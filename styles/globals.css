@@ -1,16 +1,102 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
+@layer components {
+  .font-medium1 {
+    @apply font-medium;
+    @apply text-f32;
+  }
+  .font-medium2 {
+    @apply font-medium;
+    @apply text-f24;
+  }
+  .font-title1 {
+    @apply font-medium;
+    @apply text-f20;
+  }
+  .font-title2 {
+    @apply font-medium;
+    @apply text-f18;
+  }
+  .font-title3 {
+    @apply font-medium;
+    @apply text-f16;
+  }
+  .font-body1 {
+    @apply font-regular;
+    @apply text-f12;
+  }
+  .font-body2 {
+    @apply font-medium;
+    @apply text-f12;
+  }
+  .font-body3 {
+    @apply font-regular;
+    @apply text-f14;
+  }
+  .font-body3 {
+    @apply font-medium;
+    @apply text-f14;
+  }
+  .font-caption1 {
+    @apply font-medium;
+    @apply text-f12;
+  }
+  .font-caption2 {
+    @apply font-semibold;
+    @apply text-f12;
+  }
+  .font-bold1 {
+    @apply font-semibold;
+    @apply text-f32;
+  }
+  .font-bold2 {
+    @apply font-semibold;
+    @apply text-f24;
+  }
+  .font-title1-bold {
+    @apply font-semibold;
+    @apply text-f20;
+  }
+  .font-title2-bold {
+    @apply font-semibold;
+    @apply text-f18;
+  }
+  .font-title3-bold {
+    @apply font-semibold;
+    @apply text-f16;
+  }
+  .font-subtitle1 {
+    @apply font-medium;
+    @apply text-f12;
+  }
+  .font-subtitle2 {
+    @apply font-semibold;
+    @apply text-f12;
+  }
+  .font-subtitle3 {
+    @apply font-medium;
+    @apply text-f14;
+  }
+  .font-subtitle4 {
+    @apply font-semibold;
+    @apply text-f14;
+  }
+  .font-subtitle5 {
+    @apply font-medium;
+    @apply text-f16;
+  }
+  .font-subtitle6 {
+    @apply font-semibold;
+    @apply text-f16;
+  }
+  .font-caption1-small {
+    @apply font-medium;
+    @apply text-f10;
+  }
+  .font-caption2-small {
+    @apply font-semibold;
+    @apply text-f10;
+  }
 }
