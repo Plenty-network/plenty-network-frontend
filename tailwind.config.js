@@ -19,6 +19,8 @@ module.exports = {
     colors: {
       primary: {
         500: '#9D5CFF',
+        400: '#A76CFF',
+        600: '#1F0E38',
       },
       secondary: {
         500: '#32C2AD',
@@ -36,11 +38,15 @@ module.exports = {
         500: '#F97316',
       },
       muted: {
+        50: '#341E54',
+        300: '#26163D',
         500: '#1C112E',
       },
       text: {
         500: '#706B75',
+        600: '#58535E',
       },
+      white: '#ffffff',
     },
     fontSize: {
       f32: ['32px', '40px'],
@@ -52,6 +58,12 @@ module.exports = {
       f14: ['14px', '20px'],
       f10: ['10px', '16px'],
     },
+    extend: {
+      height: {
+        13: '52px',
+      },
+    },
   },
+
   plugins: [],
 };
