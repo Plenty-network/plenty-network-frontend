@@ -1,7 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+body{
+  /*
+  background: -webkit-gradient(linear, left top, left bottom, from(#0C011C), to(#1E063F)) fixed;
+  */
+  background-color: #1E063F;
+background-image: url('/assets/image/Noise4.png');
+  color: #9F9DA3;
+}
+.topNavblurEffect{
+  backdrop-filter: blur(10px);
+}
 @layer components {
   .font-medium1 {
     @apply font-medium;

@@ -21,6 +21,13 @@ module.exports = {
         500: '#9D5CFF',
         400: '#A76CFF',
         600: '#1F0E38',
+        50: '#F5EFFF',
+        100:'#E2CEFF',
+        200:'#CEAEFF',
+        300:'#BA8DFF',
+        700:'#5E3799',
+        800:'#3F2566',
+        900:'#1F1233'
       },
       secondary: {
         500: '#32C2AD',
@@ -47,6 +54,13 @@ module.exports = {
         600: '#58535E',
       },
       white: '#ffffff',
+      sideBar: '#090015',
+      topBar:'#09001547',
+      outineBtn:'rgba(157, 92, 255, 0.1)',
+      outineBtnHover:'rgba(157, 92, 255, 0.5)',
+      sideBarHover:'rgba(157, 92, 255, 0.15)',
+      transprent:'rgba(157, 92, 255, 0)',
+
     },
     fontSize: {
       f32: ['32px', '40px'],
