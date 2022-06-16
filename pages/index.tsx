@@ -1,8 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
 import Button from '../src/components/Button/Button';
-import { SideBar } from '../src/components/Sidebar/sidebar';
 import { SideBarHOC } from '../src/components/Sidebar/SideBarHOC';
 import Tooltip from '../src/components/Tooltip/Tooltip';
 import styles from '../styles/Home.module.css';
@@ -16,7 +14,17 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
     <SideBarHOC>
-      
+       <div >
+     
+      <Button color="primary">CONNECT WALLET</Button>
+      <main className={styles.main}>
+        <Tooltip message="hi vgjhbkjnjkj">
+          <h1 className={styles.title}>
+            Welcome to <a href="https://nextjs.org">Next.js!</a>
+          </h1>
+        </Tooltip>
+      </main>
+    </div>
     </SideBarHOC>
     </div>
   );

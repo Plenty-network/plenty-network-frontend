@@ -1,5 +1,5 @@
-import React,{Children} from 'react';
-import { SideBar } from './sidebar';
+import React from 'react';
+import { SideBar } from './Sidebar';
 import { TopNavBar } from './TopNavBar';
 
 export interface ISideBarHOCProps {

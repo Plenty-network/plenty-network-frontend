@@ -9,7 +9,7 @@ module.exports = {
     return [
       // Rewrite everything to `pages/index`
       {
-        source: "/:any*",
+        source: "/",
         destination: "/",
       },
     ];
