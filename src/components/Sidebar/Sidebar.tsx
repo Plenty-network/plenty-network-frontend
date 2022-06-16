@@ -101,6 +101,11 @@ const MainMenu:Array<ISingleSideBarProps>=[
                 pathName:'./limk',
             },
             {
+                name:'sap',
+                iconName:'swap',
+                pathName:'./limk',
+            },
+            {
                 name:'swap',
                 iconName:'swap',
                 pathName:'./limk',
@@ -109,6 +114,15 @@ const MainMenu:Array<ISingleSideBarProps>=[
     },
     {
         name:'Earn',
+        iconName:'swap',
+        pathName:'./limk',
+    },
+    {
+        name:'kokmm',
+        iconName:'swap',
+        pathName:'./limk',
+    },{
+        name:'kokmm',
         iconName:'swap',
         pathName:'./limk',
     }
