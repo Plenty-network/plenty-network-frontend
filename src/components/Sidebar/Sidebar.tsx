@@ -5,33 +5,141 @@ export interface ISideBarProps {
 }
 
 export interface ISingleSideBarProps {
+    name:string;
+    iconName:string;
+    pathName?:string;
+    subMenu?:ISingleSideBarProps[] | false;
+    className?:string;
 }
 
 export function SingleSideBar (props: ISingleSideBarProps) {
-  return (
-    <li className="flex w-full gap-4 py-3.5 px-6 text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-sideBarHover border-x-2 border border-transprent hover:border-r-primary-500" >
-             <Image src={'/assets/icon/swap.svg'} height={'20px'} width={'20px'}  />
-             <p>Swap</p>
+  
 
-    </li>
+  return (
+    <div className={`flex flex-col ${props?.className}`} >
+         <div className={`flex w-full justify-between py-3.5 px-6 text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-sideBarHover border-x-2 border border-transprent hover:border-r-primary-500 `} >
+
+             <div className='flex gap-4'>
+                <Image src={'/assets/icon/swap.svg'} height={'11.67px'} width={'16.66px'}  />
+                <p>{props.name}</p>
+             </div>
+             {props.subMenu && props.subMenu.length &&
+             <Image src={'/assets/icon/DownArrow.svg'} height={'8px'} width={'11px'}  />
+             }
+
+             
+    </div>
+    {props.subMenu && props.subMenu.length && 
+             
+             <div>
+             {props.subMenu.map((submenuItem,index)=><SingleSideBar
+              name={submenuItem.name}
+              iconName={submenuItem.iconName}
+              className='ml-4 border-l-2 border-muted-border'
+              key={`submenu_${index}`}
+              />)}
+              
+              </div>
+              }
+    </div>
+
   );
 }
 
 
+export interface IHrefIconProps {
+   name:string;
+   href:string;
+   iconName:string;
+}
+
+export function HrefIcon (props: IHrefIconProps) {
+  return (
+    <div>
+          <a 
+          href={props.href}
+          target='_blank'
+          className="flex w-full justify-between py-3.5 px-6 text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-sideBarHover border-x-2 border border-transprent hover:border-r-primary-500" >
+             <div className='flex gap-4'>
+             <Image src={`/assets/icon/${props.iconName}.svg`} height={'11.67px'} width={'16.66px'}  />
+             <p>{props.name}</p>
+             </div>
+             <Image src={'/assets/icon/HrefIcon.svg'} height={'11.67px'} width={'16.66px'}  />
+
+          </a>
+    </div>
+  );
+}
+
+const FooterMenu:Array<IHrefIconProps>=[
+    {
+        name:'Analytic',
+        iconName:'VectorfooterMenu',
+        href:'https://google.com'
+    },
+    {
+        name:'Docs',
+        iconName:'VectorfooterMenu-1',
+        href:'https://google.com'
+    },
+    {
+        name:'Feedback',
+        iconName:'VectorfooterMenu-2',
+        href:'https://google.com'
+    }
+]
+
+const MainMenu:Array<ISingleSideBarProps>=[
+    {
+        name:'swap',
+        iconName:'swap',
+        pathName:'./limk',
+        subMenu:[
+            {
+                name:'swap',
+                iconName:'swap',
+                pathName:'./limk',
+            },
+            {
+                name:'swap',
+                iconName:'swap',
+                pathName:'./limk',
+            }
+        ]
+    },
+    {
+        name:'Earn',
+        iconName:'swap',
+        pathName:'./limk',
+    }
+]
 
 export function SideBar (props: ISideBarProps) {
   return (
     
-    <div className="fixed sm:relative bg-sideBar shadow flex-col justify-between  flex " style={{height:'calc(100vh - 64px)',width: '240px',marginTop:'64px'}} >
-                    <div className="mt-1">
-                       
-                        <ul className="">
-                            {Array(5).fill(3).map((_)=><SingleSideBar/>)}
-                            <SingleSideBar/>
-                        </ul>
-                        
+    <div className="fixed sm:relative text-f14 bg-sideBar shadow  " style={{height:'calc(100vh - 64px)',width: '240px',marginTop:'64px'}} >
+                 <div className='flex-col justify-between h-full flex overflow-y-auto'>
+                    <div className=" border-muted-border border-b-2 ">
+                        {MainMenu.map((menuItem,index)=>
+                        <SingleSideBar
+                          name={menuItem.name}
+                          iconName={menuItem.iconName}
+                          key={`menuItem${index}`}
+                          subMenu={menuItem.subMenu?menuItem.subMenu:false}
+                        />)}
                     </div>
-                    <div className="px-8 border-t border-gray-700">
+                    
+
+                    <div >
+                        <div className=" border-muted-border border-b-2 border-t-2">
+                        {FooterMenu.map((e,i)=><HrefIcon
+                          name={e.name}
+                          href={e.href}
+                          key={`footer_${i}`}
+                          iconName={e.iconName}
+                        />)}
+                        </div>
+                        <div className="px-8 border-t border-gray-700">
                         <ul className="w-full flex items-center justify-between bg-gray-800">
                             <li className="cursor-pointer text-white pt-5 pb-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-bell" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -63,7 +171,10 @@ export function SideBar (props: ISideBarProps) {
                                 </svg>
                             </li>
                         </ul>
+                        </div>
+                        
                     </div>
+                </div>
                 </div>
   );
 }
