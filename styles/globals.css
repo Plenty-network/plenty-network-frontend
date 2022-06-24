@@ -24,7 +24,7 @@
     @apply text-f16;
   }
   .font-body1 {
-    @apply font-regular;
+    @apply font-normal;
     @apply text-f12;
   }
   .font-body2 {
@@ -32,10 +32,10 @@
     @apply text-f12;
   }
   .font-body3 {
-    @apply font-regular;
+    @apply font-normal;
     @apply text-f14;
   }
-  .font-body3 {
+  .font-body4 {
     @apply font-medium;
     @apply text-f14;
   }

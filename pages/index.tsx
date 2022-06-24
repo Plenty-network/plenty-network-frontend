@@ -2,8 +2,10 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Button from '../src/components/Button/Button';
+import Card from '../src/components/Card/Card';
 import Tooltip from '../src/components/Tooltip/Tooltip';
 import styles from '../styles/Home.module.css';
+import Swap from './Swap';
 
 const Home: NextPage = () => {
   return (
@@ -15,11 +17,10 @@ const Home: NextPage = () => {
       </Head>
       <Button color="primary">CONNECT WALLET</Button>
       <main className={styles.main}>
-        <Tooltip message="hi vgjhbkjnjkj">
-          <h1 className={styles.title}>
-            Welcome to <a href="https://nextjs.org">Next.js!</a>
-          </h1>
-        </Tooltip>
+        <h1 className={styles.title}>
+          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          <Swap />
+        </h1>
       </main>
     </div>
   );
