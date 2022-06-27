@@ -14,7 +14,7 @@ export function SideBarHOC (props: ISideBarHOCProps) {
       <div className='circle2'></div>
       <div className='circle2'></div>
     </div>
-    <div className="flex bg-secondary-500 sm:bg-outineBtnHover flex-no-wrap flex-col">
+    <div className="flex flex-no-wrap flex-col">
       <TopNavBar/>
       <div className="flex flex-no-wrap">
       <SideBar/>
