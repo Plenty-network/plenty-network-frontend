@@ -5,14 +5,14 @@ module.exports = {
   ],
 
   theme: {
-    screens: {
-      //need to update while developing
-      xs: { max: '575px' }, // Mobile (iPhone 3 - iPhone XS Max).
-      sm: { min: '576px', max: '767px' }, // Mobile (matches max: iPhone 11 Pro .
-      md: { min: '768px', max: '1199px' }, // Tablet (matches max: iPad Pro @ 1112px).
-      lg: { min: '1200px', max: '1359px' }, // Desktop smallest.
-      xl: { min: '1440px' },
-    },
+    // screens: {
+    //   //need to update while developing
+    //   xs: { max: '575px' }, // Mobile (iPhone 3 - iPhone XS Max).
+    //   sm: { min: '576px', max: '767px' }, // Mobile (matches max: iPhone 11 Pro .
+    //   md: { min: '768px', max: '1199px' }, // Tablet (matches max: iPad Pro @ 1112px).
+    //   lg: { min: '1200px', max: '1359px' }, // Desktop smallest.
+    //   xl: { min: '1440px' },
+    // },
     fontFamily: {
       sans: ['Poppins', 'sans-serif'],
     },
