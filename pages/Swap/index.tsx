@@ -10,23 +10,73 @@ import ctez from '../../public/assets/tokens/ctez.png';
 import Image from 'next/image';
 import Button from '../../src/components/Button/Button';
 import TokenDropdown from '../../src/components/TokenDropdown/TokenDropdown';
+import TransactionSettings from '../../src/components/TransactionSettings/TransactionSettings';
+import { useState } from 'react';
+import { tokens } from '../../src/constants/Tokens';
 interface ISwapProps {
   className?: string;
 }
+
 function Swap(props: ISwapProps) {
+  const [settingsShow, setSettingsShow] = useState(false);
+  const [openSwapDetails, setOpenSwapDetails] = useState(false);
+  const [firstTokenAmount, setFirstTokenAmount] = useState('');
+  const [secondTokenAmount, setSecondTokenAmount] = useState('');
+  const [slippage, setSlippage] = useState(0.5);
+  console.log(tokens);
+
+  const [routeData, setRouteData] = useState({ success: false });
+
+  const handleSwapTokenInput = (
+    input: string,
+    tokenType: 'tokenIn' | 'tokenOut'
+  ) => {
+    if (input === '') {
+      setFirstTokenAmount('');
+      setSecondTokenAmount('');
+      setRouteData({ success: false });
+    } else {
+      if (tokenType === 'tokenIn') {
+        setFirstTokenAmount(input);
+
+        setTimeout(() => {
+          setSecondTokenAmount('123');
+          setRouteData({ success: true });
+        }, 1000);
+      } else if (tokenType === 'tokenOut') {
+        setSecondTokenAmount(input);
+
+        setFirstTokenAmount('123');
+      }
+    }
+  };
+
   return (
-    <div className={clsx('bg-card-500 rounded-3xl  text-white w-640 py-5')}>
+    <div
+      className={clsx(
+        'bg-card-500 border border-text-800 mt-[75px] rounded-3xl  text-white w-640 py-5'
+      )}
+    >
       <div className="flex flex-row px-9">
         <div className="font-title2">Swap</div>
         <div className="py-1 px-15 h-8 border rounded-[21px] ml-auto">
           <Image src={refresh} height={'14px'} width={'15px'} />
         </div>
-        <div className="py-1 px-2 h-8 border rounded-[12px] ml-2">
+        <div
+          className="py-1 px-2 h-8 border cursor-pointer rounded-[12px] ml-2"
+          onClick={() => setSettingsShow(!settingsShow)}
+        >
           <Image src={settings} height={'20px'} width={'20px'} />
           <span className="text-white font-body4 ml-0.5 relative -top-[3px]">
-            0.5%
+            {slippage}%
           </span>
         </div>
+        <TransactionSettings
+          show={settingsShow}
+          setSlippage={setSlippage}
+          slippage={slippage}
+          setSettingsShow={setSettingsShow}
+        />
       </div>
       <div className="w-580 mt-4 h-[102px] border border-text-800 mx-[30px] rounded-2xl px-4 ">
         <div className="flex">
@@ -42,7 +92,10 @@ function Swap(props: ISwapProps) {
                   'text-white bg-card-500 text-right border-0 font-medium1 outline-none'
                 )}
                 placeholder="0.0"
-                value={'0.0'}
+                onChange={(e) =>
+                  handleSwapTokenInput(e.target.value, 'tokenIn')
+                }
+                value={firstTokenAmount}
               />
             </div>
           </div>
@@ -57,7 +110,7 @@ function Swap(props: ISwapProps) {
           </div>
         </div>
       </div>
-      <div className="relative top-[26px] bg-card-500 w-[70px] h-[70px] p-[10.4px] border border-primary-500/[0.2] mx-auto rounded-lg ">
+      <div className="z-10 relative top-[26px] bg-card-500 w-[70px] h-[70px] p-[10.4px] border border-primary-500/[0.2] mx-auto rounded-lg ">
         <div className="bg-primary-500 p-2 w-[46px] h-[46px] rounded-lg ">
           <Image src={switchsvg} height={'32px'} width={'32px'} />
         </div>
@@ -81,7 +134,10 @@ function Swap(props: ISwapProps) {
                     'text-primary-500 bg-card-500 text-right border-0 font-medium1 outline-none'
                   )}
                   placeholder="0.0"
-                  value={'0.0'}
+                  onChange={(e) =>
+                    handleSwapTokenInput(e.target.value, 'tokenOut')
+                  }
+                  value={secondTokenAmount}
                 />
               </div>
             </div>
@@ -89,74 +145,95 @@ function Swap(props: ISwapProps) {
           <div className="flex -mt-2">
             <div className="text-left">
               <span className="text-text-600 font-body3">Balance:</span>{' '}
-              <span className="font-body4 text-text-500 ">5.98</span>
+              <span className="font-body4 text-text-500 ">--</span>
             </div>
             <div className="text-right ml-auto font-body2 text-text-400">
               ~$0.00
             </div>
           </div>
         </div>
-        <div className="h-12 mt-3 px-4 pt-[11px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] flex ">
-          <div>
-            <span className="relative top-0.5">
-              <Image src={info} />
-            </span>
-            <span className="ml-[9.25px] font-text-bold mr-[7px]">
-              {' '}
-              1 PLENTY = 0.114 uUSD
-            </span>
-            <span className="relative top-px">
-              <Image src={ratesrefresh} />
-            </span>
-          </div>
-          <div className="ml-auto">
-            <Image src={arrowUp} />
-          </div>
-        </div>
-        <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2">
-          <div className="flex">
-            <div className="font-body3 ">
-              <span className="mr-[5px]">Minimum received</span>
-              <span className="relative top-0.5">
-                <Image src={info} />
-              </span>
-            </div>
-            <div className="ml-auto font-subtitle4">
-              0.11197067216831917 uUSD
-            </div>
-          </div>
 
-          <div className="flex mt-2">
-            <div className="font-body3 ">
-              <span className="mr-[5px]">Price Impact</span>
-              <span className="relative top-0.5">
-                <Image src={info} />
-              </span>
-            </div>
-            <div className="ml-auto font-subtitle4">4.38 %</div>
+        {firstTokenAmount && (
+          <div
+            className="h-12 mt-3 cursor-pointer px-4 pt-[11px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] flex "
+            onClick={() => setOpenSwapDetails(!openSwapDetails)}
+          >
+            {firstTokenAmount && !routeData.success ? (
+              <div>
+                <span className="ml-[9.25px] font-text-bold mr-[7px]">
+                  {' '}
+                  Fetching best price
+                </span>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <span className="relative top-0.5">
+                    <Image src={info} />
+                  </span>
+                  <span className="ml-[9.25px] font-text-bold mr-[7px]">
+                    {' '}
+                    1 PLENTY = 0.114 uUSD
+                  </span>
+                  <span className="relative top-px">
+                    <Image src={ratesrefresh} />
+                  </span>
+                </div>
+                <div className="ml-auto">
+                  <Image src={arrowUp} />
+                </div>
+              </>
+            )}
           </div>
-          <div className="flex mt-2">
-            <div className="font-body3 ">
-              <span className="mr-[5px]">Fee</span>
-              <span className="relative top-0.5">
-                <Image src={info} />
-              </span>
+        )}
+        {openSwapDetails && (
+          <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2">
+            <div className="flex">
+              <div className="font-body3 ">
+                <span className="mr-[5px]">Minimum received</span>
+                <span className="relative top-0.5">
+                  <Image src={info} />
+                </span>
+              </div>
+              <div className="ml-auto font-subtitle4">
+                0.11197067216831917 uUSD
+              </div>
             </div>
-            <div className="ml-auto font-subtitle4">0.0025 PLENTY</div>
-          </div>
-          <div className="border-t border-text-800 mt-[18px]"></div>
-          <div className="mt-4 flex">
-            <div className="font-subtitle4">
-              {' '}
-              <span className="mr-[5px]">Route</span>
-              <span className="relative top-0.5">
-                <Image src={info} />
-              </span>
+
+            <div className="flex mt-2">
+              <div className="font-body3 ">
+                <span className="mr-[5px]">Price Impact</span>
+                <span className="relative top-0.5">
+                  <Image src={info} />
+                </span>
+              </div>
+              <div className="ml-auto font-subtitle4">4.38 %</div>
+            </div>
+            <div className="flex mt-2">
+              <div className="font-body3 ">
+                <span className="mr-[5px]">Fee</span>
+                <span className="relative top-0.5">
+                  <Image src={info} />
+                </span>
+              </div>
+              <div className="ml-auto font-subtitle4">0.0025 PLENTY</div>
+            </div>
+            <div className="border-t border-text-800 mt-[18px]"></div>
+            <div className="mt-4 flex">
+              <div className="font-subtitle4">
+                {' '}
+                <span className="mr-[5px]">Route</span>
+                <span className="relative top-0.5">
+                  <Image src={info} />
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="mt-5">
-          <Button color="primary">Connect Wallet</Button>
+          <Button color="primary" width="w-full">
+            Connect Wallet
+          </Button>
         </div>
       </div>
     </div>
