@@ -17,10 +17,7 @@ const Home: NextPage = () => {
       </Head>
       <Button color="primary">CONNECT WALLET</Button>
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-          <Swap />
-        </h1>
+        <Swap />
       </main>
     </div>
   );

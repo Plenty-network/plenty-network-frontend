@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import Image from 'next/image';
-import arrowDown from '../../../public/assets/icon/arrowDown.svg';
+import arrowDown from '../../assets/icon/swap/arrowDown.svg';
+import arrowDownViolet from '../../assets/icon/swap/arrowDownViolet.svg';
 
 interface ITokenDropdownProps {
   tokenIcon?: any;
@@ -13,7 +14,7 @@ function TokenDropdown(props: ITokenDropdownProps) {
     return (
       <button
         className={clsx(
-          '  p-3 rounded-xl border border-text-800 font-title3 text-white flex content-center'
+          '  p-3 rounded-xl border border-text-800 font-title3 text-white flex content-center h-[50px]'
         )}
         onClick={props.onClick}
         {...props}
@@ -33,14 +34,14 @@ function TokenDropdown(props: ITokenDropdownProps) {
     return (
       <button
         className={clsx(
-          '  p-3 rounded-xl border border-text-800 font-title3 text-primary-500 flex content-center'
+          '  p-3 rounded-xl border border-primary-500/[0.5] font-title3 text-primary-500 flex content-center'
         )}
         onClick={props.onClick}
         {...props}
       >
         <span>{props.tokenName}</span>
         <span className="ml-2">
-          <Image src={arrowDown} />
+          <Image src={arrowDownViolet} />
         </span>
       </button>
     );

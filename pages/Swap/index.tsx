@@ -1,5 +1,11 @@
 import clsx from 'clsx';
-import refresh from '../../public/assets/icon/refresh.svg';
+import refresh from '../../src/assets/icon/swap/refresh.svg';
+import settings from '../../src/assets/icon/swap/settings.svg';
+
+import arrowUp from '../../src/assets/icon/swap/arrowUp.svg';
+import ratesrefresh from '../../src/assets/icon/swap/ratesrefresh.svg';
+import info from '../../src/assets/icon/swap/info.svg';
+import switchsvg from '../../src/assets/icon/swap/switch.svg';
 import ctez from '../../public/assets/tokens/ctez.png';
 import Image from 'next/image';
 import Button from '../../src/components/Button/Button';
@@ -11,11 +17,16 @@ function Swap(props: ISwapProps) {
   return (
     <div className={clsx('bg-card-500 rounded-3xl  text-white w-640 py-5')}>
       <div className="flex flex-row px-9">
-        <div>Swap</div>
-        <div className="py-1.5 px-15 border rounded-[21px] ml-auto">
+        <div className="font-title2">Swap</div>
+        <div className="py-1 px-15 h-8 border rounded-[21px] ml-auto">
           <Image src={refresh} height={'14px'} width={'15px'} />
         </div>
-        <div>Settings</div>
+        <div className="py-1 px-2 h-8 border rounded-[12px] ml-2">
+          <Image src={settings} height={'20px'} width={'20px'} />
+          <span className="text-white font-body4 ml-0.5 relative -top-[3px]">
+            0.5%
+          </span>
+        </div>
       </div>
       <div className="w-580 mt-4 h-[102px] border border-text-800 mx-[30px] rounded-2xl px-4 ">
         <div className="flex">
@@ -28,7 +39,7 @@ function Swap(props: ISwapProps) {
               <input
                 type="text"
                 className={clsx(
-                  'text-white bg-card-500 text-right border-0 font-medium1'
+                  'text-white bg-card-500 text-right border-0 font-medium1 outline-none'
                 )}
                 placeholder="0.0"
                 value={'0.0'}
@@ -46,8 +57,13 @@ function Swap(props: ISwapProps) {
           </div>
         </div>
       </div>
-      <div className=" mt-[48px] h-[231px] border border-primary-500/[0.2] mx-2 px-[22px] rounded-2xl bg-primary-500/[0.04]">
-        <div className="w-580 mt-4 h-[102px] border border-text-800 rounded-2xl mt-[41px] px-4 border-primary-500/[0.2] bg-card-500">
+      <div className="relative top-[26px] bg-card-500 w-[70px] h-[70px] p-[10.4px] border border-primary-500/[0.2] mx-auto rounded-lg ">
+        <div className="bg-primary-500 p-2 w-[46px] h-[46px] rounded-lg ">
+          <Image src={switchsvg} height={'32px'} width={'32px'} />
+        </div>
+      </div>
+      <div className=" pt-[41px] pb-5 border border-primary-500/[0.2] mx-2 px-[22px] rounded-2xl bg-primary-500/[0.04]">
+        <div className="w-580  h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] bg-card-500">
           <div className="flex">
             <div className="mt-4">
               <TokenDropdown tokenName="Select a token" />
@@ -62,7 +78,7 @@ function Swap(props: ISwapProps) {
                 <input
                   type="text"
                   className={clsx(
-                    'text-primary-500 bg-card-500 text-right border-0 font-medium1'
+                    'text-primary-500 bg-card-500 text-right border-0 font-medium1 outline-none'
                   )}
                   placeholder="0.0"
                   value={'0.0'}
@@ -80,8 +96,67 @@ function Swap(props: ISwapProps) {
             </div>
           </div>
         </div>
+        <div className="h-12 mt-3 px-4 pt-[11px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] flex ">
+          <div>
+            <span className="relative top-0.5">
+              <Image src={info} />
+            </span>
+            <span className="ml-[9.25px] font-text-bold mr-[7px]">
+              {' '}
+              1 PLENTY = 0.114 uUSD
+            </span>
+            <span className="relative top-px">
+              <Image src={ratesrefresh} />
+            </span>
+          </div>
+          <div className="ml-auto">
+            <Image src={arrowUp} />
+          </div>
+        </div>
+        <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2">
+          <div className="flex">
+            <div className="font-body3 ">
+              <span className="mr-[5px]">Minimum received</span>
+              <span className="relative top-0.5">
+                <Image src={info} />
+              </span>
+            </div>
+            <div className="ml-auto font-subtitle4">
+              0.11197067216831917 uUSD
+            </div>
+          </div>
+
+          <div className="flex mt-2">
+            <div className="font-body3 ">
+              <span className="mr-[5px]">Price Impact</span>
+              <span className="relative top-0.5">
+                <Image src={info} />
+              </span>
+            </div>
+            <div className="ml-auto font-subtitle4">4.38 %</div>
+          </div>
+          <div className="flex mt-2">
+            <div className="font-body3 ">
+              <span className="mr-[5px]">Fee</span>
+              <span className="relative top-0.5">
+                <Image src={info} />
+              </span>
+            </div>
+            <div className="ml-auto font-subtitle4">0.0025 PLENTY</div>
+          </div>
+          <div className="border-t border-text-800 mt-[18px]"></div>
+          <div className="mt-4 flex">
+            <div className="font-subtitle4">
+              {' '}
+              <span className="mr-[5px]">Route</span>
+              <span className="relative top-0.5">
+                <Image src={info} />
+              </span>
+            </div>
+          </div>
+        </div>
         <div className="mt-5">
-          <Button color="disabled">Enter an amount</Button>
+          <Button color="primary">Connect Wallet</Button>
         </div>
       </div>
     </div>
