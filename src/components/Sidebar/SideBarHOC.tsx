@@ -18,7 +18,7 @@ export function SideBarHOC (props: ISideBarHOCProps) {
       <TopNavBar/>
       <div className="flex flex-no-wrap">
       <SideBar/>
-      <div  style={{marginTop:'0px',marginLeft:'240px',width: 'calc(100% - 240px)'}} >
+      <div className='mt-0 md:ml-[240px] md:w-[calc(100%_-_240px)] w-full'   >
         <div className=' overflow-x-hidden h-screen px-3 py-6 z-0 overflow-y-auto' style={{paddingTop:'64px'}}>
         {props.children}
         </div>
