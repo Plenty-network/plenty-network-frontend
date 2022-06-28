@@ -18,6 +18,12 @@ body{
     background-image: url('/assets/image/plenty.net_bg.svg'), url('/assets/image/Noise4.png');
    color: #9F9DA3;
 }
+.mobile-flex {
+  @apply flex md:hidden lg:hidden xl:hidden ;
+}
+.mobile {
+  @apply block md:hidden lg:hidden xl:hidden;
+}
 .topNavblurEffect{
   backdrop-filter: blur(10px);
 }

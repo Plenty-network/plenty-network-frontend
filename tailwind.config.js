@@ -71,11 +71,21 @@ module.exports = {
         100: 'rgba(157, 92, 255, 0.04)',
       },
       sideBar: '#090015',
+<<<<<<< HEAD
       topBar: '#09001547',
       outineBtn: 'rgba(157, 92, 255, 0.1)',
       outineBtnHover: 'rgba(157, 92, 255, 0.5)',
       sideBarHover: 'rgba(157, 92, 255, 0.15)',
       transprent: 'rgba(157, 92, 255, 0)',
+=======
+      topBar:'#09001547',
+      outineBtn:'rgba(157, 92, 255, 0.1)',
+      outineBtnHover:'rgba(157, 92, 255, 0.5)',
+      sideBarHover:'rgba(157, 92, 255, 0.15)',
+      transprent:'rgba(157, 92, 255, 0)',
+      navBarBorder:'#544D5D',
+      navBarMuted:'#9D99A1',
+>>>>>>> ee0e7a28771b1bd5728719fbb5fbf04465c0b705
     },
     fontSize: {
       f32: ['32px', '40px'],

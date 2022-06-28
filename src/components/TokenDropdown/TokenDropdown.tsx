@@ -25,7 +25,7 @@ function TokenDropdown(props: ITokenDropdownProps) {
         <div className="mx-2">
           <span>{props.tokenName}</span>
         </div>
-        <div className="ml-2">
+        <div className="ml-px relative -top-px">
           <Image src={arrowDown} />
         </div>
       </button>

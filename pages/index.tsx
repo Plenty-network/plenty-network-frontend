@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Button from '../src/components/Button/Button';
 import Card from '../src/components/Card/Card';
+import Modal from '../src/components/Modal/Modal';
 import { SideBarHOC } from '../src/components/Sidebar/SideBarHOC';
 import Tooltip from '../src/components/Tooltip/Tooltip';
 import styles from '../styles/Home.module.css';
@@ -17,6 +18,7 @@ const Home: NextPage = () => {
       </Head>
       <SideBarHOC>
         <Swap />
+        <Modal />
       </SideBarHOC>
     </>
   );

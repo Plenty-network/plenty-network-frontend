@@ -11,30 +11,43 @@ import Image from 'next/image';
 import Button from '../../src/components/Button/Button';
 import TokenDropdown from '../../src/components/TokenDropdown/TokenDropdown';
 import TransactionSettings from '../../src/components/TransactionSettings/TransactionSettings';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { tokens } from '../../src/constants/Tokens';
+import { useLocationStateInSwap } from '../../src/hooks/useLocationStateInSwap';
 interface ISwapProps {
   className?: string;
 }
 
 function Swap(props: ISwapProps) {
+  const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
+    useLocationStateInSwap();
   const [settingsShow, setSettingsShow] = useState(false);
   const [openSwapDetails, setOpenSwapDetails] = useState(false);
-  const [firstTokenAmount, setFirstTokenAmount] = useState('');
-  const [secondTokenAmount, setSecondTokenAmount] = useState('');
+  const [firstTokenAmount, setFirstTokenAmount] = useState<string | number>('');
+  const [secondTokenAmount, setSecondTokenAmount] = useState<string | number>(
+    ''
+  );
   const [slippage, setSlippage] = useState(0.5);
+
   console.log(tokens);
 
   const [routeData, setRouteData] = useState({ success: false });
 
+  useEffect(() => {
+    if (tokenOut.name !== 'false') {
+      setRouteData({ success: true });
+    }
+  }, [tokenIn, tokenOut]);
+
   const handleSwapTokenInput = (
-    input: string,
+    input: string | number,
     tokenType: 'tokenIn' | 'tokenOut'
   ) => {
+    setRouteData({ success: false });
     if (input === '') {
       setFirstTokenAmount('');
       setSecondTokenAmount('');
-      setRouteData({ success: false });
+      setRouteData({ success: true });
     } else {
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
@@ -46,15 +59,38 @@ function Swap(props: ISwapProps) {
       } else if (tokenType === 'tokenOut') {
         setSecondTokenAmount(input);
 
-        setFirstTokenAmount('123');
+        setTimeout(() => {
+          setFirstTokenAmount('6875');
+          setRouteData({ success: true });
+        }, 1000);
       }
+    }
+  };
+
+  const changeTokenLocation = () => {
+    setSecondTokenAmount(firstTokenAmount);
+
+    setFirstTokenAmount('');
+    setRouteData({ success: false });
+    if (tokenOut.name) {
+      setTokenIn({
+        name: tokenOut.name,
+        image: tokenOut.image,
+      });
+
+      setTokenOut({
+        name: tokenIn.name,
+        image: tokenIn.image,
+      });
+
+      handleSwapTokenInput(firstTokenAmount, 'tokenOut');
     }
   };
 
   return (
     <div
       className={clsx(
-        'bg-card-500 border border-text-800 mt-[75px] rounded-3xl  text-white w-640 py-5'
+        'bg-card-500 border border-text-800 mt-[75px] rounded-3xl  text-white w-640 py-5 mx-auto'
       )}
     >
       <div className="flex flex-row px-9">
@@ -78,10 +114,19 @@ function Swap(props: ISwapProps) {
           setSettingsShow={setSettingsShow}
         />
       </div>
-      <div className="w-580 mt-4 h-[102px] border border-text-800 mx-[30px] rounded-2xl px-4 ">
+      <div className="w-580 mt-4 h-[102px] border border-text-800 mx-[30px] rounded-2xl px-4 hover:border-text-700">
         <div className="flex">
           <div className="mt-4">
-            <TokenDropdown tokenIcon={ctez} tokenName="CTEZ" />
+            <TokenDropdown
+              tokenIcon={tokenIn.image}
+              tokenName={
+                tokenIn.name === 'tez'
+                  ? 'TEZ'
+                  : tokenIn.name === 'ctez'
+                  ? 'CTEZ'
+                  : tokenIn.name
+              }
+            />
           </div>
           <div className="my-3 ml-auto">
             <div className="text-right font-body1 text-text-400">YOU PAY</div>
@@ -110,7 +155,10 @@ function Swap(props: ISwapProps) {
           </div>
         </div>
       </div>
-      <div className="z-10 relative top-[26px] bg-card-500 w-[70px] h-[70px] p-[10.4px] border border-primary-500/[0.2] mx-auto rounded-lg ">
+      <div
+        className="z-10 relative top-[26px] bg-card-500 w-[70px] h-[70px] p-[10.4px] border border-primary-500/[0.2] mx-auto rounded-lg "
+        onClick={() => changeTokenLocation()}
+      >
         <div className="bg-primary-500 p-2 w-[46px] h-[46px] rounded-lg ">
           <Image src={switchsvg} height={'32px'} width={'32px'} />
         </div>
@@ -119,26 +167,44 @@ function Swap(props: ISwapProps) {
         <div className="w-580  h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] bg-card-500">
           <div className="flex">
             <div className="mt-4">
-              <TokenDropdown tokenName="Select a token" />
+              {/* <TokenDropdown tokenName="Select a token" /> */}
 
-              {/* <TokenDropdown tokenIcon={ctez} tokenName="PLENTY" /> */}
+              <TokenDropdown
+                tokenIcon={tokenOut.image}
+                tokenName={tokenOut.name}
+              />
             </div>
             <div className="my-3 ml-auto">
               <div className="text-right font-body1 text-text-400">
                 YOU RECEIVE
               </div>
               <div>
-                <input
-                  type="text"
-                  className={clsx(
-                    'text-primary-500 bg-card-500 text-right border-0 font-medium1 outline-none'
-                  )}
-                  placeholder="0.0"
-                  onChange={(e) =>
-                    handleSwapTokenInput(e.target.value, 'tokenOut')
-                  }
-                  value={secondTokenAmount}
-                />
+                {tokenOut.name !== 'false' ? (
+                  routeData.success ? (
+                    <input
+                      type="text"
+                      className={clsx(
+                        'text-primary-500 bg-card-500 text-right border-0 font-medium1 outline-none'
+                      )}
+                      placeholder="0.0"
+                      onChange={(e) =>
+                        handleSwapTokenInput(e.target.value, 'tokenOut')
+                      }
+                      value={secondTokenAmount}
+                    />
+                  ) : (
+                    <p className="  h-[38px] animate-pulse bg-primary-500"></p>
+                  )
+                ) : (
+                  <input
+                    type="text"
+                    className={clsx(
+                      'text-primary-500 bg-card-500 text-right border-0 font-medium1 outline-none'
+                    )}
+                    placeholder="--"
+                    value={'--'}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -153,12 +219,12 @@ function Swap(props: ISwapProps) {
           </div>
         </div>
 
-        {firstTokenAmount && (
+        {(firstTokenAmount || secondTokenAmount) && (
           <div
             className="h-12 mt-3 cursor-pointer px-4 pt-[11px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] flex "
             onClick={() => setOpenSwapDetails(!openSwapDetails)}
           >
-            {firstTokenAmount && !routeData.success ? (
+            {(firstTokenAmount || secondTokenAmount) && !routeData.success ? (
               <div>
                 <span className="ml-[9.25px] font-text-bold mr-[7px]">
                   {' '}
