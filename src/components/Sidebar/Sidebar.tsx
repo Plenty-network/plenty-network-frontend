@@ -93,7 +93,7 @@ const MainMenu: Array<ISingleSideBarProps> = [
 export function SideBar(props: ISideBarProps) {
     const [activeMenu, setActiveMenu] = React.useState<string>('');
     return (
-        <div className="fixed sm:relative text-f14 bg-sideBar shadow  " style={{ height: 'calc(100vh - 64px)', width: '240px', marginTop: '64px' }} >
+        <div className="fixed text-f14 bg-sideBar shadow hidden md:block  " style={{ height: 'calc(100vh - 64px)', width: '240px', marginTop: '64px' }} >
             <div className='flex-col justify-between h-full flex overflow-y-auto'>
                 <div className=" border-muted-border border-b-2 ">
                     {MainMenu.map((menuItem, index) =>
