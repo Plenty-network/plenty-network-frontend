@@ -1,30 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body{
+body {
   /*
   background: -webkit-gradient(linear, left top, left bottom, from(#0C011C), to(#1E063F)) fixed;
   */
   background-color: #090015;
   background-size: cover;
-/* background-image: url('/assets/image/Noise4.png'); */
-/* background: linear-gradient(195.23deg, #090015 20.19%, rgba(59, 8, 133, 0.3) 82.41%, rgba(98, 2, 239, 0.5) 219.63%, rgba(9, 0, 21, 0.29) 340.7%);
+  /* background-image: url('/assets/image/Noise4.png'); */
+  /* background: linear-gradient(195.23deg, #090015 20.19%, rgba(59, 8, 133, 0.3) 82.41%, rgba(98, 2, 239, 0.5) 219.63%, rgba(9, 0, 21, 0.29) 340.7%);
 
  
-   */ 
-   /* background-image: linear-gradient(195.23deg, #090015 20.19%, rgba(59, 8, 133, 0.3) 82.41%, rgba(98, 2, 239, 0.5) 219.63%, rgba(9, 0, 21, 0.29) 340.7%), url("/assets/image/Noise4.png"), url('/assets/image/plenty.net_bg.svg'); 
+   */
+  /* background-image: linear-gradient(195.23deg, #090015 20.19%, rgba(59, 8, 133, 0.3) 82.41%, rgba(98, 2, 239, 0.5) 219.63%, rgba(9, 0, 21, 0.29) 340.7%), url("/assets/image/Noise4.png"), url('/assets/image/plenty.net_bg.svg'); 
    
     */
-    background-image: url('/assets/image/plenty.net_bg.svg'), url('/assets/image/Noise4.png');
-   color: #9F9DA3;
+  background-image: url('/assets/image/plenty.net_bg.svg'),
+    url('/assets/image/Noise4.png');
+  color: #9f9da3;
 }
 .mobile-flex {
-  @apply flex md:hidden lg:hidden xl:hidden ;
+  @apply flex md:hidden lg:hidden xl:hidden;
 }
 .mobile {
   @apply block md:hidden lg:hidden xl:hidden;
 }
-.topNavblurEffect{
+.topNavblurEffect {
   backdrop-filter: blur(10px);
 }
 @layer components {
@@ -130,5 +131,13 @@ body{
   .font-text-bold {
     @apply font-bold;
     @apply text-f14;
+  }
+  .font-input-text {
+    @apply font-medium;
+    @apply text-f28;
+  }
+  .font-mobile-text {
+    @apply font-medium;
+    @apply text-f1416;
   }
 }

@@ -18,7 +18,6 @@ const Home: NextPage = () => {
       </Head>
       <SideBarHOC>
         <Swap />
-        <Modal />
       </SideBarHOC>
     </>
   );

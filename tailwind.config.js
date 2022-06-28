@@ -71,34 +71,32 @@ module.exports = {
         100: 'rgba(157, 92, 255, 0.04)',
       },
       sideBar: '#090015',
-<<<<<<< HEAD
       topBar: '#09001547',
       outineBtn: 'rgba(157, 92, 255, 0.1)',
       outineBtnHover: 'rgba(157, 92, 255, 0.5)',
       sideBarHover: 'rgba(157, 92, 255, 0.15)',
       transprent: 'rgba(157, 92, 255, 0)',
-=======
-      topBar:'#09001547',
-      outineBtn:'rgba(157, 92, 255, 0.1)',
-      outineBtnHover:'rgba(157, 92, 255, 0.5)',
-      sideBarHover:'rgba(157, 92, 255, 0.15)',
-      transprent:'rgba(157, 92, 255, 0)',
-      navBarBorder:'#544D5D',
-      navBarMuted:'#9D99A1',
->>>>>>> ee0e7a28771b1bd5728719fbb5fbf04465c0b705
+      navBarBorder: '#544D5D',
+      navBarMuted: '#9D99A1',
     },
     fontSize: {
       f32: ['32px', '40px'],
+      f28: ['28px', '42px'],
       f24: ['24px', '38px'],
       f20: ['20px', '32px'],
       f18: ['18px', '26px'],
       f16: ['16px', '24px'],
       f12: ['12px', '18px'],
       f14: ['14px', '20px'],
+      f1416: ['14px', '16px'],
       f10: ['10px', '16px'],
     },
 
     extend: {
+      backgroundImage: {
+        switchBorder:
+          'linear-gradient(180deg, transparent 64%, rgba(157, 92, 255, 0.2) 50%)',
+      },
       padding: {
         15: '15px',
         30: '30px',

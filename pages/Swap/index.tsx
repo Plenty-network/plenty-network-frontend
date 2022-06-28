@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import refresh from '../../src/assets/icon/swap/refresh.svg';
 import settings from '../../src/assets/icon/swap/settings.svg';
-
+import arrowDown from '../../src/assets/icon/swap/arrowDown.svg';
 import arrowUp from '../../src/assets/icon/swap/arrowUp.svg';
 import ratesrefresh from '../../src/assets/icon/swap/ratesrefresh.svg';
 import info from '../../src/assets/icon/swap/info.svg';
@@ -27,9 +27,8 @@ function Swap(props: ISwapProps) {
   const [secondTokenAmount, setSecondTokenAmount] = useState<string | number>(
     ''
   );
+  console.log(tokenOut.name !== 'false');
   const [slippage, setSlippage] = useState(0.5);
-
-  console.log(tokens);
 
   const [routeData, setRouteData] = useState({ success: false });
 
@@ -51,11 +50,12 @@ function Swap(props: ISwapProps) {
     } else {
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
-
-        setTimeout(() => {
-          setSecondTokenAmount('123');
-          setRouteData({ success: true });
-        }, 1000);
+        if (tokenOut.name !== 'false') {
+          setTimeout(() => {
+            setSecondTokenAmount('123');
+            setRouteData({ success: true });
+          }, 1000);
+        }
       } else if (tokenType === 'tokenOut') {
         setSecondTokenAmount(input);
 
@@ -67,6 +67,12 @@ function Swap(props: ISwapProps) {
     }
   };
 
+  const selectToken = () => {
+    setTokenOut({ name: 'PLENTY', image: ctez });
+    // setTimeout(() => {
+    //   handleSwapTokenInput(firstTokenAmount, 'tokenIn');
+    // }, 1000);
+  };
   const changeTokenLocation = () => {
     setSecondTokenAmount(firstTokenAmount);
 
@@ -90,16 +96,16 @@ function Swap(props: ISwapProps) {
   return (
     <div
       className={clsx(
-        'bg-card-500 border border-text-800 mt-[75px] rounded-3xl  text-white w-640 py-5 mx-auto'
+        'bg-card-500 border border-text-800 mt-[36px] md:mt-[75px] md:rounded-3xl  text-white md:w-640 py-5 mx-auto'
       )}
     >
-      <div className="flex flex-row px-9">
+      <div className="flex flex-row px-5 md:px-9">
         <div className="font-title2">Swap</div>
-        <div className="py-1 px-15 h-8 border rounded-[21px] ml-auto">
+        <div className="py-1 cursor-pointer px-15 h-8 border border-text-700 rounded-[21px] ml-auto">
           <Image src={refresh} height={'14px'} width={'15px'} />
         </div>
         <div
-          className="py-1 px-2 h-8 border cursor-pointer rounded-[12px] ml-2"
+          className="py-1 px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] ml-2"
           onClick={() => setSettingsShow(!settingsShow)}
         >
           <Image src={settings} height={'20px'} width={'20px'} />
@@ -114,8 +120,8 @@ function Swap(props: ISwapProps) {
           setSettingsShow={setSettingsShow}
         />
       </div>
-      <div className="w-580 mt-4 h-[102px] border border-text-800 mx-[30px] rounded-2xl px-4 hover:border-text-700">
-        <div className="flex">
+      <div className="md:w-580 mt-4 h-[102px] border border-text-800 mx-5 md:mx-[30px] rounded-2xl px-4 hover:border-text-700">
+        <div className="flex ">
           <div className="mt-4">
             <TokenDropdown
               tokenIcon={tokenIn.image}
@@ -134,7 +140,7 @@ function Swap(props: ISwapProps) {
               <input
                 type="text"
                 className={clsx(
-                  'text-white bg-card-500 text-right border-0 font-medium1 outline-none'
+                  'text-white bg-card-500 text-right border-0 font-medium2 md:font-medium1 outline-none'
                 )}
                 placeholder="0.0"
                 onChange={(e) =>
@@ -156,23 +162,27 @@ function Swap(props: ISwapProps) {
         </div>
       </div>
       <div
-        className="z-10 relative top-[26px] bg-card-500 w-[70px] h-[70px] p-[10.4px] border border-primary-500/[0.2] mx-auto rounded-lg "
+        className="z-10 cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-lg "
         onClick={() => changeTokenLocation()}
       >
-        <div className="bg-primary-500 p-2 w-[46px] h-[46px] rounded-lg ">
-          <Image src={switchsvg} height={'32px'} width={'32px'} />
+        <div className="p-[11px] bg-card-500 rounded-lg  w-[68px] h-[68px]">
+          <div className="bg-primary-500 p-2  w-[46px] h-[46px] rounded-lg ">
+            <Image src={switchsvg} height={'32px'} width={'32px'} />
+          </div>
         </div>
       </div>
-      <div className=" pt-[41px] pb-5 border border-primary-500/[0.2] mx-2 px-[22px] rounded-2xl bg-primary-500/[0.04]">
-        <div className="w-580  h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] bg-card-500">
+      <div className=" pt-[41px] pb-5 border border-primary-500/[0.2] mx-px md:mx-2  px-5 md:px-[22px] rounded-2xl bg-primary-500/[0.04]">
+        <div className="md:w-580  h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] bg-card-500">
           <div className="flex">
-            <div className="mt-4">
-              {/* <TokenDropdown tokenName="Select a token" /> */}
-
-              <TokenDropdown
-                tokenIcon={tokenOut.image}
-                tokenName={tokenOut.name}
-              />
+            <div className="mt-4" onClick={() => selectToken()}>
+              {tokenOut.name !== 'false' ? (
+                <TokenDropdown
+                  tokenIcon={tokenOut.image}
+                  tokenName={tokenOut.name}
+                />
+              ) : (
+                <TokenDropdown tokenName="Select a token" />
+              )}
             </div>
             <div className="my-3 ml-auto">
               <div className="text-right font-body1 text-text-400">
@@ -184,7 +194,7 @@ function Swap(props: ISwapProps) {
                     <input
                       type="text"
                       className={clsx(
-                        'text-primary-500 bg-card-500 text-right border-0 font-medium1 outline-none'
+                        'text-primary-500 bg-card-500 text-right border-0  font-input-text md:font-medium1 outline-none'
                       )}
                       placeholder="0.0"
                       onChange={(e) =>
@@ -199,7 +209,7 @@ function Swap(props: ISwapProps) {
                   <input
                     type="text"
                     className={clsx(
-                      'text-primary-500 bg-card-500 text-right border-0 font-medium1 outline-none'
+                      'text-primary-500 bg-card-500 text-right border-0 font-input-text md:font-medium1 outline-none'
                     )}
                     placeholder="--"
                     value={'--'}
@@ -211,7 +221,9 @@ function Swap(props: ISwapProps) {
           <div className="flex -mt-2">
             <div className="text-left">
               <span className="text-text-600 font-body3">Balance:</span>{' '}
-              <span className="font-body4 text-text-500 ">--</span>
+              <span className="font-body4 text-text-500 ">
+                {tokenOut.name !== 'false' ? '0.34' : '--'}
+              </span>
             </div>
             <div className="text-right ml-auto font-body2 text-text-400">
               ~$0.00
@@ -246,7 +258,11 @@ function Swap(props: ISwapProps) {
                   </span>
                 </div>
                 <div className="ml-auto">
-                  <Image src={arrowUp} />
+                  <Image
+                    src={openSwapDetails ? arrowUp : arrowDown}
+                    width={'12px'}
+                    height={'9px'}
+                  />
                 </div>
               </>
             )}
