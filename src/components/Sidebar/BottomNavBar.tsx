@@ -51,9 +51,9 @@ export function BottoMoreNavMenu (props: IBottomNavMenuProps) {
       <div className='border-t-[1.5px] text-f10 flex-1 flex flex-col justify-center items-center text-center gap-2 border-t-navBarBorder p-5  hover:bg-sideBarHover hover:border-t-primary-500 '>
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_4328_25645)">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M8 10.5C8 9.39543 8.89543 8.5 10 8.5C11.1046 8.5 12 9.39543 12 10.5C12 11.6046 11.1046 12.5 10 12.5C8.89543 12.5 8 11.6046 8 10.5Z" fill="#9D99A1"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M15 10.5C15 9.39543 15.8954 8.5 17 8.5C18.1046 8.5 19 9.39543 19 10.5C19 11.6046 18.1046 12.5 17 12.5C15.8954 12.5 15 11.6046 15 10.5Z" fill="#9D99A1"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M1 10.5C1 9.39543 1.89543 8.5 3 8.5C4.10457 8.5 5 9.39543 5 10.5C5 11.6046 4.10457 12.5 3 12.5C1.89543 12.5 1 11.6046 1 10.5Z" fill="#9D99A1"/>
+            <path fillRule="evenodd" clipRule="evenodd" d="M8 10.5C8 9.39543 8.89543 8.5 10 8.5C11.1046 8.5 12 9.39543 12 10.5C12 11.6046 11.1046 12.5 10 12.5C8.89543 12.5 8 11.6046 8 10.5Z" fill="#9D99A1"/>
+            <path fillRule="evenodd" clipRule="evenodd" d="M15 10.5C15 9.39543 15.8954 8.5 17 8.5C18.1046 8.5 19 9.39543 19 10.5C19 11.6046 18.1046 12.5 17 12.5C15.8954 12.5 15 11.6046 15 10.5Z" fill="#9D99A1"/>
+            <path fillRule="evenodd" clipRule="evenodd" d="M1 10.5C1 9.39543 1.89543 8.5 3 8.5C4.10457 8.5 5 9.39543 5 10.5C5 11.6046 4.10457 12.5 3 12.5C1.89543 12.5 1 11.6046 1 10.5Z" fill="#9D99A1"/>
             </g>
             <defs>
             <clipPath id="clip0_4328_25645">
