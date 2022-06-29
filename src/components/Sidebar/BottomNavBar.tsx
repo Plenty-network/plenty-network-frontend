@@ -1,4 +1,8 @@
 import * as React from 'react';
+import { FooterInfoIcon } from './FooterIconList';
+import { HrefIcon } from './LinkIconList';
+import { FooterMenu } from './Sidebar';
+import { SingleSideBar } from './SideBarTabList';
 
 export interface IBottomNavigationBarProps {
 }
@@ -17,6 +21,8 @@ export default function BottomNavigationBar (props: IBottomNavigationBarProps) {
   return (
     <div className='mobile fixed bottom-0 bg-sideBar w-screen p-0 '>
    {activeSubMenu===1 && <SubMenuList/>}
+   {activeSubMenu===2 && <MoreSubMenuList/>}
+
     <div className='justify-between flex w-screen' >
     <BottomNavMenu 
     onClick={()=>setActiveSubMenu(1)}
@@ -25,7 +31,10 @@ export default function BottomNavigationBar (props: IBottomNavigationBarProps) {
     <BottomNavMenu onClick={()=>setActiveSubMenu(0)} />
     <BottomNavMenu onClick={()=>setActiveSubMenu(0)}/>
     <BottomNavMenu onClick={()=>setActiveSubMenu(0)}/> 
-    <BottoMoreNavMenu onClick={()=>setActiveSubMenu(0)}/> 
+    <BottoMoreNavMenu onClick={
+      ()=>setActiveSubMenu(2)}
+      active={activeSubMenu===2}
+      /> 
     </div>
     </div>
   );
@@ -48,8 +57,8 @@ export function BottomNavMenu (props: IBottomNavMenuProps) {
 }
 export function BottoMoreNavMenu (props: IBottomNavMenuProps) {
     return (
-      <div className='border-t text-f10 flex-1 flex flex-col justify-center items-center text-center gap-2 border-t-borderColor p-5  hover:bg-sideBarHover hover:border-t-primary-500 '>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div onClick={props.onClick?()=>{props.onClick && props.onClick()}:()=>{}} className={`${props.active?'bg-sideBarHover border-t-primary-500':'border-t-borderColor'} ${props.className} border-t-[1.5px] text-f10 flex-1 flex flex-col items-center justify-center  gap-2  p-5  hover:bg-sideBarHover hover:border-t-primary-500 `}>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_4328_25645)">
             <path fillRule="evenodd" clipRule="evenodd" d="M8 10.5C8 9.39543 8.89543 8.5 10 8.5C11.1046 8.5 12 9.39543 12 10.5C12 11.6046 11.1046 12.5 10 12.5C8.89543 12.5 8 11.6046 8 10.5Z" fill="#9D99A1"/>
             <path fillRule="evenodd" clipRule="evenodd" d="M15 10.5C15 9.39543 15.8954 8.5 17 8.5C18.1046 8.5 19 9.39543 19 10.5C19 11.6046 18.1046 12.5 17 12.5C15.8954 12.5 15 11.6046 15 10.5Z" fill="#9D99A1"/>
@@ -79,6 +88,68 @@ export function SubMenuList (props: ISubMenuListProps) {
         <BottomSubMenu/>
         <BottomSubMenu/>
 
+    </div>
+  );
+}
+export function MoreSubMenuList (props: ISubMenuListProps) {
+  return (
+    <div className='w-screen flex flex-col text-f12 bg-topBar '>
+      {/*  */}
+      <div className='p-0 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500'>  
+        <SingleSideBar
+        name='Swap'
+        className='px-9'
+        iconName='swap'
+        isBottomMenu
+        />
+        </div>
+       {/*  */}
+
+       {/*  */}
+      <div className=' border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500'>  
+        <SingleSideBar
+        name='Swap'
+        className='px-9'
+        iconName='swap'
+        isBottomMenu
+        />
+        </div>
+       {/*  */}
+
+       {/*  */}
+      <div className=' border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500'>  
+        <SingleSideBar
+        name='Swap'
+        className='px-9'
+        iconName='swap'
+        isBottomMenu
+        />
+        </div>
+       {/*  */}
+
+       {/*  */}
+      <div className=' border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500'>  
+        <SingleSideBar
+        name='Swap'
+        className='px-9'
+        iconName='swap'
+        isBottomMenu
+        />
+        </div>
+       {/*  */}
+
+       <div className="px-3">
+                        {FooterMenu.map((e, i) => <HrefIcon
+                            name={e.name}
+                            href={e.href}
+                            key={`footer_${i}`}
+                            iconName={e.iconName}
+                        />)}
+                    </div>
+
+       <div className='px-5 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500'>
+        <FooterInfoIcon />
+        </div>
     </div>
   );
 }

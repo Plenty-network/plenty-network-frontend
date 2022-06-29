@@ -5,7 +5,7 @@ import { ISingleSideBarProps, SingleSideBar } from './SideBarTabList';
 
 export interface ISideBarProps {
 }
-const FooterMenu: Array<IHrefIconProps> = [
+export const FooterMenu: Array<IHrefIconProps> = [
     {
         name: 'Analytic',
         iconName: 'VectorfooterMenu',
