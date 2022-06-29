@@ -321,7 +321,7 @@ function Swap(props: ISwapProps) {
                   <Image src={info} />
                 </span>
               </div>
-              <div className="mt-2 flex">
+              {/* <div className="mt-2 flex">
                 <span className="w-[28px] h-[28px]">
                   <Image src={plenty} width={'28px'} height={'28px'} />
                 </span>
@@ -337,6 +337,7 @@ function Swap(props: ISwapProps) {
                   <Image src={plenty} width={'28px'} height={'28px'} />
                 </span>
               </div>
+             */}
             </div>
           </div>
         )}
