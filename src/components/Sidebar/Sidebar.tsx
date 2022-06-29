@@ -93,9 +93,9 @@ const MainMenu: Array<ISingleSideBarProps> = [
 export function SideBar(props: ISideBarProps) {
     const [activeMenu, setActiveMenu] = React.useState<string>('');
     return (
-        <div className="fixed text-f14 bg-sideBar border-r-borderColor border-r shadow hidden md:block  " style={{ height: 'calc(100vh - 62px)', width: '240px', marginTop: '62px' }} >
+        <div className="fixed text-f14 bg-sideBar border-r-borderColor border-r shadow hidden md:block  " style={{ height: 'calc(100vh - 64px)', width: '240px', marginTop: '64px' }} >
             <div className='flex-col justify-between h-full flex overflow-y-auto'>
-                <div className=" border-muted-border border-b ">
+                <div className=" border-muted-border border-b flex-1 md:h-[calc(100%_-_215px)] overflow-y-auto"> 
                     {MainMenu.map((menuItem, index) =>
                         <SingleSideBar
                             name={menuItem.name}
@@ -107,7 +107,7 @@ export function SideBar(props: ISideBarProps) {
                         />)}
                 </div>
                 <div >
-                    <div className=" border-t-borderColor  border-t">
+                    <div className=" border-t-borderColor border-t">
                         {FooterMenu.map((e, i) => <HrefIcon
                             name={e.name}
                             href={e.href}
