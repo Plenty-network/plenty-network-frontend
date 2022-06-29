@@ -7,7 +7,7 @@ export interface ITopNavBarMobileProps {
 
 export function TopNavBarMobile (props: ITopNavBarMobileProps) {
   return (
-    <div className='mobile-flex pr-5 py-5 justify-between border-b border-b-navBarBorder'>
+    <div className='mobile-flex fixed w-screen bottomNavBarMobile pr-5 py-5 justify-between border-b border-b-borderColor'>
          <Image src='/assets/icon/plentyIcon.svg' height={'22.47px'}  width='100%' />
       <div>
       <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">

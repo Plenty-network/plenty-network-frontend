@@ -18,7 +18,7 @@ export function IconBTN (props: IIconBTNProps) {
 
 export function TopNavBar (props: ITopNavBarProps) {
   return (
-  <nav className="bg-topBar hidden md:flex  w-screen fixed h-16 items-center shadow  justify-between px-10 topNavblurEffect ">
+  <nav className="hidden md:flex border-b border-b-borderColor w-screen fixed h-16 items-center shadow  justify-between px-10 topNavblurEffect ">
    <div>
    <Image src='/assets/icon/plentyIcon.svg' height={'22.47px'}  width='100%' />
    </div>
