@@ -8,6 +8,7 @@ export interface ISingleSideBarProps {
     className?:string;
     onClick?: () => void | Promise<void>;
     isMenuOpen?:boolean;
+    isBottomMenu?:boolean;
 }
 
 export function SingleSideBar (props: ISingleSideBarProps) {
@@ -15,7 +16,7 @@ export function SingleSideBar (props: ISingleSideBarProps) {
 
   return (
     <div className={`flex flex-col ${props?.className}`} onClick={props.onClick} >
-         <div className={`flex w-full justify-between py-3.5 px-6 text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-sideBarHover border-x-2 border border-transprent hover:border-r-primary-500 `} >
+         <div className={`flex w-full justify-between py-3.5 ${!props.isBottomMenu?'px-6':''} text-gray-300 hover:text-gray-500 cursor-pointer items-center  ${!props.isBottomMenu?'hover:bg-sideBarHover':''} ${!props.isBottomMenu?'border-x-2':''} border border-transprent ${!props.isBottomMenu?'hover:border-r-primary-500':''}`} >
 
              <div className='flex gap-4'>
                 {props.iconName && <Image src={'/assets/icon/swap.svg'} height={'11.67px'} width={'16.66px'}  />}
@@ -32,7 +33,7 @@ export function SingleSideBar (props: ISingleSideBarProps) {
              <div>
              {props.subMenu.map((submenuItem,index)=><SingleSideBar
               name={submenuItem.name}
-              className='ml-8 border-l-2 border-muted-border'
+              className='ml-8 border-l-2 border-borderColor'
               key={`submenu_${index}`}
               />)}
               

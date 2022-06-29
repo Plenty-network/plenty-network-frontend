@@ -6,7 +6,8 @@ import arrowUp from '../../src/assets/icon/swap/arrowUp.svg';
 import ratesrefresh from '../../src/assets/icon/swap/ratesrefresh.svg';
 import info from '../../src/assets/icon/swap/info.svg';
 import switchsvg from '../../src/assets/icon/swap/switch.svg';
-import ctez from '../../public/assets/tokens/ctez.png';
+
+import plenty from '../../src/assets/tokens/plenty.png';
 import Image from 'next/image';
 import Button from '../../src/components/Button/Button';
 import TokenDropdown from '../../src/components/TokenDropdown/TokenDropdown';
@@ -27,14 +28,18 @@ function Swap(props: ISwapProps) {
   const [secondTokenAmount, setSecondTokenAmount] = useState<string | number>(
     ''
   );
-  console.log(tokenOut.name !== 'false');
+
   const [slippage, setSlippage] = useState(0.5);
 
-  const [routeData, setRouteData] = useState({ success: false });
+  const [routeData, setRouteData] = useState({
+    success: false,
+    isloading: false,
+  });
 
+  //routedata true once we have both the tokens
   useEffect(() => {
     if (tokenOut.name !== 'false') {
-      setRouteData({ success: true });
+      setRouteData({ success: true, isloading: false });
     }
   }, [tokenIn, tokenOut]);
 
@@ -42,33 +47,33 @@ function Swap(props: ISwapProps) {
     input: string | number,
     tokenType: 'tokenIn' | 'tokenOut'
   ) => {
-    setRouteData({ success: false });
+    setRouteData({ success: false, isloading: true });
     if (input === '') {
       setFirstTokenAmount('');
       setSecondTokenAmount('');
-      setRouteData({ success: true });
+      //setRouteData({ success: true });
     } else {
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
         if (tokenOut.name !== 'false') {
           setTimeout(() => {
-            setSecondTokenAmount('123');
-            setRouteData({ success: true });
+            setSecondTokenAmount('55.721932');
+            setRouteData({ success: true, isloading: false });
           }, 1000);
         }
       } else if (tokenType === 'tokenOut') {
         setSecondTokenAmount(input);
 
         setTimeout(() => {
-          setFirstTokenAmount('6875');
-          setRouteData({ success: true });
+          setFirstTokenAmount('12.1');
+          setRouteData({ success: true, isloading: false });
         }, 1000);
       }
     }
   };
 
   const selectToken = () => {
-    setTokenOut({ name: 'PLENTY', image: ctez });
+    setTokenOut({ name: 'PLENTY', image: plenty });
     // setTimeout(() => {
     //   handleSwapTokenInput(firstTokenAmount, 'tokenIn');
     // }, 1000);
@@ -77,7 +82,7 @@ function Swap(props: ISwapProps) {
     setSecondTokenAmount(firstTokenAmount);
 
     setFirstTokenAmount('');
-    setRouteData({ success: false });
+    setRouteData({ success: false, isloading: true });
     if (tokenOut.name) {
       setTokenIn({
         name: tokenOut.name,
@@ -154,7 +159,7 @@ function Swap(props: ISwapProps) {
         <div className="flex -mt-2">
           <div className="text-left">
             <span className="text-text-600 font-body3">Balance:</span>{' '}
-            <span className="font-body4 text-primary-500 2">5.98</span>
+            <span className="font-body4 text-primary-500 2">--</span>
           </div>
           <div className="text-right ml-auto font-body2 text-text-400">
             ~$0.00
@@ -165,7 +170,7 @@ function Swap(props: ISwapProps) {
         className="z-10 cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-lg "
         onClick={() => changeTokenLocation()}
       >
-        <div className="p-[11px] bg-card-500 rounded-lg  w-[68px] h-[68px]">
+        <div className="p-[11.5px] bg-card-500 rounded-lg  w-[68px] h-[68px]">
           <div className="bg-primary-500 p-2  w-[46px] h-[46px] rounded-lg ">
             <Image src={switchsvg} height={'32px'} width={'32px'} />
           </div>
@@ -178,7 +183,13 @@ function Swap(props: ISwapProps) {
               {tokenOut.name !== 'false' ? (
                 <TokenDropdown
                   tokenIcon={tokenOut.image}
-                  tokenName={tokenOut.name}
+                  tokenName={
+                    tokenOut.name === 'tez'
+                      ? 'TEZ'
+                      : tokenOut.name === 'ctez'
+                      ? 'CTEZ'
+                      : tokenOut.name
+                  }
                 />
               ) : (
                 <TokenDropdown tokenName="Select a token" />
@@ -222,7 +233,8 @@ function Swap(props: ISwapProps) {
             <div className="text-left">
               <span className="text-text-600 font-body3">Balance:</span>{' '}
               <span className="font-body4 text-text-500 ">
-                {tokenOut.name !== 'false' ? '0.34' : '--'}
+                --
+                {/* {tokenOut.name !== 'false' ? '0.34' : '--'} */}
               </span>
             </div>
             <div className="text-right ml-auto font-body2 text-text-400">
@@ -231,12 +243,12 @@ function Swap(props: ISwapProps) {
           </div>
         </div>
 
-        {(firstTokenAmount || secondTokenAmount) && (
+        {(firstTokenAmount || secondTokenAmount) && tokenOut.name !== 'false' && (
           <div
             className="h-12 mt-3 cursor-pointer px-4 pt-[11px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] flex "
             onClick={() => setOpenSwapDetails(!openSwapDetails)}
           >
-            {(firstTokenAmount || secondTokenAmount) && !routeData.success ? (
+            {routeData.isloading && !routeData.success ? (
               <div>
                 <span className="ml-[9.25px] font-text-bold mr-[7px]">
                   {' '}
@@ -268,7 +280,7 @@ function Swap(props: ISwapProps) {
             )}
           </div>
         )}
-        {openSwapDetails && (
+        {openSwapDetails && routeData.success && (
           <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2">
             <div className="flex">
               <div className="font-body3 ">
@@ -301,12 +313,28 @@ function Swap(props: ISwapProps) {
               <div className="ml-auto font-subtitle4">0.0025 PLENTY</div>
             </div>
             <div className="border-t border-text-800 mt-[18px]"></div>
-            <div className="mt-4 flex">
+            <div className="mt-4 ">
               <div className="font-subtitle4">
                 {' '}
                 <span className="mr-[5px]">Route</span>
                 <span className="relative top-0.5">
                   <Image src={info} />
+                </span>
+              </div>
+              <div className="mt-2 flex">
+                <span className="w-[28px] h-[28px]">
+                  <Image src={plenty} width={'28px'} height={'28px'} />
+                </span>
+                <div className="border-dashed relative top-[11px] w-[20%] border-t-2 border-muted-50 mx-2"></div>
+                <span className="relative -right-[9px] z-100 w-[32px] h-[32px] bg-card-600 rounded-full p-px">
+                  <Image src={plenty} width={'28px'} height={'28px'} />
+                </span>
+                <span>
+                  <Image src={plenty} width={'28px'} height={'28px'} />
+                </span>
+                <div className="border-dashed relative top-[11px] w-[20%] border-t-2 border-muted-50 mx-2"></div>
+                <span className="w-[28px] h-[28px]">
+                  <Image src={plenty} width={'28px'} height={'28px'} />
                 </span>
               </div>
             </div>
