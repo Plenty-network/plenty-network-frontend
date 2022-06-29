@@ -22,7 +22,7 @@ function TransactionSettings(props: ITransactionSettingsProps) {
   return props.show ? (
     <div
       id="settings"
-      className="z-50 absolute -right-[5px] bg-card-500 border border-text-700/[0.5] w-[367px] p-5 rounded-2xl"
+      className="z-50 absolute right-[307px] bg-card-500 border border-text-700/[0.5] w-[367px] p-5 rounded-2xl"
     >
       <div className="font-subtitle2">Transaction Settings</div>
       <div className="mt-2">
