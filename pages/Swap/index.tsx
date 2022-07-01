@@ -15,8 +15,14 @@ import TransactionSettings from '../../src/components/TransactionSettings/Transa
 import { useEffect, useState } from 'react';
 import { tokens } from '../../src/constants/Tokens';
 import { useLocationStateInSwap } from '../../src/hooks/useLocationStateInSwap';
+
 interface ISwapProps {
   className?: string;
+  otherProps: {
+    connectWallet: () => {};
+    disconnectWallet: Function;
+    walletAddress: string | null;
+  };
 }
 
 function Swap(props: ISwapProps) {
@@ -51,7 +57,7 @@ function Swap(props: ISwapProps) {
     if (input === '') {
       setFirstTokenAmount('');
       setSecondTokenAmount('');
-      //setRouteData({ success: true });
+      setRouteData({ success: true, isloading: false });
     } else {
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
@@ -201,7 +207,7 @@ function Swap(props: ISwapProps) {
               </div>
               <div>
                 {tokenOut.name !== 'false' ? (
-                  routeData.success ? (
+                  !routeData.isloading ? (
                     <input
                       type="text"
                       className={clsx(
@@ -281,7 +287,7 @@ function Swap(props: ISwapProps) {
           </div>
         )}
         {openSwapDetails && routeData.success && (
-          <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2">
+          <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 ">
             <div className="flex">
               <div className="font-body3 ">
                 <span className="mr-[5px]">Minimum received</span>
@@ -342,7 +348,11 @@ function Swap(props: ISwapProps) {
           </div>
         )}
         <div className="mt-5">
-          <Button color="primary" width="w-full">
+          <Button
+            color="primary"
+            onClick={props.otherProps.connectWallet}
+            width="w-full"
+          >
             Connect Wallet
           </Button>
         </div>

@@ -2,6 +2,22 @@
 # yarn lockfile v1
 
 
+"@airgap/beacon-blockchain-substrate@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@airgap/beacon-blockchain-substrate/-/beacon-blockchain-substrate-3.1.1.tgz#418a486c6ee5e72ff2717b6995f1fffe65ab4c24"
+  integrity sha512-cWqGStDieAifiminMOGD1pXq5rycX1S7H5iGyeaADhG1WAe46PlTQjkIeiT9Nbk/f9DgO9nEhyTmQ5Tk4L3u2g==
+  dependencies:
+    "@airgap/beacon-types" "^3.1.1"
+    "@airgap/beacon-ui" "^3.1.1"
+
+"@airgap/beacon-blockchain-tezos@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@airgap/beacon-blockchain-tezos/-/beacon-blockchain-tezos-3.1.1.tgz#883cc908031984568248e75059e1dff8264eb8d8"
+  integrity sha512-IpzYThneTOV0mzaZVX62h9PU44q9qh4bfowe3K5plOi9iKqFOJd5VlOiReWmpUwdQkSY6s3smxy4PveNXJvz8Q==
+  dependencies:
+    "@airgap/beacon-types" "^3.1.1"
+    "@airgap/beacon-ui" "^3.1.1"
+
 "@airgap/beacon-core@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@airgap/beacon-core/-/beacon-core-3.1.1.tgz#90dec30aeb5b0f8f698048add7df9e2e5a34ea02"
@@ -23,6 +39,22 @@
     "@airgap/beacon-transport-postmessage" "^3.1.1"
     "@airgap/beacon-ui" "^3.1.1"
     qrcode-generator "1.4.4"
+
+"@airgap/beacon-sdk@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@airgap/beacon-sdk/-/beacon-sdk-3.1.1.tgz#b1540fe8c0457b03722091309237366d2fc18c27"
+  integrity sha512-PTvqpbsWVAlEX2wFMzqHk2hW5yNiuJqqSeIg+HXZHkiX5XFL3MJKSC9R9XPItXxXip5GC8iI0GEW1JUNTC4+pQ==
+  dependencies:
+    "@airgap/beacon-blockchain-substrate" "^3.1.1"
+    "@airgap/beacon-blockchain-tezos" "^3.1.1"
+    "@airgap/beacon-core" "^3.1.1"
+    "@airgap/beacon-dapp" "^3.1.1"
+    "@airgap/beacon-transport-matrix" "^3.1.1"
+    "@airgap/beacon-transport-postmessage" "^3.1.1"
+    "@airgap/beacon-types" "^3.1.1"
+    "@airgap/beacon-ui" "^3.1.1"
+    "@airgap/beacon-utils" "^3.1.1"
+    "@airgap/beacon-wallet" "^3.1.1"
 
 "@airgap/beacon-transport-matrix@^3.1.1":
   version "3.1.1"
@@ -69,6 +101,15 @@
     "@types/libsodium-wrappers" "0.7.9"
     bs58check "2.1.2"
     libsodium-wrappers "0.7.9"
+
+"@airgap/beacon-wallet@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@airgap/beacon-wallet/-/beacon-wallet-3.1.1.tgz#bc785bcabfabb7809c8c68dd41bd4796a18b15df"
+  integrity sha512-vUpIgJrLum89UL7X0vEq13SKazAEOnZYKtrsXHNai9hVZTennZPTVlmmRMXUmHlaaQtZVFx7dS93jYROn8B7+g==
+  dependencies:
+    "@airgap/beacon-core" "^3.1.1"
+    "@airgap/beacon-transport-matrix" "^3.1.1"
+    "@airgap/beacon-transport-postmessage" "^3.1.1"
 
 "@babel/runtime-corejs3@^7.10.2":
   version "7.18.3"
@@ -500,6 +541,18 @@
     "@typescript-eslint/types" "5.26.0"
     eslint-visitor-keys "^3.3.0"
 
+"@vue/reactivity@~3.1.1":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@vue/reactivity/-/reactivity-3.1.5.tgz#dbec4d9557f7c8f25c2635db1e23a78a729eb991"
+  integrity sha512-1tdfLmNjWG6t/CsPldh+foumYFo3cpyCHgBYQ34ylaMsJ+SNHQ1kApMIa8jN+i593zQuaw3AdWH0nJTARzCFhg==
+  dependencies:
+    "@vue/shared" "3.1.5"
+
+"@vue/shared@3.1.5":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.1.5.tgz#74ee3aad995d0a3996a6bb9533d4d280514ede03"
+  integrity sha512-oJ4F3TnvpXaQwZJNF3ZK+kLPHKarDmJjJ6jyzVNDKH9md1dptjC7lWR//jrGuLdek/U6iltWxqAnYOu8gCiOvA==
+
 acorn-jsx@^5.3.2:
   version "5.3.2"
   resolved "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-5.3.2.tgz"
@@ -538,6 +591,13 @@ ajv@^6.10.0, ajv@^6.12.4:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
+
+alpinejs@^3.10.2:
+  version "3.10.2"
+  resolved "https://registry.yarnpkg.com/alpinejs/-/alpinejs-3.10.2.tgz#bf3a12b8c3793f346bc9794038bb6e09341600e4"
+  integrity sha512-P6DTX78J94FgsskS3eS23s26hfb0NWQZUidBnkUK7fId1x64/kLm5E79lL3HNItUmHDCKOHvfP8EAcuCVab89w==
+  dependencies:
+    "@vue/reactivity" "~3.1.1"
 
 ansi-regex@^5.0.1:
   version "5.0.1"

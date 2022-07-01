@@ -3,7 +3,7 @@ import clsx from 'clsx';
 interface IButtonProps {
   loading?: boolean;
   startIcon?: string;
-  onClick?: () => void | Promise<void>;
+  onClick?: () => {};
   children?: string;
   color?: 'primary' | 'secondary' | 'disabled';
   className?: string;
