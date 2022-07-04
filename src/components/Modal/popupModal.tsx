@@ -1,8 +1,9 @@
 import * as React from 'react';
 
 export interface IPopUpModalProps {
-  children?: React.ReactNode;
-  onClick?: Function;
+  children: React.ReactNode;
+  onhide?: Function;
+  title: String;
 }
 
 export function PopUpModal(props: IPopUpModalProps) {
@@ -19,11 +20,13 @@ export function PopUpModal(props: IPopUpModalProps) {
        border
        flex 
        flex-col
+       px-6
+       py-5
        "
       >
         <div
-          className="absolute right-0 py-5 px-4 cursor-pointer hover:opacity-90 hover:scale-90"
-          onClick={() => props.onClick && props.onClick()}
+          className="absolute right-0  px-4 cursor-pointer hover:opacity-90 hover:scale-90"
+          onClick={() => props.onhide && props.onhide()}
         >
           {/* close btn */}
           <svg
@@ -40,7 +43,8 @@ export function PopUpModal(props: IPopUpModalProps) {
           </svg>
         </div>
 
-        <div className="p-6">hello</div>
+        <div className="">{props.title}</div>
+        {props.children}
       </div>
     </div>
   );
