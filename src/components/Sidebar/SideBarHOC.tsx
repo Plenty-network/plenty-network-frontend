@@ -1,4 +1,5 @@
 import React from 'react';
+import { NotificationBar } from '../Notification';
 import BottomNavigationBar from './BottomNavBar';
 import { SideBar } from './Sidebar';
 import { TopNavBar } from './TopNavBar';
@@ -19,6 +20,7 @@ export function SideBarHOC (props: ISideBarHOCProps) {
     <div className="flex flex-no-wrap flex-col">
       <TopNavBar/>
       <TopNavBarMobile/>
+      <NotificationBar/>
       <div className="flex flex-no-wrap">
       <SideBar/>
       <div className='mt-0 md:ml-[240px] md:w-[calc(100%_-_240px)] w-full mb-12 md:mb-0'   >

@@ -63,7 +63,9 @@ module.exports = {
       transprent:'rgba(157, 92, 255, 0)',
       navBarBorder:'#544D5D',
       navBarMuted:'#9D99A1',
-      borderColor:'rgba(88, 83, 94, 0.4)'
+      borderColor:'rgba(88, 83, 94, 0.4)',
+      popUpNotification:'rgba(40, 34, 48, 1)',
+      popUpNotificationHeader:'#2F1C4C'
     },
     fontSize: {
       f32: ['32px', '40px'],
