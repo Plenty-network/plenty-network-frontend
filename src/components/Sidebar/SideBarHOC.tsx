@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { PopUpModal } from '../Modal/popupModal';
 import { NotificationBar } from '../Notification';
 import BottomNavigationBar from './BottomNavBar';
 import { SideBar } from './Sidebar';
