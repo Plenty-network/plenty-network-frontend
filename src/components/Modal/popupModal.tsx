@@ -25,7 +25,7 @@ export function PopUpModal(props: IPopUpModalProps) {
        "
       >
         <div
-          className="absolute right-0  px-4 cursor-pointer hover:opacity-90 hover:scale-90"
+          className="absolute right-0  px-6 cursor-pointer hover:opacity-90 hover:scale-90"
           onClick={() => props.onhide && props.onhide()}
         >
           {/* close btn */}

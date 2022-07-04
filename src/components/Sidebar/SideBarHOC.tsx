@@ -36,7 +36,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
         <div className="flex flex-no-wrap">
           <SideBar />
           <div className="mt-0 md:ml-[240px] md:w-[calc(100%_-_240px)] w-full mb-12 md:mb-0">
-            <div className=" overflow-x-hidden h-screen px-3 py-6 z-0 overflow-y-auto pt-[64px] md:pt-[64px]">
+            <div className=" overflow-x-hidden h-screen md:px-3 py-6 z-0 overflow-y-auto pt-[64px] md:pt-[64px]">
               {props.children}
             </div>
           </div>

@@ -14,27 +14,27 @@ function TokenDropdown(props: ITokenDropdownProps) {
     return (
       <button
         className={clsx(
-          ' px-2 py-2.5 md:p-3 rounded-xl border border-text-800 font-mobile-text md:font-title3 text-white flex content-center justify-center h-[50px]'
+          ' px-2 py-2.5 md:p-3 rounded-xl border border-text-800 font-mobile-text md:font-title3 text-white  content-center justify-center h-[50px]'
         )}
         onClick={props.onClick}
         {...props}
       >
-        <div>
+        <span className="h-[24px] w-[24px]">
           <Image src={props.tokenIcon} height={'24px'} width={'24px'} />
-        </div>
-        <div className="mx-px md:mx-2">
+        </span>
+        <span className="mx-2 md:mx-2 relative -top-[6px]">
           <span>{props.tokenName}</span>
-        </div>
-        <div className="ml-px relative -top-px">
+        </span>
+        <span className="md:ml-px relative -top-[6px] ">
           <Image src={arrowDown} />
-        </div>
+        </span>
       </button>
     );
   } else {
     return (
       <button
         className={clsx(
-          '  p-3 rounded-xl border border-primary-500/[0.5] font-mobile-text md:font-title3 text-primary-500 flex content-center'
+          ' h-[50px] px-2 py-[15px] md:p-3 rounded-xl border text-center border-primary-500/[0.5] font-mobile-text md:font-title3 text-primary-500 flex content-center'
         )}
         onClick={props.onClick}
         {...props}

@@ -1,17 +1,24 @@
 import clsx from 'clsx';
 
-interface ISearchBarProps {}
+interface ISearchBarProps {
+  inputRef?: any;
+  value?: string | '';
+  onChange?: any;
+}
 function SearchBar(props: ISearchBarProps) {
   return (
     <div
       className={clsx(
-        'bg-primary-500/[0.1]    rounded font-body3 text-white w-full h-[50px] py-3.5 px-3'
+        'bg-outineBtn    rounded font-body3 text-white w-full h-[50px] py-3.5 px-3'
       )}
       {...props}
     >
       <input
-        className="bg-primary-500/[0.1]   font-body3 outline-none"
+        ref={props.inputRef}
+        className="bg-transprent   font-body3 outline-none"
         placeholder="Select a token"
+        onChange={props.onChange}
+        value={props.value}
       />
     </div>
   );

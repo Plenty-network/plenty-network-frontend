@@ -1,6 +1,6 @@
-export interface SWAPPAGE {
-  TOKENIN: 'tokenIn';
-  TOKENOUT: 'tokenOut';
+export interface tokenParameter {
+  name: string;
+  image: any;
 }
 
 export type tokenType = 'tokenIn' | 'tokenOut';

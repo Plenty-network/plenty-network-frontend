@@ -19,7 +19,11 @@ import { useLocationStateInSwap } from '../../src/hooks/useLocationStateInSwap';
 import { PopUpModal } from '../../src/components/Modal/popupModal';
 import SearchBar from '../../src/components/SearchBar/SearchBar';
 import SwapModal from '../../src/components/SwapModal/SwapModal';
-import { SWAPPAGE, tokensModal, tokenType } from '../../src/constants/swap';
+import {
+  tokenParameter,
+  tokensModal,
+  tokenType,
+} from '../../src/constants/swap';
 
 interface ISwapProps {
   className?: string;
@@ -39,7 +43,8 @@ function Swap(props: ISwapProps) {
   const [secondTokenAmount, setSecondTokenAmount] = useState<string | number>(
     ''
   );
-  const [tokenType, setTokenType] = useState('tokenIn');
+  const [tokenType, setTokenType] = useState<tokenType>('tokenIn');
+  const [searchQuery, setSearchQuery] = useState('');
   const [swapModalShow, setSwapModalShow] = useState(false);
   const [slippage, setSlippage] = useState(0.5);
   const [routeData, setRouteData] = useState({
@@ -131,10 +136,10 @@ function Swap(props: ISwapProps) {
     <>
       <div
         className={clsx(
-          'bg-card-500 md:border border-y border-text-800 mt-[70px] md:mt-[75px] md:rounded-3xl  text-white md:w-640 py-5 mx-auto'
+          'bg-card-500 md:border border-y border-text-800 mt-[70px] lg:mt-[75px] md:rounded-3xl  text-white lg:w-640 py-5 mx-auto'
         )}
       >
-        <div className="flex flex-row px-5 md:px-9">
+        <div className="flex flex-row px-5 lg:px-9">
           <div className="font-title2">Swap</div>
           <div className="py-1 cursor-pointer px-15 h-8 border border-text-700 rounded-[21px] ml-auto">
             <Image src={refresh} height={'14px'} width={'15px'} />
@@ -155,10 +160,17 @@ function Swap(props: ISwapProps) {
             setSettingsShow={setSettingsShow}
           />
         </div>
-        <div className="md:w-580 mt-4 h-[102px] border border-text-800 mx-5 md:mx-[30px] rounded-2xl px-4 hover:border-text-700">
-          <div className="flow-root">
+        <div
+          className={clsx(
+            'lg:w-580 mt-4 h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700',
+            firstTokenAmount > 100
+              ? 'border-errorBorder hover:border-errorBorder bg-errorBg'
+              : 'border-text-800 '
+          )}
+        >
+          <div className="flex justify-between">
             <div
-              className="float-left mt-4"
+              className="flex-[0_0_50%] mt-4"
               onClick={() => handleTokenType('tokenIn')}
             >
               <TokenDropdown
@@ -172,13 +184,13 @@ function Swap(props: ISwapProps) {
                 }
               />
             </div>
-            <div className="float-right my-3 ">
+            <div className=" my-3 ">
               <div className="text-right font-body1 text-text-400">YOU PAY</div>
               <div>
                 <input
                   type="text"
                   className={clsx(
-                    'text-white bg-card-500 text-right border-0 font-medium2 md:font-medium1 outline-none'
+                    'text-white bg-card-500 text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%]'
                   )}
                   placeholder="0.0"
                   onChange={(e) =>
@@ -209,11 +221,11 @@ function Swap(props: ISwapProps) {
             </div>
           </div>
         </div>
-        <div className=" pt-[41px] pb-5 border border-primary-500/[0.2] mx-px md:mx-2  px-5 md:px-[22px] rounded-2xl bg-primary-500/[0.04]">
-          <div className="md:w-580  h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] bg-card-500">
-            <div className="flow-root flex">
+        <div className=" pt-[41px] pb-5 border border-primary-500/[0.2] mx-px md:mx-2 lg:mx-2  px-5 lg:px-[22px] rounded-2xl bg-primary-500/[0.04]">
+          <div className="lg:w-580  h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] bg-card-500">
+            <div className=" flex justify-between">
               <div
-                className="float-left mt-4"
+                className="flex-[0_0_50%] mt-4"
                 onClick={() => handleTokenType('tokenOut')}
               >
                 {tokenOut.name !== 'false' ? (
@@ -231,7 +243,7 @@ function Swap(props: ISwapProps) {
                   <TokenDropdown tokenName="Select a token" />
                 )}
               </div>
-              <div className="float-right my-3 ">
+              <div className=" my-3 ">
                 <div className="text-right font-body1 text-text-400">
                   YOU RECEIVE
                 </div>
@@ -241,7 +253,7 @@ function Swap(props: ISwapProps) {
                       <input
                         type="text"
                         className={clsx(
-                          'text-primary-500 bg-card-500 text-right border-0  font-input-text md:font-medium1 outline-none'
+                          'text-primary-500 bg-card-500 text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%]'
                         )}
                         placeholder="0.0"
                         onChange={(e) =>
@@ -256,7 +268,7 @@ function Swap(props: ISwapProps) {
                     <input
                       type="text"
                       className={clsx(
-                        'text-primary-500 bg-card-500 text-right border-0 font-input-text md:font-medium1 outline-none'
+                        'text-primary-500 bg-card-500 text-right border-0 w-[100%]  font-input-text lg:font-medium1 outline-none'
                       )}
                       placeholder="--"
                       value={'--'}
@@ -401,6 +413,11 @@ function Swap(props: ISwapProps) {
         show={swapModalShow}
         selectToken={selectToken}
         onhide={handleClose}
+        tokenIn={tokenIn}
+        tokenOut={tokenOut}
+        tokenType={tokenType}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
     </>
   );

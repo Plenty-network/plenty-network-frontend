@@ -50,6 +50,7 @@ module.exports = {
         500: '#1C112E',
         600: '#180E26',
         100: '#332943',
+        200: '#100919',
       },
       border: '#282230',
       text: {
@@ -85,6 +86,8 @@ module.exports = {
       borderColor: 'rgba(88, 83, 94, 0.4)',
       popUpNotification: 'rgba(40, 34, 48, 1)',
       popUpNotificationHeader: '#2F1C4C',
+      errorBorder: 'rgba(244, 53, 82, 0.4)',
+      errorBg: 'rgba(244, 53, 82, 0.01)',
     },
     fontSize: {
       f32: ['32px', '40px'],
