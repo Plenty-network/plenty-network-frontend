@@ -107,7 +107,7 @@ function Swap(props: ISwapProps) {
   return (
     <div
       className={clsx(
-        'bg-card-500 border border-text-800 mt-[36px] md:mt-[75px] md:rounded-3xl  text-white md:w-640 py-5 mx-auto'
+        'bg-card-500 md:border border-y border-text-800 mt-[70px] md:mt-[75px] md:rounded-3xl  text-white md:w-640 py-5 mx-auto'
       )}
     >
       <div className="flex flex-row px-5 md:px-9">
@@ -132,8 +132,8 @@ function Swap(props: ISwapProps) {
         />
       </div>
       <div className="md:w-580 mt-4 h-[102px] border border-text-800 mx-5 md:mx-[30px] rounded-2xl px-4 hover:border-text-700">
-        <div className="flex ">
-          <div className="mt-4">
+        <div className="flow-root">
+          <div className="float-left mt-4">
             <TokenDropdown
               tokenIcon={tokenIn.image}
               tokenName={
@@ -145,7 +145,7 @@ function Swap(props: ISwapProps) {
               }
             />
           </div>
-          <div className="my-3 ml-auto">
+          <div className="float-right my-3 ">
             <div className="text-right font-body1 text-text-400">YOU PAY</div>
             <div>
               <input
@@ -184,8 +184,8 @@ function Swap(props: ISwapProps) {
       </div>
       <div className=" pt-[41px] pb-5 border border-primary-500/[0.2] mx-px md:mx-2  px-5 md:px-[22px] rounded-2xl bg-primary-500/[0.04]">
         <div className="md:w-580  h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] bg-card-500">
-          <div className="flex">
-            <div className="mt-4" onClick={() => selectToken()}>
+          <div className="flow-root flex">
+            <div className="float-left mt-4" onClick={() => selectToken()}>
               {tokenOut.name !== 'false' ? (
                 <TokenDropdown
                   tokenIcon={tokenOut.image}
@@ -201,7 +201,7 @@ function Swap(props: ISwapProps) {
                 <TokenDropdown tokenName="Select a token" />
               )}
             </div>
-            <div className="my-3 ml-auto">
+            <div className="float-right my-3 ">
               <div className="text-right font-body1 text-text-400">
                 YOU RECEIVE
               </div>

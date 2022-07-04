@@ -1,4 +1,5 @@
 import React from 'react';
+import { NotificationBar } from '../Notification';
 import BottomNavigationBar from './BottomNavBar';
 import { SideBar } from './Sidebar';
 import { TopNavBar } from './TopNavBar';

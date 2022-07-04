@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import './animation.css';
 body {
   /*
   background: -webkit-gradient(linear, left top, left bottom, from(#0C011C), to(#1E063F)) fixed;
@@ -27,10 +28,18 @@ body {
 }
 .topNavblurEffect {
   backdrop-filter: blur(10px);
-  background: linear-gradient(89.98deg, rgba(11, 1, 25, 0.2) 2.89%, rgba(7, 0, 17, 0.2) 100.99%);
+  background: linear-gradient(
+    89.98deg,
+    rgba(11, 1, 25, 0.2) 2.89%,
+    rgba(7, 0, 17, 0.2) 100.99%
+  );
 }
-.bottomNavBarMobile{
-  background: linear-gradient(89.98deg, rgba(11, 1, 25, 1) 2.89%, rgba(7, 0, 17, 1) 100.99%);
+.bottomNavBarMobile {
+  background: linear-gradient(
+    89.98deg,
+    rgba(11, 1, 25, 1) 2.89%,
+    rgba(7, 0, 17, 1) 100.99%
+  );
 }
 
 @layer components {

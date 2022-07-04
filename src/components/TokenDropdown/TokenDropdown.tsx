@@ -14,7 +14,7 @@ function TokenDropdown(props: ITokenDropdownProps) {
     return (
       <button
         className={clsx(
-          ' p-2 md:p-3 rounded-xl border border-text-800 font-mobile-text md:font-title3 text-white flex content-center h-[50px]'
+          ' px-2 py-2.5 md:p-3 rounded-xl border border-text-800 font-mobile-text md:font-title3 text-white flex content-center justify-center h-[50px]'
         )}
         onClick={props.onClick}
         {...props}
