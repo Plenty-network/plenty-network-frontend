@@ -15,6 +15,7 @@ import TransactionSettings from '../../src/components/TransactionSettings/Transa
 import { useEffect, useState } from 'react';
 import { tokens } from '../../src/constants/Tokens';
 import { useLocationStateInSwap } from '../../src/hooks/useLocationStateInSwap';
+import { PopUpModal } from '../../src/components/Modal/popupModal';
 
 interface ISwapProps {
   className?: string;
@@ -110,6 +111,7 @@ function Swap(props: ISwapProps) {
         'bg-card-500 md:border border-y border-text-800 mt-[70px] md:mt-[75px] md:rounded-3xl  text-white md:w-640 py-5 mx-auto'
       )}
     >
+      <PopUpModal />
       <div className="flex flex-row px-5 md:px-9">
         <div className="font-title2">Swap</div>
         <div className="py-1 cursor-pointer px-15 h-8 border border-text-700 rounded-[21px] ml-auto">
