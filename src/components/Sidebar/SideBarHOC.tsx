@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { PopUpModal } from '../Modal/popupModal';
 import { NotificationBar } from '../Notification';
 import BottomNavigationBar from './BottomNavBar';
 import { SideBar } from './Sidebar';
@@ -10,6 +11,14 @@ export interface ISideBarHOCProps {
 }
 
 export function SideBarHOC (props: ISideBarHOCProps) {
+  const [showNotification,setShowNotification]=useState(false);
+  const showNotificationClick=()=>{
+    setShowNotification(!showNotification);
+  }
+  const [showPopupModal,setShowPopupModal]=useState(true);
+  const showPopupModalClick=()=>{
+    setShowPopupModal(!showPopupModal);
+  }
   return (
     <>
     <div className='cicle_animation'>
@@ -17,10 +26,13 @@ export function SideBarHOC (props: ISideBarHOCProps) {
       <div className='circle2'></div>
       <div className='circle2'></div>
     </div>
+    {showPopupModal && <PopUpModal onClick={showPopupModalClick}>
+          Hello world
+      </PopUpModal>}
     <div className="flex flex-no-wrap flex-col">
-      <TopNavBar/>
-      <TopNavBarMobile/>
-      <NotificationBar/>
+      <TopNavBar setShowNotification={showNotificationClick}/>
+      <TopNavBarMobile setShowNotification={showNotificationClick}/>
+      {showNotification && <NotificationBar/>}
       <div className="flex flex-no-wrap">
       <SideBar/>
       <div className='mt-0 md:ml-[240px] md:w-[calc(100%_-_240px)] w-full mb-12 md:mb-0'   >
