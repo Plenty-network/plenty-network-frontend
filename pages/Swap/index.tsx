@@ -108,10 +108,10 @@ function Swap(props: ISwapProps) {
   return (
     <div
       className={clsx(
-        'bg-card-500 md:border border-y border-text-800 mt-[70px] md:mt-[75px] md:rounded-3xl  text-white md:w-640 py-5 mx-auto'
+        'bg-card-500 md:border border-y border-text-800 mt-[70px] md:mt-[75px] md:rounded-3xl  text-white md:w-640 py-5 mx-auto fade-in'
       )}
     >
-      <PopUpModal />
+      {/* <PopUpModal /> */}
       <div className="flex flex-row px-5 md:px-9">
         <div className="font-title2">Swap</div>
         <div className="py-1 cursor-pointer px-15 h-8 border border-text-700 rounded-[21px] ml-auto">

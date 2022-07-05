@@ -15,7 +15,7 @@ export function SideBarHOC (props: ISideBarHOCProps) {
   const showNotificationClick=()=>{
     setShowNotification(!showNotification);
   }
-  const [showPopupModal,setShowPopupModal]=useState(true);
+  const [showPopupModal,setShowPopupModal]=useState(false);
   const showPopupModalClick=()=>{
     setShowPopupModal(!showPopupModal);
   }
