@@ -136,7 +136,7 @@ function Swap(props: ISwapProps) {
     <>
       <div
         className={clsx(
-          'bg-card-500 md:border border-y border-text-800 mt-[70px] lg:mt-[75px] md:rounded-3xl  text-white lg:w-640 py-5 mx-auto'
+          'bg-card-500 md:border border-y border-text-800 mt-[70px] lg:mt-[75px] md:rounded-3xl  text-white lg:w-640 py-5 mx-auto fade-in'
         )}
       >
         <div className="flex flex-row px-5 lg:px-9">
@@ -329,8 +329,9 @@ function Swap(props: ISwapProps) {
                 )}
               </div>
             )}
+            {/* openSwapDetails && routeData.success  */}
           {openSwapDetails && routeData.success && (
-            <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 ">
+            <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 opendown-animation">
               <div className="flex">
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Minimum received</span>

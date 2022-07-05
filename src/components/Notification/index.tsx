@@ -16,6 +16,7 @@ export function NotificationBar (props: INotificationBarProps) {
        border
        flex 
        flex-col
+       max-w-[460px]
        '
        >
     <div className='bg-popUpNotificationHeader py-4 px-3'>Notification</div>
