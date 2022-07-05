@@ -24,6 +24,7 @@ import {
   tokensModal,
   tokenType,
 } from '../../src/constants/swap';
+import { useStateAnimate } from '../../src/hooks/useAnimateUseState';
 
 interface ISwapProps {
   className?: string;
@@ -38,7 +39,7 @@ function Swap(props: ISwapProps) {
   const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
     useLocationStateInSwap();
   const [settingsShow, setSettingsShow] = useState(false);
-  const [openSwapDetails, setOpenSwapDetails] = useState(false);
+  const [openSwapDetails, setOpenSwapDetails,animateOpenSwapDetails] = useStateAnimate(false,280);
   const [firstTokenAmount, setFirstTokenAmount] = useState<string | number>('');
   const [secondTokenAmount, setSecondTokenAmount] = useState<string | number>(
     ''
@@ -331,7 +332,7 @@ function Swap(props: ISwapProps) {
             )}
             {/* openSwapDetails && routeData.success  */}
           {openSwapDetails && routeData.success && (
-            <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 opendown-animation">
+            <div className={`bg-card-500 border border-text-700/[0.5] py-5 px-[22px] rounded-3xl mt-2 ${animateOpenSwapDetails?'opendown-animation':'closeup-animation'}`}>
               <div className="flex">
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Minimum received</span>

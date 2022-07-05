@@ -5,8 +5,13 @@ export const useStateAnimate=(innitiAlState:any,time:number)=>{
    const [animationState,setAnimationState]=useState(false);
 
    const setNewState=(dataState:any)=>{
-       setAnimationState(!animationState);
+       if(dataState===true){
+       setAnimationState(dataState);
+       setState(dataState)
+    }else{
+       setAnimationState(dataState);
        setTimeout(()=>setState(dataState),time)
+    }
    }
    
     return [
