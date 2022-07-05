@@ -262,7 +262,7 @@ function Swap(props: ISwapProps) {
                         value={secondTokenAmount}
                       />
                     ) : (
-                      <p className="  h-[38px] animate-pulse bg-primary-500"></p>
+                      <p className="  h-[32px] animate-pulse bg-shimmer-100"></p>
                     )
                   ) : (
                     <input
@@ -332,38 +332,42 @@ function Swap(props: ISwapProps) {
           {openSwapDetails && routeData.success && (
             <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 ">
               <div className="flex">
-                <div className="font-body3 ">
+                <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Minimum received</span>
                   <span className="relative top-0.5">
                     <Image src={info} />
                   </span>
                 </div>
-                <div className="ml-auto font-subtitle4">
+                <div className="ml-auto font-mobile-700 md:font-subtitle4">
                   0.11197067216831917 uUSD
                 </div>
               </div>
 
               <div className="flex mt-2">
-                <div className="font-body3 ">
+                <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Price Impact</span>
                   <span className="relative top-0.5">
                     <Image src={info} />
                   </span>
                 </div>
-                <div className="ml-auto font-subtitle4">4.38 %</div>
+                <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                  4.38 %
+                </div>
               </div>
               <div className="flex mt-2">
-                <div className="font-body3 ">
+                <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Fee</span>
                   <span className="relative top-0.5">
                     <Image src={info} />
                   </span>
                 </div>
-                <div className="ml-auto font-subtitle4">0.0025 PLENTY</div>
+                <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                  0.0025 PLENTY
+                </div>
               </div>
               <div className="border-t border-text-800 mt-[18px]"></div>
               <div className="mt-4 ">
-                <div className="font-subtitle4">
+                <div className="font-subtitle2 md:font-subtitle4">
                   {' '}
                   <span className="mr-[5px]">Route</span>
                   <span className="relative top-0.5">
@@ -374,7 +378,7 @@ function Swap(props: ISwapProps) {
                   <span className="w-[28px] h-[28px]">
                     <Image src={plenty} width={'28px'} height={'28px'} />
                   </span>
-                  <div className="border-dashed relative top-[11px] w-[31%] border-t-2 border-muted-50 mx-2"></div>
+                  <div className="border-dashed relative top-[11px] w-[19%] md:w-[31%] border-t-2 border-muted-50 mx-2"></div>
                   <div className="relative -top-[3px] rounded-2xl h-[32px] bg-card-600 p-px flex">
                     <span className="relative -left-[5px] top-px">
                       <span className="relative -right-[9px] z-100 w-[32px] h-[32px]  p-px">
@@ -388,7 +392,7 @@ function Swap(props: ISwapProps) {
                       </span>
                     </span>
                   </div>
-                  <div className="border-dashed relative top-[11px] w-[31%] border-t-2 border-muted-50 mx-2"></div>
+                  <div className="border-dashed relative top-[11px]  w-[19%] md:w-[31%] border-t-2 border-muted-50 mx-2"></div>
                   <span className="w-[28px] h-[28px]">
                     <Image src={plenty} width={'28px'} height={'28px'} />
                   </span>
