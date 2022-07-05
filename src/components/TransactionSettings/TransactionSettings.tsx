@@ -27,8 +27,8 @@ function TransactionSettings(props: ITransactionSettingsProps) {
       <div className="font-subtitle2">Transaction Settings</div>
       <div className="mt-2">
         <span className="font-caption1 text-text-200 ">Slippage tolerance</span>
-        <span className="relative top-px left-[5px]">
-          <Image src={info} width={'9.17px'} height={'9.17px'} />
+        <span className="relative top-0.5 left-[5px]">
+          <Image src={info} width={'11px'} height={'11px'} />
         </span>
       </div>
       <div className="flex mt-3">
@@ -53,22 +53,22 @@ function TransactionSettings(props: ITransactionSettingsProps) {
       <div className="font-subtitle2 mt-4">Interface Settings</div>
       <div className="mt-2">
         <span className="font-caption1 text-text-200 ">Disable multihops</span>
-        <span className="relative top-px left-[5px]">
-          <Image src={info} width={'9.17px'} height={'9.17px'} />
+        <span className="relative top-0.5 left-[5px]">
+          <Image src={info} width={'11px'} height={'11px'} />
         </span>
       </div>
       <div className="mt-2">
         <span className="font-caption1 text-text-200 ">
           Togggle expert mode
         </span>
-        <span className="relative top-px left-[5px]">
-          <Image src={info} width={'9.17px'} height={'9.17px'} />
+        <span className="relative top-0.5 left-[5px]">
+          <Image src={info} width={'11px'} height={'11px'} />
         </span>
       </div>
       <div className="mt-2">
         <span className="font-caption1 text-text-200 ">Add recipient</span>
-        <span className="relative top-px left-[5px]">
-          <Image src={info} width={'9.17px'} height={'9.17px'} />
+        <span className="relative top-0.5 left-[5px]">
+          <Image src={info} width={'11px'} height={'11px'} />
         </span>
       </div>
     </div>
