@@ -4,7 +4,6 @@ import Config from '../config/config';
 import { TOKEN_CONFIG , AMM_CONFIG, type1MapIds , type2MapIds,type3MapIds,type4MapIds,type5MapIds} from '../constants/global';
 import BigNumber from 'bignumber.js';
 import { TokenType } from '../config/types';
-import { rpcNode } from '../common/wallet';
 
 
 
@@ -20,8 +19,8 @@ export const fetchConfig = async () => {
     const amms = amms_response.data;
 
 
-    localStorage.setItem(TOKEN_CONFIG, tokens);
-    localStorage.setItem(AMM_CONFIG ,amms);
+    // localStorage.setItem(TOKEN_CONFIG, tokens);
+    // localStorage.setItem(AMM_CONFIG ,amms);
 
     // for dev purpose only
     TOKEN = tokens;
@@ -29,9 +28,6 @@ export const fetchConfig = async () => {
 
     // Add to Redux / local storage
 }
-
-// fetchConfig();
-
 
 
 /**
@@ -83,6 +79,9 @@ export const fetchConfig = async () => {
       const decimal = token.decimals;
       const tokenId = token.tokenId ?? '0';
       const packedKey = getPackedKey(tokenId, address, type as TokenType);
+
+      const connectedNetwork = Config.NETWORK;
+      const rpcNode = Config.RPC_NODES[connectedNetwork];
       const url = `${rpcNode}chains/main/blocks/head/context/big_maps/${mapId}/${packedKey}`;
       const response = await axios.get(url);
         
@@ -126,6 +125,7 @@ export const fetchConfig = async () => {
     
 //     await fetchConfig();
 //     await getUserBalanceByRpc('ctez' , 'tz1NaGu7EisUCyfJpB16ktNxgSqpuMo8aSEk');
+  
 //   }
 
 //   tester();

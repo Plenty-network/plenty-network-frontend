@@ -1,8 +1,20 @@
-import { wallet ,rpcNode , connectedNetwork} from '../../common/wallet';
+
 import { NetworkType } from '@airgap/beacon-sdk';
+import { BeaconWallet } from '@taquito/beacon-wallet';
+import Config from '../../config/config';
+
+ const connectedNetwork = Config.NETWORK;
+// const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
+ const rpcNode = Config.RPC_NODES[connectedNetwork];
+
+
 
 export const ConnectWalletAPI = async () => {
   try {
+    const wallet = new BeaconWallet({
+      name: Config.NAME,
+      preferredNetwork: connectedNetwork as NetworkType,
+    });
     let account = await wallet.client.getActiveAccount();
     if (!account) {
       await wallet.client.requestPermissions({
@@ -30,6 +42,10 @@ export const ConnectWalletAPI = async () => {
 
 export const DisconnectWalletAPI = async () => {
   try {
+    const wallet = new BeaconWallet({
+      name: Config.NAME,
+      preferredNetwork: connectedNetwork as NetworkType,
+    });
     await wallet.disconnect();
     return {
       success: true,
@@ -46,6 +62,10 @@ export const DisconnectWalletAPI = async () => {
 
 export const FetchWalletAPI = async () => {
   try {
+    const wallet = new BeaconWallet({
+      name: Config.NAME,
+      preferredNetwork: connectedNetwork as NetworkType,
+    });
     const account = await wallet.client.getActiveAccount();
     if (!account) {
       return {

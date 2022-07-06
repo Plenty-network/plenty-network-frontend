@@ -4,12 +4,12 @@ import { TezosToolkit } from "@taquito/taquito";
 import Config from '../config/config'
 
 // Import local storage
-export const connectedNetwork = Config.NETWORK;
+const connectedNetwork = Config.NETWORK;
 // const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
-export const rpcNode = Config.RPC_NODES[connectedNetwork];
+const rpcNode = Config.RPC_NODES[connectedNetwork];
 
 // Beacon Wallet instance
-export const wallet = new BeaconWallet({
+const wallet = new BeaconWallet({
   name: Config.NAME,
   preferredNetwork: connectedNetwork as NetworkType,
 });
