@@ -67,6 +67,7 @@ export const FetchWalletAPI = async () => {
       preferredNetwork: connectedNetwork as NetworkType,
     });
     const account = await wallet.client.getActiveAccount();
+
     if (!account) {
       return {
         success: false,
