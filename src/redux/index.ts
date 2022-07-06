@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, TypedUseSelectorHook, useSelector } from 'react-redux';
 
 import { wallet } from './wallet/wallet';
+import { config } from './config/config';
 
 export const store = configureStore({
   reducer: {
     wallet,
+    config,
   },
 });
 

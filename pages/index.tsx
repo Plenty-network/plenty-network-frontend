@@ -16,20 +16,23 @@ import {
 } from '../src/redux/wallet/wallet';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
+import { getConfig } from '../src/redux/config/config';
 
 const Home: NextPage = (props) => {
   const userAddress = useAppSelector((state) => state.wallet.address);
+
   const dispatch = useDispatch<AppDispatch>();
 
   const connectTempleWallet = () => {
-    dispatch(walletConnection());
+    return dispatch(walletConnection());
   };
   useEffect(() => {
     dispatch(fetchWallet());
+    dispatch(getConfig());
   }, []);
   const disconnectUserWallet = async () => {
     if (userAddress) {
-      dispatch(walletDisconnection());
+      return dispatch(walletDisconnection());
     }
   };
   const otherPageProps = {
