@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchConfig } from '../../api/utils';
+import { fetchConfig } from '../../api/util/fetchConfig';
 
 interface ConfigState {
   tokens: {};

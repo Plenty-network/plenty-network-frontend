@@ -1,6 +1,6 @@
 import { TezosMessageUtils, TezosParameterFormat } from 'conseiljs';
 import axios from 'axios';
-import Config from '../config/config';
+import Config from '../../config/config';
 import {
     TOKEN_CONFIG,
     AMM_CONFIG,
@@ -9,39 +9,20 @@ import {
     type3MapIds,
     type4MapIds,
     type5MapIds,
-} from '../constants/global';
+} from '../../constants/global';
 import BigNumber from 'bignumber.js';
-import { TokenType } from '../config/types';
+import { TokenType } from '../../config/types';
 import { TezosToolkit } from '@taquito/taquito';
 import { packDataBytes, unpackDataBytes } from '@taquito/michel-codec';
 import { BeaconWallet } from '@taquito/beacon-wallet';
-import { CheckIfWalletConnected } from '../common/wallet'
+import { CheckIfWalletConnected } from '../../common/wallet'
 import { NetworkType } from '@airgap/beacon-sdk';
-import { useAppSelector } from '../redux';
+import {TOKEN , AMM } from './fetchConfig'
+import { useAppSelector } from '../../redux';
 
-let TOKEN: { [x: string]: any };
-let AMM: { [x: string]: any };
 
-export const fetchConfig = async () => {
-    const token_response = await axios.get(Config.TOKEN_CONFIG);
-    const amms_response = await axios.get(Config.AMM_CONFIG);
+// TODO: IMPLEMENT REDUX CALLING OF CONFIG
 
-    const tokens = token_response.data;
-    const amms = amms_response.data;
-
-    // localStorage.setItem(TOKEN_CONFIG, tokens);
-    // localStorage.setItem(AMM_CONFIG ,amms);
-
-    // for dev purpose only
-    TOKEN = tokens;
-    AMM = amms;
-    return {
-        TOKEN: TOKEN,
-        AMM: AMM,
-    };
-
-    // Add to Redux / local storage
-};
 
 /**
  * Returns packed key (expr...) which will help to fetch user specific data from bigmap directly using rpc.
@@ -49,7 +30,7 @@ export const fetchConfig = async () => {
  * @param address - address of the user for whom you want to fetch the data
  * @param type - FA1.2 OR FA2
  */
-export const getPackedKey = (
+ export const getPackedKey = (
     tokenId: string,
     address: string,
     type: TokenType
@@ -208,12 +189,3 @@ export const getUserBalanceByRpc = async (
         };
     }
 };
-
-export const tester = async () => {
-
-    await fetchConfig();
-    await getUserBalanceByRpc('tzBTC', 'tz1NaGu7EisUCyfJpB16ktNxgSqpuMo8aSEk');
-
-}
-
-tester();
