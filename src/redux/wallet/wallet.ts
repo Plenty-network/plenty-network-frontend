@@ -6,12 +6,12 @@ import {
 } from './wallet.api';
 
 interface WalletState {
-  address: string | null;
+  address: string | '';
   loading: boolean;
 }
 
 const initialState: WalletState = {
-  address: null,
+  address: '',
   loading: false,
 };
 
@@ -53,7 +53,7 @@ const walletSlice = createSlice({
       state.loading = false;
     },
     [walletDisconnection.fulfilled.toString()]: (state) => {
-      state.address = null;
+      state.address = '';
     },
     [fetchWallet.fulfilled.toString()]: (state, action) => {
       state.address = action.payload;

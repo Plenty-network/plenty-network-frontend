@@ -15,7 +15,7 @@ export const getConfig = createAsyncThunk(
   'wallet/getConfig',
   async (thunkAPI) => {
     const res = await fetchConfig().then((resp) => resp);
-    console.log(res);
+
     return res;
   }
 );
@@ -30,7 +30,6 @@ const ConfigSlice = createSlice({
       state.AMMs = {};
     },
     [getConfig.fulfilled.toString()]: (state: any, action: any) => {
-      console.log(action);
       state.tokens = action.payload.TOKEN;
       state.AMMs = action.payload.AMM;
     },
