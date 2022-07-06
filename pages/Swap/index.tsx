@@ -13,23 +13,17 @@ import Image from 'next/image';
 import Button from '../../src/components/Button/Button';
 import TokenDropdown from '../../src/components/TokenDropdown/TokenDropdown';
 import TransactionSettings from '../../src/components/TransactionSettings/TransactionSettings';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { tokens } from '../../src/constants/Tokens';
 import { useLocationStateInSwap } from '../../src/hooks/useLocationStateInSwap';
-import { PopUpModal } from '../../src/components/Modal/popupModal';
-import SearchBar from '../../src/components/SearchBar/SearchBar';
 import SwapModal from '../../src/components/SwapModal/SwapModal';
-import {
-  tokenParameter,
-  tokensModal,
-  tokenType,
-} from '../../src/constants/swap';
+import { tokensModal, tokenType } from '../../src/constants/swap';
 
 interface ISwapProps {
   className?: string;
   otherProps: {
-    connectWallet: () => {};
-    disconnectWallet: Function;
+    connectWallet: () => void;
+    disconnectWallet: () => void;
     walletAddress: string | null;
   };
 }
@@ -95,6 +89,30 @@ function Swap(props: ISwapProps) {
   const handleClose = () => {
     setSwapModalShow(false);
   };
+
+  const SwapButton = useMemo(() => {
+    if (props.otherProps.walletAddress) {
+      return (
+        <Button
+          color="primary"
+          onClick={props.otherProps.disconnectWallet}
+          width="w-full"
+        >
+          Swap
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          color="primary"
+          onClick={props.otherProps.connectWallet}
+          width="w-full"
+        >
+          Connect Wallet
+        </Button>
+      );
+    }
+  }, [props.otherProps]);
 
   const selectToken = (token: tokensModal) => {
     //setTokenOut({ name: 'PLENTY', image: plenty });
@@ -329,7 +347,7 @@ function Swap(props: ISwapProps) {
                 )}
               </div>
             )}
-          {/* openSwapDetails && routeData.success  */}
+
           {openSwapDetails && routeData.success && (
             <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 opendown-animation">
               <div className="flex">
@@ -401,15 +419,7 @@ function Swap(props: ISwapProps) {
               </div>
             </div>
           )}
-          <div className="mt-5">
-            <Button
-              color="primary"
-              onClick={props.otherProps.connectWallet}
-              width="w-full"
-            >
-              Connect Wallet
-            </Button>
-          </div>
+          <div className="mt-5">{SwapButton}</div>
         </div>
       </div>
 

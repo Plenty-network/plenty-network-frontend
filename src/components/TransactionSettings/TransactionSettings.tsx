@@ -3,6 +3,8 @@ import info from '../../assets/icon/swap/info.svg';
 
 import Image from 'next/image';
 import Button from '../Button/Button';
+import { useEffect, useState } from 'react';
+import { ERRORMESSAGES } from '../../constants/swap';
 
 interface ITransactionSettingsProps {
   onClick?: () => void | Promise<void>;
@@ -13,12 +15,22 @@ interface ITransactionSettingsProps {
   setSlippage: any;
 }
 function TransactionSettings(props: ITransactionSettingsProps) {
+  const [errorMessage, setErrorMessage] = useState('');
   window.addEventListener('mouseup', function (event) {
     var settingsEle = document.getElementById('settings');
     if (event.target != settingsEle) {
       props.setSettingsShow(false);
     }
   });
+  useEffect(() => {
+    if (props.slippage > 30 && props.slippage <= 100) {
+      setErrorMessage(ERRORMESSAGES.TRANSACTIONSETTINGSWARNING);
+    } else if (props.slippage > 100) {
+      setErrorMessage(ERRORMESSAGES.TRANSACTIONSETTINGSERROR);
+    } else {
+      setErrorMessage('');
+    }
+  }, [props.slippage]);
   return props.show ? (
     <div
       id="settings"
@@ -33,11 +45,23 @@ function TransactionSettings(props: ITransactionSettingsProps) {
       </div>
       <div className="flex mt-3">
         <div className=" mr-2.5">
-          <Button color="primary" width="w-[87px]" height="h-9">
+          <Button
+            color="primary"
+            width="w-[87px]"
+            height="h-9"
+            borderRadius="rounded-lg"
+          >
             Auto
           </Button>
         </div>
-        <div className="border border-text-700/[0.5] bg-card-500 rounded-lg h-9 w-full py-2 px-3 font-body4 flex">
+        <div
+          className={clsx(
+            'border  rounded-lg h-9 w-full py-2 px-3 font-body4 flex',
+            errorMessage
+              ? 'border-error-500/[0.4] bg-error-500[0.01]'
+              : 'border-text-700/[0.5] bg-card-500'
+          )}
+        >
           <div>
             <input
               className="outline-none bg-card-500 text-left"
@@ -49,6 +73,11 @@ function TransactionSettings(props: ITransactionSettingsProps) {
           <div className="ml-auto">%</div>
         </div>
       </div>
+      {errorMessage && (
+        <div className="font-mobile-400 text-right mt-1 text-error-500 ">
+          {errorMessage}
+        </div>
+      )}
       <div className="border-t border-text-800 mt-[18px]"></div>
       <div className="font-subtitle2 mt-4">Interface Settings</div>
       <div className="mt-2">

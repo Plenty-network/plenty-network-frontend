@@ -6,25 +6,26 @@ import { PopUpModal } from '../src/components/Modal/popupModal';
 import { SideBarHOC } from '../src/components/Sidebar/SideBarHOC';
 import Swap from './Swap';
 import { Provider } from 'react-redux';
-import { store } from '../src/redux/index';
-import {
-  connectWallet,
-  disconnectWallet,
-} from '../src/redux/wallet/wallet.api';
+import { AppDispatch, store } from '../src/redux/index';
+
 import { useAppSelector } from '../src/redux/index';
+import {
+  walletConnection,
+  walletDisconnection,
+} from '../src/redux/wallet/wallet';
+import { useDispatch } from 'react-redux';
 
 const Home: NextPage = (props) => {
   const userAddress = useAppSelector((state) => state.wallet.address);
+  const dispatch = useDispatch<AppDispatch>();
 
-  const connectTempleWallet = async () => {
-    if (userAddress === null) {
-      return connectWallet();
-    }
+  const connectTempleWallet = () => {
+    dispatch(walletConnection());
   };
 
   const disconnectUserWallet = async () => {
     if (userAddress) {
-      return disconnectWallet();
+      dispatch(walletDisconnection());
     }
   };
   const otherPageProps = {
