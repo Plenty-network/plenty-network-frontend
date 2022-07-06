@@ -1,5 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ConnectWalletAPI, DisconnectWalletAPI } from './wallet.api';
+import {
+  ConnectWalletAPI,
+  DisconnectWalletAPI,
+  FetchWalletAPI,
+} from './wallet.api';
 
 interface WalletState {
   address: string | null;
@@ -24,6 +28,14 @@ export const walletDisconnection = createAsyncThunk(
     await DisconnectWalletAPI();
   }
 );
+export const fetchWallet = createAsyncThunk(
+  'wallet/fetchWallet',
+  async (thunkAPI) => {
+    const res = await FetchWalletAPI().then((resp) => resp.wallet);
+
+    return res;
+  }
+);
 
 const walletSlice = createSlice({
   name: 'wallet',
@@ -43,7 +55,7 @@ const walletSlice = createSlice({
     [walletDisconnection.fulfilled.toString()]: (state) => {
       state.address = null;
     },
-    fetchWallet: (state, action) => {
+    [fetchWallet.fulfilled.toString()]: (state, action) => {
       state.address = action.payload;
     },
   },

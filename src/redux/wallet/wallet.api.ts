@@ -47,6 +47,7 @@ export const DisconnectWalletAPI = async () => {
 export const FetchWalletAPI = async () => {
   try {
     const account = await wallet.client.getActiveAccount();
+
     if (!account) {
       return {
         success: false,
