@@ -115,8 +115,6 @@ function Swap(props: ISwapProps) {
   }, [props.otherProps]);
 
   const selectToken = (token: tokensModal) => {
-    //setTokenOut({ name: 'PLENTY', image: plenty });
-
     if (tokenType === 'tokenIn') {
       setTokenIn({
         name: token.name,

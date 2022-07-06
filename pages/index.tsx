@@ -10,10 +10,12 @@ import { AppDispatch, store } from '../src/redux/index';
 
 import { useAppSelector } from '../src/redux/index';
 import {
+  fetchWallet,
   walletConnection,
   walletDisconnection,
 } from '../src/redux/wallet/wallet';
 import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 
 const Home: NextPage = (props) => {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -22,7 +24,9 @@ const Home: NextPage = (props) => {
   const connectTempleWallet = () => {
     dispatch(walletConnection());
   };
-
+  useEffect(() => {
+    dispatch(fetchWallet());
+  }, []);
   const disconnectUserWallet = async () => {
     if (userAddress) {
       dispatch(walletDisconnection());

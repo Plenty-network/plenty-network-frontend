@@ -62,8 +62,10 @@ export const FetchWalletAPI = async () => {
     const options = {
       name: 'Plenty Defi',
     };
+
     const wallet = new BeaconWallet(options);
     const account = await wallet.client.getActiveAccount();
+
     if (!account) {
       return {
         success: false,
