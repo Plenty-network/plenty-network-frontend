@@ -1,4 +1,6 @@
 export interface IConfig {
+  TOKEN_CONFIG : string,
+  AMM_CONFIG : string,
   NAME: string;
   API: IApi;
   RPC_NODES: INodes;
@@ -48,7 +50,7 @@ interface IExplorerLinks {
   RINKEBY: string;
 }
 
-type TTokenType = 'FA2' | 'FA1.2' | 'XTZ';
+export type TTokenType = 'FA2' | 'FA1.2' | 'XTZ';
 
 export interface ITokenContract {
   address: string;
@@ -183,4 +185,34 @@ interface IWrappedToken {
   TOKEN_DECIMAL: number;
   REF_TOKEN: string;
   READ_TYPE: TTokenType;
+}
+
+export interface ITokenInterface {
+  address?:  string;
+  symbol:   string;
+  type:     TTokenType;
+  tokenId?:  number;
+  decimals: number;
+  mapId?:    number;
+}
+
+export interface IAMM {
+  address: string;
+  token1:  ITokenInterface;
+  token2:  ITokenInterface;
+  type:    AMM_TYPE;
+  token1Precision?: number,
+  token2Precision?: number,
+  lpToken: ITokenInterface;
+}
+
+enum AMM_TYPE {
+NORMAL,
+FLAT
+}
+
+export enum TokenType{
+  FA12 = 'FA1.2',
+  FA2 = 'FA2',
+  XTZ = 'XTZ'
 }

@@ -18,6 +18,7 @@ import { tokens } from '../../src/constants/Tokens';
 import { useLocationStateInSwap } from '../../src/hooks/useLocationStateInSwap';
 import SwapModal from '../../src/components/SwapModal/SwapModal';
 import { tokensModal, tokenType } from '../../src/constants/swap';
+import { fetchConfig } from '../../src/api/utils';
 
 interface ISwapProps {
   className?: string;
@@ -45,7 +46,7 @@ function Swap(props: ISwapProps) {
     success: false,
     isloading: false,
   });
-
+  fetchConfig();
   //routedata true once we have both the tokens
   useEffect(() => {
     if (tokenOut.name !== 'false') {
