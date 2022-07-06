@@ -210,3 +210,9 @@ enum AMM_TYPE {
 NORMAL,
 FLAT
 }
+
+export enum TokenType{
+  FA12 = 'FA1.2',
+  FA2 = 'FA2',
+  XTZ = 'XTZ'
+}

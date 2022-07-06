@@ -1,12 +1,15 @@
 import { TezosMessageUtils, TezosParameterFormat } from 'conseiljs';
 import axios from 'axios';
 import Config from '../config/config';
-import { RPC_NODE , TOKEN_CONFIG , AMM_CONFIG, type1MapIds , type2MapIds,type3MapIds,type4MapIds,type5MapIds} from '../constants/global';
+import { TOKEN_CONFIG , AMM_CONFIG, type1MapIds , type2MapIds,type3MapIds,type4MapIds,type5MapIds} from '../constants/global';
 import BigNumber from 'bignumber.js';
+import { TokenType } from '../config/types';
+import { rpcNode } from '../common/wallet';
+
+
 
 let TOKEN: { [x: string]: any; };
 let AMM : { [x: string]: any; };
-
 
 export const fetchConfig = async () => {
     
@@ -17,26 +20,18 @@ export const fetchConfig = async () => {
     const amms = amms_response.data;
 
 
-    // localStorage.setItem(TOKEN_CONFIG, JSON.stringify(tokens));
-    // localStorage.setItem(AMM_CONFIG ,JSON.stringify(amms));
+    localStorage.setItem(TOKEN_CONFIG, tokens);
+    localStorage.setItem(AMM_CONFIG ,amms);
 
     // for dev purpose only
     TOKEN = tokens;
     AMM = amms;
 
-    // console.log(TOKEN['XTZ']);
-    // console.log(localStorage.getItem(TOKEN_CONFIG));
-
     // Add to Redux / local storage
 }
 
-fetchConfig();
+// fetchConfig();
 
-enum TokenType{
-    FA12 = 'FA1.2',
-    FA2 = 'FA2',
-    XTZ = 'XTZ'
-}
 
 
 /**
@@ -80,17 +75,13 @@ enum TokenType{
  */
  export const getUserBalanceByRpc = async (identifier : string, address : string) => {
     try {
-    // Update to use local storage config & local storage RPC_Node
+    //TODO: Update to use local storage config & local storage RPC_Node 
       const token = TOKEN[`${identifier}`];
 
       const mapId = token.mapId;
       const type = token.type;
       const decimal = token.decimals;
       const tokenId = token.tokenId ?? '0';
-
-      const connectedNetwork = Config.NETWORK;
-    //   const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
-      const rpcNode = Config.RPC_NODES[connectedNetwork];
       const packedKey = getPackedKey(tokenId, address, type as TokenType);
       const url = `${rpcNode}chains/main/blocks/head/context/big_maps/${mapId}/${packedKey}`;
       const response = await axios.get(url);
@@ -131,12 +122,12 @@ enum TokenType{
     }
   };
 
-  export const tester = async () => {
+//   export const tester = async () => {
     
-    await fetchConfig();
-    await getUserBalanceByRpc('ctez' , 'tz1NaGu7EisUCyfJpB16ktNxgSqpuMo8aSEk');
-  }
+//     await fetchConfig();
+//     await getUserBalanceByRpc('ctez' , 'tz1NaGu7EisUCyfJpB16ktNxgSqpuMo8aSEk');
+//   }
 
-  tester();
+//   tester();
 
   
