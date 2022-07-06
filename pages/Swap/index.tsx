@@ -13,24 +13,18 @@ import Image from 'next/image';
 import Button from '../../src/components/Button/Button';
 import TokenDropdown from '../../src/components/TokenDropdown/TokenDropdown';
 import TransactionSettings from '../../src/components/TransactionSettings/TransactionSettings';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { tokens } from '../../src/constants/Tokens';
 import { useLocationStateInSwap } from '../../src/hooks/useLocationStateInSwap';
-import { PopUpModal } from '../../src/components/Modal/popupModal';
-import SearchBar from '../../src/components/SearchBar/SearchBar';
 import SwapModal from '../../src/components/SwapModal/SwapModal';
-import {
-  tokenParameter,
-  tokensModal,
-  tokenType,
-} from '../../src/constants/swap';
+import { tokensModal, tokenType } from '../../src/constants/swap';
 import { fetchConfig } from '../../src/api/utils';
 
 interface ISwapProps {
   className?: string;
   otherProps: {
-    connectWallet: () => {};
-    disconnectWallet: Function;
+    connectWallet: () => void;
+    disconnectWallet: () => void;
     walletAddress: string | null;
   };
 }
@@ -97,6 +91,30 @@ function Swap(props: ISwapProps) {
     setSwapModalShow(false);
   };
 
+  const SwapButton = useMemo(() => {
+    if (props.otherProps.walletAddress) {
+      return (
+        <Button
+          color="primary"
+          onClick={props.otherProps.disconnectWallet}
+          width="w-full"
+        >
+          Swap
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          color="primary"
+          onClick={props.otherProps.connectWallet}
+          width="w-full"
+        >
+          Connect Wallet
+        </Button>
+      );
+    }
+  }, [props.otherProps]);
+
   const selectToken = (token: tokensModal) => {
     //setTokenOut({ name: 'PLENTY', image: plenty });
 
@@ -137,10 +155,10 @@ function Swap(props: ISwapProps) {
     <>
       <div
         className={clsx(
-          'bg-card-500 md:border border-y border-text-800 mt-[70px] lg:mt-[75px] md:rounded-3xl  text-white lg:w-640 py-5 mx-auto'
+          'bg-card-500 md:border border-y border-text-800 mt-[70px] lg:mt-[75px] md:rounded-3xl  text-white lg:w-640 py-5 mx-auto fade-in'
         )}
       >
-        <div className="flex flex-row px-5 lg:px-9">
+        <div className="flex items-center flex-row px-5 lg:px-9">
           <div className="font-title2">Swap</div>
           <div className="py-1 cursor-pointer px-15 h-8 border border-text-700 rounded-[21px] ml-auto">
             <Image src={refresh} height={'14px'} width={'15px'} />
@@ -202,7 +220,7 @@ function Swap(props: ISwapProps) {
               </div>
             </div>
           </div>
-          <div className="flex -mt-2">
+          <div className="flex -mt-[12px]">
             <div className="text-left">
               <span className="text-text-600 font-body3">Balance:</span>{' '}
               <span className="font-body4 text-primary-500 2">--</span>
@@ -213,16 +231,16 @@ function Swap(props: ISwapProps) {
           </div>
         </div>
         <div
-          className="z-10 cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-lg "
+          className="z-10 cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-2xl "
           onClick={() => changeTokenLocation()}
         >
-          <div className="p-[11.5px] bg-card-500 rounded-lg  w-[68px] h-[68px]">
+          <div className="p-[11.5px] bg-card-500 rounded-2xl  w-[68px] h-[68px]">
             <div className="bg-primary-500 p-2  w-[46px] h-[46px] rounded-lg ">
               <Image src={switchsvg} height={'32px'} width={'32px'} />
             </div>
           </div>
         </div>
-        <div className=" pt-[41px] pb-5 border border-primary-500/[0.2] mx-px md:mx-2 lg:mx-2  px-5 lg:px-[22px] rounded-2xl bg-primary-500/[0.04]">
+        <div className=" pt-[41px] pb-5 border border-primary-500/[0.2] mx-px md:mx-2 lg:mx-2  px-5 lg:px-[22px] rounded-3xl bg-primary-500/[0.04]">
           <div className="lg:w-580  h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] bg-card-500">
             <div className=" flex justify-between">
               <div
@@ -263,7 +281,7 @@ function Swap(props: ISwapProps) {
                         value={secondTokenAmount}
                       />
                     ) : (
-                      <p className="  h-[38px] animate-pulse bg-primary-500"></p>
+                      <p className="  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                     )
                   ) : (
                     <input
@@ -278,7 +296,7 @@ function Swap(props: ISwapProps) {
                 </div>
               </div>
             </div>
-            <div className="flex -mt-2">
+            <div className="flex -mt-[12px]">
               <div className="text-left">
                 <span className="text-text-600 font-body3">Balance:</span>{' '}
                 <span className="font-body4 text-text-500 ">
@@ -330,41 +348,46 @@ function Swap(props: ISwapProps) {
                 )}
               </div>
             )}
+
           {openSwapDetails && routeData.success && (
-            <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 ">
+            <div className="bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 opendown-animation">
               <div className="flex">
-                <div className="font-body3 ">
+                <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Minimum received</span>
                   <span className="relative top-0.5">
                     <Image src={info} />
                   </span>
                 </div>
-                <div className="ml-auto font-subtitle4">
+                <div className="ml-auto font-mobile-700 md:font-subtitle4">
                   0.11197067216831917 uUSD
                 </div>
               </div>
 
               <div className="flex mt-2">
-                <div className="font-body3 ">
+                <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Price Impact</span>
                   <span className="relative top-0.5">
                     <Image src={info} />
                   </span>
                 </div>
-                <div className="ml-auto font-subtitle4">4.38 %</div>
+                <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                  4.38 %
+                </div>
               </div>
               <div className="flex mt-2">
-                <div className="font-body3 ">
+                <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Fee</span>
                   <span className="relative top-0.5">
                     <Image src={info} />
                   </span>
                 </div>
-                <div className="ml-auto font-subtitle4">0.0025 PLENTY</div>
+                <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                  0.0025 PLENTY
+                </div>
               </div>
               <div className="border-t border-text-800 mt-[18px]"></div>
               <div className="mt-4 ">
-                <div className="font-subtitle4">
+                <div className="font-subtitle2 md:font-subtitle4">
                   {' '}
                   <span className="mr-[5px]">Route</span>
                   <span className="relative top-0.5">
@@ -375,7 +398,7 @@ function Swap(props: ISwapProps) {
                   <span className="w-[28px] h-[28px]">
                     <Image src={plenty} width={'28px'} height={'28px'} />
                   </span>
-                  <div className="border-dashed relative top-[11px] w-[31%] border-t-2 border-muted-50 mx-2"></div>
+                  <div className="border-dashed relative top-[11px] w-[19%] md:w-[31%] border-t-2 border-muted-50 mx-2"></div>
                   <div className="relative -top-[3px] rounded-2xl h-[32px] bg-card-600 p-px flex">
                     <span className="relative -left-[5px] top-px">
                       <span className="relative -right-[9px] z-100 w-[32px] h-[32px]  p-px">
@@ -389,7 +412,7 @@ function Swap(props: ISwapProps) {
                       </span>
                     </span>
                   </div>
-                  <div className="border-dashed relative top-[11px] w-[31%] border-t-2 border-muted-50 mx-2"></div>
+                  <div className="border-dashed relative top-[11px]  w-[19%] md:w-[31%] border-t-2 border-muted-50 mx-2"></div>
                   <span className="w-[28px] h-[28px]">
                     <Image src={plenty} width={'28px'} height={'28px'} />
                   </span>
@@ -397,15 +420,7 @@ function Swap(props: ISwapProps) {
               </div>
             </div>
           )}
-          <div className="mt-5">
-            <Button
-              color="primary"
-              onClick={props.otherProps.connectWallet}
-              width="w-full"
-            >
-              Connect Wallet
-            </Button>
-          </div>
+          <div className="mt-5">{SwapButton}</div>
         </div>
       </div>
 

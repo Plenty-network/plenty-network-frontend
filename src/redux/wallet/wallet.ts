@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { ConnectWalletAPI, DisconnectWalletAPI } from './wallet.api';
 
 interface WalletState {
   address: string | null;
@@ -10,21 +11,36 @@ const initialState: WalletState = {
   loading: false,
 };
 
+export const walletConnection = createAsyncThunk(
+  'wallet/walletConnection',
+  async (thunkAPI) => {
+    const res = await ConnectWalletAPI().then((resp) => resp.wallet);
+    return res;
+  }
+);
+export const walletDisconnection = createAsyncThunk(
+  'wallet/walletDisconnection',
+  async (thunkAPI) => {
+    await DisconnectWalletAPI();
+  }
+);
+
 const walletSlice = createSlice({
   name: 'wallet',
   initialState,
-  reducers: {
-    walletConnectionStart: (state) => {
+  reducers: {},
+  extraReducers: {
+    [walletConnection.pending.toString()]: (state: any) => {
       state.loading = true;
     },
-    walletConnectionSuccessfull: (state, action) => {
+    [walletConnection.fulfilled.toString()]: (state: any, action: any) => {
       state.address = action.payload;
       state.loading = false;
     },
-    walletConnectionFailed: (state) => {
+    [walletConnection.rejected.toString()]: (state: any) => {
       state.loading = false;
     },
-    walletDisconnection: (state) => {
+    [walletDisconnection.fulfilled.toString()]: (state) => {
       state.address = null;
     },
     fetchWallet: (state, action) => {
@@ -32,13 +48,5 @@ const walletSlice = createSlice({
     },
   },
 });
-
-export const {
-  walletConnectionStart,
-  walletConnectionSuccessfull,
-  walletConnectionFailed,
-  walletDisconnection,
-  fetchWallet,
-} = walletSlice.actions;
 
 export const wallet = walletSlice.reducer;

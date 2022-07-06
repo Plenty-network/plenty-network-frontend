@@ -8,7 +8,7 @@ export interface IPopUpModalProps {
 
 export function PopUpModal(props: IPopUpModalProps) {
   return (
-    <div className="absolute top-0 left-0 z-30 w-screen h-screen topNavblurEffect flex items-center justify-center ">
+    <div className="absolute top-0 left-0 z-30 w-screen h-screen topNavblurEffect flex items-center justify-center fade-in-3">
       <div
         className="broder   relative border-popUpNotification
        w-[calc(100vw_-_38px)]

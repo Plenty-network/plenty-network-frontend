@@ -11,3 +11,8 @@ export interface tokensModal {
   new: boolean;
   extra?: { text: string; link: string } | undefined;
 }
+
+export const ERRORMESSAGES = {
+  TRANSACTIONSETTINGSWARNING: 'Your transaction may be frontrun',
+  TRANSACTIONSETTINGSERROR: 'Enter a valid slippage percentage',
+};

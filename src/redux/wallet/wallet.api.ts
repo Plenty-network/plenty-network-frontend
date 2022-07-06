@@ -1,53 +1,7 @@
 import { BeaconWallet } from '@taquito/beacon-wallet';
-import {
-  fetchWallet,
-  walletConnectionFailed,
-  walletConnectionStart,
-  walletConnectionSuccessfull,
-  walletDisconnection,
-} from './wallet';
 import Config from '../../config/config';
 import { NetworkType } from '@airgap/beacon-sdk';
 
-export const connectWallet = () => {
-  return (dispatch: any): void => {
-    dispatch(walletConnectionStart());
-    ConnectWalletAPI()
-      .then((resp) => {
-        if (resp.success === true) {
-          dispatch(walletConnectionSuccessfull(resp.wallet));
-        } else {
-          dispatch(walletConnectionFailed());
-        }
-      })
-      .catch(() => {
-        dispatch(walletConnectionFailed());
-      });
-  };
-};
-export const disconnectWallet = () => {
-  return (dispatch: any) => {
-    DisconnectWalletAPI()
-      .then((resp) => {
-        if (resp.success === true) {
-          dispatch(walletDisconnection());
-        }
-      })
-      .catch(() => {});
-  };
-};
-
-export const fetchWalletAddress = () => {
-  return (dispatch: any) => {
-    FetchWalletAPI()
-      .then((resp) => {
-        if (resp.success === true) {
-          dispatch(fetchWallet(resp.wallet));
-        }
-      })
-      .catch(() => {});
-  };
-};
 export const ConnectWalletAPI = async () => {
   try {
     const options = {

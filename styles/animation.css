@@ -483,4 +483,73 @@
 	}
 }
  
- 
+.fade-in{
+    animation: fadeIn 1.1s;
+    -webkit-animation: fadeIn 1.1s;
+    -moz-animation: fadeIn 1.1s;
+    -o-animation: fadeIn 1.1s;
+    -ms-animation: fadeIn 1.1s;
+  }
+  .fade-in-3{
+    animation: fadeIn 0.3s;
+    -webkit-animation: fadeIn 0.3s;
+    -moz-animation: fadeIn 0.3s;
+    -o-animation: fadeIn 0.3s;
+    -ms-animation: fadeIn 0.3s;
+  }
+  .opendown-animation{
+    animation: openDownwards 0.3s;
+    -webkit-animation: openDownwards 0.3s;
+    -moz-animation: openDownwards 0.3s;
+    -o-animation: openDownwards 0.3s;
+    -ms-animation: openDownwards 0.3s;
+  }
+  .closeup-animation{
+    animation: closeUpwards 0.3s;
+    -webkit-animation: closeUpwards 0.3s;
+    -moz-animation: closeUpwards 0.3s;
+    -o-animation: closeUpwards 0.3s;
+    -ms-animation: closeUpwards 0.3s;
+  }
+  @keyframes fadeIn {
+    0% { 
+        opacity: 0; 
+        transform: scale(0.99);
+
+    }
+    30%{
+        opacity: 0.3; 
+        transform: scale(0.99);
+    }
+    100% { 
+        opacity: 1;
+        transform: scale(1);
+     }
+  }
+  @keyframes openDownwards {
+    0% { 
+        /* transform: scaleY(0.6); */
+        height: 0px;
+        overflow-y: hidden;
+        display: block;
+    }
+    100% { 
+        /* transform: scaleY(1); */
+        height: 218px;
+        display: block;
+     }
+  }
+  @keyframes closeUpwards {
+    0% { 
+        /* transform: scaleY(0.6); */
+        height: 218px;
+        overflow-y: hidden;
+    }
+    100% { 
+        /* transform: scaleY(1); */
+
+        height: 0px;
+        overflow-y: hidden;
+        display: none;
+     }
+  }

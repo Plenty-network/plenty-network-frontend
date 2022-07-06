@@ -29,6 +29,9 @@ module.exports = {
         800: '#3F2566',
         900: '#1F1233',
       },
+      shimmer: {
+        100: '#211336',
+      },
       secondary: {
         500: '#32C2AD',
       },
@@ -100,6 +103,7 @@ module.exports = {
       f14: ['14px', '20px'],
       f1416: ['14px', '16px'],
       f10: ['10px', '16px'],
+      f1015: ['10px', '15px'],
     },
 
     extend: {
