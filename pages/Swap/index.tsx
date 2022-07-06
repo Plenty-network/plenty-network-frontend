@@ -24,6 +24,7 @@ import {
   tokensModal,
   tokenType,
 } from '../../src/constants/swap';
+import { fetchConfig } from '../../src/api/utils';
 
 interface ISwapProps {
   className?: string;
@@ -51,7 +52,7 @@ function Swap(props: ISwapProps) {
     success: false,
     isloading: false,
   });
-
+  fetchConfig();
   //routedata true once we have both the tokens
   useEffect(() => {
     if (tokenOut.name !== 'false') {

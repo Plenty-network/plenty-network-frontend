@@ -190,7 +190,7 @@ interface IWrappedToken {
 export interface ITokenInterface {
   address?:  string;
   symbol:   string;
-  type:     string;
+  type:     TTokenType;
   tokenId?:  number;
   decimals: number;
   mapId?:    number;
