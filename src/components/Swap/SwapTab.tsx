@@ -298,7 +298,7 @@ function SwapTab(props: ISwapTabProps) {
             </div>
           )}
 
-        {openSwapDetails && routeData.success && (
+        {openSwapDetails && (
           <div
             className={`bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 ${
               animateOpenSwapDetails
