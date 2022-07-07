@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ctez from '../assets/Tokens/ctez.png';
+import { tokenParameter } from '../constants/swap';
 
 export const useLocationStateInSwap = () => {
   const [tokenIn, setTokenIn] = useState({
@@ -7,11 +8,7 @@ export const useLocationStateInSwap = () => {
     image: ctez,
   });
 
-  // const [tokenOut, setTokenOut] = useState({ name: 'PLENTY', image: ctez });
-  const [tokenOut, setTokenOut] = useState({
-    name: 'false',
-    image: ctez,
-  });
+  const [tokenOut, setTokenOut] = useState({} as tokenParameter);
 
   return {
     tokenIn,

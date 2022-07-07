@@ -22,13 +22,19 @@ interface ISwapTabProps {
   secondTokenAmount: string | number;
   connectWallet: () => void;
   tokenIn: { name: string; image: any };
-  tokenOut: { name: string; image: any };
+  tokenOut: {
+    name: string;
+    image: any;
+  };
   tokens: tokensModal[];
   handleTokenType: (type: tokenType) => void;
   userBalances: {
     [key: string]: string;
   };
   setSlippage: any;
+  tokenPrice: {
+    [id: string]: number;
+  };
   slippage: number;
   handleClose: () => void;
   changeTokenLocation: () => void;
@@ -52,11 +58,11 @@ function SwapTab(props: ISwapTabProps) {
   });
 
   //routedata true once we have both the tokens
-  useEffect(() => {
-    if (props.tokenOut.name !== 'false') {
-      setRouteData({ success: true, isloading: false });
-    }
-  }, [props.tokenIn, props.tokenOut]);
+  // useEffect(() => {
+  //   if (props.tokenOut.name !== 'false') {
+  //     setRouteData({ success: true, isloading: false });
+  //   }
+  // }, [props.tokenIn, props.tokenOut]);
 
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {
@@ -142,13 +148,19 @@ function SwapTab(props: ISwapTabProps) {
           <div className="text-left">
             <span className="text-text-600 font-body3">Balance:</span>{' '}
             <span className="font-body4 text-primary-500 2">
-              {props.userBalances[props.tokenIn.name]
+              {Number(props.userBalances[props.tokenIn.name]) >= 0
                 ? Number(props.userBalances[props.tokenIn.name])
                 : '--'}
             </span>
           </div>
           <div className="text-right ml-auto font-body2 text-text-400">
-            ~$0.00
+            ~$
+            {props.firstTokenAmount && props.tokenPrice[props.tokenIn.name]
+              ? Number(
+                  Number(props.firstTokenAmount) *
+                    Number(props.tokenPrice[props.tokenIn.name])
+                ).toFixed(2)
+              : '0.00'}
           </div>
         </div>
       </div>
@@ -169,7 +181,7 @@ function SwapTab(props: ISwapTabProps) {
               className="flex-[0_0_50%] mt-4"
               onClick={() => props.handleTokenType('tokenOut')}
             >
-              {props.tokenOut.name !== 'false' ? (
+              {Object.keys(props.tokenOut).length !== 0 ? (
                 <TokenDropdown
                   tokenIcon={props.tokenOut.image}
                   tokenName={
@@ -189,7 +201,7 @@ function SwapTab(props: ISwapTabProps) {
                 YOU RECEIVE
               </div>
               <div>
-                {props.tokenOut.name !== 'false' ? (
+                {Object.keys(props.tokenOut).length !== 0 ? (
                   !routeData.isloading ? (
                     <input
                       type="number"
@@ -222,18 +234,28 @@ function SwapTab(props: ISwapTabProps) {
             <div className="text-left">
               <span className="text-text-600 font-body3">Balance:</span>{' '}
               <span className="font-body4 text-text-500 ">
-                --
-                {/* {tokenOut.name !== 'false' ? '0.34' : '--'} */}
+                {Object.keys(props.tokenOut).length !== 0 &&
+                Number(props.userBalances[props.tokenOut.name]) >= 0
+                  ? Number(props.userBalances[props.tokenOut.name])
+                  : '--'}
               </span>
             </div>
             <div className="text-right ml-auto font-body2 text-text-400">
-              ~$0.00
+              ~$
+              {Object.keys(props.tokenOut).length !== 0 &&
+              props.secondTokenAmount &&
+              props.tokenPrice[props.tokenOut.name]
+                ? Number(
+                    Number(props.secondTokenAmount) *
+                      Number(props.tokenPrice[props.tokenOut.name])
+                  ).toFixed(2)
+                : '0.00'}
             </div>
           </div>
         </div>
 
         {(props.firstTokenAmount || props.secondTokenAmount) &&
-          props.tokenOut.name !== 'false' && (
+          Object.keys(props.tokenOut).length !== 0 && (
             <div
               className="h-12 mt-3 cursor-pointer px-4 pt-[11px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] flex "
               onClick={() => setOpenSwapDetails(!openSwapDetails)}

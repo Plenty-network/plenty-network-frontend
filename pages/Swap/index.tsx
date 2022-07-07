@@ -37,12 +37,18 @@ function Swap(props: ISwapProps) {
     success: false,
     isloading: false,
   });
-  getTokenPrices();
+  const [tokenPrice, setTokenPrice] = useState({});
+  useEffect(() => {
+    getTokenPrices().then((response) => {
+      setTokenPrice(response.tokenPrice);
+    });
+  }, []);
+
   //routedata true once we have both the tokens
   useEffect(() => {
-    if (tokenOut.name !== 'false') {
-      setRouteData({ success: true, isloading: false });
-    }
+    // if (tokenOut.name !== 'false') {
+    //   setRouteData({ success: true, isloading: false });
+    // }
   }, [tokenIn, tokenOut]);
 
   const handleSwapTokenInput = (
@@ -57,7 +63,7 @@ function Swap(props: ISwapProps) {
     } else {
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
-        if (tokenOut.name !== 'false') {
+        if (Object.keys(tokenOut).length !== 0) {
           setTimeout(() => {
             setSecondTokenAmount('55.721932');
             setRouteData({ success: true, isloading: false });
@@ -174,6 +180,7 @@ function Swap(props: ISwapProps) {
           setTokenIn={setTokenIn}
           setTokenOut={setTokenOut}
           setTokenType={setTokenType}
+          tokenPrice={tokenPrice}
         />
       </div>
       <SwapModal
