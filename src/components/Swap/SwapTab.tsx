@@ -136,6 +136,7 @@ function SwapTab(props: ISwapTabProps) {
                   'text-white bg-card-500 text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%]'
                 )}
                 placeholder="0.0"
+                lang="en"
                 onChange={(e) =>
                   props.handleSwapTokenInput(e.target.value, 'tokenIn')
                 }
@@ -209,6 +210,8 @@ function SwapTab(props: ISwapTabProps) {
                         'text-primary-500 bg-card-500 text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%]'
                       )}
                       placeholder="0.0"
+                      lang="en"
+                      step="any"
                       onChange={(e) =>
                         props.handleSwapTokenInput(e.target.value, 'tokenOut')
                       }

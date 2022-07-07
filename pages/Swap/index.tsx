@@ -3,10 +3,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { tokens } from '../../src/constants/Tokens';
 import { useLocationStateInSwap } from '../../src/hooks/useLocationStateInSwap';
 import SwapModal from '../../src/components/SwapModal/SwapModal';
-import { tokensModal, tokenType } from '../../src/constants/swap';
 import SwapTab from '../../src/components/Swap/SwapTab';
 import { getUserBalanceByRpc } from '../../src/api/util/balance';
 import { getTokenPrices } from '../../src/api/util/price';
+import {
+  tokenParameter,
+  tokensModal,
+  tokenType,
+} from '../../src/constants/swap';
+import { useStateAnimate } from '../../src/hooks/useAnimateUseState';
 
 interface ISwapProps {
   className?: string;
@@ -20,6 +25,9 @@ interface ISwapProps {
 function Swap(props: ISwapProps) {
   const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
     useLocationStateInSwap();
+  const [settingsShow, setSettingsShow] = useState(false);
+  const [openSwapDetails, setOpenSwapDetails, animateOpenSwapDetails] =
+    useStateAnimate(false, 280);
   const [firstTokenAmount, setFirstTokenAmount] = useState<string | number>('');
   const [secondTokenAmount, setSecondTokenAmount] = useState<string | number>(
     ''

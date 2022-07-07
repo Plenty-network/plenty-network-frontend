@@ -7,8 +7,19 @@ export interface IPopUpModalProps {
 }
 
 export function PopUpModal(props: IPopUpModalProps) {
+  const [isClose,setIsClose]=React.useState(false);
+  const clickedInModal=(e:any)=>{
+    try{
+      if(e.target.id==="modal_outer"){
+        setIsClose(true); 
+        setTimeout(()=>{props.onhide && props.onhide()},300) 
+      }
+    }catch(e){
+
+    }
+  }
   return (
-    <div className="absolute top-0 left-0 z-30 w-screen h-screen topNavblurEffect flex items-center justify-center fade-in-3">
+    <div onClick={clickedInModal} id="modal_outer" className={`absolute top-0 left-0 z-30 w-screen h-screen topNavblurEffect flex items-center justify-center ${isClose?'fade-out-3':'fade-in-3'}`}>
       <div
         className="broder   relative border-popUpNotification
        w-[calc(100vw_-_38px)]
@@ -26,7 +37,7 @@ export function PopUpModal(props: IPopUpModalProps) {
       >
         <div
           className="absolute right-0  px-6 cursor-pointer hover:opacity-90 hover:scale-90"
-          onClick={() => props.onhide && props.onhide()}
+          onClick={() => {setIsClose(true); setTimeout(()=>{props.onhide && props.onhide()},280)  }}
         >
           {/* close btn */}
           <svg

@@ -497,19 +497,26 @@
     -o-animation: fadeIn 0.3s;
     -ms-animation: fadeIn 0.3s;
   }
+  .fade-out-3{
+    animation: fadeOut 0.38s;
+    -webkit-animation: fadeOut 0.38s;
+    -moz-animation: fadeOut 0.38s;
+    -o-animation: fadeOut 0.38s;
+    -ms-animation: fadeOut 0.38s;
+  }
   .opendown-animation{
-    animation: openDownwards 0.3s;
-    -webkit-animation: openDownwards 0.3s;
-    -moz-animation: openDownwards 0.3s;
-    -o-animation: openDownwards 0.3s;
-    -ms-animation: openDownwards 0.3s;
+    animation: openDownwards 0.3s ease-out;
+    -webkit-animation: openDownwards 0.3s ease-out;
+    -moz-animation: openDownwards 0.3s ease-out;
+    -o-animation: openDownwards 0.3s ease-out;
+    -ms-animation: openDownwards 0.3s ease-out;
   }
   .closeup-animation{
-    animation: closeUpwards 0.3s;
-    -webkit-animation: closeUpwards 0.3s;
-    -moz-animation: closeUpwards 0.3s;
-    -o-animation: closeUpwards 0.3s;
-    -ms-animation: closeUpwards 0.3s;
+    animation: closeUpwards 0.3s ease-in ;
+    -webkit-animation: closeUpwards 0.3s ease-in;
+    -moz-animation: closeUpwards 0.3s ease-in;
+    -o-animation: closeUpwards 0.3s ease-in;
+    -ms-animation: closeUpwards 0.3s ease-in;
   }
   @keyframes fadeIn {
     0% { 
@@ -526,30 +533,56 @@
         transform: scale(1);
      }
   }
+  @keyframes fadeOut {
+    0% { 
+        opacity: 1;
+        transform: scale(1);
+
+    }
+    30%{
+        opacity: 0.3; 
+        transform: scale(1);
+    }
+    100% { 
+        
+		opacity: 0; 
+        transform: scale(0.99);
+     }
+  }
   @keyframes openDownwards {
     0% { 
         /* transform: scaleY(0.6); */
         height: 0px;
         overflow-y: hidden;
         display: block;
+		padding-top: 0;
+    padding-bottom: 0;
+		
     }
     100% { 
         /* transform: scaleY(1); */
-        height: 218px;
+        height: 200px;
         display: block;
+		padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+	overflow-y: hidden;
      }
   }
   @keyframes closeUpwards {
     0% { 
         /* transform: scaleY(0.6); */
-        height: 218px;
+        height: 200px;
         overflow-y: hidden;
+		padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+
     }
     100% { 
         /* transform: scaleY(1); */
-
         height: 0px;
         overflow-y: hidden;
-        display: none;
+		display: none;
+		opacity: 0;
+		padding: 0;
      }
   }
