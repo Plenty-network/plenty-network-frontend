@@ -26,6 +26,11 @@ export interface IConfig {
     testnet: Record<string, IAmmContract1 | IAmmContract2>;
     mainnet: Record<string, IAmmContract1 | IAmmContract2>;
   };
+  
+  WRAPPED_ASSETS: {
+    testnet: Record<string, IWrappedToken>;
+    mainnet: Record<string, IWrappedToken>;
+  };
 
   NETWORK: 'mainnet' | 'testnet';
   WALLET_NETWORK: string;
