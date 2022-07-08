@@ -68,11 +68,36 @@ function SwapTab(props: ISwapTabProps) {
 
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {
-      return (
-        <Button color="primary" width="w-full">
-          Swap
-        </Button>
-      );
+      if (Object.keys(props.tokenOut).length === 0) {
+        return (
+          <Button color="disabled" width="w-full">
+            Select a token
+          </Button>
+        );
+      } else if (
+        Object.keys(props.tokenOut).length !== 0 &&
+        props.firstTokenAmount === ''
+      ) {
+        return (
+          <Button color="disabled" width="w-full">
+            Enter a amount
+          </Button>
+        );
+      } else if (
+        props.firstTokenAmount > props.userBalances[props.tokenIn.name]
+      ) {
+        return (
+          <Button color="disabled" width="w-full">
+            Insufficient balance
+          </Button>
+        );
+      } else {
+        return (
+          <Button color="primary" width="w-full">
+            Swap
+          </Button>
+        );
+      }
     } else {
       return (
         <Button color="primary" onClick={props.connectWallet} width="w-full">
@@ -108,7 +133,7 @@ function SwapTab(props: ISwapTabProps) {
       <div
         className={clsx(
           'lg:w-580 mt-4 h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700',
-          props.firstTokenAmount > 100
+          props.firstTokenAmount > props.userBalances[props.tokenIn.name]
             ? 'border-errorBorder hover:border-errorBorder bg-errorBg'
             : 'border-text-800 '
         )}
@@ -178,7 +203,7 @@ function SwapTab(props: ISwapTabProps) {
         </div>
       </div>
       <div className=" pt-[41px] relative -top-[24px] pb-5 border border-primary-500/[0.2] mx-px md:mx-2 lg:mx-2  px-5 lg:px-[22px] rounded-3xl bg-primary-500/[0.04]">
-        <div className="lg:w-580  h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] bg-card-500">
+        <div className="lg:w-580  h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] hover:border-primary-500/[0.6] bg-card-500 hover:bg-primary-500/[0.02]">
           <div className=" flex justify-between">
             <div
               className="flex-[0_0_50%] mt-4"
@@ -209,10 +234,10 @@ function SwapTab(props: ISwapTabProps) {
                     <input
                       type="number"
                       className={clsx(
-                        'text-primary-500 bg-card-500 text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%]'
+                        'text-primary-500 bg-card-500 text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 '
                       )}
                       placeholder="0.0"
-                      lang="en"
+                      lang="en_EN"
                       step="any"
                       onChange={(e) =>
                         props.handleSwapTokenInput(e.target.value, 'tokenOut')
@@ -226,9 +251,10 @@ function SwapTab(props: ISwapTabProps) {
                   <input
                     type="text"
                     className={clsx(
-                      'text-primary-500 bg-card-500 text-right border-0 w-[100%]  font-input-text lg:font-medium1 outline-none'
+                      'text-primary-500 bg-card-500 text-right border-0 w-[100%]  font-input-text lg:font-medium1 outline-none hover:bg-primary-500/[0.02]'
                     )}
                     placeholder="--"
+                    disabled
                     value={'--'}
                   />
                 )}
@@ -349,36 +375,45 @@ function SwapTab(props: ISwapTabProps) {
                   <Image src={info} />
                 </span>
               </div>
-              <div className="mt-2 flex">
-                <span className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
-                  <span className="w-[28px] h-[28px]">
-                    <Image src={ctez} width={'28px'} height={'28px'} />
-                  </span>
-                </span>
-                <div className="border-dashed relative top-[15px] w-[19%] md:w-[31%] border-t-2 border-muted-50 mx-2"></div>
-                <div className="relative -top-[3px] rounded-2xl h-[32px] bg-card-600 p-px flex">
-                  <span className="relative -left-[5px] top-px">
-                    <span className="relative  w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
-                      <span className="w-[28px] h-[28px]">
-                        <Image src={plenty} width={'28px'} height={'28px'} />
-                      </span>
+              <div className="border-dashed relative top-[24px]   border-t-2 border-muted-50 mx-2"></div>
+              <div className="mt-2 flex justify-between ">
+                <div className="flex items-center ">
+                  <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                    <span className="w-[28px] h-[28px]">
+                      <Image src={ctez} width={'28px'} height={'28px'} />
                     </span>
-                    <span className="relative  w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
-                      <span className="w-[28px] h-[28px]">
-                        <Image src={plenty} width={'28px'} height={'28px'} />
-                      </span>
-                    </span>
-                    <span className="relative -top-[9px] ml-[5px] h-5 px-[4.5px] py-1 bg-muted-100 rounded-xl font-subtitle4">
-                      0.3%
-                    </span>
-                  </span>
+                  </div>
+                  <div className="w-2 h-2 bg-card-500 z-50"></div>
                 </div>
-                <div className="border-dashed relative top-[15px]  w-[19%] md:w-[31%] border-t-2 border-muted-50 mx-2"></div>
-                <span className="relative  w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
-                  <span className="w-[28px] h-[28px]">
-                    <Image src={ctez} width={'28px'} height={'28px'} />
-                  </span>
-                </span>
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-card-500 z-50"></div>
+                  <div className="relative  rounded-2xl h-[32px] bg-card-600 p-px flex">
+                    <span className="relative -left-[7px] flex items-center">
+                      <div className="relative left-2.5 z-50 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                        <span className="w-[28px] h-[28px]">
+                          <Image src={ctez} width={'28px'} height={'28px'} />
+                        </span>
+                      </div>
+                      <div className="relative z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                        <span className="w-[28px] h-[28px]">
+                          <Image src={ctez} width={'28px'} height={'28px'} />
+                        </span>
+                      </div>
+                      <div className="relative ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4">
+                        0.3%
+                      </div>
+                    </span>
+                  </div>
+                  <div className="w-2 h-2 bg-card-500 z-50"></div>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-card-500 z-50"></div>
+                  <div className="relative  w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                    <span className="w-[28px] h-[28px]">
+                      <Image src={ctez} width={'28px'} height={'28px'} />
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

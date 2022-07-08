@@ -66,7 +66,7 @@ function Swap(props: ISwapProps) {
         setFirstTokenAmount(input);
         if (Object.keys(tokenOut).length !== 0) {
           setTimeout(() => {
-            setSecondTokenAmount('55.721932');
+            setSecondTokenAmount('55');
             setRouteData({ success: true, isloading: false });
           }, 1000);
         }
@@ -74,7 +74,7 @@ function Swap(props: ISwapProps) {
         setSecondTokenAmount(input);
 
         setTimeout(() => {
-          setFirstTokenAmount('12.1');
+          setFirstTokenAmount('12');
           setRouteData({ success: true, isloading: false });
         }, 1000);
       }
@@ -126,13 +126,12 @@ function Swap(props: ISwapProps) {
   useEffect(() => {
     if (props.otherProps.walletAddress) {
       const updateBalance = async () => {
-        const tzBTCName = 'tzBTC';
         const balancePromises = [];
-        tokenIn &&
+        Object.keys(tokenIn).length !== 0 &&
           balancePromises.push(
             getUserBalanceByRpc(tokenIn.name, props.otherProps.walletAddress)
           );
-        tokenOut &&
+        Object.keys(tokenOut).length !== 0 &&
           balancePromises.push(
             getUserBalanceByRpc(tokenOut.name, props.otherProps.walletAddress)
           );
