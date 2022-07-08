@@ -19,7 +19,7 @@ export function PopUpModal(props: IPopUpModalProps) {
     }
   }
   return (
-    <div onClick={clickedInModal} id="modal_outer" className={`absolute top-0 left-0 z-30 w-screen h-screen topNavblurEffect flex items-center justify-center ${isClose?'fade-out-3':'fade-in-3'}`}>
+    <div onClick={clickedInModal} id="modal_outer" className={`absolute top-0 left-0  w-screen h-screen topNavblurEffect z-50 flex items-center justify-center ${isClose?'fade-out-3':'fade-in-3'}`}>
       <div
         className="broder   relative border-popUpNotification
        w-[calc(100vw_-_38px)]
