@@ -3,8 +3,10 @@ import info from '../../assets/icon/swap/info.svg';
 
 import Image from 'next/image';
 import Button from '../Button/Button';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ERRORMESSAGES } from '../../constants/swap';
+import { useOutsideClick } from '../../utils/outSideClickHook';
+import { Switch } from '../SwitchCheckbox/switchWithoutIcon';
 
 interface ITransactionSettingsProps {
   onClick?: () => void | Promise<void>;
@@ -16,12 +18,13 @@ interface ITransactionSettingsProps {
 }
 function TransactionSettings(props: ITransactionSettingsProps) {
   const [errorMessage, setErrorMessage] = useState('');
-  window.addEventListener('mouseup', function (event) {
-    var settingsEle = document.getElementById('settings');
-    if (event.target != settingsEle) {
-      props.setSettingsShow(false);
-    }
-  });
+  const refSetting=useRef(null);
+
+  
+  
+    useOutsideClick(refSetting,()=>{
+      props.setSettingsShow(false)
+    });
   useEffect(() => {
     if (props.slippage > 30 && props.slippage <= 100) {
       setErrorMessage(ERRORMESSAGES.TRANSACTIONSETTINGSWARNING);
@@ -33,8 +36,9 @@ function TransactionSettings(props: ITransactionSettingsProps) {
   }, [props.slippage]);
   return props.show ? (
     <div
-      id="settings"
-      className="z-50 absolute right-[307px] bg-card-500 border border-text-700/[0.5] w-[367px] p-5 rounded-2xl fade-in-3"
+      ref={refSetting}
+      style={{top:'-18px'}}
+      className="z-10 absolute   right-0  bg-card-500 border border-text-700/[0.5] w-[367px] p-5 rounded-2xl fade-in-3"
     >
       <div className="font-subtitle2">Transaction Settings</div>
       <div className="mt-2">
@@ -95,9 +99,12 @@ function TransactionSettings(props: ITransactionSettingsProps) {
         </span>
       </div>
       <div className="mt-2">
+        <span className='flex justify-between'>
         <span className="font-caption1 text-text-200 ">Add recipient</span>
         <span className="relative top-0.5 left-[5px]">
           <Image src={info} width={'11px'} height={'11px'} />
+        </span>
+        <Switch/>
         </span>
       </div>
     </div>

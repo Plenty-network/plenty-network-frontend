@@ -12,9 +12,10 @@ import Image from 'next/image';
 import Button from '../Button/Button';
 import TokenDropdown from '../TokenDropdown/TokenDropdown';
 import TransactionSettings from '../TransactionSettings/TransactionSettings';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { tokensModal, tokenType } from '../../../src/constants/swap';
 import { useStateAnimate } from '../../hooks/useAnimateUseState';
+import { Switch } from '../SwitchCheckbox/switchWithoutIcon';
 
 interface ISwapTabProps {
   className?: string;
@@ -52,6 +53,8 @@ interface ISwapTabProps {
 
 function SwapTab(props: ISwapTabProps) {
   const [settingsShow, setSettingsShow] = useState(false);
+  const refSettingTab=useRef(null);
+
   const [openSwapDetails, setOpenSwapDetails, animateOpenSwapDetails] =
     useStateAnimate(false, 280);
   const [routeData, setRouteData] = useState({
@@ -109,12 +112,13 @@ function SwapTab(props: ISwapTabProps) {
 
   return (
     <>
-      <div className="flex items-center flex-row px-5 lg:px-9">
+      <div className="flex items-center flex-row px-5 lg:px-9 relative">
         <div className="font-title2">Swap</div>
         <div className="py-1 cursor-pointer px-15 h-8 border border-text-700 rounded-[21px] ml-auto">
           <Image src={refresh} height={'14px'} width={'15px'} />
         </div>
         <div
+          ref={refSettingTab}
           className="py-1 px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] ml-2"
           onClick={() => setSettingsShow(!settingsShow)}
         >
