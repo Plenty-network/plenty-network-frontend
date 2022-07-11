@@ -314,7 +314,8 @@ function SwapTab(props: ISwapTabProps) {
                   </div>
                   <div className="ml-auto">
                     <Image
-                      src={openSwapDetails ? arrowUp : arrowDown}
+                      src={arrowUp}
+                      className={animateOpenSwapDetails ? 'rotate-180' : 'rotate-0'}
                       width={'12px'}
                       height={'9px'}
                     />

@@ -586,3 +586,11 @@
 		padding: 0;
      }
   }
+  .rotate-180{
+	transform: rotateZ(-180deg);
+	transition: all 0.4s ease;;
+  }
+  .rotate-0{
+	transform: rotateZ(0deg);
+	transition: all 0.4s ease;;
+  }
