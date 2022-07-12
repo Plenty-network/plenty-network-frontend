@@ -2,8 +2,6 @@ import { TezosMessageUtils, TezosParameterFormat } from 'conseiljs';
 import axios from 'axios';
 import Config from '../../config/config';
 import {
-    TOKEN_CONFIG,
-    AMM_CONFIG,
     type1MapIds,
     type2MapIds,
     type3MapIds,
@@ -17,11 +15,8 @@ import { packDataBytes, unpackDataBytes } from '@taquito/michel-codec';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { CheckIfWalletConnected } from '../../common/wallet'
 import { NetworkType } from '@airgap/beacon-sdk';
-import {TOKEN , AMM } from './fetchConfig'
 import { useAppSelector } from '../../redux';
 
-
-// TODO: IMPLEMENT REDUX CALLING OF CONFIG
 
 
 /**
@@ -75,9 +70,10 @@ export const getUserBalanceByRpc = async (
     address: string
 ) : Promise<{success : boolean , balance : BigNumber , identifier : string , error? : any}> => {
     try {
+        const TOKEN = useAppSelector((state) => state.config.tokens);
         const connectedNetwork = Config.NETWORK;
         const rpcNode = Config.RPC_NODES[connectedNetwork];
-
+        
         if (identifier === 'tzBTC') {
             try {
                 const tokenContractAddress : string = 'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn';
