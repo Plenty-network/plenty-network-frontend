@@ -3,6 +3,7 @@ import CONFIG from '../../../config/config';
 import BigNumber from 'bignumber.js';
 import { RPC_NODE } from '../../../constants/global';
 import { useAppSelector } from '../../../redux';
+import axios from 'axios';
 
 
 
@@ -54,18 +55,183 @@ export const getGeneralExchangeRate = (tokenA_supply: BigNumber, tokenB_supply: 
         tokenBexchangeRate,
     };
 };
-export const getDexAddress = (tokenIn:string , tokenOut:string) : string =>{
+
+export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
     const AMM = useAppSelector((state) => state.config.AMMs);
     let add = 'false';
-    Object.keys(AMM).forEach(function(key) {
-        if((AMM[key].token1.symbol === tokenIn  && AMM[key].token2.symbol === tokenOut) || (AMM[key].token2.symbol === tokenIn  && AMM[key].token1.symbol === tokenOut)){
+    Object.keys(AMM).forEach(function (key) {
+        if ((AMM[key].token1.symbol === tokenIn && AMM[key].token2.symbol === tokenOut) || (AMM[key].token2.symbol === tokenIn && AMM[key].token1.symbol === tokenOut)) {
             add = key;
             return key;
         }
-      })
-      console.log(add);
-      return add;
+    })
+    return add;
 }
+
+export const calculateTokensOutTezCtez = async (
+    tezSupply: BigNumber,
+    ctezSupply: BigNumber,
+    tokenIn_amount: BigNumber,
+    pair_fee_denom: BigNumber,
+    slippage: BigNumber,
+    target: BigNumber,
+    tokenIn: string,
+): Promise<{ tokenOut: BigNumber, fee: BigNumber, minimumOut: BigNumber, exchangeRate: BigNumber, priceImpact: BigNumber, error?: any }> => {
+    tokenIn_amount = tokenIn_amount.multipliedBy(10 ** 6);
+    try {
+        if (tokenIn === 'ctez') {
+            const dy =
+                newton_dx_to_dy(target.multipliedBy(ctezSupply), tezSupply.multipliedBy(2 ** 48), tokenIn_amount.multipliedBy(target), 5).dividedBy(2 ** 48);
+            let fee = dy.dividedBy(pair_fee_denom);
+            let tokenOut = dy.minus(fee);
+            let minimumOut = tokenOut.minus((slippage.multipliedBy(tokenOut)).dividedBy(100));
+            minimumOut = minimumOut.dividedBy(10 ** 6);
+            const exchangeRate = tokenOut.dividedBy(tokenIn_amount); // 1 tokenIn = x tokenOut
+
+            const updated_Ctez_Supply = ctezSupply.plus(tokenIn_amount);
+            const updated_Tez_Supply = tezSupply.minus(tokenOut);
+
+            const next_dy =
+                newton_dx_to_dy(
+                    target.multipliedBy(updated_Ctez_Supply),
+                    updated_Tez_Supply.multipliedBy(2 ** 48),
+                    tokenIn_amount.multipliedBy(target),
+                    5,
+                ).dividedBy(2 ** 48);
+
+            const next_fee = next_dy.dividedBy(pair_fee_denom);
+            const next_tokenOut = next_dy.minus(next_fee);
+            let priceImpact = (tokenOut.minus(next_tokenOut)).dividedBy(tokenOut);
+            priceImpact = priceImpact.multipliedBy(100);
+            priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
+            tokenOut = tokenOut.dividedBy(10 ** 6);
+            fee = fee.dividedBy(10 ** 6);
+
+            return {
+                tokenOut,
+                fee,
+                minimumOut,
+                exchangeRate,
+                priceImpact,
+            };
+        } else if (tokenIn === 'tez') {
+            const dy =
+                newton_dx_to_dy(tezSupply.multipliedBy(2 ** 48), target.multipliedBy(ctezSupply), tokenIn_amount.multipliedBy(2 ** 48), 5).dividedBy(target);
+            let fee = dy.dividedBy(pair_fee_denom);
+            let tokenOut = dy.minus(fee);
+            let minimumOut = tokenOut.minus((slippage.multipliedBy(tokenOut)).dividedBy(100));
+            minimumOut = minimumOut.dividedBy(10 ** 6);
+            const exchangeRate = tokenOut.dividedBy(tokenIn_amount); // 1 tokenIn = x tokenOut
+
+            const updated_Ctez_Supply = ctezSupply.minus(tokenOut);
+            const updated_Tez_Supply = tezSupply.plus(tokenIn_amount);
+
+            const next_dy =
+                newton_dx_to_dy(
+                    updated_Tez_Supply.multipliedBy(2 ** 48),
+                    target.multipliedBy(updated_Ctez_Supply),
+                    tokenIn_amount.multipliedBy(2 ** 48),
+                    5,
+                ).dividedBy(target);
+            const next_fee = next_dy.dividedBy(pair_fee_denom);
+            const next_tokenOut = next_dy.minus(next_fee);
+            let priceImpact = (tokenOut.minus(next_tokenOut)).dividedBy(tokenOut);
+            priceImpact = priceImpact.multipliedBy(100);
+            priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
+            tokenOut = tokenOut.dividedBy(10 ** 6);
+            fee = fee.dividedBy(10 ** 6);
+            return {
+                tokenOut,
+                fee,
+                minimumOut,
+                exchangeRate,
+                priceImpact,
+            };
+        }
+        return {
+            tokenOut: new BigNumber(0),
+            fee: new BigNumber(0),
+            minimumOut: new BigNumber(0),
+            exchangeRate: new BigNumber(0),
+            priceImpact: new BigNumber(0),
+        };
+    } catch (error) {
+        return {
+            tokenOut: new BigNumber(0),
+            fee: new BigNumber(0),
+            minimumOut: new BigNumber(0),
+            exchangeRate: new BigNumber(0),
+            priceImpact: new BigNumber(0),
+            error,
+        };
+    }
+};
+
+export const loadSwapDataTezCtez = async (tokenIn : string, tokenOut : string) : Promise<{success: true,
+    tezPool : BigNumber,
+    ctezPool : BigNumber,
+    tokenIn : string,
+    tokenOut : string,
+    exchangeFee : BigNumber,
+    lpTokenSupply : BigNumber,
+    lpToken : any,
+    dexContractInstance : any,
+    target : BigNumber}> => {
+    try {
+      const AMM = useAppSelector((state) => state.config.AMMs);
+      const connectedNetwork = CONFIG.NETWORK;
+      // const rpcNode = CONFIG.RPC_NODES[connectedNetwork];
+      const rpcNode = localStorage.getItem(RPC_NODE) ?? CONFIG.RPC_NODES[connectedNetwork];
+
+      const dexContractAddress = getDexAddress(tokenIn, tokenOut);
+      if (dexContractAddress === 'false') {
+          throw 'No dex found';
+      }
+
+      const Tezos = new TezosToolkit(rpcNode);
+      const dexContractInstance = await Tezos.contract.at(dexContractAddress);
+      const dexStorage : any = await dexContractInstance.storage();
+      const tezPool : BigNumber = new BigNumber(await dexStorage.tezPool);
+      const ctezPool : BigNumber = new BigNumber(await dexStorage.ctezPool);
+      const lpTokenSupply : BigNumber = new BigNumber(await dexStorage.lqtTotal);
+      const lpFee = await dexStorage.lpFee;
+      const exchangeFee = new BigNumber(lpFee);
+      const lpToken = AMM[dexContractAddress].lpToken;
+      const ctezAddress = CONFIG.CTEZ[connectedNetwork];
+      const ctezStorageUrl = `${rpcNode}chains/main/blocks/head/context/contracts/${ctezAddress}/storage`;
+      const ctezStorage = await axios.get(ctezStorageUrl);
+      const target = ctezStorage.data.args[2].int;
+      
+      return {
+        success: true,
+        tezPool,
+        ctezPool,
+        tokenIn,
+        tokenOut,
+        exchangeFee,
+        lpTokenSupply,
+        lpToken,
+        dexContractInstance,
+        target,
+      };
+    } catch (error) {
+      console.log({ message: 'swap data error', error });
+      return {
+        success: false,
+        tezPool : new BigNumber(0),
+        ctezPool : new BigNumber(0),
+        tokenIn,
+        tokenOut,
+        exchangeFee : new BigNumber(0),
+        lpTokenSupply : new BigNumber(0),
+        lpToken : null,
+        dexContractInstance : null,
+        target : new BigNumber(0),
+      };
+    }
+  };
+
+
 
 /**
  * Returns tokensOut from the given amountIn and pool values.
@@ -152,7 +318,19 @@ export const calculateTokensOutGeneralStable = async (
     }
 };
 
-export const loadSwapDataGeneralStable = async (tokenIn : string , tokenOut : string) => {
+export const loadSwapDataGeneralStable = async (tokenIn: string, tokenOut: string) : Promise<{
+    success: boolean,
+    tokenIn : string,
+    tokenIn_supply : BigNumber | undefined,
+    tokenOut: string,
+    tokenOut_supply : BigNumber | undefined,
+    exchangeFee : BigNumber,
+    tokenOutPerTokenIn : BigNumber | undefined,
+    lpTokenSupply: BigNumber,
+    lpToken : any,
+    tokenIn_precision : BigNumber | undefined,
+    tokenOut_precision : BigNumber | undefined,
+    dexContractInstance: any,}> => {
     try {
         const TOKEN = useAppSelector((state) => state.config.tokens);
         const AMM = useAppSelector((state) => state.config.AMMs);
@@ -160,18 +338,18 @@ export const loadSwapDataGeneralStable = async (tokenIn : string , tokenOut : st
         const connectedNetwork = CONFIG.NETWORK;
         // const rpcNode = CONFIG.RPC_NODES[connectedNetwork];
         const rpcNode = localStorage.getItem(RPC_NODE) ?? CONFIG.RPC_NODES[connectedNetwork];
-        const dexContractAddress = getDexAddress(tokenIn , tokenOut);
-        if(dexContractAddress === 'false'){
-         throw 'No dex found'; 
+        const dexContractAddress = getDexAddress(tokenIn, tokenOut);
+        if (dexContractAddress === 'false') {
+            throw 'No dex found';
         }
 
         const Tezos = new TezosToolkit(rpcNode);
         const dexContractInstance = await Tezos.contract.at(dexContractAddress);
-        const dexStorage :any = await dexContractInstance.storage();
+        const dexStorage: any = await dexContractInstance.storage();
 
         const token1_pool = new BigNumber(await dexStorage.token1Pool);
         // GET PRECISION FROM CONFIG
-        const token1_precision =new BigNumber(await dexStorage.token1Precision);
+        const token1_precision = new BigNumber(await dexStorage.token1Precision);
 
         const token2_pool = new BigNumber(await dexStorage.token2Pool);
         const token2_precision = new BigNumber(await dexStorage.token2Precision);
@@ -220,13 +398,17 @@ export const loadSwapDataGeneralStable = async (tokenIn : string , tokenOut : st
         console.log({ message: 'swap data error', error });
         return {
             success: false,
-            tezPool: 0,
-            ctezPool: 0,
             tokenIn,
+            tokenIn_supply : new BigNumber(0),
             tokenOut,
-            lpTokenSupply: 0,
-            lpToken: null,
-            dexContractInstance: null,
+            tokenOut_supply : new BigNumber(0),
+            exchangeFee : new BigNumber(0),
+            tokenOutPerTokenIn : new BigNumber(0),
+            lpTokenSupply: new BigNumber(0),
+            lpToken : null,
+            tokenIn_precision : new BigNumber(0),
+            tokenOut_precision : new BigNumber(0),
+            dexContractInstance : null
         };
     }
 };
