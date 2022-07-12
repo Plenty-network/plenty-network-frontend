@@ -3,8 +3,10 @@ import info from '../../assets/icon/swap/info.svg';
 
 import Image from 'next/image';
 import Button from '../Button/Button';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ERRORMESSAGES } from '../../constants/swap';
+import { useOutsideClick } from '../../utils/outSideClickHook';
+import { Switch } from '../SwitchCheckbox/switchWithoutIcon';
 
 interface ITransactionSettingsProps {
   onClick?: () => void | Promise<void>;
@@ -13,14 +15,19 @@ interface ITransactionSettingsProps {
   className?: string;
   slippage: number;
   setSlippage: any;
+  setShowRecepient: any;
 }
 function TransactionSettings(props: ITransactionSettingsProps) {
   const [errorMessage, setErrorMessage] = useState('');
-  window.addEventListener('mouseup', function (event) {
-    var settingsEle = document.getElementById('settings');
-    if (event.target != settingsEle) {
-      props.setSettingsShow(false);
-    }
+  const refSetting = useRef(null);
+  const [recepientlocal, setRecepientlocal] = useState(false);
+  const handleShowRecepient = () => {
+    setRecepientlocal(!recepientlocal);
+    props.setShowRecepient(!recepientlocal);
+  };
+
+  useOutsideClick(refSetting, () => {
+    props.setSettingsShow(false);
   });
   useEffect(() => {
     if (props.slippage > 30 && props.slippage <= 100) {
@@ -33,8 +40,12 @@ function TransactionSettings(props: ITransactionSettingsProps) {
   }, [props.slippage]);
   return props.show ? (
     <div
-      id="settings"
-      className="z-50 absolute right-[307px] bg-card-500 border border-text-700/[0.5] w-[367px] p-5 rounded-2xl fade-in-3"
+      ref={refSetting}
+      style={{ top: '0px' }}
+      className={clsx(
+        'z-20 absolute right-[10px]  md:right-[27px]  bg-card-500 border border-text-700/[0.5] w-[367px] p-5 rounded-2xl fade-in-3 ',
+        errorMessage ? 'h-[300px]' : 'h-[280px]'
+      )}
     >
       <div className="font-subtitle2">Transaction Settings</div>
       <div className="mt-2">
@@ -81,24 +92,47 @@ function TransactionSettings(props: ITransactionSettingsProps) {
       <div className="border-t border-text-800 mt-[18px]"></div>
       <div className="font-subtitle2 mt-4">Interface Settings</div>
       <div className="mt-2">
-        <span className="font-caption1 text-text-200 ">Disable multihops</span>
-        <span className="relative top-0.5 left-[5px]">
-          <Image src={info} width={'11px'} height={'11px'} />
-        </span>
+        <div className="flex justify-between">
+          <div>
+            <span className="font-caption1 text-text-200 ">
+              Disable multihops
+            </span>
+            <span className="relative top-0.5 left-[5px]">
+              <Image src={info} width={'11px'} height={'11px'} />
+            </span>
+          </div>
+          <div>
+            <Switch id="disableMultiphops" />
+          </div>
+        </div>
       </div>
-      <div className="mt-2">
-        <span className="font-caption1 text-text-200 ">
-          Togggle expert mode
-        </span>
-        <span className="relative top-0.5 left-[5px]">
-          <Image src={info} width={'11px'} height={'11px'} />
-        </span>
+      <div className="relative -top-[16px]">
+        <div className="flex justify-between">
+          <div>
+            <span className="font-caption1 text-text-200 ">
+              Togggle expert mode
+            </span>
+            <span className="relative top-0.5 left-[5px]">
+              <Image src={info} width={'11px'} height={'11px'} />
+            </span>
+          </div>
+          <div>
+            <Switch id="expert" />
+          </div>
+        </div>
       </div>
-      <div className="mt-2">
-        <span className="font-caption1 text-text-200 ">Add recipient</span>
-        <span className="relative top-0.5 left-[5px]">
-          <Image src={info} width={'11px'} height={'11px'} />
-        </span>
+      <div className="relative -top-[32px]">
+        <div className="flex justify-between">
+          <div>
+            <span className="font-caption1 text-text-200 ">Add recipient</span>
+            <span className="relative top-0.5 left-[5px]">
+              <Image src={info} width={'11px'} height={'11px'} />
+            </span>
+          </div>
+          <div>
+            <Switch id="recipient" onChange={handleShowRecepient} />
+          </div>
+        </div>
       </div>
     </div>
   ) : null;

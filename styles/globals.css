@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 @import './animation.css';
+@import './switch.css';
+
 body {
   /*
   background: -webkit-gradient(linear, left top, left bottom, from(#0C011C), to(#1E063F)) fixed;
@@ -46,6 +48,12 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+.secondtoken:hover .inputSecond {
+  background: rgba(14, 8, 23, 0.02);
+}
+.inputSecond {
+  background: rgba(14, 8, 23, 0.02);
 }
 
 /* Firefox */

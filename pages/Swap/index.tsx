@@ -3,11 +3,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { tokens } from '../../src/constants/Tokens';
 import { useLocationStateInSwap } from '../../src/hooks/useLocationStateInSwap';
 import SwapModal from '../../src/components/SwapModal/SwapModal';
-import { tokensModal, tokenType } from '../../src/constants/swap';
 import SwapTab from '../../src/components/Swap/SwapTab';
 import { getUserBalanceByRpc } from '../../src/api/util/balance';
 import { getTokenPrices } from '../../src/api/util/price';
-import { getDexAddress, loadSwapDataGeneralStable } from '../../src/api/util/swap/stableswap';
+import { tokensModal, tokenType } from '../../src/constants/swap';
 
 interface ISwapProps {
   className?: string;
@@ -21,11 +20,13 @@ interface ISwapProps {
 function Swap(props: ISwapProps) {
   const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
     useLocationStateInSwap();
+
   const [firstTokenAmount, setFirstTokenAmount] = useState<string | number>('');
   const [secondTokenAmount, setSecondTokenAmount] = useState<string | number>(
     ''
   );
 
+  const [recepient, setRecepient] = useState('');
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>(
     {}
   );
@@ -38,13 +39,20 @@ function Swap(props: ISwapProps) {
     success: false,
     isloading: false,
   });
-  loadSwapDataGeneralStable('USDC.e' , 'uUSD')
-  // getDexAddress('uUSD' , 'USDC.e');
-  // getTokenPrices();
+  const [tokenPrice, setTokenPrice] = useState({});
+  useEffect(() => {
+    getTokenPrices().then((response) => {
+      setTokenPrice(response.tokenPrice);
+    });
+  }, []);
+
   //routedata true once we have both the tokens
   useEffect(() => {
-    if (tokenOut.name !== 'false') {
-      setRouteData({ success: true, isloading: false });
+    if (
+      Object.prototype.hasOwnProperty.call(tokenIn, 'name') &&
+      Object.prototype.hasOwnProperty.call(tokenOut, 'name')
+    ) {
+      // setRouteData(success: true);
     }
   }, [tokenIn, tokenOut]);
 
@@ -60,9 +68,9 @@ function Swap(props: ISwapProps) {
     } else {
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
-        if (tokenOut.name !== 'false') {
+        if (Object.keys(tokenOut).length !== 0) {
           setTimeout(() => {
-            setSecondTokenAmount('55.721932');
+            setSecondTokenAmount('55');
             setRouteData({ success: true, isloading: false });
           }, 1000);
         }
@@ -70,7 +78,7 @@ function Swap(props: ISwapProps) {
         setSecondTokenAmount(input);
 
         setTimeout(() => {
-          setFirstTokenAmount('12.1');
+          setFirstTokenAmount('12');
           setRouteData({ success: true, isloading: false });
         }, 1000);
       }
@@ -122,13 +130,12 @@ function Swap(props: ISwapProps) {
   useEffect(() => {
     if (props.otherProps.walletAddress) {
       const updateBalance = async () => {
-        const tzBTCName = 'tzBTC';
         const balancePromises = [];
-        tokenIn &&
+        Object.keys(tokenIn).length !== 0 &&
           balancePromises.push(
             getUserBalanceByRpc(tokenIn.name, props.otherProps.walletAddress)
           );
-        tokenOut &&
+        Object.keys(tokenOut).length !== 0 &&
           balancePromises.push(
             getUserBalanceByRpc(tokenOut.name, props.otherProps.walletAddress)
           );
@@ -177,6 +184,9 @@ function Swap(props: ISwapProps) {
           setTokenIn={setTokenIn}
           setTokenOut={setTokenOut}
           setTokenType={setTokenType}
+          tokenPrice={tokenPrice}
+          recepient={recepient}
+          setRecepient={setRecepient}
         />
       </div>
       <SwapModal
