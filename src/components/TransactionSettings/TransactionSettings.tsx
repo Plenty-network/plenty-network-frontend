@@ -19,9 +19,6 @@ interface ITransactionSettingsProps {
 function TransactionSettings(props: ITransactionSettingsProps) {
   const [errorMessage, setErrorMessage] = useState('');
   const refSetting=useRef(null);
-
-  
-  
     useOutsideClick(refSetting,()=>{
       props.setSettingsShow(false)
     });
@@ -38,7 +35,7 @@ function TransactionSettings(props: ITransactionSettingsProps) {
     <div
       ref={refSetting}
       style={{top:'-18px'}}
-      className="z-10 absolute   right-0  bg-card-500 border border-text-700/[0.5] w-[367px] p-5 rounded-2xl fade-in-3"
+      className="z-10 absolute right-0  bg-card-500 border border-text-700/[0.5] w-[367px] p-5 rounded-2xl fade-in-3"
     >
       <div className="font-subtitle2">Transaction Settings</div>
       <div className="mt-2">
