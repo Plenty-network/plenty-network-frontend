@@ -3,14 +3,14 @@ import { NetworkType } from '@airgap/beacon-sdk';
 import { TezosToolkit } from '@taquito/taquito';
 import Config from '../config/config';
 
-const connectedNetwork = Config.NETWORK;
-const name = Config.NAME;
+export const connectedNetwork = Config.NETWORK;
+export const configName = Config.NAME;
 
-const rpcNode = Config.RPC_NODES[connectedNetwork];
+export const rpcNode = Config.RPC_NODES[connectedNetwork];
 
 // Beacon Wallet instance
 export const wallet = new BeaconWallet({
-  name: name,
+  name: configName,
   preferredNetwork: connectedNetwork as NetworkType,
 });
 
