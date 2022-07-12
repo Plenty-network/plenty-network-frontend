@@ -167,7 +167,7 @@ export const calculateTokensOutTezCtez = async (
     }
 };
 
-export const loadSwapDataTezCtez = async (tokenIn : string, tokenOut : string) : Promise<{success: true,
+export const loadSwapDataTezCtez = async (tokenIn : string, tokenOut : string) : Promise<{success: boolean,
     tezPool : BigNumber,
     ctezPool : BigNumber,
     tokenIn : string,

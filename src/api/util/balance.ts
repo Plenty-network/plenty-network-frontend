@@ -73,7 +73,7 @@ export const getUserBalanceByRpc = async (
         const TOKEN = useAppSelector((state) => state.config.tokens);
         const connectedNetwork = Config.NETWORK;
         const rpcNode = Config.RPC_NODES[connectedNetwork];
-
+        
         if (identifier === 'tzBTC') {
             try {
                 const tokenContractAddress : string = 'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn';
