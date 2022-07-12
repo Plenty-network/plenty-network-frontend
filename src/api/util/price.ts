@@ -1,9 +1,7 @@
 import axios from 'axios';
 import Config from '../../config/config';
-import {TOKEN , AMM} from './fetchConfig'
+import { useAppSelector } from '../../redux';
 
-
-// TODO : IMPLEMENT REDUX CALLING OF CONFIG
 
 const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
     try {
@@ -97,6 +95,8 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
    */
   export const getTokenPrices = async () : Promise<{success : boolean , tokenPrice : { [id: string] : number; }}> => {
     try {
+      const TOKEN = useAppSelector((state) => state.config.tokens);
+      const AMM = useAppSelector((state) => state.config.AMMs);
       const pricesResponse = await axios.get('https://api.teztools.io/token/prices');
       const tokenPriceResponse = pricesResponse.data;
       const ctezPrice = await getCtezPrice();

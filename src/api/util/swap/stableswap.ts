@@ -83,9 +83,7 @@ export const calculateTokensOutGeneralStable = async (
     priceImpact: BigNumber,
     error?: any
 }> => {
-
-
-    const connectedNetwork = CONFIG.NETWORK;
+    const TOKEN = useAppSelector((state) => state.config.tokens);
     tokenIn_amount = tokenIn_amount.multipliedBy(10 ** TOKEN[tokenIn].decimals);
     try {
         tokenIn_supply = tokenIn_supply.multipliedBy(tokenIn_precision);
@@ -143,8 +141,6 @@ export const calculateTokensOutGeneralStable = async (
 };
 
 export const getDexAddress = (tokenIn:string , tokenOut:string) : string =>{
-
-    // const TOKEN = useAppSelector((state) => state.config.tokens);
     const AMM = useAppSelector((state) => state.config.AMMs);
     let add = 'false';
     Object.keys(AMM).forEach(function(key) {
@@ -207,21 +203,6 @@ export const loadSwapDataGeneralStable = async (tokenIn : string , tokenOut : st
         tokenOut_supply = tokenOut_supply?.dividedBy(Math.pow(10, tokenOut_Decimal));
         lpTokenSupply = lpTokenSupply.dividedBy(Math.pow(10, lpTokenDecimal));
         const tokenOutPerTokenIn = tokenOut_supply?.dividedBy(tokenIn_supply ?? 1);
-
-        console.log(
-            tokenIn,
-            tokenIn_supply,
-            tokenOut,
-            tokenOut_supply,
-            exchangeFee,
-            tokenOutPerTokenIn,
-            lpTokenSupply,
-            lpToken,
-            tokenIn_precision,
-            tokenOut_precision,
-            dexContractInstance,);
-
-
         return {
             success: true,
             tokenIn,

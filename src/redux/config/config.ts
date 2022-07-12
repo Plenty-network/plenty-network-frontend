@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchConfig } from '../../api/util/fetchConfig';
 
 interface ConfigState {
-  tokens: {};
-  AMMs: {};
+  tokens: { [x: string]: any };
+  AMMs: { [x: string]: any };
 }
 
 const initialState: ConfigState = {
