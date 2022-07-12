@@ -96,7 +96,6 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
   export const getTokenPrices = async () : Promise<{success : boolean , tokenPrice : { [id: string] : number; }}> => {
     try {
       const TOKEN = useAppSelector((state) => state.config.tokens);
-      const AMM = useAppSelector((state) => state.config.AMMs);
       const pricesResponse = await axios.get('https://api.teztools.io/token/prices');
       const tokenPriceResponse = pricesResponse.data;
       const ctezPrice = await getCtezPrice();

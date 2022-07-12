@@ -5,7 +5,7 @@ import Config from '../config/config';
 
 export const connectedNetwork = Config.NETWORK;
 export const configName = Config.NAME;
-
+// const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
 export const rpcNode = Config.RPC_NODES[connectedNetwork];
 
 // Beacon Wallet instance

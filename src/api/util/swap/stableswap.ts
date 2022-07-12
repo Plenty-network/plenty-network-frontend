@@ -54,6 +54,18 @@ export const getGeneralExchangeRate = (tokenA_supply: BigNumber, tokenB_supply: 
         tokenBexchangeRate,
     };
 };
+export const getDexAddress = (tokenIn:string , tokenOut:string) : string =>{
+    const AMM = useAppSelector((state) => state.config.AMMs);
+    let add = 'false';
+    Object.keys(AMM).forEach(function(key) {
+        if((AMM[key].token1.symbol === tokenIn  && AMM[key].token2.symbol === tokenOut) || (AMM[key].token2.symbol === tokenIn  && AMM[key].token1.symbol === tokenOut)){
+            add = key;
+            return key;
+        }
+      })
+      console.log(add);
+      return add;
+}
 
 /**
  * Returns tokensOut from the given amountIn and pool values.
@@ -139,19 +151,6 @@ export const calculateTokensOutGeneralStable = async (
         };
     }
 };
-
-export const getDexAddress = (tokenIn:string , tokenOut:string) : string =>{
-    const AMM = useAppSelector((state) => state.config.AMMs);
-    let add = 'false';
-    Object.keys(AMM).forEach(function(key) {
-        if((AMM[key].token1.symbol === tokenIn  && AMM[key].token2.symbol === tokenOut) || (AMM[key].token2.symbol === tokenIn  && AMM[key].token1.symbol === tokenOut)){
-            add = key;
-            return key;
-        }
-      })
-      console.log(add);
-      return add;
-}
 
 export const loadSwapDataGeneralStable = async (tokenIn : string , tokenOut : string) => {
     try {
