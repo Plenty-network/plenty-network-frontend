@@ -7,7 +7,8 @@ import SwapTab from '../../src/components/Swap/SwapTab';
 import { getUserBalanceByRpc } from '../../src/api/util/balance';
 import { getTokenPrices } from '../../src/api/util/price';
 import { tokensModal, tokenType } from '../../src/constants/swap';
-import { getDexAddress } from '../../src/api/util/swap/stableswap';
+
+import { useAppSelector } from '../../src/redux';
 
 interface ISwapProps {
   className?: string;
@@ -19,6 +20,8 @@ interface ISwapProps {
 }
 
 function Swap(props: ISwapProps) {
+  const TOKEN = useAppSelector((state) => state.config.tokens);
+
   const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
     useLocationStateInSwap();
 
@@ -136,13 +139,28 @@ function Swap(props: ISwapProps) {
     if (props.otherProps.walletAddress) {
       const updateBalance = async () => {
         const balancePromises = [];
+        console.log(
+          await getUserBalanceByRpc(
+            tokenIn.name,
+            props.otherProps.walletAddress,
+            TOKEN
+          )
+        );
         Object.keys(tokenIn).length !== 0 &&
           balancePromises.push(
-            getUserBalanceByRpc(tokenIn.name, props.otherProps.walletAddress)
+            getUserBalanceByRpc(
+              tokenIn.name,
+              props.otherProps.walletAddress,
+              TOKEN
+            )
           );
         Object.keys(tokenOut).length !== 0 &&
           balancePromises.push(
-            getUserBalanceByRpc(tokenOut.name, props.otherProps.walletAddress)
+            getUserBalanceByRpc(
+              tokenOut.name,
+              props.otherProps.walletAddress,
+              TOKEN
+            )
           );
 
         const balanceResponse = await Promise.all(balancePromises);
@@ -160,7 +178,7 @@ function Swap(props: ISwapProps) {
       };
       updateBalance();
     }
-  }, [tokenIn, tokenOut, props]);
+  }, [tokenIn, tokenOut, props, TOKEN]);
 
   return (
     <>

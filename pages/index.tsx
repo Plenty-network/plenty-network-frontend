@@ -1,8 +1,6 @@
 import type { NextPage } from 'next';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import Button from '../src/components/Button/Button';
-import { PopUpModal } from '../src/components/Modal/popupModal';
 import { SideBarHOC } from '../src/components/Sidebar/SideBarHOC';
 import Swap from './Swap';
 import { Provider } from 'react-redux';

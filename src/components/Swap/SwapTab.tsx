@@ -58,18 +58,10 @@ function SwapTab(props: ISwapTabProps) {
 
   const [openSwapDetails, setOpenSwapDetails, animateOpenSwapDetails] =
     useStateAnimate(false, 280);
-  // const [routeData, setRouteData] = useState({
-  //   success: false,
-  //   isloading: false,
-  // });
+
   const [showRecepient, setShowRecepient] = useState(false);
 
-  //routedata true once we have both the tokens
-  // useEffect(() => {
-  //   if (props.tokenOut.name !== 'false') {
-  //     setRouteData({ success: true, isloading: false });
-  //   }
-  // }, [props.tokenIn, props.tokenOut]);
+  const [isRefresh, setRefresh] = useState(false);
 
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {
@@ -237,7 +229,7 @@ function SwapTab(props: ISwapTabProps) {
               </div>
               <div>
                 {Object.keys(props.tokenOut).length !== 0 ? (
-                  props.secondTokenAmount ? (
+                  true ? (
                     <input
                       type="number"
                       className={clsx(
