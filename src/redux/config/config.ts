@@ -20,6 +20,7 @@ export const getConfig = createAsyncThunk(
   }
 );
 
+// TODO : ADD TYPES TO state vars
 const ConfigSlice = createSlice({
   name: 'config',
   initialState,

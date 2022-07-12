@@ -2,7 +2,9 @@ import { TezosToolkit } from '@taquito/taquito';
 import CONFIG from '../../../config/config';
 import BigNumber from 'bignumber.js';
 import { RPC_NODE } from '../../../constants/global';
-import { TOKEN, AMM } from '../../util/fetchConfig'
+import { useAppSelector } from '../../../redux';
+
+
 
 const util = (x: BigNumber, y: BigNumber): { first: BigNumber, second: BigNumber } => {
     const plus = x.plus(y);
@@ -140,31 +142,25 @@ export const calculateTokensOutGeneralStable = async (
     }
 };
 
-// TODO USE REDUX AND FIX THIS FUNC
-const getDexAddress = (tokenIn:string , tokenOut:string) : string =>{
+export const getDexAddress = (tokenIn:string , tokenOut:string) : string =>{
+
+    // const TOKEN = useAppSelector((state) => state.config.tokens);
+    const AMM = useAppSelector((state) => state.config.AMMs);
     let add = 'false';
-    const keys = Object.keys(AMM);
-    for( let i =0 ; i<keys.length ; i++){
-        const key = keys[i];
+    Object.keys(AMM).forEach(function(key) {
         if((AMM[key].token1.symbol === tokenIn  && AMM[key].token2.symbol === tokenOut) || (AMM[key].token2.symbol === tokenIn  && AMM[key].token1.symbol === tokenOut)){
             add = key;
             return key;
         }
-    }
-    return add;
-    // Object.keys(AMM).forEach(function(key) {
-    //     console.log(AMM[key].token1.symbol === tokenIn  && AMM[key].token2.symbol === tokenOut);
-    //     if((AMM[key].token1.symbol === tokenIn  && AMM[key].token2.symbol === tokenOut) || (AMM[key].token2.symbol === tokenIn  && AMM[key].token1.symbol === tokenOut)){
-    //         add = key;
-    //         return key;
-    //     }
-    //   })
-    //   return add;
+      })
+      console.log(add);
+      return add;
 }
 
 export const loadSwapDataGeneralStable = async (tokenIn : string , tokenOut : string) => {
     try {
-        console.log(AMM);
+        const TOKEN = useAppSelector((state) => state.config.tokens);
+        const AMM = useAppSelector((state) => state.config.AMMs);
         // TRY TO IMPORT THIS STUFF
         const connectedNetwork = CONFIG.NETWORK;
         // const rpcNode = CONFIG.RPC_NODES[connectedNetwork];
@@ -189,12 +185,12 @@ export const loadSwapDataGeneralStable = async (tokenIn : string , tokenOut : st
         let tokenOut_supply;
         let tokenIn_precision;
         let tokenOut_precision;
-        if (tokenOut === TOKEN[dexContractAddress].token2.symbol) {
+        if (tokenOut === AMM[dexContractAddress].token2.symbol) {
             tokenOut_supply = token2_pool;
             tokenOut_precision = token2_precision;
             tokenIn_supply = token1_pool;
             tokenIn_precision = token1_precision;
-        } else if (tokenOut === TOKEN[dexContractAddress].token1.symbol) {
+        } else if (tokenOut === AMM[dexContractAddress].token1.symbol) {
             tokenOut_supply = token1_pool;
             tokenOut_precision = token1_precision;
             tokenIn_supply = token2_pool;
@@ -211,6 +207,21 @@ export const loadSwapDataGeneralStable = async (tokenIn : string , tokenOut : st
         tokenOut_supply = tokenOut_supply?.dividedBy(Math.pow(10, tokenOut_Decimal));
         lpTokenSupply = lpTokenSupply.dividedBy(Math.pow(10, lpTokenDecimal));
         const tokenOutPerTokenIn = tokenOut_supply?.dividedBy(tokenIn_supply ?? 1);
+
+        console.log(
+            tokenIn,
+            tokenIn_supply,
+            tokenOut,
+            tokenOut_supply,
+            exchangeFee,
+            tokenOutPerTokenIn,
+            lpTokenSupply,
+            lpToken,
+            tokenIn_precision,
+            tokenOut_precision,
+            dexContractInstance,);
+
+
         return {
             success: true,
             tokenIn,

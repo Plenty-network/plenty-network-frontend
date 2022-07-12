@@ -7,7 +7,7 @@ import { tokensModal, tokenType } from '../../src/constants/swap';
 import SwapTab from '../../src/components/Swap/SwapTab';
 import { getUserBalanceByRpc } from '../../src/api/util/balance';
 import { getTokenPrices } from '../../src/api/util/price';
-import { loadSwapDataGeneralStable } from '../../src/api/util/swap/stableswap';
+import { getDexAddress, loadSwapDataGeneralStable } from '../../src/api/util/swap/stableswap';
 
 interface ISwapProps {
   className?: string;
@@ -38,6 +38,8 @@ function Swap(props: ISwapProps) {
     success: false,
     isloading: false,
   });
+  loadSwapDataGeneralStable('USDC.e' , 'uUSD')
+  // getDexAddress('uUSD' , 'USDC.e');
   // getTokenPrices();
   //routedata true once we have both the tokens
   useEffect(() => {
