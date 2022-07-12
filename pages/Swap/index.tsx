@@ -26,6 +26,7 @@ function Swap(props: ISwapProps) {
     ''
   );
 
+  const [recepient, setRecepient] = useState('');
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>(
     {}
   );
@@ -47,9 +48,12 @@ function Swap(props: ISwapProps) {
 
   //routedata true once we have both the tokens
   useEffect(() => {
-    // if (tokenOut.name !== 'false') {
-    //   setRouteData({ success: true, isloading: false });
-    // }
+    if (
+      Object.prototype.hasOwnProperty.call(tokenIn, 'name') &&
+      Object.prototype.hasOwnProperty.call(tokenOut, 'name')
+    ) {
+      // setRouteData(success: true);
+    }
   }, [tokenIn, tokenOut]);
 
   const handleSwapTokenInput = (
@@ -181,6 +185,8 @@ function Swap(props: ISwapProps) {
           setTokenOut={setTokenOut}
           setTokenType={setTokenType}
           tokenPrice={tokenPrice}
+          recepient={recepient}
+          setRecepient={setRecepient}
         />
       </div>
       <SwapModal

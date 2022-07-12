@@ -49,6 +49,12 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+.secondtoken:hover .inputSecond {
+  background: rgba(14, 8, 23, 0.02);
+}
+.inputSecond {
+  background: rgba(14, 8, 23, 0.02);
+}
 
 /* Firefox */
 input[type='number'] {

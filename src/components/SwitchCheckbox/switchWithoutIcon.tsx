@@ -1,14 +1,15 @@
 import * as React from 'react';
 export interface ISwitchProps {
-    name?:string;
+  name?: string;
+  id: string;
+  onChange?: () => void;
 }
 
-export function Switch (props: ISwitchProps) {
+export function Switch(props: ISwitchProps) {
   return (
-    <div className='switchWithoutIcon'>
-    <input type="checkbox" id="switch" /><label htmlFor="switch">{props.name?props.name:'toggle'}</label>
-    </div>
-
-
+    <span className="switchWithoutIcon relative -top-[18px]">
+      <input type="checkbox" id={props.id} onChange={props.onChange} />
+      <label htmlFor={props.id}>{props.name ? props.name : 'toggle'}</label>
+    </span>
   );
 }

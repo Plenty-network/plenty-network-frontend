@@ -1,21 +1,20 @@
 import clsx from 'clsx';
 import refresh from '../../../src/assets/icon/swap/refresh.svg';
 import settings from '../../../src/assets/icon/swap/settings.svg';
-import arrowDown from '../../../src/assets/icon/swap/arrowDown.svg';
 import arrowUp from '../../../src/assets/icon/swap/arrowUp.svg';
 import ratesrefresh from '../../../src/assets/icon/swap/ratesrefresh.svg';
 import info from '../../../src/assets/icon/swap/info.svg';
 import switchsvg from '../../../src/assets/icon/swap/switch.svg';
-import plenty from '../../../src/assets/Tokens/plenty.png';
 import ctez from '../../../src/assets/Tokens/ctez.png';
 import Image from 'next/image';
+import Lottie from 'lottie-react';
 import Button from '../Button/Button';
 import TokenDropdown from '../TokenDropdown/TokenDropdown';
 import TransactionSettings from '../TransactionSettings/TransactionSettings';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { tokensModal, tokenType } from '../../../src/constants/swap';
 import { useStateAnimate } from '../../hooks/useAnimateUseState';
-import { Switch } from '../SwitchCheckbox/switchWithoutIcon';
+import loader from '../../assets/animations/shimmer-swap.json';
 
 interface ISwapTabProps {
   className?: string;
@@ -38,6 +37,8 @@ interface ISwapTabProps {
     [id: string]: number;
   };
   slippage: number;
+  setRecepient: any;
+  recepient: string;
   handleClose: () => void;
   changeTokenLocation: () => void;
   setSecondTokenAmount: any;
@@ -53,14 +54,15 @@ interface ISwapTabProps {
 
 function SwapTab(props: ISwapTabProps) {
   const [settingsShow, setSettingsShow] = useState(false);
-  const refSettingTab=useRef(null);
+  const refSettingTab = useRef(null);
 
   const [openSwapDetails, setOpenSwapDetails, animateOpenSwapDetails] =
     useStateAnimate(false, 280);
-  const [routeData, setRouteData] = useState({
-    success: false,
-    isloading: false,
-  });
+  // const [routeData, setRouteData] = useState({
+  //   success: false,
+  //   isloading: false,
+  // });
+  const [showRecepient, setShowRecepient] = useState(false);
 
   //routedata true once we have both the tokens
   // useEffect(() => {
@@ -132,6 +134,7 @@ function SwapTab(props: ISwapTabProps) {
           setSlippage={props.setSlippage}
           slippage={props.slippage}
           setSettingsShow={setSettingsShow}
+          setShowRecepient={setShowRecepient}
         />
       </div>
       <div
@@ -207,7 +210,7 @@ function SwapTab(props: ISwapTabProps) {
         </div>
       </div>
       <div className=" pt-[41px] relative -top-[24px] pb-5 border border-primary-500/[0.2] mx-px md:mx-2 lg:mx-2  px-5 lg:px-[22px] rounded-3xl bg-primary-500/[0.04]">
-        <div className="lg:w-580  h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] hover:border-primary-500/[0.6] bg-card-500 hover:bg-primary-500/[0.02]">
+        <div className="lg:w-580 secondtoken h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] hover:border-primary-500/[0.6] bg-card-500 hover:bg-primary-500/[0.02]">
           <div className=" flex justify-between">
             <div
               className="flex-[0_0_50%] mt-4"
@@ -234,11 +237,11 @@ function SwapTab(props: ISwapTabProps) {
               </div>
               <div>
                 {Object.keys(props.tokenOut).length !== 0 ? (
-                  !routeData.isloading ? (
+                  props.secondTokenAmount ? (
                     <input
                       type="number"
                       className={clsx(
-                        'text-primary-500 bg-card-500 text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 '
+                        'text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 '
                       )}
                       placeholder="0.0"
                       lang="en_EN"
@@ -255,7 +258,7 @@ function SwapTab(props: ISwapTabProps) {
                   <input
                     type="text"
                     className={clsx(
-                      'text-primary-500 bg-card-500 text-right border-0 w-[100%]  font-input-text lg:font-medium1 outline-none hover:bg-primary-500/[0.02]'
+                      'text-primary-500 inputSecond  text-right border-0 w-[100%]  font-input-text lg:font-medium1 outline-none '
                     )}
                     placeholder="--"
                     disabled
@@ -288,18 +291,41 @@ function SwapTab(props: ISwapTabProps) {
             </div>
           </div>
         </div>
+        {showRecepient && (
+          <div className="bg-card-500/[0.02] mt-2.5 rounded-2xl border border-primary-500/[0.2] h-[78px] py-3 px-[18px]">
+            <div className="font-caption1 text-text-400">Send</div>
+            <div>
+              <input
+                type="text"
+                className={clsx(
+                  'text-white  bg-card-500/[0.02] border-0 font-title1  outline-none w-[100%] placeholder:text-text-800/[0.8] '
+                )}
+                placeholder="Receipient address"
+                onChange={(e) => props.setRecepient(e.target.value)}
+                value={props.recepient}
+              />
+            </div>
+          </div>
+        )}
 
         {(props.firstTokenAmount || props.secondTokenAmount) &&
           Object.keys(props.tokenOut).length !== 0 && (
             <div
-              className="h-12 mt-3 cursor-pointer px-4 pt-[11px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] flex "
+              className="h-12 mt-3 cursor-pointer px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] flex "
               onClick={() => setOpenSwapDetails(!openSwapDetails)}
             >
-              {routeData.isloading && !routeData.success ? (
-                <div>
-                  <span className="ml-[9.25px] font-text-bold mr-[7px]">
+              {!props.secondTokenAmount ? (
+                <div className="flex">
+                  <span className="ml-[6px] font-text-bold mr-[7px]">
                     {' '}
                     Fetching best price
+                  </span>
+                  <span className="relative -top-1">
+                    <Lottie
+                      animationData={loader}
+                      loop={true}
+                      style={{ height: '32px', width: '32px' }}
+                    />
                   </span>
                 </div>
               ) : (
@@ -319,7 +345,9 @@ function SwapTab(props: ISwapTabProps) {
                   <div className="ml-auto">
                     <Image
                       src={arrowUp}
-                      className={animateOpenSwapDetails ? 'rotate-180' : 'rotate-0'}
+                      className={
+                        animateOpenSwapDetails ? 'rotate-180' : 'rotate-0'
+                      }
                       width={'12px'}
                       height={'9px'}
                     />
