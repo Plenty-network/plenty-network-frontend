@@ -1,9 +1,8 @@
-import { TezosToolkit } from '@taquito/taquito';
 import CONFIG from '../../../config/config';
 import BigNumber from 'bignumber.js';
-import { RPC_NODE } from '../../../constants/global';
 import { useAppSelector } from '../../../redux';
 import axios from 'axios';
+import { connectedNetwork ,tezos as Tezos , rpcNode } from '../../../common/wallet';
 
 
 
@@ -179,16 +178,10 @@ export const loadSwapDataTezCtez = async (tokenIn : string, tokenOut : string) :
     target : BigNumber}> => {
     try {
       const AMM = useAppSelector((state) => state.config.AMMs);
-      const connectedNetwork = CONFIG.NETWORK;
-      // const rpcNode = CONFIG.RPC_NODES[connectedNetwork];
-      const rpcNode = localStorage.getItem(RPC_NODE) ?? CONFIG.RPC_NODES[connectedNetwork];
-
       const dexContractAddress = getDexAddress(tokenIn, tokenOut);
       if (dexContractAddress === 'false') {
           throw 'No dex found';
       }
-
-      const Tezos = new TezosToolkit(rpcNode);
       const dexContractInstance = await Tezos.contract.at(dexContractAddress);
       const dexStorage : any = await dexContractInstance.storage();
       const tezPool : BigNumber = new BigNumber(await dexStorage.tezPool);
@@ -334,16 +327,10 @@ export const loadSwapDataGeneralStable = async (tokenIn: string, tokenOut: strin
     try {
         const TOKEN = useAppSelector((state) => state.config.tokens);
         const AMM = useAppSelector((state) => state.config.AMMs);
-        // TRY TO IMPORT THIS STUFF
-        const connectedNetwork = CONFIG.NETWORK;
-        // const rpcNode = CONFIG.RPC_NODES[connectedNetwork];
-        const rpcNode = localStorage.getItem(RPC_NODE) ?? CONFIG.RPC_NODES[connectedNetwork];
         const dexContractAddress = getDexAddress(tokenIn, tokenOut);
         if (dexContractAddress === 'false') {
             throw 'No dex found';
         }
-
-        const Tezos = new TezosToolkit(rpcNode);
         const dexContractInstance = await Tezos.contract.at(dexContractAddress);
         const dexStorage: any = await dexContractInstance.storage();
 

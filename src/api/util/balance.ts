@@ -10,11 +10,10 @@ import {
 } from '../../constants/global';
 import BigNumber from 'bignumber.js';
 import { TokenType } from '../../config/types';
-import { TezosToolkit } from '@taquito/taquito';
 import { packDataBytes, unpackDataBytes } from '@taquito/michel-codec';
-import { BeaconWallet } from '@taquito/beacon-wallet';
-import { CheckIfWalletConnected } from '../../common/wallet';
-import { NetworkType } from '@airgap/beacon-sdk';
+import { CheckIfWalletConnected , wallet , rpcNode , tezos } from '../../common/wallet';
+
+
 
 /**
  * Returns packed key (expr...) which will help to fetch user specific data from bigmap directly using rpc.
@@ -75,16 +74,11 @@ export const getUserBalanceByRpc = async (
   error?: any;
 }> => {
   try {
-    const connectedNetwork = Config.NETWORK;
-    const rpcNode = Config.RPC_NODES[connectedNetwork];
-
     if (identifier === 'tzBTC') {
       try {
         const tokenContractAddress: string =
           'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn';
-        const Tezos = new TezosToolkit(rpcNode);
-        Tezos.setProvider({ rpc: rpcNode });
-        const contract = await Tezos.contract.at(tokenContractAddress);
+        const contract = await tezos.contract.at(tokenContractAddress);
         const storage: any = await contract.storage();
         let userBalance = 0;
         const packedAddress = packDataBytes(
@@ -124,21 +118,11 @@ export const getUserBalanceByRpc = async (
         };
       }
     } else if (identifier === 'tez') {
-      const options = {
-        name: Config.NAME,
-        preferredNetwork: connectedNetwork as NetworkType,
-      };
-
-      const wallet = new BeaconWallet(options);
-
       const WALLET_RESP = await CheckIfWalletConnected(wallet);
       if (!WALLET_RESP.success) {
         throw new Error('Wallet connection failed');
       }
-      const Tezos = new TezosToolkit(rpcNode);
-      Tezos.setRpcProvider(rpcNode);
-      Tezos.setWalletProvider(wallet);
-      const _balance = await Tezos.tz.getBalance(address);
+      const _balance = await tezos.tz.getBalance(address);
       const balance = _balance.dividedBy(Math.pow(10, 6));
       return {
         success: true,
@@ -146,9 +130,7 @@ export const getUserBalanceByRpc = async (
         identifier,
       };
     } else {
-      //TODO: Update to use local storage config & local storage RPC_Node
       const token = TOKEN[`${identifier}`];
-      // const tokens = useAppSelector((state) => state.config.tokens);
       const mapId = token.mapId;
       const type = token.type;
       const decimal: number = token.decimals;

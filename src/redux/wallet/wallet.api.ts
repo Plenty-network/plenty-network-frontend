@@ -1,10 +1,5 @@
 import { NetworkType } from '@airgap/beacon-sdk';
-import Config from '../../config/config';
-import { wallet } from '../../common/wallet';
-
-const connectedNetwork = Config.NETWORK;
-// const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
-const rpcNode = Config.RPC_NODES[connectedNetwork];
+import { wallet , connectedNetwork , rpcNode } from '../../common/wallet';
 
 export const ConnectWalletAPI = async () => {
   try {

@@ -1,13 +1,11 @@
 import axios from 'axios';
 import Config from '../../config/config';
 import { useAppSelector } from '../../redux';
+import { rpcNode , connectedNetwork} from '../../common/wallet';
 
 
 const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
     try {
-      const connectedNetwork = Config.NETWORK;
-      const rpcNode = Config.RPC_NODES[connectedNetwork];
-      // const rpcNode = localStorage.getItem(RPC_NODE) ?? CONFIG.RPC_NODES[CONFIG.NETWORK];
       const promises = [];
       const cfmmStorageUrl = `${rpcNode}chains/main/blocks/head/context/contracts/KT1H5b7LxEExkFd2Tng77TfuWbM5aPvHstPr/storage`;
       const xtzDollarValueUrl = Config.API.url;
@@ -33,10 +31,6 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
 
   const getuDEFIPrice = async () : Promise<{uDEFIinUSD : number}> => {
     try {
-      const connectedNetwork = Config.NETWORK;
-      const rpcNode = Config.RPC_NODES[connectedNetwork];
-      // const rpcNode = localStorage.getItem(RPC_NODE) ?? CONFIG.RPC_NODES[CONFIG.NETWORK];
-  
       const uDEFIOracleUrl = `${rpcNode}chains/main/blocks/head/context/contracts/KT1UuqJiGQgfNrTK5tuR1wdYi5jJ3hnxSA55/storage`;
       const uedfipriceResponse = await axios.get(uDEFIOracleUrl);
       let uDEFIinUSD = uedfipriceResponse.data.args[0].args[1].int;
@@ -121,7 +115,6 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
         }
       }
       // Depracate once the new tokens come on exchanges
-      const connectedNetwork = Config.NETWORK;
       for (const x in Config.WRAPPED_ASSETS[connectedNetwork]) {
         if (
           x === 'DAI.e' ||

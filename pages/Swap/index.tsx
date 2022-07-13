@@ -47,11 +47,14 @@ function Swap(props: ISwapProps) {
   const [tokenPrice, setTokenPrice] = useState<{
     [id: string]: number;
   }>({});
-  useEffect(() => {
-    getTokenPrices().then((response) => {
-      setTokenPrice(response.tokenPrice);
-    });
-  }, []);
+  getTokenPrices().then((response) => {
+    setTokenPrice(response.tokenPrice);
+  });
+  // useEffect(() => {
+  //   getTokenPrices().then((response) => {
+  //     setTokenPrice(response.tokenPrice);
+  //   });
+  // }, []);
 
   // getDexAddress('USDC.e' , 'uUSD');
   //routedata true once we have both the tokens
