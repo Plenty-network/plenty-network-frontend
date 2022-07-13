@@ -84,6 +84,14 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
       };
     }
   };
+
+
+  export const getXtzDollarPrice = async () : Promise<number> => {
+    const xtzDollarValueUrl = Config.API.url;
+    const xtzDollarValue = await axios.get(xtzDollarValueUrl);
+    const xtzPrice = xtzDollarValue.data.market_data.current_price.usd;
+    return xtzPrice;
+  };
   /**
    * Gets price of tokens to show during trade
    */
@@ -95,6 +103,7 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
       const ctezPrice = await getCtezPrice();
       const uDEFIPrice = await getuDEFIPrice();
       const agEurePrice = await getagEURePrice();
+      const xtzPrice = await getXtzDollarPrice();
         
     //  TEST speed
       const tokenPrice: { [id: string] : number; } = {};  
@@ -132,6 +141,7 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
       tokenPrice['ctez'] = ctezPrice.ctezPriceInUSD;
       tokenPrice['uDEFI'] = uDEFIPrice.uDEFIinUSD;
       tokenPrice['agEUR.e'] = agEurePrice.agEUReInUSD;
+      tokenPrice['tez'] = xtzPrice;
       return {
         success: true,
         tokenPrice,

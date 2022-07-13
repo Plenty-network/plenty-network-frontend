@@ -9,6 +9,8 @@ import { getTokenPrices } from '../../src/api/util/price';
 import { tokensModal, tokenType } from '../../src/constants/swap';
 
 import { useAppSelector } from '../../src/redux';
+import { calculateTokensOutGeneralStable } from '../../src/api/swap/stableswap';
+import {BigNumber} from 'bignumber.js'
 
 interface ISwapProps {
   className?: string;
@@ -57,6 +59,17 @@ function Swap(props: ISwapProps) {
   // }, []);
 
   // getDexAddress('USDC.e' , 'uUSD');
+  // calculateTokensOutGeneralStable(
+  //   new BigNumber('30654476830663416'),
+  //   new BigNumber(79811356526),
+  //   new BigNumber(1),
+  //   new BigNumber(1000),
+  //   new BigNumber(5),
+  //   'USDC.e',
+  //   'uUSD',
+  //   new BigNumber(1),
+  //   new BigNumber(1000000),
+  // );
   //routedata true once we have both the tokens
   useEffect(() => {
     if (
