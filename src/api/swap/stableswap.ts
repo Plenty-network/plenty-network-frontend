@@ -1,8 +1,8 @@
-import CONFIG from '../../../config/config';
+import CONFIG from '../../config/config';
 import BigNumber from 'bignumber.js';
-import { useAppSelector } from '../../../redux';
+import { useAppSelector } from '../../redux';
 import axios from 'axios';
-import { connectedNetwork ,tezos as Tezos , rpcNode } from '../../../common/wallet';
+import { connectedNetwork ,tezos as Tezos , rpcNode } from '../../common/wallet';
 
 
 
