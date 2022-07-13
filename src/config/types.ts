@@ -211,9 +211,9 @@ export interface IAMM {
   lpToken: ITokenInterface;
 }
 
-enum AMM_TYPE {
-NORMAL,
-FLAT
+export enum AMM_TYPE {
+NORMAL = 'NORMAL',
+FLAT = 'FLAT'
 }
 
 export enum TokenType{

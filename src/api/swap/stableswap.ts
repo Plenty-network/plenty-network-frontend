@@ -198,7 +198,7 @@ export const loadSwapDataTezCtez = async (tokenIn : string, tokenOut : string) :
         target,
       };
     } catch (error) {
-      console.log({ message: 'swap data error', error });
+      console.log({ message: 'Tez-Ctez swap data error', error });
       return {
         success: false,
         tezPool : new BigNumber(0),
@@ -377,7 +377,7 @@ export const loadSwapDataGeneralStable = async (tokenIn: string, tokenOut: strin
             dexContractInstance,
         };
     } catch (error) {
-        console.log({ message: 'swap data error', error });
+        console.log({ message: 'Stableswap data error', error });
         return {
             success: false,
             tokenIn,

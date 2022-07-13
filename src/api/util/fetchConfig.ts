@@ -26,3 +26,15 @@ export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
     return add;
 }
 
+export const getDexType = (tokenIn: string, tokenOut: string): string => {
+    const AMM = useAppSelector((state) => state.config.AMMs);
+    let type = 'false';
+    Object.keys(AMM).forEach(function (key) {
+        if ((AMM[key].token1.symbol === tokenIn && AMM[key].token2.symbol === tokenOut) || (AMM[key].token2.symbol === tokenIn && AMM[key].token1.symbol === tokenOut)) {
+            type = AMM[key].type;
+            return key;
+        }
+    })
+    return type;
+}
+

@@ -54,7 +54,7 @@ export const loadSwapDataVolatile = async (tokenIn: string, tokenOut: string) : 
         dexContractInstance,
       };
     } catch (error) {
-        console.log({ message: 'swap data error', error });
+        console.log({ message: 'Volatileswap data error', error });
         return {
             success: true,
             tokenIn,
@@ -71,7 +71,9 @@ export const loadSwapDataVolatile = async (tokenIn: string, tokenOut: string) : 
 };
 
 
-export const computeTokenOutputVolatile = (
+
+// Must confirm the decimals
+export const calculateTokenOutputVolatile = (
     tokenIn_amount : BigNumber,
     tokenIn_supply : BigNumber,
     tokenOut_supply : BigNumber,
