@@ -321,12 +321,14 @@ export const loadSwapDataGeneralStable = async (tokenIn: string, tokenOut: strin
     tokenOut_precision : BigNumber ,
     dexContractInstance: any,}> => {
     try {
+
         const TOKEN = useAppSelector((state) => state.config.tokens);
         const AMM = useAppSelector((state) => state.config.AMMs);
         const dexContractAddress = getDexAddress(tokenIn, tokenOut);
         if (dexContractAddress === 'false') {
             throw 'No dex found';
         }
+
         const dexContractInstance = await Tezos.contract.at(dexContractAddress);
         const dexStorage: any = await dexContractInstance.storage();
         const token1_pool = new BigNumber(await dexStorage.token1Pool);

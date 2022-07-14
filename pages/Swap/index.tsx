@@ -11,6 +11,8 @@ import { tokensModal, tokenType } from '../../src/constants/swap';
 import { useAppSelector } from '../../src/redux';
 import { calculateTokensOutGeneralStable } from '../../src/api/swap/stableswap';
 import {BigNumber} from 'bignumber.js'
+import { loadSwapDataWrapper } from '../../src/api/swap/wrappers';
+import axios from 'axios';
 
 interface ISwapProps {
   className?: string;
@@ -57,7 +59,16 @@ function Swap(props: ISwapProps) {
   //     setTokenPrice(response.tokenPrice);
   //   });
   // }, []);
+  const getLoad=async()=>{
 
+    const res = await loadSwapDataWrapper('USDC.e' , 'uUSD');
+    console.log(res);
+
+    // const res = await axios.get('https://api.teztools.io/token/prices');
+    // console.log(res.data);
+
+  }
+  getLoad();
   // getDexAddress('USDC.e' , 'uUSD');
   // calculateTokensOutGeneralStable(
   //   new BigNumber('30654476830663416'),
