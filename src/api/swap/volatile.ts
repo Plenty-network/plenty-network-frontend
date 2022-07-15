@@ -6,7 +6,7 @@ import { BigNumber } from 'bignumber.js'
 
 export const loadSwapDataVolatile = async (tokenIn: string, tokenOut: string) : Promise<{success: boolean,tokenIn : string, tokenIn_supply : BigNumber, tokenOut : string, tokenOut_supply :BigNumber, exchangeFee : BigNumber,tokenOutPerTokenIn : BigNumber,lpTokenSupply : BigNumber,lpToken : any,dexContractInstance : any,}> => {
     try {
-        const TOKEN = useAppSelector((state) => state.config.tokens);
+        const TOKEN = useAppSelector((state) => state.config.standard);
         const AMM = useAppSelector((state) => state.config.AMMs);
         const dexContractAddress = getDexAddress(tokenIn, tokenOut);
         if (dexContractAddress === 'false') {

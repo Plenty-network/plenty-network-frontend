@@ -1,5 +1,7 @@
 export interface IConfig {
-  TOKEN_CONFIG : string,
+  STANDARD_CONFIG : string
+  LP_CONFIG : string,
+  TOKENS_CONFIG : string
   AMM_CONFIG : string,
   NAME: string;
   API: IApi;

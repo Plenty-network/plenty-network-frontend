@@ -244,7 +244,7 @@ export const calculateTokensOutGeneralStable =  (
     priceImpact: BigNumber,
     error?: any
 } => {
-    const TOKEN = useAppSelector((state) => state.config.tokens);
+    const TOKEN = useAppSelector((state) => state.config.standard);
     tokenIn_amount = tokenIn_amount.multipliedBy(10 ** TOKEN[tokenIn].decimals);
     try {
         tokenIn_supply = tokenIn_supply.multipliedBy(tokenIn_precision);
@@ -322,7 +322,7 @@ export const loadSwapDataGeneralStable = async (tokenIn: string, tokenOut: strin
     dexContractInstance: any,}> => {
     try {
 
-        const TOKEN = useAppSelector((state) => state.config.tokens);
+        const TOKEN = useAppSelector((state) => state.config.standard);
         const AMM = useAppSelector((state) => state.config.AMMs);
         const dexContractAddress = getDexAddress(tokenIn, tokenOut);
         if (dexContractAddress === 'false') {

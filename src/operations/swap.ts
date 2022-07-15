@@ -25,7 +25,7 @@ export const swapTokens = async (
         throw new Error('Wallet connection failed');
       }
 
-      const TOKEN = useAppSelector((state) => state.config.tokens);
+      const TOKEN = useAppSelector((state) => state.config.standard);
 
       const TOKEN_IN = TOKEN[tokenIn];
       const TOKEN_OUT = TOKEN[tokenOut];
@@ -135,7 +135,7 @@ export const swapTokens = async (
         throw new Error('Wallet connection failed');
       }
 
-      const TOKEN = useAppSelector((state) => state.config.tokens);
+      const TOKEN = useAppSelector((state) => state.config.standard);
 
       const TOKEN_IN = TOKEN[tokenIn];
 

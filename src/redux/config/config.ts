@@ -4,11 +4,15 @@ import { fetchConfig } from '../../api/util/fetchConfig';
 interface ConfigState {
   tokens: { [x: string]: any };
   AMMs: { [x: string]: any };
+  standard : { [x: string]: any };
+  lp  : { [x: string]: any };
 }
 
 const initialState: ConfigState = {
   tokens: {},
   AMMs: {},
+  standard: {},
+  lp: {},
 };
 
 export const getConfig = createAsyncThunk(
@@ -29,14 +33,20 @@ const ConfigSlice = createSlice({
     [getConfig.pending.toString()]: (state: any) => {
       state.tokens = {};
       state.AMMs = {};
+      state.standard = {};
+      state.lp = {};
     },
     [getConfig.fulfilled.toString()]: (state: any, action: any) => {
       state.tokens = action.payload.TOKEN;
       state.AMMs = action.payload.AMM;
+      state.standard = action.payload.STANDARD;
+      state.LP = action.payload.LP;
     },
     [getConfig.rejected.toString()]: (state: any) => {
       state.tokens = {};
       state.AMMs = {};
+      state.standard = {};
+      state.lp = {};
     },
   },
 });
