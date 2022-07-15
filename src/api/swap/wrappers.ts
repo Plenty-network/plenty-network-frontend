@@ -35,7 +35,7 @@ export const loadSwapDataWrapper = async (tokenIn: string, tokenOut: string) : P
 
 
 // Try to incorporate return type
-export const calculateTokensOutWrapper = async (tokenIn_amount: BigNumber , Exchangefee: BigNumber ,slippage: BigNumber,tokenIn: string,tokenOut: string , tokenIn_supply?: BigNumber,tokenOut_supply?: BigNumber,tokenIn_precision?: BigNumber,tokenOut_precision?: BigNumber, tezSupply?: BigNumber, ctezSupply?: BigNumber, target?: BigNumber) : Promise<any> => {
+export const calculateTokensOutWrapper = (tokenIn_amount: BigNumber , Exchangefee: BigNumber ,slippage: BigNumber,tokenIn: string,tokenOut: string , tokenIn_supply?: BigNumber,tokenOut_supply?: BigNumber,tokenIn_precision?: BigNumber,tokenOut_precision?: BigNumber, tezSupply?: BigNumber, ctezSupply?: BigNumber, target?: BigNumber) : any => {
     try{
         const type = getDexType(tokenIn , tokenOut);
         let outputData : any;

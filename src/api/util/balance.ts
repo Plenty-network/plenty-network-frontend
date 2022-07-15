@@ -132,7 +132,7 @@ export const getUserBalanceByRpc = async (
     } else {
       const token = TOKEN[`${identifier}`];
       const mapId = token.mapId;
-      const type = token.type;
+      const type = token.variant;
       const decimal: number = token.decimals;
       const tokenId: string = token.tokenId ?? '0';
       const packedKey = getPackedKey(tokenId, address, type as TokenType);

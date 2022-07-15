@@ -31,7 +31,7 @@ export const getDexType = (tokenIn: string, tokenOut: string): string => {
     let type = 'false';
     Object.keys(AMM).forEach(function (key) {
         if ((AMM[key].token1.symbol === tokenIn && AMM[key].token2.symbol === tokenOut) || (AMM[key].token2.symbol === tokenIn && AMM[key].token1.symbol === tokenOut)) {
-            type = AMM[key].type;
+            type = AMM[key].variant;
             return key;
         }
     })

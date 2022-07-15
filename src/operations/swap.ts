@@ -46,7 +46,7 @@ export const swapTokens = async (
 
       let batch = null;
       // Approve call for FA1.2 type token
-      if ( TOKEN_IN.type === TokenType.FA12) {
+      if ( TOKEN_IN.variant === TokenType.FA12) {
         batch = Tezos.wallet
           .batch()
           .withContractCall(tokenInInstance.methods.approve(dexContractAddress, tokenInAmount))
@@ -138,7 +138,6 @@ export const swapTokens = async (
       const TOKEN = useAppSelector((state) => state.config.tokens);
 
       const TOKEN_IN = TOKEN[tokenIn];
-      const TOKEN_OUT = TOKEN[tokenOut];
 
       const contractAddress = getDexAddress(tokenIn , tokenOut);
       const CTEZ = TOKEN_IN.address;
