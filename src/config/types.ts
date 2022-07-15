@@ -214,8 +214,8 @@ export interface IAMM {
 }
 
 export enum AMM_TYPE {
-NORMAL = 'NORMAL',
-FLAT = 'FLAT'
+VOLATILE = 'VOLATILE',
+STABLE = 'STABLE'
 }
 
 export enum TokenType{

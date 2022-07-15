@@ -324,10 +324,12 @@ export const loadSwapDataGeneralStable = async (tokenIn: string, tokenOut: strin
 
         const TOKEN = useAppSelector((state) => state.config.standard);
         const AMM = useAppSelector((state) => state.config.AMMs);
+
         const dexContractAddress = getDexAddress(tokenIn, tokenOut);
         if (dexContractAddress === 'false') {
             throw 'No dex found';
-        }
+        }   
+
 
         const dexContractInstance = await Tezos.contract.at(dexContractAddress);
         const dexStorage: any = await dexContractInstance.storage();

@@ -12,10 +12,10 @@ export const loadSwapDataWrapper = async (tokenIn: string, tokenOut: string) : P
     try{
         const type = getDexType(tokenIn , tokenOut);
         let swapData : any;
-        if(type === AMM_TYPE.NORMAL){
+        if(type === AMM_TYPE.VOLATILE){
             swapData = loadSwapDataVolatile(tokenIn , tokenOut);
         }
-        else if (type === AMM_TYPE.FLAT){
+        else if (type === AMM_TYPE.STABLE){
             if((tokenIn === 'tez' && tokenOut === 'ctez') || (tokenIn === 'ctez' && tokenOut === 'tez') )
             {
                 swapData = loadSwapDataTezCtez(tokenIn , tokenOut);
@@ -40,10 +40,10 @@ export const calculateTokensOutWrapper = (tokenIn_amount: BigNumber , Exchangefe
         const type = getDexType(tokenIn , tokenOut);
         let outputData : any;
         
-        if(type === AMM_TYPE.NORMAL && tokenIn_supply && tokenOut_supply){
+        if(type === AMM_TYPE.VOLATILE && tokenIn_supply && tokenOut_supply){
             outputData = calculateTokenOutputVolatile(tokenIn_amount , tokenIn_supply, tokenOut_supply ,Exchangefee ,slippage);
         }
-        else if (type === AMM_TYPE.FLAT){
+        else if (type === AMM_TYPE.STABLE){
 
             if(((tokenIn === 'tez' && tokenOut === 'ctez') || (tokenIn === 'ctez' && tokenOut === 'tez')) && tezSupply && ctezSupply && target)
             {

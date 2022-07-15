@@ -142,6 +142,7 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
       tokenPrice['uDEFI'] = uDEFIPrice.uDEFIinUSD;
       tokenPrice['agEUR.e'] = agEurePrice.agEUReInUSD;
       tokenPrice['tez'] = xtzPrice;
+
       return {
         success: true,
         tokenPrice,
