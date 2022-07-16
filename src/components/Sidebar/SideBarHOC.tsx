@@ -22,9 +22,9 @@ export function SideBarHOC(props: ISideBarHOCProps) {
   return (
     <>
       <div className="cicle_animation">
-        <div className="circle1"></div>
+        <div className="circle"></div>
         <div className="circle2"></div>
-        <div className="circle2"></div>
+        {/* <div className="circle3"></div> */}
       </div>
       {/* {showPopupModal && <PopUpModal onClick={showPopupModalClick}>
           Hello world
