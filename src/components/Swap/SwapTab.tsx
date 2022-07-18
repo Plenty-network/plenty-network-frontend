@@ -11,12 +11,13 @@ import Lottie from 'lottie-react';
 import Button from '../Button/Button';
 import TokenDropdown from '../TokenDropdown/TokenDropdown';
 import TransactionSettings from '../TransactionSettings/TransactionSettings';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { tokensModal, tokenType } from '../../../src/constants/swap';
 import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import loader from '../../assets/animations/shimmer-swap.json';
 
 import { BigNumber } from 'bignumber.js';
+import { Token } from '@taquito/taquito/node_modules/@taquito/michelson-encoder';
 
 interface ISwapTabProps {
   className?: string;
@@ -67,6 +68,21 @@ interface ISwapTabProps {
     isLoading: boolean;
     success: boolean;
   };
+  swapData: {
+    tokenIn_amount: BigNumber;
+    exchangeFee: BigNumber;
+    slippage: BigNumber;
+    tokenIn?: string;
+    tokenOut?: string;
+    tokenIn_supply: BigNumber;
+    tokenOut_supply: BigNumber;
+    tokenIn_precision?: BigNumber;
+    tokenOut_precision?: BigNumber;
+    tezSupply?: BigNumber;
+    ctezSupply?: BigNumber;
+    target?: BigNumber;
+  };
+  setSwapData: any;
 }
 
 function SwapTab(props: ISwapTabProps) {
@@ -85,12 +101,25 @@ function SwapTab(props: ISwapTabProps) {
     props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
     setRefresh(false);
   };
-
-  // const fetchSwapDetails = () => {
-  //   setRefresh(value);
-  //   //call loadswapdata
+  // useEffect(() => {
   //   props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
-  //   setRefresh(false);
+  // }, [props.tokenIn.name, props.tokenOut.name]);
+
+  // const fetchSwapDetails = async () => {
+  //   const res = await calculateTokensOutWrapper(
+  //     new BigNumber(props.firstTokenAmount),
+  //     props.swapData.exchangeFee,
+  //     new BigNumber(props.slippage),
+  //     props.tokenIn.name,
+  //     props.tokenOut.name,
+  //     props.swapData.tokenIn_supply ?? undefined,
+  //     props.swapData.tokenOut_supply ?? undefined,
+  //     props.swapData.tokenIn_precision ?? undefined,
+  //     props.swapData.tokenOut_precision ?? undefined,
+  //     props.swapData.tezSupply ?? undefined,
+  //     props.swapData.ctezSupply ?? undefined,
+  //     props.swapData.target ?? undefined
+  //   );
   // };
 
   const SwapButton = useMemo(() => {

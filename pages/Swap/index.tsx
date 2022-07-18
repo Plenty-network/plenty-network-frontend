@@ -98,31 +98,7 @@ function Swap(props: ISwapProps) {
   getTokenPrices().then((response) => {
     setTokenPrice(response.tokenPrice);
   });
-  // useEffect(() => {
-  //   getTokenPrices().then((response) => {
-  //     setTokenPrice(response.tokenPrice);
-  //   });
-  // }, []);
-  useEffect(() => {
-    loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((res) => {
-      setSwapData(res);
-    });
-    // const res = loadSwapDataWrapper('USDC.e', 'uUSD');
 
-    // loadSwapDataVolatile('USDC.e', 'uUSD');
-  }, [tokenIn, tokenOut]);
-  // getLoad();
-  // calculateTokensOutGeneralStable(
-  //   new BigNumber('30654476830663416'),
-  //   new BigNumber(79811356526),
-  //   new BigNumber(1),
-  //   new BigNumber(1000),
-  //   new BigNumber(5),
-  //   'USDC.e',
-  //   'uUSD',
-  //   new BigNumber(1),
-  //   new BigNumber(1000000),
-  // );
   //routedata true once we have both the tokens
   useEffect(() => {
     if (
@@ -130,8 +106,14 @@ function Swap(props: ISwapProps) {
       Object.prototype.hasOwnProperty.call(tokenOut, 'name')
     ) {
       loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((res) => {
-        console.log(res);
+        setSwapData(res);
       });
+    }
+  }, [tokenIn, tokenOut]);
+
+  useEffect(() => {
+    if (firstTokenAmount !== '') {
+      handleSwapTokenInput(firstTokenAmount, 'tokenIn');
     }
   }, [tokenIn, tokenOut]);
 
@@ -318,6 +300,8 @@ function Swap(props: ISwapProps) {
           setRouteData={setRouteData}
           swapDetails={swapDetails}
           setSwapDetails={setSwapDetails}
+          swapData={swapData}
+          setSwapData={setSwapData}
         />
       </div>
       <SwapModal
