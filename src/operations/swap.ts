@@ -6,7 +6,46 @@ import { TokenType } from "../config/types";
 import { OpKind } from "@taquito/taquito";
 
 
-export const swapTokens = async (
+export const directSwapWrapper = async (
+  tokenIn : string,
+  tokenOut : string,
+  minimumTokenOut : BigNumber,
+  recipent : string,
+  tokenInAmount : BigNumber,
+  caller : string ,
+  transactionSubmitModal : any,
+  setShowConfirmSwap : any,
+  resetAllValues : any,
+  setShowConfirmTransaction : any,) : Promise<{success : boolean , operationId : any , error : any}> => {
+  
+    try {
+      let res;
+      if(tokenIn === 'tez' && tokenOut === 'ctez'){
+       res = await tez_to_ctez(tokenIn , tokenOut , minimumTokenOut , recipent , tokenInAmount , transactionSubmitModal , setShowConfirmSwap , resetAllValues ,  setShowConfirmTransaction);
+      }
+      else if(tokenIn === 'ctez' && tokenOut === 'tez'){
+       res = await ctez_to_tez(tokenIn , tokenOut , minimumTokenOut , recipent , tokenInAmount , transactionSubmitModal , setShowConfirmSwap , resetAllValues ,  setShowConfirmTransaction);
+      } 
+      else {
+        res = await swapTokens(tokenIn , tokenOut , minimumTokenOut , recipent , tokenInAmount ,caller, transactionSubmitModal , setShowConfirmSwap , resetAllValues ,  setShowConfirmTransaction);
+      }
+      return {
+        success: res.success,
+        operationId: res.operationId ?? null,
+        error : res.error ?? null,
+      };    
+    } catch (error) {
+      console.log(error);
+      return {
+        success: false,
+        operationId : null,
+        error : error,
+      };
+      
+    }
+}
+
+ const swapTokens = async (
     tokenIn : string,
     tokenOut : string,
     minimumTokenOut : BigNumber,
@@ -118,7 +157,7 @@ export const swapTokens = async (
     }
   };
 
-  export async function ctez_to_tez(
+ async function ctez_to_tez(
     tokenIn : string,
     tokenOut : string,
     minimumTokenOut : BigNumber,
@@ -189,7 +228,7 @@ export const swapTokens = async (
     }
   }
   
-  export async function tez_to_ctez(
+ async function tez_to_ctez(
     tokenIn : string,
     tokenOut : string,
     minimumTokenOut : BigNumber,
