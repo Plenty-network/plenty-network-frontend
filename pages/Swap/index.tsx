@@ -9,6 +9,11 @@ import { getTokenPrices } from '../../src/api/util/price';
 import { tokensModal, tokenType } from '../../src/constants/swap';
 
 import { useAppSelector } from '../../src/redux';
+import { calculateTokensOutGeneralStable } from '../../src/api/swap/stableswap';
+import {BigNumber} from 'bignumber.js'
+import { loadSwapDataWrapper } from '../../src/api/swap/wrappers';
+import axios from 'axios';
+import { getDexAddress, getDexType } from '../../src/api/util/fetchConfig';
 
 interface ISwapProps {
   className?: string;
@@ -47,13 +52,36 @@ function Swap(props: ISwapProps) {
   const [tokenPrice, setTokenPrice] = useState<{
     [id: string]: number;
   }>({});
-  useEffect(() => {
-    getTokenPrices().then((response) => {
-      setTokenPrice(response.tokenPrice);
-    });
-  }, []);
+  getTokenPrices().then((response) => {
+    setTokenPrice(response.tokenPrice);
+  });
+  // useEffect(() => {
+  //   getTokenPrices().then((response) => {
+  //     setTokenPrice(response.tokenPrice);
+  //   });
+  // }, []);
+  const getLoad=async()=>{
 
-  // getDexAddress('USDC.e' , 'uUSD');
+    const res = await loadSwapDataWrapper('USDC.e' , 'uUSD');
+    console.log(res);
+
+    // console.log(getDexAddress('USDC.e' , 'uUSD'));
+    // console.log(getDexType('USDC.e' , 'uUSD'));
+
+
+  }
+  getLoad();
+  // calculateTokensOutGeneralStable(
+  //   new BigNumber('30654476830663416'),
+  //   new BigNumber(79811356526),
+  //   new BigNumber(1),
+  //   new BigNumber(1000),
+  //   new BigNumber(5),
+  //   'USDC.e',
+  //   'uUSD',
+  //   new BigNumber(1),
+  //   new BigNumber(1000000),
+  // );
   //routedata true once we have both the tokens
   useEffect(() => {
     if (

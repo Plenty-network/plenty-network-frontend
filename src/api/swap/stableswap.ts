@@ -1,9 +1,9 @@
-import { TezosToolkit } from '@taquito/taquito';
-import CONFIG from '../../../config/config';
+import CONFIG from '../../config/config';
 import BigNumber from 'bignumber.js';
-import { RPC_NODE } from '../../../constants/global';
-import { useAppSelector } from '../../../redux';
+import { useAppSelector } from '../../redux';
 import axios from 'axios';
+import { connectedNetwork ,tezos as Tezos , rpcNode } from '../../common/wallet';
+import { getDexAddress } from '../util/fetchConfig';
 
 
 
@@ -56,19 +56,8 @@ export const getGeneralExchangeRate = (tokenA_supply: BigNumber, tokenB_supply: 
     };
 };
 
-export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
-    const AMM = useAppSelector((state) => state.config.AMMs);
-    let add = 'false';
-    Object.keys(AMM).forEach(function (key) {
-        if ((AMM[key].token1.symbol === tokenIn && AMM[key].token2.symbol === tokenOut) || (AMM[key].token2.symbol === tokenIn && AMM[key].token1.symbol === tokenOut)) {
-            add = key;
-            return key;
-        }
-    })
-    return add;
-}
 
-export const calculateTokensOutTezCtez = async (
+export const calculateTokensOutTezCtez =(
     tezSupply: BigNumber,
     ctezSupply: BigNumber,
     tokenIn_amount: BigNumber,
@@ -76,7 +65,7 @@ export const calculateTokensOutTezCtez = async (
     slippage: BigNumber,
     target: BigNumber,
     tokenIn: string,
-): Promise<{ tokenOut: BigNumber, fee: BigNumber, minimumOut: BigNumber, exchangeRate: BigNumber, priceImpact: BigNumber, error?: any }> => {
+): { tokenOut: BigNumber, fee: BigNumber, minimumOut: BigNumber, exchangeRate: BigNumber, priceImpact: BigNumber, error?: any } => {
     tokenIn_amount = tokenIn_amount.multipliedBy(10 ** 6);
     try {
         if (tokenIn === 'ctez') {
@@ -179,16 +168,10 @@ export const loadSwapDataTezCtez = async (tokenIn : string, tokenOut : string) :
     target : BigNumber}> => {
     try {
       const AMM = useAppSelector((state) => state.config.AMMs);
-      const connectedNetwork = CONFIG.NETWORK;
-      // const rpcNode = CONFIG.RPC_NODES[connectedNetwork];
-      const rpcNode = localStorage.getItem(RPC_NODE) ?? CONFIG.RPC_NODES[connectedNetwork];
-
       const dexContractAddress = getDexAddress(tokenIn, tokenOut);
       if (dexContractAddress === 'false') {
           throw 'No dex found';
       }
-
-      const Tezos = new TezosToolkit(rpcNode);
       const dexContractInstance = await Tezos.contract.at(dexContractAddress);
       const dexStorage : any = await dexContractInstance.storage();
       const tezPool : BigNumber = new BigNumber(await dexStorage.tezPool);
@@ -215,7 +198,7 @@ export const loadSwapDataTezCtez = async (tokenIn : string, tokenOut : string) :
         target,
       };
     } catch (error) {
-      console.log({ message: 'swap data error', error });
+      console.log({ message: 'Tez-Ctez swap data error', error });
       return {
         success: false,
         tezPool : new BigNumber(0),
@@ -243,7 +226,7 @@ export const loadSwapDataTezCtez = async (tokenIn : string, tokenOut : string) :
  * @param target- Target price of the pair in bitwise right 48
  * @param tokenIn- TokenIn
  */
-export const calculateTokensOutGeneralStable = async (
+export const calculateTokensOutGeneralStable =  (
     tokenIn_supply: BigNumber,
     tokenOut_supply: BigNumber,
     tokenIn_amount: BigNumber,
@@ -253,15 +236,15 @@ export const calculateTokensOutGeneralStable = async (
     tokenOut: string,
     tokenIn_precision: BigNumber,
     tokenOut_precision: BigNumber,
-): Promise<{
+): {
     tokenOut_amount: BigNumber,
     fees: BigNumber,
     minimum_Out: BigNumber,
     exchangeRate: BigNumber,
     priceImpact: BigNumber,
     error?: any
-}> => {
-    const TOKEN = useAppSelector((state) => state.config.tokens);
+} => {
+    const TOKEN = useAppSelector((state) => state.config.standard);
     tokenIn_amount = tokenIn_amount.multipliedBy(10 ** TOKEN[tokenIn].decimals);
     try {
         tokenIn_supply = tokenIn_supply.multipliedBy(tokenIn_precision);
@@ -299,6 +282,12 @@ export const calculateTokensOutGeneralStable = async (
         const minimum_Out = minimumOut;
         const fees = fee;
         const exchangeRate = (tokenOut_amount).dividedBy((tokenIn_amount.dividedBy(10 ** TOKEN[tokenIn].decimals)));
+
+        console.log(tokenOut_amount.toNumber(),
+            fees.toString(),
+            minimum_Out.toString(),
+            exchangeRate.toString(),
+            priceImpact.toString(),);
         return {
             tokenOut_amount,
             fees,
@@ -321,32 +310,29 @@ export const calculateTokensOutGeneralStable = async (
 export const loadSwapDataGeneralStable = async (tokenIn: string, tokenOut: string) : Promise<{
     success: boolean,
     tokenIn : string,
-    tokenIn_supply : BigNumber | undefined,
+    tokenIn_supply : BigNumber,
     tokenOut: string,
-    tokenOut_supply : BigNumber | undefined,
+    tokenOut_supply : BigNumber ,
     exchangeFee : BigNumber,
-    tokenOutPerTokenIn : BigNumber | undefined,
+    tokenOutPerTokenIn : BigNumber,
     lpTokenSupply: BigNumber,
     lpToken : any,
-    tokenIn_precision : BigNumber | undefined,
-    tokenOut_precision : BigNumber | undefined,
+    tokenIn_precision : BigNumber,
+    tokenOut_precision : BigNumber ,
     dexContractInstance: any,}> => {
     try {
-        const TOKEN = useAppSelector((state) => state.config.tokens);
+
+        const TOKEN = useAppSelector((state) => state.config.standard);
         const AMM = useAppSelector((state) => state.config.AMMs);
-        // TRY TO IMPORT THIS STUFF
-        const connectedNetwork = CONFIG.NETWORK;
-        // const rpcNode = CONFIG.RPC_NODES[connectedNetwork];
-        const rpcNode = localStorage.getItem(RPC_NODE) ?? CONFIG.RPC_NODES[connectedNetwork];
+
         const dexContractAddress = getDexAddress(tokenIn, tokenOut);
         if (dexContractAddress === 'false') {
             throw 'No dex found';
         }
+        
 
-        const Tezos = new TezosToolkit(rpcNode);
         const dexContractInstance = await Tezos.contract.at(dexContractAddress);
         const dexStorage: any = await dexContractInstance.storage();
-
         const token1_pool = new BigNumber(await dexStorage.token1Pool);
         // GET PRECISION FROM CONFIG
         const token1_precision = new BigNumber(await dexStorage.token1Precision);
@@ -354,10 +340,10 @@ export const loadSwapDataGeneralStable = async (tokenIn: string, tokenOut: strin
         const token2_pool = new BigNumber(await dexStorage.token2Pool);
         const token2_precision = new BigNumber(await dexStorage.token2Precision);
 
-        let tokenIn_supply;
-        let tokenOut_supply;
-        let tokenIn_precision;
-        let tokenOut_precision;
+        let tokenIn_supply = new BigNumber(0);
+        let tokenOut_supply= new BigNumber(0);
+        let tokenIn_precision= new BigNumber(0);
+        let tokenOut_precision= new BigNumber(0);
         if (tokenOut === AMM[dexContractAddress].token2.symbol) {
             tokenOut_supply = token2_pool;
             tokenOut_precision = token2_precision;
@@ -395,7 +381,7 @@ export const loadSwapDataGeneralStable = async (tokenIn: string, tokenOut: strin
             dexContractInstance,
         };
     } catch (error) {
-        console.log({ message: 'swap data error', error });
+        console.log({ message: 'Stableswap data error', error });
         return {
             success: false,
             tokenIn,

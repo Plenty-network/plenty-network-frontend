@@ -1,5 +1,7 @@
 export interface IConfig {
-  TOKEN_CONFIG : string,
+  STANDARD_CONFIG : string
+  LP_CONFIG : string,
+  TOKENS_CONFIG : string
   AMM_CONFIG : string,
   NAME: string;
   API: IApi;
@@ -211,9 +213,9 @@ export interface IAMM {
   lpToken: ITokenInterface;
 }
 
-enum AMM_TYPE {
-NORMAL,
-FLAT
+export enum AMM_TYPE {
+VOLATILE = 'VOLATILE',
+STABLE = 'STABLE'
 }
 
 export enum TokenType{

@@ -1,13 +1,11 @@
 import axios from 'axios';
 import Config from '../../config/config';
 import { useAppSelector } from '../../redux';
+import { rpcNode , connectedNetwork} from '../../common/wallet';
 
 
 const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
     try {
-      const connectedNetwork = Config.NETWORK;
-      const rpcNode = Config.RPC_NODES[connectedNetwork];
-      // const rpcNode = localStorage.getItem(RPC_NODE) ?? CONFIG.RPC_NODES[CONFIG.NETWORK];
       const promises = [];
       const cfmmStorageUrl = `${rpcNode}chains/main/blocks/head/context/contracts/KT1H5b7LxEExkFd2Tng77TfuWbM5aPvHstPr/storage`;
       const xtzDollarValueUrl = Config.API.url;
@@ -33,10 +31,6 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
 
   const getuDEFIPrice = async () : Promise<{uDEFIinUSD : number}> => {
     try {
-      const connectedNetwork = Config.NETWORK;
-      const rpcNode = Config.RPC_NODES[connectedNetwork];
-      // const rpcNode = localStorage.getItem(RPC_NODE) ?? CONFIG.RPC_NODES[CONFIG.NETWORK];
-  
       const uDEFIOracleUrl = `${rpcNode}chains/main/blocks/head/context/contracts/KT1UuqJiGQgfNrTK5tuR1wdYi5jJ3hnxSA55/storage`;
       const uedfipriceResponse = await axios.get(uDEFIOracleUrl);
       let uDEFIinUSD = uedfipriceResponse.data.args[0].args[1].int;
@@ -90,17 +84,26 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
       };
     }
   };
+
+
+  export const getXtzDollarPrice = async () : Promise<number> => {
+    const xtzDollarValueUrl = Config.API.url;
+    const xtzDollarValue = await axios.get(xtzDollarValueUrl);
+    const xtzPrice = xtzDollarValue.data.market_data.current_price.usd;
+    return xtzPrice;
+  };
   /**
    * Gets price of tokens to show during trade
    */
   export const getTokenPrices = async () : Promise<{success : boolean , tokenPrice : { [id: string] : number; }}> => {
     try {
-      const TOKEN = useAppSelector((state) => state.config.tokens);
+      const TOKEN = useAppSelector((state) => state.config.standard);
       const pricesResponse = await axios.get('https://api.teztools.io/token/prices');
       const tokenPriceResponse = pricesResponse.data;
       const ctezPrice = await getCtezPrice();
       const uDEFIPrice = await getuDEFIPrice();
       const agEurePrice = await getagEURePrice();
+      const xtzPrice = await getXtzDollarPrice();
         
     //  TEST speed
       const tokenPrice: { [id: string] : number; } = {};  
@@ -121,7 +124,6 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
         }
       }
       // Depracate once the new tokens come on exchanges
-      const connectedNetwork = Config.NETWORK;
       for (const x in Config.WRAPPED_ASSETS[connectedNetwork]) {
         if (
           x === 'DAI.e' ||
@@ -139,6 +141,8 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
       tokenPrice['ctez'] = ctezPrice.ctezPriceInUSD;
       tokenPrice['uDEFI'] = uDEFIPrice.uDEFIinUSD;
       tokenPrice['agEUR.e'] = agEurePrice.agEUReInUSD;
+      tokenPrice['tez'] = xtzPrice;
+
       return {
         success: true,
         tokenPrice,
