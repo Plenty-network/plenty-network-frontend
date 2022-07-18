@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Config from '../../config/config';
-import { useAppSelector } from '../../redux';
+import { store } from '../../redux';
 import { rpcNode , connectedNetwork} from '../../common/wallet';
 
 
@@ -97,7 +97,9 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
    */
   export const getTokenPrices = async () : Promise<{success : boolean , tokenPrice : { [id: string] : number; }}> => {
     try {
-      const TOKEN = useAppSelector((state) => state.config.standard);
+      // const TOKEN = useAppSelector((state) => state.config.standard);
+      const state = store.getState();
+      const TOKEN = state.config.standard;
       const pricesResponse = await axios.get('https://api.teztools.io/token/prices');
       const tokenPriceResponse = pricesResponse.data;
       const ctezPrice = await getCtezPrice();
@@ -105,7 +107,6 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
       const agEurePrice = await getagEURePrice();
       const xtzPrice = await getXtzDollarPrice();
         
-    //  TEST speed
       const tokenPrice: { [id: string] : number; } = {};  
       const tokens = Object.keys(TOKEN);
       const tokenAddress : { [id: string] : { contractAddress : string; }}= {}

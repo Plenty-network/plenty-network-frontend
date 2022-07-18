@@ -1,6 +1,6 @@
 import { getDexAddress } from "../api/util/fetchConfig";
 import { CheckIfWalletConnected, wallet ,tezos as Tezos } from "../common/wallet";
-import { useAppSelector } from "../redux";
+import { store  } from "../redux";
 import { BigNumber } from 'bignumber.js'
 import { TokenType } from "../config/types";
 import { OpKind } from "@taquito/taquito";
@@ -64,7 +64,9 @@ export const directSwapWrapper = async (
         throw new Error('Wallet connection failed');
       }
 
-      const TOKEN = useAppSelector((state) => state.config.standard);
+      // const TOKEN = useAppSelector((state) => state.config.standard);
+      const state = store.getState();
+      const TOKEN = state.config.standard;
 
       const TOKEN_IN = TOKEN[tokenIn];
       const TOKEN_OUT = TOKEN[tokenOut];
@@ -174,7 +176,9 @@ export const directSwapWrapper = async (
         throw new Error('Wallet connection failed');
       }
 
-      const TOKEN = useAppSelector((state) => state.config.standard);
+      // const TOKEN = useAppSelector((state) => state.config.standard);
+      const state = store.getState();
+      const TOKEN = state.config.standard;
 
       const TOKEN_IN = TOKEN[tokenIn];
 

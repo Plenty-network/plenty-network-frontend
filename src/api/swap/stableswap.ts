@@ -1,6 +1,6 @@
 import CONFIG from '../../config/config';
 import BigNumber from 'bignumber.js';
-import { store, useAppSelector } from '../../redux';
+import { store} from '../../redux';
 import axios from 'axios';
 import { connectedNetwork, tezos as Tezos, rpcNode } from '../../common/wallet';
 import { getDexAddress } from '../util/fetchConfig';
@@ -80,7 +80,7 @@ export const calculateTokensOutTezCtez = (
   target: BigNumber,
   tokenIn: string
 ): {
-  tokenOut: BigNumber;
+  tokenOut_amount: BigNumber;
   fee: BigNumber;
   minimumOut: BigNumber;
   exchangeRate: BigNumber;
@@ -120,10 +120,11 @@ export const calculateTokensOutTezCtez = (
       priceImpact = priceImpact.multipliedBy(100);
       priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
       tokenOut = tokenOut.dividedBy(10 ** 6);
+      const tokenOut_amount = tokenOut;
       fee = fee.dividedBy(10 ** 6);
 
       return {
-        tokenOut,
+        tokenOut_amount,
         fee,
         minimumOut,
         exchangeRate,
@@ -160,8 +161,9 @@ export const calculateTokensOutTezCtez = (
       priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
       tokenOut = tokenOut.dividedBy(10 ** 6);
       fee = fee.dividedBy(10 ** 6);
+      const tokenOut_amount = tokenOut;
       return {
-        tokenOut,
+        tokenOut_amount,
         fee,
         minimumOut,
         exchangeRate,
@@ -169,7 +171,7 @@ export const calculateTokensOutTezCtez = (
       };
     }
     return {
-      tokenOut: new BigNumber(0),
+      tokenOut_amount: new BigNumber(0),
       fee: new BigNumber(0),
       minimumOut: new BigNumber(0),
       exchangeRate: new BigNumber(0),
@@ -177,7 +179,7 @@ export const calculateTokensOutTezCtez = (
     };
   } catch (error) {
     return {
-      tokenOut: new BigNumber(0),
+      tokenOut_amount: new BigNumber(0),
       fee: new BigNumber(0),
       minimumOut: new BigNumber(0),
       exchangeRate: new BigNumber(0),
@@ -192,8 +194,8 @@ export const loadSwapDataTezCtez = async (
   tokenOut: string
 ): Promise<{
   success: boolean;
-  tezPool: BigNumber;
-  ctezPool: BigNumber;
+  tezSupply: BigNumber;
+  ctezSupply: BigNumber;
   tokenIn: string;
   tokenOut: string;
   exchangeFee: BigNumber;
@@ -213,8 +215,8 @@ export const loadSwapDataTezCtez = async (
     }
     const dexContractInstance = await Tezos.contract.at(dexContractAddress);
     const dexStorage: any = await dexContractInstance.storage();
-    const tezPool: BigNumber = new BigNumber(await dexStorage.tezPool);
-    const ctezPool: BigNumber = new BigNumber(await dexStorage.ctezPool);
+    const tezSupply: BigNumber = new BigNumber(await dexStorage.tezPool);
+    const ctezSupply: BigNumber = new BigNumber(await dexStorage.ctezPool);
     const lpTokenSupply: BigNumber = new BigNumber(await dexStorage.lqtTotal);
     const lpFee = await dexStorage.lpFee;
     const exchangeFee = new BigNumber(lpFee);
@@ -222,12 +224,12 @@ export const loadSwapDataTezCtez = async (
     const ctezAddress = CONFIG.CTEZ[connectedNetwork];
     const ctezStorageUrl = `${rpcNode}chains/main/blocks/head/context/contracts/${ctezAddress}/storage`;
     const ctezStorage = await axios.get(ctezStorageUrl);
-    const target = ctezStorage.data.args[2].int;
+    const target = new BigNumber(ctezStorage.data.args[2].int);
 
     return {
       success: true,
-      tezPool,
-      ctezPool,
+      tezSupply,
+      ctezSupply,
       tokenIn,
       tokenOut,
       exchangeFee,
@@ -240,8 +242,8 @@ export const loadSwapDataTezCtez = async (
     console.log({ message: 'Tez-Ctez swap data error', error });
     return {
       success: false,
-      tezPool: new BigNumber(0),
-      ctezPool: new BigNumber(0),
+      tezSupply: new BigNumber(0),
+      ctezSupply: new BigNumber(0),
       tokenIn,
       tokenOut,
       exchangeFee: new BigNumber(0),
@@ -282,10 +284,11 @@ export const calculateTokensOutGeneralStable = (
   error?: any;
 } => {
   const state = store.getState();
-  const TOKEN = state.config.tokens;
+  const TOKEN = state.config.standard;
 
   //const TOKEN = useAppSelector((state) => state.config.standard);
   tokenIn_amount = tokenIn_amount.multipliedBy(10 ** TOKEN[tokenIn].decimals);
+  
   try {
     tokenIn_supply = tokenIn_supply.multipliedBy(tokenIn_precision);
     tokenOut_supply = tokenOut_supply.multipliedBy(tokenOut_precision);
@@ -326,14 +329,6 @@ export const calculateTokensOutGeneralStable = (
     const exchangeRate = tokenOut_amount.dividedBy(
       tokenIn_amount.dividedBy(10 ** TOKEN[tokenIn].decimals)
     );
-
-    console.log(
-      tokenOut_amount.toNumber(),
-      fees.toString(),
-      minimum_Out.toString(),
-      exchangeRate.toString(),
-      priceImpact.toString()
-    );
     return {
       tokenOut_amount,
       fees,
@@ -363,7 +358,6 @@ export const loadSwapDataGeneralStable = async (
   tokenOut: string;
   tokenOut_supply: BigNumber;
   exchangeFee: BigNumber;
-  tokenOutPerTokenIn: BigNumber;
   lpTokenSupply: BigNumber;
   lpToken: any;
   tokenIn_precision: BigNumber;
@@ -372,7 +366,6 @@ export const loadSwapDataGeneralStable = async (
 }> => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.tokens;
     const AMM = state.config.AMMs;
     // const TOKEN = useAppSelector((state) => state.config.standard);
     // const AMM = useAppSelector((state) => state.config.AMMs);
@@ -410,15 +403,6 @@ export const loadSwapDataGeneralStable = async (
     const exchangeFee = new BigNumber(lpFee);
     let lpTokenSupply = new BigNumber(await dexStorage.lqtTotal);
     const lpToken = AMM[dexContractAddress].lpToken;
-    const lpTokenDecimal = lpToken.decimals;
-    const tokenIn_Decimal = TOKEN[tokenIn].decimals;
-    const tokenOut_Decimal = TOKEN[tokenOut].decimals;
-    tokenIn_supply = tokenIn_supply?.dividedBy(Math.pow(10, tokenIn_Decimal));
-    tokenOut_supply = tokenOut_supply?.dividedBy(
-      Math.pow(10, tokenOut_Decimal)
-    );
-    lpTokenSupply = lpTokenSupply.dividedBy(Math.pow(10, lpTokenDecimal));
-    const tokenOutPerTokenIn = tokenOut_supply?.dividedBy(tokenIn_supply ?? 1);
     return {
       success: true,
       tokenIn,
@@ -426,7 +410,6 @@ export const loadSwapDataGeneralStable = async (
       tokenOut,
       tokenOut_supply,
       exchangeFee,
-      tokenOutPerTokenIn,
       lpTokenSupply,
       lpToken,
       tokenIn_precision,
@@ -442,7 +425,6 @@ export const loadSwapDataGeneralStable = async (
       tokenOut,
       tokenOut_supply: new BigNumber(0),
       exchangeFee: new BigNumber(0),
-      tokenOutPerTokenIn: new BigNumber(0),
       lpTokenSupply: new BigNumber(0),
       lpToken: null,
       tokenIn_precision: new BigNumber(0),
