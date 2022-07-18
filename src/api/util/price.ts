@@ -105,7 +105,6 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
       const agEurePrice = await getagEURePrice();
       const xtzPrice = await getXtzDollarPrice();
         
-    //  TEST speed
       const tokenPrice: { [id: string] : number; } = {};  
       const tokens = Object.keys(TOKEN);
       const tokenAddress : { [id: string] : { contractAddress : string; }}= {}

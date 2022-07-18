@@ -23,6 +23,7 @@ export const fetchConfig = async () => {
 export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
     const AMM = useAppSelector((state) => state.config.AMMs);
     let add = 'false';
+    // for loop and then break
     Object.keys(AMM).forEach(function (key) {
         if ((AMM[key].token1.symbol === tokenIn && AMM[key].token2.symbol === tokenOut) || (AMM[key].token2.symbol === tokenIn && AMM[key].token1.symbol === tokenOut)) {
             add = key;
