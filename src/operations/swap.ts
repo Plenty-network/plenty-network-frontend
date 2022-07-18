@@ -139,11 +139,11 @@ export const directSwapWrapper = async (
       }
   
       const batchOperation : any = await batch.send();
-      setShowConfirmTransaction(false);
-  
-      setShowConfirmSwap(false);
-      transactionSubmitModal(batchOperation.opHash);
-      resetAllValues();
+      // Uncomment once implemented
+      // setShowConfirmTransaction(false);
+      // setShowConfirmSwap(false);
+      // transactionSubmitModal(batchOperation.opHash);
+      // resetAllValues();
   
       await batchOperation.confirmation().then(() => batchOperation.opHash);
       return {
@@ -213,10 +213,11 @@ export const directSwapWrapper = async (
           ? console.log('operation getting injected')
           : console.log('operation injected');
       }
-      setShowConfirmSwap(false);
-      setShowConfirmTransaction(false);
-      resetAllValues();
-      transactionSubmitModal(batchOp.opHash);
+      // Uncomment once implemented
+      // setShowConfirmSwap(false);
+      // setShowConfirmTransaction(false);
+      // resetAllValues();
+      // transactionSubmitModal(batchOp.opHash);
   
       await batchOp.confirmation();
       return {
@@ -264,10 +265,11 @@ export const directSwapWrapper = async (
       ]);
   
       const batchOp : any = await batch.send();
-      setShowConfirmSwap(false);
-      setShowConfirmTransaction(false);
-      resetAllValues();
-      transactionSubmitModal(batchOp.opHash);
+      // Uncomment once implemented
+      // setShowConfirmSwap(false);
+      // setShowConfirmTransaction(false);
+      // resetAllValues();
+      // transactionSubmitModal(batchOp.opHash);
       await batchOp.confirmation();
   
       return {
