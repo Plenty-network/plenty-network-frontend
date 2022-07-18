@@ -9,7 +9,8 @@ function SearchBar(props: ISearchBarProps) {
   return (
     <div
       className={clsx(
-        'bg-outineBtn    rounded font-body3 text-white w-full h-[50px] py-3.5 px-3'
+        'bg-outineBtn    rounded font-body3 text-white w-full h-[50px] py-3.5 px-3',
+        props.value && 'border border-primary-500'
       )}
       {...props}
     >
