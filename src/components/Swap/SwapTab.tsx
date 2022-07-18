@@ -77,8 +77,7 @@ function SwapTab(props: ISwapTabProps) {
     useStateAnimate(false, 280);
 
   const [showRecepient, setShowRecepient] = useState(false);
-  console.log(props.swapDetails);
-  console.log(props.swapDetails ? 'ishu' : 'bdjhcbdh');
+
   const [isRefresh, setRefresh] = useState(false);
   const refreshAllData = (value: boolean) => {
     setRefresh(value);
@@ -86,6 +85,13 @@ function SwapTab(props: ISwapTabProps) {
     props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
     setRefresh(false);
   };
+
+  // const fetchSwapDetails = () => {
+  //   setRefresh(value);
+  //   //call loadswapdata
+  //   props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
+  //   setRefresh(false);
+  // };
 
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {
@@ -264,6 +270,7 @@ function SwapTab(props: ISwapTabProps) {
                       )}
                       placeholder="0.0"
                       lang="en_EN"
+                      disabled
                       step="any"
                       onChange={(e) =>
                         props.handleSwapTokenInput(e.target.value, 'tokenOut')
@@ -355,9 +362,17 @@ function SwapTab(props: ISwapTabProps) {
                   <span className="ml-[9.25px] font-text-bold mr-[7px]">
                     {' '}
                     {`1 ${
-                      props.tokenIn.name
+                      props.tokenIn.name === 'tez'
+                        ? 'TEZ'
+                        : props.tokenIn.name === 'ctez'
+                        ? 'CTEZ'
+                        : props.tokenIn.name
                     } = ${props.swapDetails.exchangeRate.toFixed(3)} ${
-                      props.tokenOut.name
+                      props.tokenOut.name === 'tez'
+                        ? 'TEZ'
+                        : props.tokenOut.name === 'ctez'
+                        ? 'CTEZ'
+                        : props.tokenOut.name
                     }`}
                   </span>
                   <span className="relative top-px">
@@ -401,7 +416,11 @@ function SwapTab(props: ISwapTabProps) {
               ) : (
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
                   {` ${props.swapDetails.minimum_Out.toString()} ${
-                    props.tokenOut.name
+                    props.tokenOut.name === 'tez'
+                      ? 'TEZ'
+                      : props.tokenOut.name === 'ctez'
+                      ? 'CTEZ'
+                      : props.tokenOut.name
                   }`}
                 </div>
               )}

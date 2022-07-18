@@ -166,34 +166,31 @@ function Swap(props: ISwapProps) {
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
         if (Object.keys(tokenOut).length !== 0) {
-          const type = getDexType(tokenIn.name, tokenOut.name);
-
-          if (type === AMM_TYPE.VOLATILE) {
-            const res = await calculateTokensOutWrapper(
-              new BigNumber(input),
-              swapData.exchangeFee,
-              new BigNumber(slippage),
-              tokenIn.name,
-              tokenOut.name,
-              swapData.tokenIn_supply,
-              swapData.tokenOut_supply
-            );
-
-            setSecondTokenAmount(res.tokenOut_amount);
-            setSwapDetails({
-              exchangeRate: res.exchangeRate,
-              fees: res.fees,
-              minimum_Out: res.minimum_Out,
-              priceImpact: res.priceImpact,
-              tokenOut_amount: res.tokenOut_amount,
-              isLoading: false,
-              success: true,
-            });
-          }
-          // setTimeout(() => {
-          //   setSecondTokenAmount('55');
-          //   setRouteData({ success: true, isloading: false });
-          // }, 1000);
+          const res = await calculateTokensOutWrapper(
+            new BigNumber(input),
+            swapData.exchangeFee,
+            new BigNumber(slippage),
+            tokenIn.name,
+            tokenOut.name,
+            swapData.tokenIn_supply ?? undefined,
+            swapData.tokenOut_supply ?? undefined,
+            swapData.tokenIn_precision ?? undefined,
+            swapData.tokenOut_precision ?? undefined,
+            swapData.tezSupply ?? undefined,
+            swapData.ctezSupply ?? undefined,
+            swapData.target ?? undefined
+          );
+          console.log(res);
+          setSecondTokenAmount(res.tokenOut_amount);
+          setSwapDetails({
+            exchangeRate: res.exchangeRate,
+            fees: res.fees,
+            minimum_Out: res.minimum_Out,
+            priceImpact: res.priceImpact,
+            tokenOut_amount: res.tokenOut_amount,
+            isLoading: false,
+            success: true,
+          });
         }
       } else if (tokenType === 'tokenOut') {
         setSecondTokenAmount(input);
