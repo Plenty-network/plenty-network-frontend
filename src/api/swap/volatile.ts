@@ -14,14 +14,13 @@ export const loadSwapDataVolatile = async (
   tokenOut: string;
   tokenOut_supply: BigNumber;
   exchangeFee: BigNumber;
-  tokenOutPerTokenIn: BigNumber;
   lpTokenSupply: BigNumber;
   lpToken: any;
   dexContractInstance: any;
 }> => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.tokens;
+    const TOKEN = state.config.standard;
     const AMM = state.config.AMMs;
     // const TOKEN = useAppSelector((state) => state.config.standard);
     // const AMM = useAppSelector((state) => state.config.AMMs);
@@ -58,7 +57,6 @@ export const loadSwapDataVolatile = async (
     tokenOut_supply = tokenOut_supply.dividedBy(Math.pow(10, tokenOut_Decimal));
     lpTokenSupply = lpTokenSupply.dividedBy(Math.pow(10, lpTokenDecimal));
     const exchangeFee = new BigNumber(1).dividedBy(lpFee);
-    const tokenOutPerTokenIn = tokenOut_supply.dividedBy(tokenIn_supply);
     return {
       success: true,
       tokenIn,
@@ -66,7 +64,6 @@ export const loadSwapDataVolatile = async (
       tokenOut,
       tokenOut_supply,
       exchangeFee,
-      tokenOutPerTokenIn,
       lpTokenSupply,
       lpToken,
       dexContractInstance,
@@ -80,7 +77,6 @@ export const loadSwapDataVolatile = async (
       tokenOut,
       tokenOut_supply: new BigNumber(0),
       exchangeFee: new BigNumber(0),
-      tokenOutPerTokenIn: new BigNumber(0),
       lpTokenSupply: new BigNumber(0),
       lpToken: null,
       dexContractInstance: null,

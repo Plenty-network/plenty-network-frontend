@@ -58,7 +58,6 @@ export const calculateTokensOutWrapper = (
   try {
     const type = getDexType(tokenIn, tokenOut);
     let outputData: any;
-
     if (type === AMM_TYPE.VOLATILE && tokenIn_supply && tokenOut_supply) {
       outputData = calculateTokenOutputVolatile(
         tokenIn_amount,
