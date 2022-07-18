@@ -16,6 +16,8 @@ import { tokensModal, tokenType } from '../../../src/constants/swap';
 import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import loader from '../../assets/animations/shimmer-swap.json';
 
+import { BigNumber } from 'bignumber.js';
+
 interface ISwapTabProps {
   className?: string;
   walletAddress: string | '';
@@ -50,6 +52,21 @@ interface ISwapTabProps {
     input: string | number,
     tokenType: 'tokenIn' | 'tokenOut'
   ) => void;
+  routeData: {
+    success: boolean;
+    isloading: boolean;
+  };
+  setRouteData: any;
+  setSwapDetails: any;
+  swapDetails: {
+    exchangeRate: BigNumber;
+    fees: BigNumber;
+    minimum_Out: BigNumber;
+    priceImpact: BigNumber;
+    tokenOut_amount: BigNumber;
+    isLoading: boolean;
+    success: boolean;
+  };
 }
 
 function SwapTab(props: ISwapTabProps) {
@@ -60,8 +77,15 @@ function SwapTab(props: ISwapTabProps) {
     useStateAnimate(false, 280);
 
   const [showRecepient, setShowRecepient] = useState(false);
-
+  console.log(props.swapDetails);
+  console.log(props.swapDetails ? 'ishu' : 'bdjhcbdh');
   const [isRefresh, setRefresh] = useState(false);
+  const refreshAllData = (value: boolean) => {
+    setRefresh(value);
+    //call loadswapdata
+    props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
+    setRefresh(false);
+  };
 
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {
@@ -108,7 +132,10 @@ function SwapTab(props: ISwapTabProps) {
     <>
       <div className="flex items-center flex-row px-5 lg:px-9 relative">
         <div className="font-title2">Swap</div>
-        <div className="py-1 cursor-pointer px-15 h-8 border border-text-700 rounded-[21px] ml-auto">
+        <div
+          className="py-1 cursor-pointer px-15 h-8 border border-text-700 rounded-[21px] ml-auto"
+          onClick={() => refreshAllData(true)}
+        >
           <Image src={refresh} height={'14px'} width={'15px'} />
         </div>
         <div
@@ -157,7 +184,7 @@ function SwapTab(props: ISwapTabProps) {
             <div className="text-right font-body1 text-text-400">YOU PAY</div>
             <div>
               <input
-                type="number"
+                type="text"
                 className={clsx(
                   'text-white bg-card-500 text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%]'
                 )}
@@ -231,7 +258,7 @@ function SwapTab(props: ISwapTabProps) {
                 {Object.keys(props.tokenOut).length !== 0 ? (
                   true ? (
                     <input
-                      type="number"
+                      type="text"
                       className={clsx(
                         'text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 '
                       )}
@@ -300,56 +327,59 @@ function SwapTab(props: ISwapTabProps) {
           </div>
         )}
 
-        {(props.firstTokenAmount || props.secondTokenAmount) &&
-          Object.keys(props.tokenOut).length !== 0 && (
-            <div
-              className="h-12 mt-3 cursor-pointer px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] flex "
-              onClick={() => setOpenSwapDetails(!openSwapDetails)}
-            >
-              {!props.secondTokenAmount ? (
-                <div className="flex">
-                  <span className="ml-[6px] font-text-bold mr-[7px]">
-                    {' '}
-                    Fetching best price
+        {props.swapDetails.success && (
+          <div
+            className="h-12 mt-3 cursor-pointer px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] flex "
+            onClick={() => setOpenSwapDetails(!openSwapDetails)}
+          >
+            {props.swapDetails.isLoading ? (
+              <div className="flex">
+                <span className="ml-[6px] font-text-bold mr-[7px]">
+                  {' '}
+                  Fetching best price
+                </span>
+                <span className="relative -top-1">
+                  <Lottie
+                    animationData={loader}
+                    loop={true}
+                    style={{ height: '32px', width: '32px' }}
+                  />
+                </span>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <span className="relative top-0.5">
+                    <Image src={info} />
                   </span>
-                  <span className="relative -top-1">
-                    <Lottie
-                      animationData={loader}
-                      loop={true}
-                      style={{ height: '32px', width: '32px' }}
-                    />
+                  <span className="ml-[9.25px] font-text-bold mr-[7px]">
+                    {' '}
+                    {`1 ${
+                      props.tokenIn.name
+                    } = ${props.swapDetails.exchangeRate.toFixed(3)} ${
+                      props.tokenOut.name
+                    }`}
+                  </span>
+                  <span className="relative top-px">
+                    <Image src={ratesrefresh} />
                   </span>
                 </div>
-              ) : (
-                <>
-                  <div>
-                    <span className="relative top-0.5">
-                      <Image src={info} />
-                    </span>
-                    <span className="ml-[9.25px] font-text-bold mr-[7px]">
-                      {' '}
-                      1 PLENTY = 0.114 uUSD
-                    </span>
-                    <span className="relative top-px">
-                      <Image src={ratesrefresh} />
-                    </span>
-                  </div>
-                  <div className="ml-auto">
-                    <Image
-                      src={arrowUp}
-                      className={
-                        animateOpenSwapDetails ? 'rotate-180' : 'rotate-0'
-                      }
-                      width={'12px'}
-                      height={'9px'}
-                    />
-                  </div>
-                </>
-              )}
-            </div>
-          )}
+                <div className="ml-auto">
+                  <Image
+                    src={arrowUp}
+                    className={
+                      animateOpenSwapDetails ? 'rotate-180' : 'rotate-0'
+                    }
+                    width={'12px'}
+                    height={'9px'}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
-        {openSwapDetails && (
+        {openSwapDetails && props.swapDetails.success && (
           <div
             className={`bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 ${
               animateOpenSwapDetails
@@ -364,9 +394,17 @@ function SwapTab(props: ISwapTabProps) {
                   <Image src={info} />
                 </span>
               </div>
-              <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                0.11197067216831917 uUSD
-              </div>
+              {props.swapDetails.isLoading ? (
+                <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
+                  999999999999
+                </div>
+              ) : (
+                <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                  {` ${props.swapDetails.minimum_Out.toString()} ${
+                    props.tokenOut.name
+                  }`}
+                </div>
+              )}
             </div>
 
             <div className="flex mt-2">
@@ -376,9 +414,15 @@ function SwapTab(props: ISwapTabProps) {
                   <Image src={info} />
                 </span>
               </div>
-              <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                4.38 %
-              </div>
+              {isRefresh ? (
+                <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
+                  99999999
+                </div>
+              ) : (
+                <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                  {`${props.swapDetails.priceImpact.toFixed(4)} %`}
+                </div>
+              )}
             </div>
             <div className="flex mt-2">
               <div className="font-mobile-400 md:font-body3 ">
@@ -387,9 +431,15 @@ function SwapTab(props: ISwapTabProps) {
                   <Image src={info} />
                 </span>
               </div>
-              <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                0.0025 PLENTY
-              </div>
+              {isRefresh ? (
+                <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
+                  999999999999
+                </div>
+              ) : (
+                <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                  {props.swapDetails.fees.toFixed(4)}
+                </div>
+              )}
             </div>
             <div className="border-t border-text-800 mt-[18px]"></div>
             <div className="mt-4 ">
@@ -400,46 +450,62 @@ function SwapTab(props: ISwapTabProps) {
                   <Image src={info} />
                 </span>
               </div>
-              <div className="border-dashed relative top-[24px]   border-t-2 border-muted-50 mx-2"></div>
-              <div className="mt-2 flex justify-between ">
-                <div className="flex items-center ">
-                  <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
-                    <span className="w-[28px] h-[28px]">
-                      <Image src={ctez} width={'28px'} height={'28px'} />
-                    </span>
-                  </div>
-                  <div className="w-2 h-2 bg-card-500 z-50"></div>
+              {isRefresh ? (
+                <div className=" w-[110px] mt-2 h-[35px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
+                  99999999
                 </div>
-                <div className="flex items-center">
-                  <div className="w-2 h-2 bg-card-500 z-50"></div>
-                  <div className="relative  rounded-2xl h-[32px] bg-card-600 p-px flex">
-                    <span className="relative -left-[7px] flex items-center">
-                      <div className="relative left-2.5 z-50 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+              ) : (
+                <>
+                  <div className="border-dashed relative top-[24px]   border-t-2 border-muted-50 mx-2"></div>
+                  <div className="mt-2 flex justify-between ">
+                    <div className="flex items-center ">
+                      <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
                         <span className="w-[28px] h-[28px]">
                           <Image src={ctez} width={'28px'} height={'28px'} />
                         </span>
                       </div>
-                      <div className="relative z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                      <div className="w-2 h-2 bg-card-500 z-50"></div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-card-500 z-50"></div>
+                      <div className="relative  rounded-2xl h-[32px] bg-card-600 p-px flex">
+                        <span className="relative -left-[7px] flex items-center">
+                          <div className="relative left-2.5 z-50 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                            <span className="w-[28px] h-[28px]">
+                              <Image
+                                src={ctez}
+                                width={'28px'}
+                                height={'28px'}
+                              />
+                            </span>
+                          </div>
+                          <div className="relative z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                            <span className="w-[28px] h-[28px]">
+                              <Image
+                                src={ctez}
+                                width={'28px'}
+                                height={'28px'}
+                              />
+                            </span>
+                          </div>
+                          <div className="relative ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4">
+                            0.3%
+                          </div>
+                        </span>
+                      </div>
+                      <div className="w-2 h-2 bg-card-500 z-50"></div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-card-500 z-50"></div>
+                      <div className="relative  w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
                         <span className="w-[28px] h-[28px]">
                           <Image src={ctez} width={'28px'} height={'28px'} />
                         </span>
                       </div>
-                      <div className="relative ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4">
-                        0.3%
-                      </div>
-                    </span>
+                    </div>
                   </div>
-                  <div className="w-2 h-2 bg-card-500 z-50"></div>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-2 h-2 bg-card-500 z-50"></div>
-                  <div className="relative  w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
-                    <span className="w-[28px] h-[28px]">
-                      <Image src={ctez} width={'28px'} height={'28px'} />
-                    </span>
-                  </div>
-                </div>
-              </div>
+                </>
+              )}
             </div>
           </div>
         )}

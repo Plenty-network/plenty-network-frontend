@@ -9,11 +9,17 @@ import { getTokenPrices } from '../../src/api/util/price';
 import { tokensModal, tokenType } from '../../src/constants/swap';
 
 import { useAppSelector } from '../../src/redux';
+import { AMM_TYPE } from '../../src/config/types';
 import { calculateTokensOutGeneralStable } from '../../src/api/swap/stableswap';
-import {BigNumber} from 'bignumber.js'
-import { loadSwapDataWrapper } from '../../src/api/swap/wrappers';
+import { BigNumber } from 'bignumber.js';
+import {
+  calculateTokensOutWrapper,
+  loadSwapDataWrapper,
+} from '../../src/api/swap/wrappers';
+
 import axios from 'axios';
-import { getDexAddress, getDexType } from '../../src/api/util/fetchConfig';
+import { loadSwapDataVolatile } from '../../src/api/swap/volatile';
+import { getDexType } from '../../src/api/util/fetchConfig';
 
 interface ISwapProps {
   className?: string;
@@ -31,7 +37,7 @@ function Swap(props: ISwapProps) {
     useLocationStateInSwap();
 
   const [firstTokenAmount, setFirstTokenAmount] = useState<string | number>('');
-  const [secondTokenAmount, setSecondTokenAmount] = useState<string | number>(
+  const [secondTokenAmount, setSecondTokenAmount] = useState<number | string>(
     ''
   );
 
@@ -48,6 +54,43 @@ function Swap(props: ISwapProps) {
     success: false,
     isloading: false,
   });
+  const [swapData, setSwapData] = useState<{
+    tokenIn_amount: BigNumber;
+    exchangeFee: BigNumber;
+    slippage: BigNumber;
+    tokenIn?: string;
+    tokenOut?: string;
+    tokenIn_supply: BigNumber;
+    tokenOut_supply: BigNumber;
+    tokenIn_precision?: BigNumber;
+    tokenOut_precision?: BigNumber;
+    tezSupply?: BigNumber;
+    ctezSupply?: BigNumber;
+    target?: BigNumber;
+  }>({
+    tokenIn_amount: new BigNumber(0),
+    tokenIn_supply: new BigNumber(0),
+    tokenOut_supply: new BigNumber(0),
+    exchangeFee: new BigNumber(0),
+    slippage: new BigNumber(slippage),
+  });
+  const [swapDetails, setSwapDetails] = useState<{
+    exchangeRate: BigNumber;
+    fees: BigNumber;
+    minimum_Out: BigNumber;
+    priceImpact: BigNumber;
+    tokenOut_amount: BigNumber;
+    isLoading: boolean;
+    success: boolean;
+  }>({
+    exchangeRate: new BigNumber(0),
+    fees: new BigNumber(0),
+    minimum_Out: new BigNumber(0),
+    priceImpact: new BigNumber(0),
+    tokenOut_amount: new BigNumber(0),
+    isLoading: false,
+    success: false,
+  });
   // const [tokenPrice, setTokenPrice] = useState({});
   const [tokenPrice, setTokenPrice] = useState<{
     [id: string]: number;
@@ -60,17 +103,15 @@ function Swap(props: ISwapProps) {
   //     setTokenPrice(response.tokenPrice);
   //   });
   // }, []);
-  const getLoad=async()=>{
+  useEffect(() => {
+    loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((res) => {
+      setSwapData(res);
+    });
+    // const res = loadSwapDataWrapper('USDC.e', 'uUSD');
 
-    const res = await loadSwapDataWrapper('USDC.e' , 'uUSD');
-    console.log(res);
-
-    // console.log(getDexAddress('USDC.e' , 'uUSD'));
-    // console.log(getDexType('USDC.e' , 'uUSD'));
-
-
-  }
-  getLoad();
+    // loadSwapDataVolatile('USDC.e', 'uUSD');
+  }, [tokenIn, tokenOut]);
+  // getLoad();
   // calculateTokensOutGeneralStable(
   //   new BigNumber('30654476830663416'),
   //   new BigNumber(79811356526),
@@ -88,27 +129,71 @@ function Swap(props: ISwapProps) {
       Object.prototype.hasOwnProperty.call(tokenIn, 'name') &&
       Object.prototype.hasOwnProperty.call(tokenOut, 'name')
     ) {
-      // setRouteData(success: true);
+      loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((res) => {
+        console.log(res);
+      });
     }
   }, [tokenIn, tokenOut]);
 
-  const handleSwapTokenInput = (
+  const handleSwapTokenInput = async (
     input: string | number,
     tokenType: 'tokenIn' | 'tokenOut'
   ) => {
     setRouteData({ success: false, isloading: true });
+    setSwapDetails({
+      exchangeRate: new BigNumber(0),
+      fees: new BigNumber(0),
+      minimum_Out: new BigNumber(0),
+      priceImpact: new BigNumber(0),
+      tokenOut_amount: new BigNumber(0),
+      isLoading: true,
+      success: true,
+    });
     if (input === '') {
       setFirstTokenAmount('');
       setSecondTokenAmount('');
+      setSwapDetails({
+        exchangeRate: new BigNumber(0),
+        fees: new BigNumber(0),
+        minimum_Out: new BigNumber(0),
+        priceImpact: new BigNumber(0),
+        tokenOut_amount: new BigNumber(0),
+        isLoading: true,
+        success: false,
+      });
       setRouteData({ success: true, isloading: false });
     } else {
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
         if (Object.keys(tokenOut).length !== 0) {
-          setTimeout(() => {
-            setSecondTokenAmount('55');
-            setRouteData({ success: true, isloading: false });
-          }, 1000);
+          const type = getDexType(tokenIn.name, tokenOut.name);
+
+          if (type === AMM_TYPE.VOLATILE) {
+            const res = await calculateTokensOutWrapper(
+              new BigNumber(input),
+              swapData.exchangeFee,
+              new BigNumber(slippage),
+              tokenIn.name,
+              tokenOut.name,
+              swapData.tokenIn_supply,
+              swapData.tokenOut_supply
+            );
+
+            setSecondTokenAmount(res.tokenOut_amount);
+            setSwapDetails({
+              exchangeRate: res.exchangeRate,
+              fees: res.fees,
+              minimum_Out: res.minimum_Out,
+              priceImpact: res.priceImpact,
+              tokenOut_amount: res.tokenOut_amount,
+              isLoading: false,
+              success: true,
+            });
+          }
+          // setTimeout(() => {
+          //   setSecondTokenAmount('55');
+          //   setRouteData({ success: true, isloading: false });
+          // }, 1000);
         }
       } else if (tokenType === 'tokenOut') {
         setSecondTokenAmount(input);
@@ -167,13 +252,7 @@ function Swap(props: ISwapProps) {
     if (props.otherProps.walletAddress) {
       const updateBalance = async () => {
         const balancePromises = [];
-        console.log(
-          await getUserBalanceByRpc(
-            tokenIn.name,
-            props.otherProps.walletAddress,
-            TOKEN
-          )
-        );
+
         Object.keys(tokenIn).length !== 0 &&
           balancePromises.push(
             getUserBalanceByRpc(
@@ -238,6 +317,10 @@ function Swap(props: ISwapProps) {
           tokenPrice={tokenPrice}
           recepient={recepient}
           setRecepient={setRecepient}
+          routeData={routeData}
+          setRouteData={setRouteData}
+          swapDetails={swapDetails}
+          setSwapDetails={setSwapDetails}
         />
       </div>
       <SwapModal
