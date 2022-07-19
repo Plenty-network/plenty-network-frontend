@@ -23,7 +23,8 @@ export const fetchConfig = async () => {
 export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
   const state = store.getState();
   const AMM = state.config.AMMs;
-  //const AMM = useAppSelector((state) => state.config.AMMs);
+  
+//   TODO : Add a way to break from forEach
   let add = 'false';
   Object.keys(AMM).forEach(function (key) {
     if (
@@ -42,7 +43,8 @@ export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
 export const getDexType = (tokenIn: string, tokenOut: string): string => {
   const state = store.getState();
   const AMM = state.config.AMMs;
-  //const AMM = useAppSelector((state) => state.config.AMMs);
+  
+  //   TODO : Add a way to break from forEach
   let type = 'false';
   Object.keys(AMM).forEach(function (key) {
     if (

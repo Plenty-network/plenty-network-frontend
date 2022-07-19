@@ -105,7 +105,10 @@ function Swap(props: ISwapProps) {
       Object.prototype.hasOwnProperty.call(tokenOut, 'name')
     ) {
       loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((res) => {
+        console.log(tokenIn.name , tokenOut.name);
+        console.log(res);
         setSwapData(res);
+        console.log(swapData);
         if (firstTokenAmount !== '') {
           handleSwapTokenInput(firstTokenAmount, 'tokenIn');
         }

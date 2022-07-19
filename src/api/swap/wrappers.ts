@@ -55,7 +55,7 @@ export const calculateTokensOutWrapper = (
   target?: BigNumber
 ) => {
   console.log(
-    tokenIn_amount.toString(),
+    tokenIn_amount,
     Exchangefee,
     slippage,
     tokenIn,
@@ -71,7 +71,15 @@ export const calculateTokensOutWrapper = (
   try {
     const type = getDexType(tokenIn, tokenOut);
     let outputData: any;
+    console.log(type , tokenIn_supply , tokenOut_supply);
     if (type === AMM_TYPE.VOLATILE && tokenIn_supply && tokenOut_supply) {
+        console.log('inside volatile');
+        console.log(tokenIn_amount,
+            tokenIn_supply,
+            tokenOut_supply,
+            Exchangefee,
+            slippage,
+            tokenOut);
       outputData = calculateTokenOutputVolatile(
         tokenIn_amount,
         tokenIn_supply,
@@ -80,6 +88,7 @@ export const calculateTokensOutWrapper = (
         slippage,
         tokenOut
       );
+      console.log(outputData);
     } else if (type === AMM_TYPE.STABLE) {
       if (
         ((tokenIn === 'tez' && tokenOut === 'ctez') ||
