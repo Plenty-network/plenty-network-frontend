@@ -91,6 +91,8 @@ module.exports = {
       popUpNotificationHeader: '#2F1C4C',
       errorBorder: 'rgba(244, 53, 82, 0.4)',
       errorBg: 'rgba(244, 53, 82, 0.01)',
+      borderCommon:'rgba(40, 34, 48, 0.5)',
+      cardBackGround:'#0D0714'
     },
     fontSize: {
       f32: ['32px', '40px'],

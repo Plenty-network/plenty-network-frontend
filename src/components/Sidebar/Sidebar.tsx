@@ -25,9 +25,18 @@ export const FooterMenu: Array<IHrefIconProps> = [
 
 const MainMenu: Array<ISingleSideBarProps> = [
     {
+        name: 'Swap',
+        iconName: 'swap',
+        pathName: '/swap',
+    },
+    {
+        name: 'Pools',
+        iconName: 'pools',
+        pathName: '/pools',
+    },
+    {
         name: 'komm',
         iconName: 'swap',
-        pathName: './limk',
         subMenu: [
             {
                 name: 'swap',
@@ -69,7 +78,6 @@ const MainMenu: Array<ISingleSideBarProps> = [
     {
         name: 'Earn',
         iconName: 'swap',
-        pathName: './limk',
         subMenu: [
             {
                 name: 'swap',
@@ -104,6 +112,7 @@ export function SideBar(props: ISideBarProps) {
                             onClick={() => activeMenu === `menuItem${index}` ? setActiveMenu('') : setActiveMenu(`menuItem${index}`)}
                             isMenuOpen={activeMenu === `menuItem${index}`}
                             subMenu={menuItem.subMenu ? menuItem.subMenu : false}
+                            pathName={menuItem.pathName}
                         />)}
                 </div>
                 <div >

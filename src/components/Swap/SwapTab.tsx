@@ -18,6 +18,7 @@ import loader from '../../assets/animations/shimmer-swap.json';
 
 import { BigNumber } from 'bignumber.js';
 import { Token } from '@taquito/taquito/node_modules/@taquito/michelson-encoder';
+import { directSwapWrapper } from '../../operations/swap';
 
 interface ISwapTabProps {
   className?: string;
@@ -72,10 +73,10 @@ interface ISwapTabProps {
     tokenIn_amount: BigNumber;
     exchangeFee: BigNumber;
     slippage: BigNumber;
-    tokenIn?: string;
-    tokenOut?: string;
-    tokenIn_supply: BigNumber;
-    tokenOut_supply: BigNumber;
+    tokenIn: string;
+    tokenOut: string;
+    tokenIn_supply?: BigNumber;
+    tokenOut_supply?: BigNumber;
     tokenIn_precision?: BigNumber;
     tokenOut_precision?: BigNumber;
     tezSupply?: BigNumber;
@@ -101,26 +102,24 @@ function SwapTab(props: ISwapTabProps) {
     props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
     setRefresh(false);
   };
-  // useEffect(() => {
-  //   props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
-  // }, [props.tokenIn.name, props.tokenOut.name]);
 
-  // const fetchSwapDetails = async () => {
-  //   const res = await calculateTokensOutWrapper(
-  //     new BigNumber(props.firstTokenAmount),
-  //     props.swapData.exchangeFee,
-  //     new BigNumber(props.slippage),
-  //     props.tokenIn.name,
-  //     props.tokenOut.name,
-  //     props.swapData.tokenIn_supply ?? undefined,
-  //     props.swapData.tokenOut_supply ?? undefined,
-  //     props.swapData.tokenIn_precision ?? undefined,
-  //     props.swapData.tokenOut_precision ?? undefined,
-  //     props.swapData.tezSupply ?? undefined,
-  //     props.swapData.ctezSupply ?? undefined,
-  //     props.swapData.target ?? undefined
-  //   );
-  // };
+  const swapOperation = () => {
+    directSwapWrapper(
+      props.tokenIn.name,
+      props.tokenOut.name,
+      props.swapDetails.minimum_Out,
+      props.walletAddress,
+      new BigNumber(props.firstTokenAmount),
+      props.walletAddress,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    ).then((response) => {
+      console.log('all done');
+      console.log(response);
+    });
+  };
 
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {
@@ -149,7 +148,7 @@ function SwapTab(props: ISwapTabProps) {
         );
       } else {
         return (
-          <Button color="primary" width="w-full">
+          <Button color="primary" width="w-full" onClick={swapOperation}>
             Swap
           </Button>
         );
@@ -238,7 +237,7 @@ function SwapTab(props: ISwapTabProps) {
             <span className="text-text-600 font-body3">Balance:</span>{' '}
             <span className="font-body4 text-primary-500 2">
               {Number(props.userBalances[props.tokenIn.name]) >= 0
-                ? Number(props.userBalances[props.tokenIn.name])
+                ? props.userBalances[props.tokenIn.name].toString()
                 : '--'}
             </span>
           </div>
@@ -329,7 +328,7 @@ function SwapTab(props: ISwapTabProps) {
               <span className="font-body4 text-text-500 ">
                 {Object.keys(props.tokenOut).length !== 0 &&
                 Number(props.userBalances[props.tokenOut.name]) >= 0
-                  ? Number(props.userBalances[props.tokenOut.name])
+                  ? props.userBalances[props.tokenOut.name].toString()
                   : '--'}
               </span>
             </div>

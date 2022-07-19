@@ -16,21 +16,20 @@ export const loadSwapDataWrapper = async (
   tokenIn: string,
   tokenOut: string
 ): Promise<any> => {
-  console.log(tokenIn, tokenOut);
   try {
     const type = getDexType(tokenIn, tokenOut);
     let swapData: any;
     console.log(type);
     if (type === AMM_TYPE.VOLATILE) {
-      swapData = loadSwapDataVolatile(tokenIn, tokenOut);
+      swapData = await loadSwapDataVolatile(tokenIn, tokenOut);
     } else if (type === AMM_TYPE.STABLE) {
       if (
         (tokenIn === 'tez' && tokenOut === 'ctez') ||
         (tokenIn === 'ctez' && tokenOut === 'tez')
       ) {
-        swapData = loadSwapDataTezCtez(tokenIn, tokenOut);
+        swapData = await loadSwapDataTezCtez(tokenIn, tokenOut);
       } else {
-        swapData = loadSwapDataGeneralStable(tokenIn, tokenOut);
+        swapData = await loadSwapDataGeneralStable(tokenIn, tokenOut);
       }
     }
     return swapData;
@@ -41,7 +40,7 @@ export const loadSwapDataWrapper = async (
 };
 
 // Try to incorporate return type
-export const calculateTokensOutWrapper = (
+export const calculateTokensOutWrapper = async (
   tokenIn_amount: BigNumber,
   Exchangefee: BigNumber,
   slippage: BigNumber,
@@ -54,12 +53,12 @@ export const calculateTokensOutWrapper = (
   tezSupply?: BigNumber,
   ctezSupply?: BigNumber,
   target?: BigNumber
-): any => {
+) => {
   try {
     const type = getDexType(tokenIn, tokenOut);
     let outputData: any;
     if (type === AMM_TYPE.VOLATILE && tokenIn_supply && tokenOut_supply) {
-      outputData = calculateTokenOutputVolatile(
+      outputData = await calculateTokenOutputVolatile(
         tokenIn_amount,
         tokenIn_supply,
         tokenOut_supply,
@@ -74,7 +73,7 @@ export const calculateTokensOutWrapper = (
         ctezSupply &&
         target
       ) {
-        outputData = calculateTokensOutTezCtez(
+        outputData = await calculateTokensOutTezCtez(
           tezSupply,
           ctezSupply,
           tokenIn_amount,
@@ -89,7 +88,7 @@ export const calculateTokensOutWrapper = (
         tokenIn_precision &&
         tokenOut_precision
       ) {
-        outputData = calculateTokensOutGeneralStable(
+        outputData = await calculateTokensOutGeneralStable(
           tokenIn_supply,
           tokenOut_supply,
           tokenIn_amount,
@@ -102,6 +101,7 @@ export const calculateTokensOutWrapper = (
         );
       }
     }
+    console.log(outputData);
     return outputData;
   } catch (error) {
     console.log({ message: 'swap data error', error });
