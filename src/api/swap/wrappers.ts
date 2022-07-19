@@ -77,7 +77,8 @@ export const calculateTokensOutWrapper = (
         tokenIn_supply,
         tokenOut_supply,
         Exchangefee,
-        slippage
+        slippage,
+        tokenOut
       );
     } else if (type === AMM_TYPE.STABLE) {
       if (
