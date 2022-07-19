@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { SideBarHOC } from '../src/components/Sidebar/SideBarHOC';
-import Swap from './Swap';
+import Swap from './swap';
 import { Provider } from 'react-redux';
 import { AppDispatch, store } from '../src/redux/index';
 
@@ -40,7 +40,7 @@ const Home: NextPage = (props) => {
   };
 
   return (
-    <Provider store={store}>
+    <>
       <Head>
         <title className="font-medium1">Plent network</title>
         <meta name="description" content="plenty network" />
@@ -49,7 +49,7 @@ const Home: NextPage = (props) => {
       <SideBarHOC>
         <Swap otherProps={otherPageProps} />
       </SideBarHOC>
-    </Provider>
+    </>
   );
 };
 Home.propTypes = {
