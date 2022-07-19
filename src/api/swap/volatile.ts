@@ -132,6 +132,7 @@ export const calculateTokenOutputVolatile = (
     priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
     priceImpact = priceImpact.multipliedBy(100);
     const exchangeRate = tokenOut_amount.dividedBy(tokenIn_amount);
+    console.log(tokenOut_amount, fees, minimum_Out, exchangeRate, priceImpact);
     return {
       tokenOut_amount,
       fees,

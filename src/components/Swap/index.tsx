@@ -106,17 +106,20 @@ function Swap(props: ISwapProps) {
     ) {
       loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((res) => {
         setSwapData(res);
+        if (firstTokenAmount !== '') {
+          handleSwapTokenInput(firstTokenAmount, 'tokenIn');
+        }
       });
     }
   }, [tokenIn, tokenOut]);
 
-  useEffect(() => {
-    if (firstTokenAmount !== '') {
-      handleSwapTokenInput(firstTokenAmount, 'tokenIn');
-    }
-  }, [tokenIn, tokenOut]);
+  // useEffect(() => {
+  //   if (firstTokenAmount !== '') {
+  //     handleSwapTokenInput(firstTokenAmount, 'tokenIn');
+  //   }
+  // }, [tokenIn, tokenOut]);
 
-  const handleSwapTokenInput = async (
+  const handleSwapTokenInput = (
     input: string | number,
     tokenType: 'tokenIn' | 'tokenOut'
   ) => {
@@ -147,7 +150,8 @@ function Swap(props: ISwapProps) {
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
         if (Object.keys(tokenOut).length !== 0) {
-          const res = await calculateTokensOutWrapper(
+          console.log(swapData);
+          const res = calculateTokensOutWrapper(
             new BigNumber(input),
             swapData.exchangeFee,
             new BigNumber(slippage),
