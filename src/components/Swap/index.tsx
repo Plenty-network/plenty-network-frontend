@@ -57,10 +57,10 @@ function Swap(props: ISwapProps) {
     tokenIn_amount: BigNumber;
     exchangeFee: BigNumber;
     slippage: BigNumber;
-    tokenIn?: string;
-    tokenOut?: string;
-    tokenIn_supply: BigNumber;
-    tokenOut_supply: BigNumber;
+    tokenIn: string;
+    tokenOut: string;
+    tokenIn_supply?: BigNumber;
+    tokenOut_supply?: BigNumber;
     tokenIn_precision?: BigNumber;
     tokenOut_precision?: BigNumber;
     tezSupply?: BigNumber;
@@ -68,8 +68,8 @@ function Swap(props: ISwapProps) {
     target?: BigNumber;
   }>({
     tokenIn_amount: new BigNumber(0),
-    tokenIn_supply: new BigNumber(0),
-    tokenOut_supply: new BigNumber(0),
+    tokenIn: tokenIn.name,
+    tokenOut: tokenOut.name,
     exchangeFee: new BigNumber(0),
     slippage: new BigNumber(slippage),
   });

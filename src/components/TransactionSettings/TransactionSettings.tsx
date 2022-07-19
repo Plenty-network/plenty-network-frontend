@@ -18,6 +18,7 @@ interface ITransactionSettingsProps {
   setShowRecepient: any;
   setExpertMode: any;
   expertMode: boolean;
+  setShowExpertPopup: any;
 }
 function TransactionSettings(props: ITransactionSettingsProps) {
   const [errorMessage, setErrorMessage] = useState('');
@@ -30,8 +31,12 @@ function TransactionSettings(props: ITransactionSettingsProps) {
   };
   const handleExpertMode = () => {
     props.setExpertMode(!props.expertMode);
+    props.setShowExpertPopup(!props.expertMode);
   };
 
+  const handleAutoSlippage = () => {
+    props.setSlippage(0.5);
+  };
   useOutsideClick(refSetting, () => {
     props.setSettingsShow(false);
   });
@@ -67,6 +72,7 @@ function TransactionSettings(props: ITransactionSettingsProps) {
             width="w-[87px]"
             height="h-9"
             borderRadius="rounded-lg"
+            onClick={handleAutoSlippage}
           >
             Auto
           </Button>
