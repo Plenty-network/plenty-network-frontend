@@ -1,5 +1,4 @@
 import { tezos as Tezos } from '../../common/wallet';
-import { useAppSelector } from '../../redux';
 import { getDexAddress } from '../util/fetchConfig';
 import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';
@@ -84,21 +83,27 @@ export const loadSwapDataVolatile = async (
   }
 };
 
-// Must confirm the decimals
 export const calculateTokenOutputVolatile = (
   tokenIn_amount: BigNumber,
   tokenIn_supply: BigNumber,
   tokenOut_supply: BigNumber,
   exchangeFee: BigNumber,
-  slippage: BigNumber
+  slippage: BigNumber,
+  tokenOut : string,
 ): {
   tokenOut_amount: BigNumber;
   fees: BigNumber;
+  feePerc : BigNumber;
   minimum_Out: BigNumber;
   exchangeRate: BigNumber;
   priceImpact: BigNumber;
 } => {
   try {
+
+    const state = store.getState();
+    const TOKEN = state.config.standard;
+
+    const feePerc = new BigNumber(0.35);
     let tokenOut_amount = new BigNumber(0);
     tokenOut_amount = new BigNumber(1)
       .minus(exchangeFee)
@@ -109,10 +114,15 @@ export const calculateTokenOutputVolatile = (
         new BigNumber(1).minus(exchangeFee).multipliedBy(tokenIn_amount)
       )
     );
+
+    tokenOut_amount = new BigNumber(tokenOut_amount.precision(TOKEN[tokenOut].decimals));
+
     const fees = tokenIn_amount.multipliedBy(exchangeFee);
-    const minimum_Out = tokenOut_amount.minus(
+    let minimum_Out = tokenOut_amount.minus(
       slippage.multipliedBy(tokenOut_amount).dividedBy(100)
     );
+
+    minimum_Out = new BigNumber(minimum_Out.precision(TOKEN[tokenOut].decimals));
 
     const updated_TokenIn_Supply = tokenIn_supply.minus(tokenIn_amount);
     const updated_TokenOut_Supply = tokenOut_supply.minus(tokenOut_amount);
@@ -136,6 +146,7 @@ export const calculateTokenOutputVolatile = (
     return {
       tokenOut_amount,
       fees,
+      feePerc,
       minimum_Out,
       exchangeRate,
       priceImpact,
@@ -144,6 +155,7 @@ export const calculateTokenOutputVolatile = (
     return {
       tokenOut_amount: new BigNumber(0),
       fees: new BigNumber(0),
+      feePerc : new BigNumber(0),
       minimum_Out: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),

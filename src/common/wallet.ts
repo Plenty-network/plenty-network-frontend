@@ -17,6 +17,7 @@ export const wallet = new BeaconWallet({
 // Tezos instance
 export const tezos = new TezosToolkit(rpcNode);
 tezos.setWalletProvider(wallet);
+tezos.setRpcProvider(rpcNode);
 
 // Function to check if user wallet is already conneted
 export const CheckIfWalletConnected = async (wallet: BeaconWallet) => {

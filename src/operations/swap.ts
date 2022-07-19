@@ -176,10 +176,10 @@ const swapTokens = async (
     transactionSubmitModal(batchOperation.opHash);
     // resetAllValues();
 
-    await batchOperation.confirmation().then(() => batchOperation.opHash);
+    const opHash = await batchOperation.confirmation();
     return {
       success: true,
-      operationId: batchOperation.hash,
+      operationId: opHash.hash,
     };
   } catch (error) {
     console.log(error);

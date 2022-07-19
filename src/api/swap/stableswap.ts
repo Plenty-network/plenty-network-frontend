@@ -81,12 +81,14 @@ export const calculateTokensOutTezCtez = (
   tokenIn: string
 ): {
   tokenOut_amount: BigNumber;
-  fee: BigNumber;
-  minimumOut: BigNumber;
+  fees: BigNumber;
+  feePerc : BigNumber;
+  minimum_Out: BigNumber;
   exchangeRate: BigNumber;
   priceImpact: BigNumber;
   error?: any;
 } => {
+  const feePerc = new BigNumber(0.1);
   tokenIn_amount = tokenIn_amount.multipliedBy(10 ** 6);
   try {
     if (tokenIn === 'ctez') {
@@ -119,14 +121,15 @@ export const calculateTokensOutTezCtez = (
       let priceImpact = tokenOut.minus(next_tokenOut).dividedBy(tokenOut);
       priceImpact = priceImpact.multipliedBy(100);
       priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
-      tokenOut = tokenOut.dividedBy(10 ** 6);
-      const tokenOut_amount = tokenOut;
-      fee = fee.dividedBy(10 ** 6);
+      const tokenOut_amount = new BigNumber(tokenOut.dividedBy(10 ** 6).precision(6));
+      const fees = fee.dividedBy(10 ** 6);
+      const minimum_Out = new BigNumber(minimumOut.precision(6));
 
       return {
         tokenOut_amount,
-        fee,
-        minimumOut,
+        fees,
+        feePerc,
+        minimum_Out,
         exchangeRate,
         priceImpact,
       };
@@ -159,29 +162,32 @@ export const calculateTokensOutTezCtez = (
       let priceImpact = tokenOut.minus(next_tokenOut).dividedBy(tokenOut);
       priceImpact = priceImpact.multipliedBy(100);
       priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
-      tokenOut = tokenOut.dividedBy(10 ** 6);
-      fee = fee.dividedBy(10 ** 6);
-      const tokenOut_amount = tokenOut;
+      const tokenOut_amount  = new BigNumber(tokenOut.dividedBy(10 ** 6).precision(6));
+      const fees = fee.dividedBy(10 ** 6);
+      const minimum_Out = new BigNumber(minimumOut.precision(6));
       return {
         tokenOut_amount,
-        fee,
-        minimumOut,
+        fees,
+        feePerc,
+        minimum_Out,
         exchangeRate,
         priceImpact,
       };
     }
     return {
       tokenOut_amount: new BigNumber(0),
-      fee: new BigNumber(0),
-      minimumOut: new BigNumber(0),
+      fees: new BigNumber(0),
+      feePerc : new BigNumber(0),
+      minimum_Out: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
     };
   } catch (error) {
     return {
       tokenOut_amount: new BigNumber(0),
-      fee: new BigNumber(0),
-      minimumOut: new BigNumber(0),
+      fees: new BigNumber(0),
+      feePerc : new BigNumber(0),
+      minimum_Out: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
       error,
@@ -255,16 +261,6 @@ export const loadSwapDataTezCtez = async (
   }
 };
 
-/**
- * Returns tokensOut from the given amountIn and pool values.
- * @param tokenIn_supply - Pool value of tokenIn
- * @param tokenOut_supply - Pool value of tokenOut
- * @param tokenIn_amount - Amount of tokenIn
- * @param pair_fee_denom - Denominator of pair fee (Ex: for 0.5% pass 2000)
- * @param slippage - Slippage which the user can tolerate in percentage
- * @param target- Target price of the pair in bitwise right 48
- * @param tokenIn- TokenIn
- */
 export const calculateTokensOutGeneralStable = (
   tokenIn_supply: BigNumber,
   tokenOut_supply: BigNumber,
@@ -278,6 +274,7 @@ export const calculateTokensOutGeneralStable = (
 ): {
   tokenOut_amount: BigNumber;
   fees: BigNumber;
+  feePerc : BigNumber;
   minimum_Out: BigNumber;
   exchangeRate: BigNumber;
   priceImpact: BigNumber;
@@ -285,8 +282,8 @@ export const calculateTokensOutGeneralStable = (
 } => {
   const state = store.getState();
   const TOKEN = state.config.standard;
+  const feePerc = new BigNumber(0.1);
 
-  //const TOKEN = useAppSelector((state) => state.config.standard);
   tokenIn_amount = tokenIn_amount.multipliedBy(10 ** TOKEN[tokenIn].decimals);
 
   try {
@@ -323,8 +320,8 @@ export const calculateTokensOutGeneralStable = (
     tokenOut_amt = tokenOut_amt.dividedBy(10 ** TOKEN[tokenOut].decimals);
     fee = fee.dividedBy(tokenOut_precision);
     fee = fee.dividedBy(10 ** TOKEN[tokenOut].decimals);
-    const tokenOut_amount = tokenOut_amt;
-    const minimum_Out = minimumOut;
+    const tokenOut_amount = new BigNumber(tokenOut_amt.precision(TOKEN[tokenOut].decimals));
+    const minimum_Out = new BigNumber(minimumOut.precision(TOKEN[tokenOut].decimals));
     const fees = fee;
     const exchangeRate = tokenOut_amount.dividedBy(
       tokenIn_amount.dividedBy(10 ** TOKEN[tokenIn].decimals)
@@ -332,6 +329,7 @@ export const calculateTokensOutGeneralStable = (
     return {
       tokenOut_amount,
       fees,
+      feePerc,
       minimum_Out,
       exchangeRate,
       priceImpact,
@@ -340,6 +338,7 @@ export const calculateTokensOutGeneralStable = (
     return {
       tokenOut_amount: new BigNumber(0),
       fees: new BigNumber(0),
+      feePerc : new BigNumber(0),
       minimum_Out: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
