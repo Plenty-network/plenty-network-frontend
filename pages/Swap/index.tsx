@@ -1,322 +1,62 @@
-import clsx from 'clsx';
-import { useEffect, useMemo, useState } from 'react';
-import { tokens } from '../../src/constants/Tokens';
-import { useLocationStateInSwap } from '../../src/hooks/useLocationStateInSwap';
-import SwapModal from '../../src/components/SwapModal/SwapModal';
-import SwapTab from '../../src/components/Swap/SwapTab';
-import { getUserBalanceByRpc } from '../../src/api/util/balance';
-import { getTokenPrices } from '../../src/api/util/price';
-import { tokensModal, tokenType } from '../../src/constants/swap';
+import type { NextPage } from 'next';
+import PropTypes from 'prop-types';
+import Head from 'next/head';
+import { SideBarHOC } from '../../src/components/Sidebar/SideBarHOC';
+import Swap from '../../src/components/Swap';
+import { Provider } from 'react-redux';
+import { AppDispatch, store } from '../../src/redux/index';
 
-import { useAppSelector } from '../../src/redux';
-import { AMM_TYPE } from '../../src/config/types';
-import { calculateTokensOutGeneralStable } from '../../src/api/swap/stableswap';
-import { BigNumber } from 'bignumber.js';
+import { useAppSelector } from '../../src/redux/index';
 import {
-  calculateTokensOutWrapper,
-  loadSwapDataWrapper,
-} from '../../src/api/swap/wrappers';
+  fetchWallet,
+  walletConnection,
+  walletDisconnection,
+} from '../../src/redux/wallet/wallet';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { getConfig } from '../../src/redux/config/config';
 
-import axios from 'axios';
-import { loadSwapDataVolatile } from '../../src/api/swap/volatile';
-import { getDexType } from '../../src/api/util/fetchConfig';
+const Home: NextPage = (props) => {
+  const userAddress = useAppSelector((state) => state.wallet.address);
 
-interface ISwapProps {
-  className?: string;
-  otherProps: {
-    connectWallet: () => void;
-    disconnectWallet: () => void;
-    walletAddress: string;
-  };
-}
+  const dispatch = useDispatch<AppDispatch>();
 
-function Swap(props: ISwapProps) {
-  const TOKEN = useAppSelector((state) => state.config.tokens);
-
-  const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
-    useLocationStateInSwap();
-
-  const [firstTokenAmount, setFirstTokenAmount] = useState<string | number>('');
-  const [secondTokenAmount, setSecondTokenAmount] = useState<number | string>(
-    ''
-  );
-
-  const [recepient, setRecepient] = useState('');
-  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>(
-    {}
-  );
-
-  const [tokenType, setTokenType] = useState<tokenType>('tokenIn');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [swapModalShow, setSwapModalShow] = useState(false);
-  const [slippage, setSlippage] = useState(0.5);
-  const [routeData, setRouteData] = useState({
-    success: false,
-    isloading: false,
-  });
-  const [swapData, setSwapData] = useState<{
-    tokenIn_amount: BigNumber;
-    exchangeFee: BigNumber;
-    slippage: BigNumber;
-    tokenIn?: string;
-    tokenOut?: string;
-    tokenIn_supply: BigNumber;
-    tokenOut_supply: BigNumber;
-    tokenIn_precision?: BigNumber;
-    tokenOut_precision?: BigNumber;
-    tezSupply?: BigNumber;
-    ctezSupply?: BigNumber;
-    target?: BigNumber;
-  }>({
-    tokenIn_amount: new BigNumber(0),
-    tokenIn_supply: new BigNumber(0),
-    tokenOut_supply: new BigNumber(0),
-    exchangeFee: new BigNumber(0),
-    slippage: new BigNumber(slippage),
-  });
-  const [swapDetails, setSwapDetails] = useState<{
-    exchangeRate: BigNumber;
-    fees: BigNumber;
-    minimum_Out: BigNumber;
-    priceImpact: BigNumber;
-    tokenOut_amount: BigNumber;
-    isLoading: boolean;
-    success: boolean;
-  }>({
-    exchangeRate: new BigNumber(0),
-    fees: new BigNumber(0),
-    minimum_Out: new BigNumber(0),
-    priceImpact: new BigNumber(0),
-    tokenOut_amount: new BigNumber(0),
-    isLoading: false,
-    success: false,
-  });
-  // const [tokenPrice, setTokenPrice] = useState({});
-  const [tokenPrice, setTokenPrice] = useState<{
-    [id: string]: number;
-  }>({});
-  getTokenPrices().then((response) => {
-    setTokenPrice(response.tokenPrice);
-  });
-
-  //routedata true once we have both the tokens
-  useEffect(() => {
-    if (
-      Object.prototype.hasOwnProperty.call(tokenIn, 'name') &&
-      Object.prototype.hasOwnProperty.call(tokenOut, 'name')
-    ) {
-      loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((res) => {
-        setSwapData(res);
-      });
-    }
-  }, [tokenIn, tokenOut]);
-
-  useEffect(() => {
-    if (firstTokenAmount !== '') {
-      handleSwapTokenInput(firstTokenAmount, 'tokenIn');
-    }
-  }, [tokenIn, tokenOut]);
-
-  const handleSwapTokenInput = async (
-    input: string | number,
-    tokenType: 'tokenIn' | 'tokenOut'
-  ) => {
-    setRouteData({ success: false, isloading: true });
-    setSwapDetails({
-      exchangeRate: new BigNumber(0),
-      fees: new BigNumber(0),
-      minimum_Out: new BigNumber(0),
-      priceImpact: new BigNumber(0),
-      tokenOut_amount: new BigNumber(0),
-      isLoading: true,
-      success: true,
-    });
-    if (input === '') {
-      setFirstTokenAmount('');
-      setSecondTokenAmount('');
-      setSwapDetails({
-        exchangeRate: new BigNumber(0),
-        fees: new BigNumber(0),
-        minimum_Out: new BigNumber(0),
-        priceImpact: new BigNumber(0),
-        tokenOut_amount: new BigNumber(0),
-        isLoading: true,
-        success: false,
-      });
-      setRouteData({ success: true, isloading: false });
-    } else {
-      if (tokenType === 'tokenIn') {
-        setFirstTokenAmount(input);
-        if (Object.keys(tokenOut).length !== 0) {
-          const res = await calculateTokensOutWrapper(
-            new BigNumber(input),
-            swapData.exchangeFee,
-            new BigNumber(slippage),
-            tokenIn.name,
-            tokenOut.name,
-            swapData.tokenIn_supply ?? undefined,
-            swapData.tokenOut_supply ?? undefined,
-            swapData.tokenIn_precision ?? undefined,
-            swapData.tokenOut_precision ?? undefined,
-            swapData.tezSupply ?? undefined,
-            swapData.ctezSupply ?? undefined,
-            swapData.target ?? undefined
-          );
-          console.log(res);
-          setSecondTokenAmount(res.tokenOut_amount);
-          setSwapDetails({
-            exchangeRate: res.exchangeRate,
-            fees: res.fees,
-            minimum_Out: res.minimum_Out,
-            priceImpact: res.priceImpact,
-            tokenOut_amount: res.tokenOut_amount,
-            isLoading: false,
-            success: true,
-          });
-        }
-      } else if (tokenType === 'tokenOut') {
-        setSecondTokenAmount(input);
-
-        setTimeout(() => {
-          setFirstTokenAmount('12');
-          setRouteData({ success: true, isloading: false });
-        }, 1000);
-      }
-    }
-  };
-
-  const handleTokenType = (type: tokenType) => {
-    setSwapModalShow(true);
-    setTokenType(type);
-  };
-
-  const handleClose = () => {
-    setSwapModalShow(false);
-  };
-
-  const selectToken = (token: tokensModal) => {
-    if (tokenType === 'tokenIn') {
-      setTokenIn({
-        name: token.name,
-        image: token.image,
-      });
-    } else {
-      setTokenOut({
-        name: token.name,
-        image: token.image,
-      });
-    }
-    handleClose();
-  };
-  const changeTokenLocation = () => {
-    setSecondTokenAmount(firstTokenAmount);
-
-    setFirstTokenAmount('');
-    setRouteData({ success: false, isloading: true });
-    if (tokenOut.name) {
-      setTokenIn({
-        name: tokenOut.name,
-        image: tokenOut.image,
-      });
-
-      setTokenOut({
-        name: tokenIn.name,
-        image: tokenIn.image,
-      });
-
-      handleSwapTokenInput(firstTokenAmount, 'tokenOut');
-    }
+  const connectTempleWallet = () => {
+    return dispatch(walletConnection());
   };
   useEffect(() => {
-    if (props.otherProps.walletAddress) {
-      const updateBalance = async () => {
-        const balancePromises = [];
-
-        Object.keys(tokenIn).length !== 0 &&
-          balancePromises.push(
-            getUserBalanceByRpc(
-              tokenIn.name,
-              props.otherProps.walletAddress,
-              TOKEN
-            )
-          );
-        Object.keys(tokenOut).length !== 0 &&
-          balancePromises.push(
-            getUserBalanceByRpc(
-              tokenOut.name,
-              props.otherProps.walletAddress,
-              TOKEN
-            )
-          );
-
-        const balanceResponse = await Promise.all(balancePromises);
-
-        setUserBalances((prev) => ({
-          ...prev,
-          ...balanceResponse.reduce(
-            (acc, cur) => ({
-              ...acc,
-              [cur.identifier]: cur.balance.toNumber(),
-            }),
-            {}
-          ),
-        }));
-      };
-      updateBalance();
+    dispatch(fetchWallet());
+    dispatch(getConfig());
+  }, []);
+  const disconnectUserWallet = async () => {
+    if (userAddress) {
+      return dispatch(walletDisconnection());
     }
-  }, [tokenIn, tokenOut, props, TOKEN]);
+  };
+  const otherPageProps = {
+    connectWallet: connectTempleWallet,
+    disconnectWallet: disconnectUserWallet,
+    walletAddress: userAddress,
+  };
 
   return (
     <>
-      <div
-        className={clsx(
-          'bg-card-500 md:border border-y border-text-800 mt-[70px] lg:mt-[75px] md:rounded-3xl  text-white lg:w-640 py-5 mx-auto fade-in'
-        )}
-      >
-        <SwapTab
-          walletAddress={props.otherProps.walletAddress}
-          firstTokenAmount={firstTokenAmount}
-          secondTokenAmount={secondTokenAmount}
-          connectWallet={props.otherProps.connectWallet}
-          tokenIn={tokenIn}
-          tokenOut={tokenOut}
-          tokens={tokens}
-          handleTokenType={handleTokenType}
-          userBalances={userBalances}
-          setSlippage={setSlippage}
-          slippage={slippage}
-          handleClose={handleClose}
-          changeTokenLocation={changeTokenLocation}
-          setSecondTokenAmount={setSecondTokenAmount}
-          setFirstTokenAmount={setFirstTokenAmount}
-          handleSwapTokenInput={handleSwapTokenInput}
-          setTokenIn={setTokenIn}
-          setTokenOut={setTokenOut}
-          setTokenType={setTokenType}
-          tokenPrice={tokenPrice}
-          recepient={recepient}
-          setRecepient={setRecepient}
-          routeData={routeData}
-          setRouteData={setRouteData}
-          swapDetails={swapDetails}
-          setSwapDetails={setSwapDetails}
-          swapData={swapData}
-          setSwapData={setSwapData}
-        />
-      </div>
-      <SwapModal
-        tokens={tokens}
-        show={swapModalShow}
-        selectToken={selectToken}
-        onhide={handleClose}
-        tokenIn={tokenIn}
-        tokenOut={tokenOut}
-        tokenType={tokenType}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
+      <Head>
+        <title className="font-medium1">Plent network</title>
+        <meta name="description" content="plenty network" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <SideBarHOC>
+        <Swap otherProps={otherPageProps} />
+      </SideBarHOC>
     </>
   );
-}
+};
+Home.propTypes = {
+  connectWallet: PropTypes.any,
+  disconnectWallet: PropTypes.any,
+  fetchWalletAddress: PropTypes.any,
+  userAddress: PropTypes.any,
+};
 
-export default Swap;
+export default Home;
