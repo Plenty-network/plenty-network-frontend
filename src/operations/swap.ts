@@ -177,9 +177,10 @@ const swapTokens = async (
     // resetAllValues();
 
     const opHash = await batchOperation.confirmation();
+
     return {
       success: true,
-      operationId: opHash.hash,
+      operationId: batchOperation.opHash,
     };
   } catch (error) {
     console.log(error);
@@ -252,7 +253,7 @@ async function ctez_to_tez(
     await batchOp.confirmation();
     return {
       success: true,
-      operationId: batchOp.hash,
+      operationId: batchOp.opHash,
     };
   } catch (error) {
     console.log(error);
@@ -311,7 +312,7 @@ async function tez_to_ctez(
 
     return {
       success: true,
-      operationId: batchOp.hash,
+      operationId: batchOp.opHash,
     };
   } catch (error) {
     return {

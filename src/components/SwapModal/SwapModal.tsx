@@ -4,6 +4,7 @@ import Image from 'next/image';
 import infogrey from '../../assets/icon/swap/info-grey.svg';
 import plenty from '../../assets/Tokens/plenty.png';
 import { tokenParameter, tokensModal, tokenType } from '../../constants/swap';
+import { BigNumber } from 'bignumber.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface ISwapModalProps {
@@ -16,6 +17,9 @@ interface ISwapModalProps {
   searchQuery: string;
   tokenType: tokenType;
   setSearchQuery: Function;
+  allBalance: {
+    [id: string]: BigNumber;
+  };
 }
 function SwapModal(props: ISwapModalProps) {
   const searchTokenEl = useRef(null);
@@ -150,7 +154,11 @@ function SwapModal(props: ISwapModalProps) {
                       <span>New!</span>
                     </div>
                   )}
-                  <div className="font-subtitle4 ml-auto mt-[7px]">0.0</div>
+                  <div className="font-subtitle4 ml-auto mt-[7px]">
+                    {props.allBalance[token.name]
+                      ? Number(props.allBalance[token.name]).toFixed(2)
+                      : 0.0}
+                  </div>
                 </div>
               );
             })}

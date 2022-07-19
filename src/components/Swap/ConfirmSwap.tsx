@@ -15,6 +15,7 @@ interface IConfirmSwapProps {
   swapDetails: {
     exchangeRate: BigNumber;
     fees: BigNumber;
+    feePerc: BigNumber;
     minimum_Out: BigNumber;
     priceImpact: BigNumber;
     tokenOut_amount: BigNumber;
@@ -142,7 +143,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {props.swapDetails.fees.toFixed(4)}
+                  {props.swapDetails.feePerc.toFixed(2)}
                 </div>
               </div>
               <div className="border-t border-text-800 mt-[18px]"></div>

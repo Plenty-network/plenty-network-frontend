@@ -11,7 +11,7 @@ import Lottie from 'lottie-react';
 import Button from '../Button/Button';
 import TokenDropdown from '../TokenDropdown/TokenDropdown';
 import TransactionSettings from '../TransactionSettings/TransactionSettings';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { tokensModal, tokenType } from '../../../src/constants/swap';
 import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import loader from '../../assets/animations/shimmer-swap.json';
@@ -23,6 +23,7 @@ import ExpertModePopup from '../ExpertMode';
 import ConfirmSwap from './ConfirmSwap';
 import ConfirmTransaction from '../ConfirmTransaction';
 import TransactionSubmitted from '../TransactionSubmitted';
+import { getCompleteUserBalace } from '../../api/util/balance';
 
 interface ISwapTabProps {
   className?: string;
@@ -67,6 +68,7 @@ interface ISwapTabProps {
   swapDetails: {
     exchangeRate: BigNumber;
     fees: BigNumber;
+    feePerc: BigNumber;
     minimum_Out: BigNumber;
     priceImpact: BigNumber;
     tokenOut_amount: BigNumber;
@@ -87,13 +89,19 @@ interface ISwapTabProps {
     ctezSupply?: BigNumber;
     target?: BigNumber;
   };
-  setSwapData: any;
   showConfirmSwap: boolean;
   setShowConfirmSwap: any;
   showConfirmTransaction: any;
   setShowConfirmTransaction: any;
   showTransactionSubmitModal: boolean;
   setShowTransactionSubmitModal: any;
+  allBalance: {
+    [id: string]: BigNumber;
+  };
+  loading: {
+    isLoadingfirst?: boolean;
+    isLoadingSecond?: boolean;
+  };
 }
 
 function SwapTab(props: ISwapTabProps) {
@@ -102,7 +110,6 @@ function SwapTab(props: ISwapTabProps) {
   const [transactionId, setTransactionId] = useState('');
   const [openSwapDetails, setOpenSwapDetails, animateOpenSwapDetails] =
     useStateAnimate(false, 280);
-
   const [showRecepient, setShowRecepient] = useState(false);
   const [expertMode, setExpertMode] = useState(false);
   const [showExpertPopup, setShowExpertPopup] = useState(false);
@@ -137,9 +144,7 @@ function SwapTab(props: ISwapTabProps) {
       props.setShowConfirmTransaction
     ).then((response) => {
       if (response.success) {
-        console.log('all done');
         console.log(response);
-
         props.setShowTransactionSubmitModal(false);
       } else {
         console.log('failed');
@@ -254,18 +259,22 @@ function SwapTab(props: ISwapTabProps) {
           <div className=" my-3 ">
             <div className="text-right font-body1 text-text-400">YOU PAY</div>
             <div>
-              <input
-                type="text"
-                className={clsx(
-                  'text-white bg-card-500 text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%]'
-                )}
-                placeholder="0.0"
-                lang="en"
-                onChange={(e) =>
-                  props.handleSwapTokenInput(e.target.value, 'tokenIn')
-                }
-                value={props.firstTokenAmount}
-              />
+              {props.loading.isLoadingfirst ? (
+                <p className="  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+              ) : (
+                <input
+                  type="text"
+                  className={clsx(
+                    'text-white bg-card-500 text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%]'
+                  )}
+                  placeholder="0.0"
+                  lang="en"
+                  onChange={(e) =>
+                    props.handleSwapTokenInput(e.target.value, 'tokenIn')
+                  }
+                  value={props.firstTokenAmount}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -327,7 +336,9 @@ function SwapTab(props: ISwapTabProps) {
               </div>
               <div>
                 {Object.keys(props.tokenOut).length !== 0 ? (
-                  true ? (
+                  props.loading.isLoadingSecond ? (
+                    <p className="  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+                  ) : (
                     <input
                       type="text"
                       className={clsx(
@@ -342,8 +353,6 @@ function SwapTab(props: ISwapTabProps) {
                       }
                       value={props.secondTokenAmount}
                     />
-                  ) : (
-                    <p className="  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   )
                 ) : (
                   <input
@@ -521,7 +530,7 @@ function SwapTab(props: ISwapTabProps) {
                 </div>
               ) : (
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {props.swapDetails.fees.toFixed(4)}
+                  {props.swapDetails.feePerc.toFixed(2)}
                 </div>
               )}
             </div>

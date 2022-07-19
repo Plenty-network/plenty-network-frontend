@@ -89,17 +89,16 @@ export const calculateTokenOutputVolatile = (
   tokenOut_supply: BigNumber,
   exchangeFee: BigNumber,
   slippage: BigNumber,
-  tokenOut : string,
+  tokenOut: string
 ): {
   tokenOut_amount: BigNumber;
   fees: BigNumber;
-  feePerc : BigNumber;
+  feePerc: BigNumber;
   minimum_Out: BigNumber;
   exchangeRate: BigNumber;
   priceImpact: BigNumber;
 } => {
   try {
-
     const state = store.getState();
     const TOKEN = state.config.standard;
 
@@ -115,14 +114,18 @@ export const calculateTokenOutputVolatile = (
       )
     );
 
-    tokenOut_amount = new BigNumber(tokenOut_amount.precision(TOKEN[tokenOut].decimals));
+    tokenOut_amount = new BigNumber(
+      tokenOut_amount.precision(TOKEN[tokenOut].decimals)
+    );
 
     const fees = tokenIn_amount.multipliedBy(exchangeFee);
     let minimum_Out = tokenOut_amount.minus(
       slippage.multipliedBy(tokenOut_amount).dividedBy(100)
     );
 
-    minimum_Out = new BigNumber(minimum_Out.precision(TOKEN[tokenOut].decimals));
+    minimum_Out = new BigNumber(
+      minimum_Out.precision(TOKEN[tokenOut].decimals)
+    );
 
     const updated_TokenIn_Supply = tokenIn_supply.minus(tokenIn_amount);
     const updated_TokenOut_Supply = tokenOut_supply.minus(tokenOut_amount);
@@ -142,7 +145,7 @@ export const calculateTokenOutputVolatile = (
     priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
     priceImpact = priceImpact.multipliedBy(100);
     const exchangeRate = tokenOut_amount.dividedBy(tokenIn_amount);
-    console.log(tokenOut_amount, fees, minimum_Out, exchangeRate, priceImpact);
+
     return {
       tokenOut_amount,
       fees,
@@ -155,7 +158,7 @@ export const calculateTokenOutputVolatile = (
     return {
       tokenOut_amount: new BigNumber(0),
       fees: new BigNumber(0),
-      feePerc : new BigNumber(0),
+      feePerc: new BigNumber(0),
       minimum_Out: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),

@@ -19,7 +19,7 @@ export const loadSwapDataWrapper = async (
   try {
     const type = getDexType(tokenIn, tokenOut);
     let swapData: any;
-    console.log(type);
+
     if (type === AMM_TYPE.VOLATILE) {
       swapData = await loadSwapDataVolatile(tokenIn, tokenOut);
     } else if (type === AMM_TYPE.STABLE) {
@@ -54,32 +54,11 @@ export const calculateTokensOutWrapper = (
   ctezSupply?: BigNumber,
   target?: BigNumber
 ) => {
-  console.log(
-    tokenIn_amount,
-    Exchangefee,
-    slippage,
-    tokenIn,
-    tokenOut,
-    tokenIn_supply,
-    tokenOut_supply,
-    tokenIn_precision,
-    tokenOut_precision,
-    tezSupply,
-    ctezSupply,
-    target
-  );
   try {
     const type = getDexType(tokenIn, tokenOut);
     let outputData: any;
-    console.log(type , tokenIn_supply , tokenOut_supply);
+
     if (type === AMM_TYPE.VOLATILE && tokenIn_supply && tokenOut_supply) {
-        console.log('inside volatile');
-        console.log(tokenIn_amount,
-            tokenIn_supply,
-            tokenOut_supply,
-            Exchangefee,
-            slippage,
-            tokenOut);
       outputData = calculateTokenOutputVolatile(
         tokenIn_amount,
         tokenIn_supply,
@@ -88,7 +67,6 @@ export const calculateTokensOutWrapper = (
         slippage,
         tokenOut
       );
-      console.log(outputData);
     } else if (type === AMM_TYPE.STABLE) {
       if (
         ((tokenIn === 'tez' && tokenOut === 'ctez') ||

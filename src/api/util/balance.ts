@@ -10,10 +10,13 @@ import {
 import BigNumber from 'bignumber.js';
 import { TokenType } from '../../config/types';
 import { packDataBytes, unpackDataBytes } from '@taquito/michel-codec';
-import { CheckIfWalletConnected , wallet , rpcNode , tezos } from '../../common/wallet';
+import {
+  CheckIfWalletConnected,
+  wallet,
+  rpcNode,
+  tezos,
+} from '../../common/wallet';
 import { store } from '../../redux';
-
-
 
 /**
  * Returns packed key (expr...) which will help to fetch user specific data from bigmap directly using rpc.
@@ -63,7 +66,7 @@ export const getPackedKey = (
  */
 export const getUserBalanceByRpc = async (
   identifier: string,
-  address: string,
+  address: string
 ): Promise<{
   success: boolean;
   balance: BigNumber;
@@ -175,30 +178,28 @@ export const getUserBalanceByRpc = async (
   }
 };
 
-
-export const getCompleteUserBalace = async (address : string) : Promise<{success : boolean , userBalance : { [id: string] : BigNumber; } }> => {
-
+export const getCompleteUserBalace = async (
+  address: string
+): Promise<{ success: boolean; userBalance: { [id: string]: BigNumber } }> => {
   try {
     const state = store.getState();
     const TOKEN = state.config.standard;
-    const userBalance: { [id: string] : BigNumber; } = {}; 
+    const userBalance: { [id: string]: BigNumber } = {};
 
     Object.keys(TOKEN).forEach(async function (key) {
-      const bal = await getUserBalanceByRpc(key , address);
+      const bal = await getUserBalanceByRpc(key, address);
       userBalance[key] = bal.balance;
     });
 
-    return{
-      success : true , 
-      userBalance
-    } 
+    return {
+      success: true,
+      userBalance,
+    };
   } catch (error) {
     console.log(error);
-    return{
-      success : false , 
-      userBalance : {}
-    } 
-
+    return {
+      success: false,
+      userBalance: {},
+    };
   }
-  
-}
+};
