@@ -146,7 +146,7 @@ input[type='number'] {
     @apply text-f14;
   }
   .font-subtitle5 {
-    @apply font-medium;
+    @apply font-normal;
     @apply text-f16;
   }
   .font-subtitle6 {

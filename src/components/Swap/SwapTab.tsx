@@ -11,7 +11,7 @@ import Lottie from 'lottie-react';
 import Button from '../Button/Button';
 import TokenDropdown from '../TokenDropdown/TokenDropdown';
 import TransactionSettings from '../TransactionSettings/TransactionSettings';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { tokensModal, tokenType } from '../../../src/constants/swap';
 import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import loader from '../../assets/animations/shimmer-swap.json';
@@ -19,6 +19,7 @@ import loader from '../../assets/animations/shimmer-swap.json';
 import { BigNumber } from 'bignumber.js';
 import { Token } from '@taquito/taquito/node_modules/@taquito/michelson-encoder';
 import { directSwapWrapper } from '../../operations/swap';
+import ExpertModePopup from '../ExpertMode';
 
 interface ISwapTabProps {
   className?: string;
@@ -95,11 +96,11 @@ function SwapTab(props: ISwapTabProps) {
 
   const [showRecepient, setShowRecepient] = useState(false);
   const [expertMode, setExpertMode] = useState(false);
-
+  const [showExpertPopup, setShowExpertPopup] = useState(false);
   const [isRefresh, setRefresh] = useState(false);
+
   const refreshAllData = (value: boolean) => {
     setRefresh(value);
-    //call loadswapdata
     props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
     setRefresh(false);
   };
@@ -149,7 +150,7 @@ function SwapTab(props: ISwapTabProps) {
         );
       } else if (expertMode && Number(props.swapDetails.priceImpact) > 50) {
         return (
-          <Button color="primary" width="w-full" onClick={swapOperation}>
+          <Button color="error" width="w-full" onClick={swapOperation}>
             Swap Anyway
           </Button>
         );
@@ -197,6 +198,7 @@ function SwapTab(props: ISwapTabProps) {
           setShowRecepient={setShowRecepient}
           setExpertMode={setExpertMode}
           expertMode={expertMode}
+          setShowExpertPopup={setShowExpertPopup}
         />
       </div>
       <div
@@ -567,6 +569,13 @@ function SwapTab(props: ISwapTabProps) {
         )}
         <div className="mt-5">{SwapButton}</div>
       </div>
+      {showExpertPopup && (
+        <ExpertModePopup
+          show={showExpertPopup}
+          setShow={setShowExpertPopup}
+          setExpertMode={setExpertMode}
+        />
+      )}
     </>
   );
 }

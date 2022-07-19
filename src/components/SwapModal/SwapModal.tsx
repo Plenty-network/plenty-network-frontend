@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { PopUpModal } from '../Modal/popupModal';
 import SearchBar from '../SearchBar/SearchBar';
 import Image from 'next/image';
