@@ -9,16 +9,11 @@ import { getTokenPrices } from '../../api/util/price';
 import { tokensModal, tokenType } from '../../constants/swap';
 
 import { useAppSelector } from '../../redux';
-import { AMM_TYPE } from '../../config/types';
-import { calculateTokensOutGeneralStable } from '../../api/swap/stableswap';
 import { BigNumber } from 'bignumber.js';
 import {
   calculateTokensOutWrapper,
   loadSwapDataWrapper,
 } from '../../api/swap/wrappers';
-import axios from 'axios';
-import { loadSwapDataVolatile } from '../../api/swap/volatile';
-import { getDexType } from '../../api/util/fetchConfig';
 
 interface ISwapProps {
   className?: string;
@@ -39,12 +34,14 @@ function Swap(props: ISwapProps) {
   const [secondTokenAmount, setSecondTokenAmount] = useState<number | string>(
     ''
   );
-
+  const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
+  const [showConfirmSwap, setShowConfirmSwap] = useState(false);
   const [recepient, setRecepient] = useState('');
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>(
     {}
   );
-
+  const [showTransactionSubmitModal, setShowTransactionSubmitModal] =
+    useState(false);
   const [tokenType, setTokenType] = useState<tokenType>('tokenIn');
   const [searchQuery, setSearchQuery] = useState('');
   const [swapModalShow, setSwapModalShow] = useState(false);
@@ -150,7 +147,6 @@ function Swap(props: ISwapProps) {
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
         if (Object.keys(tokenOut).length !== 0) {
-          console.log(swapData);
           const res = calculateTokensOutWrapper(
             new BigNumber(input),
             swapData.exchangeFee,
@@ -165,7 +161,7 @@ function Swap(props: ISwapProps) {
             swapData.ctezSupply ?? undefined,
             swapData.target ?? undefined
           );
-          console.log(res);
+
           setSecondTokenAmount(res.tokenOut_amount);
           setSwapDetails({
             exchangeRate: res.exchangeRate,
@@ -305,6 +301,12 @@ function Swap(props: ISwapProps) {
           setSwapDetails={setSwapDetails}
           swapData={swapData}
           setSwapData={setSwapData}
+          setShowConfirmSwap={setShowConfirmSwap}
+          showConfirmSwap={showConfirmSwap}
+          setShowConfirmTransaction={setShowConfirmTransaction}
+          showConfirmTransaction={showConfirmTransaction}
+          setShowTransactionSubmitModal={setShowTransactionSubmitModal}
+          showTransactionSubmitModal={showTransactionSubmitModal}
         />
       </div>
       <SwapModal

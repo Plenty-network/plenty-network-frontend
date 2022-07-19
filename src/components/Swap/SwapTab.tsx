@@ -17,9 +17,12 @@ import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import loader from '../../assets/animations/shimmer-swap.json';
 
 import { BigNumber } from 'bignumber.js';
-import { Token } from '@taquito/taquito/node_modules/@taquito/michelson-encoder';
+
 import { directSwapWrapper } from '../../operations/swap';
 import ExpertModePopup from '../ExpertMode';
+import ConfirmSwap from './ConfirmSwap';
+import ConfirmTransaction from '../ConfirmTransaction';
+import TransactionSubmitted from '../TransactionSubmitted';
 
 interface ISwapTabProps {
   className?: string;
@@ -85,12 +88,18 @@ interface ISwapTabProps {
     target?: BigNumber;
   };
   setSwapData: any;
+  showConfirmSwap: boolean;
+  setShowConfirmSwap: any;
+  showConfirmTransaction: any;
+  setShowConfirmTransaction: any;
+  showTransactionSubmitModal: boolean;
+  setShowTransactionSubmitModal: any;
 }
 
 function SwapTab(props: ISwapTabProps) {
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
-
+  const [transactionId, setTransactionId] = useState('');
   const [openSwapDetails, setOpenSwapDetails, animateOpenSwapDetails] =
     useStateAnimate(false, 280);
 
@@ -104,8 +113,18 @@ function SwapTab(props: ISwapTabProps) {
     props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
     setRefresh(false);
   };
+  const transactionSubmitModal = (id: string) => {
+    setTransactionId(id);
+    props.setShowTransactionSubmitModal(true);
+  };
 
-  const swapOperation = () => {
+  const handleSwap = () => {
+    props.setShowConfirmSwap(true);
+  };
+
+  const handleConfirmSwap = () => {
+    props.setShowConfirmSwap(false);
+    props.setShowConfirmTransaction(true);
     directSwapWrapper(
       props.tokenIn.name,
       props.tokenOut.name,
@@ -113,13 +132,20 @@ function SwapTab(props: ISwapTabProps) {
       props.walletAddress,
       new BigNumber(props.firstTokenAmount),
       props.walletAddress,
+      transactionSubmitModal,
       undefined,
-      undefined,
-      undefined,
-      undefined
+      props.setShowConfirmTransaction
     ).then((response) => {
-      console.log('all done');
-      console.log(response);
+      if (response.success) {
+        console.log('all done');
+        console.log(response);
+
+        props.setShowTransactionSubmitModal(false);
+      } else {
+        console.log('failed');
+        props.setShowConfirmTransaction(false);
+        props.setShowTransactionSubmitModal(false);
+      }
     });
   };
 
@@ -150,13 +176,13 @@ function SwapTab(props: ISwapTabProps) {
         );
       } else if (expertMode && Number(props.swapDetails.priceImpact) > 50) {
         return (
-          <Button color="error" width="w-full" onClick={swapOperation}>
+          <Button color="error" width="w-full" onClick={handleSwap}>
             Swap Anyway
           </Button>
         );
       } else {
         return (
-          <Button color="primary" width="w-full" onClick={swapOperation}>
+          <Button color="primary" width="w-full" onClick={handleSwap}>
             Swap
           </Button>
         );
@@ -375,7 +401,7 @@ function SwapTab(props: ISwapTabProps) {
 
         {props.swapDetails.success && (
           <div
-            className="h-12 mt-3 cursor-pointer px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] flex "
+            className="h-12 mt-3 cursor-pointer px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] items-center flex "
             onClick={() => setOpenSwapDetails(!openSwapDetails)}
           >
             {props.swapDetails.isLoading ? (
@@ -574,6 +600,42 @@ function SwapTab(props: ISwapTabProps) {
           show={showExpertPopup}
           setShow={setShowExpertPopup}
           setExpertMode={setExpertMode}
+        />
+      )}
+      {props.showConfirmSwap && (
+        <ConfirmSwap
+          show={props.showConfirmSwap}
+          setShow={props.setShowConfirmSwap}
+          tokenIn={props.tokenIn}
+          tokenOut={props.tokenOut}
+          firstTokenAmount={props.firstTokenAmount}
+          secondTokenAmount={props.secondTokenAmount.toString()}
+          swapDetails={props.swapDetails}
+          onClick={handleConfirmSwap}
+        />
+      )}
+      {props.showConfirmTransaction && (
+        <ConfirmTransaction
+          show={props.showConfirmTransaction}
+          setShow={props.setShowConfirmTransaction}
+          onClick={handleConfirmSwap}
+          content={`Swap ${Number(props.firstTokenAmount).toFixed(2)} ${
+            props.tokenIn.name
+          } for ${Number(props.secondTokenAmount).toFixed(4)} ${
+            props.tokenOut.name
+          } `}
+        />
+      )}
+      {props.showTransactionSubmitModal && (
+        <TransactionSubmitted
+          show={props.showTransactionSubmitModal}
+          setShow={props.setShowTransactionSubmitModal}
+          onClick={handleConfirmSwap}
+          content={`Swap ${Number(props.firstTokenAmount).toFixed(2)} ${
+            props.tokenIn.name
+          } for ${Number(props.secondTokenAmount).toFixed(4)} ${
+            props.tokenOut.name
+          } `}
         />
       )}
     </>

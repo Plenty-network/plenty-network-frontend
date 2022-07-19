@@ -29,8 +29,8 @@ export function PopUpModal(props: IPopUpModalProps) {
     >
       <div
         className={clsx(
-          'broder relative border-popUpNotification w-[calc(100vw_-_38px)] max-w-[460px]    bg-sideBar  rounded-md border flex  flex-col px-6 py-5',
-          props.title === 'Select Token' && 'h-[576px]'
+          'broder relative border-popUpNotification w-[calc(100vw_-_38px)] max-w-[460px]    bg-sideBar  rounded-3xl border flex  flex-col px-6 py-5',
+          props.title === 'Select Token' && 'h-[576px] rounded-md'
         )}
       >
         <div
@@ -57,7 +57,7 @@ export function PopUpModal(props: IPopUpModalProps) {
           </svg>
         </div>
 
-        <div className="">{props.title}</div>
+        <div className="font-title3">{props.title}</div>
         {props.title === 'Confirm' && (
           <div className="border-t mt-5 border-text-800/[0.5] relative -left-[22px] w-[455px]"></div>
         )}

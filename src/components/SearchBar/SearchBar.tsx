@@ -16,7 +16,7 @@ function SearchBar(props: ISearchBarProps) {
     >
       <input
         ref={props.inputRef}
-        className="bg-transprent   font-body3 outline-none"
+        className="bg-transprent  w-full font-body3 outline-none"
         placeholder="Select a token"
         onChange={props.onChange}
         value={props.value}

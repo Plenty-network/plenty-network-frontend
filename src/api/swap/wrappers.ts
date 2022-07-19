@@ -115,7 +115,7 @@ export const calculateTokensOutWrapper = (
         );
       }
     }
-    console.log(outputData);
+
     return outputData;
   } catch (error) {
     console.log({ message: 'swap data error', error });

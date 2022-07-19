@@ -17,7 +17,6 @@ export const directSwapWrapper = async (
   tokenInAmount: BigNumber,
   caller: string,
   transactionSubmitModal: any,
-  setShowConfirmSwap: any,
   resetAllValues: any,
   setShowConfirmTransaction: any
 ): Promise<{ success: boolean; operationId: any; error: any }> => {
@@ -31,7 +30,6 @@ export const directSwapWrapper = async (
         recipent,
         tokenInAmount,
         transactionSubmitModal,
-        setShowConfirmSwap,
         resetAllValues,
         setShowConfirmTransaction
       );
@@ -43,7 +41,6 @@ export const directSwapWrapper = async (
         recipent,
         tokenInAmount,
         transactionSubmitModal,
-        setShowConfirmSwap,
         resetAllValues,
         setShowConfirmTransaction
       );
@@ -56,7 +53,6 @@ export const directSwapWrapper = async (
         tokenInAmount,
         caller,
         transactionSubmitModal,
-        setShowConfirmSwap,
         resetAllValues,
         setShowConfirmTransaction
       );
@@ -84,7 +80,6 @@ const swapTokens = async (
   tokenInAmount: BigNumber,
   caller: string,
   transactionSubmitModal: any,
-  setShowConfirmSwap: any,
   resetAllValues: any,
   setShowConfirmTransaction: any
 ) => {
@@ -175,10 +170,10 @@ const swapTokens = async (
     }
 
     const batchOperation: any = await batch.send();
-    // Uncomment once implemented
-    // setShowConfirmTransaction(false);
-    // setShowConfirmSwap(false);
-    // transactionSubmitModal(batchOperation.opHash);
+
+    setShowConfirmTransaction(false);
+
+    transactionSubmitModal(batchOperation.opHash);
     // resetAllValues();
 
     await batchOperation.confirmation().then(() => batchOperation.opHash);
@@ -202,7 +197,7 @@ async function ctez_to_tez(
   recipent: string,
   tokenInAmount: BigNumber,
   transactionSubmitModal: any,
-  setShowConfirmSwap: any,
+
   resetAllValues: any,
   setShowConfirmTransaction: any
 ) {
@@ -249,11 +244,10 @@ async function ctez_to_tez(
         ? console.log('operation getting injected')
         : console.log('operation injected');
     }
-    // Uncomment once implemented
-    // setShowConfirmSwap(false);
-    // setShowConfirmTransaction(false);
+
+    setShowConfirmTransaction(false);
     // resetAllValues();
-    // transactionSubmitModal(batchOp.opHash);
+    transactionSubmitModal(batchOp.opHash);
 
     await batchOp.confirmation();
     return {
@@ -276,7 +270,7 @@ async function tez_to_ctez(
   recipent: string,
   tokenInAmount: BigNumber,
   transactionSubmitModal: any,
-  setShowConfirmSwap: any,
+
   resetAllValues: any,
   setShowConfirmTransaction: any
 ) {
@@ -309,11 +303,10 @@ async function tez_to_ctez(
     ]);
 
     const batchOp: any = await batch.send();
-    // Uncomment once implemented
-    // setShowConfirmSwap(false);
-    // setShowConfirmTransaction(false);
+
+    setShowConfirmTransaction(false);
     // resetAllValues();
-    // transactionSubmitModal(batchOp.opHash);
+    transactionSubmitModal(batchOp.opHash);
     await batchOp.confirmation();
 
     return {
