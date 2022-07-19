@@ -8,6 +8,43 @@ import { store } from '../redux';
 import { BigNumber } from 'bignumber.js';
 import { TokenType } from '../config/types';
 import { OpKind } from '@taquito/taquito';
+import { routerSwap } from './router';
+
+export const allSwapWrapper = async (
+  tokenInAmount: BigNumber,
+  path : string[],
+  minimum_Out_All : BigNumber[],
+  caller: string,
+  recipent: string,
+  transactionSubmitModal: any,
+  resetAllValues: any,
+  setShowConfirmTransaction: any,
+  setShowConfirmSwap : any,
+
+): Promise<{ success: boolean; operationId: any; error: any }> => {
+  try {
+    let res;
+    if(path.length === 2){
+      // directSwap
+      res = await directSwapWrapper(path[0] , path[1] , minimum_Out_All[0] , recipent ,tokenInAmount ,caller ,transactionSubmitModal ,resetAllValues ,setShowConfirmTransaction);
+    }else{
+      // routerSwap
+      res = await routerSwap(path ,minimum_Out_All ,caller , recipent ,tokenInAmount ,transactionSubmitModal ,setShowConfirmSwap ,resetAllValues ,setShowConfirmTransaction);
+    }
+    return {
+      success: res.success,
+      operationId: res.operationId ?? null,
+      error: res.error ?? null,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      operationId: null,
+      error: error,
+    };
+  }
+};
 
 export const directSwapWrapper = async (
   tokenIn: string,
@@ -110,9 +147,6 @@ const swapTokens = async (
     minimumTokenOut = minimumTokenOut.multipliedBy(
       Math.pow(10, TOKEN_OUT.decimals)
     );
-
-    //   CHECK
-    //  minimumTokenOut = Math.floor(minimumTokenOut);
 
     let batch = null;
     // Approve call for FA1.2 type token
