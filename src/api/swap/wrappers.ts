@@ -40,7 +40,7 @@ export const loadSwapDataWrapper = async (
 };
 
 // Try to incorporate return type
-export const calculateTokensOutWrapper = async (
+export const calculateTokensOutWrapper = (
   tokenIn_amount: BigNumber,
   Exchangefee: BigNumber,
   slippage: BigNumber,
@@ -54,11 +54,25 @@ export const calculateTokensOutWrapper = async (
   ctezSupply?: BigNumber,
   target?: BigNumber
 ) => {
+  console.log(
+    tokenIn_amount.toString(),
+    Exchangefee,
+    slippage,
+    tokenIn,
+    tokenOut,
+    tokenIn_supply,
+    tokenOut_supply,
+    tokenIn_precision,
+    tokenOut_precision,
+    tezSupply,
+    ctezSupply,
+    target
+  );
   try {
     const type = getDexType(tokenIn, tokenOut);
     let outputData: any;
     if (type === AMM_TYPE.VOLATILE && tokenIn_supply && tokenOut_supply) {
-      outputData = await calculateTokenOutputVolatile(
+      outputData = calculateTokenOutputVolatile(
         tokenIn_amount,
         tokenIn_supply,
         tokenOut_supply,
@@ -73,7 +87,7 @@ export const calculateTokensOutWrapper = async (
         ctezSupply &&
         target
       ) {
-        outputData = await calculateTokensOutTezCtez(
+        outputData = calculateTokensOutTezCtez(
           tezSupply,
           ctezSupply,
           tokenIn_amount,
@@ -88,7 +102,7 @@ export const calculateTokensOutWrapper = async (
         tokenIn_precision &&
         tokenOut_precision
       ) {
-        outputData = await calculateTokensOutGeneralStable(
+        outputData = calculateTokensOutGeneralStable(
           tokenIn_supply,
           tokenOut_supply,
           tokenIn_amount,

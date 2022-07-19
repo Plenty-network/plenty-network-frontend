@@ -94,6 +94,7 @@ function SwapTab(props: ISwapTabProps) {
     useStateAnimate(false, 280);
 
   const [showRecepient, setShowRecepient] = useState(false);
+  const [expertMode, setExpertMode] = useState(false);
 
   const [isRefresh, setRefresh] = useState(false);
   const refreshAllData = (value: boolean) => {
@@ -146,6 +147,12 @@ function SwapTab(props: ISwapTabProps) {
             Insufficient balance
           </Button>
         );
+      } else if (expertMode && Number(props.swapDetails.priceImpact) > 50) {
+        return (
+          <Button color="primary" width="w-full" onClick={swapOperation}>
+            Swap Anyway
+          </Button>
+        );
       } else {
         return (
           <Button color="primary" width="w-full" onClick={swapOperation}>
@@ -188,6 +195,8 @@ function SwapTab(props: ISwapTabProps) {
           slippage={props.slippage}
           setSettingsShow={setSettingsShow}
           setShowRecepient={setShowRecepient}
+          setExpertMode={setExpertMode}
+          expertMode={expertMode}
         />
       </div>
       <div

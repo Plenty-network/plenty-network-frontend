@@ -16,14 +16,20 @@ interface ITransactionSettingsProps {
   slippage: number;
   setSlippage: any;
   setShowRecepient: any;
+  setExpertMode: any;
+  expertMode: boolean;
 }
 function TransactionSettings(props: ITransactionSettingsProps) {
   const [errorMessage, setErrorMessage] = useState('');
   const refSetting = useRef(null);
   const [recepientlocal, setRecepientlocal] = useState(false);
+
   const handleShowRecepient = () => {
     setRecepientlocal(!recepientlocal);
     props.setShowRecepient(!recepientlocal);
+  };
+  const handleExpertMode = () => {
+    props.setExpertMode(!props.expertMode);
   };
 
   useOutsideClick(refSetting, () => {
@@ -117,7 +123,11 @@ function TransactionSettings(props: ITransactionSettingsProps) {
             </span>
           </div>
           <div>
-            <Switch id="expert" />
+            <Switch
+              id="expert"
+              isChecked={props.expertMode}
+              onChange={handleExpertMode}
+            />
           </div>
         </div>
       </div>
@@ -132,7 +142,7 @@ function TransactionSettings(props: ITransactionSettingsProps) {
           <div>
             <Switch
               id="recipient"
-              recepientlocal={recepientlocal}
+              isChecked={recepientlocal}
               onChange={handleShowRecepient}
             />
           </div>

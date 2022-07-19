@@ -3,7 +3,7 @@ export interface ISwitchProps {
   name?: string;
   id: string;
   onChange?: () => void;
-  recepientlocal?: boolean;
+  isChecked?: boolean;
 }
 
 export function Switch(props: ISwitchProps) {
@@ -13,7 +13,7 @@ export function Switch(props: ISwitchProps) {
         type="checkbox"
         id={props.id}
         onChange={props.onChange}
-        checked={props.recepientlocal}
+        checked={props.isChecked}
       />
       <label htmlFor={props.id}>{props.name ? props.name : 'toggle'}</label>
     </span>
