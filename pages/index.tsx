@@ -47,7 +47,7 @@ const Home: NextPage = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
-        <Swap otherProps={otherPageProps} />
+       <h1>heello world</h1>
       </SideBarHOC>
     </>
   );

@@ -130,7 +130,11 @@ function TransactionSettings(props: ITransactionSettingsProps) {
             </span>
           </div>
           <div>
-            <Switch id="recipient" onChange={handleShowRecepient} />
+            <Switch
+              id="recipient"
+              recepientlocal={recepientlocal}
+              onChange={handleShowRecepient}
+            />
           </div>
         </div>
       </div>

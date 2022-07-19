@@ -237,7 +237,7 @@ function SwapTab(props: ISwapTabProps) {
             <span className="text-text-600 font-body3">Balance:</span>{' '}
             <span className="font-body4 text-primary-500 2">
               {Number(props.userBalances[props.tokenIn.name]) >= 0
-                ? Number(props.userBalances[props.tokenIn.name])
+                ? props.userBalances[props.tokenIn.name].toString()
                 : '--'}
             </span>
           </div>
@@ -328,7 +328,7 @@ function SwapTab(props: ISwapTabProps) {
               <span className="font-body4 text-text-500 ">
                 {Object.keys(props.tokenOut).length !== 0 &&
                 Number(props.userBalances[props.tokenOut.name]) >= 0
-                  ? Number(props.userBalances[props.tokenOut.name])
+                  ? props.userBalances[props.tokenOut.name].toString()
                   : '--'}
               </span>
             </div>
