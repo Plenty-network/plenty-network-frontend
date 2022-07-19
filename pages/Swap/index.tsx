@@ -9,17 +9,12 @@ import { getTokenPrices } from '../../src/api/util/price';
 import { tokensModal, tokenType } from '../../src/constants/swap';
 
 import { useAppSelector } from '../../src/redux';
-import { AMM_TYPE } from '../../src/config/types';
-import { calculateTokensOutGeneralStable } from '../../src/api/swap/stableswap';
+
 import { BigNumber } from 'bignumber.js';
 import {
   calculateTokensOutWrapper,
   loadSwapDataWrapper,
 } from '../../src/api/swap/wrappers';
-
-import axios from 'axios';
-import { loadSwapDataVolatile } from '../../src/api/swap/volatile';
-import { getDexType } from '../../src/api/util/fetchConfig';
 
 interface ISwapProps {
   className?: string;
@@ -69,8 +64,8 @@ function Swap(props: ISwapProps) {
     target?: BigNumber;
   }>({
     tokenIn_amount: new BigNumber(0),
-    tokenIn : tokenIn.name,
-    tokenOut : tokenOut.name,
+    tokenIn: tokenIn.name,
+    tokenOut: tokenOut.name,
     exchangeFee: new BigNumber(0),
     slippage: new BigNumber(slippage),
   });
@@ -95,6 +90,7 @@ function Swap(props: ISwapProps) {
   const [tokenPrice, setTokenPrice] = useState<{
     [id: string]: number;
   }>({});
+
   getTokenPrices().then((response) => {
     setTokenPrice(response.tokenPrice);
   });
@@ -107,13 +103,10 @@ function Swap(props: ISwapProps) {
     ) {
       loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((res) => {
         setSwapData(res);
+        if (firstTokenAmount !== '') {
+          handleSwapTokenInput(firstTokenAmount, 'tokenIn');
+        }
       });
-    }
-  }, [tokenIn, tokenOut]);
-
-  useEffect(() => {
-    if (firstTokenAmount !== '') {
-      handleSwapTokenInput(firstTokenAmount, 'tokenIn');
     }
   }, [tokenIn, tokenOut]);
 
@@ -147,8 +140,9 @@ function Swap(props: ISwapProps) {
     } else {
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
+
         if (Object.keys(tokenOut).length !== 0) {
-          const res = calculateTokensOutWrapper(
+          const res = await calculateTokensOutWrapper(
             new BigNumber(input),
             swapData.exchangeFee,
             new BigNumber(slippage),
@@ -162,8 +156,6 @@ function Swap(props: ISwapProps) {
             swapData.ctezSupply ?? undefined,
             swapData.target ?? undefined
           );
-          console.log(res);
-          setSecondTokenAmount(res.tokenOut_amount);
           setSwapDetails({
             exchangeRate: res.exchangeRate,
             fees: res.fees,
@@ -173,6 +165,7 @@ function Swap(props: ISwapProps) {
             isLoading: false,
             success: true,
           });
+          setSecondTokenAmount(res.tokenOut_amount.toString());
         }
       } else if (tokenType === 'tokenOut') {
         setSecondTokenAmount(input);

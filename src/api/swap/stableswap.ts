@@ -1,6 +1,6 @@
 import CONFIG from '../../config/config';
 import BigNumber from 'bignumber.js';
-import { store} from '../../redux';
+import { store } from '../../redux';
 import axios from 'axios';
 import { connectedNetwork, tezos as Tezos, rpcNode } from '../../common/wallet';
 import { getDexAddress } from '../util/fetchConfig';
@@ -288,7 +288,7 @@ export const calculateTokensOutGeneralStable = (
 
   //const TOKEN = useAppSelector((state) => state.config.standard);
   tokenIn_amount = tokenIn_amount.multipliedBy(10 ** TOKEN[tokenIn].decimals);
-  
+
   try {
     tokenIn_supply = tokenIn_supply.multipliedBy(tokenIn_precision);
     tokenOut_supply = tokenOut_supply.multipliedBy(tokenOut_precision);
