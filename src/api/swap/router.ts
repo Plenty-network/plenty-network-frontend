@@ -39,7 +39,7 @@ const allPathHelper = (src : string , dest : string , visited : any , psf : stri
 }
 
 // Return Best Path and calculations
-export const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumber , slippage : BigNumber) :  Promise<{path : string[] , tokenOut_amount : BigNumber ,minimumTokenOut : BigNumber[] ,fees : BigNumber[] , feePerc : BigNumber[] }> => {
+export const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumber , slippage : BigNumber) :  Promise<{path : string[] , tokenOut_amount : BigNumber ,minimumTokenOut : BigNumber[] ,fees : BigNumber[] , feePerc : BigNumber[] , isStable : boolean[] }> => {
 
     try {
         let bestPath;
@@ -98,17 +98,27 @@ export const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumb
                     tokenOut_amount : tokenInAmount[tokenInAmount.length-1],
                     minimumTokenOut : minimumTokenOut,
                     fees : fees , 
-                    feePerc : feePerc
+                    feePerc : feePerc,
+                    isStable : [true]  //only initialising here
                 }
             }
     
     
         }
-    
+        
+        const isStable : boolean[] = [];
+        if(bestPath){
+        for(var x of bestPath.feePerc){
+            if(x.isEqualTo(new BigNumber(0.1)))
+            isStable.push(true);
+            else
+            isStable.push(false);
+        }
+        bestPath.isStable = isStable;
         console.log(bestPath);
-
-        if(bestPath)
-        return bestPath;
+        return bestPath
+    
+    }
         else
         throw "Can not calculate Route";
         
@@ -120,8 +130,8 @@ export const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumb
             tokenOut_amount : new BigNumber(0),
             minimumTokenOut : [],
             fees : [] , 
-            feePerc : []
-
+            feePerc : [],
+            isStable : []
         };
         return bestPath;
     }
