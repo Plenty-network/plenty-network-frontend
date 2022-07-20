@@ -3,6 +3,7 @@ import Button from '../Button/Button';
 import { PopUpModal } from '../Modal/popupModal';
 import Image from 'next/image';
 import ratesrefresh from '../../../src/assets/icon/swap/ratesrefresh.svg';
+import arrow from '../../../src/assets/icon/swap/downArrow.svg';
 import info from '../../../src/assets/icon/swap/info.svg';
 import { BigNumber } from 'bignumber.js';
 
@@ -38,7 +39,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
         <>
           <div className="mt-6">
             <div className="border bg-muted-100/[0.1] rounded-2xl border-text-800 p-3 flex content-center justify-center">
-              <div className="border rounded-xl border-text-800/[0.3] bg-muted-400 p-3 h-[50px] justify-center flex">
+              <div className="border rounded-xl border-text-800/[0.5] bg-muted-400 p-3 h-[50px] justify-center flex">
                 <span className="h-[26px] w-[26px]">
                   <Image
                     src={props.tokenIn.image}
@@ -47,15 +48,24 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   />
                 </span>
                 <span className="font-title3 ml-2">
-                  <span>{props.tokenIn.name}</span>
+                  <span>
+                    {props.tokenIn.name === 'tez'
+                      ? 'TEZ'
+                      : props.tokenIn.name === 'ctez'
+                      ? 'CTEZ'
+                      : props.tokenIn.name}
+                  </span>
                 </span>
               </div>
               <div className="ml-auto items-center flex font-medium2">
-                {props.firstTokenAmount ? props.firstTokenAmount : 2.132423423}
+                {props.firstTokenAmount}
               </div>
             </div>
-            <div className="border mt-2 bg-muted-100/[0.1] rounded-2xl border-text-800 p-3 flex content-center justify-center">
-              <div className="border rounded-xl border-text-800/[0.3] bg-muted-400 p-3 h-[50px] justify-center flex">
+            <div className="flex justify-center -mt-[15px]">
+              <Image src={arrow} />
+            </div>
+            <div className="border -mt-[18px] bg-muted-100/[0.1] rounded-2xl border-text-800 p-3 flex content-center justify-center">
+              <div className="border rounded-xl border-text-800/[0.5] bg-muted-400 p-3 h-[50px] justify-center flex">
                 <span className="h-[26px] w-[26px]">
                   <Image
                     src={props.tokenOut.image}
@@ -64,7 +74,13 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   />
                 </span>
                 <span className="font-title3 ml-2">
-                  <span>{props.tokenOut.name}</span>
+                  <span>
+                    {props.tokenOut.name === 'tez'
+                      ? 'TEZ'
+                      : props.tokenOut.name === 'ctez'
+                      ? 'CTEZ'
+                      : props.tokenOut.name}
+                  </span>
                 </span>
               </div>
               <div className="ml-auto items-center flex font-medium2">
@@ -75,7 +91,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
               <>
                 <div>
                   <span className="relative top-0.5">
-                    <Image src={info} />
+                    <Image src={info} width={'15px'} height={'15px'} />
                   </span>
                   <span className="ml-[9.25px] font-text-bold mr-[7px]">
                     {' '}
@@ -107,12 +123,12 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Minimum received</span>
                   <span className="relative top-0.5">
-                    <Image src={info} />
+                    <Image src={info} width={'15px'} height={'15px'} />
                   </span>
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {` ${Number(props.swapDetails.minimum_Out).toFixed(8)} ${
+                  {` ${Number(props.swapDetails.minimum_Out).toFixed(4)} ${
                     props.tokenOut.name === 'tez'
                       ? 'TEZ'
                       : props.tokenOut.name === 'ctez'
@@ -126,7 +142,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Price Impact</span>
                   <span className="relative top-0.5">
-                    <Image src={info} />
+                    <Image src={info} width={'15px'} height={'15px'} />
                   </span>
                 </div>
 
@@ -152,7 +168,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   {' '}
                   <span className="mr-[5px]">Route</span>
                   <span className="relative top-0.5">
-                    <Image src={info} />
+                    <Image src={info} width={'15px'} height={'15px'} />
                   </span>
                 </div>
               </div>

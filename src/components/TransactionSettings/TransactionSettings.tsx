@@ -81,7 +81,9 @@ function TransactionSettings(props: ITransactionSettingsProps) {
           className={clsx(
             'border  rounded-lg h-9 w-full py-2 px-3 font-body4 flex',
             errorMessage
-              ? 'border-error-500/[0.4] bg-error-500[0.01]'
+              ? errorMessage === ERRORMESSAGES.TRANSACTIONSETTINGSWARNING
+                ? 'border-warning-500/[0.4] bg-wraning-500/[0.01]'
+                : 'border-error-500/[0.4] bg-error-500[0.01]'
               : 'border-text-700/[0.5] bg-card-500'
           )}
         >
@@ -97,7 +99,14 @@ function TransactionSettings(props: ITransactionSettingsProps) {
         </div>
       </div>
       {errorMessage && (
-        <div className="font-mobile-400 text-right mt-1 text-error-500 ">
+        <div
+          className={clsx(
+            'font-mobile-400 text-right mt-1  ',
+            errorMessage === ERRORMESSAGES.TRANSACTIONSETTINGSWARNING
+              ? 'text-warning-500'
+              : 'text-error-500'
+          )}
+        >
           {errorMessage}
         </div>
       )}

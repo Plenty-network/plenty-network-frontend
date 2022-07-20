@@ -23,11 +23,11 @@ function ConfirmTransaction(props: IConfirmTransactionProps) {
     <PopUpModal title="Confirm Transaction" onhide={closeModal}>
       {
         <>
-          <div className="flex justify-center mt-20">
+          <div className="flex justify-center mt-10">
             <Lottie
               animationData={loader}
               loop={true}
-              style={{ height: '100px', width: '100px' }}
+              style={{ height: '150px', width: '150px' }}
             />
           </div>
           <div className="mt-11 border border-border-100/[0.4] rounded-2xl bg-secondary-100/[0.02] flex justify-center items-center h-[52px] font-subtitle4">
