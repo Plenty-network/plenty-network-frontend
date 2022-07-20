@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { SideBarHOC } from '../src/components/Sidebar/SideBarHOC';
-import Swap from './swap';
+
 import { Provider } from 'react-redux';
 import { AppDispatch, store } from '../src/redux/index';
 
@@ -47,7 +47,7 @@ const Home: NextPage = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
-       <h1>heello world</h1>
+        <h1>heello world</h1>
       </SideBarHOC>
     </>
   );

@@ -171,10 +171,10 @@ const swapTokens = async (
 
     const batchOperation: any = await batch.send();
 
-    setShowConfirmTransaction(false);
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
 
     transactionSubmitModal(batchOperation.opHash);
-    // resetAllValues();
+    resetAllValues();
 
     const opHash = await batchOperation.confirmation();
 
@@ -246,8 +246,8 @@ async function ctez_to_tez(
         : console.log('operation injected');
     }
 
-    setShowConfirmTransaction(false);
-    // resetAllValues();
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+    resetAllValues();
     transactionSubmitModal(batchOp.opHash);
 
     await batchOp.confirmation();
@@ -305,8 +305,8 @@ async function tez_to_ctez(
 
     const batchOp: any = await batch.send();
 
-    setShowConfirmTransaction(false);
-    // resetAllValues();
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+    resetAllValues();
     transactionSubmitModal(batchOp.opHash);
     await batchOp.confirmation();
 

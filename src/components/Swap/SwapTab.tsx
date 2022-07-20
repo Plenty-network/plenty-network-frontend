@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import refresh from '../../../src/assets/icon/swap/refresh.svg';
 import settings from '../../../src/assets/icon/swap/settings.svg';
-import arrowUp from '../../../src/assets/icon/swap/arrowUp.svg';
+import arrowDown from '../../../src/assets/icon/swap/arrowDown.svg';
 import ratesrefresh from '../../../src/assets/icon/swap/ratesrefresh.svg';
 import info from '../../../src/assets/icon/swap/info.svg';
 import switchsvg from '../../../src/assets/icon/swap/switch.svg';
@@ -24,6 +24,7 @@ import ConfirmSwap from './ConfirmSwap';
 import ConfirmTransaction from '../ConfirmTransaction';
 import TransactionSubmitted from '../TransactionSubmitted';
 import { getCompleteUserBalace } from '../../api/util/balance';
+import Tooltip from '../Tooltip/Tooltip';
 
 interface ISwapTabProps {
   className?: string;
@@ -102,6 +103,10 @@ interface ISwapTabProps {
     isLoadingfirst?: boolean;
     isLoadingSecond?: boolean;
   };
+  refreshAllData?: (value: boolean) => void;
+  isRefresh?: boolean;
+  setAllBalance: any;
+  resetAllValues: () => void;
 }
 
 function SwapTab(props: ISwapTabProps) {
@@ -113,25 +118,31 @@ function SwapTab(props: ISwapTabProps) {
   const [showRecepient, setShowRecepient] = useState(false);
   const [expertMode, setExpertMode] = useState(false);
   const [showExpertPopup, setShowExpertPopup] = useState(false);
+
   const [isRefresh, setRefresh] = useState(false);
 
   const refreshAllData = (value: boolean) => {
     setRefresh(value);
-    props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
-    setRefresh(false);
+    setTimeout(() => {
+      props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
+      setRefresh(false);
+    }, 1000);
   };
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     props.setShowTransactionSubmitModal(true);
   };
-
+  const [isConvert, setConvert] = useState(false);
   const handleSwap = () => {
     props.setShowConfirmSwap(true);
   };
-
+  const convertRates = (e: any) => {
+    e.stopPropagation();
+    setConvert(!isConvert);
+  };
   const handleConfirmSwap = () => {
     props.setShowConfirmSwap(false);
-    props.setShowConfirmTransaction(true);
+    !expertMode && props.setShowConfirmTransaction(true);
     directSwapWrapper(
       props.tokenIn.name,
       props.tokenOut.name,
@@ -140,20 +151,27 @@ function SwapTab(props: ISwapTabProps) {
       new BigNumber(props.firstTokenAmount),
       props.walletAddress,
       transactionSubmitModal,
-      undefined,
-      props.setShowConfirmTransaction
+      props.resetAllValues,
+      !expertMode && props.setShowConfirmTransaction
     ).then((response) => {
       if (response.success) {
         console.log(response);
+        props.resetAllValues;
         props.setShowTransactionSubmitModal(false);
       } else {
         console.log('failed');
+        props.resetAllValues;
         props.setShowConfirmTransaction(false);
+
         props.setShowTransactionSubmitModal(false);
       }
     });
   };
-
+  useEffect(() => {
+    getCompleteUserBalace(props.walletAddress).then((res) => {
+      props.setAllBalance(res);
+    });
+  }, []);
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {
       if (Object.keys(props.tokenOut).length === 0) {
@@ -260,7 +278,7 @@ function SwapTab(props: ISwapTabProps) {
             <div className="text-right font-body1 text-text-400">YOU PAY</div>
             <div>
               {props.loading.isLoadingfirst ? (
-                <p className="  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+                <p className=" my-[4px] h-[32px] rounded animate-pulse bg-shimmer-100"></p>
               ) : (
                 <input
                   type="text"
@@ -283,7 +301,7 @@ function SwapTab(props: ISwapTabProps) {
             <span className="text-text-600 font-body3">Balance:</span>{' '}
             <span className="font-body4 text-primary-500 2">
               {Number(props.userBalances[props.tokenIn.name]) >= 0
-                ? props.userBalances[props.tokenIn.name].toString()
+                ? Number(props.userBalances[props.tokenIn.name]).toFixed(4)
                 : '--'}
             </span>
           </div>
@@ -299,7 +317,7 @@ function SwapTab(props: ISwapTabProps) {
         </div>
       </div>
       <div
-        className="z-10 cursor-pointer relative top-[5px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-2xl "
+        className="z-10 -mt-[25px] cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-2xl "
         onClick={() => props.changeTokenLocation()}
       >
         <div className="p-[11.5px] bg-card-500 rounded-2xl  w-[68px] h-[68px]">
@@ -308,7 +326,7 @@ function SwapTab(props: ISwapTabProps) {
           </div>
         </div>
       </div>
-      <div className=" pt-[41px] relative -top-[24px] pb-5 border border-primary-500/[0.2] mx-px md:mx-2 lg:mx-2  px-5 lg:px-[22px] rounded-3xl bg-primary-500/[0.04]">
+      <div className=" pt-[41px]  pb-5 border border-primary-500/[0.2] mx-px md:mx-2 lg:mx-2  px-5 lg:px-[22px] rounded-3xl bg-primary-500/[0.04]">
         <div className="lg:w-580 secondtoken h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] hover:border-primary-500/[0.6] bg-card-500 hover:bg-primary-500/[0.02]">
           <div className=" flex justify-between">
             <div
@@ -337,7 +355,7 @@ function SwapTab(props: ISwapTabProps) {
               <div>
                 {Object.keys(props.tokenOut).length !== 0 ? (
                   props.loading.isLoadingSecond ? (
-                    <p className="  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+                    <p className="my-[4px]  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input
                       type="text"
@@ -374,7 +392,7 @@ function SwapTab(props: ISwapTabProps) {
               <span className="font-body4 text-text-500 ">
                 {Object.keys(props.tokenOut).length !== 0 &&
                 Number(props.userBalances[props.tokenOut.name]) >= 0
-                  ? props.userBalances[props.tokenOut.name].toString()
+                  ? Number(props.userBalances[props.tokenOut.name]).toFixed(4)
                   : '--'}
               </span>
             </div>
@@ -413,8 +431,8 @@ function SwapTab(props: ISwapTabProps) {
             className="h-12 mt-3 cursor-pointer px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] items-center flex "
             onClick={() => setOpenSwapDetails(!openSwapDetails)}
           >
-            {props.swapDetails.isLoading ? (
-              <div className="flex">
+            {props.loading.isLoadingSecond ? (
+              <div className="flex relative top-[8px]">
                 <span className="ml-[6px] font-text-bold mr-[7px]">
                   {' '}
                   Fetching best price
@@ -431,36 +449,55 @@ function SwapTab(props: ISwapTabProps) {
               <>
                 <div>
                   <span className="relative top-0.5">
-                    <Image src={info} />
+                    <Image src={info} width={'15px'} height={'15px'} />
                   </span>
                   <span className="ml-[9.25px] font-text-bold mr-[7px]">
                     {' '}
-                    {`1 ${
-                      props.tokenIn.name === 'tez'
-                        ? 'TEZ'
-                        : props.tokenIn.name === 'ctez'
-                        ? 'CTEZ'
-                        : props.tokenIn.name
-                    } = ${props.swapDetails.exchangeRate.toFixed(3)} ${
-                      props.tokenOut.name === 'tez'
-                        ? 'TEZ'
-                        : props.tokenOut.name === 'ctez'
-                        ? 'CTEZ'
-                        : props.tokenOut.name
-                    }`}
+                    {!isConvert
+                      ? `1 ${
+                          props.tokenIn.name === 'tez'
+                            ? 'TEZ'
+                            : props.tokenIn.name === 'ctez'
+                            ? 'CTEZ'
+                            : props.tokenIn.name
+                        } = ${props.swapDetails.exchangeRate.toFixed(3)} ${
+                          props.tokenOut.name === 'tez'
+                            ? 'TEZ'
+                            : props.tokenOut.name === 'ctez'
+                            ? 'CTEZ'
+                            : props.tokenOut.name
+                        }`
+                      : `1 ${
+                          props.tokenOut.name === 'tez'
+                            ? 'TEZ'
+                            : props.tokenOut.name === 'ctez'
+                            ? 'CTEZ'
+                            : props.tokenOut.name
+                        } = ${Number(
+                          1 / Number(props.swapDetails.exchangeRate)
+                        ).toFixed(3)} ${
+                          props.tokenIn.name === 'tez'
+                            ? 'TEZ'
+                            : props.tokenIn.name === 'ctez'
+                            ? 'CTEZ'
+                            : props.tokenIn.name
+                        }`}
                   </span>
                   <span className="relative top-px">
-                    <Image src={ratesrefresh} />
+                    <Image
+                      src={ratesrefresh}
+                      onClick={(e) => convertRates(e)}
+                    />
                   </span>
                 </div>
-                <div className="ml-auto">
+                <div className="ml-auto relative top-[3px]">
                   <Image
-                    src={arrowUp}
+                    src={arrowDown}
                     className={
                       animateOpenSwapDetails ? 'rotate-180' : 'rotate-0'
                     }
-                    width={'12px'}
-                    height={'9px'}
+                    width={'24px'}
+                    height={'24px'}
                   />
                 </div>
               </>
@@ -480,16 +517,16 @@ function SwapTab(props: ISwapTabProps) {
               <div className="font-mobile-400 md:font-body3 ">
                 <span className="mr-[5px]">Minimum received</span>
                 <span className="relative top-0.5">
-                  <Image src={info} />
+                  <Image src={info} width={'15px'} height={'15px'} />
                 </span>
               </div>
-              {props.swapDetails.isLoading ? (
+              {isRefresh ? (
                 <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
                   999999999999
                 </div>
               ) : (
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {` ${props.swapDetails.minimum_Out.toString()} ${
+                  {` ${Number(props.swapDetails.minimum_Out).toFixed(4)} ${
                     props.tokenOut.name === 'tez'
                       ? 'TEZ'
                       : props.tokenOut.name === 'ctez'
@@ -504,7 +541,7 @@ function SwapTab(props: ISwapTabProps) {
               <div className="font-mobile-400 md:font-body3 ">
                 <span className="mr-[5px]">Price Impact</span>
                 <span className="relative top-0.5">
-                  <Image src={info} />
+                  <Image src={info} width={'15px'} height={'15px'} />
                 </span>
               </div>
               {isRefresh ? (
@@ -512,7 +549,13 @@ function SwapTab(props: ISwapTabProps) {
                   99999999
                 </div>
               ) : (
-                <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                <div
+                  className={clsx(
+                    'ml-auto font-mobile-700 md:font-subtitle4',
+                    Number(props.swapDetails.priceImpact) > 5 &&
+                      'text-error-500'
+                  )}
+                >
                   {`${props.swapDetails.priceImpact.toFixed(4)} %`}
                 </div>
               )}
@@ -521,7 +564,7 @@ function SwapTab(props: ISwapTabProps) {
               <div className="font-mobile-400 md:font-body3 ">
                 <span className="mr-[5px]">Fee</span>
                 <span className="relative top-0.5">
-                  <Image src={info} />
+                  <Image src={info} width={'15px'} height={'15px'} />
                 </span>
               </div>
               {isRefresh ? (
@@ -540,7 +583,7 @@ function SwapTab(props: ISwapTabProps) {
                 {' '}
                 <span className="mr-[5px]">Route</span>
                 <span className="relative top-0.5">
-                  <Image src={info} />
+                  <Image src={info} width={'15px'} height={'15px'} />
                 </span>
               </div>
               {isRefresh ? (
@@ -629,9 +672,17 @@ function SwapTab(props: ISwapTabProps) {
           setShow={props.setShowConfirmTransaction}
           onClick={handleConfirmSwap}
           content={`Swap ${Number(props.firstTokenAmount).toFixed(2)} ${
-            props.tokenIn.name
+            props.tokenIn.name === 'tez'
+              ? 'TEZ'
+              : props.tokenIn.name === 'ctez'
+              ? 'CTEZ'
+              : props.tokenIn.name
           } for ${Number(props.secondTokenAmount).toFixed(4)} ${
-            props.tokenOut.name
+            props.tokenOut.name === 'tez'
+              ? 'TEZ'
+              : props.tokenOut.name === 'ctez'
+              ? 'CTEZ'
+              : props.tokenOut.name
           } `}
         />
       )}
@@ -641,9 +692,17 @@ function SwapTab(props: ISwapTabProps) {
           setShow={props.setShowTransactionSubmitModal}
           onClick={handleConfirmSwap}
           content={`Swap ${Number(props.firstTokenAmount).toFixed(2)} ${
-            props.tokenIn.name
+            props.tokenIn.name === 'tez'
+              ? 'TEZ'
+              : props.tokenIn.name === 'ctez'
+              ? 'CTEZ'
+              : props.tokenIn.name
           } for ${Number(props.secondTokenAmount).toFixed(4)} ${
-            props.tokenOut.name
+            props.tokenOut.name === 'tez'
+              ? 'TEZ'
+              : props.tokenOut.name === 'ctez'
+              ? 'CTEZ'
+              : props.tokenOut.name
           } `}
         />
       )}

@@ -23,14 +23,14 @@ function TransactionSubmitted(props: ITransactionSubmittedProps) {
     <PopUpModal title="Transaction Submitted" onhide={closeModal}>
       {
         <>
-          <div className="flex justify-center mt-12">
+          <div className="flex justify-center mt-10">
             <Lottie
               animationData={animation}
               loop={false}
               style={{ height: '150px', width: '150px' }}
             />
           </div>
-          <div className="mt-6 border border-border-100/[0.4] rounded-2xl bg-secondary-100/[0.02] flex justify-center items-center h-[52px] font-subtitle4">
+          <div className="mt-11 border border-border-100/[0.4] rounded-2xl bg-secondary-100/[0.02] flex justify-center items-center h-[52px] font-subtitle4">
             {props.content}
           </div>
           <div className="my-3 font-text-bold flex justify-center text-primary-500">
