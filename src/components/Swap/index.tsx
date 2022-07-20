@@ -133,12 +133,18 @@ function Swap(props: ISwapProps) {
   getTokenPrices().then((response) => {
     setTokenPrice(response.tokenPrice);
   });
+  const [data, setData] = useState<{
+    success: boolean;
+    userBalance: { [id: string]: BigNumber };
+  }>({ success: false, userBalance: {} });
 
   useEffect(() => {
-    getCompleteUserBalace(props.otherProps.walletAddress).then((res) => {
-      setAllBalance(res);
-    });
-  }, []);
+    if (props.otherProps.walletAddress) {
+      getCompleteUserBalace(props.otherProps.walletAddress).then((response) => {
+        setAllBalance(response);
+      });
+    }
+  }, [props.otherProps.walletAddress, TOKEN]);
 
   useEffect(() => {
     if (

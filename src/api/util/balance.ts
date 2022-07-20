@@ -185,12 +185,10 @@ export const getCompleteUserBalace = async (
     const state = store.getState();
     const TOKEN = state.config.standard;
     const userBalance: { [id: string]: BigNumber } = {};
-
     Object.keys(TOKEN).forEach(async function (key) {
       const bal = await getUserBalanceByRpc(key, address);
       userBalance[key] = bal.balance;
     });
-
     return {
       success: true,
       userBalance,
