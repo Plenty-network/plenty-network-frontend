@@ -131,7 +131,7 @@ export const getUserBalanceByRpc = async (
       };
     } else {
       const state = store.getState();
-      const TOKEN = state.config.standard;
+      const TOKEN = state.config.tokens;
       const token = TOKEN[`${identifier}`];
       const mapId = token.mapId;
       const type = token.variant;
