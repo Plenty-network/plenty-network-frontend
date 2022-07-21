@@ -51,6 +51,8 @@ const allPathHelper = (
 // Return Best Path and calculations
 const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumber , slippage : BigNumber) :  Promise<{path : string[] , tokenOut_amount : BigNumber ,minimumTokenOut : BigNumber[] ,fees : BigNumber[] , feePerc : BigNumber[] , priceImpact : BigNumber[] }> => {
 
+    try{
+    let bestPath;
     for (var i in paths) {
       // Adding input from user
       const tokenInAmount: BigNumber[] = [];
@@ -121,13 +123,12 @@ const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumber , sl
     
         }
         
+    }
     //    console.log(bestPath);
-        if(bestPath)
-        return bestPath
-        else
-        throw "Can not calculate Route";
-        
-        
+    if(bestPath)
+    return bestPath
+    else
+    throw "Can not calculate Route";
     } catch (error) {
         console.log(error);
         const bestPath = {

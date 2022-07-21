@@ -17,7 +17,6 @@ export const routerSwap = async (
   recipent: string,
   amount: BigNumber,
   transactionSubmitModal: any,
-
   resetAllValues: any,
   setShowConfirmTransaction: any
 ): Promise<{ success: boolean; operationId: any; error?: any }> => {
