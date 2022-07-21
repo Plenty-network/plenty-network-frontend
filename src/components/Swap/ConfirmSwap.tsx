@@ -14,14 +14,16 @@ interface IConfirmSwapProps {
   tokenOut: { name: string; image: any };
   firstTokenAmount: string | number;
   swapDetails: {
-    exchangeRate: BigNumber;
-    fees: BigNumber;
-    feePerc: BigNumber;
-    minimum_Out: BigNumber;
-    priceImpact: BigNumber;
+    feePerc: BigNumber[];
+    fees: BigNumber[];
+    minimum_Out: BigNumber[];
     tokenOut_amount: BigNumber;
+    isStable: boolean[];
+    path: string[];
     isLoading: boolean;
     success: boolean;
+    exchangeRate: BigNumber;
+    priceImpact: BigNumber;
   };
   secondTokenAmount: string | number;
   onClick: () => void;
@@ -159,7 +161,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {props.swapDetails.feePerc.toFixed(2)}
+                  {props.swapDetails.feePerc[0].toFixed(2)}
                 </div>
               </div>
               <div className="border-t border-text-800 mt-[18px]"></div>

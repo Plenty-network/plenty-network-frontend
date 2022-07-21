@@ -12,24 +12,41 @@ import { routerSwap } from './router';
 
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,
-  path : string[],
-  minimum_Out_All : BigNumber[],
+  path: string[],
+  minimum_Out_All: BigNumber[],
   caller: string,
   recipent: string,
   transactionSubmitModal: any,
   resetAllValues: any,
-  setShowConfirmTransaction: any,
-  setShowConfirmSwap : any,
-
+  setShowConfirmTransaction: any
 ): Promise<{ success: boolean; operationId: any; error: any }> => {
   try {
     let res;
-    if(path.length === 2){
+    if (path.length === 2) {
       // directSwap
-      res = await directSwapWrapper(path[0] , path[1] , minimum_Out_All[0] , recipent ,tokenInAmount ,caller ,transactionSubmitModal ,resetAllValues ,setShowConfirmTransaction);
-    }else{
+      res = await directSwapWrapper(
+        path[0],
+        path[1],
+        minimum_Out_All[0],
+        recipent,
+        tokenInAmount,
+        caller,
+        transactionSubmitModal,
+        resetAllValues,
+        setShowConfirmTransaction
+      );
+    } else {
       // routerSwap
-      res = await routerSwap(path ,minimum_Out_All ,caller , recipent ,tokenInAmount ,transactionSubmitModal ,setShowConfirmSwap ,resetAllValues ,setShowConfirmTransaction);
+      res = await routerSwap(
+        path,
+        minimum_Out_All,
+        caller,
+        recipent,
+        tokenInAmount,
+        transactionSubmitModal,
+        resetAllValues,
+        setShowConfirmTransaction
+      );
     }
     return {
       success: res.success,
