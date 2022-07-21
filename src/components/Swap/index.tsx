@@ -29,8 +29,8 @@ interface ISwapProps {
   };
 }
 
-// const res = allPaths('tez', 'USDC.e');
-// computeAllPaths(res, new BigNumber(1), new BigNumber(0.5));
+const res = allPaths('tez', 'USDC.e');
+console.log(computeAllPathsWrapper(res, new BigNumber(1), new BigNumber(0.5)));
 
 function Swap(props: ISwapProps) {
   const TOKEN = useAppSelector((state) => state.config.tokens);
@@ -203,7 +203,7 @@ function Swap(props: ISwapProps) {
             isLoadingfirst: false,
           };
 
-          computeAllPaths(
+          computeAllPathsWrapper(
             allPath.current,
             new BigNumber(input),
             new BigNumber(slippage)
@@ -213,7 +213,7 @@ function Swap(props: ISwapProps) {
               isLoadingfirst: false,
             };
             routeDetails.current = {
-              fees: res.fees,
+              fees: [],
               exchangeRate: new BigNumber(123),
               priceImpact: new BigNumber(123),
               feePerc: res.feePerc,
