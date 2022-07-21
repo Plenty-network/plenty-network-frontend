@@ -121,16 +121,19 @@ function SwapTab(props: ISwapTabProps) {
   };
   const handleConfirmSwap = () => {
     props.setShowConfirmSwap(false);
+    const recepientAddress = props.recepient
+      ? props.recepient
+      : props.walletAddress;
     !expertMode && props.setShowConfirmTransaction(true);
     allSwapWrapper(
       new BigNumber(props.firstTokenAmount),
       props.routeDetails.path,
       props.routeDetails.minimumTokenOut,
       props.walletAddress,
-      props.recepient,
+      recepientAddress,
       transactionSubmitModal,
       props.resetAllValues,
-      !expertMode && props.setShowConfirmTransaction
+      props.setShowConfirmTransaction
     ).then((response) => {
       if (response.success) {
         console.log(response);
@@ -154,7 +157,7 @@ function SwapTab(props: ISwapTabProps) {
     }
 
     return null;
-  }, [props.routeDetails]);
+  }, [props.routeDetails.path]);
 
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {

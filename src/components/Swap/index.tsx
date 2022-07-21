@@ -26,9 +26,6 @@ interface ISwapProps {
   };
 }
 
-const res = allPaths('tez', 'USDC.e');
-console.log(computeAllPathsWrapper(res, new BigNumber(1), new BigNumber(0.5)));
-
 function Swap(props: ISwapProps) {
   const TOKEN = useAppSelector((state) => state.config.tokens);
 
@@ -137,7 +134,7 @@ function Swap(props: ISwapProps) {
           isLoadingSecond: true,
         };
         setSecondTokenAmount('');
-        console.log(1);
+
         handleSwapTokenInput(firstTokenAmount, 'tokenIn');
       }
     }
@@ -147,7 +144,6 @@ function Swap(props: ISwapProps) {
     input: string | number,
     tokenType: 'tokenIn' | 'tokenOut'
   ) => {
-    console.log('2');
     if (Object.keys(tokenOut).length !== 0) {
       loading.current = {
         isLoadingSecond: true,
@@ -185,11 +181,9 @@ function Swap(props: ISwapProps) {
         isLoadingfirst: false,
       };
     } else {
-      console.log('3');
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
         if (Object.keys(tokenOut).length !== 0) {
-          console.log('4');
           loading.current = {
             isLoadingSecond: true,
             isLoadingfirst: false,
@@ -315,7 +309,6 @@ function Swap(props: ISwapProps) {
       updateBalance();
     }
   }, [tokenIn, tokenOut, props, TOKEN]);
-  console.log(routeDetails.current);
 
   return (
     <>

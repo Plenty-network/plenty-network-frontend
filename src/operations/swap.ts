@@ -20,6 +20,16 @@ export const allSwapWrapper = async (
   resetAllValues: any,
   setShowConfirmTransaction: any
 ): Promise<{ success: boolean; operationId: any; error: any }> => {
+  console.log(
+    tokenInAmount,
+    path,
+    minimum_Out_All,
+    caller,
+    recipent,
+    transactionSubmitModal,
+    resetAllValues,
+    setShowConfirmTransaction
+  );
   try {
     let res;
     if (path.length === 2) {
