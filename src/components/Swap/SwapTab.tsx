@@ -4,6 +4,8 @@ import settings from '../../../src/assets/icon/swap/settings.svg';
 import arrowDown from '../../../src/assets/icon/swap/arrowDown.svg';
 import ratesrefresh from '../../../src/assets/icon/swap/ratesrefresh.svg';
 import info from '../../../src/assets/icon/swap/info.svg';
+import stableSwap from '../../../src/assets/icon/swap/stableswapViolet.svg';
+
 import switchsvg from '../../../src/assets/icon/swap/switch.svg';
 import ctez from '../../../src/assets/Tokens/ctez.png';
 import Image from 'next/image';
@@ -583,19 +585,70 @@ function SwapTab(props: ISwapTabProps) {
                   <div className="border-dashed relative top-[24px]   border-t-2 border-muted-50 mx-2"></div>
                   <div className="mt-2 flex justify-between ">
                     {swapRoute?.map((token, idx) => {
+                      const index = idx + 1;
                       return (
-                        <div className="flex items-center " key={token?.name}>
-                          <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
-                            <span className="w-[28px] h-[28px]">
-                              <Image
-                                src={token?.image}
-                                width={'28px'}
-                                height={'28px'}
-                              />
-                            </span>
-                          </div>
-                          <div className="w-2 h-2 bg-card-500 z-50"></div>
-                        </div>
+                        <>
+                          {(idx === 0 || idx === swapRoute.length - 1) && (
+                            <div
+                              className="flex items-center "
+                              key={token?.name}
+                            >
+                              <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                                <span className="w-[28px] h-[28px]">
+                                  <Image
+                                    src={token?.image}
+                                    width={'28px'}
+                                    height={'28px'}
+                                  />
+                                </span>
+                              </div>
+                              <div className="w-2 h-2 bg-card-500 z-50"></div>
+                            </div>
+                          )}
+                          {idx !== swapRoute.length - 1 && (
+                            <div className="flex items-center">
+                              <div className="w-2 h-2 bg-card-500 z-50"></div>
+                              <div className="relative  rounded-2xl h-[32px] bg-card-600 p-px flex">
+                                <span className="relative -left-[7px] flex items-center">
+                                  <div className="  relative left-5 z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
+                                    <span className="w-[18px] h-[18px]">
+                                      <Image
+                                        src={stableSwap}
+                                        width={'18px'}
+                                        height={'18px'}
+                                      />
+                                    </span>
+                                  </div>
+                                  <div className="relative left-2.5 z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                                    <span className="w-[28px] h-[28px]">
+                                      <Image
+                                        src={token?.image}
+                                        width={'28px'}
+                                        height={'28px'}
+                                      />
+                                    </span>
+                                  </div>
+                                  <div className="relative z-30 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                                    <span className="w-[28px] h-[28px]">
+                                      <Image
+                                        src={swapRoute[index]?.image}
+                                        width={'28px'}
+                                        height={'28px'}
+                                      />
+                                    </span>
+                                  </div>
+                                  <div className="relative ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4">
+                                    {Number(
+                                      props.routeDetails.feePerc[idx]
+                                    ).toFixed(2)}
+                                    %
+                                  </div>
+                                </span>
+                              </div>
+                              <div className="w-2 h-2 bg-card-500 z-50"></div>
+                            </div>
+                          )}
+                        </>
                       );
                     })}
                   </div>

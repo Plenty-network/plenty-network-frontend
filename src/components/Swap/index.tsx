@@ -94,9 +94,11 @@ function Swap(props: ISwapProps) {
       setTokenPrice(response.tokenPrice);
     });
     if (props.otherProps.walletAddress) {
-      getCompleteUserBalace(props.otherProps.walletAddress).then((response) => {
-        setAllBalance(response);
-      });
+      getCompleteUserBalace(props.otherProps.walletAddress).then(
+        (response: any) => {
+          setAllBalance(response);
+        }
+      );
     }
   }, [props.otherProps.walletAddress, TOKEN]);
 
