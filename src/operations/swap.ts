@@ -26,9 +26,6 @@ export const allSwapWrapper = async (
     minimum_Out_All,
     caller,
     recipent,
-    transactionSubmitModal,
-    resetAllValues,
-    setShowConfirmTransaction
   );
   try {
     let res;
@@ -185,7 +182,7 @@ const swapTokens = async (
         )
         .withContractCall(
           dexContractInstance.methods.Swap(
-            minimumTokenOut.toFixed(0),
+            minimumTokenOut.toString(),
             recipent,
             tokenOutAddress,
             tokenOutId,
@@ -210,7 +207,7 @@ const swapTokens = async (
         )
         .withContractCall(
           dexContractInstance.methods.Swap(
-            minimumTokenOut.toFixed(0),
+            minimumTokenOut.toString(),
             recipent,
             tokenOutAddress,
             tokenOutId,
@@ -291,7 +288,7 @@ async function ctez_to_tez(
       .withContractCall(
         contract.methods.ctez_to_tez(
           tokenInAmount.multipliedBy(10 ** tokenInDecimals).toString(),
-          minimumTokenOut.multipliedBy(10 ** tokenInDecimals).toFixed(0),
+          minimumTokenOut.multipliedBy(10 ** tokenInDecimals).toString(),
           recipent
         )
       )
@@ -352,12 +349,12 @@ async function tez_to_ctez(
         kind: OpKind.TRANSACTION,
         ...contract.methods
           .tez_to_ctez(
-            minimumTokenOut.multipliedBy(10 ** tokenOutDecimals).toFixed(0),
+            minimumTokenOut.multipliedBy(10 ** tokenOutDecimals).toString(),
             recipent
           )
           .toTransferParams({
             amount: Number(
-              tokenInAmount.multipliedBy(10 ** tokenInDecimals).toFixed(0)
+              tokenInAmount.multipliedBy(10 ** tokenInDecimals).toString()
             ),
             mutez: true,
           }),
