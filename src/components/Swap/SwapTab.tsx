@@ -76,16 +76,15 @@ interface ISwapTabProps {
   setAllBalance: any;
   resetAllValues: () => void;
   routeDetails: {
-    feePerc: BigNumber[];
-    fees: BigNumber[];
-    minimum_Out: BigNumber[];
-    tokenOut_amount: BigNumber;
-    isStable: boolean[];
     path: string[];
-    isLoading: boolean;
-    success: boolean;
-    exchangeRate: BigNumber;
+    minimum_Out: BigNumber;
+    minimumTokenOut: BigNumber[];
     priceImpact: BigNumber;
+    finalFeePerc: BigNumber;
+    feePerc: BigNumber[];
+    isStable: boolean[];
+    exchangeRate: BigNumber;
+    success: boolean;
   };
 }
 
@@ -122,16 +121,19 @@ function SwapTab(props: ISwapTabProps) {
   };
   const handleConfirmSwap = () => {
     props.setShowConfirmSwap(false);
+    const recepientAddress = props.recepient
+      ? props.recepient
+      : props.walletAddress;
     !expertMode && props.setShowConfirmTransaction(true);
     allSwapWrapper(
       new BigNumber(props.firstTokenAmount),
       props.routeDetails.path,
-      props.routeDetails.minimum_Out,
+      props.routeDetails.minimumTokenOut,
       props.walletAddress,
-      props.recepient,
+      recepientAddress,
       transactionSubmitModal,
       props.resetAllValues,
-      !expertMode && props.setShowConfirmTransaction
+      props.setShowConfirmTransaction
     ).then((response) => {
       if (response.success) {
         console.log(response);
@@ -155,7 +157,7 @@ function SwapTab(props: ISwapTabProps) {
     }
 
     return null;
-  }, [props.routeDetails]);
+  }, [props.routeDetails.path]);
 
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {
@@ -511,11 +513,7 @@ function SwapTab(props: ISwapTabProps) {
                 </div>
               ) : (
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {` ${Number(
-                    props.routeDetails.minimum_Out[
-                      props.routeDetails.minimum_Out.length - 1
-                    ]
-                  ).toFixed(4)} ${
+                  {` ${Number(props.routeDetails.minimum_Out).toFixed(4)} ${
                     props.tokenOut.name === 'tez'
                       ? 'TEZ'
                       : props.tokenOut.name === 'ctez'
