@@ -14,16 +14,15 @@ interface IConfirmSwapProps {
   tokenOut: { name: string; image: any };
   firstTokenAmount: string | number;
   swapDetails: {
-    feePerc: BigNumber[];
-    fees: BigNumber[];
-    minimum_Out: BigNumber[];
-    tokenOut_amount: BigNumber;
-    isStable: boolean[];
     path: string[];
-    isLoading: boolean;
-    success: boolean;
-    exchangeRate: BigNumber;
+    minimum_Out: BigNumber;
+    minimumTokenOut: BigNumber[];
     priceImpact: BigNumber;
+    finalFeePerc: BigNumber;
+    feePerc: BigNumber[];
+    isStable: boolean[];
+    exchangeRate: BigNumber;
+    success: boolean;
   };
   secondTokenAmount: string | number;
   onClick: () => void;

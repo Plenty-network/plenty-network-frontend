@@ -14,10 +14,7 @@ import { tokensModal, tokenType } from '../../constants/swap';
 
 import { useAppSelector } from '../../redux';
 import { BigNumber } from 'bignumber.js';
-import {
-  calculateTokensOutWrapper,
-  loadSwapDataWrapper,
-} from '../../api/swap/wrappers';
+
 import { allPaths, computeAllPathsWrapper } from '../../api/swap/router';
 
 interface ISwapProps {
@@ -64,24 +61,22 @@ function Swap(props: ISwapProps) {
   });
 
   const routeDetails = React.useRef<{
-    feePerc: BigNumber[];
-    fees: BigNumber[];
-    minimum_Out: BigNumber[];
-    tokenOut_amount: BigNumber;
-    isStable: boolean[];
     path: string[];
-    isLoading: boolean;
-    success: boolean;
-    exchangeRate: BigNumber;
+    minimum_Out: BigNumber;
+    minimumTokenOut: BigNumber[];
     priceImpact: BigNumber;
+    finalFeePerc: BigNumber;
+    feePerc: BigNumber[];
+    isStable: boolean[];
+    exchangeRate: BigNumber;
+    success: boolean;
   }>({
-    fees: [],
-    minimum_Out: [],
-    tokenOut_amount: new BigNumber(0),
+    minimum_Out: new BigNumber(0),
+    minimumTokenOut: [],
     feePerc: [],
     isStable: [],
     path: [],
-    isLoading: false,
+    finalFeePerc: new BigNumber(0),
     priceImpact: new BigNumber(0),
     success: false,
     exchangeRate: new BigNumber(0),
@@ -119,13 +114,12 @@ function Swap(props: ISwapProps) {
             isLoadingSecond: false,
           })
         : (routeDetails.current = {
-            fees: [],
-            minimum_Out: [],
-            tokenOut_amount: new BigNumber(0),
+            minimum_Out: new BigNumber(0),
+            minimumTokenOut: [],
             feePerc: [],
             isStable: [],
             path: [],
-            isLoading: false,
+            finalFeePerc: new BigNumber(0),
             priceImpact: new BigNumber(0),
             success: true,
             exchangeRate: new BigNumber(0),
@@ -161,13 +155,12 @@ function Swap(props: ISwapProps) {
       };
     } else {
       routeDetails.current = {
-        fees: [],
-        minimum_Out: [],
-        tokenOut_amount: new BigNumber(0),
+        minimum_Out: new BigNumber(0),
+        minimumTokenOut: [],
         feePerc: [],
         isStable: [],
         path: [],
-        isLoading: false,
+        finalFeePerc: new BigNumber(0),
         priceImpact: new BigNumber(0),
         success: false,
         exchangeRate: new BigNumber(0),
@@ -177,13 +170,12 @@ function Swap(props: ISwapProps) {
       setFirstTokenAmount('');
       setSecondTokenAmount('');
       routeDetails.current = {
-        fees: [],
-        minimum_Out: [],
-        tokenOut_amount: new BigNumber(0),
+        minimum_Out: new BigNumber(0),
+        minimumTokenOut: [],
         feePerc: [],
         isStable: [],
         path: [],
-        isLoading: false,
+        finalFeePerc: new BigNumber(0),
         priceImpact: new BigNumber(0),
         success: false,
         exchangeRate: new BigNumber(0),
@@ -203,7 +195,7 @@ function Swap(props: ISwapProps) {
             isLoadingfirst: false,
           };
 
-          computeAllPaths(
+          computeAllPathsWrapper(
             allPath.current,
             new BigNumber(input),
             new BigNumber(slippage)
@@ -213,16 +205,15 @@ function Swap(props: ISwapProps) {
               isLoadingfirst: false,
             };
             routeDetails.current = {
-              fees: res.fees,
-              exchangeRate: new BigNumber(123),
-              priceImpact: new BigNumber(123),
+              minimum_Out: res.finalMinimumTokenOut,
+              minimumTokenOut: res.minimumTokenOut,
               feePerc: res.feePerc,
-              minimum_Out: res.minimumTokenOut,
-              path: res.path,
               isStable: res.isStable,
-              tokenOut_amount: res.tokenOut_amount,
-              isLoading: false,
+              path: res.path,
+              finalFeePerc: res.finalFeePerc,
+              priceImpact: res.finalPriceImpact,
               success: true,
+              exchangeRate: res.exchangeRate,
             };
             setSecondTokenAmount(res.tokenOut_amount.toString());
           });
