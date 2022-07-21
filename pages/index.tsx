@@ -15,6 +15,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { getConfig } from '../src/redux/config/config';
+import { ShortCard } from '../src/components/Pools/ShortCard';
 
 const Home: NextPage = (props) => {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -47,7 +48,7 @@ const Home: NextPage = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
-       <h1>heello world</h1>
+      <ShortCard/>
       </SideBarHOC>
     </>
   );
