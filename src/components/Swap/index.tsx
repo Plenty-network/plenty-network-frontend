@@ -30,7 +30,7 @@ interface ISwapProps {
 }
 
 const res = allPaths('tez', 'USDC.e');
-console.log(computeAllPathsWrapper(res, new BigNumber(1), new BigNumber(0.5)));
+computeAllPathsWrapper(res, new BigNumber(1), new BigNumber(0.5));
 
 function Swap(props: ISwapProps) {
   const TOKEN = useAppSelector((state) => state.config.tokens);
