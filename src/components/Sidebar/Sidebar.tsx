@@ -109,7 +109,7 @@ export function SideBar(props: ISideBarProps) {
       }}
     >
       <div className="flex-col justify-between h-full flex overflow-y-auto">
-        <div className=" border-muted-border border-b flex-1 md:h-[calc(100%_-_215px)] overflow-y-auto">
+        <div className=" flex-1 md:h-[calc(100%_-_215px)] overflow-y-auto">
           {MainMenu.map((menuItem, index) => (
             <SingleSideBar
               name={menuItem.name}
