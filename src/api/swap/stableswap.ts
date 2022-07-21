@@ -2,8 +2,9 @@ import CONFIG from '../../config/config';
 import BigNumber from 'bignumber.js';
 import { store } from '../../redux';
 import axios from 'axios';
-import { connectedNetwork, tezos as Tezos, rpcNode } from '../../common/wallet';
+import { connectedNetwork, rpcNode } from '../../common/wallet';
 import { getDexAddress } from '../util/fetchConfig';
+import { dappClient } from '../../common/wallet-withts';
 
 const util = (
   x: BigNumber,
@@ -219,6 +220,7 @@ export const loadSwapDataTezCtez = async (
     if (dexContractAddress === 'false') {
       throw 'No dex found';
     }
+    const Tezos = await dappClient().tezos();
     const dexContractInstance = await Tezos.contract.at(dexContractAddress);
     const dexStorage: any = await dexContractInstance.storage();
     const tezSupply: BigNumber = new BigNumber(await dexStorage.tezPool);
@@ -373,7 +375,7 @@ export const loadSwapDataGeneralStable = async (
     if (dexContractAddress === 'false') {
       throw 'No dex found';
     }
-
+    const Tezos = await dappClient().tezos();
     const dexContractInstance = await Tezos.contract.at(dexContractAddress);
     const dexStorage: any = await dexContractInstance.storage();
     const token1_pool = new BigNumber(await dexStorage.token1Pool);

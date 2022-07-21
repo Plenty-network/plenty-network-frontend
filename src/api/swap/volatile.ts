@@ -1,7 +1,7 @@
-import { tezos as Tezos } from '../../common/wallet';
 import { getDexAddress } from '../util/fetchConfig';
 import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';
+import { dappClient } from '../../common/wallet-withts';
 
 export const loadSwapDataVolatile = async (
   tokenIn: string,
@@ -28,7 +28,7 @@ export const loadSwapDataVolatile = async (
     if (dexContractAddress === 'false') {
       throw 'No dex found';
     }
-
+    const Tezos = await dappClient().tezos();
     const dexContractInstance = await Tezos.contract.at(dexContractAddress);
     const dexStorage: any = await dexContractInstance.storage();
     const lpFee = new BigNumber(await dexStorage.lpFee);
