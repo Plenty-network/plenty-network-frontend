@@ -2,7 +2,7 @@ import CONFIG from '../../config/config';
 import BigNumber from 'bignumber.js';
 import { store } from '../../redux';
 import axios from 'axios';
-import { connectedNetwork, tezos as Tezos, rpcNode } from '../../common/wallet';
+import { connectedNetwork, rpcNode } from '../../common/wallet';
 import { getDexAddress } from '../util/fetchConfig';
 
 const util = (
@@ -207,7 +207,6 @@ export const loadSwapDataTezCtez = async (
   exchangeFee: BigNumber;
   lpTokenSupply: BigNumber;
   lpToken: any;
-  dexContractInstance: any;
   target: BigNumber;
 }> => {
   try {
@@ -219,13 +218,14 @@ export const loadSwapDataTezCtez = async (
     if (dexContractAddress === 'false') {
       throw 'No dex found';
     }
-    const dexContractInstance = await Tezos.contract.at(dexContractAddress);
-    const dexStorage: any = await dexContractInstance.storage();
-    const tezSupply: BigNumber = new BigNumber(await dexStorage.tezPool);
-    const ctezSupply: BigNumber = new BigNumber(await dexStorage.ctezPool);
-    const lpTokenSupply: BigNumber = new BigNumber(await dexStorage.lqtTotal);
-    const lpFee = await dexStorage.lpFee;
-    const exchangeFee = new BigNumber(lpFee);
+    const storageResponse = await axios.get(
+      `${rpcNode}chains/main/blocks/head/context/contracts/${dexContractAddress}/storage`,
+    );
+
+    const tezSupply: BigNumber = new BigNumber(storageResponse.data.args[2].args[1].int);
+    const ctezSupply: BigNumber = new BigNumber(storageResponse.data.args[0].args[1].args[0].int);
+    const lpTokenSupply: BigNumber = new BigNumber(storageResponse.data.args[0].args[4].int);
+    const exchangeFee = new BigNumber(storageResponse.data.args[0].args[2].int);
     const lpToken = AMM[dexContractAddress].lpToken;
     const ctezAddress = CONFIG.CTEZ[connectedNetwork];
     const ctezStorageUrl = `${rpcNode}chains/main/blocks/head/context/contracts/${ctezAddress}/storage`;
@@ -241,7 +241,6 @@ export const loadSwapDataTezCtez = async (
       exchangeFee,
       lpTokenSupply,
       lpToken,
-      dexContractInstance,
       target,
     };
   } catch (error) {
@@ -255,7 +254,6 @@ export const loadSwapDataTezCtez = async (
       exchangeFee: new BigNumber(0),
       lpTokenSupply: new BigNumber(0),
       lpToken: null,
-      dexContractInstance: null,
       target: new BigNumber(0),
     };
   }
@@ -361,27 +359,24 @@ export const loadSwapDataGeneralStable = async (
   lpToken: any;
   tokenIn_precision: BigNumber;
   tokenOut_precision: BigNumber;
-  dexContractInstance: any;
 }> => {
   try {
     const state = store.getState();
     const AMM = state.config.AMMs;
-    // const TOKEN = useAppSelector((state) => state.config.standard);
-    // const AMM = useAppSelector((state) => state.config.AMMs);
 
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
     if (dexContractAddress === 'false') {
       throw 'No dex found';
     }
 
-    const dexContractInstance = await Tezos.contract.at(dexContractAddress);
-    const dexStorage: any = await dexContractInstance.storage();
-    const token1_pool = new BigNumber(await dexStorage.token1Pool);
-    // GET PRECISION FROM CONFIG
-    const token1_precision = new BigNumber(await dexStorage.token1Precision);
+    const storageResponse = await axios.get(
+      `${rpcNode}chains/main/blocks/head/context/contracts/${dexContractAddress}/storage`,
+    );
 
-    const token2_pool = new BigNumber(await dexStorage.token2Pool);
-    const token2_precision = new BigNumber(await dexStorage.token2Precision);
+    const token1_pool = new BigNumber(storageResponse.data.args[1].args[0].args[1].int);
+    const token2_pool = new BigNumber(storageResponse.data.args[3].int);  
+    const token1_precision = new BigNumber(AMM[dexContractAddress].token1Precision);
+    const token2_precision = new BigNumber(AMM[dexContractAddress].token2Precision);
 
     let tokenIn_supply = new BigNumber(0);
     let tokenOut_supply = new BigNumber(0);
@@ -398,9 +393,8 @@ export const loadSwapDataGeneralStable = async (
       tokenIn_supply = token2_pool;
       tokenIn_precision = token2_precision;
     }
-    const lpFee = await dexStorage.lpFee;
-    const exchangeFee = new BigNumber(lpFee);
-    let lpTokenSupply = new BigNumber(await dexStorage.lqtTotal);
+    const exchangeFee = new BigNumber(storageResponse.data.args[0].args[0].args[0].args[1].int);
+    let lpTokenSupply = new BigNumber(storageResponse.data.args[0].args[0].args[2].int);
     const lpToken = AMM[dexContractAddress].lpToken;
     return {
       success: true,
@@ -413,7 +407,6 @@ export const loadSwapDataGeneralStable = async (
       lpToken,
       tokenIn_precision,
       tokenOut_precision,
-      dexContractInstance,
     };
   } catch (error) {
     console.log({ message: 'Stableswap data error', error });
@@ -428,7 +421,6 @@ export const loadSwapDataGeneralStable = async (
       lpToken: null,
       tokenIn_precision: new BigNumber(0),
       tokenOut_precision: new BigNumber(0),
-      dexContractInstance: null,
     };
   }
 };
