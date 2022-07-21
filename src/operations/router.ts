@@ -34,12 +34,11 @@ export const routerSwap = async (
     const routerAddress = Config.ROUTER[Config.NETWORK];
     const routerInstance: any = await Tezos.contract.at(routerAddress);
 
-    let DataLiteral: any;
+    let DataLiteral: any = [];
     for (let i = 0; i < path.length - 1; i++) {
       const dexAddress = getDexAddress(path[i], path[i + 1]);
       const minOut = minimum_Out_All[i]
-        .multipliedBy(Math.pow(10, TOKEN[path[i + 1]].decimals))
-        .toFixed(0);
+        .multipliedBy(Math.pow(10, TOKEN[path[i + 1]].decimals)).toString();
       const tokenAddress = TOKEN[path[i + 1]].address;
       const tokenId = TOKEN[path[i + 1]].tokenId ?? 0;
       DataLiteral[i] = {
@@ -53,7 +52,7 @@ export const routerSwap = async (
     const DataMap = MichelsonMap.fromLiteral(DataLiteral);
     let swapAmount = amount
       .multipliedBy(Math.pow(10, TOKEN_IN.decimals))
-      .toFixed(0);
+      .toString();
     const tokenInCallType = TOKEN_IN.variant;
 
     let batch = null;
