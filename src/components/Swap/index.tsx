@@ -29,9 +29,8 @@ interface ISwapProps {
   };
 }
 
-
-const res = allPaths('tez' , 'USDC.e');
-computeAllPathsWrapper(res , new BigNumber(1) , new BigNumber(0.5));
+// const res = allPaths('tez', 'USDC.e');
+// computeAllPaths(res, new BigNumber(1), new BigNumber(0.5));
 
 function Swap(props: ISwapProps) {
   const TOKEN = useAppSelector((state) => state.config.tokens);
@@ -55,30 +54,7 @@ function Swap(props: ISwapProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [swapModalShow, setSwapModalShow] = useState(false);
   const [slippage, setSlippage] = useState(0.5);
-  const [routeData, setRouteData] = useState({
-    success: false,
-    isloading: false,
-  });
-  const swapData = React.useRef<{
-    tokenIn_amount: BigNumber;
-    exchangeFee: BigNumber;
-    slippage: BigNumber;
-    tokenIn: string;
-    tokenOut: string;
-    tokenIn_supply?: BigNumber;
-    tokenOut_supply?: BigNumber;
-    tokenIn_precision?: BigNumber;
-    tokenOut_precision?: BigNumber;
-    tezSupply?: BigNumber;
-    ctezSupply?: BigNumber;
-    target?: BigNumber;
-  }>({
-    tokenIn_amount: new BigNumber(0),
-    tokenIn: tokenIn.name,
-    tokenOut: tokenOut.name,
-    exchangeFee: new BigNumber(0),
-    slippage: new BigNumber(slippage),
-  });
+
   const loading = React.useRef<{
     isLoadingfirst?: boolean;
     isLoadingSecond?: boolean;
@@ -87,44 +63,28 @@ function Swap(props: ISwapProps) {
     isLoadingSecond: false,
   });
 
-  // const [swapData, setSwapData] = useState<{
-  //   tokenIn_amount: BigNumber;
-  //   exchangeFee: BigNumber;
-  //   slippage: BigNumber;
-  //   tokenIn: string;
-  //   tokenOut: string;
-  //   tokenIn_supply?: BigNumber;
-  //   tokenOut_supply?: BigNumber;
-  //   tokenIn_precision?: BigNumber;
-  //   tokenOut_precision?: BigNumber;
-  //   tezSupply?: BigNumber;
-  //   ctezSupply?: BigNumber;
-  //   target?: BigNumber;
-  // }>({
-  // tokenIn_amount: new BigNumber(0),
-  // tokenIn: tokenIn.name,
-  // tokenOut: tokenOut.name,
-  // exchangeFee: new BigNumber(0),
-  // slippage: new BigNumber(slippage),
-  // });
-  const [swapDetails, setSwapDetails] = useState<{
-    exchangeRate: BigNumber;
-    fees: BigNumber;
-    minimum_Out: BigNumber;
-    priceImpact: BigNumber;
+  const routeDetails = React.useRef<{
+    feePerc: BigNumber[];
+    fees: BigNumber[];
+    minimum_Out: BigNumber[];
     tokenOut_amount: BigNumber;
-    feePerc: BigNumber;
+    isStable: boolean[];
+    path: string[];
     isLoading: boolean;
     success: boolean;
+    exchangeRate: BigNumber;
+    priceImpact: BigNumber;
   }>({
-    exchangeRate: new BigNumber(0),
-    fees: new BigNumber(0),
-    minimum_Out: new BigNumber(0),
-    priceImpact: new BigNumber(0),
+    fees: [],
+    minimum_Out: [],
     tokenOut_amount: new BigNumber(0),
-    feePerc: new BigNumber(0),
+    feePerc: [],
+    isStable: [],
+    path: [],
     isLoading: false,
+    priceImpact: new BigNumber(0),
     success: false,
+    exchangeRate: new BigNumber(0),
   });
 
   const [tokenPrice, setTokenPrice] = useState<{
@@ -135,15 +95,12 @@ function Swap(props: ISwapProps) {
     userBalance: { [id: string]: BigNumber };
   }>({ success: false, userBalance: {} });
 
-  getTokenPrices().then((response) => {
-    setTokenPrice(response.tokenPrice);
-  });
-  const [data, setData] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
+  const allPath = React.useRef<string[]>([]);
 
   useEffect(() => {
+    getTokenPrices().then((response) => {
+      setTokenPrice(response.tokenPrice);
+    });
     if (props.otherProps.walletAddress) {
       getCompleteUserBalace(props.otherProps.walletAddress).then((response) => {
         setAllBalance(response);
@@ -156,45 +113,39 @@ function Swap(props: ISwapProps) {
       Object.prototype.hasOwnProperty.call(tokenIn, 'name') &&
       Object.prototype.hasOwnProperty.call(tokenOut, 'name')
     ) {
-      swapData.current = {
-        tokenIn_amount: new BigNumber(0),
-        tokenIn: tokenIn.name,
-        tokenOut: tokenOut.name,
-        exchangeFee: new BigNumber(0),
-        slippage: new BigNumber(slippage),
-      };
       firstTokenAmount === ''
         ? (loading.current = {
             isLoadingfirst: true,
             isLoadingSecond: false,
           })
-        : setSwapDetails({
-            exchangeRate: new BigNumber(0),
-            feePerc: new BigNumber(0),
-            fees: new BigNumber(0),
-            minimum_Out: new BigNumber(0),
-            priceImpact: new BigNumber(0),
+        : (routeDetails.current = {
+            fees: [],
+            minimum_Out: [],
             tokenOut_amount: new BigNumber(0),
-            isLoading: true,
+            feePerc: [],
+            isStable: [],
+            path: [],
+            isLoading: false,
+            priceImpact: new BigNumber(0),
             success: true,
+            exchangeRate: new BigNumber(0),
           });
-      loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((res) => {
-        swapData.current = res;
 
+      const res = allPaths(tokenIn.name, tokenOut.name);
+      allPath.current = res;
+      loading.current = {
+        isLoadingfirst: false,
+        isLoadingSecond: false,
+      };
+      if (firstTokenAmount !== '') {
         loading.current = {
           isLoadingfirst: false,
-          isLoadingSecond: false,
+          isLoadingSecond: true,
         };
-
-        if (firstTokenAmount !== '') {
-          loading.current = {
-            isLoadingfirst: false,
-            isLoadingSecond: true,
-          };
-          setSecondTokenAmount('');
-          handleSwapTokenInput(firstTokenAmount, 'tokenIn');
-        }
-      });
+        setSecondTokenAmount('');
+        console.log(1);
+        handleSwapTokenInput(firstTokenAmount, 'tokenIn');
+      }
     }
   }, [tokenIn, tokenOut]);
 
@@ -202,79 +153,78 @@ function Swap(props: ISwapProps) {
     input: string | number,
     tokenType: 'tokenIn' | 'tokenOut'
   ) => {
-    setRouteData({ success: false, isloading: true });
-
+    console.log('2');
     if (Object.keys(tokenOut).length !== 0) {
       loading.current = {
         isLoadingSecond: true,
         isLoadingfirst: false,
       };
     } else {
-      setSwapDetails({
-        exchangeRate: new BigNumber(0),
-        feePerc: new BigNumber(0),
-        fees: new BigNumber(0),
-        minimum_Out: new BigNumber(0),
-        priceImpact: new BigNumber(0),
+      routeDetails.current = {
+        fees: [],
+        minimum_Out: [],
         tokenOut_amount: new BigNumber(0),
-        isLoading: true,
+        feePerc: [],
+        isStable: [],
+        path: [],
+        isLoading: false,
+        priceImpact: new BigNumber(0),
         success: false,
-      });
+        exchangeRate: new BigNumber(0),
+      };
     }
     if (input === '') {
       setFirstTokenAmount('');
       setSecondTokenAmount('');
-      setSwapDetails({
-        exchangeRate: new BigNumber(0),
-        fees: new BigNumber(0),
-        feePerc: new BigNumber(0),
-        minimum_Out: new BigNumber(0),
-        priceImpact: new BigNumber(0),
+      routeDetails.current = {
+        fees: [],
+        minimum_Out: [],
         tokenOut_amount: new BigNumber(0),
-        isLoading: true,
+        feePerc: [],
+        isStable: [],
+        path: [],
+        isLoading: false,
+        priceImpact: new BigNumber(0),
         success: false,
-      });
+        exchangeRate: new BigNumber(0),
+      };
       loading.current = {
         isLoadingSecond: false,
         isLoadingfirst: false,
       };
-      setRouteData({ success: true, isloading: false });
     } else {
+      console.log('3');
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
         if (Object.keys(tokenOut).length !== 0) {
+          console.log('4');
           loading.current = {
             isLoadingSecond: true,
             isLoadingfirst: false,
           };
-          const res = calculateTokensOutWrapper(
+
+          computeAllPaths(
+            allPath.current,
             new BigNumber(input),
-            swapData.current.exchangeFee,
-            new BigNumber(slippage),
-            tokenIn.name,
-            tokenOut.name,
-            swapData.current.tokenIn_supply ?? undefined,
-            swapData.current.tokenOut_supply ?? undefined,
-            swapData.current.tokenIn_precision ?? undefined,
-            swapData.current.tokenOut_precision ?? undefined,
-            swapData.current.tezSupply ?? undefined,
-            swapData.current.ctezSupply ?? undefined,
-            swapData.current.target ?? undefined
-          );
-          loading.current = {
-            isLoadingSecond: false,
-            isLoadingfirst: false,
-          };
-          setSecondTokenAmount(res.tokenOut_amount);
-          setSwapDetails({
-            exchangeRate: res.exchangeRate,
-            fees: res.fees,
-            feePerc: res.feePerc,
-            minimum_Out: res.minimum_Out,
-            priceImpact: res.priceImpact,
-            tokenOut_amount: res.tokenOut_amount,
-            isLoading: false,
-            success: true,
+            new BigNumber(slippage)
+          ).then((res) => {
+            loading.current = {
+              isLoadingSecond: false,
+              isLoadingfirst: false,
+            };
+            routeDetails.current = {
+              fees: res.fees,
+              exchangeRate: new BigNumber(123),
+              priceImpact: new BigNumber(123),
+              feePerc: res.feePerc,
+              minimum_Out: res.minimumTokenOut,
+              path: res.path,
+              isStable: res.isStable,
+              tokenOut_amount: res.tokenOut_amount,
+              isLoading: false,
+              success: true,
+            };
+            setSecondTokenAmount(res.tokenOut_amount.toString());
           });
         }
       } else if (tokenType === 'tokenOut') {
@@ -282,7 +232,6 @@ function Swap(props: ISwapProps) {
 
         setTimeout(() => {
           setFirstTokenAmount('12');
-          setRouteData({ success: true, isloading: false });
         }, 1000);
       }
     }
@@ -330,7 +279,7 @@ function Swap(props: ISwapProps) {
     setSecondTokenAmount(firstTokenAmount);
 
     setFirstTokenAmount('');
-    setRouteData({ success: false, isloading: true });
+
     if (tokenOut.name) {
       setTokenIn({
         name: tokenOut.name,
@@ -375,6 +324,7 @@ function Swap(props: ISwapProps) {
       updateBalance();
     }
   }, [tokenIn, tokenOut, props, TOKEN]);
+  console.log(routeDetails.current);
 
   return (
     <>
@@ -406,21 +356,16 @@ function Swap(props: ISwapProps) {
           tokenPrice={tokenPrice}
           recepient={recepient}
           setRecepient={setRecepient}
-          routeData={routeData}
-          setRouteData={setRouteData}
-          swapDetails={swapDetails}
-          setSwapDetails={setSwapDetails}
-          swapData={swapData.current}
           setShowConfirmSwap={setShowConfirmSwap}
           showConfirmSwap={showConfirmSwap}
           setShowConfirmTransaction={setShowConfirmTransaction}
           showConfirmTransaction={showConfirmTransaction}
           setShowTransactionSubmitModal={setShowTransactionSubmitModal}
           showTransactionSubmitModal={showTransactionSubmitModal}
-          allBalance={allBalance.userBalance}
           loading={loading.current}
           setAllBalance={setAllBalance}
           resetAllValues={resetAllValues}
+          routeDetails={routeDetails.current}
         />
       </div>
       <SwapModal
