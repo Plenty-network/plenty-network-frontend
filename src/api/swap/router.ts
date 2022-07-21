@@ -39,7 +39,7 @@ const allPathHelper = (src : string , dest : string , visited : any , psf : stri
 }
 
 // Return Best Path and calculations
-export const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumber , slippage : BigNumber) :  Promise<{path : string[] , tokenOut_amount : BigNumber ,minimumTokenOut : BigNumber[] ,fees : BigNumber[] , feePerc : BigNumber[] , isStable : boolean[] }> => {
+const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumber , slippage : BigNumber) :  Promise<{path : string[] , tokenOut_amount : BigNumber ,minimumTokenOut : BigNumber[] ,fees : BigNumber[] , feePerc : BigNumber[] , priceImpact : BigNumber[] }> => {
 
     try {
         let bestPath;
@@ -52,6 +52,7 @@ export const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumb
             const fees: BigNumber[]  = [];
             const minimumTokenOut: BigNumber[]  = [];
             const feePerc: BigNumber[]  = [];
+            const priceImpact : BigNumber[] =[];
     
             const path = paths[i].split(" ");
     
@@ -79,6 +80,7 @@ export const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumb
                 minimumTokenOut.push(output.minimum_Out);
                 fees.push(output.fees);
                 feePerc.push(output.feePerc);
+                priceImpact.push(output.priceImpact);
             }
     
             // Update bestPath
@@ -90,6 +92,7 @@ export const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumb
                     bestPath.minimumTokenOut = minimumTokenOut;
                     bestPath.fees = fees;
                     bestPath.feePerc = feePerc;
+                    bestPath.priceImpact = priceImpact
                 }
             }else{
                 // add current path as best path
@@ -99,26 +102,16 @@ export const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumb
                     minimumTokenOut : minimumTokenOut,
                     fees : fees , 
                     feePerc : feePerc,
-                    isStable : [true]  //only initialising here
+                    priceImpact : priceImpact,
                 }
             }
     
     
         }
         
-        const isStable : boolean[] = [];
-        if(bestPath){
-        for(var x of bestPath.feePerc){
-            if(x.isEqualTo(new BigNumber(0.1)))
-            isStable.push(true);
-            else
-            isStable.push(false);
-        }
-        bestPath.isStable = isStable;
-        console.log(bestPath);
+    //    console.log(bestPath);
+        if(bestPath)
         return bestPath
-    
-    }
         else
         throw "Can not calculate Route";
         
@@ -129,10 +122,65 @@ export const computeAllPaths =async (paths : string[] , tokenIn_amount : BigNumb
             path : [],
             tokenOut_amount : new BigNumber(0),
             minimumTokenOut : [],
+            priceImpact : [],
             fees : [] , 
             feePerc : [],
-            isStable : []
         };
         return bestPath;
     }
+}
+
+export const computeAllPathsWrapper =async (paths : string[] , tokenIn_amount : BigNumber , slippage : BigNumber) : Promise<{path : string[] , tokenOut_amount : BigNumber , finalMinimumTokenOut : BigNumber , minimumTokenOut : BigNumber[] , finalPriceImpact : BigNumber , finalFeePerc : BigNumber , feePerc : BigNumber[] , isStable : boolean[] , exchangeRate : BigNumber }> => {
+
+    try {
+        const bestPath = await computeAllPaths(paths , tokenIn_amount , slippage );
+
+        const isStable : boolean[] = [];
+        let finalPriceImpact = new BigNumber(0);
+        let finalFeePerc = new BigNumber(0);
+    
+    
+        for(var x of bestPath.priceImpact){
+            finalPriceImpact = finalPriceImpact.plus(x);
+         } 
+    
+        for(var x of bestPath.feePerc){
+            finalFeePerc= finalFeePerc.plus(x);
+            if(x.isEqualTo(new BigNumber(0.1)))
+            isStable.push(true);
+            else
+            isStable.push(false);
+        }
+    
+        const exchangeRateCalculation = await computeAllPaths([bestPath.path.join(" ")] , new BigNumber(1) , new BigNumber(0));
+        
+        return{
+            path : bestPath.path,
+            tokenOut_amount : bestPath.tokenOut_amount,
+            finalMinimumTokenOut : bestPath.minimumTokenOut[bestPath.minimumTokenOut.length-1],
+            minimumTokenOut : bestPath.minimumTokenOut,
+            finalPriceImpact : finalPriceImpact,
+            finalFeePerc : finalFeePerc,
+            feePerc : bestPath.feePerc,
+            isStable : isStable,
+            exchangeRate : exchangeRateCalculation.tokenOut_amount
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return{
+            path : [],
+            tokenOut_amount : new BigNumber(0),
+            finalMinimumTokenOut : new BigNumber(0),
+            minimumTokenOut : [],
+            finalPriceImpact : new BigNumber(0),
+            finalFeePerc : new BigNumber(0),
+            feePerc : [],
+            isStable : [],
+            exchangeRate : new BigNumber(0)
+            
+        }
+        
+    }
+
 }

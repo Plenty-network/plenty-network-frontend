@@ -18,7 +18,7 @@ import {
   calculateTokensOutWrapper,
   loadSwapDataWrapper,
 } from '../../api/swap/wrappers';
-import { allPaths, computeAllPaths } from '../../api/swap/router';
+import { allPaths, computeAllPathsWrapper } from '../../api/swap/router';
 
 interface ISwapProps {
   className?: string;
@@ -31,7 +31,7 @@ interface ISwapProps {
 
 
 const res = allPaths('tez' , 'USDC.e');
-computeAllPaths(res , new BigNumber(1) , new BigNumber(0.5));
+computeAllPathsWrapper(res , new BigNumber(1) , new BigNumber(0.5));
 
 function Swap(props: ISwapProps) {
   const TOKEN = useAppSelector((state) => state.config.tokens);
