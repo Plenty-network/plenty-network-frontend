@@ -35,8 +35,8 @@ export function ShortCard (props: IShortCardProps) {
   <tr className='border-b border-b-borderCommon  bg-cardBackGround' >
     <tr className='flex justify-start items-center'>
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8 3.08288L8 12.9141" stroke="white" stroke-width="1.46829" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M11.4297 10.2328L8.00367 12.9141L4.57765 10.2328" stroke="white" stroke-width="1.46829" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8 3.08288L8 12.9141" stroke="white" strokeWidth="1.46829" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M11.4297 10.2328L8.00367 12.9141L4.57765 10.2328" stroke="white" strokeWidth="1.46829" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
         <div className='flex flex-col'>
           <div className='flex items-center gap-1'>

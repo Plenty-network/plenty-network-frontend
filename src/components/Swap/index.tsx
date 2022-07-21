@@ -30,8 +30,8 @@ interface ISwapProps {
 }
 
 
-const res = allPaths('tez' , 'USDC.e');
-computeAllPaths(res , new BigNumber(1) , new BigNumber(0.5));
+// const res = allPaths('tez' , 'USDC.e');
+// computeAllPaths(res , new BigNumber(1) , new BigNumber(0.5));
 
 function Swap(props: ISwapProps) {
   const TOKEN = useAppSelector((state) => state.config.tokens);
@@ -145,7 +145,7 @@ function Swap(props: ISwapProps) {
 
   useEffect(() => {
     if (props.otherProps.walletAddress) {
-      getCompleteUserBalace(props.otherProps.walletAddress).then((response) => {
+      getCompleteUserBalace(props.otherProps.walletAddress).then((response:any) => {
         setAllBalance(response);
       });
     }
