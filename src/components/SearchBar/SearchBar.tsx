@@ -18,6 +18,7 @@ function SearchBar(props: ISearchBarProps) {
     >
       <input
         ref={props.inputRef}
+        autoFocus
         className="bg-transprent relative top-[1px] w-full font-body3 outline-none"
         placeholder="Search name or paste address"
         onChange={props.onChange}

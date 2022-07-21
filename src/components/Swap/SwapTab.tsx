@@ -562,7 +562,7 @@ function SwapTab(props: ISwapTabProps) {
                 </div>
               ) : (
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {Number(props.routeDetails.feePerc[0]).toFixed(2)}
+                  {Number(props.routeDetails.finalFeePerc).toFixed(2)}
                 </div>
               )}
             </div>
@@ -593,6 +593,9 @@ function SwapTab(props: ISwapTabProps) {
                               className="flex items-center "
                               key={token?.name}
                             >
+                              {idx === swapRoute.length - 1 && (
+                                <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                              )}
                               <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
                                 <span className="w-[28px] h-[28px]">
                                   <Image
@@ -602,24 +605,42 @@ function SwapTab(props: ISwapTabProps) {
                                   />
                                 </span>
                               </div>
-                              <div className="w-2 h-2 bg-card-500 z-50"></div>
+                              {idx === 0 && (
+                                <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                              )}
                             </div>
                           )}
+
                           {idx !== swapRoute.length - 1 && (
                             <div className="flex items-center">
-                              <div className="w-2 h-2 bg-card-500 z-50"></div>
-                              <div className="relative  rounded-2xl h-[32px] bg-card-600 p-px flex">
-                                <span className="relative -left-[7px] flex items-center">
-                                  <div className="  relative left-5 z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
-                                    <span className="w-[18px] h-[18px]">
-                                      <Image
-                                        src={stableSwap}
-                                        width={'18px'}
-                                        height={'18px'}
-                                      />
-                                    </span>
-                                  </div>
-                                  <div className="relative left-2.5 z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                              <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                              <div
+                                className={clsx(
+                                  'relative  rounded-2xl h-[32px] bg-card-600 p-px flex',
+                                  props.routeDetails.isStable[idx]
+                                    ? 'w-[130px]'
+                                    : 'w-[114px]'
+                                )}
+                              >
+                                <span className=" flex items-center">
+                                  {props.routeDetails.isStable[idx] && (
+                                    <div className="   z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
+                                      <span className="w-[18px] h-[18px]">
+                                        <Image
+                                          src={stableSwap}
+                                          width={'18px'}
+                                          height={'18px'}
+                                        />
+                                      </span>
+                                    </div>
+                                  )}
+                                  <div
+                                    className={clsx(
+                                      'relative   z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full',
+                                      props.routeDetails.isStable[idx] &&
+                                        'right-[10px]'
+                                    )}
+                                  >
                                     <span className="w-[28px] h-[28px]">
                                       <Image
                                         src={token?.image}
@@ -628,7 +649,14 @@ function SwapTab(props: ISwapTabProps) {
                                       />
                                     </span>
                                   </div>
-                                  <div className="relative z-30 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                                  <div
+                                    className={clsx(
+                                      'relative  z-30 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full',
+                                      props.routeDetails.isStable[idx]
+                                        ? 'right-5'
+                                        : 'right-[10px]'
+                                    )}
+                                  >
                                     <span className="w-[28px] h-[28px]">
                                       <Image
                                         src={swapRoute[index]?.image}
@@ -637,7 +665,14 @@ function SwapTab(props: ISwapTabProps) {
                                       />
                                     </span>
                                   </div>
-                                  <div className="relative ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4">
+                                  <div
+                                    className={clsx(
+                                      'relative right-[22px] ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4',
+                                      props.routeDetails.isStable[idx]
+                                        ? 'right-[22px]'
+                                        : 'right-[12px]'
+                                    )}
+                                  >
                                     {Number(
                                       props.routeDetails.feePerc[idx]
                                     ).toFixed(2)}
@@ -645,7 +680,7 @@ function SwapTab(props: ISwapTabProps) {
                                   </div>
                                 </span>
                               </div>
-                              <div className="w-2 h-2 bg-card-500 z-50"></div>
+                              <div className="w-1.5 h-2 bg-card-500 z-50"></div>
                             </div>
                           )}
                         </>
@@ -674,7 +709,7 @@ function SwapTab(props: ISwapTabProps) {
           tokenOut={props.tokenOut}
           firstTokenAmount={props.firstTokenAmount}
           secondTokenAmount={props.secondTokenAmount.toString()}
-          swapDetails={props.routeDetails}
+          routeDetails={props.routeDetails}
           onClick={handleConfirmSwap}
         />
       )}
