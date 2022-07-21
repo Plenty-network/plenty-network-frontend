@@ -88,6 +88,7 @@ function Swap(props: ISwapProps) {
   }>({ success: false, userBalance: {} });
 
   const allPath = React.useRef<string[]>([]);
+  const allPathSwapData = React.useRef<any[][]>([]);
 
   useEffect(() => {
     getTokenPrices().then((response) => {
@@ -124,12 +125,19 @@ function Swap(props: ISwapProps) {
             exchangeRate: new BigNumber(0),
           });
 
-      const res = allPaths(tokenIn.name, tokenOut.name);
-      allPath.current = res;
-      loading.current = {
-        isLoadingfirst: false,
-        isLoadingSecond: false,
-      };
+          // ISHWARYAA CHECK HERE , IMPLEMENTATION IS WRONG but i did for testing purposes
+      allPaths(tokenIn.name, tokenOut.name).then((res) => {
+        console.log('got data');
+        allPath.current = res.paths;
+        allPathSwapData.current = res.swapData;
+
+        loading.current = {
+          isLoadingfirst: false,
+          isLoadingSecond: false,
+        };
+        
+
+      });
       if (firstTokenAmount !== '') {
         loading.current = {
           isLoadingfirst: false,
@@ -139,6 +147,7 @@ function Swap(props: ISwapProps) {
 
         handleSwapTokenInput(firstTokenAmount, 'tokenIn');
       }
+      
     }
   }, [tokenIn, tokenOut]);
 
@@ -191,11 +200,12 @@ function Swap(props: ISwapProps) {
             isLoadingfirst: false,
           };
 
-          computeAllPathsWrapper(
+          const res = computeAllPathsWrapper(
             allPath.current,
             new BigNumber(input),
-            new BigNumber(slippage)
-          ).then((res) => {
+            new BigNumber(slippage),
+            allPathSwapData.current
+          );
             loading.current = {
               isLoadingSecond: false,
               isLoadingfirst: false,
@@ -212,7 +222,7 @@ function Swap(props: ISwapProps) {
               exchangeRate: res.exchangeRate,
             };
             setSecondTokenAmount(res.tokenOut_amount.toString());
-          });
+          
         }
       } else if (tokenType === 'tokenOut') {
         setSecondTokenAmount(input);
