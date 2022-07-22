@@ -109,7 +109,7 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
         
       const tokenPrice: { [id: string] : number; } = {};  
       const tokens = Object.keys(TOKEN);
-      const tokenAddress : { [id: string] : { contractAddress : string; }}= {}
+      const tokenAddress : { [id: string] : { contractAddress? : string; }}= {}
       Object.keys(TOKEN).forEach(function(key) {
         tokenAddress[key] = {contractAddress : TOKEN[key].address}
       })
