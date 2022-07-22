@@ -60,3 +60,25 @@ export const getDexType = (tokenIn: string, tokenOut: string): string => {
   });
   return type;
 };
+
+/**
+ * Returns the LP token symbol for given pair of tokens.
+ * @param tokenOneSymbol - Symbol of token one of the pair.
+ * @param tokenTwoSymbol - Symbol of token two of the pair.
+ * @returns Symbol of the LP token.
+ */
+export const getLpTokenSymbol = (tokenOneSymbol: string, tokenTwoSymbol: string): string | undefined => {
+  const state = store.getState();
+  const AMMs = state.config.AMMs;
+
+  const tokensAmm = Object.keys(AMMs).find(
+    (ammAddress) =>
+      (AMMs[ammAddress].token1.symbol === tokenOneSymbol &&
+        AMMs[ammAddress].token2.symbol === tokenTwoSymbol) ||
+      (AMMs[ammAddress].token2.symbol === tokenOneSymbol &&
+        AMMs[ammAddress].token1.symbol === tokenTwoSymbol)
+  );
+  
+  return tokensAmm ? AMMs[tokensAmm].lpToken.symbol : undefined;
+
+};

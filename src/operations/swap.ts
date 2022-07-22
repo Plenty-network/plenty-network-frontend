@@ -6,7 +6,7 @@ import {
 } from '../common/wallet';
 import { store } from '../redux';
 import { BigNumber } from 'bignumber.js';
-import { TokenType } from '../config/types';
+import { TokenType, TokenVariant } from '../config/types';
 import { OpKind } from '@taquito/taquito';
 import { routerSwap } from './router';
 
@@ -154,7 +154,7 @@ const swapTokens = async (
     const tokenInId = TOKEN_IN.tokenId ?? 0;
     const tokenOutAddress = TOKEN_OUT.address;
     const tokenOutId = TOKEN_OUT.tokenId ?? 0;
-    const tokenInAddress = TOKEN_IN.address;
+    const tokenInAddress = TOKEN_IN.address as string;
     const tokenInInstance: any = await Tezos.contract.at(tokenInAddress);
     const dexContractInstance: any = await Tezos.contract.at(
       dexContractAddress
@@ -167,7 +167,7 @@ const swapTokens = async (
 
     let batch = null;
     // Approve call for FA1.2 type token
-    if (TOKEN_IN.variant === TokenType.FA12) {
+    if (TOKEN_IN.variant === TokenVariant.FA12) {
       batch = Tezos.wallet
         .batch()
         .withContractCall(
@@ -266,7 +266,7 @@ async function ctez_to_tez(
     const TOKEN_IN = TOKEN[tokenIn];
 
     const contractAddress = getDexAddress(tokenIn, tokenOut);
-    const CTEZ = TOKEN_IN.address;
+    const CTEZ = TOKEN_IN.address as string;
     const tokenInDecimals = TOKEN_IN.decimals;
     const contract = await Tezos.wallet.at(contractAddress);
     const ctez_contract = await Tezos.wallet.at(CTEZ);
