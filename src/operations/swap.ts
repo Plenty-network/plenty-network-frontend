@@ -8,24 +8,41 @@ import { dappClient } from '../common/wallet-withts';
 
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,
-  path : string[],
-  minimum_Out_All : BigNumber[],
+  path: string[],
+  minimum_Out_All: BigNumber[],
   caller: string,
   recipent: string,
   transactionSubmitModal: any,
   resetAllValues: any,
-  setShowConfirmTransaction: any,
-  setShowConfirmSwap : any,
-
+  setShowConfirmTransaction: any
 ): Promise<{ success: boolean; operationId: any; error: any }> => {
   try {
     let res;
-    if(path.length === 2){
+    if (path.length === 2) {
       // directSwap
-      res = await directSwapWrapper(path[0] , path[1] , minimum_Out_All[0] , recipent ,tokenInAmount ,caller ,transactionSubmitModal ,resetAllValues ,setShowConfirmTransaction);
-    }else{
+      res = await directSwapWrapper(
+        path[0],
+        path[1],
+        minimum_Out_All[0],
+        recipent,
+        tokenInAmount,
+        caller,
+        transactionSubmitModal,
+        resetAllValues,
+        setShowConfirmTransaction
+      );
+    } else {
       // routerSwap
-      res = await routerSwap(path ,minimum_Out_All ,caller , recipent ,tokenInAmount ,transactionSubmitModal ,setShowConfirmSwap ,resetAllValues ,setShowConfirmTransaction);
+      res = await routerSwap(
+        path,
+        minimum_Out_All,
+        caller,
+        recipent,
+        tokenInAmount,
+        transactionSubmitModal,
+        resetAllValues,
+        setShowConfirmTransaction
+      );
     }
     return {
       success: res.success,
@@ -156,7 +173,7 @@ const swapTokens = async (
         )
         .withContractCall(
           dexContractInstance.methods.Swap(
-            minimumTokenOut.toFixed(0),
+            minimumTokenOut.toString(),
             recipent,
             tokenOutAddress,
             tokenOutId,
@@ -181,7 +198,7 @@ const swapTokens = async (
         )
         .withContractCall(
           dexContractInstance.methods.Swap(
-            minimumTokenOut.toFixed(0),
+            minimumTokenOut.toString(),
             recipent,
             tokenOutAddress,
             tokenOutId,
@@ -264,7 +281,7 @@ async function ctez_to_tez(
       .withContractCall(
         contract.methods.ctez_to_tez(
           tokenInAmount.multipliedBy(10 ** tokenInDecimals).toString(),
-          minimumTokenOut.multipliedBy(10 ** tokenInDecimals).toFixed(0),
+          minimumTokenOut.multipliedBy(10 ** tokenInDecimals).toString(),
           recipent
         )
       )
@@ -326,12 +343,12 @@ async function tez_to_ctez(
         kind: OpKind.TRANSACTION,
         ...contract.methods
           .tez_to_ctez(
-            minimumTokenOut.multipliedBy(10 ** tokenOutDecimals).toFixed(0),
+            minimumTokenOut.multipliedBy(10 ** tokenOutDecimals).toString(),
             recipent
           )
           .toTransferParams({
             amount: Number(
-              tokenInAmount.multipliedBy(10 ** tokenInDecimals).toFixed(0)
+              tokenInAmount.multipliedBy(10 ** tokenInDecimals).toString()
             ),
             mutez: true,
           }),

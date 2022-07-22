@@ -194,13 +194,23 @@ interface IWrappedToken {
   READ_TYPE: TTokenType;
 }
 
+export interface IAmmContracts {
+  [key: string]: IAMM;
+}
+
+export interface ITokens {
+  [key: string]: ITokenInterface;
+}
+
 export interface ITokenInterface {
   address?:  string;
   symbol:   string;
+  variant: TokenVariant;
   type:     TTokenType;
   tokenId?:  number;
   decimals: number;
   mapId?:    number;
+  pairs?: string[];
 }
 
 export interface IAMM {
@@ -208,6 +218,8 @@ export interface IAMM {
   token1:  ITokenInterface;
   token2:  ITokenInterface;
   type:    AMM_TYPE;
+  gaugeAddress?: string;
+  bribeAddress?: string;
   token1Precision?: number,
   token2Precision?: number,
   lpToken: ITokenInterface;
@@ -222,4 +234,18 @@ export enum TokenType{
   FA12 = 'FA1.2',
   FA2 = 'FA2',
   TEZ = 'TEZ'
+}
+
+export enum TokenVariant {
+  TEZ = 'TEZ',
+  FA12 = 'FA1.2',
+  FA2 = 'FA2',
+}
+
+
+export interface IContractsConfig {
+  TOKEN: ITokens,
+  LP: ITokens,
+  STANDARD: ITokens,
+  AMM: IAmmContracts,
 }

@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchConfig } from '../../api/util/fetchConfig';
+import { IAmmContracts, ITokens } from '../../config/types';
 
 interface ConfigState {
-  tokens: { [x: string]: any };
-  AMMs: { [x: string]: any };
-  standard : { [x: string]: any };
-  lp  : { [x: string]: any };
+  tokens: ITokens;
+  AMMs: IAmmContracts;
+  standard : ITokens;
+  lp  : ITokens;
 }
 
 const initialState: ConfigState = {

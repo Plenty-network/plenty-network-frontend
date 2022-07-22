@@ -3,9 +3,13 @@ import Button from '../Button/Button';
 import { PopUpModal } from '../Modal/popupModal';
 import Image from 'next/image';
 import ratesrefresh from '../../../src/assets/icon/swap/ratesrefresh.svg';
+
+import { useMemo } from 'react';
 import arrow from '../../../src/assets/icon/swap/downArrow.svg';
 import info from '../../../src/assets/icon/swap/info.svg';
 import { BigNumber } from 'bignumber.js';
+import stableSwap from '../../../src/assets/icon/swap/stableswapViolet.svg';
+import { tokens } from '../../constants/Tokens';
 
 interface IConfirmSwapProps {
   show: boolean;
@@ -13,14 +17,15 @@ interface IConfirmSwapProps {
   tokenIn: { name: string; image: any };
   tokenOut: { name: string; image: any };
   firstTokenAmount: string | number;
-  swapDetails: {
-    exchangeRate: BigNumber;
-    fees: BigNumber;
-    feePerc: BigNumber;
+  routeDetails: {
+    path: string[];
     minimum_Out: BigNumber;
+    minimumTokenOut: BigNumber[];
     priceImpact: BigNumber;
-    tokenOut_amount: BigNumber;
-    isLoading: boolean;
+    finalFeePerc: BigNumber;
+    feePerc: BigNumber[];
+    isStable: boolean[];
+    exchangeRate: BigNumber;
     success: boolean;
   };
   secondTokenAmount: string | number;
@@ -30,9 +35,16 @@ function ConfirmSwap(props: IConfirmSwapProps) {
   const closeModal = () => {
     props.setShow(false);
   };
-  const enableExpertMode = () => {
-    props.setShow(false);
-  };
+  const swapRoute = useMemo(() => {
+    if (props.routeDetails.path?.length >= 2) {
+      return props.routeDetails.path.map((tokenName) =>
+        tokens.find((token) => token.name === tokenName)
+      );
+    }
+
+    return null;
+  }, [props.routeDetails.path]);
+
   return props.show ? (
     <PopUpModal title="Confirm Swap" onhide={closeModal}>
       {
@@ -101,7 +113,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                         : props.tokenIn.name === 'ctez'
                         ? 'CTEZ'
                         : props.tokenIn.name
-                    } = ${props.swapDetails.exchangeRate.toFixed(3)} ${
+                    } = ${props.routeDetails.exchangeRate.toFixed(3)} ${
                       props.tokenOut.name === 'tez'
                         ? 'TEZ'
                         : props.tokenOut.name === 'ctez'
@@ -128,7 +140,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {` ${Number(props.swapDetails.minimum_Out).toFixed(4)} ${
+                  {` ${Number(props.routeDetails.minimum_Out).toFixed(4)} ${
                     props.tokenOut.name === 'tez'
                       ? 'TEZ'
                       : props.tokenOut.name === 'ctez'
@@ -147,7 +159,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {`${props.swapDetails.priceImpact.toFixed(4)} %`}
+                  {`${props.routeDetails.priceImpact.toFixed(4)} %`}
                 </div>
               </div>
               <div className="flex mt-2">
@@ -159,7 +171,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {props.swapDetails.feePerc.toFixed(2)}
+                  {props.routeDetails.finalFeePerc.toFixed(2)}
                 </div>
               </div>
               <div className="border-t border-text-800 mt-[18px]"></div>
@@ -171,6 +183,113 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                     <Image src={info} width={'15px'} height={'15px'} />
                   </span>
                 </div>
+                <>
+                  <div className="border-dashed relative top-[24px]   border-t-2 border-muted-50 mx-2"></div>
+                  <div className="mt-2 flex justify-between ">
+                    {swapRoute?.map((token, idx) => {
+                      const index = idx + 1;
+                      return (
+                        <>
+                          {(idx === 0 || idx === swapRoute.length - 1) && (
+                            <div
+                              className="flex items-center "
+                              key={token?.name}
+                            >
+                              {idx === swapRoute?.length - 1 && (
+                                <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                              )}
+                              <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                                <span className="w-[28px] h-[28px]">
+                                  <Image
+                                    src={token?.image}
+                                    width={'28px'}
+                                    height={'28px'}
+                                  />
+                                </span>
+                              </div>
+                              {idx === 0 && (
+                                <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                              )}
+                            </div>
+                          )}
+
+                          {idx !== swapRoute.length - 1 && (
+                            <div className="flex items-center">
+                              <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                              <div
+                                className={clsx(
+                                  'relative  rounded-2xl h-[32px] bg-card-600 p-px flex',
+                                  props.routeDetails.isStable[idx]
+                                    ? 'w-[130px]'
+                                    : 'w-[114px]'
+                                )}
+                              >
+                                <span className=" flex items-center">
+                                  {props.routeDetails.isStable[idx] && (
+                                    <div className="   z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
+                                      <span className="w-[18px] h-[18px]">
+                                        <Image
+                                          src={stableSwap}
+                                          width={'18px'}
+                                          height={'18px'}
+                                        />
+                                      </span>
+                                    </div>
+                                  )}
+                                  <div
+                                    className={clsx(
+                                      'relative   z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full',
+                                      props.routeDetails.isStable[idx] &&
+                                        'right-[10px]'
+                                    )}
+                                  >
+                                    <span className="w-[28px] h-[28px]">
+                                      <Image
+                                        src={token?.image}
+                                        width={'28px'}
+                                        height={'28px'}
+                                      />
+                                    </span>
+                                  </div>
+                                  <div
+                                    className={clsx(
+                                      'relative  z-30 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full',
+                                      props.routeDetails.isStable[idx]
+                                        ? 'right-5'
+                                        : 'right-[10px]'
+                                    )}
+                                  >
+                                    <span className="w-[28px] h-[28px]">
+                                      <Image
+                                        src={swapRoute[index]?.image}
+                                        width={'28px'}
+                                        height={'28px'}
+                                      />
+                                    </span>
+                                  </div>
+                                  <div
+                                    className={clsx(
+                                      'relative right-[22px] ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4',
+                                      props.routeDetails.isStable[idx]
+                                        ? 'right-[22px]'
+                                        : 'right-[12px]'
+                                    )}
+                                  >
+                                    {Number(
+                                      props.routeDetails.feePerc[idx]
+                                    ).toFixed(2)}
+                                    %
+                                  </div>
+                                </span>
+                              </div>
+                              <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })}
+                  </div>
+                </>
               </div>
             </div>
             <div className="mt-4">
