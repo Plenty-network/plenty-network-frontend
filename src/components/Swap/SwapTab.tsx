@@ -20,13 +20,11 @@ import loader from '../../assets/animations/shimmer-swap.json';
 
 import { BigNumber } from 'bignumber.js';
 import { tokens } from '../../constants/Tokens';
-import { allSwapWrapper, directSwapWrapper } from '../../operations/swap';
+import { allSwapWrapper } from '../../operations/swap';
 import ExpertModePopup from '../ExpertMode';
 import ConfirmSwap from './ConfirmSwap';
 import ConfirmTransaction from '../ConfirmTransaction';
 import TransactionSubmitted from '../TransactionSubmitted';
-import { getCompleteUserBalace } from '../../api/util/balance';
-import Tooltip from '../Tooltip/Tooltip';
 
 interface ISwapTabProps {
   className?: string;
@@ -57,6 +55,7 @@ interface ISwapTabProps {
   setFirstTokenAmount: any;
   setTokenIn: any;
   setTokenType: any;
+  allPath: string[];
   setTokenOut: any;
   handleSwapTokenInput: (
     input: string | number,
