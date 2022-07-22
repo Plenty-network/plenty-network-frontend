@@ -32,7 +32,7 @@ export const fetchWallet = createAsyncThunk(
   'wallet/fetchWallet',
   async (thunkAPI) => {
     const res = await FetchWalletAPI();
-    return res;
+    return res.wallet;
   }
 );
 
