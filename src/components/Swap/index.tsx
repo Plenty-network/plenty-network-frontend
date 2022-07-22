@@ -125,18 +125,13 @@ function Swap(props: ISwapProps) {
             exchangeRate: new BigNumber(0),
           });
 
-          // ISHWARYAA CHECK HERE , IMPLEMENTATION IS WRONG but i did for testing purposes
       allPaths(tokenIn.name, tokenOut.name).then((res) => {
-        console.log('got data');
-        allPath.current = res.paths;
-        allPathSwapData.current = res.swapData;
-
         loading.current = {
           isLoadingfirst: false,
           isLoadingSecond: false,
         };
-        
-
+        allPath.current = res.paths;
+        allPathSwapData.current = res.swapData;
       });
       if (firstTokenAmount !== '') {
         loading.current = {
@@ -147,7 +142,6 @@ function Swap(props: ISwapProps) {
 
         handleSwapTokenInput(firstTokenAmount, 'tokenIn');
       }
-      
     }
   }, [tokenIn, tokenOut]);
 
@@ -206,23 +200,22 @@ function Swap(props: ISwapProps) {
             new BigNumber(slippage),
             allPathSwapData.current
           );
-            loading.current = {
-              isLoadingSecond: false,
-              isLoadingfirst: false,
-            };
-            routeDetails.current = {
-              minimum_Out: res.finalMinimumTokenOut,
-              minimumTokenOut: res.minimumTokenOut,
-              feePerc: res.feePerc,
-              isStable: res.isStable,
-              path: res.path,
-              finalFeePerc: res.finalFeePerc,
-              priceImpact: res.finalPriceImpact,
-              success: true,
-              exchangeRate: res.exchangeRate,
-            };
-            setSecondTokenAmount(res.tokenOut_amount.toString());
-          
+          loading.current = {
+            isLoadingSecond: false,
+            isLoadingfirst: false,
+          };
+          routeDetails.current = {
+            minimum_Out: res.finalMinimumTokenOut,
+            minimumTokenOut: res.minimumTokenOut,
+            feePerc: res.feePerc,
+            isStable: res.isStable,
+            path: res.path,
+            finalFeePerc: res.finalFeePerc,
+            priceImpact: res.finalPriceImpact,
+            success: true,
+            exchangeRate: res.exchangeRate,
+          };
+          setSecondTokenAmount(res.tokenOut_amount.toString());
         }
       } else if (tokenType === 'tokenOut') {
         setSecondTokenAmount(input);
