@@ -88,6 +88,7 @@ function Swap(props: ISwapProps) {
   }>({ success: false, userBalance: {} });
 
   const allPath = React.useRef<string[]>([]);
+  const [allPathState, setAllPathState] = useState<string[]>([]);
   const allPathSwapData = React.useRef<any[][]>([]);
 
   useEffect(() => {
@@ -131,6 +132,7 @@ function Swap(props: ISwapProps) {
           isLoadingSecond: false,
         };
         allPath.current = res.paths;
+        setAllPathState(res.paths);
         allPathSwapData.current = res.swapData;
       });
       if (firstTokenAmount !== '') {
@@ -355,6 +357,7 @@ function Swap(props: ISwapProps) {
           setAllBalance={setAllBalance}
           resetAllValues={resetAllValues}
           routeDetails={routeDetails.current}
+          allPath={allPathState}
         />
       </div>
       <SwapModal
