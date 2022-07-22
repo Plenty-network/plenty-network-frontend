@@ -1,17 +1,18 @@
 import axios from 'axios';
 import Config from '../../config/config';
+import { IAmmContracts, IContractsConfig, ITokens } from '../../config/types';
 import { store, useAppSelector } from '../../redux';
 
-export const fetchConfig = async () => {
+export const fetchConfig = async () : Promise<IContractsConfig> => {
   const token_response = await axios.get(Config.TOKENS_CONFIG);
   const lp_response = await axios.get(Config.LP_CONFIG);
   const standard_response = await axios.get(Config.STANDARD_CONFIG);
   const amms_response = await axios.get(Config.AMM_CONFIG);
 
-  const TOKEN: { [x: string]: any } = token_response.data;
-  const LP: { [x: string]: any } = lp_response.data;
-  const STANDARD: { [x: string]: any } = standard_response.data;
-  const AMM: { [x: string]: any } = amms_response.data;
+  const TOKEN: ITokens = token_response.data;
+  const LP: ITokens = lp_response.data;
+  const STANDARD: ITokens = standard_response.data;
+  const AMM: IAmmContracts = amms_response.data;
   return {
     TOKEN: TOKEN,
     LP: LP,
