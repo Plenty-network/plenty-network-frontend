@@ -4,7 +4,7 @@ import { BigNumber } from 'bignumber.js';
 import { TokenType } from '../config/types';
 import { OpKind } from '@taquito/taquito';
 import { routerSwap } from './router';
-import { dappClient } from '../common/wallet-withts';
+import { dappClient } from '../common/walletconnect';
 
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,

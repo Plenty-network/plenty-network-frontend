@@ -1,6 +1,6 @@
 import { NetworkType } from '@airgap/beacon-sdk';
 import {   connectedNetwork , rpcNode } from '../../common/wallet';
-import { dappClient } from '../../common/wallet-withts';
+import { dappClient } from '../../common/walletconnect';
 
 export const ConnectWalletAPI = async () => {
   try {

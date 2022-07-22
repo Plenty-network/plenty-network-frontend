@@ -4,7 +4,7 @@ import { BigNumber } from 'bignumber.js';
 import { TokenType } from '../config/types';
 import { MichelsonMap, OpKind } from '@taquito/taquito';
 import Config from '../config/config';
-import { dappClient } from '../common/wallet-withts';
+import { dappClient } from '../common/walletconnect';
 
 export const routerSwap = async (
   path: string[],

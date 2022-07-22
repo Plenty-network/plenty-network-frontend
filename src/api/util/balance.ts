@@ -14,7 +14,7 @@ import {
   rpcNode,
 } from '../../common/wallet';
 import { store } from '../../redux';
-import { dappClient } from '../../common/wallet-withts';
+import { dappClient } from '../../common/walletconnect';
 
 /**
  * Returns packed key (expr...) which will help to fetch user specific data from bigmap directly using rpc.
