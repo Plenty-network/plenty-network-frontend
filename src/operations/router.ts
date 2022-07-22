@@ -6,7 +6,7 @@ import {
 } from '../common/wallet';
 import { store } from '../redux';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, TokenVariant } from '../config/types';
+import { TokenVariant } from '../config/types';
 import { MichelsonMap, OpKind } from '@taquito/taquito';
 import Config from '../config/config';
 
