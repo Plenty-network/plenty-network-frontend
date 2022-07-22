@@ -9,9 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@airgap/beacon-sdk": "^3.0.0",
+    "@reduxjs/toolkit": "^1.8.2",
+    "@taquito/beacon-wallet": "^13.0.0",
+    "@taquito/michel-codec": "^10.1.1",
+    "@taquito/taquito": "^12.0.3",
+    "clsx": "^1.1.1",
+    "conseiljs": "^5.1.0",
+    "lottie-react": "^2.3.1",
     "next": "12.1.6",
-    "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-redux": "^8.0.2"
   },
   "devDependencies": {
     "@types/node": "17.0.35",
