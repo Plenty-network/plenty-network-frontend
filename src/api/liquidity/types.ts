@@ -10,3 +10,16 @@ export interface IPnlpBalanceResponse {
   balance: string;
   error?: string;
 }
+
+export interface IPnlpEstimateResponse {
+  success: boolean;
+  pnlpEstimate: string;
+  error?: string;
+}
+
+export interface IOutputTokensAmountResponse {
+  success: boolean;
+  tokenOneAmount: string;
+  tokenTwoAmount: string;
+  error?: string;
+}
