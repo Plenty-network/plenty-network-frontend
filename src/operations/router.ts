@@ -6,7 +6,7 @@ import {
 } from '../common/wallet';
 import { store } from '../redux';
 import { BigNumber } from 'bignumber.js';
-import { TokenType } from '../config/types';
+import { TokenVariant } from '../config/types';
 import { MichelsonMap, OpKind } from '@taquito/taquito';
 import Config from '../config/config';
 
@@ -56,7 +56,7 @@ export const routerSwap = async (
     const tokenInCallType = TOKEN_IN.variant;
 
     let batch = null;
-    if (tokenInCallType === TokenType.TEZ) {
+    if (tokenInCallType === TokenVariant.TEZ) {
       batch = Tezos.wallet.batch([
         {
           kind: OpKind.TRANSACTION,
@@ -83,8 +83,8 @@ export const routerSwap = async (
       //   success: true,
       // };
     } else {
-      const tokenInInstance: any = await Tezos.contract.at(TOKEN_IN.address);
-      if (tokenInCallType === TokenType.FA12) {
+      const tokenInInstance: any = await Tezos.contract.at(TOKEN_IN.address as string);
+      if (tokenInCallType === TokenVariant.FA12) {
         batch = Tezos.wallet
           .batch()
           .withContractCall(
