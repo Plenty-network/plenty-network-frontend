@@ -8,7 +8,7 @@ import {
   type5MapIds,
 } from '../../constants/global';
 import BigNumber from 'bignumber.js';
-import { TokenType } from '../../config/types';
+import { TokenType, TokenVariant } from '../../config/types';
 import { packDataBytes, unpackDataBytes } from '@taquito/michel-codec';
 import {
   CheckIfWalletConnected,
@@ -25,13 +25,13 @@ import { store } from '../../redux';
  * @param type - FA1.2 OR FA2
  */
 export const getPackedKey = (
-  tokenId: string,
+  tokenId: number,
   address: string,
-  type: TokenType
+  type: TokenVariant
 ): string => {
   const accountHex: string = `0x${TezosMessageUtils.writeAddress(address)}`;
   let packedKey = null;
-  if (type === TokenType.FA2) {
+  if (type === TokenVariant.FA2) {
     packedKey = TezosMessageUtils.encodeBigMapKey(
       // eslint-disable-next-line no-undef
       Buffer.from(
@@ -140,23 +140,23 @@ export const getUserBalanceByRpc = async (
       const mapId = token.mapId;
       const type = token.variant;
       const decimal: number = token.decimals;
-      const tokenId: string = token.tokenId ?? '0';
-      const packedKey = getPackedKey(tokenId, address, type as TokenType);
+      const tokenId: number = token.tokenId ?? 0;
+      const packedKey = getPackedKey(tokenId, address, type as TokenVariant);
       const url = `${rpcNode}chains/main/blocks/head/context/big_maps/${mapId}/${packedKey}`;
       const response = await axios.get(url);
 
       const balance = (() => {
         // IIFE
         let _balance;
-        if (type1MapIds.includes(mapId)) {
+        if (type1MapIds.includes(mapId as number)) {
           _balance = response.data.args[0].args[1].int;
-        } else if (type2MapIds.includes(mapId)) {
+        } else if (type2MapIds.includes(mapId as number)) {
           _balance = response.data.args[1].int;
-        } else if (type3MapIds.includes(mapId)) {
+        } else if (type3MapIds.includes(mapId as number)) {
           _balance = response.data.args[0].int;
-        } else if (type4MapIds.includes(mapId)) {
+        } else if (type4MapIds.includes(mapId as number)) {
           _balance = response.data.int;
-        } else if (type5MapIds.includes(mapId)) {
+        } else if (type5MapIds.includes(mapId as number)) {
           _balance = response.data.args[0][0].args[1].int;
         } else {
           _balance = response.data.args[1].int;
