@@ -3,6 +3,7 @@ import Image from 'next/image';
 import * as React from 'react';
 import HeadInfo from '../../src/components/HeadInfo';
 import { CardHeader } from '../../src/components/Pools/Cardheader';
+import { ShortCard as PoolsTable} from '../../src/components/Pools/ShortCard';
 import { SideBarHOC } from '../../src/components/Sidebar/SideBarHOC';
 export interface IIndexProps {
 }
@@ -20,6 +21,7 @@ export default function kom (props: IIndexProps) {
         <div >
           <HeadInfo className='md:px-3'/>
           <CardHeader className='md:px-3'/>
+          <PoolsTable className='px-5 py-4 '/>
           {/* poolsTable */}
         </div>
       </SideBarHOC>

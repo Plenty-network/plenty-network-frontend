@@ -9,13 +9,17 @@ export const configName = Config.NAME;
 export const rpcNode = Config.RPC_NODES[connectedNetwork];
 
 // Beacon Wallet instance
-export const wallet = new BeaconWallet({
-  name: configName,
-  preferredNetwork: connectedNetwork as NetworkType,
-});
+function useWallet() {
+  const wallet = new BeaconWallet({
+    name: configName,
+    preferredNetwork: connectedNetwork as NetworkType,
+  });
+  return wallet;
+}
 
 // Tezos instance
 export const tezos = new TezosToolkit(rpcNode);
+export const wallet = useWallet();
 tezos.setWalletProvider(wallet);
 tezos.setRpcProvider(rpcNode);
 

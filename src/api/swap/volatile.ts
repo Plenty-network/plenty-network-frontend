@@ -1,7 +1,8 @@
-import { tezos as Tezos } from '../../common/wallet';
+import { rpcNode} from '../../common/wallet';
 import { getDexAddress } from '../util/fetchConfig';
 import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';
+import axios from 'axios';
 
 export const loadSwapDataVolatile = async (
   tokenIn: string,
@@ -15,7 +16,6 @@ export const loadSwapDataVolatile = async (
   exchangeFee: BigNumber;
   lpTokenSupply: BigNumber;
   lpToken: any;
-  dexContractInstance: any;
 }> => {
   try {
     const state = store.getState();
@@ -29,13 +29,15 @@ export const loadSwapDataVolatile = async (
       throw 'No dex found';
     }
 
-    const dexContractInstance = await Tezos.contract.at(dexContractAddress);
-    const dexStorage: any = await dexContractInstance.storage();
-    const lpFee = new BigNumber(await dexStorage.lpFee);
+    const storageResponse = await axios.get(
+      `${rpcNode}chains/main/blocks/head/context/contracts/${dexContractAddress}/storage`,
+    );
 
-    const token1_pool = new BigNumber(await dexStorage.token1_pool);
-    const token2_pool = new BigNumber(await dexStorage.token2_pool);
-    let lpTokenSupply = new BigNumber(await dexStorage.totalSupply);
+    const token1_pool = new BigNumber(storageResponse.data.args[1].args[0].args[1].int);
+    const token2_pool = new BigNumber(storageResponse.data.args[3].int);
+    let lpTokenSupply = new BigNumber(storageResponse.data.args[4].int);
+    const lpFee = new BigNumber(storageResponse.data.args[0].args[0].args[0].args[1].int);
+ 
     const lpToken = AMM[dexContractAddress].lpToken;
 
     let tokenIn_supply = new BigNumber(0);
@@ -65,7 +67,6 @@ export const loadSwapDataVolatile = async (
       exchangeFee,
       lpTokenSupply,
       lpToken,
-      dexContractInstance,
     };
   } catch (error) {
     console.log({ message: 'Volatileswap data error', error });
@@ -78,7 +79,6 @@ export const loadSwapDataVolatile = async (
       exchangeFee: new BigNumber(0),
       lpTokenSupply: new BigNumber(0),
       lpToken: null,
-      dexContractInstance: null,
     };
   }
 };
