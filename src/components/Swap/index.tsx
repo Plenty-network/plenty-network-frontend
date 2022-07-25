@@ -21,6 +21,7 @@ import { useAppSelector } from '../../redux';
 import { BigNumber } from 'bignumber.js';
 
 import { allPaths, computeAllPathsWrapper } from '../../api/swap/router';
+import { TOKEN_PRICE } from '../../constants/localStorage';
 
 interface ISwapProps {
   className?: string;
@@ -132,7 +133,7 @@ function Swap(props: ISwapProps) {
             exchangeRate: new BigNumber(0),
           });
 
-      allPaths(tokenIn.name, tokenOut.name , false).then((res) => {
+      allPaths(tokenIn.name, tokenOut.name, enableMultiHop).then((res) => {
         loading.current = {
           isLoadingfirst: false,
           isLoadingSecond: false,
@@ -144,7 +145,11 @@ function Swap(props: ISwapProps) {
           allPathSwapData.current = res.swapData;
           setErrorMessage('');
         } else {
-          setErrorMessage(ERRORMESSAGES.SWAPROUTER);
+          setErrorMessage(
+            enableMultiHop
+              ? ERRORMESSAGES.SWAPROUTER
+              : ERRORMESSAGES.SWAPMULTIHOP
+          );
           setAllPathState([]);
           allPathSwapData.current = [];
         }
