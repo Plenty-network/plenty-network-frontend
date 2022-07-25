@@ -100,7 +100,7 @@ export const calculateTokensOutTezCtez = (
         slippage.multipliedBy(tokenOut).dividedBy(100)
       );
       minimumOut = minimumOut.dividedBy(new BigNumber(10).pow(6));
-      const exchangeRate = tokenOut.dividedBy(tokenIn_amount); // 1 tokenIn = x tokenOut
+      const exchangeRate = tokenOut.dividedBy(tokenIn_amount); 
 
       const updated_Ctez_Supply = ctezSupply.plus(tokenIn_amount);
       const updated_Tez_Supply = tezSupply.minus(tokenOut);
@@ -142,7 +142,7 @@ export const calculateTokensOutTezCtez = (
         slippage.multipliedBy(tokenOut).dividedBy(100)
       );
       minimumOut = minimumOut.dividedBy(new BigNumber(10).pow(6));
-      const exchangeRate = tokenOut.dividedBy(tokenIn_amount); // 1 tokenIn = x tokenOut
+      const exchangeRate = tokenOut.dividedBy(tokenIn_amount);
 
       const updated_Ctez_Supply = ctezSupply.minus(tokenOut);
       const updated_Tez_Supply = tezSupply.plus(tokenIn_amount);
@@ -199,7 +199,6 @@ export const loadSwapDataTezCtez = async (
     const state = store.getState();
 
     const AMM = state.config.AMMs;
-    //const AMM = useAppSelector((state) => state.config.AMMs);
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
     if (dexContractAddress === 'false') {
       throw 'No dex found';

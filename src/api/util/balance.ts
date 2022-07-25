@@ -32,7 +32,6 @@ export const getPackedKey = (
   let packedKey = null;
   if (type === TokenVariant.FA2) {
     packedKey = TezosMessageUtils.encodeBigMapKey(
-      // eslint-disable-next-line no-undef
       Buffer.from(
         TezosMessageUtils.writePackedData(
           `(Pair ${accountHex} ${tokenId})`,
@@ -44,7 +43,6 @@ export const getPackedKey = (
     );
   } else {
     packedKey = TezosMessageUtils.encodeBigMapKey(
-      // eslint-disable-next-line no-undef
       Buffer.from(
         TezosMessageUtils.writePackedData(
           `${accountHex}`,
@@ -173,7 +171,6 @@ export const getUserBalanceByRpc = async (
       const response = await axios.get(url);
 
       const balance = (() => {
-        // IIFE
         let _balance;
         if (type1MapIds.includes(mapId as number)) {
           _balance = response.data.args[0].args[1].int;
