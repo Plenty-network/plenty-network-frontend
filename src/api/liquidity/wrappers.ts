@@ -1,7 +1,7 @@
 import { AMM_TYPE } from '../../config/types';
 import { getDexType, getLpTokenSymbol } from '../util/fetchConfig';
 import { BigNumber } from 'bignumber.js';
-import { IOtherTokenOutput, IPnlpBalanceResponse } from './types';
+import { IOtherTokenOutput, IOutputTokensAmountResponse, IPnlpBalanceResponse, IPnlpEstimateResponse } from './types';
 import { getUserBalanceByRpc } from '../util/balance';
 
 /**
@@ -16,8 +16,8 @@ export const estimateOtherTokenAmount = (
   otherTokenSupply: string | BigNumber
 ): IOtherTokenOutput => {
   try {
-    // TODO: @Udit, please check for the possible decimals issue for input and other token supply, if not divided by decimals.
-    // This functions works for supply values which are divided by decimals.
+    // TODO: @Udit, please check for the possible decimals issue for input and other token supply, if not divided by decimal.
+    // This functions works for supply values which are divided by decimal.
     const otherTokenAmount = new BigNumber(inputTokenAmount)
       .multipliedBy(otherTokenSupply)
       .dividedBy(inputTokenSupply)
@@ -71,6 +71,101 @@ export const getPnlpBalance = async (
       lpToken: "",
       balance: "0",
       error: err.message,
+    };
+  }
+};
+
+/**
+ * Returns the estimated PNLP amount the user will get for adding liquidity of selected pair.
+ * @param tokenOneAmount - Amount of the first token of the selected pair
+ * @param tokenTwoAmount - Amount of the second token of the selected pair
+ * @param tokenOneSupply - Total supply of the first token of the selected pair
+ * @param tokenTwoSupply - Total supply of the second token of the selected pair
+ * @param lpTokenSupply - Total supply of the LP token of the selected pair
+ */
+export const getPnlpOutputEstimate = (
+  tokenOneAmount: string | BigNumber,
+  tokenTwoAmount: string | BigNumber,
+  tokenOneSupply: string | BigNumber,
+  tokenTwoSupply: string | BigNumber,
+  lpTokenSupply: string | BigNumber
+): IPnlpEstimateResponse => {
+  try {
+    // TODO: @Udit, please check for the possible decimals issue for one, two and lp token supply, if not divided by decimal.
+    // This functions works for supply values which are divided by decimal.
+    const pnlpBasedOnTokenOne = new BigNumber(tokenOneAmount)
+      .multipliedBy(lpTokenSupply)
+      .dividedBy(tokenOneSupply);
+    const pnlpBasedOnTokenTwo = new BigNumber(tokenTwoAmount)
+      .multipliedBy(lpTokenSupply)
+      .dividedBy(tokenTwoSupply);
+    const pnlpEstimatedOutput = pnlpBasedOnTokenOne.isLessThan(
+      pnlpBasedOnTokenTwo
+    )
+      ? pnlpBasedOnTokenOne
+      : pnlpBasedOnTokenTwo;
+    return {
+      success: true,
+      pnlpEstimate: pnlpEstimatedOutput.toString(),
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      pnlpEstimate: "0",
+      error: error.message,
+    };
+  }
+};
+
+/**
+ * Returns the computed token one and token two amounts for the amount of LP token user burns.
+ * @param burnAmount - Amount of LP token the user wants to burn
+ * @param tokenOneSymbol - Symbol of the first token of the selected pair
+ * @param tokenTwoSymbol - Symbol of the second token of the selected pair
+ * @param tokenOneSupply - Total supply of the first token of the selected pair
+ * @param tokenTwoSupply - Total supply of the second token of the selected pair
+ * @param lpTokenSupply - Total supply of the LP token of the selected pair
+ * @param slippage - Amount of slippage user can tolerate, defaults to 0.5 if no input provided 
+ */
+export const getOutputTokensAmount = (
+  burnAmount: string | BigNumber,
+  tokenOneSymbol: string,
+  tokenTwoSymbol: string,
+  tokenOneSupply: string | BigNumber,
+  tokenTwoSupply: string | BigNumber,
+  lpTokenSupply: string | BigNumber,
+  slippage: string | BigNumber = "0.5"
+): IOutputTokensAmountResponse => {
+  // TODO: @Udit, please check for the possible decimals issue for one, two and lp token supply, if not divided by decimal.
+  // This functions works for supply values which are divided by decimal.
+  try {
+    let tokenOneAmount = new BigNumber(burnAmount)
+      .multipliedBy(tokenOneSupply)
+      .dividedBy(lpTokenSupply);
+    let tokenTwoAmount = new BigNumber(burnAmount)
+      .multipliedBy(tokenTwoSupply)
+      .dividedBy(lpTokenSupply);
+
+    // Check if its a non tez-ctez pair and calculate slippage if so.
+    if (tokenOneSymbol !== "tez" && tokenTwoSymbol !== "tez") {
+      tokenOneAmount = tokenOneAmount.minus(
+        new BigNumber(slippage).multipliedBy(tokenOneAmount).dividedBy(100)
+      );
+      tokenTwoAmount = tokenTwoAmount.minus(
+        new BigNumber(slippage).multipliedBy(tokenTwoAmount).dividedBy(100)
+      );
+    }
+    return {
+      success: true,
+      tokenOneAmount: tokenOneAmount.toString(),
+      tokenTwoAmount: tokenTwoAmount.toString(),
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      tokenOneAmount: "0",
+      tokenTwoAmount: "0",
+      error: error.message,
     };
   }
 };
