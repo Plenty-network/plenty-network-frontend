@@ -22,79 +22,87 @@ export const FooterMenu: Array<IHrefIconProps> = [
   },
 ];
 
+// const MainMenu: Array<ISingleSideBarProps> = [
+//   {
+//     name: 'Swap',
+//     iconName: 'swap',
+//     pathName: '/Swap',
+//   },
+//   {
+//     name: 'Pools',
+//     iconName: 'pools',
+//     pathName: '/pools',
+//   },
+//   {
+//     name: 'komm',
+//     iconName: 'swap',
+//     subMenu: [
+//       {
+//         name: 'swap',
+//         iconName: 'swap',
+//         pathName: './limk',
+//       },
+//       {
+//         name: 'swap',
+//         iconName: 'swap',
+//         pathName: './limk',
+//       },
+//       {
+//         name: 'swap',
+//         iconName: 'swap',
+//         pathName: './limk',
+//       },
+//       {
+//         name: 'swap',
+//         iconName: 'swap',
+//         pathName: './limk',
+//       },
+//       {
+//         name: 'swap',
+//         iconName: 'swap',
+//         pathName: './limk',
+//       },
+//       {
+//         name: 'sap',
+//         iconName: 'swap',
+//         pathName: './limk',
+//       },
+//       {
+//         name: 'swap',
+//         iconName: 'swap',
+//         pathName: './limk',
+//       },
+//     ],
+//   },
+//   {
+//     name: 'Earn',
+//     iconName: 'swap',
+//     subMenu: [
+//       {
+//         name: 'swap',
+//         iconName: 'swap',
+//         pathName: './limk',
+//       },
+//     ],
+//   },
+//   {
+//     name: 'kokmm',
+//     iconName: 'swap',
+//     pathName: './limk',
+//   },
+//   {
+//     name: 'mopp',
+//     iconName: 'swap',
+//     pathName: './limk',
+//   },
+// ];
+
 const MainMenu: Array<ISingleSideBarProps> = [
   {
     name: 'Swap',
     iconName: 'swap',
     pathName: '/Swap',
-  },
-  {
-    name: 'Pools',
-    iconName: 'pools',
-    pathName: '/pools',
-  },
-  {
-    name: 'komm',
-    iconName: 'swap',
-    subMenu: [
-      {
-        name: 'swap',
-        iconName: 'swap',
-        pathName: './limk',
-      },
-      {
-        name: 'swap',
-        iconName: 'swap',
-        pathName: './limk',
-      },
-      {
-        name: 'swap',
-        iconName: 'swap',
-        pathName: './limk',
-      },
-      {
-        name: 'swap',
-        iconName: 'swap',
-        pathName: './limk',
-      },
-      {
-        name: 'swap',
-        iconName: 'swap',
-        pathName: './limk',
-      },
-      {
-        name: 'sap',
-        iconName: 'swap',
-        pathName: './limk',
-      },
-      {
-        name: 'swap',
-        iconName: 'swap',
-        pathName: './limk',
-      },
-    ],
-  },
-  {
-    name: 'Earn',
-    iconName: 'swap',
-    subMenu: [
-      {
-        name: 'swap',
-        iconName: 'swap',
-        pathName: './limk',
-      },
-    ],
-  },
-  {
-    name: 'kokmm',
-    iconName: 'swap',
-    pathName: './limk',
-  },
-  {
-    name: 'mopp',
-    iconName: 'swap',
-    pathName: './limk',
-  },
+  }
 ];
 
 export function SideBar(props: ISideBarProps) {
