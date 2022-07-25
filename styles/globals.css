@@ -55,6 +55,9 @@ input::-webkit-inner-spin-button {
 .inputSecond {
   background: rgba(14, 8, 23, 0.02);
 }
+#tokensList {
+  box-shadow: inset 0px 11px 8px -10px #fff, inset 0px -11px 8px -10px #fff;
+}
 
 /* Firefox */
 input[type='number'] {
