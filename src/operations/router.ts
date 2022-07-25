@@ -75,11 +75,6 @@ export const routerSwap = async (
         success: true,
         operationId: batchOp.opHash,
       };
-      // const hash = await routerInstance.methods.routerSwap(DataMap, swapAmount, caller).send({amount : swapAmount});
-      // await hash.confirmation();
-      // return {
-      //   success: true,
-      // };
     } else {
       const tokenInInstance: any = await Tezos.contract.at(TOKEN_IN.address as string);
       if (tokenInCallType === TokenVariant.FA12) {

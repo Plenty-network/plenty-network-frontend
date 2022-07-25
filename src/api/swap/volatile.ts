@@ -3,26 +3,16 @@ import { getDexAddress } from '../util/fetchConfig';
 import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';
 import axios from 'axios';
+import { ISwapDataResponse , ICalculateTokenResponse} from './types';
 
 export const loadSwapDataVolatile = async (
   tokenIn: string,
   tokenOut: string
-): Promise<{
-  success: boolean;
-  tokenIn: string;
-  tokenIn_supply: BigNumber;
-  tokenOut: string;
-  tokenOut_supply: BigNumber;
-  exchangeFee: BigNumber;
-  lpTokenSupply: BigNumber;
-  lpToken: any;
-}> => {
+): Promise<ISwapDataResponse> => {
   try {
     const state = store.getState();
     const TOKEN = state.config.standard;
     const AMM = state.config.AMMs;
-    // const TOKEN = useAppSelector((state) => state.config.standard);
-    // const AMM = useAppSelector((state) => state.config.AMMs);
 
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
     if (dexContractAddress === 'false') {
@@ -74,7 +64,7 @@ export const loadSwapDataVolatile = async (
       tokenOut_supply: new BigNumber(0),
       exchangeFee: new BigNumber(0),
       lpTokenSupply: new BigNumber(0),
-      lpToken: null,
+      lpToken: undefined,
     };
   }
 };
@@ -86,14 +76,7 @@ export const calculateTokenOutputVolatile = (
   exchangeFee: BigNumber,
   slippage: BigNumber,
   tokenOut: string
-): {
-  tokenOut_amount: BigNumber;
-  fees: BigNumber;
-  feePerc: BigNumber;
-  minimum_Out: BigNumber;
-  exchangeRate: BigNumber;
-  priceImpact: BigNumber;
-} => {
+): ICalculateTokenResponse => {
   try {
     const state = store.getState();
     const TOKEN = state.config.standard;
@@ -158,6 +141,7 @@ export const calculateTokenOutputVolatile = (
       minimum_Out: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
+      error
     };
   }
 };
