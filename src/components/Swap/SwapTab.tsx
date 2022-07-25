@@ -111,7 +111,7 @@ function SwapTab(props: ISwapTabProps) {
   const [isSecondInputFocus, setIsSecondInputFocus] = useState(false);
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const [isRefresh, setRefresh] = useState(false);
-  console.log(props.tokenPrice);
+  // console.log(props.tokenPrice);
   const refreshAllData = (value: boolean) => {
     setRefresh(value);
     setTimeout(() => {

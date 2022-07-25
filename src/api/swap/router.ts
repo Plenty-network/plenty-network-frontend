@@ -20,32 +20,31 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
             visited[key] = false;
         });
         allPathHelper(tokenIn, tokenOut, visited, tokenIn, TOKEN);
-        
 
+        let tempPaths : string[] = [];
+
+        for (var i in paths){
+            const path = paths[i].split(' ');
+            if(!multihop){
+                if(path.length === 2)   // To show only directSwap
+                tempPaths.push(paths[i]);
+            }
+            else{
+                if(path.length <= 5) //To prevent 5 swaps if required
+                tempPaths.push(paths[i]);
+            }
+        }
+        paths = tempPaths;
+        
         let swapData: any[][] = [[], []];
 
         for (var i in paths) {
             const path = paths[i].split(' ');
-            if(!multihop){
-                if(path.length > 2)   // To show only directSwap
-                continue;
-            }
-            else{
-                if(path.length > 5) //To prevent 5 swaps if required
-                continue;
-            }
             for (let j = 0; j < path.length - 1; j++) {
                 // Getting Swap Details
                 swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
             }
         }
-
-        for (var i in swapData){
-            if(swapData[i].length === 0){
-                // delete swapData[i] and paths[i]
-            }
-        }
-
 
         return {
             paths,
