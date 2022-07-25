@@ -132,7 +132,7 @@ function Swap(props: ISwapProps) {
             exchangeRate: new BigNumber(0),
           });
 
-      allPaths(tokenIn.name, tokenOut.name).then((res) => {
+      allPaths(tokenIn.name, tokenOut.name , true).then((res) => {
         loading.current = {
           isLoadingfirst: false,
           isLoadingSecond: false,
