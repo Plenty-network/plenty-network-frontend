@@ -1,8 +1,14 @@
 import { AMM_TYPE } from '../../config/types';
 import { getDexType, getLpTokenSymbol } from '../util/fetchConfig';
-import { BigNumber } from 'bignumber.js';
-import { IOtherTokenOutput, IOutputTokensAmountResponse, IPnlpBalanceResponse, IPnlpEstimateResponse } from './types';
-import { getUserBalanceByRpc } from '../util/balance';
+import { BigNumber } from "bignumber.js";
+import {
+  ICurrentPoolShareResponse,
+  IOtherTokenOutput,
+  IOutputTokensAmountResponse,
+  IPnlpBalanceResponse,
+  IPnlpEstimateResponse,
+} from "./types";
+import { getUserBalanceByRpc } from "../util/balance";
 
 /**
  * Estimate the other token amount while adding liquidity.
@@ -40,14 +46,16 @@ export const estimateOtherTokenAmount = (
  * @param tokenOneSymbol - Symbol of token one of the pair.
  * @param tokenTwoSymbol - Symbol of token two of the pair.
  * @param userTezosAddress - Tezos wallet address of the user.
+ * @param lpToken - (Optional) Symbol of the LP token for the given pair if known/available.
  */
 export const getPnlpBalance = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
-  userTezosAddress: string
+  userTezosAddress: string,
+  lpToken?: string
 ): Promise<IPnlpBalanceResponse> => {
   try {
-    const lpTokenSymbol = getLpTokenSymbol(tokenOneSymbol, tokenTwoSymbol);
+    const lpTokenSymbol = lpToken ? lpToken : getLpTokenSymbol(tokenOneSymbol, tokenTwoSymbol);
     if (lpTokenSymbol) {
       const lpTokenBalance = await getUserBalanceByRpc(
         lpTokenSymbol,
@@ -166,6 +174,51 @@ export const getOutputTokensAmount = (
       tokenOneAmount: "0",
       tokenTwoAmount: "0",
       error: error.message,
+    };
+  }
+};
+
+/**
+ * Returns the current pool share percentage for the user for given pair of tokens.
+ * @param tokenOneSymbol - Symbol of the first token of the selected pair
+ * @param tokenTwoSymbol - Symbol of the second token of the selected pair
+ * @param userTezosAddress - Tezos wallet address of the user
+ * @param lpTokenSupply - Total supply of the LP token of the selected pair
+ * @param lpToken - (Optional) Symbol of the LP token for the given pair if known/available
+ */
+export const getCurrentPoolShare = async (
+  tokenOneSymbol: string,
+  tokenTwoSymbol: string,
+  userTezosAddress: string,
+  lpTokenSupply: string | BigNumber,
+  lpToken?: string
+): Promise<ICurrentPoolShareResponse> => {
+  try {
+    const lpBalanceResult = await getPnlpBalance(
+      tokenOneSymbol,
+      tokenTwoSymbol,
+      userTezosAddress,
+      lpToken
+    );
+    if (lpBalanceResult.success) {
+      const currentPoolShare = new BigNumber(lpBalanceResult.balance)
+        .multipliedBy(100)
+        .dividedBy(lpTokenSupply)
+        .toString();
+      return {
+        success: true,
+        currentPoolShare,
+        balance: lpBalanceResult.balance,
+      };
+    } else {
+      throw new Error(lpBalanceResult.error);
+    }
+  } catch (err: any) {
+    return {
+      success: false,
+      currentPoolShare: "0",
+      balance: "0",
+      error: err.message,
     };
   }
 };
