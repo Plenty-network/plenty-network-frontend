@@ -16,7 +16,11 @@ import Button from '../Button/Button';
 import TokenDropdown from '../TokenDropdown/TokenDropdown';
 import TransactionSettings from '../TransactionSettings/TransactionSettings';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { tokensModal, tokenType } from '../../../src/constants/swap';
+import {
+  ERRORMESSAGES,
+  tokensModal,
+  tokenType,
+} from '../../../src/constants/swap';
 import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import loader from '../../assets/animations/shimmer-swap.json';
 
@@ -89,6 +93,10 @@ interface ISwapTabProps {
     exchangeRate: BigNumber;
     success: boolean;
   };
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  errorMessage: string;
+  setEnableMultiHop: React.Dispatch<React.SetStateAction<boolean>>;
+  enableMultiHop: boolean;
 }
 
 function SwapTab(props: ISwapTabProps) {
@@ -103,7 +111,7 @@ function SwapTab(props: ISwapTabProps) {
   const [isSecondInputFocus, setIsSecondInputFocus] = useState(false);
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const [isRefresh, setRefresh] = useState(false);
-
+  console.log(props.tokenPrice);
   const refreshAllData = (value: boolean) => {
     setRefresh(value);
     setTimeout(() => {
@@ -170,6 +178,12 @@ function SwapTab(props: ISwapTabProps) {
         return (
           <Button color="disabled" width="w-full">
             Select a token
+          </Button>
+        );
+      } else if (props.errorMessage === ERRORMESSAGES.SWAPROUTER) {
+        return (
+          <Button color="disabled" width="w-full">
+            Swap
           </Button>
         );
       } else if (
@@ -240,12 +254,15 @@ function SwapTab(props: ISwapTabProps) {
           setExpertMode={setExpertMode}
           expertMode={expertMode}
           setShowExpertPopup={setShowExpertPopup}
+          setEnableMultiHop={props.setEnableMultiHop}
+          enableMultiHop={props.enableMultiHop}
         />
       </div>
       <div
         className={clsx(
           'lg:w-580 mt-4 h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700',
-          props.firstTokenAmount > props.userBalances[props.tokenIn.name] &&
+          (props.firstTokenAmount > props.userBalances[props.tokenIn.name] ||
+            props.errorMessage) &&
             'border-errorBorder hover:border-errorBorder bg-errorBg',
           isFirstInputFocus ? 'border-text-700' : 'border-text-800 '
         )}
@@ -287,6 +304,7 @@ function SwapTab(props: ISwapTabProps) {
                     onChange={(e) =>
                       props.handleSwapTokenInput(e.target.value, 'tokenIn')
                     }
+                    disabled={props.errorMessage === ERRORMESSAGES.SWAPROUTER}
                     value={props.firstTokenAmount}
                     onFocus={() => setIsFirstInputFocus(true)}
                     onBlur={() => setIsFirstInputFocus(false)}
@@ -326,6 +344,11 @@ function SwapTab(props: ISwapTabProps) {
           </div>
         </div>
       </div>
+      {props.errorMessage !== '' && (
+        <div className="mt-1 lg:mx-[30px] font-body2 text-error-500">
+          {props.errorMessage}
+        </div>
+      )}
       <div
         className="z-10 -mt-[25px] cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-2xl "
         onClick={() => props.changeTokenLocation()}
@@ -596,7 +619,7 @@ function SwapTab(props: ISwapTabProps) {
                 </div>
               ) : (
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {Number(props.routeDetails.finalFeePerc).toFixed(2)}
+                  {`${props.routeDetails.finalFeePerc.toFixed(2)}  %`}
                 </div>
               )}
             </div>
