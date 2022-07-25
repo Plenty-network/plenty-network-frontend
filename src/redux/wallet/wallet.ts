@@ -31,9 +31,8 @@ export const walletDisconnection = createAsyncThunk(
 export const fetchWallet = createAsyncThunk(
   'wallet/fetchWallet',
   async (thunkAPI) => {
-    const res = await FetchWalletAPI().then((resp) => resp.wallet);
-
-    return res;
+    const res = await FetchWalletAPI();
+    return res.wallet;
   }
 );
 

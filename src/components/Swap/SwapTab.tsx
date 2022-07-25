@@ -4,6 +4,8 @@ import settings from '../../../src/assets/icon/swap/settings.svg';
 import arrowDown from '../../../src/assets/icon/swap/arrowDown.svg';
 import ratesrefresh from '../../../src/assets/icon/swap/ratesrefresh.svg';
 import info from '../../../src/assets/icon/swap/info.svg';
+
+import router from '../../../src/assets/icon/swap/router.svg';
 import stableSwap from '../../../src/assets/icon/swap/stableswapViolet.svg';
 
 import switchsvg from '../../../src/assets/icon/swap/switch.svg';
@@ -107,7 +109,7 @@ function SwapTab(props: ISwapTabProps) {
     setTimeout(() => {
       props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
       setRefresh(false);
-    }, 1000);
+    }, 500);
   };
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
@@ -115,14 +117,15 @@ function SwapTab(props: ISwapTabProps) {
   };
   const [isConvert, setConvert] = useState(false);
   const handleSwap = () => {
-    props.setShowConfirmSwap(true);
+    !expertMode && props.setShowConfirmSwap(true);
+    expertMode && handleConfirmSwap();
   };
   const convertRates = (e: any) => {
     e.stopPropagation();
     setConvert(!isConvert);
   };
   const handleConfirmSwap = () => {
-    props.setShowConfirmSwap(false);
+    !expertMode && props.setShowConfirmSwap(false);
     const recepientAddress = props.recepient
       ? props.recepient
       : props.walletAddress;
@@ -135,7 +138,7 @@ function SwapTab(props: ISwapTabProps) {
       recepientAddress,
       transactionSubmitModal,
       props.resetAllValues,
-      props.setShowConfirmTransaction
+      !expertMode && props.setShowConfirmTransaction
     ).then((response) => {
       if (response.success) {
         console.log(response);
@@ -252,36 +255,52 @@ function SwapTab(props: ISwapTabProps) {
             className="flex-[0_0_50%] mt-4"
             onClick={() => props.handleTokenType('tokenIn')}
           >
-            <TokenDropdown
-              tokenIcon={props.tokenIn.image}
-              tokenName={
-                props.tokenIn.name === 'tez'
-                  ? 'TEZ'
-                  : props.tokenIn.name === 'ctez'
-                  ? 'CTEZ'
-                  : props.tokenIn.name
-              }
-            />
+            {Object.keys(props.tokenIn).length !== 0 ? (
+              <TokenDropdown
+                tokenIcon={props.tokenIn.image}
+                tokenName={
+                  props.tokenIn.name === 'tez'
+                    ? 'TEZ'
+                    : props.tokenIn.name === 'ctez'
+                    ? 'CTEZ'
+                    : props.tokenIn.name
+                }
+              />
+            ) : (
+              <TokenDropdown tokenName="Select a token" />
+            )}
           </div>
           <div className=" my-3 ">
             <div className="text-right font-body1 text-text-400">YOU PAY</div>
             <div>
-              {props.loading.isLoadingfirst ? (
-                <p className=" my-[4px] h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+              {Object.keys(props.tokenIn).length !== 0 ? (
+                props.loading.isLoadingfirst ? (
+                  <p className=" my-[4px] h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+                ) : (
+                  <input
+                    type="text"
+                    className={clsx(
+                      'text-white bg-card-500 text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%]'
+                    )}
+                    placeholder="0.0"
+                    lang="en"
+                    onChange={(e) =>
+                      props.handleSwapTokenInput(e.target.value, 'tokenIn')
+                    }
+                    value={props.firstTokenAmount}
+                    onFocus={() => setIsFirstInputFocus(true)}
+                    onBlur={() => setIsFirstInputFocus(false)}
+                  />
+                )
               ) : (
                 <input
                   type="text"
                   className={clsx(
-                    'text-white bg-card-500 text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%]'
+                    'text-primary-500 inputSecond  text-right border-0 w-[100%]  font-input-text lg:font-medium1 outline-none '
                   )}
-                  placeholder="0.0"
-                  lang="en"
-                  onChange={(e) =>
-                    props.handleSwapTokenInput(e.target.value, 'tokenIn')
-                  }
-                  value={props.firstTokenAmount}
-                  onFocus={() => setIsFirstInputFocus(true)}
-                  onBlur={() => setIsFirstInputFocus(false)}
+                  placeholder="--"
+                  disabled
+                  value={'--'}
                 />
               )}
             </div>
@@ -488,7 +507,13 @@ function SwapTab(props: ISwapTabProps) {
                     />
                   </span>
                 </div>
-                <div className="ml-auto relative top-[3px]">
+                <div className="ml-auto mr-6 h-[36px] flex justify-center rounded bg-shimmer-100 p-2">
+                  <Image src={router} width={'20px'} height={'20px'} />
+                  <span className="ml-1 font-subtitle4 text-primary-500">{`${Number(
+                    props.routeDetails.finalFeePerc
+                  ).toFixed(2)} %`}</span>
+                </div>
+                <div className=" relative top-[3px]">
                   <Image
                     src={arrowDown}
                     className={
@@ -747,6 +772,11 @@ function SwapTab(props: ISwapTabProps) {
           show={props.showTransactionSubmitModal}
           setShow={props.setShowTransactionSubmitModal}
           onClick={handleConfirmSwap}
+          onBtnClick={
+            transactionId
+              ? () => window.open(`https://tzkt.io/${transactionId}`, '_blank')
+              : null
+          }
           content={`Swap ${Number(props.firstTokenAmount).toFixed(2)} ${
             props.tokenIn.name === 'tez'
               ? 'TEZ'

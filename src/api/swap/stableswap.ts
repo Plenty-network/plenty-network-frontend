@@ -4,6 +4,7 @@ import { store } from '../../redux';
 import axios from 'axios';
 import { connectedNetwork, rpcNode } from '../../common/wallet';
 import { getDexAddress } from '../util/fetchConfig';
+import { dappClient } from '../../common/walletconnect';
 
 const util = (
   x: BigNumber,

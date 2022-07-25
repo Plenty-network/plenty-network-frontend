@@ -10,7 +10,7 @@ import {
   getUserBalanceByRpc,
 } from '../../api/util/balance';
 import { getTokenPrices } from '../../api/util/price';
-import { tokensModal, tokenType } from '../../constants/swap';
+import { tokenParameter, tokensModal, tokenType } from '../../constants/swap';
 
 import { useAppSelector } from '../../redux';
 import { BigNumber } from 'bignumber.js';
@@ -145,7 +145,7 @@ function Swap(props: ISwapProps) {
         handleSwapTokenInput(firstTokenAmount, 'tokenIn');
       }
     }
-  }, [tokenIn, tokenOut]);
+  }, [tokenIn, tokenOut, tokenType]);
 
   const handleSwapTokenInput = (
     input: string | number,
@@ -169,7 +169,7 @@ function Swap(props: ISwapProps) {
         exchangeRate: new BigNumber(0),
       };
     }
-    if (input === '') {
+    if (input === '' || isNaN(Number(input))) {
       setFirstTokenAmount('');
       setSecondTokenAmount('');
       routeDetails.current = {
@@ -243,6 +243,17 @@ function Swap(props: ISwapProps) {
     setFirstTokenAmount('');
     setSecondTokenAmount('');
     handleSwapTokenInput('', 'tokenIn');
+    routeDetails.current = {
+      minimum_Out: new BigNumber(0),
+      minimumTokenOut: [],
+      feePerc: [],
+      isStable: [],
+      path: [],
+      finalFeePerc: new BigNumber(0),
+      priceImpact: new BigNumber(0),
+      success: false,
+      exchangeRate: new BigNumber(0),
+    };
   };
 
   const selectToken = (token: tokensModal) => {
@@ -269,10 +280,8 @@ function Swap(props: ISwapProps) {
   };
   const changeTokenLocation = () => {
     setSecondTokenAmount(firstTokenAmount);
-
     setFirstTokenAmount('');
-
-    if (tokenOut.name) {
+    if (tokenOut.name && tokenIn.name) {
       setTokenIn({
         name: tokenOut.name,
         image: tokenOut.image,
@@ -284,6 +293,18 @@ function Swap(props: ISwapProps) {
       });
 
       handleSwapTokenInput(firstTokenAmount, 'tokenOut');
+    } else if (Object.keys(tokenOut).length === 0) {
+      setTokenOut({
+        name: tokenIn.name,
+        image: tokenIn.image,
+      });
+      setTokenIn({} as tokenParameter);
+    } else if (Object.keys(tokenIn).length === 0) {
+      setTokenIn({
+        name: tokenOut.name,
+        image: tokenOut.image,
+      });
+      setTokenOut({} as tokenParameter);
     }
   };
   useEffect(() => {
