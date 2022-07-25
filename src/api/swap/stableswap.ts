@@ -91,6 +91,8 @@ export const calculateTokensOutTezCtez = (
 } => {
   const feePerc = new BigNumber(0.1);
   tokenIn_amount = tokenIn_amount.multipliedBy(10 ** 6);
+  tezSupply = tezSupply.multipliedBy(10 ** 6);
+  ctezSupply = ctezSupply.multipliedBy(10 ** 6);
   try {
     if (tokenIn === 'ctez') {
       const dy = newton_dx_to_dy(
@@ -223,15 +225,20 @@ export const loadSwapDataTezCtez = async (
       `${rpcNode}chains/main/blocks/head/context/contracts/${dexContractAddress}/storage`,
     );
 
-    const tezSupply: BigNumber = new BigNumber(storageResponse.data.args[2].args[1].int);
-    const ctezSupply: BigNumber = new BigNumber(storageResponse.data.args[0].args[1].args[0].int);
-    const lpTokenSupply: BigNumber = new BigNumber(storageResponse.data.args[0].args[4].int);
+    let tezSupply: BigNumber = new BigNumber(storageResponse.data.args[2].args[1].int);
+    let ctezSupply: BigNumber = new BigNumber(storageResponse.data.args[0].args[1].args[0].int);
+    let lpTokenSupply: BigNumber = new BigNumber(storageResponse.data.args[0].args[4].int);
     const exchangeFee = new BigNumber(storageResponse.data.args[0].args[2].int);
     const lpToken = AMM[dexContractAddress].lpToken;
     const ctezAddress = CONFIG.CTEZ[connectedNetwork];
     const ctezStorageUrl = `${rpcNode}chains/main/blocks/head/context/contracts/${ctezAddress}/storage`;
     const ctezStorage = await axios.get(ctezStorageUrl);
     const target = new BigNumber(ctezStorage.data.args[2].int);
+
+    tezSupply = tezSupply.dividedBy(10 ** 6);
+    ctezSupply = ctezSupply.dividedBy(10 ** 6);
+    lpTokenSupply = lpTokenSupply.dividedBy(10 ** 6);
+
 
     return {
       success: true,
@@ -284,6 +291,8 @@ export const calculateTokensOutGeneralStable = (
   const feePerc = new BigNumber(0.1);
 
   tokenIn_amount = tokenIn_amount.multipliedBy(10 ** TOKEN[tokenIn].decimals);
+  tokenIn_supply = tokenIn_supply.multipliedBy(10 ** TOKEN[tokenIn].decimals);
+  tokenOut_supply = tokenOut_supply.multipliedBy(10 ** TOKEN[tokenOut].decimals);
 
   try {
     tokenIn_supply = tokenIn_supply.multipliedBy(tokenIn_precision);
@@ -364,6 +373,7 @@ export const loadSwapDataGeneralStable = async (
   try {
     const state = store.getState();
     const AMM = state.config.AMMs;
+    const TOKEN = state.config.standard;
 
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
     if (dexContractAddress === 'false') {
@@ -397,6 +407,11 @@ export const loadSwapDataGeneralStable = async (
     const exchangeFee = new BigNumber(storageResponse.data.args[0].args[0].args[0].args[1].int);
     let lpTokenSupply = new BigNumber(storageResponse.data.args[0].args[0].args[2].int);
     const lpToken = AMM[dexContractAddress].lpToken;
+
+    tokenIn_supply = tokenIn_supply.dividedBy(10 ** TOKEN[tokenIn].decimals);
+    tokenOut_supply = tokenOut_supply.dividedBy(10 ** TOKEN[tokenOut].decimals);
+    lpTokenSupply = lpTokenSupply.dividedBy(lpToken.decimals);
+
     return {
       success: true,
       tokenIn,
