@@ -220,8 +220,8 @@ export interface IAMM {
   type:    AMM_TYPE;
   gaugeAddress?: string;
   bribeAddress?: string;
-  token1Precision?: number,
-  token2Precision?: number,
+  token1Precision?: string,
+  token2Precision?: string,
   lpToken: ITokenInterface;
 }
 
@@ -231,9 +231,8 @@ STABLE = 'STABLE'
 }
 
 export enum TokenType{
-  FA12 = 'FA1.2',
-  FA2 = 'FA2',
-  TEZ = 'TEZ'
+  STANDARD = 'STANDARD',
+  LP = 'LP',
 }
 
 export enum TokenVariant {

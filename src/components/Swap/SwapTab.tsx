@@ -98,7 +98,8 @@ function SwapTab(props: ISwapTabProps) {
   const [showRecepient, setShowRecepient] = useState(false);
   const [expertMode, setExpertMode] = useState(false);
   const [showExpertPopup, setShowExpertPopup] = useState(false);
-
+  const [isSecondInputFocus, setIsSecondInputFocus] = useState(false);
+  const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const [isRefresh, setRefresh] = useState(false);
 
   const refreshAllData = (value: boolean) => {
@@ -241,9 +242,9 @@ function SwapTab(props: ISwapTabProps) {
       <div
         className={clsx(
           'lg:w-580 mt-4 h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700',
-          props.firstTokenAmount > props.userBalances[props.tokenIn.name]
-            ? 'border-errorBorder hover:border-errorBorder bg-errorBg'
-            : 'border-text-800 '
+          props.firstTokenAmount > props.userBalances[props.tokenIn.name] &&
+            'border-errorBorder hover:border-errorBorder bg-errorBg',
+          isFirstInputFocus ? 'border-text-700' : 'border-text-800 '
         )}
       >
         <div className="flex justify-between">
@@ -279,6 +280,8 @@ function SwapTab(props: ISwapTabProps) {
                     props.handleSwapTokenInput(e.target.value, 'tokenIn')
                   }
                   value={props.firstTokenAmount}
+                  onFocus={() => setIsFirstInputFocus(true)}
+                  onBlur={() => setIsFirstInputFocus(false)}
                 />
               )}
             </div>
@@ -315,7 +318,12 @@ function SwapTab(props: ISwapTabProps) {
         </div>
       </div>
       <div className=" pt-[41px]  pb-5 border border-primary-500/[0.2] mx-px md:mx-2 lg:mx-2  px-5 lg:px-[22px] rounded-3xl bg-primary-500/[0.04]">
-        <div className="lg:w-580 secondtoken h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] hover:border-primary-500/[0.6] bg-card-500 hover:bg-primary-500/[0.02]">
+        <div
+          className={clsx(
+            'lg:w-580 secondtoken h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] hover:border-primary-500/[0.6] bg-card-500 hover:bg-primary-500/[0.02]',
+            isSecondInputFocus && 'border-text-700'
+          )}
+        >
           <div className=" flex justify-between">
             <div
               className="flex-[0_0_50%] mt-4"
@@ -358,6 +366,8 @@ function SwapTab(props: ISwapTabProps) {
                         props.handleSwapTokenInput(e.target.value, 'tokenOut')
                       }
                       value={props.secondTokenAmount}
+                      onFocus={() => setIsSecondInputFocus(true)}
+                      onBlur={() => setIsSecondInputFocus(false)}
                     />
                   )
                 ) : (

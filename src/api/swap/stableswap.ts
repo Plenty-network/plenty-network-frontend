@@ -376,8 +376,8 @@ export const loadSwapDataGeneralStable = async (
 
     const token1_pool = new BigNumber(storageResponse.data.args[1].args[0].args[1].int);
     const token2_pool = new BigNumber(storageResponse.data.args[3].int);  
-    const token1_precision = new BigNumber(AMM[dexContractAddress].token1Precision);
-    const token2_precision = new BigNumber(AMM[dexContractAddress].token2Precision);
+    const token1_precision = new BigNumber(AMM[dexContractAddress].token1Precision as string);
+    const token2_precision = new BigNumber(AMM[dexContractAddress].token2Precision as string);
 
     let tokenIn_supply = new BigNumber(0);
     let tokenOut_supply = new BigNumber(0);
