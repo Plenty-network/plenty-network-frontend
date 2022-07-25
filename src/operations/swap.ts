@@ -143,7 +143,6 @@ const swapTokens = async (
       throw new Error('Wallet connection failed');
     }
 
-    // const TOKEN = useAppSelector((state) => state.config.standard);
     const state = store.getState();
     const TOKEN = state.config.standard;
 

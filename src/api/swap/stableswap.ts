@@ -121,9 +121,9 @@ export const calculateTokensOutTezCtez = (
       let priceImpact = tokenOut.minus(next_tokenOut).dividedBy(tokenOut);
       priceImpact = priceImpact.multipliedBy(100);
       priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
-      const tokenOut_amount = new BigNumber(tokenOut.dividedBy(10 ** 6).precision(6));
+      const tokenOut_amount = new BigNumber(tokenOut.dividedBy(10 ** 6).decimalPlaces(6));
       const fees = fee.dividedBy(10 ** 6);
-      const minimum_Out = new BigNumber(minimumOut.precision(6));
+      const minimum_Out = new BigNumber(minimumOut.decimalPlaces(6));
 
       return {
         tokenOut_amount,
@@ -162,9 +162,9 @@ export const calculateTokensOutTezCtez = (
       let priceImpact = tokenOut.minus(next_tokenOut).dividedBy(tokenOut);
       priceImpact = priceImpact.multipliedBy(100);
       priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
-      const tokenOut_amount  = new BigNumber(tokenOut.dividedBy(10 ** 6).precision(6));
+      const tokenOut_amount  = new BigNumber(tokenOut.dividedBy(10 ** 6).decimalPlaces(6));
       const fees = fee.dividedBy(10 ** 6);
-      const minimum_Out = new BigNumber(minimumOut.precision(6));
+      const minimum_Out = new BigNumber(minimumOut.decimalPlaces(6));
       return {
         tokenOut_amount,
         fees,
@@ -318,8 +318,8 @@ export const calculateTokensOutGeneralStable = (
     tokenOut_amt = tokenOut_amt.dividedBy(10 ** TOKEN[tokenOut].decimals);
     fee = fee.dividedBy(tokenOut_precision);
     fee = fee.dividedBy(10 ** TOKEN[tokenOut].decimals);
-    const tokenOut_amount = new BigNumber(tokenOut_amt.precision(TOKEN[tokenOut].decimals));
-    const minimum_Out = new BigNumber(minimumOut.precision(TOKEN[tokenOut].decimals));
+    const tokenOut_amount = new BigNumber(tokenOut_amt.decimalPlaces(TOKEN[tokenOut].decimals));
+    const minimum_Out = new BigNumber(minimumOut.decimalPlaces(TOKEN[tokenOut].decimals));
     const fees = fee;
     const exchangeRate = tokenOut_amount.dividedBy(
       tokenIn_amount.dividedBy(10 ** TOKEN[tokenIn].decimals)
