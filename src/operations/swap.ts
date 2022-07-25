@@ -1,14 +1,10 @@
 import { getDexAddress } from '../api/util/fetchConfig';
-import {
-  CheckIfWalletConnected,
-  wallet,
-  tezos as Tezos,
-} from '../common/wallet';
 import { store } from '../redux';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenVariant } from '../config/types';
 import { OpKind } from '@taquito/taquito';
 import { routerSwap } from './router';
+import { dappClient } from '../common/walletconnect';
 
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,
@@ -138,7 +134,8 @@ const swapTokens = async (
   setShowConfirmTransaction: any
 ) => {
   try {
-    const WALLET_RESP = await CheckIfWalletConnected(wallet);
+    const {CheckIfWalletConnected}=dappClient()
+    const WALLET_RESP = await CheckIfWalletConnected();
     if (!WALLET_RESP.success) {
       throw new Error('Wallet connection failed');
     }
@@ -154,6 +151,7 @@ const swapTokens = async (
     const tokenInId = TOKEN_IN.tokenId ?? 0;
     const tokenOutAddress = TOKEN_OUT.address;
     const tokenOutId = TOKEN_OUT.tokenId ?? 0;
+    const Tezos = await dappClient().tezos();
     const tokenInAddress = TOKEN_IN.address as string;
     const tokenInInstance: any = await Tezos.contract.at(tokenInAddress);
     const dexContractInstance: any = await Tezos.contract.at(
@@ -254,7 +252,8 @@ async function ctez_to_tez(
   setShowConfirmTransaction: any
 ) {
   try {
-    const WALLET_RESP = await CheckIfWalletConnected(wallet);
+    const {CheckIfWalletConnected}=dappClient()
+    const WALLET_RESP = await CheckIfWalletConnected();
     if (!WALLET_RESP.success) {
       throw new Error('Wallet connection failed');
     }
@@ -268,6 +267,7 @@ async function ctez_to_tez(
     const contractAddress = getDexAddress(tokenIn, tokenOut);
     const CTEZ = TOKEN_IN.address as string;
     const tokenInDecimals = TOKEN_IN.decimals;
+    const Tezos = await dappClient().tezos();
     const contract = await Tezos.wallet.at(contractAddress);
     const ctez_contract = await Tezos.wallet.at(CTEZ);
     const batch = Tezos.wallet
@@ -327,12 +327,13 @@ async function tez_to_ctez(
   setShowConfirmTransaction: any
 ) {
   try {
-    const WALLET_RESP = await CheckIfWalletConnected(wallet);
-    if (!WALLET_RESP.success) {
+    const {CheckIfWalletConnected}=dappClient()
+    const WALLET_RESP = await CheckIfWalletConnected();    if (!WALLET_RESP.success) {
       throw new Error('Wallet connection failed');
     }
 
     const contractAddress = getDexAddress(tokenIn, tokenOut);
+    const Tezos = await dappClient().tezos();
     const contract = await Tezos.wallet.at(contractAddress);
 
     const tokenInDecimals = 6;

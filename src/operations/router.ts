@@ -1,14 +1,10 @@
 import { getDexAddress } from '../api/util/fetchConfig';
-import {
-  CheckIfWalletConnected,
-  wallet,
-  tezos as Tezos,
-} from '../common/wallet';
 import { store } from '../redux';
 import { BigNumber } from 'bignumber.js';
 import { TokenVariant } from '../config/types';
 import { MichelsonMap, OpKind } from '@taquito/taquito';
 import Config from '../config/config';
+import { dappClient } from '../common/walletconnect';
 
 export const routerSwap = async (
   path: string[],
@@ -21,7 +17,8 @@ export const routerSwap = async (
   setShowConfirmTransaction: any
 ): Promise<{ success: boolean; operationId: any; error?: any }> => {
   try {
-    const WALLET_RESP = await CheckIfWalletConnected(wallet);
+    const {CheckIfWalletConnected}=dappClient()
+    const WALLET_RESP = await CheckIfWalletConnected();
     if (!WALLET_RESP.success) {
       throw new Error('Wallet connection failed');
     }
@@ -32,6 +29,7 @@ export const routerSwap = async (
     const TOKEN_IN = TOKEN[path[0]];
 
     const routerAddress = Config.ROUTER[Config.NETWORK];
+    const Tezos = await dappClient().tezos();
     const routerInstance: any = await Tezos.contract.at(routerAddress);
 
     let DataLiteral: any = [];

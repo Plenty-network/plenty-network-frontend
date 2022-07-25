@@ -11,12 +11,10 @@ import BigNumber from 'bignumber.js';
 import { TokenType, TokenVariant } from '../../config/types';
 import { packDataBytes, unpackDataBytes } from '@taquito/michel-codec';
 import {
-  CheckIfWalletConnected,
-  wallet,
   rpcNode,
-  tezos,
 } from '../../common/wallet';
 import { store } from '../../redux';
+import { dappClient } from '../../common/walletconnect';
 
 /**
  * Returns packed key (expr...) which will help to fetch user specific data from bigmap directly using rpc.
@@ -82,6 +80,7 @@ export const getUserBalanceByRpc = async (
       try {
         const tokenContractAddress: string =
           'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn';
+        const tezos = await dappClient().tezos();
         const contract = await tezos.contract.at(tokenContractAddress);
         const storage: any = await contract.storage();
         let userBalance = 0;
@@ -122,10 +121,12 @@ export const getUserBalanceByRpc = async (
         };
       }
     } else if (identifier === 'tez') {
-      const WALLET_RESP = await CheckIfWalletConnected(wallet);
+      const {CheckIfWalletConnected}=dappClient();
+      const WALLET_RESP = await CheckIfWalletConnected();
       if (!WALLET_RESP.success) {
         throw new Error('Wallet connection failed');
       }
+      const tezos = await dappClient().tezos();
       const _balance = await tezos.tz.getBalance(address);
       const balance = _balance.dividedBy(Math.pow(10, 6));
       return {

@@ -1,17 +1,19 @@
 import { NetworkType } from '@airgap/beacon-sdk';
-import { wallet , connectedNetwork , rpcNode } from '../../common/wallet';
+import {   connectedNetwork , rpcNode } from '../../common/wallet';
+import { dappClient } from '../../common/walletconnect';
 
 export const ConnectWalletAPI = async () => {
   try {
-    let account = await wallet.client.getActiveAccount();
+    let walletClient= await dappClient().getDAppClient();
+    let account = await walletClient.getActiveAccount();
     if (!account) {
-      await wallet.client.requestPermissions({
+      await walletClient.requestPermissions({
         network: {
           type: connectedNetwork as NetworkType,
           rpcUrl: rpcNode,
         },
       });
-      account = await wallet.client.getActiveAccount();
+      account = await walletClient.getActiveAccount();
     }
     if (account) {
       return {
@@ -34,24 +36,13 @@ export const ConnectWalletAPI = async () => {
 };
 
 export const DisconnectWalletAPI = async () => {
-  try {
-    await wallet.disconnect();
-    return {
-      success: true,
-      wallet: null,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      wallet: null,
-      error,
-    };
-  }
+  return await dappClient().disconnectWallet()
 };
 
 export const FetchWalletAPI = async () => {
+  let walletClient= await dappClient().getDAppClient();
   try {
-    const account = await wallet.client.getActiveAccount();
+    const account = await walletClient.getActiveAccount();
 
     if (!account) {
       return {
