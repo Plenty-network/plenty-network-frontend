@@ -4,7 +4,7 @@ import { store } from '../../redux';
 import axios from 'axios';
 import { connectedNetwork, rpcNode } from '../../common/wallet';
 import { getDexAddress } from '../util/fetchConfig';
-import { dappClient } from '../../common/walletconnect';
+import { ISwapDataResponse , ICalculateTokenResponse } from './types';
 
 const util = (
   x: BigNumber,
@@ -80,15 +80,7 @@ export const calculateTokensOutTezCtez = (
   slippage: BigNumber,
   target: BigNumber,
   tokenIn: string
-): {
-  tokenOut_amount: BigNumber;
-  fees: BigNumber;
-  feePerc : BigNumber;
-  minimum_Out: BigNumber;
-  exchangeRate: BigNumber;
-  priceImpact: BigNumber;
-  error?: any;
-} => {
+): ICalculateTokenResponse => {
 
   const feePerc = new BigNumber(0.1);
   tokenIn_amount = tokenIn_amount.multipliedBy(new BigNumber(10).pow(6));
@@ -202,17 +194,7 @@ export const calculateTokensOutTezCtez = (
 export const loadSwapDataTezCtez = async (
   tokenIn: string,
   tokenOut: string
-): Promise<{
-  success: boolean;
-  tezSupply: BigNumber;
-  ctezSupply: BigNumber;
-  tokenIn: string;
-  tokenOut: string;
-  exchangeFee: BigNumber;
-  lpTokenSupply: BigNumber;
-  lpToken: any;
-  target: BigNumber;
-}> => {
+): Promise<ISwapDataResponse> => {
   try {
     const state = store.getState();
 
@@ -262,7 +244,7 @@ export const loadSwapDataTezCtez = async (
       tokenOut,
       exchangeFee: new BigNumber(0),
       lpTokenSupply: new BigNumber(0),
-      lpToken: null,
+      lpToken: undefined,
       target: new BigNumber(0),
     };
   }
@@ -278,15 +260,7 @@ export const calculateTokensOutGeneralStable = (
   tokenOut: string,
   tokenIn_precision: BigNumber,
   tokenOut_precision: BigNumber
-): {
-  tokenOut_amount: BigNumber;
-  fees: BigNumber;
-  feePerc : BigNumber;
-  minimum_Out: BigNumber;
-  exchangeRate: BigNumber;
-  priceImpact: BigNumber;
-  error?: any;
-} => {
+): ICalculateTokenResponse => {
   const state = store.getState();
   const TOKEN = state.config.standard;
   const feePerc = new BigNumber(0.1);
@@ -359,18 +333,7 @@ export const calculateTokensOutGeneralStable = (
 export const loadSwapDataGeneralStable = async (
   tokenIn: string,
   tokenOut: string
-): Promise<{
-  success: boolean;
-  tokenIn: string;
-  tokenIn_supply: BigNumber;
-  tokenOut: string;
-  tokenOut_supply: BigNumber;
-  exchangeFee: BigNumber;
-  lpTokenSupply: BigNumber;
-  lpToken: any;
-  tokenIn_precision: BigNumber;
-  tokenOut_precision: BigNumber;
-}> => {
+): Promise<ISwapDataResponse> => {
   try {
     const state = store.getState();
     const AMM = state.config.AMMs;
@@ -435,7 +398,7 @@ export const loadSwapDataGeneralStable = async (
       tokenOut_supply: new BigNumber(0),
       exchangeFee: new BigNumber(0),
       lpTokenSupply: new BigNumber(0),
-      lpToken: null,
+      lpToken: undefined,
       tokenIn_precision: new BigNumber(0),
       tokenOut_precision: new BigNumber(0),
     };

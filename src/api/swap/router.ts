@@ -39,6 +39,14 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
                 swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
             }
         }
+
+        for (var i in swapData){
+            if(swapData[i].length === 0){
+                // delete swapData[i] and paths[i]
+            }
+        }
+
+
         return {
             paths,
             swapData
