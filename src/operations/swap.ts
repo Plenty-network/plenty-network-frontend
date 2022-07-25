@@ -134,7 +134,7 @@ const swapTokens = async (
   setShowConfirmTransaction: any
 ) => {
   try {
-    const {CheckIfWalletConnected}=dappClient()
+    const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
     if (!WALLET_RESP.success) {
       throw new Error('Wallet connection failed');
@@ -223,10 +223,9 @@ const swapTokens = async (
     setShowConfirmTransaction && setShowConfirmTransaction(false);
 
     transactionSubmitModal(batchOperation.opHash);
-    resetAllValues();
 
     const opHash = await batchOperation.confirmation();
-
+    resetAllValues();
     return {
       success: true,
       operationId: batchOperation.opHash,
@@ -252,7 +251,7 @@ async function ctez_to_tez(
   setShowConfirmTransaction: any
 ) {
   try {
-    const {CheckIfWalletConnected}=dappClient()
+    const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
     if (!WALLET_RESP.success) {
       throw new Error('Wallet connection failed');
@@ -298,10 +297,11 @@ async function ctez_to_tez(
     }
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    resetAllValues();
+
     transactionSubmitModal(batchOp.opHash);
 
     await batchOp.confirmation();
+    resetAllValues();
     return {
       success: true,
       operationId: batchOp.opHash,
@@ -327,8 +327,9 @@ async function tez_to_ctez(
   setShowConfirmTransaction: any
 ) {
   try {
-    const {CheckIfWalletConnected}=dappClient()
-    const WALLET_RESP = await CheckIfWalletConnected();    if (!WALLET_RESP.success) {
+    const { CheckIfWalletConnected } = dappClient();
+    const WALLET_RESP = await CheckIfWalletConnected();
+    if (!WALLET_RESP.success) {
       throw new Error('Wallet connection failed');
     }
 
@@ -358,10 +359,11 @@ async function tez_to_ctez(
     const batchOp: any = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    resetAllValues();
-    transactionSubmitModal(batchOp.opHash);
-    await batchOp.confirmation();
 
+    transactionSubmitModal(batchOp.opHash);
+
+    await batchOp.confirmation();
+    resetAllValues();
     return {
       success: true,
       operationId: batchOp.opHash,

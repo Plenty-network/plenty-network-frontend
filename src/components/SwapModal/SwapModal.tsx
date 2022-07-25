@@ -128,7 +128,10 @@ function SwapModal(props: ISwapModalProps) {
               No results found
             </div>
           ) : (
-            <div className="border relative max-h-[300px] overflow-y-auto border-text-800 bg-card-100 rounded-xl px-[18px] w-full pb-5 mt-5">
+            <div
+              id="tokensList"
+              className="border relative max-h-[300px] overflow-y-auto border-text-800 bg-card-100 rounded-xl px-[18px] w-full pb-5 mt-5"
+            >
               {tokensToShow.map((token, index) => {
                 return (
                   <div
