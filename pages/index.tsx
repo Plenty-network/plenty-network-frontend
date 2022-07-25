@@ -48,7 +48,7 @@ const Home: NextPage = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
-        <ShortCard />
+        {/* <ShortCard /> */}
       </SideBarHOC>
     </>
   );
