@@ -50,13 +50,9 @@ export const loadSwapDataVolatile = async (
       tokenIn_supply = token2_pool;
     }
 
-    const lpTokenDecimal = lpToken.decimals;
-    const tokenIn_Decimal = TOKEN[tokenIn].decimals;
-    const tokenOut_Decimal = TOKEN[tokenOut].decimals;
-
-    tokenIn_supply = tokenIn_supply.dividedBy(Math.pow(10, tokenIn_Decimal));
-    tokenOut_supply = tokenOut_supply.dividedBy(Math.pow(10, tokenOut_Decimal));
-    lpTokenSupply = lpTokenSupply.dividedBy(Math.pow(10, lpTokenDecimal));
+    tokenIn_supply = tokenIn_supply.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
+    tokenOut_supply = tokenOut_supply.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+    lpTokenSupply = lpTokenSupply.dividedBy(new BigNumber(10).pow(lpToken.decimals));
     const exchangeFee = new BigNumber(1).dividedBy(lpFee);
     return {
       success: true,
@@ -115,7 +111,7 @@ export const calculateTokenOutputVolatile = (
     );
 
     tokenOut_amount = new BigNumber(
-      tokenOut_amount.precision(TOKEN[tokenOut].decimals)
+      tokenOut_amount.decimalPlaces(TOKEN[tokenOut].decimals)
     );
 
     const fees = tokenIn_amount.multipliedBy(exchangeFee);
@@ -124,7 +120,7 @@ export const calculateTokenOutputVolatile = (
     );
 
     minimum_Out = new BigNumber(
-      minimum_Out.precision(TOKEN[tokenOut].decimals)
+      minimum_Out.decimalPlaces(TOKEN[tokenOut].decimals)
     );
 
     const updated_TokenIn_Supply = tokenIn_supply.minus(tokenIn_amount);

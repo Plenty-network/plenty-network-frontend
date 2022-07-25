@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Config from '../../config/config';
 import { AMM_TYPE, IAmmContracts, IContractsConfig, ITokens } from '../../config/types';
-import { store, useAppSelector } from '../../redux';
+import { store } from '../../redux';
 
 export const fetchConfig = async () : Promise<IContractsConfig> => {
   const token_response = await axios.get(Config.TOKENS_CONFIG);
@@ -24,41 +24,31 @@ export const fetchConfig = async () : Promise<IContractsConfig> => {
 export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
   const state = store.getState();
   const AMM = state.config.AMMs;
-  
-//   TODO : Add a way to break from forEach
-  let add = 'false';
-  Object.keys(AMM).forEach(function (key) {
-    if (
-      (AMM[key].token1.symbol === tokenIn &&
-        AMM[key].token2.symbol === tokenOut) ||
-      (AMM[key].token2.symbol === tokenIn &&
-        AMM[key].token1.symbol === tokenOut)
-    ) {
-      add = key;
-      return key;
-    }
-  });
-  return add;
+
+  const address = Object.keys(AMM).find(
+    (key) =>
+    (AMM[key].token1.symbol === tokenIn &&
+      AMM[key].token2.symbol === tokenOut) ||
+    (AMM[key].token2.symbol === tokenIn &&
+      AMM[key].token1.symbol === tokenOut)
+  );
+
+  return address ?? 'false';
 };
 
 export const getDexType = (tokenIn: string, tokenOut: string): string => {
   const state = store.getState();
   const AMM = state.config.AMMs;
+
+  const address = Object.keys(AMM).find(
+    (key) =>
+    (AMM[key].token1.symbol === tokenIn &&
+      AMM[key].token2.symbol === tokenOut) ||
+    (AMM[key].token2.symbol === tokenIn &&
+      AMM[key].token1.symbol === tokenOut)
+  );
   
-  //   TODO : Add a way to break from forEach
-  let type = 'false';
-  Object.keys(AMM).forEach(function (key) {
-    if (
-      (AMM[key].token1.symbol === tokenIn &&
-        AMM[key].token2.symbol === tokenOut) ||
-      (AMM[key].token2.symbol === tokenIn &&
-        AMM[key].token1.symbol === tokenOut)
-    ) {
-      type = AMM[key].type;
-      return key;
-    }
-  });
-  return type;
+  return address ? AMM[address].type : 'false';
 };
 
 /**

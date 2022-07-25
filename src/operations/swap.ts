@@ -140,7 +140,6 @@ const swapTokens = async (
       throw new Error('Wallet connection failed');
     }
 
-    // const TOKEN = useAppSelector((state) => state.config.standard);
     const state = store.getState();
     const TOKEN = state.config.standard;
 
@@ -158,9 +157,9 @@ const swapTokens = async (
       dexContractAddress
     );
 
-    tokenInAmount = tokenInAmount.multipliedBy(Math.pow(10, TOKEN_IN.decimals));
+    tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN_IN.decimals));
     minimumTokenOut = minimumTokenOut.multipliedBy(
-      Math.pow(10, TOKEN_OUT.decimals)
+      new BigNumber(10).pow(TOKEN_OUT.decimals)
     );
 
     let batch = null;
@@ -274,13 +273,13 @@ async function ctez_to_tez(
       .withContractCall(
         ctez_contract.methods.approve(
           contractAddress,
-          tokenInAmount.multipliedBy(10 ** tokenInDecimals).toString()
+          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString()
         )
       )
       .withContractCall(
         contract.methods.ctez_to_tez(
-          tokenInAmount.multipliedBy(10 ** tokenInDecimals).toString(),
-          minimumTokenOut.multipliedBy(10 ** tokenInDecimals).toString(),
+          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString(),
+          minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString(),
           recipent
         )
       )
@@ -344,12 +343,12 @@ async function tez_to_ctez(
         kind: OpKind.TRANSACTION,
         ...contract.methods
           .tez_to_ctez(
-            minimumTokenOut.multipliedBy(10 ** tokenOutDecimals).toString(),
+            minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenOutDecimals)).toString(),
             recipent
           )
           .toTransferParams({
             amount: Number(
-              tokenInAmount.multipliedBy(10 ** tokenInDecimals).toString()
+              tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString()
             ),
             mutez: true,
           }),
