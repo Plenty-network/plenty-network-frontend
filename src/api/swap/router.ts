@@ -1,10 +1,11 @@
 import { BigNumber } from 'bignumber.js';
+import path from 'path';
 import { store } from '../../redux';
 import { calculateTokensOutWrapper, loadSwapDataWrapper } from './wrappers';
 
 let paths: string[] = [];
 
-export const allPaths = async (tokenIn: string, tokenOut: string): Promise<{ paths: string[], swapData: any[][] }> => {
+export const allPaths = async (tokenIn: string, tokenOut: string , multihop : boolean): Promise<{ paths: string[], swapData: any[][] }> => {
     try {
         const state = store.getState();
         const TOKEN = state.config.standard;
@@ -19,11 +20,20 @@ export const allPaths = async (tokenIn: string, tokenOut: string): Promise<{ pat
             visited[key] = false;
         });
         allPathHelper(tokenIn, tokenOut, visited, tokenIn, TOKEN);
+        
 
         let swapData: any[][] = [[], []];
 
         for (var i in paths) {
             const path = paths[i].split(' ');
+            if(!multihop){
+                if(path.length > 2)   // To show only directSwap
+                continue;
+            }
+            else{
+                if(path.length > 4) //To prevent 5 swaps
+                continue;
+            }
             for (let j = 0; j < path.length - 1; j++) {
                 // Getting Swap Details
                 swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
