@@ -157,7 +157,9 @@ const swapTokens = async (
       dexContractAddress
     );
 
-    tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN_IN.decimals));
+    tokenInAmount = tokenInAmount.multipliedBy(
+      new BigNumber(10).pow(TOKEN_IN.decimals)
+    );
     minimumTokenOut = minimumTokenOut.multipliedBy(
       new BigNumber(10).pow(TOKEN_OUT.decimals)
     );
@@ -222,9 +224,9 @@ const swapTokens = async (
     setShowConfirmTransaction && setShowConfirmTransaction(false);
 
     transactionSubmitModal(batchOperation.opHash);
-
-    const opHash = await batchOperation.confirmation();
     resetAllValues();
+    const opHash = await batchOperation.confirmation();
+
     return {
       success: true,
       operationId: batchOperation.opHash,
@@ -273,13 +275,19 @@ async function ctez_to_tez(
       .withContractCall(
         ctez_contract.methods.approve(
           contractAddress,
-          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString()
+          tokenInAmount
+            .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
+            .toString()
         )
       )
       .withContractCall(
         contract.methods.ctez_to_tez(
-          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString(),
-          minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString(),
+          tokenInAmount
+            .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
+            .toString(),
+          minimumTokenOut
+            .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
+            .toString(),
           recipent
         )
       )
@@ -298,9 +306,9 @@ async function ctez_to_tez(
     setShowConfirmTransaction && setShowConfirmTransaction(false);
 
     transactionSubmitModal(batchOp.opHash);
-
-    await batchOp.confirmation();
     resetAllValues();
+    await batchOp.confirmation();
+
     return {
       success: true,
       operationId: batchOp.opHash,
@@ -343,12 +351,16 @@ async function tez_to_ctez(
         kind: OpKind.TRANSACTION,
         ...contract.methods
           .tez_to_ctez(
-            minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenOutDecimals)).toString(),
+            minimumTokenOut
+              .multipliedBy(new BigNumber(10).pow(tokenOutDecimals))
+              .toString(),
             recipent
           )
           .toTransferParams({
             amount: Number(
-              tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString()
+              tokenInAmount
+                .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
+                .toString()
             ),
             mutez: true,
           }),
@@ -360,9 +372,9 @@ async function tez_to_ctez(
     setShowConfirmTransaction && setShowConfirmTransaction(false);
 
     transactionSubmitModal(batchOp.opHash);
-
-    await batchOp.confirmation();
     resetAllValues();
+    await batchOp.confirmation();
+
     return {
       success: true,
       operationId: batchOp.opHash,

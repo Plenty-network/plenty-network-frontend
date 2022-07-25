@@ -31,6 +31,12 @@ import ExpertModePopup from '../ExpertMode';
 import ConfirmSwap from './ConfirmSwap';
 import ConfirmTransaction from '../ConfirmTransaction';
 import TransactionSubmitted from '../TransactionSubmitted';
+import {
+  FIRST_TOKEN_AMOUNT,
+  SECOND_TOKEN_AMOUNT,
+  TOKEN_A,
+  TOKEN_B,
+} from '../../constants/localStorage';
 
 interface ISwapTabProps {
   className?: string;
@@ -111,7 +117,7 @@ function SwapTab(props: ISwapTabProps) {
   const [isSecondInputFocus, setIsSecondInputFocus] = useState(false);
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const [isRefresh, setRefresh] = useState(false);
-  console.log(props.tokenPrice);
+
   const refreshAllData = (value: boolean) => {
     setRefresh(value);
     setTimeout(() => {
@@ -133,6 +139,27 @@ function SwapTab(props: ISwapTabProps) {
     setConvert(!isConvert);
   };
   const handleConfirmSwap = () => {
+    localStorage.setItem(
+      TOKEN_A,
+      props.tokenIn.name === 'tez'
+        ? 'TEZ'
+        : props.tokenIn.name === 'ctez'
+        ? 'CTEZ'
+        : props.tokenIn.name
+    );
+    localStorage.setItem(
+      TOKEN_B,
+      props.tokenOut.name === 'tez'
+        ? 'TEZ'
+        : props.tokenOut.name === 'ctez'
+        ? 'CTEZ'
+        : props.tokenOut.name
+    );
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, props.firstTokenAmount.toString());
+    localStorage.setItem(
+      SECOND_TOKEN_AMOUNT,
+      props.secondTokenAmount.toString()
+    );
     !expertMode && props.setShowConfirmSwap(false);
     const recepientAddress = props.recepient
       ? props.recepient
@@ -156,7 +183,6 @@ function SwapTab(props: ISwapTabProps) {
         console.log('failed');
         props.resetAllValues;
         props.setShowConfirmTransaction(false);
-
         props.setShowTransactionSubmitModal(false);
       }
     });
@@ -180,7 +206,7 @@ function SwapTab(props: ISwapTabProps) {
             Select a token
           </Button>
         );
-      } else if (props.errorMessage === ERRORMESSAGES.SWAPROUTER) {
+      } else if (props.errorMessage !== '') {
         return (
           <Button color="disabled" width="w-full">
             Swap
@@ -345,7 +371,7 @@ function SwapTab(props: ISwapTabProps) {
         </div>
       </div>
       {props.errorMessage !== '' && (
-        <div className="mt-1 lg:mx-[30px] font-body2 text-error-500">
+        <div className="mt-1 lg:mx-[30px] font-body3 text-error-500">
           {props.errorMessage}
         </div>
       )}
@@ -800,19 +826,11 @@ function SwapTab(props: ISwapTabProps) {
               ? () => window.open(`https://tzkt.io/${transactionId}`, '_blank')
               : null
           }
-          content={`Swap ${Number(props.firstTokenAmount).toFixed(2)} ${
-            props.tokenIn.name === 'tez'
-              ? 'TEZ'
-              : props.tokenIn.name === 'ctez'
-              ? 'CTEZ'
-              : props.tokenIn.name
-          } for ${Number(props.secondTokenAmount).toFixed(4)} ${
-            props.tokenOut.name === 'tez'
-              ? 'TEZ'
-              : props.tokenOut.name === 'ctez'
-              ? 'CTEZ'
-              : props.tokenOut.name
-          } `}
+          content={`Swap ${Number(
+            localStorage.getItem(FIRST_TOKEN_AMOUNT)
+          ).toFixed(2)} ${localStorage.getItem(TOKEN_A)} for ${Number(
+            localStorage.getItem(SECOND_TOKEN_AMOUNT)
+          ).toFixed(4)} ${localStorage.getItem(TOKEN_B)} `}
         />
       )}
     </>
