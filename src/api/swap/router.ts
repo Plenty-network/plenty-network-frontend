@@ -31,7 +31,7 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
                 continue;
             }
             else{
-                if(path.length > 4) //To prevent 5 swaps
+                if(path.length > 5) //To prevent 5 swaps if required
                 continue;
             }
             for (let j = 0; j < path.length - 1; j++) {
@@ -96,6 +96,10 @@ const computeAllPaths = (
         let bestPath;
 
             for (var i in paths) {
+                // Check if swapData is not calculated
+                if(swapData[i].length === 0)
+                    continue;
+
                 // Adding input from user
                 const tokenInAmount: BigNumber[] = [];
                 tokenInAmount.push(tokenIn_amount);
@@ -106,7 +110,6 @@ const computeAllPaths = (
                 const priceImpact: BigNumber[] = [];
 
                 const path = paths[i].split(' ');
-
                 for (let j = 0; j < path.length - 1; j++) {
                     // Getting Swap Details
                     const res = swapData[i][j];
