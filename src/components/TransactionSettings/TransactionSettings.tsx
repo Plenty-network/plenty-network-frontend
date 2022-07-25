@@ -19,6 +19,8 @@ interface ITransactionSettingsProps {
   setExpertMode: any;
   expertMode: boolean;
   setShowExpertPopup: any;
+  setEnableMultiHop: React.Dispatch<React.SetStateAction<boolean>>;
+  enableMultiHop: boolean;
 }
 function TransactionSettings(props: ITransactionSettingsProps) {
   const [errorMessage, setErrorMessage] = useState('');
@@ -32,6 +34,9 @@ function TransactionSettings(props: ITransactionSettingsProps) {
   const handleExpertMode = () => {
     props.setExpertMode(!props.expertMode);
     props.setShowExpertPopup(!props.expertMode);
+  };
+  const handleMultiHop = () => {
+    props.setEnableMultiHop(!props.enableMultiHop);
   };
 
   const handleAutoSlippage = () => {
@@ -115,15 +120,17 @@ function TransactionSettings(props: ITransactionSettingsProps) {
       <div className="mt-2">
         <div className="flex justify-between">
           <div>
-            <span className="font-caption1 text-text-200 ">
-              Disable multihops
-            </span>
+            <span className="font-caption1 text-text-200 ">Multihops</span>
             <span className="relative top-0.5 left-[5px]">
               <Image src={info} width={'11px'} height={'11px'} />
             </span>
           </div>
           <div>
-            <Switch id="disableMultiphops" />
+            <Switch
+              id="multiphops"
+              onChange={handleMultiHop}
+              isChecked={props.enableMultiHop}
+            />
           </div>
         </div>
       </div>
