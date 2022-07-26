@@ -257,8 +257,6 @@ async function ctez_to_tez(
     if (!WALLET_RESP.success) {
       throw new Error('Wallet connection failed');
     }
-
-    // const TOKEN = useAppSelector((state) => state.config.standard);
     const state = store.getState();
     const TOKEN = state.config.standard;
 
@@ -291,12 +289,8 @@ async function ctez_to_tez(
           recipent
         )
       )
-      // .send();
-      // await op2.confirmation();
       .withContractCall(ctez_contract.methods.approve(contractAddress, 0));
-    // .send();
     const batchOp: any = await batch.send();
-    // eslint-disable-next-line no-lone-blocks
     {
       batchOp.opHash === null
         ? console.log('operation getting injected')

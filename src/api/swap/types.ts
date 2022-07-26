@@ -26,3 +26,24 @@ export interface ICalculateTokenResponse {
     priceImpact: BigNumber;
     error?: any;
   }
+
+export interface IRouterResponse {
+  path: string[];
+  tokenOut_amount: BigNumber;
+  finalMinimumTokenOut: BigNumber;
+  minimumTokenOut: BigNumber[];
+  finalPriceImpact: BigNumber;
+  finalFeePerc: BigNumber;
+  feePerc: BigNumber[];
+  isStable: boolean[];
+  exchangeRate: BigNumber;
+}
+
+export interface IBestPathResponse {
+  path: string[];
+  tokenOut_amount: BigNumber;
+  minimumTokenOut: BigNumber[];
+  fees: BigNumber[];
+  feePerc: BigNumber[];
+  priceImpact: BigNumber[];
+}

@@ -16,8 +16,6 @@ export const estimateOtherTokenAmount = (
   otherTokenSupply: string | BigNumber
 ): IOtherTokenOutput => {
   try {
-    // TODO: @Udit, please check for the possible decimals issue for input and other token supply, if not divided by decimal.
-    // This functions works for supply values which are divided by decimal.
     const otherTokenAmount = new BigNumber(inputTokenAmount)
       .multipliedBy(otherTokenSupply)
       .dividedBy(inputTokenSupply)
@@ -91,8 +89,6 @@ export const getPnlpOutputEstimate = (
   lpTokenSupply: string | BigNumber
 ): IPnlpEstimateResponse => {
   try {
-    // TODO: @Udit, please check for the possible decimals issue for one, two and lp token supply, if not divided by decimal.
-    // This functions works for supply values which are divided by decimal.
     const pnlpBasedOnTokenOne = new BigNumber(tokenOneAmount)
       .multipliedBy(lpTokenSupply)
       .dividedBy(tokenOneSupply);
@@ -136,8 +132,6 @@ export const getOutputTokensAmount = (
   lpTokenSupply: string | BigNumber,
   slippage: string | BigNumber = "0.5"
 ): IOutputTokensAmountResponse => {
-  // TODO: @Udit, please check for the possible decimals issue for one, two and lp token supply, if not divided by decimal.
-  // This functions works for supply values which are divided by decimal.
   try {
     let tokenOneAmount = new BigNumber(burnAmount)
       .multipliedBy(tokenOneSupply)

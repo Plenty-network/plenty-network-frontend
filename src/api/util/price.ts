@@ -20,7 +20,6 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
       return {
         ctezPriceInUSD: ctezPriceInUSD,
       };
-      //xtzPriceResponse.data.market_data.current_price.usd;
     } catch (e) {
       console.log({ e });
       return {
@@ -97,7 +96,6 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
    */
   export const getTokenPrices = async () : Promise<{success : boolean , tokenPrice : { [id: string] : number; }}> => {
     try {
-      // const TOKEN = useAppSelector((state) => state.config.standard);
       const state = store.getState();
       const TOKEN = state.config.standard;
       const pricesResponse = await axios.get('https://api.teztools.io/token/prices');
@@ -124,7 +122,7 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
           }
         }
       }
-      // Depracate once the new tokens come on exchanges
+      // TODO: Find solution with Anshu for .e token prices
       for (const x in Config.WRAPPED_ASSETS[connectedNetwork]) {
         if (
           x === 'DAI.e' ||

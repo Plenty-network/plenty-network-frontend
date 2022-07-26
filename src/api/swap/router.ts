@@ -1,7 +1,8 @@
 import { BigNumber } from 'bignumber.js';
-import path from 'path';
 import { store } from '../../redux';
 import { calculateTokensOutWrapper, loadSwapDataWrapper } from './wrappers';
+import { IBestPathResponse, ISwapDataResponse} from './types'
+import { ITokens } from '../../config/types';
 
 let paths: string[] = [];
 
@@ -35,8 +36,8 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
             }
         }
         paths = tempPaths;
-        
-        let swapData: any[][] = [[], []];
+    
+        let swapData: ISwapDataResponse[][] = [[], []];
 
         for (var i in paths) {
             const path = paths[i].split(' ');
@@ -45,7 +46,6 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
                 swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
             }
         }
-
         return {
             paths,
             swapData
@@ -63,9 +63,9 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
 const allPathHelper = (
     src: string,
     dest: string,
-    visited: any,
+    visited: { [x: string]: boolean },
     psf: string,
-    TOKEN: { [x: string]: any }
+    TOKEN: ITokens
 ) => {
     if (src === dest) {
         paths.push(psf);
@@ -85,28 +85,16 @@ const allPathHelper = (
     visited[src] = false;
 };
 
-// Return Best Path and calculations
-const computeAllPaths = (
+export const computeAllPaths = (
     paths: string[],
     tokenIn_amount: BigNumber,
     slippage: BigNumber,
-    swapData: any[][],
-): {
-    path: string[];
-    tokenOut_amount: BigNumber;
-    minimumTokenOut: BigNumber[];
-    fees: BigNumber[];
-    feePerc: BigNumber[];
-    priceImpact: BigNumber[];
-} => {
+    swapData: ISwapDataResponse[][],
+): IBestPathResponse => {
     try {
         let bestPath;
 
             for (var i in paths) {
-                // Check if swapData is not calculated
-                if(swapData[i].length === 0)
-                    continue;
-
                 // Adding input from user
                 const tokenInAmount: BigNumber[] = [];
                 tokenInAmount.push(tokenIn_amount);
@@ -186,70 +174,4 @@ const computeAllPaths = (
     }
 };
 
-export const computeAllPathsWrapper = (
-    paths: string[],
-    tokenIn_amount: BigNumber,
-    slippage: BigNumber,
-    swapData: any[][],
-): {
-    path: string[];
-    tokenOut_amount: BigNumber;
-    finalMinimumTokenOut: BigNumber;
-    minimumTokenOut: BigNumber[];
-    finalPriceImpact: BigNumber;
-    finalFeePerc: BigNumber;
-    feePerc: BigNumber[];
-    isStable: boolean[];
-    exchangeRate: BigNumber;
-} => {
-    try {
-        const bestPath = computeAllPaths(paths, tokenIn_amount, slippage, swapData);
 
-        const isStable: boolean[] = [];
-        let finalPriceImpact = new BigNumber(0);
-        let finalFeePerc = new BigNumber(0);
-
-        for (var x of bestPath.priceImpact) {
-            finalPriceImpact = finalPriceImpact.plus(x);
-        }
-
-        for (var x of bestPath.feePerc) {
-            finalFeePerc = finalFeePerc.plus(x);
-            if (x.isEqualTo(new BigNumber(0.1))) isStable.push(true);
-            else isStable.push(false);
-        }
-
-        const exchangeRateCalculation = computeAllPaths(
-            [bestPath.path.join(' ')],
-            new BigNumber(1),
-            new BigNumber(0),
-            swapData
-        );
-
-        return {
-            path: bestPath.path,
-            tokenOut_amount: bestPath.tokenOut_amount,
-            finalMinimumTokenOut:
-                bestPath.minimumTokenOut[bestPath.minimumTokenOut.length - 1],
-            minimumTokenOut: bestPath.minimumTokenOut,
-            finalPriceImpact: finalPriceImpact,
-            finalFeePerc: finalFeePerc,
-            feePerc: bestPath.feePerc,
-            isStable: isStable,
-            exchangeRate: exchangeRateCalculation.tokenOut_amount,
-        };
-    } catch (error) {
-        console.log(error);
-        return {
-            path: [],
-            tokenOut_amount: new BigNumber(0),
-            finalMinimumTokenOut: new BigNumber(0),
-            minimumTokenOut: [],
-            finalPriceImpact: new BigNumber(0),
-            finalFeePerc: new BigNumber(0),
-            feePerc: [],
-            isStable: [],
-            exchangeRate: new BigNumber(0),
-        };
-    }
-};
