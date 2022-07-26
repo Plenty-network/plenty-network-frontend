@@ -32,7 +32,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
       <div className="flex flex-no-wrap flex-col">
         <TopNavBar setShowNotification={showNotificationClick} />
         <TopNavBarMobile setShowNotification={showNotificationClick} />
-        {showNotification && <NotificationBar />}
+        {showNotification && <NotificationBar  onhide={()=>{setShowNotification(false)}}/>}
         <div className="flex flex-no-wrap">
           <SideBar />
           <div className="mt-0 md:ml-[240px] md:w-[calc(100%_-_240px)] w-full mb-12 md:mb-0">

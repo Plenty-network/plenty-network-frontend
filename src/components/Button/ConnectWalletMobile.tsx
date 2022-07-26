@@ -1,14 +1,10 @@
 import Image from 'next/image';
 import * as React from 'react';
-import loadingLogo from '../../assets/icon/common/loadingLogo.svg';
-import settingLogo from '../../assets/icon/common/settingLogo.svg';
-import templeLogo from '../../assets/icon/common/templeLogo.svg';
-
 import copyLogo from '../../assets/icon/common/copyLogo.svg';
-import fiatLogo from '../../assets/icon/common/fiatLogo.svg';
-import nodeSelectorLogo from '../../assets/icon/common/nodeSelectorLogo.svg';
 import disconnectLogo from '../../assets/icon/common/disconnectLogo.svg';
-import { AppDispatch, store } from '../../redux/index';
+import fiatLogo from '../../assets/icon/common/fiatLogo.svg';
+import mobileConnectWallet from '../../assets/icon/common/mobileConnectWallet.svg';
+import nodeSelectorLogo from '../../assets/icon/common/nodeSelectorLogo.svg';
 import { useAppDispatch, useAppSelector } from '../../redux/index';
 import { walletConnection, walletDisconnection } from '../../redux/wallet/wallet';
 import { useOutsideClick } from '../../utils/outSideClickHook';
@@ -16,10 +12,11 @@ import { useOutsideClick } from '../../utils/outSideClickHook';
 
 
 
-export interface IConnectWalletBtnDeskTopProps {
+
+export interface IConnectWalletBtnMobileProps {
 }
 
-export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
+export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
     const userAddress = useAppSelector((state) => state.wallet.address);
     const dispatch = useAppDispatch();
     const reff=React.useRef(null);
@@ -39,15 +36,8 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
     if (userAddress) {
         return (
             <div className='relative' ref={reff}>
-                <button onClick={()=>{setShowMenu(sow=>!sow)}} className='flex flex-row justify-center items-center gap-2 bg-primary-500/10 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/30'>
-                    <Image src={templeLogo} />
-                    <p className='text-f14 ' style={{"textOverflow":"ellipsis","width":"68px","whiteSpace":"nowrap","overflow":"hidden"}}>
-                        {userAddress}
-                    </p>
-                    <Image src={loadingLogo} className='spin' />
-                    <Image src={settingLogo} />
-                </button>
-                {showMenu && <div className='absolute w-[320px] right-0 mt-2 border z-10 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col'>
+                <Image src={mobileConnectWallet} onClick={()=>{setShowMenu(sow=>!sow)}} />
+                {showMenu && <div className='absolute w-[320px] right-0 mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col'>
                 <p className='bg-primary-755 text-f14 p-4 flex gap-2'>
                     <span className='text-text-400'>Temple wallet</span>
                     (<span className='text-text-50' style={{"textOverflow":"ellipsis","width":"68px","whiteSpace":"nowrap","overflow":"hidden"}} >{userAddress}</span>)
@@ -85,7 +75,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
     }
     return (
         <button onClick={connectTempleWallet} className='bg-primary-500/5 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/100'>
-            Connect Wallet
+            Connect
         </button>
     );
 }
