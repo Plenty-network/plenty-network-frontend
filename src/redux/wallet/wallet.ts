@@ -18,7 +18,7 @@ const initialState: WalletState = {
 export const walletConnection = createAsyncThunk(
   'wallet/walletConnection',
   async (thunkAPI) => {
-    const res = await ConnectWalletAPI().then((resp) => resp.wallet);
+    const res = await (await ConnectWalletAPI()).wallet;
     return res;
   }
 );
