@@ -122,6 +122,24 @@ const getCtezPrice = async () : Promise<{ctezPriceInUSD : number}> => {
           }
         }
       }
+      // TODO : Remove this for removing wAssets
+      for (const i in tokenPriceResponse.contracts) {
+          const x = tokenPriceResponse.contracts[i].symbol;
+          if (
+            x === 'wDAI' ||
+            x === 'wUSDC' ||
+            x === 'wUSDT' ||
+            x === 'wLINK' ||
+            x === 'wMATIC' ||
+            x === 'wBUSD' ||
+            x === 'wWETH' ||
+            x === 'wWBTC'
+          ) {
+
+            tokenPrice[tokenPriceResponse.contracts[i].symbol] =
+              tokenPriceResponse.contracts[i].usdValue;
+          }
+      }
       // TODO: Find solution with Anshu for .e token prices
       for (const x in Config.WRAPPED_ASSETS[connectedNetwork]) {
         if (
