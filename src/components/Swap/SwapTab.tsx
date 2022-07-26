@@ -106,7 +106,6 @@ interface ISwapTabProps {
 }
 
 function SwapTab(props: ISwapTabProps) {
-  console.log(tokens);
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
   const [transactionId, setTransactionId] = useState('');
@@ -176,11 +175,9 @@ function SwapTab(props: ISwapTabProps) {
       !expertMode && props.setShowConfirmTransaction
     ).then((response) => {
       if (response.success) {
-        console.log(response);
         props.resetAllValues;
         props.setShowTransactionSubmitModal(false);
       } else {
-        console.log('failed');
         props.resetAllValues;
         props.setShowConfirmTransaction(false);
         props.setShowTransactionSubmitModal(false);
@@ -294,12 +291,10 @@ function SwapTab(props: ISwapTabProps) {
         )}
       >
         <div className="flex justify-between">
-          <div
-            className="flex-[0_0_50%] mt-4"
-            onClick={() => props.handleTokenType('tokenIn')}
-          >
+          <div className="flex-[0_0_50%] mt-4">
             {Object.keys(props.tokenIn).length !== 0 ? (
               <TokenDropdown
+                onClick={() => props.handleTokenType('tokenIn')}
                 tokenIcon={props.tokenIn.image}
                 tokenName={
                   props.tokenIn.name === 'tez'
@@ -310,7 +305,10 @@ function SwapTab(props: ISwapTabProps) {
                 }
               />
             ) : (
-              <TokenDropdown tokenName="Select a token" />
+              <TokenDropdown
+                tokenName="Select a token"
+                onClick={() => props.handleTokenType('tokenIn')}
+              />
             )}
           </div>
           <div className=" my-3 ">
@@ -371,7 +369,7 @@ function SwapTab(props: ISwapTabProps) {
         </div>
       </div>
       {props.errorMessage !== '' && (
-        <div className="mt-1 lg:mx-[30px] font-body3 text-error-500">
+        <div className="mt-1 mx-5 lg:mx-[30px] font-body2 lg:font-body3 text-error-500">
           {props.errorMessage}
         </div>
       )}
@@ -393,12 +391,10 @@ function SwapTab(props: ISwapTabProps) {
           )}
         >
           <div className=" flex justify-between">
-            <div
-              className="flex-[0_0_50%] mt-4"
-              onClick={() => props.handleTokenType('tokenOut')}
-            >
+            <div className="flex-[0_0_50%] mt-4">
               {Object.keys(props.tokenOut).length !== 0 ? (
                 <TokenDropdown
+                  onClick={() => props.handleTokenType('tokenOut')}
                   tokenIcon={props.tokenOut.image}
                   tokenName={
                     props.tokenOut.name === 'tez'
@@ -409,7 +405,10 @@ function SwapTab(props: ISwapTabProps) {
                   }
                 />
               ) : (
-                <TokenDropdown tokenName="Select a token" />
+                <TokenDropdown
+                  tokenName="Select a token"
+                  onClick={() => props.handleTokenType('tokenOut')}
+                />
               )}
             </div>
             <div className=" my-3 ">
@@ -517,7 +516,7 @@ function SwapTab(props: ISwapTabProps) {
                   <span className="relative top-0.5">
                     <Image src={info} width={'15px'} height={'15px'} />
                   </span>
-                  <span className="ml-[9.25px] font-text-bold mr-[7px]">
+                  <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
                     {' '}
                     {!isConvert
                       ? `1 ${
@@ -556,9 +555,9 @@ function SwapTab(props: ISwapTabProps) {
                     />
                   </span>
                 </div>
-                <div className="ml-auto mr-6 h-[36px] flex justify-center rounded bg-shimmer-100 p-2">
+                <div className="ml-auto mr-2.5 lg:mr-6 h-[36px] flex justify-center rounded bg-shimmer-100 p-2">
                   <Image src={router} width={'20px'} height={'20px'} />
-                  <span className="ml-1 font-subtitle4 text-primary-500">{`${Number(
+                  <span className="ml-1 font-bold3 lg:font-subtitle4 text-primary-500">{`${Number(
                     props.routeDetails.finalFeePerc
                   ).toFixed(2)} %`}</span>
                 </div>
@@ -579,7 +578,7 @@ function SwapTab(props: ISwapTabProps) {
 
         {openSwapDetails && props.routeDetails.success && (
           <div
-            className={`bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 ${
+            className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 ${
               animateOpenSwapDetails
                 ? 'opendown-animation'
                 : 'closeup-animation'

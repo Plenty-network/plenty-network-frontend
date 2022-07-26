@@ -117,6 +117,11 @@ input[type='number'] {
     /*600*/
     @apply text-f24;
   }
+  .font-bold3 {
+    @apply font-bold;
+    /*700*/
+    @apply text-f12;
+  }
   .font-title1-bold {
     @apply font-semibold;
     @apply text-f20;

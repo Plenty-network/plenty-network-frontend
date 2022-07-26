@@ -129,7 +129,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
             </div>
 
             <div
-              className={`bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 `}
+              className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 `}
             >
               <div className="flex">
                 <div className="font-mobile-400 md:font-body3 ">
