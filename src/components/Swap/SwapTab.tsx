@@ -25,7 +25,7 @@ import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import loader from '../../assets/animations/shimmer-swap.json';
 
 import { BigNumber } from 'bignumber.js';
-import { tokens } from '../../constants/Tokens';
+import { tokens } from '../../constants/tokensList';
 import { allSwapWrapper } from '../../operations/swap';
 import ExpertModePopup from '../ExpertMode';
 import ConfirmSwap from './ConfirmSwap';
@@ -106,6 +106,7 @@ interface ISwapTabProps {
 }
 
 function SwapTab(props: ISwapTabProps) {
+  console.log(tokens);
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
   const [transactionId, setTransactionId] = useState('');
@@ -329,7 +330,7 @@ function SwapTab(props: ISwapTabProps) {
                     onChange={(e) =>
                       props.handleSwapTokenInput(e.target.value, 'tokenIn')
                     }
-                    disabled={props.errorMessage === ERRORMESSAGES.SWAPROUTER}
+                    disabled={props.errorMessage !== ''}
                     value={props.firstTokenAmount}
                     onFocus={() => setIsFirstInputFocus(true)}
                     onBlur={() => setIsFirstInputFocus(false)}

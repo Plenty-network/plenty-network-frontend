@@ -39,6 +39,9 @@ import link_normal from '../assets/Tokens/link_icon.svg';
 import matic_normal from '../assets/Tokens/matic_icon.svg';
 import busd_normal from '../assets/Tokens/busd_icon.svg';
 import usdt_normal from '../assets/Tokens/usdt_icon.svg';
+import ageure from '../assets/Tokens/ageure.png';
+import eurl from '../assets/Tokens/eurl.png';
+import usdt from '../assets/Tokens/usdt.png';
 export const tokens = [
   {
     name: 'DOGA',
@@ -50,6 +53,21 @@ export const tokens = [
     image: wbtce,
     new: true,
   },
+  // {
+  //   name: 'USDt',
+  //   image: usdt,
+  //   new: true,
+  // },
+  // {
+  //   name: 'EURL',
+  //   image: eurl,
+  //   new: true,
+  // },
+  // {
+  //   name: 'agEUR.e',
+  //   image: ageure,
+  //   new: true,
+  // },
   {
     name: 'USDC.e',
     image: usdce,
