@@ -13,6 +13,7 @@ interface ITransactionSubmittedProps {
   content: string;
   setShow: any;
   onClick: () => void;
+  onBtnClick: any;
 }
 function TransactionSubmitted(props: ITransactionSubmittedProps) {
   const closeModal = () => {
@@ -33,7 +34,10 @@ function TransactionSubmitted(props: ITransactionSubmittedProps) {
           <div className="mt-11 border border-border-100/[0.4] rounded-2xl bg-secondary-100/[0.02] flex justify-center items-center h-[52px] font-subtitle4">
             {props.content}
           </div>
-          <div className="my-3 font-text-bold flex justify-center text-primary-500">
+          <div
+            className="my-3 font-text-bold flex justify-center text-primary-500"
+            onClick={props.onBtnClick}
+          >
             View on BLOCK EXPLORER
             <span className="ml-2">
               <Image src={externalLink} width={'12px'} height={'12px'} />

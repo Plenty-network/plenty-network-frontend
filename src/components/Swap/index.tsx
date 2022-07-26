@@ -10,12 +10,18 @@ import {
   getUserBalanceByRpc,
 } from '../../api/util/balance';
 import { getTokenPrices } from '../../api/util/price';
-import { tokensModal, tokenType } from '../../constants/swap';
+import {
+  ERRORMESSAGES,
+  tokenParameter,
+  tokensModal,
+  tokenType,
+} from '../../constants/swap';
 
 import { useAppSelector } from '../../redux';
 import { BigNumber } from 'bignumber.js';
 
-import { allPaths, computeAllPathsWrapper } from '../../api/swap/router';
+import { allPaths } from '../../api/swap/router';
+import { computeAllPathsWrapper } from '../../api/swap/wrappers'
 
 interface ISwapProps {
   className?: string;
@@ -48,7 +54,8 @@ function Swap(props: ISwapProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [swapModalShow, setSwapModalShow] = useState(false);
   const [slippage, setSlippage] = useState(0.5);
-
+  const [errorMessage, setErrorMessage] = useState('');
+  const [enableMultiHop, setEnableMultiHop] = useState(true);
   const loading = React.useRef<{
     isLoadingfirst?: boolean;
     isLoadingSecond?: boolean;
@@ -126,26 +133,38 @@ function Swap(props: ISwapProps) {
             exchangeRate: new BigNumber(0),
           });
 
-      allPaths(tokenIn.name, tokenOut.name).then((res) => {
+      allPaths(tokenIn.name, tokenOut.name, enableMultiHop).then((res) => {
         loading.current = {
           isLoadingfirst: false,
           isLoadingSecond: false,
         };
-        allPath.current = res.paths;
-        setAllPathState(res.paths);
-        allPathSwapData.current = res.swapData;
-      });
-      if (firstTokenAmount !== '') {
-        loading.current = {
-          isLoadingfirst: false,
-          isLoadingSecond: true,
-        };
-        setSecondTokenAmount('');
 
-        handleSwapTokenInput(firstTokenAmount, 'tokenIn');
-      }
+        allPath.current = res.paths;
+        if (allPath.current.length !== 0) {
+          setAllPathState(res.paths);
+          allPathSwapData.current = res.swapData;
+          setErrorMessage('');
+        } else {
+          setErrorMessage(
+            enableMultiHop
+              ? ERRORMESSAGES.SWAPROUTER
+              : ERRORMESSAGES.SWAPMULTIHOP
+          );
+          setAllPathState([]);
+          allPathSwapData.current = [];
+        }
+        if (firstTokenAmount !== '') {
+          loading.current = {
+            isLoadingfirst: false,
+            isLoadingSecond: true,
+          };
+          setSecondTokenAmount('');
+
+          handleSwapTokenInput(firstTokenAmount, 'tokenIn');
+        }
+      });
     }
-  }, [tokenIn, tokenOut]);
+  }, [tokenIn, tokenOut, tokenType]);
 
   const handleSwapTokenInput = (
     input: string | number,
@@ -169,7 +188,12 @@ function Swap(props: ISwapProps) {
         exchangeRate: new BigNumber(0),
       };
     }
-    if (input === '') {
+
+    if (
+      input === '' ||
+      isNaN(Number(input)) ||
+      (Object.keys(tokenOut).length !== 0 && allPath.current.length === 0)
+    ) {
       setFirstTokenAmount('');
       setSecondTokenAmount('');
       routeDetails.current = {
@@ -243,6 +267,17 @@ function Swap(props: ISwapProps) {
     setFirstTokenAmount('');
     setSecondTokenAmount('');
     handleSwapTokenInput('', 'tokenIn');
+    routeDetails.current = {
+      minimum_Out: new BigNumber(0),
+      minimumTokenOut: [],
+      feePerc: [],
+      isStable: [],
+      path: [],
+      finalFeePerc: new BigNumber(0),
+      priceImpact: new BigNumber(0),
+      success: false,
+      exchangeRate: new BigNumber(0),
+    };
   };
 
   const selectToken = (token: tokensModal) => {
@@ -269,10 +304,8 @@ function Swap(props: ISwapProps) {
   };
   const changeTokenLocation = () => {
     setSecondTokenAmount(firstTokenAmount);
-
     setFirstTokenAmount('');
-
-    if (tokenOut.name) {
+    if (tokenOut.name && tokenIn.name) {
       setTokenIn({
         name: tokenOut.name,
         image: tokenOut.image,
@@ -284,6 +317,18 @@ function Swap(props: ISwapProps) {
       });
 
       handleSwapTokenInput(firstTokenAmount, 'tokenOut');
+    } else if (Object.keys(tokenOut).length === 0) {
+      setTokenOut({
+        name: tokenIn.name,
+        image: tokenIn.image,
+      });
+      setTokenIn({} as tokenParameter);
+    } else if (Object.keys(tokenIn).length === 0) {
+      setTokenIn({
+        name: tokenOut.name,
+        image: tokenOut.image,
+      });
+      setTokenOut({} as tokenParameter);
     }
   };
   useEffect(() => {
@@ -358,6 +403,10 @@ function Swap(props: ISwapProps) {
           resetAllValues={resetAllValues}
           routeDetails={routeDetails.current}
           allPath={allPathState}
+          setErrorMessage={setErrorMessage}
+          errorMessage={errorMessage}
+          setEnableMultiHop={setEnableMultiHop}
+          enableMultiHop={enableMultiHop}
         />
       </div>
       <SwapModal

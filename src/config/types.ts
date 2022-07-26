@@ -210,7 +210,7 @@ export interface ITokenInterface {
   tokenId?:  number;
   decimals: number;
   mapId?:    number;
-  pairs?: string[];
+  pairs: string[];
 }
 
 export interface IAMM {

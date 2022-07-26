@@ -3,26 +3,16 @@ import { getDexAddress } from '../util/fetchConfig';
 import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';
 import axios from 'axios';
+import { ISwapDataResponse , ICalculateTokenResponse} from './types';
 
 export const loadSwapDataVolatile = async (
   tokenIn: string,
   tokenOut: string
-): Promise<{
-  success: boolean;
-  tokenIn: string;
-  tokenIn_supply: BigNumber;
-  tokenOut: string;
-  tokenOut_supply: BigNumber;
-  exchangeFee: BigNumber;
-  lpTokenSupply: BigNumber;
-  lpToken: any;
-}> => {
+): Promise<ISwapDataResponse> => {
   try {
     const state = store.getState();
     const TOKEN = state.config.standard;
     const AMM = state.config.AMMs;
-    // const TOKEN = useAppSelector((state) => state.config.standard);
-    // const AMM = useAppSelector((state) => state.config.AMMs);
 
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
     if (dexContractAddress === 'false') {
@@ -50,13 +40,9 @@ export const loadSwapDataVolatile = async (
       tokenIn_supply = token2_pool;
     }
 
-    const lpTokenDecimal = lpToken.decimals;
-    const tokenIn_Decimal = TOKEN[tokenIn].decimals;
-    const tokenOut_Decimal = TOKEN[tokenOut].decimals;
-
-    tokenIn_supply = tokenIn_supply.dividedBy(Math.pow(10, tokenIn_Decimal));
-    tokenOut_supply = tokenOut_supply.dividedBy(Math.pow(10, tokenOut_Decimal));
-    lpTokenSupply = lpTokenSupply.dividedBy(Math.pow(10, lpTokenDecimal));
+    tokenIn_supply = tokenIn_supply.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
+    tokenOut_supply = tokenOut_supply.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+    lpTokenSupply = lpTokenSupply.dividedBy(new BigNumber(10).pow(lpToken.decimals));
     const exchangeFee = new BigNumber(1).dividedBy(lpFee);
     return {
       success: true,
@@ -78,7 +64,7 @@ export const loadSwapDataVolatile = async (
       tokenOut_supply: new BigNumber(0),
       exchangeFee: new BigNumber(0),
       lpTokenSupply: new BigNumber(0),
-      lpToken: null,
+      lpToken: undefined,
     };
   }
 };
@@ -90,14 +76,7 @@ export const calculateTokenOutputVolatile = (
   exchangeFee: BigNumber,
   slippage: BigNumber,
   tokenOut: string
-): {
-  tokenOut_amount: BigNumber;
-  fees: BigNumber;
-  feePerc: BigNumber;
-  minimum_Out: BigNumber;
-  exchangeRate: BigNumber;
-  priceImpact: BigNumber;
-} => {
+): ICalculateTokenResponse => {
   try {
     const state = store.getState();
     const TOKEN = state.config.standard;
@@ -115,7 +94,7 @@ export const calculateTokenOutputVolatile = (
     );
 
     tokenOut_amount = new BigNumber(
-      tokenOut_amount.precision(TOKEN[tokenOut].decimals)
+      tokenOut_amount.decimalPlaces(TOKEN[tokenOut].decimals)
     );
 
     const fees = tokenIn_amount.multipliedBy(exchangeFee);
@@ -124,7 +103,7 @@ export const calculateTokenOutputVolatile = (
     );
 
     minimum_Out = new BigNumber(
-      minimum_Out.precision(TOKEN[tokenOut].decimals)
+      minimum_Out.decimalPlaces(TOKEN[tokenOut].decimals)
     );
 
     const updated_TokenIn_Supply = tokenIn_supply.minus(tokenIn_amount);
@@ -162,6 +141,7 @@ export const calculateTokenOutputVolatile = (
       minimum_Out: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
+      error
     };
   }
 };

@@ -171,7 +171,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {props.routeDetails.finalFeePerc.toFixed(2)}
+                  {`${props.routeDetails.finalFeePerc.toFixed(2)} %`}
                 </div>
               </div>
               <div className="border-t border-text-800 mt-[18px]"></div>

@@ -15,4 +15,8 @@ export interface tokensModal {
 export const ERRORMESSAGES = {
   TRANSACTIONSETTINGSWARNING: 'Your transaction may be frontrun',
   TRANSACTIONSETTINGSERROR: 'Enter a valid slippage percentage',
+  SWAPROUTER:
+    "The exchange route doesn't exist for the selected tokens. Please try with other tokens.",
+  SWAPMULTIHOP:
+    "Direct swap for this pair doesn't exist. Enable multihop in the settings, if you want to swap through a route.",
 };
