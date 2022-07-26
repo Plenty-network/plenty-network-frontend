@@ -5,6 +5,7 @@ import { TokenVariant } from '../config/types';
 import { MichelsonMap, OpKind } from '@taquito/taquito';
 import Config from '../config/config';
 import { dappClient } from '../common/walletconnect';
+import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShowConfirmTransaction } from './types';
 
 export const routerSwap = async (
   path: string[],
@@ -12,10 +13,10 @@ export const routerSwap = async (
   caller: string,
   recipent: string,
   amount: BigNumber,
-  transactionSubmitModal: any,
-  resetAllValues: any,
-  setShowConfirmTransaction: any
-): Promise<{ success: boolean; operationId: any; error?: any }> => {
+  transactionSubmitModal: TTransactionSubmitModal,
+  resetAllValues: TResetAllValues,
+  setShowConfirmTransaction: TSetShowConfirmTransaction
+): Promise<IOperationsResponse> => {
   try {
     const {CheckIfWalletConnected}=dappClient()
     const WALLET_RESP = await CheckIfWalletConnected();
@@ -121,12 +122,12 @@ export const routerSwap = async (
         operationId: batchOp.opHash,
       };
     }
-  } catch (error) {
+  } catch (error : any) {
     console.error(error);
     return {
       success: false,
-      operationId: null,
-      error,
+      operationId: undefined,
+      error : error.message,
     };
   }
 };
