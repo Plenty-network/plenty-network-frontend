@@ -47,81 +47,79 @@ export const tokens = [
     name: 'DOGA',
     image: doga,
     new: true,
+    chainType : 'TEZOS'
   },
   {
     name: 'WBTC.e',
     image: wbtce,
     new: true,
+    chainType : 'ETHEREUM'
   },
-  // {
-  //   name: 'USDt',
-  //   image: usdt,
-  //   new: true,
-  // },
-  // {
-  //   name: 'EURL',
-  //   image: eurl,
-  //   new: true,
-  // },
-  // {
-  //   name: 'agEUR.e',
-  //   image: ageure,
-  //   new: true,
-  // },
   {
     name: 'USDC.e',
     image: usdce,
     new: true,
+    chainType : 'ETHEREUM'
   },
   {
     name: 'DAI.e',
     image: dai_normal,
     new: true,
+    chainType : 'ETHEREUM'
   },
   {
     name: 'WETH.e',
     image: weth_normal,
     new: true,
+    chainType : 'ETHEREUM'
   },
   {
     name: 'LINK.e',
     image: link_normal,
     new: true,
+    chainType : 'ETHEREUM'
   },
   {
     name: 'MATIC.e',
     image: matic_normal,
     new: true,
+    chainType : 'ETHEREUM'
   },
   {
     name: 'BUSD.e',
     image: busd_normal,
     new: true,
+    chainType : 'ETHEREUM'
   },
   {
     name: 'USDT.e',
     image: usdt_normal,
     new: true,
+    chainType : 'ETHEREUM'
   },
   {
     name: 'CRUNCH',
     image: CRUNCH,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'crDAO',
     image: crDAO,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'tez',
     image: tez,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'ctez',
     image: ctez,
     new: false,
+    chainType: 'TEZOS',
     extra: {
       text: 'Get ctez',
       link: 'https://ctez.app',
@@ -131,126 +129,151 @@ export const tokens = [
     name: 'ETHtz',
     image: ETHtz,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'FLAME',
     image: FLAME,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'GIF',
     image: gif,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'INSTA',
     image: INSTA,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'hDAO',
     image: hDAO,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'KALAM',
     image: KALAM,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'kDAO',
     image: kDAO,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'kUSD',
     image: kusd,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'PAUL',
     image: PAUL,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'PLENTY',
     image: plenty,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'PXL',
     image: PXL,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'QUIPU',
     image: QUIPU,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'SMAK',
     image: SMAK,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'USDtz',
     image: usdtz,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'tzBTC',
     image: tzBTC,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'wBUSD',
     image: wbusd,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'wDAI',
     image: wDAI,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'wLINK',
     image: wlink,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'wMATIC',
     image: wmatic,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'WRAP',
     image: WRAP,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'wUSDC',
     image: wusdc,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'wUSDT',
     image: wUSDT,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'wWBTC',
     image: wwbtc,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'wWETH',
     image: wWETH,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'uDEFI',
     image: uDEFI,
     new: false,
+    chainType: 'TEZOS',
     extra: {
       text: 'Get uDEFI',
       link: 'https://app.youves.com/udefi/minting/start',
@@ -260,15 +283,36 @@ export const tokens = [
     name: 'UNO',
     image: UNO,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'uUSD',
     image: uUSD,
     new: false,
+    chainType: 'TEZOS'
   },
   {
     name: 'YOU',
     image: youGov,
     new: false,
+    chainType: 'TEZOS'
   },
+  // {
+  //   name: 'USDt',
+  //   image: usdt,
+  //   new: true,
+  // chainType : 'TEZOS'
+  // },
+  // {
+  //   name: 'EURL',
+  //   image: eurl,
+  //   new: true,
+  // chainType : 'TEZOS'
+  // },
+  // {
+  //   name: 'agEUR.e',
+  //   image: ageure,
+  //   new: true,
+  // chainType : 'ETHEREUM'
+  // },
 ];
