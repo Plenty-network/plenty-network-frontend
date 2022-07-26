@@ -19,7 +19,7 @@ import {
 import { useAppSelector } from '../../redux';
 import { BigNumber } from 'bignumber.js';
 import { allPaths } from '../../api/swap/router';
-import { computeAllPathsWrapper } from '../../api/swap/wrappers';
+import { computeAllPathsWrapper, reverseCalculation } from '../../api/swap/wrappers';
 
 interface ISwapProps {
   className?: string;
@@ -262,6 +262,9 @@ function Swap(props: ISwapProps) {
       } else if (tokenType === 'tokenOut') {
         setSecondTokenAmount(input);
 
+        const res =  reverseCalculation(allPath.current, new BigNumber(input),new BigNumber(slippage),allPathSwapData.current, tokenPriceRef.current);
+        console.log(res);
+        
         setTimeout(() => {
           setFirstTokenAmount('12');
         }, 1000);
