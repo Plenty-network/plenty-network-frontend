@@ -1,5 +1,4 @@
-import { AMM_TYPE } from '../../config/types';
-import { getDexType, getLpTokenSymbol } from '../util/fetchConfig';
+import { getLpTokenSymbol } from '../util/fetchConfig';
 import { BigNumber } from "bignumber.js";
 import {
   ICurrentPoolShareResponse,
