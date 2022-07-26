@@ -19,7 +19,7 @@ export function dappClient() {
     const { BeaconWallet } = await import('@taquito/beacon-wallet')
     const dAppInfo: DAppClientOptions = {
       name: 'Plenty Network',
-      preferredNetwork: 'https://mifx20dfsr.windmill.tools/'as NetworkType,
+      preferredNetwork: connectedNetwork as NetworkType,
       colorMode: ColorMode.DARK,
     }
 

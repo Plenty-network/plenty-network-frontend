@@ -1,7 +1,7 @@
 import { getDexAddress } from '../api/util/fetchConfig';
 import { store } from '../redux';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, TokenVariant } from '../config/types';
+import { TokenVariant } from '../config/types';
 import { OpKind } from '@taquito/taquito';
 import { routerSwap } from './router';
 import { dappClient } from '../common/walletconnect';
