@@ -104,19 +104,13 @@ export const isVolatilePair = (
  };
 
 /**
- * Check whether a given pair of tokens is ctez-tez pair or not.
+ * Check whether a given pair of tokens is a tez pair(tez - other_token) or not.
  * @param tokenOneSymbol - Symbol of the first token of the pair
  * @param tokenTwoSymbol - Symbol of the second token of the pair
  */
- export const isCtezTezPair = (
+ export const isTezPair = (
    tokenOneSymbol: string,
    tokenTwoSymbol: string
  ): boolean => {
-   const dexType = getDexType(tokenOneSymbol, tokenTwoSymbol);
-   return dexType !== "false" && dexType === AMM_TYPE.STABLE
-     ? (tokenOneSymbol === "tez" && tokenTwoSymbol === "ctez") ||
-       (tokenOneSymbol === "ctez" && tokenTwoSymbol === "tez")
-       ? true
-       : false
-     : false;
+   return tokenOneSymbol === "tez" || tokenTwoSymbol === "tez" ? true : false;
  };

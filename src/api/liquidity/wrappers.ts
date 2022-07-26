@@ -7,6 +7,7 @@ import {
   IOutputTokensAmountResponse,
   IPnlpBalanceResponse,
   IPnlpEstimateResponse,
+  IPnlpPoolShareResponse,
 } from "./types";
 import { getUserBalanceByRpc } from "../util/balance";
 
@@ -213,6 +214,30 @@ export const getCurrentPoolShare = async (
       currentPoolShare: "0",
       balance: "0",
       error: err.message,
+    };
+  }
+};
+
+/**
+ * Returns the share of pool (percentage) for the amount of PNLP token which will be received or which is to be removed.
+ * @param pnlpAmount - PNLP token amount to be received or removed by the user for a given pair, which is calculated while adding and user input while removing
+ * @param lpTokenSupply - Total supply of the LP token of the selected pair
+ */
+export const getPoolShareForPnlp = (
+  pnlpAmount: string | BigNumber,
+  lpTokenSupply: string | BigNumber
+): IPnlpPoolShareResponse => {
+  try {
+    const pnlpPoolShare = new BigNumber(pnlpAmount).multipliedBy(100).dividedBy(lpTokenSupply).toString();
+    return {
+      success: true,
+      pnlpPoolShare,
+    }
+  } catch (error: any) {
+    return {
+      success: false,
+      pnlpPoolShare: '0',
+      error: error.message,
     };
   }
 };

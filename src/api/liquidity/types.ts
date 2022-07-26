@@ -30,3 +30,9 @@ export interface ICurrentPoolShareResponse {
   balance: string;
   error?: string;
 }
+
+export interface IPnlpPoolShareResponse {
+  success: boolean;
+  pnlpPoolShare: string;
+  error?: string;
+}
