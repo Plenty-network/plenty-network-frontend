@@ -380,7 +380,7 @@ function Swap(props: ISwapProps) {
       };
       updateBalance();
     }
-  }, [tokenIn, tokenOut, props, TOKEN]);
+  }, [tokenIn, tokenOut, props.otherProps.walletAddress, TOKEN]);
 
   return (
     <>

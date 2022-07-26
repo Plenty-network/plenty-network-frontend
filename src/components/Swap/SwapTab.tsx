@@ -219,7 +219,7 @@ function SwapTab(props: ISwapTabProps) {
             Insufficient balance
           </Button>
         );
-      } else if (expertMode && Number(props.routeDetails.priceImpact) > 50) {
+      } else if (expertMode && Number(props.routeDetails.priceImpact) > 3) {
         return (
           <Button color="error" width="w-full" onClick={handleSwap}>
             Swap Anyway
