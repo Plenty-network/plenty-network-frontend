@@ -242,7 +242,8 @@ function Swap(props: ISwapProps) {
             allPath.current,
             new BigNumber(input),
             new BigNumber(slippage),
-            allPathSwapData.current
+            allPathSwapData.current,
+            tokenPrice,
           );
           loading.current = {
             isLoadingSecond: false,
