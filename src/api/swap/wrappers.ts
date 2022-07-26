@@ -165,7 +165,7 @@ export const computeAllPathsWrapper = (
           path: bestPath.path,
           tokenOut_amount: bestPath.tokenOut_amount,
           finalMinimumTokenOut:
-              bestPath.minimumTokenOut[bestPath.minimumTokenOut.length - 1],
+          bestPath.minimumTokenOut[bestPath.minimumTokenOut.length - 1],
           minimumTokenOut: bestPath.minimumTokenOut,
           finalPriceImpact: finalPriceImpact,
           finalFeePerc: finalFeePerc,
@@ -188,3 +188,55 @@ export const computeAllPathsWrapper = (
       };
   }
 };
+
+
+// Check this api for large amounts 
+export const reverseCalculation = (paths : string[], tokenOutAmount : BigNumber , slippage : BigNumber , swapData : ISwapDataResponse[][], tokenPrice : { [id: string] : number; }) => {
+
+    try {
+      let tokenInAmount = new BigNumber(Infinity);
+    let bestPath:string;
+
+    for (var i in paths){
+      const path = paths[i].split(" ");
+      const tempAmountIn = new BigNumber(tokenOutAmount.multipliedBy(tokenPrice[path[path.length-1]]).dividedBy(tokenPrice[path[0]]));
+      if(tempAmountIn.isLessThan(tokenInAmount)){
+        tokenInAmount = tempAmountIn;
+        bestPath = paths[i];
+      }
+    }
+
+    const res = computeAllPathsWrapper(paths, tokenInAmount, slippage, swapData , tokenPrice);
+
+    return {
+      path: res.path,
+      tokenIn_amount : tokenInAmount,
+      tokenOut_amount: res.tokenOut_amount,
+      finalMinimumTokenOut: res.finalMinimumTokenOut,
+      minimumTokenOut: res.minimumTokenOut,
+      finalPriceImpact: res.finalPriceImpact,
+      finalFeePerc: res.finalFeePerc,
+      feePerc: res.feePerc,
+      isStable: res.isStable,
+      exchangeRate: res.exchangeRate,
+  };
+    
+    } catch (error) {
+      console.log(error);
+      return {
+          path: [],
+          tokenIn_amount : new BigNumber(0),
+          tokenOut_amount: new BigNumber(0),
+          finalMinimumTokenOut: new BigNumber(0),
+          minimumTokenOut: [],
+          finalPriceImpact: new BigNumber(0),
+          finalFeePerc: new BigNumber(0),
+          feePerc: [],
+          isStable: [],
+          exchangeRate: new BigNumber(0),
+      };
+      
+    }
+   
+  
+}

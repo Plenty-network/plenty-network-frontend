@@ -18,7 +18,10 @@ import {
 import { store, useAppSelector } from '../../redux';
 import { BigNumber } from 'bignumber.js';
 import { allPaths } from '../../api/swap/router';
-import { computeAllPathsWrapper } from '../../api/swap/wrappers';
+import {
+  computeAllPathsWrapper,
+  reverseCalculation,
+} from '../../api/swap/wrappers';
 
 interface ISwapProps {
   className?: string;
