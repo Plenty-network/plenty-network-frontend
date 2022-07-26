@@ -183,38 +183,47 @@ export const computeAllPathsWrapper = (
 };
 
 
-// Check this api for large amounts 
-export const reverseCalculation = (paths : string[], tokenOutAmount : BigNumber , slippage : BigNumber , swapData : ISwapDataResponse[][], tokenPrice : { [id: string] : number; }) => {
+// TODO : Check this api for large amounts 
+export const reverseCalculation = (tokenIn :  string , tokenOut : string ,paths : string[], tokenOutAmount : BigNumber , slippage : BigNumber , swapData : ISwapDataResponse[][], tokenPrice : { [id: string] : number; }) => {
 
     try {
-
     const state = store.getState();
     const TOKEN = state.config.standard;
 
     let tokenInAmount = new BigNumber(Infinity);
-    let bestPath:string;
-    let tokenIn;
 
     for (var i in paths){
       const path = paths[i].split(" ");
       const tempAmountIn = new BigNumber(tokenOutAmount.multipliedBy(tokenPrice[path[path.length-1]]).dividedBy(tokenPrice[path[0]]));
       if(tempAmountIn.isLessThan(tokenInAmount)){
         tokenInAmount = tempAmountIn.decimalPlaces(TOKEN[path[0]].decimals);
-        bestPath = paths[i];
       }
-      tokenIn = path[0];
     }
+
+    const priceDifferential = new BigNumber(Math.abs(tokenPrice[tokenOut] - tokenPrice[tokenIn]));
 
     // Round Up Works in general case
-    tokenInAmount = new BigNumber(tokenInAmount.toFixed(2 , BigNumber.ROUND_UP));
-    console.log(tokenInAmount.toString());
+    tokenInAmount = new BigNumber(tokenInAmount.toFixed(5 , BigNumber.ROUND_UP));
     let res = computeAllPathsWrapper(paths, tokenInAmount, slippage, swapData , tokenPrice);
 
-    // For high precision tokens
-    while(res.tokenOut_amount.isLessThan(tokenOutAmount)){
-      tokenInAmount = tokenInAmount.plus(0.01);
+    // For high value and precision tokens
+    let counter = 0;
+    // max 100 iterations
+    while(res.tokenOut_amount.isLessThan(tokenOutAmount) && counter<=100){
+      counter++;
+      console.log(counter);
+      // Token with high price differential need higher plus factor
+      if(priceDifferential.isGreaterThan(1000)){
+      tokenInAmount = tokenInAmount.plus(1);}
+      else{
+      tokenInAmount = tokenInAmount.plus(0.01);}
+      console.log(tokenInAmount.toString());
       res = computeAllPathsWrapper(paths, tokenInAmount, slippage, swapData , tokenPrice);
     }
+
+    let insufficientLiquidity = false;
+    if(res.tokenOut_amount.isLessThan(tokenOutAmount))
+    insufficientLiquidity = true;
     
 
     return {
@@ -228,6 +237,7 @@ export const reverseCalculation = (paths : string[], tokenOutAmount : BigNumber 
       feePerc: res.feePerc,
       isStable: res.isStable,
       exchangeRate: res.exchangeRate,
+      insufficientLiquidity : insufficientLiquidity,
   };
     
     } catch (error) {
@@ -243,6 +253,7 @@ export const reverseCalculation = (paths : string[], tokenOutAmount : BigNumber 
           feePerc: [],
           isStable: [],
           exchangeRate: new BigNumber(0),
+          insufficientLiquidity : false,
       };
       
     }

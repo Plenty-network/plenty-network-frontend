@@ -273,6 +273,8 @@ function Swap(props: ISwapProps) {
             isLoadingSecond: false,
           };
           const res = reverseCalculation(
+            tokenIn.name,
+            tokenOut.name,
             allPath.current,
             new BigNumber(input),
             new BigNumber(slippage),
