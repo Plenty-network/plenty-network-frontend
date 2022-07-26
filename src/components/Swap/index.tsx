@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import { tokens } from '../../constants/Tokens';
+import { tokens } from '../../constants/tokensList';
 import { useLocationStateInSwap } from '../../hooks/useLocationStateInSwap';
 import SwapModal from '../../components/SwapModal/SwapModal';
 import SwapTab from '../../components/Swap/SwapTab';
@@ -21,7 +21,6 @@ import { useAppSelector } from '../../redux';
 import { BigNumber } from 'bignumber.js';
 
 import { allPaths, computeAllPathsWrapper } from '../../api/swap/router';
-import { TOKEN_PRICE } from '../../constants/localStorage';
 
 interface ISwapProps {
   className?: string;
@@ -150,10 +149,28 @@ function Swap(props: ISwapProps) {
               ? ERRORMESSAGES.SWAPROUTER
               : ERRORMESSAGES.SWAPMULTIHOP
           );
+
           setAllPathState([]);
           allPathSwapData.current = [];
+          routeDetails.current = {
+            minimum_Out: new BigNumber(0),
+            minimumTokenOut: [],
+            feePerc: [],
+            isStable: [],
+            path: [],
+            finalFeePerc: new BigNumber(0),
+            priceImpact: new BigNumber(0),
+            success: false,
+            exchangeRate: new BigNumber(0),
+          };
+
+          loading.current = {
+            isLoadingfirst: false,
+            isLoadingSecond: false,
+          };
         }
         if (firstTokenAmount !== '') {
+          console.log('ishu', firstTokenAmount, errorMessage);
           loading.current = {
             isLoadingfirst: false,
             isLoadingSecond: true,
@@ -164,7 +181,7 @@ function Swap(props: ISwapProps) {
         }
       });
     }
-  }, [tokenIn, tokenOut, tokenType]);
+  }, [tokenIn, tokenOut, tokenType, enableMultiHop]);
 
   const handleSwapTokenInput = (
     input: string | number,
