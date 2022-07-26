@@ -47,8 +47,8 @@ export const allSwapWrapper = async (
     }
     return {
       success: res.success,
-      operationId: res.operationId ?? null,
-      error: res.error ?? null,
+      operationId: res.operationId ?? undefined,
+      error: res.error ?? undefined,
     };
   } catch (error : any) {
     console.log(error);
