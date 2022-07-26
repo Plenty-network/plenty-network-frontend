@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { SideBarHOC } from '../../src/components/Sidebar/SideBarHOC';
 import Swap from '../../src/components/Swap';
-import { Provider } from 'react-redux';
-import { AppDispatch, store } from '../../src/redux/index';
+import { AppDispatch } from '../../src/redux/index';
 
 import { useAppSelector } from '../../src/redux/index';
 import {

@@ -98,6 +98,7 @@ interface ISwapTabProps {
 }
 
 function SwapTab(props: ISwapTabProps) {
+  console.log(props.tokenPrice);
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
   const [transactionId, setTransactionId] = useState('');
@@ -240,6 +241,19 @@ function SwapTab(props: ISwapTabProps) {
     }
   }, [props]);
 
+  const onClickAmount = () => {
+    props.setSecondTokenAmount('');
+
+    props.tokenIn.name === 'tez'
+      ? props.handleSwapTokenInput(
+          Number(props.userBalances[props.tokenIn.name]) - 0.02,
+          'tokenIn'
+        )
+      : props.handleSwapTokenInput(
+          props.userBalances[props.tokenIn.name],
+          'tokenIn'
+        );
+  };
   return (
     <>
       <div className="flex items-center flex-row px-5 lg:px-9 relative">
@@ -283,7 +297,14 @@ function SwapTab(props: ISwapTabProps) {
         )}
       >
         <div className="flex justify-between">
-          <div className="flex-[0_0_38%] mt-4">
+          <div
+            className={clsx(
+              ' mt-4',
+              Object.keys(props.tokenIn).length !== 0
+                ? 'flex-[0_0_38%]'
+                : 'flex-[0_0_45%]'
+            )}
+          >
             {Object.keys(props.tokenIn).length !== 0 ? (
               <TokenDropdown
                 onClick={() => props.handleTokenType('tokenIn')}
@@ -343,7 +364,10 @@ function SwapTab(props: ISwapTabProps) {
         <div className="flex -mt-[12px]">
           <div className="text-left">
             <span className="text-text-600 font-body3">Balance:</span>{' '}
-            <span className="font-body4 text-primary-500 2">
+            <span
+              className="font-body4 text-primary-500 cursor-pointer"
+              onClick={onClickAmount}
+            >
               {Number(props.userBalances[props.tokenIn.name]) >= 0
                 ? Number(props.userBalances[props.tokenIn.name]).toFixed(4)
                 : '--'}
@@ -383,7 +407,14 @@ function SwapTab(props: ISwapTabProps) {
           )}
         >
           <div className=" flex justify-between">
-            <div className="flex-[0_0_38%] mt-4">
+            <div
+              className={clsx(
+                ' mt-4',
+                Object.keys(props.tokenOut).length !== 0
+                  ? 'flex-[0_0_38%]'
+                  : 'flex-[0_0_45%]'
+              )}
+            >
               {Object.keys(props.tokenOut).length !== 0 ? (
                 <TokenDropdown
                   onClick={() => props.handleTokenType('tokenOut')}

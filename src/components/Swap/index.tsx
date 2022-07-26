@@ -95,10 +95,14 @@ function Swap(props: ISwapProps) {
   const allPath = React.useRef<string[]>([]);
   const [allPathState, setAllPathState] = useState<string[]>([]);
   const allPathSwapData = React.useRef<any[][]>([]);
+  const tokenPriceRef = React.useRef<{
+    [id: string]: number;
+  }>({});
 
   useEffect(() => {
     getTokenPrices().then((response) => {
       setTokenPrice(response.tokenPrice);
+      tokenPriceRef.current = response.tokenPrice;
     });
     if (props.otherProps.walletAddress) {
       getCompleteUserBalace(props.otherProps.walletAddress).then(
@@ -240,7 +244,7 @@ function Swap(props: ISwapProps) {
             new BigNumber(input),
             new BigNumber(slippage),
             allPathSwapData.current,
-            tokenPrice
+            tokenPriceRef.current
           );
           loading.current = {
             isLoadingSecond: false,

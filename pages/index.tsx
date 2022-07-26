@@ -1,12 +1,9 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
 import { SideBarHOC } from '../src/components/Sidebar/SideBarHOC';
 
-
-
-const Home: NextPage = (props) => {
+const Home: NextPage = () => {
   return (
     <>
       <Head>
@@ -14,9 +11,7 @@ const Home: NextPage = (props) => {
         <meta name="description" content="plenty network" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <SideBarHOC>
-        {/* <ShortCard /> */}
-      </SideBarHOC>
+      <SideBarHOC>{/* <ShortCard /> */}</SideBarHOC>
     </>
   );
 };
