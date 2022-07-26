@@ -5,8 +5,8 @@ import { IAmmContracts, ITokens } from '../../config/types';
 interface ConfigState {
   tokens: ITokens;
   AMMs: IAmmContracts;
-  standard : ITokens;
-  lp  : ITokens;
+  standard: ITokens;
+  lp: ITokens;
 }
 
 const initialState: ConfigState = {
@@ -17,7 +17,7 @@ const initialState: ConfigState = {
 };
 
 export const getConfig = createAsyncThunk(
-  'wallet/getConfig',
+  'config/getConfig',
   async (thunkAPI) => {
     const res = await fetchConfig().then((resp) => resp);
 

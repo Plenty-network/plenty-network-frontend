@@ -29,6 +29,8 @@ import {
   TOKEN_A,
   TOKEN_B,
 } from '../../constants/localStorage';
+import { useAppDispatch } from '../../redux';
+import { setLoading } from '../../redux/isLoading/action';
 
 interface ISwapTabProps {
   className?: string;
@@ -98,7 +100,6 @@ interface ISwapTabProps {
 }
 
 function SwapTab(props: ISwapTabProps) {
-  console.log(props.tokenPrice);
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
   const [transactionId, setTransactionId] = useState('');
@@ -109,6 +110,7 @@ function SwapTab(props: ISwapTabProps) {
   const [showExpertPopup, setShowExpertPopup] = useState(false);
   const [isSecondInputFocus, setIsSecondInputFocus] = useState(false);
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
+  const dispatch = useAppDispatch();
   const [isRefresh, setRefresh] = useState(false);
   const refreshAllData = (value: boolean) => {
     setRefresh(value);
@@ -131,6 +133,8 @@ function SwapTab(props: ISwapTabProps) {
     setConvert(!isConvert);
   };
   const handleConfirmSwap = () => {
+    dispatch(setLoading(true));
+
     localStorage.setItem(
       TOKEN_A,
       props.tokenIn.name === 'tez'
@@ -170,10 +174,12 @@ function SwapTab(props: ISwapTabProps) {
       if (response.success) {
         props.resetAllValues;
         props.setShowTransactionSubmitModal(false);
+        dispatch(setLoading(false));
       } else {
         props.resetAllValues;
         props.setShowConfirmTransaction(false);
         props.setShowTransactionSubmitModal(false);
+        dispatch(setLoading(false));
       }
     });
   };
