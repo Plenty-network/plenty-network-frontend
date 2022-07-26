@@ -159,14 +159,7 @@ export const computeAllPathsWrapper = (
           else isStable.push(false);
       }
 
-      const exchangeRate = tokenPrice[bestPath.path[0]] / tokenPrice[bestPath.path[bestPath.path.length-1]];
-
-      // const exchangeRateCalculation = computeAllPaths(
-      //     [bestPath.path.join(' ')],
-      //     new BigNumber(1),
-      //     new BigNumber(0),
-      //     [bestPath.bestPathSwapData],
-      // );
+      const exchangeRate = new BigNumber(tokenPrice[bestPath.path[0]] / tokenPrice[bestPath.path[bestPath.path.length-1]]);
 
       return {
           path: bestPath.path,
@@ -178,7 +171,7 @@ export const computeAllPathsWrapper = (
           finalFeePerc: finalFeePerc,
           feePerc: bestPath.feePerc,
           isStable: isStable,
-          exchangeRate: new BigNumber(exchangeRate),
+          exchangeRate: exchangeRate,
       };
   } catch (error) {
       console.log(error);
