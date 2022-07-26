@@ -29,6 +29,8 @@ import {
   TOKEN_A,
   TOKEN_B,
 } from '../../constants/localStorage';
+import { useAppDispatch } from '../../redux';
+import { setLoading } from '../../redux/isLoading/action';
 
 interface ISwapTabProps {
   className?: string;
@@ -108,6 +110,7 @@ function SwapTab(props: ISwapTabProps) {
   const [showExpertPopup, setShowExpertPopup] = useState(false);
   const [isSecondInputFocus, setIsSecondInputFocus] = useState(false);
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
+  const dispatch = useAppDispatch();
   const [isRefresh, setRefresh] = useState(false);
   const refreshAllData = (value: boolean) => {
     setRefresh(value);
@@ -130,6 +133,8 @@ function SwapTab(props: ISwapTabProps) {
     setConvert(!isConvert);
   };
   const handleConfirmSwap = () => {
+    dispatch(setLoading(true));
+
     localStorage.setItem(
       TOKEN_A,
       props.tokenIn.name === 'tez'
@@ -169,10 +174,12 @@ function SwapTab(props: ISwapTabProps) {
       if (response.success) {
         props.resetAllValues;
         props.setShowTransactionSubmitModal(false);
+        dispatch(setLoading(false));
       } else {
         props.resetAllValues;
         props.setShowConfirmTransaction(false);
         props.setShowTransactionSubmitModal(false);
+        dispatch(setLoading(false));
       }
     });
   };
@@ -218,7 +225,7 @@ function SwapTab(props: ISwapTabProps) {
             Insufficient balance
           </Button>
         );
-      } else if (expertMode && Number(props.routeDetails.priceImpact) > 50) {
+      } else if (expertMode && Number(props.routeDetails.priceImpact) > 3) {
         return (
           <Button color="error" width="w-full" onClick={handleSwap}>
             Swap Anyway
@@ -240,6 +247,19 @@ function SwapTab(props: ISwapTabProps) {
     }
   }, [props]);
 
+  const onClickAmount = () => {
+    props.setSecondTokenAmount('');
+
+    props.tokenIn.name === 'tez'
+      ? props.handleSwapTokenInput(
+          Number(props.userBalances[props.tokenIn.name]) - 0.02,
+          'tokenIn'
+        )
+      : props.handleSwapTokenInput(
+          props.userBalances[props.tokenIn.name],
+          'tokenIn'
+        );
+  };
   return (
     <>
       <div className="flex items-center flex-row px-5 lg:px-9 relative">
@@ -283,7 +303,14 @@ function SwapTab(props: ISwapTabProps) {
         )}
       >
         <div className="flex justify-between">
-          <div className="flex-[0_0_38%] mt-4">
+          <div
+            className={clsx(
+              ' mt-4',
+              Object.keys(props.tokenIn).length !== 0
+                ? 'flex-[0_0_38%]'
+                : 'flex-[0_0_45%]'
+            )}
+          >
             {Object.keys(props.tokenIn).length !== 0 ? (
               <TokenDropdown
                 onClick={() => props.handleTokenType('tokenIn')}
@@ -343,7 +370,10 @@ function SwapTab(props: ISwapTabProps) {
         <div className="flex -mt-[12px]">
           <div className="text-left">
             <span className="text-text-600 font-body3">Balance:</span>{' '}
-            <span className="font-body4 text-primary-500 2">
+            <span
+              className="font-body4 text-primary-500 cursor-pointer"
+              onClick={onClickAmount}
+            >
               {Number(props.userBalances[props.tokenIn.name]) >= 0
                 ? Number(props.userBalances[props.tokenIn.name]).toFixed(4)
                 : '--'}
@@ -383,7 +413,14 @@ function SwapTab(props: ISwapTabProps) {
           )}
         >
           <div className=" flex justify-between">
-            <div className="flex-[0_0_38%] mt-4">
+            <div
+              className={clsx(
+                ' mt-4',
+                Object.keys(props.tokenOut).length !== 0
+                  ? 'flex-[0_0_38%]'
+                  : 'flex-[0_0_45%]'
+              )}
+            >
               {Object.keys(props.tokenOut).length !== 0 ? (
                 <TokenDropdown
                   onClick={() => props.handleTokenType('tokenOut')}
@@ -418,9 +455,6 @@ function SwapTab(props: ISwapTabProps) {
                         'text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 '
                       )}
                       placeholder="0.0"
-                      lang="en_EN"
-                      disabled
-                      step="any"
                       onChange={(e) =>
                         props.handleSwapTokenInput(e.target.value, 'tokenOut')
                       }

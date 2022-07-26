@@ -36,9 +36,7 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
                 tempPaths.push(paths[i]);
             }
         }
-        console.log(paths);
         paths = tempPaths;
-        console.log(paths);
     
         let swapData: ISwapDataResponse[][] = [[], []];
 
