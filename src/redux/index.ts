@@ -3,14 +3,15 @@ import { useDispatch, TypedUseSelectorHook, useSelector } from 'react-redux';
 
 import { wallet } from './wallet/wallet';
 import { config } from './config/config';
+import { tokenPrice } from './tokenPrice/tokenPrice';
 import isLoadingWallet from './isLoading/reducer';
-
 
 export const store = configureStore({
   reducer: {
     wallet,
     config,
-    isLoadingWallet
+    isLoadingWallet,
+    tokenPrice,
   },
 });
 

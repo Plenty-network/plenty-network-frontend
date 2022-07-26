@@ -14,9 +14,11 @@ import {
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { getConfig } from '../../src/redux/config/config';
+import { getTokenPrice } from '../../src/redux/tokenPrice/tokenPrice';
 
 const Home: NextPage = (props) => {
   const userAddress = useAppSelector((state) => state.wallet.address);
+  const token = useAppSelector((state) => state.config.tokens);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -27,6 +29,9 @@ const Home: NextPage = (props) => {
     dispatch(fetchWallet());
     dispatch(getConfig());
   }, []);
+  useEffect(() => {
+    Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+  }, [token]);
   const disconnectUserWallet = async () => {
     if (userAddress) {
       return dispatch(walletDisconnection());
