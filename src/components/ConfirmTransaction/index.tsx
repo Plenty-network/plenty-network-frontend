@@ -1,10 +1,4 @@
-import clsx from 'clsx';
-import Button from '../Button/Button';
 import { PopUpModal } from '../Modal/popupModal';
-import Image from 'next/image';
-import ratesrefresh from '../../../src/assets/icon/swap/ratesrefresh.svg';
-import info from '../../../src/assets/icon/swap/info.svg';
-import { BigNumber } from 'bignumber.js';
 import loader from '../../assets/animations/loader.json';
 import Lottie from 'lottie-react';
 

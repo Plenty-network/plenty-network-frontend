@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { tokens } from '../../constants/tokensList';
 import { useLocationStateInSwap } from '../../hooks/useLocationStateInSwap';
 import SwapModal from '../../components/SwapModal/SwapModal';
@@ -16,10 +16,8 @@ import {
   tokensModal,
   tokenType,
 } from '../../constants/swap';
-
 import { useAppSelector } from '../../redux';
 import { BigNumber } from 'bignumber.js';
-
 import { allPaths } from '../../api/swap/router';
 import { computeAllPathsWrapper } from '../../api/swap/wrappers';
 
@@ -242,7 +240,7 @@ function Swap(props: ISwapProps) {
             new BigNumber(input),
             new BigNumber(slippage),
             allPathSwapData.current,
-            tokenPrice,
+            tokenPrice
           );
           loading.current = {
             isLoadingSecond: false,
