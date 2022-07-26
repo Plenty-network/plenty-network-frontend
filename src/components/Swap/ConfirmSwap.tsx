@@ -3,13 +3,12 @@ import Button from '../Button/Button';
 import { PopUpModal } from '../Modal/popupModal';
 import Image from 'next/image';
 import ratesrefresh from '../../../src/assets/icon/swap/ratesrefresh.svg';
-
 import { useMemo } from 'react';
 import arrow from '../../../src/assets/icon/swap/downArrow.svg';
 import info from '../../../src/assets/icon/swap/info.svg';
 import { BigNumber } from 'bignumber.js';
 import stableSwap from '../../../src/assets/icon/swap/stableswapViolet.svg';
-import { tokens } from '../../constants/Tokens';
+import { tokens } from '../../constants/tokensList';
 
 interface IConfirmSwapProps {
   show: boolean;
@@ -129,7 +128,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
             </div>
 
             <div
-              className={`bg-card-500 border border-text-700/[0.5] py-5 px-[22px] h-[218px] rounded-3xl mt-2 `}
+              className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 `}
             >
               <div className="flex">
                 <div className="font-mobile-400 md:font-body3 ">

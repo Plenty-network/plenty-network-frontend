@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
-import { tokens } from '../../constants/Tokens';
+import { useEffect, useState } from 'react';
+import { tokens } from '../../constants/tokensList';
 import { useLocationStateInSwap } from '../../hooks/useLocationStateInSwap';
 import SwapModal from '../../components/SwapModal/SwapModal';
 import SwapTab from '../../components/Swap/SwapTab';
@@ -16,12 +16,10 @@ import {
   tokensModal,
   tokenType,
 } from '../../constants/swap';
-
 import { useAppSelector } from '../../redux';
 import { BigNumber } from 'bignumber.js';
-
 import { allPaths } from '../../api/swap/router';
-import { computeAllPathsWrapper } from '../../api/swap/wrappers'
+import { computeAllPathsWrapper } from '../../api/swap/wrappers';
 
 interface ISwapProps {
   className?: string;
@@ -150,8 +148,25 @@ function Swap(props: ISwapProps) {
               ? ERRORMESSAGES.SWAPROUTER
               : ERRORMESSAGES.SWAPMULTIHOP
           );
+
           setAllPathState([]);
           allPathSwapData.current = [];
+          routeDetails.current = {
+            minimum_Out: new BigNumber(0),
+            minimumTokenOut: [],
+            feePerc: [],
+            isStable: [],
+            path: [],
+            finalFeePerc: new BigNumber(0),
+            priceImpact: new BigNumber(0),
+            success: false,
+            exchangeRate: new BigNumber(0),
+          };
+
+          loading.current = {
+            isLoadingfirst: false,
+            isLoadingSecond: false,
+          };
         }
         if (firstTokenAmount !== '') {
           loading.current = {
@@ -164,7 +179,7 @@ function Swap(props: ISwapProps) {
         }
       });
     }
-  }, [tokenIn, tokenOut, tokenType]);
+  }, [tokenIn, tokenOut, tokenType, enableMultiHop]);
 
   const handleSwapTokenInput = (
     input: string | number,
@@ -224,7 +239,8 @@ function Swap(props: ISwapProps) {
             allPath.current,
             new BigNumber(input),
             new BigNumber(slippage),
-            allPathSwapData.current
+            allPathSwapData.current,
+            tokenPrice
           );
           loading.current = {
             isLoadingSecond: false,

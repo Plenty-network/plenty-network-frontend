@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import * as React from 'react';
-import { OutlineBtn } from '../Button/OutlineButton';
+import { ConnectWalletBtnDeskTop } from '../Button/ConnectWalletDesktop';
+
 
 export interface ITopNavBarProps {
   setShowNotification: Function;
@@ -49,7 +50,7 @@ export function TopNavBar(props: ITopNavBarProps) {
           </div>
           <IconBTN isVerticalline={false} />
         </div>
-        <OutlineBtn />
+        <ConnectWalletBtnDeskTop/>
       </div>
     </nav>
   );

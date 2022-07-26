@@ -30,7 +30,8 @@ function SwapModal(props: ISwapModalProps) {
     (token: tokensModal) => {
       return (
         props.searchQuery.length === 0 ||
-        token.name.toLowerCase().includes(props.searchQuery.toLowerCase())
+        token.name.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
+        token.address?.toLowerCase().includes(props.searchQuery.toLowerCase())
       );
     },
     [props.searchQuery]
@@ -159,7 +160,7 @@ function SwapModal(props: ISwapModalProps) {
                     </div>
                     <div className="ml-2">
                       <div className="font-body1 text-text-100/[0.2]">
-                        Aave Token
+                        {token.chainType}
                       </div>
                       <div
                         className={clsx(

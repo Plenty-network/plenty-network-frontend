@@ -55,15 +55,14 @@ input::-webkit-inner-spin-button {
 .inputSecond {
   background: rgba(14, 8, 23, 0.02);
 }
-#tokensList {
-  box-shadow: inset 0px 11px 8px -10px #fff, inset 0px -11px 8px -10px #fff;
-}
 
 /* Firefox */
 input[type='number'] {
   -moz-appearance: textfield;
 }
-
+.sideNavactive {
+  @apply border-r-primary-500  bg-sideBarHover;
+}
 @layer components {
   .font-medium1 {
     @apply font-medium;
@@ -119,6 +118,11 @@ input[type='number'] {
     @apply font-semibold;
     /*600*/
     @apply text-f24;
+  }
+  .font-bold3 {
+    @apply font-bold;
+    /*700*/
+    @apply text-f12;
   }
   .font-title1-bold {
     @apply font-semibold;

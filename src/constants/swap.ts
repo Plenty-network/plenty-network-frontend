@@ -9,6 +9,8 @@ export interface tokensModal {
   name: string;
   image: any;
   new: boolean;
+  chainType?: string;
+  address?: string;
   extra?: { text: string; link: string } | undefined;
 }
 

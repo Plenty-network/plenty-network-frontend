@@ -1,10 +1,6 @@
-import clsx from 'clsx';
-import Button from '../Button/Button';
 import { PopUpModal } from '../Modal/popupModal';
 import Image from 'next/image';
 import externalLink from '../../../src/assets/icon/common/externalLink.svg';
-import info from '../../../src/assets/icon/swap/info.svg';
-import { BigNumber } from 'bignumber.js';
 import animation from '../../assets/animations/transaction-submitted.json';
 import Lottie from 'lottie-react';
 
@@ -35,7 +31,7 @@ function TransactionSubmitted(props: ITransactionSubmittedProps) {
             {props.content}
           </div>
           <div
-            className="my-3 font-text-bold flex justify-center text-primary-500"
+            className="my-3 cursor-pointer font-text-bold flex justify-center text-primary-500"
             onClick={props.onBtnClick}
           >
             View on BLOCK EXPLORER

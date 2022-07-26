@@ -41,6 +41,7 @@ export interface IRouterResponse {
 
 export interface IBestPathResponse {
   path: string[];
+  bestPathSwapData : ISwapDataResponse[];
   tokenOut_amount: BigNumber;
   minimumTokenOut: BigNumber[];
   fees: BigNumber[];
