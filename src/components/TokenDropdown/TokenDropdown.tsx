@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-
 import { useState } from 'react';
 import Image from 'next/image';
 import arrowDown from '../../assets/icon/swap/arrowDown.svg';

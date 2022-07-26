@@ -3,7 +3,6 @@ import Button from '../Button/Button';
 import { PopUpModal } from '../Modal/popupModal';
 import Image from 'next/image';
 import ratesrefresh from '../../../src/assets/icon/swap/ratesrefresh.svg';
-
 import { useMemo } from 'react';
 import arrow from '../../../src/assets/icon/swap/downArrow.svg';
 import info from '../../../src/assets/icon/swap/info.svg';

@@ -4,26 +4,18 @@ import settings from '../../../src/assets/icon/swap/settings.svg';
 import arrowDown from '../../../src/assets/icon/swap/arrowDown.svg';
 import ratesrefresh from '../../../src/assets/icon/swap/ratesrefresh.svg';
 import info from '../../../src/assets/icon/swap/info.svg';
-
 import router from '../../../src/assets/icon/swap/router.svg';
 import stableSwap from '../../../src/assets/icon/swap/stableswapViolet.svg';
-
 import switchsvg from '../../../src/assets/icon/swap/switch.svg';
-import ctez from '../../../src/assets/Tokens/ctez.png';
 import Image from 'next/image';
 import Lottie from 'lottie-react';
 import Button from '../Button/Button';
 import TokenDropdown from '../TokenDropdown/TokenDropdown';
 import TransactionSettings from '../TransactionSettings/TransactionSettings';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  ERRORMESSAGES,
-  tokensModal,
-  tokenType,
-} from '../../../src/constants/swap';
+import { useMemo, useRef, useState } from 'react';
+import { tokensModal, tokenType } from '../../../src/constants/swap';
 import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import loader from '../../assets/animations/shimmer-swap.json';
-
 import { BigNumber } from 'bignumber.js';
 import { tokens } from '../../constants/tokensList';
 import { allSwapWrapper } from '../../operations/swap';
@@ -291,7 +283,7 @@ function SwapTab(props: ISwapTabProps) {
         )}
       >
         <div className="flex justify-between">
-          <div className="flex-[0_0_50%] mt-4">
+          <div className="flex-[0_0_38%] mt-4">
             {Object.keys(props.tokenIn).length !== 0 ? (
               <TokenDropdown
                 onClick={() => props.handleTokenType('tokenIn')}
@@ -391,7 +383,7 @@ function SwapTab(props: ISwapTabProps) {
           )}
         >
           <div className=" flex justify-between">
-            <div className="flex-[0_0_50%] mt-4">
+            <div className="flex-[0_0_38%] mt-4">
               {Object.keys(props.tokenOut).length !== 0 ? (
                 <TokenDropdown
                   onClick={() => props.handleTokenType('tokenOut')}
