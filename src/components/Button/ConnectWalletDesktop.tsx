@@ -8,6 +8,7 @@ import copyLogo from '../../assets/icon/common/copyLogo.svg';
 import fiatLogo from '../../assets/icon/common/fiatLogo.svg';
 import nodeSelectorLogo from '../../assets/icon/common/nodeSelectorLogo.svg';
 import disconnectLogo from '../../assets/icon/common/disconnectLogo.svg';
+import { AppDispatch, store } from '../../redux/index';
 import { useAppDispatch, useAppSelector } from '../../redux/index';
 import {
   walletConnection,
@@ -25,6 +26,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
     return dispatch(walletConnection());
   };
   const disconnectUserWallet = async () => {
+    setShowMenu(false);
     if (userAddress) {
       return dispatch(walletDisconnection());
     }

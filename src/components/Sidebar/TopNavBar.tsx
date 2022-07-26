@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import * as React from 'react';
-import { ConnectWalletBtnDeskTop } from '../Button/connectWalletDesktop';
+import { ConnectWalletBtnDeskTop } from '../Button/ConnectWalletDesktop';
+
 
 export interface ITopNavBarProps {
   setShowNotification: Function;
@@ -49,7 +50,7 @@ export function TopNavBar(props: ITopNavBarProps) {
           </div>
           <IconBTN isVerticalline={false} />
         </div>
-        <ConnectWalletBtnDeskTop  />
+        <ConnectWalletBtnDeskTop/>
       </div>
     </nav>
   );

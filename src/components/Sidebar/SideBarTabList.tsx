@@ -11,13 +11,14 @@ export interface ISingleSideBarProps {
   isMenuOpen?: boolean;
   isBottomMenu?: boolean;
   isActive?: boolean;
+  activePathName?:string;
 }
 
 export function SingleSideBar(props: ISingleSideBarProps) {
   if (props.pathName) {
     return (
       <Link className={`flex flex-col ${props?.className}`} href={props.pathName}>
-        <div className={`flex w-full justify-between py-3.5 ${!props.isBottomMenu ? 'px-6' : ''} text-gray-300 hover:text-gray-500 cursor-pointer items-center  ${!props.isBottomMenu ? 'hover:bg-sideBarHover' : ''} ${!props.isBottomMenu ? 'border-x-2' : ''} border border-transprent ${!props.isBottomMenu ? 'hover:border-r-primary-500' : ''}`} >
+        <div className={`flex w-full justify-between py-3.5 ${props.isActive?'sideNavactive':''} ${!props.isBottomMenu ? 'px-6' : ''} text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-muted-250/60 ${!props.isBottomMenu ? 'border-x-2' : ''} border border-transprent `} >
           <div className='flex gap-4'>
             {props.iconName && <Image src={`/assets/icon/${props.iconName}.svg`} height={'11.67px'} width={'16.66px'} />}
             <p>{props.name}</p>
@@ -33,8 +34,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
   return (
 
     <div className={`flex flex-col ${props?.className}`} onClick={props.onClick} >
-      <div className={`flex w-full justify-between py-3.5 ${!props.isBottomMenu ? 'px-6' : ''} text-gray-300 hover:text-gray-500 cursor-pointer items-center  ${!props.isBottomMenu ? 'hover:bg-sideBarHover' : ''} ${!props.isBottomMenu ? 'border-x-2' : ''} border border-transprent ${!props.isBottomMenu ? 'hover:border-r-primary-500' : ''}`} >
-
+        <div className={`flex w-full justify-between py-3.5 ${props.isActive?'sideNavactive':''} ${!props.isBottomMenu ? 'px-6' : ''} text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-muted-250/60 ${!props.isBottomMenu ? 'border-x-2' : ''} border border-transprent `} >
         <div className='flex gap-4'>
           {props.iconName && <Image src={`/assets/icon/${props.iconName}.svg`} height={'11.67px'} width={'16.66px'} />}
           <p>{props.name}</p>
