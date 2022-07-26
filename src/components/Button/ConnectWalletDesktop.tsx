@@ -21,6 +21,8 @@ export interface IConnectWalletBtnDeskTopProps {
 
 export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
     const userAddress = useAppSelector((state) => state.wallet.address);
+    const isConnectWalletLoading = useAppSelector((state) => state.isLoadingWallet.isLoading);
+
     const dispatch = useAppDispatch();
     const reff=React.useRef(null);
     const connectTempleWallet = () => {
@@ -44,7 +46,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
                     <p className='text-f14 ' style={{"textOverflow":"ellipsis","width":"68px","whiteSpace":"nowrap","overflow":"hidden"}}>
                         {userAddress}
                     </p>
-                    <Image src={loadingLogo} className='spin' />
+                    {isConnectWalletLoading && <Image src={loadingLogo} className='spin' />}
                     <Image src={settingLogo} />
                 </button>
                 {showMenu && <div className='absolute w-[320px] right-0 mt-2 border z-10 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col'>
