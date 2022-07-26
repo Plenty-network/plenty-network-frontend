@@ -455,9 +455,6 @@ function SwapTab(props: ISwapTabProps) {
                         'text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 '
                       )}
                       placeholder="0.0"
-                      lang="en_EN"
-                      disabled
-                      step="any"
                       onChange={(e) =>
                         props.handleSwapTokenInput(e.target.value, 'tokenOut')
                       }

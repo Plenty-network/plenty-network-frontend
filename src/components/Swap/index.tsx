@@ -114,7 +114,7 @@ function Swap(props: ISwapProps) {
       firstTokenAmount === ''
         ? (loading.current = {
             isLoadingfirst: true,
-            isLoadingSecond: false,
+            isLoadingSecond: true,
           })
         : (routeDetails.current = {
             minimum_Out: new BigNumber(0),
@@ -165,14 +165,24 @@ function Swap(props: ISwapProps) {
             isLoadingSecond: false,
           };
         }
-        if (firstTokenAmount !== '') {
-          loading.current = {
-            isLoadingfirst: false,
-            isLoadingSecond: true,
-          };
-          setSecondTokenAmount('');
+        if (firstTokenAmount !== '' || secondTokenAmount !== '') {
+          if (tokenType === 'tokenIn') {
+            loading.current = {
+              isLoadingfirst: false,
+              isLoadingSecond: true,
+            };
+            setSecondTokenAmount('');
+          } else {
+            loading.current = {
+              isLoadingfirst: true,
+              isLoadingSecond: false,
+            };
+            setFirstTokenAmount('');
+          }
 
-          handleSwapTokenInput(firstTokenAmount, 'tokenIn');
+          tokenType === 'tokenIn'
+            ? handleSwapTokenInput(firstTokenAmount, 'tokenIn')
+            : handleSwapTokenInput(secondTokenAmount, 'tokenOut');
         }
       });
     }
@@ -262,7 +272,7 @@ function Swap(props: ISwapProps) {
             isLoadingfirst: true,
             isLoadingSecond: false,
           };
-          const res = computeAllPathsWrapper(
+          const res = reverseCalculation(
             allPath.current,
             new BigNumber(input),
             new BigNumber(slippage),
@@ -284,6 +294,7 @@ function Swap(props: ISwapProps) {
             success: true,
             exchangeRate: res.exchangeRate,
           };
+          setFirstTokenAmount(res.tokenIn_amount.toString());
           setSecondTokenAmount(res.tokenOut_amount.toString());
         }
       }
