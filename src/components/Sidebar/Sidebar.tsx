@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import * as React from 'react';
 import { FooterInfoIcon } from './FooterIconList';
 import { HrefIcon, IHrefIconProps } from './LinkIconList';
@@ -74,17 +75,17 @@ export const FooterMenu: Array<IHrefIconProps> = [
 //       },
 //     ],
 //   },
-//   {
-//     name: 'Earn',
-//     iconName: 'swap',
-//     subMenu: [
-//       {
-//         name: 'swap',
-//         iconName: 'swap',
-//         pathName: './limk',
-//       },
-//     ],
-//   },
+  // {
+  //   name: 'Earn',
+  //   iconName: 'swap',
+  //   subMenu: [
+  //     {
+  //       name: 'swap',
+  //       iconName: 'swap',
+  //       pathName: './limk',
+  //     },
+  //   ],
+  // },
 //   {
 //     name: 'kokmm',
 //     iconName: 'swap',
@@ -102,11 +103,25 @@ const MainMenu: Array<ISingleSideBarProps> = [
     name: 'Swap',
     iconName: 'swap',
     pathName: '/Swap',
-  }
+    activePathName:'/Swap'
+  },
+  {
+    name: 'Earn',
+    iconName: 'swap',
+    subMenu: [
+      {
+        name: 'swap',
+        iconName: 'swap',
+        pathName: './limk',
+      },
+    ],
+  },
 ];
 
 export function SideBar(props: ISideBarProps) {
   const [activeMenu, setActiveMenu] = React.useState<string>('');
+  const {pathname} = useRouter()
+  
   return (
     <div
       className="fixed text-f14 bg-sideBar border-r-borderColor border-r shadow hidden md:block  "
@@ -128,9 +143,11 @@ export function SideBar(props: ISideBarProps) {
                   ? setActiveMenu('')
                   : setActiveMenu(`menuItem${index}`)
               }
+              isActive={pathname === menuItem.activePathName}
               isMenuOpen={activeMenu === `menuItem${index}`}
               subMenu={menuItem.subMenu ? menuItem.subMenu : false}
               pathName={menuItem.pathName}
+
             />
           ))}
         </div>
