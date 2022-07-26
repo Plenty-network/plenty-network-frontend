@@ -44,13 +44,6 @@ import eurl from '../assets/Tokens/eurl.png';
 import usdt from '../assets/Tokens/usdt.png';
 export const tokens = [
   {
-    name: 'DOGA',
-    image: doga,
-    new: true,
-    chainType: 'TEZOS',
-    address: 'KT1Ha4yFVeyzw6KRAdkzq6TxDHB97KG4pZe8',
-  },
-  {
     name: 'WBTC.e',
     image: wbtce,
     new: true,
@@ -105,6 +98,13 @@ export const tokens = [
     new: true,
     chainType: 'ETHEREUM',
     address: 'KT1UsSfaXyqcjSVPeiD7U1bWgKy3taYN7NWY',
+  },
+  {
+    name: 'DOGA',
+    image: doga,
+    new: false,
+    chainType: 'TEZOS',
+    address: 'KT1Ha4yFVeyzw6KRAdkzq6TxDHB97KG4pZe8',
   },
   {
     name: 'CRUNCH',
