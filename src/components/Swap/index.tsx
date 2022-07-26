@@ -171,7 +171,6 @@ function Swap(props: ISwapProps) {
           };
         }
         if (firstTokenAmount !== '') {
-          console.log('ishu', firstTokenAmount, errorMessage);
           loading.current = {
             isLoadingfirst: false,
             isLoadingSecond: true,

@@ -47,73 +47,85 @@ export const tokens = [
     name: 'DOGA',
     image: doga,
     new: true,
-    chainType : 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1Ha4yFVeyzw6KRAdkzq6TxDHB97KG4pZe8',
   },
   {
     name: 'WBTC.e',
     image: wbtce,
     new: true,
-    chainType : 'ETHEREUM'
+    chainType: 'ETHEREUM',
+    address: 'KT1UsSfaXyqcjSVPeiD7U1bWgKy3taYN7NWY',
   },
   {
     name: 'USDC.e',
     image: usdce,
     new: true,
-    chainType : 'ETHEREUM'
+    chainType: 'ETHEREUM',
+    address: 'KT1UsSfaXyqcjSVPeiD7U1bWgKy3taYN7NWY',
   },
   {
     name: 'DAI.e',
     image: dai_normal,
     new: true,
-    chainType : 'ETHEREUM'
+    chainType: 'ETHEREUM',
+    address: 'KT1UsSfaXyqcjSVPeiD7U1bWgKy3taYN7NWY',
   },
   {
     name: 'WETH.e',
     image: weth_normal,
     new: true,
-    chainType : 'ETHEREUM'
+    chainType: 'ETHEREUM',
+    address: 'KT1UsSfaXyqcjSVPeiD7U1bWgKy3taYN7NWY',
   },
   {
     name: 'LINK.e',
     image: link_normal,
     new: true,
-    chainType : 'ETHEREUM'
+    chainType: 'ETHEREUM',
+    address: 'KT1UsSfaXyqcjSVPeiD7U1bWgKy3taYN7NWY',
   },
   {
     name: 'MATIC.e',
     image: matic_normal,
     new: true,
-    chainType : 'ETHEREUM'
+    chainType: 'ETHEREUM',
+    address: 'KT1UsSfaXyqcjSVPeiD7U1bWgKy3taYN7NWY',
   },
   {
     name: 'BUSD.e',
     image: busd_normal,
     new: true,
-    chainType : 'ETHEREUM'
+    chainType: 'ETHEREUM',
+    address: 'KT1UsSfaXyqcjSVPeiD7U1bWgKy3taYN7NWY',
   },
   {
     name: 'USDT.e',
     image: usdt_normal,
     new: true,
-    chainType : 'ETHEREUM'
+    chainType: 'ETHEREUM',
+    address: 'KT1UsSfaXyqcjSVPeiD7U1bWgKy3taYN7NWY',
   },
   {
     name: 'CRUNCH',
     image: CRUNCH,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1BHCumksALJQJ8q8to2EPigPW6qpyTr7Ng',
   },
   {
     name: 'crDAO',
     image: crDAO,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1XPFjZqCULSnqfKaaYy8hJjeY63UNSGwXg',
   },
   {
     name: 'tez',
     image: tez,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: '',
   },
   {
     name: 'ctez',
@@ -124,151 +136,122 @@ export const tokens = [
       text: 'Get ctez',
       link: 'https://ctez.app',
     },
+    address: 'KT1SjXiUX63QvdNMcM2m492f7kuf8JxXRLp4',
   },
   {
     name: 'ETHtz',
     image: ETHtz,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8',
   },
   {
     name: 'FLAME',
     image: FLAME,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1Wa8yqRBpFCusJWgcQyjhRz7hUQAmFxW7j',
   },
   {
     name: 'GIF',
     image: gif,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1XTxpQvo7oRCqp85LikEZgAZ22uDxhbWJv',
   },
   {
     name: 'INSTA',
     image: INSTA,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT19y6R8x53uDKiM46ahgguS6Tjqhdj2rSzZ',
   },
   {
     name: 'hDAO',
     image: hDAO,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1AFA2mwNUMNd4SsujE1YYp29vd8BZejyKW',
   },
   {
     name: 'KALAM',
     image: KALAM,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1A5P4ejnLix13jtadsfV9GCnXLMNnab8UT',
   },
   {
     name: 'kDAO',
     image: kDAO,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1JkoE42rrMBP9b2oDhbx6EUr26GcySZMUH',
   },
   {
     name: 'kUSD',
     image: kusd,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
   },
   {
     name: 'PAUL',
     image: PAUL,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT19DUSZw7mfeEATrbWVPHRrWNVbNnmfFAE6',
   },
   {
     name: 'PLENTY',
     image: plenty,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1GRSvLoikDsXujKgZPsGLX8k8VvR2Tq95b',
   },
   {
     name: 'PXL',
     image: PXL,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1F1mn2jbqQCJcsNgYKVAQjvenecNMY2oPK',
   },
   {
     name: 'QUIPU',
     image: QUIPU,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT193D4vozYnhGJQVtw7CoxxqphqUEEwK6Vb',
   },
   {
     name: 'SMAK',
     image: SMAK,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1TwzD6zV3WeJ39ukuqxcfK2fJCnhvrdN1X',
   },
   {
     name: 'USDtz',
     image: usdtz,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1LN4LPSqTMS7Sd2CJw4bbDGRkMv2t68Fy9',
   },
   {
     name: 'tzBTC',
     image: tzBTC,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn',
   },
-  {
-    name: 'wBUSD',
-    image: wbusd,
-    new: false,
-    chainType: 'TEZOS'
-  },
-  {
-    name: 'wDAI',
-    image: wDAI,
-    new: false,
-    chainType: 'TEZOS'
-  },
-  {
-    name: 'wLINK',
-    image: wlink,
-    new: false,
-    chainType: 'TEZOS'
-  },
-  {
-    name: 'wMATIC',
-    image: wmatic,
-    new: false,
-    chainType: 'TEZOS'
-  },
+
   {
     name: 'WRAP',
     image: WRAP,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1LRboPna9yQY9BrjtQYDS1DVxhKESK4VVd',
   },
-  {
-    name: 'wUSDC',
-    image: wusdc,
-    new: false,
-    chainType: 'TEZOS'
-  },
-  {
-    name: 'wUSDT',
-    image: wUSDT,
-    new: false,
-    chainType: 'TEZOS'
-  },
-  {
-    name: 'wWBTC',
-    image: wwbtc,
-    new: false,
-    chainType: 'TEZOS'
-  },
-  {
-    name: 'wWETH',
-    image: wWETH,
-    new: false,
-    chainType: 'TEZOS'
-  },
+
   {
     name: 'uDEFI',
     image: uDEFI,
@@ -278,24 +261,28 @@ export const tokens = [
       text: 'Get uDEFI',
       link: 'https://app.youves.com/udefi/minting/start',
     },
+    address: 'KT1XRPEPXbZK25r3Htzp2o1x7xdMMmfocKNW',
   },
   {
     name: 'UNO',
     image: UNO,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF',
   },
   {
     name: 'uUSD',
     image: uUSD,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1XRPEPXbZK25r3Htzp2o1x7xdMMmfocKNW',
   },
   {
     name: 'YOU',
     image: youGov,
     new: false,
-    chainType: 'TEZOS'
+    chainType: 'TEZOS',
+    address: 'KT1Xobej4mc6XgEjDoJoHtTKgbD1ELMvcQuL',
   },
   // {
   //   name: 'USDt',
