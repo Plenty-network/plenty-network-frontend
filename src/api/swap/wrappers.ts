@@ -10,6 +10,7 @@ import { calculateTokenOutputVolatile, loadSwapDataVolatile } from './volatile';
 import { BigNumber } from 'bignumber.js';
 import { ISwapDataResponse , ICalculateTokenResponse, IRouterResponse } from './types'
 import { computeAllPaths } from './router'
+import { store } from '../../redux';
 
 export const loadSwapDataWrapper = async (
   tokenIn: string,
@@ -107,16 +108,8 @@ export const calculateTokensOutWrapper = (
           tokenOut_precision
         );
       }
-      // TODO: Ask Kiran once regarding this final else
       else{
-        outputData = {
-          tokenOut_amount: new BigNumber(0),
-          fees: new BigNumber(0),
-          feePerc : new BigNumber(0),
-          minimum_Out: new BigNumber(0),
-          exchangeRate: new BigNumber(0),
-          priceImpact: new BigNumber(0),
-        };
+        throw "Invalid Parameter";
       }
     }
 
@@ -194,19 +187,35 @@ export const computeAllPathsWrapper = (
 export const reverseCalculation = (paths : string[], tokenOutAmount : BigNumber , slippage : BigNumber , swapData : ISwapDataResponse[][], tokenPrice : { [id: string] : number; }) => {
 
     try {
-      let tokenInAmount = new BigNumber(Infinity);
+
+    const state = store.getState();
+    const TOKEN = state.config.standard;
+
+    let tokenInAmount = new BigNumber(Infinity);
     let bestPath:string;
+    let tokenIn;
 
     for (var i in paths){
       const path = paths[i].split(" ");
       const tempAmountIn = new BigNumber(tokenOutAmount.multipliedBy(tokenPrice[path[path.length-1]]).dividedBy(tokenPrice[path[0]]));
       if(tempAmountIn.isLessThan(tokenInAmount)){
-        tokenInAmount = tempAmountIn;
+        tokenInAmount = tempAmountIn.decimalPlaces(TOKEN[path[0]].decimals);
         bestPath = paths[i];
       }
+      tokenIn = path[0];
     }
 
-    const res = computeAllPathsWrapper(paths, tokenInAmount, slippage, swapData , tokenPrice);
+    // Round Up Works in general case
+    tokenInAmount = new BigNumber(tokenInAmount.toFixed(2 , BigNumber.ROUND_UP));
+    console.log(tokenInAmount.toString());
+    let res = computeAllPathsWrapper(paths, tokenInAmount, slippage, swapData , tokenPrice);
+
+    // For high precision tokens
+    while(res.tokenOut_amount.isLessThan(tokenOutAmount)){
+      tokenInAmount = tokenInAmount.plus(0.01);
+      res = computeAllPathsWrapper(paths, tokenInAmount, slippage, swapData , tokenPrice);
+    }
+    
 
     return {
       path: res.path,

@@ -268,7 +268,8 @@ function Swap(props: ISwapProps) {
 
         const res =  reverseCalculation(allPath.current, new BigNumber(input),new BigNumber(slippage),allPathSwapData.current, tokenPriceRef.current);
         console.log(res);
-        
+        console.log(res.tokenIn_amount.toString() , res.tokenOut_amount.toString());
+
         setTimeout(() => {
           setFirstTokenAmount('12');
         }, 1000);

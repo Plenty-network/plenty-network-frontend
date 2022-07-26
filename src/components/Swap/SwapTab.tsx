@@ -98,7 +98,6 @@ interface ISwapTabProps {
 }
 
 function SwapTab(props: ISwapTabProps) {
-  console.log(props.tokenPrice);
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
   const [transactionId, setTransactionId] = useState('');
@@ -450,7 +449,7 @@ function SwapTab(props: ISwapTabProps) {
                       )}
                       placeholder="0.0"
                       lang="en_EN"
-                      disabled
+                        
                       step="any"
                       onChange={(e) =>
                         props.handleSwapTokenInput(e.target.value, 'tokenOut')
