@@ -22,6 +22,7 @@ import {
   computeAllPathsWrapper,
   reverseCalculation,
 } from '../../api/swap/wrappers';
+import { IAllBalanceResponse } from '../../api/util/types';
 
 interface ISwapProps {
   className?: string;
@@ -35,6 +36,15 @@ interface ISwapProps {
 function Swap(props: ISwapProps) {
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const userSettings = useAppSelector((state) =>
+    state.userSettings.settings[
+      props.otherProps.walletAddress ? props.otherProps.walletAddress : ''
+    ]
+      ? state.userSettings.settings[
+          props.otherProps.walletAddress ? props.otherProps.walletAddress : ''
+        ]
+      : state.userSettings.settings['']
+  );
 
   const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
     useLocationStateInSwap();
@@ -54,9 +64,10 @@ function Swap(props: ISwapProps) {
   const [tokenType, setTokenType] = useState<tokenType>('tokenIn');
   const [searchQuery, setSearchQuery] = useState('');
   const [swapModalShow, setSwapModalShow] = useState(false);
-  const [slippage, setSlippage] = useState(0.5);
+
+  const [slippage, setSlippage] = useState(Number(userSettings.slippage));
   const [errorMessage, setErrorMessage] = useState('');
-  const [enableMultiHop, setEnableMultiHop] = useState(true);
+  const [enableMultiHop, setEnableMultiHop] = useState(userSettings.multiHop);
   const loading = React.useRef<{
     isLoadingfirst?: boolean;
     isLoadingSecond?: boolean;
@@ -99,12 +110,17 @@ function Swap(props: ISwapProps) {
   useEffect(() => {
     if (props.otherProps.walletAddress) {
       getCompleteUserBalace(props.otherProps.walletAddress).then(
-        (response: any) => {
+        (response: IAllBalanceResponse) => {
           setAllBalance(response);
         }
       );
     }
   }, [props.otherProps.walletAddress, TOKEN]);
+
+  useEffect(() => {
+    setSlippage(userSettings.slippage);
+    setEnableMultiHop(userSettings.multiHop);
+  }, [props.otherProps.walletAddress, userSettings]);
 
   useEffect(() => {
     if (
@@ -166,23 +182,28 @@ function Swap(props: ISwapProps) {
           };
         }
         if (firstTokenAmount !== '' || secondTokenAmount !== '') {
-          if (tokenType === 'tokenIn') {
-            loading.current = {
-              isLoadingfirst: false,
-              isLoadingSecond: true,
-            };
-            setSecondTokenAmount('');
-          } else {
-            loading.current = {
-              isLoadingfirst: true,
-              isLoadingSecond: false,
-            };
-            setFirstTokenAmount('');
-          }
-
-          tokenType === 'tokenIn'
-            ? handleSwapTokenInput(firstTokenAmount, 'tokenIn')
-            : handleSwapTokenInput(secondTokenAmount, 'tokenOut');
+          // if (tokenType === 'tokenIn') {
+          //   loading.current = {
+          //     isLoadingfirst: false,
+          //     isLoadingSecond: true,
+          //   };
+          //   setSecondTokenAmount('');
+          // } else {
+          //   loading.current = {
+          //     isLoadingfirst: true,
+          //     isLoadingSecond: false,
+          //   };
+          //   setFirstTokenAmount('');
+          // }
+          loading.current = {
+            isLoadingfirst: false,
+            isLoadingSecond: false,
+          };
+          setSecondTokenAmount('');
+          handleSwapTokenInput(firstTokenAmount, 'tokenIn');
+          // tokenType === 'tokenIn'
+          //   ? handleSwapTokenInput(firstTokenAmount, 'tokenIn')
+          //   : handleSwapTokenInput(secondTokenAmount, 'tokenOut');
         }
       });
     }
