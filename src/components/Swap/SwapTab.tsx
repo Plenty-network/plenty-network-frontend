@@ -30,6 +30,7 @@ import {
 } from '../../constants/localStorage';
 import { store, useAppDispatch, useAppSelector } from '../../redux';
 import { setLoading } from '../../redux/isLoading/action';
+import { Position, ToolTip } from '../Tooltip/TooltipAdvanced';
 
 interface ISwapTabProps {
   className?: string;
@@ -551,7 +552,69 @@ function SwapTab(props: ISwapTabProps) {
               <>
                 <div>
                   <span className="relative top-0.5">
-                    <Image src={info} width={'15px'} height={'15px'} />
+                    <ToolTip
+                      id="tooltip1"
+                      toolTipChild={
+                        <p>
+                          <div
+                            className={`w-[277px]   rounded-3xl 
+                            }`}
+                          >
+                            <div className="flex mt-2">
+                              <div className="font-mobile-400 md:font-body3 ">
+                                <span className="mr-[5px]">
+                                  Minimum received
+                                </span>
+                              </div>
+
+                              <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                                {` ${Number(
+                                  props.routeDetails.minimum_Out
+                                ).toFixed(4)} ${
+                                  props.tokenOut.name === 'tez'
+                                    ? 'TEZ'
+                                    : props.tokenOut.name === 'ctez'
+                                    ? 'CTEZ'
+                                    : props.tokenOut.name
+                                }`}
+                              </div>
+                            </div>
+
+                            <div className="flex mt-3">
+                              <div className="font-mobile-400 md:font-body3 ">
+                                <span className="mr-[5px]">Price Impact</span>
+                              </div>
+
+                              <div
+                                className={clsx(
+                                  'ml-auto font-mobile-700 md:font-subtitle4',
+                                  Number(props.routeDetails.priceImpact) > 5 &&
+                                    'text-error-500'
+                                )}
+                              >
+                                {`${props.routeDetails.priceImpact.toFixed(
+                                  4
+                                )} %`}
+                              </div>
+                            </div>
+                            <div className="flex mt-3 mb-2">
+                              <div className="font-mobile-400 md:font-body3 ">
+                                <span className="mr-[5px]">Fee</span>
+                              </div>
+
+                              <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                                {`${props.routeDetails.finalFeePerc.toFixed(
+                                  2
+                                )}  %`}
+                              </div>
+                            </div>
+                          </div>
+                        </p>
+                      }
+                      position={Position.left}
+                    >
+                      <Image src={info} width={'15px'} height={'15px'} />
+                    </ToolTip>
                   </span>
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
                     {' '}

@@ -524,7 +524,7 @@ function Swap(props: ISwapProps) {
         />
       </div>
       <SwapModal
-        tokens={tokensListConfig}
+        tokens={tokensList}
         show={swapModalShow}
         allBalance={allBalance.userBalance}
         selectToken={selectToken}

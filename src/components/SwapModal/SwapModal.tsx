@@ -9,14 +9,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 interface ISwapModalProps {
-  tokens:
-    | {
-        name: string;
-        image: string;
-        new: boolean;
-        chainType: string;
-        address: string | undefined;
-      }[];
+  tokens: tokensModal[];
   show: boolean;
   selectToken: Function;
   onhide?: Function;
@@ -159,7 +152,7 @@ function SwapModal(props: ISwapModalProps) {
                     <div>
                       <span className="w-[30px] h-[30px] relative top-1">
                         <Image
-                          src={`/assets/Tokens/${token.image}.png`}
+                          src={token.image}
                           width={'30px'}
                           height={'30px'}
                         />{' '}
