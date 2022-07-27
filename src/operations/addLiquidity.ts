@@ -392,7 +392,7 @@ const addTezPairsLiquidity = async (
       throw new Error("No dex found for the given pair of tokens.");
     }
     // Make the order of tokens according to the order in contract.
-    if(tokenOneSymbol === 'tez') {
+    if (tokenOneSymbol === "tez") {
       tezSymbol = tokenOneSymbol;
       tezAmount = tokenOneAmount;
       secondTokenSymbol = tokenTwoSymbol;
@@ -403,14 +403,18 @@ const addTezPairsLiquidity = async (
       secondTokenSymbol = tokenOneSymbol;
       secondTokenAmount = tokenOneAmount;
     }
-    
+
     const secondTokenAddress = TOKENS[secondTokenSymbol].address as string;
     const secondTokenId = TOKENS[secondTokenSymbol].tokenId ?? 0;
     const secondTokenInstance = await Tezos.wallet.at(secondTokenAddress);
     const dexContractInstance = await Tezos.wallet.at(dexContractAddress);
 
-    tezAmount = tezAmount.multipliedBy(new BigNumber(10).pow(TOKENS[tezSymbol].decimals));
-    secondTokenAmount = secondTokenAmount.multipliedBy(new BigNumber(10).pow(TOKENS[secondTokenSymbol].decimals));
+    tezAmount = tezAmount.multipliedBy(
+      new BigNumber(10).pow(TOKENS[tezSymbol].decimals)
+    );
+    secondTokenAmount = secondTokenAmount.multipliedBy(
+      new BigNumber(10).pow(TOKENS[secondTokenSymbol].decimals)
+    );
 
     let batch = null;
     if (TOKENS[secondTokenSymbol].variant === TokenVariant.FA12) {
@@ -472,7 +476,9 @@ const addTezPairsLiquidity = async (
         },
       ]);
     } else {
-      throw new Error('Invalid token variant. Token variant can be FA1.2 or FA2.');
+      throw new Error(
+        "Invalid token variant. Token variant can be FA1.2 or FA2."
+      );
     }
     const batchOperation = await batch?.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);
@@ -483,7 +489,7 @@ const addTezPairsLiquidity = async (
       success: true,
       operationId: batchOperation?.opHash,
     };
-  } catch(error: any) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
-}
+};
