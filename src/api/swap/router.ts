@@ -6,7 +6,7 @@ import { ITokens } from '../../config/types';
 
 let paths: string[] = [];
 
-export const allPaths = async (tokenIn: string, tokenOut: string , multihop : boolean): Promise<{ paths: string[], swapData: any[][] }> => {
+export const allPaths = async (tokenIn: string, tokenOut: string , multihop : boolean): Promise<{ paths: string[], swapData: ISwapDataResponse[][] }> => {
     try {
         const state = store.getState();
         const TOKEN = state.config.standard;
@@ -20,6 +20,7 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
         Object.keys(TOKEN).forEach(function (key) {
             visited[key] = false;
         });
+        
         allPathHelper(tokenIn, tokenOut, visited, tokenIn, TOKEN);
 
         let tempPaths : string[] = [];
@@ -144,6 +145,7 @@ export const computeAllPaths = (
                         bestPath.fees = fees;
                         bestPath.feePerc = feePerc;
                         bestPath.priceImpact = priceImpact;
+                        bestPath.bestPathSwapData = swapData[i];
                     }
                 } else {
                     // add current path as best path
@@ -154,6 +156,7 @@ export const computeAllPaths = (
                         fees: fees,
                         feePerc: feePerc,
                         priceImpact: priceImpact,
+                        bestPathSwapData : swapData[i],
                     };
                 }
             }
@@ -164,6 +167,7 @@ export const computeAllPaths = (
         console.log(error);
         const bestPath = {
             path: [],
+            bestPathSwapData : [],
             tokenOut_amount: new BigNumber(0),
             minimumTokenOut: [],
             priceImpact: [],

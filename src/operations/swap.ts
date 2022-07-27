@@ -1,10 +1,11 @@
 import { getDexAddress } from '../api/util/fetchConfig';
 import { store } from '../redux';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, TokenVariant } from '../config/types';
+import { TokenVariant } from '../config/types';
 import { OpKind } from '@taquito/taquito';
 import { routerSwap } from './router';
 import { dappClient } from '../common/walletconnect';
+import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShowConfirmTransaction } from './types';
 
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,
@@ -12,10 +13,10 @@ export const allSwapWrapper = async (
   minimum_Out_All: BigNumber[],
   caller: string,
   recipent: string,
-  transactionSubmitModal: any,
-  resetAllValues: any,
-  setShowConfirmTransaction: any
-): Promise<{ success: boolean; operationId: any; error: any }> => {
+  transactionSubmitModal: TTransactionSubmitModal,
+  resetAllValues: TResetAllValues,
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+): Promise<IOperationsResponse> => {
   try {
     let res;
     if (path.length === 2) {
@@ -46,15 +47,15 @@ export const allSwapWrapper = async (
     }
     return {
       success: res.success,
-      operationId: res.operationId ?? null,
-      error: res.error ?? null,
+      operationId: res.operationId ?? undefined,
+      error: res.error ?? undefined,
     };
-  } catch (error) {
+  } catch (error : any) {
     console.log(error);
     return {
       success: false,
-      operationId: null,
-      error: error,
+      operationId: undefined,
+      error: error.message,
     };
   }
 };
@@ -66,10 +67,10 @@ export const directSwapWrapper = async (
   recipent: string,
   tokenInAmount: BigNumber,
   caller: string,
-  transactionSubmitModal: any,
-  resetAllValues: any,
-  setShowConfirmTransaction: any
-): Promise<{ success: boolean; operationId: any; error: any }> => {
+  transactionSubmitModal: TTransactionSubmitModal,
+  resetAllValues: TResetAllValues,
+  setShowConfirmTransaction: TSetShowConfirmTransaction
+): Promise<IOperationsResponse> => {
   try {
     let res;
     if (tokenIn === 'tez' && tokenOut === 'ctez') {
@@ -109,15 +110,15 @@ export const directSwapWrapper = async (
     }
     return {
       success: res.success,
-      operationId: res.operationId ?? null,
-      error: res.error ?? null,
+      operationId: res.operationId ?? undefined,
+      error: res.error ?? undefined,
     };
-  } catch (error) {
+  } catch (error : any) {
     console.log(error);
     return {
       success: false,
-      operationId: null,
-      error: error,
+      operationId: undefined,
+      error: error.message,
     };
   }
 };
@@ -129,10 +130,10 @@ const swapTokens = async (
   recipent: string,
   tokenInAmount: BigNumber,
   caller: string,
-  transactionSubmitModal: any,
-  resetAllValues: any,
-  setShowConfirmTransaction: any
-) => {
+  transactionSubmitModal: TTransactionSubmitModal,
+  resetAllValues: TResetAllValues,
+  setShowConfirmTransaction: TSetShowConfirmTransaction
+) : Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
@@ -231,11 +232,11 @@ const swapTokens = async (
       success: true,
       operationId: batchOperation.opHash,
     };
-  } catch (error) {
+  } catch (error : any) {
     console.log(error);
     return {
       success: false,
-      error,
+      error : error.message,
     };
   }
 };
@@ -246,11 +247,10 @@ async function ctez_to_tez(
   minimumTokenOut: BigNumber,
   recipent: string,
   tokenInAmount: BigNumber,
-  transactionSubmitModal: any,
-
-  resetAllValues: any,
-  setShowConfirmTransaction: any
-) {
+  transactionSubmitModal: TTransactionSubmitModal,
+  resetAllValues: TResetAllValues,
+  setShowConfirmTransaction: TSetShowConfirmTransaction
+) : Promise<IOperationsResponse> {
   try {
     const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
@@ -307,11 +307,11 @@ async function ctez_to_tez(
       success: true,
       operationId: batchOp.opHash,
     };
-  } catch (error) {
+  } catch (error : any) {
     console.log(error);
     return {
       success: false,
-      error,
+      error : error.message,
     };
   }
 }
@@ -322,11 +322,10 @@ async function tez_to_ctez(
   minimumTokenOut: BigNumber,
   recipent: string,
   tokenInAmount: BigNumber,
-  transactionSubmitModal: any,
-
-  resetAllValues: any,
-  setShowConfirmTransaction: any
-) {
+  transactionSubmitModal: TTransactionSubmitModal,
+  resetAllValues: TResetAllValues,
+  setShowConfirmTransaction: TSetShowConfirmTransaction
+) : Promise<IOperationsResponse> {
   try {
     const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
@@ -373,10 +372,10 @@ async function tez_to_ctez(
       success: true,
       operationId: batchOp.opHash,
     };
-  } catch (error) {
+  } catch (error : any) {
     return {
       success: false,
-      error,
+      error : error.message,
     };
   }
 }

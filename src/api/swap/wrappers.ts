@@ -10,6 +10,7 @@ import { calculateTokenOutputVolatile, loadSwapDataVolatile } from './volatile';
 import { BigNumber } from 'bignumber.js';
 import { ISwapDataResponse , ICalculateTokenResponse, IRouterResponse } from './types'
 import { computeAllPaths } from './router'
+import { store } from '../../redux';
 
 export const loadSwapDataWrapper = async (
   tokenIn: string,
@@ -107,16 +108,8 @@ export const calculateTokensOutWrapper = (
           tokenOut_precision
         );
       }
-      // TODO: Ask Kiran once regarding this final else
       else{
-        outputData = {
-          tokenOut_amount: new BigNumber(0),
-          fees: new BigNumber(0),
-          feePerc : new BigNumber(0),
-          minimum_Out: new BigNumber(0),
-          exchangeRate: new BigNumber(0),
-          priceImpact: new BigNumber(0),
-        };
+        throw "Invalid Parameter";
       }
     }
 
@@ -139,7 +132,8 @@ export const computeAllPathsWrapper = (
   paths: string[],
   tokenIn_amount: BigNumber,
   slippage: BigNumber,
-  swapData: any[][],
+  swapData: ISwapDataResponse[][],
+  tokenPrice : { [id: string] : number; },
 ): IRouterResponse => {
   try {
       const bestPath = computeAllPaths(paths, tokenIn_amount, slippage, swapData);
@@ -158,24 +152,19 @@ export const computeAllPathsWrapper = (
           else isStable.push(false);
       }
 
-      const exchangeRateCalculation = computeAllPaths(
-          [bestPath.path.join(' ')],
-          new BigNumber(1),
-          new BigNumber(0),
-          swapData
-      );
+      const exchangeRate = new BigNumber(tokenPrice[bestPath.path[0]] / tokenPrice[bestPath.path[bestPath.path.length-1]]);
 
       return {
           path: bestPath.path,
           tokenOut_amount: bestPath.tokenOut_amount,
           finalMinimumTokenOut:
-              bestPath.minimumTokenOut[bestPath.minimumTokenOut.length - 1],
+          bestPath.minimumTokenOut[bestPath.minimumTokenOut.length - 1],
           minimumTokenOut: bestPath.minimumTokenOut,
           finalPriceImpact: finalPriceImpact,
           finalFeePerc: finalFeePerc,
           feePerc: bestPath.feePerc,
           isStable: isStable,
-          exchangeRate: exchangeRateCalculation.tokenOut_amount,
+          exchangeRate: exchangeRate,
       };
   } catch (error) {
       console.log(error);
@@ -192,3 +181,82 @@ export const computeAllPathsWrapper = (
       };
   }
 };
+
+
+// TODO : Check this api for large amounts 
+export const reverseCalculation = (tokenIn :  string , tokenOut : string ,paths : string[], tokenOutAmount : BigNumber , slippage : BigNumber , swapData : ISwapDataResponse[][], tokenPrice : { [id: string] : number; }) => {
+
+    try {
+    const state = store.getState();
+    const TOKEN = state.config.standard;
+
+    let tokenInAmount = new BigNumber(Infinity);
+
+    for (var i in paths){
+      const path = paths[i].split(" ");
+      const tempAmountIn = new BigNumber(tokenOutAmount.multipliedBy(tokenPrice[path[path.length-1]]).dividedBy(tokenPrice[path[0]]));
+      if(tempAmountIn.isLessThan(tokenInAmount)){
+        tokenInAmount = tempAmountIn.decimalPlaces(TOKEN[path[0]].decimals);
+      }
+    }
+
+    const priceDifferential = new BigNumber(Math.abs(tokenPrice[tokenOut] - tokenPrice[tokenIn]));
+
+    // Round Up Works in general case
+    tokenInAmount = new BigNumber(tokenInAmount.toFixed(5 , BigNumber.ROUND_UP));
+    let res = computeAllPathsWrapper(paths, tokenInAmount, slippage, swapData , tokenPrice);
+
+    // For high value and precision tokens
+    let counter = 0;
+    // max 100 iterations
+    while(res.tokenOut_amount.isLessThan(tokenOutAmount) && counter<=100){
+      counter++;
+      console.log(counter);
+      // Token with high price differential need higher plus factor
+      if(priceDifferential.isGreaterThan(1000)){
+      tokenInAmount = tokenInAmount.plus(1);}
+      else{
+      tokenInAmount = tokenInAmount.plus(0.01);}
+      console.log(tokenInAmount.toString());
+      res = computeAllPathsWrapper(paths, tokenInAmount, slippage, swapData , tokenPrice);
+    }
+
+    let insufficientLiquidity = false;
+    if(res.tokenOut_amount.isLessThan(tokenOutAmount))
+    insufficientLiquidity = true;
+    
+
+    return {
+      path: res.path,
+      tokenIn_amount : tokenInAmount,
+      tokenOut_amount: res.tokenOut_amount,
+      finalMinimumTokenOut: res.finalMinimumTokenOut,
+      minimumTokenOut: res.minimumTokenOut,
+      finalPriceImpact: res.finalPriceImpact,
+      finalFeePerc: res.finalFeePerc,
+      feePerc: res.feePerc,
+      isStable: res.isStable,
+      exchangeRate: res.exchangeRate,
+      insufficientLiquidity : insufficientLiquidity,
+  };
+    
+    } catch (error) {
+      console.log(error);
+      return {
+          path: [],
+          tokenIn_amount : new BigNumber(0),
+          tokenOut_amount: new BigNumber(0),
+          finalMinimumTokenOut: new BigNumber(0),
+          minimumTokenOut: [],
+          finalPriceImpact: new BigNumber(0),
+          finalFeePerc: new BigNumber(0),
+          feePerc: [],
+          isStable: [],
+          exchangeRate: new BigNumber(0),
+          insufficientLiquidity : false,
+      };
+      
+    }
+   
+  
+}
