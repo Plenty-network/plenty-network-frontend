@@ -31,6 +31,7 @@ import {
 } from '../../constants/localStorage';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { setLoading } from '../../redux/isLoading/action';
+import { InfoIconToolTip } from '../Tooltip/infoIconTooltip';
 
 interface ISwapTabProps {
   className?: string;
@@ -627,7 +628,9 @@ function SwapTab(props: ISwapTabProps) {
               <div className="font-mobile-400 md:font-body3 ">
                 <span className="mr-[5px]">Minimum received</span>
                 <span className="relative top-0.5">
-                  <Image src={info} width={'15px'} height={'15px'} />
+                <InfoIconToolTip
+                    message='Hello world'
+                    />
                 </span>
               </div>
               {isRefresh || props.loading.isLoadingSecond ? (
