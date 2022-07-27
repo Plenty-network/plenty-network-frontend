@@ -60,9 +60,22 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+.tooltipCustom{
+  background-color: #160D24 !important;
+  border-color: #341E54 !important;;
+  color: white !important;;
+  text-align: left !important;;
+  border: 1px solid #341E54 !important;;
+  border-radius: 12px !important;
+  box-shadow: rgba(255, 255, 255, 0.064) 0px 3px 8px !important;
+  padding: 8px 19px !important;
+  
+}  
 .sideNavactive {
   @apply border-r-primary-500  bg-sideBarHover;
 }
+
+
 @layer components {
   .font-medium1 {
     @apply font-medium;
