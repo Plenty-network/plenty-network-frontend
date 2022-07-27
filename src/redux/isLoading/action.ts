@@ -4,10 +4,6 @@ export const setLoading=(isTrue:boolean)=>{
     }
     return {type:loadingActionType.SET_LOADING_TRUE,isLoading:false}
 }
-
-
-   
-
 export const loadingActionType={
     SET_LOADING_FALSE:'SET_LOADING_FALSE',
     SET_LOADING_TRUE:'SET_LOADING_TRUE',
