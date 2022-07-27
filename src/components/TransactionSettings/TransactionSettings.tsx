@@ -6,6 +6,13 @@ import { useEffect, useRef, useState } from 'react';
 import { ERRORMESSAGES } from '../../constants/swap';
 import { useOutsideClick } from '../../utils/outSideClickHook';
 import { Switch } from '../SwitchCheckbox/switchWithoutIcon';
+import { useDispatch } from 'react-redux';
+import { AppDispatch, useAppSelector } from '../../redux';
+import {
+  setUserSettingsExpertMode,
+  setUserSettingsMultihop,
+  setUserSettingsSlippage,
+} from '../../redux/userSettings/userSettings';
 
 interface ITransactionSettingsProps {
   onClick?: () => void | Promise<void>;
@@ -26,16 +33,42 @@ function TransactionSettings(props: ITransactionSettingsProps) {
   const refSetting = useRef(null);
   const [recepientlocal, setRecepientlocal] = useState(false);
 
+  const dispatch = useDispatch<AppDispatch>();
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const handleShowRecepient = () => {
     setRecepientlocal(!recepientlocal);
     props.setShowRecepient(!recepientlocal);
   };
   const handleExpertMode = () => {
     props.setExpertMode(!props.expertMode);
+    walletAddress !== null &&
+      dispatch(
+        setUserSettingsExpertMode({
+          address: walletAddress,
+          expertMode: !props.expertMode,
+        })
+      );
     props.setShowExpertPopup(!props.expertMode);
   };
   const handleMultiHop = () => {
+    walletAddress !== null &&
+      dispatch(
+        setUserSettingsMultihop({
+          address: walletAddress,
+          multiHop: !props.enableMultiHop,
+        })
+      );
     props.setEnableMultiHop(!props.enableMultiHop);
+  };
+  const handleSlippage = (input: any) => {
+    props.setSlippage(input);
+    walletAddress !== null &&
+      dispatch(
+        setUserSettingsSlippage({
+          address: walletAddress,
+          slippage: input,
+        })
+      );
   };
 
   const handleAutoSlippage = () => {
@@ -96,7 +129,7 @@ function TransactionSettings(props: ITransactionSettingsProps) {
               className="outline-none bg-card-500 text-left"
               placeholder="0.5"
               value={props.slippage}
-              onChange={(e) => props.setSlippage(e.target.value)}
+              onChange={(e) => handleSlippage(e.target.value)}
             />
           </div>
           <div className="ml-auto">%</div>

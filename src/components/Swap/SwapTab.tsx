@@ -12,7 +12,7 @@ import Lottie from 'lottie-react';
 import Button from '../Button/Button';
 import TokenDropdown from '../TokenDropdown/TokenDropdown';
 import TransactionSettings from '../TransactionSettings/TransactionSettings';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { tokensModal, tokenType } from '../../../src/constants/swap';
 import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import loader from '../../assets/animations/shimmer-swap.json';
@@ -29,7 +29,7 @@ import {
   TOKEN_A,
   TOKEN_B,
 } from '../../constants/localStorage';
-import { useAppDispatch } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../redux';
 import { setLoading } from '../../redux/isLoading/action';
 
 interface ISwapTabProps {
@@ -100,13 +100,23 @@ interface ISwapTabProps {
 }
 
 function SwapTab(props: ISwapTabProps) {
+  const userSettings = useAppSelector((state) =>
+    state.userSettings.settings[props.walletAddress ? props.walletAddress : '']
+      ? state.userSettings.settings[
+          props.walletAddress ? props.walletAddress : ''
+        ]
+      : state.userSettings.settings['']
+  );
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
   const [transactionId, setTransactionId] = useState('');
   const [openSwapDetails, setOpenSwapDetails, animateOpenSwapDetails] =
     useStateAnimate(false, 280);
   const [showRecepient, setShowRecepient] = useState(false);
-  const [expertMode, setExpertMode] = useState(false);
+  // const expertModeState = useAppSelector(
+  //   (state) => state.userSettings
+  // );
+  const [expertMode, setExpertMode] = useState(userSettings.expertMode);
   const [showExpertPopup, setShowExpertPopup] = useState(false);
   const [isSecondInputFocus, setIsSecondInputFocus] = useState(false);
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
@@ -119,6 +129,9 @@ function SwapTab(props: ISwapTabProps) {
       setRefresh(false);
     }, 500);
   };
+  useEffect(() => {
+    setExpertMode(userSettings.expertMode);
+  }, [props.walletAddress, userSettings]);
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     props.setShowTransactionSubmitModal(true);
