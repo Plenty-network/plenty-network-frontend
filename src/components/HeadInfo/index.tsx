@@ -11,7 +11,12 @@ export default function HeadInfo (props: IHeadInfoProps) {
   return (
       <div className={`${props.className} flex gap-2 items-center border-b border-b-borderCommon py-2 bg-cardBackGround`}>
            <div className='p-2 text-f18 font-medium text-white' >Pools</div>
+           <ToolTip
+            id='poolsInfoIcon'
+            message='Watch how to add liquidity, stake, and earn PLY. '
+           >
             <Image src={playIcon} height={'28px'} width={'28px'} className='cursor-pointer hover:opacity-90' />
+           </ToolTip>
     </div>
    
 
