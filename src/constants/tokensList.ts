@@ -42,7 +42,7 @@ import usdt_normal from '../assets/Tokens/usdt_icon.svg';
 import ageure from '../assets/Tokens/ageure.png';
 import eurl from '../assets/Tokens/eurl.png';
 import usdt from '../assets/Tokens/usdt.png';
-export const tokens = [
+export const tokensList = [
   {
     name: 'WBTC.e',
     image: wbtce,

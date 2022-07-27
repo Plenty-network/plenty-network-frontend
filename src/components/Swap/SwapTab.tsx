@@ -17,7 +17,6 @@ import { tokensModal, tokenType } from '../../../src/constants/swap';
 import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import loader from '../../assets/animations/shimmer-swap.json';
 import { BigNumber } from 'bignumber.js';
-import { tokens } from '../../constants/tokensList';
 import { allSwapWrapper } from '../../operations/swap';
 import ExpertModePopup from '../ExpertMode';
 import ConfirmSwap from './ConfirmSwap';
@@ -29,9 +28,9 @@ import {
   TOKEN_A,
   TOKEN_B,
 } from '../../constants/localStorage';
-import { useAppDispatch, useAppSelector } from '../../redux';
+import { store, useAppDispatch, useAppSelector } from '../../redux';
 import { setLoading } from '../../redux/isLoading/action';
-import { InfoIconToolTip } from '../Tooltip/infoIconTooltip';
+import { Position, ToolTip } from '../Tooltip/TooltipAdvanced';
 
 interface ISwapTabProps {
   className?: string;
@@ -108,15 +107,14 @@ function SwapTab(props: ISwapTabProps) {
         ]
       : state.userSettings.settings['']
   );
+
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
   const [transactionId, setTransactionId] = useState('');
   const [openSwapDetails, setOpenSwapDetails, animateOpenSwapDetails] =
     useStateAnimate(false, 280);
   const [showRecepient, setShowRecepient] = useState(false);
-  // const expertModeState = useAppSelector(
-  //   (state) => state.userSettings
-  // );
+
   const [expertMode, setExpertMode] = useState(userSettings.expertMode);
   const [showExpertPopup, setShowExpertPopup] = useState(false);
   const [isSecondInputFocus, setIsSecondInputFocus] = useState(false);
@@ -201,7 +199,7 @@ function SwapTab(props: ISwapTabProps) {
   const swapRoute = useMemo(() => {
     if (props.routeDetails.path?.length >= 2) {
       return props.routeDetails.path.map((tokenName) =>
-        tokens.find((token) => token.name === tokenName)
+        props.tokens.find((token) => token.name === tokenName)
       );
     }
 
@@ -388,9 +386,17 @@ function SwapTab(props: ISwapTabProps) {
               className="font-body4 text-primary-500 cursor-pointer"
               onClick={onClickAmount}
             >
-              {Number(props.userBalances[props.tokenIn.name]) >= 0
-                ? Number(props.userBalances[props.tokenIn.name]).toFixed(4)
-                : '--'}
+              {Number(props.userBalances[props.tokenIn.name]) >= 0 ? (
+                <ToolTip
+                  message={props.userBalances[props.tokenIn.name].toString()}
+                  id="tooltip8"
+                  position={Position.top}
+                >
+                  {Number(props.userBalances[props.tokenIn.name]).toFixed(4)}
+                </ToolTip>
+              ) : (
+                '--'
+              )}
             </span>
           </div>
           <div className="text-right ml-auto font-body2 text-text-400">
@@ -496,9 +502,17 @@ function SwapTab(props: ISwapTabProps) {
               <span className="text-text-600 font-body3">Balance:</span>{' '}
               <span className="font-body4 text-text-500 ">
                 {Object.keys(props.tokenOut).length !== 0 &&
-                Number(props.userBalances[props.tokenOut.name]) >= 0
-                  ? Number(props.userBalances[props.tokenOut.name]).toFixed(4)
-                  : '--'}
+                Number(props.userBalances[props.tokenOut.name]) >= 0 ? (
+                  <ToolTip
+                    message={props.userBalances[props.tokenOut.name].toString()}
+                    id="tooltip9"
+                    position={Position.top}
+                  >
+                    {Number(props.userBalances[props.tokenOut.name]).toFixed(4)}
+                  </ToolTip>
+                ) : (
+                  '--'
+                )}
               </span>
             </div>
             <div className="text-right ml-auto font-body2 text-text-400">
@@ -554,39 +568,113 @@ function SwapTab(props: ISwapTabProps) {
               <>
                 <div>
                   <span className="relative top-0.5">
-                    <Image src={info} width={'15px'} height={'15px'} />
+                    <ToolTip
+                      id="tooltip1"
+                      toolTipChild={
+                        <p>
+                          <div
+                            className={`w-[277px]   rounded-3xl 
+                            }`}
+                          >
+                            <div className="flex mt-2">
+                              <div className="font-mobile-400 md:font-body3 ">
+                                <span className="mr-[5px]">
+                                  Minimum received
+                                </span>
+                              </div>
+
+                              <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                                {` ${Number(
+                                  props.routeDetails.minimum_Out
+                                ).toFixed(4)} ${
+                                  props.tokenOut.name === 'tez'
+                                    ? 'TEZ'
+                                    : props.tokenOut.name === 'ctez'
+                                    ? 'CTEZ'
+                                    : props.tokenOut.name
+                                }`}
+                              </div>
+                            </div>
+
+                            <div className="flex mt-3">
+                              <div className="font-mobile-400 md:font-body3 ">
+                                <span className="mr-[5px]">Price Impact</span>
+                              </div>
+
+                              <div
+                                className={clsx(
+                                  'ml-auto font-mobile-700 md:font-subtitle4',
+                                  Number(props.routeDetails.priceImpact) > 5 &&
+                                    'text-error-500'
+                                )}
+                              >
+                                {`${props.routeDetails.priceImpact.toFixed(
+                                  4
+                                )} %`}
+                              </div>
+                            </div>
+                            <div className="flex mt-3 mb-2">
+                              <div className="font-mobile-400 md:font-body3 ">
+                                <span className="mr-[5px]">Fee</span>
+                              </div>
+
+                              <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                                {`${props.routeDetails.finalFeePerc.toFixed(
+                                  2
+                                )}  %`}
+                              </div>
+                            </div>
+                          </div>
+                        </p>
+                      }
+                      position={Position.left}
+                    >
+                      <Image src={info} width={'15px'} height={'15px'} />
+                    </ToolTip>
                   </span>
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
-                    {' '}
-                    {!isConvert
-                      ? `1 ${
-                          props.tokenIn.name === 'tez'
-                            ? 'TEZ'
-                            : props.tokenIn.name === 'ctez'
-                            ? 'CTEZ'
-                            : props.tokenIn.name
-                        } = ${props.routeDetails.exchangeRate.toFixed(3)} ${
-                          props.tokenOut.name === 'tez'
-                            ? 'TEZ'
-                            : props.tokenOut.name === 'ctez'
-                            ? 'CTEZ'
-                            : props.tokenOut.name
-                        }`
-                      : `1 ${
-                          props.tokenOut.name === 'tez'
-                            ? 'TEZ'
-                            : props.tokenOut.name === 'ctez'
-                            ? 'CTEZ'
-                            : props.tokenOut.name
-                        } = ${Number(
-                          1 / Number(props.routeDetails.exchangeRate)
-                        ).toFixed(3)} ${
-                          props.tokenIn.name === 'tez'
-                            ? 'TEZ'
-                            : props.tokenIn.name === 'ctez'
-                            ? 'CTEZ'
-                            : props.tokenIn.name
-                        }`}
+                    <ToolTip
+                      message={
+                        !isConvert
+                          ? props.routeDetails.exchangeRate.toString()
+                          : (
+                              1 / Number(props.routeDetails.exchangeRate)
+                            ).toString()
+                      }
+                      id="tooltip7"
+                      position={Position.top}
+                    >
+                      {' '}
+                      {!isConvert
+                        ? `1 ${
+                            props.tokenIn.name === 'tez'
+                              ? 'TEZ'
+                              : props.tokenIn.name === 'ctez'
+                              ? 'CTEZ'
+                              : props.tokenIn.name
+                          } = ${props.routeDetails.exchangeRate.toFixed(3)} ${
+                            props.tokenOut.name === 'tez'
+                              ? 'TEZ'
+                              : props.tokenOut.name === 'ctez'
+                              ? 'CTEZ'
+                              : props.tokenOut.name
+                          }`
+                        : `1 ${
+                            props.tokenOut.name === 'tez'
+                              ? 'TEZ'
+                              : props.tokenOut.name === 'ctez'
+                              ? 'CTEZ'
+                              : props.tokenOut.name
+                          } = ${Number(
+                            1 / Number(props.routeDetails.exchangeRate)
+                          ).toFixed(3)} ${
+                            props.tokenIn.name === 'tez'
+                              ? 'TEZ'
+                              : props.tokenIn.name === 'ctez'
+                              ? 'CTEZ'
+                              : props.tokenIn.name
+                          }`}
+                    </ToolTip>
                   </span>
                   <span className="relative top-px">
                     <Image
@@ -595,11 +683,145 @@ function SwapTab(props: ISwapTabProps) {
                     />
                   </span>
                 </div>
-                <div className="ml-auto mr-2.5 lg:mr-6 h-[36px] flex justify-center rounded bg-shimmer-100 p-2">
-                  <Image src={router} width={'20px'} height={'20px'} />
-                  <span className="ml-1 font-bold3 lg:font-subtitle4 text-primary-500">{`${Number(
-                    props.routeDetails.finalFeePerc
-                  ).toFixed(2)} %`}</span>
+                <div className="ml-auto">
+                  <ToolTip
+                    id="tooltip9"
+                    position={Position.top}
+                    toolTipChild={
+                      <div className="w-[400px]">
+                        <div className="mt-2 ">
+                          <div className="font-subtitle2 md:font-subtitle4">
+                            {' '}
+                            <span className="mr-[5px]">Route</span>
+                          </div>
+
+                          <>
+                            <div className="border-dashed relative top-[24px]   border-t-2 border-muted-50 mx-2"></div>
+                            <div className="mt-2 flex justify-between ">
+                              {swapRoute?.map((token, idx) => {
+                                const index = idx + 1;
+                                return (
+                                  <>
+                                    {(idx === 0 ||
+                                      idx === swapRoute.length - 1) && (
+                                      <div
+                                        className="flex items-center "
+                                        key={token?.name}
+                                      >
+                                        {idx === swapRoute.length - 1 && (
+                                          <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                                        )}
+                                        <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                                          <span className="w-[28px] h-[28px]">
+                                            <Image
+                                              src={token?.image}
+                                              width={'28px'}
+                                              height={'28px'}
+                                            />
+                                          </span>
+                                        </div>
+                                        {idx === 0 && (
+                                          <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                                        )}
+                                      </div>
+                                    )}
+
+                                    {idx !== swapRoute.length - 1 && (
+                                      <div className="flex items-center">
+                                        <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                                        <div
+                                          className={clsx(
+                                            'relative  rounded-2xl h-[32px] bg-card-600 p-px flex',
+                                            props.routeDetails.isStable[idx]
+                                              ? 'w-[130px]'
+                                              : 'w-[114px]'
+                                          )}
+                                        >
+                                          <span className=" flex items-center">
+                                            {props.routeDetails.isStable[
+                                              idx
+                                            ] && (
+                                              <div className="   z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
+                                                <span className="w-[18px] h-[18px]">
+                                                  <Image
+                                                    src={stableSwap}
+                                                    width={'18px'}
+                                                    height={'18px'}
+                                                  />
+                                                </span>
+                                              </div>
+                                            )}
+                                            <div
+                                              className={clsx(
+                                                'relative   z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full',
+                                                props.routeDetails.isStable[
+                                                  idx
+                                                ] && 'right-[10px]'
+                                              )}
+                                            >
+                                              <span className="w-[28px] h-[28px]">
+                                                <Image
+                                                  src={token?.image}
+                                                  width={'28px'}
+                                                  height={'28px'}
+                                                />
+                                              </span>
+                                            </div>
+                                            <div
+                                              className={clsx(
+                                                'relative  z-30 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full',
+                                                props.routeDetails.isStable[idx]
+                                                  ? 'right-5'
+                                                  : 'right-[10px]'
+                                              )}
+                                            >
+                                              <span className="w-[28px] h-[28px]">
+                                                <Image
+                                                  src={swapRoute[index]?.image}
+                                                  width={'28px'}
+                                                  height={'28px'}
+                                                />
+                                              </span>
+                                            </div>
+                                            <div
+                                              className={clsx(
+                                                'relative right-[22px] ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4',
+                                                props.routeDetails.isStable[idx]
+                                                  ? 'right-[22px]'
+                                                  : 'right-[12px]'
+                                              )}
+                                            >
+                                              {Number(
+                                                props.routeDetails.feePerc[idx]
+                                              ).toFixed(2)}
+                                              %
+                                            </div>
+                                          </span>
+                                        </div>
+                                        <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                                      </div>
+                                    )}
+                                  </>
+                                );
+                              })}
+                            </div>
+                          </>
+                          <div className="mt-3 text-text-50 font-body1">
+                            This route optimises your total output by
+                            considering all the Volatile and Flat AMMs on Plenty
+                            Network.
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  >
+                    <div className="mr-2.5 lg:mr-6 h-[36px] flex justify-center rounded bg-shimmer-100 p-2">
+                      <Image src={router} width={'20px'} height={'20px'} />
+                      <span className="ml-1 font-bold3 lg:font-subtitle4 text-primary-500">{`${Number(
+                        props.routeDetails.finalFeePerc
+                      ).toFixed(2)} %`}</span>
+                    </div>
+                  </ToolTip>
                 </div>
                 <div className=" relative top-[3px]">
                   <Image
@@ -628,9 +850,19 @@ function SwapTab(props: ISwapTabProps) {
               <div className="font-mobile-400 md:font-body3 ">
                 <span className="mr-[5px]">Minimum received</span>
                 <span className="relative top-0.5">
-                <InfoIconToolTip
-                    message='Hello world'
-                    />
+                  <ToolTip
+                    id="tooltip2"
+                    toolTipChild={
+                      <div className="w-[323px]">
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry. Lorem Ipsum has been the industrys
+                        standard dummy text ever since the 1500s, when an
+                        unknown printer.
+                      </div>
+                    }
+                  >
+                    <Image src={info} width={'15px'} height={'15px'} />
+                  </ToolTip>
                 </span>
               </div>
               {isRefresh || props.loading.isLoadingSecond ? (
@@ -639,13 +871,19 @@ function SwapTab(props: ISwapTabProps) {
                 </div>
               ) : (
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {` ${Number(props.routeDetails.minimum_Out).toFixed(4)} ${
-                    props.tokenOut.name === 'tez'
-                      ? 'TEZ'
-                      : props.tokenOut.name === 'ctez'
-                      ? 'CTEZ'
-                      : props.tokenOut.name
-                  }`}
+                  <ToolTip
+                    message={props.routeDetails.minimum_Out.toString()}
+                    id="tooltip6"
+                    position={Position.top}
+                  >
+                    {` ${Number(props.routeDetails.minimum_Out).toFixed(4)} ${
+                      props.tokenOut.name === 'tez'
+                        ? 'TEZ'
+                        : props.tokenOut.name === 'ctez'
+                        ? 'CTEZ'
+                        : props.tokenOut.name
+                    }`}
+                  </ToolTip>
                 </div>
               )}
             </div>
@@ -654,7 +892,19 @@ function SwapTab(props: ISwapTabProps) {
               <div className="font-mobile-400 md:font-body3 ">
                 <span className="mr-[5px]">Price Impact</span>
                 <span className="relative top-0.5">
-                  <Image src={info} width={'15px'} height={'15px'} />
+                  <ToolTip
+                    id="tooltip4"
+                    toolTipChild={
+                      <div className="w-[323px]">
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry. Lorem Ipsum has been the industrys
+                        standard dummy text ever since the 1500s, when an
+                        unknown printer.
+                      </div>
+                    }
+                  >
+                    <Image src={info} width={'15px'} height={'15px'} />
+                  </ToolTip>
                 </span>
               </div>
               {isRefresh || props.loading.isLoadingSecond ? (
@@ -669,7 +919,13 @@ function SwapTab(props: ISwapTabProps) {
                       'text-error-500'
                   )}
                 >
-                  {`${props.routeDetails.priceImpact.toFixed(4)} %`}
+                  <ToolTip
+                    message={props.routeDetails.priceImpact.toString()}
+                    id="tooltip5"
+                    position={Position.top}
+                  >
+                    {`${props.routeDetails.priceImpact.toFixed(4)} %`}{' '}
+                  </ToolTip>
                 </div>
               )}
             </div>
@@ -677,7 +933,19 @@ function SwapTab(props: ISwapTabProps) {
               <div className="font-mobile-400 md:font-body3 ">
                 <span className="mr-[5px]">Fee</span>
                 <span className="relative top-0.5">
-                  <Image src={info} width={'15px'} height={'15px'} />
+                  <ToolTip
+                    id="tooltip3"
+                    toolTipChild={
+                      <div className="w-[323px]">
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry. Lorem Ipsum has been the industrys
+                        standard dummy text ever since the 1500s, when an
+                        unknown printer.
+                      </div>
+                    }
+                  >
+                    <Image src={info} width={'15px'} height={'15px'} />
+                  </ToolTip>
                 </span>
               </div>
               {isRefresh || props.loading.isLoadingSecond ? (
