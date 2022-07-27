@@ -22,6 +22,7 @@ import {
   computeAllPathsWrapper,
   reverseCalculation,
 } from '../../api/swap/wrappers';
+import { IAllBalanceResponse } from '../../api/util/types';
 
 interface ISwapProps {
   className?: string;
@@ -109,7 +110,7 @@ function Swap(props: ISwapProps) {
   useEffect(() => {
     if (props.otherProps.walletAddress) {
       getCompleteUserBalace(props.otherProps.walletAddress).then(
-        (response: any) => {
+        (response: IAllBalanceResponse) => {
           setAllBalance(response);
         }
       );
@@ -181,23 +182,28 @@ function Swap(props: ISwapProps) {
           };
         }
         if (firstTokenAmount !== '' || secondTokenAmount !== '') {
-          if (tokenType === 'tokenIn') {
-            loading.current = {
-              isLoadingfirst: false,
-              isLoadingSecond: true,
-            };
-            setSecondTokenAmount('');
-          } else {
-            loading.current = {
-              isLoadingfirst: true,
-              isLoadingSecond: false,
-            };
-            setFirstTokenAmount('');
-          }
-
-          tokenType === 'tokenIn'
-            ? handleSwapTokenInput(firstTokenAmount, 'tokenIn')
-            : handleSwapTokenInput(secondTokenAmount, 'tokenOut');
+          // if (tokenType === 'tokenIn') {
+          //   loading.current = {
+          //     isLoadingfirst: false,
+          //     isLoadingSecond: true,
+          //   };
+          //   setSecondTokenAmount('');
+          // } else {
+          //   loading.current = {
+          //     isLoadingfirst: true,
+          //     isLoadingSecond: false,
+          //   };
+          //   setFirstTokenAmount('');
+          // }
+          loading.current = {
+            isLoadingfirst: false,
+            isLoadingSecond: false,
+          };
+          setSecondTokenAmount('');
+          handleSwapTokenInput(firstTokenAmount, 'tokenIn');
+          // tokenType === 'tokenIn'
+          //   ? handleSwapTokenInput(firstTokenAmount, 'tokenIn')
+          //   : handleSwapTokenInput(secondTokenAmount, 'tokenOut');
         }
       });
     }
