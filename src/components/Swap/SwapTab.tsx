@@ -17,7 +17,6 @@ import { tokensModal, tokenType } from '../../../src/constants/swap';
 import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import loader from '../../assets/animations/shimmer-swap.json';
 import { BigNumber } from 'bignumber.js';
-import { tokens } from '../../constants/tokensList';
 import { allSwapWrapper } from '../../operations/swap';
 import ExpertModePopup from '../ExpertMode';
 import ConfirmSwap from './ConfirmSwap';
@@ -29,7 +28,7 @@ import {
   TOKEN_A,
   TOKEN_B,
 } from '../../constants/localStorage';
-import { useAppDispatch, useAppSelector } from '../../redux';
+import { store, useAppDispatch, useAppSelector } from '../../redux';
 import { setLoading } from '../../redux/isLoading/action';
 
 interface ISwapTabProps {
@@ -107,15 +106,14 @@ function SwapTab(props: ISwapTabProps) {
         ]
       : state.userSettings.settings['']
   );
+
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
   const [transactionId, setTransactionId] = useState('');
   const [openSwapDetails, setOpenSwapDetails, animateOpenSwapDetails] =
     useStateAnimate(false, 280);
   const [showRecepient, setShowRecepient] = useState(false);
-  // const expertModeState = useAppSelector(
-  //   (state) => state.userSettings
-  // );
+
   const [expertMode, setExpertMode] = useState(userSettings.expertMode);
   const [showExpertPopup, setShowExpertPopup] = useState(false);
   const [isSecondInputFocus, setIsSecondInputFocus] = useState(false);
@@ -200,7 +198,7 @@ function SwapTab(props: ISwapTabProps) {
   const swapRoute = useMemo(() => {
     if (props.routeDetails.path?.length >= 2) {
       return props.routeDetails.path.map((tokenName) =>
-        tokens.find((token) => token.name === tokenName)
+        props.tokens.find((token) => token.name === tokenName)
       );
     }
 
