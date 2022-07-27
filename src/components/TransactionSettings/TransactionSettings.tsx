@@ -13,6 +13,7 @@ import {
   setUserSettingsMultihop,
   setUserSettingsSlippage,
 } from '../../redux/userSettings/userSettings';
+import { Position, ToolTip } from '../Tooltip/TooltipAdvanced';
 
 interface ITransactionSettingsProps {
   onClick?: () => void | Promise<void>;
@@ -99,7 +100,9 @@ function TransactionSettings(props: ITransactionSettingsProps) {
       <div className="mt-2">
         <span className="font-caption1 text-text-200 ">Slippage tolerance</span>
         <span className="relative top-0.5 left-[5px]">
-          <Image src={info} width={'11px'} height={'11px'} />
+          <ToolTip message="slippage" id="tooltipD" position={Position.top}>
+            <Image src={info} width={'11px'} height={'11px'} />
+          </ToolTip>
         </span>
       </div>
       <div className="flex mt-3">
@@ -154,7 +157,13 @@ function TransactionSettings(props: ITransactionSettingsProps) {
           <div>
             <span className="font-caption1 text-text-200 ">Multihops</span>
             <span className="relative top-0.5 left-[5px]">
-              <Image src={info} width={'11px'} height={'11px'} />
+              <ToolTip
+                message="Interface Settings"
+                id="tooltipA"
+                position={Position.top}
+              >
+                <Image src={info} width={'11px'} height={'11px'} />
+              </ToolTip>
             </span>
           </div>
           <div>
@@ -173,7 +182,13 @@ function TransactionSettings(props: ITransactionSettingsProps) {
               Togggle expert mode
             </span>
             <span className="relative top-0.5 left-[5px]">
-              <Image src={info} width={'11px'} height={'11px'} />
+              <ToolTip
+                message="Togggle expert mode"
+                id="tooltipB"
+                position={Position.top}
+              >
+                <Image src={info} width={'11px'} height={'11px'} />
+              </ToolTip>
             </span>
           </div>
           <div>
@@ -190,7 +205,13 @@ function TransactionSettings(props: ITransactionSettingsProps) {
           <div>
             <span className="font-caption1 text-text-200 ">Add recipient</span>
             <span className="relative top-0.5 left-[5px]">
-              <Image src={info} width={'11px'} height={'11px'} />
+              <ToolTip
+                message="Add recipient"
+                id="tooltipC"
+                position={Position.top}
+              >
+                <Image src={info} width={'11px'} height={'11px'} />
+              </ToolTip>
             </span>
           </div>
           <div>

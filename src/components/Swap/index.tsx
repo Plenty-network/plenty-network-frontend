@@ -469,7 +469,7 @@ function Swap(props: ISwapProps) {
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
       name: token[0],
-      image: token[1].symbol,
+      image: `/assets/Tokens/${token[1].symbol}.png`,
       new: false,
       chainType: 'ETHEREUM',
       address: token[1].address,
@@ -524,7 +524,7 @@ function Swap(props: ISwapProps) {
         />
       </div>
       <SwapModal
-        tokens={tokensList}
+        tokens={tokensListConfig}
         show={swapModalShow}
         allBalance={allBalance.userBalance}
         selectToken={selectToken}
