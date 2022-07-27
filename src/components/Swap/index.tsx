@@ -35,6 +35,15 @@ interface ISwapProps {
 function Swap(props: ISwapProps) {
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const userSettings = useAppSelector((state) =>
+    state.userSettings.settings[
+      props.otherProps.walletAddress ? props.otherProps.walletAddress : ''
+    ]
+      ? state.userSettings.settings[
+          props.otherProps.walletAddress ? props.otherProps.walletAddress : ''
+        ]
+      : state.userSettings.settings['']
+  );
 
   const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
     useLocationStateInSwap();
@@ -54,9 +63,10 @@ function Swap(props: ISwapProps) {
   const [tokenType, setTokenType] = useState<tokenType>('tokenIn');
   const [searchQuery, setSearchQuery] = useState('');
   const [swapModalShow, setSwapModalShow] = useState(false);
-  const [slippage, setSlippage] = useState(0.5);
+
+  const [slippage, setSlippage] = useState(Number(userSettings.slippage));
   const [errorMessage, setErrorMessage] = useState('');
-  const [enableMultiHop, setEnableMultiHop] = useState(true);
+  const [enableMultiHop, setEnableMultiHop] = useState(userSettings.multiHop);
   const loading = React.useRef<{
     isLoadingfirst?: boolean;
     isLoadingSecond?: boolean;
@@ -105,6 +115,11 @@ function Swap(props: ISwapProps) {
       );
     }
   }, [props.otherProps.walletAddress, TOKEN]);
+
+  useEffect(() => {
+    setSlippage(userSettings.slippage);
+    setEnableMultiHop(userSettings.multiHop);
+  }, [props.otherProps.walletAddress, userSettings]);
 
   useEffect(() => {
     if (
