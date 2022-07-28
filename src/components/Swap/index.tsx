@@ -470,8 +470,8 @@ function Swap(props: ISwapProps) {
     return tokensArray.map((token) => ({
       name: token[0],
       image: `/assets/Tokens/${token[1].symbol}.png`,
-      new: false,
-      chainType: 'ETHEREUM',
+      new: token[1].extras.isNew,
+      chainType: token[1].extras.chain,
       address: token[1].address,
     }));
   }, [tokens]);

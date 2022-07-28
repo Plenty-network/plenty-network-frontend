@@ -28,6 +28,18 @@ body {
 .mobile {
   @apply block md:hidden lg:hidden xl:hidden;
 }
+.infoIcon {
+  width: 15px !important;
+  height: 15px !important;
+}
+@media (min-width: 320px) and (max-width: 768px) {
+  .infoIcon {
+    width: 12px !important;
+    height: 12px !important;
+    min-width: 12px !important;
+    min-height: 12px !important;
+  }
+}
 .topNavblurEffect {
   backdrop-filter: blur(10px);
   background: linear-gradient(
@@ -60,21 +72,19 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
-.tooltipCustom{
-  background-color: #160D24 !important;
-  border-color: #341E54 !important;;
-  color: white !important;;
-  text-align: left !important;;
-  border: 1px solid #341E54 !important;;
+.tooltipCustom {
+  background-color: #160d24 !important;
+  border-color: #341e54 !important;
+  color: white !important;
+  text-align: left !important;
+  border: 1px solid #341e54 !important;
   border-radius: 12px !important;
   box-shadow: rgba(255, 255, 255, 0.064) 0px 3px 8px !important;
   padding: 8px 19px !important;
-  
-}  
+}
 .sideNavactive {
   @apply border-r-primary-500  bg-sideBarHover;
 }
-
 
 @layer components {
   .font-medium1 {

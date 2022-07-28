@@ -849,7 +849,7 @@ function SwapTab(props: ISwapTabProps) {
             <div className="flex">
               <div className="font-mobile-400 md:font-body3 ">
                 <span className="mr-[5px]">Minimum received</span>
-                <span className="relative top-0.5">
+                <span className="relative top-1 lg:top-0.5">
                   <ToolTip
                     id="tooltip2"
                     toolTipChild={
@@ -861,7 +861,7 @@ function SwapTab(props: ISwapTabProps) {
                       </div>
                     }
                   >
-                    <Image src={info} width={'15px'} height={'15px'} />
+                    <Image src={info} className="infoIcon" />
                   </ToolTip>
                 </span>
               </div>
@@ -891,7 +891,7 @@ function SwapTab(props: ISwapTabProps) {
             <div className="flex mt-2">
               <div className="font-mobile-400 md:font-body3 ">
                 <span className="mr-[5px]">Price Impact</span>
-                <span className="relative top-0.5">
+                <span className="relative top-1 lg:top-0.5">
                   <ToolTip
                     id="tooltip4"
                     toolTipChild={
@@ -903,7 +903,7 @@ function SwapTab(props: ISwapTabProps) {
                       </div>
                     }
                   >
-                    <Image src={info} width={'15px'} height={'15px'} />
+                    <Image src={info} className="infoIcon" />
                   </ToolTip>
                 </span>
               </div>
@@ -932,7 +932,7 @@ function SwapTab(props: ISwapTabProps) {
             <div className="flex mt-2">
               <div className="font-mobile-400 md:font-body3 ">
                 <span className="mr-[5px]">Fee</span>
-                <span className="relative top-0.5">
+                <span className="relative top-1 lg:top-0.5">
                   <ToolTip
                     id="tooltip3"
                     toolTipChild={
@@ -944,7 +944,7 @@ function SwapTab(props: ISwapTabProps) {
                       </div>
                     }
                   >
-                    <Image src={info} width={'15px'} height={'15px'} />
+                    <Image src={info} className="infoIcon" />
                   </ToolTip>
                 </span>
               </div>
@@ -964,8 +964,8 @@ function SwapTab(props: ISwapTabProps) {
               <div className="font-subtitle2 md:font-subtitle4">
                 {' '}
                 <span className="mr-[5px]">Route</span>
-                <span className="relative top-0.5">
-                  <Image src={info} width={'15px'} height={'15px'} />
+                <span className="relative top-1 lg:top-0.5">
+                  <Image src={info} className="infoIcon" />
                 </span>
               </div>
               {isRefresh || props.loading.isLoadingSecond ? (
