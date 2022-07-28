@@ -23,33 +23,33 @@ export const loadSwapDataVolatile = async (
       `${rpcNode}chains/main/blocks/head/context/contracts/${dexContractAddress}/storage`,
     );
 
-    const token1_pool = new BigNumber(storageResponse.data.args[1].args[0].args[1].int);
-    const token2_pool = new BigNumber(storageResponse.data.args[3].int);
+    const token1Pool = new BigNumber(storageResponse.data.args[1].args[0].args[1].int);
+    const token2Pool = new BigNumber(storageResponse.data.args[3].int);
     let lpTokenSupply = new BigNumber(storageResponse.data.args[4].int);
     const lpFee = new BigNumber(storageResponse.data.args[0].args[0].args[0].args[1].int);
  
     const lpToken = AMM[dexContractAddress].lpToken;
 
-    let tokenIn_supply = new BigNumber(0);
-    let tokenOut_supply = new BigNumber(0);
+    let tokenInSupply = new BigNumber(0);
+    let tokenOutSupply = new BigNumber(0);
     if (tokenOut === AMM[dexContractAddress].token2.symbol) {
-      tokenOut_supply = token2_pool;
-      tokenIn_supply = token1_pool;
+      tokenOutSupply = token2Pool;
+      tokenInSupply = token1Pool;
     } else if (tokenOut === AMM[dexContractAddress].token1.symbol) {
-      tokenOut_supply = token1_pool;
-      tokenIn_supply = token2_pool;
+      tokenOutSupply = token1Pool;
+      tokenInSupply = token2Pool;
     }
 
-    tokenIn_supply = tokenIn_supply.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
-    tokenOut_supply = tokenOut_supply.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+    tokenInSupply = tokenInSupply.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
+    tokenOutSupply = tokenOutSupply.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
     lpTokenSupply = lpTokenSupply.dividedBy(new BigNumber(10).pow(lpToken.decimals));
     const exchangeFee = new BigNumber(1).dividedBy(lpFee);
     return {
       success: true,
       tokenIn,
-      tokenIn_supply,
+      tokenInSupply,
       tokenOut,
-      tokenOut_supply,
+      tokenOutSupply,
       exchangeFee,
       lpTokenSupply,
       lpToken,
@@ -59,9 +59,9 @@ export const loadSwapDataVolatile = async (
     return {
       success: true,
       tokenIn,
-      tokenIn_supply: new BigNumber(0),
+      tokenInSupply: new BigNumber(0),
       tokenOut,
-      tokenOut_supply: new BigNumber(0),
+      tokenOutSupply: new BigNumber(0),
       exchangeFee: new BigNumber(0),
       lpTokenSupply: new BigNumber(0),
       lpToken: undefined,
@@ -70,9 +70,9 @@ export const loadSwapDataVolatile = async (
 };
 
 export const calculateTokenOutputVolatile = (
-  tokenIn_amount: BigNumber,
-  tokenIn_supply: BigNumber,
-  tokenOut_supply: BigNumber,
+  tokenInAmount: BigNumber,
+  tokenInSupply: BigNumber,
+  tokenOutSupply: BigNumber,
   exchangeFee: BigNumber,
   slippage: BigNumber,
   tokenOut: string
@@ -82,63 +82,63 @@ export const calculateTokenOutputVolatile = (
     const TOKEN = state.config.standard;
 
     const feePerc = new BigNumber(0.35);
-    let tokenOut_amount = new BigNumber(0);
-    tokenOut_amount = new BigNumber(1)
+    let tokenOutAmount = new BigNumber(0);
+    tokenOutAmount = new BigNumber(1)
       .minus(exchangeFee)
-      .multipliedBy(tokenOut_supply)
-      .multipliedBy(tokenIn_amount);
-    tokenOut_amount = tokenOut_amount.dividedBy(
-      tokenIn_supply.plus(
-        new BigNumber(1).minus(exchangeFee).multipliedBy(tokenIn_amount)
+      .multipliedBy(tokenOutSupply)
+      .multipliedBy(tokenInAmount);
+    tokenOutAmount = tokenOutAmount.dividedBy(
+      tokenInSupply.plus(
+        new BigNumber(1).minus(exchangeFee).multipliedBy(tokenInAmount)
       )
     );
 
-    tokenOut_amount = new BigNumber(
-      tokenOut_amount.decimalPlaces(TOKEN[tokenOut].decimals)
+    tokenOutAmount = new BigNumber(
+      tokenOutAmount.decimalPlaces(TOKEN[tokenOut].decimals)
     );
 
-    const fees = tokenIn_amount.multipliedBy(exchangeFee);
-    let minimum_Out = tokenOut_amount.minus(
-      slippage.multipliedBy(tokenOut_amount).dividedBy(100)
+    const fees = tokenInAmount.multipliedBy(exchangeFee);
+    let minimumOut = tokenOutAmount.minus(
+      slippage.multipliedBy(tokenOutAmount).dividedBy(100)
     );
 
-    minimum_Out = new BigNumber(
-      minimum_Out.decimalPlaces(TOKEN[tokenOut].decimals)
+    minimumOut = new BigNumber(
+      minimumOut.decimalPlaces(TOKEN[tokenOut].decimals)
     );
 
-    const updated_TokenIn_Supply = tokenIn_supply.minus(tokenIn_amount);
-    const updated_TokenOut_Supply = tokenOut_supply.minus(tokenOut_amount);
-    let next_tokenOut_Amount = new BigNumber(1)
+    const updatedTokenInSupply = tokenInSupply.minus(tokenInAmount);
+    const updatedTokenOutSupply = tokenOutSupply.minus(tokenOutAmount);
+    let nextTokenOutAmount = new BigNumber(1)
       .minus(exchangeFee)
-      .multipliedBy(updated_TokenOut_Supply)
-      .multipliedBy(tokenIn_amount);
-    next_tokenOut_Amount = next_tokenOut_Amount.dividedBy(
-      updated_TokenIn_Supply.plus(
-        new BigNumber(1).minus(exchangeFee).multipliedBy(tokenIn_amount)
+      .multipliedBy(updatedTokenOutSupply)
+      .multipliedBy(tokenInAmount);
+    nextTokenOutAmount = nextTokenOutAmount.dividedBy(
+      updatedTokenInSupply.plus(
+        new BigNumber(1).minus(exchangeFee).multipliedBy(tokenInAmount)
       )
     );
-    let priceImpact = tokenOut_amount
-      .minus(next_tokenOut_Amount)
-      .dividedBy(tokenOut_amount);
+    let priceImpact = tokenOutAmount
+      .minus(nextTokenOutAmount)
+      .dividedBy(tokenOutAmount);
     priceImpact = priceImpact.multipliedBy(100);
     priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
     priceImpact = priceImpact.multipliedBy(100);
-    const exchangeRate = tokenOut_amount.dividedBy(tokenIn_amount);
+    const exchangeRate = tokenOutAmount.dividedBy(tokenInAmount);
 
     return {
-      tokenOut_amount,
+      tokenOutAmount,
       fees,
       feePerc,
-      minimum_Out,
+      minimumOut,
       exchangeRate,
       priceImpact,
     };
   } catch (error) {
     return {
-      tokenOut_amount: new BigNumber(0),
+      tokenOutAmount: new BigNumber(0),
       fees: new BigNumber(0),
       feePerc: new BigNumber(0),
-      minimum_Out: new BigNumber(0),
+      minimumOut: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
       error

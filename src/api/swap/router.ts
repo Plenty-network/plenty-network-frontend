@@ -88,7 +88,7 @@ const allPathHelper = (
 
 export const computeAllPaths = (
     paths: string[],
-    tokenIn_amount: BigNumber,
+    tokenInAmount: BigNumber,
     slippage: BigNumber,
     swapData: ISwapDataResponse[][],
 ): IBestPathResponse => {
@@ -97,8 +97,8 @@ export const computeAllPaths = (
 
             for (var i in paths) {
                 // Adding input from user
-                const tokenInAmount: BigNumber[] = [];
-                tokenInAmount.push(tokenIn_amount);
+                const tokenInAmountArr: BigNumber[] = [];
+                tokenInAmountArr.push(tokenInAmount);
 
                 const fees: BigNumber[] = [];
                 const minimumTokenOut: BigNumber[] = [];
@@ -112,22 +112,22 @@ export const computeAllPaths = (
 
                     // Calculating individual Token out value
                     const output = calculateTokensOutWrapper(
-                        tokenInAmount[j],
+                        tokenInAmountArr[j],
                         res.exchangeFee,
                         slippage,
                         path[j],
                         path[j + 1],
-                        res.tokenIn_supply ?? undefined,
-                        res.tokenOut_supply ?? undefined,
-                        res.tokenIn_precision ?? undefined,
-                        res.tokenOut_precision ?? undefined,
+                        res.tokenInSupply ?? undefined,
+                        res.tokenOutSupply ?? undefined,
+                        res.tokenInPrecision ?? undefined,
+                        res.tokenOutPrecision ?? undefined,
                         res.tezSupply ?? undefined,
                         res.ctezSupply ?? undefined,
                         res.target ?? undefined
                     );
 
-                    tokenInAmount.push(output.tokenOut_amount);
-                    minimumTokenOut.push(output.minimum_Out);
+                    tokenInAmountArr.push(output.tokenOutAmount);
+                    minimumTokenOut.push(output.minimumOut);
                     fees.push(output.fees);
                     feePerc.push(output.feePerc);
                     priceImpact.push(output.priceImpact);
@@ -137,10 +137,10 @@ export const computeAllPaths = (
                 if (bestPath) {
                     // update best path
                     if (
-                        tokenInAmount[tokenInAmount.length - 1] > bestPath.tokenOut_amount
+                        tokenInAmountArr[tokenInAmountArr.length - 1] > bestPath.tokenOutAmount
                     ) {
                         bestPath.path = path;
-                        bestPath.tokenOut_amount = tokenInAmount[tokenInAmount.length - 1];
+                        bestPath.tokenOutAmount = tokenInAmountArr[tokenInAmountArr.length - 1];
                         bestPath.minimumTokenOut = minimumTokenOut;
                         bestPath.fees = fees;
                         bestPath.feePerc = feePerc;
@@ -151,7 +151,7 @@ export const computeAllPaths = (
                     // add current path as best path
                     bestPath = {
                         path: path,
-                        tokenOut_amount: tokenInAmount[tokenInAmount.length - 1],
+                        tokenOutAmount: tokenInAmountArr[tokenInAmountArr.length - 1],
                         minimumTokenOut: minimumTokenOut,
                         fees: fees,
                         feePerc: feePerc,
@@ -162,13 +162,13 @@ export const computeAllPaths = (
             }
 
         if (bestPath) return bestPath;
-        else throw 'Can not calculate Route';
+        else throw Error('Can not calculate Route');
     } catch (error) {
         console.log(error);
         const bestPath = {
             path: [],
             bestPathSwapData : [],
-            tokenOut_amount: new BigNumber(0),
+            tokenOutAmount: new BigNumber(0),
             minimumTokenOut: [],
             priceImpact: [],
             fees: [],

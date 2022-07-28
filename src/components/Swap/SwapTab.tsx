@@ -84,7 +84,7 @@ interface ISwapTabProps {
   resetAllValues: () => void;
   routeDetails: {
     path: string[];
-    minimum_Out: BigNumber;
+    minimumOut: BigNumber;
     minimumTokenOut: BigNumber[];
     priceImpact: BigNumber;
     finalFeePerc: BigNumber;
@@ -585,7 +585,7 @@ function SwapTab(props: ISwapTabProps) {
 
                               <div className="ml-auto font-mobile-700 md:font-subtitle4">
                                 {` ${Number(
-                                  props.routeDetails.minimum_Out
+                                  props.routeDetails.minimumOut
                                 ).toFixed(4)} ${
                                   props.tokenOut.name === 'tez'
                                     ? 'TEZ'
@@ -872,11 +872,11 @@ function SwapTab(props: ISwapTabProps) {
               ) : (
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
                   <ToolTip
-                    message={props.routeDetails.minimum_Out.toString()}
+                    message={props.routeDetails.minimumOut.toString()}
                     id="tooltip6"
                     position={Position.top}
                   >
-                    {` ${Number(props.routeDetails.minimum_Out).toFixed(4)} ${
+                    {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${
                       props.tokenOut.name === 'tez'
                         ? 'TEZ'
                         : props.tokenOut.name === 'ctez'
