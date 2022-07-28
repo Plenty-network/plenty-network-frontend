@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PopUpModal } from '../Modal/popupModal';
 import { VideoModal } from '../Modal/videoModal';
-import { InfoIconToolTip } from '../Tooltip/infoIconTooltip';
+import { InfoIconToolTip } from '../Tooltip/InfoIconTooltip';
 
 export interface IManageLiquidityProps {
     closeFn:Function;
