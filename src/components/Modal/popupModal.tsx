@@ -9,6 +9,7 @@ export interface IPopUpModalProps {
   title?: String;
   className?:string;
   headerChild?:any;
+  footerChild?:any;
 }
 
 export function PopUpModal(props: IPopUpModalProps) {
@@ -27,7 +28,7 @@ export function PopUpModal(props: IPopUpModalProps) {
     <div
       onClick={clickedInModal}
       id="modal_outer"
-      className={`absolute top-0 left-0  w-screen h-screen topNavblurEffect z-50 flex items-center justify-center ${
+      className={`absolute top-0 left-0 flex flex-col gap-2 w-screen h-screen topNavblurEffect z-50 items-center justify-center ${
         isClose ? 'fade-out-3' : 'fade-in-3'
       }`}
     >
@@ -57,6 +58,7 @@ export function PopUpModal(props: IPopUpModalProps) {
         )}
         {props.children}
       </div>
+      {props.footerChild}
     </div>
   );
 }
