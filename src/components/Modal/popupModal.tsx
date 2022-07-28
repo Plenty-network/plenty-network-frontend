@@ -6,10 +6,9 @@ import Image from 'next/image';
 export interface IPopUpModalProps {
   children: React.ReactNode;
   onhide?: Function;
-  title: String;
-  width?:string;
-  height?:string;
-
+  title?: String;
+  className?:string;
+  headerChild?:any;
 }
 
 export function PopUpModal(props: IPopUpModalProps) {
@@ -34,10 +33,9 @@ export function PopUpModal(props: IPopUpModalProps) {
     >
       <div
         className={clsx(
-          'broder relative border-popUpNotification    bg-sideBar  rounded-3xl border flex  flex-col px-6 py-5',
+          'broder relative border-popUpNotification  max-w-[460px] w-[calc(100vw_-_38px)]  bg-sideBar  rounded-3xl border flex  flex-col px-6 py-5',
           props.title === 'Select Token' && 'h-[576px] ',
-          props.width?`w-[${props.width}] `:'max-w-[460px] w-[calc(100vw_-_38px)] ',
-          props.height?`h-[${props.height}]`:'',
+          props.className,
         )}
       >
         <div
@@ -52,8 +50,8 @@ export function PopUpModal(props: IPopUpModalProps) {
           {/* close btn */}
           <Image src={close} />
         </div>
-
-        <div className="font-title3">{props.title}</div>
+        {props.headerChild && <div className="font-title3">{props.headerChild}</div>}
+        {props.title && <div className="font-title3">{props.title}</div>}
         {props.title === 'Confirm' && (
           <div className="border-t mt-5 border-text-800/[0.5] relative -left-[22px] w-[455px]"></div>
         )}
