@@ -1,8 +1,8 @@
 export interface IConfig {
-  STANDARD_CONFIG : string
-  LP_CONFIG : string,
-  TOKENS_CONFIG : string
-  AMM_CONFIG : string,
+  STANDARD_CONFIG: string;
+  LP_CONFIG: string;
+  TOKENS_CONFIG: string;
+  AMM_CONFIG: string;
   NAME: string;
   API: IApi;
   RPC_NODES: INodes;
@@ -28,7 +28,7 @@ export interface IConfig {
     testnet: Record<string, IAmmContract1 | IAmmContract2>;
     mainnet: Record<string, IAmmContract1 | IAmmContract2>;
   };
-  
+
   WRAPPED_ASSETS: {
     testnet: Record<string, IWrappedToken>;
     mainnet: Record<string, IWrappedToken>;
@@ -203,34 +203,38 @@ export interface ITokens {
 }
 
 export interface ITokenInterface {
-  address?:  string;
-  symbol:   string;
+  address?: string;
+  symbol: string;
   variant: TokenVariant;
-  type:     TTokenType;
-  tokenId?:  number;
+  type: TTokenType;
+  tokenId?: number;
   decimals: number;
-  mapId?:    number;
+  mapId?: number;
   pairs: string[];
+  extras: {
+    chain: string;
+    isNew: boolean;
+  };
 }
 
 export interface IAMM {
   address: string;
-  token1:  ITokenInterface;
-  token2:  ITokenInterface;
-  type:    AMM_TYPE;
+  token1: ITokenInterface;
+  token2: ITokenInterface;
+  type: AMM_TYPE;
   gaugeAddress?: string;
   bribeAddress?: string;
-  token1Precision?: string,
-  token2Precision?: string,
+  token1Precision?: string;
+  token2Precision?: string;
   lpToken: ITokenInterface;
 }
 
 export enum AMM_TYPE {
-VOLATILE = 'VOLATILE',
-STABLE = 'STABLE'
+  VOLATILE = 'VOLATILE',
+  STABLE = 'STABLE',
 }
 
-export enum TokenType{
+export enum TokenType {
   STANDARD = 'STANDARD',
   LP = 'LP',
 }
@@ -241,10 +245,9 @@ export enum TokenVariant {
   FA2 = 'FA2',
 }
 
-
 export interface IContractsConfig {
-  TOKEN: ITokens,
-  LP: ITokens,
-  STANDARD: ITokens,
-  AMM: IAmmContracts,
+  TOKEN: ITokens;
+  LP: ITokens;
+  STANDARD: ITokens;
+  AMM: IAmmContracts;
 }
