@@ -8,20 +8,20 @@ export interface ISwapDataResponse {
   exchangeFee: BigNumber;
   lpTokenSupply: BigNumber;
   lpToken: ITokenInterface | undefined;
-  tokenIn_precision?: BigNumber;
-  tokenOut_precision?: BigNumber;
-  tokenIn_supply?: BigNumber;
-  tokenOut_supply?: BigNumber;
+  tokenInPrecision?: BigNumber;
+  tokenOutPrecision?: BigNumber;
+  tokenInSupply?: BigNumber;
+  tokenOutSupply?: BigNumber;
   tezSupply?: BigNumber;
   ctezSupply?: BigNumber;
   target?: BigNumber;
 }
 
 export interface ICalculateTokenResponse {
-    tokenOut_amount: BigNumber;
+    tokenOutAmount: BigNumber;
     fees: BigNumber;
     feePerc : BigNumber;
-    minimum_Out: BigNumber;
+    minimumOut: BigNumber;
     exchangeRate: BigNumber;
     priceImpact: BigNumber;
     error?: any;
@@ -29,7 +29,7 @@ export interface ICalculateTokenResponse {
 
 export interface IRouterResponse {
   path: string[];
-  tokenOut_amount: BigNumber;
+  tokenOutAmount: BigNumber;
   finalMinimumTokenOut: BigNumber;
   minimumTokenOut: BigNumber[];
   finalPriceImpact: BigNumber;
@@ -42,7 +42,7 @@ export interface IRouterResponse {
 export interface IBestPathResponse {
   path: string[];
   bestPathSwapData : ISwapDataResponse[];
-  tokenOut_amount: BigNumber;
+  tokenOutAmount: BigNumber;
   minimumTokenOut: BigNumber[];
   fees: BigNumber[];
   feePerc: BigNumber[];

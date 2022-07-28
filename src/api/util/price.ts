@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Config from '../../config/config';
 import { store } from '../../redux';
-import { rpcNode, connectedNetwork } from '../../common/wallet';
+import { rpcNode, connectedNetwork } from '../../common/walletconnect';
 
 const getCtezPrice = async (): Promise<{ ctezPriceInUSD: number }> => {
   try {
