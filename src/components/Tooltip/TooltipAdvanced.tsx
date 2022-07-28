@@ -2,6 +2,7 @@ import Image from 'next/image';
 import * as React from 'react';
 import ReactTooltip from 'react-tooltip';
 import closeIcon from  '../../assets/icon/common/closeCross.svg';
+import { generateRandomString } from '../../utils/commonUtils';
 
 
 export enum Position {
@@ -18,7 +19,7 @@ export enum TooltipType{
 export interface IToolTipProps {
     position?: Position,
     message?: string;
-    id: string;
+    id?: string;
     type?:TooltipType;
     children?: any;
     title?:string;
@@ -28,10 +29,11 @@ export interface IToolTipProps {
 
 
 export function ToolTip(props: IToolTipProps) {
+    const randomId = generateRandomString(8);
     if(props.type===TooltipType.withoutArrowsAndTitle){
         return (
             <>
-                <a data-tip data-for={`tooltip_${props.id}`}> 
+                <a data-tip data-for={`tooltip_${randomId}`}> 
                 {props.children }
                  </a>
                 <ReactTooltip
@@ -39,7 +41,7 @@ export function ToolTip(props: IToolTipProps) {
                  className='tooltipCustom'
                  arrowColor='rgba(60, 60, 60,0)'
                  place={props.position ? props.position : 'right'} 
-                 id={`tooltip_${props.id}`} 
+                 id={`tooltip_${randomId}`} 
                  effect="solid"
                  >
                    { props.message && <span>{props.message}</span>}
@@ -51,13 +53,13 @@ export function ToolTip(props: IToolTipProps) {
     else if(props.type===TooltipType.withTitle){
         return (
             <>
-                <a data-tip data-for={`tooltip_${props.id}`}> 
+                <a data-tip data-for={`tooltip_${randomId}`}> 
                 {props.children }
                 </a>
                 <ReactTooltip
                  className='tooltipCustom'
                  arrowColor='#341E54'
-                 place={props.position ? props.position : 'right'} id={`tooltip_${props.id}`} effect="solid">
+                 place={props.position ? props.position : 'right'} id={`tooltip_${randomId}`} effect="solid">
                   <div className='absolute right-2 top-1 cursor-pointer'>
                   <Image  src={closeIcon} />
                   </div>
@@ -77,13 +79,13 @@ export function ToolTip(props: IToolTipProps) {
     }
     return (
         <>
-            <a data-tip data-for={`tooltip_${props.id}`}> 
+            <a data-tip data-for={`tooltip_${randomId}`}> 
             {props.children }
              </a>
             <ReactTooltip
              className='tooltipCustom'
              arrowColor='#341E54'
-             place={props.position ? props.position : 'right'} id={`tooltip_${props.id}`} effect="solid">
+             place={props.position ? props.position : 'right'} id={`tooltip_${randomId}`} effect="solid">
                 { props.message && <span>{props.message}</span>}
                 {props.toolTipChild}
             </ReactTooltip>
