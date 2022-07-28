@@ -162,7 +162,7 @@ export const computeAllPaths = (
             }
 
         if (bestPath) return bestPath;
-        else throw Error('Can not calculate Route');
+        else throw new Error('Can not calculate Route');
     } catch (error) {
         console.log(error);
         const bestPath = {

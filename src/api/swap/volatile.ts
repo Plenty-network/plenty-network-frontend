@@ -16,7 +16,7 @@ export const loadSwapDataVolatile = async (
 
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
     if (dexContractAddress === 'false') {
-      throw 'No dex found';
+      throw new Error('No dex found');
     }
 
     const storageResponse = await axios.get(

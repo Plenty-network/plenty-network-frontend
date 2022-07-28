@@ -109,7 +109,7 @@ export const calculateTokensOutWrapper = (
         );
       }
       else{
-        throw Error("Invalid Parameter");
+        throw new Error("Invalid Parameter");
       }
     }
 

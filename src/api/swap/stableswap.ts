@@ -201,7 +201,7 @@ export const loadSwapDataTezCtez = async (
     const AMM = state.config.AMMs;
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
     if (dexContractAddress === 'false') {
-      throw 'No dex found';
+      throw new Error('No dex found');
     }
     const storageResponse = await axios.get(
       `${rpcNode}chains/main/blocks/head/context/contracts/${dexContractAddress}/storage`,
@@ -340,7 +340,7 @@ export const loadSwapDataGeneralStable = async (
 
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
     if (dexContractAddress === 'false') {
-      throw 'No dex found';
+      throw new Error('No dex found');
     }
 
     const storageResponse = await axios.get(
