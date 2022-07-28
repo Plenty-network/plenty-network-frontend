@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PopUpModal } from '../Modal/popupModal';
 import { VideoModal } from '../Modal/videoModal';
 import { InfoIconToolTip } from '../Tooltip/InfoIconTooltip';
+import { ActiveLiquidity, ManageLiquidityHeader } from './ManageLiquidityHeader';
 
 export interface IManageLiquidityProps {
     closeFn:Function;
@@ -9,6 +10,7 @@ export interface IManageLiquidityProps {
 
 export function ManageLiquidity (props: IManageLiquidityProps) {
   const [showVideoModal,setShowVideoModal]=React.useState(false);
+  const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(ActiveLiquidity.Liquidity);
 
   return (
       <>
@@ -31,7 +33,18 @@ export function ManageLiquidity (props: IManageLiquidityProps) {
   </svg>
   }
     >
-     <div className='h-52'></div> 
+      <ManageLiquidityHeader className='mt-5 mb-6' activeStateTab={activeState} setActiveStateTab={setActiveState} />
+
+     {activeState=== ActiveLiquidity.Liquidity && <div className='h-52'>
+     Liquidity
+     </div> }
+     {activeState=== ActiveLiquidity.Rewards && <div className='h-52'>
+     Rewards
+     </div> }
+     {activeState=== ActiveLiquidity.Staking && <div className='h-52'>
+     Staking
+     </div> }
+
      </PopUpModal>  
      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={'Bh5zuEI4M9o'} />}
      </>
