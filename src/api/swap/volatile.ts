@@ -1,4 +1,4 @@
-import { rpcNode} from '../../common/wallet';
+import { rpcNode} from '../../common/walletconnect';
 import { getDexAddress } from '../util/fetchConfig';
 import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';

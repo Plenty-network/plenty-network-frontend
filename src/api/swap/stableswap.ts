@@ -2,7 +2,7 @@ import CONFIG from '../../config/config';
 import BigNumber from 'bignumber.js';
 import { store } from '../../redux';
 import axios from 'axios';
-import { connectedNetwork, rpcNode } from '../../common/wallet';
+import { connectedNetwork, rpcNode } from '../../common/walletconnect';
 import { getDexAddress } from '../util/fetchConfig';
 import { ISwapDataResponse , ICalculateTokenResponse } from './types';
 

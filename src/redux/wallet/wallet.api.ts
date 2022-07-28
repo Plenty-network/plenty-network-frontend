@@ -1,5 +1,5 @@
 import { NetworkType } from '@airgap/beacon-sdk';
-import { rpcNode } from '../../common/wallet';
+import { connectedNetwork , rpcNode } from '../../common/walletconnect';
 import { dappClient } from '../../common/walletconnect';
 
 export const ConnectWalletAPI = async () => {
@@ -9,7 +9,7 @@ export const ConnectWalletAPI = async () => {
     if (!account) {
       await walletClient.requestPermissions({
         network: {
-          type: NetworkType.GHOSTNET,
+          type: connectedNetwork as NetworkType,
           rpcUrl: rpcNode,
         },
       });
