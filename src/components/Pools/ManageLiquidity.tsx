@@ -24,7 +24,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     <>
       <PopUpModal
         onhide={props.closeFn}
-        className="w-[620px] max-w-none"
+        className="w-[620px] max-w-[620px]"
         headerChild={
           <div className="flex gap-1">
             <p>Manage Liquidity </p>
@@ -51,15 +51,15 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         />
 
         {activeState === ActiveLiquidity.Liquidity && (
-          <div className="h-52">
+          <div className="">
             <Liquidity />
           </div>
         )}
         {activeState === ActiveLiquidity.Rewards && (
-          <div className="h-52">Rewards</div>
+          <div className="">Rewards</div>
         )}
         {activeState === ActiveLiquidity.Staking && (
-          <div className="h-52">Staking</div>
+          <div className="">Staking</div>
         )}
       </PopUpModal>
       {showVideoModal && (
