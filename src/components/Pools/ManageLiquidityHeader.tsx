@@ -21,7 +21,7 @@ export function Tab(props: ITabProps) {
   return (
     <div
       onClick={() => onClick()}
-      className={`flex justify-center cursor-pointer items-center flex-1 py-2 ${
+      className={`flex justify-center cursor-pointer items-center flex-1 py-1.5 ${
         isActive ? active : ""
       }`}
     >
