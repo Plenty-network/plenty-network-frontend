@@ -7,6 +7,9 @@ export interface IPopUpModalProps {
   children: React.ReactNode;
   onhide?: Function;
   title: String;
+  width?:string;
+  height?:string;
+
 }
 
 export function PopUpModal(props: IPopUpModalProps) {
@@ -31,8 +34,10 @@ export function PopUpModal(props: IPopUpModalProps) {
     >
       <div
         className={clsx(
-          'broder relative border-popUpNotification w-[calc(100vw_-_38px)] max-w-[460px]    bg-sideBar  rounded-3xl border flex  flex-col px-6 py-5',
-          props.title === 'Select Token' && 'h-[576px] '
+          'broder relative border-popUpNotification    bg-sideBar  rounded-3xl border flex  flex-col px-6 py-5',
+          props.title === 'Select Token' && 'h-[576px] ',
+          props.width?`w-[${props.width}] `:'max-w-[460px] w-[calc(100vw_-_38px)] ',
+          props.height?`h-[${props.height}]`:'',
         )}
       >
         <div
