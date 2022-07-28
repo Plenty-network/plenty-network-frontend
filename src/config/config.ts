@@ -2,10 +2,10 @@ import { IConfig, TokenVariant } from './types';
 
 const Config: IConfig = {
   NAME: 'Plenty Network',
-  STANDARD_CONFIG : 'http://3.88.82.46/v1/config/token?type=standard&network=testnet' ,
-  LP_CONFIG : "http://3.88.82.46/v1/config/token?type=lp&network=testnet",
-  TOKENS_CONFIG : "http://3.88.82.46/v1/config/token?network=testnet",
-  AMM_CONFIG : 'http://3.88.82.46/v1/config/amm?network=testnet' ,
+  STANDARD_CONFIG : 'http://3.88.82.46/v1/config/token?type=standard&network=mainnet' ,
+  LP_CONFIG : "http://3.88.82.46/v1/config/token?type=lp&network=mainnet",
+  TOKENS_CONFIG : "http://3.88.82.46/v1/config/token?network=mainnet",
+  AMM_CONFIG : 'http://3.88.82.46/v1/config/amm?network=mainnet' ,
   API: {
     url: 'https://api.coingecko.com/api/v3/coins/tezos?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false',
     API_KEY: '4824FE50-DB6E-4316-B099-72283C964891',
