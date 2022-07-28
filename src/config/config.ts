@@ -2,22 +2,22 @@ import { IConfig, TokenVariant } from './types';
 
 const Config: IConfig = {
   NAME: 'Plenty Network',
-  STANDARD_CONFIG : 'http://3.88.82.46/v1/config/token?type=standard' ,
-  LP_CONFIG : "http://3.88.82.46/v1/config/token?type=lp",
-  TOKENS_CONFIG : "http://3.88.82.46/v1/config/token",
-  AMM_CONFIG : 'http://3.88.82.46/v1/config/amm' ,
+  STANDARD_CONFIG : 'http://3.88.82.46/v1/config/token?type=standard&network=testnet' ,
+  LP_CONFIG : "http://3.88.82.46/v1/config/token?type=lp&network=testnet",
+  TOKENS_CONFIG : "http://3.88.82.46/v1/config/token?network=testnet",
+  AMM_CONFIG : 'http://3.88.82.46/v1/config/amm?network=testnet' ,
   API: {
     url: 'https://api.coingecko.com/api/v3/coins/tezos?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false',
     API_KEY: '4824FE50-DB6E-4316-B099-72283C964891',
     tezToolTokenPrice: 'https://api.teztools.io/token/prices',
   },
   RPC_NODES: {
-    testnet: 'https://ithacanet.smartpy.io/',
+    testnet: 'https://ghostnet.smartpy.io/',
     mainnet: 'https://mifx20dfsr.windmill.tools/',
   },
   TZKT_NODES: {
     mainnet: 'https://api.tzkt.io',
-    testnet: 'https://api.ithacanet.tzkt.io',
+    testnet: 'https://api.ghostnet.tzkt.io',
   },
 
   CTEZ: {
@@ -41,8 +41,8 @@ const Config: IConfig = {
     testnet: 'KT1FMZVMeyCrNFyGjJfiB6VSq3LX1ShSEzuw',
   },
 
-  NETWORK: 'mainnet',
-  WALLET_NETWORK: 'mainnet',
+  NETWORK: 'testnet',
+  WALLET_NETWORK: 'testnet',
   ADMIN_ADDRESS: 'KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW',
   BURNER: 'tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg',
 

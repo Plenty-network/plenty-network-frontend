@@ -10,7 +10,8 @@ import Config from '../config/config';
 export const connectedNetwork = Config.NETWORK;
 export const configName = Config.NAME;
 // const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
-export const rpcNode = Config.RPC_NODES[connectedNetwork];
+// export const rpcNode = Config.RPC_NODES[connectedNetwork];
+export const rpcNode = 'https://ghostnet.smartpy.io/';
 
 export function dappClient() {
   let instance: BeaconWallet | undefined
@@ -19,7 +20,7 @@ export function dappClient() {
     const { BeaconWallet } = await import('@taquito/beacon-wallet')
     const dAppInfo: DAppClientOptions = {
       name: 'Plenty Network',
-      preferredNetwork: connectedNetwork as NetworkType,
+      preferredNetwork: NetworkType.GHOSTNET,
       colorMode: ColorMode.DARK,
     }
 
@@ -45,7 +46,7 @@ export function dappClient() {
     await client.clearActiveAccount()
     return client.requestPermissions({
       network: {
-        type: process.env.NEXT_PUBLIC_NETWORK as NetworkType,
+        type: NetworkType.GHOSTNET,
       },
     })
   }
@@ -65,7 +66,7 @@ export function dappClient() {
       if (!activeAccount) {
         await client.requestPermissions({
           network: {
-            type: connectedNetwork as NetworkType,
+            type: NetworkType.GHOSTNET,
             rpcUrl: rpcNode,
           },
         });
