@@ -3,6 +3,7 @@
 @tailwind utilities;
 @import './animation.css';
 @import './switch.css';
+@import './switchWithIcon.css';
 
 body {
   /*
