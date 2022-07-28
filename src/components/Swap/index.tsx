@@ -15,7 +15,7 @@ import {
   tokensModal,
   tokenType,
 } from '../../constants/swap';
-import { store, useAppSelector } from '../../redux';
+import { useAppSelector } from '../../redux';
 import { BigNumber } from 'bignumber.js';
 import { allPaths } from '../../api/swap/router';
 import {
@@ -23,6 +23,7 @@ import {
   reverseCalculation,
 } from '../../api/swap/wrappers';
 import { IAllBalanceResponse } from '../../api/util/types';
+import { Chain } from '../../config/types';
 
 interface ISwapProps {
   className?: string;
@@ -470,8 +471,8 @@ function Swap(props: ISwapProps) {
     return tokensArray.map((token) => ({
       name: token[0],
       image: `/assets/Tokens/${token[1].symbol}.png`,
-      new: token[1].extras.isNew,
-      chainType: token[1].extras.chain,
+      new: token[1].extras?.isNew as boolean,
+      chainType: token[1].extras?.chain as Chain,
       address: token[1].address,
     }));
   }, [tokens]);
