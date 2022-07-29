@@ -47,15 +47,15 @@ export const loadSwapDataWrapper = async (
 };
 
 export const calculateTokensOutWrapper = (
-  tokenIn_amount: BigNumber,
+  tokenInAmount: BigNumber,
   Exchangefee: BigNumber,
   slippage: BigNumber,
   tokenIn: string,
   tokenOut: string,
-  tokenIn_supply?: BigNumber,
-  tokenOut_supply?: BigNumber,
-  tokenIn_precision?: BigNumber,
-  tokenOut_precision?: BigNumber,
+  tokenInSupply?: BigNumber,
+  tokenOutSupply?: BigNumber,
+  tokenInPrecision?: BigNumber,
+  tokenOutPrecision?: BigNumber,
   tezSupply?: BigNumber,
   ctezSupply?: BigNumber,
   target?: BigNumber
@@ -64,11 +64,11 @@ export const calculateTokensOutWrapper = (
     const type = getDexType(tokenIn, tokenOut);
     let outputData: ICalculateTokenResponse;
 
-    if (type === AMM_TYPE.VOLATILE && tokenIn_supply && tokenOut_supply) {
+    if (type === AMM_TYPE.VOLATILE && tokenInSupply && tokenOutSupply) {
       outputData = calculateTokenOutputVolatile(
-        tokenIn_amount,
-        tokenIn_supply,
-        tokenOut_supply,
+        tokenInAmount,
+        tokenInSupply,
+        tokenOutSupply,
         Exchangefee,
         slippage,
         tokenOut
@@ -84,32 +84,32 @@ export const calculateTokensOutWrapper = (
         outputData = calculateTokensOutTezCtez(
           tezSupply,
           ctezSupply,
-          tokenIn_amount,
+          tokenInAmount,
           Exchangefee,
           slippage,
           target,
           tokenIn
         );
       } else if (
-        tokenIn_supply &&
-        tokenOut_supply &&
-        tokenIn_precision &&
-        tokenOut_precision
+        tokenInSupply &&
+        tokenOutSupply &&
+        tokenInPrecision &&
+        tokenOutPrecision
       ) {
         outputData = calculateTokensOutGeneralStable(
-          tokenIn_supply,
-          tokenOut_supply,
-          tokenIn_amount,
+          tokenInSupply,
+          tokenOutSupply,
+          tokenInAmount,
           Exchangefee,
           slippage,
           tokenIn,
           tokenOut,
-          tokenIn_precision,
-          tokenOut_precision
+          tokenInPrecision,
+          tokenOutPrecision
         );
       }
       else{
-        throw "Invalid Parameter";
+        throw new Error("Invalid Parameter");
       }
     }
 
@@ -117,10 +117,10 @@ export const calculateTokensOutWrapper = (
   } catch (error) {
     console.log({ message: 'swap data error', error });
     return {
-      tokenOut_amount: new BigNumber(0),
+      tokenOutAmount: new BigNumber(0),
       fees: new BigNumber(0),
       feePerc : new BigNumber(0),
-      minimum_Out: new BigNumber(0),
+      minimumOut: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
       error
@@ -130,13 +130,13 @@ export const calculateTokensOutWrapper = (
 
 export const computeAllPathsWrapper = (
   paths: string[],
-  tokenIn_amount: BigNumber,
+  tokenInAmount: BigNumber,
   slippage: BigNumber,
   swapData: ISwapDataResponse[][],
   tokenPrice : { [id: string] : number; },
 ): IRouterResponse => {
   try {
-      const bestPath = computeAllPaths(paths, tokenIn_amount, slippage, swapData);
+      const bestPath = computeAllPaths(paths, tokenInAmount, slippage, swapData);
 
       const isStable: boolean[] = [];
       let finalPriceImpact = new BigNumber(0);
@@ -156,7 +156,7 @@ export const computeAllPathsWrapper = (
 
       return {
           path: bestPath.path,
-          tokenOut_amount: bestPath.tokenOut_amount,
+          tokenOutAmount: bestPath.tokenOutAmount,
           finalMinimumTokenOut:
           bestPath.minimumTokenOut[bestPath.minimumTokenOut.length - 1],
           minimumTokenOut: bestPath.minimumTokenOut,
@@ -170,7 +170,7 @@ export const computeAllPathsWrapper = (
       console.log(error);
       return {
           path: [],
-          tokenOut_amount: new BigNumber(0),
+          tokenOutAmount: new BigNumber(0),
           finalMinimumTokenOut: new BigNumber(0),
           minimumTokenOut: [],
           finalPriceImpact: new BigNumber(0),
@@ -209,7 +209,7 @@ export const reverseCalculation = (tokenIn :  string , tokenOut : string ,paths 
     // For high value and precision tokens
     let counter = 0;
     // max 100 iterations
-    while(res.tokenOut_amount.isLessThan(tokenOutAmount) && counter<=100){
+    while(res.tokenOutAmount.isLessThan(tokenOutAmount) && counter<=100){
       counter++;
       console.log(counter);
       // Token with high price differential need higher plus factor
@@ -222,14 +222,14 @@ export const reverseCalculation = (tokenIn :  string , tokenOut : string ,paths 
     }
 
     let insufficientLiquidity = false;
-    if(res.tokenOut_amount.isLessThan(tokenOutAmount))
+    if(res.tokenOutAmount.isLessThan(tokenOutAmount))
     insufficientLiquidity = true;
     
 
     return {
       path: res.path,
-      tokenIn_amount : tokenInAmount,
-      tokenOut_amount: res.tokenOut_amount,
+      tokenInAmount : tokenInAmount,
+      tokenOutAmount: res.tokenOutAmount,
       finalMinimumTokenOut: res.finalMinimumTokenOut,
       minimumTokenOut: res.minimumTokenOut,
       finalPriceImpact: res.finalPriceImpact,
@@ -244,8 +244,8 @@ export const reverseCalculation = (tokenIn :  string , tokenOut : string ,paths 
       console.log(error);
       return {
           path: [],
-          tokenIn_amount : new BigNumber(0),
-          tokenOut_amount: new BigNumber(0),
+          tokenInAmount : new BigNumber(0),
+          tokenOutAmount: new BigNumber(0),
           finalMinimumTokenOut: new BigNumber(0),
           minimumTokenOut: [],
           finalPriceImpact: new BigNumber(0),

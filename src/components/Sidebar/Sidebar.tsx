@@ -106,6 +106,12 @@ const MainMenu: Array<ISingleSideBarProps> = [
     activePathName:'/Swap'
   },
   {
+    name: 'Pools',
+    iconName: 'pools',
+    pathName: '/pools',
+    activePathName:'/pools'
+  },
+  {
     name: 'Earn',
     iconName: 'swap',
     subMenu: [

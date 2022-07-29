@@ -8,7 +8,7 @@ import arrow from '../../../src/assets/icon/swap/downArrow.svg';
 import info from '../../../src/assets/icon/swap/info.svg';
 import { BigNumber } from 'bignumber.js';
 import stableSwap from '../../../src/assets/icon/swap/stableswapViolet.svg';
-import { tokens } from '../../constants/tokensList';
+import { tokensList } from '../../constants/tokensList';
 
 interface IConfirmSwapProps {
   show: boolean;
@@ -18,7 +18,7 @@ interface IConfirmSwapProps {
   firstTokenAmount: string | number;
   routeDetails: {
     path: string[];
-    minimum_Out: BigNumber;
+    minimumOut: BigNumber;
     minimumTokenOut: BigNumber[];
     priceImpact: BigNumber;
     finalFeePerc: BigNumber;
@@ -37,7 +37,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
   const swapRoute = useMemo(() => {
     if (props.routeDetails.path?.length >= 2) {
       return props.routeDetails.path.map((tokenName) =>
-        tokens.find((token) => token.name === tokenName)
+        tokensList.find((token) => token.name === tokenName)
       );
     }
 
@@ -139,7 +139,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {` ${Number(props.routeDetails.minimum_Out).toFixed(4)} ${
+                  {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${
                     props.tokenOut.name === 'tez'
                       ? 'TEZ'
                       : props.tokenOut.name === 'ctez'

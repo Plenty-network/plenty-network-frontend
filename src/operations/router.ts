@@ -9,7 +9,7 @@ import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShow
 
 export const routerSwap = async (
   path: string[],
-  minimum_Out_All: BigNumber[],
+  minimumOut_All: BigNumber[],
   caller: string,
   recipent: string,
   amount: BigNumber,
@@ -36,7 +36,7 @@ export const routerSwap = async (
     let DataLiteral: any = [];
     for (let i = 0; i < path.length - 1; i++) {
       const dexAddress = getDexAddress(path[i], path[i + 1]);
-      const minOut = minimum_Out_All[i]
+      const minOut = minimumOut_All[i]
         .multipliedBy(new BigNumber(10).pow(TOKEN[path[i + 1]].decimals)).toString();
       const tokenAddress = TOKEN[path[i + 1]].address;
       const tokenId = TOKEN[path[i + 1]].tokenId ?? 0;

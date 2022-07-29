@@ -10,11 +10,8 @@ import {
 import BigNumber from 'bignumber.js';
 import { TokenVariant } from '../../config/types';
 import { packDataBytes, unpackDataBytes } from '@taquito/michel-codec';
-import {
-  rpcNode,
-} from '../../common/wallet';
 import { store } from '../../redux';
-import { dappClient } from '../../common/walletconnect';
+import { rpcNode , dappClient } from '../../common/walletconnect';
 import { IBalanceResponse , IAllBalanceResponse } from './types';
 
 /**
