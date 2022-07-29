@@ -404,7 +404,7 @@ function Swap(props: ISwapProps) {
           );
 
           routeDetails.current = {
-            minimum_Out: res.finalMinimumTokenOut,
+            minimumOut: res.finalMinimumTokenOut,
             minimumTokenOut: res.minimumTokenOut,
             feePerc: res.feePerc,
             isStable: res.isStable,
@@ -415,8 +415,8 @@ function Swap(props: ISwapProps) {
             exchangeRate: res.exchangeRate,
           };
 
-          setFirstTokenAmount(res.tokenIn_amount.toString());
-          setSecondTokenAmount(res.tokenOut_amount.toString());
+          setFirstTokenAmount(res.tokenInAmount.toString());
+          setSecondTokenAmount(res.tokenOutAmount.toString());
           loading.current = {
             isLoadingSecond: false,
             isLoadingfirst: false,
