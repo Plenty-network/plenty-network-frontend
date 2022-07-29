@@ -14,13 +14,20 @@ interface ILiquidityProps {
   inputRef?: any;
   value?: string | '';
   onChange?: any;
+  setScreen: React.Dispatch<React.SetStateAction<string>>;
 }
 function Liquidity(props: ILiquidityProps) {
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
   const [slippage, setSlippage] = useState(0.5);
   const [isAddLiquidity, setIsAddLiquidity] = useState(true);
-  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+  const handleAddLiquidity = () => {
+    props.setScreen('2');
+  };
+  const handleRemoveLiquidity = () => {
+    props.setScreen('3');
+  };
+
   return (
     <>
       <div className="border rounded-2xl border-text-800 bg-card-200 px-3.5 pt-4 pb-6  mb-5">
@@ -58,15 +65,17 @@ function Liquidity(props: ILiquidityProps) {
       </div>
       {isAddLiquidity ? (
         <div className="">
-          <Button color={'primary'}>Add</Button>
+          <Button color={'primary'} onClick={handleAddLiquidity}>
+            Add
+          </Button>
         </div>
       ) : (
         <div className="">
-          <Button color={'primary'}>Remove</Button>
+          <Button color={'primary'} onClick={handleRemoveLiquidity}>
+            Remove
+          </Button>
         </div>
       )}
-      {showConfirmPopup &&
-        (isAddLiquidity ? <ConfirmAddLiquidity /> : <ConfirmAddLiquidity />)}
     </>
   );
 }
