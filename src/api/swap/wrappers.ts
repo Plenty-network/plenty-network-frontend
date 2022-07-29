@@ -196,7 +196,7 @@ export const reverseCalculation = (tokenIn :  string , tokenOut : string ,paths 
       const path = paths[i].split(" ");
       const tempAmountIn = new BigNumber(tokenOutAmount.multipliedBy(tokenPrice[path[path.length-1]]).dividedBy(tokenPrice[path[0]]));
       if(tempAmountIn.isLessThan(tokenInAmount)){
-        tokenInAmount = tempAmountIn.decimalPlaces(TOKEN[path[0]].decimals);
+        tokenInAmount = tempAmountIn.decimalPlaces(TOKEN[path[0]].decimals , 1);
       }
     }
 
