@@ -3,10 +3,10 @@ import { NetworkType } from "@airgap/beacon-types";
 
 const Config: IConfig = {
   NAME: 'Plenty Network',
-  STANDARD_CONFIG : 'http://3.88.82.46/v1/config/token?type=standard' ,
-  LP_CONFIG : "http://3.88.82.46/v1/config/token?type=lp",
-  TOKENS_CONFIG : "http://3.88.82.46/v1/config/token",
-  AMM_CONFIG : 'http://3.88.82.46/v1/config/amm' ,
+  STANDARD_CONFIG : 'https://config.plentydefi.com/v1/config/token?type=standard' ,
+  LP_CONFIG : "https://config.plentydefi.com/v1/config/token?type=lp",
+  TOKENS_CONFIG : "https://config.plentydefi.com/v1/config/token",
+  AMM_CONFIG : 'https://config.plentydefi.com/v1/config/amm' ,
   API: {
     url: 'https://api.coingecko.com/api/v3/coins/tezos?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false',
     API_KEY: '4824FE50-DB6E-4316-B099-72283C964891',
