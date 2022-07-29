@@ -10,7 +10,7 @@ import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShow
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,
   path: string[],
-  minimum_Out_All: BigNumber[],
+  minimumOut_All: BigNumber[],
   caller: string,
   recipent: string,
   transactionSubmitModal: TTransactionSubmitModal,
@@ -24,7 +24,7 @@ export const allSwapWrapper = async (
       res = await directSwapWrapper(
         path[0],
         path[1],
-        minimum_Out_All[0],
+        minimumOut_All[0],
         recipent,
         tokenInAmount,
         caller,
@@ -36,7 +36,7 @@ export const allSwapWrapper = async (
       // routerSwap
       res = await routerSwap(
         path,
-        minimum_Out_All,
+        minimumOut_All,
         caller,
         recipent,
         tokenInAmount,

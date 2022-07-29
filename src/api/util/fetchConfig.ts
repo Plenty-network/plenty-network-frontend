@@ -4,15 +4,15 @@ import { AMM_TYPE, IAmmContracts, IContractsConfig, ITokens } from '../../config
 import { store } from '../../redux';
 
 export const fetchConfig = async () : Promise<IContractsConfig> => {
-  const token_response = await axios.get(Config.TOKENS_CONFIG);
-  const lp_response = await axios.get(Config.LP_CONFIG);
-  const standard_response = await axios.get(Config.STANDARD_CONFIG);
-  const amms_response = await axios.get(Config.AMM_CONFIG);
+  const tokenResponse = await axios.get(Config.TOKENS_CONFIG);
+  const lpResponse = await axios.get(Config.LP_CONFIG);
+  const standardResponse = await axios.get(Config.STANDARD_CONFIG);
+  const ammsResponse = await axios.get(Config.AMM_CONFIG);
 
-  const TOKEN: ITokens = token_response.data;
-  const LP: ITokens = lp_response.data;
-  const STANDARD: ITokens = standard_response.data;
-  const AMM: IAmmContracts = amms_response.data;
+  const TOKEN: ITokens = tokenResponse.data;
+  const LP: ITokens = lpResponse.data;
+  const STANDARD: ITokens = standardResponse.data;
+  const AMM: IAmmContracts = ammsResponse.data;
   return {
     TOKEN: TOKEN,
     LP: LP,
