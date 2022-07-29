@@ -9,22 +9,27 @@ import {
   IPnlpPoolShareResponse,
 } from "./types";
 import { getUserBalanceByRpc } from "../util/balance";
+import { store } from '../../redux';
 
 /**
  * Estimate the other token amount while adding liquidity.
  * @param inputTokenAmount - Amount entered for a token.
  * @param inputTokenSupply - Supply value for the token, for which amount is input.
  * @param otherTokenSupply - Supply value for the token, for which amount is to be estimated.
+ * @param otherTokenSymbol - Symbol of the other token, for which amount is to be estimated.
  */
 export const estimateOtherTokenAmount = (
   inputTokenAmount: string | BigNumber,
   inputTokenSupply: string | BigNumber,
-  otherTokenSupply: string | BigNumber
+  otherTokenSupply: string | BigNumber,
+  otherTokenSymbol: string,
 ): IOtherTokenOutput => {
   try {
+    const TOKENS = store.getState().config.standard;
     const otherTokenAmount = new BigNumber(inputTokenAmount)
       .multipliedBy(otherTokenSupply)
       .dividedBy(inputTokenSupply)
+      .decimalPlaces(TOKENS[otherTokenSymbol].decimals,1)   // 1 - Rounding down
       .toString();
     return {
       success: true,
@@ -83,6 +88,8 @@ export const getPnlpBalance = async (
 
 /**
  * Returns the estimated PNLP amount the user will get for adding liquidity of selected pair.
+ * @param tokenOneSymbol - Symbol of the first token of the selected pair
+ * @param tokenTwoSymbol - Symbol of the second token of the selected pair
  * @param tokenOneAmount - Amount of the first token of the selected pair
  * @param tokenTwoAmount - Amount of the second token of the selected pair
  * @param tokenOneSupply - Total supply of the first token of the selected pair
@@ -90,28 +97,49 @@ export const getPnlpBalance = async (
  * @param lpTokenSupply - Total supply of the LP token of the selected pair
  */
 export const getPnlpOutputEstimate = (
+  tokenOneSymbol: string,
+  tokenTwoSymbol: string,
   tokenOneAmount: string | BigNumber,
   tokenTwoAmount: string | BigNumber,
   tokenOneSupply: string | BigNumber,
   tokenTwoSupply: string | BigNumber,
-  lpTokenSupply: string | BigNumber
+  lpTokenSupply: string | BigNumber,
+  lpToken?: string
 ): IPnlpEstimateResponse => {
   try {
-    const pnlpBasedOnTokenOne = new BigNumber(tokenOneAmount)
-      .multipliedBy(lpTokenSupply)
-      .dividedBy(tokenOneSupply);
-    const pnlpBasedOnTokenTwo = new BigNumber(tokenTwoAmount)
-      .multipliedBy(lpTokenSupply)
-      .dividedBy(tokenTwoSupply);
-    const pnlpEstimatedOutput = pnlpBasedOnTokenOne.isLessThan(
-      pnlpBasedOnTokenTwo
-    )
-      ? pnlpBasedOnTokenOne
-      : pnlpBasedOnTokenTwo;
-    return {
-      success: true,
-      pnlpEstimate: pnlpEstimatedOutput.toString(),
-    };
+    const LP_TOKENS = store.getState().config.lp;
+    const lpTokenSymbol = lpToken ? lpToken : getLpTokenSymbol(tokenOneSymbol, tokenTwoSymbol);
+    if (lpTokenSymbol) {
+      let pnlpEstimatedOutput: BigNumber = new BigNumber(0);
+
+      const pnlpBasedOnTokenOne = new BigNumber(tokenOneAmount)
+        .multipliedBy(lpTokenSupply)
+        .dividedBy(tokenOneSupply);
+      const pnlpBasedOnTokenTwo = new BigNumber(tokenTwoAmount)
+        .multipliedBy(lpTokenSupply)
+        .dividedBy(tokenTwoSupply);
+
+      if (
+        (tokenOneSymbol === "tez" && tokenTwoSymbol === "ctez") ||
+        (tokenOneSymbol === "ctez" && tokenTwoSymbol === "tez")
+      ) {
+        // For tez-ctez pair estimated PNLP output will be based on tez token only
+        pnlpEstimatedOutput =
+          tokenOneSymbol === "tez" ? pnlpBasedOnTokenOne : pnlpBasedOnTokenTwo;
+      } else {
+        pnlpEstimatedOutput = pnlpBasedOnTokenOne.isLessThan(
+          pnlpBasedOnTokenTwo
+        )
+          ? pnlpBasedOnTokenOne
+          : pnlpBasedOnTokenTwo;
+      }
+      return {
+        success: true,
+        pnlpEstimate: pnlpEstimatedOutput.decimalPlaces(LP_TOKENS[lpTokenSymbol].decimals, 1).toString(),
+      };
+    } else {
+      throw new Error("LP token not found for the given pairs.");
+    }
   } catch (error: any) {
     return {
       success: false,
@@ -141,6 +169,7 @@ export const getOutputTokensAmount = (
   slippage: string | BigNumber = "0.5"
 ): IOutputTokensAmountResponse => {
   try {
+    const TOKENS = store.getState().config.standard;
     let tokenOneAmount = new BigNumber(burnAmount)
       .multipliedBy(tokenOneSupply)
       .dividedBy(lpTokenSupply);
@@ -148,12 +177,16 @@ export const getOutputTokensAmount = (
       .multipliedBy(tokenTwoSupply)
       .dividedBy(lpTokenSupply);
 
-    tokenOneAmount = tokenOneAmount.minus(
-      new BigNumber(slippage).multipliedBy(tokenOneAmount).dividedBy(100)
-    );
-    tokenTwoAmount = tokenTwoAmount.minus(
-      new BigNumber(slippage).multipliedBy(tokenTwoAmount).dividedBy(100)
-    );
+    tokenOneAmount = tokenOneAmount
+      .minus(
+        new BigNumber(slippage).multipliedBy(tokenOneAmount).dividedBy(100)
+      )
+      .decimalPlaces(TOKENS[tokenOneSymbol].decimals, 1);     // 1 - Rounding down
+    tokenTwoAmount = tokenTwoAmount
+      .minus(
+        new BigNumber(slippage).multipliedBy(tokenTwoAmount).dividedBy(100)
+      )
+      .decimalPlaces(TOKENS[tokenTwoSymbol].decimals, 1);     // 1 - Rounding down
 
     return {
       success: true,
