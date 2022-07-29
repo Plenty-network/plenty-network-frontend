@@ -1,12 +1,12 @@
 import axios from 'axios';
 import Config from '../../config/config';
 import { store } from '../../redux';
-import { rpcNode, connectedNetwork } from '../../common/walletconnect';
+import { connectedNetwork } from '../../common/walletconnect';
 
 const getCtezPrice = async (): Promise<{ ctezPriceInUSD: number }> => {
   try {
     const promises = [];
-    const cfmmStorageUrl = `${rpcNode}chains/main/blocks/head/context/contracts/KT1H5b7LxEExkFd2Tng77TfuWbM5aPvHstPr/storage`;
+    const cfmmStorageUrl = `${Config.RPC_NODES.mainnet}chains/main/blocks/head/context/contracts/KT1H5b7LxEExkFd2Tng77TfuWbM5aPvHstPr/storage`;
     const xtzDollarValueUrl = Config.API.url;
     promises.push(axios.get(cfmmStorageUrl));
     promises.push(axios.get(xtzDollarValueUrl));
@@ -29,7 +29,7 @@ const getCtezPrice = async (): Promise<{ ctezPriceInUSD: number }> => {
 
 const getuDEFIPrice = async (): Promise<{ uDEFIinUSD: number }> => {
   try {
-    const uDEFIOracleUrl = `${rpcNode}chains/main/blocks/head/context/contracts/KT1UuqJiGQgfNrTK5tuR1wdYi5jJ3hnxSA55/storage`;
+    const uDEFIOracleUrl = `${Config.RPC_NODES.mainnet}chains/main/blocks/head/context/contracts/KT1UuqJiGQgfNrTK5tuR1wdYi5jJ3hnxSA55/storage`;
     const uedfipriceResponse = await axios.get(uDEFIOracleUrl);
     let uDEFIinUSD = uedfipriceResponse.data.args[0].args[1].int;
     uDEFIinUSD = parseInt(uDEFIinUSD);
