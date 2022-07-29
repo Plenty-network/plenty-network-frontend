@@ -1,24 +1,46 @@
 import axios from 'axios';
+import { connectedNetwork } from '../../common/walletconnect';
 import Config from '../../config/config';
 import { AMM_TYPE, IAmmContracts, IContractsConfig, ITokens } from '../../config/types';
 import { store } from '../../redux';
 
-export const fetchConfig = async () : Promise<IContractsConfig> => {
-  const tokenResponse = await axios.get(Config.TOKENS_CONFIG);
-  const lpResponse = await axios.get(Config.LP_CONFIG);
-  const standardResponse = await axios.get(Config.STANDARD_CONFIG);
-  const ammsResponse = await axios.get(Config.AMM_CONFIG);
-
-  const TOKEN: ITokens = tokenResponse.data;
-  const LP: ITokens = lpResponse.data;
-  const STANDARD: ITokens = standardResponse.data;
-  const AMM: IAmmContracts = ammsResponse.data;
-  return {
-    TOKEN: TOKEN,
-    LP: LP,
-    STANDARD: STANDARD,
-    AMM: AMM,
-  };
+export const fetchConfig = async (): Promise<IContractsConfig> => {
+  try {
+    const tokensUrl: string = `${Config.TOKENS_CONFIG}${
+      connectedNetwork === "testnet" ? "?network=testnet" : ""
+    }`;
+    const ammsUrl: string = `${Config.AMM_CONFIG}${
+      connectedNetwork === "testnet" ? "?network=testnet" : ""
+    }`;
+    const lpTokensUrl: string = `${Config.LP_CONFIG}${
+      connectedNetwork === "testnet" ? "&network=testnet" : ""
+    }`;
+    const standardTokensUrl: string = `${Config.STANDARD_CONFIG}${
+      connectedNetwork === "testnet" ? "&network=testnet" : ""
+    }`;
+    const configResult = await Promise.all([
+      axios.get(tokensUrl),
+      axios.get(lpTokensUrl),
+      axios.get(standardTokensUrl),
+      axios.get(ammsUrl),
+    ]);
+    if (configResult.find((result) => result.status !== 200)) {
+      throw new Error("Failed to fetch the config from server.");
+    } else {
+      const TOKEN: ITokens = configResult[0].data;
+      const LP: ITokens = configResult[1].data;
+      const STANDARD: ITokens = configResult[2].data;
+      const AMM: IAmmContracts = configResult[3].data;
+      return {
+        TOKEN,
+        LP,
+        STANDARD,
+        AMM,
+      };
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
 };
 
 export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
