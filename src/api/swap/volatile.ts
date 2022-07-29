@@ -94,7 +94,7 @@ export const calculateTokenOutputVolatile = (
     );
 
     tokenOutAmount = new BigNumber(
-      tokenOutAmount.decimalPlaces(TOKEN[tokenOut].decimals)
+      tokenOutAmount.decimalPlaces(TOKEN[tokenOut].decimals , 1)
     );
 
     const fees = tokenInAmount.multipliedBy(exchangeFee);
@@ -103,7 +103,7 @@ export const calculateTokenOutputVolatile = (
     );
 
     minimumOut = new BigNumber(
-      minimumOut.decimalPlaces(TOKEN[tokenOut].decimals)
+      minimumOut.decimalPlaces(TOKEN[tokenOut].decimals , 1)
     );
 
     const updatedTokenInSupply = tokenInSupply.minus(tokenInAmount);
