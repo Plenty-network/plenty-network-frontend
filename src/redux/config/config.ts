@@ -31,23 +31,25 @@ const ConfigSlice = createSlice({
   reducers: {},
   extraReducers: {
     [getConfig.pending.toString()]: (state: any) => {
-      state.tokens = {};
-      state.AMMs = {};
-      state.standard = {};
-      state.lp = {};
+      //   state.tokens = {};
+      //   state.AMMs = {};
+      //   state.standard = {};
+      //   state.lp = {};
       console.log('Fetching config');
     },
     [getConfig.fulfilled.toString()]: (state: any, action: any) => {
+      console.log(action.payload);
       state.tokens = action.payload.TOKEN;
       state.AMMs = action.payload.AMM;
       state.standard = action.payload.STANDARD;
       state.lp = action.payload.LP;
+      console.log('done');
     },
     [getConfig.rejected.toString()]: (state: any, action: any) => {
-      state.tokens = {};
-      state.AMMs = {};
-      state.standard = {};
-      state.lp = {};
+      // state.tokens = {};
+      // state.AMMs = {};
+      // state.standard = {};
+      // state.lp = {};
       console.log(`Error: ${action.error.message}`);
     },
   },
