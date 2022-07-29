@@ -391,37 +391,37 @@ function Swap(props: ISwapProps) {
         name: tokenIn.name,
         image: tokenIn.image,
       });
+      inputValue > 0 &&
+        setTimeout(() => {
+          const res = reverseCalculation(
+            tokenIn.name,
+            tokenOut.name,
+            allPath.current,
+            new BigNumber(inputValue),
+            new BigNumber(slippage),
+            allPathSwapData.current,
+            tokenPrice
+          );
 
-      setTimeout(() => {
-        const res = reverseCalculation(
-          tokenIn.name,
-          tokenOut.name,
-          allPath.current,
-          new BigNumber(inputValue),
-          new BigNumber(slippage),
-          allPathSwapData.current,
-          tokenPrice
-        );
+          routeDetails.current = {
+            minimum_Out: res.finalMinimumTokenOut,
+            minimumTokenOut: res.minimumTokenOut,
+            feePerc: res.feePerc,
+            isStable: res.isStable,
+            path: res.path,
+            finalFeePerc: res.finalFeePerc,
+            priceImpact: res.finalPriceImpact,
+            success: true,
+            exchangeRate: res.exchangeRate,
+          };
 
-        routeDetails.current = {
-          minimum_Out: res.finalMinimumTokenOut,
-          minimumTokenOut: res.minimumTokenOut,
-          feePerc: res.feePerc,
-          isStable: res.isStable,
-          path: res.path,
-          finalFeePerc: res.finalFeePerc,
-          priceImpact: res.finalPriceImpact,
-          success: true,
-          exchangeRate: res.exchangeRate,
-        };
-
-        setFirstTokenAmount(res.tokenIn_amount.toString());
-        setSecondTokenAmount(res.tokenOut_amount.toString());
-        loading.current = {
-          isLoadingSecond: false,
-          isLoadingfirst: false,
-        };
-      }, 500);
+          setFirstTokenAmount(res.tokenIn_amount.toString());
+          setSecondTokenAmount(res.tokenOut_amount.toString());
+          loading.current = {
+            isLoadingSecond: false,
+            isLoadingfirst: false,
+          };
+        }, 500);
     } else if (Object.keys(tokenOut).length === 0) {
       setTokenOut({
         name: tokenIn.name,

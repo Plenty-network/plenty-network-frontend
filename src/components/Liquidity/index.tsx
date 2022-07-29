@@ -23,7 +23,7 @@ function Liquidity(props: ILiquidityProps) {
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   return (
     <>
-      <div className="border rounded-2xl border-text-800 bg-card-200 px-3.5 pt-4 pb-6 mt-[25px] mb-5">
+      <div className="border rounded-2xl border-text-800 bg-card-200 px-3.5 pt-4 pb-6  mb-5">
         <div className="flex items-center justify-between flex-row  relative">
           <div className="flex">
             <span className="relative ml-2 top-[3px]">
