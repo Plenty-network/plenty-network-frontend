@@ -39,7 +39,7 @@ const Config: IConfig = {
   },
   ROUTER: {
     mainnet: 'KT1MEVCrGRCsoERXf6ahNLC4ik6J2vRH7Mm6',
-    testnet: 'KT1FMZVMeyCrNFyGjJfiB6VSq3LX1ShSEzuw',
+    testnet: 'KT1VFVoR11dNoFwSnxLgFRknsTexEZsfiP8T',
   },
 
   NETWORK: 'testnet',
