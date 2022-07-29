@@ -125,15 +125,17 @@ function Swap(props: ISwapProps) {
     setEnableMultiHop(userSettings.multiHop);
   }, [props.otherProps.walletAddress, userSettings]);
   useEffect(() => {
-    tokenPrice[tokenIn.name] || tokenPrice[tokenOut.name]
-      ? (loading.current = {
-          isLoadingfirst: true,
-          isLoadingSecond: true,
-        })
-      : (loading.current = {
-          isLoadingfirst: false,
-          isLoadingSecond: false,
-        });
+    if (Object.keys(tokenOut).length !== 0) {
+      tokenPrice[tokenIn.name] || tokenPrice[tokenOut.name]
+        ? (loading.current = {
+            isLoadingfirst: true,
+            isLoadingSecond: true,
+          })
+        : (loading.current = {
+            isLoadingfirst: false,
+            isLoadingSecond: false,
+          });
+    }
   }, [tokenPrice]);
 
   useEffect(() => {

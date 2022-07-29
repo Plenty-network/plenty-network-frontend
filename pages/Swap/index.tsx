@@ -19,8 +19,6 @@ import { getTokenPrice } from '../../src/redux/tokenPrice/tokenPrice';
 const Home: NextPage = (props) => {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
-  const config = useAppSelector((state) => state.config);
-  console.log(config);
 
   const dispatch = useDispatch<AppDispatch>();
 
