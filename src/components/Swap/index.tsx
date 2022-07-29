@@ -124,6 +124,17 @@ function Swap(props: ISwapProps) {
     setSlippage(userSettings.slippage);
     setEnableMultiHop(userSettings.multiHop);
   }, [props.otherProps.walletAddress, userSettings]);
+  useEffect(() => {
+    tokenPrice[tokenIn.name] || tokenPrice[tokenOut.name]
+      ? (loading.current = {
+          isLoadingfirst: true,
+          isLoadingSecond: true,
+        })
+      : (loading.current = {
+          isLoadingfirst: false,
+          isLoadingSecond: false,
+        });
+  }, [tokenPrice]);
 
   useEffect(() => {
     if (
