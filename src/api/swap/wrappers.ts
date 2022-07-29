@@ -152,7 +152,7 @@ export const computeAllPathsWrapper = (
           else isStable.push(false);
       }
 
-      const exchangeRate = new BigNumber(tokenPrice[bestPath.path[0]] / tokenPrice[bestPath.path[bestPath.path.length-1]]);
+      const exchangeRate = new BigNumber(new BigNumber(tokenPrice[bestPath.path[0]]).dividedBy(tokenPrice[bestPath.path[bestPath.path.length-1]]));
 
       return {
           path: bestPath.path,
@@ -196,11 +196,11 @@ export const reverseCalculation = (tokenIn :  string , tokenOut : string ,paths 
       const path = paths[i].split(" ");
       const tempAmountIn = new BigNumber(tokenOutAmount.multipliedBy(tokenPrice[path[path.length-1]]).dividedBy(tokenPrice[path[0]]));
       if(tempAmountIn.isLessThan(tokenInAmount)){
-        tokenInAmount = tempAmountIn.decimalPlaces(TOKEN[path[0]].decimals);
+        tokenInAmount = tempAmountIn.decimalPlaces(TOKEN[path[0]].decimals , 1);
       }
     }
 
-    const priceDifferential = new BigNumber(Math.abs(tokenPrice[tokenOut] - tokenPrice[tokenIn]));
+    const priceDifferential = new BigNumber(tokenPrice[tokenOut]).minus(tokenPrice[tokenIn]).abs();
 
     // Round Up Works in general case
     tokenInAmount = new BigNumber(tokenInAmount.toFixed(5 , BigNumber.ROUND_UP));

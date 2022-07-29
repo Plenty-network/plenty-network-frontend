@@ -117,9 +117,9 @@ export const calculateTokensOutTezCtez = (
       let priceImpact = tokenOut.minus(nextTokenOut).dividedBy(tokenOut);
       priceImpact = priceImpact.multipliedBy(100);
       priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
-      const tokenOutAmount = new BigNumber(tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6));
+      const tokenOutAmount = new BigNumber(tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6 , 1));
       const fees = fee.dividedBy(new BigNumber(10).pow(6));
-      const minimumOut = new BigNumber(minOut.decimalPlaces(6));
+      const minimumOut = new BigNumber(minOut.decimalPlaces(6 , 1));
 
       return {
         tokenOutAmount,
@@ -158,9 +158,9 @@ export const calculateTokensOutTezCtez = (
       let priceImpact = tokenOut.minus(nextTokenOut).dividedBy(tokenOut);
       priceImpact = priceImpact.multipliedBy(100);
       priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
-      const tokenOutAmount  = new BigNumber(tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6));
+      const tokenOutAmount  = new BigNumber(tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6 , 1));
       const fees = fee.dividedBy(new BigNumber(10).pow(6));
-      const minimumOut = new BigNumber(minOut.decimalPlaces(6));
+      const minimumOut = new BigNumber(minOut.decimalPlaces(6 , 1));
       return {
         tokenOutAmount,
         fees,
@@ -302,8 +302,8 @@ export const calculateTokensOutGeneralStable = (
     tokenOutAmt = tokenOutAmt.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
     fee = fee.dividedBy(tokenOutPrecision);
     fee = fee.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
-    const tokenOutAmount = new BigNumber(tokenOutAmt.decimalPlaces(TOKEN[tokenOut].decimals));
-    const minimumOut = new BigNumber(minOut.decimalPlaces(TOKEN[tokenOut].decimals));
+    const tokenOutAmount = new BigNumber(tokenOutAmt.decimalPlaces(TOKEN[tokenOut].decimals , 1));
+    const minimumOut = new BigNumber(minOut.decimalPlaces(TOKEN[tokenOut].decimals , 1));
     const fees = fee;
     const exchangeRate = tokenOutAmount.dividedBy(
       tokenInAmount.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals))

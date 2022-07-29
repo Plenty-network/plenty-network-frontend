@@ -124,6 +124,17 @@ function Swap(props: ISwapProps) {
     setSlippage(userSettings.slippage);
     setEnableMultiHop(userSettings.multiHop);
   }, [props.otherProps.walletAddress, userSettings]);
+  useEffect(() => {
+    tokenPrice[tokenIn.name] || tokenPrice[tokenOut.name]
+      ? (loading.current = {
+          isLoadingfirst: true,
+          isLoadingSecond: true,
+        })
+      : (loading.current = {
+          isLoadingfirst: false,
+          isLoadingSecond: false,
+        });
+  }, [tokenPrice]);
 
   useEffect(() => {
     if (
@@ -391,37 +402,37 @@ function Swap(props: ISwapProps) {
         name: tokenIn.name,
         image: tokenIn.image,
       });
+      inputValue > 0 &&
+        setTimeout(() => {
+          const res = reverseCalculation(
+            tokenIn.name,
+            tokenOut.name,
+            allPath.current,
+            new BigNumber(inputValue),
+            new BigNumber(slippage),
+            allPathSwapData.current,
+            tokenPrice
+          );
 
-      setTimeout(() => {
-        const res = reverseCalculation(
-          tokenIn.name,
-          tokenOut.name,
-          allPath.current,
-          new BigNumber(inputValue),
-          new BigNumber(slippage),
-          allPathSwapData.current,
-          tokenPrice
-        );
+          routeDetails.current = {
+            minimumOut: res.finalMinimumTokenOut,
+            minimumTokenOut: res.minimumTokenOut,
+            feePerc: res.feePerc,
+            isStable: res.isStable,
+            path: res.path,
+            finalFeePerc: res.finalFeePerc,
+            priceImpact: res.finalPriceImpact,
+            success: true,
+            exchangeRate: res.exchangeRate,
+          };
 
-        routeDetails.current = {
-          minimumOut: res.finalMinimumTokenOut,
-          minimumTokenOut: res.minimumTokenOut,
-          feePerc: res.feePerc,
-          isStable: res.isStable,
-          path: res.path,
-          finalFeePerc: res.finalFeePerc,
-          priceImpact: res.finalPriceImpact,
-          success: true,
-          exchangeRate: res.exchangeRate,
-        };
-
-        setFirstTokenAmount(res.tokenInAmount.toString());
-        setSecondTokenAmount(res.tokenOutAmount.toString());
-        loading.current = {
-          isLoadingSecond: false,
-          isLoadingfirst: false,
-        };
-      }, 500);
+          setFirstTokenAmount(res.tokenInAmount.toString());
+          setSecondTokenAmount(res.tokenOutAmount.toString());
+          loading.current = {
+            isLoadingSecond: false,
+            isLoadingfirst: false,
+          };
+        }, 500);
     } else if (Object.keys(tokenOut).length === 0) {
       setTokenOut({
         name: tokenIn.name,
