@@ -10,6 +10,7 @@ import {
 import playBtn from '../../assets/icon/common/playBtn.svg';
 import Image from 'next/image';
 import ConfirmAddLiquidity from '../Liquidity/ConfirmAddLiquidity';
+import ConfirmRemoveLiquidity from '../Liquidity/ConfirmRemoveLiquidity';
 
 export interface IManageLiquidityProps {
   closeFn: Function;
@@ -68,6 +69,11 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         {screen === '2' && (
           <>
             <ConfirmAddLiquidity setScreen={setScreen} />
+          </>
+        )}
+        {screen === '3' && (
+          <>
+            <ConfirmRemoveLiquidity setScreen={setScreen} />
           </>
         )}
       </PopUpModal>
