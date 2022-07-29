@@ -62,7 +62,7 @@ export const getPnlpBalance = async (
       if (lpTokenBalance.success) {
         return {
           success: true,
-          lpToken: "",
+          lpToken: lpTokenSymbol,
           balance: lpTokenBalance.balance.toString(),
         };
       } else {
@@ -148,15 +148,13 @@ export const getOutputTokensAmount = (
       .multipliedBy(tokenTwoSupply)
       .dividedBy(lpTokenSupply);
 
-    // Check if its a non tez-ctez pair and calculate slippage if so.
-    if (tokenOneSymbol !== "tez" && tokenTwoSymbol !== "tez") {
-      tokenOneAmount = tokenOneAmount.minus(
-        new BigNumber(slippage).multipliedBy(tokenOneAmount).dividedBy(100)
-      );
-      tokenTwoAmount = tokenTwoAmount.minus(
-        new BigNumber(slippage).multipliedBy(tokenTwoAmount).dividedBy(100)
-      );
-    }
+    tokenOneAmount = tokenOneAmount.minus(
+      new BigNumber(slippage).multipliedBy(tokenOneAmount).dividedBy(100)
+    );
+    tokenTwoAmount = tokenTwoAmount.minus(
+      new BigNumber(slippage).multipliedBy(tokenTwoAmount).dividedBy(100)
+    );
+
     return {
       success: true,
       tokenOneAmount: tokenOneAmount.toString(),
