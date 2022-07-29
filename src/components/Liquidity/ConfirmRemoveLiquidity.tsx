@@ -7,10 +7,10 @@ import add from '../../../src/assets/icon/pools/addIcon.svg';
 import Button from '../Button/Button';
 import { PopUpModal } from '../Modal/popupModal';
 
-interface IConfirmAddLiquidityProps {
+interface IConfirmRemoveLiquidityProps {
   setScreen: React.Dispatch<React.SetStateAction<string>>;
 }
-function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
+function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
   return (
     <>
       <div className="flex">
@@ -18,7 +18,7 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
           <Image src={arrowLeft} />
         </div>
         <div className="mx-2 text-white font-title3">
-          Confirm add liquidity{' '}
+          Confirm Remove liquidity{' '}
         </div>
         <div className="relative top-[2px]">
           <Image src={info} />
@@ -29,7 +29,7 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
         transaction will revert
       </div>
       <div className="mt-[17px] border border-text-800 bg-card-200 rounded-2xl py-5">
-        <p className="text-text-250 font-body4 px-5">Your depositing</p>
+        <p className="text-text-250 font-body4 px-5">Your removing</p>
         <div className="flex mt-3 h-[50px] items-center border-t border-b border-text-800/[0.5] bg-card-500 px-5">
           <div className="flex items-center">
             <span className="relative top-[3px]">
@@ -63,10 +63,10 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
         </div>
       </div>
       <div className="mt-5">
-        <Button color={'primary'}>Confirm deposit</Button>
+        <Button color={'primary'}>Confirm</Button>
       </div>
     </>
   );
 }
 
-export default ConfirmAddLiquidity;
+export default ConfirmRemoveLiquidity;

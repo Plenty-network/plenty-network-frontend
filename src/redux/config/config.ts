@@ -19,8 +19,7 @@ const initialState: ConfigState = {
 export const getConfig = createAsyncThunk(
   'config/getConfig',
   async (thunkAPI) => {
-    const res = await fetchConfig().then((resp) => resp);
-
+    const res = await fetchConfig();
     return res;
   }
 );
@@ -36,18 +35,20 @@ const ConfigSlice = createSlice({
       state.AMMs = {};
       state.standard = {};
       state.lp = {};
+      console.log('Fetching config');
     },
     [getConfig.fulfilled.toString()]: (state: any, action: any) => {
       state.tokens = action.payload.TOKEN;
       state.AMMs = action.payload.AMM;
       state.standard = action.payload.STANDARD;
-      state.LP = action.payload.LP;
+      state.lp = action.payload.LP;
     },
-    [getConfig.rejected.toString()]: (state: any) => {
+    [getConfig.rejected.toString()]: (state: any, action: any) => {
       state.tokens = {};
       state.AMMs = {};
       state.standard = {};
       state.lp = {};
+      console.log(`Error: ${action.error.message}`);
     },
   },
 });
