@@ -607,7 +607,7 @@ function SwapTab(props: ISwapTabProps) {
                               <div
                                 className={clsx(
                                   'ml-auto font-mobile-700 md:font-subtitle4',
-                                  Number(props.routeDetails.priceImpact) > 5 &&
+                                  Number(props.routeDetails.priceImpact) > 3 &&
                                     'text-error-500'
                                 )}
                               >
