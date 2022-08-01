@@ -34,11 +34,11 @@ export function ShortCard (props: IShortCardProps) {
 </div>
      <div className={`w-full ${props.className}`}>
 <table className='w-full flex flex-col gap-3'>
-    <thead>
+  <thead>
  <ShortCardHeader/>
  </thead>
- <tbody className='w-full flex flex-col gap-3 '>
- {Array(10).fill(1).map((_,i)=><ShortCardList key={`poolslist${i}`}/>)}
+ <tbody className='w-full flex flex-col gap-1'>
+ {Array(10).fill(1).map((_,i)=><ShortCardList className='slideFromTop' key={`poolslist${i}`}/>)}
  </tbody>
   </table>
       </div>

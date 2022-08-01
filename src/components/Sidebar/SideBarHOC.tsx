@@ -7,7 +7,7 @@ import { TopNavBar } from './TopNavBar';
 import { TopNavBarMobile } from './TopNavBarMobile';
 
 export interface ISideBarHOCProps {
-  children: React.ReactNode;
+  children: any;
 }
 
 export function SideBarHOC(props: ISideBarHOCProps) {
@@ -26,9 +26,6 @@ export function SideBarHOC(props: ISideBarHOCProps) {
         <div className="circle2"></div> */}
         {/* <div className="circle3"></div> */}
       </div>
-      {/* {showPopupModal && <PopUpModal onClick={showPopupModalClick}>
-          Hello world
-      </PopUpModal>} */}
       <div className="flex flex-no-wrap flex-col">
         <TopNavBar setShowNotification={showNotificationClick} />
         <TopNavBarMobile setShowNotification={showNotificationClick} />

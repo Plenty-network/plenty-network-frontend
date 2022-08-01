@@ -55,6 +55,11 @@ body {
     rgba(7, 0, 17, 1) 100.99%
   );
 }
+.pushtoCenter{
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

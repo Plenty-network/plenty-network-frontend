@@ -1,7 +1,9 @@
+import { number } from 'prop-types';
 import * as React from 'react';
 import { ManageLiquidity } from './ManageLiquidity';
 
 export interface IShortCardListProps {
+    className?:string;
 }
 
 export function ShortCardList(props: IShortCardListProps) {
@@ -9,7 +11,8 @@ export function ShortCardList(props: IShortCardListProps) {
     return (
         <>
         {showLiquidityModal && <ManageLiquidity closeFn={setShowLiquidityModal}/>}
-        <tr className='border border-borderCommon  bg-cardBackGround flex px-5 py-3 items-center rounded-lg	'>
+        <tr 
+        className={`border border-borderCommon  bg-cardBackGround flex px-5 py-3 items-center rounded-lg ${props.className}`}>
 
             <td className='flex-1  flex justify-center items-center'>
                 <svg width="144" height="40" viewBox="0 0 144 40" fill="none" xmlns="http://www.w3.org/2000/svg">
