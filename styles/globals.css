@@ -56,7 +56,7 @@ body {
     rgba(7, 0, 17, 1) 100.99%
   );
 }
-.pushtoCenter{
+.pushtoCenter {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
@@ -79,6 +79,7 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 .tooltipCustom {
+  opacity: 0.98 !important;
   background-color: #160d24 !important;
   border-color: #341e54 !important;
   color: white !important;
