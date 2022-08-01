@@ -193,8 +193,13 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                     </ToolTip>
                   </span>
                 </div>
-
-                <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                <div
+                  className={clsx(
+                    'ml-auto font-mobile-700 md:font-subtitle4',
+                    Number(props.routeDetails.priceImpact) > 3 &&
+                      'text-error-500'
+                  )}
+                >
                   {`${props.routeDetails.priceImpact.toFixed(4)} %`}
                 </div>
               </div>
@@ -258,8 +263,21 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                               {idx === swapRoute?.length - 1 && (
                                 <div className="w-1.5 h-2 bg-card-500 z-50"></div>
                               )}
-                              <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
-                                <span className="w-[28px] h-[28px]">
+                              <div
+                                className={clsx(
+                                  'relative  z-100   p-0.5 bg-card-600 rounded-full',
+                                  swapRoute?.length > 3
+                                    ? 'w-[24px] h-[24px]'
+                                    : 'w-[28px] h-[28px] lg:w-[32px] lg:h-[32px]'
+                                )}
+                              >
+                                <span
+                                  className={clsx(
+                                    swapRoute?.length > 3
+                                      ? 'w-[20px] h-[20px]'
+                                      : 'w-[24px] h-[24px] lg:w-[28px] lg:h-[28px]'
+                                  )}
+                                >
                                   <Image
                                     src={token?.image}
                                     width={'28px'}
@@ -278,15 +296,30 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                               <div className="w-1.5 h-2 bg-card-500 z-50"></div>
                               <div
                                 className={clsx(
-                                  'relative  rounded-2xl h-[32px] bg-card-600 p-px flex',
+                                  'relative  rounded-2xl  bg-card-600 p-px flex',
+
                                   props.routeDetails.isStable[idx]
-                                    ? 'w-[130px]'
-                                    : 'w-[114px]'
+                                    ? swapRoute.length > 3
+                                      ? 'w-[96px]'
+                                      : 'w-[113px] lg:w-[130px]'
+                                    : swapRoute.length > 3
+                                    ? 'w-[88px]'
+                                    : 'w-[103px] lg:w-[114px]',
+                                  swapRoute.length > 3
+                                    ? 'h-[24px]'
+                                    : 'h-[28px] lg:h-[32px]'
                                 )}
                               >
                                 <span className=" flex items-center">
                                   {props.routeDetails.isStable[idx] && (
-                                    <div className="   z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
+                                    <div
+                                      className={clsx(
+                                        '   z-50   flex justify-center items-center bg-card-600 rounded-full',
+                                        swapRoute.length > 3
+                                          ? 'w-[20px] h-[20px]'
+                                          : 'w-[24px] h-[24px] lg:w-[28px] lg:h-[28px]'
+                                      )}
+                                    >
                                       <span className="w-[18px] h-[18px]">
                                         <Image
                                           src={stableSwap}
@@ -298,12 +331,21 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                                   )}
                                   <div
                                     className={clsx(
-                                      'relative   z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full',
+                                      'relative   z-40   p-0.5 bg-card-600 rounded-full',
                                       props.routeDetails.isStable[idx] &&
-                                        'right-[10px]'
+                                        'right-[10px]',
+                                      swapRoute.length > 3
+                                        ? 'w-[24px] h-[24px]'
+                                        : 'w-[28px] h-[28px] lg:w-[32px] lg:h-[32px]'
                                     )}
                                   >
-                                    <span className="w-[28px] h-[28px]">
+                                    <span
+                                      className={clsx(
+                                        swapRoute?.length > 3
+                                          ? 'w-[20px] h-[20px]'
+                                          : 'w-[24px] h-[24px] lg:w-[28px] lg:h-[28px]'
+                                      )}
+                                    >
                                       <Image
                                         src={token?.image}
                                         width={'28px'}
@@ -313,13 +355,22 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                                   </div>
                                   <div
                                     className={clsx(
-                                      'relative  z-30 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full',
+                                      'relative  z-30 p-0.5 bg-card-600 rounded-full',
                                       props.routeDetails.isStable[idx]
                                         ? 'right-5'
-                                        : 'right-[10px]'
+                                        : 'right-[10px]',
+                                      swapRoute.length > 3
+                                        ? 'w-[24px] h-[24px]'
+                                        : 'w-[28px] h-[28px] lg:w-[32px] lg:h-[32px]'
                                     )}
                                   >
-                                    <span className="w-[28px] h-[28px]">
+                                    <span
+                                      className={clsx(
+                                        swapRoute?.length > 3
+                                          ? 'w-[20px] h-[20px]'
+                                          : 'w-[24px] h-[24px] lg:w-[28px] lg:h-[28px]'
+                                      )}
+                                    >
                                       <Image
                                         src={swapRoute[index]?.image}
                                         width={'28px'}

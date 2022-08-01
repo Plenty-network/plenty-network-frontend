@@ -636,6 +636,19 @@ function SwapTab(props: ISwapTabProps) {
                     </ToolTip>
                   </span>
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
+                    1{' '}
+                    {!isConvert
+                      ? props.tokenIn.name === 'tez'
+                        ? 'TEZ'
+                        : props.tokenIn.name === 'ctez'
+                        ? 'CTEZ'
+                        : props.tokenIn.name
+                      : props.tokenOut.name === 'tez'
+                      ? 'TEZ'
+                      : props.tokenOut.name === 'ctez'
+                      ? 'CTEZ'
+                      : props.tokenOut.name}{' '}
+                    =
                     <ToolTip
                       message={
                         !isConvert
@@ -647,28 +660,16 @@ function SwapTab(props: ISwapTabProps) {
                       id="tooltip7"
                       position={Position.top}
                     >
-                      {' '}
                       {!isConvert
-                        ? `1 ${
-                            props.tokenIn.name === 'tez'
-                              ? 'TEZ'
-                              : props.tokenIn.name === 'ctez'
-                              ? 'CTEZ'
-                              : props.tokenIn.name
-                          } = ${props.routeDetails.exchangeRate.toFixed(3)} ${
-                            props.tokenOut.name === 'tez'
-                              ? 'TEZ'
-                              : props.tokenOut.name === 'ctez'
-                              ? 'CTEZ'
-                              : props.tokenOut.name
-                          }`
-                        : `1 ${
-                            props.tokenOut.name === 'tez'
-                              ? 'TEZ'
-                              : props.tokenOut.name === 'ctez'
-                              ? 'CTEZ'
-                              : props.tokenOut.name
-                          } = ${Number(
+                        ? ` ${props.routeDetails.exchangeRate.toFixed(3)} 
+                            ${
+                              props.tokenOut.name === 'tez'
+                                ? 'TEZ'
+                                : props.tokenOut.name === 'ctez'
+                                ? 'CTEZ'
+                                : props.tokenOut.name
+                            }`
+                        : `${Number(
                             1 / Number(props.routeDetails.exchangeRate)
                           ).toFixed(3)} ${
                             props.tokenIn.name === 'tez'
@@ -691,7 +692,13 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip9"
                     position={Position.top}
                     toolTipChild={
-                      <div className="w-[400px]">
+                      <div
+                        className={clsx(
+                          swapRoute && swapRoute?.length > 3
+                            ? 'w-[500px]'
+                            : 'w-[400px]'
+                        )}
+                      >
                         <div className="mt-2 ">
                           <div className="font-subtitle2 md:font-subtitle4">
                             {' '}
