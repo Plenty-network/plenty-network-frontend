@@ -9,6 +9,7 @@ import info from '../../../src/assets/icon/swap/info.svg';
 import { BigNumber } from 'bignumber.js';
 import stableSwap from '../../../src/assets/icon/swap/stableswapViolet.svg';
 import { tokensList } from '../../constants/tokensList';
+import { ToolTip } from '../Tooltip/TooltipAdvanced';
 
 interface IConfirmSwapProps {
   show: boolean;
@@ -102,7 +103,19 @@ function ConfirmSwap(props: IConfirmSwapProps) {
               <>
                 <div>
                   <span className="relative top-0.5">
-                    <Image src={info} width={'15px'} height={'15px'} />
+                    <ToolTip
+                      id="tooltipQ"
+                      toolTipChild={
+                        <div className="w-[300px]">
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting industry. Lorem Ipsum has been the
+                          industrys standard dummy text ever since the 1500s,
+                          when an unknown printer.
+                        </div>
+                      }
+                    >
+                      <Image src={info} width={'15px'} height={'15px'} />
+                    </ToolTip>
                   </span>
                   <span className="ml-[9.25px] font-text-bold mr-[7px]">
                     {' '}
@@ -134,7 +147,19 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Minimum received</span>
                   <span className="relative top-0.5">
-                    <Image src={info} width={'15px'} height={'15px'} />
+                    <ToolTip
+                      id="tooltipM"
+                      toolTipChild={
+                        <div className="w-[200px]">
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting industry. Lorem Ipsum has been the
+                          industrys standard dummy text ever since the 1500s,
+                          when an unknown printer.
+                        </div>
+                      }
+                    >
+                      <Image src={info} width={'15px'} height={'15px'} />
+                    </ToolTip>
                   </span>
                 </div>
 
@@ -153,7 +178,19 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Price Impact</span>
                   <span className="relative top-0.5">
-                    <Image src={info} width={'15px'} height={'15px'} />
+                    <ToolTip
+                      id="tooltipN"
+                      toolTipChild={
+                        <div className="w-[200px]">
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting industry. Lorem Ipsum has been the
+                          industrys standard dummy text ever since the 1500s,
+                          when an unknown printer.
+                        </div>
+                      }
+                    >
+                      <Image src={info} width={'15px'} height={'15px'} />
+                    </ToolTip>
                   </span>
                 </div>
 
@@ -165,7 +202,19 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Fee</span>
                   <span className="relative top-0.5">
-                    <Image src={info} />
+                    <ToolTip
+                      id="tooltipO"
+                      toolTipChild={
+                        <div className="w-[200px]">
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting industry. Lorem Ipsum has been the
+                          industrys standard dummy text ever since the 1500s,
+                          when an unknown printer.
+                        </div>
+                      }
+                    >
+                      <Image src={info} />
+                    </ToolTip>
                   </span>
                 </div>
 
@@ -179,7 +228,19 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   {' '}
                   <span className="mr-[5px]">Route</span>
                   <span className="relative top-0.5">
-                    <Image src={info} width={'15px'} height={'15px'} />
+                    <ToolTip
+                      id="tooltipP"
+                      toolTipChild={
+                        <div className="w-[200px]">
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting industry. Lorem Ipsum has been the
+                          industrys standard dummy text ever since the 1500s,
+                          when an unknown printer.
+                        </div>
+                      }
+                    >
+                      <Image src={info} width={'15px'} height={'15px'} />
+                    </ToolTip>
                   </span>
                 </div>
                 <>

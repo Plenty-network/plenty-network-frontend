@@ -968,7 +968,19 @@ function SwapTab(props: ISwapTabProps) {
                 {' '}
                 <span className="mr-[5px]">Route</span>
                 <span className="relative top-1 lg:top-0.5">
-                  <Image src={info} className="infoIcon" />
+                  <ToolTip
+                    id="tooltip4"
+                    toolTipChild={
+                      <div className="w-[323px]">
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry. Lorem Ipsum has been the industrys
+                        standard dummy text ever since the 1500s, when an
+                        unknown printer.
+                      </div>
+                    }
+                  >
+                    <Image src={info} className="infoIcon" />
+                  </ToolTip>
                 </span>
               </div>
               {isRefresh || props.loading.isLoadingSecond ? (
