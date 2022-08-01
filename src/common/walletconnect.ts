@@ -1,13 +1,13 @@
 import {
   AccountInfo,
   ColorMode,
-  NetworkType,
   DAppClientOptions,
 } from '@airgap/beacon-sdk'
 import type { BeaconWallet } from '@taquito/beacon-wallet'
 import Config from '../config/config';
 
 export const connectedNetwork = Config.NETWORK;
+export const walletNetwork = Config.WALLET_NETWORK;
 export const configName = Config.NAME;
 // const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
 export const rpcNode = Config.RPC_NODES[connectedNetwork];
@@ -19,7 +19,7 @@ export function dappClient() {
     const { BeaconWallet } = await import('@taquito/beacon-wallet')
     const dAppInfo: DAppClientOptions = {
       name: 'Plenty Network',
-      preferredNetwork: connectedNetwork as NetworkType,
+      preferredNetwork: walletNetwork,
       colorMode: ColorMode.DARK,
     }
 
@@ -45,7 +45,7 @@ export function dappClient() {
     await client.clearActiveAccount()
     return client.requestPermissions({
       network: {
-        type: process.env.NEXT_PUBLIC_NETWORK as NetworkType,
+        type: walletNetwork,
       },
     })
   }
@@ -65,7 +65,7 @@ export function dappClient() {
       if (!activeAccount) {
         await client.requestPermissions({
           network: {
-            type: connectedNetwork as NetworkType,
+            type: walletNetwork,
             rpcUrl: rpcNode,
           },
         });

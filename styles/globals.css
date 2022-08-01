@@ -3,6 +3,7 @@
 @tailwind utilities;
 @import './animation.css';
 @import './switch.css';
+@import './switchWithIcon.css';
 
 body {
   /*
@@ -112,6 +113,7 @@ input[type='number'] {
     @apply font-medium;
     @apply text-f16;
   }
+
   .font-body1 {
     @apply font-normal;
     @apply text-f12;

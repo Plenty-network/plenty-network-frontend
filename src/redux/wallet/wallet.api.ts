@@ -1,5 +1,4 @@
-import { NetworkType } from '@airgap/beacon-sdk';
-import {   connectedNetwork , rpcNode } from '../../common/wallet';
+import { walletNetwork , rpcNode } from '../../common/walletconnect';
 import { dappClient } from '../../common/walletconnect';
 
 export const ConnectWalletAPI = async () => {
@@ -9,7 +8,7 @@ export const ConnectWalletAPI = async () => {
     if (!account) {
       await walletClient.requestPermissions({
         network: {
-          type: connectedNetwork as NetworkType,
+          type: walletNetwork,
           rpcUrl: rpcNode,
         },
       });

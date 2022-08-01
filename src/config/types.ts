@@ -1,3 +1,5 @@
+import { NetworkType } from "@airgap/beacon-types";
+
 export interface IConfig {
   STANDARD_CONFIG: string;
   LP_CONFIG: string;
@@ -23,7 +25,7 @@ export interface IConfig {
   };
 
   NETWORK: 'mainnet' | 'testnet';
-  WALLET_NETWORK: string;
+  WALLET_NETWORK: NetworkType;
   ADMIN_ADDRESS: string;
   BURNER: string;
 }

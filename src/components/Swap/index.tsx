@@ -80,7 +80,7 @@ function Swap(props: ISwapProps) {
 
   const routeDetails = React.useRef<{
     path: string[];
-    minimum_Out: BigNumber;
+    minimumOut: BigNumber;
     minimumTokenOut: BigNumber[];
     priceImpact: BigNumber;
     finalFeePerc: BigNumber;
@@ -89,7 +89,7 @@ function Swap(props: ISwapProps) {
     exchangeRate: BigNumber;
     success: boolean;
   }>({
-    minimum_Out: new BigNumber(0),
+    minimumOut: new BigNumber(0),
     minimumTokenOut: [],
     feePerc: [],
     isStable: [],
@@ -124,6 +124,19 @@ function Swap(props: ISwapProps) {
     setSlippage(userSettings.slippage);
     setEnableMultiHop(userSettings.multiHop);
   }, [props.otherProps.walletAddress, userSettings]);
+  useEffect(() => {
+    if (Object.keys(tokenOut).length !== 0) {
+      tokenPrice[tokenIn.name] || tokenPrice[tokenOut.name]
+        ? (loading.current = {
+            isLoadingfirst: true,
+            isLoadingSecond: true,
+          })
+        : (loading.current = {
+            isLoadingfirst: false,
+            isLoadingSecond: false,
+          });
+    }
+  }, [tokenPrice]);
 
   useEffect(() => {
     if (
@@ -136,7 +149,7 @@ function Swap(props: ISwapProps) {
             isLoadingSecond: true,
           })
         : (routeDetails.current = {
-            minimum_Out: new BigNumber(0),
+            minimumOut: new BigNumber(0),
             minimumTokenOut: [],
             feePerc: [],
             isStable: [],
@@ -168,7 +181,7 @@ function Swap(props: ISwapProps) {
           setAllPathState([]);
           allPathSwapData.current = [];
           routeDetails.current = {
-            minimum_Out: new BigNumber(0),
+            minimumOut: new BigNumber(0),
             minimumTokenOut: [],
             feePerc: [],
             isStable: [],
@@ -215,7 +228,7 @@ function Swap(props: ISwapProps) {
       };
     } else {
       routeDetails.current = {
-        minimum_Out: new BigNumber(0),
+        minimumOut: new BigNumber(0),
         minimumTokenOut: [],
         feePerc: [],
         isStable: [],
@@ -235,7 +248,7 @@ function Swap(props: ISwapProps) {
       setFirstTokenAmount('');
       setSecondTokenAmount('');
       routeDetails.current = {
-        minimum_Out: new BigNumber(0),
+        minimumOut: new BigNumber(0),
         minimumTokenOut: [],
         feePerc: [],
         isStable: [],
@@ -269,7 +282,7 @@ function Swap(props: ISwapProps) {
             isLoadingfirst: false,
           };
           routeDetails.current = {
-            minimum_Out: res.finalMinimumTokenOut,
+            minimumOut: res.finalMinimumTokenOut,
             minimumTokenOut: res.minimumTokenOut,
             feePerc: res.feePerc,
             isStable: res.isStable,
@@ -279,7 +292,7 @@ function Swap(props: ISwapProps) {
             success: true,
             exchangeRate: res.exchangeRate,
           };
-          setSecondTokenAmount(res.tokenOut_amount.toString());
+          setSecondTokenAmount(res.tokenOutAmount.toString());
         }
       } else if (tokenType === 'tokenOut') {
         if (Object.keys(tokenIn).length !== 0) {
@@ -301,7 +314,7 @@ function Swap(props: ISwapProps) {
             isLoadingfirst: false,
           };
           routeDetails.current = {
-            minimum_Out: res.finalMinimumTokenOut,
+            minimumOut: res.finalMinimumTokenOut,
             minimumTokenOut: res.minimumTokenOut,
             feePerc: res.feePerc,
             isStable: res.isStable,
@@ -311,8 +324,8 @@ function Swap(props: ISwapProps) {
             success: true,
             exchangeRate: res.exchangeRate,
           };
-          setFirstTokenAmount(res.tokenIn_amount.toString());
-          setSecondTokenAmount(res.tokenOut_amount.toString());
+          setFirstTokenAmount(res.tokenInAmount.toString());
+          setSecondTokenAmount(res.tokenOutAmount.toString());
         }
       }
     }
@@ -333,7 +346,7 @@ function Swap(props: ISwapProps) {
     setSecondTokenAmount('');
     handleSwapTokenInput('', 'tokenIn');
     routeDetails.current = {
-      minimum_Out: new BigNumber(0),
+      minimumOut: new BigNumber(0),
       minimumTokenOut: [],
       feePerc: [],
       isStable: [],
@@ -391,37 +404,37 @@ function Swap(props: ISwapProps) {
         name: tokenIn.name,
         image: tokenIn.image,
       });
+      inputValue > 0 &&
+        setTimeout(() => {
+          const res = reverseCalculation(
+            tokenIn.name,
+            tokenOut.name,
+            allPath.current,
+            new BigNumber(inputValue),
+            new BigNumber(slippage),
+            allPathSwapData.current,
+            tokenPrice
+          );
 
-      setTimeout(() => {
-        const res = reverseCalculation(
-          tokenIn.name,
-          tokenOut.name,
-          allPath.current,
-          new BigNumber(inputValue),
-          new BigNumber(slippage),
-          allPathSwapData.current,
-          tokenPrice
-        );
+          routeDetails.current = {
+            minimumOut: res.finalMinimumTokenOut,
+            minimumTokenOut: res.minimumTokenOut,
+            feePerc: res.feePerc,
+            isStable: res.isStable,
+            path: res.path,
+            finalFeePerc: res.finalFeePerc,
+            priceImpact: res.finalPriceImpact,
+            success: true,
+            exchangeRate: res.exchangeRate,
+          };
 
-        routeDetails.current = {
-          minimum_Out: res.finalMinimumTokenOut,
-          minimumTokenOut: res.minimumTokenOut,
-          feePerc: res.feePerc,
-          isStable: res.isStable,
-          path: res.path,
-          finalFeePerc: res.finalFeePerc,
-          priceImpact: res.finalPriceImpact,
-          success: true,
-          exchangeRate: res.exchangeRate,
-        };
-
-        setFirstTokenAmount(res.tokenIn_amount.toString());
-        setSecondTokenAmount(res.tokenOut_amount.toString());
-        loading.current = {
-          isLoadingSecond: false,
-          isLoadingfirst: false,
-        };
-      }, 500);
+          setFirstTokenAmount(res.tokenInAmount.toString());
+          setSecondTokenAmount(res.tokenOutAmount.toString());
+          loading.current = {
+            isLoadingSecond: false,
+            isLoadingfirst: false,
+          };
+        }, 500);
     } else if (Object.keys(tokenOut).length === 0) {
       setTokenOut({
         name: tokenIn.name,

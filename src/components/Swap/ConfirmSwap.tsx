@@ -18,7 +18,7 @@ interface IConfirmSwapProps {
   firstTokenAmount: string | number;
   routeDetails: {
     path: string[];
-    minimum_Out: BigNumber;
+    minimumOut: BigNumber;
     minimumTokenOut: BigNumber[];
     priceImpact: BigNumber;
     finalFeePerc: BigNumber;
@@ -139,7 +139,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {` ${Number(props.routeDetails.minimum_Out).toFixed(4)} ${
+                  {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${
                     props.tokenOut.name === 'tez'
                       ? 'TEZ'
                       : props.tokenOut.name === 'ctez'

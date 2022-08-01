@@ -8,7 +8,7 @@ import { SideBarHOC } from '../../src/components/Sidebar/SideBarHOC';
 export interface IIndexProps {
 }
 
-export default function kom (props: IIndexProps) {
+export default function Pools (props: IIndexProps) {
   const [activeStateTab, setActiveStateTab] = React.useState<PoolsCardHeader | string>(PoolsCardHeader.All);
 
   return (
