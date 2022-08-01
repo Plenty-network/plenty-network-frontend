@@ -97,6 +97,7 @@ interface ISwapTabProps {
   errorMessage: string;
   setEnableMultiHop: React.Dispatch<React.SetStateAction<boolean>>;
   enableMultiHop: boolean;
+  setBalanceUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function SwapTab(props: ISwapTabProps) {
@@ -184,10 +185,12 @@ function SwapTab(props: ISwapTabProps) {
       !expertMode && props.setShowConfirmTransaction
     ).then((response) => {
       if (response.success) {
+        props.setBalanceUpdate(true);
         props.resetAllValues;
         props.setShowTransactionSubmitModal(false);
         dispatch(setLoading(false));
       } else {
+        props.setBalanceUpdate(true);
         props.resetAllValues;
         props.setShowConfirmTransaction(false);
         props.setShowTransactionSubmitModal(false);
