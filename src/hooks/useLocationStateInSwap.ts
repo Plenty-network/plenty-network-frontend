@@ -18,16 +18,8 @@ export const useLocationStateInSwap = () => {
 
   useEffect(() => {
     if (
-      (tokenIn.name === 'tez'
-        ? 'TEZ'
-        : tokenIn.name === 'ctez'
-        ? 'CTEZ'
-        : tokenIn.name) === router.query.from &&
-      (tokenOut.name === 'tez'
-        ? 'TEZ'
-        : tokenOut.name === 'ctez'
-        ? 'CTEZ'
-        : tokenOut.name) === router.query.to
+      tokenIn.name === router.query.from &&
+      tokenOut.name === router.query.to
     ) {
       return;
     }
@@ -37,22 +29,10 @@ export const useLocationStateInSwap = () => {
         pathname: router.pathname,
         query: {
           ...router.query,
-          from:
-            tokenIn && tokenIn.name
-              ? tokenIn.name === 'tez'
-                ? 'TEZ'
-                : tokenIn.name === 'ctez'
-                ? 'CTEZ'
-                : tokenIn.name
-              : null,
+          from: tokenIn && tokenIn.name ? tokenIn.name : null,
           ...(tokenOut.name
             ? {
-                to:
-                  tokenOut.name === 'tez'
-                    ? 'TEZ'
-                    : tokenOut.name === 'ctez'
-                    ? 'CTEZ'
-                    : tokenOut.name,
+                to: tokenOut.name,
               }
             : {}),
         },
@@ -60,7 +40,7 @@ export const useLocationStateInSwap = () => {
       undefined,
       { shallow: true }
     );
-  }, [tokenIn, tokenOut, router]);
+  }, [tokenIn, tokenOut]);
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
       name: token[0],
