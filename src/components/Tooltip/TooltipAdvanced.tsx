@@ -24,6 +24,7 @@ export interface IToolTipProps {
     children?: any;
     title?:string;
     toolTipChild?:any;
+    classNameAncorToolTip?:string;
 }
 
 
@@ -33,7 +34,7 @@ export function ToolTip(props: IToolTipProps) {
     if(props.type===TooltipType.withoutArrowsAndTitle){
         return (
             <>
-                <a data-tip data-for={`tooltip_${randomId}`}> 
+                <a className={props.classNameAncorToolTip} data-tip data-for={`tooltip_${randomId}`}> 
                 {props.children }
                  </a>
                 <ReactTooltip
@@ -53,7 +54,7 @@ export function ToolTip(props: IToolTipProps) {
     else if(props.type===TooltipType.withTitle){
         return (
             <>
-                <a data-tip data-for={`tooltip_${randomId}`}> 
+                <a className={props.classNameAncorToolTip} data-tip data-for={`tooltip_${randomId}`}> 
                 {props.children }
                 </a>
                 <ReactTooltip
@@ -79,7 +80,7 @@ export function ToolTip(props: IToolTipProps) {
     }
     return (
         <>
-            <a data-tip data-for={`tooltip_${randomId}`}> 
+            <a className={props.classNameAncorToolTip} data-tip data-for={`tooltip_${randomId}`}> 
             {props.children }
              </a>
             <ReactTooltip

@@ -743,3 +743,16 @@
         transform:rotate(360deg); 
     } 
 }
+.slideFromTop{
+	animation: slideFromtop 0.3s ease-in-out;
+}
+@keyframes slideFromtop {
+    0% {
+        transform: translateY(-40px);
+		opacity: 0.8;	
+    }
+    100% { 
+		transform: translateY(0px);
+		opacity: 1;
+     }
+  }
