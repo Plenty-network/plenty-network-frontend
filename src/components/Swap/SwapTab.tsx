@@ -1137,7 +1137,6 @@ function SwapTab(props: ISwapTabProps) {
         <ConfirmTransaction
           show={props.showConfirmTransaction}
           setShow={props.setShowConfirmTransaction}
-          onClick={handleConfirmSwap}
           content={`Swap ${Number(props.firstTokenAmount).toFixed(2)} ${
             props.tokenIn.name === 'tez'
               ? 'TEZ'
@@ -1157,7 +1156,6 @@ function SwapTab(props: ISwapTabProps) {
         <TransactionSubmitted
           show={props.showTransactionSubmitModal}
           setShow={props.setShowTransactionSubmitModal}
-          onClick={handleConfirmSwap}
           onBtnClick={
             transactionId
               ? () => window.open(`https://tzkt.io/${transactionId}`, '_blank')

@@ -6,7 +6,6 @@ interface IConfirmTransactionProps {
   show: boolean;
   content: string;
   setShow: any;
-  onClick: () => void;
 }
 function ConfirmTransaction(props: IConfirmTransactionProps) {
   const closeModal = () => {

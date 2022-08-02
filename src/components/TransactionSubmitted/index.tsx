@@ -8,7 +8,6 @@ interface ITransactionSubmittedProps {
   show: boolean;
   content: string;
   setShow: any;
-  onClick: () => void;
   onBtnClick: any;
 }
 function TransactionSubmitted(props: ITransactionSubmittedProps) {
