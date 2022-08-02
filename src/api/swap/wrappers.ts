@@ -139,6 +139,10 @@ export const computeAllPathsWrapper = (
   tokenPrice: { [id: string]: number }
 ): IRouterResponse => {
   try {
+
+    const state = store.getState();
+    const TOKEN = state.config.standard;
+
     const bestPath = computeAllPaths(paths, tokenInAmount, slippage, swapData);
 
     const isStable: boolean[] = [];
@@ -159,7 +163,7 @@ export const computeAllPathsWrapper = (
       new BigNumber(tokenPrice[bestPath.path[0]]).dividedBy(
         tokenPrice[bestPath.path[bestPath.path.length - 1]]
       )
-    );
+    ).decimalPlaces(TOKEN[bestPath.path[bestPath.path.length-1]].decimals);
 
     return {
       path: bestPath.path,
