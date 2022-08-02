@@ -187,13 +187,19 @@ function SwapTab(props: ISwapTabProps) {
       if (response.success) {
         props.setBalanceUpdate(true);
         props.resetAllValues;
-        props.setShowTransactionSubmitModal(false);
+        setTimeout(() => {
+          props.setShowTransactionSubmitModal(false);
+        }, 2000);
+
         dispatch(setLoading(false));
       } else {
         props.setBalanceUpdate(true);
         props.resetAllValues;
         props.setShowConfirmTransaction(false);
-        props.setShowTransactionSubmitModal(false);
+        setTimeout(() => {
+          props.setShowTransactionSubmitModal(false);
+        }, 2000);
+
         dispatch(setLoading(false));
       }
     });
@@ -419,7 +425,7 @@ function SwapTab(props: ISwapTabProps) {
         </div>
       )}
       <div
-        className="z-10 -mt-[25px] cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-2xl "
+        className=" -mt-[25px] cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-2xl "
         onClick={() => props.changeTokenLocation()}
       >
         <div className="p-[11.5px] bg-card-500 rounded-2xl  w-[68px] h-[68px]">
