@@ -10,10 +10,8 @@ export interface ISwapDataResponse {
   lpToken: ITokenInterface | undefined;
   tokenInPrecision?: BigNumber;
   tokenOutPrecision?: BigNumber;
-  tokenInSupply?: BigNumber;
-  tokenOutSupply?: BigNumber;
-  tezSupply?: BigNumber;
-  ctezSupply?: BigNumber;
+  tokenInSupply: BigNumber;
+  tokenOutSupply: BigNumber;
   target?: BigNumber;
 }
 

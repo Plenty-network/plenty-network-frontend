@@ -2,6 +2,8 @@ import axios from 'axios';
 import Config from '../../config/config';
 import { store } from '../../redux';
 import { connectedNetwork } from '../../common/walletconnect';
+import { loadSwapDataWrapper } from '../swap/wrappers';
+import { BigNumber } from 'bignumber.js'
 
 const getCtezPrice = async (): Promise<{ ctezPriceInUSD: number }> => {
   try {
@@ -173,3 +175,67 @@ export const getTokenPrices = async (): Promise<{
     };
   }
 };
+
+export const getLPTokenPrice = async (tokenA : string , tokenB : string , tokenPrice: { [id: string]: number }): Promise<{
+  success: boolean;
+  lpTokenPrice: BigNumber;
+}> => {
+  try {
+    const state = store.getState();
+    const TOKEN = state.config.standard;
+
+    const swapData = await loadSwapDataWrapper(tokenA , tokenB);
+
+    const tokenInSupply = swapData.tokenInSupply.multipliedBy(new BigNumber(10).pow(TOKEN[swapData.tokenIn].decimals));
+    const tokenOutSupply = swapData.tokenOutSupply.multipliedBy(new BigNumber(10).pow(TOKEN[swapData.tokenOut].decimals));
+    const lpTokenSupply = swapData.lpTokenSupply.multipliedBy(new BigNumber(10).pow(swapData.lpToken?.decimals as number));
+
+    let tokenAAmount = ((tokenInSupply).multipliedBy(new BigNumber(10).pow(swapData.lpToken?.decimals as number))).dividedBy(lpTokenSupply);
+    tokenAAmount = (tokenAAmount.multipliedBy(tokenPrice[swapData.tokenIn])).dividedBy(new BigNumber(10).pow(TOKEN[swapData.tokenIn].decimals));
+
+
+    let tokenBAmount = new BigNumber((tokenOutSupply).multipliedBy(new BigNumber(10).pow(swapData.lpToken?.decimals as number))).dividedBy(lpTokenSupply);
+    tokenBAmount = (tokenBAmount.multipliedBy(tokenPrice[swapData.tokenOut])).dividedBy(new BigNumber(10).pow(TOKEN[swapData.tokenOut].decimals));
+
+    const lpTokenPrice = tokenAAmount.plus(tokenBAmount);
+
+    return {
+      success: true,
+      lpTokenPrice,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      lpTokenPrice: new BigNumber(0),
+    };
+  }
+};
+
+export const getLPTokenPrices =async (tokenPrice: { [id: string]: number }) : Promise<{success : boolean , lpPrices : { [id: string]: BigNumber } }> => {
+
+  try {
+    const state = store.getState();
+    const AMM = state.config.AMMs;
+
+    // Can also send wrt address / symbol 
+
+    const lpPrices: { [id: string]: BigNumber } = {};
+    Object.keys(AMM).forEach(async function (key) {
+      const price = await getLPTokenPrice(AMM[key].token1.symbol , AMM[key].token2.symbol , tokenPrice);
+      lpPrices[AMM[key].lpToken.symbol] = price.lpTokenPrice;
+    });
+
+    return {
+      success : true , 
+      lpPrices,
+    };    
+  } catch (error) {
+    console.log(error);
+    return{
+      success : false,
+      lpPrices : {},
+    };
+  }
+  
+}
