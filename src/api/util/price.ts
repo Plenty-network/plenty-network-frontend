@@ -162,7 +162,7 @@ export const getTokenPrices = async (): Promise<{
     tokenPrice['uDEFI'] = uDEFIPrice.uDEFIinUSD;
     tokenPrice['agEUR.e'] = agEurePrice.agEUReInUSD;
     tokenPrice['tez'] = xtzPrice;
-
+    
     return {
       success: true,
       tokenPrice,

@@ -382,7 +382,7 @@ export const loadSwapDataGeneralStable = async (
 
     tokenInSupply = tokenInSupply.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
     tokenOutSupply = tokenOutSupply.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
-    lpTokenSupply = lpTokenSupply.dividedBy(lpToken.decimals);
+    lpTokenSupply = lpTokenSupply.dividedBy(new BigNumber(10).pow(lpToken.decimals));
 
     return {
       success: true,
