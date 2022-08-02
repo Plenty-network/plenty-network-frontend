@@ -9,6 +9,9 @@ import Button from '../Button/Button';
 import { SwitchWithIcon } from '../SwitchCheckbox/switchWithIcon';
 import RemoveLiquidity from './RemoveLiquidity';
 import ConfirmAddLiquidity from './ConfirmAddLiquidity';
+import { useLocationStateInLiquidity } from '../../hooks/useLocationStateInLiquidity';
+import { useAppSelector } from '../../redux';
+import { getUserBalanceByRpc } from '../../api/util/balance';
 
 interface ILiquidityProps {
   inputRef?: any;
@@ -17,16 +20,65 @@ interface ILiquidityProps {
   setScreen: React.Dispatch<React.SetStateAction<string>>;
 }
 function Liquidity(props: ILiquidityProps) {
+  const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
+    useLocationStateInLiquidity();
+  const TOKEN = useAppSelector((state) => state.config.tokens);
+  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
   const [slippage, setSlippage] = useState(0.5);
   const [isAddLiquidity, setIsAddLiquidity] = useState(true);
+
+  const [firstTokenAmount, setFirstTokenAmount] = useState<string | number>('');
+  const [secondTokenAmount, setSecondTokenAmount] = useState<number | string>(
+    ''
+  );
+
+  const [balanceUpdate, setBalanceUpdate] = useState(false);
+  const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
+  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>(
+    {}
+  );
+  const [showTransactionSubmitModal, setShowTransactionSubmitModal] =
+    useState(false);
+
   const handleAddLiquidity = () => {
     props.setScreen('2');
   };
   const handleRemoveLiquidity = () => {
     props.setScreen('3');
   };
+  useEffect(() => {
+    if (walletAddress) {
+      const updateBalance = async () => {
+        const balancePromises = [];
+
+        Object.keys(tokenIn).length !== 0 &&
+          balancePromises.push(
+            getUserBalanceByRpc(tokenIn.name, walletAddress)
+          );
+        Object.keys(tokenOut).length !== 0 &&
+          balancePromises.push(
+            getUserBalanceByRpc(tokenOut.name, walletAddress)
+          );
+
+        const balanceResponse = await Promise.all(balancePromises);
+
+        setUserBalances((prev) => ({
+          ...prev,
+          ...balanceResponse.reduce(
+            (acc, cur) => ({
+              ...acc,
+              [cur.identifier]: cur.balance.toNumber(),
+            }),
+            {}
+          ),
+        }));
+      };
+      updateBalance();
+    }
+  }, [tokenIn, tokenOut, TOKEN, balanceUpdate]);
 
   return (
     <>

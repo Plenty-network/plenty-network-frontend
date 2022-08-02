@@ -5,21 +5,18 @@ import { useRouter } from 'next/router';
 import { useAppSelector } from '../redux';
 import { Chain } from '../config/types';
 
-export const useLocationStateInSwap = () => {
+export const useLocationStateInLiquidity = () => {
   const tokens = useAppSelector((state) => state.config.standard);
   const tokensArray = Object.entries(tokens);
   const router = useRouter();
-  const [tokenIn, setTokenIn] = useState<tokenParameter>({
-    name: 'ctez',
-    image: ctez,
-  });
+  const [tokenIn, setTokenIn] = useState<tokenParameter>({} as tokenParameter);
 
   const [tokenOut, setTokenOut] = useState({} as tokenParameter);
 
   useEffect(() => {
     if (
-      tokenIn.name === router.query.from &&
-      tokenOut.name === router.query.to
+      tokenIn.name === router.query.tokenA &&
+      tokenOut.name === router.query.tokenB
     ) {
       return;
     }
@@ -29,10 +26,10 @@ export const useLocationStateInSwap = () => {
         pathname: router.pathname,
         query: {
           ...router.query,
-          from: tokenIn && tokenIn.name ? tokenIn.name : null,
+          tokenA: tokenIn && tokenIn.name ? tokenIn.name : null,
           ...(tokenOut.name
             ? {
-                to: tokenOut.name,
+                tokenB: tokenOut.name,
               }
             : {}),
         },
@@ -52,8 +49,8 @@ export const useLocationStateInSwap = () => {
   }, [tokens]);
 
   useEffect(() => {
-    const tokenInFromParam = router.query.from;
-    const tokenOutFromParam = router.query.to;
+    const tokenInFromParam = router.query.tokenA;
+    const tokenOutFromParam = router.query.tokenB;
 
     if (tokenInFromParam) {
       const tokenInDatum = tokensListConfig.find(

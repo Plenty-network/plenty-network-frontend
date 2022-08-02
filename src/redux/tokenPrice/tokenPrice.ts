@@ -15,7 +15,7 @@ export const getTokenPrice = createAsyncThunk(
   'tokenPrice/getTokenPrice',
   async (thunkAPI) => {
     const res = await getTokenPrices().then((resp) => resp.tokenPrice);
-    console.log();
+
     return res;
   }
 );

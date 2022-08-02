@@ -15,6 +15,7 @@ export default function HeadInfo (props: IHeadInfoProps) {
            <div className='p-2 text-f18 font-medium text-white' >Pools</div>
            <ToolTip
             message='Watch how to add liquidity, stake, and earn PLY. '
+            classNameAncorToolTip='pushtoCenter'
            >
             <Image src={playIcon} onClick={()=>setShowVideoModal(true)} height={'28px'} width={'28px'} className='cursor-pointer hover:opacity-90' />
            </ToolTip>

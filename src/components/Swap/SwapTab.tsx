@@ -97,6 +97,7 @@ interface ISwapTabProps {
   errorMessage: string;
   setEnableMultiHop: React.Dispatch<React.SetStateAction<boolean>>;
   enableMultiHop: boolean;
+  setBalanceUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function SwapTab(props: ISwapTabProps) {
@@ -184,13 +185,21 @@ function SwapTab(props: ISwapTabProps) {
       !expertMode && props.setShowConfirmTransaction
     ).then((response) => {
       if (response.success) {
+        props.setBalanceUpdate(true);
         props.resetAllValues;
-        props.setShowTransactionSubmitModal(false);
+        setTimeout(() => {
+          props.setShowTransactionSubmitModal(false);
+        }, 2000);
+
         dispatch(setLoading(false));
       } else {
+        props.setBalanceUpdate(true);
         props.resetAllValues;
         props.setShowConfirmTransaction(false);
-        props.setShowTransactionSubmitModal(false);
+        setTimeout(() => {
+          props.setShowTransactionSubmitModal(false);
+        }, 2000);
+
         dispatch(setLoading(false));
       }
     });
@@ -416,7 +425,7 @@ function SwapTab(props: ISwapTabProps) {
         </div>
       )}
       <div
-        className="z-10 -mt-[25px] cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-2xl "
+        className=" -mt-[25px] cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-2xl "
         onClick={() => props.changeTokenLocation()}
       >
         <div className="p-[11.5px] bg-card-500 rounded-2xl  w-[68px] h-[68px]">
@@ -604,7 +613,7 @@ function SwapTab(props: ISwapTabProps) {
                               <div
                                 className={clsx(
                                   'ml-auto font-mobile-700 md:font-subtitle4',
-                                  Number(props.routeDetails.priceImpact) > 5 &&
+                                  Number(props.routeDetails.priceImpact) > 3 &&
                                     'text-error-500'
                                 )}
                               >
@@ -633,6 +642,19 @@ function SwapTab(props: ISwapTabProps) {
                     </ToolTip>
                   </span>
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
+                    1{' '}
+                    {!isConvert
+                      ? props.tokenIn.name === 'tez'
+                        ? 'TEZ'
+                        : props.tokenIn.name === 'ctez'
+                        ? 'CTEZ'
+                        : props.tokenIn.name
+                      : props.tokenOut.name === 'tez'
+                      ? 'TEZ'
+                      : props.tokenOut.name === 'ctez'
+                      ? 'CTEZ'
+                      : props.tokenOut.name}{' '}
+                    =
                     <ToolTip
                       message={
                         !isConvert
@@ -644,28 +666,16 @@ function SwapTab(props: ISwapTabProps) {
                       id="tooltip7"
                       position={Position.top}
                     >
-                      {' '}
                       {!isConvert
-                        ? `1 ${
-                            props.tokenIn.name === 'tez'
-                              ? 'TEZ'
-                              : props.tokenIn.name === 'ctez'
-                              ? 'CTEZ'
-                              : props.tokenIn.name
-                          } = ${props.routeDetails.exchangeRate.toFixed(3)} ${
-                            props.tokenOut.name === 'tez'
-                              ? 'TEZ'
-                              : props.tokenOut.name === 'ctez'
-                              ? 'CTEZ'
-                              : props.tokenOut.name
-                          }`
-                        : `1 ${
-                            props.tokenOut.name === 'tez'
-                              ? 'TEZ'
-                              : props.tokenOut.name === 'ctez'
-                              ? 'CTEZ'
-                              : props.tokenOut.name
-                          } = ${Number(
+                        ? ` ${props.routeDetails.exchangeRate.toFixed(3)} 
+                            ${
+                              props.tokenOut.name === 'tez'
+                                ? 'TEZ'
+                                : props.tokenOut.name === 'ctez'
+                                ? 'CTEZ'
+                                : props.tokenOut.name
+                            }`
+                        : `${Number(
                             1 / Number(props.routeDetails.exchangeRate)
                           ).toFixed(3)} ${
                             props.tokenIn.name === 'tez'
@@ -688,7 +698,13 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip9"
                     position={Position.top}
                     toolTipChild={
-                      <div className="w-[400px]">
+                      <div
+                        className={clsx(
+                          swapRoute && swapRoute?.length > 3
+                            ? 'w-[500px]'
+                            : 'w-[400px]'
+                        )}
+                      >
                         <div className="mt-2 ">
                           <div className="font-subtitle2 md:font-subtitle4">
                             {' '}
@@ -965,7 +981,19 @@ function SwapTab(props: ISwapTabProps) {
                 {' '}
                 <span className="mr-[5px]">Route</span>
                 <span className="relative top-1 lg:top-0.5">
-                  <Image src={info} className="infoIcon" />
+                  <ToolTip
+                    id="tooltip4"
+                    toolTipChild={
+                      <div className="w-[323px]">
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry. Lorem Ipsum has been the industrys
+                        standard dummy text ever since the 1500s, when an
+                        unknown printer.
+                      </div>
+                    }
+                  >
+                    <Image src={info} className="infoIcon" />
+                  </ToolTip>
                 </span>
               </div>
               {isRefresh || props.loading.isLoadingSecond ? (

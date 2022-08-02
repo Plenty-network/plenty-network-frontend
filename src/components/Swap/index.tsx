@@ -68,6 +68,8 @@ function Swap(props: ISwapProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [swapModalShow, setSwapModalShow] = useState(false);
   const [slippage, setSlippage] = useState(Number(userSettings.slippage));
+
+  const [balanceUpdate, setBalanceUpdate] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [enableMultiHop, setEnableMultiHop] = useState(userSettings.multiHop);
   const loading = React.useRef<{
@@ -125,15 +127,17 @@ function Swap(props: ISwapProps) {
     setEnableMultiHop(userSettings.multiHop);
   }, [props.otherProps.walletAddress, userSettings]);
   useEffect(() => {
-    tokenPrice[tokenIn.name] || tokenPrice[tokenOut.name]
-      ? (loading.current = {
-          isLoadingfirst: true,
-          isLoadingSecond: true,
-        })
-      : (loading.current = {
-          isLoadingfirst: false,
-          isLoadingSecond: false,
-        });
+    if (Object.keys(tokenOut).length !== 0) {
+      tokenPrice[tokenIn.name] || tokenPrice[tokenOut.name]
+        ? (loading.current = {
+            isLoadingfirst: true,
+            isLoadingSecond: true,
+          })
+        : (loading.current = {
+            isLoadingfirst: false,
+            isLoadingSecond: false,
+          });
+    }
   }, [tokenPrice]);
 
   useEffect(() => {
@@ -330,6 +334,7 @@ function Swap(props: ISwapProps) {
   };
 
   const handleTokenType = (type: tokenType) => {
+    setBalanceUpdate(false);
     setSwapModalShow(true);
     setTokenType(type);
   };
@@ -476,7 +481,7 @@ function Swap(props: ISwapProps) {
       };
       updateBalance();
     }
-  }, [tokenIn, tokenOut, props.otherProps.walletAddress, TOKEN]);
+  }, [tokenIn, tokenOut, props.otherProps.walletAddress, TOKEN, balanceUpdate]);
 
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
@@ -533,6 +538,7 @@ function Swap(props: ISwapProps) {
           errorMessage={errorMessage}
           setEnableMultiHop={setEnableMultiHop}
           enableMultiHop={enableMultiHop}
+          setBalanceUpdate={setBalanceUpdate}
         />
       </div>
       <SwapModal
