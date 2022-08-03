@@ -16,7 +16,7 @@ import Image from 'next/image';
 import ConfirmAddLiquidity from '../Liquidity/ConfirmAddLiquidity';
 import ConfirmRemoveLiquidity from '../Liquidity/ConfirmRemoveLiquidity';
 import { useLocationStateInLiquidity } from '../../hooks/useLocationStateInLiquidity';
-import { useAppDispatch, useAppSelector } from '../../redux';
+import { store, useAppDispatch, useAppSelector } from '../../redux';
 import { getPnlpBalance, getUserBalanceByRpc } from '../../api/util/balance';
 import { ISwapData } from '../Liquidity/types';
 import {
@@ -38,6 +38,7 @@ import {
 import { setLoading } from '../../redux/isLoading/action';
 import { addLiquidity } from '../../operations/addLiquidity';
 import { removeLiquidity } from '../../operations/removeLiquidity';
+import { getLPTokenPrice } from '../../api/util/price';
 
 export interface IManageLiquidityProps {
   closeFn: Function;
@@ -91,6 +92,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const [pnlpBalance, setPnlpBalance] = useState('');
+  const [lpTokenPrice, setLpTokenPrice] = useState(new BigNumber(0));
   useEffect(() => {
     if (walletAddress) {
       const updateBalance = async () => {
@@ -109,6 +111,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             setPnlpBalance(res.balance);
           }
         );
+        getLPTokenPrice(tokenIn.name, tokenOut.name, {
+          [tokenIn.name]: tokenPrice[tokenIn.name],
+          [tokenOut.name]: tokenPrice[tokenOut.name],
+        }).then((res) => {
+          setLpTokenPrice(res.lpTokenPrice);
+        });
         const balanceResponse = await Promise.all(balancePromises);
 
         setUserBalances((prev) => ({
@@ -124,7 +132,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       };
       updateBalance();
     }
-  }, [tokenIn, tokenOut, TOKEN, balanceUpdate]);
+  }, [tokenIn, tokenOut, props, tokenPrice, TOKEN, balanceUpdate]);
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(tokenIn, 'name') &&
@@ -170,6 +178,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const resetAllValues = () => {
     setFirstTokenAmountLiq('');
     setSecondTokenAmountLiq('');
+    setBalanceUpdate(false);
     swapData.current = {
       tokenInSupply: new BigNumber(0),
       tokenOutSupply: new BigNumber(0),
@@ -217,7 +226,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
-        resetAllValues;
+        //resetAllValues();
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
@@ -225,7 +234,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setScreen('1');
       } else {
         setBalanceUpdate(true);
-        resetAllValues;
+        //resetAllValues();
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -247,7 +256,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       swapData.current.lpToken as string,
       removeTokenAmount.tokenOneAmount.toString(),
       removeTokenAmount.tokenTwoAmount.toString(),
-      pnlpBalance,
+      burnAmount.toString(),
       walletAddress,
       transactionSubmitModal,
       resetAllValues,
@@ -255,14 +264,14 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
-        resetAllValues;
+
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
         dispatch(setLoading(false));
       } else {
         setBalanceUpdate(true);
-        resetAllValues;
+
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -324,6 +333,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                   removeTokenAmount={removeTokenAmount}
                   setSlippage={setSlippage}
                   slippage={slippage}
+                  lpTokenPrice={lpTokenPrice}
                 />
               </div>
             )}
