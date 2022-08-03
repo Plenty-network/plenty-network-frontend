@@ -4,13 +4,6 @@ export interface IOtherTokenOutput {
   error?: string;
 }
 
-export interface IPnlpBalanceResponse {
-  success: boolean;
-  lpToken: string;
-  balance: string;
-  error?: string;
-}
-
 export interface IPnlpEstimateResponse {
   success: boolean;
   pnlpEstimate: string;
