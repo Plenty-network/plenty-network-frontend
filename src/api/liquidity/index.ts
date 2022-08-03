@@ -4,11 +4,10 @@ import {
   ICurrentPoolShareResponse,
   IOtherTokenOutput,
   IOutputTokensAmountResponse,
-  IPnlpBalanceResponse,
   IPnlpEstimateResponse,
   IPnlpPoolShareResponse,
 } from "./types";
-import { getUserBalanceByRpc } from "../util/balance";
+import { getPnlpBalance } from "../util/balance";
 import { store } from '../../redux';
 
 /**
@@ -40,48 +39,6 @@ export const estimateOtherTokenAmount = (
       success: false,
       otherTokenAmount: '0',
       error: error.message,
-    };
-  }
-};
-
-/**
- * Returns the symbol and user balance of the LP token for the given pair of tokens.
- * @param tokenOneSymbol - Symbol of token one of the pair.
- * @param tokenTwoSymbol - Symbol of token two of the pair.
- * @param userTezosAddress - Tezos wallet address of the user.
- * @param lpToken - (Optional) Symbol of the LP token for the given pair if known/available.
- */
-export const getPnlpBalance = async (
-  tokenOneSymbol: string,
-  tokenTwoSymbol: string,
-  userTezosAddress: string,
-  lpToken?: string
-): Promise<IPnlpBalanceResponse> => {
-  try {
-    const lpTokenSymbol = lpToken ? lpToken : getLpTokenSymbol(tokenOneSymbol, tokenTwoSymbol);
-    if (lpTokenSymbol) {
-      const lpTokenBalance = await getUserBalanceByRpc(
-        lpTokenSymbol,
-        userTezosAddress
-      );
-      if (lpTokenBalance.success) {
-        return {
-          success: true,
-          lpToken: lpTokenSymbol,
-          balance: lpTokenBalance.balance.toString(),
-        };
-      } else {
-        throw new Error(lpTokenBalance.error?.message);
-      }
-    } else {
-      throw new Error("LP token not found for the given pairs.");
-    }
-  } catch (err: any) {
-    return {
-      success: false,
-      lpToken: "",
-      balance: "0",
-      error: err.message,
     };
   }
 };
