@@ -12,9 +12,8 @@ import { TokenVariant } from '../../config/types';
 import { packDataBytes, unpackDataBytes } from '@taquito/michel-codec';
 import { store } from '../../redux';
 import { rpcNode, dappClient } from '../../common/walletconnect';
-import { IBalanceResponse, IAllBalanceResponse } from './types';
+import { IBalanceResponse, IAllBalanceResponse, IPnlpBalanceResponse } from './types';
 import { getLpTokenSymbol } from './fetchConfig';
-import { IPnlpBalanceResponse } from '../liquidity/types';
 
 /**
  * Returns packed key (expr...) which will help to fetch user specific data from bigmap directly using rpc.
