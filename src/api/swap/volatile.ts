@@ -3,7 +3,8 @@ import { getDexAddress } from '../util/fetchConfig';
 import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';
 import axios from 'axios';
-import { ISwapDataResponse , ICalculateTokenResponse} from './types';
+import { ISwapDataResponse , ICalculateTokenResponse, volatileSwapStorageType} from './types';
+import { getStorage } from '../util/storageProvider';
 
 export const loadSwapDataVolatile = async (
   tokenIn: string,

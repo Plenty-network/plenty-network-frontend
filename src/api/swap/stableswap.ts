@@ -221,11 +221,20 @@ export const loadSwapDataTezCtez = async (
     ctezSupply = ctezSupply.dividedBy(new BigNumber(10).pow(6));
     lpTokenSupply = lpTokenSupply.dividedBy(new BigNumber(10).pow(6));
 
+    let tokenInSupply = new BigNumber(0);
+    let tokenOutSupply = new BigNumber(0);
+    if (tokenOut === AMM[dexContractAddress].token2.symbol) {
+      tokenOutSupply = ctezSupply;
+      tokenInSupply = tezSupply;
+    } else if (tokenOut === AMM[dexContractAddress].token1.symbol) {
+      tokenOutSupply = tezSupply;
+      tokenInSupply = ctezSupply;
+    }
 
     return {
       success: true,
-      tezSupply,
-      ctezSupply,
+      tokenInSupply,
+      tokenOutSupply,
       tokenIn,
       tokenOut,
       exchangeFee,
@@ -237,8 +246,8 @@ export const loadSwapDataTezCtez = async (
     console.log({ message: 'Tez-Ctez swap data error', error });
     return {
       success: false,
-      tezSupply: new BigNumber(0),
-      ctezSupply: new BigNumber(0),
+      tokenInSupply: new BigNumber(0),
+      tokenOutSupply: new BigNumber(0),
       tokenIn,
       tokenOut,
       exchangeFee: new BigNumber(0),
@@ -373,7 +382,7 @@ export const loadSwapDataGeneralStable = async (
 
     tokenInSupply = tokenInSupply.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
     tokenOutSupply = tokenOutSupply.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
-    lpTokenSupply = lpTokenSupply.dividedBy(lpToken.decimals);
+    lpTokenSupply = lpTokenSupply.dividedBy(new BigNumber(10).pow(lpToken.decimals));
 
     return {
       success: true,
