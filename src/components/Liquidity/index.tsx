@@ -1,47 +1,55 @@
 import clsx from 'clsx';
 import Image from 'next/image';
+import * as React from 'react';
 import settings from '../../../src/assets/icon/swap/settings.svg';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import TransactionSettingsLiquidity from '../TransactionSettings/TransactionSettingsLiq';
-import { Switch } from '../SwitchCheckbox/switchWithoutIcon';
+import { BigNumber } from 'bignumber.js';
 import AddLiquidity from './AddLiquidity';
 import Button from '../Button/Button';
 import { SwitchWithIcon } from '../SwitchCheckbox/switchWithIcon';
 import RemoveLiquidity from './RemoveLiquidity';
-import ConfirmAddLiquidity from './ConfirmAddLiquidity';
-import { useLocationStateInLiquidity } from '../../hooks/useLocationStateInLiquidity';
 import { useAppSelector } from '../../redux';
-import { getUserBalanceByRpc } from '../../api/util/balance';
+import { ISwapData, tokenParameterLiquidity } from './types';
 
 interface ILiquidityProps {
+  firstTokenAmount: string | number;
+  secondTokenAmount: string | number;
+  setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
+  setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   inputRef?: any;
   value?: string | '';
   onChange?: any;
+  tokenIn: tokenParameterLiquidity;
+  tokenOut: tokenParameterLiquidity;
+  userBalances: {
+    [key: string]: string;
+  };
   setScreen: React.Dispatch<React.SetStateAction<string>>;
+  setIsAddLiquidity: React.Dispatch<React.SetStateAction<boolean>>;
+  isAddLiquidity: boolean;
+  swapData: ISwapData;
+  pnlpBalance: string;
+  setBurnAmount: React.Dispatch<React.SetStateAction<string | number>>;
+  burnAmount: string | number;
+  setRemoveTokenAmount: React.Dispatch<
+    React.SetStateAction<{
+      tokenOneAmount: string;
+      tokenTwoAmount: string;
+    }>
+  >;
+  removeTokenAmount: {
+    tokenOneAmount: string;
+    tokenTwoAmount: string;
+  };
+  setSlippage: React.Dispatch<React.SetStateAction<number>>;
+  slippage: string | number;
 }
 function Liquidity(props: ILiquidityProps) {
-  const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
-    useLocationStateInLiquidity();
-  const TOKEN = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  const walletAddress = useAppSelector((state) => state.wallet.address);
+
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
-  const [slippage, setSlippage] = useState(0.5);
-  const [isAddLiquidity, setIsAddLiquidity] = useState(true);
-
-  const [firstTokenAmount, setFirstTokenAmount] = useState<string | number>('');
-  const [secondTokenAmount, setSecondTokenAmount] = useState<number | string>(
-    ''
-  );
-
-  const [balanceUpdate, setBalanceUpdate] = useState(false);
-  const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
-  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>(
-    {}
-  );
-  const [showTransactionSubmitModal, setShowTransactionSubmitModal] =
-    useState(false);
 
   const handleAddLiquidity = () => {
     props.setScreen('2');
@@ -49,36 +57,6 @@ function Liquidity(props: ILiquidityProps) {
   const handleRemoveLiquidity = () => {
     props.setScreen('3');
   };
-  useEffect(() => {
-    if (walletAddress) {
-      const updateBalance = async () => {
-        const balancePromises = [];
-
-        Object.keys(tokenIn).length !== 0 &&
-          balancePromises.push(
-            getUserBalanceByRpc(tokenIn.name, walletAddress)
-          );
-        Object.keys(tokenOut).length !== 0 &&
-          balancePromises.push(
-            getUserBalanceByRpc(tokenOut.name, walletAddress)
-          );
-
-        const balanceResponse = await Promise.all(balancePromises);
-
-        setUserBalances((prev) => ({
-          ...prev,
-          ...balanceResponse.reduce(
-            (acc, cur) => ({
-              ...acc,
-              [cur.identifier]: cur.balance.toNumber(),
-            }),
-            {}
-          ),
-        }));
-      };
-      updateBalance();
-    }
-  }, [tokenIn, tokenOut, TOKEN, balanceUpdate]);
 
   return (
     <>
@@ -88,12 +66,12 @@ function Liquidity(props: ILiquidityProps) {
             <span className="relative ml-2 top-[3px]">
               <SwitchWithIcon
                 id="Addliquidity"
-                isChecked={isAddLiquidity}
-                onChange={() => setIsAddLiquidity(!isAddLiquidity)}
+                isChecked={props.isAddLiquidity}
+                onChange={() => props.setIsAddLiquidity(!props.isAddLiquidity)}
               />
             </span>
             <span className="ml-2 text-white font-title3 relative top-[12px]">
-              {isAddLiquidity ? 'Add Liquidity' : 'Remove Liquidity'}
+              {props.isAddLiquidity ? 'Add Liquidity' : 'Remove Liquidity'}
             </span>
           </div>
           <div
@@ -103,19 +81,43 @@ function Liquidity(props: ILiquidityProps) {
           >
             <Image src={settings} height={'20px'} width={'20px'} />
             <span className="text-white font-body4 ml-0.5 relative -top-[3px]">
-              {slippage}%
+              {props.slippage}%
             </span>
           </div>
           <TransactionSettingsLiquidity
             show={settingsShow}
-            setSlippage={setSlippage}
-            slippage={slippage}
+            setSlippage={props.setSlippage}
+            slippage={Number(props.slippage)}
             setSettingsShow={setSettingsShow}
           />
         </div>
-        {isAddLiquidity ? <AddLiquidity /> : <RemoveLiquidity />}
+        {props.isAddLiquidity ? (
+          <AddLiquidity
+            tokenIn={props.tokenIn}
+            tokenOut={props.tokenOut}
+            firstTokenAmount={props.firstTokenAmount}
+            secondTokenAmount={props.secondTokenAmount}
+            userBalances={props.userBalances}
+            setSecondTokenAmount={props.setSecondTokenAmount}
+            setFirstTokenAmount={props.setFirstTokenAmount}
+            swapData={props.swapData}
+            tokenPrice={tokenPrice}
+          />
+        ) : (
+          <RemoveLiquidity
+            tokenIn={props.tokenIn}
+            tokenOut={props.tokenOut}
+            pnlpBalance={props.pnlpBalance}
+            swapData={props.swapData}
+            setBurnAmount={props.setBurnAmount}
+            burnAmount={props.burnAmount}
+            setRemoveTokenAmount={props.setRemoveTokenAmount}
+            removeTokenAmount={props.removeTokenAmount}
+            slippage={props.slippage}
+          />
+        )}
       </div>
-      {isAddLiquidity ? (
+      {props.isAddLiquidity ? (
         <div className="">
           <Button color={'primary'} onClick={handleAddLiquidity}>
             Add

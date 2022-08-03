@@ -1,10 +1,20 @@
-import { getDexAddress, isGeneralStablePair, isTezPair } from '../api/util/fetchConfig';
+import {
+  getDexAddress,
+  isGeneralStablePair,
+  isTezPair,
+} from '../api/util/fetchConfig';
 import { BigNumber } from 'bignumber.js';
 import { dappClient } from '../common/walletconnect';
 import { store } from '../redux';
 import { TokenVariant } from '../config/types';
-import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from './types';
-import { OpKind } from '@taquito/taquito/dist/types/operations/types';
+import {
+  IOperationsResponse,
+  TResetAllValues,
+  TSetShowConfirmTransaction,
+  TTransactionSubmitModal,
+} from './types';
+
+import { OpKind } from '@taquito/taquito';
 
 /**
  * Add liquidity operation for given pair of tokens.
@@ -29,7 +39,7 @@ export const addLiquidity = async (
 ): Promise<IOperationsResponse> => {
   try {
     let addLiquidityResult: IOperationsResponse;
-    if (isTezPair(tokenOneSymbol,tokenTwoSymbol)) {
+    if (isTezPair(tokenOneSymbol, tokenTwoSymbol)) {
       addLiquidityResult = await addTezPairsLiquidity(
         tokenOneSymbol,
         tokenTwoSymbol,
@@ -95,15 +105,15 @@ const addAllPairsLiquidity = async (
     const { CheckIfWalletConnected } = dappClient();
     const walletResponse = await CheckIfWalletConnected();
     if (!walletResponse.success) {
-      throw new Error("Wallet connection failed");
+      throw new Error('Wallet connection failed');
     }
     const Tezos = await dappClient().tezos();
     const state = store.getState();
     const AMM = state.config.AMMs;
     const TOKENS = state.config.standard;
     const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
-    if (dexContractAddress === "false") {
-      throw new Error("No dex found for the given pair of tokens.");
+    if (dexContractAddress === 'false') {
+      throw new Error('No dex found for the given pair of tokens.');
     }
     // Make the order of tokens according to the order in contract.
     [firstTokenSymbol, firstTokenAmount] =
@@ -120,12 +130,8 @@ const addAllPairsLiquidity = async (
     const secondTokenAddress = TOKENS[secondTokenSymbol].address as string;
     const secondTokenId = TOKENS[secondTokenSymbol].tokenId ?? 0;
     const firstTokenInstance = await Tezos.wallet.at(firstTokenAddress);
-    const secondTokenInstance = await Tezos.wallet.at(
-      secondTokenAddress
-    );
-    const dexContractInstance = await Tezos.wallet.at(
-      dexContractAddress
-    );
+    const secondTokenInstance = await Tezos.wallet.at(secondTokenAddress);
+    const dexContractInstance = await Tezos.wallet.at(dexContractAddress);
 
     firstTokenAmount = firstTokenAmount.multipliedBy(
       new BigNumber(10).pow(TOKENS[firstTokenSymbol].decimals)
@@ -335,13 +341,15 @@ const addAllPairsLiquidity = async (
         .withContractCall(
           secondTokenInstance.methods.approve(dexContractAddress, 0)
         );
-    }
-    else {
-      throw new Error('Invalid token variants. Token variants can be FA1.2 or FA2.');
+    } else {
+      throw new Error(
+        'Invalid token variants. Token variants can be FA1.2 or FA2.'
+      );
     }
     const batchOperation = await batch?.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    transactionSubmitModal && transactionSubmitModal(batchOperation?.opHash as string);
+    transactionSubmitModal &&
+      transactionSubmitModal(batchOperation?.opHash as string);
     resetAllValues && resetAllValues();
     await batchOperation?.confirmation();
     return {
@@ -382,17 +390,17 @@ const addTezPairsLiquidity = async (
     const { CheckIfWalletConnected } = dappClient();
     const walletResponse = await CheckIfWalletConnected();
     if (!walletResponse.success) {
-      throw new Error("Wallet connection failed");
+      throw new Error('Wallet connection failed');
     }
     const Tezos = await dappClient().tezos();
     const state = store.getState();
     const TOKENS = state.config.standard;
     const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
-    if (dexContractAddress === "false") {
-      throw new Error("No dex found for the given pair of tokens.");
+    if (dexContractAddress === 'false') {
+      throw new Error('No dex found for the given pair of tokens.');
     }
     // Make the order of tokens according to the order in contract.
-    if (tokenOneSymbol === "tez") {
+    if (tokenOneSymbol === 'tez') {
       tezSymbol = tokenOneSymbol;
       tezAmount = tokenOneAmount;
       secondTokenSymbol = tokenTwoSymbol;
@@ -477,7 +485,7 @@ const addTezPairsLiquidity = async (
       ]);
     } else {
       throw new Error(
-        "Invalid token variant. Token variant can be FA1.2 or FA2."
+        'Invalid token variant. Token variant can be FA1.2 or FA2.'
       );
     }
     const batchOperation = await batch?.send();
