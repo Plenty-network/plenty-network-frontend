@@ -42,43 +42,19 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
       });
       return;
     } else {
-      if (
-        (props.tokenIn.name === 'tez' && props.tokenOut.name === 'ctez') ||
-        (props.tokenIn.name === 'ctez' && props.tokenOut.name === 'tez')
-      ) {
-        const res = getOutputTokensAmount(
-          input.toString(),
-          props.tokenIn.symbol,
-          props.tokenOut.symbol,
-          (props.tokenIn.name === 'tez'
-            ? props.swapData.tezSupply
-            : props.swapData.ctezSupply) as BigNumber,
-          (props.tokenOut.name === 'ctez'
-            ? props.swapData.ctezSupply
-            : props.swapData.tezSupply) as BigNumber,
-          props.swapData.lpTokenSupply,
-          props.slippage.toString()
-        );
-        props.setRemoveTokenAmount({
-          tokenOneAmount: res.tokenOneAmount,
-          tokenTwoAmount: res.tokenTwoAmount,
-        });
-        console.log(res);
-      } else {
-        const res = getOutputTokensAmount(
-          input.toString(),
-          props.tokenIn.symbol,
-          props.tokenOut.symbol,
-          props.swapData.tokenInSupply as BigNumber,
-          props.swapData.tokenOutSupply as BigNumber,
-          props.swapData.lpTokenSupply,
-          props.slippage.toString()
-        );
-        props.setRemoveTokenAmount({
-          tokenOneAmount: res.tokenOneAmount,
-          tokenTwoAmount: res.tokenTwoAmount,
-        });
-      }
+      const res = getOutputTokensAmount(
+        input.toString(),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        props.swapData.tokenInSupply as BigNumber,
+        props.swapData.tokenOutSupply as BigNumber,
+        props.swapData.lpTokenSupply,
+        props.slippage.toString()
+      );
+      props.setRemoveTokenAmount({
+        tokenOneAmount: res.tokenOneAmount,
+        tokenTwoAmount: res.tokenTwoAmount,
+      });
     }
   };
   return (

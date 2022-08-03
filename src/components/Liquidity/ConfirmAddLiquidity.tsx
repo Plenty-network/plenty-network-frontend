@@ -19,7 +19,6 @@ interface IConfirmAddLiquidityProps {
   handleAddLiquidityOperation: () => void;
 }
 function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
-  console.log(props);
   return (
     <>
       <div className="flex">

@@ -11,9 +11,10 @@ import BigNumber from 'bignumber.js';
 import { TokenVariant } from '../../config/types';
 import { packDataBytes, unpackDataBytes } from '@taquito/michel-codec';
 import { store } from '../../redux';
-import { rpcNode , dappClient } from '../../common/walletconnect';
-import { IBalanceResponse , IAllBalanceResponse, IPnlpBalanceResponse } from './types';
+import { rpcNode, dappClient } from '../../common/walletconnect';
+import { IBalanceResponse, IAllBalanceResponse } from './types';
 import { getLpTokenSymbol } from './fetchConfig';
+import { IPnlpBalanceResponse } from '../liquidity/types';
 
 /**
  * Returns packed key (expr...) which will help to fetch user specific data from bigmap directly using rpc.
@@ -54,11 +55,9 @@ export const getPackedKey = (
   return packedKey;
 };
 
-
-const getTzBtcBalance =async (address : string): Promise<IBalanceResponse> => {
+const getTzBtcBalance = async (address: string): Promise<IBalanceResponse> => {
   try {
-    const tokenContractAddress: string =
-      'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn';
+    const tokenContractAddress: string = 'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn';
     const tezos = await dappClient().tezos();
     const contract = await tezos.contract.at(tokenContractAddress);
     const storage: any = await contract.storage();
@@ -69,10 +68,7 @@ const getTzBtcBalance =async (address : string): Promise<IBalanceResponse> => {
     );
     const ledgerKey: any = {
       prim: 'Pair',
-      args: [
-        { string: 'ledger' },
-        { bytes: packedAddress.bytes.slice(12) },
-      ],
+      args: [{ string: 'ledger' }, { bytes: packedAddress.bytes.slice(12) }],
     };
     const ledgerKeyBytes = packDataBytes(ledgerKey);
     const ledgerInstance = storage[Object.keys(storage)[0]];
@@ -83,7 +79,9 @@ const getTzBtcBalance =async (address : string): Promise<IBalanceResponse> => {
         Object.prototype.hasOwnProperty.call(bigmapValData, 'prim') &&
         bigmapValData.prim === 'Pair'
       ) {
-        userBalance = new BigNumber(bigmapValData.args[0].int).dividedBy(new BigNumber(10).pow(8));
+        userBalance = new BigNumber(bigmapValData.args[0].int).dividedBy(
+          new BigNumber(10).pow(8)
+        );
       }
     }
     const userBal = new BigNumber(userBalance);
@@ -97,40 +95,36 @@ const getTzBtcBalance =async (address : string): Promise<IBalanceResponse> => {
       success: false,
       balance: new BigNumber(0),
       identifier: 'tzBTC',
-      error : e,
+      error: e,
     };
   }
-  
-}
+};
 
-const getTezBalance =async (address : string): Promise<IBalanceResponse> => {
-      
+const getTezBalance = async (address: string): Promise<IBalanceResponse> => {
   try {
-    const {CheckIfWalletConnected}=dappClient();
-      const WALLET_RESP = await CheckIfWalletConnected();
-      if (!WALLET_RESP.success) {
-        throw new Error('Wallet connection failed');
-      }
-      const tezos = await dappClient().tezos();
-      const _balance = await tezos.tz.getBalance(address);
-      const balance = _balance.dividedBy(new BigNumber(10).pow(6));
-      return {
-        success: true,
-        balance,
-        identifier : 'tez',
-      };
+    const { CheckIfWalletConnected } = dappClient();
+    const WALLET_RESP = await CheckIfWalletConnected();
+    if (!WALLET_RESP.success) {
+      throw new Error('Wallet connection failed');
+    }
+    const tezos = await dappClient().tezos();
+    const _balance = await tezos.tz.getBalance(address);
+    const balance = _balance.dividedBy(new BigNumber(10).pow(6));
+    return {
+      success: true,
+      balance,
+      identifier: 'tez',
+    };
   } catch (error) {
     console.log(error);
     return {
       success: false,
-      balance : new BigNumber(0),
-      identifier : 'tez',
-      error : error
+      balance: new BigNumber(0),
+      identifier: 'tez',
+      error: error,
     };
-    
   }
-  
-}
+};
 
 /**
  * Gets balance of user of a particular token using RPC
@@ -144,14 +138,14 @@ export const getUserBalanceByRpc = async (
   try {
     if (identifier === 'tzBTC') {
       const res = await getTzBtcBalance(address);
-      return{
+      return {
         success: res.success,
         balance: res.balance,
         identifier: res.identifier,
       };
     } else if (identifier === 'tez') {
       const res = await getTezBalance(address);
-      return{
+      return {
         success: res.success,
         balance: res.balance,
         identifier: res.identifier,
@@ -228,8 +222,6 @@ export const getCompleteUserBalace = async (
   }
 };
 
-
-
 /**
  * Returns the symbol and user balance of the LP token for the given pair of tokens.
  * @param tokenOneSymbol - Symbol of token one of the pair.
@@ -237,14 +229,16 @@ export const getCompleteUserBalace = async (
  * @param userTezosAddress - Tezos wallet address of the user.
  * @param lpToken - (Optional) Symbol of the LP token for the given pair if known/available.
  */
- export const getPnlpBalance = async (
+export const getPnlpBalance = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
   userTezosAddress: string,
   lpToken?: string
 ): Promise<IPnlpBalanceResponse> => {
   try {
-    const lpTokenSymbol = lpToken ? lpToken : getLpTokenSymbol(tokenOneSymbol, tokenTwoSymbol);
+    const lpTokenSymbol = lpToken
+      ? lpToken
+      : getLpTokenSymbol(tokenOneSymbol, tokenTwoSymbol);
     if (lpTokenSymbol) {
       const lpTokenBalance = await getUserBalanceByRpc(
         lpTokenSymbol,
@@ -260,13 +254,13 @@ export const getCompleteUserBalace = async (
         throw new Error(lpTokenBalance.error?.message);
       }
     } else {
-      throw new Error("LP token not found for the given pairs.");
+      throw new Error('LP token not found for the given pairs.');
     }
   } catch (err: any) {
     return {
       success: false,
-      lpToken: "",
-      balance: "0",
+      lpToken: '',
+      balance: '0',
       error: err.message,
     };
   }
