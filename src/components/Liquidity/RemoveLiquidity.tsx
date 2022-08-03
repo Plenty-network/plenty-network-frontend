@@ -25,6 +25,7 @@ interface IRemoveLiquidityProps {
   };
 
   slippage: string | number;
+  lpTokenPrice: BigNumber;
 }
 function RemoveLiquidity(props: IRemoveLiquidityProps) {
   const handleInputPercentage = (value: number) => {
@@ -96,7 +97,14 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
             />
           </p>
           <p>
-            <span className="mt-2 ml-1 font-body4 text-text-400">$0.0</span>
+            <span className="mt-2 ml-1 font-body4 text-text-400">
+              ~$
+              {props.lpTokenPrice
+                ? Number(
+                    Number(props.burnAmount) * Number(props.lpTokenPrice)
+                  ).toFixed(2)
+                : '0.00'}
+            </span>
           </p>
         </div>
         <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
