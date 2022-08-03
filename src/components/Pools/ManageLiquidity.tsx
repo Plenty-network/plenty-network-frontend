@@ -17,10 +17,9 @@ import ConfirmAddLiquidity from '../Liquidity/ConfirmAddLiquidity';
 import ConfirmRemoveLiquidity from '../Liquidity/ConfirmRemoveLiquidity';
 import { useLocationStateInLiquidity } from '../../hooks/useLocationStateInLiquidity';
 import { useAppDispatch, useAppSelector } from '../../redux';
-import { getUserBalanceByRpc } from '../../api/util/balance';
+import { getPnlpBalance, getUserBalanceByRpc } from '../../api/util/balance';
 import { ISwapData } from '../Liquidity/types';
 import {
-  getPnlpBalance,
   getPnlpOutputEstimate,
   getPoolShareForPnlp,
 } from '../../api/liquidity';
@@ -71,6 +70,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [burnAmount, setBurnAmount] = React.useState<string | number>('');
   const [transactionId, setTransactionId] = useState('');
   const swapData = React.useRef<ISwapData>({
+    tokenInSupply: new BigNumber(0),
+    tokenOutSupply: new BigNumber(0),
     lpToken: '',
     lpTokenSupply: new BigNumber(0),
   });
@@ -91,7 +92,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const [pnlpBalance, setPnlpBalance] = useState('');
   useEffect(() => {
-    console.log(walletAddress, TOKEN);
     if (walletAddress) {
       const updateBalance = async () => {
         const balancePromises = [];
@@ -131,79 +131,54 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       Object.prototype.hasOwnProperty.call(tokenOut, 'name')
     ) {
       loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((response) => {
-        console.log(response);
-        if (
-          (tokenIn.name === 'tez' && tokenOut.name === 'ctez') ||
-          (tokenIn.name === 'ctez' && tokenOut.name === 'tez')
-        ) {
-          swapData.current = {
-            tezSupply: response.tezSupply,
-            ctezSupply: response.ctezSupply,
-            lpToken: response.lpToken?.symbol,
-            lpTokenSupply: response.lpTokenSupply,
-          };
-        } else {
-          swapData.current = {
-            tokenInSupply: response.tokenInSupply,
-            tokenOutSupply: response.tokenOutSupply,
-            lpToken: response.lpToken?.symbol,
-            lpTokenSupply: response.lpTokenSupply,
-          };
-        }
+        swapData.current = {
+          tokenInSupply: response.tokenInSupply as BigNumber,
+          tokenOutSupply: response.tokenOutSupply as BigNumber,
+          lpToken: response.lpToken?.symbol,
+          lpTokenSupply: response.lpTokenSupply,
+        };
       });
     }
   }, []);
 
   useEffect(() => {
     if (firstTokenAmountLiq > 0 && secondTokenAmountLiq > 0 && isAddLiquidity) {
-      console.log(firstTokenAmountLiq, secondTokenAmountLiq);
       const res = getPnlpOutputEstimate(
         tokenIn.symbol,
         tokenOut.symbol,
         firstTokenAmountLiq.toString(),
         secondTokenAmountLiq.toString(),
-        (swapData.current.tokenInSupply
-          ? swapData.current.tokenInSupply
-          : tokenIn.name === 'tez'
-          ? swapData.current.tezSupply
-          : swapData.current.ctezSupply) as BigNumber,
-        (swapData.current.tokenOutSupply
-          ? swapData.current.tokenOutSupply
-          : tokenIn.name === 'ctez'
-          ? swapData.current.ctezSupply
-          : swapData.current.tezSupply) as BigNumber,
+        swapData.current.tokenInSupply as BigNumber,
+        swapData.current.tokenOutSupply as BigNumber,
         swapData.current.lpTokenSupply,
         swapData.current.lpToken
       );
-      console.log(res.pnlpEstimate);
       setPnlpEstimates(res.pnlpEstimate);
       const sharePool = getPoolShareForPnlp(
         res.pnlpEstimate,
         swapData.current.lpTokenSupply
       );
-      console.log(sharePool.pnlpPoolShare);
       setSharePool(sharePool.pnlpPoolShare);
     } else if (burnAmount > 0 && !isAddLiquidity) {
       const sharePool = getPoolShareForPnlp(
         burnAmount.toString(),
         swapData.current.lpTokenSupply
       );
-      console.log(sharePool.pnlpPoolShare);
       setSharePool(sharePool.pnlpPoolShare);
     }
-    console.log(pnlpEstimates, sharePool);
   }, [firstTokenAmountLiq, secondTokenAmountLiq, screen, burnAmount]);
   const resetAllValues = () => {
     setFirstTokenAmountLiq('');
     setSecondTokenAmountLiq('');
     swapData.current = {
+      tokenInSupply: new BigNumber(0),
+      tokenOutSupply: new BigNumber(0),
       lpToken: '',
       lpTokenSupply: new BigNumber(0),
     };
   };
 
   const handleAddLiquidityOperation = () => {
-    console.log('ishu');
     dispatch(setLoading(true));
     setShowConfirmTransaction(true);
     localStorage.setItem(
@@ -240,7 +215,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       resetAllValues,
       setShowConfirmTransaction
     ).then((response) => {
-      console.log(response);
       if (response.success) {
         setBalanceUpdate(true);
         resetAllValues;
@@ -248,6 +222,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           setShowTransactionSubmitModal(false);
         }, 2000);
         dispatch(setLoading(false));
+        setScreen('1');
       } else {
         setBalanceUpdate(true);
         resetAllValues;
@@ -260,7 +235,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       }
     });
     setScreen('1');
-    setIsAddLiquidity(false);
   };
 
   const handleRemoveLiquidityOperation = () => {
@@ -279,7 +253,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       resetAllValues,
       setShowConfirmTransaction
     ).then((response) => {
-      console.log(response);
       if (response.success) {
         setBalanceUpdate(true);
         resetAllValues;
@@ -298,8 +271,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         dispatch(setLoading(false));
       }
     });
-    setScreen('1');
-    setIsAddLiquidity(false);
   };
 
   return (

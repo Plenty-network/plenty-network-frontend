@@ -35,59 +35,23 @@ function AddLiquidity(props: IAddLiquidityProps) {
     } else if (tokenType === 'tokenIn') {
       props.setFirstTokenAmount(input);
 
-      if (
-        (props.tokenIn.name === 'tez' && props.tokenOut.name === 'ctez') ||
-        (props.tokenIn.name === 'ctez' && props.tokenOut.name === 'tez')
-      ) {
-        const res = estimateOtherTokenAmount(
-          input.toString(),
-          (props.tokenIn.name === 'tez'
-            ? props.swapData.tezSupply
-            : props.swapData.ctezSupply) as BigNumber,
-          (props.tokenOut.name === 'ctez'
-            ? props.swapData.ctezSupply
-            : props.swapData.tezSupply) as BigNumber,
-          props.tokenOut.symbol
-        );
-        props.setSecondTokenAmount(res.otherTokenAmount);
-        console.log(res);
-      } else {
-        const res = estimateOtherTokenAmount(
-          input.toString(),
-          props.swapData.tokenInSupply as BigNumber,
-          props.swapData.tokenOutSupply as BigNumber,
-          props.tokenOut.symbol
-        );
-        props.setSecondTokenAmount(res.otherTokenAmount);
-        console.log(res);
-      }
+      const res = estimateOtherTokenAmount(
+        input.toString(),
+        props.swapData.tokenInSupply as BigNumber,
+        props.swapData.tokenOutSupply as BigNumber,
+        props.tokenOut.symbol
+      );
+      props.setSecondTokenAmount(res.otherTokenAmount);
     } else if (tokenType === 'tokenOut') {
       props.setSecondTokenAmount(input);
-      if (
-        (props.tokenIn.name === 'tez' && props.tokenOut.name === 'ctez') ||
-        (props.tokenIn.name === 'ctez' && props.tokenOut.name === 'tez')
-      ) {
-        const res = estimateOtherTokenAmount(
-          input.toString(),
-          (props.tokenOut.name === 'ctez'
-            ? props.swapData.ctezSupply
-            : props.swapData.tezSupply) as BigNumber,
-          (props.tokenIn.name === 'tez'
-            ? props.swapData.tezSupply
-            : props.swapData.ctezSupply) as BigNumber,
-          props.tokenIn.symbol
-        );
-        props.setFirstTokenAmount(res.otherTokenAmount);
-      } else {
-        const res = estimateOtherTokenAmount(
-          input.toString(),
-          props.swapData.tokenOutSupply as BigNumber,
-          props.swapData.tokenInSupply as BigNumber,
-          props.tokenIn.symbol
-        );
-        props.setFirstTokenAmount(res.otherTokenAmount);
-        console.log(res);
-      }
+
+      const res = estimateOtherTokenAmount(
+        input.toString(),
+        props.swapData.tokenOutSupply as BigNumber,
+        props.swapData.tokenInSupply as BigNumber,
+        props.tokenIn.symbol
+      );
+      props.setFirstTokenAmount(res.otherTokenAmount);
     }
   };
   return (
