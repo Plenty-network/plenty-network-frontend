@@ -1,16 +1,12 @@
 import clsx from 'clsx';
 import Image from 'next/image';
-import ctez from '../../../src/assets/Tokens/ctez.png';
 import wallet from '../../../src/assets/icon/pools/wallet.svg';
-
 import { BigNumber } from 'bignumber.js';
 import add from '../../../src/assets/icon/pools/addIcon.svg';
-import Button from '../Button/Button';
 import { ISwapData, tokenParameterLiquidity } from './types';
 import { estimateOtherTokenAmount } from '../../api/liquidity';
 import { getDexType } from '../../api/util/fetchConfig';
-import { AMM_TYPE } from '../../config/types';
-import { useEffect } from 'hoist-non-react-statics/node_modules/@types/react';
+import { TokenType } from '../../config/types';
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -32,14 +28,12 @@ function AddLiquidity(props: IAddLiquidityProps) {
     input: string | number,
     tokenType: 'tokenIn' | 'tokenOut'
   ) => {
-    props.setFirstTokenAmount(input);
-    props.setSecondTokenAmount('');
     if (input === '' || isNaN(Number(input))) {
       props.setSecondTokenAmount('');
       props.setFirstTokenAmount('');
       return;
-    } else {
-      const type = getDexType(props.tokenIn.name, props.tokenOut.name);
+    } else if (tokenType === 'tokenIn') {
+      props.setFirstTokenAmount(input);
 
       if (
         (props.tokenIn.name === 'tez' && props.tokenOut.name === 'ctez') ||
@@ -65,6 +59,33 @@ function AddLiquidity(props: IAddLiquidityProps) {
           props.tokenOut.symbol
         );
         props.setSecondTokenAmount(res.otherTokenAmount);
+        console.log(res);
+      }
+    } else if (tokenType === 'tokenOut') {
+      props.setSecondTokenAmount(input);
+      if (
+        (props.tokenIn.name === 'tez' && props.tokenOut.name === 'ctez') ||
+        (props.tokenIn.name === 'ctez' && props.tokenOut.name === 'tez')
+      ) {
+        const res = estimateOtherTokenAmount(
+          input.toString(),
+          (props.tokenOut.name === 'ctez'
+            ? props.swapData.ctezSupply
+            : props.swapData.tezSupply) as BigNumber,
+          (props.tokenIn.name === 'tez'
+            ? props.swapData.tezSupply
+            : props.swapData.ctezSupply) as BigNumber,
+          props.tokenIn.symbol
+        );
+        props.setFirstTokenAmount(res.otherTokenAmount);
+      } else {
+        const res = estimateOtherTokenAmount(
+          input.toString(),
+          props.swapData.tokenOutSupply as BigNumber,
+          props.swapData.tokenInSupply as BigNumber,
+          props.tokenIn.symbol
+        );
+        props.setFirstTokenAmount(res.otherTokenAmount);
         console.log(res);
       }
     }
@@ -128,7 +149,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
           </div>
         </div>
       </div>
-      <div className="relative -top-[9px] left-[134px]">
+      <div className="relative -top-[9px] left-[138.5px]">
         <Image src={add} width={'24px'} height={'24px'} />
       </div>
       <div className="border -mt-[25px] flex border-text-800/[0.5] rounded-2xl h-[88px]">
@@ -155,6 +176,9 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 value={props.secondTokenAmount}
                 className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  lg:font-medium1 outline-none w-[100%]"
                 placeholder="0.0"
+                onChange={(e) =>
+                  handleLiquidityInput(e.target.value, 'tokenOut')
+                }
               />
             </p>
             <p>

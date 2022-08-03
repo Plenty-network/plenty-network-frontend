@@ -2,18 +2,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import arrowLeft from '../../../src/assets/icon/pools/arrowLeft.svg';
 import info from '../../../src/assets/icon/common/infoIcon.svg';
-import ctez from '../../../src/assets/Tokens/ctez.png';
-import add from '../../../src/assets/icon/pools/addIcon.svg';
 import Button from '../Button/Button';
-import { PopUpModal } from '../Modal/popupModal';
-import {
-  FIRST_TOKEN_AMOUNT_LIQ,
-  PNLP_ADD,
-  SECOND_TOKEN_AMOUNT_LIQ,
-  SHARE_OF_POOL,
-  TOKEN_A_LIQ,
-  TOKEN_B_LIQ,
-} from '../../constants/localStorage';
 import { tokenParameterLiquidity } from './types';
 
 interface IConfirmAddLiquidityProps {
@@ -34,7 +23,7 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
   return (
     <>
       <div className="flex">
-        <div onClick={() => props.setScreen('1')}>
+        <div className="cursor-pointer" onClick={() => props.setScreen('1')}>
           <Image src={arrowLeft} />
         </div>
         <div className="mx-2 text-white font-title3">

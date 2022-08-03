@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from '../../redux';
 import { getUserBalanceByRpc } from '../../api/util/balance';
 import { ISwapData } from '../Liquidity/types';
 import {
+  getPnlpBalance,
   getPnlpOutputEstimate,
   getPoolShareForPnlp,
 } from '../../api/liquidity';
@@ -28,6 +29,7 @@ import { getDexType } from '../../api/util/fetchConfig';
 import ConfirmTransaction from '../ConfirmTransaction';
 import TransactionSubmitted from '../TransactionSubmitted';
 import {
+  BURN_AMOUNT,
   FIRST_TOKEN_AMOUNT_LIQ,
   SECOND_TOKEN_AMOUNT_LIQ,
   TOKEN_A,
@@ -36,6 +38,7 @@ import {
 } from '../../constants/localStorage';
 import { setLoading } from '../../redux/isLoading/action';
 import { addLiquidity } from '../../operations/addLiquidity';
+import { removeLiquidity } from '../../operations/removeLiquidity';
 
 export interface IManageLiquidityProps {
   closeFn: Function;
@@ -43,6 +46,7 @@ export interface IManageLiquidityProps {
 
 export function ManageLiquidity(props: IManageLiquidityProps) {
   const [showVideoModal, setShowVideoModal] = React.useState(false);
+  const [slippage, setSlippage] = useState(0.5);
   const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
     useLocationStateInLiquidity();
   const TOKEN = useAppSelector((state) => state.config.tokens);
@@ -64,11 +68,15 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   );
   const [isAddLiquidity, setIsAddLiquidity] = useState(true);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
-
+  const [burnAmount, setBurnAmount] = React.useState<string | number>('');
   const [transactionId, setTransactionId] = useState('');
   const swapData = React.useRef<ISwapData>({
     lpToken: '',
     lpTokenSupply: new BigNumber(0),
+  });
+  const [removeTokenAmount, setRemoveTokenAmount] = useState({
+    tokenOneAmount: '',
+    tokenTwoAmount: '',
   });
 
   const dispatch = useAppDispatch();
@@ -81,7 +89,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] =
     useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
-
+  const [pnlpBalance, setPnlpBalance] = useState('');
   useEffect(() => {
     console.log(walletAddress, TOKEN);
     if (walletAddress) {
@@ -96,7 +104,11 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           balancePromises.push(
             getUserBalanceByRpc(tokenOut.name, walletAddress)
           );
-
+        getPnlpBalance(tokenIn.name, tokenOut.name, walletAddress).then(
+          (res) => {
+            setPnlpBalance(res.balance);
+          }
+        );
         const balanceResponse = await Promise.all(balancePromises);
 
         setUserBalances((prev) => ({
@@ -143,7 +155,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   }, []);
 
   useEffect(() => {
-    if (firstTokenAmountLiq > 0 && secondTokenAmountLiq > 0) {
+    if (firstTokenAmountLiq > 0 && secondTokenAmountLiq > 0 && isAddLiquidity) {
       console.log(firstTokenAmountLiq, secondTokenAmountLiq);
       const res = getPnlpOutputEstimate(
         tokenIn.symbol,
@@ -171,9 +183,16 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       );
       console.log(sharePool.pnlpPoolShare);
       setSharePool(sharePool.pnlpPoolShare);
+    } else if (burnAmount > 0 && !isAddLiquidity) {
+      const sharePool = getPoolShareForPnlp(
+        burnAmount.toString(),
+        swapData.current.lpTokenSupply
+      );
+      console.log(sharePool.pnlpPoolShare);
+      setSharePool(sharePool.pnlpPoolShare);
     }
     console.log(pnlpEstimates, sharePool);
-  }, [firstTokenAmountLiq, secondTokenAmountLiq, screen]);
+  }, [firstTokenAmountLiq, secondTokenAmountLiq, screen, burnAmount]);
   const resetAllValues = () => {
     setFirstTokenAmountLiq('');
     setSecondTokenAmountLiq('');
@@ -216,6 +235,45 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       tokenOut.symbol,
       firstTokenAmountLiq.toString(),
       secondTokenAmountLiq.toString(),
+      walletAddress,
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      console.log(response);
+      if (response.success) {
+        setBalanceUpdate(true);
+        resetAllValues;
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        dispatch(setLoading(false));
+      } else {
+        setBalanceUpdate(true);
+        resetAllValues;
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+
+        dispatch(setLoading(false));
+      }
+    });
+    setScreen('1');
+    setIsAddLiquidity(false);
+  };
+
+  const handleRemoveLiquidityOperation = () => {
+    dispatch(setLoading(true));
+    setShowConfirmTransaction(true);
+    localStorage.setItem(BURN_AMOUNT, burnAmount.toString());
+    removeLiquidity(
+      tokenIn.symbol,
+      tokenOut.symbol,
+      swapData.current.lpToken as string,
+      removeTokenAmount.tokenOneAmount.toString(),
+      removeTokenAmount.tokenTwoAmount.toString(),
+      pnlpBalance,
       walletAddress,
       transactionSubmitModal,
       resetAllValues,
@@ -288,6 +346,13 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                   setIsAddLiquidity={setIsAddLiquidity}
                   isAddLiquidity={isAddLiquidity}
                   swapData={swapData.current}
+                  pnlpBalance={pnlpBalance}
+                  setBurnAmount={setBurnAmount}
+                  burnAmount={burnAmount}
+                  setRemoveTokenAmount={setRemoveTokenAmount}
+                  removeTokenAmount={removeTokenAmount}
+                  setSlippage={setSlippage}
+                  slippage={slippage}
                 />
               </div>
             )}
@@ -316,7 +381,17 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         )}
         {screen === '3' && (
           <>
-            <ConfirmRemoveLiquidity setScreen={setScreen} />
+            <ConfirmRemoveLiquidity
+              setScreen={setScreen}
+              tokenIn={tokenIn}
+              tokenOut={tokenOut}
+              tokenPrice={tokenPrice}
+              burnAmount={burnAmount}
+              pnlpEstimates={pnlpEstimates}
+              sharePool={sharePool}
+              handleRemoveLiquidityOperation={handleRemoveLiquidityOperation}
+              removeTokenAmount={removeTokenAmount}
+            />
           </>
         )}
       </PopUpModal>
@@ -327,19 +402,23 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         <ConfirmTransaction
           show={showConfirmTransaction}
           setShow={setShowConfirmTransaction}
-          content={`Mint ${Number(firstTokenAmountLiq).toFixed(2)} ${
-            tokenIn.name === 'tez'
-              ? 'TEZ'
-              : tokenIn.name === 'ctez'
-              ? 'CTEZ'
-              : tokenIn.name
-          } / ${Number(secondTokenAmountLiq).toFixed(4)} ${
-            tokenOut.name === 'tez'
-              ? 'TEZ'
-              : tokenOut.name === 'ctez'
-              ? 'CTEZ'
-              : tokenOut.name
-          } `}
+          content={
+            isAddLiquidity
+              ? `Mint ${Number(firstTokenAmountLiq).toFixed(2)} ${
+                  tokenIn.name === 'tez'
+                    ? 'TEZ'
+                    : tokenIn.name === 'ctez'
+                    ? 'CTEZ'
+                    : tokenIn.name
+                } / ${Number(secondTokenAmountLiq).toFixed(4)} ${
+                  tokenOut.name === 'tez'
+                    ? 'TEZ'
+                    : tokenOut.name === 'ctez'
+                    ? 'CTEZ'
+                    : tokenOut.name
+                } `
+              : `Burn ${Number(burnAmount).toFixed(2)} PNLP `
+          }
         />
       )}
       {showTransactionSubmitModal && (
@@ -351,11 +430,17 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               ? () => window.open(`https://tzkt.io/${transactionId}`, '_blank')
               : null
           }
-          content={`Mint ${Number(
-            localStorage.getItem(FIRST_TOKEN_AMOUNT_LIQ)
-          ).toFixed(2)} ${localStorage.getItem(TOKEN_A_LIQ)} / ${Number(
-            localStorage.getItem(SECOND_TOKEN_AMOUNT_LIQ)
-          ).toFixed(4)} ${localStorage.getItem(TOKEN_B_LIQ)} `}
+          content={
+            isAddLiquidity
+              ? `Mint ${Number(
+                  localStorage.getItem(FIRST_TOKEN_AMOUNT_LIQ)
+                ).toFixed(2)} ${localStorage.getItem(TOKEN_A_LIQ)} / ${Number(
+                  localStorage.getItem(SECOND_TOKEN_AMOUNT_LIQ)
+                ).toFixed(4)} ${localStorage.getItem(TOKEN_B_LIQ)} `
+              : `Burn ${Number(localStorage.getItem(BURN_AMOUNT)).toFixed(
+                  2
+                )} PNLP `
+          }
         />
       )}
     </>

@@ -11,3 +11,4 @@ export const SECOND_TOKEN_AMOUNT_LIQ = 'secondTokenAmountLiq';
 export const TOKEN_B_LIQ = 'tokenBLiq';
 export const SHARE_OF_POOL = 'shareOfPool';
 export const PNLP_ADD = 'pnlpAdd';
+export const BURN_AMOUNT = 'burnAmount';

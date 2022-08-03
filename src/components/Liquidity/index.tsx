@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import Image from 'next/image';
-
 import * as React from 'react';
 import settings from '../../../src/assets/icon/swap/settings.svg';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -10,25 +9,8 @@ import AddLiquidity from './AddLiquidity';
 import Button from '../Button/Button';
 import { SwitchWithIcon } from '../SwitchCheckbox/switchWithIcon';
 import RemoveLiquidity from './RemoveLiquidity';
-import { useLocationStateInLiquidity } from '../../hooks/useLocationStateInLiquidity';
-import { store, useAppSelector } from '../../redux';
-import { getUserBalanceByRpc } from '../../api/util/balance';
-import { loadSwapDataWrapper } from '../../api/swap/wrappers';
+import { useAppSelector } from '../../redux';
 import { ISwapData, tokenParameterLiquidity } from './types';
-import { getDexType } from '../../api/util/fetchConfig';
-import { AMM_TYPE } from '../../config/types';
-import {
-  FIRST_TOKEN_AMOUNT_LIQ,
-  PNLP_ADD,
-  SECOND_TOKEN_AMOUNT_LIQ,
-  SHARE_OF_POOL,
-  TOKEN_A_LIQ,
-  TOKEN_B_LIQ,
-} from '../../constants/localStorage';
-import {
-  getPnlpOutputEstimate,
-  getPoolShareForPnlp,
-} from '../../api/liquidity';
 
 interface ILiquidityProps {
   firstTokenAmount: string | number;
@@ -47,13 +29,27 @@ interface ILiquidityProps {
   setIsAddLiquidity: React.Dispatch<React.SetStateAction<boolean>>;
   isAddLiquidity: boolean;
   swapData: ISwapData;
+  pnlpBalance: string;
+  setBurnAmount: React.Dispatch<React.SetStateAction<string | number>>;
+  burnAmount: string | number;
+  setRemoveTokenAmount: React.Dispatch<
+    React.SetStateAction<{
+      tokenOneAmount: string;
+      tokenTwoAmount: string;
+    }>
+  >;
+  removeTokenAmount: {
+    tokenOneAmount: string;
+    tokenTwoAmount: string;
+  };
+  setSlippage: React.Dispatch<React.SetStateAction<number>>;
+  slippage: string | number;
 }
 function Liquidity(props: ILiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
 
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
-  const [slippage, setSlippage] = useState(0.5);
 
   const handleAddLiquidity = () => {
     props.setScreen('2');
@@ -85,13 +81,13 @@ function Liquidity(props: ILiquidityProps) {
           >
             <Image src={settings} height={'20px'} width={'20px'} />
             <span className="text-white font-body4 ml-0.5 relative -top-[3px]">
-              {slippage}%
+              {props.slippage}%
             </span>
           </div>
           <TransactionSettingsLiquidity
             show={settingsShow}
-            setSlippage={setSlippage}
-            slippage={slippage}
+            setSlippage={props.setSlippage}
+            slippage={Number(props.slippage)}
             setSettingsShow={setSettingsShow}
           />
         </div>
@@ -108,7 +104,17 @@ function Liquidity(props: ILiquidityProps) {
             tokenPrice={tokenPrice}
           />
         ) : (
-          <RemoveLiquidity />
+          <RemoveLiquidity
+            tokenIn={props.tokenIn}
+            tokenOut={props.tokenOut}
+            pnlpBalance={props.pnlpBalance}
+            swapData={props.swapData}
+            setBurnAmount={props.setBurnAmount}
+            burnAmount={props.burnAmount}
+            setRemoveTokenAmount={props.setRemoveTokenAmount}
+            removeTokenAmount={props.removeTokenAmount}
+            slippage={props.slippage}
+          />
         )}
       </div>
       {props.isAddLiquidity ? (
