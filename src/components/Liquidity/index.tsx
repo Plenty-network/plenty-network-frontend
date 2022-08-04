@@ -110,7 +110,7 @@ function Liquidity(props: ILiquidityProps) {
             <span className="relative ml-2 top-[3px]">
               <SwitchWithIcon
                 id="Addliquidity"
-                isChecked={props.isAddLiquidity}
+                isChecked={!props.isAddLiquidity}
                 onChange={() => props.setIsAddLiquidity(!props.isAddLiquidity)}
               />
             </span>

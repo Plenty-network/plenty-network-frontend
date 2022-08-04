@@ -5,8 +5,7 @@ import { BigNumber } from 'bignumber.js';
 import add from '../../../src/assets/icon/pools/addIcon.svg';
 import { ISwapData, tokenParameterLiquidity } from './types';
 import { estimateOtherTokenAmount } from '../../api/liquidity';
-import { getDexType } from '../../api/util/fetchConfig';
-import { TokenType } from '../../config/types';
+import { useAppSelector } from '../../redux';
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -24,6 +23,7 @@ interface IAddLiquidityProps {
   };
 }
 function AddLiquidity(props: IAddLiquidityProps) {
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: 'tokenIn' | 'tokenOut'
@@ -101,19 +101,27 @@ function AddLiquidity(props: IAddLiquidityProps) {
               </span>
             </p>
           </div>
-          <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
-            <div>
-              <Image src={wallet} width={'32px'} height={'32px'} />
+          {walletAddress && (
+            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
+              <div>
+                <Image src={wallet} width={'32px'} height={'32px'} />
+              </div>
+              <div className="ml-1 flex text-primary-500 font-body2">
+                {!props.userBalances[props.tokenIn.name] ? (
+                  <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
+                ) : (
+                  <span className="mr-1">
+                    {Number(props.userBalances[props.tokenIn.name]).toFixed(4)}{' '}
+                  </span>
+                )}
+                {props.tokenIn.name === 'tez'
+                  ? 'TEZ'
+                  : props.tokenIn.name === 'ctez'
+                  ? 'CTEZ'
+                  : props.tokenIn.name}
+              </div>
             </div>
-            <div className="ml-1 text-primary-500 font-body2">
-              {props.userBalances[props.tokenIn.name]}{' '}
-              {props.tokenIn.name === 'tez'
-                ? 'TEZ'
-                : props.tokenIn.name === 'ctez'
-                ? 'CTEZ'
-                : props.tokenIn.name}
-            </div>
-          </div>
+          )}
         </div>
       </div>
       <div className="relative -top-[9px] left-[138.5px]">
@@ -165,19 +173,27 @@ function AddLiquidity(props: IAddLiquidityProps) {
               </span>
             </p>
           </div>
-          <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
-            <div>
-              <Image src={wallet} width={'32px'} height={'32px'} />
+          {walletAddress && (
+            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
+              <div>
+                <Image src={wallet} width={'32px'} height={'32px'} />
+              </div>
+              <div className="ml-1 flex text-primary-500 font-body2">
+                {!props.userBalances[props.tokenOut.name] ? (
+                  <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
+                ) : (
+                  <span className="mr-1">
+                    {Number(props.userBalances[props.tokenOut.name]).toFixed(4)}{' '}
+                  </span>
+                )}
+                {props.tokenOut.name === 'tez'
+                  ? 'TEZ'
+                  : props.tokenOut.name === 'ctez'
+                  ? 'CTEZ'
+                  : props.tokenOut.name}
+              </div>
             </div>
-            <div className="ml-1 text-primary-500 font-body2">
-              {props.userBalances[props.tokenOut.name]}{' '}
-              {props.tokenOut.name === 'tez'
-                ? 'TEZ'
-                : props.tokenOut.name === 'ctez'
-                ? 'CTEZ'
-                : props.tokenOut.name}
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </>
