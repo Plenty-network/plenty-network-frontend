@@ -22,15 +22,15 @@ export const useLocationStateInLiquidity = () => {
   //   symbol: 'tez',
   // });
   const [tokenIn, setTokenIn] = useState<tokenParameterLiquidity>({
-    name: 'USDC.e',
+    name: 'tez',
     image: ctez,
-    symbol: 'USDC.e',
+    symbol: 'tez',
   });
 
   const [tokenOut, setTokenOut] = useState<tokenParameterLiquidity>({
-    name: 'USDT.e',
+    name: 'ctez',
     image: ctez,
-    symbol: 'USDT.e',
+    symbol: 'ctez',
   });
 
   return {
