@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 import Image from 'next/image';
 import { BigNumber } from 'bignumber.js';
-import ctez from '../../../src/assets/Tokens/ctez.png';
 import wallet from '../../../src/assets/icon/pools/wallet.svg';
 import { ISwapData, tokenParameterLiquidity } from './types';
 import { getOutputTokensAmount } from '../../api/liquidity';
+import { useAppSelector } from '../../redux';
 
 interface IRemoveLiquidityProps {
   swapData: ISwapData;
@@ -28,6 +28,7 @@ interface IRemoveLiquidityProps {
   lpTokenPrice: BigNumber;
 }
 function RemoveLiquidity(props: IRemoveLiquidityProps) {
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const handleInputPercentage = (value: number) => {
     props.setBurnAmount(value * Number(props.pnlpBalance));
     handleRemoveLiquidityInput(value * Number(props.pnlpBalance));
@@ -107,14 +108,16 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
             </span>
           </p>
         </div>
-        <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
-          <div>
-            <Image src={wallet} width={'32px'} height={'32px'} />
+        {walletAddress && (
+          <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
+            <div>
+              <Image src={wallet} width={'32px'} height={'32px'} />
+            </div>
+            <div className="ml-1 text-primary-500 font-body2">
+              {Number(props.pnlpBalance).toFixed(4)} PNLP
+            </div>
           </div>
-          <div className="ml-1 text-primary-500 font-body2">
-            {props.pnlpBalance} PNLP
-          </div>
-        </div>
+        )}
       </div>
 
       <div className="border mt-3 flex border-text-800/[0.5] rounded-2xl h-[88px]">
