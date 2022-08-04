@@ -12,6 +12,7 @@ export interface ISwapData {
   tokenOutSupply: BigNumber;
   lpToken: string | undefined;
   lpTokenSupply: BigNumber;
+  isloading?: boolean;
 }
 export interface tokenParameterLiquidity {
   name: string;

@@ -44,10 +44,13 @@ interface ILiquidityProps {
   };
   setSlippage: React.Dispatch<React.SetStateAction<number>>;
   slippage: string | number;
+  lpTokenPrice: BigNumber;
+
+  isLoading: boolean;
 }
 function Liquidity(props: ILiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
 
@@ -58,6 +61,47 @@ function Liquidity(props: ILiquidityProps) {
     props.setScreen('3');
   };
 
+  const AddButton = useMemo(() => {
+    if (
+      walletAddress &&
+      ((props.firstTokenAmount &&
+        props.firstTokenAmount > props.userBalances[props.tokenIn.name]) ||
+        (props.secondTokenAmount && props.secondTokenAmount) >
+          props.userBalances[props.tokenOut.name])
+    ) {
+      return (
+        <Button onClick={() => null} color={'disabled'}>
+          Insufficient Balance
+        </Button>
+      );
+    } else {
+      return (
+        <Button color={'primary'} onClick={handleAddLiquidity}>
+          Add
+        </Button>
+      );
+    }
+  }, [props]);
+  const RemoveButton = useMemo(() => {
+    if (
+      walletAddress &&
+      props.burnAmount &&
+      props.burnAmount > props.pnlpBalance
+    ) {
+      return (
+        <Button onClick={() => null} color={'disabled'}>
+          Insufficient Balance
+        </Button>
+      );
+    } else {
+      return (
+        <Button color={'primary'} onClick={handleRemoveLiquidity}>
+          Remove
+        </Button>
+      );
+    }
+  }, [props]);
+
   return (
     <>
       <div className="border rounded-2xl border-text-800 bg-card-200 px-3.5 pt-4 pb-6  mb-5">
@@ -66,7 +110,7 @@ function Liquidity(props: ILiquidityProps) {
             <span className="relative ml-2 top-[3px]">
               <SwitchWithIcon
                 id="Addliquidity"
-                isChecked={props.isAddLiquidity}
+                isChecked={!props.isAddLiquidity}
                 onChange={() => props.setIsAddLiquidity(!props.isAddLiquidity)}
               />
             </span>
@@ -114,21 +158,14 @@ function Liquidity(props: ILiquidityProps) {
             setRemoveTokenAmount={props.setRemoveTokenAmount}
             removeTokenAmount={props.removeTokenAmount}
             slippage={props.slippage}
+            lpTokenPrice={props.lpTokenPrice}
           />
         )}
       </div>
       {props.isAddLiquidity ? (
-        <div className="">
-          <Button color={'primary'} onClick={handleAddLiquidity}>
-            Add
-          </Button>
-        </div>
+        <div className="">{AddButton}</div>
       ) : (
-        <div className="">
-          <Button color={'primary'} onClick={handleRemoveLiquidity}>
-            Remove
-          </Button>
-        </div>
+        <div className="">{RemoveButton}</div>
       )}
     </>
   );

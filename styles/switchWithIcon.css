@@ -9,7 +9,7 @@
   text-indent: -9999px;
   width: 53px;
   height: 30px;
-  background: rgba(47, 28, 77, 1);
+  background: #2a0b5b;
   display: block;
   border-radius: 19px;
   position: relative;
@@ -22,18 +22,24 @@
   left: 4px;
   width: 24px;
   height: 24px;
-  background: rgba(86, 65, 119, 1);
+  background-image: url('../src/assets/icon/pools/plus.svg');
+  background-repeat: no-repeat;
+  background-color: #9d5cff;
   border-radius: 15.1px;
   transition: 0.3s;
+  background-position: center;
 }
 
 .switchWithIcon input:checked + label {
-  background: rgba(157, 92, 255, 1);
+  background: #2a0b5b;
 }
 .switchWithIcon input:checked + label:after {
   left: calc(100% - 3px);
   transform: translateX(-100%);
-  background: white;
+  background-color: #9d5cff;
+  background-image: url('../src/assets/icon/pools/minus.svg');
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .switchWithIcon label:active:after {

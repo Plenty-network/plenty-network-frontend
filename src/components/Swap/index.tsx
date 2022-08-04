@@ -116,6 +116,7 @@ function Swap(props: ISwapProps) {
     if (props.otherProps.walletAddress) {
       getCompleteUserBalace(props.otherProps.walletAddress).then(
         (response: IAllBalanceResponse) => {
+          console.log(response);
           setAllBalance(response);
         }
       );
