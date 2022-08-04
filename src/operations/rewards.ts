@@ -3,7 +3,14 @@ import { dappClient } from '../common/walletconnect';
 import { store } from '../redux';
 import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from './types';
 
-
+/**
+ * Harvest rewards operation for the selected pair of tokens, for which PNLP is staked.
+ * @param tokenOneSymbol - Symbol of the first token of the selected pair
+ * @param tokenTwoSymbol - Symbol of the second token of the selected pair 
+ * @param transactionSubmitModal - Callback to open modal when transaction is submiited
+ * @param resetAllValues - Callback to reset values when transaction is submitted
+ * @param setShowConfirmTransaction - Callback to show transaction confirmed
+ */
 export const harvestRewards = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,

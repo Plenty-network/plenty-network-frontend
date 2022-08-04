@@ -10,7 +10,7 @@ import { IDepositedAmountResponse, IRewardsResponse } from "./types";
 
 /**
  * Returns the computed token one and token two deposited amounts for the amount of LP token user has staked.
- * @param stakedLpAmount - Amount of LP token the user has staked
+ * @param stakedLpAmount - Total amount of LP token the user has staked currently
  * @param tokenOneSymbol - Symbol of the first token of the selected pair
  * @param tokenTwoSymbol - Symbol of the second token of the selected pair
  * @param tokenOneSupply - Total supply of the first token of the selected pair
@@ -36,7 +36,12 @@ export const getDepositedAmounts = (
   );
 };
 
-
+/**
+ * Returns the estimated rewards the user will get on harversting.
+ * @param tokenOneSymbol - Symbol of the first token of the selected pair
+ * @param tokenTwoSymbol - Symbol of the second token of the selected pair
+ * @param userTezosAddress - Tezos wallet address of the user
+ */
 export const getRewards = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
