@@ -34,7 +34,6 @@ function AddLiquidity(props: IAddLiquidityProps) {
       return;
     } else if (tokenType === 'tokenIn') {
       props.setFirstTokenAmount(input);
-
       const res = estimateOtherTokenAmount(
         input.toString(),
         props.swapData.tokenInSupply as BigNumber,
@@ -75,15 +74,19 @@ function AddLiquidity(props: IAddLiquidityProps) {
         <div className="pl-[25px] w-[100%] pr-[18px] items-center  flex bg-muted-200/[0.1]">
           <div className="w-[50%]">
             <p>
-              <input
-                type="text"
-                className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  lg:font-medium1 outline-none w-[100%]"
-                value={props.firstTokenAmount}
-                placeholder="0.0"
-                onChange={(e) =>
-                  handleLiquidityInput(e.target.value, 'tokenIn')
-                }
-              />
+              {props.swapData.isloading ? (
+                <p className=" my-[4px] h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+              ) : (
+                <input
+                  type="text"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  lg:font-medium1 outline-none w-[100%]"
+                  value={props.firstTokenAmount}
+                  placeholder="0.0"
+                  onChange={(e) =>
+                    handleLiquidityInput(e.target.value, 'tokenIn')
+                  }
+                />
+              )}
             </p>
             <p>
               <span className="mt-2 ml-1 font-body4 text-text-400">
@@ -135,15 +138,19 @@ function AddLiquidity(props: IAddLiquidityProps) {
         <div className="pl-[25px] w-[100%] pr-[18px] items-center  flex bg-muted-200/[0.1]">
           <div className="w-[50%]">
             <p>
-              <input
-                type="text"
-                value={props.secondTokenAmount}
-                className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  lg:font-medium1 outline-none w-[100%]"
-                placeholder="0.0"
-                onChange={(e) =>
-                  handleLiquidityInput(e.target.value, 'tokenOut')
-                }
-              />
+              {props.swapData.isloading ? (
+                <p className=" my-[4px] h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+              ) : (
+                <input
+                  type="text"
+                  value={props.secondTokenAmount}
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  lg:font-medium1 outline-none w-[100%]"
+                  placeholder="0.0"
+                  onChange={(e) =>
+                    handleLiquidityInput(e.target.value, 'tokenOut')
+                  }
+                />
+              )}
             </p>
             <p>
               <span className="mt-2 ml-1 font-body4 text-text-400">

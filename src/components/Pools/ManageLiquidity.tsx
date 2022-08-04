@@ -75,6 +75,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     tokenOutSupply: new BigNumber(0),
     lpToken: '',
     lpTokenSupply: new BigNumber(0),
+    isloading: true,
   });
   const [removeTokenAmount, setRemoveTokenAmount] = useState({
     tokenOneAmount: '',
@@ -93,6 +94,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const [pnlpBalance, setPnlpBalance] = useState('');
   const [lpTokenPrice, setLpTokenPrice] = useState(new BigNumber(0));
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     if (walletAddress) {
       const updateBalance = async () => {
@@ -138,13 +141,16 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       Object.prototype.hasOwnProperty.call(tokenIn, 'name') &&
       Object.prototype.hasOwnProperty.call(tokenOut, 'name')
     ) {
+      setIsLoading(true);
       loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((response) => {
         swapData.current = {
           tokenInSupply: response.tokenInSupply as BigNumber,
           tokenOutSupply: response.tokenOutSupply as BigNumber,
           lpToken: response.lpToken?.symbol,
           lpTokenSupply: response.lpTokenSupply,
+          isloading: false,
         };
+        setIsLoading(false);
       });
     }
   }, []);
@@ -334,6 +340,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                   setSlippage={setSlippage}
                   slippage={slippage}
                   lpTokenPrice={lpTokenPrice}
+                  isLoading={isLoading}
                 />
               </div>
             )}

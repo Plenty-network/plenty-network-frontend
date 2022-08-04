@@ -45,6 +45,8 @@ interface ILiquidityProps {
   setSlippage: React.Dispatch<React.SetStateAction<number>>;
   slippage: string | number;
   lpTokenPrice: BigNumber;
+
+  isLoading: boolean;
 }
 function Liquidity(props: ILiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
