@@ -196,6 +196,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const handleAddLiquidityOperation = () => {
     dispatch(setLoading(true));
     setShowConfirmTransaction(true);
+    setScreen('1');
     localStorage.setItem(
       TOKEN_A_LIQ,
       tokenIn.name === 'tez'
@@ -231,13 +232,13 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       setShowConfirmTransaction
     ).then((response) => {
       if (response.success) {
+        setActiveState(ActiveLiquidity.Staking);
         setBalanceUpdate(true);
         //resetAllValues();
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
         dispatch(setLoading(false));
-        setScreen('1');
       } else {
         setBalanceUpdate(true);
         //resetAllValues();
@@ -249,12 +250,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         dispatch(setLoading(false));
       }
     });
-    setScreen('1');
   };
 
   const handleRemoveLiquidityOperation = () => {
     dispatch(setLoading(true));
     setShowConfirmTransaction(true);
+    setScreen('1');
     localStorage.setItem(BURN_AMOUNT, burnAmount.toString());
     removeLiquidity(
       tokenIn.symbol,
@@ -270,7 +271,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
-
+        setActiveState(ActiveLiquidity.Staking);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
