@@ -10,11 +10,13 @@ import { TokenVariant } from '../config/types';
 import {
   IOperationsResponse,
   TResetAllValues,
+  TSetActiveState,
   TSetShowConfirmTransaction,
   TTransactionSubmitModal,
 } from './types';
 
 import { OpKind } from '@taquito/taquito';
+import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 
 /**
  * Add liquidity operation for given pair of tokens.
@@ -26,6 +28,7 @@ import { OpKind } from '@taquito/taquito';
  * @param transactionSubmitModal - Callback to open modal when transaction is submiited
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
+ * @param setActiveState - Callback to change active state
  */
 export const addLiquidity = async (
   tokenOneSymbol: string,
@@ -35,7 +38,8 @@ export const addLiquidity = async (
   userTezosAddress: string,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  setActiveState: TSetActiveState | undefined
 ): Promise<IOperationsResponse> => {
   try {
     let addLiquidityResult: IOperationsResponse;
@@ -48,7 +52,8 @@ export const addLiquidity = async (
         userTezosAddress,
         transactionSubmitModal,
         resetAllValues,
-        setShowConfirmTransaction
+        setShowConfirmTransaction,
+        setActiveState
       );
     } else {
       addLiquidityResult = await addAllPairsLiquidity(
@@ -59,7 +64,8 @@ export const addLiquidity = async (
         userTezosAddress,
         transactionSubmitModal,
         resetAllValues,
-        setShowConfirmTransaction
+        setShowConfirmTransaction,
+        setActiveState
       );
     }
     return {
@@ -86,6 +92,7 @@ export const addLiquidity = async (
  * @param transactionSubmitModal - Callback to open modal when transaction is submiited
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
+ * @param setActiveState - Callback to change active state
  */
 const addAllPairsLiquidity = async (
   tokenOneSymbol: string,
@@ -95,7 +102,8 @@ const addAllPairsLiquidity = async (
   userTezosAddress: string,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  setActiveState: TSetActiveState | undefined
 ): Promise<IOperationsResponse> => {
   try {
     let firstTokenSymbol: string | undefined,
@@ -350,6 +358,7 @@ const addAllPairsLiquidity = async (
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal &&
       transactionSubmitModal(batchOperation?.opHash as string);
+    setActiveState && setActiveState(ActiveLiquidity.Staking);
     resetAllValues && resetAllValues();
     await batchOperation?.confirmation();
     return {
@@ -371,6 +380,7 @@ const addAllPairsLiquidity = async (
  * @param transactionSubmitModal - Callback to open modal when transaction is submiited
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
+ * @param setActiveState - Callback to change active state
  */
 const addTezPairsLiquidity = async (
   tokenOneSymbol: string,
@@ -380,7 +390,8 @@ const addTezPairsLiquidity = async (
   userTezosAddress: string,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  setActiveState: TSetActiveState | undefined
 ): Promise<IOperationsResponse> => {
   try {
     let tezSymbol: string | undefined,
@@ -491,6 +502,7 @@ const addTezPairsLiquidity = async (
     const batchOperation = await batch?.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(batchOperation?.opHash);
+    setActiveState && setActiveState(ActiveLiquidity.Staking);
     resetAllValues && resetAllValues();
     await batchOperation?.confirmation();
     return {
