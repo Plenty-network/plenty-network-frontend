@@ -2,7 +2,8 @@ import { getDexAddress, isGeneralStablePair, isTezPair } from '../api/util/fetch
 import { BigNumber } from 'bignumber.js';
 import { dappClient } from '../common/walletconnect';
 import { store } from '../redux';
-import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from './types';
+import { IOperationsResponse, TResetAllValues, TSetActiveState, TSetShowConfirmTransaction, TTransactionSubmitModal } from './types';
+import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 
 /**
  * Remove liquidity operation for given pair of tokens.
@@ -16,6 +17,7 @@ import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTran
  * @param transactionSubmitModal - Callback to open modal when transaction is submiited
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
+ * @param setActiveState - Callback to change active state
  */
 export const removeLiquidity = async (
   tokenOneSymbol: string,
@@ -27,7 +29,8 @@ export const removeLiquidity = async (
   userTezosAddress: string,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  setActiveState: TSetActiveState | undefined
 ): Promise<IOperationsResponse> => {
   try {
     let removeLiquidityResult: IOperationsResponse;
@@ -41,7 +44,8 @@ export const removeLiquidity = async (
         new BigNumber(pnlpAmount),
         transactionSubmitModal,
         resetAllValues,
-        setShowConfirmTransaction
+        setShowConfirmTransaction,
+        setActiveState
       );
     } else {
       removeLiquidityResult = await removeAllPairsLiquidity(
@@ -54,7 +58,8 @@ export const removeLiquidity = async (
         userTezosAddress,
         transactionSubmitModal,
         resetAllValues,
-        setShowConfirmTransaction
+        setShowConfirmTransaction,
+        setActiveState
       );
     }
     return {
@@ -83,6 +88,7 @@ export const removeLiquidity = async (
  * @param transactionSubmitModal - Callback to open modal when transaction is submiited
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
+ * @param setActiveState - Callback to change active state
  */
 const removeAllPairsLiquidity = async (
   tokenOneSymbol: string,
@@ -94,7 +100,8 @@ const removeAllPairsLiquidity = async (
   userTezosAddress: string,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  setActiveState: TSetActiveState | undefined
 ): Promise<IOperationsResponse> => {
   try {
     let firstTokenSymbol: string | undefined,
@@ -157,6 +164,7 @@ const removeAllPairsLiquidity = async (
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(operation.opHash);
+    setActiveState && setActiveState(ActiveLiquidity.Staking);
     resetAllValues && resetAllValues();
     await operation.confirmation();
 
@@ -181,6 +189,7 @@ const removeAllPairsLiquidity = async (
  * @param transactionSubmitModal - Callback to open modal when transaction is submiited
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
+ * @param setActiveState - Callback to change active state
  */
  const removeTezPairsLiquidity = async (
    tokenOneSymbol: string,
@@ -191,7 +200,8 @@ const removeAllPairsLiquidity = async (
    pnlpAmount: BigNumber,
    transactionSubmitModal: TTransactionSubmitModal | undefined,
    resetAllValues: TResetAllValues | undefined,
-   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+   setActiveState: TSetActiveState | undefined
  ): Promise<IOperationsResponse> => {
    try {
      let tezSymbol: string | undefined,
@@ -242,6 +252,7 @@ const removeAllPairsLiquidity = async (
 
      setShowConfirmTransaction && setShowConfirmTransaction(false);
      transactionSubmitModal && transactionSubmitModal(operation.opHash);
+     setActiveState && setActiveState(ActiveLiquidity.Staking);
      resetAllValues && resetAllValues();
      await operation.confirmation();
 
