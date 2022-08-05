@@ -229,10 +229,10 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       walletAddress,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      setActiveState
     ).then((response) => {
       if (response.success) {
-        setActiveState(ActiveLiquidity.Staking);
         setBalanceUpdate(true);
         //resetAllValues();
         setTimeout(() => {
@@ -267,11 +267,11 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       walletAddress,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      setActiveState
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
-        setActiveState(ActiveLiquidity.Staking);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
