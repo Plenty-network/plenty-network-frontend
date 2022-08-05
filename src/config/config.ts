@@ -20,7 +20,10 @@ const Config: IConfig = {
     mainnet: 'https://api.tzkt.io',
     testnet: 'https://api.ghostnet.tzkt.io',
   },
-
+  VOTER: {
+    mainnet: '',
+    testnet: 'KT1PexY3Jn8BCJmVpVLNN944YpVLM2LWTMMV',
+  },
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',
     testnet: 'KT1P7eP7gGuHgPVNWRLs1p4uRhc9Wbyku8B2',
