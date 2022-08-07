@@ -20,6 +20,9 @@ export const loadSwapDataVolatile = async (
       throw new Error('No dex found');
     }
 
+    // const storageResponse1 = await getStorage(dexContractAddress , volatileSwapStorageType);
+    // console.log(storageResponse1);
+
     const storageResponse = await axios.get(
       `${rpcNode}chains/main/blocks/head/context/contracts/${dexContractAddress}/storage`,
     );
