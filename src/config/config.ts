@@ -24,6 +24,10 @@ const Config: IConfig = {
     mainnet: '',
     testnet: 'KT1PexY3Jn8BCJmVpVLNN944YpVLM2LWTMMV',
   },
+  VOTE_ESCROW : {
+    mainnet : '',
+    testnet : 'KT1Xrb4eEizLTwR9sZgckjugfuaPB563KKd6',
+  },
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',
     testnet: 'KT1P7eP7gGuHgPVNWRLs1p4uRhc9Wbyku8B2',

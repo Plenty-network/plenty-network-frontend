@@ -217,3 +217,7 @@ export const voterStorageType = {
     },
   ],
 };
+
+export const voteEscrowStorageType = {
+  // TODO : Add VE Storage
+}

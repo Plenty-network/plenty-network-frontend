@@ -29,6 +29,7 @@ export interface IConfig {
   ADMIN_ADDRESS: string;
   BURNER: string;
   VOTER: { mainnet: string; testnet: string };
+  VOTE_ESCROW: { mainnet: string; testnet: string };
 }
 
 interface IApi {
