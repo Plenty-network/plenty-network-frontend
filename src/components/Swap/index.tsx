@@ -24,6 +24,7 @@ import {
 } from '../../api/swap/wrappers';
 import { IAllBalanceResponse } from '../../api/util/types';
 import { Chain } from '../../config/types';
+import { votingPower } from '../../api/votes/vote_udit';
 
 interface ISwapProps {
   className?: string;
@@ -113,6 +114,9 @@ function Swap(props: ISwapProps) {
   const isSwitchClicked = React.useRef<boolean>(false);
 
   useEffect(() => {
+
+    const res = votingPower(0 , 	1659954612 ,  1);
+
     if (props.otherProps.walletAddress) {
       getCompleteUserBalace(props.otherProps.walletAddress).then(
         (response: IAllBalanceResponse) => {
