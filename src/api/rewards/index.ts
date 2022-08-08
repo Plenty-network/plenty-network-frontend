@@ -113,14 +113,14 @@ export const getRewards = async (
     } else {
       throw new Error("No amount staked yet in the contract.");
     }
-
+    
     const reward = derivedBalances
       .multipliedBy(rewardPerTokenLatest.minus(userRewardPerTokenDebt))
-      .dividedBy(new BigNumber(10).pow(18));
+      .dividedBy(new BigNumber(10).pow(36));
 
     const totalRewards = rewardsFromStorage
-      .plus(reward)
       .dividedBy(new BigNumber(10).pow(18))
+      .plus(reward)
       .toString();
     
     return {
