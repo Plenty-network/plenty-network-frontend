@@ -5,7 +5,16 @@ import { TokenVariant } from "../config/types";
 import { store } from '../redux';
 import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from './types';
 
-
+/**
+ * Stake PNLP token operation for the selected pair of tokens.
+ * @param tokenOneSymbol - Symbol of first token of the pair
+ * @param tokenTwoSymbol - Symbol of second token of the pair 
+ * @param pnlpAmount - Amount of PNLP token the user wants to stake
+ * @param userTezosAddress - Tezos wallet address of user
+ * @param transactionSubmitModal - Callback to open modal when transaction is submiited
+ * @param resetAllValues - Callback to reset values when transaction is submitted
+ * @param setShowConfirmTransaction - Callback to show transaction confirmed
+ */
 export const stakePnlpTokens = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
