@@ -111,6 +111,12 @@ const MainMenu: Array<ISingleSideBarProps> = [
     pathName: '/pools',
     activePathName: '/pools',
   },
+  {
+    name: 'Vote',
+    iconName: 'pools',
+    pathName: '/Vote',
+    activePathName: '/Vote',
+  },
 ];
 
 export function SideBar(props: ISideBarProps) {

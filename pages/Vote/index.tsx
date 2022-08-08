@@ -14,9 +14,10 @@ import { AppDispatch, useAppSelector } from '../../src/redux';
 import { fetchWallet } from '../../src/redux/wallet/wallet';
 import { getConfig } from '../../src/redux/config/config';
 import { getTokenPrice } from '../../src/redux/tokenPrice/tokenPrice';
-export interface IIndexProps {}
+import SelectNFT from '../../src/components/Votes/SelectNFT';
+import { VotesTable } from '../../src/components/Votes/VotesTable';
 
-export default function Pools(props: IIndexProps) {
+export default function Vote() {
   const [activeStateTab, setActiveStateTab] = React.useState<
     PoolsCardHeader | string
   >(PoolsCardHeader.All);
@@ -38,23 +39,15 @@ export default function Pools(props: IIndexProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
-        {/* className='' */}
         <div>
           <HeadInfo
             className="md:px-3"
-            title="Pools"
-            toolTipContent="Watch how to add liquidity, stake, and earn PLY. "
+            title="Vote"
+            toolTipContent="Watch how to add veNFT"
           />
-          <CardHeader
-            activeStateTab={activeStateTab}
-            setActiveStateTab={setActiveStateTab}
-            className="md:px-3"
-          />
-          {activeStateTab === PoolsCardHeader.All && (
-            <PoolsTable className="px-5 py-4 " />
-          )}
+          <SelectNFT />
 
-          {/* poolsTable */}
+          <VotesTable className="px-5 py-4 " />
         </div>
       </SideBarHOC>
     </>
