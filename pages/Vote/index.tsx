@@ -16,11 +16,9 @@ import { getConfig } from '../../src/redux/config/config';
 import { getTokenPrice } from '../../src/redux/tokenPrice/tokenPrice';
 import SelectNFT from '../../src/components/Votes/SelectNFT';
 import { VotesTable } from '../../src/components/Votes/VotesTable';
+import Button from '../../src/components/Button/Button';
 
 export default function Vote() {
-  const [activeStateTab, setActiveStateTab] = React.useState<
-    PoolsCardHeader | string
-  >(PoolsCardHeader.All);
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.config.tokens);
   useEffect(() => {
@@ -40,11 +38,19 @@ export default function Vote() {
       </Head>
       <SideBarHOC>
         <div>
-          <HeadInfo
-            className="md:px-3"
-            title="Vote"
-            toolTipContent="Watch how to add veNFT"
-          />
+          <div className="flex">
+            <div>
+              <HeadInfo
+                className="md:px-3"
+                title="Vote"
+                toolTipContent="Watch how to add veNFT"
+              />
+            </div>
+            <div className=" h-[52px] flex items-center px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1]">
+              Create Lock
+            </div>
+          </div>
+
           <SelectNFT />
 
           <VotesTable className="px-5 py-4 " />

@@ -52,6 +52,7 @@ export function VotesHeader(props: IShortCardHeaderProps) {
       <Tabs text="Rewards" isToolTipEnabled />
       <Tabs text="Total votes" isToolTipEnabled />
       <Tabs text="My votes" isToolTipEnabled />
+      <Tabs text="My votes" isToolTipEnabled />
     </tr>
   );
 }

@@ -120,6 +120,7 @@ module.exports = {
       f1416: ['14px', '16px'],
       f10: ['10px', '16px'],
       f1015: ['10px', '15px'],
+      f13: ['13px', '2.6px'],
     },
 
     extend: {

@@ -219,4 +219,8 @@ input[type='number'] {
     @apply font-semibold;
     @apply text-f1015;
   }
+  .font-f13 {
+    @apply font-medium;
+    @apply text-f13;
+  }
 }
