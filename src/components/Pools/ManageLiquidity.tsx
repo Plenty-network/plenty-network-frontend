@@ -1,3 +1,5 @@
+import { StakingScreen } from './StakingScreen';
+import { RewardsScreen } from './RewardsScreen';
 import * as React from 'react';
 import Liquidity from '../Liquidity';
 import { PopUpModal } from '../Modal/popupModal';
@@ -346,10 +348,10 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               </div>
             )}
             {activeState === ActiveLiquidity.Rewards && (
-              <div className="">Rewards</div>
+             <RewardsScreen/>
             )}
             {activeState === ActiveLiquidity.Staking && (
-              <div className="">Staking</div>
+             <StakingScreen/>
             )}
           </>
         )}
