@@ -1,36 +1,25 @@
 import { PopUpModal } from '../Modal/popupModal';
 import calender from '../../../src/assets/icon/vote/calender.svg';
 
+import { useState } from 'react';
 import wallet from '../../../src/assets/icon/pools/wallet.svg';
 import Image from 'next/image';
-import externalLink from '../../../src/assets/icon/common/externalLink.svg';
-import animation from '../../assets/animations/transaction-submitted.json';
-import Lottie from 'lottie-react';
-import arrowLeft from '../../../src/assets/icon/pools/arrowLeft.svg';
-import ctez from '../../assets/Tokens/ctez.png';
-import tez from '../../assets/Tokens/tez.png';
-import lock from '../../../src/assets/icon/vote/lock.svg';
-import info from '../../../src/assets/icon/common/infoIcon.svg';
 import Button from '../Button/Button';
+import ConfirmLocking from './ConfirmLocking';
+import { ICreateLockProps } from './types';
 
-interface ITransactionSubmittedProps {
-  show: boolean;
-
-  setShow: any;
-}
-function CreateLock(props: ITransactionSubmittedProps) {
+function CreateLock(props: ICreateLockProps) {
+  const [screen, setScreen] = useState('1');
   const closeModal = () => {
     props.setShow(false);
   };
 
   return props.show ? (
-    <PopUpModal
-      onhide={closeModal}
-      title="Create lock"
-      className="w-[602px] max-w-[602px]"
-    >
-      {
+    <PopUpModal onhide={closeModal} className="w-[602px] max-w-[602px]">
+      {screen === '1' ? (
         <>
+          <div className="mx-2 text-white font-title3">Create Lock </div>
+
           <div className="border pl-4 pr-5 mt-[22px] bg-muted-200/[0.1] items-center flex border-text-800 rounded-2xl h-[86px]">
             <div className="w-[50%]">
               <p>
@@ -102,10 +91,14 @@ function CreateLock(props: ITransactionSubmittedProps) {
           </div>
 
           <div className="mt-[18px]">
-            <Button color="disabled">Proceed</Button>
+            <Button color="disabled" onClick={() => setScreen('2')}>
+              Proceed
+            </Button>
           </div>
         </>
-      }
+      ) : (
+        <ConfirmLocking setScreen={setScreen} />
+      )}
     </PopUpModal>
   ) : null;
 }

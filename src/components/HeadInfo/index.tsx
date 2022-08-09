@@ -44,7 +44,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
         {props.title === 'Vote' && (
           <div
             className="ml-auto h-[52px] flex items-center px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1] mr-[32px]"
-            onClick={() => props.handleCreateLock}
+            onClick={props.handleCreateLock}
           >
             Create Lock
           </div>

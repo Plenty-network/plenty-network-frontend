@@ -1,21 +1,14 @@
 import { PopUpModal } from '../Modal/popupModal';
 import Image from 'next/image';
-import externalLink from '../../../src/assets/icon/common/externalLink.svg';
-import animation from '../../assets/animations/transaction-submitted.json';
-import Lottie from 'lottie-react';
 import arrowLeft from '../../../src/assets/icon/pools/arrowLeft.svg';
 import ctez from '../../assets/Tokens/ctez.png';
 import tez from '../../assets/Tokens/tez.png';
 import lock from '../../../src/assets/icon/vote/lock.svg';
 import info from '../../../src/assets/icon/common/infoIcon.svg';
 import Button from '../Button/Button';
+import { ICastVoteProps } from './types';
 
-interface ITransactionSubmittedProps {
-  show: boolean;
-
-  setShow: any;
-}
-function CastVote(props: ITransactionSubmittedProps) {
+function CastVote(props: ICastVoteProps) {
   const closeModal = () => {
     props.setShow(false);
   };

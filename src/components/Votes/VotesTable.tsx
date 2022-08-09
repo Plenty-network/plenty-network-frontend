@@ -9,8 +9,8 @@ export interface IShortCardProps {
 export function VotesTable(props: IShortCardProps) {
   return (
     <>
-      <div className={`w-full ${props.className}`}>
-        <table className="w-9/12 flex flex-col gap-3">
+      <div className={` ${props.className}`}>
+        <table className=" flex flex-col gap-3">
           <thead>
             <VotesHeader />
           </thead>
