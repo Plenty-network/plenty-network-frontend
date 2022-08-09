@@ -218,6 +218,404 @@ export const voterStorageType = {
   ],
 };
 
-export const voteEscrowStorageType = {
-  // TODO : Add VE Storage
+export const voteEscrowStorageType = 
+{
+  "prim": "pair",
+  "args": [
+    {
+      "prim": "pair",
+      "args": [
+        {
+          "prim": "pair",
+          "args": [
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "big_map",
+                  "args": [
+                    {
+                      "prim": "nat"
+                    },
+                    {
+                      "prim": "address"
+                    }
+                  ],
+                  "annots": [
+                    "%attached"
+                  ]
+                },
+                {
+                  "prim": "address",
+                  "annots": [
+                    "%base_token"
+                  ]
+                }
+              ]
+            },
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "big_map",
+                  "args": [
+                    {
+                      "prim": "pair",
+                      "args": [
+                        {
+                          "prim": "nat",
+                          "annots": [
+                            "%token_id"
+                          ]
+                        },
+                        {
+                          "prim": "nat",
+                          "annots": [
+                            "%epoch"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "unit"
+                    }
+                  ],
+                  "annots": [
+                    "%claim_ledger"
+                  ]
+                },
+                {
+                  "prim": "big_map",
+                  "args": [
+                    {
+                      "prim": "nat"
+                    },
+                    {
+                      "prim": "nat"
+                    }
+                  ],
+                  "annots": [
+                    "%epoch_inflation"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "prim": "pair",
+          "args": [
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%gc_index"
+                  ]
+                },
+                {
+                  "prim": "big_map",
+                  "args": [
+                    {
+                      "prim": "nat"
+                    },
+                    {
+                      "prim": "pair",
+                      "args": [
+                        {
+                          "prim": "nat",
+                          "annots": [
+                            "%slope"
+                          ]
+                        },
+                        {
+                          "prim": "pair",
+                          "args": [
+                            {
+                              "prim": "nat",
+                              "annots": [
+                                "%bias"
+                              ]
+                            },
+                            {
+                              "prim": "nat",
+                              "annots": [
+                                "%ts"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "annots": [
+                    "%global_checkpoints"
+                  ]
+                }
+              ]
+            },
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "big_map",
+                  "args": [
+                    {
+                      "prim": "pair",
+                      "args": [
+                        {
+                          "prim": "address"
+                        },
+                        {
+                          "prim": "nat"
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "nat"
+                    }
+                  ],
+                  "annots": [
+                    "%ledger"
+                  ]
+                },
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%locked_supply"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "prim": "pair",
+      "args": [
+        {
+          "prim": "pair",
+          "args": [
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "big_map",
+                  "args": [
+                    {
+                      "prim": "nat"
+                    },
+                    {
+                      "prim": "pair",
+                      "args": [
+                        {
+                          "prim": "nat",
+                          "annots": [
+                            "%base_value"
+                          ]
+                        },
+                        {
+                          "prim": "nat",
+                          "annots": [
+                            "%end"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "annots": [
+                    "%locks"
+                  ]
+                },
+                {
+                  "prim": "big_map",
+                  "args": [
+                    {
+                      "prim": "nat"
+                    },
+                    {
+                      "prim": "nat"
+                    }
+                  ],
+                  "annots": [
+                    "%num_token_checkpoints"
+                  ]
+                }
+              ]
+            },
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "big_map",
+                  "args": [
+                    {
+                      "prim": "pair",
+                      "args": [
+                        {
+                          "prim": "address",
+                          "annots": [
+                            "%owner"
+                          ]
+                        },
+                        {
+                          "prim": "pair",
+                          "args": [
+                            {
+                              "prim": "address",
+                              "annots": [
+                                "%operator"
+                              ]
+                            },
+                            {
+                              "prim": "nat",
+                              "annots": [
+                                "%token_id"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "unit"
+                    }
+                  ],
+                  "annots": [
+                    "%operators"
+                  ]
+                },
+                {
+                  "prim": "big_map",
+                  "args": [
+                    {
+                      "prim": "nat"
+                    },
+                    {
+                      "prim": "nat"
+                    }
+                  ],
+                  "annots": [
+                    "%slope_changes"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "prim": "pair",
+          "args": [
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "big_map",
+                  "args": [
+                    {
+                      "prim": "pair",
+                      "args": [
+                        {
+                          "prim": "nat"
+                        },
+                        {
+                          "prim": "nat"
+                        }
+                      ]
+                    },
+                    {
+                      "prim": "pair",
+                      "args": [
+                        {
+                          "prim": "nat",
+                          "annots": [
+                            "%slope"
+                          ]
+                        },
+                        {
+                          "prim": "pair",
+                          "args": [
+                            {
+                              "prim": "nat",
+                              "annots": [
+                                "%bias"
+                              ]
+                            },
+                            {
+                              "prim": "nat",
+                              "annots": [
+                                "%ts"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "annots": [
+                    "%token_checkpoints"
+                  ]
+                },
+                {
+                  "prim": "big_map",
+                  "args": [
+                    {
+                      "prim": "nat"
+                    },
+                    {
+                      "prim": "pair",
+                      "args": [
+                        {
+                          "prim": "nat",
+                          "annots": [
+                            "%token_id"
+                          ]
+                        },
+                        {
+                          "prim": "map",
+                          "args": [
+                            {
+                              "prim": "string"
+                            },
+                            {
+                              "prim": "bytes"
+                            }
+                          ],
+                          "annots": [
+                            "%token_info"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "annots": [
+                    "%token_metadata"
+                  ]
+                }
+              ]
+            },
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%uid"
+                  ]
+                },
+                {
+                  "prim": "address",
+                  "annots": [
+                    "%voter"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
