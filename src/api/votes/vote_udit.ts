@@ -20,6 +20,7 @@ export const votingPower = async (tokenId: number, ts2: number, time: number) : 
         const veStorage = await getStorage(Config.VOTE_ESCROW[connectedNetwork] , voteEscrowStorageType);
         const tzktProvider = Config.TZKT_NODES[connectedNetwork];
 
+
         // Cosnider using direct rpc calls
         const allTokenCheckpointsCall = await axios.get(`${tzktProvider}/v1/bigmaps/${veStorage.token_checkpoints}/keys?key.nat_0="${tokenId}"&select=key,value`);
         const allTokenCheckpoints =  allTokenCheckpointsCall.data;
@@ -29,11 +30,12 @@ export const votingPower = async (tokenId: number, ts2: number, time: number) : 
             map1.set(allTokenCheckpoints[x].key.nat_1, allTokenCheckpoints[x].value);
         }
 
-        if (ts < map1.get('1').ts) {
-            throw "Too early timestamp"
+        if (ts.isLessThan(map1.get('1').ts)) {
+            throw "Too early timestamp";
         }
 
-        const sec = await axios.get(`${tzktProvider}/v1/bigmaps/${veStorage.num_token_checkpoints}/keys/${tokenId}`);
+        const secCall = await axios.get(`${tzktProvider}/v1/bigmaps/${veStorage.num_token_checkpoints}/keys/${tokenId}`);
+        const sec = secCall.data.value;
         const lastCheckpoint = map1.get(sec);
 
         // Check calculations

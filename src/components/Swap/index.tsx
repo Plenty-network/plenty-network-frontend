@@ -115,7 +115,7 @@ function Swap(props: ISwapProps) {
 
   useEffect(() => {
 
-    const res = votingPower(0 , 	1659954612 ,  1);
+    // votingPower(1 , 	1659578000 ,  0).then((res)=>{console.log(res)});
 
     if (props.otherProps.walletAddress) {
       getCompleteUserBalace(props.otherProps.walletAddress).then(
