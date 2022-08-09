@@ -9,7 +9,7 @@ export interface ICircularImageInfoProps {
 export function CircularImageInfo(props: ICircularImageInfoProps) {
   return (
     <div className="pl-1 flex flex-row" >
-     {props.imageArray?.map((token)=> <ImageCircle src={token} />)}
+     {props.imageArray?.map((token,i)=> <ImageCircle key={`CircularImageInfo_${i}`} src={token} />)}
     </div>
   );
 }
