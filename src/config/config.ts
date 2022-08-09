@@ -17,8 +17,8 @@ const Config: IConfig = {
     mainnet: 'https://mifx20dfsr.windmill.tools/',
   },
   TZKT_NODES: {
-    mainnet: 'https://api.tzkt.io',
-    testnet: 'https://api.ghostnet.tzkt.io',
+    mainnet: 'https://api.tzkt.io/',
+    testnet: 'https://api.ghostnet.tzkt.io/',
   },
   VOTER: {
     mainnet: '',
