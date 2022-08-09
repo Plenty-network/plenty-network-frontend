@@ -100,7 +100,14 @@ function TransactionSettings(props: ITransactionSettingsProps) {
       <div className="mt-2">
         <span className="font-caption1 text-text-200 ">Slippage tolerance</span>
         <span className="relative top-0.5 left-[5px]">
-          <ToolTip message="slippage" id="tooltipD" position={Position.top}>
+          <ToolTip
+            id="tooltipD"
+            toolTipChild={
+              <div className="w-[250px]">
+                Change the slippage tolerance in the transaction settings.
+              </div>
+            }
+          >
             <Image src={info} width={'11px'} height={'11px'} />
           </ToolTip>
         </span>
@@ -158,7 +165,7 @@ function TransactionSettings(props: ITransactionSettingsProps) {
             <span className="font-caption1 text-text-200 ">Multihops</span>
             <span className="relative top-0.5 left-[5px]">
               <ToolTip
-                message="Interface Settings"
+                message="Restricts swaps to direct pairs only"
                 id="tooltipA"
                 position={Position.top}
               >
@@ -178,14 +185,16 @@ function TransactionSettings(props: ITransactionSettingsProps) {
       <div className="relative -top-[16px]">
         <div className="flex justify-between">
           <div>
-            <span className="font-caption1 text-text-200 ">
-              Togggle expert mode
-            </span>
+            <span className="font-caption1 text-text-200 ">Expert mode</span>
             <span className="relative top-0.5 left-[5px]">
               <ToolTip
-                message="Togggle expert mode"
                 id="tooltipB"
-                position={Position.top}
+                toolTipChild={
+                  <div className="w-[250px]">
+                    Bypass confirmation modals and allows high slippage trades.
+                    Use at your own risk
+                  </div>
+                }
               >
                 <Image src={info} width={'11px'} height={'11px'} />
               </ToolTip>
