@@ -28,6 +28,14 @@ const Config: IConfig = {
     mainnet : '',
     testnet : 'KT1Xrb4eEizLTwR9sZgckjugfuaPB563KKd6',
   },
+  PLY_TOKEN : {
+    mainnet : '',
+    testnet : 'KT1XFABWm5H9CMFL3T5iNb7Zz6YVpLHQjpsA',
+  },
+
+  VE_INDEXER : 'http://65.0.129.224/',
+  PLY_INDEXER : '',
+
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',
     testnet: 'KT1P7eP7gGuHgPVNWRLs1p4uRhc9Wbyku8B2',

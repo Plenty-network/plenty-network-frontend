@@ -217,9 +217,7 @@ export const getLPTokenPrices =async (tokenPrice: { [id: string]: number }) : Pr
   try {
     const state = store.getState();
     const AMM = state.config.AMMs;
-
-    // Can also send wrt address / symbol 
-
+    
     const lpPrices: { [id: string]: BigNumber } = {};
     Object.keys(AMM).forEach(async function (key) {
       const price = await getLPTokenPrice(AMM[key].token1.symbol , AMM[key].token2.symbol , tokenPrice);
