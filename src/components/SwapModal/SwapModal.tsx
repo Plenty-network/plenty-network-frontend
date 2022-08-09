@@ -7,6 +7,7 @@ import { tokenParameter, tokensModal, tokenType } from '../../constants/swap';
 import { BigNumber } from 'bignumber.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
+import { ToolTip } from '../Tooltip/TooltipAdvanced';
 
 interface ISwapModalProps {
   tokens: tokensModal[];
@@ -71,7 +72,16 @@ function SwapModal(props: ISwapModalProps) {
           <div className="text-text-400 mt-[20px] font-body1">
             Common base
             <span className="relative top-0.5 ml-[5px]">
-              <Image src={infogrey} />
+              <ToolTip
+                id="tooltipH"
+                toolTipChild={
+                  <div className="w-[200px]">
+                    These tokens are commonly paired with other tokens
+                  </div>
+                }
+              >
+                <Image src={infogrey} />
+              </ToolTip>
             </span>
           </div>
           <div className="flex flex-wrap mt-1">
