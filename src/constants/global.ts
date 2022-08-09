@@ -29,3 +29,6 @@ export const AMM_CONFIG = 'ammConfig';
   * balance for these type5MapIds will be present in `response.data.args[0][0].args[1].int`
   */
  export const type5MapIds = [12043];
+
+ export const EPOCH_DURATION_TESTNET: number = 1680000; // milliseconds
+ export const EPOCH_DURATION_MAINNET: number = 604800000; // milliseconds
