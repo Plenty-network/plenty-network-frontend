@@ -3,7 +3,7 @@ import Button from '../Button/Button';
 import { PopUpModal } from '../Modal/popupModal';
 import Image from 'next/image';
 import ratesrefresh from '../../../src/assets/icon/swap/ratesrefresh.svg';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import arrow from '../../../src/assets/icon/swap/downArrow.svg';
 import info from '../../../src/assets/icon/swap/info.svg';
 import { BigNumber } from 'bignumber.js';
@@ -32,6 +32,11 @@ interface IConfirmSwapProps {
   onClick: () => void;
 }
 function ConfirmSwap(props: IConfirmSwapProps) {
+  const [isConvert, setConvert] = useState(false);
+  const convertRates = (e: any) => {
+    e.stopPropagation();
+    setConvert(!isConvert);
+  };
   const closeModal = () => {
     props.setShow(false);
   };
@@ -102,7 +107,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
             <div className="h-12 mt-3 cursor-pointer px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2]  items-center flex  ">
               <>
                 <div>
-                  <span className="relative top-0.5">
+                  {/* <span className="relative top-0.5">
                     <ToolTip
                       id="tooltipQ"
                       toolTipChild={
@@ -116,8 +121,8 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                     >
                       <Image src={info} width={'15px'} height={'15px'} />
                     </ToolTip>
-                  </span>
-                  <span className="ml-[9.25px] font-text-bold mr-[7px]">
+                  </span> */}
+                  {/* <span className="ml-[9.25px] font-text-bold mr-[7px]">
                     {' '}
                     {`1 ${
                       props.tokenIn.name === 'tez'
@@ -135,6 +140,45 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   </span>
                   <span className="relative top-px">
                     <Image src={ratesrefresh} />
+                  </span> */}
+                  <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
+                    1{' '}
+                    {!isConvert
+                      ? props.tokenIn.name === 'tez'
+                        ? 'TEZ'
+                        : props.tokenIn.name === 'ctez'
+                        ? 'CTEZ'
+                        : props.tokenIn.name
+                      : props.tokenOut.name === 'tez'
+                      ? 'TEZ'
+                      : props.tokenOut.name === 'ctez'
+                      ? 'CTEZ'
+                      : props.tokenOut.name}{' '}
+                    =
+                    {!isConvert
+                      ? ` ${props.routeDetails.exchangeRate.toFixed(3)} 
+                            ${
+                              props.tokenOut.name === 'tez'
+                                ? 'TEZ'
+                                : props.tokenOut.name === 'ctez'
+                                ? 'CTEZ'
+                                : props.tokenOut.name
+                            }`
+                      : `${Number(
+                          1 / Number(props.routeDetails.exchangeRate)
+                        ).toFixed(3)} ${
+                          props.tokenIn.name === 'tez'
+                            ? 'TEZ'
+                            : props.tokenIn.name === 'ctez'
+                            ? 'CTEZ'
+                            : props.tokenIn.name
+                        }`}
+                  </span>
+                  <span className="relative top-px">
+                    <Image
+                      src={ratesrefresh}
+                      onClick={(e) => convertRates(e)}
+                    />
                   </span>
                 </div>
               </>
@@ -151,10 +195,8 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                       id="tooltipM"
                       toolTipChild={
                         <div className="w-[200px]">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industrys standard dummy text ever since the 1500s,
-                          when an unknown printer.
+                          Your transaction will revert if there is a large,
+                          unfavorable price movement before it is confirmed.
                         </div>
                       }
                     >
@@ -182,10 +224,8 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                       id="tooltipN"
                       toolTipChild={
                         <div className="w-[200px]">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industrys standard dummy text ever since the 1500s,
-                          when an unknown printer.
+                          The difference between the market price and estimated
+                          price due to trade size.
                         </div>
                       }
                     >
@@ -211,10 +251,8 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                       id="tooltipO"
                       toolTipChild={
                         <div className="w-[200px]">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industrys standard dummy text ever since the 1500s,
-                          when an unknown printer.
+                          Fees are 0.35% for each volatile swap and 0.10% for
+                          each stable swap.
                         </div>
                       }
                     >
@@ -237,10 +275,8 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                       id="tooltipP"
                       toolTipChild={
                         <div className="w-[200px]">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industrys standard dummy text ever since the 1500s,
-                          when an unknown printer.
+                          Routing through these tokens results in the best price
+                          for your trade.
                         </div>
                       }
                     >
