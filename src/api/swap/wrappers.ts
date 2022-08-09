@@ -15,6 +15,7 @@ import {
 } from './types';
 import { computeAllPaths } from './router';
 import { store } from '../../redux';
+import axios from 'axios'
 
 export const loadSwapDataWrapper = async (
   tokenIn: string,
@@ -298,3 +299,30 @@ export const reverseCalculation = (
     };
   }
 };
+
+export const topTokensList = async () => {
+  try {
+    const tokenTvlResponse = await axios.get('http://13.127.76.247/analytics/tokens');
+    console.log(tokenTvlResponse);
+    const tokenTvl = tokenTvlResponse.data;
+    console.log(tokenTvl);
+
+    const topTokens : { [id: string]: BigNumber } = {};
+
+    for(var x of tokenTvl){
+      topTokens[x.token] = x.tvl.value;
+    }
+
+    console.log(topTokens);
+    // topTokens.sort
+
+
+
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+};
+
+// topTokensList();

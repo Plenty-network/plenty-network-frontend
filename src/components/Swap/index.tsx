@@ -21,10 +21,11 @@ import { allPaths } from '../../api/swap/router';
 import {
   computeAllPathsWrapper,
   reverseCalculation,
+  topTokensList,
 } from '../../api/swap/wrappers';
 import { IAllBalanceResponse } from '../../api/util/types';
 import { Chain } from '../../config/types';
-import { votingPower } from '../../api/votes/vote_udit';
+import { votingPower } from '../../api/votes/votesUdit';
 
 interface ISwapProps {
   className?: string;

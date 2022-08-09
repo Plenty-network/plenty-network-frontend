@@ -2,7 +2,7 @@ import { BigNumber } from 'bignumber.js'
 import axios from 'axios'
 import Config from '../../config/config';
 import { connectedNetwork } from '../../common/walletconnect';
-import { getStorage } from '../util/storageProvider';
+import { getStorage, getTzktBigMapData } from '../util/storageProvider';
 import { voteEscrowStorageType } from './data';
 
 export const votingPower = async (tokenId: number, ts2: number, time: number) : Promise<number> => {
@@ -16,13 +16,10 @@ export const votingPower = async (tokenId: number, ts2: number, time: number) : 
         ts2 = Math.floor(ts2 / factor) * factor;
         const ts = new BigNumber(ts2);
 
-        // Store map ids so that storage is not called everytime voting power is called 
         const veStorage = await getStorage(Config.VOTE_ESCROW[connectedNetwork] , voteEscrowStorageType);
         const tzktProvider = Config.TZKT_NODES[connectedNetwork];
 
-
-        // Cosnider using direct rpc calls
-        const allTokenCheckpointsCall = await axios.get(`${tzktProvider}/v1/bigmaps/${veStorage.token_checkpoints}/keys?key.nat_0="${tokenId}"&select=key,value`);
+        const allTokenCheckpointsCall = await getTzktBigMapData(veStorage.token_checkpoints , `key.nat_0="${tokenId}"&select=key,value`);
         const allTokenCheckpoints =  allTokenCheckpointsCall.data;
 
         const map1 = new Map();
