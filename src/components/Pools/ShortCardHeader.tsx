@@ -10,16 +10,19 @@ export interface ITabsProps {
     isShorting?:boolean;
     toolTipChild?:any;
     isToolTipEnabled?:boolean;
-    text:string;
+    text:string | undefined | null;
     subText?:string;
     arrowUp?:'up'|'down'|undefined;
     className?:string;
     isFirstRow?:boolean;
+    onClick?:Function;
 }
 
 export function Tabs (props: ITabsProps) {
   return (
-    <th className={`flex flex-1 justify-end cursor-pointer text-f12 text-text-50 text-left ${props.isFirstRow?'justify-start':'justify-end'}`} >
+    <th className={`flex flex-1 cursor-pointer text-f12 text-text-50 text-left ${props.isFirstRow?'justify-start':'justify-end'}`} 
+      onClick={()=>props.onClick?props.onClick():{}}
+    >
         <div className='flex gap-0 flex-col'>
         <div className={`flex gap-1 ${props.isFirstRow?'justify-start':'justify-end'} `}>
             {props.isToolTipEnabled && <InfoIconToolTip message='tooltip' />}
@@ -29,7 +32,9 @@ export function Tabs (props: ITabsProps) {
             {props.subText}
         </div>}  
         </div>
-        {props.arrowUp && <Image src={arrowDown} className={props.arrowUp==='up'?'rotate-0':'rotate-180'}/>}
+        {props.arrowUp && <div>
+            <Image src={arrowDown} className={props.arrowUp==='up'?'rotate-0':'rotate-180'}/>
+        </div>}
     </th>
   );
 }

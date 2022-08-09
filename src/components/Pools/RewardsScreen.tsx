@@ -27,6 +27,9 @@ export function RewardsScreen({}) {
          </div>
 
          <div className="flex border rounded-2xl border-text-800 bg-card-200 p-4 flex-col gap-[15px]">
+         <div className="text-text-400 text-f12">
+         Your Rewards
+        </div>
            <div className="flex flex-col" >
               {InnerTab(token,'3332','')}
             </div>
