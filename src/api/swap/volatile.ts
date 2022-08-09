@@ -3,7 +3,8 @@ import { getDexAddress } from '../util/fetchConfig';
 import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';
 import axios from 'axios';
-import { ISwapDataResponse , ICalculateTokenResponse} from './types';
+import { ISwapDataResponse , ICalculateTokenResponse, volatileSwapStorageType} from './types';
+import { getStorage } from '../util/storageProvider';
 
 export const loadSwapDataVolatile = async (
   tokenIn: string,
@@ -18,6 +19,9 @@ export const loadSwapDataVolatile = async (
     if (dexContractAddress === 'false') {
       throw new Error('No dex found');
     }
+
+    // const storageResponse1 = await getStorage(dexContractAddress , volatileSwapStorageType);
+    // console.log(storageResponse1);
 
     const storageResponse = await axios.get(
       `${rpcNode}chains/main/blocks/head/context/contracts/${dexContractAddress}/storage`,

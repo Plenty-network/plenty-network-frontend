@@ -8,12 +8,11 @@ export interface IBalanceResponse {
 }
 
 export interface ISwapData {
-  tokenInSupply?: BigNumber;
-  tokenOutSupply?: BigNumber;
-  tezSupply?: BigNumber;
-  ctezSupply?: BigNumber;
+  tokenInSupply: BigNumber;
+  tokenOutSupply: BigNumber;
   lpToken: string | undefined;
   lpTokenSupply: BigNumber;
+  isloading?: boolean;
 }
 export interface tokenParameterLiquidity {
   name: string;

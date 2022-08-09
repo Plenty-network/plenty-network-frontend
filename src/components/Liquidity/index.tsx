@@ -4,11 +4,15 @@ import * as React from 'react';
 import settings from '../../../src/assets/icon/swap/settings.svg';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import TransactionSettingsLiquidity from '../TransactionSettings/TransactionSettingsLiq';
+
+import info from '../../../src/assets/icon/swap/info.svg';
 import { BigNumber } from 'bignumber.js';
 import AddLiquidity from './AddLiquidity';
 import Button from '../Button/Button';
 import { SwitchWithIcon } from '../SwitchCheckbox/switchWithIcon';
 import RemoveLiquidity from './RemoveLiquidity';
+
+import wallet from '../../../src/assets/icon/pools/wallet.svg';
 import { useAppSelector } from '../../redux';
 import { ISwapData, tokenParameterLiquidity } from './types';
 
@@ -44,10 +48,13 @@ interface ILiquidityProps {
   };
   setSlippage: React.Dispatch<React.SetStateAction<number>>;
   slippage: string | number;
+  lpTokenPrice: BigNumber;
+
+  isLoading: boolean;
 }
 function Liquidity(props: ILiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
 
@@ -58,6 +65,47 @@ function Liquidity(props: ILiquidityProps) {
     props.setScreen('3');
   };
 
+  const AddButton = useMemo(() => {
+    if (
+      walletAddress &&
+      ((props.firstTokenAmount &&
+        props.firstTokenAmount > props.userBalances[props.tokenIn.name]) ||
+        (props.secondTokenAmount && props.secondTokenAmount) >
+          props.userBalances[props.tokenOut.name])
+    ) {
+      return (
+        <Button onClick={() => null} color={'disabled'}>
+          Insufficient Balance
+        </Button>
+      );
+    } else {
+      return (
+        <Button color={'primary'} onClick={handleAddLiquidity}>
+          Add
+        </Button>
+      );
+    }
+  }, [props]);
+  const RemoveButton = useMemo(() => {
+    if (
+      walletAddress &&
+      props.burnAmount &&
+      props.burnAmount > props.pnlpBalance
+    ) {
+      return (
+        <Button onClick={() => null} color={'disabled'}>
+          Insufficient Balance
+        </Button>
+      );
+    } else {
+      return (
+        <Button color={'primary'} onClick={handleRemoveLiquidity}>
+          Remove
+        </Button>
+      );
+    }
+  }, [props]);
+
   return (
     <>
       <div className="border rounded-2xl border-text-800 bg-card-200 px-3.5 pt-4 pb-6  mb-5">
@@ -66,7 +114,7 @@ function Liquidity(props: ILiquidityProps) {
             <span className="relative ml-2 top-[3px]">
               <SwitchWithIcon
                 id="Addliquidity"
-                isChecked={props.isAddLiquidity}
+                isChecked={!props.isAddLiquidity}
                 onChange={() => props.setIsAddLiquidity(!props.isAddLiquidity)}
               />
             </span>
@@ -114,20 +162,34 @@ function Liquidity(props: ILiquidityProps) {
             setRemoveTokenAmount={props.setRemoveTokenAmount}
             removeTokenAmount={props.removeTokenAmount}
             slippage={props.slippage}
+            lpTokenPrice={props.lpTokenPrice}
           />
         )}
       </div>
       {props.isAddLiquidity ? (
-        <div className="">
-          <Button color={'primary'} onClick={handleAddLiquidity}>
-            Add
-          </Button>
-        </div>
+        <div className="">{AddButton}</div>
       ) : (
-        <div className="">
-          <Button color={'primary'} onClick={handleRemoveLiquidity}>
-            Remove
-          </Button>
+        <div className="">{RemoveButton}</div>
+      )}
+      {!props.isAddLiquidity && (
+        <div className="mt-4 border border-text-800 rounded-2xl bg-card-300 flex items-center h-[48px] pr-3 pl-5">
+          <div className="flex">
+            <span>
+              <Image src={info} width={'14px'} height={'14px'} />
+            </span>
+            <span className="font-subtitle1 relative top-[1.5px] ml-2">
+              Your position
+            </span>
+          </div>
+
+          <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] items-center flex px-3">
+            <div>
+              <Image src={wallet} width={'32px'} height={'32px'} />
+            </div>
+            <div className="ml-1 text-primary-500 font-body2">
+              {Number(props.pnlpBalance).toFixed(4)} PNLP
+            </div>
+          </div>
         </div>
       )}
     </>

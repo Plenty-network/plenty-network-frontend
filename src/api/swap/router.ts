@@ -117,12 +117,10 @@ export const computeAllPaths = (
                         slippage,
                         path[j],
                         path[j + 1],
-                        res.tokenInSupply ?? undefined,
-                        res.tokenOutSupply ?? undefined,
+                        res.tokenInSupply,
+                        res.tokenOutSupply,
                         res.tokenInPrecision ?? undefined,
                         res.tokenOutPrecision ?? undefined,
-                        res.tezSupply ?? undefined,
-                        res.ctezSupply ?? undefined,
                         res.target ?? undefined
                     );
 

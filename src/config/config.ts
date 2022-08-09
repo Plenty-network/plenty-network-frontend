@@ -20,7 +20,14 @@ const Config: IConfig = {
     mainnet: 'https://api.tzkt.io',
     testnet: 'https://api.ghostnet.tzkt.io',
   },
-
+  VOTER: {
+    mainnet: '',
+    testnet: 'KT1PexY3Jn8BCJmVpVLNN944YpVLM2LWTMMV',
+  },
+  VOTE_ESCROW : {
+    mainnet : '',
+    testnet : 'KT1Xrb4eEizLTwR9sZgckjugfuaPB563KKd6',
+  },
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',
     testnet: 'KT1P7eP7gGuHgPVNWRLs1p4uRhc9Wbyku8B2',
@@ -43,7 +50,7 @@ const Config: IConfig = {
   },
 
   NETWORK: 'testnet',
-  WALLET_NETWORK: NetworkType.GHOSTNET,
+  WALLET_NETWORK: NetworkType.CUSTOM,
   ADMIN_ADDRESS: 'KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW',
   BURNER: 'tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg',
 

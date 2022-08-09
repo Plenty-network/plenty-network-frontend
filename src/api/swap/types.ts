@@ -10,10 +10,8 @@ export interface ISwapDataResponse {
   lpToken: ITokenInterface | undefined;
   tokenInPrecision?: BigNumber;
   tokenOutPrecision?: BigNumber;
-  tokenInSupply?: BigNumber;
-  tokenOutSupply?: BigNumber;
-  tezSupply?: BigNumber;
-  ctezSupply?: BigNumber;
+  tokenInSupply: BigNumber;
+  tokenOutSupply: BigNumber;
   target?: BigNumber;
 }
 
@@ -47,4 +45,16 @@ export interface IBestPathResponse {
   fees: BigNumber[];
   feePerc: BigNumber[];
   priceImpact: BigNumber[];
+}
+
+export const tezCtezStorageType : any = {
+  // TODO : tezCtez storage type
+}
+
+export const stableswapStorageType : any = {
+  // TODO : stableswap storage type
+}
+
+export const volatileSwapStorageType : any = {
+  // TODO: volatile Storage type
 }

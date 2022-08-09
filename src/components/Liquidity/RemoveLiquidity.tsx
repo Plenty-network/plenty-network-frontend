@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 import Image from 'next/image';
 import { BigNumber } from 'bignumber.js';
-import ctez from '../../../src/assets/Tokens/ctez.png';
 import wallet from '../../../src/assets/icon/pools/wallet.svg';
 import { ISwapData, tokenParameterLiquidity } from './types';
 import { getOutputTokensAmount } from '../../api/liquidity';
+import { useAppSelector } from '../../redux';
 
 interface IRemoveLiquidityProps {
   swapData: ISwapData;
@@ -25,8 +25,10 @@ interface IRemoveLiquidityProps {
   };
 
   slippage: string | number;
+  lpTokenPrice: BigNumber;
 }
 function RemoveLiquidity(props: IRemoveLiquidityProps) {
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const handleInputPercentage = (value: number) => {
     props.setBurnAmount(value * Number(props.pnlpBalance));
     handleRemoveLiquidityInput(value * Number(props.pnlpBalance));
@@ -42,43 +44,19 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
       });
       return;
     } else {
-      if (
-        (props.tokenIn.name === 'tez' && props.tokenOut.name === 'ctez') ||
-        (props.tokenIn.name === 'ctez' && props.tokenOut.name === 'tez')
-      ) {
-        const res = getOutputTokensAmount(
-          input.toString(),
-          props.tokenIn.symbol,
-          props.tokenOut.symbol,
-          (props.tokenIn.name === 'tez'
-            ? props.swapData.tezSupply
-            : props.swapData.ctezSupply) as BigNumber,
-          (props.tokenOut.name === 'ctez'
-            ? props.swapData.ctezSupply
-            : props.swapData.tezSupply) as BigNumber,
-          props.swapData.lpTokenSupply,
-          props.slippage.toString()
-        );
-        props.setRemoveTokenAmount({
-          tokenOneAmount: res.tokenOneAmount,
-          tokenTwoAmount: res.tokenTwoAmount,
-        });
-        console.log(res);
-      } else {
-        const res = getOutputTokensAmount(
-          input.toString(),
-          props.tokenIn.symbol,
-          props.tokenOut.symbol,
-          props.swapData.tokenInSupply as BigNumber,
-          props.swapData.tokenOutSupply as BigNumber,
-          props.swapData.lpTokenSupply,
-          props.slippage.toString()
-        );
-        props.setRemoveTokenAmount({
-          tokenOneAmount: res.tokenOneAmount,
-          tokenTwoAmount: res.tokenTwoAmount,
-        });
-      }
+      const res = getOutputTokensAmount(
+        input.toString(),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        props.swapData.tokenInSupply as BigNumber,
+        props.swapData.tokenOutSupply as BigNumber,
+        props.swapData.lpTokenSupply,
+        props.slippage.toString()
+      );
+      props.setRemoveTokenAmount({
+        tokenOneAmount: res.tokenOneAmount,
+        tokenTwoAmount: res.tokenTwoAmount,
+      });
     }
   };
   return (
@@ -120,17 +98,26 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
             />
           </p>
           <p>
-            <span className="mt-2 ml-1 font-body4 text-text-400">$0.0</span>
+            <span className="mt-2 ml-1 font-body4 text-text-400">
+              ~$
+              {props.lpTokenPrice
+                ? Number(
+                    Number(props.burnAmount) * Number(props.lpTokenPrice)
+                  ).toFixed(2)
+                : '0.00'}
+            </span>
           </p>
         </div>
-        <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
-          <div>
-            <Image src={wallet} width={'32px'} height={'32px'} />
+        {walletAddress && (
+          <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
+            <div>
+              <Image src={wallet} width={'32px'} height={'32px'} />
+            </div>
+            <div className="ml-1 text-primary-500 font-body2">
+              {Number(props.pnlpBalance).toFixed(4)} PNLP
+            </div>
           </div>
-          <div className="ml-1 text-primary-500 font-body2">
-            {props.pnlpBalance} PNLP
-          </div>
-        </div>
+        )}
       </div>
 
       <div className="border mt-3 flex border-text-800/[0.5] rounded-2xl h-[88px]">

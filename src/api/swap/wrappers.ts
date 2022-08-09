@@ -43,6 +43,8 @@ export const loadSwapDataWrapper = async (
       success: false,
       tokenIn: tokenIn,
       tokenOut: tokenOut,
+      tokenInSupply : new BigNumber(0),
+      tokenOutSupply : new BigNumber(0),
       exchangeFee: new BigNumber(0),
       lpTokenSupply: new BigNumber(0),
       lpToken: undefined,
@@ -56,12 +58,10 @@ export const calculateTokensOutWrapper = (
   slippage: BigNumber,
   tokenIn: string,
   tokenOut: string,
-  tokenInSupply?: BigNumber,
-  tokenOutSupply?: BigNumber,
+  tokenInSupply: BigNumber,
+  tokenOutSupply: BigNumber,
   tokenInPrecision?: BigNumber,
   tokenOutPrecision?: BigNumber,
-  tezSupply?: BigNumber,
-  ctezSupply?: BigNumber,
   target?: BigNumber
 ): ICalculateTokenResponse => {
   try {
@@ -79,22 +79,31 @@ export const calculateTokensOutWrapper = (
       );
     } else {
       if (
-        ((tokenIn === 'tez' && tokenOut === 'ctez') ||
-          (tokenIn === 'ctez' && tokenOut === 'tez')) &&
-        tezSupply &&
-        ctezSupply &&
+        (tokenIn === 'tez' && tokenOut === 'ctez') &&
         target
       ) {
         outputData = calculateTokensOutTezCtez(
-          tezSupply,
-          ctezSupply,
+          tokenInSupply,
+          tokenOutSupply,
           tokenInAmount,
           Exchangefee,
           slippage,
           target,
           tokenIn
         );
-      } else if (
+      } else if((tokenIn === 'ctez' && tokenOut === 'tez') &&
+      target){
+        outputData = calculateTokensOutTezCtez(
+          tokenOutSupply,
+          tokenInSupply,
+          tokenInAmount,
+          Exchangefee,
+          slippage,
+          target,
+          tokenIn
+        );
+      }
+       else if (
         tokenInSupply &&
         tokenOutSupply &&
         tokenInPrecision &&
