@@ -11,6 +11,7 @@ export const walletNetwork = Config.WALLET_NETWORK;
 export const configName = Config.NAME;
 // const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
 export const rpcNode = Config.RPC_NODES[connectedNetwork];
+export const tzktNode = Config.TZKT_NODES[connectedNetwork];
 
 export function dappClient() {
   let instance: BeaconWallet | undefined
