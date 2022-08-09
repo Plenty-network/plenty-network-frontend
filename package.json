@@ -14,7 +14,6 @@
     "@taquito/beacon-wallet": "^13.0.0",
     "@taquito/michel-codec": "^10.1.1",
     "@taquito/taquito": "^12.0.3",
-    "@types/react-table": "^7.7.9",
     "clsx": "^1.1.1",
     "conseiljs": "^5.1.0",
     "lottie-react": "^2.3.1",
@@ -24,12 +23,14 @@
     "react-redux": "^8.0.2",
     "react-table": "^7.7.0",
     "react-tooltip": "^4.2.21",
-    "redux-persist": "^6.0.0"
-  },
+    "redux-persist": "^6.0.0",
+    "react-query": "^3.34.5"
+    },
   "devDependencies": {
     "@types/node": "17.0.35",
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.5",
+    "@types/react-table": "^7.7.9",
     "autoprefixer": "^10.4.7",
     "eslint": "8.16.0",
     "eslint-config-next": "12.1.6",

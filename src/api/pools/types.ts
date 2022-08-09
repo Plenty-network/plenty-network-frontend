@@ -21,7 +21,7 @@ export interface Token2 {
   tokenId: string;
 }
 
-export interface poolsSingle {
+export interface poolsMainPage {
   amm: string;
   type: string;
   gauge: string;

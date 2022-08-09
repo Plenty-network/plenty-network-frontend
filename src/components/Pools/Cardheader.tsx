@@ -1,9 +1,12 @@
 import * as React from "react";
+import { InputSearchBox } from "./Component/SearchInputBox";
 
 export interface ICardHeaderProps {
   className?: string;
   setActiveStateTab: Function;
   activeStateTab: any;
+  searchValue:string;
+  setSearchValue:Function;
 }
 
 export interface ITabProps {
@@ -34,9 +37,10 @@ export enum PoolsCardHeader {
   Mypools = "My pools",
 }
 export function CardHeader(props: ICardHeaderProps) {
-  const { activeStateTab, setActiveStateTab } = props;
+  const { activeStateTab, setActiveStateTab,setSearchValue,searchValue } = props; 
   const ListOfTabs = ["All", "Stable", "Volatile", "My pools"];
   return (
+    <div className="flex justify-between border-b border-b-borderCommon  bg-cardBackGround">
     <div
       className={`${props.className} flex  items-center border-b border-b-borderCommon  bg-cardBackGround`}
     >
@@ -48,6 +52,8 @@ export function CardHeader(props: ICardHeaderProps) {
           onClick={() => setActiveStateTab(tab)}
         />
       ))}
+    </div>
+    <InputSearchBox value={searchValue} onChange={setSearchValue} />
     </div>
   );
 }

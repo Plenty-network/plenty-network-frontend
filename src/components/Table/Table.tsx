@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
 import { useTable, Column, useFilters, useSortBy, usePagination } from 'react-table';
-import { Box, makeStyles, Skeleton, Table as MuiTable, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import TablePagination from './pagination-action';
 import { Tabs } from '../Pools/ShortCardHeader';
 
+export interface ISimmerEffectProps {
+  lines:number;
+}
+
+export function SimmerEffect (props: ISimmerEffectProps) {
+  return (
+    <>
+      {Array(props.lines).fill(1).map((_,i)=><tr key={`simmerEffect_${i}`} className={`border border-borderCommon h-16 bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg animate-pulse `}>
+    </tr>)}
+    </>
+  );
+}
 const Table = <D extends object>({ columns, data,shortby }: { columns: Column<D>[]; data: D[],shortby?:string }) => {
   const [shortByGroup,setshortByGroup]=useState({
     id: shortby??'usd',
@@ -65,19 +75,52 @@ const Table = <D extends object>({ columns, data,shortby }: { columns: Column<D>
   }
   if(true){
     return(
+      <div>
       <table className='w-full flex flex-col gap-3'>
       <thead>
-      <tr className='border border-borderCommon bg-cardBackGround flex px-5 py-3 items-center rounded-t-xl	rounded-b'>
+        
       {headerGroups.map((headerGroup) => (
+      <tr className='border border-borderCommon bg-cardBackGround flex px-5 py-3 items-center rounded-t-xl	rounded-b'>       
+        {headerGroup.headers.map((column,i) => (      
            <Tabs 
-           text='Pools'
+           text={column.render('Header')?.toString()}
            className='justify-start'
-           isFirstRow
+           isFirstRow={i==0}
+           isToolTipEnabled={column.hasOwnProperty('isToolTipEnabled')}
+           onClick={column.hasOwnProperty('canShort')?()=>{shortByHandler(column.id)}:()=>{}}
+           arrowUp={shortByGroup.id==column.id?shortByGroup.desc?"down":"up":undefined}
+           subText={column.hasOwnProperty('subText')?column.render('subText')?.toString():''}
            />
-      ))}
+           ))}
       </tr>
+      ))}
+      
       </thead>
+      <tbody className=' flex-col flex gap-2'>
+      {data.length===0 ?<SimmerEffect lines={2}/>:null }  
+      {data.length ? page.map((row:any) => {
+              prepareRow(row);
+              return (
+             // eslint-disable-next-line react/jsx-key
+             <tr 
+             className={`border border-borderCommon  bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg slideFromTop`}>
+     
+                
+             {row.cells.map((cell:any,i:any) => {
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <td className={`flex-1  flex items-center ${i==0?'justify-start':'justify-end'}`}>
+                         {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>);           
+            }):null}
+      </tbody>
       </table>
+      
+      </div>
+
     );
 }
 

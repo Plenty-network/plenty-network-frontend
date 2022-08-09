@@ -29,7 +29,7 @@ export default function Pools(props: IIndexProps) {
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
-
+  const [searchValue,setSearchValue]=React.useState("");
   return (
     <>
       <Head>
@@ -45,6 +45,9 @@ export default function Pools(props: IIndexProps) {
             activeStateTab={activeStateTab}
             setActiveStateTab={setActiveStateTab}
             className="md:px-3"
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+
           />
           {activeStateTab === PoolsCardHeader.All && (
             <PoolsTable className="px-5 py-4 " />
