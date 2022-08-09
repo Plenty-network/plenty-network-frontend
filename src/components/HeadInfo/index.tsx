@@ -8,6 +8,7 @@ export interface IHeadInfoProps {
   className?: string;
   title: string;
   toolTipContent: string;
+  handleCreateLock?: () => void;
 }
 
 export default function HeadInfo(props: IHeadInfoProps) {
@@ -41,7 +42,10 @@ export default function HeadInfo(props: IHeadInfoProps) {
           )}
         </div>
         {props.title === 'Vote' && (
-          <div className="ml-auto h-[52px] flex items-center px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1] mr-[32px]">
+          <div
+            className="ml-auto h-[52px] flex items-center px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1] mr-[32px]"
+            onClick={() => props.handleCreateLock}
+          >
             Create Lock
           </div>
         )}

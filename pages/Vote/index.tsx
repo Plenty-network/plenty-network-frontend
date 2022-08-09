@@ -18,6 +18,7 @@ import SelectNFT from '../../src/components/Votes/SelectNFT';
 import { VotesTable } from '../../src/components/Votes/VotesTable';
 import Button from '../../src/components/Button/Button';
 import CastVote from '../../src/components/Votes/CastVote';
+import CreateLock from '../../src/components/Votes/CreateLock';
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,14 +30,18 @@ export default function Vote() {
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
-  const [showCastVoteModal, setShowCastVoteModal] = useState(true);
+  const [showCastVoteModal, setShowCastVoteModal] = useState(false);
 
-  const handleCreateLock = () => {};
+  const [showCreateLockModal, setShowCreateLockModal] = useState(true);
+
+  const handleCreateLock = () => {
+    setShowCreateLockModal(true);
+  };
 
   return (
     <>
       <Head>
-        <title className="font-medium1">Plent network</title>
+        <title className="font-medium1">Plenty network</title>
         <meta name="description" content="plenty network" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -46,6 +51,7 @@ export default function Vote() {
             className="md:px-3"
             title="Vote"
             toolTipContent="Watch how to add veNFT"
+            handleCreateLock={handleCreateLock}
           />
 
           <SelectNFT />
@@ -55,6 +61,12 @@ export default function Vote() {
       </SideBarHOC>
       {showCastVoteModal && (
         <CastVote show={showCastVoteModal} setShow={setShowCastVoteModal} />
+      )}
+      {showCreateLockModal && (
+        <CreateLock
+          show={showCreateLockModal}
+          setShow={setShowCreateLockModal}
+        />
       )}
     </>
   );
