@@ -3,7 +3,7 @@ import { connectedNetwork } from "../../common/walletconnect";
 import Config from "../../config/config";
 import { getStorage } from "../util/storageProvider";
 import { voterStorageType } from "./data";
-import { IEpochDataResponse, IEpochListObject } from "./tyoes";
+import { IEpochDataResponse, IEpochListObject } from "./types";
 import { EPOCH_DURATION_MAINNET, EPOCH_DURATION_TESTNET } from "../../constants/global";
 
 /**
