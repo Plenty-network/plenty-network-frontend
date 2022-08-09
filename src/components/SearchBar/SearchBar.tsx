@@ -15,14 +15,14 @@ function SearchBar(props: ISearchBarProps) {
         props.value
           ? 'border border-primary-500 bg-outineBtn hover:border-primary-500'
           : 'border border-text-800/[0.5]',
-        !isFocus && 'border-0 bg-outineBtn'
+        !isFocus && props.value && 'border-0 bg-outineBtn'
       )}
       {...props}
     >
       <input
         ref={props.inputRef}
         autoFocus
-        className="bg-transprent relative top-[1px] w-full font-body3 outline-none"
+        className="bg-transprent relative top-[1px] w-full font-body3 outline-none placeholder:text-text-700"
         placeholder="Search name or paste address"
         onChange={props.onChange}
         value={props.value}
