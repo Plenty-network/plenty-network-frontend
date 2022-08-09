@@ -131,13 +131,13 @@ function SwapModal(props: ISwapModalProps) {
           ) : (
             <div
               id="tokensList"
-              className="border relative max-h-[300px] overflow-y-auto border-text-800 bg-card-100 rounded-xl px-[18px] w-full pb-5 mt-5"
+              className="border relative max-h-[300px] overflow-y-auto border-text-800 bg-muted-200 rounded-xl  w-full pb-5 mt-5"
             >
               {tokensToShow.map((token, index) => {
                 return (
                   <div
                     className={clsx(
-                      ' flex content-center mt-4',
+                      ' flex content-center  px-[18px] hover:bg-card-100 py-2',
                       props.tokenIn.name === token.name ||
                         props.tokenOut.name === token.name
                         ? 'cursor-not-allowed'
