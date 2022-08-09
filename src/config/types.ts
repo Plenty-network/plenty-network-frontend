@@ -32,6 +32,7 @@ export interface IConfig {
   VOTE_ESCROW: { mainnet: string; testnet: string };
   VE_INDEXER : string;
   PLY_INDEXER : string;
+  PLY_TOKEN: { mainnet: string; testnet: string };
 }
 
 interface IApi {
