@@ -105,12 +105,12 @@ const MainMenu: Array<ISingleSideBarProps> = [
     pathName: '/Swap',
     activePathName: '/Swap',
   },
-  {
-    name: 'Pools',
-    iconName: 'pools',
-    pathName: '/pools',
-    activePathName: '/pools',
-  },
+  // {
+  //   name: 'Pools',
+  //   iconName: 'pools',
+  //   pathName: '/pools',
+  //   activePathName: '/pools',
+  // },
 ];
 
 export function SideBar(props: ISideBarProps) {

@@ -230,8 +230,9 @@ function SwapTab(props: ISwapTabProps) {
           </Button>
         );
       } else if (
-        Object.keys(props.tokenOut).length !== 0 &&
-        props.firstTokenAmount === ''
+        (Object.keys(props.tokenOut).length !== 0 &&
+          props.firstTokenAmount === '') ||
+        Number(props.firstTokenAmount) === 0
       ) {
         return (
           <Button color="disabled" width="w-full">
@@ -870,10 +871,8 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip2"
                     toolTipChild={
                       <div className="w-[323px]">
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the industrys
-                        standard dummy text ever since the 1500s, when an
-                        unknown printer.
+                        Your transaction will revert if there is a large,
+                        unfavorable price movement before it is confirmed.
                       </div>
                     }
                   >
@@ -912,10 +911,8 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip4"
                     toolTipChild={
                       <div className="w-[323px]">
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the industrys
-                        standard dummy text ever since the 1500s, when an
-                        unknown printer.
+                        The difference between the market price and estimated
+                        price due to trade size.
                       </div>
                     }
                   >
@@ -953,10 +950,8 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip3"
                     toolTipChild={
                       <div className="w-[323px]">
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the industrys
-                        standard dummy text ever since the 1500s, when an
-                        unknown printer.
+                        Fees are 0.35% for each volatile swap and 0.10% for each
+                        stable swap.
                       </div>
                     }
                   >
@@ -985,10 +980,8 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip4"
                     toolTipChild={
                       <div className="w-[323px]">
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the industrys
-                        standard dummy text ever since the 1500s, when an
-                        unknown printer.
+                        Routing through these tokens results in the best price
+                        for your trade.
                       </div>
                     }
                   >

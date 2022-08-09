@@ -116,10 +116,12 @@ function Swap(props: ISwapProps) {
     if (props.otherProps.walletAddress) {
       getCompleteUserBalace(props.otherProps.walletAddress).then(
         (response: IAllBalanceResponse) => {
-          console.log(response);
           setAllBalance(response);
         }
       );
+    } else {
+      setAllBalance({ success: false, userBalance: {} });
+      setUserBalances({});
     }
   }, [props.otherProps.walletAddress, TOKEN]);
 
@@ -265,6 +267,25 @@ function Swap(props: ISwapProps) {
         isLoadingSecond: false,
         isLoadingfirst: false,
       };
+    } else if (Number(input) === 0) {
+      setFirstTokenAmount(input);
+
+      routeDetails.current = {
+        minimumOut: new BigNumber(0),
+        minimumTokenOut: [],
+        feePerc: [],
+        isStable: [],
+        path: [],
+        finalFeePerc: new BigNumber(0),
+        priceImpact: new BigNumber(0),
+        success: false,
+        exchangeRate: new BigNumber(0),
+      };
+      loading.current = {
+        isLoadingSecond: false,
+        isLoadingfirst: false,
+      };
+      setSecondTokenAmount(input);
     } else {
       if (tokenType === 'tokenIn') {
         setFirstTokenAmount(input);
@@ -410,6 +431,18 @@ function Swap(props: ISwapProps) {
       });
       inputValue > 0 &&
         setTimeout(() => {
+          routeDetails.current = {
+            minimumOut: new BigNumber(0),
+            minimumTokenOut: [],
+            feePerc: [],
+            isStable: [],
+            path: [],
+            finalFeePerc: new BigNumber(0),
+            priceImpact: new BigNumber(0),
+            success: true,
+            exchangeRate: new BigNumber(0),
+          };
+          setAllPathState([]);
           const res = reverseCalculation(
             tokenIn.name,
             tokenOut.name,
@@ -438,7 +471,7 @@ function Swap(props: ISwapProps) {
             isLoadingSecond: false,
             isLoadingfirst: false,
           };
-        }, 500);
+        }, 1000);
     } else if (Object.keys(tokenOut).length === 0) {
       setTokenOut({
         name: tokenIn.name,
