@@ -20,7 +20,7 @@ import ConfirmRemoveLiquidity from '../Liquidity/ConfirmRemoveLiquidity';
 import { useLocationStateInLiquidity } from '../../hooks/useLocationStateInLiquidity';
 import { store, useAppDispatch, useAppSelector } from '../../redux';
 import { getPnlpBalance, getUserBalanceByRpc } from '../../api/util/balance';
-import { ISwapData } from '../Liquidity/types';
+import { ISwapData, tokenParameterLiquidity } from '../Liquidity/types';
 import {
   getPnlpOutputEstimate,
   getPoolShareForPnlp,
@@ -44,13 +44,15 @@ import { getLPTokenPrice } from '../../api/util/price';
 
 export interface IManageLiquidityProps {
   closeFn: Function;
+  tokenIn: tokenParameterLiquidity;
+  tokenOut: tokenParameterLiquidity;
 }
 
 export function ManageLiquidity(props: IManageLiquidityProps) {
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState(0.5);
-  const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
-    useLocationStateInLiquidity();
+  // const {tokenIn, setTokenIn, tokenOut, setTokenOut } =
+  //   useLocationStateInLiquidity();
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
@@ -103,22 +105,24 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       const updateBalance = async () => {
         const balancePromises = [];
 
-        Object.keys(tokenIn).length !== 0 &&
+        Object.keys(props.tokenIn).length !== 0 &&
           balancePromises.push(
-            getUserBalanceByRpc(tokenIn.name, walletAddress)
+            getUserBalanceByRpc(props.tokenIn.name, walletAddress)
           );
-        Object.keys(tokenOut).length !== 0 &&
+        Object.keys(props.tokenOut).length !== 0 &&
           balancePromises.push(
-            getUserBalanceByRpc(tokenOut.name, walletAddress)
+            getUserBalanceByRpc(props.tokenOut.name, walletAddress)
           );
-        getPnlpBalance(tokenIn.name, tokenOut.name, walletAddress).then(
-          (res) => {
-            setPnlpBalance(res.balance);
-          }
-        );
-        getLPTokenPrice(tokenIn.name, tokenOut.name, {
-          [tokenIn.name]: tokenPrice[tokenIn.name],
-          [tokenOut.name]: tokenPrice[tokenOut.name],
+        getPnlpBalance(
+          props.tokenIn.name,
+          props.tokenOut.name,
+          walletAddress
+        ).then((res) => {
+          setPnlpBalance(res.balance);
+        });
+        getLPTokenPrice(props.tokenIn.name, props.tokenOut.name, {
+          [props.tokenIn.name]: tokenPrice[props.tokenIn.name],
+          [props.tokenOut.name]: tokenPrice[props.tokenOut.name],
         }).then((res) => {
           setLpTokenPrice(res.lpTokenPrice);
         });
@@ -137,31 +141,33 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       };
       updateBalance();
     }
-  }, [tokenIn, tokenOut, props, tokenPrice, TOKEN, balanceUpdate]);
+  }, [props.tokenIn, props.tokenOut, props, tokenPrice, TOKEN, balanceUpdate]);
   useEffect(() => {
     if (
-      Object.prototype.hasOwnProperty.call(tokenIn, 'name') &&
-      Object.prototype.hasOwnProperty.call(tokenOut, 'name')
+      Object.prototype.hasOwnProperty.call(props.tokenIn, 'name') &&
+      Object.prototype.hasOwnProperty.call(props.tokenOut, 'name')
     ) {
       setIsLoading(true);
-      loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((response) => {
-        swapData.current = {
-          tokenInSupply: response.tokenInSupply as BigNumber,
-          tokenOutSupply: response.tokenOutSupply as BigNumber,
-          lpToken: response.lpToken?.symbol,
-          lpTokenSupply: response.lpTokenSupply,
-          isloading: false,
-        };
-        setIsLoading(false);
-      });
+      loadSwapDataWrapper(props.tokenIn.name, props.tokenOut.name).then(
+        (response) => {
+          swapData.current = {
+            tokenInSupply: response.tokenInSupply as BigNumber,
+            tokenOutSupply: response.tokenOutSupply as BigNumber,
+            lpToken: response.lpToken?.symbol,
+            lpTokenSupply: response.lpTokenSupply,
+            isloading: false,
+          };
+          setIsLoading(false);
+        }
+      );
     }
   }, []);
 
   useEffect(() => {
     if (firstTokenAmountLiq > 0 && secondTokenAmountLiq > 0 && isAddLiquidity) {
       const res = getPnlpOutputEstimate(
-        tokenIn.symbol,
-        tokenOut.symbol,
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
         firstTokenAmountLiq.toString(),
         secondTokenAmountLiq.toString(),
         swapData.current.tokenInSupply as BigNumber,
@@ -201,19 +207,19 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     setScreen('1');
     localStorage.setItem(
       TOKEN_A_LIQ,
-      tokenIn.name === 'tez'
+      props.tokenIn.name === 'tez'
         ? 'TEZ'
-        : tokenIn.name === 'ctez'
+        : props.tokenIn.name === 'ctez'
         ? 'CTEZ'
-        : tokenIn.name
+        : props.tokenIn.name
     );
     localStorage.setItem(
       TOKEN_B_LIQ,
-      tokenOut.name === 'tez'
+      props.tokenOut.name === 'tez'
         ? 'TEZ'
-        : tokenOut.name === 'ctez'
+        : props.tokenOut.name === 'ctez'
         ? 'CTEZ'
-        : tokenOut.name
+        : props.tokenOut.name
     );
     localStorage.setItem(
       FIRST_TOKEN_AMOUNT_LIQ,
@@ -224,8 +230,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       secondTokenAmountLiq.toString()
     );
     addLiquidity(
-      tokenIn.symbol,
-      tokenOut.symbol,
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
       firstTokenAmountLiq.toString(),
       secondTokenAmountLiq.toString(),
       walletAddress,
@@ -260,8 +266,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     setScreen('1');
     localStorage.setItem(BURN_AMOUNT, burnAmount.toString());
     removeLiquidity(
-      tokenIn.symbol,
-      tokenOut.symbol,
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
       swapData.current.lpToken as string,
       removeTokenAmount.tokenOneAmount.toString(),
       removeTokenAmount.tokenTwoAmount.toString(),
@@ -299,9 +305,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         footerChild={
           <div className="flex justify-center items-center gap-4">
             <p className="text-f16 text-text-150">
-              {activeState === ActiveLiquidity.Liquidity && "Add liquidity, stake, and earn PLY"}
-              {activeState === ActiveLiquidity.Staking && "Add liquidity, stake, and earn PLY"}
-              {activeState === ActiveLiquidity.Rewards && "Lock PLY, and vote to earn trading fees & bribes"}
+              {activeState === ActiveLiquidity.Liquidity &&
+                'Add liquidity, stake, and earn PLY'}
+              {activeState === ActiveLiquidity.Staking &&
+                'Add liquidity, stake, and earn PLY'}
+              {activeState === ActiveLiquidity.Rewards &&
+                'Lock PLY, and vote to earn trading fees & bribes'}
             </p>
             <Image
               className="cursor-pointer hover:opacity-90"
@@ -332,8 +341,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                   userBalances={userBalances}
                   setSecondTokenAmount={setSecondTokenAmountLiq}
                   setFirstTokenAmount={setFirstTokenAmountLiq}
-                  tokenIn={tokenIn}
-                  tokenOut={tokenOut}
+                  tokenIn={props.tokenIn}
+                  tokenOut={props.tokenOut}
                   setIsAddLiquidity={setIsAddLiquidity}
                   isAddLiquidity={isAddLiquidity}
                   swapData={swapData.current}
@@ -349,12 +358,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 />
               </div>
             )}
-            {activeState === ActiveLiquidity.Rewards && (
-             <RewardsScreen/>
-            )}
-            {activeState === ActiveLiquidity.Staking && (
-             <StakingScreen/>
-            )}
+            {activeState === ActiveLiquidity.Rewards && <RewardsScreen />}
+            {activeState === ActiveLiquidity.Staking && <StakingScreen />}
           </>
         )}
         {screen === '2' && (
@@ -363,8 +368,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               setScreen={setScreen}
               firstTokenAmount={firstTokenAmountLiq}
               secondTokenAmount={secondTokenAmountLiq}
-              tokenIn={tokenIn}
-              tokenOut={tokenOut}
+              tokenIn={props.tokenIn}
+              tokenOut={props.tokenOut}
               tokenPrice={tokenPrice}
               pnlpEstimates={pnlpEstimates}
               sharePool={sharePool}
@@ -376,8 +381,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           <>
             <ConfirmRemoveLiquidity
               setScreen={setScreen}
-              tokenIn={tokenIn}
-              tokenOut={tokenOut}
+              tokenIn={props.tokenIn}
+              tokenOut={props.tokenOut}
               tokenPrice={tokenPrice}
               burnAmount={burnAmount}
               pnlpEstimates={pnlpEstimates}
@@ -398,17 +403,17 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           content={
             isAddLiquidity
               ? `Mint ${Number(firstTokenAmountLiq).toFixed(2)} ${
-                  tokenIn.name === 'tez'
+                  props.tokenIn.name === 'tez'
                     ? 'TEZ'
-                    : tokenIn.name === 'ctez'
+                    : props.tokenIn.name === 'ctez'
                     ? 'CTEZ'
-                    : tokenIn.name
+                    : props.tokenIn.name
                 } / ${Number(secondTokenAmountLiq).toFixed(4)} ${
-                  tokenOut.name === 'tez'
+                  props.tokenOut.name === 'tez'
                     ? 'TEZ'
-                    : tokenOut.name === 'ctez'
+                    : props.tokenOut.name === 'ctez'
                     ? 'CTEZ'
-                    : tokenOut.name
+                    : props.tokenOut.name
                 } `
               : `Burn ${Number(burnAmount).toFixed(2)} PNLP `
           }
