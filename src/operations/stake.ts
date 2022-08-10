@@ -6,10 +6,11 @@ import { store } from '../redux';
 import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from './types';
 
 /**
- * Stake PNLP token operation for the selected pair of tokens.
+ * Stake PNLP token operation for the selected pair of tokens
  * @param tokenOneSymbol - Symbol of first token of the pair
  * @param tokenTwoSymbol - Symbol of second token of the pair 
  * @param pnlpAmount - Amount of PNLP token the user wants to stake
+ * @param tokenId - Token ID for veNFT selected by user for boosting. 'undefined' if nothing selected
  * @param userTezosAddress - Tezos wallet address of user
  * @param transactionSubmitModal - Callback to open modal when transaction is submiited
  * @param resetAllValues - Callback to reset values when transaction is submitted
@@ -19,6 +20,7 @@ export const stakePnlpTokens = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
   pnlpAmount: string | BigNumber,
+  tokenId: number | undefined,
   userTezosAddress: string,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
@@ -67,7 +69,7 @@ export const stakePnlpTokens = async (
           )
         )
         .withContractCall(
-          gaugeContractInstance.methods.stake(pnlpAmountToStake.toString(), 0)
+          gaugeContractInstance.methods.stake(pnlpAmountToStake.toString(), tokenId ?? 0)
         );
     } else if (PNLP_TOKEN.variant === TokenVariant.FA2) {
       batch = Tezos.wallet
@@ -84,7 +86,7 @@ export const stakePnlpTokens = async (
           ])
         )
         .withContractCall(
-          gaugeContractInstance.methods.stake(pnlpAmountToStake.toString(), 0)
+          gaugeContractInstance.methods.stake(pnlpAmountToStake.toString(), tokenId ?? 0)
         )
         .withContractCall(
           pnlpTokenContractInstance.methods.update_operators([
