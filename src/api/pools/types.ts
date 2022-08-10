@@ -1,36 +1,56 @@
-export interface Lqt {
-  lqt_decimals: string;
-  lqt_symbol: string;
-  lqt_token: string;
-  lqt_token_bigmap: string;
-}
+import { IAMM } from "../../config/types";
 
-export interface Token1 {
-  address: string;
-  variant: string;
-  decimals: string;
-  symbol: string;
-  tokenId: string;
-}
-
-export interface Token2 {
-  address: string;
-  variant: string;
-  decimals: string;
-  symbol: string;
-  tokenId: string;
-}
-
-export interface poolsMainPage {
-  amm: string;
-  type: string;
+export interface VolumeV1Data {
+  pool: string;
   gauge: string;
-  bribe: string;
-  gauge_bigmap: string;
-  bribe_bigmap: string;
-  lqt: Lqt;
-  token1: Token1;
-  token2: Token2;
   bribes: any[];
   apr: string;
+}
+export interface Volume24H {
+  value: string;
+  token1: string;
+  token2: string;
+}
+
+export interface Volume7D {
+  value: string;
+  token1: string;
+  token2: string;
+}
+
+export interface Fees24H {
+  value: string;
+  token1: string;
+  token2: string;
+}
+
+export interface Fees7D {
+  value: string;
+  token1: string;
+  token2: string;
+}
+
+export interface FeesEpoch {
+  value: string;
+  token1: string;
+  token2: string;
+}
+
+export interface Tvl {
+  value: string;
+  token1: string;
+  token2: string;
+}
+
+export interface VolumeVeData {
+  pool: string;
+  volume24H: Volume24H;
+  volume7D: Volume7D;
+  fees24H: Fees24H;
+  fees7D: Fees7D;
+  feesEpoch: FeesEpoch;
+  tvl: Tvl;
+}
+export interface PoolsMainPage extends  VolumeVeData,VolumeV1Data,IAMM {
+  id:number;
 }
