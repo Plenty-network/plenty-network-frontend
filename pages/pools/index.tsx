@@ -59,6 +59,9 @@ export default function Pools(props: IIndexProps) {
           {activeStateTab === PoolsCardHeader.Volatile && (
             <PoolsTable className="px-5 py-4 " poolsFilter={AMM_TYPE.VOLATILE} />
           )}
+          {activeStateTab === PoolsCardHeader.Mypools && (
+            <PoolsTable className="px-5 py-4 " poolsFilter={AMM_TYPE.MYPOOS} isConnectWalletRequired={true} />
+          )}
 
           {/* poolsTable */}
         </div>
