@@ -116,7 +116,15 @@ const MainMenu: Array<ISingleSideBarProps> = [
 export function SideBar(props: ISideBarProps) {
   const [activeMenu, setActiveMenu] = React.useState<string>('');
   const { pathname } = useRouter();
-
+  try{
+    if(pathname== '/Swap')
+      document.getElementsByTagName("body")[0].className='swap';
+    else 
+      document.getElementsByTagName("body")[0].className='';   
+   }
+   catch{
+  
+   }
   return (
     <div
       className="fixed text-f14 bg-sideBar border-r-borderColor border-r shadow hidden md:block  "
