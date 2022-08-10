@@ -16,14 +16,19 @@ export const poolsDataWrapper = async (
         const AMMResponse = await axios.get("https://config.plentydefi.com/v1/config/amm");
         const AMMS : IAmmContracts  = AMMResponse.data;
 
+        // console.log(AMMS);
+
     //   Make URL dynamic
         const poolsResponse = await axios.get("http://65.0.129.224/v1/pools");
         const poolsData = poolsResponse.data;
 
+        console.log(poolsData);
+
         const analyticsResponse = await axios.get("http://13.127.76.247/ve/pools");
         const analyticsData = analyticsResponse.data;
 
-        // Add Type later
+        console.log(poolsData);
+
         const allData: { [id: string]: IPoolsDataWrapperResponse } = {};
 
         for(var x of poolsData){
@@ -45,6 +50,7 @@ export const poolsDataWrapper = async (
 
             allData[x.pool].fees = new BigNumber(analyticsObject.fees7D.value) ?? new BigNumber(0);
 
+            // Add Bribes data here ANIKET
             allData[x.pool].bribes = x.bribes[0] ?? new BigNumber(0);
 
             // Call Balance and staked API from KIRAN with ternary operator
@@ -87,5 +93,3 @@ const getAnalyticsObject =  (ammAddress :string , analyticsData: VolumeVeData[])
         throw new Error("No Analytics Data Available");
 
 }
-
-poolsDataWrapper("random");
