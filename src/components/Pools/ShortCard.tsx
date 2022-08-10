@@ -133,16 +133,16 @@ export function ShortCard(props: IShortCardProps) {
 
   return (
     <>
-      {true && (
+      {showLiquidityModal && (
         <ManageLiquidity
           tokenIn={tokenIn}
           tokenOut={tokenOut}
           closeFn={setShowLiquidityModal}
         />
       )}
-      {/* <div className={`w-full ${props.className}`}>
+      <div className={`w-full ${props.className}`}>
         <Table<any> columns={columns} data={poolsTableData} />
-      </div> */}
+      </div>
     </>
   );
 }
