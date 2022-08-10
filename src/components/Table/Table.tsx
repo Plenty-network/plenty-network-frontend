@@ -105,7 +105,7 @@ const Table = <D extends object>({ columns, data,shortby,isConnectWalletRequired
          <NoContentAvailable/>:null
       }
       {(isConnectWalletRequired && !walletAddress && isFetched) ? <WalletNotConnected/> :null}
-      { !isFetched?<SimmerEffect lines={2}/>:null }  
+      { !isFetched?<SimmerEffect lines={6}/>:null }  
       { (isFetched && data.length ) ? page.map((row:any) => {
               prepareRow(row);
               return (

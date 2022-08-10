@@ -5,14 +5,9 @@ import { PoolsMainPage } from '../../api/pools/types';
 import { useTableNumberUtils } from '../../hooks/useTableUtils';
 import Table from '../Table/Table';
 import { CircularImageInfo } from './Component/CircularImageInfo';
-import { ShortCardHeader } from './ShortCardHeader';
-import { ShortCardList } from './ShortCardList';
-import token from '../../assets/Tokens/plenty.png';
-import token2 from '../../assets/Tokens/ctez.png';
 import { ManageLiquidity } from './ManageLiquidity';
 import { AMM_TYPE } from '../../config/types';
 import { tokenParameterLiquidity } from '../Liquidity/types';
-import { useAppSelector } from '../../redux';
 import { AprInfo } from './Component/AprInfo';
 import { PoolsText, PoolsTextWithTooltip } from './Component/poolsText';
 
@@ -102,6 +97,7 @@ export function ShortCard (props: IShortCardProps) {
         Header: 'TVL',
         id: 'TVL',
         isToolTipEnabled:true,
+        canShort:true,
         accessor: (x)=>(
           <PoolsTextWithTooltip
              text={x.tvl.value}
@@ -145,23 +141,7 @@ export function ShortCard (props: IShortCardProps) {
     ],
     [valueFormat]
   );
-
-  return (
-    <>
-      {showLiquidityModal && (
-        <ManageLiquidity
-          tokenIn={tokenIn}
-          tokenOut={tokenOut}
-          closeFn={setShowLiquidityModal}
-        />
-      )}
-      <div className={`w-full ${props.className}`}>
-        <Table<any> columns={columns} data={poolsTableData} isFetched={isFetched} isConnectWalletRequired={props.isConnectWalletRequired} />
-      </div>
-    </>
-  );
-
-  function ManageBtn(): any {
+function ManageBtn(): any {
     return <div
       className="bg-primary-500/10 cursor-pointer  text-primary-500 px-7 py-2 rounded-lg"
       onClick={() => {
@@ -181,4 +161,20 @@ export function ShortCard (props: IShortCardProps) {
       Manage
     </div>;
   }
+  return (
+    <>
+      {showLiquidityModal && (
+        <ManageLiquidity
+          tokenIn={tokenIn}
+          tokenOut={tokenOut}
+          closeFn={setShowLiquidityModal}
+        />
+      )}
+      <div className={`w-full ${props.className}`}>
+        <Table<any> columns={columns} data={poolsTableData} shortby='fees' isFetched={isFetched} isConnectWalletRequired={props.isConnectWalletRequired} />
+      </div>
+    </>
+  );
+
+  
 }
