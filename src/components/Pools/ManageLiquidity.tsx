@@ -43,7 +43,7 @@ import { removeLiquidity } from '../../operations/removeLiquidity';
 import { getLPTokenPrice } from '../../api/util/price';
 
 export interface IManageLiquidityProps {
-  closeFn: Function;
+  closeFn: React.Dispatch<React.SetStateAction<boolean>>;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
 }
