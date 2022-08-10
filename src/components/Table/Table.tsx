@@ -16,7 +16,7 @@ export function SimmerEffect (props: ISimmerEffectProps) {
     </>
   );
 }
-const Table = <D extends object>({ columns, data,shortby,isConnectWalletRequired=false }: { columns: Column<D>[]; data: D[] ,shortby?:string,isConnectWalletRequired?:boolean }) => {
+const Table = <D extends object>({ columns, data,shortby,isConnectWalletRequired=false,isFetched=false }: { columns: Column<D>[]; data: D[] ,shortby?:string,isConnectWalletRequired?:boolean,isFetched?:boolean }) => {
   const [shortByGroup,setshortByGroup]=useState({
     id: shortby??'usd',
     desc: true,
@@ -101,12 +101,12 @@ const Table = <D extends object>({ columns, data,shortby,isConnectWalletRequired
       
       </thead>
       <tbody className=' flex-col flex gap-2'>
-      {(isConnectWalletRequired===true && data!=undefined && data.length===0 ) &&
-         <NoContentAvailable/>
+      {(isConnectWalletRequired  && walletAddress && isFetched && !data.length ) ?
+         <NoContentAvailable/>:null
       }
-      {(isConnectWalletRequired===true && !walletAddress && <WalletNotConnected/>)}
-      { data===undefined  ?<SimmerEffect lines={2}/>:null }  
-      { data!=undefined && data.length && !isConnectWalletRequired ? page.map((row:any) => {
+      {(isConnectWalletRequired && !walletAddress && isFetched) ? <WalletNotConnected/> :null}
+      { !isFetched?<SimmerEffect lines={2}/>:null }  
+      { (isFetched && data.length ) ? page.map((row:any) => {
               prepareRow(row);
               return (
              // eslint-disable-next-line react/jsx-key
