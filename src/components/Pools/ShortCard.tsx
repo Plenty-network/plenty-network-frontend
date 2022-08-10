@@ -28,7 +28,7 @@ export function ShortCard(props: IShortCardProps) {
   });
   const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
     name: 'USDT.e',
-    image: `/assets/tokens/USDC.e.png`,
+    image: `/assets/tokens/USDT.e.png`,
     symbol: 'USDT.e',
   });
   const getImagesPath = (name: string, isSvg?: boolean) => {
@@ -118,7 +118,7 @@ export function ShortCard(props: IShortCardProps) {
               });
               setTokenOut({
                 name: 'USDT.e',
-                image: `/assets/tokens/USDC.e.png`,
+                image: `/assets/tokens/USDT.e.png`,
                 symbol: 'USDT.e',
               });
             }}
@@ -133,16 +133,16 @@ export function ShortCard(props: IShortCardProps) {
 
   return (
     <>
-      {showLiquidityModal && (
+      {true && (
         <ManageLiquidity
           tokenIn={tokenIn}
           tokenOut={tokenOut}
           closeFn={setShowLiquidityModal}
         />
       )}
-      <div className={`w-full ${props.className}`}>
+      {/* <div className={`w-full ${props.className}`}>
         <Table<any> columns={columns} data={poolsTableData} />
-      </div>
+      </div> */}
     </>
   );
 }
