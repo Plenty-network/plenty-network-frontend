@@ -14,6 +14,7 @@ import { AppDispatch, useAppSelector } from '../../src/redux';
 import { fetchWallet } from '../../src/redux/wallet/wallet';
 import { getConfig } from '../../src/redux/config/config';
 import { getTokenPrice } from '../../src/redux/tokenPrice/tokenPrice';
+import { AMM_TYPE } from '../../src/config/types';
 export interface IIndexProps {}
 
 export default function Pools(props: IIndexProps) {
@@ -51,6 +52,12 @@ export default function Pools(props: IIndexProps) {
           />
           {activeStateTab === PoolsCardHeader.All && (
             <PoolsTable className="px-5 py-4 " />
+          )}
+          {activeStateTab === PoolsCardHeader.Stable && (
+            <PoolsTable className="px-5 py-4 " poolsFilter={AMM_TYPE.STABLE} />
+          )}
+          {activeStateTab === PoolsCardHeader.Volatile && (
+            <PoolsTable className="px-5 py-4 " poolsFilter={AMM_TYPE.VOLATILE} />
           )}
 
           {/* poolsTable */}

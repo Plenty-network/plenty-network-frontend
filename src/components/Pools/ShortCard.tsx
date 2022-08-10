@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Column } from 'react-table';
 import { usePoolsMain } from '../../api/pools/query/poolsmain.query';
-import { poolsMainPage, Token1 } from '../../api/pools/types';
+import { PoolsMainPage } from '../../api/pools/types';
 import { useTableNumberUtils } from '../../hooks/useTableUtils';
 import Table from '../Table/Table';
 import { CircularImageInfo } from './Component/CircularImageInfo';
@@ -10,17 +10,33 @@ import { ShortCardList } from './ShortCardList';
 import token from '../../assets/Tokens/plenty.png';
 import token2 from '../../assets/Tokens/ctez.png';
 import { ManageLiquidity } from './ManageLiquidity';
-import { tokenParameter } from '../../constants/swap';
+import { AMM_TYPE } from '../../config/types';
 import { tokenParameterLiquidity } from '../Liquidity/types';
 
 export interface IShortCardProps {
-  className?: string;
+    className?:string;
+    poolsFilter?:AMM_TYPE;
 }
 
-export function ShortCard(props: IShortCardProps) {
-  const { valueFormat } = useTableNumberUtils();
-  const { data: poolsTableData = [] } = usePoolsMain();
-  const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
+export function ShortCard (props: IShortCardProps) {
+  const {valueFormat}=useTableNumberUtils();
+  const  { data:poolTableData=[] }=usePoolsMain();
+  let poolsTableData=poolTableData;
+  if(props.poolsFilter){
+    poolsTableData= poolsTableData.filter((e)=>e.type === props.poolsFilter)
+   }else{
+    poolsTableData=poolTableData;
+   }
+
+  const [showLiquidityModal,setShowLiquidityModal]=React.useState(false);
+  const getImagesPath = (name: string,isSvg?: boolean) => {
+    if(isSvg)
+    return `/assets/tokens/${name}.svg`;
+    if(name)
+    return `/assets/tokens/${name.toLowerCase()}.png`;
+    else
+    return '';
+  };
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: 'USDC.e',
     image: `/assets/tokens/USDC.e.png`,
@@ -31,17 +47,12 @@ export function ShortCard(props: IShortCardProps) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: 'USDT.e',
   });
-  const getImagesPath = (name: string, isSvg?: boolean) => {
-    if (isSvg) return `/assets/tokens/${name}.svg`;
-    if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
-    else return '';
-  };
-  const columns = React.useMemo<Column<poolsMainPage>[]>(
+  const columns = React.useMemo<Column<PoolsMainPage>[]>(
     () => [
       {
         Header: 'Pools',
         id: 'pools',
-        accessor: (x) => (
+        accessor: (x:any) => (
           <div className="flex gap-2 items-center max-w-[153px]">
             <CircularImageInfo
               imageArray={[
@@ -62,44 +73,44 @@ export function ShortCard(props: IShortCardProps) {
         Header: 'APR',
         id: 'apr',
         subText: 'current Epoch',
-        isToolTipEnabled: true,
-        canShort: true,
-        accessor: (x) => (
-          <p className="max-w-[115px] overflow-hidden ">{x.apr}</p>
+        isToolTipEnabled:true,
+        canShort:true,
+        accessor: (x:any)=>(
+          <p className='max-w-[115px] overflow-hidden '>{x.apr}</p>
         ),
       },
       {
         Header: 'Volume',
         id: 'Volume24h',
         subText: '24h',
-        isToolTipEnabled: true,
-        accessor: (x) => (
-          <p className="max-w-[115px] overflow-hidden ">{x.token1.decimals}</p>
+        isToolTipEnabled:true,
+        accessor: (x:any)=>(
+          <p className='max-w-[115px] overflow-hidden '>{x.token1.decimals}</p>
         ),
       },
       {
         Header: 'TVL',
         id: 'TVL',
-        isToolTipEnabled: true,
-        accessor: (x) => (
-          <p className="max-w-[115px] overflow-hidden ">{x.apr}</p>
+        isToolTipEnabled:true,
+        accessor: (x:any)=>(
+          <p className='max-w-[115px] overflow-hidden '>{x.apr}</p>
         ),
       },
       {
         Header: 'Fees',
         id: 'fees',
-        subText: 'current epoch',
-        isToolTipEnabled: true,
-        accessor: (x) => (
-          <p className="max-w-[115px] overflow-hidden ">{x.apr}</p>
+        subText:'current epoch',
+        isToolTipEnabled:true,
+        accessor: (x:any)=>(
+          <p className='max-w-[115px] overflow-hidden '>{x.apr}</p>
         ),
       },
       {
         Header: 'Bribes',
         id: 'Bribes',
-        isToolTipEnabled: true,
-        accessor: (x) => (
-          <p className="max-w-[115px] overflow-hidden ">{x.bribe}</p>
+        isToolTipEnabled:true,
+        accessor: (x:any)=>(
+          <p className='max-w-[115px] overflow-hidden '>{x.bribe}</p>
         ),
       },
       {
