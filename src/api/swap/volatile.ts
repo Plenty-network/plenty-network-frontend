@@ -1,8 +1,6 @@
-import { rpcNode} from '../../common/walletconnect';
 import { getDexAddress } from '../util/fetchConfig';
 import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';
-import axios from 'axios';
 import { ISwapDataResponse , ICalculateTokenResponse, volatileSwapStorageType} from './types';
 import { getStorage } from '../util/storageProvider';
 
@@ -20,17 +18,12 @@ export const loadSwapDataVolatile = async (
       throw new Error('No dex found');
     }
 
-    // const storageResponse1 = await getStorage(dexContractAddress , volatileSwapStorageType);
-    // console.log(storageResponse1);
+    const storageResponse = await getStorage(dexContractAddress , volatileSwapStorageType);
 
-    const storageResponse = await axios.get(
-      `${rpcNode}chains/main/blocks/head/context/contracts/${dexContractAddress}/storage`,
-    );
-
-    const token1Pool = new BigNumber(storageResponse.data.args[1].args[0].args[1].int);
-    const token2Pool = new BigNumber(storageResponse.data.args[3].int);
-    let lpTokenSupply = new BigNumber(storageResponse.data.args[4].int);
-    const lpFee = new BigNumber(storageResponse.data.args[0].args[0].args[0].args[1].int);
+    const token1Pool = new BigNumber(storageResponse.token1_pool);
+    const token2Pool = new BigNumber(storageResponse.token2_pool);
+    let lpTokenSupply = new BigNumber(storageResponse.totalSupply);
+    const lpFee = new BigNumber(storageResponse.lpFee);
  
     const lpToken = AMM[dexContractAddress].lpToken;
 

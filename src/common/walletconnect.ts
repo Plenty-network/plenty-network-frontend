@@ -12,6 +12,7 @@ export const configName = Config.NAME;
 // const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
 export const rpcNode = Config.RPC_NODES[connectedNetwork];
 export const tzktNode = Config.TZKT_NODES[connectedNetwork];
+export const voteEscrowAddress = Config.VOTE_ESCROW[connectedNetwork];
 
 export function dappClient() {
   let instance: BeaconWallet | undefined
