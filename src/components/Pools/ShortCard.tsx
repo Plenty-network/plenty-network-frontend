@@ -133,7 +133,7 @@ export function ShortCard(props: IShortCardProps) {
 
   return (
     <>
-      {true && (
+      {showLiquidityModal && (
         <ManageLiquidity
           tokenIn={tokenIn}
           tokenOut={tokenOut}
