@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Column } from 'react-table';
 import { usePoolsMain } from '../../api/pools/query/poolsmain.query';
-import { poolsMainPage } from '../../api/pools/types';
+import { PoolsMainPage } from '../../api/pools/types';
 import { useTableNumberUtils } from '../../hooks/useTableUtils';
 import Table from '../Table/Table';
 import { CircularImageInfo } from './Component/CircularImageInfo';
@@ -10,14 +10,23 @@ import { ShortCardList } from './ShortCardList';
 import token from "../../assets/Tokens/plenty.png";
 import token2 from "../../assets/Tokens/ctez.png";
 import { ManageLiquidity } from './ManageLiquidity';
+import { AMM_TYPE } from '../../config/types';
 
 export interface IShortCardProps {
     className?:string;
+    poolsFilter?:AMM_TYPE;
 }
 
 export function ShortCard (props: IShortCardProps) {
   const {valueFormat}=useTableNumberUtils();
-  const { data:poolsTableData=[] }=usePoolsMain();
+  const  { data:poolTableData=[] }=usePoolsMain();
+  let poolsTableData=poolTableData;
+  if(props.poolsFilter){
+    poolsTableData= poolsTableData.filter((e)=>e.type === props.poolsFilter)
+   }else{
+    poolsTableData=poolTableData;
+   }
+
   const [showLiquidityModal,setShowLiquidityModal]=React.useState(false);
   const getImagesPath = (name: string,isSvg?: boolean) => {
     if(isSvg)
@@ -27,12 +36,12 @@ export function ShortCard (props: IShortCardProps) {
     else
     return '';
   };
-  const columns = React.useMemo<Column<poolsMainPage>[]>(
+  const columns = React.useMemo<Column<PoolsMainPage>[]>(
     () => [
       {
         Header: 'Pools',
         id: 'pools',
-        accessor: (x) => (
+        accessor: (x:any) => (
           <div className="flex gap-2 items-center max-w-[153px]">
           <CircularImageInfo imageArray={[getImagesPath(x.token1.symbol), getImagesPath(x.token2.symbol)]} />
           <div className='flex flex-col gap-[2px]'>
@@ -48,7 +57,7 @@ export function ShortCard (props: IShortCardProps) {
         subText: 'current Epoch',
         isToolTipEnabled:true,
         canShort:true,
-        accessor: (x)=>(
+        accessor: (x:any)=>(
           <p className='max-w-[115px] overflow-hidden '>{x.apr}</p>
         ),
       },
@@ -57,7 +66,7 @@ export function ShortCard (props: IShortCardProps) {
         id: 'Volume24h',
         subText: '24h',
         isToolTipEnabled:true,
-        accessor: (x)=>(
+        accessor: (x:any)=>(
           <p className='max-w-[115px] overflow-hidden '>{x.token1.decimals}</p>
         ),
       },
@@ -65,7 +74,7 @@ export function ShortCard (props: IShortCardProps) {
         Header: 'TVL',
         id: 'TVL',
         isToolTipEnabled:true,
-        accessor: (x)=>(
+        accessor: (x:any)=>(
           <p className='max-w-[115px] overflow-hidden '>{x.apr}</p>
         ),
       },
@@ -74,7 +83,7 @@ export function ShortCard (props: IShortCardProps) {
         id: 'fees',
         subText:'current epoch',
         isToolTipEnabled:true,
-        accessor: (x)=>(
+        accessor: (x:any)=>(
           <p className='max-w-[115px] overflow-hidden '>{x.apr}</p>
         ),
       },
@@ -82,7 +91,7 @@ export function ShortCard (props: IShortCardProps) {
         Header: 'Bribes',
         id: 'Bribes',
         isToolTipEnabled:true,
-        accessor: (x)=>(
+        accessor: (x:any)=>(
           <p className='max-w-[115px] overflow-hidden '>{x.bribe}</p>
         ),
       },
@@ -90,7 +99,7 @@ export function ShortCard (props: IShortCardProps) {
         Header: '',
         id: 'lools',
         minWidth:151,
-        accessor: (x)=>(
+        accessor: (x:any)=>(
           <div className='bg-primary-500/10 cursor-pointer  text-primary-500 px-7 py-2 rounded-lg' onClick={()=>{setShowLiquidityModal(true)}}>
                 Manage
           </div>

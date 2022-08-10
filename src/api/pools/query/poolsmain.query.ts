@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { IAmmContracts } from "../../../config/types";
+import {IAmmContracts } from "../../../config/types";
 import { PoolsMainPage, VolumeV1Data, VolumeVeData } from "../types";
 
 export const usePoolsMain = () =>
@@ -25,10 +25,9 @@ export const usePoolsMain = () =>
             }
          });
       });
-      console.log("data3",data) 
       return data;
     },
-    { refetchInterval: 30_000 },
+    { refetchInterval: 60000 },
 );
 const volumeV1Data =async ()=>{
     const response = await fetch('http://65.0.129.224/v1/pools');
