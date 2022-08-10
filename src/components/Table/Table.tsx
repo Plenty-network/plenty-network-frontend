@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useTable, Column, useFilters, useSortBy, usePagination } from 'react-table';
+import { useAppSelector } from '../../redux';
+import { NoContentAvailable, WalletNotConnected } from '../Pools/Component/ConnectWalletOrNoToken';
 import { Tabs } from '../Pools/ShortCardHeader';
 
 export interface ISimmerEffectProps {
@@ -14,11 +16,13 @@ export function SimmerEffect (props: ISimmerEffectProps) {
     </>
   );
 }
-const Table = <D extends object>({ columns, data,shortby }: { columns: Column<D>[]; data: D[],shortby?:string }) => {
+const Table = <D extends object>({ columns, data,shortby,isConnectWalletRequired=false,isFetched=false }: { columns: Column<D>[]; data: D[] ,shortby?:string,isConnectWalletRequired?:boolean,isFetched?:boolean }) => {
   const [shortByGroup,setshortByGroup]=useState({
     id: shortby??'usd',
     desc: true,
-  })
+  });
+  const walletAddress = useAppSelector((state) => state.wallet.address);
+
   const {
     getTableProps,
     headerGroups,
@@ -97,8 +101,12 @@ const Table = <D extends object>({ columns, data,shortby }: { columns: Column<D>
       
       </thead>
       <tbody className=' flex-col flex gap-2'>
-      {data.length===0 ?<SimmerEffect lines={2}/>:null }  
-      {data.length ? page.map((row:any) => {
+      {(isConnectWalletRequired  && walletAddress && isFetched && !data.length ) ?
+         <NoContentAvailable/>:null
+      }
+      {(isConnectWalletRequired && !walletAddress && isFetched) ? <WalletNotConnected/> :null}
+      { !isFetched?<SimmerEffect lines={6}/>:null }  
+      { (isFetched && data.length ) ? page.map((row:any) => {
               prepareRow(row);
               return (
              // eslint-disable-next-line react/jsx-key

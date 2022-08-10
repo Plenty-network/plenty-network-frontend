@@ -5,25 +5,26 @@ import { PoolsMainPage } from '../../api/pools/types';
 import { useTableNumberUtils } from '../../hooks/useTableUtils';
 import Table from '../Table/Table';
 import { CircularImageInfo } from './Component/CircularImageInfo';
-import { ShortCardHeader } from './ShortCardHeader';
-import { ShortCardList } from './ShortCardList';
-import token from '../../assets/Tokens/plenty.png';
-import token2 from '../../assets/Tokens/ctez.png';
 import { ManageLiquidity } from './ManageLiquidity';
 import { AMM_TYPE } from '../../config/types';
 import { tokenParameterLiquidity } from '../Liquidity/types';
+import { AprInfo } from './Component/AprInfo';
+import { PoolsText, PoolsTextWithTooltip } from './Component/poolsText';
 
 export interface IShortCardProps {
     className?:string;
     poolsFilter?:AMM_TYPE;
+    isConnectWalletRequired?:boolean;
+    searchValue?:string;
+    setSearchValue?:Function
 }
 
 export function ShortCard (props: IShortCardProps) {
   const {valueFormat}=useTableNumberUtils();
-  const  { data:poolTableData=[] }=usePoolsMain();
+  const  { data:poolTableData=[],isFetched=false }=usePoolsMain();
   let poolsTableData=poolTableData;
   if(props.poolsFilter){
-    poolsTableData= poolsTableData.filter((e)=>e.type === props.poolsFilter)
+    poolsTableData= poolsTableData.filter((e)=>e.type === props.poolsFilter);
    }else{
     poolsTableData=poolTableData;
    }
@@ -76,7 +77,7 @@ export function ShortCard (props: IShortCardProps) {
         isToolTipEnabled:true,
         canShort:true,
         accessor: (x:any)=>(
-          <p className='max-w-[115px] overflow-hidden '>{x.apr}</p>
+          <AprInfo/>
         ),
       },
       {
@@ -84,16 +85,25 @@ export function ShortCard (props: IShortCardProps) {
         id: 'Volume24h',
         subText: '24h',
         isToolTipEnabled:true,
-        accessor: (x:any)=>(
-          <p className='max-w-[115px] overflow-hidden '>{x.token1.decimals}</p>
+        accessor: (x)=>(
+           <PoolsTextWithTooltip
+             text={x.volume24H.value}
+             token1={x.volume24H.token1}
+             token2={x.volume24H.token2}
+           />
         ),
       },
       {
         Header: 'TVL',
         id: 'TVL',
         isToolTipEnabled:true,
-        accessor: (x:any)=>(
-          <p className='max-w-[115px] overflow-hidden '>{x.apr}</p>
+        canShort:true,
+        accessor: (x)=>(
+          <PoolsTextWithTooltip
+             text={x.tvl.value}
+             token1={x.tvl.token1}
+             token2={x.tvl.token2}
+           />
         ),
       },
       {
@@ -101,16 +111,23 @@ export function ShortCard (props: IShortCardProps) {
         id: 'fees',
         subText:'current epoch',
         isToolTipEnabled:true,
-        accessor: (x:any)=>(
-          <p className='max-w-[115px] overflow-hidden '>{x.apr}</p>
+        canShort:true,
+        accessor: (x)=>(
+          <PoolsTextWithTooltip
+          text={x.feesEpoch.value}
+          token1={x.feesEpoch.token1}
+          token2={x.feesEpoch.token2}
+        />
         ),
       },
       {
         Header: 'Bribes',
         id: 'Bribes',
         isToolTipEnabled:true,
-        accessor: (x:any)=>(
-          <p className='max-w-[115px] overflow-hidden '>{x.bribe}</p>
+        accessor: (x)=>(
+          <PoolsText
+          text={'$234.5'}
+        />
         ),
       },
       {
@@ -118,30 +135,32 @@ export function ShortCard (props: IShortCardProps) {
         id: 'lools',
         minWidth: 151,
         accessor: (x) => (
-          <div
-            className="bg-primary-500/10 cursor-pointer  text-primary-500 px-7 py-2 rounded-lg"
-            onClick={() => {
-              setShowLiquidityModal(true);
-              setTokenIn({
-                name: 'USDC.e',
-                image: `/assets/tokens/USDC.e.png`,
-                symbol: 'USDC.e',
-              });
-              setTokenOut({
-                name: 'USDT.e',
-                image: `/assets/tokens/USDT.e.png`,
-                symbol: 'USDT.e',
-              });
-            }}
-          >
-            Manage
-          </div>
+          <ManageBtn/>
         ),
       },
     ],
     [valueFormat]
   );
-
+function ManageBtn(): any {
+    return <div
+      className="bg-primary-500/10 cursor-pointer  text-primary-500 px-7 py-2 rounded-lg"
+      onClick={() => {
+        setShowLiquidityModal(true);
+        setTokenIn({
+          name: 'USDC.e',
+          image: `/assets/tokens/USDC.e.png`,
+          symbol: 'USDC.e',
+        });
+        setTokenOut({
+          name: 'USDT.e',
+          image: `/assets/tokens/USDT.e.png`,
+          symbol: 'USDT.e',
+        });
+      } }
+    >
+      Manage
+    </div>;
+  }
   return (
     <>
       {showLiquidityModal && (
@@ -152,8 +171,10 @@ export function ShortCard (props: IShortCardProps) {
         />
       )}
       <div className={`w-full ${props.className}`}>
-        <Table<any> columns={columns} data={poolsTableData} />
+        <Table<any> columns={columns} data={poolsTableData} shortby='fees' isFetched={isFetched} isConnectWalletRequired={props.isConnectWalletRequired} />
       </div>
     </>
   );
+
+  
 }
