@@ -12,10 +12,14 @@ import token2 from '../../assets/Tokens/ctez.png';
 import { ManageLiquidity } from './ManageLiquidity';
 import { AMM_TYPE } from '../../config/types';
 import { tokenParameterLiquidity } from '../Liquidity/types';
+import { useAppSelector } from '../../redux';
 
 export interface IShortCardProps {
     className?:string;
     poolsFilter?:AMM_TYPE;
+    isConnectWalletRequired?:boolean;
+    searchValue?:string;
+    setSearchValue?:Function
 }
 
 export function ShortCard (props: IShortCardProps) {
@@ -23,7 +27,7 @@ export function ShortCard (props: IShortCardProps) {
   const  { data:poolTableData=[] }=usePoolsMain();
   let poolsTableData=poolTableData;
   if(props.poolsFilter){
-    poolsTableData= poolsTableData.filter((e)=>e.type === props.poolsFilter)
+    poolsTableData= poolsTableData.filter((e)=>e.type === props.poolsFilter);
    }else{
     poolsTableData=poolTableData;
    }
@@ -110,7 +114,7 @@ export function ShortCard (props: IShortCardProps) {
         id: 'Bribes',
         isToolTipEnabled:true,
         accessor: (x:any)=>(
-          <p className='max-w-[115px] overflow-hidden '>{x.bribe}</p>
+          <p className='max-w-[115px] overflow-hidden '>{x.bribes}</p>
         ),
       },
       {
@@ -152,7 +156,7 @@ export function ShortCard (props: IShortCardProps) {
         />
       )}
       <div className={`w-full ${props.className}`}>
-        <Table<any> columns={columns} data={poolsTableData} />
+        <Table<any> columns={columns} data={poolsTableData?poolsTableData:[]} isConnectWalletRequired={props.isConnectWalletRequired} />
       </div>
     </>
   );
