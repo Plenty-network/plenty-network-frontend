@@ -48,289 +48,629 @@ export interface IBestPathResponse {
 }
 
 export const tezCtezStorageType : any = {
-  "prim": "Pair",
+  "prim": "pair",
   "args": [
     {
-      "prim": "Pair",
+      "prim": "pair",
       "args": [
         {
-          "prim": "Pair",
+          "prim": "pair",
           "args": [
             {
-              "prim": "Pair",
+              "prim": "pair",
               "args": [
                 {
-                  "prim": "False"
+                  "prim": "bool",
+                  "annots": [
+                    "%Locked"
+                  ]
                 },
                 {
-                  "string": "tz1NbDzUQCcV2kp3wxdVHVSZEDeq2h97mweW"
+                  "prim": "address",
+                  "annots": [
+                    "%admin"
+                  ]
                 }
               ]
             },
             {
-              "string": "KT1SjXiUX63QvdNMcM2m492f7kuf8JxXRLp4"
-            },
-            {
-              "int": "0"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "address",
+                  "annots": [
+                    "%ctezAddress"
+                  ]
+                },
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%ctezFee"
+                  ]
+                }
+              ]
             }
           ]
         },
         {
-          "prim": "Pair",
+          "prim": "pair",
           "args": [
             {
-              "int": "17262413106"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%ctezPool"
+                  ]
+                },
+                {
+                  "prim": "address",
+                  "annots": [
+                    "%ctez_admin"
+                  ]
+                }
+              ]
             },
             {
-              "string": "KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%lpFee"
+                  ]
+                },
+                {
+                  "prim": "pair",
+                  "args": [
+                    {
+                      "prim": "address",
+                      "annots": [
+                        "%lqtAddress"
+                      ]
+                    },
+                    {
+                      "prim": "nat",
+                      "annots": [
+                        "%lqtTotal"
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           ]
-        },
-        {
-          "int": "1000"
-        },
-        {
-          "string": "KT1DMnJvNrFYc8N9Ptxhw3NtqKN7AWqxCpkS"
-        },
-        {
-          "int": "64067365458"
         }
       ]
     },
     {
-      "prim": "Pair",
+      "prim": "pair",
       "args": [
         {
-          "prim": "Pair",
+          "prim": "pair",
           "args": [
             {
-              "prim": "None"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "option",
+                  "args": [
+                    {
+                      "prim": "nat"
+                    }
+                  ],
+                  "annots": [
+                    "%minAmount"
+                  ]
+                },
+                {
+                  "prim": "bool",
+                  "annots": [
+                    "%paused"
+                  ]
+                }
+              ]
             },
             {
-              "prim": "False"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "option",
+                  "args": [
+                    {
+                      "prim": "address"
+                    }
+                  ],
+                  "annots": [
+                    "%recipient"
+                  ]
+                },
+                {
+                  "prim": "option",
+                  "args": [
+                    {
+                      "prim": "address"
+                    }
+                  ],
+                  "annots": [
+                    "%sender"
+                  ]
+                }
+              ]
             }
           ]
         },
         {
-          "prim": "None"
-        },
-        {
-          "prim": "None"
+          "prim": "pair",
+          "args": [
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "bool",
+                  "annots": [
+                    "%state"
+                  ]
+                },
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%tezPool"
+                  ]
+                }
+              ]
+            },
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "option",
+                  "args": [
+                    {
+                      "prim": "nat"
+                    }
+                  ],
+                  "annots": [
+                    "%tradeAmount"
+                  ]
+                },
+                {
+                  "prim": "pair",
+                  "args": [
+                    {
+                      "prim": "option",
+                      "args": [
+                        {
+                          "prim": "address"
+                        }
+                      ],
+                      "annots": [
+                        "%voterContract"
+                      ]
+                    },
+                    {
+                      "prim": "nat",
+                      "annots": [
+                        "%xtzFee"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
-    },
-    {
-      "prim": "Pair",
-      "args": [
-        {
-          "prim": "False"
-        },
-        {
-          "int": "49001167488"
-        }
-      ]
-    },
-    {
-      "prim": "None"
-    },
-    {
-      "prim": "None"
-    },
-    {
-      "int": "0"
     }
   ]
 }
 
-export const stableswapStorageType : any ={
-  "prim": "Pair",
+export const stableswapStorageType : any = {
+  "prim": "pair",
   "args": [
     {
-      "prim": "Pair",
+      "prim": "pair",
       "args": [
         {
-          "prim": "Pair",
+          "prim": "pair",
           "args": [
             {
-              "prim": "Pair",
+              "prim": "pair",
               "args": [
                 {
-                  "string": "tz1NbDzUQCcV2kp3wxdVHVSZEDeq2h97mweW"
+                  "prim": "address",
+                  "annots": [
+                    "%admin"
+                  ]
                 },
                 {
-                  "int": "1000"
+                  "prim": "nat",
+                  "annots": [
+                    "%lpFee"
+                  ]
                 }
               ]
             },
             {
-              "string": "KT1Ah4Fe2hjcRdVCiCQDhRDZ2vDYLdYNjY51"
-            },
-            {
-              "int": "118363489997237"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "address",
+                  "annots": [
+                    "%lqtAddress"
+                  ]
+                },
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%lqtTotal"
+                  ]
+                }
+              ]
             }
           ]
         },
         {
-          "prim": "Pair",
+          "prim": "pair",
           "args": [
             {
-              "prim": "False"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "bool",
+                  "annots": [
+                    "%paused"
+                  ]
+                },
+                {
+                  "prim": "bool",
+                  "annots": [
+                    "%state"
+                  ]
+                }
+              ]
             },
             {
-              "prim": "False"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "address",
+                  "annots": [
+                    "%token1Address"
+                  ]
+                },
+                {
+                  "prim": "pair",
+                  "args": [
+                    {
+                      "prim": "bool",
+                      "annots": [
+                        "%token1Check"
+                      ]
+                    },
+                    {
+                      "prim": "nat",
+                      "annots": [
+                        "%token1Fee"
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           ]
-        },
-        {
-          "string": "KT1XRPEPXbZK25r3Htzp2o1x7xdMMmfocKNW"
-        },
-        {
-          "prim": "True"
-        },
-        {
-          "int": "0"
         }
       ]
     },
     {
-      "prim": "Pair",
+      "prim": "pair",
       "args": [
         {
-          "prim": "Pair",
+          "prim": "pair",
           "args": [
             {
-              "int": "0"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%token1Id"
+                  ]
+                },
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%token1Pool"
+                  ]
+                }
+              ]
             },
             {
-              "int": "33247881732435488"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%token1Precision"
+                  ]
+                },
+                {
+                  "prim": "pair",
+                  "args": [
+                    {
+                      "prim": "address",
+                      "annots": [
+                        "%token2Address"
+                      ]
+                    },
+                    {
+                      "prim": "bool",
+                      "annots": [
+                        "%token2Check"
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
         {
-          "int": "1"
-        },
-        {
-          "string": "KT1UsSfaXyqcjSVPeiD7U1bWgKy3taYN7NWY"
-        },
-        {
-          "prim": "True"
+          "prim": "pair",
+          "args": [
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%token2Fee"
+                  ]
+                },
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%token2Id"
+                  ]
+                }
+              ]
+            },
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%token2Pool"
+                  ]
+                },
+                {
+                  "prim": "pair",
+                  "args": [
+                    {
+                      "prim": "nat",
+                      "annots": [
+                        "%token2Precision"
+                      ]
+                    },
+                    {
+                      "prim": "option",
+                      "args": [
+                        {
+                          "prim": "address"
+                        }
+                      ],
+                      "annots": [
+                        "%voterContract"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
-    },
-    {
-      "prim": "Pair",
-      "args": [
-        {
-          "int": "0"
-        },
-        {
-          "int": "2"
-        }
-      ]
-    },
-    {
-      "int": "85822482565"
-    },
-    {
-      "int": "1000000"
-    },
-    {
-      "prim": "None"
     }
   ]
 }
 
 export const volatileSwapStorageType : any = {
-  "prim": "Pair",
+  "prim": "pair",
   "args": [
     {
-      "prim": "Pair",
+      "prim": "pair",
       "args": [
         {
-          "prim": "Pair",
+          "prim": "pair",
           "args": [
             {
-              "prim": "Pair",
+              "prim": "pair",
               "args": [
                 {
-                  "string": "tz1NbDzUQCcV2kp3wxdVHVSZEDeq2h97mweW"
+                  "prim": "address",
+                  "annots": [
+                    "%admin"
+                  ]
                 },
                 {
-                  "int": "290"
+                  "prim": "nat",
+                  "annots": [
+                    "%lpFee"
+                  ]
                 }
               ]
             },
             {
-              "string": "KT1XpLzv4tqqsf2aLneDZgEeNFhKkH8JBGXv"
-            },
-            {
-              "int": "40"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "address",
+                  "annots": [
+                    "%lpTokenAddress"
+                  ]
+                },
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%maxSwapLimit"
+                  ]
+                }
+              ]
             }
           ]
         },
         {
-          "prim": "Pair",
+          "prim": "pair",
           "args": [
             {
-              "prim": "False"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "bool",
+                  "annots": [
+                    "%paused"
+                  ]
+                },
+                {
+                  "prim": "bool",
+                  "annots": [
+                    "%state"
+                  ]
+                }
+              ]
             },
             {
-              "prim": "False"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "address",
+                  "annots": [
+                    "%token1Address"
+                  ]
+                },
+                {
+                  "prim": "pair",
+                  "args": [
+                    {
+                      "prim": "bool",
+                      "annots": [
+                        "%token1Check"
+                      ]
+                    },
+                    {
+                      "prim": "nat",
+                      "annots": [
+                        "%token1Id"
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           ]
-        },
-        {
-          "string": "KT1UsSfaXyqcjSVPeiD7U1bWgKy3taYN7NWY"
-        },
-        {
-          "prim": "True"
-        },
-        {
-          "int": "2"
         }
       ]
     },
     {
-      "prim": "Pair",
+      "prim": "pair",
       "args": [
         {
-          "prim": "Pair",
+          "prim": "pair",
           "args": [
             {
-              "int": "0"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%token1_Fee"
+                  ]
+                },
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%token1_pool"
+                  ]
+                }
+              ]
             },
             {
-              "int": "31474281515"
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "address",
+                  "annots": [
+                    "%token2Address"
+                  ]
+                },
+                {
+                  "prim": "bool",
+                  "annots": [
+                    "%token2Check"
+                  ]
+                }
+              ]
             }
           ]
         },
         {
-          "string": "KT1SjXiUX63QvdNMcM2m492f7kuf8JxXRLp4"
-        },
-        {
-          "prim": "False"
+          "prim": "pair",
+          "args": [
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%token2Id"
+                  ]
+                },
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%token2_Fee"
+                  ]
+                }
+              ]
+            },
+            {
+              "prim": "pair",
+              "args": [
+                {
+                  "prim": "nat",
+                  "annots": [
+                    "%token2_pool"
+                  ]
+                },
+                {
+                  "prim": "pair",
+                  "args": [
+                    {
+                      "prim": "nat",
+                      "annots": [
+                        "%totalSupply"
+                      ]
+                    },
+                    {
+                      "prim": "option",
+                      "args": [
+                        {
+                          "prim": "address"
+                        }
+                      ],
+                      "annots": [
+                        "%voterContract"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
-    },
-    {
-      "prim": "Pair",
-      "args": [
-        {
-          "int": "0"
-        },
-        {
-          "int": "0"
-        }
-      ]
-    },
-    {
-      "int": "16501150538"
-    },
-    {
-      "int": "22262435093"
-    },
-    {
-      "prim": "None"
     }
   ]
 }

@@ -7,10 +7,11 @@ import Table from '../Table/Table';
 import { CircularImageInfo } from './Component/CircularImageInfo';
 import { ShortCardHeader } from './ShortCardHeader';
 import { ShortCardList } from './ShortCardList';
-import token from "../../assets/Tokens/plenty.png";
-import token2 from "../../assets/Tokens/ctez.png";
+import token from '../../assets/Tokens/plenty.png';
+import token2 from '../../assets/Tokens/ctez.png';
 import { ManageLiquidity } from './ManageLiquidity';
 import { AMM_TYPE } from '../../config/types';
+import { tokenParameterLiquidity } from '../Liquidity/types';
 
 export interface IShortCardProps {
     className?:string;
@@ -36,6 +37,16 @@ export function ShortCard (props: IShortCardProps) {
     else
     return '';
   };
+  const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
+    name: 'USDC.e',
+    image: `/assets/tokens/USDC.e.png`,
+    symbol: 'USDC.e',
+  });
+  const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
+    name: 'USDT.e',
+    image: `/assets/tokens/USDT.e.png`,
+    symbol: 'USDT.e',
+  });
   const columns = React.useMemo<Column<PoolsMainPage>[]>(
     () => [
       {
@@ -43,12 +54,19 @@ export function ShortCard (props: IShortCardProps) {
         id: 'pools',
         accessor: (x:any) => (
           <div className="flex gap-2 items-center max-w-[153px]">
-          <CircularImageInfo imageArray={[getImagesPath(x.token1.symbol), getImagesPath(x.token2.symbol)]} />
-          <div className='flex flex-col gap-[2px]'>
-          <span className="text-f14 text-white uppercase">{x.token1.symbol}/{x.token2.symbol}</span>
-          <span className='text-f12 text-text-500'>Stable Pool</span>
+            <CircularImageInfo
+              imageArray={[
+                getImagesPath(x.token1.symbol),
+                getImagesPath(x.token2.symbol),
+              ]}
+            />
+            <div className="flex flex-col gap-[2px]">
+              <span className="text-f14 text-white uppercase">
+                {x.token1.symbol}/{x.token2.symbol}
+              </span>
+              <span className="text-f12 text-text-500">Stable Pool</span>
+            </div>
           </div>
-        </div>
         ),
       },
       {
@@ -98,23 +116,44 @@ export function ShortCard (props: IShortCardProps) {
       {
         Header: '',
         id: 'lools',
-        minWidth:151,
-        accessor: (x:any)=>(
-          <div className='bg-primary-500/10 cursor-pointer  text-primary-500 px-7 py-2 rounded-lg' onClick={()=>{setShowLiquidityModal(true)}}>
-                Manage
+        minWidth: 151,
+        accessor: (x) => (
+          <div
+            className="bg-primary-500/10 cursor-pointer  text-primary-500 px-7 py-2 rounded-lg"
+            onClick={() => {
+              setShowLiquidityModal(true);
+              setTokenIn({
+                name: 'USDC.e',
+                image: `/assets/tokens/USDC.e.png`,
+                symbol: 'USDC.e',
+              });
+              setTokenOut({
+                name: 'USDT.e',
+                image: `/assets/tokens/USDT.e.png`,
+                symbol: 'USDT.e',
+              });
+            }}
+          >
+            Manage
           </div>
         ),
       },
     ],
-    [valueFormat],
+    [valueFormat]
   );
- 
 
-  return (<>
-    {showLiquidityModal && <ManageLiquidity closeFn={setShowLiquidityModal}/>}
-    <div className={`w-full ${props.className}`}>
-    
-    <Table<any> columns={columns} data={poolsTableData} />
-    </div>
-    </>);
+  return (
+    <>
+      {showLiquidityModal && (
+        <ManageLiquidity
+          tokenIn={tokenIn}
+          tokenOut={tokenOut}
+          closeFn={setShowLiquidityModal}
+        />
+      )}
+      <div className={`w-full ${props.className}`}>
+        <Table<any> columns={columns} data={poolsTableData} />
+      </div>
+    </>
+  );
 }

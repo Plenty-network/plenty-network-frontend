@@ -28,6 +28,11 @@ export interface IConfig {
   WALLET_NETWORK: NetworkType;
   ADMIN_ADDRESS: string;
   BURNER: string;
+  VOTER: { mainnet: string; testnet: string };
+  VOTE_ESCROW: { mainnet: string; testnet: string };
+  VE_INDEXER : string;
+  PLY_INDEXER : string;
+  PLY_TOKEN: { mainnet: string; testnet: string };
 }
 
 interface IApi {

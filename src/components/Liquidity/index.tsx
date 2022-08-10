@@ -13,8 +13,10 @@ import { SwitchWithIcon } from '../SwitchCheckbox/switchWithIcon';
 import RemoveLiquidity from './RemoveLiquidity';
 
 import wallet from '../../../src/assets/icon/pools/wallet.svg';
-import { useAppSelector } from '../../redux';
+import { AppDispatch, useAppSelector } from '../../redux';
 import { ISwapData, tokenParameterLiquidity } from './types';
+import { useDispatch } from 'react-redux';
+import { walletConnection } from '../../redux/wallet/wallet';
 
 interface ILiquidityProps {
   firstTokenAmount: string | number;
@@ -64,9 +66,18 @@ function Liquidity(props: ILiquidityProps) {
   const handleRemoveLiquidity = () => {
     props.setScreen('3');
   };
-
+  const dispatch = useDispatch<AppDispatch>();
+  const connectTempleWallet = () => {
+    return dispatch(walletConnection());
+  };
   const AddButton = useMemo(() => {
-    if (
+    if (!walletAddress) {
+      return (
+        <Button onClick={connectTempleWallet} color={'primary'}>
+          Connect Wallet
+        </Button>
+      );
+    } else if (
       walletAddress &&
       ((props.firstTokenAmount &&
         props.firstTokenAmount > props.userBalances[props.tokenIn.name]) ||

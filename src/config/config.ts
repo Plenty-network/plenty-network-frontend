@@ -17,9 +17,24 @@ const Config: IConfig = {
     mainnet: 'https://mifx20dfsr.windmill.tools/',
   },
   TZKT_NODES: {
-    mainnet: 'https://api.tzkt.io',
-    testnet: 'https://api.ghostnet.tzkt.io',
+    mainnet: 'https://api.tzkt.io/',
+    testnet: 'https://api.ghostnet.tzkt.io/',
   },
+  VOTER: {
+    mainnet: '',
+    testnet: 'KT1PexY3Jn8BCJmVpVLNN944YpVLM2LWTMMV',
+  },
+  VOTE_ESCROW : {
+    mainnet : '',
+    testnet : 'KT1Xrb4eEizLTwR9sZgckjugfuaPB563KKd6',
+  },
+  PLY_TOKEN : {
+    mainnet : '',
+    testnet : 'KT1XFABWm5H9CMFL3T5iNb7Zz6YVpLHQjpsA',
+  },
+
+  VE_INDEXER : 'http://65.0.129.224/',
+  PLY_INDEXER : '',
 
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',

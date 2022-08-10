@@ -24,7 +24,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title className="font-medium1">Plent network</title>
+        <title className="font-medium1">Plenty network</title>
         <meta name="description" content="plenty network" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

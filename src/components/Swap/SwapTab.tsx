@@ -230,8 +230,9 @@ function SwapTab(props: ISwapTabProps) {
           </Button>
         );
       } else if (
-        Object.keys(props.tokenOut).length !== 0 &&
-        props.firstTokenAmount === ''
+        (Object.keys(props.tokenOut).length !== 0 &&
+          props.firstTokenAmount === '') ||
+        Number(props.firstTokenAmount) === 0
       ) {
         return (
           <Button color="disabled" width="w-full">
@@ -297,7 +298,7 @@ function SwapTab(props: ISwapTabProps) {
           onClick={() => setSettingsShow(!settingsShow)}
         >
           <Image src={settings} height={'20px'} width={'20px'} />
-          <span className="text-white font-body4 ml-0.5 relative -top-[3px]">
+          <span className="text-white font-body4 ml-2 relative -top-[3px]">
             {props.slippage}%
           </span>
         </div>
@@ -361,7 +362,7 @@ function SwapTab(props: ISwapTabProps) {
                   <input
                     type="text"
                     className={clsx(
-                      'text-white bg-card-500 text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%]'
+                      'text-white bg-card-500 text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%] placeholder:text-text-500'
                     )}
                     placeholder="0.0"
                     lang="en"
@@ -725,7 +726,7 @@ function SwapTab(props: ISwapTabProps) {
                                         key={token?.name}
                                       >
                                         {idx === swapRoute.length - 1 && (
-                                          <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                                          <div className="w-1.5 h-2 bg-primary-750 z-50"></div>
                                         )}
                                         <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
                                           <span className="w-[28px] h-[28px]">
@@ -737,14 +738,14 @@ function SwapTab(props: ISwapTabProps) {
                                           </span>
                                         </div>
                                         {idx === 0 && (
-                                          <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                                          <div className="w-1.5 h-2 bg-primary-750 z-50"></div>
                                         )}
                                       </div>
                                     )}
 
                                     {idx !== swapRoute.length - 1 && (
                                       <div className="flex items-center">
-                                        <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                                        <div className="w-1.5 h-2 bg-primary-750 z-50"></div>
                                         <div
                                           className={clsx(
                                             'relative  rounded-2xl h-[32px] bg-card-600 p-px flex',
@@ -757,7 +758,7 @@ function SwapTab(props: ISwapTabProps) {
                                             {props.routeDetails.isStable[
                                               idx
                                             ] && (
-                                              <div className="   z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
+                                              <div className="border-2 border-primary-500/[0.2] z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
                                                 <span className="w-[18px] h-[18px]">
                                                   <Image
                                                     src={stableSwap}
@@ -814,7 +815,7 @@ function SwapTab(props: ISwapTabProps) {
                                             </div>
                                           </span>
                                         </div>
-                                        <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                                        <div className="w-1.5 h-2 bg-primary-750 z-50"></div>
                                       </div>
                                     )}
                                   </>
@@ -870,10 +871,8 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip2"
                     toolTipChild={
                       <div className="w-[323px]">
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the industrys
-                        standard dummy text ever since the 1500s, when an
-                        unknown printer.
+                        Your transaction will revert if there is a large,
+                        unfavorable price movement before it is confirmed.
                       </div>
                     }
                   >
@@ -912,10 +911,8 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip4"
                     toolTipChild={
                       <div className="w-[323px]">
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the industrys
-                        standard dummy text ever since the 1500s, when an
-                        unknown printer.
+                        The difference between the market price and estimated
+                        price due to trade size.
                       </div>
                     }
                   >
@@ -953,10 +950,8 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip3"
                     toolTipChild={
                       <div className="w-[323px]">
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the industrys
-                        standard dummy text ever since the 1500s, when an
-                        unknown printer.
+                        Fees are 0.35% for each volatile swap and 0.10% for each
+                        stable swap.
                       </div>
                     }
                   >
@@ -985,10 +980,8 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip4"
                     toolTipChild={
                       <div className="w-[323px]">
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the industrys
-                        standard dummy text ever since the 1500s, when an
-                        unknown printer.
+                        Routing through these tokens results in the best price
+                        for your trade.
                       </div>
                     }
                   >
@@ -1044,7 +1037,7 @@ function SwapTab(props: ISwapTabProps) {
                               >
                                 <span className=" flex items-center">
                                   {props.routeDetails.isStable[idx] && (
-                                    <div className="   z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
+                                    <div className="border-2 border-primary-500/[0.2] z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
                                       <span className="w-[18px] h-[18px]">
                                         <Image
                                           src={stableSwap}

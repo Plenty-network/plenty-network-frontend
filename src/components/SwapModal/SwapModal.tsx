@@ -7,6 +7,7 @@ import { tokenParameter, tokensModal, tokenType } from '../../constants/swap';
 import { BigNumber } from 'bignumber.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
+import { ToolTip } from '../Tooltip/TooltipAdvanced';
 
 interface ISwapModalProps {
   tokens: tokensModal[];
@@ -71,7 +72,16 @@ function SwapModal(props: ISwapModalProps) {
           <div className="text-text-400 mt-[20px] font-body1">
             Common base
             <span className="relative top-0.5 ml-[5px]">
-              <Image src={infogrey} />
+              <ToolTip
+                id="tooltipH"
+                toolTipChild={
+                  <div className="w-[200px]">
+                    These tokens are commonly paired with other tokens
+                  </div>
+                }
+              >
+                <Image src={infogrey} />
+              </ToolTip>
             </span>
           </div>
           <div className="flex flex-wrap mt-1">
@@ -131,13 +141,13 @@ function SwapModal(props: ISwapModalProps) {
           ) : (
             <div
               id="tokensList"
-              className="border relative max-h-[300px] overflow-y-auto border-text-800 bg-card-100 rounded-xl px-[18px] w-full pb-5 mt-5"
+              className="border relative max-h-[300px] overflow-y-auto border-text-800 bg-muted-200 rounded-xl  w-full pb-5 mt-5"
             >
               {tokensToShow.map((token, index) => {
                 return (
                   <div
                     className={clsx(
-                      ' flex content-center mt-4',
+                      ' flex content-center  px-[18px] hover:bg-card-100 py-2',
                       props.tokenIn.name === token.name ||
                         props.tokenOut.name === token.name
                         ? 'cursor-not-allowed'
