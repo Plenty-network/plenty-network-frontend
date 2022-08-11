@@ -26,6 +26,7 @@ import {
 import { IAllBalanceResponse } from '../../api/util/types';
 import { Chain } from '../../config/types';
 import { votingPower } from '../../api/votes/votesUdit';
+import { poolsDataWrapper } from '../../api/pools';
 
 interface ISwapProps {
   className?: string;
@@ -113,6 +114,7 @@ function Swap(props: ISwapProps) {
   const [allPathState, setAllPathState] = useState<string[]>([]);
   const allPathSwapData = React.useRef<any[][]>([]);
   const isSwitchClicked = React.useRef<boolean>(false);
+
 
   useEffect(() => {
 

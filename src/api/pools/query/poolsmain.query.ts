@@ -1,7 +1,19 @@
 import { useQuery } from "react-query";
+import { poolsDataWrapper } from "..";
 import {IAmmContracts } from "../../../config/types";
-import { PoolsMainPage, VolumeV1Data, VolumeVeData } from "../types";
+import { IPoolsDataWrapperResponse, PoolsMainPage, VolumeV1Data, VolumeVeData } from "../types";
 
+
+export const usePoolsMain2 = () =>
+  useQuery<IPoolsDataWrapperResponse[], Error>(
+    'pools-mains',
+    async () => {
+      const data1= await (await poolsDataWrapper('')).allData;
+      const data:IPoolsDataWrapperResponse[]=Object.values(data1)
+       return data;
+    },
+    { refetchInterval: 60000 },
+);
 export const usePoolsMain = () =>
   useQuery<PoolsMainPage[], Error>(
     'pools-mains',
@@ -27,7 +39,7 @@ export const usePoolsMain = () =>
       });
       return data;
     },
-    { refetchInterval: 60000 },
+    { refetchInterval: 10000 },
 );
 const volumeV1Data =async ()=>{
     const response = await fetch('http://65.0.129.224/v1/pools');

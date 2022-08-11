@@ -3,11 +3,12 @@ import * as React from 'react';
 import subtractSvg from '../../../assets/icon/pools/subtract.svg'
 import { Position, ToolTip } from '../../Tooltip/TooltipAdvanced';
 export interface IAprInfoProps {
+  isMobile?:boolean;
 }
 
 export function AprInfo (props: IAprInfoProps) {
   return (
-    <div className='flex gap-2 '>
+    <div className={props.isMobile?'flex gap-2 flex-col':'flex gap-2 '}>
         <ToolTip
          position={Position.top}
          toolTipChild={<p>Previous week: <span className='font-semibold'>3.48 %</span></p>}

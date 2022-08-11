@@ -1,4 +1,5 @@
-import { IAMM } from "../../config/types";
+import { AMM_TYPE, IAMM } from "../../config/types";
+import { BigNumber } from 'bignumber.js'
 
 export interface VolumeV1Data {
   pool: string;
@@ -51,6 +52,24 @@ export interface VolumeVeData {
   feesEpoch: FeesEpoch;
   tvl: Tvl;
 }
-export interface PoolsMainPage extends  VolumeVeData,VolumeV1Data,IAMM {
-  id:number;
+
+export interface IPoolsDataWrapperResponse {
+  tokenA : String;
+  tokenB : String;
+  poolType : AMM_TYPE;
+  apr : BigNumber;
+  prevApr : BigNumber;
+  boostedApr : BigNumber;
+  volume : BigNumber;
+  volumeTokenA : BigNumber;
+  volumeTokenB : BigNumber;
+  tvl : BigNumber;
+  fees : BigNumber;
+  bribes : BigNumber;
+  isMyPos : Boolean;
+
+}
+
+export interface PoolsMainPage extends VolumeVeData, VolumeV1Data, IAMM {
+  id: number;
 }

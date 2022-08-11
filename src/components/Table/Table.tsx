@@ -3,7 +3,6 @@ import { useTable, Column, useFilters, useSortBy, usePagination } from 'react-ta
 import { useAppSelector } from '../../redux';
 import { NoContentAvailable, WalletNotConnected } from '../Pools/Component/ConnectWalletOrNoToken';
 import { Tabs } from '../Pools/ShortCardHeader';
-
 export interface ISimmerEffectProps {
   lines:number;
 }
@@ -83,7 +82,7 @@ const Table = <D extends object>({ columns, data,shortby,isConnectWalletRequired
       {headerGroups.map((headerGroup,index) => (
       <tr
       key={`headerGroup_${index}`}
-      className='border border-borderCommon bg-cardBackGround flex px-5 py-3 items-center rounded-t-xl	rounded-b'>       
+      className='border border-borderCommon bg-cardBackGround flex md:px-5 md:py-3 px-1 py-1  items-center rounded-t-xl	rounded-b'>       
         {headerGroup.headers.map((column,i) => (      
            <Tabs 
           key={`tabls_${column.render('Header')?.toString()}_${i}`}
@@ -111,7 +110,7 @@ const Table = <D extends object>({ columns, data,shortby,isConnectWalletRequired
               return (
              // eslint-disable-next-line react/jsx-key
              <tr 
-             className={`border border-borderCommon  bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg slideFromTop`}>
+             className={`border border-borderCommon  bg-cardBackGround flex md:px-5 md:py-3 px-1 py-1 items-center justify-between rounded-lg slideFromTop`}>
      
                 
              {row.cells.map((cell:any,i:any) => {
