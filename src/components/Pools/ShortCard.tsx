@@ -9,7 +9,7 @@ import { ManageLiquidity } from './ManageLiquidity';
 import { AMM_TYPE } from '../../config/types';
 import { tokenParameterLiquidity } from '../Liquidity/types';
 import { AprInfo } from './Component/AprInfo';
-import { PoolsText, PoolsTextWithTooltip } from './Component/poolsText';
+import { PoolsText, PoolsTextWithTooltip } from './Component/PoolsText';
 import { isMobile} from 'react-device-detect';
 
 export interface IShortCardProps {
@@ -221,7 +221,7 @@ function ManageBtn(): any {
   }
   return (
     <>
-      {showLiquidityModal && (
+      {showLiquidityModal || true && (
         <ManageLiquidity
           tokenIn={tokenIn}
           tokenOut={tokenOut}
