@@ -4,6 +4,7 @@ import { SwitchWithIcon } from '../SwitchCheckbox/switchWithIcon';
 import { InputText } from './Component/InputText';
 import {
   BtnWithStakeIcon,
+  BtnWithUnStakeIcon,
   BtnWithWalletIcon,
 } from './Component/BtnWithWalletIcon';
 
@@ -391,7 +392,7 @@ export function Unstaking(props: IUnstakingProps) {
         </div>
         {walletAddress && (
           <div className="pr-2 md:pr-5">
-            <BtnWithWalletIcon
+            <BtnWithUnStakeIcon
               text={`${Number(props.stakedToken).toFixed(4)} PNLP`}
             />
           </div>
