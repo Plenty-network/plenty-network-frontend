@@ -98,7 +98,13 @@ function Liquidity(props: ILiquidityProps) {
     }
   }, [props]);
   const RemoveButton = useMemo(() => {
-    if (
+    if (!walletAddress) {
+      return (
+        <Button onClick={connectTempleWallet} color={'primary'}>
+          Connect Wallet
+        </Button>
+      );
+    } else if (
       walletAddress &&
       props.burnAmount &&
       props.burnAmount > props.pnlpBalance
@@ -119,7 +125,7 @@ function Liquidity(props: ILiquidityProps) {
 
   return (
     <>
-      <div className="border rounded-2xl border-text-800 bg-card-200 px-3.5 pt-4 pb-6  mb-5">
+      <div className="border rounded-2xl border-text-800 bg-card-200 px-[10px] md:px-3.5 pt-4 pb-6  mb-5">
         <div className="flex items-center justify-between flex-row  relative">
           <div className="flex">
             <span className="relative ml-2 top-[3px]">
@@ -139,7 +145,7 @@ function Liquidity(props: ILiquidityProps) {
             onClick={() => setSettingsShow(!settingsShow)}
           >
             <Image src={settings} height={'20px'} width={'20px'} />
-            <span className="text-white font-body4 ml-0.5 relative -top-[3px]">
+            <span className="text-white font-body4 ml-2 relative -top-[3px]">
               {props.slippage}%
             </span>
           </div>
