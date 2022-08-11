@@ -5,16 +5,14 @@ import info from '../../../src/assets/icon/common/infoIcon.svg';
 import Button from '../Button/Button';
 import { tokenParameterLiquidity } from '../Liquidity/types';
 
-interface IConfirmAddLiquidityProps {
+interface IConfirmUnStakeLiquidity {
   tokenIn: tokenParameterLiquidity;
   unStakeInput: string | number;
   tokenOut: tokenParameterLiquidity;
-
   setScreen: React.Dispatch<React.SetStateAction<string>>;
-
   handleOperation: () => void;
 }
-export function ConfirmUnStakeLiquidity(props: IConfirmAddLiquidityProps) {
+export function ConfirmUnStakeLiquidity(props: IConfirmUnStakeLiquidity) {
   return (
     <>
       <div className="flex">

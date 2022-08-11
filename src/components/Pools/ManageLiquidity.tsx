@@ -82,6 +82,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>(
     {}
   );
+  const [selectedDropDown, setSelectedDropDown] = useState('');
   const [isAddLiquidity, setIsAddLiquidity] = useState(true);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [burnAmount, setBurnAmount] = React.useState<string | number>('');
@@ -587,6 +588,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 stakedToken={stakedToken}
                 setStakingScreen={setStakingScreen}
                 stakingScreen={stakingScreen}
+                setSelectedDropDown={setSelectedDropDown}
+                selectedDropDown={selectedDropDown}
               />
             )}
             {activeState === ActiveLiquidity.Rewards && (
@@ -624,6 +627,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               tokenOut={props.tokenOut}
               stakeInput={stakeInput}
               handleOperation={handleStakeOperation}
+              setSelectedDropDown={setSelectedDropDown}
+              selectedDropDown={selectedDropDown}
             />
           </>
         )}

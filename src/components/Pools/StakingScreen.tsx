@@ -38,6 +38,8 @@ export interface IStakingScreenProps {
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   stakedToken: string;
   setStakingScreen: React.Dispatch<React.SetStateAction<StakingScreenType>>;
+  setSelectedDropDown: React.Dispatch<React.SetStateAction<string>>;
+  selectedDropDown: string;
 }
 export interface IStakingProps {
   setStakingScreen: Function;
@@ -50,6 +52,8 @@ export interface IStakingProps {
   setStakeInput: React.Dispatch<React.SetStateAction<string | number>>;
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   stakedToken: string;
+  setSelectedDropDown: React.Dispatch<React.SetStateAction<string>>;
+  selectedDropDown: string;
 }
 
 export interface IUnstakingProps {
@@ -79,6 +83,8 @@ export function StakingScreen(props: IStakingScreenProps) {
           setScreen={props.setScreen}
           stakedToken={props.stakedToken}
           stakingScreen={props.stakingScreen}
+          setSelectedDropDown={props.setSelectedDropDown}
+          selectedDropDown={props.selectedDropDown}
         />
       )}
       {props.stakingScreen === StakingScreenType.Unstaking && (
@@ -103,7 +109,6 @@ export function Staking(props: IStakingProps) {
   const walletAddress = store.getState().wallet.address;
   const handleInputPercentage = (value: number) => {
     props.setStakeInput(value * Number(props.pnlpBalance));
-    // handleStakeInput(value * Number(props.pnlpBalance));
   };
   const handleStakeInput = async (input: string | number) => {
     if (input === '' || isNaN(Number(input))) {
@@ -114,7 +119,6 @@ export function Staking(props: IStakingProps) {
       props.setStakeInput(input);
     }
   };
-  const [selectedDropDown,setSelectedDropDown]=useState('');
 
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
@@ -125,6 +129,12 @@ export function Staking(props: IStakingProps) {
       return (
         <Button onClick={connectTempleWallet} color={'primary'}>
           Connect Wallet
+        </Button>
+      );
+    } else if (Number(props.stakeInput) <= 0) {
+      return (
+        <Button onClick={() => null} color={'disabled'}>
+          Stake
         </Button>
       );
     } else if (
@@ -169,11 +179,11 @@ export function Staking(props: IStakingProps) {
         {/* dropDown And InfoTab */}
         <div className="flex py-2 px-4 justify-between">
           <Dropdown
-           Options={['one','two','three']}
-           selectedText={selectedDropDown}
-           onClick={setSelectedDropDown}
+            Options={['one', 'two', 'three']}
+            selectedText={props.selectedDropDown}
+            onClick={props.setSelectedDropDown}
           />
-          <div className="text-f12 text-text-400 max-w-[300px] text-center">
+          <div className="font-mobile-f9 md:text-f12 text-text-400 ml-2 max-w-[300px] text-center">
             Based on how much vePLY a user owns, they may be able to receive up
             to 2.5x more PLY rewards.
           </div>
@@ -285,6 +295,12 @@ export function Unstaking(props: IUnstakingProps) {
       return (
         <Button onClick={connectTempleWallet} color={'primary'}>
           Connect Wallet
+        </Button>
+      );
+    } else if (Number(props.unStakeInput) <= 0) {
+      return (
+        <Button onClick={() => null} color={'disabled'}>
+          Unstake
         </Button>
       );
     } else if (
