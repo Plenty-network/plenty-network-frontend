@@ -13,6 +13,7 @@ export interface ITabProps {
   isActive: boolean;
   text: string;
   onClick: Function;
+  className?:string;
 }
 
 const active = "border-b border-b-primary-500 text-white";
@@ -23,7 +24,7 @@ export function PoolsCardHeaderTab(props: ITabProps) {
     <div
       onClick={() => onClick()}
       className={`w-[113px] text-f16 text-center cursor-pointer py-4 text-navBarMuted ${isActive ? active : ""
-        }`}
+        } ${props.className}`}
     >
       {text}
     </div>
@@ -40,20 +41,25 @@ export function CardHeader(props: ICardHeaderProps) {
   const { activeStateTab, setActiveStateTab,setSearchValue,searchValue } = props; 
   const ListOfTabs = ["All", "Stable", "Volatile", "My pools"];
   return (
-    <div className="flex justify-between border-b border-b-borderCommon  bg-cardBackGround">
+    <div className="flex md:justify-between justify-center border-b border-b-borderCommon  bg-cardBackGround">
     <div
       className={`${props.className} flex  items-center border-b border-b-borderCommon  bg-cardBackGround`}
     >
-      {ListOfTabs.map((tab, i) => (
-        <PoolsCardHeaderTab
-          key={tab + i}
-          isActive={activeStateTab === tab}
-          text={tab}
-          onClick={() => setActiveStateTab(tab)}
-        />
-      ))}
+        {PoolsHeaderCard("All", 0,'')}
+        {PoolsHeaderCard("Stable", 1,'')}
+        {PoolsHeaderCard("Volatile", 2,'')}
+        {PoolsHeaderCard("My pools", 3,'hidden md:block')}
     </div>
-    <InputSearchBox value={searchValue} onChange={setSearchValue} />
+    <InputSearchBox className='hidden md:block' value={searchValue} onChange={setSearchValue} />
     </div>
   );
+
+  function PoolsHeaderCard(tab: string, i: number,className:string): JSX.Element {
+    return <PoolsCardHeaderTab
+      key={tab + i}
+      className={className}
+      isActive={activeStateTab === tab}
+      text={tab}
+      onClick={() => setActiveStateTab(tab)} />;
+  }
 }
