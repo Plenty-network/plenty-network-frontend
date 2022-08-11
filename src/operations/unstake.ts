@@ -1,15 +1,21 @@
-import { BigNumber } from "bignumber.js";
+import { BigNumber } from 'bignumber.js';
 import { getDexAddress } from '../api/util/fetchConfig';
 import { dappClient } from '../common/walletconnect';
+import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 import { store } from '../redux';
-import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from './types';
+import {
+  IOperationsResponse,
+  TResetAllValues,
+  TSetActiveState,
+  TSetShowConfirmTransaction,
+  TTransactionSubmitModal,
+} from './types';
 
 /**
  * Unstake PNLP token operation for the selected pair of tokens.
  * @param tokenOneSymbol - Symbol of first token of the pair
- * @param tokenTwoSymbol - Symbol of second token of the pair 
+ * @param tokenTwoSymbol - Symbol of second token of the pair
  * @param pnlpAmount - Amount of PNLP token the user wants to unstake
- * @param userTezosAddress - Tezos wallet address of user
  * @param transactionSubmitModal - Callback to open modal when transaction is submiited
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
@@ -18,28 +24,28 @@ export const unstakePnlpTokens = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
   pnlpAmount: string | BigNumber,
-  userTezosAddress: string,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  setActiveState: TSetActiveState | undefined
 ): Promise<IOperationsResponse> => {
   try {
     const state = store.getState();
     const AMM = state.config.AMMs;
     const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
-    if (dexContractAddress === "false") {
-      throw new Error("AMM does not exist for the selected pair.");
+    if (dexContractAddress === 'false') {
+      throw new Error('AMM does not exist for the selected pair.');
     }
     const gaugeAddress: string | undefined =
       AMM[dexContractAddress].gaugeAddress;
     if (gaugeAddress === undefined) {
-      throw new Error("Gauge does not exist for the selected pair.");
+      throw new Error('Gauge does not exist for the selected pair.');
     }
 
     const { CheckIfWalletConnected } = dappClient();
     const walletResponse = await CheckIfWalletConnected();
     if (!walletResponse.success) {
-      throw new Error("Wallet connection failed.");
+      throw new Error('Wallet connection failed.');
     }
     const Tezos = await dappClient().tezos();
 
@@ -63,6 +69,7 @@ export const unstakePnlpTokens = async (
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal &&
       transactionSubmitModal(batchOperation.opHash as string);
+    setActiveState && setActiveState(ActiveLiquidity.Liquidity);
     resetAllValues && resetAllValues();
     await batchOperation.confirmation();
     return {
