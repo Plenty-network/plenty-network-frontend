@@ -5,7 +5,6 @@ import wallet from '../../../src/assets/icon/pools/wallet.svg';
 import { ISwapData, tokenParameterLiquidity } from './types';
 import { getOutputTokensAmount } from '../../api/liquidity';
 import { useAppSelector } from '../../redux';
-import { walletConnection } from '../../redux/wallet/wallet';
 
 interface IRemoveLiquidityProps {
   swapData: ISwapData;
@@ -136,7 +135,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
           </div>
         </div>
         <div className="px-2 md:px-5 w-[100%]  items-center  flex ">
-          <div className="border border-text-800/[0.5] flex  items-center rounded-2xl w-[120px] md:w-[166px] pl-[10px] h-[66px] bg-cardBackGround">
+          <div className="border border-text-800/[0.5] flex  items-center rounded-2xl w-[120px] md:w-[166px] pl-[10px] py-2 h-[66px] bg-cardBackGround">
             <div>
               <Image
                 src={props.tokenIn.image}
@@ -145,8 +144,8 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
                 height={'34px'}
               />
             </div>
-            <div className="md:ml-2.5 md:font-title1 font-title3 text-white">
-              <p>
+            <div className="md:ml-2.5 ">
+              <p className=" md:font-title1 font-title3 text-white">
                 {props.removeTokenAmount.tokenOneAmount
                   ? Number(props.removeTokenAmount.tokenOneAmount).toFixed(4)
                   : '--'}
@@ -162,7 +161,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
               </p>
             </div>
           </div>
-          <div className="border border-text-800/[0.5] ml-3 flex  items-center rounded-2xl w-[120px] md:w-[166px] pl-[10px] h-[66px] bg-cardBackGround">
+          <div className="border border-text-800/[0.5] ml-3 flex  items-center rounded-2xl w-[120px] md:w-[166px] pl-[10px] py-2 h-[66px] bg-cardBackGround">
             <div>
               <Image
                 src={props.tokenOut.image}
@@ -171,8 +170,8 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
                 height={'34px'}
               />
             </div>
-            <div className="md:ml-2.5 md:font-title1 font-title3 text-white">
-              <p>
+            <div className="md:ml-2.5 ">
+              <p className=" md:font-title1 font-title3 text-white">
                 {props.removeTokenAmount.tokenTwoAmount
                   ? Number(props.removeTokenAmount.tokenTwoAmount).toFixed(4)
                   : '--'}

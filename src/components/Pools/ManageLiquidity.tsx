@@ -17,7 +17,6 @@ import playBtn from '../../assets/icon/common/playBtn.svg';
 import Image from 'next/image';
 import ConfirmAddLiquidity from '../Liquidity/ConfirmAddLiquidity';
 import ConfirmRemoveLiquidity from '../Liquidity/ConfirmRemoveLiquidity';
-import { useLocationStateInLiquidity } from '../../hooks/useLocationStateInLiquidity';
 import { store, useAppDispatch, useAppSelector } from '../../redux';
 import {
   getPnlpBalance,
@@ -30,7 +29,6 @@ import {
   getPoolShareForPnlp,
 } from '../../api/liquidity';
 import { loadSwapDataWrapper } from '../../api/swap/wrappers';
-import { getDexType } from '../../api/util/fetchConfig';
 import ConfirmTransaction from '../ConfirmTransaction';
 import TransactionSubmitted from '../TransactionSubmitted';
 import {
@@ -385,7 +383,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       props.tokenIn.symbol,
       props.tokenOut.symbol,
       unStakeInput.toString(),
-      walletAddress,
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
