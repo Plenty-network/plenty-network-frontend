@@ -45,3 +45,22 @@ export function BtnWithStakeIcon(props: IWalletBtnWithIconProps) {
     </div>
   );
 }
+
+export function BtnWithUnStakeIcon(props: IWalletBtnWithIconProps) {
+  return (
+    <div
+      className={`ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3 ${props.className}`}
+    >
+      <div className="relative top-1">
+        <Image src={stakeIcon} width={'32px'} height={'32px'} />
+      </div>
+      <div className="ml-1 flex text-primary-500 font-body2">
+        {!props.text ? (
+          <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
+        ) : (
+          <span className="mr-1">{props.text}</span>
+        )}
+      </div>
+    </div>
+  );
+}

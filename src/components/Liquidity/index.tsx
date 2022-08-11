@@ -78,6 +78,15 @@ function Liquidity(props: ILiquidityProps) {
         </Button>
       );
     } else if (
+      Number(props.firstTokenAmount) <= 0 ||
+      Number(props.secondTokenAmount) <= 0
+    ) {
+      return (
+        <Button onClick={() => null} color={'disabled'}>
+          Add
+        </Button>
+      );
+    } else if (
       walletAddress &&
       ((props.firstTokenAmount &&
         props.firstTokenAmount > props.userBalances[props.tokenIn.name]) ||
@@ -102,6 +111,12 @@ function Liquidity(props: ILiquidityProps) {
       return (
         <Button onClick={connectTempleWallet} color={'primary'}>
           Connect Wallet
+        </Button>
+      );
+    } else if (Number(props.burnAmount) <= 0) {
+      return (
+        <Button onClick={() => null} color={'disabled'}>
+          Remove
         </Button>
       );
     } else if (
