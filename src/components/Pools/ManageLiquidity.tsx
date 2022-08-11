@@ -510,7 +510,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         className="w-[410px] max-w-[410px] md:w-[620px] md:max-w-[620px] rounded-none md:rounded-3xl px-[18px] md:px-6"
         footerChild={
           <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
-            <p className="text-f16 text-text-150">
+            <p className="font-subtitle1 md:text-f16 text-text-150">
               {activeState === ActiveLiquidity.Liquidity &&
                 'Add liquidity, stake, and earn PLY'}
               {activeState === ActiveLiquidity.Staking &&

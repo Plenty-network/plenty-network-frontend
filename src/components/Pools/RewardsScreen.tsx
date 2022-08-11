@@ -53,14 +53,19 @@ export function RewardsScreen(props: IRewardsProps) {
   }, [props]);
   function InnerTab(
     token: any,
-    text: string,
+    text: number,
     className: string,
     tokenName: string
   ) {
     return (
       <div className="flex gap-2 items-center">
         <ImageCircle src={token} className={className} />
-        <div className="text-f14 text-white h-5 font-medium">{text}</div>
+        {!isNaN(text) ? (
+          <div className="text-f14 text-white h-5 font-medium">{text}</div>
+        ) : (
+          <div className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></div>
+        )}
+
         <div
           className={clsx(
             'text-f14 ml-px h-5 font-medium',
@@ -80,13 +85,13 @@ export function RewardsScreen(props: IRewardsProps) {
         <div className="flex flex-col">
           {InnerTab(
             props.tokenIn.image,
-            props.tokenInAmount,
+            Number(props.tokenInAmount),
             '',
             props.tokenIn.symbol
           )}
           {InnerTab(
             props.tokenOut.image,
-            props.tokenOutAmount,
+            Number(props.tokenOutAmount),
             '-mt-1',
             props.tokenOut.symbol
           )}
@@ -96,7 +101,7 @@ export function RewardsScreen(props: IRewardsProps) {
       <div className="flex border rounded-2xl border-text-800 bg-card-200 p-4 flex-col gap-[15px]">
         <div className="text-text-400 text-f12">Your Rewards</div>
         <div className="flex flex-col">
-          {InnerTab(token, props.rewardToken, '', 'PLY')}
+          {InnerTab(token, Number(props.rewardToken), '', 'PLY')}
         </div>
       </div>
 
