@@ -49,9 +49,7 @@ export function ShortCard (props: IShortCardProps) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: 'USDT.e',
   });
-  let columns;
-  if(isMobile){
-    columns = React.useMemo<Column<PoolsMainPage>[]>(
+  const mobilecolumns = React.useMemo<Column<PoolsMainPage>[]>(
       () => [
         {
           Header: 'Pools',
@@ -97,9 +95,8 @@ export function ShortCard (props: IShortCardProps) {
       ],
       [valueFormat]
     );
-  }
-  else{
-    columns = React.useMemo<Column<PoolsMainPage>[]>(
+  
+   const  desktopcolumns = React.useMemo<Column<PoolsMainPage>[]>(
       () => [
         {
           Header: 'Pools',
@@ -194,7 +191,7 @@ export function ShortCard (props: IShortCardProps) {
       ],
       [valueFormat]
     );
-  }
+  
    
 
 
@@ -229,7 +226,7 @@ function ManageBtn(): any {
         />
       )}
       <div className={`w-full  ${props.className}`}>
-        <Table<any> columns={columns} data={poolsTableData} shortby='fees' isFetched={isFetched} isConnectWalletRequired={props.isConnectWalletRequired} />
+        <Table<any> columns={isMobile?mobilecolumns:desktopcolumns} data={poolsTableData} shortby='fees' isFetched={isFetched} isConnectWalletRequired={props.isConnectWalletRequired} />
       </div>
     </>
   );

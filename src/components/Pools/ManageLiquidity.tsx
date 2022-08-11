@@ -1,4 +1,4 @@
-import { StakingScreen } from './StakingScreen';
+import { StakingScreen, StakingScreenType } from './StakingScreen';
 import { RewardsScreen } from './RewardsScreen';
 import * as React from 'react';
 import Liquidity from '../Liquidity';
@@ -59,6 +59,7 @@ export interface IManageLiquidityProps {
 }
 
 export function ManageLiquidity(props: IManageLiquidityProps) {
+  const [stakingScreen, setStakingScreen] = useState(StakingScreenType.Staking);
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState(0.5);
   // const {tokenIn, setTokenIn, tokenOut, setTokenOut } =
@@ -234,6 +235,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const resetAllValues = () => {
     setFirstTokenAmountLiq('');
     setSecondTokenAmountLiq('');
+    setBurnAmount('');
+    setStakeInput('');
+    setUnStakeInput('');
     setBalanceUpdate(false);
   };
 
@@ -344,7 +348,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       walletAddress,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      setActiveState
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -371,24 +376,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     setContentTransaction(`Unstake ${Number(unStakeInput).toFixed(2)} PNLP`);
     dispatch(setLoading(true));
     setShowConfirmTransaction(true);
+    // setStakingScreen(StakingScreenType.Unstaking);
     setScreen('1');
-
-    localStorage.setItem(
-      TOKEN_A_LIQ,
-      props.tokenIn.name === 'tez'
-        ? 'TEZ'
-        : props.tokenIn.name === 'ctez'
-        ? 'CTEZ'
-        : props.tokenIn.name
-    );
-    localStorage.setItem(
-      TOKEN_B_LIQ,
-      props.tokenOut.name === 'tez'
-        ? 'TEZ'
-        : props.tokenOut.name === 'ctez'
-        ? 'CTEZ'
-        : props.tokenOut.name
-    );
+    setIsAddLiquidity(false);
 
     unstakePnlpTokens(
       props.tokenIn.symbol,
@@ -397,7 +387,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       walletAddress,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      setActiveState
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -489,7 +480,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      setActiveState
+      undefined
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -516,10 +507,10 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     <>
       <PopUpModal
         onhide={props.closeFn}
-        className="w-[380px] max-w-[380px] md:w-[620px] md:max-w-[620px]"
+        className="w-[410px] max-w-[410px] md:w-[620px] md:max-w-[620px] rounded-none md:rounded-3xl px-[18px] md:px-6"
         footerChild={
-          <div className="flex justify-center items-center gap-4 px-2 md:px-0">
-            <p className="text-f16 text-text-150">
+          <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
+            <p className="font-subtitle1 md:text-f16 text-text-150">
               {activeState === ActiveLiquidity.Liquidity &&
                 'Add liquidity, stake, and earn PLY'}
               {activeState === ActiveLiquidity.Staking &&
@@ -538,8 +529,17 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         {screen === '1' && (
           <>
             <div className="flex gap-1">
-              <p>Manage Liquidity </p>
-              <InfoIconToolTip message="Hello world" />
+              <p className="text-white">
+                {activeState === ActiveLiquidity.Liquidity &&
+                  'Manage Liquidity'}
+                {activeState === ActiveLiquidity.Staking && 'Staking Liquidity'}
+
+                {activeState === ActiveLiquidity.Rewards &&
+                  'Your positions & Rewards'}
+              </p>
+              <p className="ml-1 relative top-[6px]">
+                <InfoIconToolTip message="Hello world" />
+              </p>
             </div>
             <ManageLiquidityHeader
               className="mt-5 mb-6"
@@ -585,6 +585,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 setUnStakeInput={setUnStakeInput}
                 setScreen={setScreen}
                 stakedToken={stakedToken}
+                setStakingScreen={setStakingScreen}
+                stakingScreen={stakingScreen}
               />
             )}
             {activeState === ActiveLiquidity.Rewards && (

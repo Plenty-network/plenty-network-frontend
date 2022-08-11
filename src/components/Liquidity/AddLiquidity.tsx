@@ -57,12 +57,17 @@ function AddLiquidity(props: IAddLiquidityProps) {
     <>
       <div className="border mt-[10px] flex border-text-800/[0.5] rounded-2xl h-[88px]">
         <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
-          <div className="ml-5">
-            <Image src={props.tokenIn.image} width={'42px'} height={'42px'} />
+          <div className="ml-2 md:ml-5">
+            <Image
+              src={props.tokenIn.image}
+              className="tokenIconLiq"
+              width={'32px'}
+              height={'32px'}
+            />
           </div>
-          <div className="ml-2">
+          <div className="ml-1 md:ml-2">
             <p className="text-text-900 font-body2">Input</p>
-            <p className="font-title2 text-white">
+            <p className="font-caption1 md:font-title2 text-white">
               {props.tokenIn.name === 'tez'
                 ? 'TEZ'
                 : props.tokenIn.name === 'ctez'
@@ -71,7 +76,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
             </p>
           </div>
         </div>
-        <div className="pl-[25px] w-[100%] pr-[18px] items-center  flex bg-muted-200/[0.1]">
+        <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
           <div className="w-[50%]">
             <p>
               {props.swapData.isloading ? (
@@ -79,7 +84,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
               ) : (
                 <input
                   type="text"
-                  className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  lg:font-medium1 outline-none w-[100%]"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%]"
                   value={props.firstTokenAmount}
                   placeholder="0.0"
                   onChange={(e) =>
@@ -89,7 +94,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
               )}
             </p>
             <p>
-              <span className="mt-2 ml-1 font-body4 text-text-400">
+              <span className="mt-2 ml-1 font-body2 md:font-body4 text-text-400">
                 {' '}
                 ~$
                 {props.firstTokenAmount && props.tokenPrice[props.tokenIn.name]
@@ -102,12 +107,12 @@ function AddLiquidity(props: IAddLiquidityProps) {
             </p>
           </div>
           {walletAddress && (
-            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
-              <div>
-                <Image src={wallet} width={'32px'} height={'32px'} />
+            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-2 md:px-3">
+              <div className="relative top-0.5 md:top-0">
+                <Image src={wallet} className="walletIcon" />
               </div>
-              <div className="ml-1 flex text-primary-500 font-body2">
-                {!props.userBalances[props.tokenIn.name] ? (
+              <div className="ml-1 flex text-primary-500 font-caption1-small md:font-body2">
+                {!(Number(props.userBalances[props.tokenIn.name]) >= 0) ? (
                   <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
@@ -129,12 +134,17 @@ function AddLiquidity(props: IAddLiquidityProps) {
       </div>
       <div className="border -mt-[25px] flex border-text-800/[0.5] rounded-2xl h-[88px]">
         <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
-          <div className="ml-5">
-            <Image src={props.tokenOut.image} width={'42px'} height={'42px'} />
+          <div className="ml-2 md:ml-5">
+            <Image
+              src={props.tokenOut.image}
+              className="tokenIconLiq"
+              width={'32px'}
+              height={'32px'}
+            />
           </div>
-          <div className="ml-2">
+          <div className="ml-1 md:ml-2">
             <p className="text-text-900 font-body2">Input</p>
-            <p className="font-title2 text-white">
+            <p className="font-caption1 md:font-title2 text-white">
               {props.tokenOut.name === 'tez'
                 ? 'TEZ'
                 : props.tokenOut.name === 'ctez'
@@ -143,7 +153,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
             </p>
           </div>
         </div>
-        <div className="pl-[25px] w-[100%] pr-[18px] items-center  flex bg-muted-200/[0.1]">
+        <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
           <div className="w-[50%]">
             <p>
               {props.swapData.isloading ? (
@@ -152,7 +162,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 <input
                   type="text"
                   value={props.secondTokenAmount}
-                  className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  lg:font-medium1 outline-none w-[100%]"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%]"
                   placeholder="0.0"
                   onChange={(e) =>
                     handleLiquidityInput(e.target.value, 'tokenOut')
@@ -161,7 +171,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
               )}
             </p>
             <p>
-              <span className="mt-2 ml-1 font-body4 text-text-400">
+              <span className="mt-2 ml-1 font-body2 md:font-body4 text-text-400">
                 ~$
                 {props.secondTokenAmount &&
                 props.tokenPrice[props.tokenOut.name]
@@ -174,12 +184,12 @@ function AddLiquidity(props: IAddLiquidityProps) {
             </p>
           </div>
           {walletAddress && (
-            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
-              <div>
-                <Image src={wallet} width={'32px'} height={'32px'} />
+            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-2 md:px-3">
+              <div className="relative top-0.5 md:top-0">
+                <Image src={wallet} className="walletIcon" />
               </div>
-              <div className="ml-1 flex text-primary-500 font-body2">
-                {!props.userBalances[props.tokenOut.name] ? (
+              <div className="ml-1 flex text-primary-500 font-caption1-small md:font-body2">
+                {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (
                   <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">

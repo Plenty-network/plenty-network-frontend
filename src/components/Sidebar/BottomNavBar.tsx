@@ -59,6 +59,7 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
         <>
         {mainMenu.map((e)=>(
           <MenuWithLink
+          key={e.pathName}
           link={e.pathName} 
           text={e.name} 
           iconName={e.iconName}
