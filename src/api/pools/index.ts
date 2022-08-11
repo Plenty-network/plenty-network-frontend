@@ -4,7 +4,8 @@ import { IPoolsDataWrapperResponse, VolumeVeData } from './types'
 import { IAmmContracts } from '../../config/types';
 
 export const poolsDataWrapper = async (
-    address: string
+    address: string,
+    tokenPrice: { [id: string]: number },
   ): Promise< { success : boolean , allData  :{ [id: string]: IPoolsDataWrapperResponse } }> => {
     try {   
 
@@ -16,7 +17,7 @@ export const poolsDataWrapper = async (
         const AMMS : IAmmContracts  = AMMResponse.data;
 
 
-    //   Make URL dynamic
+        // Make URL dynamic
         const poolsResponse = await axios.get("http://65.0.129.224/v1/pools");
         const poolsData = poolsResponse.data;
 
@@ -32,6 +33,18 @@ export const poolsDataWrapper = async (
         for(var x of poolsData){
             const AMM = AMMS[x.pool];
             const analyticsObject = getAnalyticsObject(x.pool , analyticsData);
+            let bribes : BigNumber = new BigNumber(0);
+
+            // Uncomment when Aniket updates API
+
+            // if(!x.bribes || x.bribes.length === 0)
+            // bribes = new BigNumber(0);
+            // else{
+            //     for(var y in x.bribes){
+            //         bribes = bribes.plus(new BigNumber(tokenPrice[y.token] * y.value)); 
+            //     }
+
+            // }
 
             allData[x.pool] = {
             tokenA  : AMM.token1.symbol,
@@ -53,8 +66,7 @@ export const poolsDataWrapper = async (
             feesTokenA : new BigNumber(analyticsObject.fees7D.token1) ?? new BigNumber(0), 
             feesTokenB : new BigNumber(analyticsObject.fees7D.token2) ?? new BigNumber(0),
 
-            // Add Bribes data here ANIKET
-            bribes : x.bribes[0] ?? new BigNumber(0),
+            bribes : bribes,
 
             // Call Balance and staked API from KIRAN with ternary operator
             isMyPos : false,

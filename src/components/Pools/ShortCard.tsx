@@ -218,7 +218,7 @@ function ManageBtn(): any {
   }
   return (
     <>
-      {showLiquidityModal || true && (
+      {showLiquidityModal && (
         <ManageLiquidity
           tokenIn={tokenIn}
           tokenOut={tokenOut}
