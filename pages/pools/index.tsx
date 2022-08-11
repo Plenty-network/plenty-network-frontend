@@ -51,16 +51,16 @@ export default function Pools(props: IIndexProps) {
 
           />
           {activeStateTab === PoolsCardHeader.All && (
-            <PoolsTable className="px-5 py-4 " />
+            <PoolsTable className="md:px-5 md:py-4  px-2 py-4" />
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
-            <PoolsTable className="px-5 py-4 " poolsFilter={AMM_TYPE.STABLE} />
+            <PoolsTable className="md:px-5 md:py-4  px-2 py-4" poolsFilter={AMM_TYPE.STABLE} />
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
-            <PoolsTable className="px-5 py-4 " poolsFilter={AMM_TYPE.VOLATILE} />
+            <PoolsTable className="md:px-5 md:py-4  px-2 py-4" poolsFilter={AMM_TYPE.VOLATILE} />
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
-            <PoolsTable className="px-5 py-4 " poolsFilter={AMM_TYPE.MYPOOS} isConnectWalletRequired={true} />
+            <PoolsTable className="md:px-5 md:py-4  px-2 py-4" poolsFilter={AMM_TYPE.MYPOOS} isConnectWalletRequired={true} />
           )}
 
           {/* poolsTable */}

@@ -516,9 +516,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     <>
       <PopUpModal
         onhide={props.closeFn}
-        className="w-[620px] max-w-[620px]"
+        className="w-[380px] max-w-[380px] md:w-[620px] md:max-w-[620px]"
         footerChild={
-          <div className="flex justify-center items-center gap-4">
+          <div className="flex justify-center items-center gap-4 px-2 md:px-0">
             <p className="text-f16 text-text-150">
               {activeState === ActiveLiquidity.Liquidity &&
                 'Add liquidity, stake, and earn PLY'}

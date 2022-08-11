@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { store } from '../../redux';
 import { BigNumber } from 'bignumber.js'
 import { IPoolsDataWrapperResponse, VolumeVeData } from './types'
 import { IAmmContracts } from '../../config/types';
