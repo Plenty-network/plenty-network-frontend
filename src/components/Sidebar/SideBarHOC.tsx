@@ -21,11 +21,11 @@ export function SideBarHOC(props: ISideBarHOCProps) {
   };
   return (
     <>
-      <div className="cicle_animation">
-        {/* <div className="circle"></div>
-        <div className="circle2"></div> */}
-        {/* <div className="circle3"></div> */}
-      </div>
+      {/* <div className="cicle_animation">
+        <div className="circle"></div>
+        <div className="circle2"></div>
+        <div className="circle3"></div>
+      </div> */}
       <div className="flex flex-no-wrap flex-col">
         <TopNavBar setShowNotification={showNotificationClick} />
         <TopNavBarMobile setShowNotification={showNotificationClick} />
