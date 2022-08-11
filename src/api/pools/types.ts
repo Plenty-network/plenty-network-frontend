@@ -64,6 +64,8 @@ export interface IPoolsDataWrapperResponse {
   volumeTokenA : BigNumber;
   volumeTokenB : BigNumber;
   tvl : BigNumber;
+  tvlTokenA : BigNumber;
+  tvlTokenB : BigNumber;
   fees : BigNumber;
   bribes : BigNumber;
   isMyPos : Boolean;

@@ -40,7 +40,7 @@ export const poolsDataWrapper = async (
             tokenB : AMM.token2.symbol,
             poolType : AMM.type,
             apr : x.apr != "NaN" ? new BigNumber(x.apr) :new BigNumber(0),
-            prevApr : new BigNumber(x.prevApr) ?? new BigNumber(0),
+            prevApr : new BigNumber(x.previousApr) ?? new BigNumber(0),
             boostedApr : x.apr != "NaN" ? new BigNumber(x.apr).multipliedBy(2.5) :new BigNumber(0), //Check formula
 
             volume : new BigNumber(analyticsObject.volume24H.value) ?? new BigNumber(0),
@@ -48,6 +48,8 @@ export const poolsDataWrapper = async (
             volumeTokenB : new BigNumber(analyticsObject.volume24H.token2) ?? new BigNumber(0),
 
             tvl : new BigNumber(analyticsObject.tvl.value) ?? new BigNumber(0),
+            tvlTokenA : new BigNumber(analyticsObject.tvl.token1) ?? new BigNumber(0),
+            tvlTokenB : new BigNumber(analyticsObject.tvl.token2) ?? new BigNumber(0),
 
             fees : new BigNumber(analyticsObject.fees7D.value) ?? new BigNumber(0),
 
