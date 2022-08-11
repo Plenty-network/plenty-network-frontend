@@ -8,7 +8,7 @@ export const usePoolsMain2 = () =>
   useQuery<IPoolsDataWrapperResponse[], Error>(
     'pools-mains',
     async () => {
-      const data1= await (await poolsDataWrapper('')).allData;
+      const data1= (await poolsDataWrapper('' , {})).allData;
       const data:IPoolsDataWrapperResponse[]=Object.values(data1)
        return data;
     },

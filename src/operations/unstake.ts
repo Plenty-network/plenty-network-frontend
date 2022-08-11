@@ -1,7 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import { getDexAddress } from '../api/util/fetchConfig';
 import { dappClient } from '../common/walletconnect';
-import { TokenVariant } from "../config/types";
 import { store } from '../redux';
 import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from './types';
 
@@ -46,9 +45,6 @@ export const unstakePnlpTokens = async (
 
     const PNLP_TOKEN = AMM[dexContractAddress].lpToken;
 
-    const pnlpTokenContractInstance = await Tezos.wallet.at(
-      PNLP_TOKEN.address as string
-    );
     const gaugeContractInstance = await Tezos.wallet.at(gaugeAddress);
 
     const pnlpAmountToUnstake = new BigNumber(pnlpAmount).multipliedBy(
@@ -57,51 +53,11 @@ export const unstakePnlpTokens = async (
 
     let batch = null;
 
-    if (PNLP_TOKEN.variant === TokenVariant.FA12) {
-      batch = Tezos.wallet
+    batch = Tezos.wallet
         .batch()
-        .withContractCall(
-          pnlpTokenContractInstance.methods.approve(
-            gaugeAddress,
-            pnlpAmountToUnstake.toString()
-          )
-        )
         .withContractCall(
           gaugeContractInstance.methods.withdraw(pnlpAmountToUnstake.toString())
         );
-    } else if (PNLP_TOKEN.variant === TokenVariant.FA2) {
-      batch = Tezos.wallet
-        .batch()
-        .withContractCall(
-          pnlpTokenContractInstance.methods.update_operators([
-            {
-              add_operator: {
-                owner: userTezosAddress,
-                operator: gaugeAddress,
-                token_id: PNLP_TOKEN.tokenId as number,
-              },
-            },
-          ])
-        )
-        .withContractCall(
-          gaugeContractInstance.methods.withdraw(pnlpAmountToUnstake.toString())
-        )
-        .withContractCall(
-          pnlpTokenContractInstance.methods.update_operators([
-            {
-              remove_operator: {
-                owner: userTezosAddress,
-                operator: gaugeAddress,
-                token_id: PNLP_TOKEN.tokenId as number,
-              },
-            },
-          ])
-        );
-    } else {
-      throw new Error(
-        "Invalid token variant for the PNLP selected. Token variants can be FA1.2 or FA2."
-      );
-    }
 
     const batchOperation = await batch.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);
