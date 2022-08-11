@@ -5,14 +5,9 @@ import Button from '../Button/Button';
 import { useEffect, useRef, useState } from 'react';
 import { ERRORMESSAGES } from '../../constants/swap';
 import { useOutsideClick } from '../../utils/outSideClickHook';
-import { Switch } from '../SwitchCheckbox/switchWithoutIcon';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, useAppSelector } from '../../redux';
-import {
-  setUserSettingsExpertMode,
-  setUserSettingsMultihop,
-  setUserSettingsSlippage,
-} from '../../redux/userSettings/userSettings';
+import { setUserSettingsSlippage } from '../../redux/userSettings/userSettings';
 import { Position, ToolTip } from '../Tooltip/TooltipAdvanced';
 
 interface ITransactionSettingsProps {
@@ -61,7 +56,7 @@ function TransactionSettingsLiquidity(props: ITransactionSettingsProps) {
       ref={refSetting}
       style={{ top: '0px' }}
       className={clsx(
-        'z-20 absolute right-[10px]  md:right-[27px]  bg-card-500 border border-text-700/[0.5] w-[367px] p-5 rounded-2xl fade-in-3 '
+        'z-20 absolute right-[10px]  md:right-[27px]  bg-card-500 border border-text-700/[0.5] w-[300px] md:w-[367px] p-5 rounded-2xl fade-in-3 '
       )}
     >
       <div className="font-subtitle2">Transaction Settings</div>
