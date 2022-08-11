@@ -17,13 +17,15 @@ export function AprInfo (props: IAprInfoProps) {
       2.45%
       </div>
       </ToolTip>
-      <Image src={subtractSvg}/>
+      {!props.isMobile && <Image src={subtractSvg}/>}
       <ToolTip
          message='Hello'
          position={Position.top}
         >
-      <div className='text-f14 cursor-pointer text-white py-[3px] px-2 '>
+      <div className={`text-f14 cursor-pointer text-white py-[3px] px-2 ${props.isMobile?'flex gap-2':''}`}>
       2.45%
+      {props.isMobile && <Image src={subtractSvg}/>}
+
       </div>
       </ToolTip>
     </div>

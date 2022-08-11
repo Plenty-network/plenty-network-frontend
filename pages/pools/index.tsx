@@ -41,14 +41,17 @@ export default function Pools(props: IIndexProps) {
       <SideBarHOC>
         {/* className='' */}
         <div>
-          <HeadInfo className="md:px-3" />
+          <HeadInfo 
+          className="md:px-3" 
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          />
           <CardHeader
             activeStateTab={activeStateTab}
             setActiveStateTab={setActiveStateTab}
             className="md:px-3"
             searchValue={searchValue}
             setSearchValue={setSearchValue}
-
           />
           {activeStateTab === PoolsCardHeader.All && (
             <PoolsTable className="md:px-5 md:py-4  px-2 py-4" />
