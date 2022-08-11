@@ -9,7 +9,7 @@ import { ManageLiquidity } from './ManageLiquidity';
 import { AMM_TYPE } from '../../config/types';
 import { tokenParameterLiquidity } from '../Liquidity/types';
 import { AprInfo } from './Component/AprInfo';
-import { PoolsText, PoolsTextWithTooltip } from './Component/poolsText';
+import { PoolsText, PoolsTextWithTooltip } from './Component/PoolsText';
 import { isMobile} from 'react-device-detect';
 
 export interface IShortCardProps {
@@ -49,9 +49,7 @@ export function ShortCard (props: IShortCardProps) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: 'USDT.e',
   });
-  let columns;
-  if(isMobile){
-    columns = React.useMemo<Column<PoolsMainPage>[]>(
+  const mobilecolumns = React.useMemo<Column<PoolsMainPage>[]>(
       () => [
         {
           Header: 'Pools',
@@ -97,9 +95,8 @@ export function ShortCard (props: IShortCardProps) {
       ],
       [valueFormat]
     );
-  }
-  else{
-    columns = React.useMemo<Column<PoolsMainPage>[]>(
+  
+   const  desktopcolumns = React.useMemo<Column<PoolsMainPage>[]>(
       () => [
         {
           Header: 'Pools',
@@ -194,7 +191,7 @@ export function ShortCard (props: IShortCardProps) {
       ],
       [valueFormat]
     );
-  }
+  
    
 
 
@@ -221,7 +218,7 @@ function ManageBtn(): any {
   }
   return (
     <>
-      {showLiquidityModal && (
+      {showLiquidityModal || true && (
         <ManageLiquidity
           tokenIn={tokenIn}
           tokenOut={tokenOut}
@@ -229,7 +226,7 @@ function ManageBtn(): any {
         />
       )}
       <div className={`w-full  ${props.className}`}>
-        <Table<any> columns={columns} data={poolsTableData} shortby='fees' isFetched={isFetched} isConnectWalletRequired={props.isConnectWalletRequired} />
+        <Table<any> columns={isMobile?mobilecolumns:desktopcolumns} data={poolsTableData} shortby='fees' isFetched={isFetched} isConnectWalletRequired={props.isConnectWalletRequired} />
       </div>
     </>
   );
