@@ -135,13 +135,13 @@ function SwapModal(props: ISwapModalProps) {
             </div>
           </div>
           {Object.keys(tokensToShow).length === 0 ? (
-            <div className="border  h-[300px]  border-text-800 bg-muted-200 rounded-xl flex justify-center items-center px-[18px] w-full pb-5 mt-5 text-white">
+            <div className="border  h-[300px]  border-text-800 bg-muted-200 rounded-xl flex justify-center items-center px-[18px] w-full pb-5 mt-5 font-body4 text-white">
               No results found
             </div>
           ) : (
             <div
               id="tokensList"
-              className="border relative max-h-[300px] overflow-y-auto border-text-800 bg-muted-200 rounded-xl  w-full pb-5 mt-5"
+              className="border relative max-h-[300px] h-[300px] overflow-y-auto border-text-800 bg-muted-200 rounded-xl  w-full pb-5 mt-5"
             >
               {tokensToShow.map((token, index) => {
                 return (

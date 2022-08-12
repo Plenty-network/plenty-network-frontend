@@ -53,6 +53,17 @@ function AddLiquidity(props: IAddLiquidityProps) {
       props.setFirstTokenAmount(res.otherTokenAmount);
     }
   };
+
+  const onClickAmount = () => {
+    props.setSecondTokenAmount('');
+
+    props.tokenIn.name === 'tez'
+      ? handleLiquidityInput(
+          Number(props.userBalances[props.tokenIn.name]) - 0.02,
+          'tokenIn'
+        )
+      : handleLiquidityInput(props.userBalances[props.tokenIn.name], 'tokenIn');
+  };
   return (
     <>
       <div className="border mt-[10px] flex border-text-800/[0.5] rounded-2xl h-[88px]">
@@ -61,8 +72,8 @@ function AddLiquidity(props: IAddLiquidityProps) {
             <Image
               src={props.tokenIn.image}
               className="tokenIconLiq"
-              width={'32px'}
-              height={'32px'}
+              width={'42px'}
+              height={'42px'}
             />
           </div>
           <div className="ml-1 md:ml-2">
@@ -84,7 +95,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
               ) : (
                 <input
                   type="text"
-                  className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%]"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%] placeholder:text-text-400"
                   value={props.firstTokenAmount}
                   placeholder="0.0"
                   onChange={(e) =>
@@ -111,7 +122,10 @@ function AddLiquidity(props: IAddLiquidityProps) {
               <div className="relative top-0.5 md:top-0">
                 <Image src={wallet} className="walletIcon" />
               </div>
-              <div className="ml-1 flex text-primary-500 font-caption1-small md:font-body2">
+              <div
+                className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
+                onClick={onClickAmount}
+              >
                 {!(Number(props.userBalances[props.tokenIn.name]) >= 0) ? (
                   <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
@@ -138,8 +152,8 @@ function AddLiquidity(props: IAddLiquidityProps) {
             <Image
               src={props.tokenOut.image}
               className="tokenIconLiq"
-              width={'32px'}
-              height={'32px'}
+              width={'42px'}
+              height={'42px'}
             />
           </div>
           <div className="ml-1 md:ml-2">
@@ -162,7 +176,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 <input
                   type="text"
                   value={props.secondTokenAmount}
-                  className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%]"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%] placeholder:text-text-400"
                   placeholder="0.0"
                   onChange={(e) =>
                     handleLiquidityInput(e.target.value, 'tokenOut')

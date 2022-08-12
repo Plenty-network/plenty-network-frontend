@@ -59,6 +59,9 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
       });
     }
   };
+  const onClickAmount = () => {
+    handleRemoveLiquidityInput(props.pnlpBalance);
+  };
   return (
     <>
       <div className="flex items-end mt-[10px]">
@@ -68,7 +71,9 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
         <div className="ml-auto flex font-body2">
           <p
             className={clsx(
-              'cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex'
+              'cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex',
+              props.burnAmount === 0.25 * Number(props.pnlpBalance) &&
+                'border-primary-500 bg-primary-500/[0.20]'
             )}
             {...(!walletAddress || Number(props.pnlpBalance) === 0
               ? {}
@@ -77,7 +82,11 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
             25%
           </p>
           <p
-            className="cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex"
+            className={clsx(
+              'cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex',
+              props.burnAmount === 0.5 * Number(props.pnlpBalance) &&
+                'border-primary-500 bg-primary-500/[0.20]'
+            )}
             {...(!walletAddress || Number(props.pnlpBalance) === 0
               ? {}
               : { onClick: () => handleInputPercentage(0.5) })}
@@ -85,7 +94,11 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
             50%
           </p>
           <p
-            className="cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md: h-[32px] px-[8.5px] md:px-[13px] items-center flex"
+            className={clsx(
+              'cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md: h-[32px] px-[8.5px] md:px-[13px] items-center flex',
+              props.burnAmount === 0.75 * Number(props.pnlpBalance) &&
+                'border-primary-500 bg-primary-500/[0.20]'
+            )}
             {...(!walletAddress || Number(props.pnlpBalance) === 0
               ? {}
               : { onClick: () => handleInputPercentage(0.75) })}
@@ -99,7 +112,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
           <p>
             <input
               type="text"
-              className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%]"
+              className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%] placeholder:text-text-400"
               placeholder="0.0"
               value={props.burnAmount}
               onChange={(e) => handleRemoveLiquidityInput(e.target.value)}
@@ -121,7 +134,10 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
             <div>
               <Image src={wallet} width={'32px'} height={'32px'} />
             </div>
-            <div className="ml-1 text-primary-500 font-body2">
+            <div
+              className="ml-1 text-primary-500 font-body2 cursor-pointer"
+              onClick={onClickAmount}
+            >
               {Number(props.pnlpBalance).toFixed(4)} PNLP
             </div>
           </div>

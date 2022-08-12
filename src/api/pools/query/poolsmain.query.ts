@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import { poolsDataWrapper } from "..";
 import {IAmmContracts } from "../../../config/types";
+import { store } from "../../../redux";
 import { IPoolsDataWrapperResponse, PoolsMainPage, VolumeV1Data, VolumeVeData } from "../types";
 
 
@@ -21,7 +22,8 @@ export const usePoolsMain = () =>
       const data:PoolsMainPage[]=[];  
       const  data1  = await volumeV1Data();
       const  data2 =await volumeVeData();
-      //const  tokens = store.getState().config.AMMs;
+      // const a= await poolsDataWrapper
+      // const  tokenprice = store.getState().tokenPrice.tokenPrice;
       const tokens=await iAmmContracts();
       data1.forEach((e,index)=>{
          data2.forEach((d2)=>{
