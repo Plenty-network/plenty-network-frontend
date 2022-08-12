@@ -26,12 +26,7 @@ export function ShortCard (props: IShortCardProps) {
   const {valueFormat}=useTableNumberUtils();
   const  { data:poolTableData=[],isFetched:isFetch=false }=usePoolsTableFilter(props.poolsFilter,'');
   const  [poolsTableData,isFetched]=usePoolsTableSearch(poolTableData,props.searchValue,isFetch);
-
-
-  //let poolsTableData=poolTableData;
-  
-  //end of  searching logic
-
+   
   const [showLiquidityModal,setShowLiquidityModal]=React.useState(false);
   const getImagesPath = (name: string,isSvg?: boolean) => {
     if(isSvg)
