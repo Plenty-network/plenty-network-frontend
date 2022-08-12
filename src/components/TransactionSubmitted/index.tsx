@@ -33,7 +33,7 @@ function TransactionSubmitted(props: ITransactionSubmittedProps) {
             className="my-3 cursor-pointer font-text-bold flex justify-center text-primary-500"
             onClick={props.onBtnClick}
           >
-            View on BLOCK EXPLORER
+            View on Block Explorer
             <span className="ml-2">
               <Image src={externalLink} width={'12px'} height={'12px'} />
             </span>

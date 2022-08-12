@@ -6,6 +6,7 @@ import stakeIcon from '../../../assets/icon/pools/stakeIcon.svg';
 export interface IWalletBtnWithIconProps {
   text?: string | number;
   className?: string;
+  onClick?: () => void;
 }
 
 export function BtnWithWalletIcon(props: IWalletBtnWithIconProps) {
@@ -16,7 +17,10 @@ export function BtnWithWalletIcon(props: IWalletBtnWithIconProps) {
       <div>
         <Image src={wallet} width={'32px'} height={'32px'} />
       </div>
-      <div className="ml-1 flex text-primary-500 font-body2">
+      <div
+        className="ml-1 flex text-primary-500 font-body2 cursor-pointer"
+        onClick={props.onClick}
+      >
         {!props.text ? (
           <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
         ) : (
@@ -54,7 +58,10 @@ export function BtnWithUnStakeIcon(props: IWalletBtnWithIconProps) {
       <div className="relative top-1">
         <Image src={stakeIcon} width={'32px'} height={'32px'} />
       </div>
-      <div className="ml-1 flex text-primary-500 font-body2">
+      <div
+        className="ml-1 flex text-primary-500 font-body2 cursor-pointer"
+        onClick={props.onClick}
+      >
         {!props.text ? (
           <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
         ) : (
