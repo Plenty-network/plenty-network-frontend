@@ -60,6 +60,6 @@ export function CardHeader(props: ICardHeaderProps) {
       className={className}
       isActive={activeStateTab === tab}
       text={tab}
-      onClick={() => setActiveStateTab(tab)} />;
+      onClick={() => {setActiveStateTab(tab); setSearchValue('')}} />;
   }
 }

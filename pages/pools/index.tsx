@@ -53,17 +53,17 @@ export default function Pools(props: IIndexProps) {
             searchValue={searchValue}
             setSearchValue={setSearchValue}
           />
-          {activeStateTab === PoolsCardHeader.All && (
-            <PoolsTable className="md:px-5 md:py-4  px-2 py-4" />
+          {activeStateTab === PoolsCardHeader.All  && (
+            <PoolsTable className="md:px-5 md:py-4  px-2 py-4" searchValue={searchValue} />
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
-            <PoolsTable className="md:px-5 md:py-4  px-2 py-4" poolsFilter={AMM_TYPE.STABLE} />
+            <PoolsTable className="md:px-5 md:py-4  px-2 py-4" poolsFilter={AMM_TYPE.STABLE} searchValue={searchValue} />
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
-            <PoolsTable className="md:px-5 md:py-4  px-2 py-4" poolsFilter={AMM_TYPE.VOLATILE} />
+            <PoolsTable className="md:px-5 md:py-4  px-2 py-4" poolsFilter={AMM_TYPE.VOLATILE} searchValue={searchValue}/>
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
-            <PoolsTable className="md:px-5 md:py-4  px-2 py-4" poolsFilter={AMM_TYPE.MYPOOS} isConnectWalletRequired={true} />
+            <PoolsTable className="md:px-5 md:py-4  px-2 py-4" poolsFilter={AMM_TYPE.MYPOOS} isConnectWalletRequired={true} searchValue={searchValue} />
           )}
 
           {/* poolsTable */}
