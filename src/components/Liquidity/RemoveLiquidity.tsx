@@ -121,7 +121,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
           <p>
             <span className="mt-2 ml-1 font-body2 md:font-body4 text-text-400">
               ~$
-              {props.lpTokenPrice
+              {!isNaN(Number(props.lpTokenPrice))
                 ? Number(
                     Number(props.burnAmount) * Number(props.lpTokenPrice)
                   ).toFixed(2)

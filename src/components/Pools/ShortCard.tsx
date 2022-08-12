@@ -90,7 +90,14 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <AprInfo currentApr={x.apr.toString()} previousApr={x.prevApr.toString()} boostedApr={x.boostedApr.toString()} isMobile={true}/>,
+        accessor: (x: any) => (
+          <AprInfo
+            currentApr={x.apr.toString()}
+            previousApr={x.prevApr.toString()}
+            boostedApr={x.boostedApr.toString()}
+            isMobile={true}
+          />
+        ),
       },
       {
         Header: '',
@@ -134,7 +141,13 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <AprInfo currentApr={x.apr.toString()} previousApr={x.prevApr.toString()} boostedApr={x.boostedApr.toString()} />,
+        accessor: (x: any) => (
+          <AprInfo
+            currentApr={x.apr.toString()}
+            previousApr={x.prevApr.toString()}
+            boostedApr={x.boostedApr.toString()}
+          />
+        ),
       },
       {
         Header: 'Volume',
@@ -207,7 +220,6 @@ export function ShortCard(props: IShortCardProps) {
               ? setActiveState(ActiveLiquidity.Rewards)
               : setActiveState(ActiveLiquidity.Staking)
             : setActiveState(ActiveLiquidity.Liquidity);
-          console.log(props.isLiquidityAvailable, props.isStakeAvailable);
           setShowLiquidityModal(true);
           setTokenIn({
             name: 'USDC.e',
