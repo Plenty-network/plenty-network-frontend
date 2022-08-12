@@ -62,7 +62,7 @@ export function ShortCard (props: IShortCardProps) {
                 ]}
               />
               <div className="flex flex-col gap-[2px]">
-                <span className="text-f14 text-white uppercase">
+                <span className="text-f14 text-white ">
                   {x.tokenA}/{x.token2.symbol}
                 </span>
                 <span className="text-f12 text-text-500">Stable Pool</span>
@@ -78,7 +78,7 @@ export function ShortCard (props: IShortCardProps) {
           canShort:true,
           showOnMobile:true,
           accessor: (x:any)=>(
-            <AprInfo isMobile={true}/>
+            <AprInfo   currentApr={x.apr.toString()} previousApr={x.prevApr.toString()} boostedApr={x.boostedApr.toString()} isMobile={true}/>
           ),
         },
         {
@@ -108,7 +108,7 @@ export function ShortCard (props: IShortCardProps) {
                 ]}
               />
               <div className="flex flex-col gap-[2px]">
-                <span className="text-f14 text-white uppercase">
+                <span className="text-f14 text-white ">
                   {x.tokenA}/{x.tokenB}
                 </span>
                 <span className="text-f12 text-text-500">Stable Pool</span>
@@ -123,8 +123,8 @@ export function ShortCard (props: IShortCardProps) {
           isToolTipEnabled:true,
           canShort:true,
           showOnMobile:true,
-          accessor: (x:any)=>(
-            <AprInfo/>
+          accessor: (x)=>(
+            <AprInfo currentApr={x.apr.toString()} previousApr={x.prevApr.toString()} boostedApr={x.boostedApr.toString()}/>
           ),
         },
         {
