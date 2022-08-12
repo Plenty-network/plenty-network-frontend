@@ -250,7 +250,7 @@ export function Staking(props: IStakingProps) {
             <InputText value={props.stakeInput} onChange={handleStakeInput} />
             <div className="font-body2 md:font-body4 text-text-400">
               ~$
-              {props.lpTokenPrice
+              {!isNaN(Number(props.lpTokenPrice))
                 ? Number(
                     Number(props.stakeInput) * Number(props.lpTokenPrice)
                   ).toFixed(2)
@@ -419,7 +419,7 @@ export function Unstaking(props: IUnstakingProps) {
           <InputText value={props.unStakeInput} onChange={handleUnStakeInput} />
           <div className="font-body2 md:font-body4 text-text-400">
             ~$
-            {props.lpTokenPrice
+            {!isNaN(Number(props.lpTokenPrice))
               ? Number(
                   Number(props.unStakeInput) * Number(props.lpTokenPrice)
                 ).toFixed(2)
