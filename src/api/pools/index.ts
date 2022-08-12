@@ -37,18 +37,21 @@ export const poolsDataWrapper = async (
         for(var poolData of poolsData){
             const AMM = AMMS[poolData.pool];
             const analyticsObject = getAnalyticsObject(poolData.pool , analyticsData);
-            let bribes : BigNumber = new BigNumber(0);
+            let bribe : BigNumber = new BigNumber(0);
+            // Add type
+            let bribes : any = [];
 
-            // TODO: Uncomment when Aniket updates API
+            if(!poolData.bribes || poolData.bribes.length === 0)
+            {bribe = new BigNumber(0);
+            bribes = [];
+            }
+            else{
+                for(var y of poolData.bribes){
+                    bribe = bribe.plus(new BigNumber(tokenPrice[y.token] * y.value));
+                    bribes.push({tokenName : y.token , value : y.value});
+                }
 
-            // if(!poolData.bribes || poolData.bribes.length === 0)
-            // bribes = new BigNumber(0);
-            // else{
-            //     for(var y in poolData.bribes){
-            //         bribes = bribes.plus(new BigNumber(tokenPrice[y.token] * y.value)); 
-            //     }
-
-            // }
+            }
 
             allData[poolData.pool] = {
             tokenA  : AMM.token1.symbol,
@@ -69,6 +72,8 @@ export const poolsDataWrapper = async (
             fees : new BigNumber(analyticsObject.fees7D.value) ?? new BigNumber(0),
             feesTokenA : new BigNumber(analyticsObject.fees7D.token1) ?? new BigNumber(0), 
             feesTokenB : new BigNumber(analyticsObject.fees7D.token2) ?? new BigNumber(0),
+
+            bribeUSD : bribe,
 
             bribes : bribes,
 
