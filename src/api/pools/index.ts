@@ -57,6 +57,7 @@ export const poolsDataWrapper = async (
             tokenA  : AMM.token1.symbol,
             tokenB : AMM.token2.symbol,
             poolType : AMM.type,
+            
             apr : poolData.apr != "NaN" ? new BigNumber(poolData.apr) :new BigNumber(0),
             prevApr : new BigNumber(poolData.previousApr) ?? new BigNumber(0),
             boostedApr : poolData.apr != "NaN" ? new BigNumber(poolData.apr).multipliedBy(2.5) :new BigNumber(0), //Check formula
@@ -74,18 +75,15 @@ export const poolsDataWrapper = async (
             feesTokenB : new BigNumber(analyticsObject.fees7D.token2) ?? new BigNumber(0),
 
             bribeUSD : bribe,
-
             bribes : bribes,
 
             isLiquidityAvailable: address ? await doesLiquidityExistForUser(address,AMM) : false,
-
             isStakeAvailable: address ? await doesStakeExistForUser(address,AMM) : false,
 
             }
 
         }
-      
-
+        
         console.log(allData);
 
       return {
