@@ -15,7 +15,6 @@ export const usePoolsMain2 = () =>
     async () => {
       const tokenprice = store.getState().tokenPrice.tokenPrice;
       const walletAddress = store.getState().wallet.address;
-      console.log(walletAddress ? walletAddress : undefined);
       const data1 = (
         await poolsDataWrapper(
           walletAddress ? walletAddress : undefined,
@@ -46,7 +45,6 @@ export const usePoolsMain = () =>
               ...e,
               ...tokens[e.pool],
             };
-            console.log('dataEachPool', dataEachPool);
             data.push(dataEachPool);
           }
         });
