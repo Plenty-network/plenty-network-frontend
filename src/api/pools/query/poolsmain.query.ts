@@ -16,6 +16,17 @@ export const usePoolsMain2 = () =>
     },
     { refetchInterval: 60000 },
 );
+export const usePoolsMainwithAddress = (address:string) =>
+  useQuery<IPoolsDataWrapperResponse[], Error>(
+    'pools-mains-with-address',
+    async () => {
+      const  tokenprice = store.getState().tokenPrice.tokenPrice;
+      const data1= (await poolsDataWrapper(address,tokenprice)).allData;
+      const data:IPoolsDataWrapperResponse[]=Object.values(data1)
+       return data;
+    },
+    { refetchInterval: 60000 },
+);
 export const usePoolsMain = () =>
   useQuery<PoolsMainPage[], Error>(
     'pools-mains',
