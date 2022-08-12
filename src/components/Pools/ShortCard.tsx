@@ -180,7 +180,7 @@ export function ShortCard(props: IShortCardProps) {
         Header: 'Bribes',
         id: 'Bribes',
         isToolTipEnabled: true,
-        accessor: (x) => <PoolsText text={x.bribes} />,
+        accessor: (x) => <PoolsText text={x.bribes.toString()} />,
       },
       {
         Header: '',
