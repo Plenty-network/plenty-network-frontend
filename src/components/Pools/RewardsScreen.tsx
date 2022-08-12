@@ -43,6 +43,12 @@ export function RewardsScreen(props: IRewardsProps) {
           Insufficient Balance
         </Button>
       );
+    } else if (Number(props.rewardToken) === 0) {
+      return (
+        <Button onClick={() => null} color={'disabled'}>
+          No Rewards yet
+        </Button>
+      );
     } else {
       return (
         <Button color={'primary'} onClick={props.handleOperation}>
