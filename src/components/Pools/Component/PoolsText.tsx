@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Position, ToolTip } from '../../Tooltip/TooltipAdvanced';
+import { BigNumber } from 'bignumber.js'
 
 export interface IPoolsTextProps {
-    text:String;
+    text:String | BigNumber;
 }
 export interface IPoolsTextWithTooltipProps extends IPoolsTextProps  {
     token1:string;
@@ -12,7 +13,7 @@ export interface IPoolsTextWithTooltipProps extends IPoolsTextProps  {
 export function PoolsText (props: IPoolsTextProps) {
   return (
     <div className='text-f14 text-white cursor-pointer'>
-      {props.text}
+      {props.text.toString()}
     </div>
   );
 }

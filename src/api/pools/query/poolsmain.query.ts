@@ -9,7 +9,8 @@ export const usePoolsMain2 = () =>
   useQuery<IPoolsDataWrapperResponse[], Error>(
     'pools-mains',
     async () => {
-      const data1= (await poolsDataWrapper('' , {})).allData;
+      const  tokenprice = store.getState().tokenPrice.tokenPrice;
+      const data1= (await poolsDataWrapper(undefined,tokenprice)).allData;
       const data:IPoolsDataWrapperResponse[]=Object.values(data1)
        return data;
     },
