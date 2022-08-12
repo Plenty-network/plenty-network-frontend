@@ -566,7 +566,7 @@ function SwapTab(props: ISwapTabProps) {
                   {' '}
                   Fetching best price
                 </span>
-                <span className="relative -top-1">
+                <span className="relative -top-[5px]">
                   <Lottie
                     animationData={loader}
                     loop={true}
