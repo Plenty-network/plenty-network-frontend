@@ -14,9 +14,12 @@ import { AppDispatch, useAppSelector } from '../../src/redux';
 import { fetchWallet } from '../../src/redux/wallet/wallet';
 import { getConfig } from '../../src/redux/config/config';
 import { getTokenPrice } from '../../src/redux/tokenPrice/tokenPrice';
-import { AMM_TYPE } from '../../src/config/types';
 export interface IIndexProps {}
-
+export enum AMM_TYPE{
+  VOLATILE = 'VOLATILE',
+  STABLE = 'STABLE',
+  MYPOOS ='MYPOOS'
+}
 export default function Pools(props: IIndexProps) {
   const [activeStateTab, setActiveStateTab] = React.useState<
     PoolsCardHeader | string

@@ -6,11 +6,11 @@ import { useTableNumberUtils } from '../../hooks/useTableUtils';
 import Table from '../Table/Table';
 import { CircularImageInfo } from './Component/CircularImageInfo';
 import { ManageLiquidity } from './ManageLiquidity';
-import { AMM_TYPE } from '../../config/types';
 import { tokenParameterLiquidity } from '../Liquidity/types';
 import { AprInfo } from './Component/AprInfo';
 import { PoolsText, PoolsTextWithTooltip } from './Component/PoolsText';
 import { isMobile} from 'react-device-detect';
+import { AMM_TYPE } from '../../../pages/pools';
 
 export interface IShortCardProps {
     className?:string;
