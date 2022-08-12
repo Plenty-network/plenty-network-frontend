@@ -136,7 +136,7 @@ function SwapModal(props: ISwapModalProps) {
           </div>
           {Object.keys(tokensToShow).length === 0 ? (
             <div className="border  h-[300px]  border-text-800 bg-muted-200 rounded-xl flex justify-center items-center px-[18px] w-full pb-5 mt-5 font-body4 text-white">
-              No results found
+              No Tokens found
             </div>
           ) : (
             <div
