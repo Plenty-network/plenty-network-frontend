@@ -4,7 +4,9 @@ export const usePoolsTableFilter=(filterText:string | 'MyPools' | undefined ,add
     const  { data:poolTableData=[],isFetched }=usePoolsMain2(); 
     if(poolTableData.length){
         if(filterText === 'MyPools'){
-            return {data:poolTableData,isFetched:isFetched} 
+
+            const newpoolTableData= poolTableData.filter((e)=>e.isLiquidityAvailable);
+             return {data:newpoolTableData,isFetched:isFetched}
         }
     if(filterText){         
        const newpoolTableData= poolTableData.filter((e)=>e.poolType===filterText);
