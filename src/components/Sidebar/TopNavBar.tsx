@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import * as React from 'react';
 import { ConnectWalletBtnDeskTop } from '../Button/ConnectWalletDesktop';
-import myPostion from '../../assets/icon/common/myPosition.svg'
-
+import myPostion from '../../assets/icon/common/myPosition.svg';
+import plentyIcon from '../../assets/icon/common//plentyIcon.svg';
 export interface ITopNavBarProps {
   setShowNotification: Function;
 }
@@ -31,12 +31,10 @@ export function IconBTN(props: IIconBTNProps) {
 
 export function TopNavBar(props: ITopNavBarProps) {
   return (
-    <nav className="hidden md:flex border-b border-b-borderColor w-screen fixed h-16 items-center shadow  justify-between px-10 topNavblurEffect z-50">
-      <div>
+    <nav className="hidden md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow  justify-between px-10 pl-0 topNavblurEffect z-50">
+      <div className='h-full w-[240px] border-border-500/50 border-r flex items-center pl-[26px]' >
         <Image
-          src="/assets/icon/plentyIcon.svg"
-          height={'22.47px'}
-          width="100%"
+          src={plentyIcon}
         />
       </div>
       <div className="flex flex-row gap-7 ">
