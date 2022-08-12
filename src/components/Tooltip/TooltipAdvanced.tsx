@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import * as React from 'react';
-import ReactTooltip from 'react-tooltip';
+// import ReactTooltip from 'react-tooltip';
+
 import closeIcon from '../../assets/icon/common/closeCross.svg';
 import { generateRandomString } from '../../utils/commonUtils';
+import  ReactTooltip from './ReactTooltipExtends';
 
 export enum Position {
   top = 'top',
@@ -24,6 +26,7 @@ export interface IToolTipProps {
   title?: string;
   toolTipChild?: any;
   classNameAncorToolTip?: string;
+  isShowInnitially?:boolean;
 }
 
 export function ToolTip(props: IToolTipProps) {
@@ -39,6 +42,7 @@ export function ToolTip(props: IToolTipProps) {
           {props.children}
         </a>
         <ReactTooltip
+          showInitial={props.isShowInnitially}
           className="tooltipCustom"
           arrowColor="rgba(60, 60, 60,0)"
           place={props.position ? props.position : 'right'}
@@ -61,6 +65,7 @@ export function ToolTip(props: IToolTipProps) {
           {props.children}
         </a>
         <ReactTooltip
+        showInitial={props.isShowInnitially}
           className="tooltipCustom"
           arrowColor="#341E54"
           place={props.position ? props.position : 'right'}
@@ -81,6 +86,7 @@ export function ToolTip(props: IToolTipProps) {
       </>
     );
   }
+  
   return (
     <>
       <a
@@ -91,6 +97,7 @@ export function ToolTip(props: IToolTipProps) {
         {props.children}
       </a>
       <ReactTooltip
+        showInitial={props.isShowInnitially}
         className="tooltipCustom"
         arrowColor="#341E54"
         place={props.position ? props.position : 'right'}
