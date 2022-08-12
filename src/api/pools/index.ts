@@ -1,10 +1,12 @@
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 import { IPoolsDataWrapperResponse, VolumeVeData } from './types'
-import { IAmmContracts } from '../../config/types';
+import { IAMM, IAmmContracts } from '../../config/types';
+import { getPnlpBalance, getStakedBalance } from '../util/balance';
+import Config from '../../config/config';
 
 export const poolsDataWrapper = async (
-    address: string,
+    address: string | undefined,
     tokenPrice: { [id: string]: number },
   ): Promise< { success : boolean , allData  :{ [id: string]: IPoolsDataWrapperResponse } }> => {
     try {   
@@ -13,16 +15,18 @@ export const poolsDataWrapper = async (
         // const state = store.getState();
         // const AMMS = state.config.AMMs;
 
+        // TODO: Remove this get call
         const AMMResponse = await axios.get("https://config.plentydefi.com/v1/config/amm");
         const AMMS : IAmmContracts  = AMMResponse.data;
 
 
-        // Make URL dynamic
-        const poolsResponse = await axios.get("http://65.0.129.224/v1/pools");
+        // TODO: Make URL dynamic. Fetch all base urls from Config.
+        // const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
+        const poolsResponse = await axios.get("https://62d80fa990883139358a3999.mockapi.io/api/v1/ve");
         const poolsData = poolsResponse.data;
 
 
-        // const analyticsResponse = await axios.get("http://13.127.76.247/ve/pools");
+        // const analyticsResponse = await axios.get(`${Config.PLY_INDEXER}ve/pools`);
         const analyticsResponse = await axios.get("https://62d80fa990883139358a3999.mockapi.io/api/v1/config");
         const analyticsData = analyticsResponse.data;
 
@@ -30,29 +34,29 @@ export const poolsDataWrapper = async (
 
         const allData: { [id: string]: IPoolsDataWrapperResponse } = {};
 
-        for(var x of poolsData){
-            const AMM = AMMS[x.pool];
-            const analyticsObject = getAnalyticsObject(x.pool , analyticsData);
+        for(var poolData of poolsData){
+            const AMM = AMMS[poolData.pool];
+            const analyticsObject = getAnalyticsObject(poolData.pool , analyticsData);
             let bribes : BigNumber = new BigNumber(0);
 
-            // Uncomment when Aniket updates API
+            // TODO: Uncomment when Aniket updates API
 
-            // if(!x.bribes || x.bribes.length === 0)
+            // if(!poolData.bribes || poolData.bribes.length === 0)
             // bribes = new BigNumber(0);
             // else{
-            //     for(var y in x.bribes){
+            //     for(var y in poolData.bribes){
             //         bribes = bribes.plus(new BigNumber(tokenPrice[y.token] * y.value)); 
             //     }
 
             // }
 
-            allData[x.pool] = {
+            allData[poolData.pool] = {
             tokenA  : AMM.token1.symbol,
             tokenB : AMM.token2.symbol,
             poolType : AMM.type,
-            apr : x.apr != "NaN" ? new BigNumber(x.apr) :new BigNumber(0),
-            prevApr : new BigNumber(x.previousApr) ?? new BigNumber(0),
-            boostedApr : x.apr != "NaN" ? new BigNumber(x.apr).multipliedBy(2.5) :new BigNumber(0), //Check formula
+            apr : poolData.apr != "NaN" ? new BigNumber(poolData.apr) :new BigNumber(0),
+            prevApr : new BigNumber(poolData.previousApr) ?? new BigNumber(0),
+            boostedApr : poolData.apr != "NaN" ? new BigNumber(poolData.apr).multipliedBy(2.5) :new BigNumber(0), //Check formula
 
             volume : new BigNumber(analyticsObject.volume24H.value) ?? new BigNumber(0),
             volumeTokenA : new BigNumber(analyticsObject.volume24H.token1) ?? new BigNumber(0),
@@ -68,8 +72,9 @@ export const poolsDataWrapper = async (
 
             bribes : bribes,
 
-            // Call Balance and staked API from KIRAN with ternary operator
-            isMyPos : false,
+            isLiquidityAvailable: address ? await doesLiquidityExistForUser(address,AMM) : false,
+
+            isStakeAvailable: address ? await doesStakeExistForUser(address,AMM) : false,
 
             }
 
@@ -92,24 +97,73 @@ export const poolsDataWrapper = async (
   };
 
 
-const getAnalyticsObject =  (ammAddress :string , analyticsData: VolumeVeData[]) => {
+const getAnalyticsObject = (
+  ammAddress: string,
+  analyticsData: VolumeVeData[]
+) => {
+  // Add Try Catch and Data Types
+
+  console.log("inside get ana");
+
+  let analyticsObject;
+
+  for (var poolData of analyticsData) {
+    if (poolData.pool === ammAddress) {
+      analyticsObject = poolData;
+      break;
+    }
+  }
+
+  if (analyticsObject) return analyticsObject;
+  else throw new Error("No Analytics Data Available");
+};
 
 
-    // Add Try Catch and Data Types 
+const doesLiquidityExistForUser = async (
+  userTezosAddress: string,
+  amm: IAMM
+): Promise<boolean> => {
+  try {
+    const lpTokenSymbol: string = amm.lpToken.symbol;
+    const tokenOneSymbol: string = amm.token1.symbol;
+    const tokenTwoSymbol: string = amm.token2.symbol;
+    const lpTokenBalanceResponse = await getPnlpBalance(
+      tokenOneSymbol,
+      tokenTwoSymbol,
+      userTezosAddress,
+      // lpTokenSymbol  //TODO: Uncomment when moving to mainnet
+    );
+    if (new BigNumber(lpTokenBalanceResponse.balance).isGreaterThan(0)) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
 
-        console.log('inside get ana');
 
-        let analyticsObject;
-
-        for(var x of analyticsData){
-            if(x.pool === ammAddress)
-            {analyticsObject = x;
-            break;}
-        }   
-
-        if(analyticsObject)
-        return analyticsObject;
-        else
-        throw new Error("No Analytics Data Available");
-
-}
+const doesStakeExistForUser = async (
+  userTezosAddress: string,
+  amm: IAMM
+): Promise<boolean> => {
+  try {
+    const tokenOneSymbol: string = amm.token1.symbol;
+    const tokenTwoSymbol: string = amm.token2.symbol;
+    const stakedBalanceResponse = await getStakedBalance(
+      tokenOneSymbol,
+      tokenTwoSymbol,
+      userTezosAddress
+    );
+    if (new BigNumber(stakedBalanceResponse.balance).isGreaterThan(0)) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
