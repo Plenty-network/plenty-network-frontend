@@ -178,7 +178,10 @@ export function Staking(props: IStakingProps) {
                 }
               />
             </span>
-            <p className="text-f16 text-white">Stake Liquidity</p>
+
+            <p className="text-f16 text-white relative -top-0.5">
+              Stake Liquidity
+            </p>
           </div>
         </div>
         {/* dropDown And InfoTab */}
@@ -357,7 +360,9 @@ export function Unstaking(props: IUnstakingProps) {
               onChange={() => props.setStakingScreen(StakingScreenType.Staking)}
             />
           </span>
-          <p className="text-f16 text-white">Unstake Liquidity</p>
+          <p className="text-f16 text-white relative -top-0.5">
+            Unstake Liquidity
+          </p>
         </div>
       </div>
       {/* end of switch */}

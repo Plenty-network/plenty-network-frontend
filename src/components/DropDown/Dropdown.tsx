@@ -53,7 +53,7 @@ export function Dropdown(props: IDropdownProps) {
         />
       </div>
       {isDropDownActive && (
-        <div className="absolute w-[124px] md:w-[163px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1">
+        <div className="absolute hidden w-[124px] md:w-[163px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1">
           {props.Options.map((text, i) => (
             <Options onClick={props.onClick} key={`${text}_${i}`} text={text} />
           ))}
@@ -69,7 +69,7 @@ export function Dropdown(props: IDropdownProps) {
           props.onClick(props.text);
           setIsDropDownActive(false);
         }}
-        className="hover:bg-muted-500 px-2 flex items-center h-[36px] cursor-pointer"
+        className="hidden hover:bg-muted-500 px-2 flex items-center h-[36px] cursor-pointer"
       >
         {props.text}
       </div>
