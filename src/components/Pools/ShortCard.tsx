@@ -23,12 +23,35 @@ export interface IShortCardProps {
 export function ShortCard (props: IShortCardProps) {
   const {valueFormat}=useTableNumberUtils();
   const  { data:poolTableData=[],isFetched=false }=usePoolsMain();
-  let poolsTableData=poolTableData;
-  if(props.poolsFilter){
-    poolsTableData= poolsTableData.filter((e)=>e.type === props.poolsFilter);
-   }else{
-    poolsTableData=poolTableData;
+  //let poolsTableData=poolTableData;
+  const [poolsTableData,setPoolsTableData]=React.useState(poolTableData)
+  
+  // searching and filtering logic
+  React.useEffect(()=>{
+    let newPoolsData=poolsTableData;
+     if(props.poolsFilter){
+    const _poolsTableData= newPoolsData.filter((e)=>{
+     if(props.searchValue){
+       return e.type === props.poolsFilter && (e.token1.symbol.toLowerCase().includes(props.searchValue) || e.token2.symbol.toLowerCase().includes(props.searchValue))
+     } 
+     return e.type === props.poolsFilter
+    
+    });
+    newPoolsData=_poolsTableData;
    }
+   if(props.searchValue){
+    const _poolsTableData= newPoolsData.filter((e)=>{
+       return (e.token1.symbol.toLowerCase().includes(props.searchValue) || e.token2.symbol.toLowerCase().includes(props.searchValue))    
+    });
+    newPoolsData=_poolsTableData;
+   }
+  else if(!props.poolsFilter) 
+   {
+     newPoolsData=poolTableData;
+   }
+   setPoolsTableData(newPoolsData);
+  },[props.poolsFilter,props.searchValue])
+  //end of  searching and filtering logic
 
   const [showLiquidityModal,setShowLiquidityModal]=React.useState(false);
   const getImagesPath = (name: string,isSvg?: boolean) => {
