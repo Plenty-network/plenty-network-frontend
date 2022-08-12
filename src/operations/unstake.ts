@@ -56,25 +56,20 @@ export const unstakePnlpTokens = async (
     const pnlpAmountToUnstake = new BigNumber(pnlpAmount).multipliedBy(
       new BigNumber(10).pow(PNLP_TOKEN.decimals)
     );
+    
+    const operation = await gaugeContractInstance.methods
+      .withdraw(pnlpAmountToUnstake.toString())
+      .send();
 
-    let batch = null;
-
-    batch = Tezos.wallet
-        .batch()
-        .withContractCall(
-          gaugeContractInstance.methods.withdraw(pnlpAmountToUnstake.toString())
-        );
-
-    const batchOperation = await batch.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal &&
-      transactionSubmitModal(batchOperation.opHash as string);
+      transactionSubmitModal(operation.opHash);
     setActiveState && setActiveState(ActiveLiquidity.Liquidity);
     resetAllValues && resetAllValues();
-    await batchOperation.confirmation();
+    await operation.confirmation();
     return {
       success: true,
-      operationId: batchOperation.opHash,
+      operationId: operation.opHash,
     };
   } catch (error: any) {
     return {

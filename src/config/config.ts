@@ -33,8 +33,8 @@ const Config: IConfig = {
     testnet : 'KT1XFABWm5H9CMFL3T5iNb7Zz6YVpLHQjpsA',
   },
 
-  VE_INDEXER : 'http://65.0.129.224/',
-  PLY_INDEXER : '',
+  VE_INDEXER : 'http://65.0.129.224/v1/',
+  PLY_INDEXER : 'http://13.127.76.247/',
 
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',

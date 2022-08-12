@@ -107,7 +107,6 @@ export interface IAMM {
 export enum AMM_TYPE {
   VOLATILE = 'VOLATILE',
   STABLE = 'STABLE',
-  MYPOOS='MYPOOLS'
 }
 
 export enum TokenType {
