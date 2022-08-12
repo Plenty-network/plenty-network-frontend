@@ -16,7 +16,7 @@ export interface IShortCardProps {
     className?:string;
     poolsFilter?:AMM_TYPE;
     isConnectWalletRequired?:boolean;
-    searchValue?:string;
+    searchValue:string;
     setSearchValue?:Function
 }
 
