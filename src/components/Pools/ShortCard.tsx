@@ -43,15 +43,9 @@ export function ShortCard(props: IShortCardProps) {
     props.searchValue,
     isFetch
   );
-  console.log(poolsTableData);
   const [activeState, setActiveState] = React.useState<
     ActiveLiquidity | string
   >(ActiveLiquidity.Liquidity);
-
-  //let poolsTableData=poolTableData;
-
-  //end of  searching logic
-
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
@@ -186,7 +180,7 @@ export function ShortCard(props: IShortCardProps) {
         Header: 'Bribes',
         id: 'Bribes',
         isToolTipEnabled: true,
-        accessor: (x) => <PoolsText text={x.bribeUSD} />,
+        accessor: (x) => <PoolsText text={x.bribes} />,
       },
       {
         Header: '',
