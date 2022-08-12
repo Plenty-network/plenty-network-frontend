@@ -75,7 +75,7 @@ export function ShortCard(props: IShortCardProps) {
               imageArray={[getImagesPath(x.tokenA), getImagesPath(x.tokenB)]}
             />
             <div className="flex flex-col gap-[2px]">
-              <span className="text-f14 text-white uppercase">
+              <span className="text-f14 text-white ">
                 {x.tokenA}/{x.token2.symbol}
               </span>
               <span className="text-f12 text-text-500">Stable Pool</span>
@@ -90,7 +90,7 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <AprInfo isMobile={true} />,
+        accessor: (x: any) => <AprInfo currentApr={x.apr.toString()} previousApr={x.prevApr.toString()} boostedApr={x.boostedApr.toString()} isMobile={true}/>,
       },
       {
         Header: '',
@@ -119,7 +119,7 @@ export function ShortCard(props: IShortCardProps) {
               imageArray={[getImagesPath(x.tokenA), getImagesPath(x.tokenB)]}
             />
             <div className="flex flex-col gap-[2px]">
-              <span className="text-f14 text-white uppercase">
+              <span className="text-f14 text-white ">
                 {x.tokenA}/{x.tokenB}
               </span>
               <span className="text-f12 text-text-500">Stable Pool</span>
@@ -134,7 +134,7 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <AprInfo />,
+        accessor: (x: any) => <AprInfo currentApr={x.apr.toString()} previousApr={x.prevApr.toString()} boostedApr={x.boostedApr.toString()} />,
       },
       {
         Header: 'Volume',

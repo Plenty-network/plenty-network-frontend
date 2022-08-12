@@ -25,7 +25,7 @@ export function Tabs (props: ITabsProps) {
     >
         <div className='flex gap-0 flex-col'>
         <div className={`flex gap-1 ${props.isFirstRow?'justify-start':'justify-end'} `}>
-            {props.isToolTipEnabled && <InfoIconToolTip message='tooltip' />}
+            {props.isToolTipEnabled && <InfoIconToolTip message='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry' />}
             {props.text}
         </div>
         {props.subText && <div className='text-text-500 font-light'>

@@ -1,30 +1,27 @@
 import Image from 'next/image';
 import * as React from 'react';
 import { ConnectWalletBtnDeskTop } from '../Button/ConnectWalletDesktop';
-
+import myPostion from '../../assets/icon/common/myPosition.svg'
 
 export interface ITopNavBarProps {
   setShowNotification: Function;
 }
 export interface IIconBTNProps {
-  isVerticalline: boolean;
   onClick?: Function;
+  image:string;
+  className?:string
 }
 
 export function IconBTN(props: IIconBTNProps) {
   return (
     <div
-      className="flex items-center"
+      className={`flex items-center ${props.className}`}
       onClick={() => {
         props.onClick && props.onClick();
       }}
     >
       <Image
-        src={
-          props.isVerticalline
-            ? '/assets/icon/verticalline.svg'
-            : '/assets/icon/bellicon.svg'
-        }
+        src={`/assets/icon/${props.image}`}
         height={'26px'}
         width={'26px'}
       />
@@ -44,11 +41,11 @@ export function TopNavBar(props: ITopNavBarProps) {
       </div>
       <div className="flex flex-row gap-7 ">
         <div className="flex flex-row gap-3.5 ">
-          <IconBTN isVerticalline={false} onClick={props.setShowNotification} />
+        <Image src={myPostion} className='cursor-pointer hover:opacity-90' />
           <div className="my-1 flex items-center">
-            <IconBTN isVerticalline={true} />
+            <IconBTN image={'verticalline.svg'} />
           </div>
-          <IconBTN isVerticalline={false} />
+          <IconBTN className='cursor-pointer hover:opacity-90' image={'bellicon.svg'} onClick={props.setShowNotification} />
         </div>
         <ConnectWalletBtnDeskTop/>
       </div>
