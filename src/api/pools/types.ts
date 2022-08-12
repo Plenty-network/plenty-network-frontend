@@ -70,7 +70,8 @@ export interface IPoolsDataWrapperResponse {
   feesTokenA : BigNumber;
   feesTokenB : BigNumber;
   bribes : BigNumber;
-  isMyPos : Boolean;
+  isLiquidityAvailable : boolean;
+  isStakeAvailable: boolean;
 
 }
 
