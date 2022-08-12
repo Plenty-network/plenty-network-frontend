@@ -1,5 +1,6 @@
 import { ISimpleButtonProps, SimpleButton } from './Component/SimpleButton';
 import React, { useState, useMemo } from 'react';
+import clsx from 'clsx';
 import { SwitchWithIcon } from '../SwitchCheckbox/switchWithIcon';
 import { InputText } from './Component/InputText';
 import {
@@ -120,6 +121,9 @@ export function Staking(props: IStakingProps) {
       props.setStakeInput(input);
     }
   };
+  const onClickAmount = () => {
+    handleStakeInput(props.pnlpBalance);
+  };
 
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
@@ -178,7 +182,7 @@ export function Staking(props: IStakingProps) {
           </div>
         </div>
         {/* dropDown And InfoTab */}
-        <div className="flex py-2 px-4 justify-between">
+        <div className="flex py-2 px-2 md:px-4 justify-between">
           <Dropdown
             Options={['one', 'two', 'three']}
             selectedText={props.selectedDropDown}
@@ -196,10 +200,13 @@ export function Staking(props: IStakingProps) {
           <div className="font-body2 md:font-body4  text-text-500">
             How much PNLP to stake?
           </div>
-
           <div className="ml-auto flex font-body2">
             <p
-              className="cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex"
+              className={clsx(
+                'cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex',
+                props.stakeInput === 0.25 * Number(props.pnlpBalance) &&
+                  'border-primary-500 bg-primary-500/[0.20]'
+              )}
               {...(!walletAddress || Number(props.pnlpBalance) === 0
                 ? {}
                 : { onClick: () => handleInputPercentage(0.25) })}
@@ -207,7 +214,11 @@ export function Staking(props: IStakingProps) {
               25%
             </p>
             <p
-              className="cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex"
+              className={clsx(
+                'cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex',
+                props.stakeInput === 0.5 * Number(props.pnlpBalance) &&
+                  'border-primary-500 bg-primary-500/[0.20]'
+              )}
               {...(!walletAddress || Number(props.pnlpBalance) === 0
                 ? {}
                 : { onClick: () => handleInputPercentage(0.5) })}
@@ -215,7 +226,11 @@ export function Staking(props: IStakingProps) {
               50%
             </p>
             <p
-              className="cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md: h-[32px] px-[8.5px] md:px-[13px] items-center flex"
+              className={clsx(
+                'cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md: h-[32px] px-[8.5px] md:px-[13px] items-center flex',
+                props.stakeInput === 0.75 * Number(props.pnlpBalance) &&
+                  'border-primary-500 bg-primary-500/[0.20]'
+              )}
               {...(!walletAddress || Number(props.pnlpBalance) === 0
                 ? {}
                 : { onClick: () => handleInputPercentage(0.75) })}
@@ -243,6 +258,7 @@ export function Staking(props: IStakingProps) {
             <div className="pr-2 md:pr-5">
               <BtnWithWalletIcon
                 text={`${Number(props.pnlpBalance).toFixed(4)} PNLP`}
+                onClick={onClickAmount}
               />
             </div>
           )}
@@ -286,6 +302,9 @@ export function Unstaking(props: IUnstakingProps) {
     } else {
       props.setUnStakeInput(input);
     }
+  };
+  const onClickAmount = () => {
+    handleUnStakeInput(props.stakedToken);
   };
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
@@ -350,24 +369,36 @@ export function Unstaking(props: IUnstakingProps) {
         </div>
         <div className="ml-auto flex font-body2">
           <p
-            className="cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex"
-            {...(!walletAddress || Number(props.pnlpBalance) === 0
+            className={clsx(
+              'cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex',
+              props.unStakeInput === 0.25 * Number(props.stakedToken) &&
+                'border-primary-500 bg-primary-500/[0.20]'
+            )}
+            {...(!walletAddress || Number(props.stakedToken) === 0
               ? {}
               : { onClick: () => handleInputPercentage(0.25) })}
           >
             25%
           </p>
           <p
-            className="cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex"
-            {...(!walletAddress || Number(props.pnlpBalance) === 0
+            className={clsx(
+              'cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex',
+              props.unStakeInput === 0.5 * Number(props.stakedToken) &&
+                'border-primary-500 bg-primary-500/[0.20]'
+            )}
+            {...(!walletAddress || Number(props.stakedToken) === 0
               ? {}
               : { onClick: () => handleInputPercentage(0.5) })}
           >
             50%
           </p>
           <p
-            className="cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md: h-[32px] px-[8.5px] md:px-[13px] items-center flex"
-            {...(!walletAddress || Number(props.pnlpBalance) === 0
+            className={clsx(
+              'cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md: h-[32px] px-[8.5px] md:px-[13px] items-center flex',
+              props.unStakeInput === 0.75 * Number(props.stakedToken) &&
+                'border-primary-500 bg-primary-500/[0.20]'
+            )}
+            {...(!walletAddress || Number(props.stakedToken) === 0
               ? {}
               : { onClick: () => handleInputPercentage(0.75) })}
           >
@@ -394,6 +425,7 @@ export function Unstaking(props: IUnstakingProps) {
           <div className="pr-2 md:pr-5">
             <BtnWithUnStakeIcon
               text={`${Number(props.stakedToken).toFixed(4)} PNLP`}
+              onClick={onClickAmount}
             />
           </div>
         )}

@@ -421,7 +421,7 @@ function SwapTab(props: ISwapTabProps) {
         </div>
       </div>
       {props.errorMessage !== '' && (
-        <div className="mt-1 mx-5 lg:mx-[30px] font-body2 lg:font-body3 text-error-500">
+        <div className="mt-1 mx-5 lg:mr-[30px] lg:ml-[50px] font-body2 lg:font-body3 text-error-500">
           {props.errorMessage}
         </div>
       )}
