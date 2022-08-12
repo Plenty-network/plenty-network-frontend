@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Column } from 'react-table';
-import { usePoolsMain } from '../../api/pools/query/poolsmain.query';
-import { PoolsMainPage } from '../../api/pools/types';
+import { usePoolsMain, usePoolsMain2 } from '../../api/pools/query/poolsmain.query';
+import { IPoolsDataWrapperResponse, PoolsMainPage } from '../../api/pools/types';
 import { useTableNumberUtils } from '../../hooks/useTableUtils';
 import Table from '../Table/Table';
 import { CircularImageInfo } from './Component/CircularImageInfo';
@@ -11,6 +11,8 @@ import { AprInfo } from './Component/AprInfo';
 import { PoolsText, PoolsTextWithTooltip } from './Component/PoolsText';
 import { isMobile} from 'react-device-detect';
 import { AMM_TYPE } from '../../../pages/pools';
+import { usePoolsTableFilter } from '../../hooks/usePoolsTableFilter';
+import { usePoolsTableSearch } from '../../hooks/usePoolsTableSearch';
 
 export interface IShortCardProps {
     className?:string;
@@ -22,36 +24,13 @@ export interface IShortCardProps {
 
 export function ShortCard (props: IShortCardProps) {
   const {valueFormat}=useTableNumberUtils();
-  const  { data:poolTableData=[],isFetched=false }=usePoolsMain();
+  const  { data:poolTableData=[],isFetched:isFetch=false }=usePoolsTableFilter(props.poolsFilter,'');
+  const  [poolsTableData,isFetched]=usePoolsTableSearch(poolTableData,props.searchValue,isFetch);
+
+
   //let poolsTableData=poolTableData;
-  const [poolsTableData,setPoolsTableData]=React.useState(poolTableData)
   
-  // searching and filtering logic
-  React.useEffect(()=>{
-    let newPoolsData=poolsTableData;
-     if(props.poolsFilter){
-    const _poolsTableData= newPoolsData.filter((e)=>{
-     if(props.searchValue){
-       return e.type === props.poolsFilter && (e.token1.symbol.toLowerCase().includes(props.searchValue) || e.token2.symbol.toLowerCase().includes(props.searchValue))
-     } 
-     return e.type === props.poolsFilter
-    
-    });
-    newPoolsData=_poolsTableData;
-   }
-   if(props.searchValue){
-    const _poolsTableData= newPoolsData.filter((e)=>{
-       return (e.token1.symbol.toLowerCase().includes(props.searchValue) || e.token2.symbol.toLowerCase().includes(props.searchValue))    
-    });
-    newPoolsData=_poolsTableData;
-   }
-  else if(!props.poolsFilter) 
-   {
-     newPoolsData=poolTableData;
-   }
-   setPoolsTableData(newPoolsData);
-  },[props.poolsFilter,props.searchValue])
-  //end of  searching and filtering logic
+  //end of  searching logic
 
   const [showLiquidityModal,setShowLiquidityModal]=React.useState(false);
   const getImagesPath = (name: string,isSvg?: boolean) => {
@@ -72,7 +51,7 @@ export function ShortCard (props: IShortCardProps) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: 'USDT.e',
   });
-  const mobilecolumns = React.useMemo<Column<PoolsMainPage>[]>(
+  const mobilecolumns = React.useMemo<Column<IPoolsDataWrapperResponse>[]>(
       () => [
         {
           Header: 'Pools',
@@ -83,13 +62,13 @@ export function ShortCard (props: IShortCardProps) {
               <CircularImageInfo
                 className='w-7 h-7'
                 imageArray={[
-                  getImagesPath(x.token1.symbol),
-                  getImagesPath(x.token2.symbol),
+                  getImagesPath(x.tokenA),
+                  getImagesPath(x.tokenB),
                 ]}
               />
               <div className="flex flex-col gap-[2px]">
                 <span className="text-f14 text-white uppercase">
-                  {x.token1.symbol}/{x.token2.symbol}
+                  {x.tokenA}/{x.token2.symbol}
                 </span>
                 <span className="text-f12 text-text-500">Stable Pool</span>
               </div>
@@ -119,7 +98,7 @@ export function ShortCard (props: IShortCardProps) {
       [valueFormat]
     );
   
-   const  desktopcolumns = React.useMemo<Column<PoolsMainPage>[]>(
+   const  desktopcolumns = React.useMemo<Column<IPoolsDataWrapperResponse>[]>(
       () => [
         {
           Header: 'Pools',
@@ -129,13 +108,13 @@ export function ShortCard (props: IShortCardProps) {
             <div className="flex gap-2 items-center max-w-[153px]">
               <CircularImageInfo
                 imageArray={[
-                  getImagesPath(x.token1.symbol),
-                  getImagesPath(x.token2.symbol),
+                  getImagesPath(x.tokenA),
+                  getImagesPath(x.tokenB),
                 ]}
               />
               <div className="flex flex-col gap-[2px]">
                 <span className="text-f14 text-white uppercase">
-                  {x.token1.symbol}/{x.token2.symbol}
+                  {x.tokenA}/{x.tokenB}
                 </span>
                 <span className="text-f12 text-text-500">Stable Pool</span>
               </div>
@@ -160,9 +139,9 @@ export function ShortCard (props: IShortCardProps) {
           isToolTipEnabled:true,
           accessor: (x)=>(
              <PoolsTextWithTooltip
-               text={x.volume24H.value}
-               token1={x.volume24H.token1}
-               token2={x.volume24H.token2}
+               text={x.volume}
+               token1={x.volumeTokenA.toString()}
+               token2={x.volumeTokenB.toString()}
              />
           ),
         },
@@ -173,9 +152,9 @@ export function ShortCard (props: IShortCardProps) {
           canShort:true,
           accessor: (x)=>(
             <PoolsTextWithTooltip
-               text={x.tvl.value}
-               token1={x.tvl.token1}
-               token2={x.tvl.token2}
+               text={x.tvl}
+               token1={x.tvlTokenA.toString()}
+               token2={x.tvlTokenB.toString()}
              />
           ),
         },
@@ -187,9 +166,9 @@ export function ShortCard (props: IShortCardProps) {
           canShort:true,
           accessor: (x)=>(
             <PoolsTextWithTooltip
-            text={x.feesEpoch.value}
-            token1={x.feesEpoch.token1}
-            token2={x.feesEpoch.token2}
+            text={x.fees}
+            token1={x.feesTokenA.toString()}
+            token2={x.feesTokenB.toString()}
           />
           ),
         },
@@ -199,7 +178,7 @@ export function ShortCard (props: IShortCardProps) {
           isToolTipEnabled:true,
           accessor: (x)=>(
             <PoolsText
-            text={'$234.5'}
+            text={x.bribeUSD}
           />
           ),
         },
