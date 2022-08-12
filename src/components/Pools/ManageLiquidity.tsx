@@ -54,6 +54,8 @@ export interface IManageLiquidityProps {
   closeFn: React.Dispatch<React.SetStateAction<boolean>>;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
+  setActiveState: React.Dispatch<React.SetStateAction<string>>;
+  activeState: string;
 }
 
 export function ManageLiquidity(props: IManageLiquidityProps) {
@@ -64,9 +66,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const [screen, setScreen] = React.useState('1');
-  const [activeState, setActiveState] = React.useState<
-    ActiveLiquidity | string
-  >(ActiveLiquidity.Liquidity);
+  // const [activeState, setActiveState] = React.useState<
+  //   ActiveLiquidity | string
+  // >(ActiveLiquidity.Liquidity);
 
   const [firstTokenAmountLiq, setFirstTokenAmountLiq] = React.useState<
     string | number
@@ -291,7 +293,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      setActiveState
+      props.setActiveState
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -346,7 +348,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      setActiveState
+      props.setActiveState
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -384,7 +386,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      setActiveState
+      props.setActiveState
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -507,11 +509,11 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         footerChild={
           <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
             <p className="font-subtitle1 md:text-f16 text-text-150">
-              {activeState === ActiveLiquidity.Liquidity &&
+              {props.activeState === ActiveLiquidity.Liquidity &&
                 'Add liquidity, stake, and earn PLY'}
-              {activeState === ActiveLiquidity.Staking &&
+              {props.activeState === ActiveLiquidity.Staking &&
                 'Add liquidity, stake, and earn PLY'}
-              {activeState === ActiveLiquidity.Rewards &&
+              {props.activeState === ActiveLiquidity.Rewards &&
                 'Lock PLY, and vote to earn trading fees & bribes'}
             </p>
             <Image
@@ -526,11 +528,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           <>
             <div className="flex gap-1">
               <p className="text-white">
-                {activeState === ActiveLiquidity.Liquidity &&
+                {props.activeState === ActiveLiquidity.Liquidity &&
                   'Manage Liquidity'}
-                {activeState === ActiveLiquidity.Staking && 'Staking Liquidity'}
+                {props.activeState === ActiveLiquidity.Staking &&
+                  'Staking Liquidity'}
 
-                {activeState === ActiveLiquidity.Rewards &&
+                {props.activeState === ActiveLiquidity.Rewards &&
                   'Your positions & Rewards'}
               </p>
               <p className="ml-1 relative top-[6px]">
@@ -539,11 +542,11 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             </div>
             <ManageLiquidityHeader
               className="mt-5 mb-6"
-              activeStateTab={activeState}
-              setActiveStateTab={setActiveState}
+              activeStateTab={props.activeState}
+              setActiveStateTab={props.setActiveState}
             />
 
-            {activeState === ActiveLiquidity.Liquidity && (
+            {props.activeState === ActiveLiquidity.Liquidity && (
               <div className="">
                 <Liquidity
                   setScreen={setScreen}
@@ -569,7 +572,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 />
               </div>
             )}
-            {activeState === ActiveLiquidity.Staking && (
+            {props.activeState === ActiveLiquidity.Staking && (
               <StakingScreen
                 tokenIn={props.tokenIn}
                 tokenOut={props.tokenOut}
@@ -587,7 +590,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 selectedDropDown={selectedDropDown}
               />
             )}
-            {activeState === ActiveLiquidity.Rewards && (
+            {props.activeState === ActiveLiquidity.Rewards && (
               <RewardsScreen
                 tokenIn={props.tokenIn}
                 tokenOut={props.tokenOut}
@@ -599,7 +602,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             )}
           </>
         )}
-        {activeState === ActiveLiquidity.Liquidity && screen === '2' && (
+        {props.activeState === ActiveLiquidity.Liquidity && screen === '2' && (
           <>
             <ConfirmAddLiquidity
               setScreen={setScreen}
@@ -614,7 +617,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             />
           </>
         )}
-        {activeState === ActiveLiquidity.Staking && screen === '2' && (
+        {props.activeState === ActiveLiquidity.Staking && screen === '2' && (
           <>
             <ConfirmStakeLiquidity
               setScreen={setScreen}
@@ -627,7 +630,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             />
           </>
         )}
-        {activeState === ActiveLiquidity.Staking && screen === '3' && (
+        {props.activeState === ActiveLiquidity.Staking && screen === '3' && (
           <>
             <ConfirmUnStakeLiquidity
               setScreen={setScreen}
@@ -638,7 +641,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             />
           </>
         )}
-        {activeState === ActiveLiquidity.Liquidity && screen === '3' && (
+        {props.activeState === ActiveLiquidity.Liquidity && screen === '3' && (
           <>
             <ConfirmRemoveLiquidity
               setScreen={setScreen}
