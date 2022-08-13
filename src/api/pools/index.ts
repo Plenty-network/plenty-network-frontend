@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { BigNumber } from 'bignumber.js';
-import { IPoolsDataWrapperResponse, VolumeVeData } from './types';
+import { Bribes, IPoolsDataWrapperResponse, VolumeV1Data, VolumeVeData } from './types';
 import { IAMM, IAmmContracts } from '../../config/types';
 import { getPnlpBalance, getStakedBalance } from '../util/balance';
 import Config from '../../config/config';
@@ -28,13 +28,13 @@ export const poolsDataWrapper = async (
     const poolsResponse = await axios.get(
       'https://62d80fa990883139358a3999.mockapi.io/api/v1/ve'
     );
-    const poolsData = poolsResponse.data;
+    const poolsData : VolumeV1Data[] = poolsResponse.data;
 
     // const analyticsResponse = await axios.get(`${Config.PLY_INDEXER}ve/pools`);
     const analyticsResponse = await axios.get(
       'https://62d80fa990883139358a3999.mockapi.io/api/v1/config'
     );
-    const analyticsData = analyticsResponse.data;
+    const analyticsData : VolumeVeData[] = analyticsResponse.data;
 
     const allData: { [id: string]: IPoolsDataWrapperResponse } = {};
 
@@ -42,18 +42,21 @@ export const poolsDataWrapper = async (
       const AMM = AMMS[poolData.pool];
       const analyticsObject = getAnalyticsObject(poolData.pool, analyticsData);
       let bribe: BigNumber = new BigNumber(0);
-      // Add type
-      let bribes: any = [];
+      let bribes: Bribes[] = []; 
 
       if (!poolData.bribes || poolData.bribes.length === 0) {
         bribe = new BigNumber(0);
         bribes = [];
       } else {
         for (var y of poolData.bribes) {
-          bribe = bribe.plus(new BigNumber(tokenPrice[y.token] * y.value));
-          bribes.push({ tokenName: y.token, value: y.value });
+          bribe = bribe.plus(new BigNumber(new BigNumber(y.value).multipliedBy(tokenPrice[y.tokenName])));
+          bribes.push({ tokenName: y.tokenName, value: new BigNumber(y.value)});
         }
       }
+
+      console.log(tokenPrice);
+      console.log(bribe);
+      console.log(bribes);
 
       allData[poolData.pool] = {
         tokenA: AMM.token1.symbol,
@@ -71,23 +74,23 @@ export const poolsDataWrapper = async (
             : new BigNumber(0), //Check formula
 
         volume:
-          new BigNumber(analyticsObject.volume24H.value) ?? new BigNumber(0),
+          new BigNumber(analyticsObject.volume24H.value),
         volumeTokenA:
-          new BigNumber(analyticsObject.volume24H.token1) ?? new BigNumber(0),
+          new BigNumber(analyticsObject.volume24H.token1),
         volumeTokenB:
-          new BigNumber(analyticsObject.volume24H.token2) ?? new BigNumber(0),
+          new BigNumber(analyticsObject.volume24H.token2),
 
-        tvl: new BigNumber(analyticsObject.tvl.value) ?? new BigNumber(0),
+        tvl: new BigNumber(analyticsObject.tvl.value),
         tvlTokenA:
-          new BigNumber(analyticsObject.tvl.token1) ?? new BigNumber(0),
+          new BigNumber(analyticsObject.tvl.token1),
         tvlTokenB:
-          new BigNumber(analyticsObject.tvl.token2) ?? new BigNumber(0),
+          new BigNumber(analyticsObject.tvl.token2),
 
-        fees: new BigNumber(analyticsObject.fees7D.value) ?? new BigNumber(0),
+        fees: new BigNumber(analyticsObject.fees7D.value),
         feesTokenA:
-          new BigNumber(analyticsObject.fees7D.token1) ?? new BigNumber(0),
+          new BigNumber(analyticsObject.fees7D.token1),
         feesTokenB:
-          new BigNumber(analyticsObject.fees7D.token2) ?? new BigNumber(0),
+          new BigNumber(analyticsObject.fees7D.token2),
 
         bribeUSD: bribe,
         bribes: bribes,
@@ -117,10 +120,10 @@ export const poolsDataWrapper = async (
 const getAnalyticsObject = (
   ammAddress: string,
   analyticsData: VolumeVeData[]
-) => {
-  // Add Try Catch and Data Types
+) : VolumeVeData => {
 
-  let analyticsObject;
+  try {
+    let analyticsObject : VolumeVeData | undefined;
 
   for (var poolData of analyticsData) {
     if (poolData.pool === ammAddress) {
@@ -131,6 +134,19 @@ const getAnalyticsObject = (
 
   if (analyticsObject) return analyticsObject;
   else throw new Error('No Analytics Data Available');
+    
+  } catch (error) {
+    console.log(error);
+    return {
+      pool : "",
+      volume24H: {value :"0" ,token1:"0",token2:"0"},
+      volume7D : {value :"0" ,token1:"0",token2:"0"},
+      fees24H: {value :"0" ,token1:"0",token2:"0"},
+      fees7D: {value :"0" ,token1:"0",token2:"0"},
+      feesEpoch : {value :"0" ,token1:"0",token2:"0"},
+      tvl : {value :"0" ,token1:"0",token2:"0"},
+    };
+  }
 };
 
 const doesLiquidityExistForUser = async (
