@@ -3,10 +3,11 @@ import { BigNumber } from 'bignumber.js'
 
 export interface VolumeV1Data {
   pool: string;
-  gauge: string;
-  bribes: any[];
+  bribes: Bribes[];
   apr: string;
+  previousApr : number
 }
+
 export interface Volume24H {
   value: string;
   token1: string;
@@ -53,6 +54,11 @@ export interface VolumeVeData {
   tvl: Tvl;
 }
 
+export interface Bribes{
+  tokenName : string;
+  value : BigNumber;
+}
+
 export interface IPoolsDataWrapperResponse {
   tokenA : String;
   tokenB : String;
@@ -70,12 +76,8 @@ export interface IPoolsDataWrapperResponse {
   feesTokenA : BigNumber;
   feesTokenB : BigNumber;
   bribeUSD : BigNumber;
-  bribes : [];
+  bribes : Bribes[];
   isLiquidityAvailable : boolean;
   isStakeAvailable: boolean;
 
-}
-
-export interface PoolsMainPage extends VolumeVeData, VolumeV1Data, IAMM {
-  id: number;
 }

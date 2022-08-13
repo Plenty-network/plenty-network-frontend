@@ -2,11 +2,9 @@ import * as React from 'react';
 import { Column } from 'react-table';
 import {
   usePoolsMain,
-  usePoolsMain2,
 } from '../../api/pools/query/poolsmain.query';
 import {
   IPoolsDataWrapperResponse,
-  PoolsMainPage,
 } from '../../api/pools/types';
 import { useTableNumberUtils } from '../../hooks/useTableUtils';
 import Table from '../Table/Table';
@@ -76,7 +74,7 @@ export function ShortCard(props: IShortCardProps) {
             />
             <div className="flex flex-col gap-[2px]">
               <span className="text-f14 text-white ">
-                {x.tokenA}/{x.token2.symbol}
+                {x.tokenA}/{x.tokenB}
               </span>
               <span className="text-f12 text-text-500">Stable Pool</span>
             </div>
@@ -193,7 +191,7 @@ export function ShortCard(props: IShortCardProps) {
         Header: 'Bribes',
         id: 'Bribes',
         isToolTipEnabled: true,
-        accessor: (x) => <PoolsText text={x.bribes.toString()} />,
+        accessor: (x) => <PoolsText text={x.bribeUSD.toString()} />,
       },
       {
         Header: '',
