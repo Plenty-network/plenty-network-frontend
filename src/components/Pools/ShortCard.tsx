@@ -60,6 +60,8 @@ export function ShortCard(props: IShortCardProps) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: 'USDT.e',
   });
+  const tEZorCTEZtoUppercase=(a:string)=> (a.trim().toLowerCase() === 'tez' || a.trim().toLowerCase() === 'ctez')?a.toUpperCase():a;
+
   const mobilecolumns = React.useMemo<Column<IPoolsDataWrapperResponse>[]>(
     () => [
       {
@@ -74,7 +76,7 @@ export function ShortCard(props: IShortCardProps) {
             />
             <div className="flex flex-col gap-[2px]">
               <span className="text-f14 text-white ">
-                {x.tokenB}/{x.tokenA}
+              {tEZorCTEZtoUppercase(x.tokenA.toString())}/{tEZorCTEZtoUppercase(x.tokenB.toString())}
               </span>
               <span className="text-f12 text-text-500">Stable Pool</span>
             </div>
@@ -104,7 +106,6 @@ export function ShortCard(props: IShortCardProps) {
     ],
     [valueFormat]
   );
-
   const desktopcolumns = React.useMemo<Column<IPoolsDataWrapperResponse>[]>(
     () => [
       {
@@ -118,7 +119,7 @@ export function ShortCard(props: IShortCardProps) {
             />
             <div className="flex flex-col gap-[2px]">
               <span className="text-f14 text-white ">
-                {x.tokenA}/{x.tokenB}
+                {tEZorCTEZtoUppercase(x.tokenA.toString())}/{tEZorCTEZtoUppercase(x.tokenB.toString())}
               </span>
               <span className="text-f12 text-text-500">Stable Pool</span>
             </div>
