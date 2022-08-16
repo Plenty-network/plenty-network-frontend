@@ -5,23 +5,24 @@
 @import './switch.css';
 @import './switchWithIcon.css';
 
-body {
-  /*
-  background: -webkit-gradient(linear, left top, left bottom, from(#0C011C), to(#1E063F)) fixed;
-  */
+body.swap {
   background-color: #090015;
   background-size: cover;
-  /* background-image: url('/assets/image/Noise4.png'); */
-  /* background: linear-gradient(195.23deg, #090015 20.19%, rgba(59, 8, 133, 0.3) 82.41%, rgba(98, 2, 239, 0.5) 219.63%, rgba(9, 0, 21, 0.29) 340.7%);
-
- 
-   */
-  /* background-image: linear-gradient(195.23deg, #090015 20.19%, rgba(59, 8, 133, 0.3) 82.41%, rgba(98, 2, 239, 0.5) 219.63%, rgba(9, 0, 21, 0.29) 340.7%), url("/assets/image/Noise4.png"), url('/assets/image/plenty.net_bg.svg'); 
-   
-    */
   background-image: url('/assets/image/plenty.net_bg.svg'),
     url('/assets/image/Noise4.png');
   color: #9f9da3;
+}
+body {
+  background-color: #090015;
+  background-size: cover;
+  background-image: url('/assets/image/plentyBackgroundWithoutline.svg'),
+    url('/assets/image/Noise4.png');
+  /* background: linear-gradient(195.23deg, #090015 20.19%, rgba(59, 8, 133, 0.3) 82.41%, rgba(98, 2, 239, 0.5) 219.63%, rgba(9, 0, 21, 0.29) 340.7%); */
+
+  color: #9f9da3;
+}
+.z-index-max {
+  z-index: 9999;
 }
 .mobile-flex {
   @apply flex md:hidden lg:hidden xl:hidden;
@@ -39,6 +40,42 @@ body {
     height: 12px !important;
     min-width: 12px !important;
     min-height: 12px !important;
+  }
+}
+.walletIcon {
+  width: 32px !important;
+  height: 32px !important;
+}
+@media (min-width: 320px) and (max-width: 768px) {
+  .walletIcon {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+  }
+}
+.tokenIconLiq {
+  width: 42px !important;
+  height: 42px !important;
+}
+@media (min-width: 320px) and (max-width: 768px) {
+  .tokenIconLiq {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+  }
+}
+.tokenIconLiqRemove {
+  width: 34px !important;
+  height: 34px !important;
+}
+@media (min-width: 320px) and (max-width: 768px) {
+  .tokenIconLiqRemove {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
   }
 }
 .topNavblurEffect {
@@ -222,5 +259,9 @@ input[type='number'] {
   .font-f13 {
     @apply font-medium;
     @apply text-f13;
+  }
+  .font-mobile-f9 {
+    @apply font-normal;
+    @apply text-f9;
   }
 }

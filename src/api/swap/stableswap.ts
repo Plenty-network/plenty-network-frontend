@@ -4,7 +4,8 @@ import { store } from '../../redux';
 import axios from 'axios';
 import { connectedNetwork, rpcNode } from '../../common/walletconnect';
 import { getDexAddress } from '../util/fetchConfig';
-import { ISwapDataResponse , ICalculateTokenResponse } from './types';
+import { ISwapDataResponse , ICalculateTokenResponse, tezCtezStorageType, stableswapStorageType } from './types';
+import { getStorage } from '../util/storageProvider';
 
 const util = (
   x: BigNumber,
@@ -203,14 +204,13 @@ export const loadSwapDataTezCtez = async (
     if (dexContractAddress === 'false') {
       throw new Error('No dex found');
     }
-    const storageResponse = await axios.get(
-      `${rpcNode}chains/main/blocks/head/context/contracts/${dexContractAddress}/storage`,
-    );
 
-    let tezSupply: BigNumber = new BigNumber(storageResponse.data.args[2].args[1].int);
-    let ctezSupply: BigNumber = new BigNumber(storageResponse.data.args[0].args[1].args[0].int);
-    let lpTokenSupply: BigNumber = new BigNumber(storageResponse.data.args[0].args[4].int);
-    const exchangeFee = new BigNumber(storageResponse.data.args[0].args[2].int);
+    const storageResponse = await getStorage(dexContractAddress , tezCtezStorageType);
+
+    let tezSupply: BigNumber = new BigNumber(storageResponse.tezPool);
+    let ctezSupply: BigNumber = new BigNumber(storageResponse.ctezPool);
+    let lpTokenSupply: BigNumber = new BigNumber(storageResponse.lqtTotal);
+    const exchangeFee = new BigNumber(storageResponse.lpFee);
     const lpToken = AMM[dexContractAddress].lpToken;
     const ctezAddress = CONFIG.CTEZ[connectedNetwork];
     const ctezStorageUrl = `${rpcNode}chains/main/blocks/head/context/contracts/${ctezAddress}/storage`;
@@ -352,12 +352,10 @@ export const loadSwapDataGeneralStable = async (
       throw new Error('No dex found');
     }
 
-    const storageResponse = await axios.get(
-      `${rpcNode}chains/main/blocks/head/context/contracts/${dexContractAddress}/storage`,
-    );
+    const storageResponse = await getStorage(dexContractAddress , stableswapStorageType);
 
-    const token1Pool = new BigNumber(storageResponse.data.args[1].args[0].args[1].int);
-    const token2Pool = new BigNumber(storageResponse.data.args[3].int);  
+    const token1Pool = new BigNumber(storageResponse.token1Pool);
+    const token2Pool = new BigNumber(storageResponse.token2Pool);  
     const token1Precision = new BigNumber(AMM[dexContractAddress].token1Precision as string);
     const token2Precision = new BigNumber(AMM[dexContractAddress].token2Precision as string);
 
@@ -376,8 +374,8 @@ export const loadSwapDataGeneralStable = async (
       tokenInSupply = token2Pool;
       tokenInPrecision = token2Precision;
     }
-    const exchangeFee = new BigNumber(storageResponse.data.args[0].args[0].args[0].args[1].int);
-    let lpTokenSupply = new BigNumber(storageResponse.data.args[0].args[0].args[2].int);
+    const exchangeFee = new BigNumber(storageResponse.lpFee);
+    let lpTokenSupply = new BigNumber(storageResponse.lqtTotal);
     const lpToken = AMM[dexContractAddress].lpToken;
 
     tokenInSupply = tokenInSupply.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));

@@ -42,7 +42,6 @@ const Home: NextPage = (props) => {
     disconnectWallet: disconnectUserWallet,
     walletAddress: userAddress,
   };
-
   return (
     <>
       <Head>
