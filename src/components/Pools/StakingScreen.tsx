@@ -12,14 +12,13 @@ import {
 import { BigNumber } from 'bignumber.js';
 import Button from '../Button/Button';
 import { CircularImageInfo } from './Component/CircularImageInfo';
-import stake from '../../assets/icon/pools/stake.svg';
-import token from '../../assets/Tokens/plenty.png';
-import token2 from '../../assets/Tokens/ctez.png';
 import { tokenParameterLiquidity } from '../Liquidity/types';
-import { Dropdown } from '../DropDown/Dropdown';
 import { AppDispatch, store } from '../../redux';
 import { useDispatch } from 'react-redux';
 import { walletConnection } from '../../redux/wallet/wallet';
+import { IVePLYData } from '../../api/stake/types';
+
+import { VePLY } from '../DropDown/VePLY';
 
 export enum StakingScreenType {
   Staking = 'Staking',
@@ -40,8 +39,9 @@ export interface IStakingScreenProps {
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   stakedToken: string;
   setStakingScreen: React.Dispatch<React.SetStateAction<StakingScreenType>>;
-  setSelectedDropDown: React.Dispatch<React.SetStateAction<string>>;
-  selectedDropDown: string;
+  setSelectedDropDown: React.Dispatch<React.SetStateAction<IVePLYData>>;
+  selectedDropDown: IVePLYData;
+  vePLYOptions: IVePLYData[];
 }
 export interface IStakingProps {
   setStakingScreen: Function;
@@ -54,8 +54,9 @@ export interface IStakingProps {
   setStakeInput: React.Dispatch<React.SetStateAction<string | number>>;
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   stakedToken: string;
-  setSelectedDropDown: React.Dispatch<React.SetStateAction<string>>;
-  selectedDropDown: string;
+  setSelectedDropDown: React.Dispatch<React.SetStateAction<IVePLYData>>;
+  selectedDropDown: IVePLYData;
+  vePLYOptions: IVePLYData[];
 }
 
 export interface IUnstakingProps {
@@ -87,6 +88,7 @@ export function StakingScreen(props: IStakingScreenProps) {
           stakingScreen={props.stakingScreen}
           setSelectedDropDown={props.setSelectedDropDown}
           selectedDropDown={props.selectedDropDown}
+          vePLYOptions={props.vePLYOptions}
         />
       )}
       {props.stakingScreen === StakingScreenType.Unstaking && (
@@ -108,6 +110,7 @@ export function StakingScreen(props: IStakingScreenProps) {
 }
 
 export function Staking(props: IStakingProps) {
+  console.log(props);
   const walletAddress = store.getState().wallet.address;
   const handleInputPercentage = (value: number) => {
     props.setStakeInput(value * Number(props.pnlpBalance));
@@ -124,7 +127,7 @@ export function Staking(props: IStakingProps) {
   const onClickAmount = () => {
     handleStakeInput(props.pnlpBalance);
   };
-
+  console.log(Number(props.stakedToken));
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
@@ -186,8 +189,8 @@ export function Staking(props: IStakingProps) {
         </div>
         {/* dropDown And InfoTab */}
         <div className="flex py-2 px-2 md:px-4 justify-between">
-          <Dropdown
-            Options={['one', 'two', 'three']}
+          <VePLY
+            Options={props.vePLYOptions}
             selectedText={props.selectedDropDown}
             onClick={props.setSelectedDropDown}
           />

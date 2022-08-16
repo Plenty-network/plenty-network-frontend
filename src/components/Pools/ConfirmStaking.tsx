@@ -4,7 +4,8 @@ import arrowLeft from '../../../src/assets/icon/pools/arrowLeft.svg';
 import info from '../../../src/assets/icon/common/infoIcon.svg';
 import Button from '../Button/Button';
 import { tokenParameterLiquidity } from '../Liquidity/types';
-import { Dropdown } from '../DropDown/Dropdown';
+import { IVePLYData } from '../../api/stake/types';
+import { VePLY } from '../DropDown/VePLY';
 
 interface IConfirmStakeLiquidity {
   tokenIn: tokenParameterLiquidity;
@@ -12,8 +13,10 @@ interface IConfirmStakeLiquidity {
   tokenOut: tokenParameterLiquidity;
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   handleOperation: () => void;
-  setSelectedDropDown: React.Dispatch<React.SetStateAction<string>>;
-  selectedDropDown: string;
+  setSelectedDropDown: React.Dispatch<React.SetStateAction<IVePLYData>>;
+  selectedDropDown: IVePLYData;
+
+  vePLYOptions: IVePLYData[];
 }
 
 export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
@@ -35,8 +38,8 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
           </div>
           <div className="ml-auto">
             {' '}
-            <Dropdown
-              Options={['one', 'two', 'three']}
+            <VePLY
+              Options={props.vePLYOptions}
               selectedText={props.selectedDropDown}
               onClick={props.setSelectedDropDown}
             />
