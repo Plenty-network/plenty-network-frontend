@@ -135,14 +135,21 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       ).then((res) => {
         setVePLYOptions(res.vePLYData);
       });
+    } else if (stakeInput === '') {
+      setVePLYOptions([]);
+      setSelectedDropDown({ tokenId: '', boostValue: '', votingPower: '' });
     }
-  }, [stakeInput, walletAddress]);
+  }, [stakeInput, walletAddress, screen]);
   useEffect(() => {
-    vePLYOptions.map((id, i) => {
-      if (id.tokenId === selectedDropDown.tokenId) {
-        setSelectedDropDown(id);
-      }
-    });
+    if (vePLYOptions.length > 0) {
+      vePLYOptions.map((id, i) => {
+        if (id.tokenId === selectedDropDown.tokenId) {
+          setSelectedDropDown(id);
+        }
+      });
+    } else {
+      setSelectedDropDown({ tokenId: '', boostValue: '', votingPower: '' });
+    }
   }, [vePLYOptions]);
   useEffect(() => {
     if (walletAddress) {
