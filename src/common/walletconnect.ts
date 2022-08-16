@@ -48,7 +48,6 @@ export function dappClient() {
     return client.requestPermissions({
       network: {
         type: walletNetwork,
-        rpcUrl: rpcNode,
       },
     })
   }
