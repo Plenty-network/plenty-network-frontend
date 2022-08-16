@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { Column } from 'react-table';
-import {
-  usePoolsMain,
-} from '../../api/pools/query/poolsmain.query';
-import {
-  IPoolsDataWrapperResponse,
-} from '../../api/pools/types';
+import { usePoolsMain } from '../../api/pools/query/poolsmain.query';
+import { IPoolsDataWrapperResponse } from '../../api/pools/types';
 import { useTableNumberUtils } from '../../hooks/useTableUtils';
 import Table from '../Table/Table';
 import { CircularImageInfo } from './Component/CircularImageInfo';

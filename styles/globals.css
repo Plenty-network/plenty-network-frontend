@@ -10,17 +10,18 @@ body.swap {
   background-size: cover;
   background-image: url('/assets/image/plenty.net_bg.svg'),
     url('/assets/image/Noise4.png');
-  color: #9f9da3;
+  color: #ffffff;
 }
 body {
   background-color: #090015;
   background-size: cover;
-  background-image: url('/assets/image/plentyBackgroundWithoutline.svg'), url('/assets/image/Noise4.png');;
+  background-image: url('/assets/image/plentyBackgroundWithoutline.svg'),
+    url('/assets/image/Noise4.png');
   /* background: linear-gradient(195.23deg, #090015 20.19%, rgba(59, 8, 133, 0.3) 82.41%, rgba(98, 2, 239, 0.5) 219.63%, rgba(9, 0, 21, 0.29) 340.7%); */
 
-  color: #9f9da3;
+  color: #ffffff;
 }
-.z-index-max{
+.z-index-max {
   z-index: 9999;
 }
 .mobile-flex {
@@ -254,6 +255,10 @@ input[type='number'] {
   .font-mobile-700 {
     @apply font-semibold;
     @apply text-f1015;
+  }
+  .font-f13 {
+    @apply font-medium;
+    @apply text-f13;
   }
   .font-mobile-f9 {
     @apply font-normal;
