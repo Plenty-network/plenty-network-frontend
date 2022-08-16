@@ -30,7 +30,7 @@ export default function Pools(props: IIndexProps) {
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
-    dispatch(getTotalVotingPower());
+    //dispatch(getTotalVotingPower());
   }, []);
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
