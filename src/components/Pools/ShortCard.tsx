@@ -2,11 +2,9 @@ import * as React from 'react';
 import { Column } from 'react-table';
 import {
   usePoolsMain,
-  usePoolsMain2,
 } from '../../api/pools/query/poolsmain.query';
 import {
   IPoolsDataWrapperResponse,
-  PoolsMainPage,
 } from '../../api/pools/types';
 import { useTableNumberUtils } from '../../hooks/useTableUtils';
 import Table from '../Table/Table';
@@ -134,7 +132,13 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <AprInfo currentApr={x.apr.toString()} previousApr={x.prevApr.toString()} boostedApr={x.boostedApr.toString()} />,
+        accessor: (x: any) => (
+          <AprInfo
+            currentApr={x.apr.toString()}
+            previousApr={x.prevApr.toString()}
+            boostedApr={x.boostedApr.toString()}
+          />
+        ),
       },
       {
         Header: 'Volume',
@@ -187,7 +191,7 @@ export function ShortCard(props: IShortCardProps) {
         Header: 'Bribes',
         id: 'Bribes',
         isToolTipEnabled: true,
-        accessor: (x) => <PoolsText text={x.bribeUSD} />,
+        accessor: (x) => <PoolsText text={x.bribeUSD.toString()} />,
       },
       {
         Header: '',
@@ -214,7 +218,6 @@ export function ShortCard(props: IShortCardProps) {
               ? setActiveState(ActiveLiquidity.Rewards)
               : setActiveState(ActiveLiquidity.Staking)
             : setActiveState(ActiveLiquidity.Liquidity);
-          console.log(props.isLiquidityAvailable, props.isStakeAvailable);
           setShowLiquidityModal(true);
           setTokenIn({
             name: 'USDC.e',

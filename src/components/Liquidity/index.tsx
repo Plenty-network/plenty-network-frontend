@@ -205,23 +205,29 @@ function Liquidity(props: ILiquidityProps) {
       )}
       {!props.isAddLiquidity && (
         <div className="mt-4 border border-text-800 rounded-2xl bg-card-300 flex items-center h-[48px] pr-3 pl-5">
-          <div className="flex">
-            <span>
-              <Image src={info} width={'14px'} height={'14px'} />
-            </span>
-            <span className="font-subtitle1 relative top-[1.5px] ml-2">
-              Your position
-            </span>
-          </div>
+          {Number(props.pnlpBalance) > 0 ? (
+            <>
+              <div className="flex">
+                <span>
+                  <Image src={info} width={'14px'} height={'14px'} />
+                </span>
+                <span className="font-subtitle1 relative top-[1.5px] ml-2">
+                  Your position
+                </span>
+              </div>
 
-          <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] items-center flex px-3">
-            <div>
-              <Image src={wallet} width={'32px'} height={'32px'} />
-            </div>
-            <div className="ml-1 text-primary-500 font-body2">
-              {Number(props.pnlpBalance).toFixed(4)} PNLP
-            </div>
-          </div>
+              <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] items-center flex px-3">
+                <div>
+                  <Image src={wallet} width={'32px'} height={'32px'} />
+                </div>
+                <div className="ml-1 text-primary-500 font-body2">
+                  {Number(props.pnlpBalance).toFixed(4)} PNLP
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="font-body2 text-white">No Liquidity positions</div>
+          )}
         </div>
       )}
     </>

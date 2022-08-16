@@ -43,6 +43,12 @@ export function RewardsScreen(props: IRewardsProps) {
           Insufficient Balance
         </Button>
       );
+    } else if (Number(props.rewardToken) === 0) {
+      return (
+        <Button onClick={() => null} color={'disabled'}>
+          No Rewards yet
+        </Button>
+      );
     } else {
       return (
         <Button color={'primary'} onClick={props.handleOperation}>
@@ -63,7 +69,7 @@ export function RewardsScreen(props: IRewardsProps) {
         {!isNaN(text) ? (
           <div className="text-f14 text-white h-5 font-medium">{text}</div>
         ) : (
-          <div className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></div>
+          <div className=" w-12 mr-2  h-[18px] rounded animate-pulse bg-shimmer-100"></div>
         )}
 
         <div
@@ -85,13 +91,13 @@ export function RewardsScreen(props: IRewardsProps) {
         <div className="flex flex-col">
           {InnerTab(
             props.tokenIn.image,
-            Number(props.tokenInAmount),
+            props.tokenInAmount ? Number(props.tokenInAmount) : NaN,
             '',
             props.tokenIn.symbol
           )}
           {InnerTab(
             props.tokenOut.image,
-            Number(props.tokenOutAmount),
+            props.tokenOutAmount ? Number(props.tokenOutAmount) : NaN,
             '-mt-1',
             props.tokenOut.symbol
           )}
