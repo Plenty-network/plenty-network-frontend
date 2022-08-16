@@ -66,15 +66,15 @@ export function ShortCard(props: IShortCardProps) {
         Header: 'Pools',
         id: 'pools',
         showOnMobile: true,
-        accessor: (x: any) => (
+        accessor: (x) => (
           <div className="flex gap-1 items-center max-w-[153px]">
             <CircularImageInfo
               className="w-7 h-7"
-              imageArray={[getImagesPath(x.tokenA), getImagesPath(x.tokenB)]}
+              imageArray={[getImagesPath(x.tokenA.toString()), getImagesPath(x.tokenB.toString())]}
             />
             <div className="flex flex-col gap-[2px]">
               <span className="text-f14 text-white ">
-                {x.tokenA}/{x.tokenB}
+                {x.tokenB}/{x.tokenA}
               </span>
               <span className="text-f12 text-text-500">Stable Pool</span>
             </div>
@@ -88,14 +88,7 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => (
-          <AprInfo
-            currentApr={x.apr.toString()}
-            previousApr={x.prevApr.toString()}
-            boostedApr={x.boostedApr.toString()}
-            isMobile={true}
-          />
-        ),
+        accessor: (x) => <AprInfo currentApr={x.apr.toString()} previousApr={x.prevApr.toString()} boostedApr={x.boostedApr.toString()} isMobile={true}/>,
       },
       {
         Header: '',
@@ -118,10 +111,10 @@ export function ShortCard(props: IShortCardProps) {
         Header: 'Pools',
         id: 'pools',
         showOnMobile: true,
-        accessor: (x: any) => (
+        accessor: (x) => (
           <div className="flex gap-2 items-center max-w-[153px]">
             <CircularImageInfo
-              imageArray={[getImagesPath(x.tokenA), getImagesPath(x.tokenB)]}
+              imageArray={[getImagesPath(x.tokenA.toString()), getImagesPath(x.tokenB.toString())]}
             />
             <div className="flex flex-col gap-[2px]">
               <span className="text-f14 text-white ">
@@ -154,9 +147,12 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.volume}
+            text={valueFormat(x.volume.toNumber())}
             token1={x.volumeTokenA.toString()}
             token2={x.volumeTokenB.toString()}
+            token1Name={x.tokenA.toString()}
+            token2Name={x.tokenB.toString()}
+
           />
         ),
       },
@@ -167,9 +163,11 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.tvl}
+           text={valueFormat(x.tvl.toNumber())}
             token1={x.tvlTokenA.toString()}
             token2={x.tvlTokenB.toString()}
+            token1Name={x.tokenA.toString()}
+            token2Name={x.tokenB.toString()}
           />
         ),
       },
@@ -181,9 +179,11 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.fees}
+            text={valueFormat(x.fees.toNumber())}
             token1={x.feesTokenA.toString()}
             token2={x.feesTokenB.toString()}
+            token1Name={x.tokenA.toString()}
+            token2Name={x.tokenB.toString()}
           />
         ),
       },
@@ -211,7 +211,7 @@ export function ShortCard(props: IShortCardProps) {
   function ManageBtn(props: IManageBtnProps): any {
     return (
       <div
-        className="bg-primary-500/10 cursor-pointer  text-primary-500 px-7 py-2 rounded-lg"
+        className="bg-primary-500/10 cursor-pointer  text-primary-500 hover:opacity-90 px-7 py-2 rounded-lg"
         onClick={() => {
           props.isLiquidityAvailable
             ? props.isStakeAvailable
