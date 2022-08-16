@@ -28,7 +28,7 @@ export function PopUpModal(props: IPopUpModalProps) {
     <div
       onClick={clickedInModal}
       id="modal_outer"
-      className={`fixed top-0 left-0 flex flex-col gap-2 w-screen h-screen topNavblurEffect z-50 items-center justify-center ${
+      className={`z-index-max fixed top-0 left-0 flex flex-col gap-2 w-screen h-screen topNavblurEffect z-50 items-center justify-center ${
         isClose ? 'fade-out-3' : 'fade-in-3'
       }`}
     >

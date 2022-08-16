@@ -152,22 +152,24 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         ).then((res) => {
           setStakedToken(res.balance);
           stakedTokenLp.current = res.balance;
+          const response = getDepositedAmounts(
+            res.balance,
+            props.tokenIn.name,
+            props.tokenOut.name,
+            swapData.current.tokenInSupply,
+            swapData.current.tokenOutSupply,
+            swapData.current.lpTokenSupply
+          );
+
+          setTokenInAmountHarvest(response.tokenOneAmount);
+          setTokenOutAmountHarvest(response.tokenTwoAmount);
         });
         getRewards(props.tokenIn.name, props.tokenOut.name, walletAddress).then(
           (res) => {
             setRewardToken(res.rewards);
           }
         );
-        const res = getDepositedAmounts(
-          stakedTokenLp.current,
-          props.tokenIn.name,
-          props.tokenOut.name,
-          swapData.current.tokenInSupply,
-          swapData.current.tokenOutSupply,
-          swapData.current.lpTokenSupply
-        );
-        setTokenInAmountHarvest(res.tokenOneAmount);
-        setTokenOutAmountHarvest(res.tokenTwoAmount);
+
         const balanceResponse = await Promise.all(balancePromises);
 
         setUserBalances((prev) => ({
@@ -183,7 +185,15 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       };
       updateBalance();
     }
-  }, [props.tokenIn, props.tokenOut, props, tokenPrice, TOKEN, balanceUpdate]);
+  }, [
+    props.tokenIn,
+    props.tokenOut,
+    props,
+    tokenPrice,
+    TOKEN,
+    balanceUpdate,
+    swapData.current,
+  ]);
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(props.tokenIn, 'name') &&

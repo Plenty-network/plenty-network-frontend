@@ -20,6 +20,9 @@ body {
 
   color: #9f9da3;
 }
+.z-index-max{
+  z-index: 9999;
+}
 .mobile-flex {
   @apply flex md:hidden lg:hidden xl:hidden;
 }

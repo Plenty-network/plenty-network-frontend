@@ -250,7 +250,7 @@ export function Staking(props: IStakingProps) {
             <InputText value={props.stakeInput} onChange={handleStakeInput} />
             <div className="font-body2 md:font-body4 text-text-400">
               ~$
-              {props.lpTokenPrice
+              {!isNaN(Number(props.lpTokenPrice))
                 ? Number(
                     Number(props.stakeInput) * Number(props.lpTokenPrice)
                   ).toFixed(2)
@@ -274,18 +274,24 @@ export function Staking(props: IStakingProps) {
 
       {/* start of notification panel */}
 
-      <div className="border mt-4 rounded-2xl flex justify-between items-center pr-2 py-1.5 border-border-500 bg-card-300">
-        <div className="flex gap-2 items-center pl-4">
-          <CircularImageInfo
-            imageArray={[props.tokenIn.image, props.tokenOut.image]}
-          />
-          <span className="text-f14 text-white ">
-            {props.tokenIn.symbol} / {props.tokenOut.symbol}
-          </span>
-        </div>
-        <BtnWithStakeIcon
-          text={`${Number(props.stakedToken).toFixed(4)} PNLP`}
-        />
+      <div className="border mt-4 rounded-2xl flex justify-between items-center pr-2 py-1.5 border-border-500 bg-card-300 h-[48px]">
+        {Number(props.stakedToken) > 0 ? (
+          <>
+            <div className="flex gap-2 items-center pl-4">
+              <CircularImageInfo
+                imageArray={[props.tokenIn.image, props.tokenOut.image]}
+              />
+              <span className="text-f14 text-white ">
+                {props.tokenIn.symbol} / {props.tokenOut.symbol}
+              </span>
+            </div>
+            <BtnWithStakeIcon
+              text={`${Number(props.stakedToken).toFixed(4)} PNLP`}
+            />
+          </>
+        ) : (
+          <div className="font-body2 text-white pl-4">No Staked positions</div>
+        )}
       </div>
 
       {/* end of notification panel */}
@@ -419,7 +425,7 @@ export function Unstaking(props: IUnstakingProps) {
           <InputText value={props.unStakeInput} onChange={handleUnStakeInput} />
           <div className="font-body2 md:font-body4 text-text-400">
             ~$
-            {props.lpTokenPrice
+            {!isNaN(Number(props.lpTokenPrice))
               ? Number(
                   Number(props.unStakeInput) * Number(props.lpTokenPrice)
                 ).toFixed(2)

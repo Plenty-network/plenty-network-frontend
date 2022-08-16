@@ -2,11 +2,9 @@ import * as React from 'react';
 import { Column } from 'react-table';
 import {
   usePoolsMain,
-  usePoolsMain2,
 } from '../../api/pools/query/poolsmain.query';
 import {
   IPoolsDataWrapperResponse,
-  PoolsMainPage,
 } from '../../api/pools/types';
 import { useTableNumberUtils } from '../../hooks/useTableUtils';
 import Table from '../Table/Table';
@@ -75,8 +73,8 @@ export function ShortCard(props: IShortCardProps) {
               imageArray={[getImagesPath(x.tokenA), getImagesPath(x.tokenB)]}
             />
             <div className="flex flex-col gap-[2px]">
-              <span className="text-f14 text-white uppercase">
-                {x.tokenA}/{x.token2.symbol}
+              <span className="text-f14 text-white ">
+                {x.tokenA}/{x.tokenB}
               </span>
               <span className="text-f12 text-text-500">Stable Pool</span>
             </div>
@@ -90,7 +88,14 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <AprInfo isMobile={true} />,
+        accessor: (x: any) => (
+          <AprInfo
+            currentApr={x.apr.toString()}
+            previousApr={x.prevApr.toString()}
+            boostedApr={x.boostedApr.toString()}
+            isMobile={true}
+          />
+        ),
       },
       {
         Header: '',
@@ -119,7 +124,7 @@ export function ShortCard(props: IShortCardProps) {
               imageArray={[getImagesPath(x.tokenA), getImagesPath(x.tokenB)]}
             />
             <div className="flex flex-col gap-[2px]">
-              <span className="text-f14 text-white uppercase">
+              <span className="text-f14 text-white ">
                 {x.tokenA}/{x.tokenB}
               </span>
               <span className="text-f12 text-text-500">Stable Pool</span>
@@ -134,7 +139,13 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <AprInfo />,
+        accessor: (x: any) => (
+          <AprInfo
+            currentApr={x.apr.toString()}
+            previousApr={x.prevApr.toString()}
+            boostedApr={x.boostedApr.toString()}
+          />
+        ),
       },
       {
         Header: 'Volume',
@@ -180,7 +191,7 @@ export function ShortCard(props: IShortCardProps) {
         Header: 'Bribes',
         id: 'Bribes',
         isToolTipEnabled: true,
-        accessor: (x) => <PoolsText text={x.bribes.toString()} />,
+        accessor: (x) => <PoolsText text={x.bribeUSD.toString()} />,
       },
       {
         Header: '',
@@ -207,7 +218,6 @@ export function ShortCard(props: IShortCardProps) {
               ? setActiveState(ActiveLiquidity.Rewards)
               : setActiveState(ActiveLiquidity.Staking)
             : setActiveState(ActiveLiquidity.Liquidity);
-          console.log(props.isLiquidityAvailable, props.isStakeAvailable);
           setShowLiquidityModal(true);
           setTokenIn({
             name: 'USDC.e',
