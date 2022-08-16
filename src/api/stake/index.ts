@@ -9,6 +9,13 @@ import { getDexAddress } from "../util/fetchConfig";
 import { getStorage } from "../util/storageProvider";
 import { IVePLYData, IVePLYListResponse } from "./types";
 
+/**
+ * Returns the list of veNFTs with boost value for a user, for a particular gauge.
+ * @param tokenOneSymbol - Symbol of the first token of the selected pair
+ * @param tokenTwoSymbol - Symbol of the second token of the selected pair 
+ * @param userStakeInput - Amount of PNLP token the user wants to stake(input)
+ * @param userTezosAddress - Tezos wallet address of the user
+ */
 export const getVePLYListForUser = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
@@ -18,22 +25,19 @@ export const getVePLYListForUser = async (
   try {
     const state = store.getState();
     const AMM = state.config.AMMs;
-    //TODO: Uncomment when CORS issue is fixed
-    // const locksResponse = await axios.get(
-    //   `${Config.VE_INDEXER}locks?address=${userTezosAddress}`
-    // );
+    
     const locksResponse = await axios.get(
-      `https://62d80fa990883139358a3999.mockapi.io/api/v1/locks`
+      `${Config.VE_INDEXER}locks?address=${userTezosAddress}`
     );
-    //TODO: remove [0] when CORS issue is fixed
-    if (locksResponse.data[0].result.length === 0) {
+    
+    if (locksResponse.data.result.length === 0) {
       return {
         success: true,
         vePLYData: [],
       };
     }
-    //TODO: remove [0] when CORS issue is fixed
-    const locksData = locksResponse.data[0].result.filter(
+    
+    const locksData = locksResponse.data.result.filter(
       (lock: any) => !lock.attached
     ); // Filter the tokens for not attached ones.
 
@@ -64,7 +68,7 @@ export const getVePLYListForUser = async (
       totalSupply
     );
 
-    const totalVotingPower = state.pools.totalVotingPower;
+    const totalVotingPower = state.pools.totalVotingPower;   // Fetch the total voting power stored in redux store
     
     const finalVePLYData: IVePLYData[] = [];
 
@@ -74,7 +78,7 @@ export const getVePLYListForUser = async (
       );
       const updatedLockData = {
         tokenId: lock.id,
-        boostValue: getBoostedValue(
+        boostValue: getBoostValue(
           finalUserStakedBalance,
           finalTotalSupply,
           votingPower,
@@ -98,7 +102,9 @@ export const getVePLYListForUser = async (
   }
 };
 
-
+/**
+ * Fetch the total voting power for the current timestamp.
+ */
 export const fetchTotalVotingPower = async (): Promise<BigNumber> => {
   try {
     const voteEscrowAddress = Config.VOTE_ESCROW[connectedNetwork];
@@ -119,8 +125,14 @@ export const fetchTotalVotingPower = async (): Promise<BigNumber> => {
   }
 };
 
-
-const getBoostedValue = (
+/**
+ * Calulate the boost value for the selected veNFT.
+ * @param userStakedBalance - The final balance calculated by adding the user input to staked balance in storage
+ * @param totalSupply - The final total supply calculated by adding the user input to the total supply in storage
+ * @param tokenVotingPower - Voting power of selected veNFT received from indexer api
+ * @param totalVotingPower - Total voting power for the current timestamp
+ */
+const getBoostValue = (
   userStakedBalance: BigNumber,
   totalSupply: BigNumber,
   tokenVotingPower: BigNumber,

@@ -192,7 +192,7 @@ export function ShortCard(props: IShortCardProps) {
         Header: 'Bribes',
         id: 'Bribes',
         isToolTipEnabled: true,
-        accessor: (x) => <PoolsText text={x.bribeUSD.toString()} />,
+        accessor: (x) => <PoolsText text={valueFormat(x.bribeUSD.toNumber())} />,
       },
       {
         Header: '',

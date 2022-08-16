@@ -1,3 +1,4 @@
+import { BigNumber } from "bignumber.js";
 export interface IEpochListObject {
   epochNumber: number;
   isCurrent: boolean;
@@ -8,5 +9,27 @@ export interface IEpochListObject {
 export interface IEpochDataResponse {
   success: boolean;
   epochData: IEpochListObject[];
+  error?: string;
+}
+
+export interface ITotalAmmVotesData {
+  amm: string;
+  epoch: string;
+}
+
+export interface ITotalAmmVotesBigMap {
+  key: ITotalAmmVotesData;
+  value: string;
+}
+
+export interface IVeNFTData {
+  tokenId: BigNumber;
+  baseValue: BigNumber;
+  votingPower: BigNumber;
+}
+
+export interface IVeNFTListResponse {
+  success: boolean;
+  veNFTData: IVeNFTData[];
   error?: string;
 }
