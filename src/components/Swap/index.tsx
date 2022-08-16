@@ -21,9 +21,12 @@ import { allPaths } from '../../api/swap/router';
 import {
   computeAllPathsWrapper,
   reverseCalculation,
+  topTokensList,
 } from '../../api/swap/wrappers';
 import { IAllBalanceResponse } from '../../api/util/types';
 import { Chain } from '../../config/types';
+import { votingPower } from '../../api/votes/votesUdit';
+import { poolsDataWrapper } from '../../api/pools';
 
 interface ISwapProps {
   className?: string;
@@ -112,7 +115,11 @@ function Swap(props: ISwapProps) {
   const allPathSwapData = React.useRef<any[][]>([]);
   const isSwitchClicked = React.useRef<boolean>(false);
 
+
   useEffect(() => {
+
+    // votingPower(1 , 	1659578000 ,  0).then((res)=>{console.log(res)});
+
     if (props.otherProps.walletAddress) {
       getCompleteUserBalace(props.otherProps.walletAddress).then(
         (response: IAllBalanceResponse) => {

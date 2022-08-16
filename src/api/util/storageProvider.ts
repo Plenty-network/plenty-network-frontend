@@ -1,6 +1,6 @@
 import { Schema } from "@taquito/michelson-encoder";
 import axios from "axios";
-import { rpcNode } from "../../common/walletconnect";
+import { rpcNode, tzktNode } from "../../common/walletconnect";
 
 export const getStorage = async (
   contractAddress: string,
@@ -26,6 +26,17 @@ export const getBigMapData = async (
   }
 };
 
+export const getTzktBigMapData = async (
+  mapId: string,
+  filters: string | undefined
+): Promise<any> => {
+  try {
+    const bigMapResponse = await axios.get(`${tzktNode}v1/bigmaps/${mapId}/keys?${filters === undefined ? '' : filters}`);
+    return bigMapResponse;
+  } catch(error: any) {
+    throw error;
+  }
+};
 
 const getReadableStorage = (
   storageData: any,

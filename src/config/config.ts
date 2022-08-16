@@ -17,8 +17,8 @@ const Config: IConfig = {
     mainnet: 'https://mifx20dfsr.windmill.tools/',
   },
   TZKT_NODES: {
-    mainnet: 'https://api.tzkt.io',
-    testnet: 'https://api.ghostnet.tzkt.io',
+    mainnet: 'https://api.tzkt.io/',
+    testnet: 'https://api.ghostnet.tzkt.io/',
   },
   VOTER: {
     mainnet: '',
@@ -28,6 +28,14 @@ const Config: IConfig = {
     mainnet : '',
     testnet : 'KT1Xrb4eEizLTwR9sZgckjugfuaPB563KKd6',
   },
+  PLY_TOKEN : {
+    mainnet : '',
+    testnet : 'KT1XFABWm5H9CMFL3T5iNb7Zz6YVpLHQjpsA',
+  },
+
+  VE_INDEXER : 'http://65.0.129.224/v1/',
+  PLY_INDEXER : 'http://13.127.76.247/',
+
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',
     testnet: 'KT1P7eP7gGuHgPVNWRLs1p4uRhc9Wbyku8B2',
@@ -50,7 +58,7 @@ const Config: IConfig = {
   },
 
   NETWORK: 'testnet',
-  WALLET_NETWORK: NetworkType.CUSTOM,
+  WALLET_NETWORK: NetworkType.GHOSTNET,
   ADMIN_ADDRESS: 'KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW',
   BURNER: 'tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg',
 

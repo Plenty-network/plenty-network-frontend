@@ -105,21 +105,29 @@ const MainMenu: Array<ISingleSideBarProps> = [
     pathName: '/Swap',
     activePathName: '/Swap',
   },
-  // {
-  //   name: 'Pools',
-  //   iconName: 'pools',
-  //   pathName: '/pools',
-  //   activePathName: '/pools',
-  // },
+  {
+    name: 'Pools',
+    iconName: 'pools',
+    pathName: '/pools',
+    activePathName: '/pools',
+  },
 ];
 
 export function SideBar(props: ISideBarProps) {
   const [activeMenu, setActiveMenu] = React.useState<string>('');
   const { pathname } = useRouter();
-
+  try{
+    if(pathname== '/Swap')
+      document.getElementsByTagName("body")[0].className='swap';
+    else 
+      document.getElementsByTagName("body")[0].className='';   
+   }
+   catch{
+  
+   }
   return (
     <div
-      className="fixed text-f14 bg-sideBar border-r-borderColor border-r shadow hidden md:block  "
+      className="fixed text-f14 bg-sideBar border-border-500/50 border-r shadow hidden md:block  "
       style={{
         height: 'calc(100vh - 64px)',
         width: '240px',
@@ -146,7 +154,7 @@ export function SideBar(props: ISideBarProps) {
           ))}
         </div>
         <div>
-          <div className=" border-t-borderColor border-t">
+          <div className=" border-border-500/50 border-t">
             {FooterMenu.map((e, i) => (
               <HrefIcon
                 name={e.name}
@@ -156,7 +164,7 @@ export function SideBar(props: ISideBarProps) {
               />
             ))}
           </div>
-          <div className=" border-t border-t-borderColor ">
+          <div className=" border-t border-border-500/50 ">
             <FooterInfoIcon />
           </div>
         </div>

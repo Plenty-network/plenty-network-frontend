@@ -421,7 +421,7 @@ function SwapTab(props: ISwapTabProps) {
         </div>
       </div>
       {props.errorMessage !== '' && (
-        <div className="mt-1 mx-5 lg:mx-[30px] font-body2 lg:font-body3 text-error-500">
+        <div className="mt-1 mx-5 lg:mr-[30px] lg:ml-[50px] font-body2 lg:font-body3 text-error-500">
           {props.errorMessage}
         </div>
       )}
@@ -497,7 +497,7 @@ function SwapTab(props: ISwapTabProps) {
                   <input
                     type="text"
                     className={clsx(
-                      'text-primary-500 inputSecond  text-right border-0 w-[100%]  font-input-text lg:font-medium1 outline-none '
+                      'text-primary-700 inputSecond  text-right border-0 w-[100%]  font-input-text lg:font-medium1 outline-none '
                     )}
                     placeholder="--"
                     disabled
@@ -566,7 +566,7 @@ function SwapTab(props: ISwapTabProps) {
                   {' '}
                   Fetching best price
                 </span>
-                <span className="relative -top-1">
+                <span className="relative -top-[5px]">
                   <Lottie
                     animationData={loader}
                     loop={true}

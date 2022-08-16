@@ -15,6 +15,7 @@ import {
 } from './types';
 import { computeAllPaths } from './router';
 import { store } from '../../redux';
+import axios from 'axios';
 
 export const loadSwapDataWrapper = async (
   tokenIn: string,
@@ -43,8 +44,8 @@ export const loadSwapDataWrapper = async (
       success: false,
       tokenIn: tokenIn,
       tokenOut: tokenOut,
-      tokenInSupply : new BigNumber(0),
-      tokenOutSupply : new BigNumber(0),
+      tokenInSupply: new BigNumber(0),
+      tokenOutSupply: new BigNumber(0),
       exchangeFee: new BigNumber(0),
       lpTokenSupply: new BigNumber(0),
       lpToken: undefined,
@@ -78,10 +79,7 @@ export const calculateTokensOutWrapper = (
         tokenOut
       );
     } else {
-      if (
-        (tokenIn === 'tez' && tokenOut === 'ctez') &&
-        target
-      ) {
+      if (tokenIn === 'tez' && tokenOut === 'ctez' && target) {
         outputData = calculateTokensOutTezCtez(
           tokenInSupply,
           tokenOutSupply,
@@ -91,8 +89,7 @@ export const calculateTokensOutWrapper = (
           target,
           tokenIn
         );
-      } else if((tokenIn === 'ctez' && tokenOut === 'tez') &&
-      target){
+      } else if (tokenIn === 'ctez' && tokenOut === 'tez' && target) {
         outputData = calculateTokensOutTezCtez(
           tokenOutSupply,
           tokenInSupply,
@@ -102,8 +99,7 @@ export const calculateTokensOutWrapper = (
           target,
           tokenIn
         );
-      }
-       else if (
+      } else if (
         tokenInSupply &&
         tokenOutSupply &&
         tokenInPrecision &&
@@ -148,7 +144,6 @@ export const computeAllPathsWrapper = (
   tokenPrice: { [id: string]: number }
 ): IRouterResponse => {
   try {
-
     const state = store.getState();
     const TOKEN = state.config.standard;
 
@@ -172,7 +167,7 @@ export const computeAllPathsWrapper = (
       new BigNumber(tokenPrice[bestPath.path[0]]).dividedBy(
         tokenPrice[bestPath.path[bestPath.path.length - 1]]
       )
-    ).decimalPlaces(TOKEN[bestPath.path[bestPath.path.length-1]].decimals);
+    ).decimalPlaces(TOKEN[bestPath.path[bestPath.path.length - 1]].decimals);
 
     return {
       path: bestPath.path,
@@ -298,3 +293,28 @@ export const reverseCalculation = (
     };
   }
 };
+
+export const topTokensList = async () => {
+  try {
+    // TODO : Check Why API response is not being fetched in VSCODE
+    const tokenTvlResponse = await axios.get(
+      'http://13.127.76.247/analytics/tokens'
+    );
+    console.log(tokenTvlResponse);
+    const tokenTvl = tokenTvlResponse.data;
+    console.log(tokenTvl);
+
+    const topTokens: { [id: string]: BigNumber } = {};
+
+    for (var x of tokenTvl) {
+      topTokens[x.token] = x.tvl.value;
+    }
+
+    console.log(topTokens);
+    // topTokens.sort
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// topTokensList();

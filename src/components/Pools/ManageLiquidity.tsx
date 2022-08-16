@@ -1,4 +1,4 @@
-import { StakingScreen } from './StakingScreen';
+import { StakingScreen, StakingScreenType } from './StakingScreen';
 import { RewardsScreen } from './RewardsScreen';
 import * as React from 'react';
 import Liquidity from '../Liquidity';
@@ -17,16 +17,18 @@ import playBtn from '../../assets/icon/common/playBtn.svg';
 import Image from 'next/image';
 import ConfirmAddLiquidity from '../Liquidity/ConfirmAddLiquidity';
 import ConfirmRemoveLiquidity from '../Liquidity/ConfirmRemoveLiquidity';
-import { useLocationStateInLiquidity } from '../../hooks/useLocationStateInLiquidity';
 import { store, useAppDispatch, useAppSelector } from '../../redux';
-import { getPnlpBalance, getUserBalanceByRpc } from '../../api/util/balance';
-import { ISwapData } from '../Liquidity/types';
+import {
+  getPnlpBalance,
+  getStakedBalance,
+  getUserBalanceByRpc,
+} from '../../api/util/balance';
+import { ISwapData, tokenParameterLiquidity } from '../Liquidity/types';
 import {
   getPnlpOutputEstimate,
   getPoolShareForPnlp,
 } from '../../api/liquidity';
 import { loadSwapDataWrapper } from '../../api/swap/wrappers';
-import { getDexType } from '../../api/util/fetchConfig';
 import ConfirmTransaction from '../ConfirmTransaction';
 import TransactionSubmitted from '../TransactionSubmitted';
 import {
@@ -41,23 +43,32 @@ import { setLoading } from '../../redux/isLoading/action';
 import { addLiquidity } from '../../operations/addLiquidity';
 import { removeLiquidity } from '../../operations/removeLiquidity';
 import { getLPTokenPrice } from '../../api/util/price';
+import { ConfirmStakeLiquidity } from './ConfirmStaking';
+import { stakePnlpTokens } from '../../operations/stake';
+import { ConfirmUnStakeLiquidity } from './ConfirmUnstake';
+import { unstakePnlpTokens } from '../../operations/unstake';
+import { harvestRewards } from '../../operations/rewards';
+import { getDepositedAmounts, getRewards } from '../../api/rewards';
 
 export interface IManageLiquidityProps {
-  closeFn: Function;
+  closeFn: React.Dispatch<React.SetStateAction<boolean>>;
+  tokenIn: tokenParameterLiquidity;
+  tokenOut: tokenParameterLiquidity;
+  setActiveState: React.Dispatch<React.SetStateAction<string>>;
+  activeState: string;
 }
 
 export function ManageLiquidity(props: IManageLiquidityProps) {
+  const [stakingScreen, setStakingScreen] = useState(StakingScreenType.Staking);
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState(0.5);
-  const { tokenIn, setTokenIn, tokenOut, setTokenOut } =
-    useLocationStateInLiquidity();
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const [screen, setScreen] = React.useState('1');
-  const [activeState, setActiveState] = React.useState<
-    ActiveLiquidity | string
-  >(ActiveLiquidity.Liquidity);
+  // const [activeState, setActiveState] = React.useState<
+  //   ActiveLiquidity | string
+  // >(ActiveLiquidity.Liquidity);
 
   const [firstTokenAmountLiq, setFirstTokenAmountLiq] = React.useState<
     string | number
@@ -65,9 +76,11 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [secondTokenAmountLiq, setSecondTokenAmountLiq] = React.useState<
     number | string
   >('');
+
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>(
     {}
   );
+  const [selectedDropDown, setSelectedDropDown] = useState('');
   const [isAddLiquidity, setIsAddLiquidity] = useState(true);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [burnAmount, setBurnAmount] = React.useState<string | number>('');
@@ -95,33 +108,68 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const [pnlpBalance, setPnlpBalance] = useState('');
+  const [stakeInput, setStakeInput] = useState<string | number>('');
+  const [unStakeInput, setUnStakeInput] = useState<string | number>('');
   const [lpTokenPrice, setLpTokenPrice] = useState(new BigNumber(0));
   const [isLoading, setIsLoading] = useState(false);
+  const [tokenInAmountHarvest, setTokenInAmountHarvest] = useState('');
+  const [tokenOutAmountHarvest, setTokenOutAmountHarvest] = useState('');
+  const [rewardToken, setRewardToken] = useState('');
+  const [stakedToken, setStakedToken] = useState('');
+  const stakedTokenLp = React.useRef<string>('');
+  const [contentTransaction, setContentTransaction] = useState('');
 
   useEffect(() => {
     if (walletAddress) {
       const updateBalance = async () => {
         const balancePromises = [];
 
-        Object.keys(tokenIn).length !== 0 &&
+        Object.keys(props.tokenIn).length !== 0 &&
           balancePromises.push(
-            getUserBalanceByRpc(tokenIn.name, walletAddress)
+            getUserBalanceByRpc(props.tokenIn.name, walletAddress)
           );
-        Object.keys(tokenOut).length !== 0 &&
+        Object.keys(props.tokenOut).length !== 0 &&
           balancePromises.push(
-            getUserBalanceByRpc(tokenOut.name, walletAddress)
+            getUserBalanceByRpc(props.tokenOut.name, walletAddress)
           );
-        getPnlpBalance(tokenIn.name, tokenOut.name, walletAddress).then(
-          (res) => {
-            setPnlpBalance(res.balance);
-          }
-        );
-        getLPTokenPrice(tokenIn.name, tokenOut.name, {
-          [tokenIn.name]: tokenPrice[tokenIn.name],
-          [tokenOut.name]: tokenPrice[tokenOut.name],
+        getPnlpBalance(
+          props.tokenIn.name,
+          props.tokenOut.name,
+          walletAddress
+        ).then((res) => {
+          setPnlpBalance(res.balance);
+        });
+        getLPTokenPrice(props.tokenIn.name, props.tokenOut.name, {
+          [props.tokenIn.name]: tokenPrice[props.tokenIn.name],
+          [props.tokenOut.name]: tokenPrice[props.tokenOut.name],
         }).then((res) => {
           setLpTokenPrice(res.lpTokenPrice);
         });
+        getStakedBalance(
+          props.tokenIn.name,
+          props.tokenOut.name,
+          walletAddress
+        ).then((res) => {
+          setStakedToken(res.balance);
+          stakedTokenLp.current = res.balance;
+          const response = getDepositedAmounts(
+            res.balance,
+            props.tokenIn.name,
+            props.tokenOut.name,
+            swapData.current.tokenInSupply,
+            swapData.current.tokenOutSupply,
+            swapData.current.lpTokenSupply
+          );
+
+          setTokenInAmountHarvest(response.tokenOneAmount);
+          setTokenOutAmountHarvest(response.tokenTwoAmount);
+        });
+        getRewards(props.tokenIn.name, props.tokenOut.name, walletAddress).then(
+          (res) => {
+            setRewardToken(res.rewards);
+          }
+        );
+
         const balanceResponse = await Promise.all(balancePromises);
 
         setUserBalances((prev) => ({
@@ -137,31 +185,41 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       };
       updateBalance();
     }
-  }, [tokenIn, tokenOut, props, tokenPrice, TOKEN, balanceUpdate]);
+  }, [
+    props.tokenIn,
+    props.tokenOut,
+    props,
+    tokenPrice,
+    TOKEN,
+    balanceUpdate,
+    swapData.current,
+  ]);
   useEffect(() => {
     if (
-      Object.prototype.hasOwnProperty.call(tokenIn, 'name') &&
-      Object.prototype.hasOwnProperty.call(tokenOut, 'name')
+      Object.prototype.hasOwnProperty.call(props.tokenIn, 'name') &&
+      Object.prototype.hasOwnProperty.call(props.tokenOut, 'name')
     ) {
       setIsLoading(true);
-      loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((response) => {
-        swapData.current = {
-          tokenInSupply: response.tokenInSupply as BigNumber,
-          tokenOutSupply: response.tokenOutSupply as BigNumber,
-          lpToken: response.lpToken?.symbol,
-          lpTokenSupply: response.lpTokenSupply,
-          isloading: false,
-        };
-        setIsLoading(false);
-      });
+      loadSwapDataWrapper(props.tokenIn.name, props.tokenOut.name).then(
+        (response) => {
+          swapData.current = {
+            tokenInSupply: response.tokenInSupply as BigNumber,
+            tokenOutSupply: response.tokenOutSupply as BigNumber,
+            lpToken: response.lpToken?.symbol,
+            lpTokenSupply: response.lpTokenSupply,
+            isloading: false,
+          };
+          setIsLoading(false);
+        }
+      );
     }
   }, []);
 
   useEffect(() => {
     if (firstTokenAmountLiq > 0 && secondTokenAmountLiq > 0 && isAddLiquidity) {
       const res = getPnlpOutputEstimate(
-        tokenIn.symbol,
-        tokenOut.symbol,
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
         firstTokenAmountLiq.toString(),
         secondTokenAmountLiq.toString(),
         swapData.current.tokenInSupply as BigNumber,
@@ -186,34 +244,47 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const resetAllValues = () => {
     setFirstTokenAmountLiq('');
     setSecondTokenAmountLiq('');
+    setBurnAmount('');
+    setStakeInput('');
+    setUnStakeInput('');
     setBalanceUpdate(false);
-    swapData.current = {
-      tokenInSupply: new BigNumber(0),
-      tokenOutSupply: new BigNumber(0),
-      lpToken: '',
-      lpTokenSupply: new BigNumber(0),
-    };
   };
 
   const handleAddLiquidityOperation = () => {
+    setContentTransaction(
+      `Mint ${Number(firstTokenAmountLiq).toFixed(2)} ${
+        props.tokenIn.name === 'tez'
+          ? 'TEZ'
+          : props.tokenIn.name === 'ctez'
+          ? 'CTEZ'
+          : props.tokenIn.name
+      } / ${Number(secondTokenAmountLiq).toFixed(4)} ${
+        props.tokenOut.name === 'tez'
+          ? 'TEZ'
+          : props.tokenOut.name === 'ctez'
+          ? 'CTEZ'
+          : props.tokenOut.name
+      } `
+    );
     dispatch(setLoading(true));
     setShowConfirmTransaction(true);
     setScreen('1');
+
     localStorage.setItem(
       TOKEN_A_LIQ,
-      tokenIn.name === 'tez'
+      props.tokenIn.name === 'tez'
         ? 'TEZ'
-        : tokenIn.name === 'ctez'
+        : props.tokenIn.name === 'ctez'
         ? 'CTEZ'
-        : tokenIn.name
+        : props.tokenIn.name
     );
     localStorage.setItem(
       TOKEN_B_LIQ,
-      tokenOut.name === 'tez'
+      props.tokenOut.name === 'tez'
         ? 'TEZ'
-        : tokenOut.name === 'ctez'
+        : props.tokenOut.name === 'ctez'
         ? 'CTEZ'
-        : tokenOut.name
+        : props.tokenOut.name
     );
     localStorage.setItem(
       FIRST_TOKEN_AMOUNT_LIQ,
@@ -224,15 +295,15 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       secondTokenAmountLiq.toString()
     );
     addLiquidity(
-      tokenIn.symbol,
-      tokenOut.symbol,
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
       firstTokenAmountLiq.toString(),
       secondTokenAmountLiq.toString(),
       walletAddress,
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      setActiveState
+      props.setActiveState
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -241,6 +312,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           setShowTransactionSubmitModal(false);
         }, 2000);
         dispatch(setLoading(false));
+        setContentTransaction('');
       } else {
         setBalanceUpdate(true);
         //resetAllValues();
@@ -250,18 +322,164 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }, 2000);
 
         dispatch(setLoading(false));
+        setContentTransaction('');
       }
     });
   };
-
-  const handleRemoveLiquidityOperation = () => {
+  const handleStakeOperation = () => {
+    setContentTransaction(`Stake ${Number(stakeInput).toFixed(2)} PNLP`);
     dispatch(setLoading(true));
     setShowConfirmTransaction(true);
     setScreen('1');
+
+    localStorage.setItem(
+      TOKEN_A_LIQ,
+      props.tokenIn.name === 'tez'
+        ? 'TEZ'
+        : props.tokenIn.name === 'ctez'
+        ? 'CTEZ'
+        : props.tokenIn.name
+    );
+    localStorage.setItem(
+      TOKEN_B_LIQ,
+      props.tokenOut.name === 'tez'
+        ? 'TEZ'
+        : props.tokenOut.name === 'ctez'
+        ? 'CTEZ'
+        : props.tokenOut.name
+    );
+
+    stakePnlpTokens(
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
+      stakeInput.toString(),
+      undefined,
+      walletAddress,
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction,
+      props.setActiveState
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        //resetAllValues();
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        dispatch(setLoading(false));
+        setContentTransaction('');
+      } else {
+        setBalanceUpdate(true);
+        //resetAllValues();
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+
+        dispatch(setLoading(false));
+        setContentTransaction('');
+      }
+    });
+  };
+  const handleUnStakeOperation = () => {
+    setContentTransaction(`Unstake ${Number(unStakeInput).toFixed(2)} PNLP`);
+    dispatch(setLoading(true));
+    setShowConfirmTransaction(true);
+    // setStakingScreen(StakingScreenType.Unstaking);
+    setScreen('1');
+    setIsAddLiquidity(false);
+
+    unstakePnlpTokens(
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
+      unStakeInput.toString(),
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction,
+      props.setActiveState
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        //resetAllValues();
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        dispatch(setLoading(false));
+        setContentTransaction('');
+      } else {
+        setBalanceUpdate(true);
+        //resetAllValues();
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+
+        dispatch(setLoading(false));
+        setContentTransaction('');
+      }
+    });
+  };
+  const handleRewardsOperation = () => {
+    setContentTransaction(`Harvest `);
+    dispatch(setLoading(true));
+    setShowConfirmTransaction(true);
+    setScreen('1');
+
+    localStorage.setItem(
+      TOKEN_A_LIQ,
+      props.tokenIn.name === 'tez'
+        ? 'TEZ'
+        : props.tokenIn.name === 'ctez'
+        ? 'CTEZ'
+        : props.tokenIn.name
+    );
+    localStorage.setItem(
+      TOKEN_B_LIQ,
+      props.tokenOut.name === 'tez'
+        ? 'TEZ'
+        : props.tokenOut.name === 'ctez'
+        ? 'CTEZ'
+        : props.tokenOut.name
+    );
+
+    harvestRewards(
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        //resetAllValues();
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        dispatch(setLoading(false));
+        setContentTransaction('');
+      } else {
+        setBalanceUpdate(true);
+        //resetAllValues();
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+
+        dispatch(setLoading(false));
+        setContentTransaction('');
+      }
+    });
+  };
+  const handleRemoveLiquidityOperation = () => {
+    setContentTransaction(`Burn ${Number(burnAmount).toFixed(2)} PNLP`);
+    dispatch(setLoading(true));
+    setShowConfirmTransaction(true);
+    setScreen('1');
+
     localStorage.setItem(BURN_AMOUNT, burnAmount.toString());
     removeLiquidity(
-      tokenIn.symbol,
-      tokenOut.symbol,
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
       swapData.current.lpToken as string,
       removeTokenAmount.tokenOneAmount.toString(),
       removeTokenAmount.tokenTwoAmount.toString(),
@@ -270,7 +488,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      setActiveState
+      undefined
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -278,6 +496,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           setShowTransactionSubmitModal(false);
         }, 2000);
         dispatch(setLoading(false));
+        setContentTransaction('');
       } else {
         setBalanceUpdate(true);
 
@@ -287,6 +506,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }, 2000);
 
         dispatch(setLoading(false));
+        setContentTransaction('');
       }
     });
   };
@@ -295,11 +515,16 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     <>
       <PopUpModal
         onhide={props.closeFn}
-        className="w-[620px] max-w-[620px]"
+        className="w-[390px] max-w-[390px] md:w-[620px] md:max-w-[620px] rounded-none md:rounded-3xl px-[18px] md:px-6"
         footerChild={
-          <div className="flex justify-center items-center gap-4">
-            <p className="text-f16 text-text-150">
-              Add liquidity, stake, and earn PLY
+          <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
+            <p className="font-subtitle1 md:text-f16 text-text-150">
+              {props.activeState === ActiveLiquidity.Liquidity &&
+                'Add liquidity, stake, and earn PLY'}
+              {props.activeState === ActiveLiquidity.Staking &&
+                'Add liquidity, stake, and earn PLY'}
+              {props.activeState === ActiveLiquidity.Rewards &&
+                'Lock PLY, and vote to earn trading fees & bribes'}
             </p>
             <Image
               className="cursor-pointer hover:opacity-90"
@@ -312,16 +537,26 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         {screen === '1' && (
           <>
             <div className="flex gap-1">
-              <p>Manage Liquidity </p>
-              <InfoIconToolTip message="Hello world" />
+              <p className="text-white">
+                {props.activeState === ActiveLiquidity.Liquidity &&
+                  'Manage Liquidity'}
+                {props.activeState === ActiveLiquidity.Staking &&
+                  'Staking Liquidity'}
+
+                {props.activeState === ActiveLiquidity.Rewards &&
+                  'Your positions & Rewards'}
+              </p>
+              <p className="ml-1 relative top-[6px]">
+                <InfoIconToolTip message="Hello world" />
+              </p>
             </div>
             <ManageLiquidityHeader
               className="mt-5 mb-6"
-              activeStateTab={activeState}
-              setActiveStateTab={setActiveState}
+              activeStateTab={props.activeState}
+              setActiveStateTab={props.setActiveState}
             />
 
-            {activeState === ActiveLiquidity.Liquidity && (
+            {props.activeState === ActiveLiquidity.Liquidity && (
               <div className="">
                 <Liquidity
                   setScreen={setScreen}
@@ -330,8 +565,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                   userBalances={userBalances}
                   setSecondTokenAmount={setSecondTokenAmountLiq}
                   setFirstTokenAmount={setFirstTokenAmountLiq}
-                  tokenIn={tokenIn}
-                  tokenOut={tokenOut}
+                  tokenIn={props.tokenIn}
+                  tokenOut={props.tokenOut}
                   setIsAddLiquidity={setIsAddLiquidity}
                   isAddLiquidity={isAddLiquidity}
                   swapData={swapData.current}
@@ -347,22 +582,44 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 />
               </div>
             )}
-            {activeState === ActiveLiquidity.Rewards && (
-             <RewardsScreen/>
+            {props.activeState === ActiveLiquidity.Staking && (
+              <StakingScreen
+                tokenIn={props.tokenIn}
+                tokenOut={props.tokenOut}
+                lpTokenPrice={lpTokenPrice}
+                pnlpBalance={pnlpBalance}
+                unStakeInput={unStakeInput}
+                stakeInput={stakeInput}
+                setStakeInput={setStakeInput}
+                setUnStakeInput={setUnStakeInput}
+                setScreen={setScreen}
+                stakedToken={stakedToken}
+                setStakingScreen={setStakingScreen}
+                stakingScreen={stakingScreen}
+                setSelectedDropDown={setSelectedDropDown}
+                selectedDropDown={selectedDropDown}
+              />
             )}
-            {activeState === ActiveLiquidity.Staking && (
-             <StakingScreen/>
+            {props.activeState === ActiveLiquidity.Rewards && (
+              <RewardsScreen
+                tokenIn={props.tokenIn}
+                tokenOut={props.tokenOut}
+                tokenInAmount={tokenInAmountHarvest}
+                tokenOutAmount={tokenOutAmountHarvest}
+                rewardToken={rewardToken}
+                handleOperation={handleRewardsOperation}
+              />
             )}
           </>
         )}
-        {screen === '2' && (
+        {props.activeState === ActiveLiquidity.Liquidity && screen === '2' && (
           <>
             <ConfirmAddLiquidity
               setScreen={setScreen}
               firstTokenAmount={firstTokenAmountLiq}
               secondTokenAmount={secondTokenAmountLiq}
-              tokenIn={tokenIn}
-              tokenOut={tokenOut}
+              tokenIn={props.tokenIn}
+              tokenOut={props.tokenOut}
               tokenPrice={tokenPrice}
               pnlpEstimates={pnlpEstimates}
               sharePool={sharePool}
@@ -370,12 +627,36 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             />
           </>
         )}
-        {screen === '3' && (
+        {props.activeState === ActiveLiquidity.Staking && screen === '2' && (
+          <>
+            <ConfirmStakeLiquidity
+              setScreen={setScreen}
+              tokenIn={props.tokenIn}
+              tokenOut={props.tokenOut}
+              stakeInput={stakeInput}
+              handleOperation={handleStakeOperation}
+              setSelectedDropDown={setSelectedDropDown}
+              selectedDropDown={selectedDropDown}
+            />
+          </>
+        )}
+        {props.activeState === ActiveLiquidity.Staking && screen === '3' && (
+          <>
+            <ConfirmUnStakeLiquidity
+              setScreen={setScreen}
+              tokenIn={props.tokenIn}
+              tokenOut={props.tokenOut}
+              unStakeInput={unStakeInput}
+              handleOperation={handleUnStakeOperation}
+            />
+          </>
+        )}
+        {props.activeState === ActiveLiquidity.Liquidity && screen === '3' && (
           <>
             <ConfirmRemoveLiquidity
               setScreen={setScreen}
-              tokenIn={tokenIn}
-              tokenOut={tokenOut}
+              tokenIn={props.tokenIn}
+              tokenOut={props.tokenOut}
               tokenPrice={tokenPrice}
               burnAmount={burnAmount}
               pnlpEstimates={pnlpEstimates}
@@ -393,23 +674,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         <ConfirmTransaction
           show={showConfirmTransaction}
           setShow={setShowConfirmTransaction}
-          content={
-            isAddLiquidity
-              ? `Mint ${Number(firstTokenAmountLiq).toFixed(2)} ${
-                  tokenIn.name === 'tez'
-                    ? 'TEZ'
-                    : tokenIn.name === 'ctez'
-                    ? 'CTEZ'
-                    : tokenIn.name
-                } / ${Number(secondTokenAmountLiq).toFixed(4)} ${
-                  tokenOut.name === 'tez'
-                    ? 'TEZ'
-                    : tokenOut.name === 'ctez'
-                    ? 'CTEZ'
-                    : tokenOut.name
-                } `
-              : `Burn ${Number(burnAmount).toFixed(2)} PNLP `
-          }
+          content={contentTransaction}
         />
       )}
       {showTransactionSubmitModal && (
@@ -421,17 +686,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               ? () => window.open(`https://tzkt.io/${transactionId}`, '_blank')
               : null
           }
-          content={
-            isAddLiquidity
-              ? `Mint ${Number(
-                  localStorage.getItem(FIRST_TOKEN_AMOUNT_LIQ)
-                ).toFixed(2)} ${localStorage.getItem(TOKEN_A_LIQ)} / ${Number(
-                  localStorage.getItem(SECOND_TOKEN_AMOUNT_LIQ)
-                ).toFixed(4)} ${localStorage.getItem(TOKEN_B_LIQ)} `
-              : `Burn ${Number(localStorage.getItem(BURN_AMOUNT)).toFixed(
-                  2
-                )} PNLP `
-          }
+          content={contentTransaction}
         />
       )}
     </>
