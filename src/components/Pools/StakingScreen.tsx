@@ -12,16 +12,13 @@ import {
 import { BigNumber } from 'bignumber.js';
 import Button from '../Button/Button';
 import { CircularImageInfo } from './Component/CircularImageInfo';
-import stake from '../../assets/icon/pools/stake.svg';
-import token from '../../assets/Tokens/plenty.png';
-import token2 from '../../assets/Tokens/ctez.png';
 import { tokenParameterLiquidity } from '../Liquidity/types';
-import { Dropdown } from '../DropDown/Dropdown';
 import { AppDispatch, store } from '../../redux';
 import { useDispatch } from 'react-redux';
 import { walletConnection } from '../../redux/wallet/wallet';
 import { IVePLYData } from '../../api/stake/types';
-import { VePLY } from '../DropDown/vePLYDropdown';
+
+import { VePLY } from '../DropDown/VePLY';
 
 export enum StakingScreenType {
   Staking = 'Staking',

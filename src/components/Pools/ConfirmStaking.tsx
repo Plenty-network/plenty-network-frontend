@@ -4,9 +4,8 @@ import arrowLeft from '../../../src/assets/icon/pools/arrowLeft.svg';
 import info from '../../../src/assets/icon/common/infoIcon.svg';
 import Button from '../Button/Button';
 import { tokenParameterLiquidity } from '../Liquidity/types';
-import { Dropdown } from '../DropDown/Dropdown';
-import { VePLY } from '../DropDown/vePLYDropdown';
 import { IVePLYData } from '../../api/stake/types';
+import { VePLY } from '../DropDown/VePLY';
 
 interface IConfirmStakeLiquidity {
   tokenIn: tokenParameterLiquidity;

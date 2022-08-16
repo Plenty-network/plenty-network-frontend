@@ -13,7 +13,6 @@ export interface IDropdownProps {
 }
 
 export function VePLY(props: IDropdownProps) {
-  console.log(props);
   const [isDropDownActive, setIsDropDownActive] = React.useState(false);
   const reff = React.useRef(null);
   console.log(props.selectedText.boostValue ? 'cjhbsj' : 'hj');
