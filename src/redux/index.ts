@@ -9,6 +9,7 @@ import { config } from './config/config';
 import { tokenPrice } from './tokenPrice/tokenPrice';
 import isLoadingWallet from './isLoading/reducer';
 import { userSettings } from './userSettings/userSettings';
+import { pools } from './pools';
 
 const reducers = combineReducers({
   wallet: wallet,
@@ -16,12 +17,13 @@ const reducers = combineReducers({
   isLoadingWallet: isLoadingWallet,
   tokenPrice: tokenPrice,
   userSettings: userSettings,
+  pools: pools
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['userSettings', 'config'],
+  whitelist: ['userSettings', 'config', 'pools'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
