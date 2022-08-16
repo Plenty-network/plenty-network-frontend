@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import { connectedNetwork, dappClient, voteEscrowAddress } from '../common/walletconnect';
-import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShowConfirmTransaction } from './types';
+import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShowConfirmTransaction, IAttachmentLiteral } from './types';
 import Config from '../config/config';
 
 export const createLock = async (
@@ -211,8 +211,6 @@ export const createLock = async (
     }
   };
 
-// TODO :   Ask Claim inflation 
-
 export const claimInflation = async (
     epochs : number[] , 
     id : number,
@@ -231,8 +229,6 @@ export const claimInflation = async (
       const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
 
       let batch = null;
-
-    //  TODO :  Confirm how to send epochs
 
       batch = Tezos.wallet
         .batch()
@@ -289,11 +285,27 @@ export const updateAttachments = async (
 
     //  TODO :  Confirm how to send attachments
 
+
+    let attachmentLiteral : IAttachmentLiteral[] = [];
+    if(remove){
+      for( var x of attachments){
+        attachmentLiteral.push({remove_attachment : { remove_attachemnt : attachments[x]}});
+      }
+    }
+    else{
+      for( var x of attachments){
+        attachmentLiteral.push({add_attachment : { add_attachemnt : attachments[x]}});
+      }
+    }
+    
+    // TODO : Check Calling 
+
       batch = Tezos.wallet
         .batch()
         .withContractCall(
           veInstance.methods.update_attachments(
-        //    TODO : ADD OPERATOR TYPE CALLING
+            id,
+            attachmentLiteral
           )
         );
 
