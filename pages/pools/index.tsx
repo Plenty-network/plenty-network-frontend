@@ -14,6 +14,7 @@ import { AppDispatch, useAppSelector } from '../../src/redux';
 import { fetchWallet } from '../../src/redux/wallet/wallet';
 import { getConfig } from '../../src/redux/config/config';
 import { getTokenPrice } from '../../src/redux/tokenPrice/tokenPrice';
+import { getTotalVotingPower } from '../../src/redux/pools';
 export interface IIndexProps {}
 export enum AMM_TYPE {
   VOLATILE = 'VOLATILE',
@@ -29,6 +30,7 @@ export default function Pools(props: IIndexProps) {
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
+    dispatch(getTotalVotingPower());
   }, []);
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
