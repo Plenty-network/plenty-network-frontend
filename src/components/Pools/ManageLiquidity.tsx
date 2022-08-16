@@ -43,12 +43,14 @@ import { setLoading } from '../../redux/isLoading/action';
 import { addLiquidity } from '../../operations/addLiquidity';
 import { removeLiquidity } from '../../operations/removeLiquidity';
 import { getLPTokenPrice } from '../../api/util/price';
-import { ConfirmStakeLiquidity } from './ConfirmStaking';
 import { stakePnlpTokens } from '../../operations/stake';
-import { ConfirmUnStakeLiquidity } from './ConfirmUnstake';
 import { unstakePnlpTokens } from '../../operations/unstake';
 import { harvestRewards } from '../../operations/rewards';
 import { getDepositedAmounts, getRewards } from '../../api/rewards';
+import { getVePLYListForUser } from '../../api/stake';
+import { ConfirmStakeLiquidity } from './ConfirmStaking';
+import { ConfirmUnStakeLiquidity } from './ConfirmUnstake';
+import { IVePLYData } from '../../api/stake/types';
 
 export interface IManageLiquidityProps {
   closeFn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -80,7 +82,11 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>(
     {}
   );
-  const [selectedDropDown, setSelectedDropDown] = useState('');
+  const [selectedDropDown, setSelectedDropDown] = useState<IVePLYData>({
+    tokenId: '',
+    boostValue: '',
+    votingPower: '',
+  });
   const [isAddLiquidity, setIsAddLiquidity] = useState(true);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [burnAmount, setBurnAmount] = React.useState<string | number>('');
@@ -118,7 +124,26 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [stakedToken, setStakedToken] = useState('');
   const stakedTokenLp = React.useRef<string>('');
   const [contentTransaction, setContentTransaction] = useState('');
-
+  const [vePLYOptions, setVePLYOptions] = useState<IVePLYData[]>([]);
+  useEffect(() => {
+    if (Number(stakeInput) > 0 && walletAddress) {
+      getVePLYListForUser(
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        stakeInput.toString(),
+        walletAddress
+      ).then((res) => {
+        setVePLYOptions(res.vePLYData);
+      });
+    }
+  }, [stakeInput, walletAddress]);
+  useEffect(() => {
+    vePLYOptions.map((id, i) => {
+      if (id.tokenId === selectedDropDown.tokenId) {
+        setSelectedDropDown(id);
+      }
+    });
+  }, [vePLYOptions]);
   useEffect(() => {
     if (walletAddress) {
       const updateBalance = async () => {
@@ -598,6 +623,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 stakingScreen={stakingScreen}
                 setSelectedDropDown={setSelectedDropDown}
                 selectedDropDown={selectedDropDown}
+                vePLYOptions={vePLYOptions}
               />
             )}
             {props.activeState === ActiveLiquidity.Rewards && (
@@ -637,6 +663,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               handleOperation={handleStakeOperation}
               setSelectedDropDown={setSelectedDropDown}
               selectedDropDown={selectedDropDown}
+              vePLYOptions={vePLYOptions}
             />
           </>
         )}

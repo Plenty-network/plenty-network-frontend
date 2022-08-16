@@ -50,7 +50,7 @@ export function CardHeader(props: ICardHeaderProps) {
         {PoolsHeaderCard("Volatile", 2,'')}
         {PoolsHeaderCard("My pools", 3,'hidden md:block')}
     </div>
-    <InputSearchBox className='hidden md:block' value={searchValue} onChange={setSearchValue} />
+    <InputSearchBox className='hidden md:flex md:gap-1' value={searchValue} onChange={setSearchValue} />
     </div>
   );
 

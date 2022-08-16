@@ -5,9 +5,10 @@ import { SideBarHOC } from '../src/components/Sidebar/SideBarHOC';
 import { AppDispatch, useAppSelector } from '../src/redux';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { fetchWallet, walletConnection } from '../src/redux/wallet/wallet';
+import { fetchWallet } from '../src/redux/wallet/wallet';
 import { getConfig } from '../src/redux/config/config';
 import { getTokenPrice } from '../src/redux/tokenPrice/tokenPrice';
+import { getTotalVotingPower } from '../src/redux/pools';
 
 const Home: NextPage = () => {
   const token = useAppSelector((state) => state.config.tokens);
@@ -17,6 +18,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
+    //dispatch(getTotalVotingPower());
   }, []);
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());

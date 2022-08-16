@@ -41,7 +41,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   });
   if (userAddress) {
     return (
-      <div className="relative" ref={reff}>
+      <div className="relative flex items-center" ref={reff}>
         <button
           onClick={() => {
             setShowMenu((sow) => !sow);
@@ -66,7 +66,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
           <Image src={settingLogo} />
         </button>
         {showMenu && (
-          <div className="absolute w-[320px] fade-in-3 right-0 mt-2 border z-10 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
+          <div className="absolute w-[320px] fade-in-3  right-0 top-[55px] mt-2 border z-10 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
             <p className="bg-primary-755 text-f14 p-4 flex gap-2">
               <span className="text-text-400">Temple wallet</span>(
               <span
@@ -109,11 +109,13 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
     );
   }
   return (
+    <div className='flex items-center'>
     <button
       onClick={connectTempleWallet}
-      className="bg-primary-500/5 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/100"
+      className="bg-primary-500/5 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/100  "
     >
       Connect Wallet
     </button>
+    </div>
   );
 }

@@ -30,7 +30,7 @@ const Config: IConfig = {
   },
   PLY_TOKEN : {
     mainnet : '',
-    testnet : 'KT1XFABWm5H9CMFL3T5iNb7Zz6YVpLHQjpsA',
+    testnet : 'KT1ArfQ6At3NhzMbiGwLzGtvekytjXq6Gy2G',
   },
 
   VE_INDEXER : 'http://65.0.129.224/v1/',
@@ -58,7 +58,7 @@ const Config: IConfig = {
   },
 
   NETWORK: 'testnet',
-  WALLET_NETWORK: NetworkType.CUSTOM,
+  WALLET_NETWORK: NetworkType.GHOSTNET,
   ADMIN_ADDRESS: 'KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW',
   BURNER: 'tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg',
 

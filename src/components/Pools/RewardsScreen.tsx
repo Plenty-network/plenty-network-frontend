@@ -91,13 +91,13 @@ export function RewardsScreen(props: IRewardsProps) {
         <div className="flex flex-col">
           {InnerTab(
             props.tokenIn.image,
-            props.tokenInAmount ? Number(props.tokenInAmount) : NaN,
+            props.tokenInAmount ? Number(props.tokenInAmount) : 0,
             '',
             props.tokenIn.symbol
           )}
           {InnerTab(
             props.tokenOut.image,
-            props.tokenOutAmount ? Number(props.tokenOutAmount) : NaN,
+            props.tokenOutAmount ? Number(props.tokenOutAmount) : 0,
             '-mt-1',
             props.tokenOut.symbol
           )}
