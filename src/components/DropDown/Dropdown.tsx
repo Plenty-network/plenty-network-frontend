@@ -9,6 +9,7 @@ export interface IDropdownProps {
   onClick: Function;
   selectedText: string;
   className?: string;
+  title?: string;
 }
 
 export function Dropdown(props: IDropdownProps) {
@@ -38,11 +39,15 @@ export function Dropdown(props: IDropdownProps) {
           )}
         >
           {props.selectedText && props.selectedText.length ? (
-            <span>{props.selectedText}</span>
+            <span className="text-white">{props.selectedText}</span>
           ) : (
             <>
-              <span className="hidden md:block  md:font-body4">Select</span>{' '}
-              <span className="font-subtitle1 md:font-body4">vePLY</span>
+              <span className="hidden md:block  md:font-body4">
+                {props.title ? props.title : 'Select'}
+              </span>{' '}
+              <span className="font-subtitle1 md:font-body4">
+                {props.title ? '' : 'vePLY'}
+              </span>
             </>
           )}
         </p>
@@ -53,7 +58,7 @@ export function Dropdown(props: IDropdownProps) {
         />
       </div>
       {isDropDownActive && (
-        <div className="absolute hidden w-[124px] md:w-[163px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1">
+        <div className="absolute  mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1 z-10">
           {props.Options.map((text, i) => (
             <Options onClick={props.onClick} key={`${text}_${i}`} text={text} />
           ))}
@@ -69,7 +74,7 @@ export function Dropdown(props: IDropdownProps) {
           props.onClick(props.text);
           setIsDropDownActive(false);
         }}
-        className="hidden hover:bg-muted-500 px-2 flex items-center h-[36px] cursor-pointer"
+        className=" hover:bg-muted-500 px-2 flex items-center h-[36px] z-10 cursor-pointer"
       >
         {props.text}
       </div>

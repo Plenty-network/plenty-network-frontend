@@ -20,3 +20,14 @@ export interface ICastVoteProps {
 
   setShow: any;
 }
+
+export interface IVotesTableProps {
+  className?: string;
+  isConnectWalletRequired?: boolean;
+  searchValue: string;
+  setSearchValue?: Function;
+}
+export interface IManageBtnProps {
+  isLiquidityAvailable: boolean;
+  isStakeAvailable: boolean;
+}

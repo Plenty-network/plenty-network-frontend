@@ -21,7 +21,9 @@ export default function HeadInfo(props: IHeadInfoProps) {
       className={`${props.className} flex justify-between items-center border-b border-b-borderCommon py-2 pt-7 md:pt-2 bg-cardBackGround`}
     >
       <div className="flex gap-2">
-        <div className="p-2 text-f18 font-medium text-white">Pools</div>
+        <div className="p-2 text-f18 font-medium text-white">
+          {props.title ? props.title : 'Pools'}
+        </div>
         <ToolTip
           message="Watch how to add liquidity, stake, and earn PLY. "
           classNameAncorToolTip="pushtoCenter"

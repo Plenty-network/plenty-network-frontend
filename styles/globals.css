@@ -10,7 +10,7 @@ body.swap {
   background-size: cover;
   background-image: url('/assets/image/plenty.net_bg.svg'),
     url('/assets/image/Noise4.png');
-  color: #9f9da3;
+  color: #ffffff;
 }
 body {
   background-color: #090015;
@@ -19,7 +19,7 @@ body {
     url('/assets/image/Noise4.png');
   /* background: linear-gradient(195.23deg, #090015 20.19%, rgba(59, 8, 133, 0.3) 82.41%, rgba(98, 2, 239, 0.5) 219.63%, rgba(9, 0, 21, 0.29) 340.7%); */
 
-  color: #9f9da3;
+  color: #ffffff;
 }
 .z-index-max {
   z-index: 9999;

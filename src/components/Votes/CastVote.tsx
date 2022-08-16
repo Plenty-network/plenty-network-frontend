@@ -18,7 +18,10 @@ function CastVote(props: ICastVoteProps) {
       {
         <>
           <div className="flex">
-            <div className="cursor-pointer">
+            <div
+              className="cursor-pointer"
+              onClick={() => props.setShow(false)}
+            >
               <Image src={arrowLeft} />
             </div>
             <div className="mx-2 text-white font-title3">Cast Vote </div>
