@@ -1,14 +1,14 @@
-import Image from 'next/image';
-import * as React from 'react';
-import clsx from 'clsx';
-import epoachIcon from '../../assets/icon/common/epochTimeIcon.svg';
-import { InfoIconToolTip } from '../Tooltip/InfoIconTooltip';
-import vectorDown from '../../assets/icon/common/vector.svg';
-import { useCountdown } from '../../hooks/useCountDown';
-import { useOutsideClick } from '../../utils/outSideClickHook';
-import { getListOfEpochs } from '../../api/votes/votesKiran';
-import { IEpochListObject } from '../../api/votes/types';
-import { EPOCH_DURATION_TESTNET } from '../../constants/global';
+import Image from "next/image";
+import * as React from "react";
+import clsx from "clsx";
+import epoachIcon from "../../assets/icon/common/epochTimeIcon.svg";
+import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
+import vectorDown from "../../assets/icon/common/vector.svg";
+import { useCountdown } from "../../hooks/useCountDown";
+import { useOutsideClick } from "../../utils/outSideClickHook";
+import { getListOfEpochs } from "../../api/votes/votesKiran";
+import { IEpochListObject } from "../../api/votes/types";
+import { EPOCH_DURATION_TESTNET } from "../../constants/global";
 
 export interface IEpochProps {
   Options: Array<string>;
@@ -46,18 +46,18 @@ export function Epoch(props: IEpochProps) {
     var date = new Date(props.startDate);
 
     const monthNames = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Decr',
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Decr",
     ];
 
     var year = date.getFullYear();
@@ -72,8 +72,7 @@ export function Epoch(props: IEpochProps) {
         }}
         className="hover:bg-primary-700 px-4 flex font-body4 text-text-50 items-center h-[36px] cursor-pointer"
       >
-        Epoch{props.epochNumber} ({day}-{monthNames[month]}-
-        {year.toString().substr(-2)})
+        Epoch{props.epochNumber} ({day}-{monthNames[month]}-{year.toString().substr(-2)})
       </div>
     );
   }
@@ -97,16 +96,16 @@ export function Epoch(props: IEpochProps) {
             />
           </div>
           <div className="flex gap-2 text-f12 text-white font-semibold cursor-pointer">
-            <span className="flex gap-2">
-              <span>{days} d</span>:<span>{hours} h</span>:
-              <span>{minutes} m</span>:<span>{seconds} s</span>
+            <span className="flex gap-1">
+              <span>{days} d</span>:<span>{hours} h</span>:<span>{minutes} m</span>:
+              <span>{seconds} s</span>
             </span>
           </div>
         </div>
         {isDropDownActive && (
           <div
             className={clsx(
-              'absolute  top-[60px]   z-50  mt-2 py-4 w-full bg-muted-600  rounded-2xl flex flex-col gap-1'
+              "absolute  top-[60px]   z-50  mt-2 py-4 w-full bg-muted-600  rounded-2xl flex flex-col gap-1"
             )}
           >
             {epochData.map((text, i) => (
