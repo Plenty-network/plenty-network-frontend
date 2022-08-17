@@ -17,7 +17,6 @@ export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
 
   const { data: poolTableData = [] } = usePoolsMain();
-  console.log(poolTableData);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
