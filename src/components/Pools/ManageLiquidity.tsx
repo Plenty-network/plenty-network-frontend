@@ -125,21 +125,30 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const stakedTokenLp = React.useRef<string>('');
   const [contentTransaction, setContentTransaction] = useState('');
   const [vePLYOptions, setVePLYOptions] = useState<IVePLYData[]>([]);
+
   useEffect(() => {
-    if (Number(stakeInput) > 0 && walletAddress) {
+    if (
+      (Number(stakeInput) > 0 && walletAddress) ||
+      (screen === '2' && props.activeState === ActiveLiquidity.Staking)
+    ) {
       getVePLYListForUser(
         props.tokenIn.symbol,
         props.tokenOut.symbol,
         stakeInput.toString(),
         walletAddress
       ).then((res) => {
-        setVePLYOptions(res.vePLYData);
+        const veplyData = res.vePLYData.filter(
+          (data) => data.boostValue !== '0.0'
+        );
+
+        setVePLYOptions(veplyData);
       });
     } else if (stakeInput === '') {
       setVePLYOptions([]);
       setSelectedDropDown({ tokenId: '', boostValue: '', votingPower: '' });
     }
   }, [stakeInput, walletAddress, screen]);
+
   useEffect(() => {
     if (vePLYOptions.length > 0) {
       vePLYOptions.map((id, i) => {
@@ -302,30 +311,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     setShowConfirmTransaction(true);
     setScreen('1');
 
-    localStorage.setItem(
-      TOKEN_A_LIQ,
-      props.tokenIn.name === 'tez'
-        ? 'TEZ'
-        : props.tokenIn.name === 'ctez'
-        ? 'CTEZ'
-        : props.tokenIn.name
-    );
-    localStorage.setItem(
-      TOKEN_B_LIQ,
-      props.tokenOut.name === 'tez'
-        ? 'TEZ'
-        : props.tokenOut.name === 'ctez'
-        ? 'CTEZ'
-        : props.tokenOut.name
-    );
-    localStorage.setItem(
-      FIRST_TOKEN_AMOUNT_LIQ,
-      firstTokenAmountLiq.toString()
-    );
-    localStorage.setItem(
-      SECOND_TOKEN_AMOUNT_LIQ,
-      secondTokenAmountLiq.toString()
-    );
     addLiquidity(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
@@ -364,28 +349,11 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     setShowConfirmTransaction(true);
     setScreen('1');
 
-    localStorage.setItem(
-      TOKEN_A_LIQ,
-      props.tokenIn.name === 'tez'
-        ? 'TEZ'
-        : props.tokenIn.name === 'ctez'
-        ? 'CTEZ'
-        : props.tokenIn.name
-    );
-    localStorage.setItem(
-      TOKEN_B_LIQ,
-      props.tokenOut.name === 'tez'
-        ? 'TEZ'
-        : props.tokenOut.name === 'ctez'
-        ? 'CTEZ'
-        : props.tokenOut.name
-    );
-
     stakePnlpTokens(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
       stakeInput.toString(),
-      undefined,
+      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
       walletAddress,
       transactionSubmitModal,
       resetAllValues,
@@ -456,24 +424,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     dispatch(setLoading(true));
     setShowConfirmTransaction(true);
     setScreen('1');
-
-    localStorage.setItem(
-      TOKEN_A_LIQ,
-      props.tokenIn.name === 'tez'
-        ? 'TEZ'
-        : props.tokenIn.name === 'ctez'
-        ? 'CTEZ'
-        : props.tokenIn.name
-    );
-    localStorage.setItem(
-      TOKEN_B_LIQ,
-      props.tokenOut.name === 'tez'
-        ? 'TEZ'
-        : props.tokenOut.name === 'ctez'
-        ? 'CTEZ'
-        : props.tokenOut.name
-    );
-
     harvestRewards(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
@@ -483,7 +433,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
-        //resetAllValues();
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
@@ -491,7 +440,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setContentTransaction('');
       } else {
         setBalanceUpdate(true);
-        //resetAllValues();
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -507,8 +455,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     dispatch(setLoading(true));
     setShowConfirmTransaction(true);
     setScreen('1');
-
-    localStorage.setItem(BURN_AMOUNT, burnAmount.toString());
     removeLiquidity(
       props.tokenIn.symbol,
       props.tokenOut.symbol,

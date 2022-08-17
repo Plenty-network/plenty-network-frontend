@@ -26,32 +26,18 @@ export const getVePLYListForUser = async (
     const state = store.getState();
     const AMM = state.config.AMMs;
 
-    // const locksResponse = await axios.get(
-    //   `${Config.VE_INDEXER}locks?address=${userTezosAddress}`
-    // );
-
-    // if (locksResponse.data.result.length === 0) {
-    //   return {
-    //     success: true,
-    //     vePLYData: [],
-    //   };
-    // }
-
-    // const locksData = locksResponse.data.result.filter(
-    //   (lock: any) => !lock.attached
-    // ); // Filter the tokens for not attached ones.
     const locksResponse = await axios.get(
-      'https://62d80fa990883139358a3999.mockapi.io/api/v1/locks'
+      `${Config.VE_INDEXER}locks?address=${userTezosAddress}`
     );
 
-    if (locksResponse.data[0].result.length === 0) {
+    if (locksResponse.data.result.length === 0) {
       return {
         success: true,
         vePLYData: [],
       };
     }
 
-    const locksData = locksResponse.data[0].result.filter(
+    const locksData = locksResponse.data.result.filter(
       (lock: any) => !lock.attached
     ); // Filter the tokens for not attached ones.
 
@@ -166,8 +152,7 @@ const getBoostValue = (
     if (baseBalance.isEqualTo(0)) {
       return '0.0';
     }
-    const boostValue = derivedBalance
-      .dividedBy(baseBalance);
+    const boostValue = derivedBalance.dividedBy(baseBalance);
     return boostValue.isFinite() ? boostValue.toFixed(1) : '0.0';
   } catch (error: any) {
     throw new Error(error.message);
