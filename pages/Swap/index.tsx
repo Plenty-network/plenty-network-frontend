@@ -20,7 +20,7 @@ import { getTotalVotingPower } from '../../src/redux/pools';
 const Home: NextPage = (props) => {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
-
+  const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const dispatch = useDispatch<AppDispatch>();
 
   const connectTempleWallet = () => {
@@ -31,6 +31,16 @@ const Home: NextPage = (props) => {
     dispatch(getConfig());
     //dispatch(getTotalVotingPower());
   }, []);
+  useEffect(() => {
+    if (userAddress) {
+      dispatch(getTotalVotingPower());
+    }
+  }, [userAddress]);
+  useEffect(() => {
+    if (totalVotingPowerError) {
+      dispatch(getTotalVotingPower());
+    }
+  }, [totalVotingPowerError]);
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);

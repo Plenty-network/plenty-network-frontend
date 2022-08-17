@@ -17,7 +17,7 @@ const reducers = combineReducers({
   isLoadingWallet: isLoadingWallet,
   tokenPrice: tokenPrice,
   userSettings: userSettings,
-  pools: pools
+  pools: pools,
 });
 
 const persistConfig = {
