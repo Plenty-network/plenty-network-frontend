@@ -512,11 +512,11 @@
     -ms-animation: openDownwards 0.3s ease-out;
   }
   .closeup-animation{
-    animation: closeUpwards 0.3s ease-in ;
-    -webkit-animation: closeUpwards 0.3s ease-in;
-    -moz-animation: closeUpwards 0.3s ease-in;
-    -o-animation: closeUpwards 0.3s ease-in;
-    -ms-animation: closeUpwards 0.3s ease-in;
+    animation: closeUpwards 0.2s ease-in ;
+    -webkit-animation: closeUpwards 0.2s ease-in;
+    -moz-animation: closeUpwards 0.2s ease-in;
+    -o-animation: closeUpwards 0.2s ease-in;
+    -ms-animation: closeUpwards 0.2s ease-in;
   }
   @keyframes fadeIn {
     0% { 

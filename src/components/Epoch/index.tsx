@@ -19,7 +19,7 @@ export function Epoch (props: IEpochProps) {
               <InfoIconToolTip message='Epoch lipsum' />
           </div>
           <div className='flex gap-2 text-f12 text-white font-semibold cursor-pointer'>
-             <span className='flex gap-2'>
+             <span className='flex gap-1'>
                 <span>{days} d</span>
                  :
                 <span>{hours} h</span>
