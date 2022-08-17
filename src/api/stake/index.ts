@@ -1,18 +1,18 @@
-import { BigNumber } from "bignumber.js";
-import axios from "axios";
-import { connectedNetwork, dappClient } from "../../common/walletconnect";
-import Config from "../../config/config";
-import { store } from "../../redux";
-import { gaugeStorageType } from "../rewards/data";
-import { getStakedBalance } from "../util/balance";
-import { getDexAddress } from "../util/fetchConfig";
-import { getStorage } from "../util/storageProvider";
-import { IVePLYData, IVePLYListResponse } from "./types";
+import { BigNumber } from 'bignumber.js';
+import axios from 'axios';
+import { connectedNetwork, dappClient } from '../../common/walletconnect';
+import Config from '../../config/config';
+import { store } from '../../redux';
+import { gaugeStorageType } from '../rewards/data';
+import { getStakedBalance } from '../util/balance';
+import { getDexAddress } from '../util/fetchConfig';
+import { getStorage } from '../util/storageProvider';
+import { IVePLYData, IVePLYListResponse } from './types';
 
 /**
  * Returns the list of veNFTs with boost value for a user, for a particular gauge.
  * @param tokenOneSymbol - Symbol of the first token of the selected pair
- * @param tokenTwoSymbol - Symbol of the second token of the selected pair 
+ * @param tokenTwoSymbol - Symbol of the second token of the selected pair
  * @param userStakeInput - Amount of PNLP token the user wants to stake(input)
  * @param userTezosAddress - Tezos wallet address of the user
  */
@@ -25,31 +25,31 @@ export const getVePLYListForUser = async (
   try {
     const state = store.getState();
     const AMM = state.config.AMMs;
-    
+
     const locksResponse = await axios.get(
       `${Config.VE_INDEXER}locks?address=${userTezosAddress}`
     );
-    
+
     if (locksResponse.data.result.length === 0) {
       return {
         success: true,
         vePLYData: [],
       };
     }
-    
+
     const locksData = locksResponse.data.result.filter(
       (lock: any) => !lock.attached
     ); // Filter the tokens for not attached ones.
 
     const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
-    if (dexContractAddress === "false") {
-      throw new Error("AMM does not exist for the selected pair.");
+    if (dexContractAddress === 'false') {
+      throw new Error('AMM does not exist for the selected pair.');
     }
     const pnlpTokenDecimals = AMM[dexContractAddress].lpToken.decimals;
     const gaugeAddress: string | undefined =
       AMM[dexContractAddress].gaugeAddress;
     if (gaugeAddress === undefined) {
-      throw new Error("Gauge does not exist for the selected pair.");
+      throw new Error('Gauge does not exist for the selected pair.');
     }
     const gaugeStorage = await getStorage(gaugeAddress, gaugeStorageType);
 
@@ -60,7 +60,7 @@ export const getVePLYListForUser = async (
       (
         await getStakedBalance(tokenOneSymbol, tokenTwoSymbol, userTezosAddress)
       ).balance
-    ).dividedBy(new BigNumber(10).pow(pnlpTokenDecimals));
+    );
     const finalUserStakedBalance = new BigNumber(userStakeInput || 0).plus(
       userStakedBalance
     );
@@ -68,8 +68,8 @@ export const getVePLYListForUser = async (
       totalSupply
     );
 
-    const totalVotingPower = state.pools.totalVotingPower;   // Fetch the total voting power stored in redux store
-    
+    const totalVotingPower = state.pools.totalVotingPower; // Fetch the total voting power stored in redux store
+
     const finalVePLYData: IVePLYData[] = [];
 
     locksData.forEach((lock: any) => {
@@ -111,7 +111,7 @@ export const fetchTotalVotingPower = async (): Promise<BigNumber> => {
     const { CheckIfWalletConnected } = dappClient();
     const walletResponse = await CheckIfWalletConnected();
     if (!walletResponse.success) {
-      throw new Error("Wallet connection failed");
+      throw new Error('Wallet connection failed');
     }
     const Tezos = await dappClient().tezos();
     const voteEscrowInstance = await Tezos.contract.at(voteEscrowAddress);
@@ -149,13 +149,11 @@ const getBoostValue = (
       baseBalance.plus(markUp),
       userStakedBalance
     );
-    if(baseBalance.isEqualTo(0)) {
-      return "0.0";
+    if (baseBalance.isEqualTo(0)) {
+      return '0.0';
     }
-    const boostValue = derivedBalance
-      .dividedBy(baseBalance)
-      .toFixed(1);
-    return boostValue;
+    const boostValue = derivedBalance.dividedBy(baseBalance);
+    return boostValue.isFinite() ? boostValue.toFixed(1) : '0.0';
   } catch (error: any) {
     throw new Error(error.message);
   }

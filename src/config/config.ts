@@ -20,6 +20,10 @@ const Config: IConfig = {
     mainnet: 'https://api.tzkt.io/',
     testnet: 'https://api.ghostnet.tzkt.io/',
   },
+  VE_SWAP : {
+    mainnet: '',
+    testnet: 'KT1TfpTQsyEEwDJUKSsBwR9GKrLXxZjz7uxB',
+  },
   VOTER: {
     mainnet: '',
     testnet: 'KT1PexY3Jn8BCJmVpVLNN944YpVLM2LWTMMV',
