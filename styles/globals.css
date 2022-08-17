@@ -129,7 +129,13 @@ input[type='number'] {
 .sideNavactive {
   @apply border-r-primary-500  bg-sideBarHover;
 }
+.progTitle {
+  text-transform: lowercase;
+}
 
+.progTitle::first-letter {
+  text-transform: uppercase;
+}
 @layer components {
   .font-medium1 {
     @apply font-medium;

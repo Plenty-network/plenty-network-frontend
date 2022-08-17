@@ -16,14 +16,14 @@ export interface ITabProps {
   className?:string;
 }
 
-const active = "border-b border-b-primary-500 text-white";
+const active = "border-b border-b-primary-500 !text-white";
 
 export function PoolsCardHeaderTab(props: ITabProps) {
   const { isActive, text, onClick } = props;
   return (
     <div
       onClick={() => onClick()}
-      className={`w-[113px] text-f16 text-center cursor-pointer py-4 text-navBarMuted ${isActive ? active : ""
+      className={`md:w-[113px] flex-1 md:flex-none text-f16 text-center cursor-pointer py-4 text-navBarMuted ${isActive ? active : ""
         } ${props.className}`}
     >
       {text}
@@ -43,12 +43,12 @@ export function CardHeader(props: ICardHeaderProps) {
   return (
     <div className="flex md:justify-between justify-center border-b border-b-borderCommon  bg-cardBackGround">
     <div
-      className={`${props.className} flex  items-center border-b border-b-borderCommon  bg-cardBackGround`}
+      className={`${props.className} flex  items-center border-b border-b-borderCommon md:justify-start w-full md:w-max px-4 md:px-0 justify-between bg-cardBackGround`}
     >
         {PoolsHeaderCard("All", 0,'')}
         {PoolsHeaderCard("Stable", 1,'')}
         {PoolsHeaderCard("Volatile", 2,'')}
-        {PoolsHeaderCard("My pools", 3,'hidden md:block')}
+        {PoolsHeaderCard("My pools", 3,'')}
     </div>
     <InputSearchBox className='hidden md:flex md:gap-1' value={searchValue} onChange={setSearchValue} />
     </div>

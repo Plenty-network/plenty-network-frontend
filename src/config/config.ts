@@ -20,13 +20,17 @@ const Config: IConfig = {
     mainnet: 'https://api.tzkt.io/',
     testnet: 'https://api.ghostnet.tzkt.io/',
   },
+  VE_SWAP : {
+    mainnet: '',
+    testnet: 'KT1TfpTQsyEEwDJUKSsBwR9GKrLXxZjz7uxB',
+  },
   VOTER: {
     mainnet: '',
-    testnet: 'KT1PexY3Jn8BCJmVpVLNN944YpVLM2LWTMMV',
+    testnet: 'KT1V2dQjTgmtaxm7H2JFqEYwcERd5ULQhyHn',
   },
   VOTE_ESCROW : {
     mainnet : '',
-    testnet : 'KT1Xrb4eEizLTwR9sZgckjugfuaPB563KKd6',
+    testnet : 'KT1LuyczajtnU8PMsyqsWNYtZLRG7kbiseKs',
   },
   PLY_TOKEN : {
     mainnet : '',

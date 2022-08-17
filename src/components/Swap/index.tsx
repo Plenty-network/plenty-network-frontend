@@ -115,11 +115,7 @@ function Swap(props: ISwapProps) {
   const allPathSwapData = React.useRef<any[][]>([]);
   const isSwitchClicked = React.useRef<boolean>(false);
 
-
   useEffect(() => {
-
-    // votingPower(1 , 	1659578000 ,  0).then((res)=>{console.log(res)});
-
     if (props.otherProps.walletAddress) {
       getCompleteUserBalace(props.otherProps.walletAddress).then(
         (response: IAllBalanceResponse) => {

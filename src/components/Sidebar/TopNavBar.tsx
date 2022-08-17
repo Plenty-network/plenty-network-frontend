@@ -4,6 +4,7 @@ import { ConnectWalletBtnDeskTop } from '../Button/ConnectWalletDesktop';
 import myPostion from '../../assets/icon/common/myPosition.svg';
 import plentyIcon from '../../assets/icon/common//plentyIcon.svg';
 import { Epoch } from '../Epoch';
+import { useEffect, useMemo, useRef, useState } from 'react';
 export interface ITopNavBarProps {
   setShowNotification: Function;
 }
@@ -31,13 +32,18 @@ export function IconBTN(props: IIconBTNProps) {
 }
 
 export function TopNavBar(props: ITopNavBarProps) {
+  const [selectedDropDown, setSelectedDropDown] = useState('');
   return (
     <nav className="hidden md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   px-10 pl-0 topNavblurEffect z-50">
       <div className="h-full w-[240px] border-border-500/50 border-r flex items-center pl-[26px]">
         <Image src={plentyIcon} />
       </div>
       <div className="flex justify-between flex-1">
-        <Epoch />
+        <Epoch
+          Options={['vghgujh', 'xchvgbjn', 'sdfgh']}
+          onClick={setSelectedDropDown}
+          selectedText={selectedDropDown}
+        />
         <div className="flex flex-row gap-7 ">
           <div className="flex flex-row gap-3.5 ">
             <Image

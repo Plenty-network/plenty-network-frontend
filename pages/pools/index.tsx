@@ -27,11 +27,23 @@ export default function Pools(props: IIndexProps) {
   >(PoolsCardHeader.All);
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.config.tokens);
+  const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
+
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
-    //dispatch(getTotalVotingPower());
   }, []);
+  useEffect(() => {
+    if (walletAddress) {
+      dispatch(getTotalVotingPower());
+    }
+  }, [walletAddress]);
+  useEffect(() => {
+    if (totalVotingPowerError) {
+      dispatch(getTotalVotingPower());
+    }
+  }, [totalVotingPowerError]);
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);

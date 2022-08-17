@@ -74,7 +74,7 @@ export function ShortCard(props: IShortCardProps) {
               <span className="text-f14 text-white ">
               {tEZorCTEZtoUppercase(x.tokenA.toString())}/{tEZorCTEZtoUppercase(x.tokenB.toString())}
               </span>
-              <span className="text-f12 text-text-500">Stable Pool</span>
+              <span className="text-f12 text-text-500">{x.poolType} Pool</span>
             </div>
           </div>
         ),
@@ -117,7 +117,7 @@ export function ShortCard(props: IShortCardProps) {
               <span className="text-f14 text-white ">
                 {tEZorCTEZtoUppercase(x.tokenA.toString())}/{tEZorCTEZtoUppercase(x.tokenB.toString())}
               </span>
-              <span className="text-f12 text-text-500">Stable Pool</span>
+              <span className="text-f12 text-text-500 progTitle">{x.poolType} Pool</span>
             </div>
           </div>
         ),
@@ -142,6 +142,7 @@ export function ShortCard(props: IShortCardProps) {
         id: 'Volume24h',
         subText: '24h',
         isToolTipEnabled: true,
+        canShort: true,
         accessor: (x) => (
           <PoolsTextWithTooltip
             text={valueFormat(x.volume.toNumber())}
