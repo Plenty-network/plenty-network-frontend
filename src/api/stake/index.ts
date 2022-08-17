@@ -74,7 +74,7 @@ export const getVePLYListForUser = async (
       (
         await getStakedBalance(tokenOneSymbol, tokenTwoSymbol, userTezosAddress)
       ).balance
-    ).dividedBy(new BigNumber(10).pow(pnlpTokenDecimals));
+    );
     const finalUserStakedBalance = new BigNumber(userStakeInput || 0).plus(
       userStakedBalance
     );
@@ -166,8 +166,9 @@ const getBoostValue = (
     if (baseBalance.isEqualTo(0)) {
       return '0.0';
     }
-    const boostValue = derivedBalance.dividedBy(baseBalance).toFixed(1);
-    return boostValue;
+    const boostValue = derivedBalance
+      .dividedBy(baseBalance);
+    return boostValue.isFinite() ? boostValue.toFixed(1) : '0.0';
   } catch (error: any) {
     throw new Error(error.message);
   }
