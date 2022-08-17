@@ -113,7 +113,7 @@ function SwapTab(props: ISwapTabProps) {
   const refSettingTab = useRef(null);
   const [transactionId, setTransactionId] = useState('');
   const [openSwapDetails, setOpenSwapDetails, animateOpenSwapDetails] =
-    useStateAnimate(false, 280);
+    useStateAnimate(false, 180);
   const [showRecepient, setShowRecepient] = useState(false);
 
   const [expertMode, setExpertMode] = useState(userSettings.expertMode);
