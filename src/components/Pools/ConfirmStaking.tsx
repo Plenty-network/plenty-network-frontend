@@ -42,6 +42,7 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
               Options={props.vePLYOptions}
               selectedText={props.selectedDropDown}
               onClick={props.setSelectedDropDown}
+              isConfirmStake={true}
             />
           </div>
         </div>

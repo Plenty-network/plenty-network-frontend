@@ -110,7 +110,6 @@ export function StakingScreen(props: IStakingScreenProps) {
 }
 
 export function Staking(props: IStakingProps) {
-  console.log(props);
   const walletAddress = store.getState().wallet.address;
   const handleInputPercentage = (value: number) => {
     props.setStakeInput(value * Number(props.pnlpBalance));
@@ -127,7 +126,6 @@ export function Staking(props: IStakingProps) {
   const onClickAmount = () => {
     handleStakeInput(props.pnlpBalance);
   };
-  console.log(Number(props.stakedToken));
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
