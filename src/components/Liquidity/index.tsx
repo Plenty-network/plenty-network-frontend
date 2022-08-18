@@ -1,22 +1,22 @@
-import clsx from 'clsx';
-import Image from 'next/image';
-import * as React from 'react';
-import settings from '../../../src/assets/icon/swap/settings.svg';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import TransactionSettingsLiquidity from '../TransactionSettings/TransactionSettingsLiq';
+import clsx from "clsx";
+import Image from "next/image";
+import * as React from "react";
+import settings from "../../../src/assets/icon/swap/settings.svg";
+import { useEffect, useMemo, useRef, useState } from "react";
+import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
 
-import info from '../../../src/assets/icon/swap/info.svg';
-import { BigNumber } from 'bignumber.js';
-import AddLiquidity from './AddLiquidity';
-import Button from '../Button/Button';
-import { SwitchWithIcon } from '../SwitchCheckbox/switchWithIcon';
-import RemoveLiquidity from './RemoveLiquidity';
+import info from "../../../src/assets/icon/swap/info.svg";
+import { BigNumber } from "bignumber.js";
+import AddLiquidity from "./AddLiquidity";
+import Button from "../Button/Button";
+import { SwitchWithIcon } from "../SwitchCheckbox/switchWithIcon";
+import RemoveLiquidity from "./RemoveLiquidity";
 
-import wallet from '../../../src/assets/icon/pools/wallet.svg';
-import { AppDispatch, useAppSelector } from '../../redux';
-import { ISwapData, tokenParameterLiquidity } from './types';
-import { useDispatch } from 'react-redux';
-import { walletConnection } from '../../redux/wallet/wallet';
+import wallet from "../../../src/assets/icon/pools/wallet.svg";
+import { AppDispatch, useAppSelector } from "../../redux";
+import { ISwapData, tokenParameterLiquidity } from "./types";
+import { useDispatch } from "react-redux";
+import { walletConnection } from "../../redux/wallet/wallet";
 
 interface ILiquidityProps {
   firstTokenAmount: string | number;
@@ -24,7 +24,7 @@ interface ILiquidityProps {
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   inputRef?: any;
-  value?: string | '';
+  value?: string | "";
   onChange?: any;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
@@ -61,10 +61,10 @@ function Liquidity(props: ILiquidityProps) {
   const refSettingTab = useRef(null);
 
   const handleAddLiquidity = () => {
-    props.setScreen('2');
+    props.setScreen("2");
   };
   const handleRemoveLiquidity = () => {
-    props.setScreen('3');
+    props.setScreen("3");
   };
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
@@ -73,16 +73,13 @@ function Liquidity(props: ILiquidityProps) {
   const AddButton = useMemo(() => {
     if (!walletAddress) {
       return (
-        <Button onClick={connectTempleWallet} color={'primary'}>
+        <Button onClick={connectTempleWallet} color={"primary"}>
           Connect Wallet
         </Button>
       );
-    } else if (
-      Number(props.firstTokenAmount) <= 0 ||
-      Number(props.secondTokenAmount) <= 0
-    ) {
+    } else if (Number(props.firstTokenAmount) <= 0 || Number(props.secondTokenAmount) <= 0) {
       return (
-        <Button onClick={() => null} color={'disabled'}>
+        <Button onClick={() => null} color={"disabled"}>
           Add
         </Button>
       );
@@ -94,13 +91,13 @@ function Liquidity(props: ILiquidityProps) {
           props.userBalances[props.tokenOut.name])
     ) {
       return (
-        <Button onClick={() => null} color={'disabled'}>
+        <Button onClick={() => null} color={"disabled"}>
           Insufficient Balance
         </Button>
       );
     } else {
       return (
-        <Button color={'primary'} onClick={handleAddLiquidity}>
+        <Button color={"primary"} onClick={handleAddLiquidity}>
           Add
         </Button>
       );
@@ -109,29 +106,25 @@ function Liquidity(props: ILiquidityProps) {
   const RemoveButton = useMemo(() => {
     if (!walletAddress) {
       return (
-        <Button onClick={connectTempleWallet} color={'primary'}>
+        <Button onClick={connectTempleWallet} color={"primary"}>
           Connect Wallet
         </Button>
       );
     } else if (Number(props.burnAmount) <= 0) {
       return (
-        <Button onClick={() => null} color={'disabled'}>
+        <Button onClick={() => null} color={"disabled"}>
           Remove
         </Button>
       );
-    } else if (
-      walletAddress &&
-      props.burnAmount &&
-      props.burnAmount > props.pnlpBalance
-    ) {
+    } else if (walletAddress && props.burnAmount && props.burnAmount > props.pnlpBalance) {
       return (
-        <Button onClick={() => null} color={'disabled'}>
+        <Button onClick={() => null} color={"disabled"}>
           Insufficient Balance
         </Button>
       );
     } else {
       return (
-        <Button color={'primary'} onClick={handleRemoveLiquidity}>
+        <Button color={"primary"} onClick={handleRemoveLiquidity}>
           Remove
         </Button>
       );
@@ -151,7 +144,7 @@ function Liquidity(props: ILiquidityProps) {
               />
             </span>
             <span className="ml-2 text-white font-title3 relative top-[12px]">
-              {props.isAddLiquidity ? 'Add Liquidity' : 'Remove Liquidity'}
+              {props.isAddLiquidity ? "Add Liquidity" : "Remove Liquidity"}
             </span>
           </div>
           <div
@@ -159,9 +152,9 @@ function Liquidity(props: ILiquidityProps) {
             className="py-1 ml-auto px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] ml-2"
             onClick={() => setSettingsShow(!settingsShow)}
           >
-            <Image src={settings} height={'20px'} width={'20px'} />
+            <Image src={settings} height={"20px"} width={"20px"} />
             <span className="text-white font-body4 ml-2 relative -top-[3px]">
-              {props.slippage}%
+              {props.slippage ? Number(props.slippage) : 0.5}%
             </span>
           </div>
           <TransactionSettingsLiquidity
@@ -209,16 +202,14 @@ function Liquidity(props: ILiquidityProps) {
             <>
               <div className="flex">
                 <span>
-                  <Image src={info} width={'14px'} height={'14px'} />
+                  <Image src={info} width={"14px"} height={"14px"} />
                 </span>
-                <span className="font-subtitle1 relative top-[1.5px] ml-2">
-                  Your position
-                </span>
+                <span className="font-subtitle1 relative top-[1.5px] ml-2">Your position</span>
               </div>
 
               <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] items-center flex px-3">
                 <div>
-                  <Image src={wallet} width={'32px'} height={'32px'} />
+                  <Image src={wallet} width={"32px"} height={"32px"} />
                 </div>
                 <div className="ml-1 text-primary-500 font-body2">
                   {Number(props.pnlpBalance).toFixed(4)} PNLP

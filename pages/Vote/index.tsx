@@ -38,7 +38,7 @@ export default function Vote() {
 
   useInterval(() => {
     dispatch(getEpochData());
-  }, 5000);
+  }, 60000);
 
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
