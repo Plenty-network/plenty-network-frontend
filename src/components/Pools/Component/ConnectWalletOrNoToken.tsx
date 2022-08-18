@@ -10,7 +10,7 @@ export interface IWalletNotConnectedProps {
 }
 
 export function NoContentAvailable (props: IWalletNotConnectedProps) {
-  return (<div className='flex justify-center items-center mt-2 gap-5 flex-col' >
+  return (<div className='flex justify-center items-center  mt-2 md:mt-12 gap-5 flex-col' >
        <Image src={noContentAvailble} />
        <OutlineBtn text='View Pools' className='w-max' onClick={()=>{}} />
       </div> );
@@ -21,7 +21,7 @@ export function  WalletNotConnected (props: IWalletNotConnectedProps) {
     return dispatch(walletConnection());
   };
     return (
-      <div className='flex justify-center items-center mt-2 gap-5 flex-col' >
+      <div className='flex justify-center items-center  mt-2 md:mt-12 gap-5 flex-col' >
        <Image src={walletNotConnected} />
        <OutlineBtn text='Connect wallet' className='w-max' onClick={connectTempleWallet} />
       </div>

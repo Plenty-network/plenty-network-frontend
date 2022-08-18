@@ -49,7 +49,7 @@ export function ToolTip(props: IToolTipProps) {
           id={`tooltip_${randomId}`}
           effect="solid"
         >
-          {props.message && <span>{props.message}</span>}
+          {props.message && <span className='!font-medium' >{props.message}</span>}
           {props.toolTipChild}
         </ReactTooltip>
       </>
@@ -78,7 +78,7 @@ export function ToolTip(props: IToolTipProps) {
           <div className="flex flex-col gap-1 mr-2   relative">
             <div className="text-f12 font-medium">{props.title}</div>
             <div className="text-f12">
-              {props.message && <span>{props.message}</span>}
+              {props.message && <span className='!font-medium'>{props.message}</span>}
               {props.toolTipChild}
             </div>
           </div>
@@ -104,7 +104,7 @@ export function ToolTip(props: IToolTipProps) {
         id={`tooltip_${randomId}`}
         effect="solid"
       >
-        {props.message && <span>{props.message}</span>}
+        {props.message && <span className='!font-medium'>{props.message}</span>}
         {props.toolTipChild}
       </ReactTooltip>
     </>

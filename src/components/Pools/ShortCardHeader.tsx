@@ -28,7 +28,7 @@ export function Tabs (props: ITabsProps) {
             {props.isToolTipEnabled && <InfoIconToolTip message='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry' />}
             {props.text}
         </div>
-        {props.subText && <div className='text-text-500 font-light'>
+        {props.subText && <div className='text-text-500 font-light text-right'>
             {props.subText}
         </div>}  
         </div>
