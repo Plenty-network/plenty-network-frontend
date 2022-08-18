@@ -1,15 +1,16 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { useDispatch, TypedUseSelectorHook, useSelector } from 'react-redux';
-import storage from 'redux-persist/lib/storage';
-import { combineReducers } from 'redux';
-import { persistReducer } from 'redux-persist';
-import thunk from 'redux-thunk';
-import { wallet } from './wallet/wallet';
-import { config } from './config/config';
-import { tokenPrice } from './tokenPrice/tokenPrice';
-import isLoadingWallet from './isLoading/reducer';
-import { userSettings } from './userSettings/userSettings';
-import { pools } from './pools';
+import { configureStore } from "@reduxjs/toolkit";
+import { useDispatch, TypedUseSelectorHook, useSelector } from "react-redux";
+import storage from "redux-persist/lib/storage";
+import { combineReducers } from "redux";
+import { persistReducer } from "redux-persist";
+import thunk from "redux-thunk";
+import { wallet } from "./wallet/wallet";
+import { config } from "./config/config";
+import { tokenPrice } from "./tokenPrice/tokenPrice";
+import isLoadingWallet from "./isLoading/reducer";
+import { userSettings } from "./userSettings/userSettings";
+import { pools } from "./pools";
+import { epoch } from "./epoch/epoch";
 
 const reducers = combineReducers({
   wallet: wallet,
@@ -18,19 +19,20 @@ const reducers = combineReducers({
   tokenPrice: tokenPrice,
   userSettings: userSettings,
   pools: pools,
+  epoch: epoch,
 });
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   storage,
-  whitelist: ['userSettings', 'config', 'pools'],
+  whitelist: ["userSettings", "config", "pools"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  devTools: process.env.NODE_ENV !== 'production',
+  devTools: process.env.NODE_ENV !== "production",
   middleware: [thunk],
 });
 

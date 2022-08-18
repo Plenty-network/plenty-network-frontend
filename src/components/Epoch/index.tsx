@@ -6,12 +6,12 @@ import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
 import vectorDown from "../../assets/icon/common/vector.svg";
 import { useCountdown } from "../../hooks/useCountDown";
 import { useOutsideClick } from "../../utils/outSideClickHook";
-import { getListOfEpochs } from "../../api/votes/votesKiran";
 import { IEpochListObject } from "../../api/votes/types";
-import { EPOCH_DURATION_TESTNET } from "../../constants/global";
+import { useDispatch } from "react-redux";
+import { AppDispatch, store } from "../../redux";
+import { getEpochData, setSelectedEpoch } from "../../redux/epoch/epoch";
 
 export interface IEpochProps {
-  Options: Array<string>;
   onClick: Function;
   selectedText: string;
   className?: string;
@@ -20,28 +20,22 @@ export interface IEpochProps {
 
 export function Epoch(props: IEpochProps) {
   const [isDropDownActive, setIsDropDownActive] = React.useState(false);
-  const [epochData, setEpochData] = React.useState<IEpochListObject[]>([]);
+  const epochData = store.getState().epoch.epochData;
+  const currentEpoch = store.getState().epoch.currentEpoch;
+  const selectedEpoch = store.getState().epoch.selectedEpoch;
   const reff = React.useRef(null);
   useOutsideClick(reff, () => {
     setIsDropDownActive(false);
   });
   React.useEffect(() => {
-    getListOfEpochs().then((res) => {
-      console.log(res.epochData);
-      setEpochData(res.epochData);
-    });
-    setInterval(() => {
-      getListOfEpochs().then((res) => {
-        setEpochData(res.epochData);
-      });
-    }, EPOCH_DURATION_TESTNET);
-  }, []);
-
+    props.onClick(currentEpoch.epochNumber);
+  }, [currentEpoch.epochNumber]);
   function Options(props: {
     onClick: Function;
     startDate: number;
     epochNumber: number;
     isCurrent?: boolean;
+    epoch: IEpochListObject;
   }) {
     var date = new Date(props.startDate);
 
@@ -63,30 +57,38 @@ export function Epoch(props: IEpochProps) {
     var year = date.getFullYear();
     var month = date.getMonth();
     var day = date.getDate();
-
+    const dispatch = useDispatch<AppDispatch>();
     return (
       <div
         onClick={() => {
-          // props.onClick(props.text);
+          props.onClick(props.epochNumber);
+          dispatch(setSelectedEpoch(props.epoch));
           setIsDropDownActive(false);
         }}
         className="hover:bg-primary-700 px-4 flex font-body4 text-text-50 items-center h-[36px] cursor-pointer"
       >
-        Epoch{props.epochNumber} ({day}-{monthNames[month]}-{year.toString().substr(-2)})
+        {props.isCurrent
+          ? `Epoch${props.epochNumber} (current)`
+          : `Epoch${props.epochNumber} (${day}-${monthNames[month]}-${year.toString().substr(-2)})`}
       </div>
     );
   }
+
   const [days, hours, minutes, seconds] = useCountdown(
-    epochData[0]?.startTimestamp ? epochData[0].startTimestamp : 654754468476474
+    currentEpoch.endTimestamp ? currentEpoch.endTimestamp : Date.now()
   );
+
   return (
     <>
-      <div className="relative flex gap-[10px] p-[14px]">
+      <div className="relative flex gap-[10px] p-[14px]" ref={reff}>
         <Image src={epoachIcon} />
         <div className="flex flex-col gap-[6px]">
           <div className="flex gap-1">
             <p className="text-text-250 text-f12">
-              Epoch <span className="text-white">23</span>
+              Epoch{" "}
+              <span className="text-white">
+                {selectedEpoch.epochNumber ? selectedEpoch.epochNumber : 0}
+              </span>
             </p>
             <InfoIconToolTip message="Epoch lipsum" />
             <Image
@@ -114,6 +116,8 @@ export function Epoch(props: IEpochProps) {
                 key={`${text.epochNumber}_${i}`}
                 startDate={text.startTimestamp}
                 epochNumber={text.epochNumber}
+                isCurrent={text.isCurrent}
+                epoch={text}
               />
             ))}
           </div>
