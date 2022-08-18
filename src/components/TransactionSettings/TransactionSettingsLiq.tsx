@@ -56,7 +56,7 @@ function TransactionSettingsLiquidity(props: ITransactionSettingsProps) {
       ref={refSetting}
       style={{ top: "0px" }}
       className={clsx(
-        "z-20 absolute right-[10px]  md:right-[27px]  bg-card-500 border border-text-700/[0.5] w-[250px] md:w-[319px] p-5 rounded-2xl fade-in-3 "
+        "z-20 absolute right-[10px]  md:-right-[1px]  bg-card-500 border border-text-700/[0.5] w-[250px] md:w-[319px] p-5 rounded-2xl fade-in-3 "
       )}
     >
       <div className="font-subtitle2">Transaction Settings</div>
@@ -92,7 +92,7 @@ function TransactionSettingsLiquidity(props: ITransactionSettingsProps) {
         >
           <div>
             <input
-              className="outline-none bg-card-500 text-left"
+              className="outline-none bg-card-500 text-white text-left"
               placeholder="0.5"
               value={props.slippage ? props.slippage : ""}
               onChange={(e) => handleSlippage(e.target.value)}
