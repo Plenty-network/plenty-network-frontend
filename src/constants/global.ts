@@ -32,3 +32,4 @@ export const AMM_CONFIG = 'ammConfig';
 
  export const EPOCH_DURATION_TESTNET: number = 3360000; // milliseconds
  export const EPOCH_DURATION_MAINNET: number = 604800000; // milliseconds
+ export const VOTES_CHART_LIMIT: number = 9;

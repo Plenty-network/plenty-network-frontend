@@ -33,3 +33,21 @@ export interface IVeNFTListResponse {
   veNFTData: IVeNFTData[];
   error?: string;
 }
+
+export interface IVotesData {
+  dexContractAddress: string | undefined;
+  votePercentage: BigNumber;
+  votes: BigNumber;
+  tokenOneSymbol: string | undefined;
+  tokenTwoSymbol: string | undefined;
+}
+
+export interface IVotesResponse {
+  success: boolean;
+  isOtherDataAvailable: boolean;
+  epoch: number;
+  allData: IVotesData[];
+  topAmmData: IVotesData[];
+  otherData: IVotesData | {};
+  error?: string;
+}

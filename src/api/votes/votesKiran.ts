@@ -5,8 +5,21 @@ import { connectedNetwork } from "../../common/walletconnect";
 import Config from "../../config/config";
 import { getStorage, getTzktBigMapData } from "../util/storageProvider";
 import { voterStorageType } from "./data";
-import { IEpochDataResponse, IEpochListObject, ITotalAmmVotesBigMap, IVeNFTData, IVeNFTListResponse } from "./types";
-import { EPOCH_DURATION_MAINNET, EPOCH_DURATION_TESTNET } from "../../constants/global";
+import {
+  IEpochDataResponse,
+  IEpochListObject,
+  ITotalAmmVotesBigMap,
+  IVeNFTData,
+  IVeNFTListResponse,
+  IVotesData,
+  IVotesResponse,
+} from "./types";
+import {
+  EPOCH_DURATION_MAINNET,
+  EPOCH_DURATION_TESTNET,
+  VOTES_CHART_LIMIT,
+} from "../../constants/global";
+import { store } from "../../redux";
 
 /**
  * Returns the list of epoch data including the current one.
@@ -18,18 +31,12 @@ export const getListOfEpochs = async (
   try {
     const listOfEpochs: IEpochListObject[] = [];
     const epochDuration: number =
-      connectedNetwork === "testnet"
-        ? EPOCH_DURATION_TESTNET
-        : EPOCH_DURATION_MAINNET;
+      connectedNetwork === "testnet" ? EPOCH_DURATION_TESTNET : EPOCH_DURATION_MAINNET;
     const voterContractAddress: string = Config.VOTER[connectedNetwork];
-    const voterStorageResponse = await getStorage(
-      voterContractAddress,
-      voterStorageType
-    );
+    const voterStorageResponse = await getStorage(voterContractAddress, voterStorageType);
     const currentEpochNumber: number = voterStorageResponse.epoch.toNumber(); // Voter storage response for epoch is BigNumber
     const currentTimestamp = new Date().getTime();
-    const currentEpochStart =
-      Math.floor(currentTimestamp / epochDuration) * epochDuration;
+    const currentEpochStart = Math.floor(currentTimestamp / epochDuration) * epochDuration;
     const currentEpochEnd = currentEpochStart + epochDuration;
 
     listOfEpochs.push({
@@ -69,24 +76,16 @@ export const getListOfEpochs = async (
  * Returns the list of veNFT tokens for a particular user address.
  * @param userTezosAddress - Tezos wallet address of the user
  */
-export const getVeNFTsList = async (
-  userTezosAddress: string
-): Promise<IVeNFTListResponse> => {
+export const getVeNFTsList = async (userTezosAddress: string): Promise<IVeNFTListResponse> => {
   try {
-    const locksResponse = await axios.get(
-      `${Config.VE_INDEXER}locks?address=${userTezosAddress}`
-    );
+    const locksResponse = await axios.get(`${Config.VE_INDEXER}locks?address=${userTezosAddress}`);
     const locksData = locksResponse.data.result;
 
     const finalVeNFTData = locksData.map((lock: any): IVeNFTData => {
       return {
         tokenId: new BigNumber(lock.id),
-        baseValue: new BigNumber(lock.base_value).dividedBy(
-          new BigNumber(10).pow(18)
-        ),
-        votingPower: new BigNumber(lock.voting_power).dividedBy(
-          new BigNumber(10).pow(18)
-        ),
+        baseValue: new BigNumber(lock.base_value).dividedBy(new BigNumber(10).pow(18)),
+        votingPower: new BigNumber(lock.voting_power).dividedBy(new BigNumber(10).pow(18)),
       };
     });
 
@@ -103,30 +102,110 @@ export const getVeNFTsList = async (
   }
 };
 
-
-/* export const getTotalAmmVotes = async (epochNumber: number) => {
+export const getTotalAmmVotes = async (epochNumber: number): Promise<IVotesResponse> => {
   try {
+    const state = store.getState();
+    const AMM = state.config.AMMs;
     const voterContractAddress: string = Config.VOTER[connectedNetwork];
-    const voterStorageResponse = await getStorage(
-      voterContractAddress,
-      voterStorageType
-    );
+    // const voterContractAddress: string = "KT1PexY3Jn8BCJmVpVLNN944YpVLM2LWTMMV";
+    const voterStorageResponse = await getStorage(voterContractAddress, voterStorageType);
     const totalAmmVotesBigMapId: string = voterStorageResponse.total_amm_votes;
-    const totalAmmVotesResponse = await getTzktBigMapData(totalAmmVotesBigMapId, `key.epoch=${epochNumber}&select=key,value`);
-    const totalAmmVotesData: ITotalAmmVotesBigMap[] = totalAmmVotesResponse.data;
-    console.log(totalAmmVotesData.sort(compareBigMapData));
+    const totalEpochVotesBigMapId: string = voterStorageResponse.total_epoch_votes;
+    const totalEpochVotesResponse = await getTzktBigMapData(
+      totalEpochVotesBigMapId,
+      `key=${epochNumber}&select=key,value`
+    );
+    if (totalEpochVotesResponse.data.length === 0) {
+      throw new Error("No votes in this epoch yet");
+    }
+    const totalEpochVotes: BigNumber = new BigNumber(totalEpochVotesResponse.data[0].value);
+
+    const totalAmmVotesResponse = await getTzktBigMapData(
+      totalAmmVotesBigMapId,
+      `key.epoch=${epochNumber}&select=key,value`
+    );
+    const totalAmmVotesBigMapData: ITotalAmmVotesBigMap[] = totalAmmVotesResponse.data;
+    if (totalAmmVotesBigMapData.length === 0) {
+      throw new Error("No votes data for AMMS in this epoch yet");
+    }
+    // Sort the list to get top votes with highest first.
+    totalAmmVotesBigMapData.sort(compareBigMapData);
+
+    const totalAmmVotesData: IVotesData[] = totalAmmVotesBigMapData.map(
+      (voteData): IVotesData => ({
+        dexContractAddress: voteData.key.amm,
+        votePercentage: new BigNumber(voteData.value).multipliedBy(100).dividedBy(totalEpochVotes),
+        votes: new BigNumber(voteData.value).dividedBy(new BigNumber(10).pow(18)),
+        tokenOneSymbol: AMM[voteData.key.amm].token1.symbol,
+        tokenTwoSymbol: AMM[voteData.key.amm].token2.symbol,
+      })
+    );
+    // Return the existing list if the gauges count is 9 or less.
+    if (totalAmmVotesData.length <= VOTES_CHART_LIMIT) {
+      return {
+        success: true,
+        isOtherDataAvailable: false,
+        epoch: epochNumber,
+        allData: totalAmmVotesData,
+        topAmmData: totalAmmVotesData,
+        otherData: {},
+      };
+    }
+    // Create a list of top 9 gauges and sum up the remaining others from the main list.
+    const [topAmmData, summedData] = createOtherAmmsData(totalAmmVotesData);
+
+    return {
+      success: true,
+      isOtherDataAvailable: true,
+      epoch: epochNumber,
+      allData: totalAmmVotesData,
+      topAmmData,
+      otherData: summedData,
+    };
   } catch (error: any) {
     console.log(error.message);
+    return {
+      success: false,
+      isOtherDataAvailable: false,
+      epoch: epochNumber,
+      allData: [],
+      topAmmData: [],
+      otherData: {},
+      error: error.message,
+    };
   }
 };
 
-
-const compareBigMapData = (valueOne: ITotalAmmVotesBigMap, valueTwo: ITotalAmmVotesBigMap): number => {
-  if(new BigNumber(valueOne.value).isGreaterThan(new BigNumber(valueTwo.value))) {
+const compareBigMapData = (
+  valueOne: ITotalAmmVotesBigMap,
+  valueTwo: ITotalAmmVotesBigMap
+): number => {
+  if (new BigNumber(valueOne.value).isGreaterThan(new BigNumber(valueTwo.value))) {
     return -1;
-  } else if(new BigNumber(valueOne.value).isLessThan(new BigNumber(valueTwo.value))) {
+  } else if (new BigNumber(valueOne.value).isLessThan(new BigNumber(valueTwo.value))) {
     return 1;
   } else {
     return 0;
   }
-}; */
+};
+
+const createOtherAmmsData = (allAmmVotesData: IVotesData[]): [IVotesData[], IVotesData] => {
+  const topAmmData = allAmmVotesData.slice(0, VOTES_CHART_LIMIT);
+  const dataToBeSummed = allAmmVotesData.slice(VOTES_CHART_LIMIT);
+  const initialSummedObject: IVotesData = {
+    dexContractAddress: undefined,
+    votePercentage: new BigNumber(0),
+    votes: new BigNumber(0),
+    tokenOneSymbol: undefined,
+    tokenTwoSymbol: undefined,
+  };
+  const summedData = dataToBeSummed.reduce(
+    (summedObject: IVotesData, data: IVotesData): IVotesData => ({
+      ...summedObject,
+      votePercentage: summedObject.votePercentage.plus(data.votePercentage),
+      votes: summedObject.votes.plus(data.votes),
+    }),
+    initialSummedObject
+  );
+  return [topAmmData, summedData];
+};
