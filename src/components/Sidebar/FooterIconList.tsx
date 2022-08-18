@@ -5,7 +5,7 @@ export interface IFooterInfoIconProps {
 
 export function FooterInfoIcon(props: IFooterInfoIconProps) {
   return (
-    <ul className="w-full flex items-center justify-between p-4 ">
+    <ul className="w-full flex items-center  py-4 justify-between px-6 ">
       <li className="cursor-pointer">
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="0.5" y="0.5" width="31" height="31" rx="4.11538" stroke="#88848C" strokeOpacity="0.2" />

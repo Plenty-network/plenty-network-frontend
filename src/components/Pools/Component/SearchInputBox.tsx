@@ -10,7 +10,7 @@ export interface IInputSearchBoxProps {
 
 export function InputSearchBox (props: IInputSearchBoxProps) {
   return (
-    <div className={`flex py-2 my-2 px-2 bg-primary-850 mr-4 gap-4 border border-border-500/50 rounded-lg ${props.className}`}>
+    <div className={`flex py-2 my-2 px-2 bg-primary-850 mr-4 md:w-[265px] gap-4 border border-border-500/50 rounded-lg ${props.className}`}>
       <Image src={searchImagr} />
       <input 
       value={props.value}
