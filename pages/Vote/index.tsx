@@ -1,37 +1,53 @@
-import Head from 'next/head';
-import Image from 'next/image';
-import * as React from 'react';
-import HeadInfo from '../../src/components/HeadInfo';
-import { SideBarHOC } from '../../src/components/Sidebar/SideBarHOC';
-import { useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
-import { AppDispatch, useAppSelector } from '../../src/redux';
-import { fetchWallet } from '../../src/redux/wallet/wallet';
-import { getConfig } from '../../src/redux/config/config';
-import { getTokenPrice } from '../../src/redux/tokenPrice/tokenPrice';
-import SelectNFT from '../../src/components/Votes/SelectNFT';
-import { VotesTable } from '../../src/components/Votes/VotesTable';
-import CastVote from '../../src/components/Votes/CastVote';
-import CreateLock from '../../src/components/Votes/CreateLock';
-import VotingAllocation from '../../src/components/Votes/VotingAllocation';
-import { InputSearchBox } from '../../src/components/Pools/Component/SearchInputBox';
+import Head from "next/head";
+import Image from "next/image";
+import * as React from "react";
+import HeadInfo from "../../src/components/HeadInfo";
+import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
+import { useDispatch } from "react-redux";
+import { useEffect, useState, useRef } from "react";
+import { AppDispatch, useAppSelector } from "../../src/redux";
+import { fetchWallet } from "../../src/redux/wallet/wallet";
+import { getConfig } from "../../src/redux/config/config";
+import { getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
+import SelectNFT from "../../src/components/Votes/SelectNFT";
+import { VotesTable } from "../../src/components/Votes/VotesTable";
+import CastVote from "../../src/components/Votes/CastVote";
+import CreateLock from "../../src/components/Votes/CreateLock";
+import VotingAllocation from "../../src/components/Votes/VotingAllocation";
+import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
+import { getEpochData } from "../../src/redux/epoch/epoch";
+import { useInterval } from "../../src/hooks/useInterval";
+import { EPOCH_DURATION_TESTNET } from "../../src/constants/global";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.config.tokens);
+  const state = useAppSelector((state) => state.epoch);
+  const epochError = useAppSelector((state) => state.epoch).epochFetchError;
+
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
+    dispatch(getEpochData());
   }, []);
+  useEffect(() => {
+    if (epochError) {
+      dispatch(getEpochData());
+    }
+  }, [epochError]);
+
+  useInterval(() => {
+    dispatch(getEpochData());
+  }, 5000);
+
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
   const [showCastVoteModal, setShowCastVoteModal] = useState(false);
 
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const handleCreateLock = () => {
-    console.log('ish');
     setShowCreateLockModal(true);
   };
 
@@ -57,16 +73,12 @@ export default function Vote() {
             <div className="basis-2/3">
               <div className="flex items-center">
                 <div>
-                  {' '}
+                  {" "}
                   <SelectNFT />
                 </div>
                 <div className="ml-auto">
-                  {' '}
-                  <InputSearchBox
-                    className=""
-                    value={searchValue}
-                    onChange={setSearchValue}
-                  />
+                  {" "}
+                  <InputSearchBox className="" value={searchValue} onChange={setSearchValue} />
                 </div>
               </div>
               <VotesTable
@@ -95,14 +107,9 @@ export default function Vote() {
           </div>
         </div>
       </SideBarHOC>
-      {showCastVoteModal && (
-        <CastVote show={showCastVoteModal} setShow={setShowCastVoteModal} />
-      )}
+      {showCastVoteModal && <CastVote show={showCastVoteModal} setShow={setShowCastVoteModal} />}
       {showCreateLockModal && (
-        <CreateLock
-          show={showCreateLockModal}
-          setShow={setShowCreateLockModal}
-        />
+        <CreateLock show={showCreateLockModal} setShow={setShowCreateLockModal} />
       )}
     </>
   );
