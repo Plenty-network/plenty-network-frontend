@@ -8,6 +8,7 @@ import { voterStorageType } from "./data";
 import {
   IEpochDataResponse,
   IEpochListObject,
+  IMyAmmVotesBigMap,
   ITotalAmmVotesBigMap,
   IVeNFTData,
   IVeNFTListResponse,
@@ -102,6 +103,10 @@ export const getVeNFTsList = async (userTezosAddress: string): Promise<IVeNFTLis
   }
 };
 
+/**
+ * Returns the total AMM votes allocation chart data in selected epoch.
+ * @param epochNumber - Numeric value of the epoch for which the data is to be fetched
+ */
 export const getTotalAmmVotes = async (epochNumber: number): Promise<IVotesResponse> => {
   try {
     const state = store.getState();
@@ -145,7 +150,6 @@ export const getTotalAmmVotes = async (epochNumber: number): Promise<IVotesRespo
       return {
         success: true,
         isOtherDataAvailable: false,
-        epoch: epochNumber,
         allData: totalAmmVotesData,
         topAmmData: totalAmmVotesData,
         otherData: {},
@@ -157,7 +161,6 @@ export const getTotalAmmVotes = async (epochNumber: number): Promise<IVotesRespo
     return {
       success: true,
       isOtherDataAvailable: true,
-      epoch: epochNumber,
       allData: totalAmmVotesData,
       topAmmData,
       otherData: summedData,
@@ -167,7 +170,6 @@ export const getTotalAmmVotes = async (epochNumber: number): Promise<IVotesRespo
     return {
       success: false,
       isOtherDataAvailable: false,
-      epoch: epochNumber,
       allData: [],
       topAmmData: [],
       otherData: {},
@@ -176,9 +178,92 @@ export const getTotalAmmVotes = async (epochNumber: number): Promise<IVotesRespo
   }
 };
 
+/**
+ * Returns the total AMM votes allocation chart data for a particular veNFT in selected epoch
+ * @param epochNumber - Numeric value of the epoch for which the data is to be fetched
+ * @param tokenId - veNFT token ID for which the data is to be fetched
+ */
+export const getMyAmmVotes = async (
+  epochNumber: number,
+  tokenId: number
+): Promise<IVotesResponse> => {
+  try {
+    const state = store.getState();
+    const AMM = state.config.AMMs;
+    // const voterContractAddress: string = Config.VOTER[connectedNetwork];
+    const voterContractAddress: string = "KT1PexY3Jn8BCJmVpVLNN944YpVLM2LWTMMV";
+    const voterStorageResponse = await getStorage(voterContractAddress, voterStorageType);
+    const tokenAmmVotesBigMapId: string = voterStorageResponse.token_amm_votes;
+    const totalTokenVotesBigMapId: string = voterStorageResponse.total_token_votes;
+    const totalTokenVotesResponse = await getTzktBigMapData(
+      totalTokenVotesBigMapId,
+      `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value`
+    );
+    if (totalTokenVotesResponse.data.length === 0) {
+      throw new Error("No votes in this epoch yet");
+    }
+    const totalTokenVotes: BigNumber = new BigNumber(totalTokenVotesResponse.data[0].value);
+    
+    const tokenAmmVotesResponse = await getTzktBigMapData(
+      tokenAmmVotesBigMapId,
+      `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value`
+    );
+    const tokenAmmVotesBigMapData: IMyAmmVotesBigMap[] = tokenAmmVotesResponse.data;
+    if (tokenAmmVotesBigMapData.length === 0) {
+      throw new Error("No votes data for AMMS in this epoch yet");
+    }
+    // Sort the list to get top votes with highest first.
+    tokenAmmVotesBigMapData.sort(compareBigMapData);
+    
+    const myAmmVotesData: IVotesData[] = tokenAmmVotesBigMapData.map(
+      (voteData): IVotesData => ({
+        dexContractAddress: voteData.key.amm,
+        votePercentage: new BigNumber(voteData.value).multipliedBy(100).dividedBy(totalTokenVotes),
+        votes: new BigNumber(voteData.value).dividedBy(new BigNumber(10).pow(18)),
+        tokenOneSymbol: AMM[voteData.key.amm].token1.symbol,
+        tokenTwoSymbol: AMM[voteData.key.amm].token2.symbol,
+      })
+    );
+    // Return the existing list if the gauges count is 9 or less.
+    if (myAmmVotesData.length <= VOTES_CHART_LIMIT) {
+      return {
+        success: true,
+        isOtherDataAvailable: false,
+        allData: myAmmVotesData,
+        topAmmData: myAmmVotesData,
+        otherData: {},
+      };
+    }
+    // Create a list of top 9 gauges and sum up the remaining others from the main list.
+    const [topAmmData, summedData] = createOtherAmmsData(myAmmVotesData);
+
+    return {
+      success: true,
+      isOtherDataAvailable: true,
+      allData: myAmmVotesData,
+      topAmmData,
+      otherData: summedData,
+    };
+  } catch (error: any) {
+    console.log(error.message);
+    return {
+      success: false,
+      isOtherDataAvailable: false,
+      allData: [],
+      topAmmData: [],
+      otherData: {},
+      error: error.message,
+    };
+  }
+};
+
+
+/**
+ * Function used as a callback for sorting the AMM votes allocation data in descending order of the votes count.
+ */
 const compareBigMapData = (
-  valueOne: ITotalAmmVotesBigMap,
-  valueTwo: ITotalAmmVotesBigMap
+  valueOne: ITotalAmmVotesBigMap | IMyAmmVotesBigMap,
+  valueTwo: ITotalAmmVotesBigMap | IMyAmmVotesBigMap
 ): number => {
   if (new BigNumber(valueOne.value).isGreaterThan(new BigNumber(valueTwo.value))) {
     return -1;
@@ -189,6 +274,12 @@ const compareBigMapData = (
   }
 };
 
+/**
+ * Function to slice the votes allocation data list into 2 lists of TOP 'N' and remaining,
+ * and further sum up the remaining data into one object. Returns the TOP 'N' AMM array and 
+ * the summed object of other AMM votes.
+ * @param allAmmVotesData - Array of vote allocation data for all the AMMs
+ */
 const createOtherAmmsData = (allAmmVotesData: IVotesData[]): [IVotesData[], IVotesData] => {
   const topAmmData = allAmmVotesData.slice(0, VOTES_CHART_LIMIT);
   const dataToBeSummed = allAmmVotesData.slice(VOTES_CHART_LIMIT);
