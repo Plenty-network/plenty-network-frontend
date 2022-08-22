@@ -2,16 +2,18 @@ import { Dropdown } from "../DropDown/Dropdown";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as React from "react";
+import { ISelectNFT } from "./types";
+import { VeNFT } from "../DropDown/VeNFT";
 
-function SelectNFT() {
-  const [selectedDropDown, setSelectedDropDown] = useState("");
+function SelectNFT(props: ISelectNFT) {
+  const [selectedDropDown, setSelectedDropDown] = useState({ votingPower: "", tokenId: "" });
   return (
     <div className="flex items-center">
-      <div className="text-white font-body1 px-[23px]">Select your veNFT:</div>
+      <div className="hidden md:block text-white font-body1 px-[23px]">Select your veNFT:</div>
       <div>
-        <Dropdown
+        <VeNFT
           title="No NFTs selected"
-          Options={["one", "two", "three"]}
+          Options={props.veNFTlist}
           selectedText={selectedDropDown}
           onClick={setSelectedDropDown}
         />

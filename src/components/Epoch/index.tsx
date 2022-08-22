@@ -24,12 +24,14 @@ export function Epoch(props: IEpochProps) {
   const currentEpoch = store.getState().epoch.currentEpoch;
   const selectedEpoch = store.getState().epoch.selectedEpoch;
   const reff = React.useRef(null);
+  const dispatch = useDispatch<AppDispatch>();
   useOutsideClick(reff, () => {
     setIsDropDownActive(false);
   });
   React.useEffect(() => {
+    dispatch(setSelectedEpoch(epochData[0]));
     props.onClick(currentEpoch.epochNumber);
-  }, [currentEpoch.epochNumber]);
+  }, [currentEpoch?.epochNumber, epochData[0]?.epochNumber]);
   function Options(props: {
     onClick: Function;
     startDate: number;
@@ -77,6 +79,9 @@ export function Epoch(props: IEpochProps) {
   const [days, hours, minutes, seconds] = useCountdown(
     currentEpoch.endTimestamp ? currentEpoch.endTimestamp : Date.now()
   );
+  if (minutes < 0 || seconds < 0) {
+    dispatch(getEpochData());
+  }
 
   return (
     <>
@@ -87,7 +92,11 @@ export function Epoch(props: IEpochProps) {
             <p className="text-text-250 text-f12">
               Epoch{" "}
               <span className="text-white">
-                {selectedEpoch.epochNumber ? selectedEpoch.epochNumber : 0}
+                {selectedEpoch?.epochNumber
+                  ? selectedEpoch.epochNumber
+                  : epochData[0]?.epochNumber
+                  ? epochData[0].epochNumber
+                  : 0}
               </span>
             </p>
             <InfoIconToolTip message="Epoch lipsum" />
