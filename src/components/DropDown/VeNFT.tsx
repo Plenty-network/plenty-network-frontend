@@ -24,10 +24,10 @@ export function VeNFT(props: IDropdownProps) {
     setIsDropDownActive(false);
   });
   return (
-    <div className={`relative min-w-[100px] md:min-w-[150px] ${props.className}`} ref={reff}>
+    <div className={`relative min-w-[150px] ${props.className}`} ref={reff}>
       <div
         className={clsx(
-          "bg-text-800/[0.25]   flex gap-2 md:gap-4 py-2 px-2 md:px-3 justify-between border border-text-700 rounded-lg",
+          "bg-text-800/[0.25]   flex gap-2 md:gap-4 py-3 md:py-2 px-2 md:px-3 justify-between border border-text-700 rounded-lg",
           isDropDownActive ? "hover:bg-text-800/[0.25]" : "hover:bg-text-800/[0.5]",
           props.Options.length === 0
             ? "border-border-200 bg-card-200 hover:bg-card-200 hover:border-border-200"
@@ -62,7 +62,9 @@ export function VeNFT(props: IDropdownProps) {
           ) : (
             <>
               <span className={clsx("hidden md:block  md:font-body4")}>{props.title}</span>{" "}
-              <span className="hidden font-subtitle1 md:font-body4">vePLY</span>
+              <span className="block md:hidden font-subtitle1 md:font-body4">
+                Select your veNFT
+              </span>
             </>
           )}
         </p>
