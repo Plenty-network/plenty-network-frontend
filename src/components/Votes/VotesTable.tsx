@@ -18,6 +18,10 @@ export function VotesTable(props: IVotesTableProps) {
 
   const { data: poolTableData = [] } = usePoolsMain();
   const [votedata, setVotedata] = React.useState(poolTableData);
+
+  React.useEffect(() => {
+    if (poolTableData.length !== 0) setVotedata(poolTableData);
+  }, [poolTableData]);
   React.useEffect(() => {
     if (props.searchValue && props.searchValue.length) {
       const _poolsTableData = poolTableData.filter((e: any) => {
@@ -145,7 +149,7 @@ export function VotesTable(props: IVotesTableProps) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
           shortby="Myvotes"
-          isFetched={true}
+          isFetched={votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
         />
       </div>

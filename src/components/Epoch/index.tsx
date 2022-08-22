@@ -28,10 +28,12 @@ export function Epoch(props: IEpochProps) {
   useOutsideClick(reff, () => {
     setIsDropDownActive(false);
   });
+
   React.useEffect(() => {
     dispatch(setSelectedEpoch(epochData[0]));
     props.onClick(currentEpoch.epochNumber);
   }, [currentEpoch?.epochNumber, epochData[0]?.epochNumber]);
+
   function Options(props: {
     onClick: Function;
     startDate: number;
@@ -67,7 +69,7 @@ export function Epoch(props: IEpochProps) {
           dispatch(setSelectedEpoch(props.epoch));
           setIsDropDownActive(false);
         }}
-        className="hover:bg-primary-700 px-4 flex font-body4 text-text-50 items-center h-[36px] cursor-pointer"
+        className="hover:bg-primary-700 px-5 flex font-body4 text-text-50 items-center h-[36px] cursor-pointer"
       >
         {props.isCurrent
           ? `Epoch${props.epochNumber} (current)`
@@ -81,6 +83,8 @@ export function Epoch(props: IEpochProps) {
   );
   if (minutes < 0 || seconds < 0) {
     dispatch(getEpochData());
+    dispatch(setSelectedEpoch(epochData[0]));
+    props.onClick(currentEpoch.epochNumber);
   }
 
   return (
@@ -116,7 +120,7 @@ export function Epoch(props: IEpochProps) {
         {isDropDownActive && (
           <div
             className={clsx(
-              "absolute  top-[60px]   z-50  mt-2 py-4 w-full bg-muted-600  rounded-2xl flex flex-col gap-1"
+              "absolute  top-[60px] max-w-[220px] w-[210px] z-50  mt-2 py-4 w-full bg-muted-600  rounded-2xl flex flex-col gap-1"
             )}
           >
             {epochData.map((text, i) => (
