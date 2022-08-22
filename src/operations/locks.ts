@@ -32,8 +32,8 @@ export const createLock = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value))
-      .withContractCall(veInstance.methods.create_lock(value, endtime, address));
+      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value.multipliedBy(new BigNumber(10).pow(18))))
+      .withContractCall(veInstance.methods.create_lock(address, value.multipliedBy(new BigNumber(10).pow(18)), endtime));
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
