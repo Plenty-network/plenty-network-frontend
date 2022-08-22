@@ -48,11 +48,11 @@ function CreateLock(props: ICreateLockProps) {
         .dividedBy(1000)
         .decimalPlaces(0, 1);
       props.setLockingDate(dateFormat(fourYearsLater.toNumber() * 1000));
-      props.setLockingEndData({ selected: days * 4 });
+      props.setLockingEndData({ selected: days * 4, lockingDate: fourYearsLater.toNumber() });
     } else {
       const oneWeekLater = today.plus(DAY.multipliedBy(days)).dividedBy(1000).decimalPlaces(0, 1);
       props.setLockingDate(dateFormat(oneWeekLater.toNumber() * 1000));
-      props.setLockingEndData({ selected: days });
+      props.setLockingEndData({ selected: days, lockingDate: oneWeekLater.toNumber() });
     }
   };
 
@@ -77,7 +77,9 @@ function CreateLock(props: ICreateLockProps) {
                 />
               </p>
               <p>
-                <span className="mt-2 ml-1 font-body4 text-text-400">~$ 0.0</span>
+                <span className="mt-2 ml-1 font-body4 text-text-400">
+                  ~${props.tokenPrice["PLY"] ? props.tokenPrice["PLY"].toFixed(2) : "0.00"}
+                </span>
               </p>
             </div>
 

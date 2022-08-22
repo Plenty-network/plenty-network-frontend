@@ -33,7 +33,3 @@ export const type5MapIds = [12043];
 export const EPOCH_DURATION_TESTNET: number = 3360000; // milliseconds
 export const EPOCH_DURATION_MAINNET: number = 604800000; // milliseconds
 export const VOTES_CHART_LIMIT: number = 9;
-
-export const WEEK: number = 604800000;
-export const MONTH: number = 2629746000;
-export const YEAR: number = 31556952000;

@@ -38,7 +38,10 @@ export default function Vote() {
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   const [lockingDate, setLockingDate] = useState("");
 
-  const [lockingEndData, setLockingEndData] = useState({ selected: 0 });
+  const [lockingEndData, setLockingEndData] = useState({
+    selected: 0,
+    lockingDate: 0,
+  });
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [transactionId, setTransactionId] = useState("");
   const [plyInput, setPlyInput] = useState("");
@@ -105,7 +108,19 @@ export default function Vote() {
     }
   }, [userAddress, tokenPrice, balanceUpdate]);
 
-  const resetAllValues = () => {};
+  const resetAllValues = () => {
+    setPlyInput("");
+    setLockingDate("");
+  };
+  const handleCloseLock = () => {
+    setShowCreateLockModal(false);
+    setPlyInput("");
+    setLockingDate("");
+    setLockingEndData({
+      selected: 0,
+      lockingDate: 0,
+    });
+  };
 
   const handleLockOperation = () => {
     setShowCreateLockModal(false);
@@ -114,7 +129,7 @@ export default function Vote() {
     createLock(
       userAddress,
       new BigNumber(plyInput),
-      new BigNumber(new Date(epochData.endTimestamp).getTime()).dividedBy(1000).decimalPlaces(0, 1),
+      new BigNumber(new Date(lockingEndData.lockingDate).getTime()).decimalPlaces(0, 1),
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction
@@ -202,7 +217,7 @@ export default function Vote() {
           show={showCreateLockModal}
           setPlyInput={setPlyInput}
           plyInput={plyInput}
-          setShow={setShowCreateLockModal}
+          setShow={handleCloseLock}
           userBalances={userBalances}
           setShowConfirmTransaction={setShowConfirmTransaction}
           showConfirmTransaction={showConfirmTransaction}
@@ -214,6 +229,7 @@ export default function Vote() {
           lockingDate={lockingDate}
           setLockingEndData={setLockingEndData}
           lockingEndData={lockingEndData}
+          tokenPrice={tokenPrice}
         />
       )}
 
