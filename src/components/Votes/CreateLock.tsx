@@ -8,7 +8,6 @@ import Image from "next/image";
 import Button from "../Button/Button";
 import ConfirmLocking from "./ConfirmLocking";
 import { ICreateLockProps } from "./types";
-import { MONTH, WEEK, YEAR } from "../../constants/global";
 import clsx from "clsx";
 import { store } from "../../redux";
 
