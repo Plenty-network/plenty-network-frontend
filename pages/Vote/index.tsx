@@ -11,6 +11,8 @@ import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { getConfig } from "../../src/redux/config/config";
 import { getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import SelectNFT from "../../src/components/Votes/SelectNFT";
+import chartMobile from "../../src/assets/icon/vote/chartMobile.svg";
+
 import { VotesTable } from "../../src/components/Votes/VotesTable";
 import CastVote from "../../src/components/Votes/CastVote";
 import CreateLock from "../../src/components/Votes/CreateLock";
@@ -26,6 +28,7 @@ import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
 import { createLock } from "../../src/operations/locks";
 import { setLoading } from "../../src/redux/isLoading/action";
+import AllocationPopup from "../../src/components/Votes/AllocationPopup";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -77,7 +80,7 @@ export default function Vote() {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
   const [showCastVoteModal, setShowCastVoteModal] = useState(false);
-
+  const [showCastVotingAllocation, setShowCastVotingAllocation] = useState(false);
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const handleCreateLock = () => {
@@ -175,14 +178,30 @@ export default function Vote() {
 
           <div className="md:flex md:flex-row">
             <div className="md:basis-2/3">
-              <div className="flex items-center">
+              <div className="flex items-center px-3 md:px-0 py-2 md:py-0 border-b border-text-800/[0.5]">
                 <div>
-                  {" "}
                   <SelectNFT veNFTlist={veNFTlist} />
                 </div>
                 <div className="ml-auto">
-                  {" "}
                   <InputSearchBox className="" value={searchValue} onChange={setSearchValue} />
+                </div>
+              </div>
+              <div className="md:hidden block flex flex-row justify-between items-center px-3 md:px-0 py-2 md:py-0 border-b border-text-800/[0.5]">
+                <div className="font-mobile-400 w-[134px]">
+                  Verify your vote percentage and cast vote
+                </div>
+
+                <div className="border border-muted-50 px-4 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
+                  00%
+                </div>
+                <div
+                  className=" bg-card-700 h-[52px] px-4 flex items-center justify-center rounded-xl cursor-pointer"
+                  onClick={() => setShowCastVoteModal(true)}
+                >
+                  Cast Vote
+                </div>
+                <div onClick={() => setShowCastVotingAllocation(true)}>
+                  <Image src={chartMobile} width={"24px"} height={"24px"} />
                 </div>
               </div>
               <VotesTable
@@ -198,7 +217,7 @@ export default function Vote() {
               </div>
               <div className="flex flex-row gap-2 mt-[14px]">
                 <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
-                  00
+                  00%
                 </div>
                 <div
                   className="basis-3/4 bg-card-700 h-[52px] flex items-center justify-center rounded-xl cursor-pointer"
@@ -211,6 +230,9 @@ export default function Vote() {
           </div>
         </div>
       </SideBarHOC>
+      {showCastVotingAllocation && (
+        <AllocationPopup show={showCastVotingAllocation} setShow={setShowCastVotingAllocation} />
+      )}
       {showCastVoteModal && <CastVote show={showCastVoteModal} setShow={setShowCastVoteModal} />}
       {showCreateLockModal && (
         <CreateLock
