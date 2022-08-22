@@ -262,6 +262,10 @@ input[type='number'] {
     @apply font-semibold;
     @apply text-f1015;
   }
+  .font-mobile-f1020 {
+    @apply font-medium;
+    @apply text-f1020;
+  }
   .font-f13 {
     @apply font-medium;
     @apply text-f13;
