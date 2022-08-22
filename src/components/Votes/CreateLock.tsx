@@ -13,6 +13,15 @@ function CreateLock(props: ICreateLockProps) {
   const closeModal = () => {
     props.setShow(false);
   };
+  const handlePlyInput = async (input: string | number) => {
+    if (input === "" || isNaN(Number(input))) {
+      props.setPlyInput("");
+
+      return;
+    } else {
+      props.setPlyInput(input.toString());
+    }
+  };
 
   return props.show ? (
     <PopUpModal
@@ -30,7 +39,8 @@ function CreateLock(props: ICreateLockProps) {
                   type="text"
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  lg:font-medium1 outline-none w-[100%]"
                   placeholder="0.0"
-                  value={0.0}
+                  value={props.plyInput}
+                  onChange={(e) => handlePlyInput(e.target.value)}
                 />
               </p>
               <p>
@@ -42,7 +52,9 @@ function CreateLock(props: ICreateLockProps) {
               <div>
                 <Image src={wallet} width={"32px"} height={"32px"} />
               </div>
-              <div className="ml-1 text-primary-500 font-body2">1.09 PNLP</div>
+              <div className="ml-1 text-primary-500 font-body2">
+                {Number(props.userBalances["PLY"]) >= 0 ? props.userBalances["PLY"] : "0.00"} PLY
+              </div>
             </div>
           </div>
           <div className="ml-auto mt-3 flex">
@@ -96,7 +108,12 @@ function CreateLock(props: ICreateLockProps) {
           </div>
         </>
       ) : (
-        <ConfirmLocking setScreen={setScreen} />
+        <ConfirmLocking
+          setScreen={setScreen}
+          setShowCreateLockModal={props.setShowCreateLockModal}
+          setShowConfirmTransaction={props.setShowConfirmTransaction}
+          handleLockOperation={props.handleLockOperation}
+        />
       )}
     </PopUpModal>
   ) : null;

@@ -29,7 +29,6 @@ const Home: NextPage = (props) => {
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
-    //dispatch(getTotalVotingPower());
   }, []);
   useEffect(() => {
     if (epochError) {
