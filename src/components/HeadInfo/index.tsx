@@ -1,10 +1,11 @@
-import Image from 'next/image';
-import * as React from 'react';
-import playIcon from '../../assets/icon/pools/playIcon.svg';
-import { VideoModal } from '../Modal/videoModal';
-import { InputSearchBox } from '../Pools/Component/SearchInputBox';
-import Tooltip from '../Tooltip/Tooltip';
-import { Position, ToolTip, TooltipType } from '../Tooltip/TooltipAdvanced';
+import Image from "next/image";
+import clsx from "clsx";
+import * as React from "react";
+import playIcon from "../../assets/icon/pools/playIcon.svg";
+import { VideoModal } from "../Modal/videoModal";
+import { InputSearchBox } from "../Pools/Component/SearchInputBox";
+import Tooltip from "../Tooltip/Tooltip";
+import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
 export interface IHeadInfoProps {
   className?: string;
   title: string;
@@ -22,7 +23,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
     >
       <div className="flex gap-2">
         <div className="p-2 text-f18 font-medium text-white">
-          {props.title ? props.title : 'Pools'}
+          {props.title ? props.title : "Pools"}
         </div>
         <ToolTip
           message="Watch how to add liquidity, stake, and earn PLY. "
@@ -32,23 +33,21 @@ export default function HeadInfo(props: IHeadInfoProps) {
           <Image
             src={playIcon}
             onClick={() => setShowVideoModal(true)}
-            height={'28px'}
-            width={'28px'}
+            height={"28px"}
+            width={"28px"}
             className="cursor-pointer hover:opacity-90"
           />
         </ToolTip>
       </div>
       <InputSearchBox
-        className="md:hidden"
+        className={clsx("md:hidden", props.title === "Vote" && "hidden")}
         value={props.searchValue}
         onChange={props.setSearchValue}
       />
-      {showVideoModal && (
-        <VideoModal closefn={setShowVideoModal} linkString={'Bh5zuEI4M9o'} />
-      )}
-      {props.title === 'Vote' && (
+      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"Bh5zuEI4M9o"} />}
+      {props.title === "Vote" && (
         <div
-          className="ml-auto h-[52px] flex items-center px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1] hover:bg-primary-500/[0.2] mr-[32px]"
+          className="ml-auto h-[52px] font-subtitle2 md:font-subtitle4 flex items-center px-4 md:px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1] hover:bg-primary-500/[0.2] mr-5 md:mr-[32px]"
           onClick={props.handleCreateLock}
         >
           Create Lock

@@ -1,25 +1,43 @@
 import { PopUpModal } from "../Modal/popupModal";
-import calender from "../../../src/assets/icon/vote/calender.svg";
-
+import React, { useState, useMemo } from "react";
 import lockPurple from "../../../src/assets/icon/vote/lockPurple.svg";
 
-import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import Image from "next/image";
-import externalLink from "../../../src/assets/icon/common/externalLink.svg";
-import animation from "../../assets/animations/transaction-submitted.json";
-import Lottie from "lottie-react";
+
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import ctez from "../../assets/Tokens/ctez.png";
-import tez from "../../assets/Tokens/tez.png";
-import lock from "../../../src/assets/icon/vote/lock.svg";
+
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import { IConfirmLockingProps } from "./types";
+import { store } from "../../redux";
 
 function ConfirmLocking(props: IConfirmLockingProps) {
+  const epochData = store.getState().epoch.currentEpoch;
   const closeModal = () => {
     props.setShow(false);
   };
+  const dateFormat = useMemo(() => {
+    var date = new Date(epochData.endTimestamp);
+
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Decr",
+    ];
+
+    return `${date.getUTCDate()}/${
+      monthNames[date.getUTCMonth()]
+    }/${date.getUTCFullYear()}, ${date.getUTCHours()}:${date.getUTCMinutes()}`;
+  }, [epochData.endTimestamp]);
 
   return (
     <>
@@ -36,12 +54,12 @@ function ConfirmLocking(props: IConfirmLockingProps) {
         <div className="mt-1 font-title2 text-white px-3 md:px-5">2500</div>
         <div className="border-t mt-5 border-text-800/[0.5]"></div>
         <div className="mt-3 px-3 md:px-5 flex items-center">
-          <span className="hidden md:block">
+          <span className="hidden md:block flex">
             <span className="text-text-250 font-body2 mr-1">You can claim your rewards after</span>
             <span className="relative top-0.5">
               <Image src={info} />
             </span>
-            <span className="text-white ml-1 font-subtitle2 block">28/07/2021, 12 AM UTC</span>
+            <span className="text-white ml-1 font-subtitle2 ">{dateFormat} UTC</span>
           </span>
           <span className="block md:hidden">
             <div className="text-text-250 font-body2 mr-1">You can start voting after </div>
@@ -60,7 +78,9 @@ function ConfirmLocking(props: IConfirmLockingProps) {
       </div>
 
       <div className="mt-[18px]">
-        <Button color="primary">Create lock</Button>
+        <Button color="primary" onClick={props.handleLockOperation}>
+          Create lock
+        </Button>
       </div>
     </>
   );

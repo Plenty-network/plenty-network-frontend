@@ -31,7 +31,7 @@ export function Epoch(props: IEpochProps) {
 
   React.useEffect(() => {
     dispatch(setSelectedEpoch(epochData[0]));
-    props.onClick(currentEpoch.epochNumber);
+    props.onClick(currentEpoch?.epochNumber);
   }, [currentEpoch?.epochNumber, epochData[0]?.epochNumber]);
 
   function Options(props: {
@@ -79,12 +79,12 @@ export function Epoch(props: IEpochProps) {
   }
 
   const [days, hours, minutes, seconds] = useCountdown(
-    currentEpoch.endTimestamp ? currentEpoch.endTimestamp : Date.now()
+    currentEpoch?.endTimestamp ? currentEpoch.endTimestamp : Date.now()
   );
   if (minutes < 0 || seconds < 0) {
     dispatch(getEpochData());
     dispatch(setSelectedEpoch(epochData[0]));
-    props.onClick(currentEpoch.epochNumber);
+    props.onClick(currentEpoch?.epochNumber);
   }
 
   return (
