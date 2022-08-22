@@ -11,7 +11,17 @@ export interface ICreateLockProps {
   userBalances: {
     [key: string]: string;
   };
+  setLockingEndData: React.Dispatch<
+    React.SetStateAction<{
+      selected: number;
+    }>
+  >;
+  lockingEndData: {
+    selected: number;
+  };
+  setLockingDate: React.Dispatch<React.SetStateAction<string>>;
   plyInput: string;
+  lockingDate: string;
   setPlyInput: React.Dispatch<React.SetStateAction<string>>;
   handleLockOperation: () => void;
   setShow: any;

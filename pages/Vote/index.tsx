@@ -36,6 +36,9 @@ export default function Vote() {
 
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
+  const [lockingDate, setLockingDate] = useState("");
+
+  const [lockingEndData, setLockingEndData] = useState({ selected: 0 });
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [transactionId, setTransactionId] = useState("");
   const [plyInput, setPlyInput] = useState("");
@@ -108,7 +111,6 @@ export default function Vote() {
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setLoading(true));
-    console.log(userAddress, plyInput, new Date(epochData.endTimestamp).getTime());
     createLock(
       userAddress,
       new BigNumber(plyInput),
@@ -208,6 +210,10 @@ export default function Vote() {
           showTransactionSubmitModal={showTransactionSubmitModal}
           setShowCreateLockModal={setShowCreateLockModal}
           handleLockOperation={handleLockOperation}
+          setLockingDate={setLockingDate}
+          lockingDate={lockingDate}
+          setLockingEndData={setLockingEndData}
+          lockingEndData={lockingEndData}
         />
       )}
 
