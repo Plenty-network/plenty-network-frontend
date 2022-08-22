@@ -18,18 +18,29 @@ import { InputSearchBox } from "../../src/components/Pools/Component/SearchInput
 import { getEpochData } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
 import { EPOCH_DURATION_TESTNET } from "../../src/constants/global";
+import { getVeNFTsList } from "../../src/api/votes/votesKiran";
+import { IVeNFTData } from "../../src/api/votes/types";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
-  const token = useAppSelector((state) => state.config.tokens);
-  const state = useAppSelector((state) => state.epoch);
-  const epochError = useAppSelector((state) => state.epoch).epochFetchError;
 
+  const userAddress = useAppSelector((state) => state.wallet.address);
+  const token = useAppSelector((state) => state.config.tokens);
+  const epochError = useAppSelector((state) => state.epoch).epochFetchError;
+  const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
     dispatch(getEpochData());
   }, []);
+  useEffect(() => {
+    if (userAddress) {
+      getVeNFTsList(userAddress).then((res) => {
+        console.log(res);
+        setVeNFTlist(res.veNFTData);
+      });
+    }
+  }, [userAddress]);
   useEffect(() => {
     if (epochError) {
       dispatch(getEpochData());
@@ -74,7 +85,7 @@ export default function Vote() {
               <div className="flex items-center">
                 <div>
                   {" "}
-                  <SelectNFT />
+                  <SelectNFT veNFTlist={veNFTlist} />
                 </div>
                 <div className="ml-auto">
                   {" "}

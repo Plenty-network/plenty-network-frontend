@@ -29,8 +29,9 @@ export function Epoch(props: IEpochProps) {
     setIsDropDownActive(false);
   });
   React.useEffect(() => {
+    dispatch(setSelectedEpoch(epochData[0]));
     props.onClick(currentEpoch.epochNumber);
-  }, [currentEpoch.epochNumber]);
+  }, [currentEpoch?.epochNumber, epochData[0]?.epochNumber]);
   function Options(props: {
     onClick: Function;
     startDate: number;
@@ -91,7 +92,11 @@ export function Epoch(props: IEpochProps) {
             <p className="text-text-250 text-f12">
               Epoch{" "}
               <span className="text-white">
-                {epochData[0]?.epochNumber ? epochData[0].epochNumber : 0}
+                {selectedEpoch?.epochNumber
+                  ? selectedEpoch.epochNumber
+                  : epochData[0]?.epochNumber
+                  ? epochData[0].epochNumber
+                  : 0}
               </span>
             </p>
             <InfoIconToolTip message="Epoch lipsum" />

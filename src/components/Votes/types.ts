@@ -1,3 +1,5 @@
+import { IVeNFTData } from "../../api/votes/types";
+
 export interface ITransactionSubmittedProps {
   show: boolean;
   content: string;
@@ -30,4 +32,7 @@ export interface IVotesTableProps {
 export interface IManageBtnProps {
   isLiquidityAvailable: boolean;
   isStakeAvailable: boolean;
+}
+export interface ISelectNFT {
+  veNFTlist: IVeNFTData[];
 }

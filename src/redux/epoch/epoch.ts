@@ -34,11 +34,6 @@ const EpochSlice = createSlice({
       state.currentEpoch = action.payload.epochData[0];
       state.epochFetchError = false;
       state.epochData = action.payload.epochData;
-      state.selectedEpoch =
-        Object.keys(state.selectedEpoch).length !== 0
-          ? state.selectedEpoch
-          : action.payload.epochData[0];
-      console.log("Total voting power fetching completed");
     },
     [getEpochData.rejected.toString()]: (state: any, action: any) => {
       state.epochFetchError = true;
