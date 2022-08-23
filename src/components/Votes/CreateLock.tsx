@@ -10,9 +10,11 @@ import ConfirmLocking from "./ConfirmLocking";
 import { ICreateLockProps } from "./types";
 import clsx from "clsx";
 import { store } from "../../redux";
+import { connectedNetwork } from "../../common/walletconnect";
 
 function CreateLock(props: ICreateLockProps) {
   const walletAddress = store.getState().wallet.address;
+  const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const [screen, setScreen] = useState("1");
   const closeModal = () => {
     props.setShow(false);
@@ -34,25 +36,20 @@ function CreateLock(props: ICreateLockProps) {
 
     return `${date.getDate()}/${("0" + (date.getMonth() + 1)).slice(-2)}/${date.getFullYear()}`;
   };
+  const handleDateSelection = (days: number | undefined, userSelectedDate: string | undefined) => {
+    const DAY = connectedNetwork === "testnet" ? 480 : 86400;
+    const WEEK = 7 * DAY;
 
-  const handleDateSelection = (days: number, isFourYear: boolean) => {
-    const DAY = new BigNumber(86400000);
+    const now = Math.floor(new Date().getTime() / 1000);
+    const endDate = days
+      ? DAY * days
+      : Math.floor(new Date(userSelectedDate as string).getTime() / 1000) - now;
 
-    const todayDate = new Date();
-    todayDate.setUTCHours(0, 0, 0, 0);
-    const today = new BigNumber(todayDate.getTime());
-    if (isFourYear) {
-      const fourYearsLater = today
-        .plus(new BigNumber(DAY.multipliedBy(days)).multipliedBy(4))
-        .dividedBy(1000)
-        .decimalPlaces(0, 1);
-      props.setLockingDate(dateFormat(fourYearsLater.toNumber() * 1000));
-      props.setLockingEndData({ selected: days * 4, lockingDate: fourYearsLater.toNumber() });
-    } else {
-      const oneWeekLater = today.plus(DAY.multipliedBy(days)).dividedBy(1000).decimalPlaces(0, 1);
-      props.setLockingDate(dateFormat(oneWeekLater.toNumber() * 1000));
-      props.setLockingEndData({ selected: days, lockingDate: oneWeekLater.toNumber() });
-    }
+    const lockEnd = Math.floor((now + (endDate + WEEK - 1)) / WEEK) * WEEK;
+    props.setLockingDate(dateFormat(lockEnd * 1000));
+    props.setLockingEndData({ selected: days ? days : 0, lockingDate: lockEnd });
+    // send new BigNumber(lockEnd) as argument to api
+    console.log(new Date(lockEnd * 1000).toString());
   };
 
   return props.show ? (
@@ -64,15 +61,22 @@ function CreateLock(props: ICreateLockProps) {
         <>
           <div className="mx-2 text-white font-title3">Create Lock </div>
 
-          <div className="border pl-4 pr-5 mt-[22px] bg-muted-200/[0.1] items-center flex border-text-800 rounded-2xl h-[86px]">
+          <div
+            className={clsx(
+              "border pl-4 pr-5 mt-[22px] bg-muted-200/[0.1] items-center flex  rounded-2xl h-[86px] hover:border-text-700",
+              isFirstInputFocus ? "border-text-700" : "border-text-800 "
+            )}
+          >
             <div className="w-[50%]">
               <p>
                 <input
                   type="text"
-                  className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  lg:font-medium1 outline-none w-[100%]"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  lg:font-medium1 outline-none w-[100%] placeholder:text-text-500 "
                   placeholder="0.0"
                   value={props.plyInput}
                   onChange={(e) => handlePlyInput(e.target.value)}
+                  onFocus={() => setIsFirstInputFocus(true)}
+                  onBlur={() => setIsFirstInputFocus(false)}
                 />
               </p>
               <p>
@@ -87,7 +91,7 @@ function CreateLock(props: ICreateLockProps) {
                 <Image src={wallet} width={"32px"} height={"32px"} />
               </div>
               <div className="ml-1 text-primary-500 font-body2">
-                {Number(props.userBalances["PLY"]) >= 0 ? props.userBalances["PLY"] : "0.00"} PLY
+                {Number(props.plyBalance) >= 0 ? Number(props.plyBalance) : "0.00"} PLY
               </div>
             </div>
           </div>
@@ -134,12 +138,12 @@ function CreateLock(props: ICreateLockProps) {
           </div>
           <div className="bg-muted-400 border border-text-800 rounded-2xl py-5 mt-5">
             <div className=" px-3 md:px-5 text-text-50 font-subtitle1">Choose lock end </div>
-            <div className="mt-2 rounded-lg ml-5 mr-[24px] border-[1.3px] border-border-200 pr-5 pl-4 flex items-center h-[62px]">
+            <div className="mt-2 rounded-lg ml-5 mr-[24px] border-[1.3px] border-border-200 pr-5 pl-4 flex items-center h-[62px] hover:border-text-700">
               <div>
                 <input
                   type="text"
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  md:font-subtitle6 outline-none w-[100%]"
-                  placeholder="00/00/0000"
+                  placeholder="dd/mm/yyyy"
                   value={props.lockingDate}
                   onChange={(e) => props.setLockingDate(e.target.value)}
                 />{" "}
@@ -156,7 +160,7 @@ function CreateLock(props: ICreateLockProps) {
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
-                onClick={() => handleDateSelection(7, false)}
+                onClick={() => handleDateSelection(7, undefined)}
               >
                 1 week
               </p>
@@ -167,7 +171,7 @@ function CreateLock(props: ICreateLockProps) {
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
-                onClick={() => handleDateSelection(30, false)}
+                onClick={() => handleDateSelection(30, undefined)}
               >
                 1 month
               </p>
@@ -178,7 +182,7 @@ function CreateLock(props: ICreateLockProps) {
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
-                onClick={() => handleDateSelection(365, false)}
+                onClick={() => handleDateSelection(365, undefined)}
               >
                 1 year
               </p>
@@ -189,7 +193,7 @@ function CreateLock(props: ICreateLockProps) {
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
-                onClick={() => handleDateSelection(365, true)}
+                onClick={() => handleDateSelection(365 * 4, undefined)}
               >
                 4 year
               </p>
