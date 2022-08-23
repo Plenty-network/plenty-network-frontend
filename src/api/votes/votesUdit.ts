@@ -10,7 +10,7 @@ import { MAX_TIME, PLY_DECIMAL_MULTIPLIER, WEEK } from '../../constants/global';
 export const estimateVotingPower = (value : BigNumber , end : number) : number => {
     try {
        
-      value  = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);  
+      value  = value.multipliedBy(PLY_DECIMAL_MULTIPLIER); 
       const now = Math.floor(new Date().getTime() / 1000);
       const ts = Math.floor(end/WEEK)*WEEK;
       const dTs = ts-now;
@@ -18,9 +18,7 @@ export const estimateVotingPower = (value : BigNumber , end : number) : number =
       if(dTs < 0 || dTs < WEEK || dTs > MAX_TIME)
       throw new Error('Invalid Timestamp');
 
-
       const bias = (value.multipliedBy(dTs)).dividedToIntegerBy(MAX_TIME);
-      console.log(bias.toString());
 
       return bias.dividedBy(PLY_DECIMAL_MULTIPLIER).toNumber(); 
         

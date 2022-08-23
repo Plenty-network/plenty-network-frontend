@@ -37,7 +37,7 @@ export const EPOCH_DURATION_MAINNET: number = 604800000; // milliseconds
 export const VOTES_CHART_LIMIT: number = 9;
 export const PLY_DECIMAL_MULTIPLIER : BigNumber = new BigNumber(10).pow(18);   // 10 ** 18
 
-export const DAY = 86400;
+export const DAY = EPOCH_DURATION_TESTNET/1000;
 export const WEEK = 7 * DAY;
 export const YEAR = 52 * WEEK;
 export const MAX_TIME = 4 * YEAR;
