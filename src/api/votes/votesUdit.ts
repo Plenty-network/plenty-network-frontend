@@ -7,7 +7,7 @@ import { voteEscrowStorageType } from './data';
 import { MAX_TIME, PLY_DECIMAL_MULTIPLIER, WEEK } from '../../constants/global';
 
 
-export const estimateVotingPower =async (value : BigNumber , end : number) : Promise<number> => {
+export const estimateVotingPower = (value : BigNumber , end : number) : number => {
     try {
        
       value  = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);  
