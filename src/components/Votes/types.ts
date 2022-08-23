@@ -8,6 +8,7 @@ export interface ITransactionSubmittedProps {
   onBtnClick: any;
 }
 export interface ICreateLockProps {
+  plyBalance: BigNumber;
   show: boolean;
   userBalances: {
     [key: string]: string;
