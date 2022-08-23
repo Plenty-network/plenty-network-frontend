@@ -48,8 +48,8 @@ interface ILiquidityProps {
     tokenOneAmount: string;
     tokenTwoAmount: string;
   };
-  setSlippage: React.Dispatch<React.SetStateAction<number>>;
-  slippage: string | number;
+  setSlippage: React.Dispatch<React.SetStateAction<string>>;
+  slippage: string;
   lpTokenPrice: BigNumber;
 
   isLoading: boolean;
@@ -160,7 +160,7 @@ function Liquidity(props: ILiquidityProps) {
           <TransactionSettingsLiquidity
             show={settingsShow}
             setSlippage={props.setSlippage}
-            slippage={Number(props.slippage)}
+            slippage={props.slippage}
             setSettingsShow={setSettingsShow}
           />
         </div>
