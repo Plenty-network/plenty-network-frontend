@@ -1,4 +1,5 @@
 import { IVeNFTData } from "../../api/votes/types";
+import { BigNumber } from "bignumber.js";
 
 export interface ITransactionSubmittedProps {
   show: boolean;
@@ -11,7 +12,22 @@ export interface ICreateLockProps {
   userBalances: {
     [key: string]: string;
   };
+  setLockingEndData: React.Dispatch<
+    React.SetStateAction<{
+      selected: number;
+      lockingDate: number;
+    }>
+  >;
+  tokenPrice: {
+    [id: string]: number;
+  };
+  lockingEndData: {
+    selected: number;
+    lockingDate: number;
+  };
+  setLockingDate: React.Dispatch<React.SetStateAction<string>>;
   plyInput: string;
+  lockingDate: string;
   setPlyInput: React.Dispatch<React.SetStateAction<string>>;
   handleLockOperation: () => void;
   setShow: any;

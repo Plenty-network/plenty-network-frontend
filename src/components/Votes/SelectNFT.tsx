@@ -8,7 +8,7 @@ import { VeNFT } from "../DropDown/VeNFT";
 function SelectNFT(props: ISelectNFT) {
   const [selectedDropDown, setSelectedDropDown] = useState({ votingPower: "", tokenId: "" });
   return (
-    <div className="flex items-center">
+    <div className="md:flex md:items-center">
       <div className="hidden md:block text-white font-body1 px-[23px]">Select your veNFT:</div>
       <div>
         <VeNFT

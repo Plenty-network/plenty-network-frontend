@@ -162,6 +162,9 @@ export const getTokenPrices = async (): Promise<{
     tokenPrice['uDEFI'] = uDEFIPrice.uDEFIinUSD;
     tokenPrice['agEUR.e'] = agEurePrice.agEUReInUSD;
     tokenPrice['tez'] = xtzPrice;
+
+    // Hardcoding PLY Price for development
+    tokenPrice['PLY'] = 1;
     
     return {
       success: true,
