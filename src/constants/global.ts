@@ -1,3 +1,5 @@
+import { BigNumber } from 'bignumber.js'
+
 export const RPC_NODE = "rpcNode";
 export const TOKEN_CONFIG = "tokenConfig";
 export const AMM_CONFIG = "ammConfig";
@@ -33,3 +35,9 @@ export const type1MapIds = [3956, 4353];
 export const EPOCH_DURATION_TESTNET: number = 3360000; // milliseconds
 export const EPOCH_DURATION_MAINNET: number = 604800000; // milliseconds
 export const VOTES_CHART_LIMIT: number = 9;
+export const PLY_DECIMAL_MULTIPLIER : BigNumber = new BigNumber(10).pow(18);   // 10 ** 18
+
+export const DAY = 86400;
+export const WEEK = 7 * DAY;
+export const YEAR = 52 * WEEK;
+export const MAX_TIME = 4 * YEAR;
