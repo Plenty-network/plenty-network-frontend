@@ -1,11 +1,13 @@
 //TODO: Merge this file's functions to index.ts under votes when all developers have finished with their respective api development.
 import { BigNumber } from "bignumber.js";
 import axios from "axios";
-import { connectedNetwork } from "../../common/walletconnect";
+import { connectedNetwork, voterAddress } from "../../common/walletconnect";
 import Config from "../../config/config";
 import { getStorage, getTzktBigMapData } from "../util/storageProvider";
 import { voterStorageType } from "./data";
 import {
+  // IAllVotesData,
+  // IAllVotesResponse,
   IEpochDataResponse,
   IEpochListObject,
   IMyAmmVotesBigMap,
@@ -82,13 +84,18 @@ export const getVeNFTsList = async (userTezosAddress: string): Promise<IVeNFTLis
     const locksResponse = await axios.get(`${Config.VE_INDEXER}locks?address=${userTezosAddress}`);
     const locksData = locksResponse.data.result;
 
-    const finalVeNFTData = locksData.map((lock: any): IVeNFTData => {
-      return {
-        tokenId: new BigNumber(lock.id),
-        baseValue: new BigNumber(lock.base_value).dividedBy(new BigNumber(10).pow(18)),
-        votingPower: new BigNumber(lock.voting_power).dividedBy(new BigNumber(10).pow(18)),
-      };
-    });
+    const finalVeNFTData: IVeNFTData[] = locksData.reduce(
+      (finalLocks: IVeNFTData[], lock: any): IVeNFTData | void => {
+        if (new BigNumber(lock.voting_power).isGreaterThan(0)) {
+          finalLocks.push({
+            tokenId: new BigNumber(lock.id),
+            baseValue: new BigNumber(lock.base_value).dividedBy(new BigNumber(10).pow(18)),
+            votingPower: new BigNumber(lock.voting_power).dividedBy(new BigNumber(10).pow(18)),
+          });
+        }
+      },
+      []
+    );
 
     return {
       success: true,
@@ -190,8 +197,8 @@ export const getMyAmmVotes = async (
   try {
     const state = store.getState();
     const AMM = state.config.AMMs;
-    // const voterContractAddress: string = Config.VOTER[connectedNetwork];
-    const voterContractAddress: string = "KT1PexY3Jn8BCJmVpVLNN944YpVLM2LWTMMV";
+    const voterContractAddress: string = Config.VOTER[connectedNetwork];
+    // const voterContractAddress: string = "KT1PexY3Jn8BCJmVpVLNN944YpVLM2LWTMMV";
     const voterStorageResponse = await getStorage(voterContractAddress, voterStorageType);
     const tokenAmmVotesBigMapId: string = voterStorageResponse.token_amm_votes;
     const totalTokenVotesBigMapId: string = voterStorageResponse.total_token_votes;
