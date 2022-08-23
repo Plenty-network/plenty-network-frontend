@@ -42,6 +42,8 @@ export function VotesTable(props: IVotesTableProps) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
+  const tEZorCTEZtoUppercase = (a: string) =>
+    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "USDC.e",
     image: `/assets/tokens/USDC.e.png`,
@@ -59,28 +61,31 @@ export function VotesTable(props: IVotesTableProps) {
         id: "pools",
         showOnMobile: true,
         accessor: (x: any) => (
-          <div className="flex gap-1 items-center max-w-[153px]">
-            <CircularImageInfo
-              className="w-7 h-7"
-              imageArray={[getImagesPath("ctez"), getImagesPath("tez")]}
-            />
-            <div className="flex flex-col gap-[2px]">
-              <span className="text-f14 text-white ">
-                {x.tokenA}/{x.tokenB}
-              </span>
-              <span className="text-f12 text-text-500">Stable Pool</span>
+          <div className=" flex justify-center items-center">
+            <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
+              <Image src={getImagesPath(x.tokenA)} width={"20px"} height={"20px"} />
+            </div>
+            <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
+              <Image src={getImagesPath(x.tokenB)} width={"20px"} height={"20px"} />
+            </div>
+            <div>
+              <div className="font-body4">
+                {" "}
+                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
+                {tEZorCTEZtoUppercase(x.tokenB.toString())}
+              </div>
+              <div className="font-subtitle1 text-text-500">Stable Pool</div>
             </div>
           </div>
         ),
       },
       {
-        Header: "APR",
-        id: "apr",
-        subText: "current Epoch",
+        Header: "Rewards",
+        id: "Rewards",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => "2334",
+        accessor: (x: any) => <RewardsData />,
       },
     ],
     [valueFormat]
@@ -103,7 +108,8 @@ export function VotesTable(props: IVotesTableProps) {
             <div>
               <div className="font-body4">
                 {" "}
-                {x.tokenA}/{x.tokenB}
+                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
+                {tEZorCTEZtoUppercase(x.tokenB.toString())}
               </div>
               <div className="font-subtitle1 text-text-500">Stable Pool</div>
             </div>
