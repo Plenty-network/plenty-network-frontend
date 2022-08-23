@@ -68,11 +68,13 @@ export default function Vote() {
       });
     }
   }, [userAddress]);
-  useEffect(() => {
-    if (epochError) {
-      dispatch(getEpochData());
-    }
-  }, [epochError]);
+  // useEffect(() => {
+  //   if (epochError) {
+  //     setTimeout(() => {
+  //       dispatch(getEpochData());
+  //     }, 1000);
+  //   }
+  // }, [epochError]);
 
   useInterval(() => {
     dispatch(getEpochData());
