@@ -99,3 +99,36 @@ export const votingPower = async (tokenId: number, ts2: number, time: number) : 
         return 0;
     }
 };
+
+const mainPageRewardData =async (epoch : number ) => {
+
+    // Get Fees and Bribes in tokens for each amm on specific epoch
+    // Bribes from VEINDEXER 
+    // FEES from ANALYTICS INDEXER
+
+
+    // Bribes : https://veplyindexer.plentydefi.com/v1/pools
+    // Fess : https://networkanalyticsindexer.plentydefi.com/ve/pools
+
+    // Get token Prices @ that epoch
+
+
+    // Multiply the two and return 
+
+
+    // Return Fees and Bribes & value to FE
+}
+
+export const votesPageDataWrapper =async (epoch : number) => {
+
+    // Get pools from ve indexer 
+
+    // For each pool calculate rewards  , total votes , my votes at specific epoch
+
+    // rewards : same file
+    // total votes: kiran's file
+    //  my votes : kirans's file
+
+    // Combine data and give in object form ammAddy : {data}
+   
+}
