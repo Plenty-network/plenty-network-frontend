@@ -12,6 +12,7 @@ import { IManageBtnProps, IVotesTableProps } from "./types";
 import { CircularImageInfo } from "../Pools/Component/CircularImageInfo";
 import { RewardsData } from "./RewardsData";
 import { TotalVotes } from "./TotalVotes";
+import { MyVotes } from "./MyVotes";
 
 export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
@@ -136,7 +137,7 @@ export function VotesTable(props: IVotesTableProps) {
         id: "Myvotess",
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x) => "--",
+        accessor: (x) => <MyVotes/>,
       },
     ],
     [valueFormat]
