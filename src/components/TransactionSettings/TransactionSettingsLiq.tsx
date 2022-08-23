@@ -15,8 +15,8 @@ interface ITransactionSettingsProps {
   show: boolean;
   setSettingsShow: any;
   className?: string;
-  slippage: number;
-  setSlippage: any;
+  setSlippage: React.Dispatch<React.SetStateAction<string>>;
+  slippage: string;
 }
 function TransactionSettingsLiquidity(props: ITransactionSettingsProps) {
   const [errorMessage, setErrorMessage] = useState("");
@@ -25,27 +25,24 @@ function TransactionSettingsLiquidity(props: ITransactionSettingsProps) {
   const dispatch = useDispatch<AppDispatch>();
   const walletAddress = useAppSelector((state) => state.wallet.address);
 
-  const handleSlippage = (input: any) => {
-    props.setSlippage(input);
-    walletAddress !== null &&
-      dispatch(
-        setUserSettingsSlippage({
-          address: walletAddress,
-          slippage: input,
-        })
-      );
+  const handleSlippage = (input: string | number) => {
+    if (input === "" || isNaN(Number(input))) {
+      props.setSlippage("");
+    } else {
+      props.setSlippage(input.toString());
+    }
   };
 
   const handleAutoSlippage = () => {
-    props.setSlippage(0.5);
+    props.setSlippage("0.5");
   };
   useOutsideClick(refSetting, () => {
     props.setSettingsShow(false);
   });
   useEffect(() => {
-    if (props.slippage > 30 && props.slippage <= 100) {
+    if (Number(props.slippage) > 30 && Number(props.slippage) <= 100) {
       setErrorMessage(ERRORMESSAGES.TRANSACTIONSETTINGSWARNING);
-    } else if (props.slippage > 100) {
+    } else if (Number(props.slippage) > 100) {
       setErrorMessage(ERRORMESSAGES.TRANSACTIONSETTINGSERROR);
     } else {
       setErrorMessage("");
@@ -92,9 +89,10 @@ function TransactionSettingsLiquidity(props: ITransactionSettingsProps) {
         >
           <div>
             <input
+              type="text"
               className="outline-none bg-card-500 text-white text-left"
               placeholder="0.5"
-              value={props.slippage ? props.slippage : ""}
+              value={props.slippage}
               onChange={(e) => handleSlippage(e.target.value)}
             />
           </div>
