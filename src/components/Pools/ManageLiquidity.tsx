@@ -53,7 +53,7 @@ export interface IManageLiquidityProps {
 export function ManageLiquidity(props: IManageLiquidityProps) {
   const [stakingScreen, setStakingScreen] = useState(StakingScreenType.Staking);
   const [showVideoModal, setShowVideoModal] = React.useState(false);
-  const [slippage, setSlippage] = useState(0.5);
+  const [slippage, setSlippage] = useState<string>("0.5");
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
