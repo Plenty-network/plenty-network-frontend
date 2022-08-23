@@ -22,7 +22,7 @@ export const estimateVotingPower = (value : BigNumber , end : number) : number =
       const bias = (value.multipliedBy(dTs)).dividedToIntegerBy(MAX_TIME);
       console.log(bias.toString());
 
-      return bias.toNumber(); 
+      return bias.dividedBy(PLY_DECIMAL_MULTIPLIER).toNumber(); 
         
     } catch (error) {
         console.log(error);
