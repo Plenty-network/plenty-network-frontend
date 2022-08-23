@@ -22,6 +22,15 @@ export interface ITotalAmmVotesBigMap {
   value: string;
 }
 
+export interface IMyAmmVotesData extends ITotalAmmVotesData {
+  token_id: string;
+}
+
+export interface IMyAmmVotesBigMap {
+  key: IMyAmmVotesData;
+  value: string;
+}
+
 export interface IVeNFTData {
   tokenId: BigNumber;
   baseValue: BigNumber;
@@ -45,9 +54,19 @@ export interface IVotesData {
 export interface IVotesResponse {
   success: boolean;
   isOtherDataAvailable: boolean;
-  epoch: number;
   allData: IVotesData[];
   topAmmData: IVotesData[];
   otherData: IVotesData | {};
+  error?: string;
+}
+
+export interface IAllVotesData {
+  [key: string]: IVotesData;
+}
+
+export interface IAllVotesResponse {
+  success: boolean;
+  totalVotesData: IAllVotesData;
+  myVotesData: IAllVotesData;
   error?: string;
 }
