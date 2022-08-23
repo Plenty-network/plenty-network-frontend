@@ -8,6 +8,7 @@ import {
   IAttachmentLiteral,
 } from "./types";
 import Config from "../config/config";
+import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
 
 export const createLock = async (
   address: string,
@@ -24,6 +25,9 @@ export const createLock = async (
       throw new Error("Wallet connection failed");
     }
 
+    // Making value to it's proper decimal form
+    value = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
+
     const Tezos = await dappClient().tezos();
     const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
     const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
@@ -32,8 +36,8 @@ export const createLock = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value.multipliedBy(new BigNumber(10).pow(18))))
-      .withContractCall(veInstance.methods.create_lock(address, value.multipliedBy(new BigNumber(10).pow(18)), endtime));
+      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value))
+      .withContractCall(veInstance.methods.create_lock(address, value, endtime));
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
