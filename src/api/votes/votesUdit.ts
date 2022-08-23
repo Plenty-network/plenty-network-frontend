@@ -4,13 +4,38 @@ import Config from '../../config/config';
 import { connectedNetwork } from '../../common/walletconnect';
 import { getStorage, getTzktBigMapData } from '../util/storageProvider';
 import { voteEscrowStorageType } from './data';
+import { MAX_TIME, PLY_DECIMAL_MULTIPLIER, WEEK } from '../../constants/global';
+
+
+export const estimateVotingPower = (value : BigNumber , end : number) : number => {
+    try {
+       
+      value  = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);  
+      const now = Math.floor(new Date().getTime() / 1000);
+      const ts = Math.floor(end/WEEK)*WEEK;
+      const dTs = ts-now;
+
+      if(dTs < 0 || dTs < WEEK || dTs > MAX_TIME)
+      throw new Error('Invalid Timestamp');
+
+
+      const bias = (value.multipliedBy(dTs)).dividedToIntegerBy(MAX_TIME);
+      console.log(bias.toString());
+
+      return bias.toNumber(); 
+        
+    } catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
 
 export const votingPower = async (tokenId: number, ts2: number, time: number) : Promise<number> => {
 
     // Try remove numbers
 
     try {
-        let factor: number = 7 * 86400;
+        let factor: number = WEEK;
         if (time === 0) { factor = 1; }
         // Must round down to nearest whole week
         ts2 = Math.floor(ts2 / factor) * factor;
@@ -74,3 +99,36 @@ export const votingPower = async (tokenId: number, ts2: number, time: number) : 
         return 0;
     }
 };
+
+const mainPageRewardData =async (epoch : number ) => {
+
+    // Get Fees and Bribes in tokens for each amm on specific epoch
+    // Bribes from VEINDEXER 
+    // FEES from ANALYTICS INDEXER
+
+
+    // Bribes : https://veplyindexer.plentydefi.com/v1/pools
+    // Fess : https://networkanalyticsindexer.plentydefi.com/ve/pools
+
+    // Get token Prices @ that epoch
+
+
+    // Multiply the two and return 
+
+
+    // Return Fees and Bribes & value to FE
+}
+
+export const votesPageDataWrapper =async (epoch : number) => {
+
+    // Get pools from ve indexer 
+
+    // For each pool calculate rewards  , total votes , my votes at specific epoch
+
+    // rewards : same file
+    // total votes: kiran's file
+    //  my votes : kirans's file
+
+    // Combine data and give in object form ammAddy : {data}
+   
+}
