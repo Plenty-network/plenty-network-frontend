@@ -9,6 +9,7 @@ export interface IDropdownProps {
   onClick: Function;
   selectedText: string;
   className?: string;
+  classNameInner?: string;
   title?: string;
 }
 
@@ -23,7 +24,7 @@ export function Dropdown(props: IDropdownProps) {
       <div
         className={clsx(
           "bg-text-800/[0.25]  cursor-pointer flex gap-2 md:gap-4 py-2 px-2 md:px-3 md:justify-between border border-text-700 rounded-lg",
-          isDropDownActive ? "hover:bg-text-800/[0.25]" : "hover:bg-text-800/[0.5]"
+          isDropDownActive ? "hover:bg-text-800/[0.25]" : "hover:bg-text-800/[0.5]",props.classNameInner
         )}
         // onClick={() => setIsDropDownActive(true)}
       >

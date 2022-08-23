@@ -9,9 +9,10 @@ function Protocol() {
     <div>
       <Dropdown
         title="Protocol"
-        Options={['My votes', 'Protocol ']}
+        Options={['My votes', 'Protocol']}
         selectedText={selectedDropDown}
         onClick={setSelectedDropDown}
+        className='bg-muted-500 border border-muted-300 rounded-lg'
       />
     </div>
   );

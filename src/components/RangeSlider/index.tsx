@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import * as React from 'react';
-import { Range } from 'react-range';
+import { Range,getTrackBackground } from 'react-range';
 import plus from '../../assets/icon/vote/plus.svg';
 import minus from '../../assets/icon/vote/minus.svg'
 
@@ -22,8 +22,16 @@ export function RangeSlider (props: IRangeSliderProps) {
         renderTrack={({ props, children }) => (
           <div
             {...props}
-            className='flex-1 w-[96px] h-[2px] bg-text-255'
-            style={{backgroundColor:'#D8DAEB'}}
+            className='flex-1 relative w-[96px] h-[2px] bg-text-255'
+            style={{
+                borderRadius: "4px",
+                  background: getTrackBackground({
+                    values: [sliderVal],
+                    colors: ["#7E4ACC", "#D8DAEB"],
+                    min: 0,
+                    max: 100
+                  }),
+                }}
           >
             {children}
           </div>
