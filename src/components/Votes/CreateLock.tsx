@@ -1,27 +1,39 @@
 import { PopUpModal } from "../Modal/popupModal";
 import calender from "../../../src/assets/icon/vote/calender.svg";
-
+import { useState, useMemo, useEffect } from "react";
 import { BigNumber } from "bignumber.js";
-import { useState, useMemo } from "react";
 import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import Image from "next/image";
 import Button from "../Button/Button";
 import ConfirmLocking from "./ConfirmLocking";
 import { ICreateLockProps } from "./types";
 import clsx from "clsx";
-import { store } from "../../redux";
+import { AppDispatch, store } from "../../redux";
 import { connectedNetwork } from "../../common/walletconnect";
+import { estimateVotingPower } from "../../api/votes/votesUdit";
+import { useDispatch } from "react-redux";
+import { walletConnection } from "../../redux/wallet/wallet";
 
 function CreateLock(props: ICreateLockProps) {
   const walletAddress = store.getState().wallet.address;
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const [screen, setScreen] = useState("1");
+  const [votingPower, setVotingPower] = useState(0);
   const closeModal = () => {
     props.setShow(false);
   };
   const handleInputPercentage = (value: number) => {
     props.setPlyInput((value * Number(props.userBalances["PLY"])).toString());
   };
+
+  useEffect(() => {
+    const res = estimateVotingPower(
+      new BigNumber(props.plyInput),
+      props.lockingEndData.lockingDate
+    );
+    console.log(res, props.plyInput, props.lockingEndData.lockingDate); //remove this
+    setVotingPower(res);
+  }, [props.plyInput, props.lockingDate]);
   const handlePlyInput = async (input: string | number) => {
     if (input === "" || isNaN(Number(input))) {
       props.setPlyInput("");
@@ -51,6 +63,47 @@ function CreateLock(props: ICreateLockProps) {
     // send new BigNumber(lockEnd) as argument to api
     console.log(new Date(lockEnd * 1000).toString());
   };
+  const dispatch = useDispatch<AppDispatch>();
+  const connectTempleWallet = () => {
+    return dispatch(walletConnection());
+  };
+  const ProceedButton = useMemo(() => {
+    if (!walletAddress) {
+      return (
+        <Button onClick={connectTempleWallet} color={"primary"}>
+          Connect Wallet
+        </Button>
+      );
+    } else if (Number(props.plyInput) <= 0) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Enter an amount
+        </Button>
+      );
+    } else if (Number(props.lockingDate) <= 0) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Select locking period
+        </Button>
+      );
+    } else if (
+      walletAddress &&
+      props.plyInput &&
+      Number(props.plyInput) > Number(props.plyBalance)
+    ) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Insufficient Balance
+        </Button>
+      );
+    } else {
+      return (
+        <Button color={"primary"} onClick={() => setScreen("2")}>
+          Proceed
+        </Button>
+      );
+    }
+  }, [props]);
 
   return props.show ? (
     <PopUpModal
@@ -142,7 +195,7 @@ function CreateLock(props: ICreateLockProps) {
               <div>
                 <input
                   type="text"
-                  className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  md:font-subtitle6 outline-none w-[100%]"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  md:font-subtitle6 outline-none w-[100%] placeholder:text-text-500"
                   placeholder="dd/mm/yyyy"
                   value={props.lockingDate}
                   onChange={(e) => props.setLockingDate(e.target.value)}
@@ -155,7 +208,7 @@ function CreateLock(props: ICreateLockProps) {
             <div className="mt-3 px-3 md:px-5 flex gap-2">
               <p
                 className={clsx(
-                  "rounded-[32px]  border  px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3",
+                  "rounded-[32px] cursor-pointer border  px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3",
                   props.lockingEndData.selected === 7
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
@@ -166,7 +219,7 @@ function CreateLock(props: ICreateLockProps) {
               </p>
               <p
                 className={clsx(
-                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3",
+                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
                   props.lockingEndData.selected === 30
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
@@ -177,7 +230,7 @@ function CreateLock(props: ICreateLockProps) {
               </p>
               <p
                 className={clsx(
-                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3",
+                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
                   props.lockingEndData.selected === 365
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
@@ -188,12 +241,12 @@ function CreateLock(props: ICreateLockProps) {
               </p>
               <p
                 className={clsx(
-                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3",
-                  props.lockingEndData.selected === 365 * 4
+                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
+                  props.lockingEndData.selected === 1461
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
-                onClick={() => handleDateSelection(365 * 4, undefined)}
+                onClick={() => handleDateSelection(1461, undefined)}
               >
                 4 year
               </p>
@@ -204,16 +257,12 @@ function CreateLock(props: ICreateLockProps) {
                 Your will receive a veNFT with a voting power of{" "}
               </div>
               <div className="ml-auto px-3 h-[38px] flex items-center text-primary-500 bg-primary-500/[0.1] rounded-[30px]">
-                2500
+                {isNaN(votingPower) ? "0.00" : votingPower.toFixed(2)}
               </div>
             </div>
           </div>
 
-          <div className="mt-[18px]">
-            <Button color="disabled" onClick={() => setScreen("2")}>
-              Proceed
-            </Button>
-          </div>
+          <div className="mt-[18px]">{ProceedButton}</div>
         </>
       ) : (
         <ConfirmLocking

@@ -117,7 +117,7 @@ export const fetchTotalVotingPower = async (): Promise<BigNumber> => {
     const voteEscrowInstance = await Tezos.contract.at(voteEscrowAddress);
     const currentTimestamp = Math.floor(new Date().getTime() / 1000);
     const totalVotingPower = await voteEscrowInstance.contractViews
-      .get_total_voting_power({ time: 1, ts: currentTimestamp })
+      .get_total_voting_power({ time: 0, ts: currentTimestamp })
       .executeView({ viewCaller: voteEscrowAddress });
     return totalVotingPower.dividedBy(new BigNumber(10).pow(18));
   } catch (error: any) {
