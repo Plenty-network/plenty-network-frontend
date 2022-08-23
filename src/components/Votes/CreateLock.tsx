@@ -8,9 +8,11 @@ import Button from "../Button/Button";
 import ConfirmLocking from "./ConfirmLocking";
 import { ICreateLockProps } from "./types";
 import clsx from "clsx";
-import { store } from "../../redux";
+import { AppDispatch, store } from "../../redux";
 import { connectedNetwork } from "../../common/walletconnect";
 import { estimateVotingPower } from "../../api/votes/votesUdit";
+import { useDispatch } from "react-redux";
+import { walletConnection } from "../../redux/wallet/wallet";
 
 function CreateLock(props: ICreateLockProps) {
   const walletAddress = store.getState().wallet.address;
@@ -61,6 +63,47 @@ function CreateLock(props: ICreateLockProps) {
     // send new BigNumber(lockEnd) as argument to api
     console.log(new Date(lockEnd * 1000).toString());
   };
+  const dispatch = useDispatch<AppDispatch>();
+  const connectTempleWallet = () => {
+    return dispatch(walletConnection());
+  };
+  const ProceedButton = useMemo(() => {
+    if (!walletAddress) {
+      return (
+        <Button onClick={connectTempleWallet} color={"primary"}>
+          Connect Wallet
+        </Button>
+      );
+    } else if (Number(props.plyInput) <= 0) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Enter an amount
+        </Button>
+      );
+    } else if (Number(props.lockingDate) <= 0) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Select locking period
+        </Button>
+      );
+    } else if (
+      walletAddress &&
+      props.plyInput &&
+      Number(props.plyInput) > Number(props.plyBalance)
+    ) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Insufficient Balance
+        </Button>
+      );
+    } else {
+      return (
+        <Button color={"primary"} onClick={() => setScreen("2")}>
+          Proceed
+        </Button>
+      );
+    }
+  }, [props]);
 
   return props.show ? (
     <PopUpModal
@@ -199,11 +242,11 @@ function CreateLock(props: ICreateLockProps) {
               <p
                 className={clsx(
                   "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
-                  props.lockingEndData.selected === 365 * 4
+                  props.lockingEndData.selected === 1461
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
-                onClick={() => handleDateSelection(365 * 4, undefined)}
+                onClick={() => handleDateSelection(1461, undefined)}
               >
                 4 year
               </p>
@@ -219,11 +262,7 @@ function CreateLock(props: ICreateLockProps) {
             </div>
           </div>
 
-          <div className="mt-[18px]">
-            <Button color="disabled" onClick={() => setScreen("2")}>
-              Proceed
-            </Button>
-          </div>
+          <div className="mt-[18px]">{ProceedButton}</div>
         </>
       ) : (
         <ConfirmLocking

@@ -33,7 +33,8 @@ import { IAllBalanceResponse } from "../../src/api/util/types";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
-  const epochData = useAppSelector((state) => state.epoch.currentEpoch);
+  const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
+  const epochData = useAppSelector((state) => state.epoch.epochData);
   const plyToken = "PLY";
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
@@ -64,10 +65,11 @@ export default function Vote() {
   useEffect(() => {
     if (userAddress) {
       getVeNFTsList(userAddress).then((res) => {
+        console.log(res.veNFTData);
         setVeNFTlist(res.veNFTData);
       });
     }
-  }, [userAddress]);
+  }, [userAddress, epochData, currentEpoch]);
   // useEffect(() => {
   //   if (epochError) {
   //     setTimeout(() => {
@@ -101,7 +103,7 @@ export default function Vote() {
         balancePromises.push(getUserBalanceByRpc("PLY", userAddress));
 
         const balanceResponse = await Promise.all(balancePromises);
-        console.log(balanceResponse);
+
         setUserBalances((prev) => ({
           ...prev,
           ...balanceResponse.reduce(
@@ -123,8 +125,6 @@ export default function Vote() {
   useEffect(() => {
     if (userAddress) {
       getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-        console.log(response.userBalance);
-        console.log(response.userBalance["tez"]);
         setAllBalance(response);
       });
     } else {
@@ -136,6 +136,10 @@ export default function Vote() {
   const resetAllValues = () => {
     setPlyInput("");
     setLockingDate("");
+    setLockingEndData({
+      selected: 0,
+      lockingDate: 0,
+    });
   };
   const handleCloseLock = () => {
     setShowCreateLockModal(false);

@@ -33,7 +33,7 @@ const EpochSlice = createSlice({
     [getEpochData.fulfilled.toString()]: (state: any, action: any) => {
       state.currentEpoch = action.payload.epochData[0];
       state.epochFetchError = false;
-      state.selectedEpoch = action.payload.epochData[0];
+
       state.epochData = action.payload.epochData;
     },
     [getEpochData.rejected.toString()]: (state: any, action: any) => {
