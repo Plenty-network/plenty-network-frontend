@@ -59,3 +59,14 @@ export interface IVotesResponse {
   otherData: IVotesData | {};
   error?: string;
 }
+
+export interface IAllVotesData {
+  [key: string]: IVotesData;
+}
+
+export interface IAllVotesResponse {
+  success: boolean;
+  totalVotesData: IAllVotesData;
+  myVotesData: IAllVotesData;
+  error?: string;
+}
