@@ -8,6 +8,7 @@ export interface ITransactionSubmittedProps {
   onBtnClick: any;
 }
 export interface ICreateLockProps {
+  plyBalance: BigNumber;
   show: boolean;
   userBalances: {
     [key: string]: string;
@@ -40,6 +41,8 @@ export interface ICreateLockProps {
 
 export interface IConfirmLockingProps {
   show?: boolean;
+  endDate: string;
+  votingPower: number;
   handleLockOperation: () => void;
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   setShow?: any;

@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'bignumber.js';
 
 export const RPC_NODE = "rpcNode";
 export const TOKEN_CONFIG = "tokenConfig";
@@ -12,7 +12,7 @@ export const type1MapIds = [3956, 4353];
  /**
   * balance for these type2MapIds will be present in `response.data.args[1].int`
   */
- export const type2MapIds = [3943];
+ export const type2MapIds = [3943, 162769];
  
  /**
   * balance for these type3MapIds will be present in `response.data.args[0].int`
@@ -24,7 +24,7 @@ export const type1MapIds = [3956, 4353];
   */
  export const type4MapIds = [
    1777, 1772, 515, 4178, 18153, 10978, 7706, 7715, 7654, 20920, 2809, 7250, 13802, 4666, 21182,
-   134335, 175082, 89954 , 90227 , 162769
+   134335, 175082, 89954 , 90227
  ];
  
  /**
@@ -37,7 +37,9 @@ export const EPOCH_DURATION_MAINNET: number = 604800000; // milliseconds
 export const VOTES_CHART_LIMIT: number = 9;
 export const PLY_DECIMAL_MULTIPLIER : BigNumber = new BigNumber(10).pow(18);   // 10 ** 18
 
-export const DAY = 86400;
+const DAY_TESTNET = 480;
+const DAY_MAINNET = 86400;
+export const DAY = DAY_TESTNET;
 export const WEEK = 7 * DAY;
 export const YEAR = 52 * WEEK;
 export const MAX_TIME = 4 * YEAR;

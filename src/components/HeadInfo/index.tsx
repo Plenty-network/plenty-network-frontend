@@ -26,9 +26,13 @@ export default function HeadInfo(props: IHeadInfoProps) {
           {props.title ? props.title : "Pools"}
         </div>
         <ToolTip
-          message="Watch how to add liquidity, stake, and earn PLY. "
+          message={
+            props.toolTipContent
+              ? props.toolTipContent
+              : "Watch how to add liquidity, stake, and earn PLY"
+          }
           classNameAncorToolTip="pushtoCenter"
-          isShowInnitially={true}
+          isShowInnitially={props.toolTipContent ? true : false}
         >
           <Image
             src={playIcon}
