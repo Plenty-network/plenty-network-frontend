@@ -111,20 +111,22 @@ const MainMenu: Array<ISingleSideBarProps> = [
     pathName: '/pools',
     activePathName: '/pools',
   },
+  {
+    name: 'Vote',
+    iconName: 'pools',
+    pathName: '/Vote',
+    activePathName: '/Vote',
+  },
 ];
 
 export function SideBar(props: ISideBarProps) {
   const [activeMenu, setActiveMenu] = React.useState<string>('');
   const { pathname } = useRouter();
-  try{
-    if(pathname== '/Swap')
-      document.getElementsByTagName("body")[0].className='swap';
-    else 
-      document.getElementsByTagName("body")[0].className='';   
-   }
-   catch{
-  
-   }
+  try {
+    if (pathname == '/Swap')
+      document.getElementsByTagName('body')[0].className = 'swap';
+    else document.getElementsByTagName('body')[0].className = '';
+  } catch {}
   return (
     <div
       className="fixed text-f14 bg-sideBar border-border-500/50 border-r shadow hidden md:block  "

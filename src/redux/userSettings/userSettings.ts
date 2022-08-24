@@ -1,14 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
-interface IAction {
-  payload: {
-    address: string;
-    multiHop?: boolean;
-    expertMode: boolean;
-    slippage?: number;
-  };
-  type: string;
-}
 interface IuserSettingsState {
   settings: {
     [key: string]: {
@@ -21,7 +12,7 @@ interface IuserSettingsState {
 
 const initialState: IuserSettingsState = {
   settings: {
-    '': {
+    "": {
       expertMode: false,
       multiHop: true,
       slippage: 0.5,
@@ -30,7 +21,7 @@ const initialState: IuserSettingsState = {
 };
 
 const UserSettingsSlice = createSlice({
-  name: 'userSettings',
+  name: "userSettings",
   initialState,
   reducers: {
     setUserSettingsExpertMode: (state, action) => {
@@ -85,9 +76,6 @@ const UserSettingsSlice = createSlice({
     },
   },
 });
-export const {
-  setUserSettingsExpertMode,
-  setUserSettingsMultihop,
-  setUserSettingsSlippage,
-} = UserSettingsSlice.actions;
+export const { setUserSettingsExpertMode, setUserSettingsMultihop, setUserSettingsSlippage } =
+  UserSettingsSlice.actions;
 export const userSettings = UserSettingsSlice.reducer;

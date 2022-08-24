@@ -1,26 +1,26 @@
-import type { NextPage } from 'next';
-import PropTypes from 'prop-types';
-import Head from 'next/head';
-import { SideBarHOC } from '../../src/components/Sidebar/SideBarHOC';
-import Swap from '../../src/components/Swap';
-import { AppDispatch } from '../../src/redux/index';
+import type { NextPage } from "next";
+import PropTypes from "prop-types";
+import Head from "next/head";
+import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
+import Swap from "../../src/components/Swap";
+import { AppDispatch } from "../../src/redux/index";
 
-import { useAppSelector } from '../../src/redux/index';
-import {
-  fetchWallet,
-  walletConnection,
-  walletDisconnection,
-} from '../../src/redux/wallet/wallet';
-import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { getConfig } from '../../src/redux/config/config';
-import { getTokenPrice } from '../../src/redux/tokenPrice/tokenPrice';
-import { getTotalVotingPower } from '../../src/redux/pools';
+import { useAppSelector } from "../../src/redux/index";
+import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getConfig } from "../../src/redux/config/config";
+import { getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
+import { getTotalVotingPower } from "../../src/redux/pools";
+import { useInterval } from "../../src/hooks/useInterval";
+import { getEpochData } from "../../src/redux/epoch/epoch";
 
 const Home: NextPage = (props) => {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
+  const epochError = useAppSelector((state) => state.epoch).epochFetchError;
+
   const dispatch = useDispatch<AppDispatch>();
 
   const connectTempleWallet = () => {
@@ -29,8 +29,16 @@ const Home: NextPage = (props) => {
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
-    //dispatch(getTotalVotingPower());
   }, []);
+  useEffect(() => {
+    if (epochError) {
+      dispatch(getEpochData());
+    }
+  }, [epochError]);
+
+  useInterval(() => {
+    dispatch(getEpochData());
+  }, 60000);
   useEffect(() => {
     if (userAddress) {
       dispatch(getTotalVotingPower());
