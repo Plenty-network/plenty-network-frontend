@@ -196,7 +196,7 @@ export default function Vote() {
           <HeadInfo
             className="px-2 md:px-3"
             title="Vote"
-            toolTipContent="Watch how to add veNFT"
+            toolTipContent=""
             handleCreateLock={handleCreateLock}
             searchValue={searchValue}
             setSearchValue={setSearchValue}

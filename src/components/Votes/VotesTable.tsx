@@ -87,6 +87,13 @@ export function VotesTable(props: IVotesTableProps) {
         showOnMobile: true,
         accessor: (x: any) => <RewardsData />,
       },
+      {
+        Header: "My votes",
+        id: "Myvotess",
+        isToolTipEnabled: true,
+        canShort: true,
+        accessor: (x) => <MyVotes isMobile={true} />,
+      },
     ],
     [valueFormat]
   );
@@ -143,7 +150,7 @@ export function VotesTable(props: IVotesTableProps) {
         id: "Myvotess",
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x) => <MyVotes/>,
+        accessor: (x) => <MyVotes isMobile={false} />,
       },
     ],
     [valueFormat]
