@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { COLORSdataChart, dataChart } from "./PiChartComponent";
 import Protocol from "./Protocol";
 const PiChart = dynamic(() => import('./PiChartComponent'), {
   loading: () => <></>,
@@ -10,8 +11,11 @@ function VotingAllocation() {
       <div className="font-body3 text-white mt-[18px]">
         <Protocol />
       </div>
-      <div className="flex items-center mt-5 h-[252px] justify-center border">
+      <div className="flex flex-col  mt-5  gap-2 justify-center w-[350px] ">
         <PiChart/>
+        <div className="grid grid-cols-2 justify-between px-6 gap-[11px]" >
+          {dataChart.map((e,i)=><ColorText text={e.name} color={COLORSdataChart[i]} />)}
+        </div>
       </div>
       <div className="flex items-center mt-5 h-[122px] border justify-center">
         datas
@@ -19,6 +23,21 @@ function VotingAllocation() {
     </div>
   );
 }
+export interface IColorTextProps {
+  text:string;
+  color:string;
+}
+
+export function ColorText (props: IColorTextProps) {
+  return (
+    <div className="flex gap-1 items-center text-f12">
+    <div className="w-[15px] h-[15px]" style={{backgroundColor:props.color}}></div>
+    <div>{props.text}</div>
+ </div>
+  );
+}
+
+
 
 export default VotingAllocation;
   
