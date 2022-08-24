@@ -105,6 +105,9 @@ function CreateLock(props: ICreateLockProps) {
       );
     }
   }, [props]);
+  const onClickAmount = () => {
+    handlePlyInput(Number(props.plyBalance));
+  };
 
   return props.show ? (
     <PopUpModal
@@ -144,7 +147,10 @@ function CreateLock(props: ICreateLockProps) {
               <div>
                 <Image src={wallet} width={"32px"} height={"32px"} />
               </div>
-              <div className="ml-1 text-primary-500 font-body2">
+              <div
+                className="cursor-pointer ml-1 text-primary-500 font-body2"
+                onClick={onClickAmount}
+              >
                 {Number(props.plyBalance) >= 0 ? Number(props.plyBalance) : "0.00"} PLY
               </div>
             </div>
@@ -154,10 +160,10 @@ function CreateLock(props: ICreateLockProps) {
               className={clsx(
                 "cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
                 props.plyInput !== "" &&
-                  Number(props.plyInput) === 0.25 * Number(props.userBalances["PLY"]) &&
+                  Number(props.plyInput) === 0.25 * Number(props.plyBalance) &&
                   "border-primary-500 bg-primary-500/[0.20]"
               )}
-              {...(!walletAddress || Number(props.userBalances["PLY"]) === 0
+              {...(!walletAddress || Number(props.plyBalance) === 0
                 ? {}
                 : { onClick: () => handleInputPercentage(0.25) })}
             >
@@ -167,12 +173,12 @@ function CreateLock(props: ICreateLockProps) {
               className={clsx(
                 "cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
                 props.plyInput !== "" &&
-                  Number(props.plyInput) === 0.25 * Number(props.userBalances["PLY"]) &&
+                  Number(props.plyInput) === 0.5 * Number(props.plyBalance) &&
                   "border-primary-500 bg-primary-500/[0.20]"
               )}
-              {...(!walletAddress || Number(props.userBalances["PLY"]) === 0
+              {...(!walletAddress || Number(props.plyBalance) === 0
                 ? {}
-                : { onClick: () => handleInputPercentage(0.25) })}
+                : { onClick: () => handleInputPercentage(0.5) })}
             >
               50%
             </p>
@@ -180,12 +186,12 @@ function CreateLock(props: ICreateLockProps) {
               className={clsx(
                 "cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
                 props.plyInput !== "" &&
-                  Number(props.plyInput) === 0.25 * Number(props.userBalances["PLY"]) &&
+                  Number(props.plyInput) === 0.75 * Number(props.plyBalance) &&
                   "border-primary-500 bg-primary-500/[0.20]"
               )}
-              {...(!walletAddress || Number(props.userBalances["PLY"]) === 0
+              {...(!walletAddress || Number(props.plyBalance) === 0
                 ? {}
-                : { onClick: () => handleInputPercentage(0.25) })}
+                : { onClick: () => handleInputPercentage(0.75) })}
             >
               75%
             </p>
@@ -271,6 +277,8 @@ function CreateLock(props: ICreateLockProps) {
           setShowCreateLockModal={props.setShowCreateLockModal}
           setShowConfirmTransaction={props.setShowConfirmTransaction}
           handleLockOperation={props.handleLockOperation}
+          votingPower={votingPower}
+          endDate={props.lockingDate}
         />
       )}
     </PopUpModal>
