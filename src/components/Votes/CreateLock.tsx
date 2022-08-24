@@ -13,6 +13,7 @@ import { connectedNetwork } from "../../common/walletconnect";
 import { estimateVotingPower } from "../../api/votes/votesUdit";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
+import { MAX_TIME, WEEK, YEAR } from "../../constants/global";
 
 function CreateLock(props: ICreateLockProps) {
   const walletAddress = store.getState().wallet.address;
@@ -54,7 +55,7 @@ function CreateLock(props: ICreateLockProps) {
 
     const now = Math.floor(new Date().getTime() / 1000);
     const endDate = days
-      ? DAY * days
+      ? days
       : Math.floor(new Date(userSelectedDate as string).getTime() / 1000) - now;
 
     const lockEnd = Math.floor((now + (endDate + WEEK - 1)) / WEEK) * WEEK;
@@ -219,7 +220,7 @@ function CreateLock(props: ICreateLockProps) {
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
-                onClick={() => handleDateSelection(7, undefined)}
+                onClick={() => handleDateSelection(WEEK, undefined)}
               >
                 1 week
               </p>
@@ -230,7 +231,7 @@ function CreateLock(props: ICreateLockProps) {
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
-                onClick={() => handleDateSelection(30, undefined)}
+                onClick={() => handleDateSelection(4*WEEK, undefined)}
               >
                 1 month
               </p>
@@ -241,7 +242,7 @@ function CreateLock(props: ICreateLockProps) {
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
-                onClick={() => handleDateSelection(365, undefined)}
+                onClick={() => handleDateSelection(YEAR, undefined)}
               >
                 1 year
               </p>
@@ -252,7 +253,7 @@ function CreateLock(props: ICreateLockProps) {
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
-                onClick={() => handleDateSelection(1461, undefined)}
+                onClick={() => handleDateSelection(MAX_TIME, undefined)}
               >
                 4 year
               </p>
