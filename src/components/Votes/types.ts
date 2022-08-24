@@ -41,6 +41,8 @@ export interface ICreateLockProps {
 
 export interface IConfirmLockingProps {
   show?: boolean;
+  endDate: string;
+  votingPower: number;
   handleLockOperation: () => void;
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   setShow?: any;
