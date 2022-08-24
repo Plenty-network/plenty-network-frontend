@@ -49,7 +49,7 @@ export default function Pools(props: IIndexProps) {
     }
   }, [walletAddress]);
   useEffect(() => {
-    if (totalVotingPowerError) {
+    if (walletAddress && totalVotingPowerError) {
       dispatch(getTotalVotingPower());
     }
   }, [totalVotingPowerError]);

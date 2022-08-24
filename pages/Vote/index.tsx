@@ -23,17 +23,20 @@ import { useInterval } from "../../src/hooks/useInterval";
 import { EPOCH_DURATION_TESTNET } from "../../src/constants/global";
 import { getVeNFTsList } from "../../src/api/votes/votesKiran";
 import { IVeNFTData } from "../../src/api/votes/types";
-import { getUserBalanceByRpc } from "../../src/api/util/balance";
+import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
 import { createLock } from "../../src/operations/locks";
 import { setLoading } from "../../src/redux/isLoading/action";
 import AllocationPopup from "../../src/components/Votes/AllocationPopup";
 import { InfoIconToolTip } from "../../src/components/Tooltip/InfoIconTooltip";
+import { IAllBalanceResponse } from "../../src/api/util/types";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
-  const epochData = useAppSelector((state) => state.epoch.currentEpoch);
+  const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
+  const epochData = useAppSelector((state) => state.epoch.epochData);
+  const plyToken = "PLY";
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
@@ -63,15 +66,18 @@ export default function Vote() {
   useEffect(() => {
     if (userAddress) {
       getVeNFTsList(userAddress).then((res) => {
+        console.log(res.veNFTData);
         setVeNFTlist(res.veNFTData);
       });
     }
-  }, [userAddress]);
-  useEffect(() => {
-    if (epochError) {
-      dispatch(getEpochData());
-    }
-  }, [epochError]);
+  }, [userAddress, epochData, currentEpoch]);
+  // useEffect(() => {
+  //   if (epochError) {
+  //     setTimeout(() => {
+  //       dispatch(getEpochData());
+  //     }, 1000);
+  //   }
+  // }, [epochError]);
 
   useInterval(() => {
     dispatch(getEpochData());
@@ -84,6 +90,8 @@ export default function Vote() {
   const [showCastVotingAllocation, setShowCastVotingAllocation] = useState(false);
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+
+  const TOKEN = useAppSelector((state) => state.config.tokens);
   const handleCreateLock = () => {
     setShowCreateLockModal(true);
   };
@@ -110,11 +118,29 @@ export default function Vote() {
       };
       updateBalance();
     }
-  }, [userAddress, tokenPrice, balanceUpdate]);
+  }, [userAddress, tokenPrice, balanceUpdate, showCreateLockModal]);
+  const [allBalance, setAllBalance] = useState<{
+    success: boolean;
+    userBalance: { [id: string]: BigNumber };
+  }>({ success: false, userBalance: {} });
+  useEffect(() => {
+    if (userAddress) {
+      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
+        setAllBalance(response);
+      });
+    } else {
+      setAllBalance({ success: false, userBalance: {} });
+      setUserBalances({});
+    }
+  }, [userAddress, TOKEN]);
 
   const resetAllValues = () => {
     setPlyInput("");
     setLockingDate("");
+    setLockingEndData({
+      selected: 0,
+      lockingDate: 0,
+    });
   };
   const handleCloseLock = () => {
     setShowCreateLockModal(false);
@@ -133,7 +159,7 @@ export default function Vote() {
     createLock(
       userAddress,
       new BigNumber(plyInput),
-      new BigNumber(new Date(lockingEndData.lockingDate).getTime()).decimalPlaces(0, 1),
+      new BigNumber(lockingEndData.lockingDate),
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction
@@ -171,7 +197,7 @@ export default function Vote() {
           <HeadInfo
             className="px-2 md:px-3"
             title="Vote"
-            toolTipContent="Watch how to add veNFT"
+            toolTipContent=""
             handleCreateLock={handleCreateLock}
             searchValue={searchValue}
             setSearchValue={setSearchValue}
@@ -256,6 +282,7 @@ export default function Vote() {
           setLockingEndData={setLockingEndData}
           lockingEndData={lockingEndData}
           tokenPrice={tokenPrice}
+          plyBalance={allBalance.userBalance["PLY"]}
         />
       )}
 

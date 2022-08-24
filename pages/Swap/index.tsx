@@ -45,7 +45,7 @@ const Home: NextPage = (props) => {
     }
   }, [userAddress]);
   useEffect(() => {
-    if (totalVotingPowerError) {
+    if (userAddress && totalVotingPowerError) {
       dispatch(getTotalVotingPower());
     }
   }, [totalVotingPowerError]);

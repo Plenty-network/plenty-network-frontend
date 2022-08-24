@@ -14,7 +14,7 @@ function VotingAllocation() {
       <div className="flex flex-col items-center  mt-5  gap-2 justify-center w-[350px] ">
         <PiChart/>
         <div className="grid grid-cols-2 justify-between   gap-[11px] gap-x-10 w-[300px]" >
-          {dataChart.map((e,i)=><ColorText text={e.name} color={COLORSdataChart[i]} />)}
+          {dataChart.map((e,i)=><ColorText key={e.name+i} text={e.name} color={COLORSdataChart[i]} />)}
         </div>
       </div>
     </div>
