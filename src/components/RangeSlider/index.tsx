@@ -9,7 +9,7 @@ export interface IRangeSliderProps {
 }
 
 export function RangeSlider(props: IRangeSliderProps) {
-  const [sliderVal, setSliderVal] = React.useState(50);
+  const [sliderVal, setSliderVal] = React.useState(0);
   const handleInputEdit = (value: string) => {
     if (value && !isNaN(parseInt(value))) {
       if (parseInt(value) >= 0 && parseInt(value) <= 100) {
