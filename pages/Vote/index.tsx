@@ -29,6 +29,7 @@ import TransactionSubmitted from "../../src/components/TransactionSubmitted";
 import { createLock } from "../../src/operations/locks";
 import { setLoading } from "../../src/redux/isLoading/action";
 import AllocationPopup from "../../src/components/Votes/AllocationPopup";
+import { InfoIconToolTip } from "../../src/components/Tooltip/InfoIconTooltip";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -216,7 +217,10 @@ export default function Vote() {
                 Verify your vote percentage and cast vote
               </div>
               <div className="flex flex-row gap-2 mt-[14px]">
-                <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
+                <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px] gap-1  flex items-center justify-center rounded-xl">
+                <InfoIconToolTip 
+                  message=" Verify your vote percentage and cast vote"
+                  />
                   00%
                 </div>
                 <div
