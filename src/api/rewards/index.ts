@@ -1,5 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import { TokenVariant } from "../../config/types";
+import { PLY_DECIMAL_MULTIPLIER } from "../../constants/global";
 import { store } from "../../redux";
 import { getOutputTokensAmount } from "../liquidity";
 import { getPackedKey } from "../util/balance";
@@ -107,7 +108,7 @@ export const getRewards = async (
       rewardPerTokenLatest = rewardPerTokenLatest.plus(
         dTime
           .multipliedBy(rewardRate)
-          .multipliedBy(new BigNumber(10).pow(18))
+          .multipliedBy(PLY_DECIMAL_MULTIPLIER)
           .dividedBy(derivedSupply)
       );
     } else {
@@ -119,7 +120,7 @@ export const getRewards = async (
       .dividedBy(new BigNumber(10).pow(36));
 
     const totalRewards = rewardsFromStorage
-      .dividedBy(new BigNumber(10).pow(18))
+      .dividedBy(PLY_DECIMAL_MULTIPLIER)
       .plus(reward)
       .toString();
     
