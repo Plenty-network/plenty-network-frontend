@@ -83,18 +83,20 @@ export const getVeNFTsList = async (userTezosAddress: string): Promise<IVeNFTLis
   try {
     const locksResponse = await axios.get(`${Config.VE_INDEXER}locks?address=${userTezosAddress}`);
     const locksData = locksResponse.data.result;
-
+    const initalLocksArray: IVeNFTData[] = [];
+    
     const finalVeNFTData: IVeNFTData[] = locksData.reduce(
-      (finalLocks: IVeNFTData[], lock: any): IVeNFTData | void => {
-        if (new BigNumber(lock.voting_power).isGreaterThan(0)) {
+      (finalLocks: IVeNFTData[], lock: any): IVeNFTData[] => {
+        if (new BigNumber(lock.voting_power).isFinite() && new BigNumber(lock.voting_power).isGreaterThan(0)) {
           finalLocks.push({
             tokenId: new BigNumber(lock.id),
             baseValue: new BigNumber(lock.base_value).dividedBy(new BigNumber(10).pow(18)),
             votingPower: new BigNumber(lock.voting_power).dividedBy(new BigNumber(10).pow(18)),
           });
         }
+        return finalLocks;
       },
-      []
+      initalLocksArray
     );
 
     return {
