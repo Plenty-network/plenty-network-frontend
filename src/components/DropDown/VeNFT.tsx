@@ -56,7 +56,9 @@ export function VeNFT(props: IDropdownProps) {
         >
           {props.selectedText.votingPower !== "" && props.selectedText.tokenId !== "" ? (
             <>
-              <span className="font-body4 text-white">{props.selectedText.votingPower}x</span>
+              <span className="font-body4 text-white">
+                {Number(props.selectedText.votingPower).toFixed(3)}x
+              </span>
               <span className="font-body3 text-text-500">(#{props.selectedText.tokenId})</span>
             </>
           ) : (
@@ -80,7 +82,7 @@ export function VeNFT(props: IDropdownProps) {
       {isDropDownActive && props.Options.length > 0 && (
         <div
           className={clsx(
-            "absolute  w-[124px] md:w-[163px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1",
+            "absolute z-20 w-[124px] md:w-[163px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1",
             props.isConfirmStake && props.selectedText.votingPower !== "" && "hidden"
           )}
         >
@@ -109,7 +111,7 @@ export function VeNFT(props: IDropdownProps) {
         }}
         className="  hover:bg-muted-500 px-4 flex items-center h-[36px] cursor-pointer flex"
       >
-        <span className="font-body4 text-white">{props.votingPower}x</span>
+        <span className="font-body4 text-white">{Number(props.votingPower).toFixed(3)}x</span>
         <span className="ml-auto font-body3 text-text-500">#{props.tokenId}</span>
       </div>
     );

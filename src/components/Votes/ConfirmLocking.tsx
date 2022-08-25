@@ -57,7 +57,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
         <div className="border-t mt-5 border-text-800/[0.5]"></div>
         <div className="mt-3 px-3 md:px-5 flex items-center">
           <span className="hidden md:block flex">
-            <span className="text-text-250 font-body2 mr-1">You can claim your rewards after</span>
+            <span className="text-text-250 font-body2 mr-1">You can start voting after </span>
             <span className="relative top-0.5">
               <Image src={info} />
             </span>

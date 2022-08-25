@@ -32,7 +32,6 @@ function CreateLock(props: ICreateLockProps) {
       new BigNumber(props.plyInput),
       props.lockingEndData.lockingDate
     );
-    console.log(res, props.plyInput, props.lockingEndData.lockingDate); //remove this
     setVotingPower(res);
   }, [props.plyInput, props.lockingDate]);
   const handlePlyInput = async (input: string | number) => {
@@ -42,6 +41,14 @@ function CreateLock(props: ICreateLockProps) {
       return;
     } else {
       props.setPlyInput(input.toString());
+      if (Number(props.lockingEndData.lockingDate) > 0) {
+        const res = estimateVotingPower(
+          new BigNumber(props.plyInput),
+          props.lockingEndData.lockingDate
+        );
+
+        setVotingPower(res);
+      }
     }
   };
   const dateFormat = (dates: number) => {
@@ -65,6 +72,10 @@ function CreateLock(props: ICreateLockProps) {
         : Math.floor((now + (timeSpan + WEEK - 1)) / WEEK) * WEEK;
 
     props.setLockingDate(dateFormat(lockEnd * 1000));
+    if (Number(props.plyInput) > 0) {
+      const res = estimateVotingPower(new BigNumber(props.plyInput), lockEnd);
+      setVotingPower(res);
+    }
     props.setLockingEndData({ selected: days ? days : 0, lockingDate: lockEnd });
     // send new BigNumber(lockEnd) as argument to api
     console.log(new Date(lockEnd * 1000).toString());

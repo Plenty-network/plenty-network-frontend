@@ -24,6 +24,12 @@ export interface IVeNFTData {
   votingPower: BigNumber;
 }
 
+export interface ISelectedPool {
+  tokenA: string;
+  tokenB: string;
+  votingPower: number;
+}
+
 export interface IVeNFTListResponse {
   success: boolean;
   veNFTData: IVeNFTData[];
