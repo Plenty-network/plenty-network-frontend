@@ -1,4 +1,5 @@
 import { BigNumber } from 'bignumber.js';
+import { connectedNetwork } from '../common/walletconnect';
 
 export const RPC_NODE = "rpcNode";
 export const TOKEN_CONFIG = "tokenConfig";
@@ -39,7 +40,7 @@ export const PLY_DECIMAL_MULTIPLIER : BigNumber = new BigNumber(10).pow(18);   /
 
 const DAY_TESTNET = 480;
 const DAY_MAINNET = 86400;
-export const DAY = DAY_TESTNET;
+export const DAY = connectedNetwork === 'testnet' ? DAY_TESTNET : DAY_MAINNET;
 export const WEEK = 7 * DAY;
 export const YEAR = 52 * WEEK;
 export const MAX_TIME = 4 * YEAR;

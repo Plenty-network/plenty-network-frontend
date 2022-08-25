@@ -8,6 +8,7 @@ import { getStakedBalance } from '../util/balance';
 import { getDexAddress } from '../util/fetchConfig';
 import { getStorage } from '../util/storageProvider';
 import { IVePLYData, IVePLYListResponse } from './types';
+import { PLY_DECIMAL_MULTIPLIER } from '../../constants/global';
 
 /**
  * Returns the list of veNFTs with boost value for a user, for a particular gauge.
@@ -73,9 +74,7 @@ export const getVePLYListForUser = async (
     const finalVePLYData: IVePLYData[] = [];
 
     locksData.forEach((lock: any) => {
-      const votingPower = new BigNumber(lock.currentVotingPower).dividedBy(
-        new BigNumber(10).pow(18)
-      );
+      const votingPower = new BigNumber(lock.currentVotingPower).dividedBy(PLY_DECIMAL_MULTIPLIER);
       const updatedLockData = {
         tokenId: lock.id,
         boostValue: getBoostValue(
@@ -119,7 +118,7 @@ export const fetchTotalVotingPower = async (): Promise<BigNumber> => {
     const totalVotingPower = await voteEscrowInstance.contractViews
       .get_total_voting_power({ time: 0, ts: currentTimestamp })
       .executeView({ viewCaller: voteEscrowAddress });
-    return totalVotingPower.dividedBy(new BigNumber(10).pow(18));
+    return totalVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER);
   } catch (error: any) {
     throw new Error(error.message);
   }
