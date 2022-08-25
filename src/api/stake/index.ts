@@ -73,7 +73,7 @@ export const getVePLYListForUser = async (
     const finalVePLYData: IVePLYData[] = [];
 
     locksData.forEach((lock: any) => {
-      const votingPower = new BigNumber(lock.voting_power).dividedBy(
+      const votingPower = new BigNumber(lock.currentVotingPower).dividedBy(
         new BigNumber(10).pow(18)
       );
       const updatedLockData = {
