@@ -12,10 +12,12 @@ import { IVotesTableProps } from "./types";
 import { RewardsData } from "./RewardsData";
 import { TotalVotes } from "./TotalVotes";
 import { MyVotes } from "./MyVotes";
+import { IVotePageData, IVotesData } from "../../api/votes/types";
 
 export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
 
+  //const data: IVotePageData[] = Object.values(props.voteData);
   const { data: poolTableData = [] } = usePoolsMain();
   const [votedata, setVotedata] = React.useState(poolTableData);
 

@@ -22,7 +22,7 @@ import { getEpochData } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
 import { EPOCH_DURATION_TESTNET } from "../../src/constants/global";
 import { getVeNFTsList } from "../../src/api/votes/votesKiran";
-import { ISelectedPool, IVeNFTData } from "../../src/api/votes/types";
+import { ISelectedPool, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
@@ -31,15 +31,13 @@ import { setLoading } from "../../src/redux/isLoading/action";
 import AllocationPopup from "../../src/components/Votes/AllocationPopup";
 import { IAllBalanceResponse } from "../../src/api/util/types";
 import { vote } from "../../src/operations/vote";
-
-
+import { votesPageDataWrapper } from "../../src/api/votes/votesUdit";
 
 export default function Vote() {
-
   const dispatch = useDispatch<AppDispatch>();
   const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
   const epochData = useAppSelector((state) => state.epoch.epochData);
-
+  const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
@@ -60,6 +58,10 @@ export default function Vote() {
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const [selectedPools, setSelectedPools] = useState<ISelectedPool[]>([] as ISelectedPool[]);
   const [selectedDropDown, setSelectedDropDown] = useState({ votingPower: "", tokenId: "" });
+  const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
+    {} as { [id: string]: IVotePageData }
+  );
+
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
@@ -69,6 +71,14 @@ export default function Vote() {
     dispatch(getConfig());
     dispatch(getEpochData());
   }, []);
+  useEffect(() => {
+    //selectedEpoch?.epochNumber ?selectedEpoch?.epochNumber:currentEpoch?.epochNumber
+    //selectedDropDown.tokenId?Number(selectedDropDown.tokenId):undefined
+    votesPageDataWrapper(174, 1).then((res) => {
+      console.log(res);
+      setVoteData(res.allData);
+    });
+  }, [selectedDropDown, currentEpoch?.epochNumber, selectedEpoch?.epochNumber]);
   useEffect(() => {
     if (userAddress) {
       getVeNFTsList(userAddress).then((res) => {
@@ -272,6 +282,7 @@ export default function Vote() {
                 selectedPools={selectedPools}
                 setTotalVotingPower={setTotalVotingPower}
                 totalVotingPower={totalVotingPower}
+                voteData={voteData}
               />
             </div>
             <div className="hidden md:block md:basis-1/3 md:pr-[30px]">
