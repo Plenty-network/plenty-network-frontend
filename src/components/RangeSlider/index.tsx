@@ -3,9 +3,14 @@ import * as React from "react";
 import { Range, getTrackBackground } from "react-range";
 import plus from "../../assets/icon/vote/plus.svg";
 import minus from "../../assets/icon/vote/minus.svg";
+import { ISelectedPool } from "../../api/votes/types";
 
 export interface IRangeSliderProps {
   isMobile: boolean;
+  tokenA: string;
+  tokenB: string;
+  setSelectedPools: React.Dispatch<React.SetStateAction<ISelectedPool[]>>;
+  selectedPools: ISelectedPool[];
 }
 
 export function RangeSlider(props: IRangeSliderProps) {
@@ -19,6 +24,29 @@ export function RangeSlider(props: IRangeSliderProps) {
       setSliderVal(0);
     }
   };
+
+  React.useEffect(() => {
+    if (sliderVal > 0) {
+      let v = true;
+
+      props.selectedPools.forEach(function (pools) {
+        if (pools.tokenA === props.tokenA && pools.tokenB === props.tokenB) {
+          pools.votingPower = Number(sliderVal.toFixed(0));
+          v = false;
+        }
+      });
+      if (v) {
+        props.setSelectedPools(
+          props.selectedPools.concat({
+            tokenA: props.tokenA,
+            tokenB: props.tokenB,
+            votingPower: Number(sliderVal.toFixed(0)),
+          })
+        );
+      }
+    }
+  }, [sliderVal]);
+
   return (
     <div className="flex gap-3">
       {!props.isMobile && (
