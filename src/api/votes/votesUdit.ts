@@ -5,8 +5,13 @@ import { connectedNetwork } from "../../common/walletconnect";
 import { getStorage, getTzktBigMapData } from "../util/storageProvider";
 import { voteEscrowStorageType } from "./data";
 import { MAX_TIME, PLY_DECIMAL_MULTIPLIER, WEEK } from "../../constants/global";
-import { IBribesResponse } from "./types";
-import { VolumeVeData } from "../pools/types";
+import { IBribesResponse, IVotePageData, IVotePageRewardData, IVotePageRewardDataResponse } from "./types";
+import { VolumeV1Data, VolumeVeData } from "../pools/types";
+import { fetchEpochData } from "../util/epoch";
+import { IEpochData, IEpochResponse } from "../util/types";
+import { getAllVotesData } from "./votesKiran";
+import { pools } from "../../redux/pools";
+import { IAmmContracts } from "../../config/types";
 
 export const estimateVotingPower = (value: BigNumber, end: number): number => {
   try {
@@ -109,12 +114,36 @@ export const votingPower = async (tokenId: number, ts2: number, time: number): P
   }
 };
 
-export const mainPageRewardData = async (epoch: number) => {
+const mainPageRewardData = async (epoch: number) : Promise<IVotePageRewardDataResponse> => {
 
-  const bribes = await axios.get(`https://veplyindexer.plentydefi.com/v1/bribes?epoch=174`);
+  try {
+
+  const bribes = await axios.get(`${Config.VE_INDEXER}bribes?epoch=${epoch}`);
   const bribesData : IBribesResponse[] = bribes.data;
 
-  const finalData : { [id: string]: {bribes : BigNumber , fees : BigNumber} }= {};
+  // call check if current 
+  const res : IEpochResponse = await fetchEpochData(epoch);
+  let feesData;
+
+  if(res.success)
+  { 
+    const epochData = res.epochData as IEpochData;
+
+    const feesResponse = await axios.get(`${Config.PLY_INDEXER}ve/pools?ts=${epochData.epochEndTimestamp-1}`);
+    feesData = feesResponse.data;
+    // if(epochData.isCurrent){
+
+    // }
+    // else{
+
+
+    // }
+  }
+  else{
+    throw new Error(res.error as string);
+  }
+
+  const finalData : IVotePageRewardData= {};
 
   for(var x of bribesData){
   let bribe: BigNumber = new BigNumber(0);
@@ -129,29 +158,89 @@ export const mainPageRewardData = async (epoch: number) => {
       );
     }
   }
-  finalData[x.pool] =  {bribes : bribe , fees : new BigNumber(0)};
-}
-
-  // call check if current 
-  // const res = checkIfCurrent(epoch);
-
-
-  const feesResponse = await axios.get(`https://networkanalyticsindexer.plentydefi.com/ve/pools?ts=1660030117`);
-  const feesData : VolumeVeData[] = feesResponse.data;
-
+  let fee = new BigNumber(0);
   for(var i of feesData){
-    finalData[i.pool].fees = new BigNumber(i.feesEpoch.value);
-  }
+    if(i.pool === x.pool)
+     fee = new BigNumber(i.feesEpoch.value);
+   }
+
+  finalData[x.pool] = { fees : fee ,  bribes : bribe};
+}
 
   console.log(finalData);
 
+  return{
+    success : true,
+    allData : finalData,
+  };
+  } catch (error) {
+    console.log(error);
+    return{
+      success : false,
+      allData : {"false" : { fees : new BigNumber(0) ,  bribes : new BigNumber(0)}},
+    };
+    
+  }
 };
 
-export const votesPageDataWrapper = async (epoch: number) => {
-  // Get pools from ve indexer
-  // For each pool calculate rewards  , total votes , my votes at specific epoch
-  // rewards : same file
-  // total votes: kiran's file
-  //  my votes : kirans's file
-  // Combine data and give in object form ammAddy : {data}
+export const votesPageDataWrapper = async (epoch: number , tokenId : number | undefined) : Promise<{
+  success: boolean;
+  allData: { [id: string]: IVotePageData };
+}> => {
+
+  try {
+
+     // TODO : UnComment when launching
+    // const state = store.getState();
+    // const AMMS = state.config.AMMs;
+
+    // TODO: Remove this get call
+    const AMMResponse = await axios.get(
+      'https://config.plentydefi.com/v1/config/amm'
+    );
+    const AMMS: IAmmContracts = AMMResponse.data;
+
+    const rewardData = await mainPageRewardData(epoch);
+    const votesData = await getAllVotesData(epoch , tokenId);
+
+    const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
+    const poolsData : VolumeV1Data[] = poolsResponse.data;
+
+    const allData: { [id: string]: IVotePageData } = {};
+
+    for (var poolData of poolsData) {
+      const AMM = AMMS[poolData.pool];
+
+      allData[poolData.pool] = {
+        tokenA: AMM.token1.symbol,
+        tokenB: AMM.token2.symbol,
+        poolType: AMM.type,
+
+        bribes : rewardData.allData[poolData.pool].bribes,
+        fees : rewardData.allData[poolData.pool].fees,
+
+        totalVotes : votesData.totalVotesData[poolData.pool].votes,
+        totalVotesPercentage : votesData.totalVotesData[poolData.pool].votePercentage,
+
+        myVotes : votesData.myVotesData[poolData.pool].votes,
+        myVotesPercentage : votesData.myVotesData[poolData.pool].votePercentage,
+
+      };
+
+    }
+
+    console.log(allData);
+
+    return{
+      success : true,
+      allData : allData,
+    };
+    
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      allData: {},
+    };
+  }
 };
