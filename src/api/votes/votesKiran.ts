@@ -15,7 +15,7 @@ import {
   IVotesData,
   IVotesResponse,
 } from "./types";
-import { VOTES_CHART_LIMIT } from "../../constants/global";
+import { PLY_DECIMAL_MULTIPLIER, VOTES_CHART_LIMIT } from "../../constants/global";
 import { store } from "../../redux";
 
 
@@ -34,8 +34,8 @@ export const getVeNFTsList = async (userTezosAddress: string): Promise<IVeNFTLis
         if (new BigNumber(lock.epochtVotingPower).isFinite() && new BigNumber(lock.epochtVotingPower).isGreaterThan(0)) {
           finalLocks.push({
             tokenId: new BigNumber(lock.id),
-            baseValue: new BigNumber(lock.baseValue).dividedBy(new BigNumber(10).pow(18)),
-            votingPower: new BigNumber(lock.availableVotingPower).dividedBy(new BigNumber(10).pow(18)),
+            baseValue: new BigNumber(lock.baseValue).dividedBy(PLY_DECIMAL_MULTIPLIER),
+            votingPower: new BigNumber(lock.availableVotingPower).dividedBy(PLY_DECIMAL_MULTIPLIER),
           });
         }
         return finalLocks;
@@ -93,7 +93,7 @@ export const getTotalAmmVotes = async (epochNumber: number): Promise<IVotesRespo
       (voteData): IVotesData => ({
         dexContractAddress: voteData.key.amm,
         votePercentage: new BigNumber(voteData.value).multipliedBy(100).dividedBy(totalEpochVotes),
-        votes: new BigNumber(voteData.value).dividedBy(new BigNumber(10).pow(18)),
+        votes: new BigNumber(voteData.value).dividedBy(PLY_DECIMAL_MULTIPLIER),
         tokenOneSymbol: AMM[voteData.key.amm].token1.symbol,
         tokenTwoSymbol: AMM[voteData.key.amm].token2.symbol,
       })
@@ -172,7 +172,7 @@ export const getMyAmmVotes = async (
       (voteData): IVotesData => ({
         dexContractAddress: voteData.key.amm,
         votePercentage: new BigNumber(voteData.value).multipliedBy(100).dividedBy(totalTokenVotes),
-        votes: new BigNumber(voteData.value).dividedBy(new BigNumber(10).pow(18)),
+        votes: new BigNumber(voteData.value).dividedBy(PLY_DECIMAL_MULTIPLIER),
         tokenOneSymbol: AMM[voteData.key.amm].token1.symbol,
         tokenTwoSymbol: AMM[voteData.key.amm].token2.symbol,
       })
@@ -254,7 +254,7 @@ export const getAllVotesData = async (
       totalVotesData[voteData.key.amm] = {
         dexContractAddress: voteData.key.amm,
         votePercentage: new BigNumber(voteData.value).multipliedBy(100).dividedBy(totalEpochVotes),
-        votes: new BigNumber(voteData.value).dividedBy(new BigNumber(10).pow(18)),
+        votes: new BigNumber(voteData.value).dividedBy(PLY_DECIMAL_MULTIPLIER),
         tokenOneSymbol: AMM[voteData.key.amm].token1.symbol,
         tokenTwoSymbol: AMM[voteData.key.amm].token2.symbol,
       };
@@ -285,7 +285,7 @@ export const getAllVotesData = async (
           votePercentage: new BigNumber(voteData.value)
             .multipliedBy(100)
             .dividedBy(totalTokenVotes),
-          votes: new BigNumber(voteData.value).dividedBy(new BigNumber(10).pow(18)),
+          votes: new BigNumber(voteData.value).dividedBy(PLY_DECIMAL_MULTIPLIER),
           tokenOneSymbol: AMM[voteData.key.amm].token1.symbol,
           tokenTwoSymbol: AMM[voteData.key.amm].token2.symbol,
         };
