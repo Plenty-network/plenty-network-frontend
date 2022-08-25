@@ -11,17 +11,31 @@ export interface IRangeSliderProps {
   tokenB: string;
   setSelectedPools: React.Dispatch<React.SetStateAction<ISelectedPool[]>>;
   selectedPools: ISelectedPool[];
+  setTotalVotingPower: React.Dispatch<React.SetStateAction<number>>;
+  totalVotingPower: number;
 }
 
 export function RangeSlider(props: IRangeSliderProps) {
   const [sliderVal, setSliderVal] = React.useState(0);
   const handleInputEdit = (value: string) => {
     if (value && !isNaN(parseInt(value))) {
-      if (parseInt(value) >= 0 && parseInt(value) <= 100) {
+      if (
+        parseInt(value) >= 0 &&
+        parseInt(value) <= 100 &&
+        props.totalVotingPower < 100 &&
+        props.totalVotingPower + Number(value) <= 100
+      ) {
         setSliderVal(parseInt(value));
       }
     } else {
       setSliderVal(0);
+    }
+  };
+  const handleSlider = (increment: boolean) => {
+    if (props.totalVotingPower < 100 && increment && props.totalVotingPower + 10 <= 100) {
+      setSliderVal((oldValue) => (oldValue + 10 < 100 ? oldValue + 10 : 100));
+    } else if (props.totalVotingPower < 100 && !increment) {
+      setSliderVal((oldValue) => (oldValue - 10 > 0 ? (oldValue - 10) % 100 : 0));
     }
   };
 
@@ -45,22 +59,22 @@ export function RangeSlider(props: IRangeSliderProps) {
         );
       }
     }
+    var d = 0;
+    props.selectedPools.forEach((pool) => (d += pool.votingPower));
+    totalVotingPower.current = d;
+    props.setTotalVotingPower(d);
   }, [sliderVal]);
+  const totalVotingPower = React.useRef(0);
 
   return (
     <div className="flex gap-3">
       {!props.isMobile && (
         <div className="flex items-center gap-[7.5px]">
-          <Image
-            src={minus}
-            className="cursor-pointer"
-            onClick={() =>
-              setSliderVal((oldValue) => (oldValue - 10 > 0 ? (oldValue - 10) % 100 : 0))
-            }
-          />
+          <Image src={minus} className="cursor-pointer" onClick={() => handleSlider(false)} />
           <Range
             step={0.1}
             min={0}
+            disabled={props.totalVotingPower >= 100}
             max={100}
             values={[sliderVal]}
             onChange={(values) => setSliderVal(values[0])}
@@ -88,18 +102,17 @@ export function RangeSlider(props: IRangeSliderProps) {
               />
             )}
           />
-          <Image
-            src={plus}
-            className="cursor-pointer"
-            onClick={() => setSliderVal((oldValue) => (oldValue + 10 < 100 ? oldValue + 10 : 100))}
-          />
+          <Image src={plus} className="cursor-pointer" onClick={() => handleSlider(true)} />
         </div>
       )}
-      <input
-        className="bg-primary-500/10 border outline-none border-primary-500 py-[9px] text-center h-[38px] w-[48px] rounded-lg text-f12 "
-        value={sliderVal.toFixed(0) + "%"}
-        onChange={(e) => handleInputEdit(e.target.value.replaceAll("%", ""))}
-      />
+      <div className="bg-primary-500/10 flex border  border-primary-500 text-f12 py-[9px] text-center h-[38px] w-[48px] rounded-lg px-[9px]">
+        <input
+          className="bg-primary-500/[0.0] w-[19px] outline-none text-center text-f12 "
+          value={sliderVal.toFixed(0)}
+          onChange={(e) => handleInputEdit(e.target.value)}
+        />
+        %
+      </div>
     </div>
   );
 }
