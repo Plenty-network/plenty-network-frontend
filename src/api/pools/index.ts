@@ -29,16 +29,16 @@ export const poolsDataWrapper = async (
     const AMMS: IAmmContracts = AMMResponse.data;
 
     // TODO: Make URL dynamic. Fetch all base urls from Config.
-    // const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
-    const poolsResponse = await axios.get(
-      'https://62d80fa990883139358a3999.mockapi.io/api/v1/ve'
-    );
+    const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
+    // const poolsResponse = await axios.get(
+    //   'https://62d80fa990883139358a3999.mockapi.io/api/v1/ve'
+    // );
     const poolsData: VolumeV1Data[] = poolsResponse.data;
 
-    // const analyticsResponse = await axios.get(`${Config.PLY_INDEXER}ve/pools`);
-    const analyticsResponse = await axios.get(
-      'https://62d80fa990883139358a3999.mockapi.io/api/v1/config'
-    );
+    const analyticsResponse = await axios.get(`${Config.PLY_INDEXER}ve/pools`);
+    // const analyticsResponse = await axios.get(
+    //   'https://62d80fa990883139358a3999.mockapi.io/api/v1/config'
+    // );
     const analyticsData: VolumeVeData[] = analyticsResponse.data;
 
     const allData: { [id: string]: IPoolsDataWrapperResponse } = {};
@@ -56,12 +56,13 @@ export const poolsDataWrapper = async (
         for (var y of poolData.bribes) {
           bribe = bribe.plus(
             new BigNumber(
-              new BigNumber(y.value).multipliedBy(tokenPrice[y.tokenName])
+              new BigNumber(y.value).multipliedBy(y.price)
             )
           );
           bribes.push({
-            tokenName: y.tokenName,
+            name: y.name,
             value: new BigNumber(y.value),
+            price : new BigNumber(y.price)
           });
         }
       }

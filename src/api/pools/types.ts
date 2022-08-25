@@ -55,8 +55,9 @@ export interface VolumeVeData {
 }
 
 export interface Bribes{
-  tokenName : string;
   value : BigNumber;
+  price : BigNumber;
+  name : string;
 }
 
 export interface IPoolsDataWrapperResponse {

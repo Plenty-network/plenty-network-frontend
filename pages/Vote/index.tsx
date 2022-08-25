@@ -32,7 +32,10 @@ import AllocationPopup from "../../src/components/Votes/AllocationPopup";
 import { IAllBalanceResponse } from "../../src/api/util/types";
 import { vote } from "../../src/operations/vote";
 
+
+
 export default function Vote() {
+
   const dispatch = useDispatch<AppDispatch>();
   const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
   const epochData = useAppSelector((state) => state.epoch.epochData);
