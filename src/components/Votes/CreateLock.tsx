@@ -54,11 +54,16 @@ function CreateLock(props: ICreateLockProps) {
     const WEEK = 7 * DAY;
 
     const now = Math.floor(new Date().getTime() / 1000);
-    const endDate = days
+    
+    const timeSpan = days
       ? days
       : Math.floor(new Date(userSelectedDate as string).getTime() / 1000) - now;
 
-    const lockEnd = Math.floor((now + (endDate + WEEK - 1)) / WEEK) * WEEK;
+    const lockEnd =
+      days === MAX_TIME
+        ? Math.floor((now + timeSpan) / WEEK) * WEEK
+        : Math.floor((now + (timeSpan + WEEK - 1)) / WEEK) * WEEK;
+
     props.setLockingDate(dateFormat(lockEnd * 1000));
     props.setLockingEndData({ selected: days ? days : 0, lockingDate: lockEnd });
     // send new BigNumber(lockEnd) as argument to api
