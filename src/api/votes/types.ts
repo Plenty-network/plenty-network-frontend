@@ -1,4 +1,5 @@
 import { BigNumber } from "bignumber.js";
+import { Bribes } from "../pools/types";
 export interface IEpochListObject {
   epochNumber: number;
   isCurrent: boolean;
@@ -69,4 +70,9 @@ export interface IAllVotesResponse {
   totalVotesData: IAllVotesData;
   myVotesData: IAllVotesData;
   error?: string;
+}
+
+export interface IBribesResponse {
+  pool : string;
+  bribes : Bribes[];
 }

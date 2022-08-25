@@ -30,8 +30,14 @@ import { createLock } from "../../src/operations/locks";
 import { setLoading } from "../../src/redux/isLoading/action";
 import AllocationPopup from "../../src/components/Votes/AllocationPopup";
 import { IAllBalanceResponse } from "../../src/api/util/types";
+import { mainPageRewardData } from "../../src/api/votes/votesUdit";
+
+
 
 export default function Vote() {
+
+  const res = mainPageRewardData(1);
+
   const dispatch = useDispatch<AppDispatch>();
   const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
   const epochData = useAppSelector((state) => state.epoch.epochData);

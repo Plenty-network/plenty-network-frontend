@@ -5,6 +5,8 @@ import { connectedNetwork } from "../../common/walletconnect";
 import { getStorage, getTzktBigMapData } from "../util/storageProvider";
 import { voteEscrowStorageType } from "./data";
 import { MAX_TIME, PLY_DECIMAL_MULTIPLIER, WEEK } from "../../constants/global";
+import { IBribesResponse } from "./types";
+import { VolumeVeData } from "../pools/types";
 
 export const estimateVotingPower = (value: BigNumber, end: number): number => {
   try {
@@ -107,15 +109,42 @@ export const votingPower = async (tokenId: number, ts2: number, time: number): P
   }
 };
 
-const mainPageRewardData = async (epoch: number) => {
-  // Get Fees and Bribes in tokens for each amm on specific epoch
-  // Bribes from VEINDEXER
-  // FEES from ANALYTICS INDEXER
-  // Bribes : https://veplyindexer.plentydefi.com/v1/pools
-  // Fess : https://networkanalyticsindexer.plentydefi.com/ve/pools
-  // Get token Prices @ that epoch
-  // Multiply the two and return
-  // Return Fees and Bribes & value to FE
+export const mainPageRewardData = async (epoch: number) => {
+
+  const bribes = await axios.get(`https://veplyindexer.plentydefi.com/v1/bribes?epoch=174`);
+  const bribesData : IBribesResponse[] = bribes.data;
+
+  const finalData : { [id: string]: {bribes : BigNumber , fees : BigNumber} }= {};
+
+  for(var x of bribesData){
+  let bribe: BigNumber = new BigNumber(0);
+  if (!x.bribes || x.bribes.length === 0) {
+    bribe = new BigNumber(0);
+  } else {
+    for (var y of x.bribes) {
+      bribe = bribe.plus(
+        new BigNumber(
+          new BigNumber(y.value).multipliedBy(y.price)
+        )
+      );
+    }
+  }
+  finalData[x.pool] =  {bribes : bribe , fees : new BigNumber(0)};
+}
+
+  // call check if current 
+  // const res = checkIfCurrent(epoch);
+
+
+  const feesResponse = await axios.get(`https://networkanalyticsindexer.plentydefi.com/ve/pools?ts=1660030117`);
+  const feesData : VolumeVeData[] = feesResponse.data;
+
+  for(var i of feesData){
+    finalData[i.pool].fees = new BigNumber(i.feesEpoch.value);
+  }
+
+  console.log(finalData);
+
 };
 
 export const votesPageDataWrapper = async (epoch: number) => {
