@@ -1,4 +1,4 @@
-import { IVeNFTData } from "../../api/votes/types";
+import { ISelectedPool, IVeNFTData } from "../../api/votes/types";
 import { BigNumber } from "bignumber.js";
 
 export interface ITransactionSubmittedProps {
@@ -51,7 +51,7 @@ export interface IConfirmLockingProps {
 }
 export interface ICastVoteProps {
   show: boolean;
-
+  selectedPools: ISelectedPool[];
   setShow: any;
 }
 
@@ -60,6 +60,8 @@ export interface IVotesTableProps {
   isConnectWalletRequired?: boolean;
   searchValue: string;
   setSearchValue?: Function;
+  setSelectedPools: React.Dispatch<React.SetStateAction<ISelectedPool[]>>;
+  selectedPools: ISelectedPool[];
 }
 export interface IManageBtnProps {
   isLiquidityAvailable: boolean;
@@ -67,4 +69,8 @@ export interface IManageBtnProps {
 }
 export interface ISelectNFT {
   veNFTlist: IVeNFTData[];
+}
+export interface IAllocationProps {
+  show: boolean;
+  setShow: any;
 }

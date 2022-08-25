@@ -22,7 +22,7 @@ import { getEpochData } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
 import { EPOCH_DURATION_TESTNET } from "../../src/constants/global";
 import { getVeNFTsList } from "../../src/api/votes/votesKiran";
-import { IVeNFTData } from "../../src/api/votes/types";
+import { ISelectedPool, IVeNFTData } from "../../src/api/votes/types";
 import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
@@ -35,12 +35,11 @@ export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
   const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
   const epochData = useAppSelector((state) => state.epoch.epochData);
-  const plyToken = "PLY";
+
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
 
-  const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   const [lockingDate, setLockingDate] = useState("");
 
@@ -53,6 +52,8 @@ export default function Vote() {
   const [plyInput, setPlyInput] = useState("");
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
+  const [selectedPools, setSelectedPools] = useState<ISelectedPool[]>([] as ISelectedPool[]);
+  console.log(selectedPools);
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
@@ -70,13 +71,6 @@ export default function Vote() {
       });
     }
   }, [userAddress, epochData, currentEpoch]);
-  // useEffect(() => {
-  //   if (epochError) {
-  //     setTimeout(() => {
-  //       dispatch(getEpochData());
-  //     }, 1000);
-  //   }
-  // }, [epochError]);
 
   useInterval(() => {
     dispatch(getEpochData());
@@ -234,6 +228,8 @@ export default function Vote() {
                 className="px-5 py-4 "
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
+                setSelectedPools={setSelectedPools}
+                selectedPools={selectedPools}
               />
             </div>
             <div className="hidden md:block md:basis-1/3 md:pr-[30px]">
@@ -259,7 +255,13 @@ export default function Vote() {
       {showCastVotingAllocation && (
         <AllocationPopup show={showCastVotingAllocation} setShow={setShowCastVotingAllocation} />
       )}
-      {showCastVoteModal && <CastVote show={showCastVoteModal} setShow={setShowCastVoteModal} />}
+      {showCastVoteModal && (
+        <CastVote
+          show={showCastVoteModal}
+          setShow={setShowCastVoteModal}
+          selectedPools={selectedPools}
+        />
+      )}
       {showCreateLockModal && (
         <CreateLock
           show={showCreateLockModal}
@@ -286,7 +288,7 @@ export default function Vote() {
         <ConfirmTransaction
           show={showConfirmTransaction}
           setShow={setShowConfirmTransaction}
-          content={`create lock`}
+          content={`Locking`}
         />
       )}
       {showTransactionSubmitModal && (
@@ -296,7 +298,7 @@ export default function Vote() {
           onBtnClick={
             transactionId ? () => window.open(`https://tzkt.io/${transactionId}`, "_blank") : null
           }
-          content={`create lock `}
+          content={`locking`}
         />
       )}
     </>
