@@ -11,6 +11,8 @@ export interface IRangeSliderProps {
   tokenB: string;
   setSelectedPools: React.Dispatch<React.SetStateAction<ISelectedPool[]>>;
   selectedPools: ISelectedPool[];
+  setTotalVotingPower: React.Dispatch<React.SetStateAction<number>>;
+  totalVotingPower: number;
 }
 
 export function RangeSlider(props: IRangeSliderProps) {
@@ -22,6 +24,13 @@ export function RangeSlider(props: IRangeSliderProps) {
       }
     } else {
       setSliderVal(0);
+    }
+  };
+  const handleSlider = (increment: boolean) => {
+    if (props.totalVotingPower < 100 && props.totalVotingPower + 10 <= 100) {
+      increment
+        ? setSliderVal((oldValue) => (oldValue + 10 < 100 ? oldValue + 10 : 100))
+        : setSliderVal((oldValue) => (oldValue - 10 > 0 ? (oldValue - 10) % 100 : 0));
     }
   };
 
@@ -45,22 +54,22 @@ export function RangeSlider(props: IRangeSliderProps) {
         );
       }
     }
+    var d = 0;
+    props.selectedPools.forEach((pool) => (d += pool.votingPower));
+    totalVotingPower.current = d;
+    props.setTotalVotingPower(d);
   }, [sliderVal]);
+  const totalVotingPower = React.useRef(0);
 
   return (
     <div className="flex gap-3">
       {!props.isMobile && (
         <div className="flex items-center gap-[7.5px]">
-          <Image
-            src={minus}
-            className="cursor-pointer"
-            onClick={() =>
-              setSliderVal((oldValue) => (oldValue - 10 > 0 ? (oldValue - 10) % 100 : 0))
-            }
-          />
+          <Image src={minus} className="cursor-pointer" onClick={() => handleSlider(false)} />
           <Range
             step={0.1}
             min={0}
+            disabled={props.totalVotingPower > 100}
             max={100}
             values={[sliderVal]}
             onChange={(values) => setSliderVal(values[0])}
@@ -88,11 +97,7 @@ export function RangeSlider(props: IRangeSliderProps) {
               />
             )}
           />
-          <Image
-            src={plus}
-            className="cursor-pointer"
-            onClick={() => setSliderVal((oldValue) => (oldValue + 10 < 100 ? oldValue + 10 : 100))}
-          />
+          <Image src={plus} className="cursor-pointer" onClick={() => handleSlider(true)} />
         </div>
       )}
       <input

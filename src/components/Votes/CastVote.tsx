@@ -43,8 +43,12 @@ function CastVote(props: ICastVoteProps) {
               </div>
               <div className="ml-auto bg-text-800/[0.5] relative -top-[9px] rounded-lg flex items-center h-[36px] px-2">
                 <Image src={lock} />
-                <span className="font-body4 text-white">2500 /</span>
-                <span className="font-body4 text-text-500 ml-px">#7623</span>
+                <span className="font-body4 text-white">
+                  {Number(props.selectedDropDown.votingPower).toFixed(3)} /
+                </span>
+                <span className="font-body4 text-text-500 ml-px">
+                  #{props.selectedDropDown.tokenId}
+                </span>
               </div>
             </div>
             {props.selectedPools.map((pool, index) => {
@@ -91,7 +95,9 @@ function CastVote(props: ICastVoteProps) {
             </div>
           </div>
           <div className="mt-[18px]">
-            <Button color="primary">Confirm vote</Button>
+            <Button color="primary" onClick={props.onClick}>
+              Confirm vote
+            </Button>
           </div>
         </>
       }

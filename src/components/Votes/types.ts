@@ -54,9 +54,16 @@ export interface ICastVoteProps {
   selectedPools: ISelectedPool[];
   setShow: any;
   totalVotingPower: number;
+  selectedDropDown: {
+    votingPower: string;
+    tokenId: string;
+  };
+  onClick: () => void;
 }
 
 export interface IVotesTableProps {
+  setTotalVotingPower: React.Dispatch<React.SetStateAction<number>>;
+  totalVotingPower: number;
   className?: string;
   isConnectWalletRequired?: boolean;
   searchValue: string;
@@ -70,6 +77,16 @@ export interface IManageBtnProps {
 }
 export interface ISelectNFT {
   veNFTlist: IVeNFTData[];
+  selectedText: {
+    votingPower: string;
+    tokenId: string;
+  };
+  setSelectedDropDown: React.Dispatch<
+    React.SetStateAction<{
+      votingPower: string;
+      tokenId: string;
+    }>
+  >;
 }
 export interface IAllocationProps {
   show: boolean;

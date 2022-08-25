@@ -8,6 +8,8 @@ export interface IMyVotesProps {
   tokenB: string;
   setSelectedPools: React.Dispatch<React.SetStateAction<ISelectedPool[]>>;
   selectedPools: ISelectedPool[];
+  setTotalVotingPower: React.Dispatch<React.SetStateAction<number>>;
+  totalVotingPower: number;
 }
 
 export function MyVotes(props: IMyVotesProps) {
@@ -19,6 +21,8 @@ export function MyVotes(props: IMyVotesProps) {
         tokenB={props.tokenB}
         setSelectedPools={props.setSelectedPools}
         selectedPools={props.selectedPools}
+        setTotalVotingPower={props.setTotalVotingPower}
+        totalVotingPower={props.totalVotingPower}
       />
     </div>
   );

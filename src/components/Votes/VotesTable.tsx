@@ -98,6 +98,8 @@ export function VotesTable(props: IVotesTableProps) {
             tokenB={tEZorCTEZtoUppercase(x.tokenB.toString())}
             setSelectedPools={props.setSelectedPools}
             selectedPools={props.selectedPools}
+            setTotalVotingPower={props.setTotalVotingPower}
+            totalVotingPower={props.totalVotingPower}
           />
         ),
       },
@@ -164,6 +166,8 @@ export function VotesTable(props: IVotesTableProps) {
             tokenB={tEZorCTEZtoUppercase(x.tokenB.toString())}
             setSelectedPools={props.setSelectedPools}
             selectedPools={props.selectedPools}
+            setTotalVotingPower={props.setTotalVotingPower}
+            totalVotingPower={props.totalVotingPower}
           />
         ),
       },
