@@ -6,7 +6,7 @@ import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
 import vectorDown from "../../assets/icon/common/vector.svg";
 import { useCountdown } from "../../hooks/useCountDown";
 import { useOutsideClick } from "../../utils/outSideClickHook";
-import { IEpochListObject } from "../../api/votes/types";
+import { IEpochListObject } from "../../api/util/types";
 import { useDispatch } from "react-redux";
 import { AppDispatch, store } from "../../redux";
 import { getEpochData, setSelectedEpoch } from "../../redux/epoch/epoch";
