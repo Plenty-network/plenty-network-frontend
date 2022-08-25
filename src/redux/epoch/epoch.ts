@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { IEpochDataResponse, IEpochListObject } from "../../api/votes/types";
-import { getListOfEpochs } from "../../api/votes/votesKiran";
+import { IEpochDataResponse, IEpochListObject } from "../../api/util/types";
+import { getListOfEpochs } from "../../api/util/epoch";
 
 interface IEpochState {
   currentEpoch: IEpochListObject;
