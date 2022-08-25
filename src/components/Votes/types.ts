@@ -53,6 +53,7 @@ export interface ICastVoteProps {
   show: boolean;
   selectedPools: ISelectedPool[];
   setShow: any;
+  totalVotingPower: number;
 }
 
 export interface IVotesTableProps {

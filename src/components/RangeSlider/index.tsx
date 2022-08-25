@@ -44,10 +44,9 @@ export function RangeSlider(props: IRangeSliderProps) {
           })
         );
       }
-
-      console.log(props.selectedPools);
     }
   }, [sliderVal]);
+
   return (
     <div className="flex gap-3">
       {!props.isMobile && (

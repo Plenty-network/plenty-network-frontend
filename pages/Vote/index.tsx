@@ -30,6 +30,7 @@ import { createLock } from "../../src/operations/locks";
 import { setLoading } from "../../src/redux/isLoading/action";
 import AllocationPopup from "../../src/components/Votes/AllocationPopup";
 import { IAllBalanceResponse } from "../../src/api/util/types";
+import { vote } from "../../src/operations/vote";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -47,13 +48,14 @@ export default function Vote() {
     selected: 0,
     lockingDate: 0,
   });
+  const totalVotingPower = useRef(0);
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [transactionId, setTransactionId] = useState("");
   const [plyInput, setPlyInput] = useState("");
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const [selectedPools, setSelectedPools] = useState<ISelectedPool[]>([] as ISelectedPool[]);
-  console.log(selectedPools);
+  const [sliderVal, setSliderVal] = React.useState(0);
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
@@ -66,7 +68,6 @@ export default function Vote() {
   useEffect(() => {
     if (userAddress) {
       getVeNFTsList(userAddress).then((res) => {
-        console.log(res.veNFTData);
         setVeNFTlist(res.veNFTData);
       });
     }
@@ -126,6 +127,13 @@ export default function Vote() {
       setUserBalances({});
     }
   }, [userAddress, TOKEN]);
+  const ref = useRef(JSON.stringify(selectedPools));
+  useEffect(() => {
+    var d = 0;
+    selectedPools.forEach((pool) => (d += pool.votingPower));
+    console.log(d);
+    totalVotingPower.current = d;
+  }, [userAddress, JSON.stringify(selectedPools), ref.current]);
 
   const resetAllValues = () => {
     setPlyInput("");
@@ -177,6 +185,33 @@ export default function Vote() {
       }
     });
   };
+  const handleVoteOperation = () => {
+    setShowCreateLockModal(false);
+    setShowConfirmTransaction(true);
+    dispatch(setLoading(true));
+    vote(6, [], transactionSubmitModal, resetAllValues, setShowConfirmTransaction).then(
+      (response) => {
+        if (response.success) {
+          setBalanceUpdate(true);
+
+          setTimeout(() => {
+            setShowTransactionSubmitModal(false);
+          }, 2000);
+
+          dispatch(setLoading(false));
+        } else {
+          setBalanceUpdate(true);
+
+          setShowConfirmTransaction(false);
+          setTimeout(() => {
+            setShowTransactionSubmitModal(false);
+          }, 2000);
+
+          dispatch(setLoading(false));
+        }
+      }
+    );
+  };
 
   return (
     <>
@@ -212,7 +247,7 @@ export default function Vote() {
                 </div>
 
                 <div className="border border-muted-50 px-4 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
-                  00%
+                  {totalVotingPower.current ? totalVotingPower.current : "00"}%
                 </div>
                 <div
                   className=" bg-card-700 h-[52px] px-4 flex items-center justify-center rounded-xl cursor-pointer"
@@ -239,7 +274,7 @@ export default function Vote() {
               </div>
               <div className="flex flex-row gap-2 mt-[14px]">
                 <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
-                  00%
+                  {totalVotingPower.current ? totalVotingPower.current : "00"}%
                 </div>
                 <div
                   className="basis-3/4 bg-card-700 h-[52px] flex items-center justify-center rounded-xl cursor-pointer"
@@ -260,6 +295,7 @@ export default function Vote() {
           show={showCastVoteModal}
           setShow={setShowCastVoteModal}
           selectedPools={selectedPools}
+          totalVotingPower={totalVotingPower.current}
         />
       )}
       {showCreateLockModal && (
