@@ -1,4 +1,4 @@
-import { ISelectedPool, IVeNFTData } from "../../api/votes/types";
+import { ISelectedPool, IVeNFTData, IVotePageData } from "../../api/votes/types";
 import { BigNumber } from "bignumber.js";
 
 export interface ITransactionSubmittedProps {
@@ -64,6 +64,10 @@ export interface ICastVoteProps {
 export interface IVotesTableProps {
   setTotalVotingPower: React.Dispatch<React.SetStateAction<number>>;
   totalVotingPower: number;
+  voteData: {
+    [id: string]: IVotePageData;
+  };
+
   className?: string;
   isConnectWalletRequired?: boolean;
   searchValue: string;
