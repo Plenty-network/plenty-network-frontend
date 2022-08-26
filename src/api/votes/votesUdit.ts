@@ -18,6 +18,7 @@ import { IEpochData, IEpochResponse } from "../util/types";
 import { getAllVotesData } from "./votesKiran";
 import { pools } from "../../redux/pools";
 import { IAmmContracts } from "../../config/types";
+import { getDexAddress } from "../util/fetchConfig";
 
 export const estimateVotingPower = (value: BigNumber, end: number): number => {
   try {
@@ -189,9 +190,9 @@ export const votesPageDataWrapper = async (
     const AMMS: IAmmContracts = AMMResponse.data;
 
     const rewardData = await mainPageRewardData(epoch);
-    
+
     const votesData = await getAllVotesData(epoch, tokenId);
-    
+
     const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
     const poolsData: VolumeV1Data[] = poolsResponse.data;
     if (poolsData.length === 0) {
@@ -201,6 +202,10 @@ export const votesPageDataWrapper = async (
 
     for (var poolData of poolsData) {
       const AMM = AMMS[poolData.pool];
+
+      //TODO: Remove next two lines during mainnet launch
+      const testnetDex = getDexAddress(AMM.token1.symbol, AMM.token2.symbol);
+      const dexForVotes = testnetDex !== "false" ? testnetDex : poolData.pool;
 
       allData[poolData.pool] = {
         tokenA: AMM.token1.symbol,
@@ -220,7 +225,8 @@ export const votesPageDataWrapper = async (
             ? rewardData.allData[poolData.pool].fees
             : new BigNumber(0),
 
-        totalVotes:
+        //TODO: Uncomment for mainnet
+        /* totalVotes:
           Object.keys(votesData.totalVotesData).length === 0
             ? new BigNumber(0)
             : votesData.totalVotesData[poolData.pool]
@@ -244,6 +250,33 @@ export const votesPageDataWrapper = async (
             ? new BigNumber(0)
             : votesData.myVotesData[poolData.pool]
             ? votesData.myVotesData[poolData.pool].votePercentage
+            : new BigNumber(0), */
+
+        //TODO: Remove for mainnet
+        totalVotes:
+          Object.keys(votesData.totalVotesData).length === 0
+            ? new BigNumber(0)
+            : votesData.totalVotesData[dexForVotes]
+            ? votesData.totalVotesData[dexForVotes].votes
+            : new BigNumber(0),
+        totalVotesPercentage:
+          Object.keys(votesData.totalVotesData).length === 0
+            ? new BigNumber(0)
+            : votesData.totalVotesData[dexForVotes]
+            ? votesData.totalVotesData[dexForVotes].votePercentage
+            : new BigNumber(0),
+
+        myVotes:
+          Object.keys(votesData.myVotesData).length === 0
+            ? new BigNumber(0)
+            : votesData.myVotesData[dexForVotes]
+            ? votesData.myVotesData[dexForVotes].votes
+            : new BigNumber(0),
+        myVotesPercentage:
+          Object.keys(votesData.myVotesData).length === 0
+            ? new BigNumber(0)
+            : votesData.myVotesData[dexForVotes]
+            ? votesData.myVotesData[dexForVotes].votePercentage
             : new BigNumber(0),
       };
     }
