@@ -2,6 +2,7 @@ import { connectedNetwork, voterAddress as voterContractAddress } from "../../co
 import {
     EPOCH_DURATION_MAINNET,
     EPOCH_DURATION_TESTNET,
+    MAX_TIME,
   } from "../../constants/global";
 import { voterStorageType } from "../votes/data";
 import { getStorage, getTzktBigMapData } from "./storageProvider";
@@ -103,3 +104,18 @@ import { getStorage, getTzktBigMapData } from "./storageProvider";
     }
   };
   
+  /**
+   * Returns the range of timestamp allowed in calendar for selection in milliseconds along with number of days allowed.
+   */
+  export const getCalendarRangeToEnable = () => {
+    const start = new Date();
+    start.setUTCHours(0,0,0,0);
+    const startTimestamp = start.getTime();
+    const endTimestamp = startTimestamp + MAX_TIME * 1000;
+    const days = Math.floor((endTimestamp - startTimestamp) / 86400000);
+    return {
+      startTimestamp,
+      endTimestamp,
+      days,
+    };
+  };
