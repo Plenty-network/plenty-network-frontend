@@ -14,12 +14,15 @@ import { estimateVotingPower } from "../../api/votes/votesUdit";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { MAX_TIME, WEEK, YEAR } from "../../constants/global";
+import { Datepicker } from "../DatePicker";
 
 function CreateLock(props: ICreateLockProps) {
   const walletAddress = store.getState().wallet.address;
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const [screen, setScreen] = useState("1");
   const [votingPower, setVotingPower] = useState(0);
+  const [selectedDate, setSelectedDate] = useState();
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const closeModal = () => {
     props.setShow(false);
   };
@@ -61,7 +64,7 @@ function CreateLock(props: ICreateLockProps) {
     const WEEK = 7 * DAY;
 
     const now = Math.floor(new Date().getTime() / 1000);
-    
+
     const timeSpan = days
       ? days
       : Math.floor(new Date(userSelectedDate as string).getTime() / 1000) - now;
@@ -225,7 +228,13 @@ function CreateLock(props: ICreateLockProps) {
                 />{" "}
               </div>
               <div className="ml-auto">
-                <Image src={calender} />
+                <Image src={calender} onClick={() => setIsDatePickerOpen(true)} />
+                <Datepicker
+                  selectedDate={new Date()}
+                  setStartDate={setSelectedDate}
+                  isOpen={isDatePickerOpen}
+                  setIsOpen={setIsDatePickerOpen}
+                />
               </div>
             </div>
             <div className="mt-3 px-3 md:px-5 flex gap-2">
