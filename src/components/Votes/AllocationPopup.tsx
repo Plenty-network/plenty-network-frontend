@@ -6,10 +6,10 @@ import tez from "../../assets/Tokens/tez.png";
 import lock from "../../../src/assets/icon/vote/lock.svg";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
-import { ICastVoteProps } from "./types";
+import { IAllocationProps, ICastVoteProps } from "./types";
 import VotingAllocation from "./VotingAllocation";
 
-function AllocationPopup(props: ICastVoteProps) {
+function AllocationPopup(props: IAllocationProps) {
   const closeModal = () => {
     props.setShow(false);
   };

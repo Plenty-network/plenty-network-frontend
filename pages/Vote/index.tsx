@@ -22,7 +22,7 @@ import { getEpochData } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
 import { EPOCH_DURATION_TESTNET } from "../../src/constants/global";
 import { getVeNFTsList } from "../../src/api/votes/votesKiran";
-import { IVeNFTData } from "../../src/api/votes/types";
+import { ISelectedPool, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
@@ -31,17 +31,18 @@ import { setLoading } from "../../src/redux/isLoading/action";
 import AllocationPopup from "../../src/components/Votes/AllocationPopup";
 import { InfoIconToolTip } from "../../src/components/Tooltip/InfoIconTooltip";
 import { IAllBalanceResponse } from "../../src/api/util/types";
+import { vote } from "../../src/operations/vote";
+import { votesPageDataWrapper } from "../../src/api/votes/votesUdit";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
   const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
   const epochData = useAppSelector((state) => state.epoch.epochData);
-  const plyToken = "PLY";
+  const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
 
-  const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   const [lockingDate, setLockingDate] = useState("");
 
@@ -49,11 +50,19 @@ export default function Vote() {
     selected: 0,
     lockingDate: 0,
   });
+  const [totalVotingPower, setTotalVotingPower] = useState(0);
+
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [transactionId, setTransactionId] = useState("");
   const [plyInput, setPlyInput] = useState("");
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
+  const [selectedPools, setSelectedPools] = useState<ISelectedPool[]>([] as ISelectedPool[]);
+  const [selectedDropDown, setSelectedDropDown] = useState({ votingPower: "", tokenId: "" });
+  const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
+    {} as { [id: string]: IVotePageData }
+  );
+
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
@@ -64,20 +73,20 @@ export default function Vote() {
     dispatch(getEpochData());
   }, []);
   useEffect(() => {
+    //selectedEpoch?.epochNumber ?selectedEpoch?.epochNumber:currentEpoch?.epochNumber
+    //selectedDropDown.tokenId?Number(selectedDropDown.tokenId):undefined
+    votesPageDataWrapper(174, 1).then((res) => {
+      console.log(res);
+      setVoteData(res.allData);
+    });
+  }, [selectedDropDown, currentEpoch?.epochNumber, selectedEpoch?.epochNumber]);
+  useEffect(() => {
     if (userAddress) {
       getVeNFTsList(userAddress).then((res) => {
-        console.log(res.veNFTData);
         setVeNFTlist(res.veNFTData);
       });
     }
   }, [userAddress, epochData, currentEpoch]);
-  // useEffect(() => {
-  //   if (epochError) {
-  //     setTimeout(() => {
-  //       dispatch(getEpochData());
-  //     }, 1000);
-  //   }
-  // }, [epochError]);
 
   useInterval(() => {
     dispatch(getEpochData());
@@ -184,6 +193,37 @@ export default function Vote() {
       }
     });
   };
+  const handleVoteOperation = () => {
+    setShowCastVoteModal(false);
+    setShowConfirmTransaction(true);
+    dispatch(setLoading(true));
+    vote(
+      Number(selectedDropDown.tokenId),
+      [],
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+
+        dispatch(setLoading(false));
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+
+        dispatch(setLoading(false));
+      }
+    });
+  };
 
   return (
     <>
@@ -207,7 +247,11 @@ export default function Vote() {
             <div className="md:basis-2/3">
               <div className="flex items-center px-3 md:px-0 py-2 md:py-0 border-b border-text-800/[0.5]">
                 <div>
-                  <SelectNFT veNFTlist={veNFTlist} />
+                  <SelectNFT
+                    veNFTlist={veNFTlist}
+                    selectedText={selectedDropDown}
+                    setSelectedDropDown={setSelectedDropDown}
+                  />
                 </div>
                 <div className="ml-auto">
                   <InputSearchBox className="" value={searchValue} onChange={setSearchValue} />
@@ -219,7 +263,7 @@ export default function Vote() {
                 </div>
 
                 <div className="border border-muted-50 px-4 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
-                  00%
+                  {totalVotingPower ? totalVotingPower : "00"}%
                 </div>
                 <div
                   className=" bg-card-700 h-[52px] px-4 flex items-center justify-center rounded-xl cursor-pointer"
@@ -235,6 +279,11 @@ export default function Vote() {
                 className="px-5 py-4 "
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
+                setSelectedPools={setSelectedPools}
+                selectedPools={selectedPools}
+                setTotalVotingPower={setTotalVotingPower}
+                totalVotingPower={totalVotingPower}
+                voteData={voteData}
               />
             </div>
             <div className="hidden md:block md:basis-1/3 md:pr-[30px]">
@@ -243,11 +292,11 @@ export default function Vote() {
                 Verify your vote percentage and cast vote
               </div>
               <div className="flex flex-row gap-2 mt-[14px]">
-                <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px] gap-1  flex items-center justify-center rounded-xl">
+                <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
                 <InfoIconToolTip 
                   message=" Verify your vote percentage and cast vote"
                   />
-                  00%
+                  {totalVotingPower ? totalVotingPower : "00"}%
                 </div>
                 <div
                   className="basis-3/4 bg-card-700 h-[52px] flex items-center justify-center rounded-xl cursor-pointer"
@@ -263,7 +312,16 @@ export default function Vote() {
       {showCastVotingAllocation && (
         <AllocationPopup show={showCastVotingAllocation} setShow={setShowCastVotingAllocation} />
       )}
-      {showCastVoteModal && <CastVote show={showCastVoteModal} setShow={setShowCastVoteModal} />}
+      {showCastVoteModal && (
+        <CastVote
+          show={showCastVoteModal}
+          setShow={setShowCastVoteModal}
+          selectedPools={selectedPools}
+          totalVotingPower={totalVotingPower}
+          selectedDropDown={selectedDropDown}
+          onClick={handleVoteOperation}
+        />
+      )}
       {showCreateLockModal && (
         <CreateLock
           show={showCreateLockModal}
@@ -290,7 +348,7 @@ export default function Vote() {
         <ConfirmTransaction
           show={showConfirmTransaction}
           setShow={setShowConfirmTransaction}
-          content={`create lock`}
+          content={`Locking`}
         />
       )}
       {showTransactionSubmitModal && (
@@ -300,7 +358,7 @@ export default function Vote() {
           onBtnClick={
             transactionId ? () => window.open(`https://tzkt.io/${transactionId}`, "_blank") : null
           }
-          content={`create lock `}
+          content={`locking`}
         />
       )}
     </>

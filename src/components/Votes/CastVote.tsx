@@ -12,6 +12,11 @@ function CastVote(props: ICastVoteProps) {
   const closeModal = () => {
     props.setShow(false);
   };
+  const getImagesPath = (name: string, isSvg?: boolean) => {
+    if (isSvg) return `/assets/tokens/${name}.svg`;
+    if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
+    else return "";
+  };
 
   return props.show ? (
     <PopUpModal
@@ -33,43 +38,42 @@ function CastVote(props: ICastVoteProps) {
             <div className="text-text-50 font-body4 px-3 md:px-5">Your votes power</div>
             <div className="flex mt-1 px-3 md:px-5">
               <div>
-                <span className="font-title2 text-white">59%</span>
+                <span className="font-title2 text-white">{props.totalVotingPower}%</span>
                 <span className="font-body1 text-text-250 ml-1">distributed between</span>
               </div>
               <div className="ml-auto bg-text-800/[0.5] relative -top-[9px] rounded-lg flex items-center h-[36px] px-2">
                 <Image src={lock} />
-                <span className="font-body4 text-white">2500 /</span>
-                <span className="font-body4 text-text-500 ml-px">#7623</span>
-              </div>
-            </div>
-            <div className="flex mt-3 h-[50px] items-center border-t border-b border-text-800/[0.5] bg-card-500 px-3 md:px-5">
-              <div className="flex items-center">
-                <span className="flex">
-                  <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                    <Image src={ctez} width={"24px"} height={"24px"} />
-                  </div>
-                  <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                    <Image src={tez} width={"24px"} height={"24px"} />
-                  </div>
+                <span className="font-body4 text-white">
+                  {Number(props.selectedDropDown.votingPower).toFixed(3)} /
                 </span>
-                <span className="text-white font-body4  relative top-[1px]">CTEZ/XTZ</span>
-              </div>
-              <div className="ml-auto font-body4 text-white">23%</div>
-            </div>
-            <div className="flex  h-[50px] items-center  border-b border-text-800/[0.5] bg-card-500 px-3 md:px-5">
-              <div className="flex items-center">
-                <span className="flex">
-                  <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                    <Image src={ctez} width={"24px"} height={"24px"} />
-                  </div>
-                  <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                    <Image src={tez} width={"24px"} height={"24px"} />
-                  </div>
+                <span className="font-body4 text-text-500 ml-px">
+                  #{props.selectedDropDown.tokenId}
                 </span>
-                <span className="text-white font-body4  relative top-[1px]">CTEZ/XTZ</span>
               </div>
-              <div className="ml-auto font-body4 text-white">23%</div>
             </div>
+            {props.selectedPools.map((pool, index) => {
+              return (
+                <div
+                  className="flex mt-3 h-[50px] items-center border-t border-b border-text-800/[0.5] bg-card-500 px-3 md:px-5"
+                  key={index}
+                >
+                  <div className="flex items-center">
+                    <span className="flex">
+                      <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
+                        <Image src={getImagesPath(pool.tokenA)} width={"24px"} height={"24px"} />
+                      </div>
+                      <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
+                        <Image src={getImagesPath(pool.tokenB)} width={"24px"} height={"24px"} />
+                      </div>
+                    </span>
+                    <span className="text-white font-body4  relative top-[1px]">
+                      {pool.tokenA}/{pool.tokenB}
+                    </span>
+                  </div>
+                  <div className="ml-auto font-body4 text-white">{pool.votingPower}%</div>
+                </div>
+              );
+            })}
             <div className="mt-5 pl-3 md:pl-5 md:flex items-center">
               <span className="text-text-250 font-body2 mr-1">
                 You can claim your rewards after
@@ -91,7 +95,9 @@ function CastVote(props: ICastVoteProps) {
             </div>
           </div>
           <div className="mt-[18px]">
-            <Button color="primary">Confirm vote</Button>
+            <Button color="primary" onClick={props.onClick}>
+              Confirm vote
+            </Button>
           </div>
         </>
       }

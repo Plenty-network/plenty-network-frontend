@@ -1,9 +1,9 @@
 import dynamic from "next/dynamic";
 import { COLORSdataChart, dataChart } from "./PiChartComponent";
 import Protocol from "./Protocol";
-const PiChart = dynamic(() => import('./PiChartComponent'), {
+const PiChart = dynamic(() => import("./PiChartComponent"), {
   loading: () => <></>,
-})
+});
 function VotingAllocation() {
   return (
     <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px]">
@@ -21,11 +21,11 @@ function VotingAllocation() {
   );
 }
 export interface IColorTextProps {
-  text:string;
-  color:string;
+  text: string;
+  color: string;
 }
 
-export function ColorText (props: IColorTextProps) {
+export function ColorText(props: IColorTextProps) {
   return (
     <div className="flex gap-1 items-center text-f12 w-max">
     <div className="w-[15px] h-[15px]" style={{backgroundColor:props.color}}></div>
@@ -34,7 +34,4 @@ export function ColorText (props: IColorTextProps) {
   );
 }
 
-
-
 export default VotingAllocation;
-  

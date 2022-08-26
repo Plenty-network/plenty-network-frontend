@@ -32,7 +32,6 @@ function CreateLock(props: ICreateLockProps) {
       new BigNumber(props.plyInput),
       props.lockingEndData.lockingDate
     );
-    console.log(res, props.plyInput, props.lockingEndData.lockingDate); //remove this
     setVotingPower(res);
   }, [props.plyInput, props.lockingDate]);
   const handlePlyInput = async (input: string | number) => {
@@ -42,6 +41,14 @@ function CreateLock(props: ICreateLockProps) {
       return;
     } else {
       props.setPlyInput(input.toString());
+      if (Number(props.lockingEndData.lockingDate) > 0) {
+        const res = estimateVotingPower(
+          new BigNumber(props.plyInput),
+          props.lockingEndData.lockingDate
+        );
+
+        setVotingPower(res);
+      }
     }
   };
   const dateFormat = (dates: number) => {
@@ -54,12 +61,21 @@ function CreateLock(props: ICreateLockProps) {
     const WEEK = 7 * DAY;
 
     const now = Math.floor(new Date().getTime() / 1000);
-    const endDate = days
+    
+    const timeSpan = days
       ? days
       : Math.floor(new Date(userSelectedDate as string).getTime() / 1000) - now;
 
-    const lockEnd = Math.floor((now + (endDate + WEEK - 1)) / WEEK) * WEEK;
+    const lockEnd =
+      days === MAX_TIME
+        ? Math.floor((now + timeSpan) / WEEK) * WEEK
+        : Math.floor((now + (timeSpan + WEEK - 1)) / WEEK) * WEEK;
+
     props.setLockingDate(dateFormat(lockEnd * 1000));
+    if (Number(props.plyInput) > 0) {
+      const res = estimateVotingPower(new BigNumber(props.plyInput), lockEnd);
+      setVotingPower(res);
+    }
     props.setLockingEndData({ selected: days ? days : 0, lockingDate: lockEnd });
     // send new BigNumber(lockEnd) as argument to api
     console.log(new Date(lockEnd * 1000).toString());
@@ -105,6 +121,9 @@ function CreateLock(props: ICreateLockProps) {
       );
     }
   }, [props]);
+  const onClickAmount = () => {
+    handlePlyInput(Number(props.plyBalance));
+  };
 
   return props.show ? (
     <PopUpModal
@@ -144,7 +163,10 @@ function CreateLock(props: ICreateLockProps) {
               <div>
                 <Image src={wallet} width={"32px"} height={"32px"} />
               </div>
-              <div className="ml-1 text-primary-500 font-body2">
+              <div
+                className="cursor-pointer ml-1 text-primary-500 font-body2"
+                onClick={onClickAmount}
+              >
                 {Number(props.plyBalance) >= 0 ? Number(props.plyBalance) : "0.00"} PLY
               </div>
             </div>
@@ -154,10 +176,10 @@ function CreateLock(props: ICreateLockProps) {
               className={clsx(
                 "cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
                 props.plyInput !== "" &&
-                  Number(props.plyInput) === 0.25 * Number(props.userBalances["PLY"]) &&
+                  Number(props.plyInput) === 0.25 * Number(props.plyBalance) &&
                   "border-primary-500 bg-primary-500/[0.20]"
               )}
-              {...(!walletAddress || Number(props.userBalances["PLY"]) === 0
+              {...(!walletAddress || Number(props.plyBalance) === 0
                 ? {}
                 : { onClick: () => handleInputPercentage(0.25) })}
             >
@@ -167,12 +189,12 @@ function CreateLock(props: ICreateLockProps) {
               className={clsx(
                 "cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
                 props.plyInput !== "" &&
-                  Number(props.plyInput) === 0.25 * Number(props.userBalances["PLY"]) &&
+                  Number(props.plyInput) === 0.5 * Number(props.plyBalance) &&
                   "border-primary-500 bg-primary-500/[0.20]"
               )}
-              {...(!walletAddress || Number(props.userBalances["PLY"]) === 0
+              {...(!walletAddress || Number(props.plyBalance) === 0
                 ? {}
-                : { onClick: () => handleInputPercentage(0.25) })}
+                : { onClick: () => handleInputPercentage(0.5) })}
             >
               50%
             </p>
@@ -180,12 +202,12 @@ function CreateLock(props: ICreateLockProps) {
               className={clsx(
                 "cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
                 props.plyInput !== "" &&
-                  Number(props.plyInput) === 0.25 * Number(props.userBalances["PLY"]) &&
+                  Number(props.plyInput) === 0.75 * Number(props.plyBalance) &&
                   "border-primary-500 bg-primary-500/[0.20]"
               )}
-              {...(!walletAddress || Number(props.userBalances["PLY"]) === 0
+              {...(!walletAddress || Number(props.plyBalance) === 0
                 ? {}
-                : { onClick: () => handleInputPercentage(0.25) })}
+                : { onClick: () => handleInputPercentage(0.75) })}
             >
               75%
             </p>
@@ -210,7 +232,7 @@ function CreateLock(props: ICreateLockProps) {
               <p
                 className={clsx(
                   "rounded-[32px] cursor-pointer border  px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3",
-                  props.lockingEndData.selected === 7
+                  props.lockingEndData.selected === WEEK
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
@@ -221,18 +243,18 @@ function CreateLock(props: ICreateLockProps) {
               <p
                 className={clsx(
                   "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
-                  props.lockingEndData.selected === 30
+                  props.lockingEndData.selected === 4 * WEEK
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
-                onClick={() => handleDateSelection(4*WEEK, undefined)}
+                onClick={() => handleDateSelection(4 * WEEK, undefined)}
               >
                 1 month
               </p>
               <p
                 className={clsx(
                   "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
-                  props.lockingEndData.selected === 365
+                  props.lockingEndData.selected === YEAR
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
@@ -243,7 +265,7 @@ function CreateLock(props: ICreateLockProps) {
               <p
                 className={clsx(
                   "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
-                  props.lockingEndData.selected === 1461
+                  props.lockingEndData.selected === MAX_TIME
                     ? "bg-card-500 border-primary-500"
                     : "bg-muted-200/[0.1] border-border-200"
                 )}
@@ -271,6 +293,8 @@ function CreateLock(props: ICreateLockProps) {
           setShowCreateLockModal={props.setShowCreateLockModal}
           setShowConfirmTransaction={props.setShowConfirmTransaction}
           handleLockOperation={props.handleLockOperation}
+          votingPower={votingPower}
+          endDate={props.lockingDate}
         />
       )}
     </PopUpModal>

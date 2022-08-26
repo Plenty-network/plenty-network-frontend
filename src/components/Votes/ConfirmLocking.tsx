@@ -34,9 +34,9 @@ function ConfirmLocking(props: IConfirmLockingProps) {
       "Decr",
     ];
 
-    return `${date.getUTCDate()}/${
-      monthNames[date.getUTCMonth()]
-    }/${date.getUTCFullYear()}, ${date.getUTCHours()}:${date.getUTCMinutes()}`;
+    return `${date.getUTCDate()}/${monthNames[date.getUTCMonth()]}/${date.getUTCFullYear()}, ${(
+      "0" + date.getUTCHours()
+    ).slice(-2)}:${("0" + date.getUTCMinutes()).slice(-2)}`;
   }, [epochData.endTimestamp]);
 
   return (
@@ -51,11 +51,13 @@ function ConfirmLocking(props: IConfirmLockingProps) {
         <div className="text-text-250 font-subtitle1 md:font-subtitle3 px-3 md:px-5">
           Your will receive a veNFT with a voting power of{" "}
         </div>
-        <div className="mt-1 font-title2 text-white px-3 md:px-5">2500</div>
+        <div className="mt-1 font-title2 text-white px-3 md:px-5">
+          {props.votingPower.toFixed(2)}
+        </div>
         <div className="border-t mt-5 border-text-800/[0.5]"></div>
         <div className="mt-3 px-3 md:px-5 flex items-center">
           <span className="hidden md:block flex">
-            <span className="text-text-250 font-body2 mr-1">You can claim your rewards after</span>
+            <span className="text-text-250 font-body2 mr-1">You can start voting after </span>
             <span className="relative top-0.5">
               <Image src={info} />
             </span>
@@ -72,7 +74,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
           </span>
           <span className="ml-auto flex rounded-lg bg-primary-500/[0.2] h-[32px] items-center px-3">
             <Image src={lockPurple} />
-            <span className="font-subtitle2 text-primary-500 ml-1">21/07/2024</span>
+            <span className="font-subtitle2 text-primary-500 ml-1">{props.endDate}</span>
           </span>
         </div>
       </div>

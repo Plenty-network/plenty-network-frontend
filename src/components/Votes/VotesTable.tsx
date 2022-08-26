@@ -8,15 +8,16 @@ import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { isMobile } from "react-device-detect";
-import { IManageBtnProps, IVotesTableProps } from "./types";
-import { CircularImageInfo } from "../Pools/Component/CircularImageInfo";
+import { IVotesTableProps } from "./types";
 import { RewardsData } from "./RewardsData";
 import { TotalVotes } from "./TotalVotes";
 import { MyVotes } from "./MyVotes";
+import { IVotePageData, IVotesData } from "../../api/votes/types";
 
 export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
 
+  //const data: IVotePageData[] = Object.values(props.voteData);
   const { data: poolTableData = [] } = usePoolsMain();
   const [votedata, setVotedata] = React.useState(poolTableData);
 
@@ -92,7 +93,17 @@ export function VotesTable(props: IVotesTableProps) {
         id: "Myvotess",
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x) => <MyVotes isMobile={true} />,
+        accessor: (x) => (
+          <MyVotes
+            isMobile={true}
+            tokenA={tEZorCTEZtoUppercase(x.tokenA.toString())}
+            tokenB={tEZorCTEZtoUppercase(x.tokenB.toString())}
+            setSelectedPools={props.setSelectedPools}
+            selectedPools={props.selectedPools}
+            setTotalVotingPower={props.setTotalVotingPower}
+            totalVotingPower={props.totalVotingPower}
+          />
+        ),
       },
     ],
     [valueFormat]
@@ -150,7 +161,17 @@ export function VotesTable(props: IVotesTableProps) {
         id: "Myvotess",
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x) => <MyVotes isMobile={false} />,
+        accessor: (x) => (
+          <MyVotes
+            isMobile={false}
+            tokenA={tEZorCTEZtoUppercase(x.tokenA.toString())}
+            tokenB={tEZorCTEZtoUppercase(x.tokenB.toString())}
+            setSelectedPools={props.setSelectedPools}
+            selectedPools={props.selectedPools}
+            setTotalVotingPower={props.setTotalVotingPower}
+            totalVotingPower={props.totalVotingPower}
+          />
+        ),
       },
     ],
     [valueFormat]

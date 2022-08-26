@@ -1,16 +1,7 @@
 import { BigNumber } from "bignumber.js";
-export interface IEpochListObject {
-  epochNumber: number;
-  isCurrent: boolean;
-  startTimestamp: number;
-  endTimestamp: number;
-}
+import { AMM_TYPE } from "../../config/types";
+import { Bribes } from "../pools/types";
 
-export interface IEpochDataResponse {
-  success: boolean;
-  epochData: IEpochListObject[];
-  error?: string;
-}
 
 export interface ITotalAmmVotesData {
   amm: string;
@@ -35,6 +26,12 @@ export interface IVeNFTData {
   tokenId: BigNumber;
   baseValue: BigNumber;
   votingPower: BigNumber;
+}
+
+export interface ISelectedPool {
+  tokenA: string;
+  tokenB: string;
+  votingPower: number;
 }
 
 export interface IVeNFTListResponse {
@@ -69,4 +66,28 @@ export interface IAllVotesResponse {
   totalVotesData: IAllVotesData;
   myVotesData: IAllVotesData;
   error?: string;
+}
+
+export interface IBribesResponse {
+  pool : string;
+  bribes : Bribes[];
+}
+
+export interface IVotePageRewardData{ [id: string]: {bribes: BigNumber , fees: BigNumber} }
+
+export interface IVotePageRewardDataResponse{
+  success : boolean;
+  allData : IVotePageRewardData;
+}
+
+export interface IVotePageData{
+        tokenA: string;
+        tokenB: string;
+        poolType: AMM_TYPE;
+        bribes : BigNumber;
+        fees : BigNumber;
+        totalVotes : BigNumber;
+        totalVotesPercentage : BigNumber;
+        myVotes : BigNumber;
+        myVotesPercentage : BigNumber;
 }
