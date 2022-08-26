@@ -207,7 +207,10 @@ export const votesPageDataWrapper = async (
       const testnetDex = getDexAddress(AMM.token1.symbol, AMM.token2.symbol);
       const dexForVotes = testnetDex !== "false" ? testnetDex : poolData.pool;
 
-      allData[poolData.pool] = {
+      //TODO: Remove next line
+      allData[testnetDex] = {
+      // TODO: Uncomment next line
+      // allData[poolData.pool] = {
         tokenA: AMM.token1.symbol,
         tokenB: AMM.token2.symbol,
         poolType: AMM.type,
