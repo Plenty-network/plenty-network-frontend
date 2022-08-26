@@ -189,13 +189,9 @@ export const votesPageDataWrapper = async (
     const AMMS: IAmmContracts = AMMResponse.data;
 
     const rewardData = await mainPageRewardData(epoch);
-    if (!rewardData.success) {
-      throw new Error(rewardData.error as string);
-    }
+    
     const votesData = await getAllVotesData(epoch, tokenId);
-    if (!votesData.success) {
-      throw new Error(votesData.error as string);
-    }
+    
     const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
     const poolsData: VolumeV1Data[] = poolsResponse.data;
     if (poolsData.length === 0) {
