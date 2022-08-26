@@ -78,6 +78,7 @@ export interface IVotePageRewardData{ [id: string]: {bribes: BigNumber , fees: B
 export interface IVotePageRewardDataResponse{
   success : boolean;
   allData : IVotePageRewardData;
+  error?: string;
 }
 
 export interface IVotePageData{
@@ -90,4 +91,10 @@ export interface IVotePageData{
         totalVotesPercentage : BigNumber;
         myVotes : BigNumber;
         myVotesPercentage : BigNumber;
+}
+
+export interface IVotePageDataResponse {
+  success: boolean;
+  allData: { [id: string]: IVotePageData };
+  error?: string;
 }

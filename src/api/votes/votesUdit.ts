@@ -5,7 +5,13 @@ import { connectedNetwork } from "../../common/walletconnect";
 import { getStorage, getTzktBigMapData } from "../util/storageProvider";
 import { voteEscrowStorageType } from "./data";
 import { MAX_TIME, PLY_DECIMAL_MULTIPLIER, WEEK } from "../../constants/global";
-import { IBribesResponse, IVotePageData, IVotePageRewardData, IVotePageRewardDataResponse } from "./types";
+import {
+  IBribesResponse,
+  IVotePageData,
+  IVotePageDataResponse,
+  IVotePageRewardData,
+  IVotePageRewardDataResponse,
+} from "./types";
 import { VolumeV1Data, VolumeVeData } from "../pools/types";
 import { fetchEpochData } from "../util/epoch";
 import { IEpochData, IEpochResponse } from "../util/types";
@@ -19,7 +25,7 @@ export const estimateVotingPower = (value: BigNumber, end: number): number => {
     const now = Math.floor(new Date().getTime() / 1000);
     //const ts = end; //Math.floor(end/WEEK)*WEEK;
     const dTs = end - now;
-    
+
     if (dTs < 0 || dTs < WEEK || dTs > MAX_TIME) {
       throw new Error("Invalid Timestamp");
     }
@@ -114,98 +120,87 @@ export const votingPower = async (tokenId: number, ts2: number, time: number): P
   }
 };
 
-const mainPageRewardData = async (epoch: number) : Promise<IVotePageRewardDataResponse> => {
-
+const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataResponse> => {
   try {
+    const bribes = await axios.get(`${Config.VE_INDEXER}bribes?epoch=${epoch}`);
+    const bribesData: IBribesResponse[] = bribes.data;
 
-  const bribes = await axios.get(`${Config.VE_INDEXER}bribes?epoch=${epoch}`);
-  const bribesData : IBribesResponse[] = bribes.data;
+    // call check if current
+    const res: IEpochResponse = await fetchEpochData(epoch);
+    let feesData;
 
-  // call check if current 
-  const res : IEpochResponse = await fetchEpochData(epoch);
-  let feesData;
+    if (res.success) {
+      const epochData = res.epochData as IEpochData;
 
-  if(res.success)
-  { 
-    const epochData = res.epochData as IEpochData;
-
-    const feesResponse = await axios.get(`${Config.PLY_INDEXER}ve/pools?ts=${epochData.epochEndTimestamp-1}`);
-    feesData = feesResponse.data;
-    // if(epochData.isCurrent){
-
-    // }
-    // else{
-
-
-    // }
-  }
-  else{
-    throw new Error(res.error as string);
-  }
-
-  const finalData : IVotePageRewardData= {};
-
-  for(var x of bribesData){
-  let bribe: BigNumber = new BigNumber(0);
-  if (!x.bribes || x.bribes.length === 0) {
-    bribe = new BigNumber(0);
-  } else {
-    for (var y of x.bribes) {
-      bribe = bribe.plus(
-        new BigNumber(
-          new BigNumber(y.value).multipliedBy(y.price)
-        )
+      const feesResponse = await axios.get(
+        `${Config.PLY_INDEXER}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
       );
+      feesData = feesResponse.data;
+    } else {
+      throw new Error(res.error as string);
     }
-  }
-  let fee = new BigNumber(0);
-  for(var i of feesData){
-    if(i.pool === x.pool)
-     fee = new BigNumber(i.feesEpoch.value);
-   }
 
-  finalData[x.pool] = { fees : fee ,  bribes : bribe};
-}
+    const finalData: IVotePageRewardData = {};
 
-  console.log(finalData);
+    for (var x of bribesData) {
+      let bribe: BigNumber = new BigNumber(0);
+      if (!x.bribes || x.bribes.length === 0) {
+        bribe = new BigNumber(0);
+      } else {
+        for (var y of x.bribes) {
+          bribe = bribe.plus(new BigNumber(new BigNumber(y.value).multipliedBy(y.price)));
+        }
+      }
+      let fee = new BigNumber(0);
+      for (var i of feesData) {
+        if (i.pool === x.pool) fee = new BigNumber(i.feesEpoch.value);
+      }
 
-  return{
-    success : true,
-    allData : finalData,
-  };
-  } catch (error) {
-    console.log(error);
-    return{
-      success : false,
-      allData : {"false" : { fees : new BigNumber(0) ,  bribes : new BigNumber(0)}},
+      finalData[x.pool] = { fees: fee, bribes: bribe };
+    }
+
+    console.log(finalData);
+
+    return {
+      success: true,
+      allData: finalData,
     };
-    
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      allData: { false: { fees: new BigNumber(0), bribes: new BigNumber(0) } },
+      error: error.message,
+    };
   }
 };
 
-export const votesPageDataWrapper = async (epoch: number , tokenId : number | undefined) : Promise<{
-  success: boolean;
-  allData: { [id: string]: IVotePageData };
-}> => {
-
+export const votesPageDataWrapper = async (
+  epoch: number,
+  tokenId: number | undefined
+): Promise<IVotePageDataResponse> => {
   try {
-
-     // TODO : UnComment when launching
+    // TODO : UnComment when launching
     // const state = store.getState();
     // const AMMS = state.config.AMMs;
 
     // TODO: Remove this get call
-    const AMMResponse = await axios.get(
-      'https://config.plentydefi.com/v1/config/amm'
-    );
+    const AMMResponse = await axios.get("https://config.plentydefi.com/v1/config/amm");
     const AMMS: IAmmContracts = AMMResponse.data;
 
     const rewardData = await mainPageRewardData(epoch);
-    const votesData = await getAllVotesData(epoch , tokenId);
-
+    if (!rewardData.success) {
+      throw new Error(rewardData.error as string);
+    }
+    const votesData = await getAllVotesData(epoch, tokenId);
+    if (!votesData.success) {
+      throw new Error(votesData.error as string);
+    }
     const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
-    const poolsData : VolumeV1Data[] = poolsResponse.data;
-
+    const poolsData: VolumeV1Data[] = poolsResponse.data;
+    if (poolsData.length === 0) {
+      throw new Error("No pools data found");
+    }
     const allData: { [id: string]: IVotePageData } = {};
 
     for (var poolData of poolsData) {
@@ -216,31 +211,59 @@ export const votesPageDataWrapper = async (epoch: number , tokenId : number | un
         tokenB: AMM.token2.symbol,
         poolType: AMM.type,
 
-        bribes : rewardData.allData[poolData.pool].bribes,
-        fees : rewardData.allData[poolData.pool].fees,
+        bribes:
+          Object.keys(rewardData.allData).length === 0
+            ? new BigNumber(0)
+            : rewardData.allData[poolData.pool]
+            ? rewardData.allData[poolData.pool].bribes
+            : new BigNumber(0),
+        fees:
+          Object.keys(rewardData.allData).length === 0
+            ? new BigNumber(0)
+            : rewardData.allData[poolData.pool]
+            ? rewardData.allData[poolData.pool].fees
+            : new BigNumber(0),
 
-        totalVotes : votesData.totalVotesData[poolData.pool].votes,
-        totalVotesPercentage : votesData.totalVotesData[poolData.pool].votePercentage,
+        totalVotes:
+          Object.keys(votesData.totalVotesData).length === 0
+            ? new BigNumber(0)
+            : votesData.totalVotesData[poolData.pool]
+            ? votesData.totalVotesData[poolData.pool].votes
+            : new BigNumber(0),
+        totalVotesPercentage:
+          Object.keys(votesData.totalVotesData).length === 0
+            ? new BigNumber(0)
+            : votesData.totalVotesData[poolData.pool]
+            ? votesData.totalVotesData[poolData.pool].votePercentage
+            : new BigNumber(0),
 
-        myVotes : votesData.myVotesData[poolData.pool].votes,
-        myVotesPercentage : votesData.myVotesData[poolData.pool].votePercentage,
-
+        myVotes:
+          Object.keys(votesData.myVotesData).length === 0
+            ? new BigNumber(0)
+            : votesData.myVotesData[poolData.pool]
+            ? votesData.myVotesData[poolData.pool].votes
+            : new BigNumber(0),
+        myVotesPercentage:
+          Object.keys(votesData.myVotesData).length === 0
+            ? new BigNumber(0)
+            : votesData.myVotesData[poolData.pool]
+            ? votesData.myVotesData[poolData.pool].votePercentage
+            : new BigNumber(0),
       };
-
     }
 
     console.log(allData);
 
-    return{
-      success : true,
-      allData : allData,
+    return {
+      success: true,
+      allData: allData,
     };
-    
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     return {
       success: false,
       allData: {},
+      error: error.message,
     };
   }
 };
