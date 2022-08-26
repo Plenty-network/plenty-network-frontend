@@ -43,3 +43,9 @@ export interface IEpochResponse {
   epochData: IEpochData | {};
   error?: string;
 }
+
+export interface IDatesEnabledRangeData {
+  startTimestamp: number;
+  endTimestamp: number;
+  days: number;
+}

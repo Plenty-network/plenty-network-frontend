@@ -7,6 +7,7 @@ import {
 import { voterStorageType } from "../votes/data";
 import { getStorage, getTzktBigMapData } from "./storageProvider";
   import {
+    IDatesEnabledRangeData,
     IEpochDataResponse,
     IEpochListObject,
     IEpochResponse,
@@ -107,9 +108,9 @@ import { getStorage, getTzktBigMapData } from "./storageProvider";
   /**
    * Returns the range of timestamp allowed in calendar for selection in milliseconds along with number of days allowed.
    */
-  export const getCalendarRangeToEnable = () => {
+  export const getCalendarRangeToEnable = (): IDatesEnabledRangeData => {
     const start = new Date();
-    start.setUTCHours(0,0,0,0);
+    start.setUTCHours(0, 0, 0, 0);
     const startTimestamp = start.getTime();
     const endTimestamp = startTimestamp + MAX_TIME * 1000;
     const days = Math.floor((endTimestamp - startTimestamp) / 86400000);
