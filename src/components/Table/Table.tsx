@@ -106,7 +106,6 @@ const Table = <D extends object>({
                   text={column.render("Header")?.toString()}
                   className="justify-start"
                   isFirstRow={i == 0}
-                  isMyVotes={i == headerGroup.headers.length - 1}
                   isToolTipEnabled={column.hasOwnProperty("isToolTipEnabled")}
                   onClick={
                     column.hasOwnProperty("canShort")

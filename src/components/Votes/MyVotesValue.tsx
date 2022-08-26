@@ -19,7 +19,7 @@ export function MyVotesValue(props: IShortCardListProps) {
     <>
       <div className="flex-1 text-right flex-col justify-center items-center">
         <div className=" ">
-          <span className="font-f13">${props.myVotes.toFixed(2)}</span>
+          <span className="font-f13">{props.myVotes}</span>
         </div>
         <div className=" ">
           <span className="font-f13">{props.myVotesPercentage.toFixed(2)}%</span>
