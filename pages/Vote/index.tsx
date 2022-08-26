@@ -75,7 +75,7 @@ export default function Vote() {
   useEffect(() => {
     //selectedEpoch?.epochNumber ?selectedEpoch?.epochNumber:currentEpoch?.epochNumber
     //selectedDropDown.tokenId?Number(selectedDropDown.tokenId):undefined
-    votesPageDataWrapper(174, 1).then((res) => {
+    votesPageDataWrapper(235, 1).then((res) => {
       console.log(res);
       setVoteData(res.allData);
     });
@@ -293,9 +293,7 @@ export default function Vote() {
               </div>
               <div className="flex flex-row gap-2 mt-[14px]">
                 <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
-                <InfoIconToolTip 
-                  message=" Verify your vote percentage and cast vote"
-                  />
+                  <InfoIconToolTip message=" Verify your vote percentage and cast vote" />
                   {totalVotingPower ? totalVotingPower : "00"}%
                 </div>
                 <div

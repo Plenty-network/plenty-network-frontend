@@ -35,7 +35,7 @@ export function Datepicker(props: IDatePickerProps) {
   ];
   // const [isOpen, setIsOpen] = React.useState(false);
   const handleClick = (e: any) => {
-    e.preventDefault();
+    // e.preventDefault();
     e ? props.setStartDate(e) : "";
     props.setIsOpen(!props.isOpen);
   };

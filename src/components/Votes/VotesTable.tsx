@@ -13,17 +13,21 @@ import { RewardsData } from "./RewardsData";
 import { TotalVotes } from "./TotalVotes";
 import { MyVotes } from "./MyVotes";
 import { IVotePageData, IVotesData } from "../../api/votes/types";
+import { MyVotesValue } from "./MyVotesValue";
+import { IAMM } from "../../config/types";
 
 export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
 
-  //const data: IVotePageData[] = Object.values(props.voteData);
-  const { data: poolTableData = [] } = usePoolsMain();
-  const [votedata, setVotedata] = React.useState(poolTableData);
+  const poolTableData: IVotePageData[] = Object.values(props.voteData);
 
+  console.log(poolTableData);
+  //const { data: poolTableData = [] } = data;
+  const [votedata, setVotedata] = React.useState(poolTableData);
+  console.log(votedata);
   React.useEffect(() => {
     if (poolTableData.length !== 0) setVotedata(poolTableData);
-  }, [poolTableData]);
+  }, [poolTableData.length]);
   React.useEffect(() => {
     if (props.searchValue && props.searchValue.length) {
       const _poolsTableData = poolTableData.filter((e: any) => {
@@ -86,7 +90,7 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <RewardsData />,
+        accessor: (x: any) => <RewardsData bribes={x.bribes} fees={x.fees} />,
       },
       {
         Header: "My votes",
@@ -109,13 +113,13 @@ export function VotesTable(props: IVotesTableProps) {
     [valueFormat]
   );
 
-  const desktopcolumns = React.useMemo<Column<IPoolsDataWrapperResponse>[]>(
+  const desktopcolumns = React.useMemo<Column<IVotePageData>[]>(
     () => [
       {
         Header: "Pools",
         id: "pools",
         showOnMobile: true,
-        accessor: (x: any) => (
+        accessor: (x: IVotePageData) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
               <Image src={getImagesPath(x.tokenA)} width={"24px"} height={"24px"} />
@@ -140,13 +144,18 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <RewardsData />,
+        accessor: (x: any) => <RewardsData bribes={x.bribes} fees={x.fees} />,
       },
       {
         Header: "Total votes",
         id: "Total votes",
         isToolTipEnabled: true,
-        accessor: (x) => <TotalVotes />,
+        accessor: (x) => (
+          <TotalVotes
+            totalvotes={x.totalVotes.toNumber()}
+            totalVotesPercentage={x.totalVotesPercentage.toNumber()}
+          />
+        ),
       },
       {
         Header: "My votes",
@@ -154,7 +163,12 @@ export function VotesTable(props: IVotesTableProps) {
 
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x) => "-",
+        accessor: (x) => (
+          <MyVotesValue
+            myVotes={x.myVotes.toNumber()}
+            myVotesPercentage={x.myVotesPercentage.toNumber()}
+          />
+        ),
       },
       {
         Header: "My votes",
