@@ -69,7 +69,7 @@ export function RangeSlider(props: IRangeSliderProps) {
           vote.votes = new BigNumber(sliderVal.toFixed(0))
             .multipliedBy(props.selectedDropDown.votingPower)
             .dividedBy(100)
-            .multipliedBy(PLY_DECIMAL_MULTIPLIER);
+            .multipliedBy(PLY_DECIMAL_MULTIPLIER).decimalPlaces(0,1);
         }
       });
       if (v) {
@@ -88,7 +88,7 @@ export function RangeSlider(props: IRangeSliderProps) {
             votes: new BigNumber(sliderVal.toFixed(0))
               .multipliedBy(props.selectedDropDown.votingPower)
               .dividedBy(100)
-              .multipliedBy(PLY_DECIMAL_MULTIPLIER),
+              .multipliedBy(PLY_DECIMAL_MULTIPLIER).decimalPlaces(0,1),
           })
         );
       }

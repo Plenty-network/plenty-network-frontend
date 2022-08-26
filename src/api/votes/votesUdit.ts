@@ -126,7 +126,6 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
     const bribes = await axios.get(`${Config.VE_INDEXER}bribes?epoch=${epoch}`);
     const bribesData: IBribesResponse[] = bribes.data;
 
-    // call check if current
     const res: IEpochResponse = await fetchEpochData(epoch);
     let feesData;
 
@@ -159,8 +158,6 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
 
       finalData[x.pool] = { fees: fee, bribes: bribe };
     }
-
-    console.log(finalData);
 
     return {
       success: true,
