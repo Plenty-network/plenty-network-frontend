@@ -4,6 +4,8 @@
 @import './animation.css';
 @import './switch.css';
 @import './switchWithIcon.css';
+@import './datePicker.css';
+
 
 body.swap {
   background-color: #090015;
