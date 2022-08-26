@@ -67,7 +67,7 @@ function CreateLock(props: ICreateLockProps) {
       : Math.floor(new Date(userSelectedDate as string).getTime() / 1000) - now;
 
     const lockEnd =
-      days === MAX_TIME
+      timeSpan >= MAX_TIME
         ? Math.floor((now + timeSpan) / WEEK) * WEEK
         : Math.floor((now + (timeSpan + WEEK - 1)) / WEEK) * WEEK;
 
