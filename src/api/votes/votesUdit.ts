@@ -284,6 +284,9 @@ export const votesPageDataWrapper = async (
       };
     }
 
+    //TODO: Remove next line in mainnet
+    delete allData['false'];
+    
     console.log(allData);
 
     return {
