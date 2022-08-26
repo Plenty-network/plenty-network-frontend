@@ -32,7 +32,9 @@ import AllocationPopup from "../../src/components/Votes/AllocationPopup";
 import { InfoIconToolTip } from "../../src/components/Tooltip/InfoIconTooltip";
 import { IAllBalanceResponse } from "../../src/api/util/types";
 import { vote } from "../../src/operations/vote";
-import { votesPageDataWrapper } from "../../src/api/votes/votesUdit";
+import { votesPageDataWrapper, votingPower } from "../../src/api/votes/votesUdit";
+import { IVotes } from "../../src/operations/types";
+import clsx from "clsx";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -62,6 +64,7 @@ export default function Vote() {
   const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
     {} as { [id: string]: IVotePageData }
   );
+  const [votes, setVotes] = useState<IVotes[]>([] as IVotes[]);
 
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
@@ -76,7 +79,6 @@ export default function Vote() {
     //selectedEpoch?.epochNumber ?selectedEpoch?.epochNumber:currentEpoch?.epochNumber
     //selectedDropDown.tokenId?Number(selectedDropDown.tokenId):undefined
     votesPageDataWrapper(235, 1).then((res) => {
-      console.log(res);
       setVoteData(res.allData);
     });
   }, [selectedDropDown, currentEpoch?.epochNumber, selectedEpoch?.epochNumber]);
@@ -199,7 +201,7 @@ export default function Vote() {
     dispatch(setLoading(true));
     vote(
       Number(selectedDropDown.tokenId),
-      [],
+      votes,
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction
@@ -224,7 +226,6 @@ export default function Vote() {
       }
     });
   };
-
   return (
     <>
       <Head>
@@ -284,6 +285,9 @@ export default function Vote() {
                 setTotalVotingPower={setTotalVotingPower}
                 totalVotingPower={totalVotingPower}
                 voteData={voteData}
+                setVotes={setVotes}
+                votes={votes}
+                selectedDropDown={selectedDropDown}
               />
             </div>
             <div className="hidden md:block md:basis-1/3 md:pr-[30px]">
@@ -294,10 +298,15 @@ export default function Vote() {
               <div className="flex flex-row gap-2 mt-[14px]">
                 <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
                   <InfoIconToolTip message=" Verify your vote percentage and cast vote" />
-                  {totalVotingPower ? totalVotingPower : "00"}%
+                  <span className="ml-2">{totalVotingPower ? totalVotingPower : "00"}%</span>
                 </div>
                 <div
-                  className="basis-3/4 bg-card-700 h-[52px] flex items-center justify-center rounded-xl cursor-pointer"
+                  className={clsx(
+                    "basis-3/4  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
+                    votes.length === 0
+                      ? "bg-card-700 text-text-400 font-subtitle4"
+                      : "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                  )}
                   onClick={() => setShowCastVoteModal(true)}
                 >
                   Cast Vote
