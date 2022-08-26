@@ -22,7 +22,7 @@ export function Tabs(props: ITabsProps) {
     <th
       className={`flex flex-1 cursor-pointer text-f12 text-text-50 text-left -mr-[13px] ${
         props.isFirstRow ? "justify-start" : "justify-end"
-      }${props.isMyVotes ? " flex-1 w-[250px]" : ""}`}
+      }`}
       onClick={() => (props.onClick ? props.onClick() : {})}
     >
       <div className="flex gap-0 flex-col">

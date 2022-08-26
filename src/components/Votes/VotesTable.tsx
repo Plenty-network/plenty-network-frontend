@@ -14,7 +14,6 @@ import { TotalVotes } from "./TotalVotes";
 import { MyVotes } from "./MyVotes";
 import { IVotePageData, IVotesData } from "../../api/votes/types";
 import { MyVotesValue } from "./MyVotesValue";
-import { IAMM } from "../../config/types";
 
 export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
@@ -22,7 +21,6 @@ export function VotesTable(props: IVotesTableProps) {
   const poolTableData: IVotePageData[] = Object.values(props.voteData);
 
   console.log(poolTableData);
-  //const { data: poolTableData = [] } = data;
   const [votedata, setVotedata] = React.useState(poolTableData);
   console.log(votedata);
   React.useEffect(() => {
