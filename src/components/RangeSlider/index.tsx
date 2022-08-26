@@ -13,6 +13,7 @@ export interface IRangeSliderProps {
   selectedPools: ISelectedPool[];
   setTotalVotingPower: React.Dispatch<React.SetStateAction<number>>;
   totalVotingPower: number;
+  isDisabled?:boolean;
 }
 
 export function RangeSlider(props: IRangeSliderProps) {
@@ -70,14 +71,14 @@ export function RangeSlider(props: IRangeSliderProps) {
     <div className="flex gap-3">
       {!props.isMobile && (
         <div className="flex items-center gap-[7.5px]">
-          <Image src={minus} className="cursor-pointer" onClick={() => handleSlider(false)} />
+          <Image src={minus} className="cursor-pointer" onClick={() => props.isDisabled?()=>{}:handleSlider(false)} />
           <Range
             step={0.1}
             min={0}
             disabled={props.totalVotingPower >= 100}
             max={100}
             values={[sliderVal]}
-            onChange={(values) => setSliderVal(values[0])}
+            onChange={(values) => props.isDisabled?()=>{}:setSliderVal(values[0])}
             renderTrack={({ props, children }) => (
               <div
                 {...props}
@@ -102,14 +103,14 @@ export function RangeSlider(props: IRangeSliderProps) {
               />
             )}
           />
-          <Image src={plus} className="cursor-pointer" onClick={() => handleSlider(true)} />
+          <Image src={plus} className="cursor-pointer" onClick={() => props.isDisabled?()=>{}:handleSlider(true)} />
         </div>
       )}
       <div className="bg-primary-500/10 flex border  border-primary-500 text-f12 py-[9px] text-center h-[38px] w-[48px] rounded-lg px-[9px]">
         <input
           className="bg-primary-500/[0.0] w-[19px] outline-none text-center text-f12 "
           value={sliderVal.toFixed(0)}
-          onChange={(e) => handleInputEdit(e.target.value)}
+          onChange={(e) => props.isDisabled?()=>{}:handleInputEdit(e.target.value)}
         />
         %
       </div>
