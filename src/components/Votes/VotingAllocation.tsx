@@ -11,12 +11,10 @@ function VotingAllocation() {
       <div className="font-body3 text-white mt-[18px]">
         <Protocol />
       </div>
-      <div className="flex flex-col  mt-5  gap-2 justify-center w-[350px] ">
-        <PiChart />
-        <div className="grid grid-cols-2 justify-between px-6 gap-[11px]">
-          {dataChart.map((e, i) => (
-            <ColorText text={e.name} color={COLORSdataChart[i]} />
-          ))}
+      <div className="flex flex-col items-center  mt-5  gap-2 justify-center w-[350px] ">
+        <PiChart/>
+        <div className="grid grid-cols-2 justify-between   gap-[11px] gap-x-10 w-[300px]" >
+          {dataChart.map((e,i)=><ColorText key={e.name+i} text={e.name} color={COLORSdataChart[i]} />)}
         </div>
       </div>
     </div>
@@ -29,10 +27,10 @@ export interface IColorTextProps {
 
 export function ColorText(props: IColorTextProps) {
   return (
-    <div className="flex gap-1 items-center text-f12">
-      <div className="w-[15px] h-[15px]" style={{ backgroundColor: props.color }}></div>
-      <div>{props.text}</div>
-    </div>
+    <div className="flex gap-1 items-center text-f12 w-max">
+    <div className="w-[15px] h-[15px]" style={{backgroundColor:props.color}}></div>
+    <div>{props.text}</div>
+ </div>
   );
 }
 

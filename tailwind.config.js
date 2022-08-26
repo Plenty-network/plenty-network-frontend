@@ -55,6 +55,7 @@ module.exports = {
       border: "#282230",
       text: {
         50: "#CFCED1",
+        55:"#F8F7FA",
         100: "#E7E6E8",
         150: "#D5D5D5",
         255:"#D8DAEB",

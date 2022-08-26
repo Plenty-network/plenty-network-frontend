@@ -10,6 +10,7 @@ import { getConfig } from "../src/redux/config/config";
 import { getTokenPrice } from "../src/redux/tokenPrice/tokenPrice";
 import { getTotalVotingPower } from "../src/redux/pools";
 import { getEpochData } from "../src/redux/epoch/epoch";
+import { Datepicker } from "../src/components/DatePicker";
 
 const Home: NextPage = () => {
   const token = useAppSelector((state) => state.config.tokens);
@@ -31,7 +32,8 @@ const Home: NextPage = () => {
         <meta name="description" content="plenty network" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <SideBarHOC>{/* <ShortCard /> */}</SideBarHOC>
+      <SideBarHOC>
+      </SideBarHOC>
     </>
   );
 };
