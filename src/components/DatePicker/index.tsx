@@ -10,7 +10,7 @@ export interface IDatePickerProps {
 }
 
 export function Datepicker(props: IDatePickerProps) {
-  const years = [2019, 2020, 2021, 2022];
+  const years = [2022, 2023, 2024, 2025, 2026, 2027];
   const getYear = (date: string | number | Date) => {
     const Xmas = new Date(date);
     return Xmas.getFullYear();
@@ -36,7 +36,7 @@ export function Datepicker(props: IDatePickerProps) {
   // const [isOpen, setIsOpen] = React.useState(false);
   const handleClick = (e: any) => {
     // e.preventDefault();
-    e ? props.setStartDate(e) : "";
+    e ? props.setStartDate(undefined, new Date(e).toISOString()) : "";
     props.setIsOpen(!props.isOpen);
   };
   return (

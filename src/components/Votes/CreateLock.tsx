@@ -29,7 +29,7 @@ function CreateLock(props: ICreateLockProps) {
   const handleInputPercentage = (value: number) => {
     props.setPlyInput((value * Number(props.userBalances["PLY"])).toString());
   };
-
+  console.log(selectedDate);
   useEffect(() => {
     const res = estimateVotingPower(
       new BigNumber(props.plyInput),
@@ -127,7 +127,6 @@ function CreateLock(props: ICreateLockProps) {
   const onClickAmount = () => {
     handlePlyInput(Number(props.plyBalance));
   };
-
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
@@ -231,7 +230,7 @@ function CreateLock(props: ICreateLockProps) {
                 <Image src={calender} onClick={() => setIsDatePickerOpen(true)} />
                 <Datepicker
                   selectedDate={new Date()}
-                  setStartDate={setSelectedDate}
+                  setStartDate={handleDateSelection}
                   isOpen={isDatePickerOpen}
                   setIsOpen={setIsDatePickerOpen}
                 />

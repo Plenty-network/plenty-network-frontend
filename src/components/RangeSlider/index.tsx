@@ -65,11 +65,12 @@ export function RangeSlider(props: IRangeSliderProps) {
         }
       });
       props.votes.forEach(function (vote) {
-        if (vote.amm === "KT1Px1JEGhrUNdojjS6QHrTWXLdWVwWByCiB") {
+        if (vote.amm === props.amm) {
           vote.votes = new BigNumber(sliderVal.toFixed(0))
             .multipliedBy(props.selectedDropDown.votingPower)
             .dividedBy(100)
-            .multipliedBy(PLY_DECIMAL_MULTIPLIER).decimalPlaces(0,1);
+            .multipliedBy(PLY_DECIMAL_MULTIPLIER)
+            .decimalPlaces(0, 1);
         }
       });
       if (v) {
@@ -84,11 +85,12 @@ export function RangeSlider(props: IRangeSliderProps) {
 
         props.setVotes(
           props.votes.concat({
-            amm: "KT1Px1JEGhrUNdojjS6QHrTWXLdWVwWByCiB",
+            amm: props.amm,
             votes: new BigNumber(sliderVal.toFixed(0))
               .multipliedBy(props.selectedDropDown.votingPower)
               .dividedBy(100)
-              .multipliedBy(PLY_DECIMAL_MULTIPLIER).decimalPlaces(0,1),
+              .multipliedBy(PLY_DECIMAL_MULTIPLIER)
+              .decimalPlaces(0, 1),
           })
         );
       }

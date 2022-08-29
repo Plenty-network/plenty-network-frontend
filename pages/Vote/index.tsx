@@ -79,9 +79,22 @@ export default function Vote() {
     //selectedEpoch?.epochNumber ?selectedEpoch?.epochNumber:currentEpoch?.epochNumber
     //selectedDropDown.tokenId?Number(selectedDropDown.tokenId):undefined
     votesPageDataWrapper(235, 1).then((res) => {
+      console.log(res);
       setVoteData(res.allData);
     });
-  }, [selectedDropDown, currentEpoch?.epochNumber, selectedEpoch?.epochNumber]);
+  }, [
+    selectedDropDown,
+    currentEpoch?.epochNumber,
+    selectedEpoch?.epochNumber,
+    showTransactionSubmitModal,
+  ]);
+  useEffect(() => {
+    //selectedEpoch?.epochNumber ?selectedEpoch?.epochNumber:currentEpoch?.epochNumber
+    //selectedDropDown.tokenId?Number(selectedDropDown.tokenId):undefined
+    votesPageDataWrapper(235, 1).then((res) => {
+      setVoteData(res.allData);
+    });
+  }, []);
   useEffect(() => {
     if (userAddress) {
       getVeNFTsList(userAddress).then((res) => {
