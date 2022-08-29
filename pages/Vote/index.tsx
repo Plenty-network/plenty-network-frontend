@@ -294,8 +294,25 @@ export default function Vote() {
                   {totalVotingPower ? totalVotingPower : "00"}%
                 </div>
                 <div
-                  className=" bg-card-700 h-[52px] px-4 flex items-center justify-center rounded-xl cursor-pointer"
-                  onClick={() => setShowCastVoteModal(true)}
+                  className={clsx(
+                    " px-4  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
+                    votes.length !== 0 &&
+                      (selectedEpoch?.epochNumber
+                        ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                        : false) &&
+                      totalVotingPower !== 0
+                      ? "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                      : "bg-card-700 text-text-400 font-subtitle4"
+                  )}
+                  onClick={() =>
+                    votes.length !== 0 &&
+                    (selectedEpoch?.epochNumber
+                      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                      : false) &&
+                    totalVotingPower !== 0
+                      ? setShowCastVoteModal(true)
+                      : () => {}
+                  }
                 >
                   Cast Vote
                 </div>
