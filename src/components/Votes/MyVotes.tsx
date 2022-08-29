@@ -25,7 +25,7 @@ export interface IMyVotesProps {
 
 export function MyVotes(props: IMyVotesProps) {
   return (
-    <div className="flex">
+    <div className="flex md:flex-1 md:ml-5">
       <RangeSlider
         isMobile={props.isMobile}
         tokenA={props.tokenA}

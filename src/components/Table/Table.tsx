@@ -150,8 +150,10 @@ const Table = <D extends object>({
                             i == 0 ? "justify-start" : "justify-end"
                           } ${
                             isVotesTable && i === row.cells.length - 1
-                              ? "w-[200px]"
-                              : "flex-1 w-[120px]"
+                              ? "w-[100px] md:w-[200px]"
+                              : i == 0
+                              ? "w-[150px]"
+                              : "flex-1 w-[100px]"
                           }`}
                         >
                           {cell.render("Cell")}

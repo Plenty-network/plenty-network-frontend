@@ -26,7 +26,10 @@ export function VeNFT(props: IDropdownProps) {
     setIsDropDownActive(false);
   });
   return (
-    <div className={`relative min-w-[200px] w-[170px] ${props.className}`} ref={reff}>
+    <div
+      className={`relative w-[150px] md:min-w-[200px] md:w-[170px] ${props.className}`}
+      ref={reff}
+    >
       <div
         className={clsx(
           "bg-text-800/[0.25]   flex gap-2 md:gap-4 py-3 md:py-2 px-2 md:px-3 justify-between border hover:border-text-700 rounded-lg",
@@ -74,8 +77,7 @@ export function VeNFT(props: IDropdownProps) {
           width={"18px"}
           height={"18px"}
           className={!isDropDownActive ? "rotate-0" : "rotate-180"}
-          {...((props.isConfirmStake && props.selectedText.votingPower !== "") ||
-          props.Options.length === 0
+          {...(props.selectedText.votingPower !== "" || props.Options.length === 0
             ? {}
             : { onClick: () => setIsDropDownActive(!isDropDownActive) })}
         />
@@ -83,7 +85,7 @@ export function VeNFT(props: IDropdownProps) {
       {isDropDownActive && props.Options.length > 0 && (
         <div
           className={clsx(
-            "absolute z-20 w-[180px] min-w-[180px] md:w-[180px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1",
+            "absolute z-20 w-[150px] min-w-[180px] md:w-[180px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1",
             props.isConfirmStake && props.selectedText.votingPower !== "" && "hidden"
           )}
         >
