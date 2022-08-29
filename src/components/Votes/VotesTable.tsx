@@ -21,14 +21,18 @@ export function VotesTable(props: IVotesTableProps) {
   const votesArray = Object.entries(props.voteData);
 
   const votedataArray = React.useMemo(() => {
-    return votesArray.map((data) => ({
+    return votesArray.map((data, index) => ({
+      index: index,
       amm: data[0],
       votes: data[1],
     }));
   }, [votesArray.length]);
 
   const [votedata, setVotedata] = React.useState(votedataArray);
-
+  const [totalVotes, setTotalVotes] = React.useState<{ values: number[]; sum: number }>({
+    values: new Array(votedata.length).fill(0),
+    sum: 0,
+  });
   React.useEffect(() => {
     if (votedataArray.length !== 0) setVotedata(votedataArray);
     else setVotedata([]);
@@ -108,6 +112,10 @@ export function VotesTable(props: IVotesTableProps) {
             selectedDropDown={props.selectedDropDown}
             totalVotesPercentage={Number(x.votes.totalVotesPercentage)}
             isCurrentEpoch={props.isCurrentEpoch}
+            index={x.index}
+            votedata={votedata}
+            totalVotes={totalVotes}
+            setTotalVotes={setTotalVotes}
           />
         ),
       },
@@ -192,6 +200,10 @@ export function VotesTable(props: IVotesTableProps) {
             selectedDropDown={props.selectedDropDown}
             totalVotesPercentage={Number(x.votes.totalVotesPercentage)}
             isCurrentEpoch={props.isCurrentEpoch}
+            index={x.index}
+            votedata={votedata}
+            totalVotes={totalVotes}
+            setTotalVotes={setTotalVotes}
           />
         ),
       },
