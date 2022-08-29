@@ -31,6 +31,7 @@ export function VotesTable(props: IVotesTableProps) {
 
   React.useEffect(() => {
     if (votedataArray.length !== 0) setVotedata(votedataArray);
+    else setVotedata([]);
   }, [votedataArray.length]);
   React.useEffect(() => {
     if (props.searchValue && props.searchValue.length) {
@@ -105,7 +106,8 @@ export function VotesTable(props: IVotesTableProps) {
             setVotes={props.setVotes}
             votes={props.votes}
             selectedDropDown={props.selectedDropDown}
-            totalVotesPercentage={x.votes.totalVotesPercentage.toNumber()}
+            totalVotesPercentage={Number(x.votes.totalVotesPercentage)}
+            isCurrentEpoch={props.isCurrentEpoch}
           />
         ),
       },
@@ -152,8 +154,8 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         accessor: (x: any) => (
           <TotalVotes
-            totalvotes={x.votes.totalVotes.toNumber()}
-            totalVotesPercentage={x.votes.totalVotesPercentage.toNumber()}
+            totalvotes={Number(x.votes.totalVotes)}
+            totalVotesPercentage={Number(x.votes.totalVotesPercentage)}
           />
         ),
       },
@@ -165,8 +167,8 @@ export function VotesTable(props: IVotesTableProps) {
         canShort: true,
         accessor: (x: any) => (
           <MyVotesValue
-            myVotes={x.votes.myVotes.toNumber()}
-            myVotesPercentage={x.votes.myVotesPercentage.toNumber()}
+            myVotes={Number(x.votes.myVotes)}
+            myVotesPercentage={Number(x.votes.myVotesPercentage)}
           />
         ),
       },
@@ -188,7 +190,8 @@ export function VotesTable(props: IVotesTableProps) {
             votes={props.votes}
             setVotes={props.setVotes}
             selectedDropDown={props.selectedDropDown}
-            totalVotesPercentage={x.votes.totalVotesPercentage.toNumber()}
+            totalVotesPercentage={Number(x.votes.totalVotesPercentage)}
+            isCurrentEpoch={props.isCurrentEpoch}
           />
         ),
       },

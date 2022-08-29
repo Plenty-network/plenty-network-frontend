@@ -29,7 +29,6 @@ function CreateLock(props: ICreateLockProps) {
   const handleInputPercentage = (value: number) => {
     props.setPlyInput((value * Number(props.userBalances["PLY"])).toString());
   };
-  console.log(selectedDate);
   useEffect(() => {
     const res = estimateVotingPower(
       new BigNumber(props.plyInput),
@@ -81,7 +80,6 @@ function CreateLock(props: ICreateLockProps) {
     }
     props.setLockingEndData({ selected: days ? days : 0, lockingDate: lockEnd });
     // send new BigNumber(lockEnd) as argument to api
-    console.log(new Date(lockEnd * 1000).toString());
   };
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {

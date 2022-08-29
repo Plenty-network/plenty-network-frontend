@@ -74,12 +74,21 @@ export default function Vote() {
     dispatch(fetchWallet());
     dispatch(getConfig());
     dispatch(getEpochData());
+    setVoteData({} as { [id: string]: IVotePageData });
+    votesPageDataWrapper(
+      selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
+      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
+    ).then((res) => {
+      setVoteData(res.allData);
+    });
   }, []);
   useEffect(() => {
-    //selectedEpoch?.epochNumber ?selectedEpoch?.epochNumber:currentEpoch?.epochNumber
-    //selectedDropDown.tokenId?Number(selectedDropDown.tokenId):undefined
-    votesPageDataWrapper(235, 1).then((res) => {
-      console.log(res);
+    setVoteData({} as { [id: string]: IVotePageData });
+    setTotalVotingPower(0);
+    votesPageDataWrapper(
+      selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
+      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
+    ).then((res) => {
       setVoteData(res.allData);
     });
   }, [
@@ -88,13 +97,7 @@ export default function Vote() {
     selectedEpoch?.epochNumber,
     showTransactionSubmitModal,
   ]);
-  useEffect(() => {
-    //selectedEpoch?.epochNumber ?selectedEpoch?.epochNumber:currentEpoch?.epochNumber
-    //selectedDropDown.tokenId?Number(selectedDropDown.tokenId):undefined
-    votesPageDataWrapper(235, 1).then((res) => {
-      setVoteData(res.allData);
-    });
-  }, []);
+
   useEffect(() => {
     if (userAddress) {
       getVeNFTsList(userAddress).then((res) => {
@@ -301,6 +304,11 @@ export default function Vote() {
                 setVotes={setVotes}
                 votes={votes}
                 selectedDropDown={selectedDropDown}
+                isCurrentEpoch={
+                  selectedEpoch?.epochNumber
+                    ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                    : true
+                }
               />
             </div>
             <div className="hidden md:block md:basis-1/3 md:pr-[30px]">
@@ -316,11 +324,19 @@ export default function Vote() {
                 <div
                   className={clsx(
                     "basis-3/4  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
-                    votes.length === 0
+                    votes.length === 0 && selectedEpoch?.epochNumber
+                      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                      : true
                       ? "bg-card-700 text-text-400 font-subtitle4"
                       : "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
                   )}
-                  onClick={() => setShowCastVoteModal(true)}
+                  onClick={() =>
+                    votes.length === 0 && selectedEpoch?.epochNumber
+                      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                      : true
+                      ? () => {}
+                      : setShowCastVoteModal(true)
+                  }
                 >
                   Cast Vote
                 </div>

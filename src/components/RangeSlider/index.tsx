@@ -30,7 +30,9 @@ export interface IRangeSliderProps {
 
 export function RangeSlider(props: IRangeSliderProps) {
   const [sliderVal, setSliderVal] = React.useState(props.totalVotesPercentage);
-
+  React.useEffect(() => {
+    setSliderVal(props.totalVotesPercentage);
+  }, [props.totalVotesPercentage]);
   const handleInputEdit = (value: string) => {
     if (value && !isNaN(parseInt(value))) {
       if (
@@ -55,13 +57,12 @@ export function RangeSlider(props: IRangeSliderProps) {
 
   React.useEffect(() => {
     if (sliderVal > 0) {
-      let v = true;
+      let flag = true;
 
       props.selectedPools.forEach(function (pools) {
         if (pools.tokenA === props.tokenA && pools.tokenB === props.tokenB) {
-          console.log("if");
           pools.votingPower = Number(sliderVal.toFixed(0));
-          v = false;
+          flag = false;
         }
       });
       props.votes.forEach(function (vote) {
@@ -73,8 +74,7 @@ export function RangeSlider(props: IRangeSliderProps) {
             .decimalPlaces(0, 1);
         }
       });
-      if (v) {
-        console.log(props.selectedPools);
+      if (flag) {
         props.setSelectedPools(
           props.selectedPools.concat({
             tokenA: props.tokenA,
