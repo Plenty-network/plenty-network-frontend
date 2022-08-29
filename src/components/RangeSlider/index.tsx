@@ -3,7 +3,7 @@ import * as React from "react";
 import { Range, getTrackBackground } from "react-range";
 import plus from "../../assets/icon/vote/plus.svg";
 import minus from "../../assets/icon/vote/minus.svg";
-import { ISelectedPool } from "../../api/votes/types";
+import { ISelectedPool, IVotePageData } from "../../api/votes/types";
 import { IVotes } from "../../operations/types";
 import { BigNumber } from "bignumber.js";
 import clsx from "clsx";
@@ -22,10 +22,26 @@ export interface IRangeSliderProps {
   setVotes: React.Dispatch<React.SetStateAction<IVotes[]>>;
   votes: IVotes[];
   totalVotesPercentage: number;
+  index: number;
   selectedDropDown: {
     votingPower: string;
     tokenId: string;
   };
+  votedata: {
+    index: number;
+    amm: string;
+    votes: IVotePageData;
+  }[];
+  totalVotes: {
+    values: number[];
+    sum: number;
+  };
+  setTotalVotes: React.Dispatch<
+    React.SetStateAction<{
+      values: number[];
+      sum: number;
+    }>
+  >;
 }
 
 export function RangeSlider(props: IRangeSliderProps) {
@@ -33,25 +49,32 @@ export function RangeSlider(props: IRangeSliderProps) {
   React.useEffect(() => {
     setSliderVal(props.totalVotesPercentage);
   }, [props.totalVotesPercentage]);
-  const handleInputEdit = (value: string) => {
+  const handleInputEdit = (index: number, value: string) => {
+    var sum = 0;
+    props.totalVotes.values.forEach((item, id) => {
+      if (id !== index) {
+        sum += item;
+      }
+    });
     if (value && !isNaN(parseInt(value))) {
-      if (
-        parseInt(value) >= 0 &&
-        parseInt(value) <= 100 &&
-        props.totalVotingPower < 100 &&
-        props.totalVotingPower + Number(value) <= 100
-      ) {
+      if (parseInt(value) >= 0 && parseInt(value) <= 100 && sum + Number(value) <= 100) {
+        props.totalVotes.values[index] = parseInt(value);
+
         setSliderVal(parseInt(value));
       }
     } else {
+      props.totalVotes.values[index] = 0;
       setSliderVal(0);
     }
   };
 
-  const handleSlider = (increment: boolean) => {
+  const handleSlider = (increment: boolean, index: number) => {
+    const oldValue = props.totalVotes.values[index];
     if (props.totalVotingPower < 100 && increment && props.totalVotingPower + 10 <= 100) {
+      props.totalVotes.values[index] = oldValue + 10 < 100 ? oldValue + 10 : 100;
       setSliderVal((oldValue) => (oldValue + 10 < 100 ? oldValue + 10 : 100));
     } else if (props.totalVotingPower <= 100 && !increment) {
+      props.totalVotes.values[index] = oldValue - 10 > 0 ? (oldValue - 10) % 100 : 0;
       setSliderVal((oldValue) => (oldValue - 10 > 0 ? (oldValue - 10) % 100 : 0));
     }
   };
@@ -66,6 +89,7 @@ export function RangeSlider(props: IRangeSliderProps) {
             props.selectedPools.splice(index, 1);
           } else {
             pools.votingPower = Number(sliderVal.toFixed(0));
+
             flag = false;
           }
         }
@@ -79,6 +103,7 @@ export function RangeSlider(props: IRangeSliderProps) {
             .decimalPlaces(0, 1);
         }
       });
+
       if (flag && sliderVal > 0) {
         props.setSelectedPools(
           props.selectedPools.concat({
@@ -100,18 +125,25 @@ export function RangeSlider(props: IRangeSliderProps) {
         );
       }
     }
-    console.log(props.selectedPools);
+    props.totalVotes.values[props.index] = sliderVal;
+    // var sum = 0;
+    // props.totalVotes.values.forEach((item) => {
+    //   sum += item;
+    // });
+
+    // props.setTotalVotes({
+    //   sum: sum,
+    //   values: [...props.totalVotes.values],
+    // });
     var d = 0;
     props.selectedPools.forEach((pool) => (d += pool.votingPower));
     props.setTotalVotingPower(d);
   }, [sliderVal]);
   React.useEffect(() => {
-    console.log(props.selectedPools);
     var d = 0;
     props.selectedPools.forEach((pool) => (d += pool.votingPower));
     props.setTotalVotingPower(d);
   }, [props.selectedPools.toString()]);
-
   return (
     <div className="flex gap-3">
       {!props.isMobile && (
@@ -119,18 +151,16 @@ export function RangeSlider(props: IRangeSliderProps) {
           <Image
             src={minus}
             className={clsx(props.isDisabled ? "cursor-not-allowed" : "cursor-pointer")}
-            onClick={() => (props.isDisabled ? () => {} : handleSlider(false))}
+            onClick={() => (props.isDisabled ? () => {} : handleSlider(false, props.index))}
           />
           <Range
-            step={0.1}
+            step={1}
             min={0}
-            disabled={props.totalVotingPower >= 100}
+            disabled={props.isDisabled}
             max={100}
             values={[sliderVal]}
             onChange={(values) =>
-              props.isDisabled && props.totalVotingPower + Number(values[0]) > 100
-                ? () => {}
-                : setSliderVal(values[0])
+              props.isDisabled ? () => {} : handleInputEdit(props.index, values[0].toString())
             }
             renderTrack={({ props, children }) => (
               <div
@@ -159,15 +189,17 @@ export function RangeSlider(props: IRangeSliderProps) {
           <Image
             src={plus}
             className={clsx(props.isDisabled ? "cursor-not-allowed" : "cursor-pointer")}
-            onClick={() => (props.isDisabled ? () => {} : handleSlider(true))}
+            onClick={() => (props.isDisabled ? () => {} : handleSlider(true, props.index))}
           />
         </div>
       )}
       <div className="bg-primary-500/10 flex border  border-primary-500 text-f12 py-[9px] text-center h-[38px] w-[48px] rounded-lg px-[9px]">
         <input
           className="bg-primary-500/[0.0] w-[19px] outline-none text-center text-f12 "
-          value={sliderVal.toFixed(0)}
-          onChange={(e) => (props.isDisabled ? () => {} : handleInputEdit(e.target.value))}
+          value={props.totalVotes.values[props.index] ? props.totalVotes.values[props.index] : 0}
+          onChange={(e) =>
+            props.isDisabled ? () => {} : handleInputEdit(props.index, e.target.value)
+          }
           disabled={props.isDisabled}
         />
         %

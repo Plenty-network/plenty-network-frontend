@@ -243,16 +243,7 @@ export default function Vote() {
       }
     });
   };
-  console.log(
-    votes.length === 0,
-    selectedEpoch?.epochNumber,
 
-    totalVotingPower == 0,
-    selectedEpoch?.epochNumber ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber : false,
-    (votes.length === 0 && totalVotingPower == 0) || selectedEpoch?.epochNumber
-      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-      : false
-  );
   return (
     <>
       <Head>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ISelectedPool } from "../../api/votes/types";
+import { ISelectedPool, IVotePageData } from "../../api/votes/types";
 import { IVotes } from "../../operations/types";
 import { RangeSlider } from "../RangeSlider";
 
@@ -21,6 +21,22 @@ export interface IMyVotesProps {
 
   totalVotesPercentage: number;
   isCurrentEpoch: boolean;
+  index: number;
+  votedata: {
+    index: number;
+    amm: string;
+    votes: IVotePageData;
+  }[];
+  totalVotes: {
+    values: number[];
+    sum: number;
+  };
+  setTotalVotes: React.Dispatch<
+    React.SetStateAction<{
+      values: number[];
+      sum: number;
+    }>
+  >;
 }
 
 export function MyVotes(props: IMyVotesProps) {
@@ -40,6 +56,10 @@ export function MyVotes(props: IMyVotesProps) {
         isDisabled={props.selectedDropDown.tokenId === "" || !props.isCurrentEpoch ? true : false}
         totalVotesPercentage={props.totalVotesPercentage}
         selectedDropDown={props.selectedDropDown}
+        index={props.index}
+        votedata={props.votedata}
+        totalVotes={props.totalVotes}
+        setTotalVotes={props.setTotalVotes}
       />
     </div>
   );
