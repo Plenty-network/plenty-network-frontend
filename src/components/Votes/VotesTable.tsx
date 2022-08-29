@@ -18,25 +18,31 @@ import { MyVotesValue } from "./MyVotesValue";
 export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
 
-  const poolTableData: IVotePageData[] = Object.values(props.voteData);
+  const votesArray = Object.entries(props.voteData);
 
-  console.log(poolTableData);
-  const [votedata, setVotedata] = React.useState(poolTableData);
-  console.log(votedata);
+  const votedataArray = React.useMemo(() => {
+    return votesArray.map((data) => ({
+      amm: data[0],
+      votes: data[1],
+    }));
+  }, [votesArray.length]);
+
+  const [votedata, setVotedata] = React.useState(votedataArray);
+
   React.useEffect(() => {
-    if (poolTableData.length !== 0) setVotedata(poolTableData);
-  }, [poolTableData.length]);
+    if (votedataArray.length !== 0) setVotedata(votedataArray);
+  }, [votedataArray.length]);
   React.useEffect(() => {
     if (props.searchValue && props.searchValue.length) {
-      const _poolsTableData = poolTableData.filter((e: any) => {
+      const _votesTableData = votedataArray.filter((e: any) => {
         return (
-          e.tokenA.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-          e.tokenB.toLowerCase().includes(props.searchValue.toLowerCase())
+          e.votes.tokenA.toLowerCase().includes(props.searchValue.toLowerCase()) ||
+          e.votes.tokenB.toLowerCase().includes(props.searchValue.toLowerCase())
         );
       });
-      setVotedata(_poolsTableData);
+      setVotedata(_votesTableData);
     } else {
-      setVotedata(poolTableData);
+      setVotedata(votedataArray);
     }
   }, [props.searchValue]);
 
@@ -47,17 +53,8 @@ export function VotesTable(props: IVotesTableProps) {
   };
   const tEZorCTEZtoUppercase = (a: string) =>
     a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
-  const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
-    name: "USDC.e",
-    image: `/assets/tokens/USDC.e.png`,
-    symbol: "USDC.e",
-  });
-  const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
-    name: "USDT.e",
-    image: `/assets/tokens/USDT.e.png`,
-    symbol: "USDT.e",
-  });
-  const mobilecolumns = React.useMemo<Column<IPoolsDataWrapperResponse>[]>(
+
+  const mobilecolumns = React.useMemo<Column<IVotePageData>[]>(
     () => [
       {
         Header: "Pools",
@@ -66,16 +63,16 @@ export function VotesTable(props: IVotesTableProps) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-              <Image src={getImagesPath(x.tokenA)} width={"20px"} height={"20px"} />
+              <Image src={getImagesPath(x.votes.tokenA)} width={"20px"} height={"20px"} />
             </div>
             <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image src={getImagesPath(x.tokenB)} width={"20px"} height={"20px"} />
+              <Image src={getImagesPath(x.votes.tokenB)} width={"20px"} height={"20px"} />
             </div>
             <div>
               <div className="font-body4">
                 {" "}
-                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
+                {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
               </div>
               <div className="font-subtitle1 text-text-500">Stable Pool</div>
             </div>
@@ -88,22 +85,27 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <RewardsData bribes={x.bribes} fees={x.fees} />,
+        accessor: (x: any) => <RewardsData bribes={x.votes.bribes} fees={x.votes.fees} />,
       },
       {
         Header: "My votes",
         id: "Myvotess",
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x) => (
+        accessor: (x: any) => (
           <MyVotes
             isMobile={true}
-            tokenA={tEZorCTEZtoUppercase(x.tokenA.toString())}
-            tokenB={tEZorCTEZtoUppercase(x.tokenB.toString())}
+            tokenA={tEZorCTEZtoUppercase(x.votes.tokenA.toString())}
+            tokenB={tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
             setSelectedPools={props.setSelectedPools}
             selectedPools={props.selectedPools}
             setTotalVotingPower={props.setTotalVotingPower}
             totalVotingPower={props.totalVotingPower}
+            amm={x.amm}
+            setVotes={props.setVotes}
+            votes={props.votes}
+            selectedDropDown={props.selectedDropDown}
+            totalVotesPercentage={x.votes.totalVotesPercentage.toNumber()}
           />
         ),
       },
@@ -117,19 +119,19 @@ export function VotesTable(props: IVotesTableProps) {
         Header: "Pools",
         id: "pools",
         showOnMobile: true,
-        accessor: (x: IVotePageData) => (
+        accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-              <Image src={getImagesPath(x.tokenA)} width={"24px"} height={"24px"} />
+              <Image src={getImagesPath(x.votes.tokenA)} width={"24px"} height={"24px"} />
             </div>
             <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-              <Image src={getImagesPath(x.tokenB)} width={"24px"} height={"24px"} />
+              <Image src={getImagesPath(x.votes.tokenB)} width={"24px"} height={"24px"} />
             </div>
             <div>
               <div className="font-body4">
                 {" "}
-                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
+                {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
               </div>
               <div className="font-subtitle1 text-text-500">Stable Pool</div>
             </div>
@@ -142,16 +144,16 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <RewardsData bribes={x.bribes} fees={x.fees} />,
+        accessor: (x: any) => <RewardsData bribes={x.votes.bribes} fees={x.votes.fees} />,
       },
       {
         Header: "Total votes",
         id: "Total votes",
         isToolTipEnabled: true,
-        accessor: (x) => (
+        accessor: (x: any) => (
           <TotalVotes
-            totalvotes={x.totalVotes.toNumber()}
-            totalVotesPercentage={x.totalVotesPercentage.toNumber()}
+            totalvotes={x.votes.totalVotes.toNumber()}
+            totalVotesPercentage={x.votes.totalVotesPercentage.toNumber()}
           />
         ),
       },
@@ -161,10 +163,10 @@ export function VotesTable(props: IVotesTableProps) {
 
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x) => (
+        accessor: (x: any) => (
           <MyVotesValue
-            myVotes={x.myVotes.toNumber()}
-            myVotesPercentage={x.myVotesPercentage.toNumber()}
+            myVotes={x.votes.myVotes.toNumber()}
+            myVotesPercentage={x.votes.myVotesPercentage.toNumber()}
           />
         ),
       },
@@ -173,15 +175,20 @@ export function VotesTable(props: IVotesTableProps) {
         id: "Myvotess",
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x) => (
+        accessor: (x: any) => (
           <MyVotes
             isMobile={false}
-            tokenA={tEZorCTEZtoUppercase(x.tokenA.toString())}
-            tokenB={tEZorCTEZtoUppercase(x.tokenB.toString())}
+            tokenA={tEZorCTEZtoUppercase(x.votes.tokenA.toString())}
+            tokenB={tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
             setSelectedPools={props.setSelectedPools}
             selectedPools={props.selectedPools}
             setTotalVotingPower={props.setTotalVotingPower}
             totalVotingPower={props.totalVotingPower}
+            amm={x.amm}
+            votes={props.votes}
+            setVotes={props.setVotes}
+            selectedDropDown={props.selectedDropDown}
+            totalVotesPercentage={x.votes.totalVotesPercentage.toNumber()}
           />
         ),
       },
