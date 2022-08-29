@@ -31,6 +31,7 @@ export function VotesTable(props: IVotesTableProps) {
 
   React.useEffect(() => {
     if (votedataArray.length !== 0) setVotedata(votedataArray);
+    else setVotedata([]);
   }, [votedataArray.length]);
   React.useEffect(() => {
     if (props.searchValue && props.searchValue.length) {
@@ -74,7 +75,7 @@ export function VotesTable(props: IVotesTableProps) {
                 {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
                 {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
               </div>
-              <div className="font-subtitle1 text-text-500">Stable Pool</div>
+              <div className="font-subtitle1 text-text-500">{x.votes.poolType} Pool</div>
             </div>
           </div>
         ),
@@ -88,7 +89,7 @@ export function VotesTable(props: IVotesTableProps) {
         accessor: (x: any) => <RewardsData bribes={x.votes.bribes} fees={x.votes.fees} />,
       },
       {
-        Header: "My votes",
+        Header: "Votes",
         id: "Myvotess",
         isToolTipEnabled: true,
         canShort: true,
@@ -105,7 +106,8 @@ export function VotesTable(props: IVotesTableProps) {
             setVotes={props.setVotes}
             votes={props.votes}
             selectedDropDown={props.selectedDropDown}
-            totalVotesPercentage={x.votes.totalVotesPercentage.toNumber()}
+            totalVotesPercentage={Number(x.votes.totalVotesPercentage)}
+            isCurrentEpoch={props.isCurrentEpoch}
           />
         ),
       },
@@ -133,7 +135,7 @@ export function VotesTable(props: IVotesTableProps) {
                 {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
                 {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
               </div>
-              <div className="font-subtitle1 text-text-500">Stable Pool</div>
+              <div className="font-subtitle1 text-text-500">{x.votes.poolType} Pool</div>
             </div>
           </div>
         ),
@@ -152,8 +154,8 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         accessor: (x: any) => (
           <TotalVotes
-            totalvotes={x.votes.totalVotes.toNumber()}
-            totalVotesPercentage={x.votes.totalVotesPercentage.toNumber()}
+            totalvotes={Number(x.votes.totalVotes)}
+            totalVotesPercentage={Number(x.votes.totalVotesPercentage)}
           />
         ),
       },
@@ -165,13 +167,13 @@ export function VotesTable(props: IVotesTableProps) {
         canShort: true,
         accessor: (x: any) => (
           <MyVotesValue
-            myVotes={x.votes.myVotes.toNumber()}
-            myVotesPercentage={x.votes.myVotesPercentage.toNumber()}
+            myVotes={Number(x.votes.myVotes)}
+            myVotesPercentage={Number(x.votes.myVotesPercentage)}
           />
         ),
       },
       {
-        Header: "My votes",
+        Header: "Votes",
         id: "Myvotess",
         isToolTipEnabled: true,
         canShort: true,
@@ -188,7 +190,8 @@ export function VotesTable(props: IVotesTableProps) {
             votes={props.votes}
             setVotes={props.setVotes}
             selectedDropDown={props.selectedDropDown}
-            totalVotesPercentage={x.votes.totalVotesPercentage.toNumber()}
+            totalVotesPercentage={Number(x.votes.totalVotesPercentage)}
+            isCurrentEpoch={props.isCurrentEpoch}
           />
         ),
       },
@@ -205,6 +208,7 @@ export function VotesTable(props: IVotesTableProps) {
           shortby="Myvotes"
           isFetched={votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
+          isVotesTable={true}
         />
       </div>
     </>

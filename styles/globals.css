@@ -32,6 +32,9 @@ body {
 .mobile {
   @apply block md:hidden lg:hidden xl:hidden;
 }
+.veNFT{
+  box-shadow: 0px 2px 41px 4px rgba(71, 16, 154, 0.3);
+}
 .infoIcon {
   width: 15px !important;
   height: 15px !important;

@@ -2,6 +2,8 @@ import Image from "next/image";
 import * as React from "react";
 import clsx from "clsx";
 import vectorIcon from "../../assets//icon/common/vector.svg";
+
+import arrow from "../../assets/icon/vote/arrowNFT.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { IVeNFTData } from "../../api/votes/types";
 
@@ -24,23 +26,20 @@ export function VeNFT(props: IDropdownProps) {
     setIsDropDownActive(false);
   });
   return (
-    <div className={`relative min-w-[150px] ${props.className}`} ref={reff}>
+    <div className={`relative min-w-[200px] w-[170px] ${props.className}`} ref={reff}>
       <div
         className={clsx(
-          "bg-text-800/[0.25]   flex gap-2 md:gap-4 py-3 md:py-2 px-2 md:px-3 justify-between border border-text-700 rounded-lg",
-          isDropDownActive ? "hover:bg-text-800/[0.25]" : "hover:bg-text-800/[0.5]",
+          "bg-text-800/[0.25]   flex gap-2 md:gap-4 py-3 md:py-2 px-2 md:px-3 justify-between border hover:border-text-700 rounded-lg",
           props.Options.length === 0
             ? "border-border-200 bg-card-200 hover:bg-card-200 hover:border-border-200"
+            : isDropDownActive
+            ? "border-muted-50 bg-muted-500 hover:border-muted-50 hover:bg-muted-500"
             : props.selectedText.votingPower === ""
-            ? "border-text-700 bg-text-800/[0.25]"
-            : "border-primary-800 bg-primary-250",
+            ? "border-[0.8px] border-primary-500 bg-card-500 text-text-400"
+            : "border-text-800 bg-text-800/[0.25]",
 
-          props.Options.length === 0 ||
-            (props.isConfirmStake && props.selectedText.votingPower !== "")
-            ? "cursor-not-allowed"
-            : "cursor-pointer"
+          props.Options.length === 0 ? "cursor-not-allowed" : "cursor-pointer"
         )}
-        // onClick={() => setIsDropDownActive(true)}
       >
         <p
           className={clsx(
@@ -57,7 +56,7 @@ export function VeNFT(props: IDropdownProps) {
           {props.selectedText.votingPower !== "" && props.selectedText.tokenId !== "" ? (
             <>
               <span className="font-body4 text-white">
-                {Number(props.selectedText.votingPower).toFixed(3)}x
+                {Number(props.selectedText.votingPower).toFixed(3)}
               </span>
               <span className="font-body3 text-text-500">(#{props.selectedText.tokenId})</span>
             </>
@@ -71,8 +70,10 @@ export function VeNFT(props: IDropdownProps) {
           )}
         </p>
         <Image
-          src={vectorIcon}
-          className={!isDropDownActive ? "rotate-180" : "rotate-0"}
+          src={arrow}
+          width={"18px"}
+          height={"18px"}
+          className={!isDropDownActive ? "rotate-0" : "rotate-180"}
           {...((props.isConfirmStake && props.selectedText.votingPower !== "") ||
           props.Options.length === 0
             ? {}
@@ -82,7 +83,7 @@ export function VeNFT(props: IDropdownProps) {
       {isDropDownActive && props.Options.length > 0 && (
         <div
           className={clsx(
-            "absolute z-20 w-[124px] md:w-[163px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1",
+            "absolute z-20 w-[180px] min-w-[180px] md:w-[180px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1",
             props.isConfirmStake && props.selectedText.votingPower !== "" && "hidden"
           )}
         >
@@ -111,7 +112,7 @@ export function VeNFT(props: IDropdownProps) {
         }}
         className="  hover:bg-muted-500 px-4 flex items-center h-[36px] cursor-pointer flex"
       >
-        <span className="font-body4 text-white">{Number(props.votingPower).toFixed(3)}x</span>
+        <span className="font-body4 text-white">{Number(props.votingPower).toFixed(3)}</span>
         <span className="ml-auto font-body3 text-text-500">#{props.tokenId}</span>
       </div>
     );
