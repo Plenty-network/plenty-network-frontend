@@ -63,6 +63,7 @@ export interface ICastVoteProps {
 }
 
 export interface IVotesTableProps {
+  isCurrentEpoch: boolean;
   setTotalVotingPower: React.Dispatch<React.SetStateAction<number>>;
   selectedDropDown: {
     votingPower: string;

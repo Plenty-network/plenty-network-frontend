@@ -31,9 +31,8 @@ export function Epoch(props: IEpochProps) {
 
   React.useEffect(() => {
     dispatch(setSelectedEpoch(epochData[0]));
-    console.log(epochData[0]?.epochNumber);
     props.onClick(currentEpoch?.epochNumber);
-  }, [epochData[0]?.epochNumber]);
+  }, [epochData[0]?.epochNumber, currentEpoch?.endTimestamp]);
 
   function Options(props: {
     onClick: Function;

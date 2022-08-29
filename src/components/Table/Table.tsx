@@ -27,12 +27,14 @@ const Table = <D extends object>({
   shortby,
   isConnectWalletRequired = false,
   isFetched = false,
+  isVotesTable = false,
 }: {
   columns: Column<D>[];
   data: D[];
   shortby?: string;
   isConnectWalletRequired?: boolean;
   isFetched?: boolean;
+  isVotesTable?: boolean;
 }) => {
   const [shortByGroup, setshortByGroup] = useState({
     id: shortby ?? "usd",
@@ -98,7 +100,7 @@ const Table = <D extends object>({
           {headerGroups.map((headerGroup, index) => (
             <tr
               key={`headerGroup_${index}`}
-              className="border border-borderCommon bg-cardBackGround flex md:px-5 md:py-3 px-1 py-1  items-center rounded-t-xl	rounded-b"
+              className="border border-borderCommon bg-cardBackGround flex md:px-5 md:py-3 px-1 py-1  items-center rounded-t-xl	rounded-b "
             >
               {headerGroup.headers.map((column, i) => (
                 <Tabs
@@ -106,6 +108,7 @@ const Table = <D extends object>({
                   text={column.render("Header")?.toString()}
                   className="justify-start"
                   isFirstRow={i == 0}
+                  isVotesTable={isVotesTable ? i === headerGroup.headers.length - 1 : false}
                   isToolTipEnabled={column.hasOwnProperty("isToolTipEnabled")}
                   onClick={
                     column.hasOwnProperty("canShort")
@@ -137,14 +140,20 @@ const Table = <D extends object>({
                 return (
                   // eslint-disable-next-line react/jsx-key
                   <tr
-                    className={`border border-borderCommon  bg-cardBackGround flex md:px-5 md:py-3 px-1 py-1 items-center justify-between rounded-lg slideFromTop`}
+                    className={`border border-borderCommon  bg-cardBackGround flex md:px-5 md:py-3 px-1 py-1 items-center justify-between rounded-lg slideFromTop `}
                   >
                     {row.cells.map((cell: any, i: any) => {
                       return (
                         // eslint-disable-next-line react/jsx-key
                         <td
-                          className={`flex-1  flex items-center ${
+                          className={` flex items-center ${
                             i == 0 ? "justify-start" : "justify-end"
+                          } ${
+                            isVotesTable && i === row.cells.length - 1
+                              ? "w-[100px] md:w-[200px]"
+                              : i == 0
+                              ? "w-[150px]"
+                              : "flex-1 w-[100px]"
                           }`}
                         >
                           {cell.render("Cell")}

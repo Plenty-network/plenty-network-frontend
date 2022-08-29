@@ -30,7 +30,9 @@ export interface IRangeSliderProps {
 
 export function RangeSlider(props: IRangeSliderProps) {
   const [sliderVal, setSliderVal] = React.useState(props.totalVotesPercentage);
-
+  React.useEffect(() => {
+    setSliderVal(props.totalVotesPercentage);
+  }, [props.totalVotesPercentage]);
   const handleInputEdit = (value: string) => {
     if (value && !isNaN(parseInt(value))) {
       if (
@@ -45,35 +47,39 @@ export function RangeSlider(props: IRangeSliderProps) {
       setSliderVal(0);
     }
   };
+
   const handleSlider = (increment: boolean) => {
     if (props.totalVotingPower < 100 && increment && props.totalVotingPower + 10 <= 100) {
       setSliderVal((oldValue) => (oldValue + 10 < 100 ? oldValue + 10 : 100));
-    } else if (props.totalVotingPower < 100 && !increment) {
+    } else if (props.totalVotingPower <= 100 && !increment) {
       setSliderVal((oldValue) => (oldValue - 10 > 0 ? (oldValue - 10) % 100 : 0));
     }
   };
 
   React.useEffect(() => {
-    if (sliderVal > 0) {
-      let v = true;
+    if (sliderVal >= 0) {
+      let flag = true;
 
-      props.selectedPools.forEach(function (pools) {
+      props.selectedPools.forEach(function (pools, index) {
         if (pools.tokenA === props.tokenA && pools.tokenB === props.tokenB) {
-          console.log("if");
-          pools.votingPower = Number(sliderVal.toFixed(0));
-          v = false;
+          if (sliderVal === 0) {
+            props.selectedPools.splice(index, 1);
+          } else {
+            pools.votingPower = Number(sliderVal.toFixed(0));
+            flag = false;
+          }
         }
       });
       props.votes.forEach(function (vote) {
-        if (vote.amm === "KT1Px1JEGhrUNdojjS6QHrTWXLdWVwWByCiB") {
+        if (vote.amm === props.amm) {
           vote.votes = new BigNumber(sliderVal.toFixed(0))
             .multipliedBy(props.selectedDropDown.votingPower)
             .dividedBy(100)
-            .multipliedBy(PLY_DECIMAL_MULTIPLIER).decimalPlaces(0,1);
+            .multipliedBy(PLY_DECIMAL_MULTIPLIER)
+            .decimalPlaces(0, 1);
         }
       });
-      if (v) {
-        console.log(props.selectedPools);
+      if (flag && sliderVal > 0) {
         props.setSelectedPools(
           props.selectedPools.concat({
             tokenA: props.tokenA,
@@ -84,21 +90,23 @@ export function RangeSlider(props: IRangeSliderProps) {
 
         props.setVotes(
           props.votes.concat({
-            amm: "KT1Px1JEGhrUNdojjS6QHrTWXLdWVwWByCiB",
+            amm: props.amm,
             votes: new BigNumber(sliderVal.toFixed(0))
               .multipliedBy(props.selectedDropDown.votingPower)
               .dividedBy(100)
-              .multipliedBy(PLY_DECIMAL_MULTIPLIER).decimalPlaces(0,1),
+              .multipliedBy(PLY_DECIMAL_MULTIPLIER)
+              .decimalPlaces(0, 1),
           })
         );
       }
     }
-
+    console.log(props.selectedPools);
     var d = 0;
     props.selectedPools.forEach((pool) => (d += pool.votingPower));
     props.setTotalVotingPower(d);
   }, [sliderVal]);
   React.useEffect(() => {
+    console.log(props.selectedPools);
     var d = 0;
     props.selectedPools.forEach((pool) => (d += pool.votingPower));
     props.setTotalVotingPower(d);
@@ -119,7 +127,11 @@ export function RangeSlider(props: IRangeSliderProps) {
             disabled={props.totalVotingPower >= 100}
             max={100}
             values={[sliderVal]}
-            onChange={(values) => (props.isDisabled ? () => {} : setSliderVal(values[0]))}
+            onChange={(values) =>
+              props.isDisabled && props.totalVotingPower + Number(values[0]) > 100
+                ? () => {}
+                : setSliderVal(values[0])
+            }
             renderTrack={({ props, children }) => (
               <div
                 {...props}

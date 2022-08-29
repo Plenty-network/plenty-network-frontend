@@ -20,11 +20,12 @@ export interface IMyVotesProps {
   };
 
   totalVotesPercentage: number;
+  isCurrentEpoch: boolean;
 }
 
 export function MyVotes(props: IMyVotesProps) {
   return (
-    <div className="flex">
+    <div className="flex md:flex-1 md:ml-5">
       <RangeSlider
         isMobile={props.isMobile}
         tokenA={props.tokenA}
@@ -36,7 +37,7 @@ export function MyVotes(props: IMyVotesProps) {
         amm={props.amm}
         setVotes={props.setVotes}
         votes={props.votes}
-        isDisabled={props.selectedDropDown.tokenId === "" ? true : false}
+        isDisabled={props.selectedDropDown.tokenId === "" || !props.isCurrentEpoch ? true : false}
         totalVotesPercentage={props.totalVotesPercentage}
         selectedDropDown={props.selectedDropDown}
       />

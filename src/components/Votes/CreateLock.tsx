@@ -29,7 +29,6 @@ function CreateLock(props: ICreateLockProps) {
   const handleInputPercentage = (value: number) => {
     props.setPlyInput((value * Number(props.userBalances["PLY"])).toString());
   };
-
   useEffect(() => {
     const res = estimateVotingPower(
       new BigNumber(props.plyInput),
@@ -81,7 +80,6 @@ function CreateLock(props: ICreateLockProps) {
     }
     props.setLockingEndData({ selected: days ? days : 0, lockingDate: lockEnd });
     // send new BigNumber(lockEnd) as argument to api
-    console.log(new Date(lockEnd * 1000).toString());
   };
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
@@ -127,7 +125,6 @@ function CreateLock(props: ICreateLockProps) {
   const onClickAmount = () => {
     handlePlyInput(Number(props.plyBalance));
   };
-
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
@@ -221,7 +218,7 @@ function CreateLock(props: ICreateLockProps) {
               <div>
                 <input
                   type="text"
-                  className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  md:font-subtitle6 outline-none w-[100%] placeholder:text-text-500"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-subtitle6  md:font-subtitle6 outline-none w-[100%] placeholder:text-text-500"
                   placeholder="dd/mm/yyyy"
                   value={props.lockingDate}
                   onChange={(e) => props.setLockingDate(e.target.value)}
@@ -231,7 +228,7 @@ function CreateLock(props: ICreateLockProps) {
                 <Image src={calender} onClick={() => setIsDatePickerOpen(true)} />
                 <Datepicker
                   selectedDate={new Date()}
-                  setStartDate={setSelectedDate}
+                  setStartDate={handleDateSelection}
                   isOpen={isDatePickerOpen}
                   setIsOpen={setIsDatePickerOpen}
                 />

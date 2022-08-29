@@ -18,7 +18,7 @@ import CastVote from "../../src/components/Votes/CastVote";
 import CreateLock from "../../src/components/Votes/CreateLock";
 import VotingAllocation from "../../src/components/Votes/VotingAllocation";
 import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
-import { getEpochData } from "../../src/redux/epoch/epoch";
+import { getEpochData, setSelectedEpoch } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
 import { EPOCH_DURATION_TESTNET } from "../../src/constants/global";
 import { getVeNFTsList } from "../../src/api/votes/votesKiran";
@@ -74,14 +74,31 @@ export default function Vote() {
     dispatch(fetchWallet());
     dispatch(getConfig());
     dispatch(getEpochData());
-  }, []);
-  useEffect(() => {
-    //selectedEpoch?.epochNumber ?selectedEpoch?.epochNumber:currentEpoch?.epochNumber
-    //selectedDropDown.tokenId?Number(selectedDropDown.tokenId):undefined
-    votesPageDataWrapper(235, 1).then((res) => {
+    setVoteData({} as { [id: string]: IVotePageData });
+    votesPageDataWrapper(
+      selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
+      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
+    ).then((res) => {
       setVoteData(res.allData);
     });
-  }, [selectedDropDown, currentEpoch?.epochNumber, selectedEpoch?.epochNumber]);
+  }, []);
+  useEffect(() => {
+    setVoteData({} as { [id: string]: IVotePageData });
+    setSelectedPools([] as ISelectedPool[]);
+    setTotalVotingPower(0);
+    votesPageDataWrapper(
+      selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
+      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
+    ).then((res) => {
+      setVoteData(res.allData);
+    });
+  }, [
+    selectedDropDown,
+    currentEpoch?.epochNumber,
+    selectedEpoch?.epochNumber,
+    showTransactionSubmitModal,
+  ]);
+
   useEffect(() => {
     if (userAddress) {
       getVeNFTsList(userAddress).then((res) => {
@@ -226,6 +243,16 @@ export default function Vote() {
       }
     });
   };
+  console.log(
+    votes.length === 0,
+    selectedEpoch?.epochNumber,
+
+    totalVotingPower == 0,
+    selectedEpoch?.epochNumber ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber : false,
+    (votes.length === 0 && totalVotingPower == 0) || selectedEpoch?.epochNumber
+      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+      : false
+  );
   return (
     <>
       <Head>
@@ -267,8 +294,25 @@ export default function Vote() {
                   {totalVotingPower ? totalVotingPower : "00"}%
                 </div>
                 <div
-                  className=" bg-card-700 h-[52px] px-4 flex items-center justify-center rounded-xl cursor-pointer"
-                  onClick={() => setShowCastVoteModal(true)}
+                  className={clsx(
+                    " px-4  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
+                    votes.length !== 0 &&
+                      (selectedEpoch?.epochNumber
+                        ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                        : false) &&
+                      totalVotingPower !== 0
+                      ? "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                      : "bg-card-700 text-text-400 font-subtitle4"
+                  )}
+                  onClick={() =>
+                    votes.length !== 0 &&
+                    (selectedEpoch?.epochNumber
+                      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                      : false) &&
+                    totalVotingPower !== 0
+                      ? setShowCastVoteModal(true)
+                      : () => {}
+                  }
                 >
                   Cast Vote
                 </div>
@@ -288,6 +332,11 @@ export default function Vote() {
                 setVotes={setVotes}
                 votes={votes}
                 selectedDropDown={selectedDropDown}
+                isCurrentEpoch={
+                  selectedEpoch?.epochNumber
+                    ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                    : true
+                }
               />
             </div>
             <div className="hidden md:block md:basis-1/3 md:pr-[30px]">
@@ -303,11 +352,23 @@ export default function Vote() {
                 <div
                   className={clsx(
                     "basis-3/4  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
-                    votes.length === 0
-                      ? "bg-card-700 text-text-400 font-subtitle4"
-                      : "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                    votes.length !== 0 &&
+                      (selectedEpoch?.epochNumber
+                        ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                        : false) &&
+                      totalVotingPower !== 0
+                      ? "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                      : "bg-card-700 text-text-400 font-subtitle4"
                   )}
-                  onClick={() => setShowCastVoteModal(true)}
+                  onClick={() =>
+                    votes.length !== 0 &&
+                    (selectedEpoch?.epochNumber
+                      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                      : false) &&
+                    totalVotingPower !== 0
+                      ? setShowCastVoteModal(true)
+                      : () => {}
+                  }
                 >
                   Cast Vote
                 </div>
