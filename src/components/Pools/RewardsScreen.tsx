@@ -1,14 +1,14 @@
-import React from 'react';
-import clsx from 'clsx';
-import { useState, useMemo } from 'react';
-import { ImageCircle } from './Component/CircularImageInfo';
-import token from '../../assets/Tokens/plenty.png';
-import token2 from '../../assets/Tokens/ctez.png';
-import Button from '../Button/Button';
-import { tokenParameterLiquidity } from '../Liquidity/types';
-import { AppDispatch, store } from '../../redux';
-import { useDispatch } from 'react-redux';
-import { walletConnection } from '../../redux/wallet/wallet';
+import React from "react";
+import clsx from "clsx";
+import { useState, useMemo } from "react";
+import { ImageCircle } from "./Component/CircularImageInfo";
+import token from "../../assets/Tokens/plenty.png";
+import token2 from "../../assets/Tokens/ctez.png";
+import Button from "../Button/Button";
+import { tokenParameterLiquidity } from "../Liquidity/types";
+import { AppDispatch, store } from "../../redux";
+import { useDispatch } from "react-redux";
+import { walletConnection } from "../../redux/wallet/wallet";
 
 export interface IRewardsProps {
   tokenIn: tokenParameterLiquidity;
@@ -24,10 +24,12 @@ export function RewardsScreen(props: IRewardsProps) {
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
+  const tEZorCTEZtoUppercase = (a: string) =>
+    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
   const harvestButton = useMemo(() => {
     if (!walletAddress) {
       return (
-        <Button onClick={connectTempleWallet} color={'primary'}>
+        <Button onClick={connectTempleWallet} color={"primary"}>
           Connect Wallet
         </Button>
       );
@@ -39,30 +41,25 @@ export function RewardsScreen(props: IRewardsProps) {
       Number(props.tokenOutAmount) === 0
     ) {
       return (
-        <Button onClick={() => null} color={'disabled'}>
+        <Button onClick={() => null} color={"disabled"}>
           Insufficient Balance
         </Button>
       );
     } else if (Number(props.rewardToken) === 0) {
       return (
-        <Button onClick={() => null} color={'disabled'}>
+        <Button onClick={() => null} color={"disabled"}>
           No Rewards yet
         </Button>
       );
     } else {
       return (
-        <Button color={'primary'} onClick={props.handleOperation}>
+        <Button color={"primary"} onClick={props.handleOperation}>
           Harvest Rewards
         </Button>
       );
     }
   }, [props]);
-  function InnerTab(
-    token: any,
-    text: number,
-    className: string,
-    tokenName: string
-  ) {
+  function InnerTab(token: any, text: number, className: string, tokenName: string) {
     return (
       <div className="flex gap-2 items-center">
         <ImageCircle src={token} className={className} />
@@ -74,11 +71,11 @@ export function RewardsScreen(props: IRewardsProps) {
 
         <div
           className={clsx(
-            'text-f14 ml-px h-5 font-medium',
-            tokenName === 'PLY' ? 'text-text-500' : 'text-white'
+            "text-f14 ml-px h-5 font-medium",
+            tokenName === "PLY" ? "text-text-500" : "text-white"
           )}
         >
-          {tokenName}
+          {tEZorCTEZtoUppercase(tokenName)}
         </div>
       </div>
     );
@@ -92,13 +89,13 @@ export function RewardsScreen(props: IRewardsProps) {
           {InnerTab(
             props.tokenIn.image,
             props.tokenInAmount ? Number(props.tokenInAmount) : 0,
-            '',
+            "",
             props.tokenIn.symbol
           )}
           {InnerTab(
             props.tokenOut.image,
             props.tokenOutAmount ? Number(props.tokenOutAmount) : 0,
-            '-mt-1',
+            "-mt-1",
             props.tokenOut.symbol
           )}
         </div>
@@ -106,9 +103,7 @@ export function RewardsScreen(props: IRewardsProps) {
 
       <div className="flex border rounded-2xl border-text-800 bg-card-200 p-4 flex-col gap-[15px]">
         <div className="text-text-400 text-f12">Your Rewards</div>
-        <div className="flex flex-col">
-          {InnerTab(token, Number(props.rewardToken), '', 'PLY')}
-        </div>
+        <div className="flex flex-col">{InnerTab(token, Number(props.rewardToken), "", "PLY")}</div>
       </div>
 
       {harvestButton}
