@@ -75,7 +75,7 @@ export function VotesTable(props: IVotesTableProps) {
                 {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
                 {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
               </div>
-              <div className="font-subtitle1 text-text-500">Stable Pool</div>
+              <div className="font-subtitle1 text-text-500">{x.votes.poolType} Pool</div>
             </div>
           </div>
         ),
@@ -89,7 +89,7 @@ export function VotesTable(props: IVotesTableProps) {
         accessor: (x: any) => <RewardsData bribes={x.votes.bribes} fees={x.votes.fees} />,
       },
       {
-        Header: "My votes",
+        Header: "Votes",
         id: "Myvotess",
         isToolTipEnabled: true,
         canShort: true,
@@ -135,7 +135,7 @@ export function VotesTable(props: IVotesTableProps) {
                 {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
                 {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
               </div>
-              <div className="font-subtitle1 text-text-500">Stable Pool</div>
+              <div className="font-subtitle1 text-text-500">{x.votes.poolType} Pool</div>
             </div>
           </div>
         ),
@@ -173,7 +173,7 @@ export function VotesTable(props: IVotesTableProps) {
         ),
       },
       {
-        Header: "My votes",
+        Header: "Votes",
         id: "Myvotess",
         isToolTipEnabled: true,
         canShort: true,
@@ -208,6 +208,7 @@ export function VotesTable(props: IVotesTableProps) {
           shortby="Myvotes"
           isFetched={votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
+          isVotesTable={true}
         />
       </div>
     </>

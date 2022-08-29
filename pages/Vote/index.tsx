@@ -18,7 +18,7 @@ import CastVote from "../../src/components/Votes/CastVote";
 import CreateLock from "../../src/components/Votes/CreateLock";
 import VotingAllocation from "../../src/components/Votes/VotingAllocation";
 import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
-import { getEpochData } from "../../src/redux/epoch/epoch";
+import { getEpochData, setSelectedEpoch } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
 import { EPOCH_DURATION_TESTNET } from "../../src/constants/global";
 import { getVeNFTsList } from "../../src/api/votes/votesKiran";
@@ -84,6 +84,7 @@ export default function Vote() {
   }, []);
   useEffect(() => {
     setVoteData({} as { [id: string]: IVotePageData });
+    setSelectedPools([] as ISelectedPool[]);
     setTotalVotingPower(0);
     votesPageDataWrapper(
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
@@ -242,6 +243,16 @@ export default function Vote() {
       }
     });
   };
+  console.log(
+    votes.length === 0,
+    selectedEpoch?.epochNumber,
+
+    totalVotingPower == 0,
+    selectedEpoch?.epochNumber ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber : false,
+    (votes.length === 0 && totalVotingPower == 0) || selectedEpoch?.epochNumber
+      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+      : false
+  );
   return (
     <>
       <Head>
@@ -324,18 +335,22 @@ export default function Vote() {
                 <div
                   className={clsx(
                     "basis-3/4  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
-                    votes.length === 0 && selectedEpoch?.epochNumber
-                      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                      : true
-                      ? "bg-card-700 text-text-400 font-subtitle4"
-                      : "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                    votes.length !== 0 &&
+                      (selectedEpoch?.epochNumber
+                        ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                        : false) &&
+                      totalVotingPower !== 0
+                      ? "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                      : "bg-card-700 text-text-400 font-subtitle4"
                   )}
                   onClick={() =>
-                    votes.length === 0 && selectedEpoch?.epochNumber
+                    votes.length !== 0 &&
+                    (selectedEpoch?.epochNumber
                       ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                      : true
-                      ? () => {}
-                      : setShowCastVoteModal(true)
+                      : false) &&
+                    totalVotingPower !== 0
+                      ? setShowCastVoteModal(true)
+                      : () => {}
                   }
                 >
                   Cast Vote

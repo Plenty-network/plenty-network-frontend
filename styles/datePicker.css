@@ -2,6 +2,9 @@
     background-color:'#180E26' ;
 }
 .react-datepicker{
+    position: absolute !important;
+    right: 36px;
+    bottom: 8px;
     background-color:#180E26 !important ;
     border-radius: 16px !important;
     color:#F8F7FA !important;

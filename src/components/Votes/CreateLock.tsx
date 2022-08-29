@@ -218,7 +218,7 @@ function CreateLock(props: ICreateLockProps) {
               <div>
                 <input
                   type="text"
-                  className="text-white bg-muted-200/[0.1] text-left border-0 font-medium2  md:font-subtitle6 outline-none w-[100%] placeholder:text-text-500"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-subtitle6  md:font-subtitle6 outline-none w-[100%] placeholder:text-text-500"
                   placeholder="dd/mm/yyyy"
                   value={props.lockingDate}
                   onChange={(e) => props.setLockingDate(e.target.value)}

@@ -47,22 +47,27 @@ export function RangeSlider(props: IRangeSliderProps) {
       setSliderVal(0);
     }
   };
+
   const handleSlider = (increment: boolean) => {
     if (props.totalVotingPower < 100 && increment && props.totalVotingPower + 10 <= 100) {
       setSliderVal((oldValue) => (oldValue + 10 < 100 ? oldValue + 10 : 100));
-    } else if (props.totalVotingPower < 100 && !increment) {
+    } else if (props.totalVotingPower <= 100 && !increment) {
       setSliderVal((oldValue) => (oldValue - 10 > 0 ? (oldValue - 10) % 100 : 0));
     }
   };
 
   React.useEffect(() => {
-    if (sliderVal > 0) {
+    if (sliderVal >= 0) {
       let flag = true;
 
-      props.selectedPools.forEach(function (pools) {
+      props.selectedPools.forEach(function (pools, index) {
         if (pools.tokenA === props.tokenA && pools.tokenB === props.tokenB) {
-          pools.votingPower = Number(sliderVal.toFixed(0));
-          flag = false;
+          if (sliderVal === 0) {
+            props.selectedPools.splice(index, 1);
+          } else {
+            pools.votingPower = Number(sliderVal.toFixed(0));
+            flag = false;
+          }
         }
       });
       props.votes.forEach(function (vote) {
@@ -74,7 +79,7 @@ export function RangeSlider(props: IRangeSliderProps) {
             .decimalPlaces(0, 1);
         }
       });
-      if (flag) {
+      if (flag && sliderVal > 0) {
         props.setSelectedPools(
           props.selectedPools.concat({
             tokenA: props.tokenA,
@@ -95,12 +100,13 @@ export function RangeSlider(props: IRangeSliderProps) {
         );
       }
     }
-
+    console.log(props.selectedPools);
     var d = 0;
     props.selectedPools.forEach((pool) => (d += pool.votingPower));
     props.setTotalVotingPower(d);
   }, [sliderVal]);
   React.useEffect(() => {
+    console.log(props.selectedPools);
     var d = 0;
     props.selectedPools.forEach((pool) => (d += pool.votingPower));
     props.setTotalVotingPower(d);
@@ -121,7 +127,11 @@ export function RangeSlider(props: IRangeSliderProps) {
             disabled={props.totalVotingPower >= 100}
             max={100}
             values={[sliderVal]}
-            onChange={(values) => (props.isDisabled ? () => {} : setSliderVal(values[0]))}
+            onChange={(values) =>
+              props.isDisabled && props.totalVotingPower + Number(values[0]) > 100
+                ? () => {}
+                : setSliderVal(values[0])
+            }
             renderTrack={({ props, children }) => (
               <div
                 {...props}
