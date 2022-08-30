@@ -21,7 +21,7 @@ import { InputSearchBox } from "../../src/components/Pools/Component/SearchInput
 import { getEpochData, setSelectedEpoch } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
 import { EPOCH_DURATION_TESTNET } from "../../src/constants/global";
-import { getVeNFTsList } from "../../src/api/votes/votesKiran";
+import { addRemainingVotesDust, getVeNFTsList } from "../../src/api/votes/votesKiran";
 import { ISelectedPool, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
@@ -219,9 +219,11 @@ export default function Vote() {
     setShowCastVoteModal(false);
     setShowConfirmTransaction(true);
     dispatch(setLoading(true));
+    const finalVotes = addRemainingVotesDust(selectedDropDown.votingPower, totalVotingPower, votes);
     vote(
       Number(selectedDropDown.tokenId),
-      votes,
+      // votes,
+      finalVotes,
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction
