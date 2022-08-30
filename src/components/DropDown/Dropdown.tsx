@@ -3,7 +3,6 @@ import * as React from "react";
 import clsx from "clsx";
 
 import arrow from "../../assets/icon/vote/arrowNFT.svg";
-import vectorIcon from "../../assets//icon/common/vector.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 
 export interface IDropdownProps {

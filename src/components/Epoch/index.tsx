@@ -30,12 +30,7 @@ export function Epoch(props: IEpochProps) {
   const indexOfCurrent = epochData.findIndex((data: IEpochListObject) => data.isCurrent === true);
 
   React.useEffect(() => {
-    console.log(epochData[indexOfCurrent]?.epochNumber);
-    console.log(currentEpoch?.epochNumber);
-    console.log(currentEpoch, epochData[indexOfCurrent]);
     dispatch(setSelectedEpoch(currentEpoch));
-    console.log(selectedEpoch?.epochNumber);
-    console.log("testing2");
   }, [epochData[indexOfCurrent]?.epochNumber, currentEpoch?.endTimestamp]);
 
   function Options(props: {

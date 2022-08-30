@@ -97,7 +97,7 @@ export default function Vote() {
   useEffect(() => {
     setVoteData({} as { [id: string]: IVotePageData });
     setSelectedPools([] as ISelectedPool[]);
-    console.log("testing1");
+
     votesPageDataWrapper(
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
       selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
@@ -113,7 +113,7 @@ export default function Vote() {
         setVeNFTlist(res.veNFTData);
       });
     }
-  }, [userAddress, epochData, currentEpoch?.epochNumber, castVoteOperation]);
+  }, [userAddress, currentEpoch?.epochNumber, castVoteOperation]);
 
   useInterval(() => {
     dispatch(getEpochData());
@@ -229,7 +229,6 @@ export default function Vote() {
     });
   };
   const handleEpochChange = () => {
-    console.log("checl");
     dispatch(setSelectedEpoch(currentEpoch));
     setShowEpochPopUp(false);
   };
