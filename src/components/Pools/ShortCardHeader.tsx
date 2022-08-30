@@ -22,13 +22,13 @@ export function Tabs(props: ITabsProps) {
   return (
     <th
       className={`flex cursor-pointer text-f12 text-text-50 text-left -mr-[13px] ${
-        props.isFirstRow ? "w-[120px] justify-start" : "justify-end"
+        props.isFirstRow ? "justify-start" : "justify-end"
       } ${
         props.isVotesTable
           ? "w-[120px] md:w-[200px]"
           : props.isFirstRow
           ? "w-[150px]"
-          : "flex-1  w-[100px]"
+          : "flex-1  w-[120px]"
       }`}
       onClick={() => (props.onClick ? props.onClick() : {})}
     >

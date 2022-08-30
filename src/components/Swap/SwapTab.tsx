@@ -1,40 +1,40 @@
-import clsx from 'clsx';
-import refresh from '../../../src/assets/icon/swap/refresh.svg';
-import settings from '../../../src/assets/icon/swap/settings.svg';
-import arrowDown from '../../../src/assets/icon/swap/arrowDown.svg';
-import ratesrefresh from '../../../src/assets/icon/swap/ratesrefresh.svg';
-import info from '../../../src/assets/icon/swap/info.svg';
-import router from '../../../src/assets/icon/swap/router.svg';
-import stableSwap from '../../../src/assets/icon/swap/stableswapViolet.svg';
-import switchsvg from '../../../src/assets/icon/swap/switch.svg';
-import Image from 'next/image';
-import Lottie from 'lottie-react';
-import Button from '../Button/Button';
-import TokenDropdown from '../TokenDropdown/TokenDropdown';
-import TransactionSettings from '../TransactionSettings/TransactionSettings';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { tokensModal, tokenType } from '../../../src/constants/swap';
-import { useStateAnimate } from '../../hooks/useAnimateUseState';
-import loader from '../../assets/animations/shimmer-swap.json';
-import { BigNumber } from 'bignumber.js';
-import { allSwapWrapper } from '../../operations/swap';
-import ExpertModePopup from '../ExpertMode';
-import ConfirmSwap from './ConfirmSwap';
-import ConfirmTransaction from '../ConfirmTransaction';
-import TransactionSubmitted from '../TransactionSubmitted';
+import clsx from "clsx";
+import refresh from "../../../src/assets/icon/swap/refresh.svg";
+import settings from "../../../src/assets/icon/swap/settings.svg";
+import arrowDown from "../../../src/assets/icon/swap/arrowDown.svg";
+import ratesrefresh from "../../../src/assets/icon/swap/ratesrefresh.svg";
+import info from "../../../src/assets/icon/swap/info.svg";
+import router from "../../../src/assets/icon/swap/router.svg";
+import stableSwap from "../../../src/assets/icon/swap/stableswapViolet.svg";
+import switchsvg from "../../../src/assets/icon/swap/switch.svg";
+import Image from "next/image";
+import Lottie from "lottie-react";
+import Button from "../Button/Button";
+import TokenDropdown from "../TokenDropdown/TokenDropdown";
+import TransactionSettings from "../TransactionSettings/TransactionSettings";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { tokensModal, tokenType } from "../../../src/constants/swap";
+import { useStateAnimate } from "../../hooks/useAnimateUseState";
+import loader from "../../assets/animations/shimmer-swap.json";
+import { BigNumber } from "bignumber.js";
+import { allSwapWrapper } from "../../operations/swap";
+import ExpertModePopup from "../ExpertMode";
+import ConfirmSwap from "./ConfirmSwap";
+import ConfirmTransaction from "../ConfirmTransaction";
+import TransactionSubmitted from "../TransactionSubmitted";
 import {
   FIRST_TOKEN_AMOUNT,
   SECOND_TOKEN_AMOUNT,
   TOKEN_A,
   TOKEN_B,
-} from '../../constants/localStorage';
-import { store, useAppDispatch, useAppSelector } from '../../redux';
-import { setLoading } from '../../redux/isLoading/action';
-import { Position, ToolTip } from '../Tooltip/TooltipAdvanced';
+} from "../../constants/localStorage";
+import { store, useAppDispatch, useAppSelector } from "../../redux";
+import { setLoading } from "../../redux/isLoading/action";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 interface ISwapTabProps {
   className?: string;
-  walletAddress: string | '';
+  walletAddress: string | "";
   firstTokenAmount: string | number;
   secondTokenAmount: string | number;
   connectWallet: () => void;
@@ -63,10 +63,7 @@ interface ISwapTabProps {
   setTokenType: any;
   allPath: string[];
   setTokenOut: any;
-  handleSwapTokenInput: (
-    input: string | number,
-    tokenType: 'tokenIn' | 'tokenOut'
-  ) => void;
+  handleSwapTokenInput: (input: string | number, tokenType: "tokenIn" | "tokenOut") => void;
   showConfirmSwap: boolean;
   setShowConfirmSwap: any;
   showConfirmTransaction: any;
@@ -102,18 +99,15 @@ interface ISwapTabProps {
 
 function SwapTab(props: ISwapTabProps) {
   const userSettings = useAppSelector((state) =>
-    state.userSettings.settings[props.walletAddress ? props.walletAddress : '']
-      ? state.userSettings.settings[
-          props.walletAddress ? props.walletAddress : ''
-        ]
-      : state.userSettings.settings['']
+    state.userSettings.settings[props.walletAddress ? props.walletAddress : ""]
+      ? state.userSettings.settings[props.walletAddress ? props.walletAddress : ""]
+      : state.userSettings.settings[""]
   );
 
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
-  const [transactionId, setTransactionId] = useState('');
-  const [openSwapDetails, setOpenSwapDetails, animateOpenSwapDetails] =
-    useStateAnimate(false, 180);
+  const [transactionId, setTransactionId] = useState("");
+  const [openSwapDetails, setOpenSwapDetails, animateOpenSwapDetails] = useStateAnimate(false, 180);
   const [showRecepient, setShowRecepient] = useState(false);
 
   const [expertMode, setExpertMode] = useState(userSettings.expertMode);
@@ -125,7 +119,7 @@ function SwapTab(props: ISwapTabProps) {
   const refreshAllData = (value: boolean) => {
     setRefresh(value);
     setTimeout(() => {
-      props.handleSwapTokenInput(props.firstTokenAmount, 'tokenIn');
+      props.handleSwapTokenInput(props.firstTokenAmount, "tokenIn");
       setRefresh(false);
     }, 500);
   };
@@ -150,29 +144,24 @@ function SwapTab(props: ISwapTabProps) {
 
     localStorage.setItem(
       TOKEN_A,
-      props.tokenIn.name === 'tez'
-        ? 'TEZ'
-        : props.tokenIn.name === 'ctez'
-        ? 'CTEZ'
+      props.tokenIn.name === "tez"
+        ? "TEZ"
+        : props.tokenIn.name === "ctez"
+        ? "CTEZ"
         : props.tokenIn.name
     );
     localStorage.setItem(
       TOKEN_B,
-      props.tokenOut.name === 'tez'
-        ? 'TEZ'
-        : props.tokenOut.name === 'ctez'
-        ? 'CTEZ'
+      props.tokenOut.name === "tez"
+        ? "TEZ"
+        : props.tokenOut.name === "ctez"
+        ? "CTEZ"
         : props.tokenOut.name
     );
     localStorage.setItem(FIRST_TOKEN_AMOUNT, props.firstTokenAmount.toString());
-    localStorage.setItem(
-      SECOND_TOKEN_AMOUNT,
-      props.secondTokenAmount.toString()
-    );
+    localStorage.setItem(SECOND_TOKEN_AMOUNT, props.secondTokenAmount.toString());
     !expertMode && props.setShowConfirmSwap(false);
-    const recepientAddress = props.recepient
-      ? props.recepient
-      : props.walletAddress;
+    const recepientAddress = props.recepient ? props.recepient : props.walletAddress;
     !expertMode && props.setShowConfirmTransaction(true);
     allSwapWrapper(
       new BigNumber(props.firstTokenAmount),
@@ -223,15 +212,14 @@ function SwapTab(props: ISwapTabProps) {
             Select a token
           </Button>
         );
-      } else if (props.errorMessage !== '') {
+      } else if (props.errorMessage !== "") {
         return (
           <Button color="disabled" width="w-full">
             Swap
           </Button>
         );
       } else if (
-        (Object.keys(props.tokenOut).length !== 0 &&
-          props.firstTokenAmount === '') ||
+        (Object.keys(props.tokenOut).length !== 0 && props.firstTokenAmount === "") ||
         Number(props.firstTokenAmount) === 0
       ) {
         return (
@@ -239,9 +227,7 @@ function SwapTab(props: ISwapTabProps) {
             Enter a amount
           </Button>
         );
-      } else if (
-        props.firstTokenAmount > props.userBalances[props.tokenIn.name]
-      ) {
+      } else if (props.firstTokenAmount > props.userBalances[props.tokenIn.name]) {
         return (
           <Button color="disabled" width="w-full">
             Insufficient balance
@@ -270,17 +256,11 @@ function SwapTab(props: ISwapTabProps) {
   }, [props]);
 
   const onClickAmount = () => {
-    props.setSecondTokenAmount('');
+    props.setSecondTokenAmount("");
 
-    props.tokenIn.name === 'tez'
-      ? props.handleSwapTokenInput(
-          Number(props.userBalances[props.tokenIn.name]) - 0.02,
-          'tokenIn'
-        )
-      : props.handleSwapTokenInput(
-          props.userBalances[props.tokenIn.name],
-          'tokenIn'
-        );
+    props.tokenIn.name === "tez"
+      ? props.handleSwapTokenInput(Number(props.userBalances[props.tokenIn.name]) - 0.02, "tokenIn")
+      : props.handleSwapTokenInput(props.userBalances[props.tokenIn.name], "tokenIn");
   };
   return (
     <>
@@ -290,17 +270,15 @@ function SwapTab(props: ISwapTabProps) {
           className="py-1 cursor-pointer px-15 h-8 border border-text-700 rounded-[21px] ml-auto"
           onClick={() => refreshAllData(true)}
         >
-          <Image src={refresh} height={'14px'} width={'15px'} />
+          <Image src={refresh} height={"14px"} width={"15px"} />
         </div>
         <div
           ref={refSettingTab}
           className="py-1 px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] ml-2"
           onClick={() => setSettingsShow(!settingsShow)}
         >
-          <Image src={settings} height={'20px'} width={'20px'} />
-          <span className="text-white font-body4 ml-2 relative -top-[3px]">
-            {props.slippage}%
-          </span>
+          <Image src={settings} height={"20px"} width={"20px"} />
+          <span className="text-white font-body4 ml-2 relative -top-[3px]">{props.slippage}%</span>
         </div>
         <TransactionSettings
           show={settingsShow}
@@ -317,38 +295,35 @@ function SwapTab(props: ISwapTabProps) {
       </div>
       <div
         className={clsx(
-          'lg:w-580 mt-4 h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700',
-          (props.firstTokenAmount > props.userBalances[props.tokenIn.name] ||
-            props.errorMessage) &&
-            'border-errorBorder hover:border-errorBorder bg-errorBg',
-          isFirstInputFocus ? 'border-text-700' : 'border-text-800 '
+          "lg:w-580 mt-4 h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700",
+          (props.firstTokenAmount > props.userBalances[props.tokenIn.name] || props.errorMessage) &&
+            "border-errorBorder hover:border-errorBorder bg-errorBg",
+          isFirstInputFocus ? "border-text-700" : "border-text-800 "
         )}
       >
         <div className="flex justify-between">
           <div
             className={clsx(
-              ' mt-4',
-              Object.keys(props.tokenIn).length !== 0
-                ? 'flex-[0_0_38%]'
-                : 'flex-[0_0_45%]'
+              " mt-4",
+              Object.keys(props.tokenIn).length !== 0 ? "flex-[0_0_38%]" : "flex-[0_0_45%]"
             )}
           >
             {Object.keys(props.tokenIn).length !== 0 ? (
               <TokenDropdown
-                onClick={() => props.handleTokenType('tokenIn')}
+                onClick={() => props.handleTokenType("tokenIn")}
                 tokenIcon={props.tokenIn.image}
                 tokenName={
-                  props.tokenIn.name === 'tez'
-                    ? 'TEZ'
-                    : props.tokenIn.name === 'ctez'
-                    ? 'CTEZ'
+                  props.tokenIn.name === "tez"
+                    ? "TEZ"
+                    : props.tokenIn.name === "ctez"
+                    ? "CTEZ"
                     : props.tokenIn.name
                 }
               />
             ) : (
               <TokenDropdown
                 tokenName="Select a token"
-                onClick={() => props.handleTokenType('tokenIn')}
+                onClick={() => props.handleTokenType("tokenIn")}
               />
             )}
           </div>
@@ -362,14 +337,12 @@ function SwapTab(props: ISwapTabProps) {
                   <input
                     type="text"
                     className={clsx(
-                      'text-white bg-card-500 text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%] placeholder:text-text-500'
+                      "text-white bg-card-500 text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%] placeholder:text-text-500"
                     )}
                     placeholder="0.0"
                     lang="en"
-                    onChange={(e) =>
-                      props.handleSwapTokenInput(e.target.value, 'tokenIn')
-                    }
-                    disabled={props.errorMessage !== ''}
+                    onChange={(e) => props.handleSwapTokenInput(e.target.value, "tokenIn")}
+                    disabled={props.errorMessage !== ""}
                     value={props.firstTokenAmount}
                     onFocus={() => setIsFirstInputFocus(true)}
                     onBlur={() => setIsFirstInputFocus(false)}
@@ -379,11 +352,11 @@ function SwapTab(props: ISwapTabProps) {
                 <input
                   type="text"
                   className={clsx(
-                    'text-primary-500 inputSecond  text-right border-0 w-[100%]  font-input-text lg:font-medium1 outline-none '
+                    "text-primary-500 inputSecond  text-right border-0 w-[100%]  font-input-text lg:font-medium1 outline-none "
                   )}
                   placeholder="--"
                   disabled
-                  value={'--'}
+                  value={"--"}
                 />
               )}
             </div>
@@ -391,21 +364,18 @@ function SwapTab(props: ISwapTabProps) {
         </div>
         <div className="flex -mt-[12px]">
           <div className="text-left">
-            <span className="text-text-600 font-body3">Balance:</span>{' '}
-            <span
-              className="font-body4 text-primary-500 cursor-pointer"
-              onClick={onClickAmount}
-            >
+            <span className="text-text-600 font-body3">Balance:</span>{" "}
+            <span className="font-body4 text-primary-500 cursor-pointer" onClick={onClickAmount}>
               {Number(props.userBalances[props.tokenIn.name]) >= 0 ? (
                 <ToolTip
                   message={props.userBalances[props.tokenIn.name].toString()}
                   id="tooltip8"
-                  position={Position.top}
+                  position={Position.right}
                 >
                   {Number(props.userBalances[props.tokenIn.name]).toFixed(4)}
                 </ToolTip>
               ) : (
-                '--'
+                "--"
               )}
             </span>
           </div>
@@ -413,14 +383,13 @@ function SwapTab(props: ISwapTabProps) {
             ~$
             {props.firstTokenAmount && props.tokenPrice[props.tokenIn.name]
               ? Number(
-                  Number(props.firstTokenAmount) *
-                    Number(props.tokenPrice[props.tokenIn.name])
+                  Number(props.firstTokenAmount) * Number(props.tokenPrice[props.tokenIn.name])
                 ).toFixed(2)
-              : '0.00'}
+              : "0.00"}
           </div>
         </div>
       </div>
-      {props.errorMessage !== '' && (
+      {props.errorMessage !== "" && (
         <div className="mt-1 mx-5 lg:mr-[30px] lg:ml-[50px] font-body2 lg:font-body3 text-error-500">
           {props.errorMessage}
         </div>
@@ -431,49 +400,45 @@ function SwapTab(props: ISwapTabProps) {
       >
         <div className="p-[11.5px] bg-card-500 rounded-2xl  w-[68px] h-[68px]">
           <div className="bg-primary-500 p-2  w-[46px] h-[46px] rounded-lg ">
-            <Image src={switchsvg} height={'32px'} width={'32px'} />
+            <Image src={switchsvg} height={"32px"} width={"32px"} />
           </div>
         </div>
       </div>
       <div className=" pt-[41px]  pb-5 border border-primary-500/[0.2] mx-px md:mx-2 lg:mx-2  px-5 lg:px-[22px] rounded-3xl bg-primary-500/[0.04]">
         <div
           className={clsx(
-            'lg:w-580 secondtoken h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] hover:border-primary-500/[0.6] bg-card-500 hover:bg-primary-500/[0.02]',
-            isSecondInputFocus && 'border-text-700'
+            "lg:w-580 secondtoken h-[102px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2] hover:border-primary-500/[0.6] bg-card-500 hover:bg-primary-500/[0.02]",
+            isSecondInputFocus && "border-text-700"
           )}
         >
           <div className=" flex justify-between">
             <div
               className={clsx(
-                ' mt-4',
-                Object.keys(props.tokenOut).length !== 0
-                  ? 'flex-[0_0_38%]'
-                  : 'flex-[0_0_45%]'
+                " mt-4",
+                Object.keys(props.tokenOut).length !== 0 ? "flex-[0_0_38%]" : "flex-[0_0_45%]"
               )}
             >
               {Object.keys(props.tokenOut).length !== 0 ? (
                 <TokenDropdown
-                  onClick={() => props.handleTokenType('tokenOut')}
+                  onClick={() => props.handleTokenType("tokenOut")}
                   tokenIcon={props.tokenOut.image}
                   tokenName={
-                    props.tokenOut.name === 'tez'
-                      ? 'TEZ'
-                      : props.tokenOut.name === 'ctez'
-                      ? 'CTEZ'
+                    props.tokenOut.name === "tez"
+                      ? "TEZ"
+                      : props.tokenOut.name === "ctez"
+                      ? "CTEZ"
                       : props.tokenOut.name
                   }
                 />
               ) : (
                 <TokenDropdown
                   tokenName="Select a token"
-                  onClick={() => props.handleTokenType('tokenOut')}
+                  onClick={() => props.handleTokenType("tokenOut")}
                 />
               )}
             </div>
             <div className=" my-3 ">
-              <div className="text-right font-body1 text-text-400">
-                YOU RECEIVE
-              </div>
+              <div className="text-right font-body1 text-text-400">YOU RECEIVE</div>
               <div>
                 {Object.keys(props.tokenOut).length !== 0 ? (
                   isRefresh || props.loading.isLoadingSecond ? (
@@ -482,12 +447,10 @@ function SwapTab(props: ISwapTabProps) {
                     <input
                       type="text"
                       className={clsx(
-                        'text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 '
+                        "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 "
                       )}
                       placeholder="0.0"
-                      onChange={(e) =>
-                        props.handleSwapTokenInput(e.target.value, 'tokenOut')
-                      }
+                      onChange={(e) => props.handleSwapTokenInput(e.target.value, "tokenOut")}
                       value={props.secondTokenAmount}
                       onFocus={() => setIsSecondInputFocus(true)}
                       onBlur={() => setIsSecondInputFocus(false)}
@@ -497,11 +460,11 @@ function SwapTab(props: ISwapTabProps) {
                   <input
                     type="text"
                     className={clsx(
-                      'text-primary-700 inputSecond  text-right border-0 w-[100%]  font-input-text lg:font-medium1 outline-none '
+                      "text-primary-700 inputSecond  text-right border-0 w-[100%]  font-input-text lg:font-medium1 outline-none "
                     )}
                     placeholder="--"
                     disabled
-                    value={'--'}
+                    value={"--"}
                   />
                 )}
               </div>
@@ -509,19 +472,19 @@ function SwapTab(props: ISwapTabProps) {
           </div>
           <div className="flex -mt-[12px]">
             <div className="text-left">
-              <span className="text-text-600 font-body3">Balance:</span>{' '}
+              <span className="text-text-600 font-body3">Balance:</span>{" "}
               <span className="font-body4 text-text-500 ">
                 {Object.keys(props.tokenOut).length !== 0 &&
                 Number(props.userBalances[props.tokenOut.name]) >= 0 ? (
                   <ToolTip
                     message={props.userBalances[props.tokenOut.name].toString()}
                     id="tooltip9"
-                    position={Position.top}
+                    position={Position.right}
                   >
                     {Number(props.userBalances[props.tokenOut.name]).toFixed(4)}
                   </ToolTip>
                 ) : (
-                  '--'
+                  "--"
                 )}
               </span>
             </div>
@@ -531,10 +494,9 @@ function SwapTab(props: ISwapTabProps) {
               props.secondTokenAmount &&
               props.tokenPrice[props.tokenOut.name]
                 ? Number(
-                    Number(props.secondTokenAmount) *
-                      Number(props.tokenPrice[props.tokenOut.name])
+                    Number(props.secondTokenAmount) * Number(props.tokenPrice[props.tokenOut.name])
                   ).toFixed(2)
-                : '0.00'}
+                : "0.00"}
             </div>
           </div>
         </div>
@@ -545,7 +507,7 @@ function SwapTab(props: ISwapTabProps) {
               <input
                 type="text"
                 className={clsx(
-                  'text-white  bg-card-500/[0.02] border-0 font-title1  outline-none w-[100%] placeholder:text-text-800/[0.8] '
+                  "text-white  bg-card-500/[0.02] border-0 font-title1  outline-none w-[100%] placeholder:text-text-800/[0.8] "
                 )}
                 placeholder="Receipient address"
                 onChange={(e) => props.setRecepient(e.target.value)}
@@ -562,15 +524,12 @@ function SwapTab(props: ISwapTabProps) {
           >
             {isRefresh || props.loading.isLoadingSecond ? (
               <div className="flex relative top-[8px]">
-                <span className="ml-[6px] font-text-bold mr-[7px]">
-                  {' '}
-                  Fetching best price
-                </span>
+                <span className="ml-[6px] font-text-bold mr-[7px]"> Fetching best price</span>
                 <span className="relative -top-[5px]">
                   <Lottie
                     animationData={loader}
                     loop={true}
-                    style={{ height: '32px', width: '32px' }}
+                    style={{ height: "32px", width: "32px" }}
                   />
                 </span>
               </div>
@@ -588,19 +547,15 @@ function SwapTab(props: ISwapTabProps) {
                           >
                             <div className="flex mt-2">
                               <div className="font-mobile-400 md:font-body3 ">
-                                <span className="mr-[5px]">
-                                  Minimum received
-                                </span>
+                                <span className="mr-[5px]">Minimum received</span>
                               </div>
 
                               <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                                {` ${Number(
-                                  props.routeDetails.minimumOut
-                                ).toFixed(4)} ${
-                                  props.tokenOut.name === 'tez'
-                                    ? 'TEZ'
-                                    : props.tokenOut.name === 'ctez'
-                                    ? 'CTEZ'
+                                {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${
+                                  props.tokenOut.name === "tez"
+                                    ? "TEZ"
+                                    : props.tokenOut.name === "ctez"
+                                    ? "CTEZ"
                                     : props.tokenOut.name
                                 }`}
                               </div>
@@ -613,14 +568,11 @@ function SwapTab(props: ISwapTabProps) {
 
                               <div
                                 className={clsx(
-                                  'ml-auto font-mobile-700 md:font-subtitle4',
-                                  Number(props.routeDetails.priceImpact) > 3 &&
-                                    'text-error-500'
+                                  "ml-auto font-mobile-700 md:font-subtitle4",
+                                  Number(props.routeDetails.priceImpact) > 3 && "text-error-500"
                                 )}
                               >
-                                {`${props.routeDetails.priceImpact.toFixed(
-                                  4
-                                )} %`}
+                                {`${props.routeDetails.priceImpact.toFixed(4)} %`}
                               </div>
                             </div>
                             <div className="flex mt-3 mb-2">
@@ -629,9 +581,7 @@ function SwapTab(props: ISwapTabProps) {
                               </div>
 
                               <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                                {`${props.routeDetails.finalFeePerc.toFixed(
-                                  2
-                                )}  %`}
+                                {`${props.routeDetails.finalFeePerc.toFixed(2)}  %`}
                               </div>
                             </div>
                           </div>
@@ -639,30 +589,28 @@ function SwapTab(props: ISwapTabProps) {
                       }
                       position={Position.left}
                     >
-                      <Image src={info} width={'15px'} height={'15px'} />
+                      <Image src={info} width={"15px"} height={"15px"} />
                     </ToolTip>
                   </span>
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
-                    1{' '}
+                    1{" "}
                     {!isConvert
-                      ? props.tokenIn.name === 'tez'
-                        ? 'TEZ'
-                        : props.tokenIn.name === 'ctez'
-                        ? 'CTEZ'
+                      ? props.tokenIn.name === "tez"
+                        ? "TEZ"
+                        : props.tokenIn.name === "ctez"
+                        ? "CTEZ"
                         : props.tokenIn.name
-                      : props.tokenOut.name === 'tez'
-                      ? 'TEZ'
-                      : props.tokenOut.name === 'ctez'
-                      ? 'CTEZ'
-                      : props.tokenOut.name}{' '}
+                      : props.tokenOut.name === "tez"
+                      ? "TEZ"
+                      : props.tokenOut.name === "ctez"
+                      ? "CTEZ"
+                      : props.tokenOut.name}{" "}
                     =
                     <ToolTip
                       message={
                         !isConvert
                           ? props.routeDetails.exchangeRate.toString()
-                          : (
-                              1 / Number(props.routeDetails.exchangeRate)
-                            ).toString()
+                          : (1 / Number(props.routeDetails.exchangeRate)).toString()
                       }
                       id="tooltip7"
                       position={Position.top}
@@ -670,28 +618,23 @@ function SwapTab(props: ISwapTabProps) {
                       {!isConvert
                         ? ` ${props.routeDetails.exchangeRate.toFixed(3)} 
                             ${
-                              props.tokenOut.name === 'tez'
-                                ? 'TEZ'
-                                : props.tokenOut.name === 'ctez'
-                                ? 'CTEZ'
+                              props.tokenOut.name === "tez"
+                                ? "TEZ"
+                                : props.tokenOut.name === "ctez"
+                                ? "CTEZ"
                                 : props.tokenOut.name
                             }`
-                        : `${Number(
-                            1 / Number(props.routeDetails.exchangeRate)
-                          ).toFixed(3)} ${
-                            props.tokenIn.name === 'tez'
-                              ? 'TEZ'
-                              : props.tokenIn.name === 'ctez'
-                              ? 'CTEZ'
+                        : `${Number(1 / Number(props.routeDetails.exchangeRate)).toFixed(3)} ${
+                            props.tokenIn.name === "tez"
+                              ? "TEZ"
+                              : props.tokenIn.name === "ctez"
+                              ? "CTEZ"
                               : props.tokenIn.name
                           }`}
                     </ToolTip>
                   </span>
                   <span className="relative top-px">
-                    <Image
-                      src={ratesrefresh}
-                      onClick={(e) => convertRates(e)}
-                    />
+                    <Image src={ratesrefresh} onClick={(e) => convertRates(e)} />
                   </span>
                 </div>
                 <div className="ml-auto">
@@ -701,14 +644,12 @@ function SwapTab(props: ISwapTabProps) {
                     toolTipChild={
                       <div
                         className={clsx(
-                          swapRoute && swapRoute?.length > 3
-                            ? 'w-[500px]'
-                            : 'w-[400px]'
+                          swapRoute && swapRoute?.length > 3 ? "w-[500px]" : "w-[400px]"
                         )}
                       >
                         <div className="mt-2 ">
                           <div className="font-subtitle2 md:font-subtitle4">
-                            {' '}
+                            {" "}
                             <span className="mr-[5px]">Route</span>
                           </div>
 
@@ -719,12 +660,8 @@ function SwapTab(props: ISwapTabProps) {
                                 const index = idx + 1;
                                 return (
                                   <>
-                                    {(idx === 0 ||
-                                      idx === swapRoute.length - 1) && (
-                                      <div
-                                        className="flex items-center "
-                                        key={token?.name}
-                                      >
+                                    {(idx === 0 || idx === swapRoute.length - 1) && (
+                                      <div className="flex items-center " key={token?.name}>
                                         {idx === swapRoute.length - 1 && (
                                           <div className="w-1.5 h-2 bg-primary-750 z-50"></div>
                                         )}
@@ -732,8 +669,8 @@ function SwapTab(props: ISwapTabProps) {
                                           <span className="w-[28px] h-[28px]">
                                             <Image
                                               src={token?.image}
-                                              width={'28px'}
-                                              height={'28px'}
+                                              width={"28px"}
+                                              height={"28px"}
                                             />
                                           </span>
                                         </div>
@@ -748,70 +685,63 @@ function SwapTab(props: ISwapTabProps) {
                                         <div className="w-1.5 h-2 bg-primary-750 z-50"></div>
                                         <div
                                           className={clsx(
-                                            'relative  rounded-2xl h-[32px] bg-card-600 p-px flex',
+                                            "relative  rounded-2xl h-[32px] bg-card-600 p-px flex",
                                             props.routeDetails.isStable[idx]
-                                              ? 'w-[130px]'
-                                              : 'w-[114px]'
+                                              ? "w-[130px]"
+                                              : "w-[114px]"
                                           )}
                                         >
                                           <span className=" flex items-center">
-                                            {props.routeDetails.isStable[
-                                              idx
-                                            ] && (
+                                            {props.routeDetails.isStable[idx] && (
                                               <div className="border-2 border-primary-500/[0.2] z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
                                                 <span className="w-[18px] h-[18px]">
                                                   <Image
                                                     src={stableSwap}
-                                                    width={'18px'}
-                                                    height={'18px'}
+                                                    width={"18px"}
+                                                    height={"18px"}
                                                   />
                                                 </span>
                                               </div>
                                             )}
                                             <div
                                               className={clsx(
-                                                'relative   z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full',
-                                                props.routeDetails.isStable[
-                                                  idx
-                                                ] && 'right-[10px]'
+                                                "relative   z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full",
+                                                props.routeDetails.isStable[idx] && "right-[10px]"
                                               )}
                                             >
                                               <span className="w-[28px] h-[28px]">
                                                 <Image
                                                   src={token?.image}
-                                                  width={'28px'}
-                                                  height={'28px'}
+                                                  width={"28px"}
+                                                  height={"28px"}
                                                 />
                                               </span>
                                             </div>
                                             <div
                                               className={clsx(
-                                                'relative  z-30 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full',
+                                                "relative  z-30 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full",
                                                 props.routeDetails.isStable[idx]
-                                                  ? 'right-5'
-                                                  : 'right-[10px]'
+                                                  ? "right-5"
+                                                  : "right-[10px]"
                                               )}
                                             >
                                               <span className="w-[28px] h-[28px]">
                                                 <Image
                                                   src={swapRoute[index]?.image}
-                                                  width={'28px'}
-                                                  height={'28px'}
+                                                  width={"28px"}
+                                                  height={"28px"}
                                                 />
                                               </span>
                                             </div>
                                             <div
                                               className={clsx(
-                                                'relative right-[22px] ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4',
+                                                "relative right-[22px] ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4",
                                                 props.routeDetails.isStable[idx]
-                                                  ? 'right-[22px]'
-                                                  : 'right-[12px]'
+                                                  ? "right-[22px]"
+                                                  : "right-[12px]"
                                               )}
                                             >
-                                              {Number(
-                                                props.routeDetails.feePerc[idx]
-                                              ).toFixed(2)}
-                                              %
+                                              {Number(props.routeDetails.feePerc[idx]).toFixed(2)}%
                                             </div>
                                           </span>
                                         </div>
@@ -824,16 +754,15 @@ function SwapTab(props: ISwapTabProps) {
                             </div>
                           </>
                           <div className="mt-3 text-text-50 font-body1">
-                            This route optimises your total output by
-                            considering all the Volatile and Flat AMMs on Plenty
-                            Network.
+                            This route optimises your total output by considering all the Volatile
+                            and Flat AMMs on Plenty Network.
                           </div>
                         </div>
                       </div>
                     }
                   >
                     <div className="mr-2.5 lg:mr-6 h-[36px] flex justify-center rounded bg-shimmer-100 p-2">
-                      <Image src={router} width={'20px'} height={'20px'} />
+                      <Image src={router} width={"20px"} height={"20px"} />
                       <span className="ml-1 font-bold3 lg:font-subtitle4 text-primary-500">{`${Number(
                         props.routeDetails.finalFeePerc
                       ).toFixed(2)} %`}</span>
@@ -843,11 +772,9 @@ function SwapTab(props: ISwapTabProps) {
                 <div className=" relative top-[3px]">
                   <Image
                     src={arrowDown}
-                    className={
-                      animateOpenSwapDetails ? 'rotate-180' : 'rotate-0'
-                    }
-                    width={'24px'}
-                    height={'24px'}
+                    className={animateOpenSwapDetails ? "rotate-180" : "rotate-0"}
+                    width={"24px"}
+                    height={"24px"}
                   />
                 </div>
               </>
@@ -858,9 +785,7 @@ function SwapTab(props: ISwapTabProps) {
         {openSwapDetails && props.routeDetails.success && (
           <div
             className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 ${
-              animateOpenSwapDetails
-                ? 'opendown-animation'
-                : 'closeup-animation'
+              animateOpenSwapDetails ? "opendown-animation" : "closeup-animation"
             }`}
           >
             <div className="flex">
@@ -871,8 +796,8 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip2"
                     toolTipChild={
                       <div className="w-[323px]">
-                        Your transaction will revert if there is a large,
-                        unfavorable price movement before it is confirmed.
+                        Your transaction will revert if there is a large, unfavorable price movement
+                        before it is confirmed.
                       </div>
                     }
                   >
@@ -892,10 +817,10 @@ function SwapTab(props: ISwapTabProps) {
                     position={Position.top}
                   >
                     {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${
-                      props.tokenOut.name === 'tez'
-                        ? 'TEZ'
-                        : props.tokenOut.name === 'ctez'
-                        ? 'CTEZ'
+                      props.tokenOut.name === "tez"
+                        ? "TEZ"
+                        : props.tokenOut.name === "ctez"
+                        ? "CTEZ"
                         : props.tokenOut.name
                     }`}
                   </ToolTip>
@@ -911,8 +836,8 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip4"
                     toolTipChild={
                       <div className="w-[323px]">
-                        The difference between the market price and estimated
-                        price due to trade size.
+                        The difference between the market price and estimated price due to trade
+                        size.
                       </div>
                     }
                   >
@@ -927,9 +852,8 @@ function SwapTab(props: ISwapTabProps) {
               ) : (
                 <div
                   className={clsx(
-                    'ml-auto font-mobile-700 md:font-subtitle4',
-                    Number(props.routeDetails.priceImpact) > 5 &&
-                      'text-error-500'
+                    "ml-auto font-mobile-700 md:font-subtitle4",
+                    Number(props.routeDetails.priceImpact) > 5 && "text-error-500"
                   )}
                 >
                   <ToolTip
@@ -937,7 +861,7 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip5"
                     position={Position.top}
                   >
-                    {`${props.routeDetails.priceImpact.toFixed(4)} %`}{' '}
+                    {`${props.routeDetails.priceImpact.toFixed(4)} %`}{" "}
                   </ToolTip>
                 </div>
               )}
@@ -950,8 +874,7 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip3"
                     toolTipChild={
                       <div className="w-[323px]">
-                        Fees are 0.35% for each volatile swap and 0.10% for each
-                        stable swap.
+                        Fees are 0.35% for each volatile swap and 0.10% for each stable swap.
                       </div>
                     }
                   >
@@ -973,15 +896,14 @@ function SwapTab(props: ISwapTabProps) {
 
             <div className="mt-4 ">
               <div className="font-subtitle2 md:font-subtitle4">
-                {' '}
+                {" "}
                 <span className="mr-[5px]">Route</span>
                 <span className="relative top-1 lg:top-0.5">
                   <ToolTip
                     id="tooltip4"
                     toolTipChild={
                       <div className="w-[323px]">
-                        Routing through these tokens results in the best price
-                        for your trade.
+                        Routing through these tokens results in the best price for your trade.
                       </div>
                     }
                   >
@@ -1002,25 +924,16 @@ function SwapTab(props: ISwapTabProps) {
                       return (
                         <>
                           {(idx === 0 || idx === swapRoute.length - 1) && (
-                            <div
-                              className="flex items-center "
-                              key={token?.name}
-                            >
+                            <div className="flex items-center " key={token?.name}>
                               {idx === swapRoute.length - 1 && (
                                 <div className="w-1.5 h-2 bg-card-500 z-50"></div>
                               )}
                               <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
                                 <span className="w-[28px] h-[28px]">
-                                  <Image
-                                    src={token?.image}
-                                    width={'28px'}
-                                    height={'28px'}
-                                  />
+                                  <Image src={token?.image} width={"28px"} height={"28px"} />
                                 </span>
                               </div>
-                              {idx === 0 && (
-                                <div className="w-1.5 h-2 bg-card-500 z-50"></div>
-                              )}
+                              {idx === 0 && <div className="w-1.5 h-2 bg-card-500 z-50"></div>}
                             </div>
                           )}
 
@@ -1029,67 +942,51 @@ function SwapTab(props: ISwapTabProps) {
                               <div className="w-1.5 h-2 bg-card-500 z-50"></div>
                               <div
                                 className={clsx(
-                                  'relative  rounded-2xl h-[32px] bg-card-600 p-px flex',
-                                  props.routeDetails.isStable[idx]
-                                    ? 'w-[130px]'
-                                    : 'w-[114px]'
+                                  "relative  rounded-2xl h-[32px] bg-card-600 p-px flex",
+                                  props.routeDetails.isStable[idx] ? "w-[130px]" : "w-[114px]"
                                 )}
                               >
                                 <span className=" flex items-center">
                                   {props.routeDetails.isStable[idx] && (
                                     <div className="border-2 border-primary-500/[0.2] z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
                                       <span className="w-[18px] h-[18px]">
-                                        <Image
-                                          src={stableSwap}
-                                          width={'18px'}
-                                          height={'18px'}
-                                        />
+                                        <Image src={stableSwap} width={"18px"} height={"18px"} />
                                       </span>
                                     </div>
                                   )}
                                   <div
                                     className={clsx(
-                                      'relative   z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full',
-                                      props.routeDetails.isStable[idx] &&
-                                        'right-[10px]'
+                                      "relative   z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full",
+                                      props.routeDetails.isStable[idx] && "right-[10px]"
                                     )}
                                   >
                                     <span className="w-[28px] h-[28px]">
-                                      <Image
-                                        src={token?.image}
-                                        width={'28px'}
-                                        height={'28px'}
-                                      />
+                                      <Image src={token?.image} width={"28px"} height={"28px"} />
                                     </span>
                                   </div>
                                   <div
                                     className={clsx(
-                                      'relative  z-30 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full',
-                                      props.routeDetails.isStable[idx]
-                                        ? 'right-5'
-                                        : 'right-[10px]'
+                                      "relative  z-30 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full",
+                                      props.routeDetails.isStable[idx] ? "right-5" : "right-[10px]"
                                     )}
                                   >
                                     <span className="w-[28px] h-[28px]">
                                       <Image
                                         src={swapRoute[index]?.image}
-                                        width={'28px'}
-                                        height={'28px'}
+                                        width={"28px"}
+                                        height={"28px"}
                                       />
                                     </span>
                                   </div>
                                   <div
                                     className={clsx(
-                                      'relative right-[22px] ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4',
+                                      "relative right-[22px] ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4",
                                       props.routeDetails.isStable[idx]
-                                        ? 'right-[22px]'
-                                        : 'right-[12px]'
+                                        ? "right-[22px]"
+                                        : "right-[12px]"
                                     )}
                                   >
-                                    {Number(
-                                      props.routeDetails.feePerc[idx]
-                                    ).toFixed(2)}
-                                    %
+                                    {Number(props.routeDetails.feePerc[idx]).toFixed(2)}%
                                   </div>
                                 </span>
                               </div>
@@ -1131,16 +1028,16 @@ function SwapTab(props: ISwapTabProps) {
           show={props.showConfirmTransaction}
           setShow={props.setShowConfirmTransaction}
           content={`Swap ${Number(props.firstTokenAmount).toFixed(2)} ${
-            props.tokenIn.name === 'tez'
-              ? 'TEZ'
-              : props.tokenIn.name === 'ctez'
-              ? 'CTEZ'
+            props.tokenIn.name === "tez"
+              ? "TEZ"
+              : props.tokenIn.name === "ctez"
+              ? "CTEZ"
               : props.tokenIn.name
           } for ${Number(props.secondTokenAmount).toFixed(4)} ${
-            props.tokenOut.name === 'tez'
-              ? 'TEZ'
-              : props.tokenOut.name === 'ctez'
-              ? 'CTEZ'
+            props.tokenOut.name === "tez"
+              ? "TEZ"
+              : props.tokenOut.name === "ctez"
+              ? "CTEZ"
               : props.tokenOut.name
           } `}
         />
@@ -1150,13 +1047,11 @@ function SwapTab(props: ISwapTabProps) {
           show={props.showTransactionSubmitModal}
           setShow={props.setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId
-              ? () => window.open(`https://tzkt.io/${transactionId}`, '_blank')
-              : null
+            transactionId ? () => window.open(`https://tzkt.io/${transactionId}`, "_blank") : null
           }
-          content={`Swap ${Number(
-            localStorage.getItem(FIRST_TOKEN_AMOUNT)
-          ).toFixed(2)} ${localStorage.getItem(TOKEN_A)} for ${Number(
+          content={`Swap ${Number(localStorage.getItem(FIRST_TOKEN_AMOUNT)).toFixed(
+            2
+          )} ${localStorage.getItem(TOKEN_A)} for ${Number(
             localStorage.getItem(SECOND_TOKEN_AMOUNT)
           ).toFixed(4)} ${localStorage.getItem(TOKEN_B)} `}
         />

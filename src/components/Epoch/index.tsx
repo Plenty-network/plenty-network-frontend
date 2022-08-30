@@ -12,8 +12,6 @@ import { AppDispatch, store } from "../../redux";
 import { getEpochData, setSelectedEpoch } from "../../redux/epoch/epoch";
 
 export interface IEpochProps {
-  onClick: Function;
-  selectedText: string;
   className?: string;
   title?: string;
 }
@@ -30,12 +28,14 @@ export function Epoch(props: IEpochProps) {
   });
 
   React.useEffect(() => {
+    console.log(epochData[0].epochNumber);
+    console.log(currentEpoch.epochNumber);
     dispatch(setSelectedEpoch(epochData[0]));
-    props.onClick(currentEpoch?.epochNumber);
+    console.log(selectedEpoch.epochNumber);
+    console.log("testing2");
   }, [epochData[0]?.epochNumber, currentEpoch?.endTimestamp]);
 
   function Options(props: {
-    onClick: Function;
     startDate: number;
     epochNumber: number;
     isCurrent?: boolean;
@@ -65,7 +65,6 @@ export function Epoch(props: IEpochProps) {
     return (
       <div
         onClick={() => {
-          props.onClick(props.epochNumber);
           dispatch(setSelectedEpoch(props.epoch));
           setIsDropDownActive(false);
         }}
@@ -85,7 +84,6 @@ export function Epoch(props: IEpochProps) {
   if (minutes < 0 || seconds < 0) {
     dispatch(getEpochData());
     dispatch(setSelectedEpoch(epochData[0]));
-    props.onClick(currentEpoch?.epochNumber);
   }
 
   return (
@@ -102,6 +100,7 @@ export function Epoch(props: IEpochProps) {
                   : epochData[0]?.epochNumber
                   ? epochData[0].epochNumber
                   : 0}
+                {selectedEpoch?.epochNumber === epochData[0]?.epochNumber && " (current) "}
               </span>
             </p>
             <InfoIconToolTip message="Epoch lipsum" />
@@ -126,7 +125,6 @@ export function Epoch(props: IEpochProps) {
           >
             {epochData.map((text, i) => (
               <Options
-                onClick={props.onClick}
                 key={`${text.epochNumber}_${i}`}
                 startDate={text.startTimestamp}
                 epochNumber={text.epochNumber}

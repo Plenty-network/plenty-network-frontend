@@ -1,12 +1,8 @@
 import * as React from "react";
-
 import Image from "next/image";
 import { Column } from "react-table";
-import { usePoolsMain } from "../../api/pools/query/poolsmain.query";
-import { IPoolsDataWrapperResponse } from "../../api/pools/types";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
-import { tokenParameterLiquidity } from "../Liquidity/types";
 import { isMobile } from "react-device-detect";
 import { IVotesTableProps } from "./types";
 import { RewardsData } from "./RewardsData";
@@ -19,8 +15,18 @@ export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
 
   const votesArray = Object.entries(props.voteData);
-
+  // const [totalVotes, setTotalVotes] = React.useState<{ values: number[]; sum: number }>({
+  //   values: new Array(votesArray.length).fill(0),
+  //   sum: 0,
+  // });
+  const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
+    new Array(votesArray.length).fill(0)
+  );
   const votedataArray = React.useMemo(() => {
+    votesArray.map((data, index) => {
+      totalVotes1[index] = Number(data[1].totalVotesPercentage);
+    });
+
     return votesArray.map((data, index) => ({
       index: index,
       amm: data[0],
@@ -29,10 +35,6 @@ export function VotesTable(props: IVotesTableProps) {
   }, [votesArray.length]);
 
   const [votedata, setVotedata] = React.useState(votedataArray);
-  const [totalVotes, setTotalVotes] = React.useState<{ values: number[]; sum: number }>({
-    values: new Array(votedata.length).fill(0),
-    sum: 0,
-  });
   React.useEffect(() => {
     if (votedataArray.length !== 0) setVotedata(votedataArray);
     else setVotedata([]);
@@ -114,8 +116,7 @@ export function VotesTable(props: IVotesTableProps) {
             isCurrentEpoch={props.isCurrentEpoch}
             index={x.index}
             votedata={votedata}
-            totalVotes={totalVotes}
-            setTotalVotes={setTotalVotes}
+            totalVotes1={totalVotes1}
           />
         ),
       },
@@ -202,8 +203,7 @@ export function VotesTable(props: IVotesTableProps) {
             isCurrentEpoch={props.isCurrentEpoch}
             index={x.index}
             votedata={votedata}
-            totalVotes={totalVotes}
-            setTotalVotes={setTotalVotes}
+            totalVotes1={totalVotes1}
           />
         ),
       },

@@ -27,16 +27,8 @@ export interface IMyVotesProps {
     amm: string;
     votes: IVotePageData;
   }[];
-  totalVotes: {
-    values: number[];
-    sum: number;
-  };
-  setTotalVotes: React.Dispatch<
-    React.SetStateAction<{
-      values: number[];
-      sum: number;
-    }>
-  >;
+
+  totalVotes1: number[];
 }
 
 export function MyVotes(props: IMyVotesProps) {
@@ -58,8 +50,7 @@ export function MyVotes(props: IMyVotesProps) {
         selectedDropDown={props.selectedDropDown}
         index={props.index}
         votedata={props.votedata}
-        totalVotes={props.totalVotes}
-        setTotalVotes={props.setTotalVotes}
+        totalVotes1={props.totalVotes1}
       />
     </div>
   );

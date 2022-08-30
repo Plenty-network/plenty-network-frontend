@@ -32,16 +32,8 @@ export interface IRangeSliderProps {
     amm: string;
     votes: IVotePageData;
   }[];
-  totalVotes: {
-    values: number[];
-    sum: number;
-  };
-  setTotalVotes: React.Dispatch<
-    React.SetStateAction<{
-      values: number[];
-      sum: number;
-    }>
-  >;
+
+  totalVotes1: number[];
 }
 
 export function RangeSlider(props: IRangeSliderProps) {
@@ -51,31 +43,31 @@ export function RangeSlider(props: IRangeSliderProps) {
   }, [props.totalVotesPercentage]);
   const handleInputEdit = (index: number, value: string) => {
     var sum = 0;
-    props.totalVotes.values.forEach((item, id) => {
+    props.totalVotes1.forEach((item, id) => {
       if (id !== index) {
         sum += item;
       }
     });
     if (value && !isNaN(parseInt(value))) {
       if (parseInt(value) >= 0 && parseInt(value) <= 100 && sum + Number(value) <= 100) {
-        props.totalVotes.values[index] = parseInt(value);
+        props.totalVotes1[index] = parseInt(value);
 
         setSliderVal(parseInt(value));
       }
     } else {
-      props.totalVotes.values[index] = 0;
+      props.totalVotes1[index] = 0;
       setSliderVal(0);
     }
   };
 
   const handleSlider = (increment: boolean, index: number) => {
-    const oldValue = props.totalVotes.values[index];
-    if (props.totalVotingPower < 100 && increment && props.totalVotingPower + 10 <= 100) {
-      props.totalVotes.values[index] = oldValue + 10 < 100 ? oldValue + 10 : 100;
-      setSliderVal((oldValue) => (oldValue + 10 < 100 ? oldValue + 10 : 100));
+    const oldValue = props.totalVotes1[index];
+    if (props.totalVotingPower < 100 && increment && props.totalVotingPower + 1 <= 100) {
+      props.totalVotes1[index] = oldValue + 1 < 100 ? oldValue + 1 : 100;
+      setSliderVal((oldValue) => (oldValue + 1 < 100 ? oldValue + 1 : 100));
     } else if (props.totalVotingPower <= 100 && !increment) {
-      props.totalVotes.values[index] = oldValue - 10 > 0 ? (oldValue - 10) % 100 : 0;
-      setSliderVal((oldValue) => (oldValue - 10 > 0 ? (oldValue - 10) % 100 : 0));
+      props.totalVotes1[index] = oldValue - 1 > 0 ? (oldValue - 1) % 100 : 0;
+      setSliderVal((oldValue) => (oldValue - 1 > 0 ? (oldValue - 1) % 100 : 0));
     }
   };
 
@@ -125,7 +117,7 @@ export function RangeSlider(props: IRangeSliderProps) {
         );
       }
     }
-    props.totalVotes.values[props.index] = sliderVal;
+    props.totalVotes1[props.index] = sliderVal;
     // var sum = 0;
     // props.totalVotes.values.forEach((item) => {
     //   sum += item;
@@ -196,7 +188,7 @@ export function RangeSlider(props: IRangeSliderProps) {
       <div className="bg-primary-500/10 flex border  border-primary-500 text-f12 py-[9px] text-center h-[38px] w-[48px] rounded-lg px-[9px]">
         <input
           className="bg-primary-500/[0.0] w-[19px] outline-none text-center text-f12 "
-          value={props.totalVotes.values[props.index] ? props.totalVotes.values[props.index] : 0}
+          value={props.totalVotes1[props.index] ? props.totalVotes1[props.index] : 0}
           onChange={(e) =>
             props.isDisabled ? () => {} : handleInputEdit(props.index, e.target.value)
           }

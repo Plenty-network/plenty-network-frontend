@@ -206,8 +206,8 @@ export const votesPageDataWrapper = async (
 
       //TODO: Remove next line
       allData[testnetDex] = {
-      // TODO: Uncomment next line
-      // allData[poolData.pool] = {
+        // TODO: Uncomment next line
+        // allData[poolData.pool] = {
         tokenA: AMM.token1.symbol,
         tokenB: AMM.token2.symbol,
         poolType: AMM.type,
@@ -282,9 +282,7 @@ export const votesPageDataWrapper = async (
     }
 
     //TODO: Remove next line in mainnet
-    delete allData['false'];
-    
-    console.log(allData);
+    delete allData["false"];
 
     return {
       success: true,
