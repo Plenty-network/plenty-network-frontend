@@ -31,9 +31,8 @@ const EpochSlice = createSlice({
   },
   extraReducers: {
     [getEpochData.fulfilled.toString()]: (state: any, action: any) => {
-      state.currentEpoch = action.payload.epochData[0];
+      state.currentEpoch = action.payload.epochData[0]; //use iscurrent
       state.epochFetchError = false;
-
       state.epochData = action.payload.epochData;
     },
     [getEpochData.rejected.toString()]: (state: any, action: any) => {
