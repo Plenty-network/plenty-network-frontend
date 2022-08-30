@@ -35,7 +35,7 @@ export function TopNavBar(props: ITopNavBarProps) {
         <Image src={plentyIcon} />
       </div>
       <div className="flex justify-between flex-1">
-        <Epoch onClick={setSelectedDropDown} selectedText={selectedDropDown} />
+        <Epoch />
         <div className="flex flex-row gap-7 ">
           <div className="flex flex-row gap-3.5 ">
             <Image src={myPostion} className="cursor-pointer hover:opacity-90" />

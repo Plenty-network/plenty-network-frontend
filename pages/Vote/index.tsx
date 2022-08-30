@@ -72,11 +72,10 @@ export default function Vote() {
   };
   useEffect(() => {
     dispatch(fetchWallet());
-
     dispatch(getConfig());
     dispatch(getEpochData());
     setVoteData({} as { [id: string]: IVotePageData });
-    setVotes([] as IVotes[]);
+    !showTransactionSubmitModal && setVotes([] as IVotes[]);
     votesPageDataWrapper(
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
       selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
@@ -87,8 +86,8 @@ export default function Vote() {
   useEffect(() => {
     setVoteData({} as { [id: string]: IVotePageData });
     setSelectedPools([] as ISelectedPool[]);
-    setVotes([] as IVotes[]);
-    setTotalVotingPower(0);
+    !showTransactionSubmitModal && setVotes([] as IVotes[]);
+    console.log("testing1");
     votesPageDataWrapper(
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
       selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
@@ -97,23 +96,35 @@ export default function Vote() {
     });
   }, [
     selectedDropDown,
-    currentEpoch?.epochNumber,
-    selectedEpoch?.epochNumber,
+    currentEpoch?.endTimestamp,
+    selectedEpoch?.endTimestamp,
     showTransactionSubmitModal,
   ]);
 
   useEffect(() => {
+    setVeNFTlist([]);
     if (userAddress) {
       getVeNFTsList(userAddress).then((res) => {
         setVeNFTlist(res.veNFTData);
       });
     }
-  }, [userAddress, epochData, currentEpoch]);
+  }, [userAddress, epochData, currentEpoch, showTransactionSubmitModal]);
 
   useInterval(() => {
     dispatch(getEpochData());
   }, 60000);
-
+  useEffect(() => {
+    if (veNFTlist.length > 0 && selectedDropDown.votingPower !== "") {
+      veNFTlist.map((list) => {
+        if (Number(list.tokenId) === Number(selectedDropDown.tokenId)) {
+          setSelectedDropDown({
+            votingPower: list.votingPower.toString(),
+            tokenId: list.tokenId.toString(),
+          });
+        }
+      });
+    }
+  }, [veNFTlist]);
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
@@ -220,6 +231,7 @@ export default function Vote() {
     setShowConfirmTransaction(true);
     dispatch(setLoading(true));
     const finalVotes = addRemainingVotesDust(selectedDropDown.votingPower, totalVotingPower, votes);
+    console.log(votes, finalVotes);
     vote(
       Number(selectedDropDown.tokenId),
       // votes,
@@ -249,6 +261,14 @@ export default function Vote() {
       }
     });
   };
+
+  const votesArray = Object.entries(voteData);
+  var sum = 0;
+  React.useEffect(() => {
+    votesArray.map((data) => {
+      sum += Number(data[1].totalVotesPercentage);
+    });
+  }, [votesArray.length]);
 
   return (
     <>
@@ -307,7 +327,8 @@ export default function Vote() {
                       ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                       : false) &&
                     totalVotingPower !== 0 &&
-                    totalVotingPower === 100
+                    totalVotingPower === 100 &&
+                    sum !== 100
                       ? setShowCastVoteModal(true)
                       : () => {}
                   }
@@ -367,7 +388,8 @@ export default function Vote() {
                           ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                           : false) &&
                         totalVotingPower !== 0 &&
-                        totalVotingPower === 100
+                        totalVotingPower === 100 &&
+                        sum !== 100
                           ? setShowCastVoteModal(true)
                           : () => {}
                       }

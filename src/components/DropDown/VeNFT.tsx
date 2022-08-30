@@ -77,7 +77,7 @@ export function VeNFT(props: IDropdownProps) {
           width={"18px"}
           height={"18px"}
           className={!isDropDownActive ? "rotate-0" : "rotate-180"}
-          {...(props.selectedText.votingPower !== "" || props.Options.length === 0
+          {...(props.Options.length === 0
             ? {}
             : { onClick: () => setIsDropDownActive(!isDropDownActive) })}
         />
@@ -85,8 +85,7 @@ export function VeNFT(props: IDropdownProps) {
       {isDropDownActive && props.Options.length > 0 && (
         <div
           className={clsx(
-            "absolute z-20 w-[150px] min-w-[180px] md:w-[180px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1",
-            props.isConfirmStake && props.selectedText.votingPower !== "" && "hidden"
+            "absolute z-20 w-[150px] min-w-[180px] md:w-[180px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1"
           )}
         >
           {props.Options.map((text, i) => (

@@ -32,16 +32,7 @@ export interface IRangeSliderProps {
     amm: string;
     votes: IVotePageData;
   }[];
-  totalVotes: {
-    values: number[];
-    sum: number;
-  };
-  setTotalVotes: React.Dispatch<
-    React.SetStateAction<{
-      values: number[];
-      sum: number;
-    }>
-  >;
+
   totalVotes1: number[];
 }
 
@@ -71,12 +62,12 @@ export function RangeSlider(props: IRangeSliderProps) {
 
   const handleSlider = (increment: boolean, index: number) => {
     const oldValue = props.totalVotes1[index];
-    if (props.totalVotingPower < 100 && increment && props.totalVotingPower + 10 <= 100) {
-      props.totalVotes1[index] = oldValue + 10 < 100 ? oldValue + 10 : 100;
-      setSliderVal((oldValue) => (oldValue + 10 < 100 ? oldValue + 10 : 100));
+    if (props.totalVotingPower < 100 && increment && props.totalVotingPower + 1 <= 100) {
+      props.totalVotes1[index] = oldValue + 1 < 100 ? oldValue + 1 : 100;
+      setSliderVal((oldValue) => (oldValue + 1 < 100 ? oldValue + 1 : 100));
     } else if (props.totalVotingPower <= 100 && !increment) {
-      props.totalVotes1[index] = oldValue - 10 > 0 ? (oldValue - 10) % 100 : 0;
-      setSliderVal((oldValue) => (oldValue - 10 > 0 ? (oldValue - 10) % 100 : 0));
+      props.totalVotes1[index] = oldValue - 1 > 0 ? (oldValue - 1) % 100 : 0;
+      setSliderVal((oldValue) => (oldValue - 1 > 0 ? (oldValue - 1) % 100 : 0));
     }
   };
 
