@@ -10,6 +10,7 @@ import { IAllocationProps, ICastVoteProps } from "./types";
 import VotingAllocation from "./VotingAllocation";
 
 function AllocationPopup(props: IAllocationProps) {
+  console.log(props.alreadyVoted);
   const closeModal = () => {
     props.setShow(false);
   };
