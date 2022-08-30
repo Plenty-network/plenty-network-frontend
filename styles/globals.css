@@ -23,6 +23,9 @@ body {
 
   color: #ffffff;
 }
+.slider-input:focus::placeholder {
+  color: transparent;
+}
 .z-index-max {
   z-index: 9999;
 }

@@ -31,7 +31,10 @@ const EpochSlice = createSlice({
   },
   extraReducers: {
     [getEpochData.fulfilled.toString()]: (state: any, action: any) => {
-      state.currentEpoch = action.payload.epochData[0]; //use iscurrent
+      const index = action.payload.epochData.findIndex(
+        (data: IEpochListObject) => data.isCurrent === true
+      );
+      state.currentEpoch = action.payload.epochData[index];
       state.epochFetchError = false;
       state.epochData = action.payload.epochData;
     },

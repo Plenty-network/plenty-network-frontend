@@ -1,6 +1,8 @@
 import Image from "next/image";
 import * as React from "react";
 import clsx from "clsx";
+
+import arrow from "../../assets/icon/vote/arrowNFT.svg";
 import vectorIcon from "../../assets//icon/common/vector.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 
@@ -23,12 +25,15 @@ export function Dropdown(props: IDropdownProps) {
     <div className={`relative min-w-[76px] md:min-w-[150px] ${props.className}`} ref={reff}>
       <div
         className={clsx(
-          "bg-text-800/[0.25]  cursor-pointer flex gap-2 md:gap-4 py-2 px-2 md:px-3 md:justify-between border border-text-700 rounded-lg",
-          isDropDownActive ? "hover:bg-text-800/[0.25]" : "hover:bg-text-800/[0.5]",props.classNameInner
+          "bg-text-800/[0.25]  cursor-pointer flex gap-2 md:gap-4 py-2 px-2 md:px-3 md:justify-between border  rounded-lg hover:border-text-700 hover:bg-text-800/[0.25]",
+          isDropDownActive
+            ? "bg-muted-500 border-muted-300 hover:bg-muted-500 hover:border-muted-300"
+            : "border-text-800 bg-text-800/[0.25] hover:border-text-700 hover:bg-text-800/[0.25]",
+          props.classNameInner
         )}
         // onClick={() => setIsDropDownActive(true)}
       >
-        <p className={clsx(" flex gap-1", isDropDownActive ? "text-muted-50" : "text-text-600")}>
+        <p className={clsx(" flex gap-1", isDropDownActive ? "text-white" : "text-text-600")}>
           {props.selectedText && props.selectedText.length ? (
             <span className="text-white">{props.selectedText}</span>
           ) : (
@@ -42,10 +47,10 @@ export function Dropdown(props: IDropdownProps) {
             </>
           )}
         </p>
-        <p className="ml-auto">
+        <p className="ml-auto relative top-1">
           <Image
-            src={vectorIcon}
-            className={!isDropDownActive ? "rotate-180 ml-auto" : "rotate-0 ml-auto"}
+            src={arrow}
+            className={!isDropDownActive ? "rotate-0 ml-auto" : "rotate-180 ml-auto"}
             onClick={() => setIsDropDownActive(!isDropDownActive)}
           />
         </p>

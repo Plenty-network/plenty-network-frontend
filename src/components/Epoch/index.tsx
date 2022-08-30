@@ -10,6 +10,7 @@ import { IEpochListObject } from "../../api/util/types";
 import { useDispatch } from "react-redux";
 import { AppDispatch, store } from "../../redux";
 import { getEpochData, setSelectedEpoch } from "../../redux/epoch/epoch";
+import { useInterval } from "../../hooks/useInterval";
 
 export interface IEpochProps {
   className?: string;
@@ -26,15 +27,16 @@ export function Epoch(props: IEpochProps) {
   useOutsideClick(reff, () => {
     setIsDropDownActive(false);
   });
+  const indexOfCurrent = epochData.findIndex((data: IEpochListObject) => data.isCurrent === true);
 
   React.useEffect(() => {
-    console.log(epochData[0]?.epochNumber);
+    console.log(epochData[indexOfCurrent]?.epochNumber);
     console.log(currentEpoch?.epochNumber);
-    console.log(currentEpoch, epochData[0]);
+    console.log(currentEpoch, epochData[indexOfCurrent]);
     dispatch(setSelectedEpoch(currentEpoch));
     console.log(selectedEpoch?.epochNumber);
     console.log("testing2");
-  }, [epochData[0]?.epochNumber, currentEpoch?.endTimestamp]);
+  }, [epochData[indexOfCurrent]?.epochNumber, currentEpoch?.endTimestamp]);
 
   function Options(props: {
     startDate: number;
@@ -81,11 +83,12 @@ export function Epoch(props: IEpochProps) {
   const [days, hours, minutes, seconds] = useCountdown(
     currentEpoch?.endTimestamp ? currentEpoch.endTimestamp : Date.now()
   );
-
-  if (minutes < 0 || seconds < 0) {
-    dispatch(getEpochData());
-    dispatch(setSelectedEpoch(epochData[0]));
-  }
+  useInterval(() => {
+    if (minutes < 0 || seconds < 0) {
+      dispatch(getEpochData());
+      dispatch(setSelectedEpoch(epochData[indexOfCurrent]));
+    }
+  }, 5000);
 
   return (
     <>
@@ -98,10 +101,11 @@ export function Epoch(props: IEpochProps) {
               <span className="text-white">
                 {selectedEpoch?.epochNumber
                   ? selectedEpoch.epochNumber
-                  : epochData[0]?.epochNumber
-                  ? epochData[0].epochNumber
+                  : epochData[indexOfCurrent]?.epochNumber
+                  ? epochData[indexOfCurrent].epochNumber
                   : 0}
-                {selectedEpoch?.epochNumber === epochData[0]?.epochNumber && " (current) "}
+                {selectedEpoch?.epochNumber === epochData[indexOfCurrent]?.epochNumber &&
+                  " (current) "}
               </span>
             </p>
             <InfoIconToolTip message="Epoch lipsum" />

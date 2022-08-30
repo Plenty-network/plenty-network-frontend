@@ -32,7 +32,7 @@ function CreateLock(props: ICreateLockProps) {
     props.setShow(false);
   };
   const handleInputPercentage = (value: number) => {
-    props.setPlyInput((value * Number(props.userBalances["PLY"])).toString());
+    props.setPlyInput((value * Number(props.plyBalance)).toString());
   };
   useEffect(() => {
     const res = getCalendarRangeToEnable();

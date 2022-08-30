@@ -12,9 +12,7 @@ export interface ITransactionSubmittedProps {
 export interface ICreateLockProps {
   plyBalance: BigNumber;
   show: boolean;
-  userBalances: {
-    [key: string]: string;
-  };
+
   setLockingEndData: React.Dispatch<
     React.SetStateAction<{
       selected: number;
@@ -109,4 +107,10 @@ export interface IAllocationProps {
     tokenId: string;
   };
   alreadyVoted: boolean;
+}
+
+export interface IEpochPopup {
+  show: boolean;
+  setShow: any;
+  onClick: () => void;
 }
