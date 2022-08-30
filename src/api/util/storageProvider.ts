@@ -38,6 +38,15 @@ export const getTzktBigMapData = async (
   }
 };
 
+export const getTzktStorageData = async (contractAddress: string): Promise<any> => {
+  try {
+    const storageResponse = await axios.get(`${tzktNode}v1/contracts/${contractAddress}/storage`);
+    return storageResponse;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
 const getReadableStorage = (
   storageData: any,
   storageType: any

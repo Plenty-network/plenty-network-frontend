@@ -1,20 +1,75 @@
 import { connectedNetwork, voterAddress as voterContractAddress } from "../../common/walletconnect";
 import { EPOCH_DURATION_MAINNET, EPOCH_DURATION_TESTNET, MAX_TIME } from "../../constants/global";
 import { voterStorageType } from "../votes/data";
-import { getStorage, getTzktBigMapData } from "./storageProvider";
+import { getStorage, getTzktBigMapData, getTzktStorageData } from "./storageProvider";
 import {
   IDatesEnabledRangeData,
   IEpochDataResponse,
   IEpochListObject,
   IEpochResponse,
 } from "./types";
+import { BigNumber } from "bignumber.js";
 
 /**
  * Returns the list of epoch data including the current one.
- * @param previousEpochsRequired - Count of previous epoch's data required(optional). Default is 5.
+ * @param previousEpochsRequired - Count of previous epoch's data required(optional). Default is 4.
  */
 export const getListOfEpochs = async (
-  previousEpochsRequired: number = 5
+  previousEpochsRequired: number = 4
+): Promise<IEpochDataResponse> => {
+  try {
+    const listOfEpochs: IEpochListObject[] = [];
+    const epochDuration: number =
+      connectedNetwork === "testnet" ? EPOCH_DURATION_TESTNET : EPOCH_DURATION_MAINNET;
+    const voterStorageResponse = await getTzktStorageData(voterContractAddress);
+    const currentEpochNumber: number = new BigNumber(voterStorageResponse.data.epoch).toNumber();
+    const epochEndBigMapId: number = voterStorageResponse.data.epoch_end;
+    const voterEpochResponse = await getTzktBigMapData(`${epochEndBigMapId}`,`key=${currentEpochNumber}`);
+    if(voterEpochResponse.data.length === 0) {
+      throw new Error("Error fetching epoch data");
+    }
+    const currentEpochEnd = new Date(voterEpochResponse.data[0].value).getTime();
+    const currentEpochStart = currentEpochEnd - epochDuration;
+
+    listOfEpochs.push({
+      epochNumber: currentEpochNumber,
+      isCurrent: true,
+      startTimestamp: currentEpochStart,
+      endTimestamp: currentEpochEnd,
+    });
+
+    let previousEpochEnd = currentEpochStart;
+    for (let i: number = 1; i <= previousEpochsRequired; i++) {
+      const epochEnd = previousEpochEnd;
+      const epochStart = epochEnd - epochDuration;
+      listOfEpochs.push({
+        epochNumber: currentEpochNumber - i,
+        isCurrent: false,
+        startTimestamp: epochStart,
+        endTimestamp: epochEnd,
+      });
+      previousEpochEnd = epochStart;
+    }
+
+    return {
+      success: true,
+      epochData: listOfEpochs,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      epochData: [],
+      error: error.message,
+    };
+  }
+};
+
+/**
+ * Returns the list of epoch data including the current one using RPC.
+ * @param previousEpochsRequired - Count of previous epoch's data required(optional). Default is 4.
+ */
+export const getListOfEpochsViaRpc = async (
+  previousEpochsRequired: number = 4
 ): Promise<IEpochDataResponse> => {
   try {
     const listOfEpochs: IEpochListObject[] = [];
