@@ -1,6 +1,7 @@
 import { ISelectedPool, IVeNFTData, IVotePageData } from "../../api/votes/types";
 import { BigNumber } from "bignumber.js";
 import { IVotes } from "../../operations/types";
+import { IEpochListObject } from "../../api/util/types";
 
 export interface ITransactionSubmittedProps {
   show: boolean;
@@ -102,4 +103,10 @@ export interface ISelectNFT {
 export interface IAllocationProps {
   show: boolean;
   setShow: any;
+  epochData: IEpochListObject[];
+  selectedDropDown: {
+    votingPower: string;
+    tokenId: string;
+  };
+  alreadyVoted: boolean;
 }

@@ -404,7 +404,13 @@ export default function Vote() {
         </div>
       </SideBarHOC>
       {showCastVotingAllocation && (
-        <AllocationPopup show={showCastVotingAllocation} setShow={setShowCastVotingAllocation} />
+        <AllocationPopup
+          show={showCastVotingAllocation}
+          setShow={setShowCastVotingAllocation}
+          selectedDropDown={selectedDropDown} // veNFT selected
+          epochData={epochData} // epoch data
+          alreadyVoted={false}
+        />
       )}
       {showCastVoteModal && (
         <CastVote
