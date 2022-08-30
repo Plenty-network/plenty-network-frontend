@@ -12,7 +12,7 @@ import { getConfig } from "../../src/redux/config/config";
 import { getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import SelectNFT from "../../src/components/Votes/SelectNFT";
 import chartMobile from "../../src/assets/icon/vote/chartMobile.svg";
-
+import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
 import { VotesTable } from "../../src/components/Votes/VotesTable";
 import CastVote from "../../src/components/Votes/CastVote";
 import CreateLock from "../../src/components/Votes/CreateLock";
@@ -72,9 +72,11 @@ export default function Vote() {
   };
   useEffect(() => {
     dispatch(fetchWallet());
+
     dispatch(getConfig());
     dispatch(getEpochData());
     setVoteData({} as { [id: string]: IVotePageData });
+    setVotes([] as IVotes[]);
     votesPageDataWrapper(
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
       selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
@@ -85,6 +87,7 @@ export default function Vote() {
   useEffect(() => {
     setVoteData({} as { [id: string]: IVotePageData });
     setSelectedPools([] as ISelectedPool[]);
+    setVotes([] as IVotes[]);
     setTotalVotingPower(0);
     votesPageDataWrapper(
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
@@ -224,6 +227,7 @@ export default function Vote() {
       setShowConfirmTransaction
     ).then((response) => {
       if (response.success) {
+        setVotes([] as IVotes[]);
         setBalanceUpdate(true);
 
         setTimeout(() => {
@@ -233,7 +237,7 @@ export default function Vote() {
         dispatch(setLoading(false));
       } else {
         setBalanceUpdate(true);
-
+        setVotes([] as IVotes[]);
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -300,7 +304,8 @@ export default function Vote() {
                     (selectedEpoch?.epochNumber
                       ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                       : false) &&
-                    totalVotingPower !== 0
+                    totalVotingPower !== 0 &&
+                    totalVotingPower === 100
                       ? setShowCastVoteModal(true)
                       : () => {}
                   }
@@ -340,28 +345,34 @@ export default function Vote() {
                   <InfoIconToolTip message=" Verify your vote percentage and cast vote" />
                   <span className="ml-2">{totalVotingPower ? totalVotingPower : "00"}%</span>
                 </div>
-                <div
-                  className={clsx(
-                    "basis-3/4  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
-                    votes.length !== 0 &&
-                      (selectedEpoch?.epochNumber
-                        ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                        : false) &&
-                      totalVotingPower !== 0
-                      ? "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
-                      : "bg-card-700 text-text-400 font-subtitle4"
-                  )}
-                  onClick={() =>
-                    votes.length !== 0 &&
-                    (selectedEpoch?.epochNumber
-                      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                      : false) &&
-                    totalVotingPower !== 0
-                      ? setShowCastVoteModal(true)
-                      : () => {}
-                  }
-                >
-                  Cast Vote
+                <div className="basis-3/4">
+                  <ToolTip message={"please vote 100%"} id="tooltip8" position={Position.top}>
+                    <div
+                      className={clsx(
+                        "  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
+                        votes.length !== 0 &&
+                          (selectedEpoch?.epochNumber
+                            ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                            : false) &&
+                          totalVotingPower !== 0 &&
+                          totalVotingPower === 100
+                          ? "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                          : "bg-card-700 text-text-400 font-subtitle4"
+                      )}
+                      onClick={() =>
+                        votes.length !== 0 &&
+                        (selectedEpoch?.epochNumber
+                          ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                          : false) &&
+                        totalVotingPower !== 0 &&
+                        totalVotingPower === 100
+                          ? setShowCastVoteModal(true)
+                          : () => {}
+                      }
+                    >
+                      Cast Vote
+                    </div>
+                  </ToolTip>
                 </div>
               </div>
             </div>

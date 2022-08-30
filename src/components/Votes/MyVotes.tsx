@@ -31,6 +31,7 @@ export interface IMyVotesProps {
     values: number[];
     sum: number;
   };
+  totalVotes1: number[];
   setTotalVotes: React.Dispatch<
     React.SetStateAction<{
       values: number[];
@@ -60,6 +61,7 @@ export function MyVotes(props: IMyVotesProps) {
         votedata={props.votedata}
         totalVotes={props.totalVotes}
         setTotalVotes={props.setTotalVotes}
+        totalVotes1={props.totalVotes1}
       />
     </div>
   );

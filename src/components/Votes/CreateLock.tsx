@@ -15,13 +15,18 @@ import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { MAX_TIME, WEEK, YEAR } from "../../constants/global";
 import { Datepicker } from "../DatePicker";
+import { getCalendarRangeToEnable } from "../../api/util/epoch";
 
 function CreateLock(props: ICreateLockProps) {
   const walletAddress = store.getState().wallet.address;
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const [screen, setScreen] = useState("1");
   const [votingPower, setVotingPower] = useState(0);
-  const [selectedDate, setSelectedDate] = useState();
+  const [dateRange, setDateRange] = useState<{
+    startTimeStamp: number;
+    endTimeStamp: number;
+    days: number;
+  }>({} as { startTimeStamp: number; endTimeStamp: number; days: number });
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const closeModal = () => {
     props.setShow(false);
@@ -29,6 +34,15 @@ function CreateLock(props: ICreateLockProps) {
   const handleInputPercentage = (value: number) => {
     props.setPlyInput((value * Number(props.userBalances["PLY"])).toString());
   };
+  useEffect(() => {
+    const res = getCalendarRangeToEnable();
+    setDateRange({
+      startTimeStamp: res.startTimestamp,
+      endTimeStamp: res.endTimestamp,
+      days: res.days,
+    });
+    console.log(res);
+  }, []);
   useEffect(() => {
     const res = estimateVotingPower(
       new BigNumber(props.plyInput),
@@ -228,6 +242,8 @@ function CreateLock(props: ICreateLockProps) {
                 <Image src={calender} onClick={() => setIsDatePickerOpen(true)} />
                 <Datepicker
                   selectedDate={new Date()}
+                  startTimeStamp={dateRange.startTimeStamp}
+                  endTimeStamp={dateRange.endTimeStamp}
                   setStartDate={handleDateSelection}
                   isOpen={isDatePickerOpen}
                   setIsOpen={setIsDatePickerOpen}

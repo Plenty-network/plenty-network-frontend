@@ -8,6 +8,8 @@ export interface IDatePickerProps {
   setStartDate: Function;
   isOpen: boolean;
   setIsOpen: Function;
+  startTimeStamp: number;
+  endTimeStamp: number;
 }
 
 export function Datepicker(props: IDatePickerProps) {
