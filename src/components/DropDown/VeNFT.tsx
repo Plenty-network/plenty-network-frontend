@@ -1,8 +1,6 @@
 import Image from "next/image";
 import * as React from "react";
 import clsx from "clsx";
-import vectorIcon from "../../assets//icon/common/vector.svg";
-
 import arrow from "../../assets/icon/vote/arrowNFT.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { IVeNFTData } from "../../api/votes/types";
@@ -41,7 +39,7 @@ export function VeNFT(props: IDropdownProps) {
             ? "border-[0.8px] border-primary-500 bg-card-500 text-text-400"
             : "border-text-800 bg-text-800/[0.25]",
 
-          props.Options.length === 0 ? "cursor-not-allowed" : "cursor-pointer"
+          "cursor-pointer"
         )}
       >
         <p

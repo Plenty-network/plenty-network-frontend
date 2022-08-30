@@ -15,10 +15,7 @@ export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
 
   const votesArray = Object.entries(props.voteData);
-  // const [totalVotes, setTotalVotes] = React.useState<{ values: number[]; sum: number }>({
-  //   values: new Array(votesArray.length).fill(0),
-  //   sum: 0,
-  // });
+
   const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
     new Array(votesArray.length).fill(0)
   );
