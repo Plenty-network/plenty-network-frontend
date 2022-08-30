@@ -28,10 +28,10 @@ export function Epoch(props: IEpochProps) {
   });
 
   React.useEffect(() => {
-    console.log(epochData[0].epochNumber);
-    console.log(currentEpoch.epochNumber);
+    console.log(epochData[0]?.epochNumber);
+    console.log(currentEpoch?.epochNumber);
     dispatch(setSelectedEpoch(epochData[0]));
-    console.log(selectedEpoch.epochNumber);
+    console.log(selectedEpoch?.epochNumber);
     console.log("testing2");
   }, [epochData[0]?.epochNumber, currentEpoch?.endTimestamp]);
 

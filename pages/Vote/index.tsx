@@ -65,6 +65,7 @@ export default function Vote() {
     {} as { [id: string]: IVotePageData }
   );
   const [votes, setVotes] = useState<IVotes[]>([] as IVotes[]);
+  const [alreadyVoted, setAlreadyVoted] = useState(false);
 
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
@@ -268,7 +269,13 @@ export default function Vote() {
     votesArray.map((data) => {
       sum += Number(data[1].totalVotesPercentage);
     });
-  }, [votesArray.length]);
+    if (sum === 100) {
+      setAlreadyVoted(true);
+    } else {
+      setAlreadyVoted(false);
+    }
+    console.log(sum, alreadyVoted);
+  }, [votesArray.length, voteData]);
 
   return (
     <>
@@ -409,7 +416,7 @@ export default function Vote() {
           setShow={setShowCastVotingAllocation}
           selectedDropDown={selectedDropDown} // veNFT selected
           epochData={epochData} // epoch data
-          alreadyVoted={false}
+          alreadyVoted={alreadyVoted}
         />
       )}
       {showCastVoteModal && (
