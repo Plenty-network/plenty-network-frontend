@@ -17,6 +17,7 @@ import {
 } from "./types";
 import { PLY_DECIMAL_MULTIPLIER, VOTES_CHART_LIMIT } from "../../constants/global";
 import { store } from "../../redux";
+import { IVotes } from "../../operations/types";
 
 
 /**
@@ -304,6 +305,38 @@ export const getAllVotesData = async (
       myVotesData: {},
       error: error.message,
     };
+  }
+};
+
+/**
+ * Returns votes data array with the remianing voting power dust added to the votes of last pool in the input votes array.
+ * @param votingPower - Total available voting power for the selected veNFT
+ * @param totalVotesPercentage - Percentage of votes selected by the user across all pools
+ * @param votesData - The votes data array formed after voting for all pools is done
+ */
+export const addRemainingVotesDust = (
+  votingPower: string | BigNumber,
+  totalVotesPercentage: number,
+  votesData: IVotes[]
+): IVotes[] => {
+  try {
+    const finalVotesData = [...votesData];
+    const availableVotingPower = new BigNumber(votingPower).multipliedBy(PLY_DECIMAL_MULTIPLIER);
+
+    const currentVotesSum = finalVotesData.reduce((sum, vote) => {
+      sum = sum.plus(vote.votes);
+      return sum;
+    }, new BigNumber(0));
+    const remainingVotesDust = availableVotingPower.minus(currentVotesSum);
+
+    if (remainingVotesDust.isGreaterThan(0) && new BigNumber(totalVotesPercentage).isEqualTo(100)) {
+      finalVotesData[finalVotesData.length - 1].votes =
+        finalVotesData[finalVotesData.length - 1].votes.plus(remainingVotesDust);
+        console.log('Dust added');
+    }
+    return finalVotesData;
+  } catch (error: any) {
+    return [...votesData];
   }
 };
 
