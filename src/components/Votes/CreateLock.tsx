@@ -41,7 +41,6 @@ function CreateLock(props: ICreateLockProps) {
       endTimeStamp: res.endTimestamp,
       days: res.days,
     });
-    console.log(res);
   }, []);
   useEffect(() => {
     const res = estimateVotingPower(
