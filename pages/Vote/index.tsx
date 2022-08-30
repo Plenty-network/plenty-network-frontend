@@ -87,7 +87,6 @@ export default function Vote() {
   useEffect(() => {
     setVoteData({} as { [id: string]: IVotePageData });
     setSelectedPools([] as ISelectedPool[]);
-    !showTransactionSubmitModal && setVotes([] as IVotes[]);
     console.log("testing1");
     votesPageDataWrapper(
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
@@ -95,12 +94,7 @@ export default function Vote() {
     ).then((res) => {
       setVoteData(res.allData);
     });
-  }, [
-    selectedDropDown,
-    currentEpoch?.endTimestamp,
-    selectedEpoch?.endTimestamp,
-    showTransactionSubmitModal,
-  ]);
+  }, [selectedDropDown.tokenId, currentEpoch?.endTimestamp, selectedEpoch?.epochNumber]);
 
   useEffect(() => {
     setVeNFTlist([]);
@@ -252,7 +246,6 @@ export default function Vote() {
         dispatch(setLoading(false));
       } else {
         setBalanceUpdate(true);
-        setVotes([] as IVotes[]);
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -264,17 +257,18 @@ export default function Vote() {
   };
 
   const votesArray = Object.entries(voteData);
+  const [sumOfVotes, setSumofVotes] = useState(0);
   var sum = 0;
   React.useEffect(() => {
     votesArray.map((data) => {
       sum += Number(data[1].totalVotesPercentage);
     });
+    setSumofVotes(sum);
     if (sum === 100) {
       setAlreadyVoted(true);
     } else {
       setAlreadyVoted(false);
     }
-    console.log(sum, alreadyVoted);
   }, [votesArray.length, voteData]);
 
   return (
@@ -315,7 +309,7 @@ export default function Vote() {
                 </div>
 
                 <div className="border border-muted-50 px-4 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
-                  {totalVotingPower ? totalVotingPower : "00"}%
+                  {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
                 </div>
                 <div
                   className={clsx(
@@ -373,7 +367,9 @@ export default function Vote() {
               <div className="flex flex-row gap-2 mt-[14px]">
                 <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
                   <InfoIconToolTip message=" Verify your vote percentage and cast vote" />
-                  <span className="ml-2">{totalVotingPower ? totalVotingPower : "00"}%</span>
+                  <span className="ml-2">
+                    {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
+                  </span>
                 </div>
                 <div className="basis-3/4">
                   <ToolTip message={"please vote 100%"} id="tooltip8" position={Position.top}>
