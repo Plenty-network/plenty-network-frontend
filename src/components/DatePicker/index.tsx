@@ -41,19 +41,25 @@ export function Datepicker(props: IDatePickerProps) {
     "December",
   ];
   // const [isOpen, setIsOpen] = React.useState(false);
-  const handleClick = (e: any) => {
+  const [selectedDate,setSelectedDate]=React.useState(props.selectedDate)
+  const handleClick = (isSetDate:boolean) => {
     // e.preventDefault();
-    e ? props.setStartDate(undefined, new Date(e).toISOString()) : "";
+    if(isSetDate){
+    selectedDate ? props.setStartDate(undefined, new Date(selectedDate).toISOString()) : "";
+    }
     props.setIsOpen(!props.isOpen);
   };
   return (
     <div ref={reff}>
       {props.isOpen && (
+        <div className="react-datepicker-2">
         <DatePicker
-          onChange={handleClick}
+          onChange={(e)=>e?setSelectedDate(e):''}
           inline
           wrapperClassName="custom-date !hidden"
-          popperClassName="bg-muted-600 absolute right-[36px] bottom-2"
+          popperClassName=" absolute right-[36px] bottom-2"
+          minDate={new Date(props.startTimeStamp)}
+          maxDate={new Date(props.endTimeStamp)}
           renderCustomHeader={({
             date,
             changeYear,
@@ -91,8 +97,15 @@ export function Datepicker(props: IDatePickerProps) {
               </div>
             </div>
           )}
-          selected={props.selectedDate}
+          
+          selected={selectedDate}
+          
         />
+        <div className="flex gap-2 text-f14 mt-2">
+        <button className="bg-primary-900 items-center justify-center flex-grow py-2 rounded-lg hover:opacity-95" onClick={()=>handleClick(false)}>Cancel</button>
+        <button className="bg-primary-500 items-center justify-center flex-grow py-2 rounded-lg hover:opacity-95" onClick={()=>handleClick(true)}>Set Date</button>
+         </div>
+      </div>
       )}
     </div>
   );
