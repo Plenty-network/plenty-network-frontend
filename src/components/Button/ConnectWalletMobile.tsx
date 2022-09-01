@@ -8,6 +8,7 @@ import nodeSelectorLogo from '../../assets/icon/common/nodeSelectorLogo.svg';
 import { useAppDispatch, useAppSelector } from '../../redux/index';
 import { walletConnection, walletDisconnection } from '../../redux/wallet/wallet';
 import { useOutsideClick } from '../../utils/outSideClickHook';
+import { MobileEpoch } from '../Epoch/MobileEpoch';
 
 
 
@@ -68,6 +69,8 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
                 Disconnect
                 </span>
                 </p>
+
+                <MobileEpoch/>
           
                 </div>}
             </div>
