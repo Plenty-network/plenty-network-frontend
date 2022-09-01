@@ -43,6 +43,9 @@ export function VeNFT(props: IDropdownProps) {
 
           "cursor-pointer"
         )}
+        {...(props.Options.length === 0
+          ? {}
+          : { onClick: () => setIsDropDownActive(!isDropDownActive) })}
       >
         <p
           className={clsx(
@@ -78,9 +81,6 @@ export function VeNFT(props: IDropdownProps) {
           width={"18px"}
           height={"18px"}
           className={!isDropDownActive ? "rotate-0" : "rotate-180"}
-          {...(props.Options.length === 0
-            ? {}
-            : { onClick: () => setIsDropDownActive(!isDropDownActive) })}
         />
       </div>
       {isDropDownActive && props.Options.length > 0 && (

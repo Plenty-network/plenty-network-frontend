@@ -244,7 +244,7 @@ export default function Vote() {
     });
   };
   const handleVoteOperation = () => {
-    setContentTransaction(`casting vote`);
+    setContentTransaction(`Casting vote`);
     setShowCastVoteModal(false);
     setShowConfirmTransaction(true);
     dispatch(setLoading(true));
@@ -427,6 +427,16 @@ export default function Vote() {
                         Cast Vote
                       </div>
                     </ToolTip>
+                  ) : sumOfVotes === 100 ? (
+                    <div
+                      className={clsx(
+                        "  h-[52px] flex items-center justify-center rounded-xl ",
+
+                        "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                      )}
+                    >
+                      Already Voted
+                    </div>
                   ) : (
                     <div
                       className={clsx(
