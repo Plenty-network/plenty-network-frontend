@@ -160,14 +160,21 @@ export const fetchEpochData = async (epochNumber: number): Promise<IEpochRespons
  * Returns the range of timestamp allowed in calendar for selection in milliseconds along with number of days allowed.
  */
 export const getCalendarRangeToEnable = (): IDatesEnabledRangeData => {
+  const yearsToEnable: number[] = [];
   const start = new Date();
   start.setUTCHours(0, 0, 0, 0);
   const startTimestamp = start.getTime();
   const endTimestamp = startTimestamp + MAX_TIME * 1000;
   const days = Math.floor((endTimestamp - startTimestamp) / 86400000);
+  const yearBegin = new Date(startTimestamp).getFullYear();
+  const yearEnd = new Date(endTimestamp).getFullYear();
+  for(let i = yearBegin; i <= yearEnd; i++) {
+    yearsToEnable.push(i);
+  }
   return {
     startTimestamp,
     endTimestamp,
     days,
+    yearsToEnable,
   };
 };
