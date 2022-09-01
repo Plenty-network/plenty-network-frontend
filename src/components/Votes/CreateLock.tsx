@@ -26,7 +26,8 @@ function CreateLock(props: ICreateLockProps) {
     startTimeStamp: number;
     endTimeStamp: number;
     days: number;
-  }>({} as { startTimeStamp: number; endTimeStamp: number; days: number });
+    years: number[];
+  }>({} as { startTimeStamp: number; endTimeStamp: number; days: number; years: number[] });
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const closeModal = () => {
     props.setShow(false);
@@ -36,10 +37,12 @@ function CreateLock(props: ICreateLockProps) {
   };
   useEffect(() => {
     const res = getCalendarRangeToEnable();
+
     setDateRange({
       startTimeStamp: res.startTimestamp,
       endTimeStamp: res.endTimestamp,
       days: res.days,
+      years: res.yearsToEnable,
     });
   }, []);
   useEffect(() => {
@@ -246,6 +249,7 @@ function CreateLock(props: ICreateLockProps) {
                   setStartDate={handleDateSelection}
                   isOpen={isDatePickerOpen}
                   setIsOpen={setIsDatePickerOpen}
+                  yearsToEnable={dateRange.years}
                 />
               </div>
             </div>

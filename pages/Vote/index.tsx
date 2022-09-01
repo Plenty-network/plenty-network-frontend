@@ -78,6 +78,7 @@ export default function Vote() {
   const [alreadyVoted, setAlreadyVoted] = useState(false);
   const [castVoteOperation, setCastVoteOperation] = useState(false);
   const [sumOfVotes, setSumofVotes] = useState(0);
+  const [contentTransaction, setContentTransaction] = useState("");
   var sum = 0;
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
@@ -98,28 +99,55 @@ export default function Vote() {
     });
   }, []);
   useEffect(() => {
+    console.log(selectedEpoch?.epochNumber);
+    console.log(selectedDropDown.tokenId);
     setVoteData({} as { [id: string]: IVotePageData });
     setSelectedPools([] as ISelectedPool[]);
     setTotalVotingPower(0); //need to verify
+    setSumofVotes(0);
+    sum = 0;
     votesPageDataWrapper(
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
       selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
     ).then((res) => {
       console.log(res);
       setVoteData(res.allData);
+      console.log(sum);
+      Object.entries(res.allData).map((data) => {
+        sum += Number(data[1].myVotesPercentage);
+      });
+      setSumofVotes(sum);
+      if (sum === 100) {
+        setAlreadyVoted(true);
+      } else {
+        setAlreadyVoted(false);
+      }
+      console.log(sum, totalVotingPower, sum ? sum : totalVotingPower ? totalVotingPower : "00"); // remove later
     });
-  }, [selectedDropDown.tokenId, currentEpoch?.epochNumber, selectedEpoch?.epochNumber]);
+  }, [selectedDropDown.tokenId, selectedEpoch?.epochNumber]);
   useEffect(() => {
     if (castVoteOperation) {
       setVoteData({} as { [id: string]: IVotePageData });
       setSelectedPools([] as ISelectedPool[]);
       setTotalVotingPower(0);
-
+      setSumofVotes(0);
+      sum = 0;
       votesPageDataWrapper(
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
         selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
       ).then((res) => {
         setVoteData(res.allData);
+
+        Object.entries(res.allData).map((data) => {
+          sum += Number(data[1].myVotesPercentage);
+        });
+        setSumofVotes(sum);
+        if (sum === 100) {
+          setAlreadyVoted(true);
+        } else {
+          setAlreadyVoted(false);
+        }
+        console.log(sum, totalVotingPower, sum ? sum : totalVotingPower ? totalVotingPower : "00");
       });
       setVeNFTlist([]);
       if (userAddress) {
@@ -189,6 +217,7 @@ export default function Vote() {
   };
 
   const handleLockOperation = () => {
+    setContentTransaction(`Locking ${plyInput} ply`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setLoading(true));
@@ -206,7 +235,7 @@ export default function Vote() {
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
-
+        setContentTransaction("");
         dispatch(setLoading(false));
       } else {
         setBalanceUpdate(true);
@@ -215,12 +244,13 @@ export default function Vote() {
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
-
+        setContentTransaction("");
         dispatch(setLoading(false));
       }
     });
   };
   const handleVoteOperation = () => {
+    setContentTransaction(`casting vote`);
     setShowCastVoteModal(false);
     setShowConfirmTransaction(true);
     dispatch(setLoading(true));
@@ -243,7 +273,7 @@ export default function Vote() {
         setTimeout(() => {
           setCastVoteOperation(false);
         }, 10000);
-
+        setContentTransaction("");
         dispatch(setLoading(false));
       } else {
         setBalanceUpdate(true);
@@ -251,7 +281,7 @@ export default function Vote() {
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
-
+        setContentTransaction("");
         dispatch(setLoading(false));
       }
     });
@@ -260,28 +290,22 @@ export default function Vote() {
     dispatch(setSelectedEpoch(currentEpoch));
     setShowEpochPopUp(false);
   };
-  const votesArray = Object.entries(voteData);
+  //const votesArray = Object.entries(voteData);
 
-  useEffect(() => {
-    setSumofVotes(0);
-    sum = 0;
-    votesArray.map((data) => {
-      sum += Number(data[1].myVotesPercentage);
-    });
-    setSumofVotes(sum);
-    if (sum === 100) {
-      setAlreadyVoted(true);
-    } else {
-      setAlreadyVoted(false);
-    }
-    console.log(sum, totalVotingPower, sum ? sum : totalVotingPower ? totalVotingPower : "00"); // remove later
-  }, [
-    votesArray.length,
-    voteData,
-    castVoteOperation,
-    selectedEpoch?.epochNumber,
-    currentEpoch?.epochNumber,
-  ]);
+  // useEffect(() => {
+  //   setSumofVotes(0);
+  //   sum = 0;
+  //   votesArray.map((data) => {
+  //     sum += Number(data[1].myVotesPercentage);
+  //   });
+  //   setSumofVotes(sum);
+  //   if (sum === 100) {
+  //     setAlreadyVoted(true);
+  //   } else {
+  //     setAlreadyVoted(false);
+  //   }
+  //   console.log(sum, totalVotingPower, sum ? sum : totalVotingPower ? totalVotingPower : "00"); // remove later
+  // }, [castVoteOperation]);
 
   return (
     <>
@@ -498,7 +522,7 @@ export default function Vote() {
         <ConfirmTransaction
           show={showConfirmTransaction}
           setShow={setShowConfirmTransaction}
-          content={`Locking`}
+          content={contentTransaction}
         />
       )}
       {showTransactionSubmitModal && (
@@ -508,7 +532,7 @@ export default function Vote() {
           onBtnClick={
             transactionId ? () => window.open(`https://tzkt.io/${transactionId}`, "_blank") : null
           }
-          content={`locking`}
+          content={contentTransaction}
         />
       )}
       {showEpochPopUp && (

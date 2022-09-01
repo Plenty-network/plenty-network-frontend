@@ -10,6 +10,7 @@ export interface IDatePickerProps {
   setIsOpen: Function;
   startTimeStamp: number;
   endTimeStamp: number;
+  yearsToEnable: number[];
 }
 
 export function Datepicker(props: IDatePickerProps) {
@@ -17,7 +18,7 @@ export function Datepicker(props: IDatePickerProps) {
   useOutsideClick(reff, () => {
     props.setIsOpen(false);
   });
-  const years = [2022, 2023, 2024, 2025, 2026, 2027];
+  const years = props.yearsToEnable;
   const getYear = (date: string | number | Date) => {
     const Xmas = new Date(date);
     return Xmas.getFullYear();
@@ -41,11 +42,11 @@ export function Datepicker(props: IDatePickerProps) {
     "December",
   ];
   // const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedDate,setSelectedDate]=React.useState(props.selectedDate)
-  const handleClick = (isSetDate:boolean) => {
+  const [selectedDate, setSelectedDate] = React.useState(props.selectedDate);
+  const handleClick = (isSetDate: boolean) => {
     // e.preventDefault();
-    if(isSetDate){
-    selectedDate ? props.setStartDate(undefined, new Date(selectedDate).toISOString()) : "";
+    if (isSetDate) {
+      selectedDate ? props.setStartDate(undefined, new Date(selectedDate).toISOString()) : "";
     }
     props.setIsOpen(!props.isOpen);
   };
@@ -53,59 +54,67 @@ export function Datepicker(props: IDatePickerProps) {
     <div ref={reff}>
       {props.isOpen && (
         <div className="react-datepicker-2">
-        <DatePicker
-          onChange={(e)=>e?setSelectedDate(e):''}
-          inline
-          wrapperClassName="custom-date !hidden"
-          popperClassName=" absolute right-[36px] bottom-2"
-          minDate={new Date(props.startTimeStamp)}
-          maxDate={new Date(props.endTimeStamp)}
-          renderCustomHeader={({
-            date,
-            changeYear,
-            changeMonth,
-            prevMonthButtonDisabled,
-            nextMonthButtonDisabled,
-          }) => (
-            <div className="flex gap-2 justify-center items-center text-text-55">
-              <div className="hover:bg-primary-900 p-2 bg-muted-600 rounded-lg ">
-                <select
-                  value={months[getMonth(date)]}
-                  onChange={({ target: { value } }) => changeMonth(months.indexOf(value))}
-                  className="hover:bg-primary-900 bg-muted-600 rounded-lg outline-none "
-                >
-                  {months.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
+          <DatePicker
+            onChange={(e) => (e ? setSelectedDate(e) : "")}
+            inline
+            wrapperClassName="custom-date !hidden"
+            popperClassName=" absolute right-[36px] bottom-2"
+            minDate={new Date(props.startTimeStamp)}
+            maxDate={new Date(props.endTimeStamp)}
+            renderCustomHeader={({
+              date,
+              changeYear,
+              changeMonth,
+              prevMonthButtonDisabled,
+              nextMonthButtonDisabled,
+            }) => (
+              <div className="flex gap-2 justify-center items-center text-text-55">
+                <div className="hover:bg-primary-900 p-2 bg-muted-600 rounded-lg ">
+                  <select
+                    value={months[getMonth(date)]}
+                    onChange={({ target: { value } }) => changeMonth(months.indexOf(value))}
+                    className="hover:bg-primary-900 bg-muted-600 rounded-lg outline-none "
+                  >
+                    {months.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-              <div className="hover:bg-primary-900 p-2 bg-muted-600 rounded-lg ">
-                <select
-                  value={getYear(date)}
-                  onChange={({ target: { value } }) => changeYear(parseInt(value))}
-                  className="hover:bg-primary-900 bg-muted-600 rounded-lg outline-none"
-                >
-                  {years.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
+                <div className="hover:bg-primary-900 p-2 bg-muted-600 rounded-lg ">
+                  <select
+                    value={getYear(date)}
+                    onChange={({ target: { value } }) => changeYear(parseInt(value))}
+                    className="hover:bg-primary-900 bg-muted-600 rounded-lg outline-none"
+                  >
+                    {years.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            </div>
-          )}
-          
-          selected={selectedDate}
-          
-        />
-        <div className="flex gap-2 text-f14 mt-2">
-        <button className="bg-primary-900 items-center justify-center flex-grow py-2 rounded-lg hover:opacity-95" onClick={()=>handleClick(false)}>Cancel</button>
-        <button className="bg-primary-500 items-center justify-center flex-grow py-2 rounded-lg hover:opacity-95" onClick={()=>handleClick(true)}>Set Date</button>
-         </div>
-      </div>
+            )}
+            selected={selectedDate}
+          />
+          <div className="flex gap-2 text-f14 mt-2">
+            <button
+              className="bg-primary-900 items-center justify-center flex-grow py-2 rounded-lg hover:opacity-95"
+              onClick={() => handleClick(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="bg-primary-500 items-center justify-center flex-grow py-2 rounded-lg hover:opacity-95"
+              onClick={() => handleClick(true)}
+            >
+              Set Date
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

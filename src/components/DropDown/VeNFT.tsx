@@ -30,7 +30,7 @@ export function VeNFT(props: IDropdownProps) {
     >
       <div
         className={clsx(
-          "bg-text-800/[0.25]   flex gap-2 md:gap-4 py-3 md:py-2 px-2 md:px-3 justify-between border hover:border-text-700 rounded-lg",
+          "bg-text-800/[0.25]   flex gap-1 md:gap-2 md:gap-4 py-3 md:py-2 px-2 md:px-3 justify-between border hover:border-text-700 rounded-lg",
           props.Options.length === 0
             ? "border-border-200 bg-card-200 hover:bg-card-200 hover:border-border-200"
             : isDropDownActive
