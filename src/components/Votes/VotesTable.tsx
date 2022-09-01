@@ -21,7 +21,7 @@ export function VotesTable(props: IVotesTableProps) {
   );
   const votedataArray = React.useMemo(() => {
     votesArray.map((data, index) => {
-      totalVotes1[index] = Number(data[1].totalVotesPercentage);
+      totalVotes1[index] = Number(data[1].myVotesPercentage);
     });
 
     return votesArray.map((data, index) => ({
@@ -109,11 +109,12 @@ export function VotesTable(props: IVotesTableProps) {
             setVotes={props.setVotes}
             votes={props.votes}
             selectedDropDown={props.selectedDropDown}
-            totalVotesPercentage={Number(x.votes.totalVotesPercentage)}
+            totalVotesPercentage={Number(x.votes.myVotesPercentage)}
             isCurrentEpoch={props.isCurrentEpoch}
             index={x.index}
             votedata={votedata}
             totalVotes1={totalVotes1}
+            sumOfVotes={props.sumOfVotes}
           />
         ),
       },
@@ -196,11 +197,12 @@ export function VotesTable(props: IVotesTableProps) {
             votes={props.votes}
             setVotes={props.setVotes}
             selectedDropDown={props.selectedDropDown}
-            totalVotesPercentage={Number(x.votes.totalVotesPercentage)}
+            totalVotesPercentage={Number(x.votes.myVotesPercentage)}
             isCurrentEpoch={props.isCurrentEpoch}
             index={x.index}
             votedata={votedata}
             totalVotes1={totalVotes1}
+            sumOfVotes={props.sumOfVotes}
           />
         ),
       },

@@ -29,6 +29,7 @@ export interface IMyVotesProps {
   }[];
 
   totalVotes1: number[];
+  sumOfVotes: number;
 }
 
 export function MyVotes(props: IMyVotesProps) {
@@ -45,7 +46,12 @@ export function MyVotes(props: IMyVotesProps) {
         amm={props.amm}
         setVotes={props.setVotes}
         votes={props.votes}
-        isDisabled={props.selectedDropDown.tokenId === "" || !props.isCurrentEpoch ? true : false}
+        isDisabled={
+          (Number(props.selectedDropDown.votingPower) === 0 || !props.isCurrentEpoch) &&
+          props.sumOfVotes === 100
+            ? true
+            : false
+        }
         totalVotesPercentage={props.totalVotesPercentage}
         selectedDropDown={props.selectedDropDown}
         index={props.index}
