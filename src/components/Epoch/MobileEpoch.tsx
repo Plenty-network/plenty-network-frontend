@@ -20,18 +20,18 @@ export function MobileEpoch (props: IMobileEpochProps) {
     <div className=' '>
       <div className={`flex justify-between cursor-pointer py-2 px-5 ${currentEpoch.isCurrent?'bg-primary-700':''}`}   onClick={() => setIsDropDownActive(!isDropDownActive)}>
           <span>
-          Epoch {currentEpoch.epochNumber} (current)
+          Epoch {selectedEpoch.epochNumber} {selectedEpoch.isCurrent?'(current)':''}
           </span>
           <Image
-              className={isDropDownActive?"rotate-180":"rotate-0"}
+              className={isDropDownActive?"rotate-0":"rotate-180"}
               src={vectorDown}  
             />
       </div>
       {isDropDownActive && <>
-           {epochData.map((epoch,i)=><EpochOptions text={epoch.epochNumber} onClick={()=>{  
+           {epochData.map((epoch,i)=><EpochOptions text={epoch.epochNumber} isCurrent={epoch.isCurrent} onClick={()=>{  
             dispatch(setSelectedEpoch(epoch));
             setIsDropDownActive(false);
-           }} isActive={epoch.isCurrent}/>)}
+           }} isActive={epoch.epochNumber === selectedEpoch.epochNumber}/>)}
       </>}
     </div>
   );
@@ -41,12 +41,13 @@ export interface IEpochOptionsProps {
     text:string | number;
     onClick:Function;
     isActive:boolean;
+    isCurrent:boolean;
 }
 
 export function EpochOptions (props: IEpochOptionsProps) {
   return (
     <div className={`flex justify-between cursor-pointer py-2 px-5 ${props.isActive?'bg-primary-700':''}`} onClick={props.onClick?()=>props.onClick():()=>{}} >
-      Epoch {props.text}
+      Epoch {props.text} {props.isCurrent?'(current)':''}
     </div>
   );
 }
