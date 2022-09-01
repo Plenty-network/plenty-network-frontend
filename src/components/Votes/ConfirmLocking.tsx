@@ -18,25 +18,11 @@ function ConfirmLocking(props: IConfirmLockingProps) {
   };
   const dateFormat = useMemo(() => {
     var date = new Date(epochData.endTimestamp);
-
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Decr",
-    ];
-
-    return `${date.getUTCDate()}/${monthNames[date.getUTCMonth()]}/${date.getUTCFullYear()}, ${(
-      "0" + date.getUTCHours()
-    ).slice(-2)}:${("0" + date.getUTCMinutes()).slice(-2)}`;
+    return `${date.getUTCDate()}/${("0" + date.getUTCMonth()).slice(
+      -2
+    )}/${date.getUTCFullYear()}, ${("0" + date.getUTCHours()).slice(-2)}:${(
+      "0" + date.getUTCMinutes()
+    ).slice(-2)}`;
   }, [epochData.endTimestamp]);
 
   return (
@@ -69,7 +55,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
               <span className="relative top-0.5">
                 <Image src={info} />
               </span>
-              <span className="text-white ml-1 font-subtitle2 block">28/07/2021, 12 AM UTC</span>
+              <span className="text-white ml-1 font-subtitle2 block">{dateFormat} UTC</span>
             </div>
           </span>
           <span className="ml-auto flex rounded-lg bg-primary-500/[0.2] h-[32px] items-center px-3">

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { IEpochDataResponse, IEpochListObject } from "../../api/util/types";
+import { IEpochListObject } from "../../api/util/types";
 import { getListOfEpochs } from "../../api/util/epoch";
 
 interface IEpochState {

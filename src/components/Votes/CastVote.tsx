@@ -1,17 +1,27 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import ctez from "../../assets/Tokens/ctez.png";
-import tez from "../../assets/Tokens/tez.png";
 import lock from "../../../src/assets/icon/vote/lock.svg";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import { ICastVoteProps } from "./types";
+import React, { useState, useMemo } from "react";
+import { store } from "../../redux";
 
 function CastVote(props: ICastVoteProps) {
+  const currentEpoch = store.getState().epoch.currentEpoch;
   const closeModal = () => {
     props.setShow(false);
   };
+  const dateFormat = useMemo(() => {
+    var date = new Date(currentEpoch.endTimestamp);
+    return `${date.getUTCDate()}/${("0" + date.getUTCMonth()).slice(
+      -2
+    )}/${date.getUTCFullYear()}, ${("0" + date.getUTCHours()).slice(-2)}:${(
+      "0" + date.getUTCMinutes()
+    ).slice(-2)}`;
+  }, [currentEpoch.endTimestamp]);
+
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
@@ -36,7 +46,7 @@ function CastVote(props: ICastVoteProps) {
           </div>
           <div className="border bg-card-200 mt-5 border-text-800 rounded-2xl  pt-[22px] pb-[25px]">
             <div className="text-text-50 font-body4 px-3 md:px-5">Your votes power</div>
-            <div className="flex mt-1 px-3 md:px-5">
+            <div className="flex mt-1 mb-3 px-3 md:px-5">
               <div>
                 <span className="font-title2 text-white">{props.totalVotingPower}%</span>
                 <span className="font-body1 text-text-250 ml-1">distributed between</span>
@@ -54,7 +64,7 @@ function CastVote(props: ICastVoteProps) {
             {props.selectedPools.map((pool, index) => {
               return (
                 <div
-                  className="flex mt-3 h-[50px] items-center border-t border-b border-text-800/[0.5] bg-card-500 px-3 md:px-5"
+                  className="flex h-[50px] items-center border-t border-b border-text-800/[0.5] bg-card-500 px-3 md:px-5"
                   key={index}
                 >
                   <div className="flex items-center">
@@ -82,14 +92,14 @@ function CastVote(props: ICastVoteProps) {
                 <span className="relative top-0.5">
                   <Image src={info} />
                 </span>
-                <span className="text-white ml-1 font-subtitle2 ">28/07/2021, 12 AM UTC</span>
+                <span className="text-white ml-1 font-subtitle2 ">{dateFormat} UTC</span>
               </span>
               <span className="block md:hidden">
                 <div>
                   <span className="relative top-0.5">
                     <Image src={info} />
                   </span>
-                  <span className="text-white ml-1 font-subtitle2 ">28/07/2021, 12 AM UTC</span>
+                  <span className="text-white ml-1 font-subtitle2 ">{dateFormat} UTC</span>
                 </div>
               </span>
             </div>

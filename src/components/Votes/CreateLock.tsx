@@ -16,6 +16,7 @@ import { walletConnection } from "../../redux/wallet/wallet";
 import { MAX_TIME, WEEK, YEAR } from "../../constants/global";
 import { Datepicker } from "../DatePicker";
 import { getCalendarRangeToEnable } from "../../api/util/epoch";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 function CreateLock(props: ICreateLockProps) {
   const walletAddress = store.getState().wallet.address;
@@ -287,16 +288,20 @@ function CreateLock(props: ICreateLockProps) {
               >
                 1 year
               </p>
-              <p
-                className={clsx(
-                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
-                  props.lockingEndData.selected === MAX_TIME
-                    ? "bg-card-500 border-primary-500"
-                    : "bg-muted-200/[0.1] border-border-200"
-                )}
-                onClick={() => handleDateSelection(MAX_TIME, undefined)}
-              >
-                4 year
+              <p>
+                <ToolTip message={"4 years"} id="tooltip8" position={Position.top}>
+                  <p
+                    className={clsx(
+                      "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
+                      props.lockingEndData.selected === MAX_TIME
+                        ? "bg-card-500 border-primary-500"
+                        : "bg-muted-200/[0.1] border-border-200"
+                    )}
+                    onClick={() => handleDateSelection(MAX_TIME, undefined)}
+                  >
+                    Max lock
+                  </p>
+                </ToolTip>
               </p>
             </div>
             <div className="mt-3 border-t border-text-800/[0.5]"></div>
