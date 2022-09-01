@@ -387,11 +387,18 @@ export default function Vote() {
                   </span>
                 </div>
                 <div className="basis-3/4">
-                  {(sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) ? (
-                    <ToolTip message={"please vote 100%"} id="tooltip8" position={Position.top}>
+                  {(sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
+                  (selectedEpoch?.epochNumber
+                    ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                    : true) ? (
+                    <ToolTip
+                      message={"Cast 100% of your Votes to proceed "}
+                      id="tooltip8"
+                      position={Position.top}
+                    >
                       <div
                         className={clsx(
-                          "  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
+                          "  h-[52px] flex items-center justify-center rounded-xl ",
                           votes.length !== 0 &&
                             (selectedEpoch?.epochNumber
                               ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
@@ -399,8 +406,8 @@ export default function Vote() {
                             totalVotingPower !== 0 &&
                             totalVotingPower === 100 &&
                             Number(selectedDropDown.votingPower) > 0
-                            ? "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
-                            : "bg-card-700 text-text-400 font-subtitle4"
+                            ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                            : "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                         )}
                         onClick={() =>
                           votes.length !== 0 &&
@@ -423,15 +430,15 @@ export default function Vote() {
                   ) : (
                     <div
                       className={clsx(
-                        "  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
+                        "  h-[52px] flex items-center justify-center rounded-xl ",
                         votes.length !== 0 &&
                           (selectedEpoch?.epochNumber
                             ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                             : false) &&
                           totalVotingPower === 100 &&
                           Number(selectedDropDown.votingPower) > 0
-                          ? "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
-                          : "bg-card-700 text-text-400 font-subtitle4"
+                          ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                          : "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                       )}
                       onClick={() =>
                         votes.length !== 0 &&
