@@ -77,6 +77,8 @@ export default function Vote() {
   }>({ success: false, userBalance: {} });
   const [alreadyVoted, setAlreadyVoted] = useState(false);
   const [castVoteOperation, setCastVoteOperation] = useState(false);
+  const [sumOfVotes, setSumofVotes] = useState(0);
+  var sum = 0;
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
@@ -91,20 +93,36 @@ export default function Vote() {
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
       selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
     ).then((res) => {
+      console.log(res);
       setVoteData(res.allData);
     });
   }, []);
   useEffect(() => {
     setVoteData({} as { [id: string]: IVotePageData });
     setSelectedPools([] as ISelectedPool[]);
-
+    setTotalVotingPower(0); //need to verify
     votesPageDataWrapper(
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
       selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
     ).then((res) => {
+      console.log(res);
       setVoteData(res.allData);
     });
-  }, [selectedDropDown.tokenId, currentEpoch?.endTimestamp, selectedEpoch?.epochNumber]);
+  }, [selectedDropDown.tokenId, currentEpoch?.epochNumber, selectedEpoch?.epochNumber]);
+  useEffect(() => {
+    if (castVoteOperation) {
+      setVoteData({} as { [id: string]: IVotePageData });
+      setSelectedPools([] as ISelectedPool[]);
+      setTotalVotingPower(0);
+      //need to verify
+      votesPageDataWrapper(
+        selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
+        selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
+      ).then((res) => {
+        setVoteData(res.allData);
+      });
+    }
+  }, [castVoteOperation]);
 
   useEffect(() => {
     setVeNFTlist([]);
@@ -215,6 +233,9 @@ export default function Vote() {
           setCastVoteOperation(true);
           setShowTransactionSubmitModal(false);
         }, 2000);
+        setTimeout(() => {
+          setCastVoteOperation(false);
+        }, 10000);
 
         dispatch(setLoading(false));
       } else {
@@ -233,11 +254,11 @@ export default function Vote() {
     setShowEpochPopUp(false);
   };
   const votesArray = Object.entries(voteData);
-  const [sumOfVotes, setSumofVotes] = useState(0);
-  var sum = 0;
+
   useEffect(() => {
+    setSumofVotes(0);
     votesArray.map((data) => {
-      sum += Number(data[1].totalVotesPercentage);
+      sum += Number(data[1].myVotesPercentage);
     });
     setSumofVotes(sum);
     if (sum === 100) {
@@ -245,7 +266,8 @@ export default function Vote() {
     } else {
       setAlreadyVoted(false);
     }
-  }, [votesArray.length, voteData]);
+    console.log(sum ? sum : totalVotingPower ? totalVotingPower : "00"); // remove later
+  }, [votesArray.length, voteData, castVoteOperation, selectedEpoch?.epochNumber]);
 
   return (
     <>
@@ -319,6 +341,7 @@ export default function Vote() {
               <VotesTable
                 className="px-5 py-4 "
                 searchValue={searchValue}
+                sumOfVotes={sumOfVotes}
                 setSearchValue={setSearchValue}
                 setSelectedPools={setSelectedPools}
                 selectedPools={selectedPools}
@@ -357,7 +380,8 @@ export default function Vote() {
                             ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                             : false) &&
                           totalVotingPower !== 0 &&
-                          totalVotingPower === 100
+                          totalVotingPower === 100 &&
+                          Number(selectedDropDown.votingPower) > 0
                           ? "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
                           : "bg-card-700 text-text-400 font-subtitle4"
                       )}
@@ -368,7 +392,8 @@ export default function Vote() {
                           : false) &&
                         totalVotingPower !== 0 &&
                         totalVotingPower === 100 &&
-                        sum !== 100
+                        sumOfVotes !== 100 &&
+                        Number(selectedDropDown.votingPower) > 0
                           ? setShowCastVoteModal(true)
                           : currentEpoch?.epochNumber !== selectedEpoch?.epochNumber
                           ? setShowEpochPopUp(true)
