@@ -47,8 +47,9 @@ export function MyVotes(props: IMyVotesProps) {
         setVotes={props.setVotes}
         votes={props.votes}
         isDisabled={
-          (Number(props.selectedDropDown.votingPower) === 0 || !props.isCurrentEpoch) &&
-          props.sumOfVotes === 100
+          Number(props.selectedDropDown.votingPower) === 0 ||
+          !props.isCurrentEpoch ||
+          (props.isCurrentEpoch && props.sumOfVotes === 100)
             ? true
             : false
         }
