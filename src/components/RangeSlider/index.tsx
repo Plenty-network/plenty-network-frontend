@@ -63,8 +63,8 @@ export function RangeSlider(props: IRangeSliderProps) {
   const handleSlider = (increment: boolean, index: number) => {
     const oldValue = props.totalVotes1[index];
     if (props.totalVotingPower < 100 && increment && props.totalVotingPower + 1 <= 100) {
-      props.totalVotes1[index] = oldValue + 1 < 100 ? oldValue + 1 : 100;
-      setSliderVal((oldValue) => (oldValue + 1 < 100 ? oldValue + 1 : 100));
+      props.totalVotes1[index] = oldValue + 1 <= 100 ? oldValue + 1 : 100;
+      setSliderVal((oldValue) => (oldValue + 1 <= 100 ? oldValue + 1 : 100));
     } else if (props.totalVotingPower <= 100 && !increment) {
       props.totalVotes1[index] = oldValue - 1 > 0 ? (oldValue - 1) % 100 : 0;
       setSliderVal((oldValue) => (oldValue - 1 > 0 ? (oldValue - 1) % 100 : 0));
@@ -122,15 +122,7 @@ export function RangeSlider(props: IRangeSliderProps) {
       }
     }
     props.totalVotes1[props.index] = sliderVal;
-    // var sum = 0;
-    // props.totalVotes.values.forEach((item) => {
-    //   sum += item;
-    // });
 
-    // props.setTotalVotes({
-    //   sum: sum,
-    //   values: [...props.totalVotes.values],
-    // });
     var d = 0;
     props.selectedPools.forEach((pool) => (d += pool.votingPower));
     props.setTotalVotingPower(d);

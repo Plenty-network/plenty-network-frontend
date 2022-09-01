@@ -171,7 +171,10 @@ function CreateLock(props: ICreateLockProps) {
               </p>
               <p>
                 <span className="mt-2 ml-1 font-body4 text-text-400">
-                  ~${props.tokenPrice["PLY"] ? props.tokenPrice["PLY"].toFixed(2) : "0.00"}
+                  ~$
+                  {props.tokenPrice["PLY"]
+                    ? Number(Number(props.plyInput) * props.tokenPrice["PLY"]).toFixed(2)
+                    : "0.00"}
                 </span>
               </p>
             </div>
