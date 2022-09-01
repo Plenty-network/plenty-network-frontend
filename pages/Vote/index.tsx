@@ -94,36 +94,32 @@ export default function Vote() {
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
       selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
     ).then((res) => {
-      console.log(res);
       setVoteData(res.allData);
     });
   }, []);
   useEffect(() => {
-    console.log(selectedEpoch?.epochNumber);
-    console.log(selectedDropDown.tokenId);
-    setVoteData({} as { [id: string]: IVotePageData });
-    setSelectedPools([] as ISelectedPool[]);
-    setTotalVotingPower(0); //need to verify
-    setSumofVotes(0);
-    sum = 0;
-    votesPageDataWrapper(
-      selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
-      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
-    ).then((res) => {
-      console.log(res);
-      setVoteData(res.allData);
-      console.log(sum);
-      Object.entries(res.allData).map((data) => {
-        sum += Number(data[1].myVotesPercentage);
+    if (selectedEpoch?.epochNumber) {
+      setVoteData({} as { [id: string]: IVotePageData });
+      setSelectedPools([] as ISelectedPool[]);
+      setTotalVotingPower(0);
+      setSumofVotes(0);
+      sum = 0;
+      votesPageDataWrapper(
+        selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
+        selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
+      ).then((res) => {
+        setVoteData(res.allData);
+        Object.entries(res.allData).map((data) => {
+          sum += Number(data[1].myVotesPercentage);
+        });
+        setSumofVotes(sum);
+        if (sum === 100) {
+          setAlreadyVoted(true);
+        } else {
+          setAlreadyVoted(false);
+        }
       });
-      setSumofVotes(sum);
-      if (sum === 100) {
-        setAlreadyVoted(true);
-      } else {
-        setAlreadyVoted(false);
-      }
-      console.log(sum, totalVotingPower, sum ? sum : totalVotingPower ? totalVotingPower : "00"); // remove later
-    });
+    }
   }, [selectedDropDown.tokenId, selectedEpoch?.epochNumber]);
   useEffect(() => {
     if (castVoteOperation) {
@@ -147,12 +143,10 @@ export default function Vote() {
         } else {
           setAlreadyVoted(false);
         }
-        console.log(sum, totalVotingPower, sum ? sum : totalVotingPower ? totalVotingPower : "00");
       });
       setVeNFTlist([]);
       if (userAddress) {
         getVeNFTsList(userAddress).then((res) => {
-          console.log(res);
           setVeNFTlist(res.veNFTData);
         });
       }
@@ -290,22 +284,6 @@ export default function Vote() {
     dispatch(setSelectedEpoch(currentEpoch));
     setShowEpochPopUp(false);
   };
-  //const votesArray = Object.entries(voteData);
-
-  // useEffect(() => {
-  //   setSumofVotes(0);
-  //   sum = 0;
-  //   votesArray.map((data) => {
-  //     sum += Number(data[1].myVotesPercentage);
-  //   });
-  //   setSumofVotes(sum);
-  //   if (sum === 100) {
-  //     setAlreadyVoted(true);
-  //   } else {
-  //     setAlreadyVoted(false);
-  //   }
-  //   console.log(sum, totalVotingPower, sum ? sum : totalVotingPower ? totalVotingPower : "00"); // remove later
-  // }, [castVoteOperation]);
 
   return (
     <>
