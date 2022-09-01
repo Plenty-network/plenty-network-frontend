@@ -114,13 +114,20 @@ export default function Vote() {
       setVoteData({} as { [id: string]: IVotePageData });
       setSelectedPools([] as ISelectedPool[]);
       setTotalVotingPower(0);
-      //need to verify
+
       votesPageDataWrapper(
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
         selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
       ).then((res) => {
         setVoteData(res.allData);
       });
+      setVeNFTlist([]);
+      if (userAddress) {
+        getVeNFTsList(userAddress).then((res) => {
+          console.log(res);
+          setVeNFTlist(res.veNFTData);
+        });
+      }
     }
   }, [castVoteOperation]);
 
@@ -131,7 +138,7 @@ export default function Vote() {
         setVeNFTlist(res.veNFTData);
       });
     }
-  }, [userAddress, currentEpoch?.epochNumber, castVoteOperation]);
+  }, [userAddress, currentEpoch?.epochNumber, selectedEpoch?.epochNumber]);
 
   useInterval(() => {
     dispatch(getEpochData());
@@ -257,6 +264,7 @@ export default function Vote() {
 
   useEffect(() => {
     setSumofVotes(0);
+    sum = 0;
     votesArray.map((data) => {
       sum += Number(data[1].myVotesPercentage);
     });
@@ -266,8 +274,14 @@ export default function Vote() {
     } else {
       setAlreadyVoted(false);
     }
-    console.log(sum ? sum : totalVotingPower ? totalVotingPower : "00"); // remove later
-  }, [votesArray.length, voteData, castVoteOperation, selectedEpoch?.epochNumber]);
+    console.log(sum, totalVotingPower, sum ? sum : totalVotingPower ? totalVotingPower : "00"); // remove later
+  }, [
+    votesArray.length,
+    voteData,
+    castVoteOperation,
+    selectedEpoch?.epochNumber,
+    currentEpoch?.epochNumber,
+  ]);
 
   return (
     <>
@@ -371,7 +385,40 @@ export default function Vote() {
                   </span>
                 </div>
                 <div className="basis-3/4">
-                  <ToolTip message={"please vote 100%"} id="tooltip8" position={Position.top}>
+                  {(sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) ? (
+                    <ToolTip message={"please vote 100%"} id="tooltip8" position={Position.top}>
+                      <div
+                        className={clsx(
+                          "  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
+                          votes.length !== 0 &&
+                            (selectedEpoch?.epochNumber
+                              ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                              : false) &&
+                            totalVotingPower !== 0 &&
+                            totalVotingPower === 100 &&
+                            Number(selectedDropDown.votingPower) > 0
+                            ? "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                            : "bg-card-700 text-text-400 font-subtitle4"
+                        )}
+                        onClick={() =>
+                          votes.length !== 0 &&
+                          (selectedEpoch?.epochNumber
+                            ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                            : false) &&
+                          totalVotingPower !== 0 &&
+                          totalVotingPower === 100 &&
+                          sumOfVotes !== 100 &&
+                          Number(selectedDropDown.votingPower) > 0
+                            ? setShowCastVoteModal(true)
+                            : currentEpoch?.epochNumber !== selectedEpoch?.epochNumber
+                            ? setShowEpochPopUp(true)
+                            : () => {}
+                        }
+                      >
+                        Cast Vote
+                      </div>
+                    </ToolTip>
+                  ) : (
                     <div
                       className={clsx(
                         "  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
@@ -379,7 +426,6 @@ export default function Vote() {
                           (selectedEpoch?.epochNumber
                             ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                             : false) &&
-                          totalVotingPower !== 0 &&
                           totalVotingPower === 100 &&
                           Number(selectedDropDown.votingPower) > 0
                           ? "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
@@ -390,7 +436,6 @@ export default function Vote() {
                         (selectedEpoch?.epochNumber
                           ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                           : false) &&
-                        totalVotingPower !== 0 &&
                         totalVotingPower === 100 &&
                         sumOfVotes !== 100 &&
                         Number(selectedDropDown.votingPower) > 0
@@ -402,7 +447,7 @@ export default function Vote() {
                     >
                       Cast Vote
                     </div>
-                  </ToolTip>
+                  )}
                 </div>
               </div>
             </div>
