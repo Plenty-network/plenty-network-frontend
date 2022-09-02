@@ -1,10 +1,15 @@
 import dynamic from "next/dynamic";
 import { COLORSdataChart, dataChart } from "./PiChartComponent";
 import Protocol from "./Protocol";
+import { IAllocationProps } from "./types";
 const PiChart = dynamic(() => import("./PiChartComponent"), {
   loading: () => <></>,
 });
-function VotingAllocation() {
+export interface IVotingAllocationProps extends IAllocationProps {
+ 
+}
+
+function VotingAllocation (props: IVotingAllocationProps) {
   return (
     <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px]">
       <div className="font-body3 text-white pr-2">Voting allocation</div>
