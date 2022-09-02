@@ -147,9 +147,9 @@ export function ShortCard(props: IShortCardProps) {
         showOnMobile: true,
         accessor: (x: any) => (
           <AprInfo
-            currentApr={x.apr.toString()}
+            currentApr={valueFormat(x.apr,{percentChange:true}).toString()}
             previousApr={x.prevApr.toString()}
-            boostedApr={x.boostedApr.toString()}
+            boostedApr={valueFormat(x.boostedApr,{percentChange:true}).toString()}
           />
         ),
       },
