@@ -44,12 +44,12 @@ const Table = <D extends object>({
   });
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const headerRef = useRef(null);
-  const [heightBody, setheightBody] = useState(456);
+  const [heightBody, setheightBody] = useState(480);
 
   useEffect(() => {
     const heightOfbody = getHeightOfElement(headerRef.current);
-    setheightBody(window.innerHeight - heightOfbody - 50);
-  }, [window.innerHeight]);
+    setheightBody(window.innerHeight - heightOfbody );
+  }, [headerRef]);
   const {
     getTableProps,
     headerGroups,
@@ -139,7 +139,7 @@ const Table = <D extends object>({
         </thead>
         <tbody
           className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-2")}
-          style={{ maxHeight: `${heightBody}px` }}
+          style={{ height: `${heightBody}px`,}}
         >
           {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
             <NoContentAvailable />
