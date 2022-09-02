@@ -12,6 +12,7 @@ export interface IDropdownProps {
   className?: string;
   classNameInner?: string;
   title?: string;
+  isDisabled?:boolean;
 }
 
 export function Dropdown(props: IDropdownProps) {
@@ -50,11 +51,11 @@ export function Dropdown(props: IDropdownProps) {
           <Image
             src={arrow}
             className={!isDropDownActive ? "rotate-0 ml-auto" : "rotate-180 ml-auto"}
-            onClick={() => setIsDropDownActive(!isDropDownActive)}
+            onClick={() => !props.isDisabled ? setIsDropDownActive(!isDropDownActive):''}
           />
         </p>
       </div>
-      {isDropDownActive && (
+      {isDropDownActive && !props.isDisabled && (
         <div className="absolute  mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1 z-10">
           {props.Options.map((text, i) => (
             <Options onClick={props.onClick} key={`${text}_${i}`} text={text} />
