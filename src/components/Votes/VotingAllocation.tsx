@@ -20,9 +20,7 @@ function VotingAllocation (props: IVotingAllocationProps) {
       getMyAmmVotes(props.epochNumber,parseInt(props.selectedDropDown.tokenId))
     }else{
       getTotalAmmVotes(props.epochNumber).then((e)=>{
-        console.log("eee",e)
-        setPiChartData(e)});
-      
+        setPiChartData(e)});     
     }  
     }
   },[props.epochNumber,props.selectedDropDown])
