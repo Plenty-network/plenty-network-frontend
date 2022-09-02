@@ -17,7 +17,7 @@ function VotingAllocation (props: IVotingAllocationProps) {
   const [piChartData,setPiChartData]=useState<IVotesResponse>();
   useEffect(()=>{
     if(props.epochNumber){
-    if(props.selectedDropDown && props.selectedDropDown.tokenId && props.selectedDropDown.tokenId.length>0 && selectedDropDown){
+    if(props.selectedDropDown && props.selectedDropDown.tokenId && props.selectedDropDown.tokenId.length>0 && selectedDropDown==='My votes'){
       getMyAmmVotes(props.epochNumber,parseInt(props.selectedDropDown.tokenId)).then((e)=>{
         setPiChartData(e);
         console.log("getMyAmmVotes",e)
