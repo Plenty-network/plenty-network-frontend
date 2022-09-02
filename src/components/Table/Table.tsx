@@ -1,7 +1,8 @@
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTable, Column, useFilters, useSortBy, usePagination } from "react-table";
 import { useAppSelector } from "../../redux";
+import { getHeightOfElement } from "../../utils/getHeight";
 import { NoContentAvailable, WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
 import { Tabs } from "../Pools/ShortCardHeader";
 export interface ISimmerEffectProps {
@@ -42,7 +43,13 @@ const Table = <D extends object>({
     desc: true,
   });
   const walletAddress = useAppSelector((state) => state.wallet.address);
-
+  const headerRef=useRef(null);
+  const [heightBody,setheightBody]=useState(456);
+  
+  useEffect(()=>{
+    const heightOfbody= getHeightOfElement(headerRef.current);
+    setheightBody(window.innerHeight-heightOfbody-50);
+  },[window.innerHeight])
   const {
     getTableProps,
     headerGroups,
@@ -74,6 +81,7 @@ const Table = <D extends object>({
     useSortBy,
     usePagination
   );
+  
   const shortByHandler = (sortByAtt: any) => {
     const currentShortBy = Object.assign({}, shortByGroup);
     if (currentShortBy.id == sortByAtt) {
@@ -97,7 +105,7 @@ const Table = <D extends object>({
   return (
     <div>
       <table className={clsx("w-full flex flex-col ", isVotesTable ? "gap-1.5" : "gap-3")}>
-        <thead>
+      <thead ref={headerRef} >
           {headerGroups.map((headerGroup, index) => (
             <tr
               key={`headerGroup_${index}`}
@@ -129,7 +137,7 @@ const Table = <D extends object>({
             </tr>
           ))}
         </thead>
-        <tbody className={clsx(" flex-col flex ", isVotesTable ? "gap-1" : "gap-2")}>
+        <tbody className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-2")} style={{maxHeight:`${heightBody}px`}}>
           {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
             <NoContentAvailable />
           ) : null}

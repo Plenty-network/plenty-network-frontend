@@ -212,7 +212,7 @@ export function VotesTable(props: IVotesTableProps) {
 
   return (
     <>
-      <div className={`w-full  ${props.className}`}>
+      <div className={`w-full min-w-[557px] overflow-x-auto  ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
