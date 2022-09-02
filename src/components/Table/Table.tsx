@@ -162,7 +162,7 @@ const Table = <D extends object>({
                             i == 0 ? "justify-start" : "justify-end"
                           } ${
                             isVotesTable && i === row.cells.length - 1
-                              ? "w-[100px] md:w-[250px]"
+                              ? "w-[100px] md:w-[220px]"
                               : i == 0
                               ? "w-[150px]"
                               : "flex-1 w-[100px]"
