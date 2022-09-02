@@ -381,6 +381,7 @@ export default function Vote() {
               selectedDropDown={selectedDropDown} // veNFT selected
               epochData={epochData} // epoch data
               alreadyVoted={alreadyVoted}
+              epochNumber={selectedEpoch.epochNumber}
               
               />
               <div className="mt-4 text-text-50 font-body3">
@@ -487,6 +488,7 @@ export default function Vote() {
           selectedDropDown={selectedDropDown} // veNFT selected
           epochData={epochData} // epoch data
           alreadyVoted={alreadyVoted}
+          epochNumber={selectedEpoch.epochNumber}
         />
       )}
       {showCastVoteModal && (
