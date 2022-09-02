@@ -141,7 +141,7 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
     }
 
     const finalData: IVotePageRewardData = {};
-
+    // TODO: Optimise this n2 loop
     for (var x of bribesData) {
       let bribe: BigNumber = new BigNumber(0);
       if (!x.bribes || x.bribes.length === 0) {
@@ -181,7 +181,7 @@ export const votesPageDataWrapper = async (
     // TODO : UnComment when launching
     // const state = store.getState();
     // const AMMS = state.config.AMMs;
-
+    console.log(`epoch:${epoch}, tokenId:${tokenId}`)
     // TODO: Remove this get call
     const AMMResponse = await axios.get("https://config.plentydefi.com/v1/config/amm");
     const AMMS: IAmmContracts = AMMResponse.data;
@@ -190,19 +190,19 @@ export const votesPageDataWrapper = async (
 
     const votesData = await getAllVotesData(epoch, tokenId);
 
-    const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
-    const poolsData: VolumeV1Data[] = poolsResponse.data;
-    if (poolsData.length === 0) {
+    // const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
+    // const poolsData: VolumeV1Data[] = poolsResponse.data;
+    if (!rewardData.success || Object.keys(rewardData.allData).length === 0) {
       throw new Error("No pools data found");
     }
     const allData: { [id: string]: IVotePageData } = {};
 
-    for (var poolData of poolsData) {
-      const AMM = AMMS[poolData.pool];
+    for (let poolData of Object.keys(rewardData.allData)) {
+      const AMM = AMMS[poolData];
 
       //TODO: Remove next two lines during mainnet launch
       const testnetDex = getDexAddress(AMM.token1.symbol, AMM.token2.symbol);
-      const dexForVotes = testnetDex !== "false" ? testnetDex : poolData.pool;
+      const dexForVotes = testnetDex !== "false" ? testnetDex : poolData;
 
       //TODO: Remove next line
       allData[testnetDex] = {
@@ -213,43 +213,39 @@ export const votesPageDataWrapper = async (
         poolType: AMM.type,
 
         bribes:
-          Object.keys(rewardData.allData).length === 0
-            ? new BigNumber(0)
-            : rewardData.allData[poolData.pool]
-            ? rewardData.allData[poolData.pool].bribes
+          rewardData.allData[poolData]
+            ? rewardData.allData[poolData].bribes
             : new BigNumber(0),
         fees:
-          Object.keys(rewardData.allData).length === 0
-            ? new BigNumber(0)
-            : rewardData.allData[poolData.pool]
-            ? rewardData.allData[poolData.pool].fees
+          rewardData.allData[poolData]
+            ? rewardData.allData[poolData].fees
             : new BigNumber(0),
 
         //TODO: Uncomment for mainnet
         /* totalVotes:
           Object.keys(votesData.totalVotesData).length === 0
             ? new BigNumber(0)
-            : votesData.totalVotesData[poolData.pool]
-            ? votesData.totalVotesData[poolData.pool].votes
+            : votesData.totalVotesData[poolData]
+            ? votesData.totalVotesData[poolData].votes
             : new BigNumber(0),
         totalVotesPercentage:
           Object.keys(votesData.totalVotesData).length === 0
             ? new BigNumber(0)
-            : votesData.totalVotesData[poolData.pool]
-            ? votesData.totalVotesData[poolData.pool].votePercentage
+            : votesData.totalVotesData[poolData]
+            ? votesData.totalVotesData[poolData].votePercentage
             : new BigNumber(0),
 
         myVotes:
           Object.keys(votesData.myVotesData).length === 0
             ? new BigNumber(0)
-            : votesData.myVotesData[poolData.pool]
-            ? votesData.myVotesData[poolData.pool].votes
+            : votesData.myVotesData[poolData]
+            ? votesData.myVotesData[poolData].votes
             : new BigNumber(0),
         myVotesPercentage:
           Object.keys(votesData.myVotesData).length === 0
             ? new BigNumber(0)
-            : votesData.myVotesData[poolData.pool]
-            ? votesData.myVotesData[poolData.pool].votePercentage
+            : votesData.myVotesData[poolData]
+            ? votesData.myVotesData[poolData].votePercentage
             : new BigNumber(0), */
 
         //TODO: Remove for mainnet
