@@ -125,6 +125,49 @@ export const fetchEpochData = async (epochNumber: number): Promise<IEpochRespons
         ? Math.floor(EPOCH_DURATION_TESTNET / 1000)
         : Math.floor(EPOCH_DURATION_MAINNET / 1000);
 
+    const voterStorageResponse = await getTzktStorageData(voterContractAddress);
+    const currentEpochNumber: number = new BigNumber(voterStorageResponse.data.epoch).toNumber();
+    const epochEndBigMapId: number = voterStorageResponse.data.epoch_end;
+    const isCurrent: boolean = epochNumber === currentEpochNumber;
+
+    const epochDataResponse = await getTzktBigMapData(`${epochEndBigMapId}`, `key=${epochNumber}`);
+    if (epochDataResponse.data.length === 0) {
+      throw new Error("No epoch data found for the selected epoch number.");
+    }
+    const epochData = epochDataResponse.data[0];
+    const epochEndTimestamp = Math.floor(new Date(epochData.value).getTime() / 1000);
+    const epochStartTimestamp = epochEndTimestamp - epochDuration;
+
+    const finalEpochData = {
+      isCurrent,
+      epochStartTimestamp,
+      epochEndTimestamp,
+    };
+    return {
+      success: true,
+      epochData: finalEpochData,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      epochData: {},
+      error: error.message,
+    };
+  }
+};
+
+/**
+ * Fetch data for a selected epoch number. Data includes if it is current epoch,
+ * start timestamp in seconds and end timestamp in seconds via RPC.
+ * @param epochNumber - Numeric value of the epoch for which the data is to be fetched
+ */
+ export const fetchEpochDataViaRpc = async (epochNumber: number): Promise<IEpochResponse> => {
+  try {
+    const epochDuration: number =
+      connectedNetwork === "testnet"
+        ? Math.floor(EPOCH_DURATION_TESTNET / 1000)
+        : Math.floor(EPOCH_DURATION_MAINNET / 1000);
+
     const voterStorageResponse = await getStorage(voterContractAddress, voterStorageType);
     const currentEpochNumber: number = voterStorageResponse.epoch.toNumber(); // Voter storage response for epoch is BigNumber
     const epochDataMapId: string = voterStorageResponse.epoch_end;

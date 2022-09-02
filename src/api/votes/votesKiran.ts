@@ -3,7 +3,7 @@ import { BigNumber } from "bignumber.js";
 import axios from "axios";
 import { connectedNetwork, voterAddress as voterContractAddress } from "../../common/walletconnect";
 import Config from "../../config/config";
-import { getStorage, getTzktBigMapData } from "../util/storageProvider";
+import { getStorage, getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
 import { voterStorageType } from "./data";
 import {
   IAllVotesData,
@@ -244,11 +244,16 @@ export const getAllVotesData = async (
     const state = store.getState();
     const AMM = state.config.AMMs;
     // const voterContractAddress: string = "KT1PexY3Jn8BCJmVpVLNN944YpVLM2LWTMMV";
-    const voterStorageResponse = await getStorage(voterContractAddress, voterStorageType);
-    const tokenAmmVotesBigMapId: string = voterStorageResponse.token_amm_votes;
-    const totalTokenVotesBigMapId: string = voterStorageResponse.total_token_votes;
-    const totalAmmVotesBigMapId: string = voterStorageResponse.total_amm_votes;
-    const totalEpochVotesBigMapId: string = voterStorageResponse.total_epoch_votes;
+    // const voterStorageResponse = await getStorage(voterContractAddress, voterStorageType);
+    // const tokenAmmVotesBigMapId: string = voterStorageResponse.token_amm_votes;
+    // const totalTokenVotesBigMapId: string = voterStorageResponse.total_token_votes;
+    // const totalAmmVotesBigMapId: string = voterStorageResponse.total_amm_votes;
+    // const totalEpochVotesBigMapId: string = voterStorageResponse.total_epoch_votes;
+    const voterStorageResponse = await getTzktStorageData(voterContractAddress);
+    const tokenAmmVotesBigMapId: string = Number(voterStorageResponse.data.token_amm_votes).toString();
+    const totalTokenVotesBigMapId: string = Number(voterStorageResponse.data.total_token_votes).toString();
+    const totalAmmVotesBigMapId: string = Number(voterStorageResponse.data.total_amm_votes).toString();
+    const totalEpochVotesBigMapId: string = Number(voterStorageResponse.data.total_epoch_votes).toString();
 
     const totalVotesData: IAllVotesData = {};
     const myVotesData: IAllVotesData = {};
