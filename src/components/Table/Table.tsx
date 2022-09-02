@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
 import { useTable, Column, useFilters, useSortBy, usePagination } from "react-table";
 import { useAppSelector } from "../../redux";
@@ -103,8 +104,8 @@ const Table = <D extends object>({
 
   return (
     <div>
-      <table className="w-full flex flex-col gap-3">
-        <thead ref={headerRef} >
+      <table className={clsx("w-full flex flex-col ", isVotesTable ? "gap-1.5" : "gap-3")}>
+      <thead ref={headerRef} >
           {headerGroups.map((headerGroup, index) => (
             <tr
               key={`headerGroup_${index}`}
@@ -136,7 +137,7 @@ const Table = <D extends object>({
             </tr>
           ))}
         </thead>
-        <tbody className=" flex-col flex gap-2 overflow-x-auto" style={{maxHeight:`${heightBody}px`}}>
+        <tbody className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-2")} style={{maxHeight:`${heightBody}px`}}>
           {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
             <NoContentAvailable />
           ) : null}

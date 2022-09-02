@@ -157,24 +157,35 @@ export const fetchEpochData = async (epochNumber: number): Promise<IEpochRespons
 };
 
 /**
- * Returns the range of timestamp allowed in calendar for selection in milliseconds along with number of days allowed.
+ * Returns the range of timestamp allowed in calendar for selection in milliseconds
+ * along with number of days, list of years and list of thursdays allowed to select.
  */
 export const getCalendarRangeToEnable = (): IDatesEnabledRangeData => {
+  const dayInMilliSeconds: number = 86400000;
   const yearsToEnable: number[] = [];
+  const thursdaysToEnable: number[] = [];
   const start = new Date();
   start.setUTCHours(0, 0, 0, 0);
   const startTimestamp = start.getTime();
   const endTimestamp = startTimestamp + MAX_TIME * 1000;
-  const days = Math.floor((endTimestamp - startTimestamp) / 86400000);
+  const days = Math.floor((endTimestamp - startTimestamp) / dayInMilliSeconds);
+  // Create the list of years to enable on calendar
   const yearBegin = new Date(startTimestamp).getFullYear();
   const yearEnd = new Date(endTimestamp).getFullYear();
-  for(let i = yearBegin; i <= yearEnd; i++) {
+  for (let i = yearBegin; i <= yearEnd; i++) {
     yearsToEnable.push(i);
+  }
+  // Create the list of thursdays to enable on calendar
+  for (let i = startTimestamp; i < endTimestamp; i += dayInMilliSeconds) {
+    if (new Date(i).getDay() === 4) {
+      thursdaysToEnable.push(i);
+    }
   }
   return {
     startTimestamp,
     endTimestamp,
     days,
     yearsToEnable,
+    thursdaysToEnable,
   };
 };
