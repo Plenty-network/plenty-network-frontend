@@ -17,13 +17,20 @@ function VotingAllocation (props: IVotingAllocationProps) {
   const [piChartData,setPiChartData]=useState<IVotesResponse>();
   useEffect(()=>{
     if(props.epochNumber){
-    if(props.selectedDropDown && props.selectedDropDown.tokenId && props.selectedDropDown.tokenId.length>0){
-      getMyAmmVotes(props.epochNumber,parseInt(props.selectedDropDown.tokenId))
+    if(props.selectedDropDown && props.selectedDropDown.tokenId && props.selectedDropDown.tokenId.length>0 && selectedDropDown){
+      getMyAmmVotes(props.epochNumber,parseInt(props.selectedDropDown.tokenId)).then((e)=>{
+        setPiChartData(e);
+        console.log("getMyAmmVotes",e)
+      });
     }else{
       getTotalAmmVotes(props.epochNumber).then((e)=>{
-        setPiChartData(e)});     
+        setPiChartData(e);
+        console.log("getMyAmmVotes -t",e)
+      });     
     }  
     }
+    console.log("piChartData",piChartData);
+
   },[props.epochNumber,props.selectedDropDown,props.show,selectedDropDown])
   return (
     <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px]">
