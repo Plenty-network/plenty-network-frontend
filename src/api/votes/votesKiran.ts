@@ -286,31 +286,28 @@ export const getAllVotesData = async (
         totalTokenVotesBigMapId,
         `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value`
       );
-      if (totalTokenVotesResponse.data.length === 0) {
-        throw new Error("No votes in this epoch yet");
-      }
-      const totalTokenVotes: BigNumber = new BigNumber(totalTokenVotesResponse.data[0].value);
+      if (totalTokenVotesResponse.data.length > 0) {
+        const totalTokenVotes: BigNumber = new BigNumber(totalTokenVotesResponse.data[0].value);
 
-      const tokenAmmVotesResponse = await getTzktBigMapData(
-        tokenAmmVotesBigMapId,
-        `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value`
-      );
-      const tokenAmmVotesBigMapData: IMyAmmVotesBigMap[] = tokenAmmVotesResponse.data;
-      if (tokenAmmVotesBigMapData.length === 0) {
-        throw new Error("No votes data for AMMS in this epoch yet");
+        const tokenAmmVotesResponse = await getTzktBigMapData(
+          tokenAmmVotesBigMapId,
+          `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value`
+        );
+        const tokenAmmVotesBigMapData: IMyAmmVotesBigMap[] = tokenAmmVotesResponse.data;
+        if (tokenAmmVotesBigMapData.length > 0) {
+          tokenAmmVotesBigMapData.forEach((voteData) => {
+            myVotesData[voteData.key.amm] = {
+              dexContractAddress: voteData.key.amm,
+              votePercentage: new BigNumber(voteData.value)
+                .multipliedBy(100)
+                .dividedBy(totalTokenVotes),
+              votes: new BigNumber(voteData.value).dividedBy(PLY_DECIMAL_MULTIPLIER),
+              tokenOneSymbol: AMM[voteData.key.amm].token1.symbol,
+              tokenTwoSymbol: AMM[voteData.key.amm].token2.symbol,
+            };
+          });
+        }
       }
-
-      tokenAmmVotesBigMapData.forEach((voteData) => {
-        myVotesData[voteData.key.amm] = {
-          dexContractAddress: voteData.key.amm,
-          votePercentage: new BigNumber(voteData.value)
-            .multipliedBy(100)
-            .dividedBy(totalTokenVotes),
-          votes: new BigNumber(voteData.value).dividedBy(PLY_DECIMAL_MULTIPLIER),
-          tokenOneSymbol: AMM[voteData.key.amm].token1.symbol,
-          tokenTwoSymbol: AMM[voteData.key.amm].token2.symbol,
-        };
-      });
     }
 
     return {

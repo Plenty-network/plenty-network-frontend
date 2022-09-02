@@ -153,7 +153,7 @@ export function RangeSlider(props: IRangeSliderProps) {
             renderTrack={({ props, children }) => (
               <div
                 {...props}
-                className="flex-1 relative w-[96px] h-[2px] bg-text-255"
+                className="flex-1 relative w-[100px] h-[2px] bg-text-255"
                 style={{
                   borderRadius: "4px",
                   background: getTrackBackground({
