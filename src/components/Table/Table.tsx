@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React, { useState } from "react";
 import { useTable, Column, useFilters, useSortBy, usePagination } from "react-table";
 import { useAppSelector } from "../../redux";
@@ -95,7 +96,7 @@ const Table = <D extends object>({
 
   return (
     <div>
-      <table className="w-full flex flex-col gap-3">
+      <table className={clsx("w-full flex flex-col ", isVotesTable ? "gap-1.5" : "gap-3")}>
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr
@@ -128,7 +129,7 @@ const Table = <D extends object>({
             </tr>
           ))}
         </thead>
-        <tbody className=" flex-col flex gap-2">
+        <tbody className={clsx(" flex-col flex ", isVotesTable ? "gap-1" : "gap-2")}>
           {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
             <NoContentAvailable />
           ) : null}

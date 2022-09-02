@@ -146,7 +146,10 @@ export default function Vote() {
       });
       setVeNFTlist([]);
       if (userAddress) {
-        getVeNFTsList(userAddress).then((res) => {
+        getVeNFTsList(
+          userAddress,
+          selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
+        ).then((res) => {
           setVeNFTlist(res.veNFTData);
         });
       }
@@ -156,7 +159,10 @@ export default function Vote() {
   useEffect(() => {
     setVeNFTlist([]);
     if (userAddress) {
-      getVeNFTsList(userAddress).then((res) => {
+      getVeNFTsList(
+        userAddress,
+        selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
+      ).then((res) => {
         setVeNFTlist(res.veNFTData);
       });
     }
@@ -168,14 +174,22 @@ export default function Vote() {
 
   useEffect(() => {
     if (veNFTlist.length > 0 && selectedDropDown.votingPower !== "") {
+      var flag = false;
       veNFTlist.map((list) => {
         if (Number(list.tokenId) === Number(selectedDropDown.tokenId)) {
+          flag = true;
           setSelectedDropDown({
             votingPower: list.votingPower.toString(),
             tokenId: list.tokenId.toString(),
           });
         }
       });
+      if (!flag) {
+        setSelectedDropDown({
+          votingPower: "",
+          tokenId: "",
+        });
+      }
     }
   }, [veNFTlist]);
   useEffect(() => {
@@ -293,19 +307,19 @@ export default function Vote() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
-        <div>
-          <HeadInfo
-            className="px-2 md:px-3"
-            title="Vote"
-            toolTipContent=""
-            handleCreateLock={handleCreateLock}
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
-          />
+        <div className="flex">
+          <div className="md:basis-2/3">
+            <HeadInfo
+              className="px-2 md:px-3"
+              title="Vote"
+              toolTipContent=""
+              handleCreateLock={handleCreateLock}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+            />
 
-          <div className="md:flex md:flex-row">
-            <div className="md:basis-2/3">
-              <div className="flex items-center px-3 md:px-0 py-2 md:py-0 border-b border-text-800/[0.5]">
+            <div className="">
+              <div className="flex items-center px-3 md:px-0 py-2 md:py-0 ">
                 <div>
                   <SelectNFT
                     veNFTlist={veNFTlist}
@@ -374,78 +388,36 @@ export default function Vote() {
                 }
               />
             </div>
-            <div className="hidden md:block md:basis-1/3 md:pr-[30px]">
-              <VotingAllocation 
+          </div>
+          <div className="hidden md:block md:basis-1/3 md:pr-[30px]">
+            <VotingAllocation
               show={showCastVotingAllocation}
               setShow={setShowCastVotingAllocation}
               selectedDropDown={selectedDropDown} // veNFT selected
               epochData={epochData} // epoch data
               alreadyVoted={alreadyVoted}
               epochNumber={selectedEpoch.epochNumber}
-              
-              />
-              <div className="mt-4 text-text-50 font-body3">
-                Verify your vote percentage and cast vote
+            />
+            <div className="mt-4 text-text-50 font-body3">
+              Verify your vote percentage and cast vote
+            </div>
+            <div className="flex flex-row gap-2 mt-[14px]">
+              <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
+                <InfoIconToolTip message=" Verify your vote percentage and cast vote" />
+                <span className="ml-2">
+                  {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
+                </span>
               </div>
-              <div className="flex flex-row gap-2 mt-[14px]">
-                <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
-                  <InfoIconToolTip message=" Verify your vote percentage and cast vote" />
-                  <span className="ml-2">
-                    {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
-                  </span>
-                </div>
-                <div className="basis-3/4">
-                  {(sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
-                  (selectedEpoch?.epochNumber
-                    ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                    : true) ? (
-                    <ToolTip
-                      message={"Cast 100% of your Votes to proceed "}
-                      id="tooltip8"
-                      position={Position.top}
-                    >
-                      <div
-                        className={clsx(
-                          "  h-[52px] flex items-center justify-center rounded-xl ",
-                          votes.length !== 0 &&
-                            (selectedEpoch?.epochNumber
-                              ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                              : false) &&
-                            totalVotingPower !== 0 &&
-                            totalVotingPower === 100 &&
-                            Number(selectedDropDown.votingPower) > 0
-                            ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
-                            : "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
-                        )}
-                        onClick={() =>
-                          votes.length !== 0 &&
-                          (selectedEpoch?.epochNumber
-                            ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                            : false) &&
-                          totalVotingPower !== 0 &&
-                          totalVotingPower === 100 &&
-                          sumOfVotes !== 100 &&
-                          Number(selectedDropDown.votingPower) > 0
-                            ? setShowCastVoteModal(true)
-                            : currentEpoch?.epochNumber !== selectedEpoch?.epochNumber
-                            ? setShowEpochPopUp(true)
-                            : () => {}
-                        }
-                      >
-                        Cast Vote
-                      </div>
-                    </ToolTip>
-                  ) : sumOfVotes === 100 ? (
-                    <div
-                      className={clsx(
-                        "  h-[52px] flex items-center justify-center rounded-xl ",
-
-                        "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
-                      )}
-                    >
-                      Already Voted
-                    </div>
-                  ) : (
+              <div className="basis-3/4">
+                {(sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
+                (selectedEpoch?.epochNumber
+                  ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                  : true) ? (
+                  <ToolTip
+                    message={"Cast 100% of your Votes to proceed "}
+                    id="tooltip8"
+                    position={Position.top}
+                  >
                     <div
                       className={clsx(
                         "  h-[52px] flex items-center justify-center rounded-xl ",
@@ -453,6 +425,7 @@ export default function Vote() {
                           (selectedEpoch?.epochNumber
                             ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                             : false) &&
+                          totalVotingPower !== 0 &&
                           totalVotingPower === 100 &&
                           Number(selectedDropDown.votingPower) > 0
                           ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
@@ -463,6 +436,7 @@ export default function Vote() {
                         (selectedEpoch?.epochNumber
                           ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                           : false) &&
+                        totalVotingPower !== 0 &&
                         totalVotingPower === 100 &&
                         sumOfVotes !== 100 &&
                         Number(selectedDropDown.votingPower) > 0
@@ -474,8 +448,47 @@ export default function Vote() {
                     >
                       Cast Vote
                     </div>
-                  )}
-                </div>
+                  </ToolTip>
+                ) : sumOfVotes === 100 ? (
+                  <div
+                    className={clsx(
+                      "  h-[52px] flex items-center justify-center rounded-xl ",
+
+                      "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                    )}
+                  >
+                    Already Voted
+                  </div>
+                ) : (
+                  <div
+                    className={clsx(
+                      "  h-[52px] flex items-center justify-center rounded-xl ",
+                      votes.length !== 0 &&
+                        (selectedEpoch?.epochNumber
+                          ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                          : false) &&
+                        totalVotingPower === 100 &&
+                        Number(selectedDropDown.votingPower) > 0
+                        ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                        : "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                    )}
+                    onClick={() =>
+                      votes.length !== 0 &&
+                      (selectedEpoch?.epochNumber
+                        ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                        : false) &&
+                      totalVotingPower === 100 &&
+                      sumOfVotes !== 100 &&
+                      Number(selectedDropDown.votingPower) > 0
+                        ? setShowCastVoteModal(true)
+                        : currentEpoch?.epochNumber !== selectedEpoch?.epochNumber
+                        ? setShowEpochPopUp(true)
+                        : () => {}
+                    }
+                  >
+                    Cast Vote
+                  </div>
+                )}
               </div>
             </div>
           </div>
