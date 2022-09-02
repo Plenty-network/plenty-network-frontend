@@ -1,6 +1,8 @@
 import Image from "next/image";
 import * as React from "react";
 import clsx from "clsx";
+
+import lighting from "../../assets/icon/vote/lighting.svg";
 import arrow from "../../assets/icon/vote/arrowNFT.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { IVeNFTData } from "../../api/votes/types";
@@ -41,6 +43,9 @@ export function VeNFT(props: IDropdownProps) {
 
           "cursor-pointer"
         )}
+        {...(props.Options.length === 0
+          ? {}
+          : { onClick: () => setIsDropDownActive(!isDropDownActive) })}
       >
         <p
           className={clsx(
@@ -56,7 +61,8 @@ export function VeNFT(props: IDropdownProps) {
         >
           {props.selectedText.votingPower !== "" && props.selectedText.tokenId !== "" ? (
             <>
-              <span className="font-body4 text-white">
+              <Image src={lighting} />
+              <span className="ml-1 font-body4 text-white">
                 {Number(props.selectedText.votingPower).toFixed(3)}
               </span>
               <span className="font-body3 text-text-500">(#{props.selectedText.tokenId})</span>
@@ -75,9 +81,6 @@ export function VeNFT(props: IDropdownProps) {
           width={"18px"}
           height={"18px"}
           className={!isDropDownActive ? "rotate-0" : "rotate-180"}
-          {...(props.Options.length === 0
-            ? {}
-            : { onClick: () => setIsDropDownActive(!isDropDownActive) })}
         />
       </div>
       {isDropDownActive && props.Options.length > 0 && (
@@ -111,7 +114,8 @@ export function VeNFT(props: IDropdownProps) {
         }}
         className="  hover:bg-muted-500 px-4 flex items-center h-[36px] cursor-pointer flex"
       >
-        <span className="font-body4 text-white">{Number(props.votingPower).toFixed(3)}</span>
+        <Image src={lighting} />
+        <span className="ml-1 font-body4 text-white">{Number(props.votingPower).toFixed(3)}</span>
         <span className="ml-auto font-body3 text-text-500">#{props.tokenId}</span>
       </div>
     );

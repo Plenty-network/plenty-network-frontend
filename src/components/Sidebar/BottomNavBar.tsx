@@ -43,6 +43,12 @@ const mainMenu: Array<ISingleSideBarProps> = [
     pathName: '/pools',
     activePathName: '/pools',
   },
+  {
+    name: "Vote",
+    iconName: "lock",
+    pathName: "/Vote",
+    activePathName: "/Vote",
+  },
 ];
 export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
   const [activeSubMenu, setActiveSubMenu] = React.useState(MenuType.NoMenu);

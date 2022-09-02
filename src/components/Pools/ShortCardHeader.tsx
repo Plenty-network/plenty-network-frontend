@@ -21,7 +21,7 @@ export interface ITabsProps {
 export function Tabs(props: ITabsProps) {
   return (
     <th
-      className={`flex cursor-pointer text-f12 text-text-50 text-left -mr-[13px] ${
+      className={`flex cursor-pointer font-subtitle1 text-text-50 text-left -mr-[13px] ${
         props.isFirstRow ? "justify-start" : "justify-end"
       } ${
         props.isVotesTable
