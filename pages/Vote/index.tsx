@@ -166,7 +166,7 @@ export default function Vote() {
         setVeNFTlist(res.veNFTData);
       });
     }
-  }, [userAddress, currentEpoch?.epochNumber, selectedEpoch?.epochNumber]);
+  }, [userAddress, selectedEpoch?.epochNumber]);
 
   useInterval(() => {
     dispatch(getEpochData());
@@ -186,8 +186,8 @@ export default function Vote() {
       });
       if (!flag) {
         setSelectedDropDown({
-          votingPower: "",
-          tokenId: "",
+          votingPower: veNFTlist[0].votingPower.toString(),
+          tokenId: veNFTlist[0].tokenId.toString(),
         });
       }
     }
