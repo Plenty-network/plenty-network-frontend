@@ -158,6 +158,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Total votes",
         id: "Total votes",
+        canShort: true,
         isToolTipEnabled: true,
         accessor: (x: any) => (
           <TotalVotes

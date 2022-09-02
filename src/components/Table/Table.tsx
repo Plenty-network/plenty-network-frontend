@@ -43,13 +43,13 @@ const Table = <D extends object>({
     desc: true,
   });
   const walletAddress = useAppSelector((state) => state.wallet.address);
-  const headerRef=useRef(null);
-  const [heightBody,setheightBody]=useState(456);
-  
-  useEffect(()=>{
-    const heightOfbody= getHeightOfElement(headerRef.current);
-    setheightBody(window.innerHeight-heightOfbody-50);
-  },[window.innerHeight])
+  const headerRef = useRef(null);
+  const [heightBody, setheightBody] = useState(456);
+
+  useEffect(() => {
+    const heightOfbody = getHeightOfElement(headerRef.current);
+    setheightBody(window.innerHeight - heightOfbody - 50);
+  }, [window.innerHeight]);
   const {
     getTableProps,
     headerGroups,
@@ -81,7 +81,7 @@ const Table = <D extends object>({
     useSortBy,
     usePagination
   );
-  
+
   const shortByHandler = (sortByAtt: any) => {
     const currentShortBy = Object.assign({}, shortByGroup);
     if (currentShortBy.id == sortByAtt) {
@@ -105,11 +105,11 @@ const Table = <D extends object>({
   return (
     <div>
       <table className={clsx("w-full flex flex-col ", isVotesTable ? "gap-1.5" : "gap-3")}>
-      <thead ref={headerRef} >
+        <thead ref={headerRef}>
           {headerGroups.map((headerGroup, index) => (
             <tr
               key={`headerGroup_${index}`}
-              className="border border-borderCommon bg-cardBackGround flex md:px-5 md:py-3 px-1 py-1  items-center rounded-t-xl	rounded-b "
+              className="border border-borderCommon bg-cardBackGround flex md:pr-5 md:pl-11 md:py-3 px-1 py-1  items-center rounded-t-xl	rounded-b "
             >
               {headerGroup.headers.map((column, i) => (
                 <Tabs
@@ -137,7 +137,10 @@ const Table = <D extends object>({
             </tr>
           ))}
         </thead>
-        <tbody className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-2")} style={{maxHeight:`${heightBody}px`}}>
+        <tbody
+          className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-2")}
+          style={{ maxHeight: `${heightBody}px` }}
+        >
           {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
             <NoContentAvailable />
           ) : null}
@@ -149,7 +152,7 @@ const Table = <D extends object>({
                 return (
                   // eslint-disable-next-line react/jsx-key
                   <tr
-                    className={`border border-borderCommon  bg-cardBackGround flex md:px-5 md:py-3 px-1 py-1 items-center justify-between rounded-lg slideFromTop `}
+                    className={`border border-borderCommon  bg-cardBackGround flex md:pr-3 md:pl-11 md:py-3 px-1 py-1 items-center justify-between rounded-lg slideFromTop `}
                   >
                     {row.cells.map((cell: any, i: any) => {
                       return (
@@ -159,7 +162,7 @@ const Table = <D extends object>({
                             i == 0 ? "justify-start" : "justify-end"
                           } ${
                             isVotesTable && i === row.cells.length - 1
-                              ? "w-[100px] md:w-[200px]"
+                              ? "w-[100px] md:w-[250px]"
                               : i == 0
                               ? "w-[150px]"
                               : "flex-1 w-[100px]"
