@@ -26,21 +26,31 @@ body {
 /* width */
 ::-webkit-scrollbar {
   width: 2px;
+  height: 5px;
   border-radius: 8px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
+  
+  height: 5px;
+  border-radius: 8px;
   background: transparent; 
 }
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
+  
+  height: 5px;
+  border-radius: 8px;
   background: #341e54; 
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
+  
+  height: 5px;
+  border-radius: 8px;
   background: #3b2f4f; 
 }
 .slider-input:focus::placeholder {
