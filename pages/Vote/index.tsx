@@ -396,7 +396,7 @@ export default function Vote() {
               selectedDropDown={selectedDropDown} // veNFT selected
               epochData={epochData} // epoch data
               alreadyVoted={alreadyVoted}
-              epochNumber={selectedEpoch.epochNumber}
+              epochNumber={selectedEpoch?selectedEpoch.epochNumber:0}
             />
             <div className="mt-4 text-text-50 font-body3">
               Verify your vote percentage and cast vote
