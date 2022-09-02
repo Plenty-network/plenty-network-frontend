@@ -23,6 +23,26 @@ body {
 
   color: #ffffff;
 }
+/* width */
+::-webkit-scrollbar {
+  width: 2px;
+  border-radius: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #341e54; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #3b2f4f; 
+}
 .slider-input:focus::placeholder {
   color: transparent;
 }
