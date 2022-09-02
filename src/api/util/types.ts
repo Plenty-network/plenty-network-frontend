@@ -49,4 +49,5 @@ export interface IDatesEnabledRangeData {
   endTimestamp: number;
   days: number;
   yearsToEnable: number[];
+  thursdaysToEnable: number[];
 }
