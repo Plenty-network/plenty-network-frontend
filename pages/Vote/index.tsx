@@ -109,6 +109,11 @@ export default function Vote() {
         selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
       ).then((res) => {
         setVoteData(res.allData);
+        console.log(
+          res.allData,
+          selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
+          selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
+        );
         Object.entries(res.allData).map((data) => {
           sum += Number(data[1].myVotesPercentage);
         });
@@ -395,7 +400,7 @@ export default function Vote() {
               setShow={setShowCastVotingAllocation}
               selectedDropDown={selectedDropDown} // veNFT selected
               epochData={epochData} // epoch data
-              alreadyVoted={alreadyVoted}
+              alreadyVoted={sumOfVotes === 100}
               epochNumber={selectedEpoch.epochNumber}
             />
             <div className="mt-4 text-text-50 font-body3">
@@ -500,7 +505,7 @@ export default function Vote() {
           setShow={setShowCastVotingAllocation}
           selectedDropDown={selectedDropDown} // veNFT selected
           epochData={epochData} // epoch data
-          alreadyVoted={alreadyVoted}
+          alreadyVoted={sumOfVotes === 100}
           epochNumber={selectedEpoch.epochNumber}
         />
       )}
