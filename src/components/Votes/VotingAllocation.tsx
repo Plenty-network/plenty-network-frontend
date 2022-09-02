@@ -23,12 +23,12 @@ function VotingAllocation (props: IVotingAllocationProps) {
         setPiChartData(e)});     
     }  
     }
-  },[props.epochNumber,props.selectedDropDown])
+  },[props.epochNumber,props.selectedDropDown,props.show])
   return (
     <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px]">
       <div className="font-body3 text-white pr-2">Voting allocation</div>
       <div className="font-body3 text-white mt-[18px]">
-        <Protocol />
+        <Protocol isSelected={props.selectedDropDown.tokenId.length?true:false} />
       </div>
       <div className="flex flex-col items-center  mt-5  gap-2 justify-center w-[350px] ">
         {piChartData?.allData &&  <PiChart piChartData={piChartData}/>}
