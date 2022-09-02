@@ -25,7 +25,7 @@ export function Tabs(props: ITabsProps) {
         props.isFirstRow ? "justify-start" : "justify-end"
       } ${
         props.isVotesTable
-          ? "w-[120px] md:w-[250px]"
+          ? "w-[120px] md:w-[220px]"
           : props.isFirstRow
           ? "w-[150px]"
           : "flex-1  w-[120px]"
