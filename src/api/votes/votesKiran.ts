@@ -18,21 +18,41 @@ import {
 import { PLY_DECIMAL_MULTIPLIER, VOTES_CHART_LIMIT } from "../../constants/global";
 import { store } from "../../redux";
 import { IVotes } from "../../operations/types";
+import { fetchEpochData } from "../util/epoch";
+import { IEpochData } from "../util/types";
 
 
 /**
  * Returns the list of veNFT tokens for a particular user address.
  * @param userTezosAddress - Tezos wallet address of the user
  */
-export const getVeNFTsList = async (userTezosAddress: string): Promise<IVeNFTListResponse> => {
+export const getVeNFTsList = async (
+  userTezosAddress: string,
+  epochNumber: number
+): Promise<IVeNFTListResponse> => {
   try {
-    const locksResponse = await axios.get(`${Config.VE_INDEXER}locks?address=${userTezosAddress}`);
+    if (!userTezosAddress || !epochNumber) {
+      throw new Error("Invalid or empty arguments.");
+    }
+    const epochDataResponse = await fetchEpochData(epochNumber);
+    if (!epochDataResponse.success) {
+      throw new Error(epochDataResponse.error as string);
+    }
+    const epochData = epochDataResponse.epochData as IEpochData;
+    const epochTimestamp = epochData.epochEndTimestamp - 10; // Timestamp within the epoch.
+
+    const locksResponse = await axios.get(
+      `${Config.VE_INDEXER}locks?address=${userTezosAddress}&epoch=${epochNumber}&timestamp=${epochTimestamp}`
+    );
     const locksData = locksResponse.data.result;
     const initalLocksArray: IVeNFTData[] = [];
 
     const finalVeNFTData: IVeNFTData[] = locksData.reduce(
       (finalLocks: IVeNFTData[], lock: any): IVeNFTData[] => {
-        if (new BigNumber(lock.epochtVotingPower).isFinite() && new BigNumber(lock.epochtVotingPower).isGreaterThan(0)) {
+        if (
+          new BigNumber(lock.epochtVotingPower).isFinite() &&
+          new BigNumber(lock.epochtVotingPower).isGreaterThan(0)
+        ) {
           finalLocks.push({
             tokenId: new BigNumber(lock.id),
             baseValue: new BigNumber(lock.baseValue).dividedBy(PLY_DECIMAL_MULTIPLIER),
@@ -322,13 +342,13 @@ export const addRemainingVotesDust = (
   try {
     const finalVotesData = [...votesData];
     const availableVotingPower = new BigNumber(votingPower).multipliedBy(PLY_DECIMAL_MULTIPLIER);
-
+    
     const currentVotesSum = finalVotesData.reduce((sum, vote) => {
       sum = sum.plus(vote.votes);
       return sum;
     }, new BigNumber(0));
     const remainingVotesDust = availableVotingPower.minus(currentVotesSum);
-
+    
     if (remainingVotesDust.isGreaterThan(0) && new BigNumber(totalVotesPercentage).isEqualTo(100)) {
       finalVotesData[finalVotesData.length - 1].votes =
         finalVotesData[finalVotesData.length - 1].votes.plus(remainingVotesDust);
