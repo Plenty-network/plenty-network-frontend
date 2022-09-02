@@ -149,7 +149,7 @@ export default function Vote() {
           setAlreadyVoted(false);
         }
       });
-      setVeNFTlist([]);
+      //setVeNFTlist([]);
       if (userAddress) {
         getVeNFTsList(
           userAddress,
@@ -162,7 +162,7 @@ export default function Vote() {
   }, [castVoteOperation]);
 
   useEffect(() => {
-    setVeNFTlist([]);
+    //setVeNFTlist([]);
     if (userAddress) {
       getVeNFTsList(
         userAddress,
