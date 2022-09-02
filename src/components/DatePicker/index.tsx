@@ -11,6 +11,7 @@ export interface IDatePickerProps {
   startTimeStamp: number;
   endTimeStamp: number;
   yearsToEnable: number[];
+  alloweDates: number[];
 }
 
 export function Datepicker(props: IDatePickerProps) {
@@ -59,8 +60,7 @@ export function Datepicker(props: IDatePickerProps) {
             inline
             wrapperClassName="custom-date !hidden"
             popperClassName=" absolute right-[36px] bottom-2"
-            minDate={new Date(props.startTimeStamp)}
-            maxDate={new Date(props.endTimeStamp)}
+            includeDates={props.alloweDates.map((e)=>new Date(e))}
             renderCustomHeader={({
               date,
               changeYear,

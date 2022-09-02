@@ -28,7 +28,8 @@ function CreateLock(props: ICreateLockProps) {
     endTimeStamp: number;
     days: number;
     years: number[];
-  }>({} as { startTimeStamp: number; endTimeStamp: number; days: number; years: number[] });
+    alloweDates: number[];
+  }>({} as { startTimeStamp: number; endTimeStamp: number; days: number; years: number[]; alloweDates: number[];   });
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const closeModal = () => {
     props.setShow(false);
@@ -44,6 +45,7 @@ function CreateLock(props: ICreateLockProps) {
       endTimeStamp: res.endTimestamp,
       days: res.days,
       years: res.yearsToEnable,
+      alloweDates:res.thursdaysToEnable,
     });
   }, []);
   useEffect(() => {
@@ -254,6 +256,7 @@ function CreateLock(props: ICreateLockProps) {
                   isOpen={isDatePickerOpen}
                   setIsOpen={setIsDatePickerOpen}
                   yearsToEnable={dateRange.years}
+                  alloweDates={dateRange.alloweDates}
                 />
               </div>
             </div>
