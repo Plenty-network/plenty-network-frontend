@@ -13,6 +13,7 @@ export interface IVotingAllocationProps extends IAllocationProps {
 }
 
 function VotingAllocation (props: IVotingAllocationProps) {
+  const [selectedDropDown, setSelectedDropDown] = useState('');
   const [piChartData,setPiChartData]=useState<IVotesResponse>();
   useEffect(()=>{
     if(props.epochNumber){
@@ -23,12 +24,16 @@ function VotingAllocation (props: IVotingAllocationProps) {
         setPiChartData(e)});     
     }  
     }
-  },[props.epochNumber,props.selectedDropDown,props.show])
+  },[props.epochNumber,props.selectedDropDown,props.show,selectedDropDown])
   return (
     <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px]">
       <div className="font-body3 text-white pr-2">Voting allocation</div>
       <div className="font-body3 text-white mt-[18px]">
-        <Protocol isSelected={props.selectedDropDown.tokenId.length?true:false} />
+        <Protocol 
+        isSelected={props.selectedDropDown.tokenId.length?true:false}
+        selectedDropDown={selectedDropDown}
+         setSelectedDropDown={setSelectedDropDown}
+        />
       </div>
       <div className="flex flex-col items-center  mt-5  gap-2 justify-center w-[350px] ">
         {piChartData?.allData &&  <PiChart piChartData={piChartData}/>}

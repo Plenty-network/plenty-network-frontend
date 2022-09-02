@@ -3,8 +3,7 @@ import { Dropdown } from '../DropDown/Dropdown';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as React from 'react';
 
-function Protocol(props:{isSelected:boolean}) {
-  const [selectedDropDown, setSelectedDropDown] = useState('');
+function Protocol(props:{isSelected:boolean,setSelectedDropDown:Function,selectedDropDown:any}) {
   console.log("props.isSelected",props.isSelected)
   let Options=['My votes', 'Protocol'];
    if(!props.isSelected){
@@ -16,8 +15,8 @@ function Protocol(props:{isSelected:boolean}) {
         isDisabled={!props.isSelected}
         title="Protocol"
         Options={Options}
-        selectedText={selectedDropDown}
-        onClick={setSelectedDropDown}
+        selectedText={props.selectedDropDown}
+        onClick={props.setSelectedDropDown}
         className='bg-muted-500 border border-muted-300 rounded-lg'
       />
     </div>
