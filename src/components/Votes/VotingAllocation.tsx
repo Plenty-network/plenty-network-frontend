@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { IVotesResponse } from "../../api/votes/types";
-import { getMyAmmVotes, getTotalAmmVotes } from "../../api/votes/votesKiran";
+import { getMyAmmVotes, getTotalAmmVotes } from "../../api/votes";
 import { COLORSdataChart } from "./PiChartComponent";
 import Protocol from "./Protocol";
 import { IAllocationProps } from "./types";
