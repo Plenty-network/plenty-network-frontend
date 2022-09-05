@@ -28,14 +28,18 @@ export const poolsDataWrapper = async (
     );
     const AMMS: IAmmContracts = AMMResponse.data;
 
-    // TODO: Make URL dynamic. Fetch all base urls from Config.
-    const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
+    const [poolsResponse, analyticsResponse] = await Promise.all([
+      axios.get(`${Config.VE_INDEXER}pools`),
+      axios.get(`${Config.PLY_INDEXER}ve/pools`),
+    ]);
+
+    // const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
     // const poolsResponse = await axios.get(
     //   'https://62d80fa990883139358a3999.mockapi.io/api/v1/ve'
     // );
     const poolsData: VolumeV1Data[] = poolsResponse.data;
 
-    const analyticsResponse = await axios.get(`${Config.PLY_INDEXER}ve/pools`);
+    // const analyticsResponse = await axios.get(`${Config.PLY_INDEXER}ve/pools`);
     // const analyticsResponse = await axios.get(
     //   'https://62d80fa990883139358a3999.mockapi.io/api/v1/config'
     // );
@@ -45,6 +49,7 @@ export const poolsDataWrapper = async (
 
     for (var poolData of poolsData) {
       const AMM = AMMS[poolData.pool];
+      // TODO: Optimise this n2 loop
       const analyticsObject = getAnalyticsObject(poolData.pool, analyticsData);
       let bribe: BigNumber = new BigNumber(0);
       let bribes: Bribes[] = [];
@@ -65,6 +70,16 @@ export const poolsDataWrapper = async (
             price : new BigNumber(y.price)
           });
         }
+      }
+
+      let isLiquidityAvailable: boolean = false, isStakeAvailable: boolean = false;
+      if(address) {
+        const [liquidityResponse, stakeResponse] = await Promise.all([
+          doesLiquidityExistForUser(address, AMM),
+          doesStakeExistForUser(address, AMM),
+        ]);
+        isLiquidityAvailable = liquidityResponse;
+        isStakeAvailable = stakeResponse;
       }
 
       allData[poolData.pool] = {
@@ -97,12 +112,8 @@ export const poolsDataWrapper = async (
         bribeUSD: bribe,
         bribes: bribes,
 
-        isLiquidityAvailable: address
-          ? await doesLiquidityExistForUser(address, AMM)
-          : false,
-        isStakeAvailable: address
-          ? await doesStakeExistForUser(address, AMM)
-          : false,
+        isLiquidityAvailable,
+        isStakeAvailable,
       };
     }
 
