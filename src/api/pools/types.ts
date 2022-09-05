@@ -82,3 +82,7 @@ export interface IPoolsDataWrapperResponse {
   isStakeAvailable: boolean;
 
 }
+
+export interface IAnalyticsDataObject {
+  [key: string]: VolumeVeData;
+}

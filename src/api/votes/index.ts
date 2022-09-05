@@ -9,6 +9,7 @@ import {
   IAllVotesData,
   IAllVotesResponse,
   IBribesResponse,
+  IFeesDataObject,
   IMyAmmVotesBigMap,
   ITotalAmmVotesBigMap,
   IVeNFTData,
@@ -149,8 +150,15 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
       throw new Error(res.error as string);
     }
 
+    const feesDataObject: IFeesDataObject = feesData.reduce(
+      (finalFeesObject: IFeesDataObject, feeData) => (
+        (finalFeesObject[feeData.pool] = feeData), finalFeesObject
+      ),
+      {}
+    );
+
     const finalData: IVotePageRewardData = {};
-    // TODO: Optimise this n2 loop
+    // TODO: Optimise this O(2n) loop
     for (var x of bribesData) {
       let bribe: BigNumber = new BigNumber(0);
       let bribes: Bribes[] = [];
@@ -166,7 +174,16 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
           });
         }
       }
-      let fee = new BigNumber(0);
+      const fee = feesDataObject[x.pool]
+        ? new BigNumber(feesDataObject[x.pool].feesEpoch.value)
+        : new BigNumber(0);
+      const feeTokenA = feesDataObject[x.pool]
+        ? new BigNumber(feesDataObject[x.pool].feesEpoch.token1)
+        : new BigNumber(0);
+      const feeTokenB = feesDataObject[x.pool]
+        ? new BigNumber(feesDataObject[x.pool].feesEpoch.token2)
+        : new BigNumber(0);
+      /* let fee = new BigNumber(0);
       let feeTokenA = new BigNumber(0);
       let feeTokenB = new BigNumber(0);
       for (var i of feesData) {
@@ -176,7 +193,7 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
           feeTokenB = new BigNumber(i.feesEpoch.token2);
           break;
         }
-      }
+      } */
 
       finalData[x.pool] = { fees: fee, bribes: bribe , bribesData : bribes , feesTokenA: feeTokenA  , feesTokenB : feeTokenB };
     }
