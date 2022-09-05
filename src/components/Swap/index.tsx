@@ -25,8 +25,6 @@ import {
 } from '../../api/swap/wrappers';
 import { IAllBalanceResponse } from '../../api/util/types';
 import { Chain } from '../../config/types';
-import { votingPower } from '../../api/votes/votesUdit';
-import { poolsDataWrapper } from '../../api/pools';
 
 interface ISwapProps {
   className?: string;

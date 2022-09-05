@@ -10,7 +10,7 @@ import { ICreateLockProps } from "./types";
 import clsx from "clsx";
 import { AppDispatch, store } from "../../redux";
 import { connectedNetwork } from "../../common/walletconnect";
-import { estimateVotingPower } from "../../api/votes/votesUdit";
+import { estimateVotingPower } from "../../api/votes";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { MAX_TIME, WEEK, YEAR } from "../../constants/global";
