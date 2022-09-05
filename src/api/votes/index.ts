@@ -20,7 +20,7 @@ import {
   IVotesData,
   IVotesResponse,
 } from "./types";
-import { VolumeV1Data, VolumeVeData } from "../pools/types";
+import { Bribes, VolumeV1Data, VolumeVeData } from "../pools/types";
 import { fetchEpochData } from "../util/epoch";
 import { IEpochData, IEpochResponse } from "../util/types";
 import { pools } from "../../redux/pools";
@@ -136,7 +136,7 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
     const bribesData: IBribesResponse[] = bribes.data;
 
     const res: IEpochResponse = await fetchEpochData(epoch);
-    let feesData;
+    let feesData : VolumeVeData[];
 
     if (res.success) {
       const epochData = res.epochData as IEpochData;
@@ -153,22 +153,32 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
     // TODO: Optimise this n2 loop
     for (var x of bribesData) {
       let bribe: BigNumber = new BigNumber(0);
+      let bribes: Bribes[] = [];
       if (!x.bribes || x.bribes.length === 0) {
         bribe = new BigNumber(0);
       } else {
         for (var y of x.bribes) {
           bribe = bribe.plus(new BigNumber(new BigNumber(y.value).multipliedBy(y.price)));
+          bribes.push({
+            name: y.name,
+            value: new BigNumber(y.value),
+            price : new BigNumber(y.price)
+          });
         }
       }
       let fee = new BigNumber(0);
+      let feeTokenA = new BigNumber(0);
+      let feeTokenB = new BigNumber(0);
       for (var i of feesData) {
         if (i.pool === x.pool) {
           fee = new BigNumber(i.feesEpoch.value);
+          feeTokenA = new BigNumber(i.feesEpoch.token1);
+          feeTokenB = new BigNumber(i.feesEpoch.token2);
           break;
         }
       }
 
-      finalData[x.pool] = { fees: fee, bribes: bribe };
+      finalData[x.pool] = { fees: fee, bribes: bribe , bribesData : bribes , feesTokenA: feeTokenA  , feesTokenB : feeTokenB };
     }
 
     return {
@@ -179,7 +189,7 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
     console.log(error);
     return {
       success: false,
-      allData: { false: { fees: new BigNumber(0), bribes: new BigNumber(0) } },
+      allData: { false: { fees: new BigNumber(0), bribes: new BigNumber(0) , bribesData : [] , feesTokenA: new BigNumber(0)  , feesTokenB : new BigNumber(0) } },
       error: error.message,
     };
   }
@@ -232,7 +242,16 @@ export const votesPageDataWrapper = async (
         bribes: rewardData.allData[poolData]
           ? rewardData.allData[poolData].bribes
           : new BigNumber(0),
+
+        bribesData : rewardData.allData[poolData]
+        ? rewardData.allData[poolData].bribesData
+        : [],
+          
         fees: rewardData.allData[poolData] ? rewardData.allData[poolData].fees : new BigNumber(0),
+
+        feesTokenA: rewardData.allData[poolData] ? rewardData.allData[poolData].feesTokenA : new BigNumber(0),
+
+        feesTokenB: rewardData.allData[poolData] ? rewardData.allData[poolData].feesTokenB : new BigNumber(0),
 
         //TODO: Uncomment for mainnet
         /* totalVotes:

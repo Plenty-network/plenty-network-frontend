@@ -73,7 +73,7 @@ export interface IBribesResponse {
   bribes : Bribes[];
 }
 
-export interface IVotePageRewardData{ [id: string]: {bribes: BigNumber , fees: BigNumber} }
+export interface IVotePageRewardData{ [id: string]: {bribes: BigNumber , fees: BigNumber , bribesData : Bribes[] , feesTokenA : BigNumber , feesTokenB : BigNumber} }
 
 export interface IVotePageRewardDataResponse{
   success : boolean;
@@ -86,7 +86,10 @@ export interface IVotePageData{
         tokenB: string;
         poolType: AMM_TYPE;
         bribes : BigNumber;
+        bribesData : Bribes[];
         fees : BigNumber;
+        feesTokenA : BigNumber;
+        feesTokenB : BigNumber;
         totalVotes : BigNumber;
         totalVotesPercentage : BigNumber;
         myVotes : BigNumber;
