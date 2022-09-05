@@ -258,23 +258,18 @@ export const getAllVotesData = async (
     const totalVotesData: IAllVotesData = {};
     const myVotesData: IAllVotesData = {};
 
-    const totalEpochVotesResponse = await getTzktBigMapData(
-      totalEpochVotesBigMapId,
-      `key=${epochNumber}&select=key,value`
-    );
+    const [totalEpochVotesResponse, totalAmmVotesResponse] = await Promise.all([
+      getTzktBigMapData(totalEpochVotesBigMapId, `key=${epochNumber}&select=key,value`),
+      getTzktBigMapData(totalAmmVotesBigMapId, `key.epoch=${epochNumber}&select=key,value`),
+    ]);
     if (totalEpochVotesResponse.data.length === 0) {
       throw new Error("No votes in this epoch yet");
     }
-    const totalEpochVotes: BigNumber = new BigNumber(totalEpochVotesResponse.data[0].value);
-
-    const totalAmmVotesResponse = await getTzktBigMapData(
-      totalAmmVotesBigMapId,
-      `key.epoch=${epochNumber}&select=key,value`
-    );
-    const totalAmmVotesBigMapData: ITotalAmmVotesBigMap[] = totalAmmVotesResponse.data;
-    if (totalAmmVotesBigMapData.length === 0) {
+    if (totalAmmVotesResponse.data.length === 0) {
       throw new Error("No votes data for AMMS in this epoch yet");
     }
+    const totalEpochVotes: BigNumber = new BigNumber(totalEpochVotesResponse.data[0].value);
+    const totalAmmVotesBigMapData: ITotalAmmVotesBigMap[] = totalAmmVotesResponse.data;
 
     totalAmmVotesBigMapData.forEach((voteData) => {
       totalVotesData[voteData.key.amm] = {
@@ -287,31 +282,30 @@ export const getAllVotesData = async (
     });
 
     if (tokenId !== undefined) {
-      const totalTokenVotesResponse = await getTzktBigMapData(
-        totalTokenVotesBigMapId,
-        `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value`
-      );
-      if (totalTokenVotesResponse.data.length > 0) {
-        const totalTokenVotes: BigNumber = new BigNumber(totalTokenVotesResponse.data[0].value);
-
-        const tokenAmmVotesResponse = await getTzktBigMapData(
+      const [totalTokenVotesResponse, tokenAmmVotesResponse] = await Promise.all([
+        getTzktBigMapData(
+          totalTokenVotesBigMapId,
+          `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value`
+        ),
+        getTzktBigMapData(
           tokenAmmVotesBigMapId,
           `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value`
-        );
+        ),
+      ]);
+      if (totalTokenVotesResponse.data.length > 0 && tokenAmmVotesResponse.data.length > 0) {
+        const totalTokenVotes: BigNumber = new BigNumber(totalTokenVotesResponse.data[0].value);
         const tokenAmmVotesBigMapData: IMyAmmVotesBigMap[] = tokenAmmVotesResponse.data;
-        if (tokenAmmVotesBigMapData.length > 0) {
-          tokenAmmVotesBigMapData.forEach((voteData) => {
-            myVotesData[voteData.key.amm] = {
-              dexContractAddress: voteData.key.amm,
-              votePercentage: new BigNumber(voteData.value)
-                .multipliedBy(100)
-                .dividedBy(totalTokenVotes),
-              votes: new BigNumber(voteData.value).dividedBy(PLY_DECIMAL_MULTIPLIER),
-              tokenOneSymbol: AMM[voteData.key.amm].token1.symbol,
-              tokenTwoSymbol: AMM[voteData.key.amm].token2.symbol,
-            };
-          });
-        }
+        tokenAmmVotesBigMapData.forEach((voteData) => {
+          myVotesData[voteData.key.amm] = {
+            dexContractAddress: voteData.key.amm,
+            votePercentage: new BigNumber(voteData.value)
+              .multipliedBy(100)
+              .dividedBy(totalTokenVotes),
+            votes: new BigNumber(voteData.value).dividedBy(PLY_DECIMAL_MULTIPLIER),
+            tokenOneSymbol: AMM[voteData.key.amm].token1.symbol,
+            tokenTwoSymbol: AMM[voteData.key.amm].token2.symbol,
+          };
+        });
       }
     }
 

@@ -153,7 +153,10 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
       }
       let fee = new BigNumber(0);
       for (var i of feesData) {
-        if (i.pool === x.pool) fee = new BigNumber(i.feesEpoch.value);
+        if (i.pool === x.pool) {
+          fee = new BigNumber(i.feesEpoch.value);
+          break;
+        }
       }
 
       finalData[x.pool] = { fees: fee, bribes: bribe };
@@ -186,9 +189,11 @@ export const votesPageDataWrapper = async (
     const AMMResponse = await axios.get("https://config.plentydefi.com/v1/config/amm");
     const AMMS: IAmmContracts = AMMResponse.data;
 
-    const rewardData = await mainPageRewardData(epoch);
+    const [rewardData, votesData] = await Promise.all([mainPageRewardData(epoch), getAllVotesData(epoch, tokenId)]);
 
-    const votesData = await getAllVotesData(epoch, tokenId);
+    /* const rewardData = await mainPageRewardData(epoch);
+
+    const votesData = await getAllVotesData(epoch, tokenId); */
 
     // const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
     // const poolsData: VolumeV1Data[] = poolsResponse.data;
