@@ -21,6 +21,7 @@ export function MyVotesValue(props: IMyVotesValueProps) {
     <>
       <ToolTip
         position={Position.top}
+        disable={Number(props.myVotes) === 0 ? true : false}
         toolTipChild={
           <div className="flex gap-1">
             <div className="text-text-50 font-body1">My Votes:</div>

@@ -395,7 +395,7 @@ export default function Vote() {
               />
             </div>
           </div>
-          <div className="hidden md:block md:basis-1/3 md:pr-[30px]">
+          <div className="hidden md:block md:basis-1/3 md:pr-[25px] w-[350px]">
             <VotingAllocation
               show={showCastVotingAllocation}
               setShow={setShowCastVotingAllocation}

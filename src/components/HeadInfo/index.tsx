@@ -23,7 +23,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
     <div
       className={`${props.className} flex justify-between items-center border-b border-b-borderCommon py-2 pt-7 md:pt-2 bg-cardBackGround`}
     >
-      <div className="flex gap-2">
+      <div className="flex gap-1">
         <div className="p-2 text-f18 font-medium text-white">
           {props.title ? props.title : "Pools"}
         </div>

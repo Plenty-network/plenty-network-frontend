@@ -44,7 +44,7 @@ function CastVote(props: ICastVoteProps) {
               <Image src={info} />
             </div>
           </div>
-          <div className="border bg-card-200 mt-5 border-text-800 rounded-2xl  pt-[22px] pb-[25px]">
+          <div className="border bg-card-200 mt-2 border-text-800 rounded-2xl  pt-[22px] pb-[20px]">
             <div className="text-text-50 font-body4 px-3 md:px-5">Your votes power</div>
             <div className="flex mt-1 mb-3 px-3 md:px-5">
               <div>
