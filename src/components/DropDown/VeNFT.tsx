@@ -63,7 +63,11 @@ export function VeNFT(props: IDropdownProps) {
             <>
               <Image src={lighting} />
               <span className="ml-1 font-body4 text-white">
-                {Number(props.selectedText.votingPower).toFixed(3)}
+                {Number(props.selectedText.votingPower) > 0
+                  ? Number(props.selectedText.votingPower) < 0.001
+                    ? `< ${Number(props.selectedText.votingPower).toFixed(3)}`
+                    : Number(props.selectedText.votingPower).toFixed(3)
+                  : "0"}
               </span>
               <span className="font-body3 text-text-500">(#{props.selectedText.tokenId})</span>
             </>
@@ -115,7 +119,13 @@ export function VeNFT(props: IDropdownProps) {
         className="  hover:bg-muted-500 px-4 flex items-center h-[36px] cursor-pointer flex"
       >
         <Image src={lighting} />
-        <span className="ml-1 font-body4 text-white">{Number(props.votingPower).toFixed(3)}</span>
+        <span className="ml-1 font-body4 text-white">
+          {Number(props.votingPower) > 0
+            ? Number(props.votingPower) < 0.001
+              ? `< ${Number(props.votingPower).toFixed(3)}`
+              : Number(props.votingPower).toFixed(3)
+            : "0"}
+        </span>
         <span className="ml-auto font-body3 text-text-500">#{props.tokenId}</span>
       </div>
     );

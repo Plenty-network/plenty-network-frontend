@@ -8,7 +8,6 @@ function Protocol(props: {
   setSelectedDropDown: Function;
   selectedDropDown: any;
 }) {
-  console.log("props.isSelected", props.isSelected);
   let Options = ["My votes", "Protocol"];
   if (!props.isSelected) {
     Options = [];

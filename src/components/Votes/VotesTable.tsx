@@ -15,13 +15,13 @@ export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
 
   const votesArray = Object.entries(props.voteData);
-
+  console.log(props.voteData);
   const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
     new Array(votesArray.length).fill(0)
   );
   const votedataArray = React.useMemo(() => {
     votesArray.map((data, index) => {
-      totalVotes1[index] = Number(data[1].myVotesPercentage);
+      totalVotes1[index] = Number(data[1].myVotesPercentage.toFixed(0));
     });
 
     return votesArray.map((data, index) => ({
@@ -89,7 +89,16 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <RewardsData bribes={x.votes.bribes} fees={x.votes.fees} />,
+        accessor: (x: any) => (
+          <RewardsData
+            bribes={x.votes.bribes}
+            fees={x.votes.fees}
+            token1Name={tEZorCTEZtoUppercase(x.votes.tokenA.toString())}
+            token2Name={tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
+            fees1={Number(x.votes.feesTokenA)}
+            fees2={Number(x.votes.feesTokenB)}
+          />
+        ),
       },
       {
         Header: "Votes",
@@ -153,7 +162,16 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => <RewardsData bribes={x.votes.bribes} fees={x.votes.fees} />,
+        accessor: (x: any) => (
+          <RewardsData
+            bribes={x.votes.bribes}
+            fees={x.votes.fees}
+            token1Name={tEZorCTEZtoUppercase(x.votes.tokenA.toString())}
+            token2Name={tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
+            fees1={Number(x.votes.feesTokenA)}
+            fees2={Number(x.votes.feesTokenB)}
+          />
+        ),
       },
       {
         Header: "Total votes",
@@ -162,7 +180,7 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         accessor: (x: any) => (
           <TotalVotes
-            totalvotes={Number(x.votes.totalVotes)}
+            totalvotes={x.votes.totalVotes}
             totalVotesPercentage={Number(x.votes.totalVotesPercentage)}
           />
         ),
@@ -175,7 +193,7 @@ export function VotesTable(props: IVotesTableProps) {
         canShort: true,
         accessor: (x: any) => (
           <MyVotesValue
-            myVotes={Number(x.votes.myVotes)}
+            myVotes={x.votes.myVotes}
             myVotesPercentage={Number(x.votes.myVotesPercentage)}
           />
         ),

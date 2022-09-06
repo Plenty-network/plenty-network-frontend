@@ -37,10 +37,10 @@ export interface IRangeSliderProps {
 }
 
 export function RangeSlider(props: IRangeSliderProps) {
-  const [sliderVal, setSliderVal] = React.useState(props.totalVotesPercentage);
+  const [sliderVal, setSliderVal] = React.useState(props.totalVotes1[props.index]);
   React.useEffect(() => {
-    setSliderVal(props.totalVotesPercentage);
-  }, [props.totalVotesPercentage]);
+    setSliderVal(props.totalVotes1[props.index]);
+  }, [props.totalVotes1[props.index]]);
   const handleInputEdit = (index: number, value: string) => {
     var sum = 0;
     props.totalVotes1.forEach((item, id) => {

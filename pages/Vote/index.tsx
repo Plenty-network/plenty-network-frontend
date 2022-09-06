@@ -109,11 +109,7 @@ export default function Vote() {
         selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
       ).then((res) => {
         setVoteData(res.allData);
-        console.log(
-          res.allData,
-          selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
-          selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
-        );
+
         Object.entries(res.allData).map((data) => {
           sum += Number(data[1].myVotesPercentage);
         });

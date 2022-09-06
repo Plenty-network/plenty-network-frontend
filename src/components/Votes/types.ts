@@ -60,6 +60,53 @@ export interface ICastVoteProps {
   };
   onClick: () => void;
 }
+export interface ITotalVotesProps {
+  className?: string;
+  totalvotes: BigNumber;
+  totalVotesPercentage: number;
+}
+export interface IMyVotesValueProps {
+  className?: string;
+  myVotes: BigNumber;
+  myVotesPercentage: number;
+}
+export interface IMyVotesProps {
+  isMobile: boolean;
+  tokenA: string;
+  tokenB: string;
+  setSelectedPools: React.Dispatch<React.SetStateAction<ISelectedPool[]>>;
+  selectedPools: ISelectedPool[];
+  setTotalVotingPower: React.Dispatch<React.SetStateAction<number>>;
+  totalVotingPower: number;
+  amm: string;
+  setVotes: React.Dispatch<React.SetStateAction<IVotes[]>>;
+  votes: IVotes[];
+  selectedDropDown: {
+    votingPower: string;
+    tokenId: string;
+  };
+
+  totalVotesPercentage: number;
+  isCurrentEpoch: boolean;
+  index: number;
+  votedata: {
+    index: number;
+    amm: string;
+    votes: IVotePageData;
+  }[];
+
+  totalVotes1: number[];
+  sumOfVotes: number;
+}
+export interface IRewardsDataProps {
+  className?: string;
+  bribes: number;
+  fees: number;
+  token1Name: string;
+  token2Name: string;
+  fees1: number;
+  fees2: number;
+}
 
 export interface IVotesTableProps {
   sumOfVotes: number;
