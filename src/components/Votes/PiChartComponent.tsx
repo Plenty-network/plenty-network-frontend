@@ -5,6 +5,8 @@ import { IVotesResponse } from '../../api/votes/types';
 
 export interface IPiChartProps {
   piChartData:IVotesResponse;
+  selectedColorIndex:number;
+  setSelectedColorIndex:Function;
 }
 // export const dataChart = [
 //     { name: "CTEZ / XTZ", value: 36 },
@@ -18,7 +20,7 @@ export interface IPiChartProps {
 //     { name: "kUSD / USDT", value: 36 },
 //     { name: "Others", value: 36 }
 //   ];
- export const COLORSdataChart = ["#78F33F", "#4E4955", "#6B6670", "#88848C","#A4A2A8","#403A47","#5C5863","#79757E","#96939A","#B3B0B5"];
+ export const COLORSdataChart = ["#4E4955", "#6B6670", "#88848C","#A4A2A8","#403A47","#5C5863","#79757E","#96939A","#B3B0B5"];
   
 export default function PiChart (props: IPiChartProps) {
    const dataChart = props.piChartData.allData.map((e)=> {
@@ -39,7 +41,7 @@ export default function PiChart (props: IPiChartProps) {
         stroke='#ff000000'
       >
         {dataChart.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORSdataChart[index % COLORSdataChart.length]} />
+          <Cell key={`cell-${index}`} onMouseEnter={()=>props.setSelectedColorIndex(index)} fill={props.selectedColorIndex ===index?'#78F33F' :COLORSdataChart[index % COLORSdataChart.length]} />
         ))}
         
       </Pie>
