@@ -63,12 +63,12 @@ export interface ICastVoteProps {
 export interface ITotalVotesProps {
   className?: string;
   totalvotes: BigNumber;
-  totalVotesPercentage: number;
+  totalVotesPercentage: BigNumber;
 }
 export interface IMyVotesValueProps {
   className?: string;
   myVotes: BigNumber;
-  myVotesPercentage: number;
+  myVotesPercentage: BigNumber;
 }
 export interface IMyVotesProps {
   isMobile: boolean;
