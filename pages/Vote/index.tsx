@@ -20,7 +20,7 @@ import VotingAllocation from "../../src/components/Votes/VotingAllocation";
 import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
 import { getEpochData, setSelectedEpoch } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
-import { addRemainingVotesDust, getVeNFTsList } from "../../src/api/votes/votesKiran";
+import { addRemainingVotesDust, getVeNFTsList } from "../../src/api/votes";
 import { ISelectedPool, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
@@ -31,7 +31,7 @@ import AllocationPopup from "../../src/components/Votes/AllocationPopup";
 import { InfoIconToolTip } from "../../src/components/Tooltip/InfoIconTooltip";
 import { IAllBalanceResponse } from "../../src/api/util/types";
 import { vote } from "../../src/operations/vote";
-import { votesPageDataWrapper } from "../../src/api/votes/votesUdit";
+import { votesPageDataWrapper } from "../../src/api/votes";
 import { IVotes } from "../../src/operations/types";
 import clsx from "clsx";
 import EpochPopup from "../../src/components/Votes/EpochPopup";
@@ -109,11 +109,7 @@ export default function Vote() {
         selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
       ).then((res) => {
         setVoteData(res.allData);
-        console.log(
-          res.allData,
-          selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
-          selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
-        );
+
         Object.entries(res.allData).map((data) => {
           sum += Number(data[1].myVotesPercentage);
         });
@@ -149,7 +145,7 @@ export default function Vote() {
           setAlreadyVoted(false);
         }
       });
-      setVeNFTlist([]);
+      //setVeNFTlist([]);
       if (userAddress) {
         getVeNFTsList(
           userAddress,
@@ -162,7 +158,7 @@ export default function Vote() {
   }, [castVoteOperation]);
 
   useEffect(() => {
-    setVeNFTlist([]);
+    //setVeNFTlist([]);
     if (userAddress) {
       getVeNFTsList(
         userAddress,
@@ -399,7 +395,7 @@ export default function Vote() {
               />
             </div>
           </div>
-          <div className="hidden md:block md:basis-1/3 md:pr-[30px]">
+          <div className="hidden md:block md:basis-1/3 md:pr-[25px] w-[350px]">
             <VotingAllocation
               show={showCastVotingAllocation}
               setShow={setShowCastVotingAllocation}

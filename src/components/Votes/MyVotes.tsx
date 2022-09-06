@@ -1,36 +1,6 @@
 import * as React from "react";
-import { ISelectedPool, IVotePageData } from "../../api/votes/types";
-import { IVotes } from "../../operations/types";
 import { RangeSlider } from "../RangeSlider";
-
-export interface IMyVotesProps {
-  isMobile: boolean;
-  tokenA: string;
-  tokenB: string;
-  setSelectedPools: React.Dispatch<React.SetStateAction<ISelectedPool[]>>;
-  selectedPools: ISelectedPool[];
-  setTotalVotingPower: React.Dispatch<React.SetStateAction<number>>;
-  totalVotingPower: number;
-  amm: string;
-  setVotes: React.Dispatch<React.SetStateAction<IVotes[]>>;
-  votes: IVotes[];
-  selectedDropDown: {
-    votingPower: string;
-    tokenId: string;
-  };
-
-  totalVotesPercentage: number;
-  isCurrentEpoch: boolean;
-  index: number;
-  votedata: {
-    index: number;
-    amm: string;
-    votes: IVotePageData;
-  }[];
-
-  totalVotes1: number[];
-  sumOfVotes: number;
-}
+import { IMyVotesProps } from "./types";
 
 export function MyVotes(props: IMyVotesProps) {
   return (

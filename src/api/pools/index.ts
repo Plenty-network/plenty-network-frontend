@@ -2,6 +2,7 @@ import axios from 'axios';
 import { BigNumber } from 'bignumber.js';
 import {
   Bribes,
+  IAnalyticsDataObject,
   IPoolsDataWrapperResponse,
   VolumeV1Data,
   VolumeVeData,
@@ -9,6 +10,7 @@ import {
 import { IAMM, IAmmContracts } from '../../config/types';
 import { getPnlpBalance, getStakedBalance } from '../util/balance';
 import Config from '../../config/config';
+import { EMPTY_POOLS_OBJECT } from '../../constants/global';
 
 export const poolsDataWrapper = async (
   address: string | undefined,
@@ -28,24 +30,37 @@ export const poolsDataWrapper = async (
     );
     const AMMS: IAmmContracts = AMMResponse.data;
 
-    // TODO: Make URL dynamic. Fetch all base urls from Config.
-    const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
+    const [poolsResponse, analyticsResponse] = await Promise.all([
+      axios.get(`${Config.VE_INDEXER}pools`),
+      axios.get(`${Config.PLY_INDEXER}ve/pools`),
+    ]);
+
+    // const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
     // const poolsResponse = await axios.get(
     //   'https://62d80fa990883139358a3999.mockapi.io/api/v1/ve'
     // );
     const poolsData: VolumeV1Data[] = poolsResponse.data;
 
-    const analyticsResponse = await axios.get(`${Config.PLY_INDEXER}ve/pools`);
+    // const analyticsResponse = await axios.get(`${Config.PLY_INDEXER}ve/pools`);
     // const analyticsResponse = await axios.get(
     //   'https://62d80fa990883139358a3999.mockapi.io/api/v1/config'
     // );
     const analyticsData: VolumeVeData[] = analyticsResponse.data;
+    
+    const analyticsDataObject: IAnalyticsDataObject = analyticsData.reduce(
+      (finalAnalyticsObject: IAnalyticsDataObject, data) => (
+        (finalAnalyticsObject[data.pool] = data), finalAnalyticsObject
+      ),
+      {}
+    );
 
     const allData: { [id: string]: IPoolsDataWrapperResponse } = {};
-
+    
     for (var poolData of poolsData) {
       const AMM = AMMS[poolData.pool];
-      const analyticsObject = getAnalyticsObject(poolData.pool, analyticsData);
+      // TODO: Optimise this O(2n) loop
+      // const analyticsObject = getAnalyticsObject(poolData.pool, analyticsData);
+      const analyticsObject = analyticsDataObject[poolData.pool] || {...EMPTY_POOLS_OBJECT};
       let bribe: BigNumber = new BigNumber(0);
       let bribes: Bribes[] = [];
 
@@ -65,6 +80,16 @@ export const poolsDataWrapper = async (
             price : new BigNumber(y.price)
           });
         }
+      }
+
+      let isLiquidityAvailable: boolean = false, isStakeAvailable: boolean = false;
+      if(address) {
+        const [liquidityResponse, stakeResponse] = await Promise.all([
+          doesLiquidityExistForUser(address, AMM),
+          doesStakeExistForUser(address, AMM),
+        ]);
+        isLiquidityAvailable = liquidityResponse;
+        isStakeAvailable = stakeResponse;
       }
 
       allData[poolData.pool] = {
@@ -97,15 +122,11 @@ export const poolsDataWrapper = async (
         bribeUSD: bribe,
         bribes: bribes,
 
-        isLiquidityAvailable: address
-          ? await doesLiquidityExistForUser(address, AMM)
-          : false,
-        isStakeAvailable: address
-          ? await doesStakeExistForUser(address, AMM)
-          : false,
+        isLiquidityAvailable,
+        isStakeAvailable,
       };
     }
-
+    
     return {
       success: true,
       allData: allData,

@@ -1,6 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import { AMM_TYPE } from "../../config/types";
-import { Bribes } from "../pools/types";
+import { Bribes, VolumeVeData } from "../pools/types";
 
 
 export interface ITotalAmmVotesData {
@@ -73,7 +73,7 @@ export interface IBribesResponse {
   bribes : Bribes[];
 }
 
-export interface IVotePageRewardData{ [id: string]: {bribes: BigNumber , fees: BigNumber} }
+export interface IVotePageRewardData{ [id: string]: {bribes: BigNumber , fees: BigNumber , bribesData : Bribes[] , feesTokenA : BigNumber , feesTokenB : BigNumber} }
 
 export interface IVotePageRewardDataResponse{
   success : boolean;
@@ -86,7 +86,10 @@ export interface IVotePageData{
         tokenB: string;
         poolType: AMM_TYPE;
         bribes : BigNumber;
+        bribesData : Bribes[];
         fees : BigNumber;
+        feesTokenA : BigNumber;
+        feesTokenB : BigNumber;
         totalVotes : BigNumber;
         totalVotesPercentage : BigNumber;
         myVotes : BigNumber;
@@ -97,4 +100,8 @@ export interface IVotePageDataResponse {
   success: boolean;
   allData: { [id: string]: IVotePageData };
   error?: string;
+}
+
+export interface IFeesDataObject {
+  [key: string]: VolumeVeData;
 }

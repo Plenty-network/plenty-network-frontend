@@ -10,7 +10,7 @@ import { ICreateLockProps } from "./types";
 import clsx from "clsx";
 import { AppDispatch, store } from "../../redux";
 import { connectedNetwork } from "../../common/walletconnect";
-import { estimateVotingPower } from "../../api/votes/votesUdit";
+import { estimateVotingPower } from "../../api/votes";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { MAX_TIME, WEEK, YEAR } from "../../constants/global";
@@ -29,7 +29,15 @@ function CreateLock(props: ICreateLockProps) {
     days: number;
     years: number[];
     alloweDates: number[];
-  }>({} as { startTimeStamp: number; endTimeStamp: number; days: number; years: number[]; alloweDates: number[];   });
+  }>(
+    {} as {
+      startTimeStamp: number;
+      endTimeStamp: number;
+      days: number;
+      years: number[];
+      alloweDates: number[];
+    }
+  );
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const closeModal = () => {
     props.setShow(false);
@@ -45,7 +53,7 @@ function CreateLock(props: ICreateLockProps) {
       endTimeStamp: res.endTimestamp,
       days: res.days,
       years: res.yearsToEnable,
-      alloweDates:res.thursdaysToEnable,
+      alloweDates: res.thursdaysToEnable,
     });
   }, []);
   useEffect(() => {
@@ -193,7 +201,7 @@ function CreateLock(props: ICreateLockProps) {
               </div>
             </div>
           </div>
-          <div className="ml-auto mt-3 flex">
+          <div className="ml-auto mt-3 flex font-body4">
             <p
               className={clsx(
                 "cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
@@ -295,7 +303,15 @@ function CreateLock(props: ICreateLockProps) {
                 1 year
               </p>
               <p>
-                <ToolTip message={"4 years"} id="tooltip8" position={Position.top}>
+                <ToolTip
+                  toolTipChild={
+                    <div className="w-[210px] text-center">
+                      Lock for 4 years for maximum voting power of 4000
+                    </div>
+                  }
+                  id="tooltip8"
+                  position={Position.top}
+                >
                   <p
                     className={clsx(
                       "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",

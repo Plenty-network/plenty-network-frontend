@@ -12,7 +12,7 @@ export interface IDropdownProps {
   className?: string;
   classNameInner?: string;
   title?: string;
-  isDisabled?:boolean;
+  isDisabled?: boolean;
 }
 
 export function Dropdown(props: IDropdownProps) {
@@ -31,6 +31,7 @@ export function Dropdown(props: IDropdownProps) {
             : "border-text-800 bg-text-800/[0.25] hover:border-text-700 hover:bg-text-800/[0.25]",
           props.classNameInner
         )}
+        onClick={() => (!props.isDisabled ? setIsDropDownActive(!isDropDownActive) : "")}
         // onClick={() => setIsDropDownActive(true)}
       >
         <p className={clsx(" flex gap-1", isDropDownActive ? "text-white" : "text-text-600")}>
@@ -51,7 +52,6 @@ export function Dropdown(props: IDropdownProps) {
           <Image
             src={arrow}
             className={!isDropDownActive ? "rotate-0 ml-auto" : "rotate-180 ml-auto"}
-            onClick={() => !props.isDisabled ? setIsDropDownActive(!isDropDownActive):''}
           />
         </p>
       </div>

@@ -1,4 +1,5 @@
 import { BigNumber } from 'bignumber.js';
+import { VolumeVeData } from '../api/pools/types';
 import { connectedNetwork } from '../common/walletconnect';
 
 export const RPC_NODE = "rpcNode";
@@ -44,3 +45,13 @@ export const DAY = connectedNetwork === 'testnet' ? DAY_TESTNET : DAY_MAINNET;
 export const WEEK = 7 * DAY;
 export const YEAR = 52 * WEEK;
 export const MAX_TIME = 4 * YEAR;
+
+export const EMPTY_POOLS_OBJECT: VolumeVeData = {
+  pool: '',
+  volume24H: { value: '0', token1: '0', token2: '0' },
+  volume7D: { value: '0', token1: '0', token2: '0' },
+  fees24H: { value: '0', token1: '0', token2: '0' },
+  fees7D: { value: '0', token1: '0', token2: '0' },
+  feesEpoch: { value: '0', token1: '0', token2: '0' },
+  tvl: { value: '0', token1: '0', token2: '0' },
+};

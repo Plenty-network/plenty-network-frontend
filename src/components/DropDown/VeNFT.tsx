@@ -63,7 +63,11 @@ export function VeNFT(props: IDropdownProps) {
             <>
               <Image src={lighting} />
               <span className="ml-1 font-body4 text-white">
-                {Number(props.selectedText.votingPower).toFixed(3)}
+                {Number(props.selectedText.votingPower) > 0
+                  ? Number(props.selectedText.votingPower) < 0.001
+                    ? `<0.001`
+                    : Number(props.selectedText.votingPower).toFixed(3)
+                  : "0"}
               </span>
               <span className="font-body3 text-text-500">(#{props.selectedText.tokenId})</span>
             </>
@@ -86,7 +90,7 @@ export function VeNFT(props: IDropdownProps) {
       {isDropDownActive && props.Options.length > 0 && (
         <div
           className={clsx(
-            "absolute z-20 w-[150px] min-w-[180px] md:w-[180px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1"
+            "absolute z-20 w-[150px] min-w-[180px] md:w-[200px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1"
           )}
         >
           {props.Options.map((text, i) => (
@@ -115,7 +119,13 @@ export function VeNFT(props: IDropdownProps) {
         className="  hover:bg-muted-500 px-4 flex items-center h-[36px] cursor-pointer flex"
       >
         <Image src={lighting} />
-        <span className="ml-1 font-body4 text-white">{Number(props.votingPower).toFixed(3)}</span>
+        <span className="ml-1 font-body4 text-white">
+          {Number(props.votingPower) > 0
+            ? Number(props.votingPower) < 0.001
+              ? `< ${Number(props.votingPower).toFixed(3)}`
+              : Number(props.votingPower).toFixed(3)
+            : "0"}
+        </span>
         <span className="ml-auto font-body3 text-text-500">#{props.tokenId}</span>
       </div>
     );

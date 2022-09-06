@@ -1,6 +1,8 @@
 import Image from "next/image";
 import * as React from "react";
 import { Range, getTrackBackground } from "react-range";
+import plusDisable from "../../assets/icon/vote/plus-disable.svg";
+import minusDisable from "../../assets/icon/vote/minus-disable.svg";
 import plus from "../../assets/icon/vote/plus.svg";
 import minus from "../../assets/icon/vote/minus.svg";
 import { ISelectedPool, IVotePageData } from "../../api/votes/types";
@@ -37,10 +39,10 @@ export interface IRangeSliderProps {
 }
 
 export function RangeSlider(props: IRangeSliderProps) {
-  const [sliderVal, setSliderVal] = React.useState(props.totalVotesPercentage);
+  const [sliderVal, setSliderVal] = React.useState(props.totalVotes1[props.index]);
   React.useEffect(() => {
-    setSliderVal(props.totalVotesPercentage);
-  }, [props.totalVotesPercentage]);
+    setSliderVal(props.totalVotes1[props.index]);
+  }, [props.totalVotes1[props.index]]);
   const handleInputEdit = (index: number, value: string) => {
     var sum = 0;
     props.totalVotes1.forEach((item, id) => {
@@ -137,7 +139,7 @@ export function RangeSlider(props: IRangeSliderProps) {
       {!props.isMobile && (
         <div className="flex items-center gap-[7.5px]">
           <Image
-            src={minus}
+            src={props.isDisabled ? minusDisable : minus}
             className={clsx(props.isDisabled ? "cursor-not-allowed" : "cursor-pointer")}
             onClick={() => (props.isDisabled ? () => {} : handleSlider(false, props.index))}
           />
@@ -170,18 +172,25 @@ export function RangeSlider(props: IRangeSliderProps) {
             renderThumb={({ props }) => (
               <div
                 {...props}
-                className="bg-primary-500 h-3 w-3 outline-none rounded-full border-2 border-white"
+                className={clsx(
+                  "bg-primary-500 h-3 w-3 outline-none rounded-full border-2 border-white"
+                )}
               />
             )}
           />
           <Image
-            src={plus}
+            src={props.isDisabled ? plusDisable : plus}
             className={clsx(props.isDisabled ? "cursor-not-allowed" : "cursor-pointer")}
             onClick={() => (props.isDisabled ? () => {} : handleSlider(true, props.index))}
           />
         </div>
       )}
-      <div className="bg-primary-500/10 flex border  border-primary-500 text-f12 py-[9px] text-center h-[38px] w-[48px] rounded-lg px-[9px]">
+      <div
+        className={clsx(
+          "bg-primary-500/10 flex   text-f12 py-[9px] text-center h-[38px] w-[48px] rounded-lg px-[9px]",
+          props.totalVotes1[props.index] > 0 ? "border border-primary-500 " : ""
+        )}
+      >
         <input
           className="slider-input bg-primary-500/[0.0] w-[19px] outline-none text-center text-f12 "
           value={props.totalVotes1[props.index] ? props.totalVotes1[props.index] : ""}
