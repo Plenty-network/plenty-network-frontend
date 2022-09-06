@@ -12,6 +12,8 @@ import { getConfig } from "../../src/redux/config/config";
 import { getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import SelectNFT from "../../src/components/Votes/SelectNFT";
 import chartMobile from "../../src/assets/icon/vote/chartMobile.svg";
+
+import info from "../../src/assets/icon/swap/info.svg";
 import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
 import { VotesTable } from "../../src/components/Votes/VotesTable";
 import CastVote from "../../src/components/Votes/CastVote";
@@ -375,7 +377,7 @@ export default function Vote() {
                 </div>
               </div>
               <VotesTable
-                className="px-5 py-4 "
+                className="md:px-5 py-4 px-2"
                 searchValue={searchValue}
                 sumOfVotes={sumOfVotes}
                 setSearchValue={setSearchValue}
@@ -409,8 +411,17 @@ export default function Vote() {
             </div>
             <div className="flex flex-row gap-2 mt-[14px]">
               <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
-                <InfoIconToolTip message=" Verify your vote percentage and cast vote" />
-                <span className="ml-2">
+                <span className="cursor-pointer relative top-0.5">
+                  <ToolTip
+                    id="tooltip2"
+                    toolTipChild={
+                      <div className="w-[200px]">Verify your vote percentage and cast vote</div>
+                    }
+                  >
+                    <Image src={info} className="infoIcon " />
+                  </ToolTip>
+                </span>
+                <span className="ml-1">
                   {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
                 </span>
               </div>

@@ -200,7 +200,7 @@ function Liquidity(props: ILiquidityProps) {
         <div className="mt-4 border border-text-800 rounded-2xl bg-card-300 flex items-center h-[48px] pr-3 pl-5">
           {Number(props.pnlpBalance) > 0 ? (
             <>
-              <div className="flex">
+              <div className="flex cursor-pointer">
                 <span>
                   <Image src={info} width={"14px"} height={"14px"} />
                 </span>

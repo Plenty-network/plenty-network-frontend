@@ -96,6 +96,7 @@ export function VotesTable(props: IVotesTableProps) {
             token2Name={tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
             fees1={Number(x.votes.feesTokenA)}
             fees2={Number(x.votes.feesTokenB)}
+            bribesData={x.votes.bribesData}
           />
         ),
       },
@@ -169,6 +170,7 @@ export function VotesTable(props: IVotesTableProps) {
             token2Name={tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
             fees1={Number(x.votes.feesTokenA)}
             fees2={Number(x.votes.feesTokenB)}
+            bribesData={x.votes.bribesData}
           />
         ),
       },
@@ -227,7 +229,7 @@ export function VotesTable(props: IVotesTableProps) {
 
   return (
     <>
-      <div className={`w-full min-w-[557px] overflow-x-auto  ${props.className}`}>
+      <div className={`w-full md:min-w-[557px] overflow-x-auto  ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}

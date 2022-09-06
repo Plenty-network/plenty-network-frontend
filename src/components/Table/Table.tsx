@@ -48,7 +48,7 @@ const Table = <D extends object>({
 
   useEffect(() => {
     const heightOfbody = getHeightOfElement(headerRef.current);
-    setheightBody(window.innerHeight - heightOfbody );
+    setheightBody(window.innerHeight - heightOfbody);
   }, [headerRef]);
   const {
     getTableProps,
@@ -109,7 +109,7 @@ const Table = <D extends object>({
           {headerGroups.map((headerGroup, index) => (
             <tr
               key={`headerGroup_${index}`}
-              className="border border-borderCommon bg-cardBackGround flex md:pr-5 md:pl-11 md:py-3 px-1 py-1  items-center rounded-t-xl	rounded-b "
+              className="border border-borderCommon bg-cardBackGround flex md:pr-5 md:pl-11 md:py-3 px-1 py-3  items-center rounded-t-xl	rounded-b "
             >
               {headerGroup.headers.map((column, i) => (
                 <Tabs
@@ -139,7 +139,7 @@ const Table = <D extends object>({
         </thead>
         <tbody
           className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-2")}
-          style={{ height: `${heightBody}px`,}}
+          style={{ height: `${heightBody}px` }}
         >
           {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
             <NoContentAvailable />

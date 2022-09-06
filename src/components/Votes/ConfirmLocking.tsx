@@ -45,7 +45,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
           <span className="hidden md:block flex">
             <span className="text-text-250 font-body2 mr-1">You can start voting after </span>
             <span className="relative top-0.5">
-              <Image src={info} />
+              <Image src={info} className="cursor-pointer" />
             </span>
             <span className="text-white ml-1 font-subtitle2 ">{dateFormat} UTC</span>
           </span>
@@ -53,7 +53,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
             <div className="text-text-250 font-body2 mr-1">You can start voting after </div>
             <div>
               <span className="relative top-0.5">
-                <Image src={info} />
+                <Image src={info} className="cursor-pointer" />
               </span>
               <span className="text-white ml-1 font-subtitle2 block">{dateFormat} UTC</span>
             </div>

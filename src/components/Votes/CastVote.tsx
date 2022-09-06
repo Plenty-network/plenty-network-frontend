@@ -40,9 +40,9 @@ function CastVote(props: ICastVoteProps) {
               <Image src={arrowLeft} />
             </div>
             <div className="mx-2 text-white font-title3">Cast Vote </div>
-            <div className="relative top-[2px]">
+            {/* <div className="relative top-[2px]">
               <Image src={info} />
-            </div>
+            </div> */}
           </div>
           <div className="border bg-card-200 mt-2 border-text-800 rounded-2xl  pt-[22px] pb-[20px]">
             <div className="text-text-50 font-body4 px-3 md:px-5">Your votes power</div>
@@ -90,14 +90,14 @@ function CastVote(props: ICastVoteProps) {
               </span>
               <span className="hidden md:block">
                 <span className="relative top-0.5">
-                  <Image src={info} />
+                  <Image src={info} className="cursor-pointer" />
                 </span>
                 <span className="text-white ml-1 font-subtitle2 ">{dateFormat} UTC</span>
               </span>
               <span className="block md:hidden">
                 <div>
                   <span className="relative top-0.5">
-                    <Image src={info} />
+                    <Image src={info} className="cursor-pointer" />
                   </span>
                   <span className="text-white ml-1 font-subtitle2 ">{dateFormat} UTC</span>
                 </div>
