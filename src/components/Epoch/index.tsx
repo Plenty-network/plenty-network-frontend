@@ -3,6 +3,8 @@ import * as React from "react";
 import clsx from "clsx";
 import epoachIcon from "../../assets/icon/common/epochTimeIcon.svg";
 import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
+
+import info from "../../assets/icon/swap/info.svg";
 import vectorDown from "../../assets/icon/common/vector.svg";
 import { useCountdown } from "../../hooks/useCountDown";
 import { useOutsideClick } from "../../utils/outSideClickHook";
@@ -11,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch, store } from "../../redux";
 import { getEpochData, setSelectedEpoch } from "../../redux/epoch/epoch";
 import { useInterval } from "../../hooks/useInterval";
+import { ToolTip } from "../Tooltip/TooltipAdvanced";
 
 export interface IEpochProps {
   className?: string;
@@ -89,8 +92,22 @@ export function Epoch(props: IEpochProps) {
     <>
       <div className="relative flex gap-[10px] p-[14px]" ref={reff}>
         <Image src={epoachIcon} />
-        <div className="flex flex-col gap-[6px]">
-          <div className="flex gap-1">
+        <div
+          className="cursor-pointer flex flex-col gap-[6px]"
+          onClick={() => setIsDropDownActive(!isDropDownActive)}
+        >
+          <div className="flex  gap-1">
+            <ToolTip
+              id="tooltipM"
+              toolTipChild={
+                <div className="w-[200px]">
+                  A weekly voting period that starts every Thursday, 12:00 AM (UTC)
+                </div>
+              }
+            >
+              <Image src={info} width={"15px"} height={"15px"} />
+            </ToolTip>
+
             <p className="text-text-250 text-f12">
               Epoch{" "}
               <span className="text-white">
@@ -103,12 +120,9 @@ export function Epoch(props: IEpochProps) {
                   " (current) "}
               </span>
             </p>
-            <InfoIconToolTip message="Epoch lipsum" />
-            <Image
-              className="rotate-180"
-              src={vectorDown}
-              onClick={() => setIsDropDownActive(!isDropDownActive)}
-            />
+            <p className="relative -top-1">
+              <Image className="rotate-180" src={vectorDown} />
+            </p>
           </div>
           <div className="flex gap-2 text-f12 text-white font-semibold cursor-pointer">
             <span className="flex gap-1">

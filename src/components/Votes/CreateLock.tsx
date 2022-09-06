@@ -189,14 +189,14 @@ function CreateLock(props: ICreateLockProps) {
               </p>
             </div>
 
-            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
+            <div
+              className="cursor-pointer ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3"
+              onClick={onClickAmount}
+            >
               <div>
                 <Image src={wallet} width={"32px"} height={"32px"} />
               </div>
-              <div
-                className="cursor-pointer ml-1 text-primary-500 font-body2"
-                onClick={onClickAmount}
-              >
+              <div className=" ml-1 text-primary-500 font-body2">
                 {Number(props.plyBalance) >= 0 ? Number(props.plyBalance) : "0.00"} PLY
               </div>
             </div>
@@ -278,7 +278,7 @@ function CreateLock(props: ICreateLockProps) {
                 )}
                 onClick={() => handleDateSelection(WEEK, undefined)}
               >
-                1 week
+                ~ 1 week
               </p>
               <p
                 className={clsx(
@@ -289,7 +289,7 @@ function CreateLock(props: ICreateLockProps) {
                 )}
                 onClick={() => handleDateSelection(4 * WEEK, undefined)}
               >
-                1 month
+                ~ 1 month
               </p>
               <p
                 className={clsx(
@@ -300,7 +300,7 @@ function CreateLock(props: ICreateLockProps) {
                 )}
                 onClick={() => handleDateSelection(YEAR, undefined)}
               >
-                1 year
+                ~ 1 year
               </p>
               <p>
                 <ToolTip
@@ -332,7 +332,7 @@ function CreateLock(props: ICreateLockProps) {
                 Your will receive a veNFT with a voting power of{" "}
               </div>
               <div className="ml-auto px-3 h-[38px] flex items-center text-primary-500 bg-primary-500/[0.1] rounded-[30px]">
-                {isNaN(votingPower) ? "0.00" : votingPower.toFixed(2)}
+                ~ {isNaN(votingPower) ? "0.00" : votingPower.toFixed(2)}
               </div>
             </div>
           </div>
