@@ -15,6 +15,7 @@ export interface IVotingAllocationProps extends IAllocationProps {
 function VotingAllocation (props: IVotingAllocationProps) {
   const [selectedDropDown, setSelectedDropDown] = useState('');
   const [piChartData,setPiChartData]=useState<IVotesResponse>();
+  const [selectedColorIndex,setSelectedColorIndex]=useState<number>(-1)
   useEffect(()=>{
     if(props.epochNumber){
     if(props.selectedDropDown && props.selectedDropDown.tokenId && props.selectedDropDown.tokenId.length>0 && selectedDropDown==='My votes'){
@@ -43,9 +44,9 @@ function VotingAllocation (props: IVotingAllocationProps) {
         />
       </div>
       <div className="flex flex-col items-center  mt-5  gap-2 justify-center w-[350px] ">
-        {piChartData?.allData &&  <PiChart piChartData={piChartData}/>}
+        {piChartData?.allData &&  <PiChart piChartData={piChartData} selectedColorIndex={selectedColorIndex} setSelectedColorIndex={setSelectedColorIndex}/>}
         <div className="grid grid-cols-2 justify-between   gap-[11px] gap-x-10 w-[300px]" >
-        {piChartData?.allData ? piChartData.allData.map((e,i)=><ColorText key={`e.votes`+i} text={`${e.tokenOneSymbol} ${e.tokenTwoSymbol}`} color={COLORSdataChart[i]} />) :<></>}
+        {piChartData?.allData ? piChartData.allData.map((e,i)=><ColorText onClick={()=>setSelectedColorIndex(i)} key={`e.votes`+i} text={`${e.tokenOneSymbol} ${e.tokenTwoSymbol}`} color={selectedColorIndex === i?'#78F33F':COLORSdataChart[i]} />) :<></>}
         </div>
       </div>
     </div>
@@ -54,11 +55,12 @@ function VotingAllocation (props: IVotingAllocationProps) {
 export interface IColorTextProps {
   text: string;
   color: string;
+  onClick:Function;
 }
 
 export function ColorText(props: IColorTextProps) {
   return (
-    <div className="flex gap-1 items-center text-f12 w-max">
+    <div className="flex gap-1 items-center text-f12 w-max cursor-pointer" onClick={()=>props.onClick()}>
     <div className="w-[15px] h-[15px]" style={{backgroundColor:props.color}}></div>
     <div>{props.text}</div>
  </div>
