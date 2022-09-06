@@ -24,7 +24,7 @@ export function TotalVotes(props: ITotalVotesProps) {
         toolTipChild={
           <div className="flex gap-1">
             <div className="text-text-50 font-body1">Total votes:</div>
-            <div className="text-white font-caption2 ">{Number(props.totalvotes)}</div>
+            <div className="text-white font-caption2 ">{props.totalvotes.toNumber()}</div>
           </div>
         }
       >
@@ -32,12 +32,12 @@ export function TotalVotes(props: ITotalVotesProps) {
           <div className="font-f13 text-text-50">
             {Number(props.totalvotes) > 0
               ? props.totalvotes.isLessThan(0.01)
-                ? "<" + props.totalvotes.toFixed(2)
+                ? "<0.01"
                 : Number(nFormatter(props.totalvotes))
               : "0"}
           </div>
           <div className="font-subtitle4 relative top-[10px]">
-            {props.totalVotesPercentage.toFixed(2)}%
+            {props.totalVotesPercentage.decimalPlaces(2, 5).toString()}%
           </div>
         </div>
       </ToolTip>

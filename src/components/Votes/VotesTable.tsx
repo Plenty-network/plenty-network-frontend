@@ -15,7 +15,6 @@ export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
 
   const votesArray = Object.entries(props.voteData);
-  console.log(props.voteData);
   const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
     new Array(votesArray.length).fill(0)
   );
@@ -181,7 +180,7 @@ export function VotesTable(props: IVotesTableProps) {
         accessor: (x: any) => (
           <TotalVotes
             totalvotes={x.votes.totalVotes}
-            totalVotesPercentage={Number(x.votes.totalVotesPercentage)}
+            totalVotesPercentage={x.votes.totalVotesPercentage}
           />
         ),
       },
@@ -192,10 +191,7 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         canShort: true,
         accessor: (x: any) => (
-          <MyVotesValue
-            myVotes={x.votes.myVotes}
-            myVotesPercentage={Number(x.votes.myVotesPercentage)}
-          />
+          <MyVotesValue myVotes={x.votes.myVotes} myVotesPercentage={x.votes.myVotesPercentage} />
         ),
       },
       {

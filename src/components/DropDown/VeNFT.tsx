@@ -65,7 +65,7 @@ export function VeNFT(props: IDropdownProps) {
               <span className="ml-1 font-body4 text-white">
                 {Number(props.selectedText.votingPower) > 0
                   ? Number(props.selectedText.votingPower) < 0.001
-                    ? `< ${Number(props.selectedText.votingPower).toFixed(3)}`
+                    ? `<0.001`
                     : Number(props.selectedText.votingPower).toFixed(3)
                   : "0"}
               </span>

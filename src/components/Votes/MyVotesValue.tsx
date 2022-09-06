@@ -33,15 +33,17 @@ export function MyVotesValue(props: IMyVotesValueProps) {
             <span className="font-f13">
               {Number(props.myVotes) > 0
                 ? props.myVotes.isLessThan(0.01)
-                  ? "<" + props.myVotes.toFixed(2)
+                  ? "<0.01"
                   : Number(nFormatter(props.myVotes))
                 : "-"}
             </span>
           </div>
           <div className=" ">
             <span className="font-f13">
-              {props.myVotesPercentage > 0 ? props.myVotesPercentage.toFixed(2) : null}
-              {props.myVotesPercentage > 0 ? "%" : null}
+              {props.myVotesPercentage.toNumber() > 0
+                ? props.myVotesPercentage.decimalPlaces(2, 5).toString()
+                : null}
+              {props.myVotesPercentage.toNumber() > 0 ? "%" : null}
             </span>
           </div>
         </div>
