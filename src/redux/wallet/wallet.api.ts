@@ -60,3 +60,37 @@ export const FetchWalletAPI = async () => {
     };
   }
 };
+
+
+export const switchWalletAccountAPI = async () => {
+  try {
+    const walletClient = await dappClient().getDAppClient();
+    let account = await walletClient.getActiveAccount();
+
+    if (account) {
+      await walletClient.clearActiveAccount();
+      await walletClient.requestPermissions({
+        network: {
+          type: walletNetwork,
+          rpcUrl: rpcNode,
+        },
+      });
+      account = await walletClient.getActiveAccount();
+      return {
+        success: account ? true : false,
+        wallet: account ? account.address : null,
+      };
+    } else {
+      return {
+        success: false,
+        wallet: null,
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      wallet: null,
+      error,
+    };
+  }
+};
