@@ -12,7 +12,7 @@ export function InputSearchBox(props: IInputSearchBoxProps) {
   const [isActive, setIsActive] = React.useState(false);
   return (
     <div
-      className={`flex py-2 my-2 px-2 bg-primary-850 mr-4 md:w-[265px] gap-4 border  rounded-lg ${
+      className={`flex h-[43px] md:h-[38px] py-2  px-2 bg-primary-850 md:mr-4 md:w-[265px] gap-4 border  rounded-lg ${
         props.className
       } ${
         isActive && props.value === ""

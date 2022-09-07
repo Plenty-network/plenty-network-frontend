@@ -40,7 +40,11 @@ export function VotesTable(props: IVotesTableProps) {
       const _votesTableData = votedataArray.filter((e: any) => {
         return (
           e.votes.tokenA.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-          e.votes.tokenB.toLowerCase().includes(props.searchValue.toLowerCase())
+          e.votes.tokenB.toLowerCase().includes(props.searchValue.toLowerCase()) ||
+          (props.searchValue.toLowerCase() === "xtz" &&
+            e.votes.tokenA.toLowerCase().includes("tez")) ||
+          (props.searchValue.toLowerCase() === "xtz" &&
+            e.votes.tokenB.toLowerCase().includes("tez"))
         );
       });
       setVotedata(_votesTableData);
