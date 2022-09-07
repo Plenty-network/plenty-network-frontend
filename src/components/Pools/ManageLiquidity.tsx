@@ -118,8 +118,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         walletAddress
       ).then((res) => {
         console.log(res.vePLYData);
-        const veplyData = res.vePLYData.filter((data) => data.boostValue !== "0.0");
-
+        const veplyData = res.vePLYData;
         setVePLYOptions(veplyData);
       });
     }
