@@ -14,6 +14,7 @@ import { AppDispatch, store } from "../../redux";
 import { getEpochData, setSelectedEpoch } from "../../redux/epoch/epoch";
 import { useInterval } from "../../hooks/useInterval";
 import { ToolTip } from "../Tooltip/TooltipAdvanced";
+import { useRouter } from "next/router";
 
 export interface IEpochProps {
   className?: string;
@@ -21,6 +22,7 @@ export interface IEpochProps {
 }
 
 export function Epoch(props: IEpochProps) {
+  const router = useRouter();
   const [isDropDownActive, setIsDropDownActive] = React.useState(false);
   const epochData = store.getState().epoch.epochData;
   const currentEpoch = store.getState().epoch.currentEpoch;
@@ -93,11 +95,16 @@ export function Epoch(props: IEpochProps) {
       <div className="relative flex gap-[10px] p-[14px]" ref={reff}>
         <Image src={epoachIcon} />
         <div
-          className="cursor-pointer flex flex-col gap-[6px]"
-          onClick={() => setIsDropDownActive(!isDropDownActive)}
+          className={clsx(
+            " flex flex-col gap-[6px]",
+            router.pathname.includes("Vote") ? "cursor-pointer" : "cursor-not-allowed"
+          )}
+          {...(router.pathname.includes("Vote")
+            ? { onClick: () => setIsDropDownActive(!isDropDownActive) }
+            : {})}
         >
-          <div className="flex  gap-1">
-            <p className="relative -top-0.5">
+          <div className="flex items-center  gap-1">
+            <p className="relative top-[2px]">
               <ToolTip
                 id="tooltipM"
                 toolTipChild={
@@ -122,11 +129,11 @@ export function Epoch(props: IEpochProps) {
                   " (current) "}
               </span>
             </p>
-            <p className="relative -top-1">
+            <p className="relative -top-[1.5px]">
               <Image className="rotate-180" src={vectorDown} />
             </p>
           </div>
-          <div className="flex gap-2 text-f12 text-white font-semibold cursor-pointer">
+          <div className="flex gap-2 -mt-[6px] text-f12 text-white font-semibold cursor-pointer">
             <span className="flex gap-1">
               <span>{days} d</span>:<span>{hours} h</span>:<span>{minutes} m</span>:
               <span>{seconds} s</span>
