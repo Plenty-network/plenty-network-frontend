@@ -327,7 +327,7 @@ export default function Vote() {
             />
 
             <div className="">
-              <div className="flex items-center px-3 md:px-0 py-2 md:py-0 ">
+              <div className="flex items-center px-3 md:px-0 py-2 md:py-2 ">
                 <div>
                   <SelectNFT
                     veNFTlist={veNFTlist}

@@ -15,6 +15,9 @@ import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
 import { usePoolsTableSearch } from "../../hooks/usePoolsTableSearch";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
 import Liquidity from "../Liquidity";
+import { AppDispatch } from "../../redux";
+import { useDispatch } from "react-redux";
+import { getTotalVotingPower } from "../../redux/pools";
 
 export interface IShortCardProps {
   className?: string;
@@ -31,6 +34,7 @@ export interface IManageBtnProps {
 }
 
 export function ShortCard(props: IShortCardProps) {
+  const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
     props.poolsFilter,
@@ -147,9 +151,9 @@ export function ShortCard(props: IShortCardProps) {
         showOnMobile: true,
         accessor: (x: any) => (
           <AprInfo
-            currentApr={valueFormat(x.apr,{percentChange:true}).toString()}
+            currentApr={valueFormat(x.apr, { percentChange: true }).toString()}
             previousApr={x.prevApr.toString()}
-            boostedApr={valueFormat(x.boostedApr,{percentChange:true}).toString()}
+            boostedApr={valueFormat(x.boostedApr, { percentChange: true }).toString()}
           />
         ),
       },
@@ -228,6 +232,7 @@ export function ShortCard(props: IShortCardProps) {
       <div
         className="bg-primary-500/10 cursor-pointer  text-primary-500 hover:opacity-90 px-7 py-2 rounded-lg"
         onClick={() => {
+          dispatch(getTotalVotingPower());
           props.isLiquidityAvailable
             ? props.isStakeAvailable
               ? setActiveState(ActiveLiquidity.Rewards)
