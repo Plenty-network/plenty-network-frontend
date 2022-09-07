@@ -1,9 +1,8 @@
-import { PopUpModal } from "../Modal/popupModal";
 import React, { useState, useMemo } from "react";
 import lockPurple from "../../../src/assets/icon/vote/lockPurple.svg";
 
 import Image from "next/image";
-
+import nft from "../../../src/assets/icon/vote/nft.svg";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 
 import info from "../../../src/assets/icon/common/infoIcon.svg";
@@ -34,13 +33,19 @@ function ConfirmLocking(props: IConfirmLockingProps) {
         <div className="mx-2 text-white font-title3">Confirm locking </div>
       </div>
       <div className="rounded-lg mt-5 border border-text-800 bg-card-200 py-5">
-        <div className="text-text-250 font-subtitle1 md:font-subtitle3 px-3 md:px-5">
-          Your will receive a veNFT with a voting power of{" "}
+        <div className="flex items-center">
+          <div className="text-text-250 font-subtitle1 md:font-subtitle3 px-3 md:px-5">
+            Your will receive a veNFT with a voting power of{" "}
+          </div>
+          <div className="ml-auto font-title2 text-primary-500 px-3 md:px-5">
+            {props.votingPower.toFixed(2)}
+          </div>
         </div>
-        <div className="mt-1 font-title2 text-white px-3 md:px-5">
-          {props.votingPower.toFixed(2)}
+        <div className="border-t mt-2 mb-5 border-text-800/[0.5]"></div>
+        <div className="flex justify-center">
+          <Image src={nft} />
         </div>
-        <div className="border-t mt-5 border-text-800/[0.5]"></div>
+        <div className="border-t mt-5 mb-2  border-text-800/[0.5]"></div>
         <div className="mt-3 px-3 md:px-5 flex items-center">
           <span className="hidden md:block flex">
             <span className="text-text-250 font-body2 mr-1">You can start voting after </span>

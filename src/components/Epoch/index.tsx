@@ -97,16 +97,18 @@ export function Epoch(props: IEpochProps) {
           onClick={() => setIsDropDownActive(!isDropDownActive)}
         >
           <div className="flex  gap-1">
-            <ToolTip
-              id="tooltipM"
-              toolTipChild={
-                <div className="w-[200px]">
-                  A weekly voting period that starts every Thursday, 12:00 AM (UTC)
-                </div>
-              }
-            >
-              <Image src={info} width={"15px"} height={"15px"} />
-            </ToolTip>
+            <p className="relative -top-0.5">
+              <ToolTip
+                id="tooltipM"
+                toolTipChild={
+                  <div className="w-[200px]">
+                    A weekly voting period that starts every Thursday, 12:00 AM (UTC)
+                  </div>
+                }
+              >
+                <Image src={info} width={"14px"} height={"14px"} />
+              </ToolTip>
+            </p>
 
             <p className="text-text-250 text-f12">
               Epoch{" "}
