@@ -42,9 +42,9 @@ export function VotesTable(props: IVotesTableProps) {
           e.votes.tokenA.toLowerCase().includes(props.searchValue.toLowerCase()) ||
           e.votes.tokenB.toLowerCase().includes(props.searchValue.toLowerCase()) ||
           (props.searchValue.toLowerCase() === "xtz" &&
-            e.votes.tokenA.toLowerCase().includes("tez")) ||
+            e.votes.tokenA.toLowerCase().search(/\btez\b/) >= 0) ||
           (props.searchValue.toLowerCase() === "xtz" &&
-            e.votes.tokenB.toLowerCase().includes("tez"))
+            e.votes.tokenB.toLowerCase().search(/\btez\b/) >= 0)
         );
       });
       setVotedata(_votesTableData);
