@@ -41,7 +41,7 @@ export function VeNFT(props: IDropdownProps) {
             ? "border-[0.8px] border-primary-500 bg-card-500 text-text-400"
             : "border-text-800 bg-text-800/[0.25]",
 
-          "cursor-pointer"
+          props.Options.length === 0 ? "cursor-not-allowed" : "cursor-pointer"
         )}
         {...(props.Options.length === 0
           ? {}

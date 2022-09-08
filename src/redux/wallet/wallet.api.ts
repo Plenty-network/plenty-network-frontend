@@ -1,9 +1,9 @@
-import { walletNetwork , rpcNode } from '../../common/walletconnect';
-import { dappClient } from '../../common/walletconnect';
+import { walletNetwork, rpcNode } from "../../common/walletconnect";
+import { dappClient } from "../../common/walletconnect";
 
 export const ConnectWalletAPI = async () => {
   try {
-    let walletClient= await dappClient().getDAppClient();
+    let walletClient = await dappClient().getDAppClient();
     let account = await walletClient.getActiveAccount();
     if (!account) {
       await walletClient.requestPermissions({
@@ -35,11 +35,11 @@ export const ConnectWalletAPI = async () => {
 };
 
 export const DisconnectWalletAPI = async () => {
-  return await dappClient().disconnectWallet()
+  return await dappClient().disconnectWallet();
 };
 
 export const FetchWalletAPI = async () => {
-  let walletClient= await dappClient().getDAppClient();
+  let walletClient = await dappClient().getDAppClient();
   try {
     const account = await walletClient.getActiveAccount();
 
@@ -60,7 +60,6 @@ export const FetchWalletAPI = async () => {
     };
   }
 };
-
 
 export const switchWalletAccountAPI = async () => {
   try {
