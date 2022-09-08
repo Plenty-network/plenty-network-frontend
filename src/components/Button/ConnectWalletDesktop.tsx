@@ -6,6 +6,8 @@ import templeLogo from "../../assets/icon/common/templeLogo.svg";
 import copy from "copy-to-clipboard";
 import truncateMiddle from "truncate-middle";
 import copyLogo from "../../assets/icon/common/copyLogo.svg";
+
+import switchLogo from "../../assets/icon/navigation/copy.svg";
 import fiatLogo from "../../assets/icon/common/fiatLogo.svg";
 import nodeSelectorLogo from "../../assets/icon/common/nodeSelectorLogo.svg";
 import disconnectLogo from "../../assets/icon/common/disconnectLogo.svg";
@@ -86,7 +88,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
               className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
               onClick={switchWalletFunction}
             >
-              <Image src={disconnectLogo} />
+              <Image src={switchLogo} />
               <span>Switch account</span>
             </p>
 

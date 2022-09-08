@@ -168,6 +168,8 @@ export default function Vote() {
       ).then((res) => {
         setVeNFTlist(res.veNFTData);
       });
+    } else {
+      setVeNFTlist([]);
     }
   }, [userAddress, selectedEpoch?.epochNumber]);
 
