@@ -301,11 +301,12 @@ function SwapTab(props: ISwapTabProps) {
           isFirstInputFocus ? "border-text-700" : "border-text-800 "
         )}
       >
-        <div className="flex justify-between">
+        <div className="flex ">
           <div
             className={clsx(
               " mt-4",
-              Object.keys(props.tokenIn).length !== 0 ? "flex-[0_0_38%]" : "flex-[0_0_45%]"
+              "w-full sm:w-auto"
+              // Object.keys(props.tokenIn).length !== 0 ? "flex-[0_0_38%]" : "flex-[0_0_45%]"
             )}
           >
             {Object.keys(props.tokenIn).length !== 0 ? (
@@ -327,12 +328,12 @@ function SwapTab(props: ISwapTabProps) {
               />
             )}
           </div>
-          <div className=" my-3 ">
+          <div className="flex-auto my-3 ">
             <div className="text-right font-body1 text-text-400">YOU PAY</div>
             <div>
               {Object.keys(props.tokenIn).length !== 0 ? (
                 props.loading.isLoadingfirst ? (
-                  <p className=" my-[4px] h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+                  <p className=" my-[4px] ml-auto w-[100px] h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <input
                     type="text"
@@ -411,11 +412,12 @@ function SwapTab(props: ISwapTabProps) {
             isSecondInputFocus && "border-text-700"
           )}
         >
-          <div className=" flex justify-between">
+          <div className=" flex ">
             <div
               className={clsx(
                 " mt-4",
-                Object.keys(props.tokenOut).length !== 0 ? "flex-[0_0_38%]" : "flex-[0_0_45%]"
+                "w-full sm:w-auto"
+                // Object.keys(props.tokenOut).length !== 0 ? "flex-[0_0_38%]" : "flex-[0_0_45%]"
               )}
             >
               {Object.keys(props.tokenOut).length !== 0 ? (
@@ -437,12 +439,12 @@ function SwapTab(props: ISwapTabProps) {
                 />
               )}
             </div>
-            <div className=" my-3 ">
+            <div className=" my-3 flex-auto">
               <div className="text-right font-body1 text-text-400">YOU RECEIVE</div>
               <div>
                 {Object.keys(props.tokenOut).length !== 0 ? (
                   isRefresh || props.loading.isLoadingSecond ? (
-                    <p className="my-[4px]  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+                    <p className="ml-auto my-[4px] w-[100px]  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input
                       type="text"

@@ -5,6 +5,7 @@ import { useAppSelector } from "../../redux";
 import { getHeightOfElement } from "../../utils/getHeight";
 import { NoContentAvailable, WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
 import { Tabs } from "../Pools/ShortCardHeader";
+import { NoSearchResult } from "../Votes/NoSearchResult";
 export interface ISimmerEffectProps {
   lines: number;
 }
@@ -30,10 +31,12 @@ const Table = <D extends object>({
   isConnectWalletRequired = false,
   isFetched = false,
   isVotesTable = false,
+  noSearchResult = false,
 }: {
   columns: Column<D>[];
   data: D[];
   shortby?: string;
+  noSearchResult?: boolean;
   isConnectWalletRequired?: boolean;
   isFetched?: boolean;
   isVotesTable?: boolean;
@@ -144,6 +147,7 @@ const Table = <D extends object>({
           {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
             <NoContentAvailable />
           ) : null}
+          {isFetched && noSearchResult ? <NoSearchResult /> : null}
           {isConnectWalletRequired && !walletAddress && isFetched ? <WalletNotConnected /> : null}
           {!isFetched ? <SimmerEffect lines={6} /> : null}
           {isFetched && data.length

@@ -18,6 +18,7 @@ export function VotesTable(props: IVotesTableProps) {
   const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
     new Array(votesArray.length).fill(0)
   );
+  const [noSearchResult, setNoSearchResult] = React.useState(false);
   const votedataArray = React.useMemo(() => {
     votesArray.map((data, index) => {
       totalVotes1[index] = Number(data[1].myVotesPercentage.toFixed(0));
@@ -47,6 +48,11 @@ export function VotesTable(props: IVotesTableProps) {
             e.votes.tokenB.toLowerCase().search(/\btez\b/) >= 0)
         );
       });
+      if (_votesTableData.length === 0) {
+        setNoSearchResult(true);
+      } else {
+        setNoSearchResult(false);
+      }
       setVotedata(_votesTableData);
     } else {
       setVotedata(votedataArray);
@@ -237,8 +243,9 @@ export function VotesTable(props: IVotesTableProps) {
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
+          noSearchResult={noSearchResult}
           shortby="Myvotes"
-          isFetched={votedata.length === 0 ? false : true}
+          isFetched={!noSearchResult && votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
           isVotesTable={true}
         />

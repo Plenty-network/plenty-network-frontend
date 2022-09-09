@@ -92,7 +92,7 @@ function TransactionSettings(props: ITransactionSettingsProps) {
       ref={refSetting}
       style={{ top: "0px" }}
       className={clsx(
-        "z-20 absolute right-[10px]  md:right-[27px]  bg-card-500 border border-text-700/[0.5] w-[367px] p-5 rounded-2xl fade-in-3 ",
+        "z-20 absolute right-[10px]  md:right-[27px]  bg-card-500 border border-text-700/[0.5] w-[303px] md:w-[367px] p-5 rounded-2xl fade-in-3 ",
         errorMessage ? "h-[300px]" : "h-[280px]"
       )}
     >
@@ -126,7 +126,7 @@ function TransactionSettings(props: ITransactionSettingsProps) {
         </div>
         <div
           className={clsx(
-            "border  rounded-lg h-9 w-full py-2 px-3 font-body4 flex",
+            "border  rounded-lg h-9 w-[179px] md:w-full py-2 px-3 font-body4 flex",
             errorMessage
               ? errorMessage === ERRORMESSAGES.TRANSACTIONSETTINGSWARNING
                 ? "border-warning-500/[0.4] bg-wraning-500/[0.01]"
