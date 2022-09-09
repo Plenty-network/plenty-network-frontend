@@ -93,7 +93,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
           </p>
           <p
             className={clsx(
-              "cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md: h-[32px] px-[8.5px] md:px-[13px] items-center flex",
+              "cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[28px] md:h-[32px] px-[8.5px] md:px-[13px] items-center flex",
               props.burnAmount === 0.75 * Number(props.pnlpBalance) &&
                 "border-primary-500 bg-primary-500/[0.20]"
             )}
