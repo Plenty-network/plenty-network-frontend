@@ -16,6 +16,7 @@ import {
 import { computeAllPaths } from './router';
 import { store } from '../../redux';
 import axios from 'axios';
+import Config from '../../config/config';
 
 export const loadSwapDataWrapper = async (
   tokenIn: string,
@@ -294,27 +295,35 @@ export const reverseCalculation = (
   }
 };
 
-export const topTokensList = async () => {
+export const topTokensList = async () : Promise<{success : boolean , topTokens : { [id: string]: number }}> => {
   try {
-    // TODO : Check Why API response is not being fetched in VSCODE
     const tokenTvlResponse = await axios.get(
-      'http://13.127.76.247/analytics/tokens'
+      `${Config.PLY_INDEXER}analytics/tokens`
     );
-    console.log(tokenTvlResponse);
     const tokenTvl = tokenTvlResponse.data;
-    console.log(tokenTvl);
-
-    const topTokens: { [id: string]: BigNumber } = {};
+    const topTokens: { [id: string]: number } = {};
 
     for (var x of tokenTvl) {
-      topTokens[x.token] = x.tvl.value;
+      topTokens[x.token] = Number(x.tvl.value);
     }
 
-    console.log(topTokens);
-    // topTokens.sort
+    const sortable = Object.entries(topTokens)
+    .sort(([,a],[,b]) => b-a)
+    .slice(0,8)
+    .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+    
+    return{
+      success : true,
+      topTokens : sortable
+    };
+
   } catch (error) {
     console.log(error);
+    return{
+      success : false,
+      topTokens : {}
+    };
   }
 };
 
-// topTokensList();
+topTokensList();
