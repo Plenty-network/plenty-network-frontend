@@ -1,11 +1,11 @@
-import clsx from 'clsx';
-import Image from 'next/image';
-import arrowLeft from '../../../src/assets/icon/pools/arrowLeft.svg';
-import info from '../../../src/assets/icon/common/infoIcon.svg';
-import Button from '../Button/Button';
-import { tokenParameterLiquidity } from '../Liquidity/types';
-import { IVePLYData } from '../../api/stake/types';
-import { VePLY } from '../DropDown/VePLY';
+import clsx from "clsx";
+import Image from "next/image";
+import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
+import info from "../../../src/assets/icon/common/infoIcon.svg";
+import Button from "../Button/Button";
+import { tokenParameterLiquidity } from "../Liquidity/types";
+import { IVePLYData } from "../../api/stake/types";
+import { VePLY } from "../DropDown/VePLY";
 
 interface IConfirmStakeLiquidity {
   tokenIn: tokenParameterLiquidity;
@@ -23,11 +23,11 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
   return (
     <>
       <div className="flex">
-        <div className="cursor-pointer" onClick={() => props.setScreen('1')}>
+        <div className="cursor-pointer" onClick={() => props.setScreen("1")}>
           <Image src={arrowLeft} />
         </div>
         <div className="mx-2 text-white font-title3">Confirm staking </div>
-        <div className="relative top-[2px]">
+        <div className="relative top-[2px] cursor-pointer">
           <Image src={info} />
         </div>
       </div>
@@ -37,7 +37,7 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
             Are you sure you want to continues with less PLY rewards?
           </div>
           <div className="ml-auto">
-            {' '}
+            {" "}
             <VePLY
               Options={props.vePLYOptions}
               selectedText={props.selectedDropDown}
@@ -47,13 +47,11 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
           </div>
         </div>
         <div className="mt-4 font-body4 text-text-250">Your staking</div>
-        <div className="mt-1 text-white font-title2">
-          {props.stakeInput} PNLP
-        </div>
+        <div className="mt-1 text-white font-title2">{props.stakeInput} PNLP</div>
       </div>
 
       <div className="mt-5">
-        <Button color={'primary'} onClick={props.handleOperation}>
+        <Button color={"primary"} onClick={props.handleOperation}>
           Confirm
         </Button>
       </div>

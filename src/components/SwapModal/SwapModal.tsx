@@ -1,13 +1,13 @@
-import { PopUpModal } from '../Modal/popupModal';
-import SearchBar from '../SearchBar/SearchBar';
-import Image from 'next/image';
-import infogrey from '../../assets/icon/swap/info-grey.svg';
-import plenty from '../../assets/Tokens/plenty.png';
-import { tokenParameter, tokensModal, tokenType } from '../../constants/swap';
-import { BigNumber } from 'bignumber.js';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import clsx from 'clsx';
-import { ToolTip } from '../Tooltip/TooltipAdvanced';
+import { PopUpModal } from "../Modal/popupModal";
+import SearchBar from "../SearchBar/SearchBar";
+import Image from "next/image";
+import infogrey from "../../assets/icon/swap/info-grey.svg";
+import plenty from "../../assets/Tokens/plenty.png";
+import { tokenParameter, tokensModal, tokenType } from "../../constants/swap";
+import { BigNumber } from "bignumber.js";
+import { useCallback, useEffect, useRef, useState } from "react";
+import clsx from "clsx";
+import { ToolTip } from "../Tooltip/TooltipAdvanced";
 
 interface ISwapModalProps {
   tokens: tokensModal[];
@@ -32,7 +32,9 @@ function SwapModal(props: ISwapModalProps) {
       return (
         props.searchQuery.length === 0 ||
         token.name.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
-        token.address?.toLowerCase().includes(props.searchQuery.toLowerCase())
+        token.address?.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
+        (props.searchQuery.toLowerCase() === "xtz" &&
+          token.name.toLowerCase().search(/\btez\b/) >= 0)
       );
     },
     [props.searchQuery]
@@ -87,49 +89,49 @@ function SwapModal(props: ISwapModalProps) {
           <div className="flex flex-wrap mt-1">
             <div className="border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100">
               <span className="w-[18px] h-[18px] relative top-1">
-                <Image src={plenty} width={'18px'} height={'18px'} />{' '}
+                <Image src={plenty} width={"18px"} height={"18px"} />{" "}
               </span>
               <span className="font-body3">PLENTY</span>
             </div>
             <div className="border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100">
               <span className="w-[18px] h-[18px] relative top-1">
-                <Image src={plenty} width={'18px'} height={'18px'} />{' '}
+                <Image src={plenty} width={"18px"} height={"18px"} />{" "}
               </span>
               <span className="font-body3">PLENTY</span>
             </div>
             <div className="border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100">
               <span className="w-[18px] h-[18px] relative top-1">
-                <Image src={plenty} width={'18px'} height={'18px'} />{' '}
+                <Image src={plenty} width={"18px"} height={"18px"} />{" "}
               </span>
               <span className="font-body3">PLENTY</span>
             </div>
             <div className="border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100">
               <span className="w-[18px] h-[18px] relative top-1">
-                <Image src={plenty} width={'18px'} height={'18px'} />{' '}
+                <Image src={plenty} width={"18px"} height={"18px"} />{" "}
               </span>
               <span className="font-body3">PLENTY</span>
             </div>
             <div className="border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100">
               <span className="w-[18px] h-[18px] relative top-1">
-                <Image src={plenty} width={'18px'} height={'18px'} />{' '}
+                <Image src={plenty} width={"18px"} height={"18px"} />{" "}
               </span>
               <span className="font-body3">PLENTY</span>
             </div>
             <div className="border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100">
               <span className="w-[18px] h-[18px] relative top-1">
-                <Image src={plenty} width={'18px'} height={'18px'} />{' '}
+                <Image src={plenty} width={"18px"} height={"18px"} />{" "}
               </span>
               <span className="font-body3">PLENTY</span>
             </div>
             <div className="border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100">
               <span className="w-[18px] h-[18px] relative top-1">
-                <Image src={plenty} width={'18px'} height={'18px'} />{' '}
+                <Image src={plenty} width={"18px"} height={"18px"} />{" "}
               </span>
               <span className="font-body3">PLENTY</span>
             </div>
             <div className="border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100">
               <span className="w-[18px] h-[18px] relative top-1">
-                <Image src={plenty} width={'18px'} height={'18px'} />{' '}
+                <Image src={plenty} width={"18px"} height={"18px"} />{" "}
               </span>
               <span className="font-body3">PLENTY</span>
             </div>
@@ -147,45 +149,32 @@ function SwapModal(props: ISwapModalProps) {
                 return (
                   <div
                     className={clsx(
-                      ' flex content-center  px-[18px] hover:bg-card-100 py-2',
-                      props.tokenIn.name === token.name ||
-                        props.tokenOut.name === token.name
-                        ? 'cursor-not-allowed'
-                        : 'cursor-pointer'
+                      " flex content-center  px-[18px] hover:bg-card-100 py-2",
+                      props.tokenIn.name === token.name || props.tokenOut.name === token.name
+                        ? "cursor-not-allowed"
+                        : "cursor-pointer"
                     )}
                     key={index}
-                    {...(props.tokenIn.name === token.name ||
-                    props.tokenOut.name === token.name
+                    {...(props.tokenIn.name === token.name || props.tokenOut.name === token.name
                       ? {}
                       : { onClick: () => props.selectToken(token) })}
                   >
                     <div>
                       <span className="w-[30px] h-[30px] relative top-1">
-                        <Image
-                          src={token.image}
-                          width={'30px'}
-                          height={'30px'}
-                        />{' '}
+                        <Image src={token.image} width={"30px"} height={"30px"} />{" "}
                       </span>
                     </div>
                     <div className="ml-2">
-                      <div className="font-body1 text-text-100/[0.2]">
-                        {token.chainType}
-                      </div>
+                      <div className="font-body1 text-text-100/[0.2]">{token.chainType}</div>
                       <div
                         className={clsx(
-                          'font-subtitle4 ',
-                          props.tokenIn.name === token.name ||
-                            props.tokenOut.name === token.name
-                            ? 'text-white/[0.1]'
-                            : 'text-white'
+                          "font-subtitle4 ",
+                          props.tokenIn.name === token.name || props.tokenOut.name === token.name
+                            ? "text-white/[0.1]"
+                            : "text-white"
                         )}
                       >
-                        {token.name === 'tez'
-                          ? 'TEZ'
-                          : token.name === 'ctez'
-                          ? 'CTEZ'
-                          : token.name}
+                        {token.name === "tez" ? "TEZ" : token.name === "ctez" ? "CTEZ" : token.name}
                       </div>
                     </div>
                     {token.new && (

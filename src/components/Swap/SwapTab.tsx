@@ -363,9 +363,9 @@ function SwapTab(props: ISwapTabProps) {
           </div>
         </div>
         <div className="flex -mt-[12px]">
-          <div className="text-left">
+          <div className="text-left cursor-pointer" onClick={onClickAmount}>
             <span className="text-text-600 font-body3">Balance:</span>{" "}
-            <span className="font-body4 text-primary-500 cursor-pointer" onClick={onClickAmount}>
+            <span className="font-body4 text-primary-500 ">
               {Number(props.userBalances[props.tokenIn.name]) >= 0 ? (
                 <ToolTip
                   message={props.userBalances[props.tokenIn.name].toString()}
@@ -589,7 +589,7 @@ function SwapTab(props: ISwapTabProps) {
                       }
                       position={Position.left}
                     >
-                      <Image src={info} width={"15px"} height={"15px"} />
+                      <Image src={info} className="cursor-pointer" width={"15px"} height={"15px"} />
                     </ToolTip>
                   </span>
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
@@ -801,7 +801,7 @@ function SwapTab(props: ISwapTabProps) {
                       </div>
                     }
                   >
-                    <Image src={info} className="infoIcon" />
+                    <Image src={info} className="infoIcon cursor-pointer" />
                   </ToolTip>
                 </span>
               </div>
@@ -841,7 +841,7 @@ function SwapTab(props: ISwapTabProps) {
                       </div>
                     }
                   >
-                    <Image src={info} className="infoIcon" />
+                    <Image src={info} className="infoIcon cursor-pointer" />
                   </ToolTip>
                 </span>
               </div>
@@ -878,7 +878,7 @@ function SwapTab(props: ISwapTabProps) {
                       </div>
                     }
                   >
-                    <Image src={info} className="infoIcon" />
+                    <Image src={info} className="infoIcon cursor-pointer" />
                   </ToolTip>
                 </span>
               </div>
@@ -907,7 +907,7 @@ function SwapTab(props: ISwapTabProps) {
                       </div>
                     }
                   >
-                    <Image src={info} className="infoIcon" />
+                    <Image src={info} className="infoIcon cursor-pointer" />
                   </ToolTip>
                 </span>
               </div>

@@ -75,19 +75,24 @@ export const getVePLYListForUser = async (
 
     locksData.forEach((lock: any) => {
       const votingPower = new BigNumber(lock.currentVotingPower).dividedBy(PLY_DECIMAL_MULTIPLIER);
-      const updatedLockData = {
-        tokenId: lock.id,
-        boostValue: getBoostValue(
-          finalUserStakedBalance,
-          finalTotalSupply,
-          votingPower,
-          totalVotingPower
-        ),
-        votingPower: votingPower.toString(),
-      };
-      finalVePLYData.push(updatedLockData);
+      const boostedValue = getBoostValue(
+        finalUserStakedBalance,
+        finalTotalSupply,
+        votingPower,
+        totalVotingPower
+      );
+      if(boostedValue.isGreaterThan(0)) {
+        const updatedLockData = {
+          tokenId: lock.id,
+          boostValue: boostedValue.toFixed(1),
+          votingPower: votingPower.toString(),
+        };
+        finalVePLYData.push(updatedLockData);
+      }
     });
-
+    if(finalVePLYData.length > 0) {
+      finalVePLYData.sort(compareVePLYData)
+    }
     return {
       success: true,
       vePLYData: finalVePLYData,
@@ -136,7 +141,7 @@ const getBoostValue = (
   totalSupply: BigNumber,
   tokenVotingPower: BigNumber,
   totalVotingPower: BigNumber
-): string => {
+): BigNumber => {
   try {
     const markUp = totalSupply
       .multipliedBy(tokenVotingPower)
@@ -148,12 +153,26 @@ const getBoostValue = (
       baseBalance.plus(markUp),
       userStakedBalance
     );
-    if (baseBalance.isEqualTo(0)) {
-      return '0.0';
-    }
     const boostValue = derivedBalance.dividedBy(baseBalance);
-    return boostValue.isFinite() ? boostValue.toFixed(1) : '0.0';
+    return boostValue.isFinite() ? boostValue : new BigNumber(0);
   } catch (error: any) {
     throw new Error(error.message);
+  }
+};
+
+
+/**
+ * Function used as a callback for sorting the vePLY data in descending order of the boost value.
+ */
+ const compareVePLYData = (
+  valueOne: IVePLYData,
+  valueTwo: IVePLYData
+): number => {
+  if (new BigNumber(valueOne.boostValue).isGreaterThan(new BigNumber(valueTwo.boostValue))) {
+    return -1;
+  } else if (new BigNumber(valueOne.boostValue).isLessThan(new BigNumber(valueTwo.boostValue))) {
+    return 1;
+  } else {
+    return 0;
   }
 };

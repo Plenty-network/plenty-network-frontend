@@ -2,6 +2,7 @@ import { ISelectedPool, IVeNFTData, IVotePageData } from "../../api/votes/types"
 import { BigNumber } from "bignumber.js";
 import { IVotes } from "../../operations/types";
 import { IEpochListObject } from "../../api/util/types";
+import { Bribes } from "../../api/pools/types";
 
 export interface ITransactionSubmittedProps {
   show: boolean;
@@ -106,6 +107,7 @@ export interface IRewardsDataProps {
   token2Name: string;
   fees1: number;
   fees2: number;
+  bribesData: Bribes[];
 }
 
 export interface IVotesTableProps {

@@ -41,7 +41,7 @@ export function VeNFT(props: IDropdownProps) {
             ? "border-[0.8px] border-primary-500 bg-card-500 text-text-400"
             : "border-text-800 bg-text-800/[0.25]",
 
-          "cursor-pointer"
+          props.Options.length === 0 ? "cursor-not-allowed" : "cursor-pointer"
         )}
         {...(props.Options.length === 0
           ? {}
@@ -90,7 +90,7 @@ export function VeNFT(props: IDropdownProps) {
       {isDropDownActive && props.Options.length > 0 && (
         <div
           className={clsx(
-            "absolute z-20 w-[150px] min-w-[180px] md:w-[200px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1"
+            "absolute  max-h-[210px] overflow-y-auto z-20 w-[150px] min-w-[180px] md:w-[200px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1"
           )}
         >
           {props.Options.map((text, i) => (

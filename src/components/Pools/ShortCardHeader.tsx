@@ -43,13 +43,15 @@ export function Tabs(props: ITabsProps) {
           <div className="text-text-500 font-light text-right">{props.subText}</div>
         )}
       </div>
-      {props.arrowUp ? (
-        <div>
-          <Image src={arrowDown} className={props.arrowUp === "up" ? "rotate-0" : "rotate-180"} />
-        </div>
-      ) : (
-        <Image src={arrowDown} className={"opacity-0"} />
-      )}
+      <div className="relative top-px">
+        {props.arrowUp ? (
+          <div>
+            <Image src={arrowDown} className={props.arrowUp === "up" ? "rotate-0" : "rotate-180"} />
+          </div>
+        ) : (
+          <Image src={arrowDown} className={"opacity-0"} />
+        )}
+      </div>
     </th>
   );
 }

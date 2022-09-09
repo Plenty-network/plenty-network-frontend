@@ -47,9 +47,9 @@ const RenderActiveShape = (props: any) => {
 };
 
 export interface IPiChartProps {
-  piChartData:IVotesResponse;
-  selectedColorIndex:number;
-  setSelectedColorIndex:Function;
+  piChartData: IVotesResponse;
+  selectedColorIndex: number;
+  setSelectedColorIndex: Function;
 }
  export const COLORSdataChart = ["#4E4955", "#6B6670", "#88848C","#A4A2A8","#403A47","#5C5863","#79757E","#96939A","#B3B0B5"];
   
