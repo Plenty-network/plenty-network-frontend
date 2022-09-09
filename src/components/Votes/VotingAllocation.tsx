@@ -5,6 +5,7 @@ import { getMyAmmVotes, getTotalAmmVotes } from "../../api/votes";
 import { COLORSdataChart } from "./PiChartComponent";
 import Protocol from "./Protocol";
 import { IAllocationProps } from "./types";
+import { tEZorCTEZTtoUpperCase } from "../../utils/commonUtils";
 const PiChart = dynamic(() => import("./PiChartComponent"), {
   loading: () => <></>,
 });
@@ -42,7 +43,7 @@ function VotingAllocation (props: IVotingAllocationProps) {
       <div className="flex flex-col items-center  mt-5  gap-2 justify-center w-[350px] ">
         {piChartData?.allData &&  <PiChart piChartData={piChartData} selectedColorIndex={selectedColorIndex} setSelectedColorIndex={setSelectedColorIndex}/>}
         <div className="grid grid-cols-2 justify-between   gap-[11px] gap-x-10 w-[300px]" >
-        {piChartData?.allData ? piChartData.allData.map((e,i)=><ColorText onClick={()=>setSelectedColorIndex(i)} key={`e.votes`+i} text={`${e.tokenOneSymbol} ${e.tokenTwoSymbol}`} color={selectedColorIndex === i?'#78F33F':COLORSdataChart[i]} />) :<></>}
+        {piChartData?.allData ? piChartData.allData.map((e,i)=><ColorText onClick={()=>setSelectedColorIndex(i)} key={`e.votes`+i} text={`${tEZorCTEZTtoUpperCase(e.tokenOneSymbol??'')} ${tEZorCTEZTtoUpperCase(e.tokenTwoSymbol??'')}`} color={selectedColorIndex === i?'#78F33F':COLORSdataChart[i]} />) :<></>}
         </div>
       </div>
     </div>
