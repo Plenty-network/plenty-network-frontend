@@ -64,7 +64,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
   return (
     <>
       <div className="border mt-[10px] flex border-text-800/[0.5] rounded-2xl h-[88px]">
-        <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
+        <div className="w-[50%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
           <div className="ml-2 md:ml-5">
             <Image
               src={props.tokenIn.image}
@@ -141,7 +141,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
         <Image src={add} width={"24px"} height={"24px"} />
       </div>
       <div className="border -mt-[25px] flex border-text-800/[0.5] rounded-2xl h-[88px]">
-        <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
+        <div className="w-[50%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
           <div className="ml-2 md:ml-5">
             <Image
               src={props.tokenOut.image}
