@@ -26,10 +26,10 @@ const RenderActiveShape = (props: any) => {
   const cos = Math.cos(-RADIAN * midAngle);
   return (
     <g style={{zIndex:999}}>
-      <text x={cx} y={cy} dy={1} textAnchor="middle"  fill={'#FFFFFF'} fontSize={'14px'}>
+      <text x={cx} y={cy} dy={1} textAnchor="middle" fontWeight={400}  fill={'#FFFFFF'} fontSize={'14px'}>
         {name}
       </text>
-      <text x={cx} y={cy+18} dy={1} textAnchor="middle"  fill={fill} fontSize={'14px'}>
+      <text x={cx} y={cy+18} dy={1} textAnchor="middle" fontWeight={400}  fill={fill} fontSize={'14px'}>
         <a style={{fill:"#78F33F"}}>{value.toFixed(2)}%</a> <a style={{fill:'#B3B0B5'}}>({ply.toFixed(2)} PLY)</a>
       </text>
       
