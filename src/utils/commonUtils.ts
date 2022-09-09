@@ -8,3 +8,4 @@ export const generateRandomString=(length:number):string =>{
    }
    return result;
 }
+export const tEZorCTEZTtoUpperCase=(a:string)=> (a.trim().toLowerCase() === 'tez' || a.trim().toLowerCase() === 'ctez')?a.toUpperCase():a;
