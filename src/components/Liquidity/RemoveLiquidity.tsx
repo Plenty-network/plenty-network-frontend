@@ -106,10 +106,10 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
         </div>
       </div>
       <div className="border pl-4 pr-5 mt-[10px] items-center flex border-text-800/[0.5] rounded-2xl h-[86px]">
-        <div className="w-[50%]">
+        <div className="flex-auto">
           <p>
             {props.swapData.isloading ? (
-              <p className=" my-[4px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+              <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
             ) : (
               <input
                 type="text"
@@ -130,7 +130,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
           </p>
         </div>
         {walletAddress && (
-          <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
+          <div className="ml-auto w-[79%] sm:w-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
             <div>
               <Image src={wallet} width={"32px"} height={"32px"} />
             </div>

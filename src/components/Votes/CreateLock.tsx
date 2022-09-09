@@ -167,7 +167,7 @@ function CreateLock(props: ICreateLockProps) {
               isFirstInputFocus ? "border-text-700" : "border-text-800 "
             )}
           >
-            <div className="w-[50%]">
+            <div className="flex-auto">
               <p>
                 <input
                   type="text"
@@ -190,7 +190,7 @@ function CreateLock(props: ICreateLockProps) {
             </div>
 
             <div
-              className="cursor-pointer ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3"
+              className="cursor-pointer w-[55%] sm:w-auto ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3"
               onClick={onClickAmount}
             >
               <div>
@@ -250,6 +250,7 @@ function CreateLock(props: ICreateLockProps) {
                   type="text"
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-subtitle6  md:font-subtitle6 outline-none w-[100%] placeholder:text-text-500"
                   placeholder="dd/mm/yyyy"
+                  disabled
                   value={props.lockingDate}
                   onChange={(e) => props.setLockingDate(e.target.value)}
                 />{" "}

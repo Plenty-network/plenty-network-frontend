@@ -85,10 +85,10 @@ function AddLiquidity(props: IAddLiquidityProps) {
           </div>
         </div>
         <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
-          <div className="w-[50%]">
+          <div className="">
             <p>
               {props.swapData.isloading ? (
-                <p className=" my-[4px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+                <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
               ) : (
                 <input
                   type="text"
@@ -162,10 +162,10 @@ function AddLiquidity(props: IAddLiquidityProps) {
           </div>
         </div>
         <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
-          <div className="w-[50%]">
+          <div className="">
             <p>
               {props.swapData.isloading ? (
-                <p className=" my-[4px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+                <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
               ) : (
                 <input
                   type="text"
