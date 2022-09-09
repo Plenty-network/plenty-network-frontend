@@ -317,7 +317,7 @@ export default function Vote() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
-        <div className="flex min-w-[100px] overflow-x-auto">
+        <div className="md:flex min-w-[100px] overflow-x-auto">
           <div className="md:basis-2/3">
             <HeadInfo
               className="px-2 md:px-3"
