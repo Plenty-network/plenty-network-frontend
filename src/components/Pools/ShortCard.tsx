@@ -14,7 +14,6 @@ import { AMM_TYPE } from "../../../pages/pools";
 import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
 import { usePoolsTableSearch } from "../../hooks/usePoolsTableSearch";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
-import Liquidity from "../Liquidity";
 import { AppDispatch } from "../../redux";
 import { useDispatch } from "react-redux";
 import { getTotalVotingPower } from "../../redux/pools";

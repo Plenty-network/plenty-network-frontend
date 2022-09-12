@@ -39,11 +39,9 @@ export function Dropdown(props: IDropdownProps) {
             <span className="text-white">{props.selectedText}</span>
           ) : (
             <>
-              <span className="hidden md:block  md:font-body4">
-                {props.title ? props.title : "Select"}
-              </span>{" "}
+              <span className="hidden md:block  md:font-body4">{props.title && props.title}</span>{" "}
               <span className="font-subtitle1 md:hidden md:font-body4">
-                {props.title ? "My votes" : "vePLY"}
+                {props.title && props.title}
               </span>
             </>
           )}
