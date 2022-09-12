@@ -9,14 +9,14 @@ function AllocationPopup(props: IAllocationProps) {
 
   return props.show ? (
     <PopUpModal onhide={closeModal} className="rounded-none w-[400px] max-w-[400px] px-5 ">
-      <VotingAllocation 
-          show={props.show}
-          setShow={props.setShow}
-          selectedDropDown={props.selectedDropDown} // veNFT selected
-          epochData={props.epochData} // epoch data
-          alreadyVoted={props.alreadyVoted} 
-          epochNumber={props.epochNumber}    
-          />
+      <VotingAllocation
+        show={props.show}
+        setShow={props.setShow}
+        selectedDropDown={props.selectedDropDown} // veNFT selected
+        epochData={props.epochData} // epoch data
+        alreadyVoted={props.alreadyVoted}
+        epochNumber={props.epochNumber}
+      />
     </PopUpModal>
   ) : null;
 }
