@@ -349,31 +349,89 @@ export default function Vote() {
                 <div className="border border-muted-50 px-4 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
                   {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
                 </div>
-                <div
-                  className={clsx(
-                    " px-4  h-[52px] flex items-center justify-center rounded-xl cursor-pointer",
-                    votes.length !== 0 &&
-                      (selectedEpoch?.epochNumber
-                        ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                        : false) &&
-                      totalVotingPower !== 0
-                      ? "bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
-                      : "bg-card-700 text-text-400 font-subtitle4"
+                <div className="">
+                  {(sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
+                  (selectedEpoch?.epochNumber
+                    ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                    : true) ? (
+                    <ToolTip
+                      message={"Cast 100% of your Votes to proceed "}
+                      id="tooltip8"
+                      position={Position.top}
+                    >
+                      <div
+                        className={clsx(
+                          " px-4 h-[52px] flex items-center justify-center rounded-xl ",
+                          votes.length !== 0 &&
+                            (selectedEpoch?.epochNumber
+                              ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                              : false) &&
+                            totalVotingPower !== 0 &&
+                            totalVotingPower === 100 &&
+                            Number(selectedDropDown.votingPower) > 0
+                            ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                            : "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                        )}
+                        onClick={() =>
+                          votes.length !== 0 &&
+                          (selectedEpoch?.epochNumber
+                            ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                            : false) &&
+                          totalVotingPower !== 0 &&
+                          totalVotingPower === 100 &&
+                          sumOfVotes !== 100 &&
+                          Number(selectedDropDown.votingPower) > 0
+                            ? setShowCastVoteModal(true)
+                            : currentEpoch?.epochNumber !== selectedEpoch?.epochNumber
+                            ? setShowEpochPopUp(true)
+                            : () => {}
+                        }
+                      >
+                        Cast Vote
+                      </div>
+                    </ToolTip>
+                  ) : sumOfVotes === 100 ? (
+                    <div
+                      className={clsx(
+                        "px-4   h-[52px] flex items-center justify-center rounded-xl ",
+
+                        "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                      )}
+                    >
+                      Already Voted
+                    </div>
+                  ) : (
+                    <div
+                      className={clsx(
+                        "px-4   h-[52px] flex items-center justify-center rounded-xl ",
+                        votes.length !== 0 &&
+                          (selectedEpoch?.epochNumber
+                            ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                            : false) &&
+                          totalVotingPower === 100 &&
+                          Number(selectedDropDown.votingPower) > 0
+                          ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                          : "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                      )}
+                      onClick={() =>
+                        votes.length !== 0 &&
+                        (selectedEpoch?.epochNumber
+                          ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                          : false) &&
+                        totalVotingPower === 100 &&
+                        sumOfVotes !== 100 &&
+                        Number(selectedDropDown.votingPower) > 0
+                          ? setShowCastVoteModal(true)
+                          : currentEpoch?.epochNumber !== selectedEpoch?.epochNumber
+                          ? setShowEpochPopUp(true)
+                          : () => {}
+                      }
+                    >
+                      Cast Vote
+                    </div>
                   )}
-                  onClick={() =>
-                    votes.length !== 0 &&
-                    (selectedEpoch?.epochNumber
-                      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                      : false) &&
-                    totalVotingPower !== 0 &&
-                    totalVotingPower === 100 &&
-                    sum !== 100
-                      ? setShowCastVoteModal(true)
-                      : () => {}
-                  }
-                >
-                  Cast Vote
                 </div>
+
                 <div onClick={() => setShowCastVotingAllocation(true)}>
                   <Image src={chartMobile} width={"24px"} height={"24px"} />
                 </div>
@@ -520,7 +578,7 @@ export default function Vote() {
           selectedDropDown={selectedDropDown} // veNFT selected
           epochData={epochData} // epoch data
           alreadyVoted={sumOfVotes === 100}
-          epochNumber={selectedEpoch.epochNumber}
+          epochNumber={selectedEpoch ? selectedEpoch.epochNumber : 0}
         />
       )}
       {showCastVoteModal && (
