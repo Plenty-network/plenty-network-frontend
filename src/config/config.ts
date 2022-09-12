@@ -37,8 +37,8 @@ const Config: IConfig = {
     testnet : 'KT1ArfQ6At3NhzMbiGwLzGtvekytjXq6Gy2G',
   },
 
-  VE_INDEXER : 'http://65.0.129.224/v1/',
-  PLY_INDEXER : 'http://13.127.76.247/',
+  VE_INDEXER : 'https://veplyindexer.plentydefi.com/v1/',
+  PLY_INDEXER : 'https://networkanalyticsindexer.plentydefi.com/',
 
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',

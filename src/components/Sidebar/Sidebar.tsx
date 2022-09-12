@@ -1,25 +1,25 @@
-import { useRouter } from 'next/router';
-import * as React from 'react';
-import { FooterInfoIcon } from './FooterIconList';
-import { HrefIcon, IHrefIconProps } from './LinkIconList';
-import { ISingleSideBarProps, SingleSideBar } from './SideBarTabList';
+import { useRouter } from "next/router";
+import * as React from "react";
+import { FooterInfoIcon } from "./FooterIconList";
+import { HrefIcon, IHrefIconProps } from "./LinkIconList";
+import { ISingleSideBarProps, SingleSideBar } from "./SideBarTabList";
 
 export interface ISideBarProps {}
 export const FooterMenu: Array<IHrefIconProps> = [
   {
-    name: 'Analytic',
-    iconName: 'VectorfooterMenu',
-    href: 'https://google.com',
+    name: "Analytic",
+    iconName: "VectorfooterMenu",
+    href: "https://google.com",
   },
   {
-    name: 'Docs',
-    iconName: 'VectorfooterMenu-1',
-    href: 'https://google.com',
+    name: "Docs",
+    iconName: "VectorfooterMenu-1",
+    href: "https://google.com",
   },
   {
-    name: 'Feedback',
-    iconName: 'VectorfooterMenu-2',
-    href: 'https://google.com',
+    name: "Feedback",
+    iconName: "VectorfooterMenu-2",
+    href: "https://google.com",
   },
 ];
 
@@ -100,38 +100,39 @@ export const FooterMenu: Array<IHrefIconProps> = [
 
 const MainMenu: Array<ISingleSideBarProps> = [
   {
-    name: 'Swap',
-    iconName: 'swap',
-    pathName: '/Swap',
-    activePathName: '/Swap',
+    name: "Swap",
+    iconName: "swap",
+    pathName: "/Swap",
+    activePathName: "/Swap",
   },
   {
-    name: 'Pools',
-    iconName: 'pools',
-    pathName: '/pools',
-    activePathName: '/pools',
+    name: "Pools",
+    iconName: "pools",
+    pathName: "/pools",
+    activePathName: "/pools",
+  },
+  {
+    name: "Vote",
+    iconName: "lock",
+    pathName: "/Vote",
+    activePathName: "/Vote",
   },
 ];
 
 export function SideBar(props: ISideBarProps) {
-  const [activeMenu, setActiveMenu] = React.useState<string>('');
+  const [activeMenu, setActiveMenu] = React.useState<string>("");
   const { pathname } = useRouter();
-  try{
-    if(pathname== '/Swap')
-      document.getElementsByTagName("body")[0].className='swap';
-    else 
-      document.getElementsByTagName("body")[0].className='';   
-   }
-   catch{
-  
-   }
+  try {
+    if (pathname == "/Swap") document.getElementsByTagName("body")[0].className = "swap";
+    else document.getElementsByTagName("body")[0].className = "";
+  } catch {}
   return (
     <div
       className="fixed text-f14 bg-sideBar border-border-500/50 border-r shadow hidden md:block  "
       style={{
-        height: 'calc(100vh - 64px)',
-        width: '240px',
-        marginTop: '64px',
+        height: "calc(100vh - 64px)",
+        width: "240px",
+        marginTop: "64px",
       }}
     >
       <div className="flex-col justify-between h-full flex overflow-y-auto">
@@ -143,7 +144,7 @@ export function SideBar(props: ISideBarProps) {
               key={`menuItem${index}`}
               onClick={() =>
                 activeMenu === `menuItem${index}`
-                  ? setActiveMenu('')
+                  ? setActiveMenu("")
                   : setActiveMenu(`menuItem${index}`)
               }
               isActive={pathname === menuItem.activePathName}
@@ -156,12 +157,7 @@ export function SideBar(props: ISideBarProps) {
         <div>
           <div className=" border-border-500/50 border-t">
             {FooterMenu.map((e, i) => (
-              <HrefIcon
-                name={e.name}
-                href={e.href}
-                key={`footer_${i}`}
-                iconName={e.iconName}
-              />
+              <HrefIcon name={e.name} href={e.href} key={`footer_${i}`} iconName={e.iconName} />
             ))}
           </div>
           <div className=" border-t border-border-500/50 ">

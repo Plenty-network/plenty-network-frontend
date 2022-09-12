@@ -1,21 +1,18 @@
-import { AMM_TYPE } from '../../config/types';
-import { getDexType } from '../util/fetchConfig';
+import { AMM_TYPE } from "../../config/types";
+import { getDexType } from "../util/fetchConfig";
 import {
   calculateTokensOutGeneralStable,
   calculateTokensOutTezCtez,
   loadSwapDataGeneralStable,
   loadSwapDataTezCtez,
-} from './stableswap';
-import { calculateTokenOutputVolatile, loadSwapDataVolatile } from './volatile';
-import { BigNumber } from 'bignumber.js';
-import {
-  ISwapDataResponse,
-  ICalculateTokenResponse,
-  IRouterResponse,
-} from './types';
-import { computeAllPaths } from './router';
-import { store } from '../../redux';
-import axios from 'axios';
+} from "./stableswap";
+import { calculateTokenOutputVolatile, loadSwapDataVolatile } from "./volatile";
+import { BigNumber } from "bignumber.js";
+import { ISwapDataResponse, ICalculateTokenResponse, IRouterResponse } from "./types";
+import { computeAllPaths } from "./router";
+import { store } from "../../redux";
+import axios from "axios";
+import Config from "../../config/config";
 
 export const loadSwapDataWrapper = async (
   tokenIn: string,
@@ -29,8 +26,8 @@ export const loadSwapDataWrapper = async (
       swapData = await loadSwapDataVolatile(tokenIn, tokenOut);
     } else {
       if (
-        (tokenIn === 'tez' && tokenOut === 'ctez') ||
-        (tokenIn === 'ctez' && tokenOut === 'tez')
+        (tokenIn === "tez" && tokenOut === "ctez") ||
+        (tokenIn === "ctez" && tokenOut === "tez")
       ) {
         swapData = await loadSwapDataTezCtez(tokenIn, tokenOut);
       } else {
@@ -39,7 +36,7 @@ export const loadSwapDataWrapper = async (
     }
     return swapData;
   } catch (error) {
-    console.log({ message: 'swap data error', error });
+    console.log({ message: "swap data error", error });
     return {
       success: false,
       tokenIn: tokenIn,
@@ -79,7 +76,7 @@ export const calculateTokensOutWrapper = (
         tokenOut
       );
     } else {
-      if (tokenIn === 'tez' && tokenOut === 'ctez' && target) {
+      if (tokenIn === "tez" && tokenOut === "ctez" && target) {
         outputData = calculateTokensOutTezCtez(
           tokenInSupply,
           tokenOutSupply,
@@ -89,7 +86,7 @@ export const calculateTokensOutWrapper = (
           target,
           tokenIn
         );
-      } else if (tokenIn === 'ctez' && tokenOut === 'tez' && target) {
+      } else if (tokenIn === "ctez" && tokenOut === "tez" && target) {
         outputData = calculateTokensOutTezCtez(
           tokenOutSupply,
           tokenInSupply,
@@ -99,12 +96,7 @@ export const calculateTokensOutWrapper = (
           target,
           tokenIn
         );
-      } else if (
-        tokenInSupply &&
-        tokenOutSupply &&
-        tokenInPrecision &&
-        tokenOutPrecision
-      ) {
+      } else if (tokenInSupply && tokenOutSupply && tokenInPrecision && tokenOutPrecision) {
         outputData = calculateTokensOutGeneralStable(
           tokenInSupply,
           tokenOutSupply,
@@ -117,13 +109,13 @@ export const calculateTokensOutWrapper = (
           tokenOutPrecision
         );
       } else {
-        throw new Error('Invalid Parameter');
+        throw new Error("Invalid Parameter");
       }
     }
 
     return outputData;
   } catch (error) {
-    console.log({ message: 'swap data error', error });
+    console.log({ message: "swap data error", error });
     return {
       tokenOutAmount: new BigNumber(0),
       fees: new BigNumber(0),
@@ -172,8 +164,7 @@ export const computeAllPathsWrapper = (
     return {
       path: bestPath.path,
       tokenOutAmount: bestPath.tokenOutAmount,
-      finalMinimumTokenOut:
-        bestPath.minimumTokenOut[bestPath.minimumTokenOut.length - 1],
+      finalMinimumTokenOut: bestPath.minimumTokenOut[bestPath.minimumTokenOut.length - 1],
       minimumTokenOut: bestPath.minimumTokenOut,
       finalPriceImpact: finalPriceImpact,
       finalFeePerc: finalFeePerc,
@@ -214,7 +205,7 @@ export const reverseCalculation = (
     let tokenInAmount = new BigNumber(Infinity);
 
     for (var i in paths) {
-      const path = paths[i].split(' ');
+      const path = paths[i].split(" ");
       const tempAmountIn = new BigNumber(
         tokenOutAmount
           .multipliedBy(tokenPrice[path[path.length - 1]])
@@ -225,19 +216,11 @@ export const reverseCalculation = (
       }
     }
 
-    const priceDifferential = new BigNumber(tokenPrice[tokenOut])
-      .minus(tokenPrice[tokenIn])
-      .abs();
+    const priceDifferential = new BigNumber(tokenPrice[tokenOut]).minus(tokenPrice[tokenIn]).abs();
 
     // Round Up Works in general case
     tokenInAmount = new BigNumber(tokenInAmount.toFixed(5, BigNumber.ROUND_UP));
-    let res = computeAllPathsWrapper(
-      paths,
-      tokenInAmount,
-      slippage,
-      swapData,
-      tokenPrice
-    );
+    let res = computeAllPathsWrapper(paths, tokenInAmount, slippage, swapData, tokenPrice);
 
     // For high value and precision tokens
     let counter = 0;
@@ -250,18 +233,11 @@ export const reverseCalculation = (
       } else {
         tokenInAmount = tokenInAmount.plus(0.01);
       }
-      res = computeAllPathsWrapper(
-        paths,
-        tokenInAmount,
-        slippage,
-        swapData,
-        tokenPrice
-      );
+      res = computeAllPathsWrapper(paths, tokenInAmount, slippage, swapData, tokenPrice);
     }
 
     let insufficientLiquidity = false;
-    if (res.tokenOutAmount.isLessThan(tokenOutAmount))
-      insufficientLiquidity = true;
+    if (res.tokenOutAmount.isLessThan(tokenOutAmount)) insufficientLiquidity = true;
 
     return {
       path: res.path,
@@ -294,27 +270,33 @@ export const reverseCalculation = (
   }
 };
 
-export const topTokensList = async () => {
+export const topTokensList = async (): Promise<{
+  success: boolean;
+  topTokens: { [id: string]: number };
+}> => {
   try {
-    // TODO : Check Why API response is not being fetched in VSCODE
-    const tokenTvlResponse = await axios.get(
-      'http://13.127.76.247/analytics/tokens'
-    );
-    console.log(tokenTvlResponse);
+    const tokenTvlResponse = await axios.get(`${Config.PLY_INDEXER}analytics/tokens`);
     const tokenTvl = tokenTvlResponse.data;
-    console.log(tokenTvl);
-
-    const topTokens: { [id: string]: BigNumber } = {};
+    const topTokens: { [id: string]: number } = {};
 
     for (var x of tokenTvl) {
-      topTokens[x.token] = x.tvl.value;
+      topTokens[x.token] = Number(x.tvl.value);
     }
 
-    console.log(topTokens);
-    // topTokens.sort
+    const sortable = Object.entries(topTokens)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 8)
+      .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+
+    return {
+      success: true,
+      topTokens: sortable,
+    };
   } catch (error) {
     console.log(error);
+    return {
+      success: false,
+      topTokens: {},
+    };
   }
 };
-
-// topTokensList();

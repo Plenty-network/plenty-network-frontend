@@ -8,6 +8,7 @@ import { getStakedBalance } from '../util/balance';
 import { getDexAddress } from '../util/fetchConfig';
 import { getStorage } from '../util/storageProvider';
 import { IVePLYData, IVePLYListResponse } from './types';
+import { PLY_DECIMAL_MULTIPLIER } from '../../constants/global';
 
 /**
  * Returns the list of veNFTs with boost value for a user, for a particular gauge.
@@ -73,22 +74,25 @@ export const getVePLYListForUser = async (
     const finalVePLYData: IVePLYData[] = [];
 
     locksData.forEach((lock: any) => {
-      const votingPower = new BigNumber(lock.voting_power).dividedBy(
-        new BigNumber(10).pow(18)
+      const votingPower = new BigNumber(lock.currentVotingPower).dividedBy(PLY_DECIMAL_MULTIPLIER);
+      const boostedValue = getBoostValue(
+        finalUserStakedBalance,
+        finalTotalSupply,
+        votingPower,
+        totalVotingPower
       );
-      const updatedLockData = {
-        tokenId: lock.id,
-        boostValue: getBoostValue(
-          finalUserStakedBalance,
-          finalTotalSupply,
-          votingPower,
-          totalVotingPower
-        ),
-        votingPower: votingPower.toString(),
-      };
-      finalVePLYData.push(updatedLockData);
+      if(boostedValue.isGreaterThan(0)) {
+        const updatedLockData = {
+          tokenId: lock.id,
+          boostValue: boostedValue.toFixed(1),
+          votingPower: votingPower.toString(),
+        };
+        finalVePLYData.push(updatedLockData);
+      }
     });
-
+    if(finalVePLYData.length > 0) {
+      finalVePLYData.sort(compareVePLYData)
+    }
     return {
       success: true,
       vePLYData: finalVePLYData,
@@ -117,9 +121,9 @@ export const fetchTotalVotingPower = async (): Promise<BigNumber> => {
     const voteEscrowInstance = await Tezos.contract.at(voteEscrowAddress);
     const currentTimestamp = Math.floor(new Date().getTime() / 1000);
     const totalVotingPower = await voteEscrowInstance.contractViews
-      .get_total_voting_power({ time: 1, ts: currentTimestamp })
+      .get_total_voting_power({ time: 0, ts: currentTimestamp })
       .executeView({ viewCaller: voteEscrowAddress });
-    return totalVotingPower.dividedBy(new BigNumber(10).pow(18));
+    return totalVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER);
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -137,7 +141,7 @@ const getBoostValue = (
   totalSupply: BigNumber,
   tokenVotingPower: BigNumber,
   totalVotingPower: BigNumber
-): string => {
+): BigNumber => {
   try {
     const markUp = totalSupply
       .multipliedBy(tokenVotingPower)
@@ -149,12 +153,26 @@ const getBoostValue = (
       baseBalance.plus(markUp),
       userStakedBalance
     );
-    if (baseBalance.isEqualTo(0)) {
-      return '0.0';
-    }
     const boostValue = derivedBalance.dividedBy(baseBalance);
-    return boostValue.isFinite() ? boostValue.toFixed(1) : '0.0';
+    return boostValue.isFinite() ? boostValue : new BigNumber(0);
   } catch (error: any) {
     throw new Error(error.message);
+  }
+};
+
+
+/**
+ * Function used as a callback for sorting the vePLY data in descending order of the boost value.
+ */
+ const compareVePLYData = (
+  valueOne: IVePLYData,
+  valueTwo: IVePLYData
+): number => {
+  if (new BigNumber(valueOne.boostValue).isGreaterThan(new BigNumber(valueTwo.boostValue))) {
+    return -1;
+  } else if (new BigNumber(valueOne.boostValue).isLessThan(new BigNumber(valueTwo.boostValue))) {
+    return 1;
+  } else {
+    return 0;
   }
 };

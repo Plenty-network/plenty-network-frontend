@@ -1,35 +1,45 @@
-import Image from 'next/image';
-import * as React from 'react';
-import subtractSvg from '../../../assets/icon/pools/subtract.svg'
-import { Position, ToolTip } from '../../Tooltip/TooltipAdvanced';
+import Image from "next/image";
+import * as React from "react";
+import subtractSvg from "../../../assets/icon/pools/subtract.svg";
+import { Position, ToolTip } from "../../Tooltip/TooltipAdvanced";
 export interface IAprInfoProps {
-  isMobile?:boolean;
-  previousApr:string;
-  currentApr:string;
-  boostedApr:string;
+  isMobile?: boolean;
+  previousApr: string;
+  currentApr: string;
+  boostedApr: string;
 }
 
-export function AprInfo (props: IAprInfoProps) {
+export function AprInfo(props: IAprInfoProps) {
   return (
-    <div className={props.isMobile?'flex gap-2 flex-col':'flex gap-2 '}>
-        <ToolTip
-         position={Position.top}
-         toolTipChild={<p>Previous week: <span className='font-semibold'>{props.previousApr}</span></p>}
-        >
-      <div className='bg-muted-200 border text-f14 cursor-pointer text-white border-border-500 rounded-lg py-[3px] px-2 '>
-      {props.currentApr}%
-      </div>
-      </ToolTip>
-      {!props.isMobile && <Image src={subtractSvg}/>}
+    <div className={props.isMobile ? "flex gap-2 flex-col" : "flex gap-2 "}>
       <ToolTip
-         toolTipChild={<p>Previous week: <span className='font-semibold'>{props.previousApr}</span></p>}
-         position={Position.top}
+        position={Position.top}
+        toolTipChild={
+          <p>
+            Previous week: <span className="font-semibold">{props.previousApr}</span>
+          </p>
+        }
+      >
+        <div className="bg-muted-200 border text-f14 cursor-pointer text-white border-border-500 rounded-lg py-[3px] px-2 ">
+          {props.currentApr}%
+        </div>
+      </ToolTip>
+      {!props.isMobile && <Image src={subtractSvg} />}
+      <ToolTip
+        toolTipChild={
+          <p>
+            Previous week: <span className="font-semibold">{props.previousApr}</span>
+          </p>
+        }
+        position={Position.top}
+      >
+        <div
+          className={`text-f14 cursor-pointer text-white py-[3px] px-2 ${
+            props.isMobile ? "flex gap-2" : ""
+          }`}
         >
-      <div className={`text-f14 cursor-pointer text-white py-[3px] px-2 ${props.isMobile?'flex gap-2':''}`}>
-      {props.boostedApr}%
-      {props.isMobile && <Image src={subtractSvg}/>}
-
-      </div>
+          {props.boostedApr}%{props.isMobile && <Image src={subtractSvg} />}
+        </div>
       </ToolTip>
     </div>
   );

@@ -1,16 +1,16 @@
-import Image from 'next/image';
-import * as React from 'react';
+import Image from "next/image";
+import * as React from "react";
 // import ReactTooltip from 'react-tooltip';
 
-import closeIcon from '../../assets/icon/common/closeCross.svg';
-import { generateRandomString } from '../../utils/commonUtils';
-import  ReactTooltip from './ReactTooltipExtends';
+import closeIcon from "../../assets/icon/common/closeCross.svg";
+import { generateRandomString } from "../../utils/commonUtils";
+import ReactTooltip from "./ReactTooltipExtends";
 
 export enum Position {
-  top = 'top',
-  right = 'right',
-  bottom = 'bottom',
-  left = 'left',
+  top = "top",
+  right = "right",
+  bottom = "bottom",
+  left = "left",
 }
 export enum TooltipType {
   withoutArrowsAndTitle,
@@ -26,7 +26,8 @@ export interface IToolTipProps {
   title?: string;
   toolTipChild?: any;
   classNameAncorToolTip?: string;
-  isShowInnitially?:boolean;
+  isShowInnitially?: boolean;
+  disable?: boolean;
 }
 
 export function ToolTip(props: IToolTipProps) {
@@ -34,22 +35,19 @@ export function ToolTip(props: IToolTipProps) {
   if (props.type === TooltipType.withoutArrowsAndTitle) {
     return (
       <>
-        <a
-          className={props.classNameAncorToolTip}
-          data-tip
-          data-for={`tooltip_${randomId}`}
-        >
+        <a className={props.classNameAncorToolTip} data-tip data-for={`tooltip_${randomId}`}>
           {props.children}
         </a>
         <ReactTooltip
+          disable={props.disable}
           showInitial={props.isShowInnitially}
           className="tooltipCustom"
           arrowColor="rgba(60, 60, 60,0)"
-          place={props.position ? props.position : 'right'}
+          place={props.position ? props.position : "right"}
           id={`tooltip_${randomId}`}
           effect="solid"
         >
-          {props.message && <span className='!font-medium' >{props.message}</span>}
+          {props.message && <span className="font-normal">{props.message}</span>}
           {props.toolTipChild}
         </ReactTooltip>
       </>
@@ -57,18 +55,15 @@ export function ToolTip(props: IToolTipProps) {
   } else if (props.type === TooltipType.withTitle) {
     return (
       <>
-        <a
-          className={props.classNameAncorToolTip}
-          data-tip
-          data-for={`tooltip_${randomId}`}
-        >
+        <a className={props.classNameAncorToolTip} data-tip data-for={`tooltip_${randomId}`}>
           {props.children}
         </a>
         <ReactTooltip
-        showInitial={props.isShowInnitially}
+          disable={props.disable}
+          showInitial={props.isShowInnitially}
           className="tooltipCustom"
           arrowColor="#341E54"
-          place={props.position ? props.position : 'right'}
+          place={props.position ? props.position : "right"}
           id={`tooltip_${randomId}`}
           effect="solid"
         >
@@ -78,7 +73,7 @@ export function ToolTip(props: IToolTipProps) {
           <div className="flex flex-col gap-1 mr-2   relative">
             <div className="text-f12 font-medium">{props.title}</div>
             <div className="text-f12">
-              {props.message && <span className='!font-medium'>{props.message}</span>}
+              {props.message && <span className="!font-medium">{props.message}</span>}
               {props.toolTipChild}
             </div>
           </div>
@@ -86,25 +81,22 @@ export function ToolTip(props: IToolTipProps) {
       </>
     );
   }
-  
+
   return (
     <>
-      <a
-        className={props.classNameAncorToolTip}
-        data-tip
-        data-for={`tooltip_${randomId}`}
-      >
+      <a className={props.classNameAncorToolTip} data-tip data-for={`tooltip_${randomId}`}>
         {props.children}
       </a>
       <ReactTooltip
+        disable={props.disable}
         showInitial={props.isShowInnitially}
         className="tooltipCustom"
         arrowColor="#341E54"
-        place={props.position ? props.position : 'right'}
+        place={props.position ? props.position : "right"}
         id={`tooltip_${randomId}`}
         effect="solid"
       >
-        {props.message && <span className='!font-medium'>{props.message}</span>}
+        {props.message && <span className="font-normal">{props.message}</span>}
         {props.toolTipChild}
       </ReactTooltip>
     </>

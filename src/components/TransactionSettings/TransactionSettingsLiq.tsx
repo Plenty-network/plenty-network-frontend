@@ -61,12 +61,12 @@ function TransactionSettingsLiquidity(props: ITransactionSettingsProps) {
         <span className="font-caption1 text-text-200 ">Slippage tolerance</span>
         <span className="relative top-0.5 left-[5px]">
           <ToolTip message="slippage" id="tooltipD" position={Position.top}>
-            <Image src={info} width={"11px"} height={"11px"} />
+            <Image src={info} width={"11px"} height={"11px"} className="cursor-pointer" />
           </ToolTip>
         </span>
       </div>
-      <div className="flex mt-3">
-        <div className=" mr-2.5">
+      <div className="flex gap-1.5 mt-3">
+        <div className=" ">
           <Button
             color="primary"
             width="w-[87px]"
@@ -79,7 +79,7 @@ function TransactionSettingsLiquidity(props: ITransactionSettingsProps) {
         </div>
         <div
           className={clsx(
-            "border  rounded-lg h-9 w-full py-2 px-3 font-body4 flex",
+            "border  rounded-lg h-9  py-2 px-3 font-body4 flex",
             errorMessage
               ? errorMessage === ERRORMESSAGES.TRANSACTIONSETTINGSWARNING
                 ? "border-warning-500/[0.4] bg-wraning-500/[0.01]"
@@ -87,16 +87,16 @@ function TransactionSettingsLiquidity(props: ITransactionSettingsProps) {
               : "border-text-700/[0.5] bg-card-500"
           )}
         >
-          <div>
+          <p>
             <input
               type="text"
-              className="outline-none bg-card-500 text-white text-left"
+              className="outline-none bg-card-500 text-white text-left w-full"
               placeholder="0.5"
               value={props.slippage}
               onChange={(e) => handleSlippage(e.target.value)}
             />
-          </div>
-          <div className="ml-auto">%</div>
+          </p>
+          <p className="text-right">%</p>
         </div>
       </div>
       {errorMessage && (

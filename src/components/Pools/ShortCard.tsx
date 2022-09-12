@@ -1,24 +1,23 @@
-import * as React from 'react';
-import { Column } from 'react-table';
-import {
-  usePoolsMain,
-} from '../../api/pools/query/poolsmain.query';
-import {
-  IPoolsDataWrapperResponse,
-} from '../../api/pools/types';
-import { useTableNumberUtils } from '../../hooks/useTableUtils';
-import Table from '../Table/Table';
-import { CircularImageInfo } from './Component/CircularImageInfo';
-import { ManageLiquidity } from './ManageLiquidity';
-import { tokenParameterLiquidity } from '../Liquidity/types';
-import { AprInfo } from './Component/AprInfo';
-import { PoolsText, PoolsTextWithTooltip } from './Component/PoolsText';
-import { isMobile } from 'react-device-detect';
-import { AMM_TYPE } from '../../../pages/pools';
-import { usePoolsTableFilter } from '../../hooks/usePoolsTableFilter';
-import { usePoolsTableSearch } from '../../hooks/usePoolsTableSearch';
-import { ActiveLiquidity } from './ManageLiquidityHeader';
-import Liquidity from '../Liquidity';
+import * as React from "react";
+import { Column } from "react-table";
+import { usePoolsMain } from "../../api/pools/query/poolsmain.query";
+import { IPoolsDataWrapperResponse } from "../../api/pools/types";
+import { useTableNumberUtils } from "../../hooks/useTableUtils";
+import Table from "../Table/Table";
+import { CircularImageInfo } from "./Component/CircularImageInfo";
+import { ManageLiquidity } from "./ManageLiquidity";
+import { tokenParameterLiquidity } from "../Liquidity/types";
+import { AprInfo } from "./Component/AprInfo";
+import { PoolsText, PoolsTextWithTooltip } from "./Component/PoolsText";
+import { isMobile } from "react-device-detect";
+import { AMM_TYPE } from "../../../pages/pools";
+import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
+import { usePoolsTableSearch } from "../../hooks/usePoolsTableSearch";
+import { ActiveLiquidity } from "./ManageLiquidityHeader";
+import Liquidity from "../Liquidity";
+import { AppDispatch } from "../../redux";
+import { useDispatch } from "react-redux";
+import { getTotalVotingPower } from "../../redux/pools";
 
 export interface IShortCardProps {
   className?: string;
@@ -30,43 +29,49 @@ export interface IShortCardProps {
 export interface IManageBtnProps {
   isLiquidityAvailable: boolean;
   isStakeAvailable: boolean;
+  tokenA: string;
+  tokenB: string;
 }
 
 export function ShortCard(props: IShortCardProps) {
+  const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
-  const { data: poolTableData = [], isFetched: isFetch = false } =
-    usePoolsTableFilter(props.poolsFilter, '');
+  const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
+    props.poolsFilter,
+    ""
+  );
   const [poolsTableData, isFetched] = usePoolsTableSearch(
     poolTableData,
     props.searchValue,
     isFetch
   );
-  const [activeState, setActiveState] = React.useState<
-    ActiveLiquidity | string
-  >(ActiveLiquidity.Liquidity);
+  const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
+    ActiveLiquidity.Liquidity
+  );
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
-    else return '';
+    else return "";
   };
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
-    name: 'USDC.e',
+    name: "USDC.e",
     image: `/assets/tokens/USDC.e.png`,
-    symbol: 'USDC.e',
+    symbol: "USDC.e",
   });
   const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
-    name: 'USDT.e',
+    name: "USDT.e",
     image: `/assets/tokens/USDT.e.png`,
-    symbol: 'USDT.e',
+    symbol: "USDT.e",
   });
-  const tEZorCTEZtoUppercase=(a:string)=> (a.trim().toLowerCase() === 'tez' || a.trim().toLowerCase() === 'ctez')?a.toUpperCase():a;
+  const tEZorCTEZtoUppercase = (a: string) =>
+    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const mobilecolumns = React.useMemo<Column<IPoolsDataWrapperResponse>[]>(
     () => [
       {
-        Header: 'Pools',
-        id: 'pools',
+        Header: "Pools",
+        id: "pools",
         showOnMobile: true,
         accessor: (x) => (
           <div className="flex gap-1 items-center max-w-[153px]">
@@ -76,7 +81,8 @@ export function ShortCard(props: IShortCardProps) {
             />
             <div className="flex flex-col gap-[2px]">
               <span className="text-f14 text-white ">
-              {tEZorCTEZtoUppercase(x.tokenA.toString())}/{tEZorCTEZtoUppercase(x.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
+                {tEZorCTEZtoUppercase(x.tokenB.toString())}
               </span>
               <span className="text-f12 text-text-500">{x.poolType} Pool</span>
             </div>
@@ -84,22 +90,31 @@ export function ShortCard(props: IShortCardProps) {
         ),
       },
       {
-        Header: 'APR',
-        id: 'apr',
-        subText: 'current Epoch',
+        Header: "APR",
+        id: "apr",
+        subText: "current Epoch",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x) => <AprInfo currentApr={x.apr.toString()} previousApr={x.prevApr.toString()} boostedApr={x.boostedApr.toString()} isMobile={true}/>,
+        accessor: (x) => (
+          <AprInfo
+            currentApr={x.apr.toString()}
+            previousApr={x.prevApr.toString()}
+            boostedApr={x.boostedApr.toString()}
+            isMobile={true}
+          />
+        ),
       },
       {
-        Header: '',
-        id: 'lools',
+        Header: "",
+        id: "lools",
         minWidth: 151,
         accessor: (x) => (
           <ManageBtn
             isLiquidityAvailable={x.isLiquidityAvailable}
             isStakeAvailable={x.isStakeAvailable}
+            tokenA={x.tokenA.toString()}
+            tokenB={x.tokenB.toString()}
           />
         ),
       },
@@ -109,8 +124,8 @@ export function ShortCard(props: IShortCardProps) {
   const desktopcolumns = React.useMemo<Column<IPoolsDataWrapperResponse>[]>(
     () => [
       {
-        Header: 'Pools',
-        id: 'pools',
+        Header: "Pools",
+        id: "pools",
         showOnMobile: true,
         accessor: (x) => (
           <div className="flex gap-2 items-center max-w-[153px]">
@@ -119,7 +134,8 @@ export function ShortCard(props: IShortCardProps) {
             />
             <div className="flex flex-col gap-[2px]">
               <span className="text-f14 text-white ">
-                {tEZorCTEZtoUppercase(x.tokenA.toString())}/{tEZorCTEZtoUppercase(x.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
+                {tEZorCTEZtoUppercase(x.tokenB.toString())}
               </span>
               <span className="text-f12 text-text-500 progTitle">{x.poolType} Pool</span>
             </div>
@@ -127,24 +143,24 @@ export function ShortCard(props: IShortCardProps) {
         ),
       },
       {
-        Header: 'APR',
-        id: 'apr',
-        subText: 'current Epoch',
+        Header: "APR",
+        id: "apr",
+        subText: "current Epoch",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
         accessor: (x: any) => (
           <AprInfo
-            currentApr={x.apr.toString()}
+            currentApr={valueFormat(x.apr, { percentChange: true }).toString()}
             previousApr={x.prevApr.toString()}
-            boostedApr={x.boostedApr.toString()}
+            boostedApr={valueFormat(x.boostedApr, { percentChange: true }).toString()}
           />
         ),
       },
       {
-        Header: 'Volume',
-        id: 'Volume24h',
-        subText: '24h',
+        Header: "Volume",
+        id: "Volume24h",
+        subText: "24h",
         isToolTipEnabled: true,
         canShort: true,
         accessor: (x) => (
@@ -154,18 +170,17 @@ export function ShortCard(props: IShortCardProps) {
             token2={x.volumeTokenB.toString()}
             token1Name={x.tokenA.toString()}
             token2Name={x.tokenB.toString()}
-
           />
         ),
       },
       {
-        Header: 'TVL',
-        id: 'TVL',
+        Header: "TVL",
+        id: "TVL",
         isToolTipEnabled: true,
         canShort: true,
         accessor: (x) => (
           <PoolsTextWithTooltip
-           text={valueFormat(x.tvl.toNumber())}
+            text={valueFormat(x.tvl.toNumber())}
             token1={x.tvlTokenA.toString()}
             token2={x.tvlTokenB.toString()}
             token1Name={x.tokenA.toString()}
@@ -174,9 +189,9 @@ export function ShortCard(props: IShortCardProps) {
         ),
       },
       {
-        Header: 'Fees',
-        id: 'fees',
-        subText: 'current epoch',
+        Header: "Fees",
+        id: "fees",
+        subText: "current epoch",
         isToolTipEnabled: true,
         canShort: true,
         accessor: (x) => (
@@ -190,19 +205,21 @@ export function ShortCard(props: IShortCardProps) {
         ),
       },
       {
-        Header: 'Bribes',
-        id: 'Bribes',
+        Header: "Bribes",
+        id: "Bribes",
         isToolTipEnabled: true,
         accessor: (x) => <PoolsText text={valueFormat(x.bribeUSD.toNumber())} />,
       },
       {
-        Header: '',
-        id: 'lools',
+        Header: "",
+        id: "lools",
         minWidth: 151,
         accessor: (x) => (
           <ManageBtn
             isLiquidityAvailable={x.isLiquidityAvailable}
             isStakeAvailable={x.isStakeAvailable}
+            tokenA={x.tokenA.toString()}
+            tokenB={x.tokenB.toString()}
           />
         ),
       },
@@ -215,6 +232,7 @@ export function ShortCard(props: IShortCardProps) {
       <div
         className="bg-primary-500/10 cursor-pointer  text-primary-500 hover:opacity-90 px-7 py-2 rounded-lg"
         onClick={() => {
+          dispatch(getTotalVotingPower());
           props.isLiquidityAvailable
             ? props.isStakeAvailable
               ? setActiveState(ActiveLiquidity.Rewards)
@@ -222,14 +240,14 @@ export function ShortCard(props: IShortCardProps) {
             : setActiveState(ActiveLiquidity.Liquidity);
           setShowLiquidityModal(true);
           setTokenIn({
-            name: 'USDC.e',
-            image: `/assets/tokens/USDC.e.png`,
-            symbol: 'USDC.e',
+            name: props.tokenA,
+            image: getImagesPath(props.tokenA.toString()),
+            symbol: props.tokenA,
           });
           setTokenOut({
-            name: 'USDT.e',
-            image: `/assets/tokens/USDT.e.png`,
-            symbol: 'USDT.e',
+            name: props.tokenB,
+            image: getImagesPath(props.tokenB.toString()),
+            symbol: props.tokenB,
           });
         }}
       >

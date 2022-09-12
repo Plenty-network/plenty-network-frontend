@@ -55,8 +55,9 @@ export interface VolumeVeData {
 }
 
 export interface Bribes{
-  tokenName : string;
   value : BigNumber;
+  price : BigNumber;
+  name : string;
 }
 
 export interface IPoolsDataWrapperResponse {
@@ -80,4 +81,8 @@ export interface IPoolsDataWrapperResponse {
   isLiquidityAvailable : boolean;
   isStakeAvailable: boolean;
 
+}
+
+export interface IAnalyticsDataObject {
+  [key: string]: VolumeVeData;
 }

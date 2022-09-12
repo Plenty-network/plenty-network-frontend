@@ -1,16 +1,20 @@
-export const RPC_NODE = 'rpcNode';
-export const TOKEN_CONFIG = 'tokenConfig';
-export const AMM_CONFIG = 'ammConfig';
+import { BigNumber } from 'bignumber.js';
+import { VolumeVeData } from '../api/pools/types';
+import { connectedNetwork } from '../common/walletconnect';
+
+export const RPC_NODE = "rpcNode";
+export const TOKEN_CONFIG = "tokenConfig";
+export const AMM_CONFIG = "ammConfig";
 
 /**
  * balance for these type1MapIds will be present in `response.data.args[0].args[1].int`
  */
- export const type1MapIds = [3956, 4353];
+export const type1MapIds = [3956, 4353];
 
  /**
   * balance for these type2MapIds will be present in `response.data.args[1].int`
   */
- export const type2MapIds = [3943];
+ export const type2MapIds = [3943, 162769];
  
  /**
   * balance for these type3MapIds will be present in `response.data.args[0].int`
@@ -30,6 +34,24 @@ export const AMM_CONFIG = 'ammConfig';
   */
  export const type5MapIds = [12043];
 
- export const EPOCH_DURATION_TESTNET: number = 3360000; // milliseconds
- export const EPOCH_DURATION_MAINNET: number = 604800000; // milliseconds
- export const VOTES_CHART_LIMIT: number = 9;
+export const EPOCH_DURATION_TESTNET: number = 3360000; // milliseconds
+export const EPOCH_DURATION_MAINNET: number = 604800000; // milliseconds
+export const VOTES_CHART_LIMIT: number = 9;
+export const PLY_DECIMAL_MULTIPLIER : BigNumber = new BigNumber(10).pow(18);   // 10 ** 18
+
+const DAY_TESTNET = 480;
+const DAY_MAINNET = 86400;
+export const DAY = connectedNetwork === 'testnet' ? DAY_TESTNET : DAY_MAINNET;
+export const WEEK = 7 * DAY;
+export const YEAR = 52 * WEEK;
+export const MAX_TIME = 4 * YEAR;
+
+export const EMPTY_POOLS_OBJECT: VolumeVeData = {
+  pool: '',
+  volume24H: { value: '0', token1: '0', token2: '0' },
+  volume7D: { value: '0', token1: '0', token2: '0' },
+  fees24H: { value: '0', token1: '0', token2: '0' },
+  fees7D: { value: '0', token1: '0', token2: '0' },
+  feesEpoch: { value: '0', token1: '0', token2: '0' },
+  tvl: { value: '0', token1: '0', token2: '0' },
+};

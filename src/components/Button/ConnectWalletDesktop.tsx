@@ -1,28 +1,26 @@
-import Image from 'next/image';
-import * as React from 'react';
-import loadingLogo from '../../assets/icon/common/loadingLogo.svg';
-import settingLogo from '../../assets/icon/common/settingLogo.svg';
-import templeLogo from '../../assets/icon/common/templeLogo.svg';
+import Image from "next/image";
+import * as React from "react";
+import loadingLogo from "../../assets/icon/common/loadingLogo.svg";
+import settingLogo from "../../assets/icon/common/settingLogo.svg";
+import templeLogo from "../../assets/icon/common/templeLogo.svg";
+import copy from "copy-to-clipboard";
+import truncateMiddle from "truncate-middle";
+import copyLogo from "../../assets/icon/common/copyLogo.svg";
 
-import copyLogo from '../../assets/icon/common/copyLogo.svg';
-import fiatLogo from '../../assets/icon/common/fiatLogo.svg';
-import nodeSelectorLogo from '../../assets/icon/common/nodeSelectorLogo.svg';
-import disconnectLogo from '../../assets/icon/common/disconnectLogo.svg';
-import { AppDispatch, store } from '../../redux/index';
-import { useAppDispatch, useAppSelector } from '../../redux/index';
-import {
-  walletConnection,
-  walletDisconnection,
-} from '../../redux/wallet/wallet';
-import { useOutsideClick } from '../../utils/outSideClickHook';
+import switchLogo from "../../assets/icon/navigation/copy.svg";
+import fiatLogo from "../../assets/icon/common/fiatLogo.svg";
+import nodeSelectorLogo from "../../assets/icon/common/nodeSelectorLogo.svg";
+import disconnectLogo from "../../assets/icon/common/disconnectLogo.svg";
+import { AppDispatch, store } from "../../redux/index";
+import { useAppDispatch, useAppSelector } from "../../redux/index";
+import { switchWallet, walletConnection, walletDisconnection } from "../../redux/wallet/wallet";
+import { useOutsideClick } from "../../utils/outSideClickHook";
 
 export interface IConnectWalletBtnDeskTopProps {}
 
 export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
-  const isConnectWalletLoading = useAppSelector(
-    (state) => state.isLoadingWallet.isLoading
-  );
+  const isConnectWalletLoading = useAppSelector((state) => state.isLoadingWallet.isLoading);
 
   const dispatch = useAppDispatch();
   const reff = React.useRef(null);
@@ -33,6 +31,12 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
     setShowMenu(false);
     if (userAddress) {
       return dispatch(walletDisconnection());
+    }
+  };
+  const switchWalletFunction = async () => {
+    setShowMenu(false);
+    if (userAddress) {
+      return dispatch(switchWallet());
     }
   };
   const [showMenu, setShowMenu] = React.useState(false);
@@ -52,43 +56,40 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
           <p
             className="text-f14 "
             style={{
-              textOverflow: 'ellipsis',
-              width: '68px',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
+              textOverflow: "ellipsis",
+              width: "76px",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
             }}
           >
-            {userAddress}
+            {truncateMiddle(userAddress, 4, 4, "...")}
           </p>
-          {isConnectWalletLoading && (
-            <Image src={loadingLogo} className="spin" />
-          )}
+          {isConnectWalletLoading && <Image src={loadingLogo} className="spin" />}
           <Image src={settingLogo} />
         </button>
         {showMenu && (
-          <div className="absolute w-[320px] fade-in-3  right-0 top-[55px] mt-2 border z-10 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
+          <div className="absolute w-[320px] fade-in-3  right-0 top-[55px] mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
             <p className="bg-primary-755 text-f14 p-4 flex gap-2">
               <span className="text-text-400">Temple wallet</span>(
-              <span
-                className="text-text-50"
-                style={{
-                  textOverflow: 'ellipsis',
-                  width: '68px',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                }}
-              >
-                {userAddress}
-              </span>
-              )
+              <span className="text-text-50">{truncateMiddle(userAddress, 4, 4, "...")}</span>)
             </p>
-            <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-not-allowed text-white text-f14">
+            <p
+              className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-context-menu text-white text-f14"
+              onClick={() => copy(userAddress)}
+            >
               <Image src={copyLogo} />
               <span>Copy address</span>
             </p>
             <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-not-allowed text-white text-f14">
               <Image src={fiatLogo} />
               <span>Fiat</span>
+            </p>
+            <p
+              className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+              onClick={switchWalletFunction}
+            >
+              <Image src={switchLogo} />
+              <span>Switch account</span>
             </p>
 
             <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-not-allowed text-white text-f14">
@@ -109,13 +110,13 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
     );
   }
   return (
-    <div className='flex items-center'>
-    <button
-      onClick={connectTempleWallet}
-      className="bg-primary-500/5 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/100  text-f14 "
-    >
-      Connect Wallet
-    </button>
+    <div className="flex items-center">
+      <button
+        onClick={connectTempleWallet}
+        className="bg-primary-500/5 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/100  text-f14 "
+      >
+        Connect Wallet
+      </button>
     </div>
   );
 }

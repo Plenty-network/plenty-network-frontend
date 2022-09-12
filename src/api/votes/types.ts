@@ -1,16 +1,7 @@
 import { BigNumber } from "bignumber.js";
-export interface IEpochListObject {
-  epochNumber: number;
-  isCurrent: boolean;
-  startTimestamp: number;
-  endTimestamp: number;
-}
+import { AMM_TYPE } from "../../config/types";
+import { Bribes, VolumeVeData } from "../pools/types";
 
-export interface IEpochDataResponse {
-  success: boolean;
-  epochData: IEpochListObject[];
-  error?: string;
-}
 
 export interface ITotalAmmVotesData {
   amm: string;
@@ -22,10 +13,25 @@ export interface ITotalAmmVotesBigMap {
   value: string;
 }
 
+export interface IMyAmmVotesData extends ITotalAmmVotesData {
+  token_id: string;
+}
+
+export interface IMyAmmVotesBigMap {
+  key: IMyAmmVotesData;
+  value: string;
+}
+
 export interface IVeNFTData {
   tokenId: BigNumber;
   baseValue: BigNumber;
   votingPower: BigNumber;
+}
+
+export interface ISelectedPool {
+  tokenA: string;
+  tokenB: string;
+  votingPower: number;
 }
 
 export interface IVeNFTListResponse {
@@ -45,9 +51,57 @@ export interface IVotesData {
 export interface IVotesResponse {
   success: boolean;
   isOtherDataAvailable: boolean;
-  epoch: number;
   allData: IVotesData[];
   topAmmData: IVotesData[];
   otherData: IVotesData | {};
   error?: string;
+}
+
+export interface IAllVotesData {
+  [key: string]: IVotesData;
+}
+
+export interface IAllVotesResponse {
+  success: boolean;
+  totalVotesData: IAllVotesData;
+  myVotesData: IAllVotesData;
+  error?: string;
+}
+
+export interface IBribesResponse {
+  pool : string;
+  bribes : Bribes[];
+}
+
+export interface IVotePageRewardData{ [id: string]: {bribes: BigNumber , fees: BigNumber , bribesData : Bribes[] , feesTokenA : BigNumber , feesTokenB : BigNumber} }
+
+export interface IVotePageRewardDataResponse{
+  success : boolean;
+  allData : IVotePageRewardData;
+  error?: string;
+}
+
+export interface IVotePageData{
+        tokenA: string;
+        tokenB: string;
+        poolType: AMM_TYPE;
+        bribes : BigNumber;
+        bribesData : Bribes[];
+        fees : BigNumber;
+        feesTokenA : BigNumber;
+        feesTokenB : BigNumber;
+        totalVotes : BigNumber;
+        totalVotesPercentage : BigNumber;
+        myVotes : BigNumber;
+        myVotesPercentage : BigNumber;
+}
+
+export interface IVotePageDataResponse {
+  success: boolean;
+  allData: { [id: string]: IVotePageData };
+  error?: string;
+}
+
+export interface IFeesDataObject {
+  [key: string]: VolumeVeData;
 }

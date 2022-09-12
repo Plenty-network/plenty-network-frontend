@@ -18,3 +18,36 @@ export interface IPnlpBalanceResponse {
   balance: string;
   error?: string;
 }
+
+export interface IEpochListObject {
+  epochNumber: number;
+  isCurrent: boolean;
+  startTimestamp: number;
+  endTimestamp: number;
+}
+
+export interface IEpochDataResponse {
+  success: boolean;
+  epochData: IEpochListObject[];
+  error?: string;
+}
+
+export interface IEpochData {
+  isCurrent: boolean;
+  epochStartTimestamp: number;
+  epochEndTimestamp: number;
+}
+
+export interface IEpochResponse {
+  success: boolean;
+  epochData: IEpochData | {};
+  error?: string;
+}
+
+export interface IDatesEnabledRangeData {
+  startTimestamp: number;
+  endTimestamp: number;
+  days: number;
+  yearsToEnable: number[];
+  thursdaysToEnable: number[];
+}
