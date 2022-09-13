@@ -4,6 +4,8 @@ import { IStatsCardProps } from "./types";
 import info from "../../assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 
+import ply from "../../assets/icon/myPortfolio/plyIcon.svg";
+
 function StatsCard(props: IStatsCardProps) {
   return (
     <>
@@ -15,10 +17,18 @@ function StatsCard(props: IStatsCardProps) {
       >
         <p>
           <div className="flex gap-2.5">
-            <p className="text-white font-body3 ">TVL</p>
+            {props.isLast && <Image src={ply} />}
+            <p className="text-white font-body3 ">{props.title}</p>
             <Image src={info} />
           </div>
-          <div className="font-input-text1 text-white mt-2">$12.3 K </div>
+          <div className="font-input-text1 text-white mt-2">
+            {props.value}{" "}
+            {props.subValue && (
+              <span className="font-subtitle5 text-border-400">
+                {props.subValue ? props.subValue : "0.0"}
+              </span>
+            )}
+          </div>
         </p>
         <p className="ml-auto">
           {props.isLast && (
