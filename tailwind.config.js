@@ -12,6 +12,7 @@ module.exports = {
         600: "#1F0E38",
         50: "#F5EFFF",
         100: "#E2CEFF",
+        150: "#0C0318",
         200: "#CEAEFF",
         300: "#BA8DFF",
         700: "#5E3799",
@@ -55,10 +56,10 @@ module.exports = {
       border: "#282230",
       text: {
         50: "#CFCED1",
-        55:"#F8F7FA",
+        55: "#F8F7FA",
         100: "#E7E6E8",
         150: "#D5D5D5",
-        255:"#D8DAEB",
+        255: "#D8DAEB",
         200: "#B7B5BA",
         300: "#B0B7C3",
         400: "#88848C",
@@ -119,6 +120,7 @@ module.exports = {
       f1020: ["10px", "20px"],
       f13: ["13px", "2.6px"],
       f9: ["9px", "13.5px"],
+      f2836: ["28px", "36px"],
     },
 
     extend: {
