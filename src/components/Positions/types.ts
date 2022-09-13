@@ -4,7 +4,7 @@ export interface IStatsProps {
 export interface IStatsCardProps {
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
   title?: string;
-  value?: number;
+  value?: string;
   subValue?: string;
   isLast?: boolean;
 }

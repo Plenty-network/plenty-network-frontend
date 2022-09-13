@@ -1,12 +1,8 @@
 import Head from "next/head";
 import Image from "next/image";
 import * as React from "react";
-
 import { BigNumber } from "bignumber.js";
 import { useEffect, useState, useRef } from "react";
-import HeadInfo from "../../src/components/HeadInfo";
-import { CardHeader, PoolsCardHeader } from "../../src/components/Pools/Cardheader";
-import { ShortCard as PoolsTable } from "../../src/components/Pools/ShortCard";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../src/redux";
@@ -16,6 +12,9 @@ import { getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getEpochData } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
+
+import rewardsViolet from "../../src/assets/icon/myPortfolio/rewardsViolet.svg";
+import positionsViolet from "../../src/assets/icon/myPortfolio/positionsViolet.svg";
 import rewards from "../../src/assets/icon/myPortfolio/rewards.svg";
 import position from "../../src/assets/icon/myPortfolio/positions.svg";
 import Stats from "../../src/components/Positions/Stats";
@@ -35,10 +34,18 @@ import TransactionSubmitted from "../../src/components/TransactionSubmitted";
 import { setLoading } from "../../src/redux/isLoading/action";
 import { createLock } from "../../src/operations/locks";
 import { LocksTablePosition } from "../../src/components/LocksPosition/LocksTable";
-
+import clsx from "clsx";
+import StatsRewards from "../../src/components/Rewards/Stats";
+export enum MyPortfolioSection {
+  Positions = "Positions",
+  Rewards = "Rewards",
+}
 export default function MyPortfolio() {
-  const [activeStateTab, setActiveStateTab] = React.useState<PoolsCardHeader | string>(
+  const [activeStateTab, setActiveStateTab] = React.useState<MyPortfolioHeader>(
     MyPortfolioHeader.Pools
+  );
+  const [activeSection, setActiveSection] = React.useState<MyPortfolioSection>(
+    MyPortfolioSection.Positions
   );
   const userAddress = store.getState().wallet.address;
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
@@ -172,15 +179,45 @@ export default function MyPortfolio() {
       <SideBarHOC>
         <div className="pt-5 px-[24px]">
           <div className="flex gap-1">
-            <p className="text-primary-500 font-title3 h-[40px] px-[24px] flex items-center bg-primary-500/[0.1] rounded-lg gap-1">
-              Positions <Image src={position} />
+            <p
+              className={clsx(
+                " font-title3 h-[40px] px-[24px] flex items-center  rounded-lg gap-1",
+                activeSection === MyPortfolioSection.Positions
+                  ? "text-primary-500 bg-primary-500/[0.1]"
+                  : "text-text-250"
+              )}
+              onClick={() => setActiveSection(MyPortfolioSection.Positions)}
+            >
+              Positions{" "}
+              {activeSection === MyPortfolioSection.Positions ? (
+                <Image src={positionsViolet} />
+              ) : (
+                <Image src={position} />
+              )}
             </p>
-            <p className="rounded-lg text-text-250 font-title3 h-[40px] px-[24px] flex items-center gap-1">
-              Rewards <Image src={rewards} />
+            <p
+              className={clsx(
+                "rounded-lg  font-title3 h-[40px] px-[24px] flex items-center gap-1",
+                activeSection === MyPortfolioSection.Rewards
+                  ? "text-primary-500 bg-primary-500/[0.1]"
+                  : "text-text-250"
+              )}
+              onClick={() => setActiveSection(MyPortfolioSection.Rewards)}
+            >
+              Rewards
+              {activeSection === MyPortfolioSection.Rewards ? (
+                <Image src={rewardsViolet} />
+              ) : (
+                <Image src={rewards} />
+              )}
             </p>
           </div>
           <div className="mt-5">
-            <Stats setShowCreateLockModal={setShowCreateLockModal} />
+            {activeSection === MyPortfolioSection.Positions ? (
+              <Stats setShowCreateLockModal={setShowCreateLockModal} />
+            ) : (
+              <StatsRewards />
+            )}
           </div>
         </div>
         <div className="border-t border-text-800/[0.5] mt-5"></div>
@@ -191,12 +228,14 @@ export default function MyPortfolio() {
             className="md:px-3"
           />
         </div>
-        {activeStateTab === MyPortfolioHeader.Pools && (
-          <PoolsTablePosition className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
-        )}
-        {activeStateTab === MyPortfolioHeader.Locks && (
-          <LocksTablePosition className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
-        )}
+        {activeStateTab === MyPortfolioHeader.Pools &&
+          (activeSection === MyPortfolioSection.Positions ? (
+            <PoolsTablePosition className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
+          ) : null)}
+        {activeStateTab === MyPortfolioHeader.Locks &&
+          (activeSection === MyPortfolioSection.Positions ? (
+            <LocksTablePosition className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
+          ) : null)}
       </SideBarHOC>
       {showCreateLockModal && (
         <CreateLock
