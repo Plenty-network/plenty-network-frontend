@@ -16,20 +16,28 @@ export interface ITabsProps {
   onClick?: Function;
   isMyVotes?: boolean;
   isVotesTable?: boolean;
+  TableName: string | undefined;
+  index: number;
 }
 
 export function Tabs(props: ITabsProps) {
   return (
     <th
-      className={`flex cursor-pointer font-subtitle1 text-text-50 text-left -mr-[13px] ${
-        props.isFirstRow ? "justify-start" : "justify-end"
+      className={`flex cursor-pointer font-subtitle1 text-text-50 text-left  ${
+        props.isFirstRow || props.text?.includes("Pool") ? "justify-start" : "justify-end "
       } ${
-        props.isVotesTable
+        props.TableName === "PoolsPosition"
+          ? props.index === 0
+            ? " w-[150px]"
+            : props.index === 1 || props.index === 5 || props.index === 6
+            ? "w-[200px]"
+            : " w-[130px]"
+          : props.isVotesTable
           ? "w-[120px] md:w-[220px]"
           : props.isFirstRow
           ? "w-[150px]"
           : "flex-1  w-[120px]"
-      }`}
+      } `}
       onClick={() => (props.onClick ? props.onClick() : {})}
     >
       <div className="flex gap-0 flex-col">
@@ -44,13 +52,19 @@ export function Tabs(props: ITabsProps) {
         )}
       </div>
       <div className="relative top-px">
-        {props.arrowUp ? (
-          <div>
-            <Image src={arrowDown} className={props.arrowUp === "up" ? "rotate-0" : "rotate-180"} />
-          </div>
-        ) : (
-          <Image src={arrowDown} className={"opacity-0"} />
-        )}
+        {
+          props.arrowUp && (
+            <div>
+              <Image
+                src={arrowDown}
+                className={props.arrowUp === "up" ? "rotate-0" : "rotate-180"}
+              />
+            </div>
+          )
+          // : (
+          //   <Image src={arrowDown} className={"opacity-0"} />
+          // )
+        }
       </div>
     </th>
   );
