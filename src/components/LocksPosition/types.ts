@@ -14,3 +14,7 @@ export interface IManageBtnProps {
   tokenA?: string;
   tokenB?: string;
 }
+
+export interface ILocksColumnProps {}
+export interface ILockExpiryProps {}
+export interface IPlyLockedProps {}

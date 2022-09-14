@@ -14,3 +14,4 @@ export interface IManageBtnProps {
   tokenA?: string;
   tokenB?: string;
 }
+export interface IBoostProps {}

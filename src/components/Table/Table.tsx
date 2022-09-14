@@ -174,7 +174,7 @@ const Table = <D extends object>({
                             TableName === "PoolsPosition"
                               ? i === 0
                                 ? " w-[150px]"
-                                : i === 1 || i === 5 || i === 6
+                                : i === 1 || i === 5 || i === 6 || i === 4
                                 ? "w-[200px]"
                                 : " w-[130px]"
                               : isVotesTable && i === row.cells.length - 1
