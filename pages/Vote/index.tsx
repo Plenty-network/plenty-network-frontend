@@ -116,11 +116,6 @@ export default function Vote() {
           sum += Number(data[1].myVotesPercentage);
         });
         setSumofVotes(sum);
-        if (sum === 100) {
-          setAlreadyVoted(true);
-        } else {
-          setAlreadyVoted(false);
-        }
       });
     }
   }, [selectedDropDown.tokenId, selectedEpoch?.epochNumber]);
@@ -141,11 +136,6 @@ export default function Vote() {
           sum += Number(data[1].myVotesPercentage);
         });
         setSumofVotes(sum);
-        if (sum === 100) {
-          setAlreadyVoted(true);
-        } else {
-          setAlreadyVoted(false);
-        }
       });
       //setVeNFTlist([]);
       if (userAddress) {
@@ -272,6 +262,7 @@ export default function Vote() {
     setShowCastVoteModal(false);
     setShowConfirmTransaction(true);
     dispatch(setLoading(true));
+    setAlreadyVoted(true);
     const finalVotes = addRemainingVotesDust(selectedDropDown.votingPower, totalVotingPower, votes);
     vote(
       Number(selectedDropDown.tokenId),
@@ -283,7 +274,7 @@ export default function Vote() {
       if (response.success) {
         setVotes([] as IVotes[]);
         setBalanceUpdate(true);
-
+        setAlreadyVoted(false);
         setTimeout(() => {
           setCastVoteOperation(true);
           setShowTransactionSubmitModal(false);
@@ -294,6 +285,7 @@ export default function Vote() {
         setContentTransaction("");
         dispatch(setLoading(false));
       } else {
+        setAlreadyVoted(false);
         setBalanceUpdate(true);
         setShowConfirmTransaction(false);
         setTimeout(() => {
@@ -350,10 +342,20 @@ export default function Vote() {
                   {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
                 </div>
                 <div className="">
-                  {(sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
-                  (selectedEpoch?.epochNumber
-                    ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                    : true) ? (
+                  {alreadyVoted ? (
+                    <div
+                      className={clsx(
+                        "px-4   h-[52px] flex items-center justify-center rounded-xl ",
+
+                        "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                      )}
+                    >
+                      Cast Vote
+                    </div>
+                  ) : (sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
+                    (selectedEpoch?.epochNumber
+                      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                      : true) ? (
                     <ToolTip
                       message={"Cast 100% of your Votes to proceed "}
                       id="tooltip8"
@@ -404,6 +406,7 @@ export default function Vote() {
                     <div
                       className={clsx(
                         "px-4   h-[52px] flex items-center justify-center rounded-xl ",
+
                         votes.length !== 0 &&
                           (selectedEpoch?.epochNumber
                             ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
@@ -486,10 +489,20 @@ export default function Vote() {
                 </span>
               </div>
               <div className="basis-3/4">
-                {(sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
-                (selectedEpoch?.epochNumber
-                  ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                  : true) ? (
+                {alreadyVoted ? (
+                  <div
+                    className={clsx(
+                      "px-4   h-[52px] flex items-center justify-center rounded-xl ",
+
+                      "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                    )}
+                  >
+                    Cast Vote
+                  </div>
+                ) : (sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
+                  (selectedEpoch?.epochNumber
+                    ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                    : true) ? (
                   <ToolTip
                     message={"Cast 100% of your Votes to proceed "}
                     id="tooltip8"
