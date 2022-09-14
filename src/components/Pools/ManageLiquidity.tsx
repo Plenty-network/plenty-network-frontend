@@ -41,6 +41,7 @@ import { getVePLYListForUser } from "../../api/stake";
 import { ConfirmStakeLiquidity } from "./ConfirmStaking";
 import { ConfirmUnStakeLiquidity } from "./ConfirmUnstake";
 import { IVePLYData } from "../../api/stake/types";
+import { ELiquidityProcess } from "../../api/liquidity/types";
 
 export interface IManageLiquidityProps {
   closeFn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -230,10 +231,10 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         swapData.current.lpToken
       );
       setPnlpEstimates(res.pnlpEstimate);
-      const sharePool = getPoolShareForPnlp(res.pnlpEstimate, swapData.current.lpTokenSupply);
+      const sharePool = getPoolShareForPnlp(res.pnlpEstimate, swapData.current.lpTokenSupply, ELiquidityProcess.ADD);
       setSharePool(sharePool.pnlpPoolShare);
     } else if (burnAmount > 0 && !isAddLiquidity) {
-      const sharePool = getPoolShareForPnlp(burnAmount.toString(), swapData.current.lpTokenSupply);
+      const sharePool = getPoolShareForPnlp(burnAmount.toString(), swapData.current.lpTokenSupply, ELiquidityProcess.REMOVE);
       setSharePool(sharePool.pnlpPoolShare);
     }
   }, [firstTokenAmountLiq, secondTokenAmountLiq, screen, burnAmount]);
