@@ -29,3 +29,8 @@ export interface IPnlpPoolShareResponse {
   pnlpPoolShare: string;
   error?: string;
 }
+
+export enum ELiquidityProcess {
+  ADD,
+  REMOVE
+};
