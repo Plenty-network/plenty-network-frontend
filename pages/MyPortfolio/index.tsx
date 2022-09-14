@@ -36,6 +36,7 @@ import { createLock } from "../../src/operations/locks";
 import { LocksTablePosition } from "../../src/components/LocksPosition/LocksTable";
 import clsx from "clsx";
 import StatsRewards from "../../src/components/Rewards/Stats";
+import { MODULE } from "../../src/components/Votes/types";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -49,6 +50,7 @@ export default function MyPortfolio() {
   );
   const userAddress = store.getState().wallet.address;
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
+  const [isManageLock, setIsManageLock] = useState(false);
   const [plyInput, setPlyInput] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
@@ -82,6 +84,7 @@ export default function MyPortfolio() {
   const handleCloseLock = () => {
     setShowCreateLockModal(false);
     setPlyInput("");
+    setIsManageLock(false);
     setLockingDate("");
     setLockingEndData({
       selected: 0,
@@ -246,12 +249,18 @@ export default function MyPortfolio() {
                   Trade locks
                 </p>
               </div>
-              <LocksTablePosition className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
+              <LocksTablePosition
+                className="md:px-5 md:py-4  px-2 py-4"
+                voteData={voteData}
+                setIsManageLock={setIsManageLock}
+                setShowCreateLockModal={setShowCreateLockModal}
+              />
             </>
           ) : null)}
       </SideBarHOC>
-      {showCreateLockModal && (
+      {(isManageLock || showCreateLockModal) && (
         <CreateLock
+          module={isManageLock ? MODULE.MY_PORTFOLIO : MODULE.VOTE}
           show={showCreateLockModal}
           setPlyInput={setPlyInput}
           plyInput={plyInput}
