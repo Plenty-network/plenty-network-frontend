@@ -9,6 +9,9 @@ import { ILocksTablePosition, IManageBtnProps } from "./types";
 import { ManageLiquidity } from "../Pools/ManageLiquidity";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
+import { LocksCloumn } from "./LockColumn";
+import { PlyLocked } from "./PlyLocked";
+import { LockExpiry } from "./LockExpiry";
 
 export function LocksTablePosition(props: ILocksTablePosition) {
   const { valueFormat } = useTableNumberUtils();
@@ -130,7 +133,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
 
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => 2345,
+        accessor: (x: any) => <LocksCloumn />,
       },
       {
         Header: "Pool",
@@ -168,14 +171,14 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         id: "PLY locked",
         canShort: true,
         isToolTipEnabled: true,
-        accessor: (x: any) => 345,
+        accessor: (x: any) => <PlyLocked />,
       },
       {
         Header: "Lock expiry",
         id: "Lock expiry",
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x: any) => 345,
+        accessor: (x: any) => <LockExpiry />,
       },
 
       {

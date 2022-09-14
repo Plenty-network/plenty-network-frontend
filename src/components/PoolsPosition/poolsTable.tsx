@@ -9,6 +9,7 @@ import { IManageBtnProps, IPoolsTablePosition } from "./types";
 import { ManageLiquidity } from "../Pools/ManageLiquidity";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
+import { Boost } from "./Boost";
 
 export function PoolsTablePosition(props: IPoolsTablePosition) {
   const { valueFormat } = useTableNumberUtils();
@@ -176,7 +177,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         id: "Boost",
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x: any) => 2345,
+        accessor: (x: any) => <Boost />,
       },
       {
         Header: "",

@@ -29,7 +29,7 @@ export function Tabs(props: ITabsProps) {
         props.TableName === "PoolsPosition"
           ? props.index === 0
             ? " w-[150px]"
-            : props.index === 1 || props.index === 5 || props.index === 6
+            : props.index === 1 || props.index === 5 || props.index === 6 || props.index === 4
             ? "w-[200px]"
             : " w-[130px]"
           : props.isVotesTable

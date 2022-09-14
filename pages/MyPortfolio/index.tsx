@@ -234,7 +234,20 @@ export default function MyPortfolio() {
           ) : null)}
         {activeStateTab === MyPortfolioHeader.Locks &&
           (activeSection === MyPortfolioSection.Positions ? (
-            <LocksTablePosition className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
+            <>
+              <div className="flex px-[25px] mt-5">
+                <p>
+                  <div className="text-white font-title3">List of my locks</div>
+                  <div className="text-text-250 font-body1">
+                    Discover veNFTs on the largest NFT marketplace on Tezos.
+                  </div>
+                </p>
+                <p className="flex items-center font-title3-bold text-primary-500 ml-auto h-[54px] px-[26px] bg-primary-500/[0.1] rounded-xl">
+                  Trade locks
+                </p>
+              </div>
+              <LocksTablePosition className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
+            </>
           ) : null)}
       </SideBarHOC>
       {showCreateLockModal && (
