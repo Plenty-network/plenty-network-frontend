@@ -35,7 +35,6 @@ const ConfigSlice = createSlice({
         if (AMMs[amm].gaugeAddress) {
           gaugeConfigData[AMMs[amm].gaugeAddress as string] = {
             ammAddress: amm,
-            ammType: AMMs[amm].type,
             tokenOneSymbol: AMMs[amm].token1.symbol,
             tokenTwoSymbol: AMMs[amm].token2.symbol,
           };

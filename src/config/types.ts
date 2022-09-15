@@ -130,7 +130,6 @@ export interface IContractsConfig {
 
 export interface IGaugeConfigData {
   ammAddress: string;
-  ammType: AMM_TYPE;
   tokenOneSymbol: string;
   tokenTwoSymbol: string;
 }
