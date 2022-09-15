@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchConfig } from "../../api/util/fetchConfig";
-import { IAmmContracts, ITokens } from "../../config/types";
+import { IAmmContracts, IGaugeConfig, ITokens } from "../../config/types";
 
 interface ConfigState {
   tokens: ITokens;
   AMMs: IAmmContracts;
   standard: ITokens;
   lp: ITokens;
+  gauges: IGaugeConfig;
 }
 
 const initialState: ConfigState = {
@@ -14,6 +15,7 @@ const initialState: ConfigState = {
   AMMs: {},
   standard: {},
   lp: {},
+  gauges: {},
 };
 
 export const getConfig = createAsyncThunk("config/getConfig", async (thunkAPI) => {
@@ -24,7 +26,25 @@ export const getConfig = createAsyncThunk("config/getConfig", async (thunkAPI) =
 const ConfigSlice = createSlice({
   name: "config",
   initialState,
-  reducers: {},
+  reducers: {
+    createGaugeConfig: (state) => {
+      const AMMs = state.AMMs;
+      const gaugeConfigData: IGaugeConfig = {};
+
+      Object.keys(AMMs).forEach((amm) => {
+        if (AMMs[amm].gaugeAddress) {
+          gaugeConfigData[AMMs[amm].gaugeAddress as string] = {
+            ammAddress: amm,
+            ammType: AMMs[amm].type,
+            tokenOneSymbol: AMMs[amm].token1.symbol,
+            tokenTwoSymbol: AMMs[amm].token2.symbol,
+          };
+        }
+      });
+
+      state.gauges = gaugeConfigData;
+    },
+  },
   extraReducers: {
     [getConfig.pending.toString()]: (state: any) => {
       console.log("Fetching config");
@@ -42,4 +62,5 @@ const ConfigSlice = createSlice({
   },
 });
 
+export const { createGaugeConfig } = ConfigSlice.actions;
 export const config = ConfigSlice.reducer;

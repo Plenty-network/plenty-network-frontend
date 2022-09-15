@@ -51,3 +51,11 @@ export interface IDatesEnabledRangeData {
   yearsToEnable: number[];
   thursdaysToEnable: number[];
 }
+
+export interface ILpTokenPriceList {
+  [id: string]: BigNumber
+}
+
+export interface ITokenPriceList {
+  [id: string]: number
+}
