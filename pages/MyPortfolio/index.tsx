@@ -7,8 +7,8 @@ import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../src/redux";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
-import { getConfig } from "../../src/redux/config/config";
-import { getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
+import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
+import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getEpochData } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
@@ -95,6 +95,7 @@ export default function MyPortfolio() {
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
+  const amm = useAppSelector((state) => state.config.AMMs);
 
   useEffect(() => {
     if (epochError) {
@@ -123,6 +124,12 @@ export default function MyPortfolio() {
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
+  useEffect(() => {
+    Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
+  }, [tokenPrice]);
+  useEffect(() => {
+    Object.keys(amm).length !== 0 && dispatch(createGaugeConfig())
+  }, [amm]);
   const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
     {} as { [id: string]: IVotePageData }
   );
