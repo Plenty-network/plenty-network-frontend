@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import { AppDispatch, useAppSelector } from "../../src/redux";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
-import { getConfig } from "../../src/redux/config/config";
+import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import SelectNFT from "../../src/components/Votes/SelectNFT";
 import chartMobile from "../../src/assets/icon/vote/chartMobile.svg";
@@ -71,6 +71,7 @@ export default function Vote() {
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const TOKEN = useAppSelector((state) => state.config.tokens);
+  const amm = useAppSelector((state) => state.config.AMMs);
   const handleCreateLock = () => {
     setShowCreateLockModal(true);
   };
@@ -199,6 +200,9 @@ export default function Vote() {
   useEffect(() => {
     Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
   }, [tokenPrice]);
+  useEffect(() => {
+    Object.keys(amm).length !== 0 && dispatch(createGaugeConfig())
+  }, [amm]);
   useEffect(() => {
     if (userAddress) {
       getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
