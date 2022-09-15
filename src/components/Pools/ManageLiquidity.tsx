@@ -107,18 +107,24 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [vePLYOptions, setVePLYOptions] = useState<IVePLYData[]>([]);
 
   useEffect(() => {
-    if (stakeInput === "") {
-      //setVePLYOptions([]);
-      setSelectedDropDown({ tokenId: "", boostValue: "", votingPower: "" });
-    }
+    // if (stakeInput === "") {
+    //   //setVePLYOptions([]);
+    //   setSelectedDropDown({ tokenId: "", boostValue: "", votingPower: "" });
+    // }
     if (walletAddress || (screen === "2" && props.activeState === ActiveLiquidity.Staking)) {
+      console.log(
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        stakeInput === "" ? undefined : stakeInput.toString(),
+        walletAddress
+      );
       getVePLYListForUser(
         props.tokenIn.symbol,
         props.tokenOut.symbol,
-        stakeInput.toString(),
+        stakeInput === "" ? undefined : stakeInput.toString(),
         walletAddress
       ).then((res) => {
-        console.log(res.vePLYData);
+        console.log(res);
         const veplyData = res.vePLYData;
         setVePLYOptions(veplyData);
       });
@@ -231,10 +237,18 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         swapData.current.lpToken
       );
       setPnlpEstimates(res.pnlpEstimate);
-      const sharePool = getPoolShareForPnlp(res.pnlpEstimate, swapData.current.lpTokenSupply, ELiquidityProcess.ADD);
+      const sharePool = getPoolShareForPnlp(
+        res.pnlpEstimate,
+        swapData.current.lpTokenSupply,
+        ELiquidityProcess.ADD
+      );
       setSharePool(sharePool.pnlpPoolShare);
     } else if (burnAmount > 0 && !isAddLiquidity) {
-      const sharePool = getPoolShareForPnlp(burnAmount.toString(), swapData.current.lpTokenSupply, ELiquidityProcess.REMOVE);
+      const sharePool = getPoolShareForPnlp(
+        burnAmount.toString(),
+        swapData.current.lpTokenSupply,
+        ELiquidityProcess.REMOVE
+      );
       setSharePool(sharePool.pnlpPoolShare);
     }
   }, [firstTokenAmountLiq, secondTokenAmountLiq, screen, burnAmount]);

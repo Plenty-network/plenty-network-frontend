@@ -126,10 +126,12 @@ export default function MyPortfolio() {
   const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
     {} as { [id: string]: IVotePageData }
   );
+  useEffect(() => {
+    votesPageDataWrapper(722, undefined).then((res) => {
+      setVoteData(res.allData);
+    });
+  }, []);
 
-  votesPageDataWrapper(722, undefined).then((res) => {
-    setVoteData(res.allData);
-  });
   const resetAllValues = () => {
     setPlyInput("");
     setLockingDate("");
@@ -215,7 +217,8 @@ export default function MyPortfolio() {
               )}
             </p>
           </div>
-          <div className="mt-5">
+
+          <div className="mt-5 overflow-x-auto">
             {activeSection === MyPortfolioSection.Positions ? (
               <Stats setShowCreateLockModal={setShowCreateLockModal} />
             ) : (

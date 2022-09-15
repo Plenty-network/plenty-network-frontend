@@ -214,7 +214,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
   }
   return (
     <>
-      <div className={`w-full md:min-w-[557px] overflow-x-auto  ${props.className}`}>
+      <div className={` overflow-x-auto  ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
@@ -222,6 +222,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           shortby="Myvotes"
           isFetched={!noSearchResult && votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
+          TableName="poolsPosition"
         />
       </div>
       {showLiquidityModal && (

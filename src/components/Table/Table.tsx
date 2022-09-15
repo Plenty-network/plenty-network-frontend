@@ -109,7 +109,17 @@ const Table = <D extends object>({
 
   return (
     <div>
-      <table className={clsx("w-full flex flex-col ", isVotesTable ? "gap-1.5" : "gap-1.5")}>
+      <table
+        className={clsx(
+          " flex flex-col ",
+          isVotesTable ? "gap-1.5" : "gap-1.5",
+          TableName === "lockPosition"
+            ? "min-w-[1049px]"
+            : TableName === "poolsPosition"
+            ? "min-w-[900px]"
+            : "w-full"
+        )}
+      >
         <thead ref={headerRef}>
           {headerGroups.map((headerGroup, index) => (
             <tr
@@ -167,22 +177,28 @@ const Table = <D extends object>({
                         // eslint-disable-next-line react/jsx-key
                         <td
                           className={` flex items-center ${
-                            i == 0 || (TableName === "PoolsPosition" && i === 1)
+                            i == 0 || (TableName === "lockPosition" && i === 1)
                               ? "justify-start"
                               : "justify-end"
                           } ${
-                            TableName === "PoolsPosition"
+                            TableName === "lockPosition"
                               ? i === 0
                                 ? " w-[150px]"
                                 : i === 1 || i === 5 || i === 6 || i === 4
                                 ? "w-[200px]"
                                 : " w-[130px]"
+                              : TableName === "poolsPosition"
+                              ? i === 0
+                                ? "w-[200px]"
+                                : i === 5
+                                ? "w-[200px]"
+                                : "w-[140px]"
                               : isVotesTable && i === row.cells.length - 1
                               ? "w-[100px] md:w-[220px]"
                               : i == 0
                               ? "w-[150px]"
                               : "flex-1 w-[120px]"
-                          }`}
+                          } ${TableName === "poolsPosition" && i === 5 && "ml-auto"}`}
                         >
                           {cell.render("Cell")}
                         </td>

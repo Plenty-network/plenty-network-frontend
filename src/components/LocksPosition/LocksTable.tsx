@@ -12,6 +12,12 @@ import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 import { LocksCloumn } from "./LockColumn";
 import { PlyLocked } from "./PlyLocked";
 import { LockExpiry } from "./LockExpiry";
+import PieChartButton from "./PieChart";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../redux";
+import { setSelectedDropDown } from "../../redux/veNFT";
+import Vote from "../../../pages/Vote";
+import { useRouter } from "next/router";
 
 export function LocksTablePosition(props: ILocksTablePosition) {
   const { valueFormat } = useTableNumberUtils();
@@ -50,28 +56,6 @@ export function LocksTablePosition(props: ILocksTablePosition) {
     if (votedataArray.length !== 0) setVotedata(votedataArray);
     else setVotedata([]);
   }, [votedataArray.length]);
-  // React.useEffect(() => {
-  //   if (props.searchValue && props.searchValue.length) {
-  //     const _votesTableData = votedataArray.filter((e: any) => {
-  //       return (
-  //         e.votes.tokenA.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-  //         e.votes.tokenB.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-  //         (props.searchValue.toLowerCase() === "xtz" &&
-  //           e.votes.tokenA.toLowerCase().search(/\btez\b/) >= 0) ||
-  //         (props.searchValue.toLowerCase() === "xtz" &&
-  //           e.votes.tokenB.toLowerCase().search(/\btez\b/) >= 0)
-  //       );
-  //     });
-  //     if (_votesTableData.length === 0) {
-  //       setNoSearchResult(true);
-  //     } else {
-  //       setNoSearchResult(false);
-  //     }
-  //     setVotedata(_votesTableData);
-  //   } else {
-  //     setVotedata(votedataArray);
-  //   }
-  // }, [props.searchValue]);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
@@ -227,17 +211,30 @@ export function LocksTablePosition(props: ILocksTablePosition) {
     }
   }
   function VoteBtn(): any {
+    const dispatch = useDispatch<AppDispatch>();
+    const router = useRouter();
     if (true) {
       //isstaked
       return (
+        // <Link >
         <div
           className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
           onClick={() => {
-            setShowLiquidityModal(true);
+            dispatch(
+              setSelectedDropDown({
+                votingPower: "1.952",
+                tokenId: "75",
+              })
+            );
+            router.push("/Vote");
           }}
         >
-          Voted
+          Voted{" "}
+          <span className="ml-2">
+            <PieChartButton />
+          </span>
         </div>
+        // </Link>
       );
     } else if (false) {
       return (
@@ -261,7 +258,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
   }
   return (
     <>
-      <div className={`w-full md:min-w-[557px] overflow-x-auto  ${props.className}`}>
+      <div className={`overflow-x-auto  ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
@@ -269,7 +266,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           shortby="Myvotes"
           isFetched={!noSearchResult && votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
-          TableName={"PoolsPosition"}
+          TableName={"lockPosition"}
         />
       </div>
       {/* {showLiquidityModal && (
