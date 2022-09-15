@@ -191,7 +191,12 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         Header: "",
         id: "manage",
         minWidth: 151,
-        accessor: (x) => <ManageBtn />,
+        accessor: (x) => (
+          <ManageBtn
+            setIsManageLock={props.setIsManageLock}
+            setShowCreateLockModal={props.setShowCreateLockModal}
+          />
+        ),
       },
     ],
     [valueFormat]
@@ -203,7 +208,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         <div
           className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
           onClick={() => {
-            setShowLiquidityModal(true);
+            props.setIsManageLock(true);
+            props.setShowCreateLockModal(true);
           }}
         >
           Manage
@@ -220,7 +226,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       );
     }
   }
-  function VoteBtn(props: IManageBtnProps): any {
+  function VoteBtn(): any {
     if (true) {
       //isstaked
       return (
@@ -266,7 +272,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           TableName={"PoolsPosition"}
         />
       </div>
-      {showLiquidityModal && (
+      {/* {showLiquidityModal && (
         <ManageLiquidity
           tokenIn={tokenIn}
           tokenOut={tokenOut}
@@ -274,7 +280,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           setActiveState={setActiveState}
           activeState={activeState}
         />
-      )}
+      )} */}
     </>
   );
 }

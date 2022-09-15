@@ -6,7 +6,7 @@ import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import Image from "next/image";
 import Button from "../Button/Button";
 import ConfirmLocking from "./ConfirmLocking";
-import { ICreateLockProps } from "./types";
+import { ICreateLockProps, MODULE } from "./types";
 import clsx from "clsx";
 import { AppDispatch, store } from "../../redux";
 import { connectedNetwork } from "../../common/walletconnect";
@@ -17,6 +17,7 @@ import { MAX_TIME, WEEK, YEAR } from "../../constants/global";
 import { Datepicker } from "../DatePicker";
 import { getCalendarRangeToEnable } from "../../api/util/epoch";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { TopBar } from "../LocksPosition/ManageLockTopBar";
 
 function CreateLock(props: ICreateLockProps) {
   const walletAddress = store.getState().wallet.address;
@@ -141,6 +142,12 @@ function CreateLock(props: ICreateLockProps) {
           Insufficient Balance
         </Button>
       );
+    } else if (props.module === MODULE.MY_PORTFOLIO) {
+      return (
+        <Button color={"primary"} onClick={() => setScreen("2")}>
+          Increase Lock
+        </Button>
+      );
     } else {
       return (
         <Button color={"primary"} onClick={() => setScreen("2")}>
@@ -155,16 +162,20 @@ function CreateLock(props: ICreateLockProps) {
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
-      className="w-[400px] max-w-[400px] px-4 md:px-6 md:w-[602px] md:max-w-[602px]"
+      Name={"Manage"}
+      className="w-[400px] max-w-[400px] py-2 px-0 md:w-[602px] md:max-w-[602px]"
     >
       {screen === "1" ? (
         <>
-          <div className="mx-2 text-white font-title3">Create Lock </div>
-
+          <div className="px-4 md:px-6  mx-2 text-white font-title3">
+            {props.module === MODULE.MY_PORTFOLIO ? "Manage Lock" : "Create Lock"}
+          </div>
+          {props.module === MODULE.MY_PORTFOLIO && <TopBar />}
           <div
             className={clsx(
-              "border pl-4 pr-5 mt-[22px] bg-muted-200/[0.1] items-center flex  rounded-2xl h-[86px] hover:border-text-700",
-              isFirstInputFocus ? "border-text-700" : "border-text-800 "
+              "mx-4 md:mx-6 border pl-4 pr-5  bg-muted-200/[0.1] items-center flex  rounded-2xl h-[86px] hover:border-text-700",
+              isFirstInputFocus ? "border-text-700" : "border-text-800 ",
+              props.module === MODULE.MY_PORTFOLIO ? "mt-3" : "mt-[22px]"
             )}
           >
             <div className="flex-auto">
@@ -201,7 +212,7 @@ function CreateLock(props: ICreateLockProps) {
               </div>
             </div>
           </div>
-          <div className="ml-auto mt-3 flex font-body4">
+          <div className="mr-4 md:mr-6 ml-auto mt-3 flex font-body4">
             <p
               className={clsx(
                 "cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
@@ -242,7 +253,12 @@ function CreateLock(props: ICreateLockProps) {
               75%
             </p>
           </div>
-          <div className="bg-muted-400 border border-text-800 rounded-2xl py-5 mt-5">
+          <div
+            className={clsx(
+              "mx-4 md:mx-6 bg-muted-400 border border-text-800 rounded-2xl py-5 mt-5",
+              props.module === MODULE.MY_PORTFOLIO ? "mt-3" : "mt-5"
+            )}
+          >
             <div className=" px-3 md:px-5 text-text-50 font-subtitle1">Choose lock end </div>
             <div className="mt-2 rounded-lg ml-5 mr-[24px] border-[1.3px] border-border-200 pr-5 pl-4 flex items-center h-[62px] hover:border-text-700">
               <div>
@@ -270,39 +286,45 @@ function CreateLock(props: ICreateLockProps) {
               </div>
             </div>
             <div className="mt-3 px-3 md:px-5 flex gap-2">
-              <p
-                className={clsx(
-                  "rounded-[32px] cursor-pointer border  px-[15px] md:px-[25px] flex items-center h-[44px] text-text-500 font-subtitle1  md:font-subtitle3",
-                  props.lockingEndData.selected === WEEK
-                    ? "bg-card-500 border-primary-500"
-                    : "bg-muted-200/[0.1] border-border-200"
-                )}
-                onClick={() => handleDateSelection(WEEK, undefined)}
-              >
-                ~ 1 week
-              </p>
-              <p
-                className={clsx(
-                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[15px] md:px-[25px] flex items-center h-[44px] text-text-500 font-subtitle1  md:font-subtitle3 cursor-pointer",
-                  props.lockingEndData.selected === 4 * WEEK
-                    ? "bg-card-500 border-primary-500"
-                    : "bg-muted-200/[0.1] border-border-200"
-                )}
-                onClick={() => handleDateSelection(4 * WEEK, undefined)}
-              >
-                ~ 1 month
-              </p>
-              <p
-                className={clsx(
-                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[15px] md:px-[25px] flex items-center h-[44px] text-text-500 font-subtitle1  md:font-subtitle3 cursor-pointer",
-                  props.lockingEndData.selected === YEAR
-                    ? "bg-card-500 border-primary-500"
-                    : "bg-muted-200/[0.1] border-border-200"
-                )}
-                onClick={() => handleDateSelection(YEAR, undefined)}
-              >
-                ~ 1 year
-              </p>
+              {props.module === MODULE.VOTE && (
+                <p
+                  className={clsx(
+                    "rounded-[32px] cursor-pointer border  px-[15px] md:px-[25px] flex items-center h-[44px] text-text-500 font-subtitle1  md:font-subtitle3",
+                    props.lockingEndData.selected === WEEK
+                      ? "bg-card-500 border-primary-500"
+                      : "bg-muted-200/[0.1] border-border-200"
+                  )}
+                  onClick={() => handleDateSelection(WEEK, undefined)}
+                >
+                  ~ 1 week
+                </p>
+              )}
+              {props.module === MODULE.VOTE && (
+                <p
+                  className={clsx(
+                    "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[15px] md:px-[25px] flex items-center h-[44px] text-text-500 font-subtitle1  md:font-subtitle3 cursor-pointer",
+                    props.lockingEndData.selected === 4 * WEEK
+                      ? "bg-card-500 border-primary-500"
+                      : "bg-muted-200/[0.1] border-border-200"
+                  )}
+                  onClick={() => handleDateSelection(4 * WEEK, undefined)}
+                >
+                  ~ 1 month
+                </p>
+              )}
+              {props.module === MODULE.VOTE && (
+                <p
+                  className={clsx(
+                    "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[15px] md:px-[25px] flex items-center h-[44px] text-text-500 font-subtitle1  md:font-subtitle3 cursor-pointer",
+                    props.lockingEndData.selected === YEAR
+                      ? "bg-card-500 border-primary-500"
+                      : "bg-muted-200/[0.1] border-border-200"
+                  )}
+                  onClick={() => handleDateSelection(YEAR, undefined)}
+                >
+                  ~ 1 year
+                </p>
+              )}
               <p>
                 <ToolTip
                   toolTipChild={
@@ -327,8 +349,13 @@ function CreateLock(props: ICreateLockProps) {
                 </ToolTip>
               </p>
             </div>
-            <div className="mt-3 border-t border-text-800/[0.5]"></div>
-            <div className="px-5 flex mt-4 flex items-center space-between">
+            <div className={clsx("mt-3 border-t border-text-800/[0.5]")}></div>
+            <div
+              className={clsx(
+                "px-5 flex  flex items-center space-between",
+                props.module === MODULE.MY_PORTFOLIO ? "mt-2" : "mt-4"
+              )}
+            >
               <div className="text-text-250 w-[155px] md:w-auto font-mobile-f1020 md:font-subtitle3">
                 Your will receive a veNFT with a voting power of{" "}
               </div>
@@ -338,7 +365,14 @@ function CreateLock(props: ICreateLockProps) {
             </div>
           </div>
 
-          <div className="mt-[18px]">{ProceedButton}</div>
+          <div
+            className={clsx(
+              "mx-4 md:mx-6 ",
+              props.module === MODULE.MY_PORTFOLIO ? "mt-3" : "mt-[18px]"
+            )}
+          >
+            {ProceedButton}
+          </div>
         </>
       ) : (
         <ConfirmLocking

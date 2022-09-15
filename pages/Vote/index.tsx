@@ -37,6 +37,7 @@ import { votesPageDataWrapper } from "../../src/api/votes";
 import { IVotes } from "../../src/operations/types";
 import clsx from "clsx";
 import EpochPopup from "../../src/components/Votes/EpochPopup";
+import { MODULE } from "../../src/components/Votes/types";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -608,6 +609,7 @@ export default function Vote() {
       )}
       {showCreateLockModal && (
         <CreateLock
+          module={MODULE.VOTE}
           show={showCreateLockModal}
           setPlyInput={setPlyInput}
           plyInput={plyInput}
