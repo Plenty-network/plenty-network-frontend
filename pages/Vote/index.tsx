@@ -163,7 +163,11 @@ export default function Vote() {
         userAddress,
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
       ).then((res) => {
-        setVeNFTlist(res.veNFTData);
+        const filteredList = res.veNFTData.filter(
+          (veNFT) => veNFT.locksState === 0 || veNFT.locksState === 1
+        );
+
+        setVeNFTlist(filteredList);
       });
     } else {
       setVeNFTlist([]);

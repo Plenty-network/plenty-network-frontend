@@ -40,9 +40,9 @@ export function TopNavBar(props: ITopNavBarProps) {
         <Epoch />
         <div className="flex flex-row gap-7 ">
           <div className="flex flex-row gap-3.5 ">
-            <Link className={`cursor-pointer hover:opacity-90 `} href={"/MyPortfolio"}>
-              <Image src={myPostion} className="cursor-pointer hover:opacity-90" />
-            </Link>
+            {/* <Link className={`cursor-pointer hover:opacity-90 `} href={"/MyPortfolio"}> */}
+            <Image src={myPostion} className="cursor-pointer hover:opacity-90" />
+            {/* </Link> */}
             <div className="my-1 flex items-center">
               <IconBTN image={"verticalline.svg"} />
             </div>

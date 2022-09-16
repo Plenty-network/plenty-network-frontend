@@ -193,15 +193,6 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
           TableName="poolsRewards"
         />
       </div>
-      {/* {showLiquidityModal && (
-        <ManageLiquidity
-          tokenIn={tokenIn}
-          tokenOut={tokenOut}
-          closeFn={setShowLiquidityModal}
-          setActiveState={setActiveState}
-          activeState={activeState}
-        />
-      )} */}
     </>
   );
 }
