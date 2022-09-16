@@ -117,6 +117,8 @@ const Table = <D extends object>({
             ? "min-w-[1049px]"
             : TableName === "poolsPosition"
             ? "min-w-[900px]"
+            : TableName === "votesTable"
+            ? "min-w-[733px]"
             : "w-full"
         )}
       >
@@ -193,11 +195,15 @@ const Table = <D extends object>({
                                 : i === 5
                                 ? "w-[200px]"
                                 : "w-[140px]"
-                              : isVotesTable && i === row.cells.length - 1
-                              ? "w-[100px] md:w-[220px]"
-                              : i == 0
+                              : TableName === "votesTable"
+                              ? i === 4
+                                ? "w-[120px] md:w-[220px]"
+                                : i === 0
+                                ? "w-[150px]"
+                                : "w-[112px]"
+                              : i === 0
                               ? "w-[150px]"
-                              : "flex-1 w-[120px]"
+                              : " flex-1"
                           } ${TableName === "poolsPosition" && i === 5 && "ml-auto"}`}
                         >
                           {cell.render("Cell")}

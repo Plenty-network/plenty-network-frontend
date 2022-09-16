@@ -23,6 +23,7 @@ export interface IEpochProps {
 
 export function Epoch(props: IEpochProps) {
   const router = useRouter();
+  console.log(router);
   const [isDropDownActive, setIsDropDownActive] = React.useState(false);
   const epochData = store.getState().epoch.epochData;
   const currentEpoch = store.getState().epoch.currentEpoch;
@@ -120,7 +121,9 @@ export function Epoch(props: IEpochProps) {
             <p className="text-text-250 text-f12">
               Epoch{" "}
               <span className="text-white">
-                {selectedEpoch?.epochNumber
+                {!router.pathname.includes("Vote")
+                  ? epochData[indexOfCurrent]?.epochNumber
+                  : selectedEpoch?.epochNumber
                   ? selectedEpoch.epochNumber
                   : epochData[indexOfCurrent]?.epochNumber
                   ? epochData[indexOfCurrent].epochNumber

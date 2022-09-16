@@ -12,7 +12,6 @@ import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import SelectNFT from "../../src/components/Votes/SelectNFT";
 import chartMobile from "../../src/assets/icon/vote/chartMobile.svg";
-
 import info from "../../src/assets/icon/swap/info.svg";
 import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
 import { VotesTable } from "../../src/components/Votes/VotesTable";
@@ -215,7 +214,7 @@ export default function Vote() {
     Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
   }, [tokenPrice]);
   useEffect(() => {
-    Object.keys(amm).length !== 0 && dispatch(createGaugeConfig())
+    Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
   useEffect(() => {
     if (userAddress) {
@@ -337,8 +336,8 @@ export default function Vote() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
-        <div className="md:flex min-w-[100px] overflow-x-auto">
-          <div className="md:basis-2/3">
+        <div className="md:flex ">
+          <div className="min-w-[562px] ">
             <HeadInfo
               className="px-2 md:px-3"
               title="Vote"

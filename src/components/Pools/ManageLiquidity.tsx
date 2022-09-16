@@ -322,7 +322,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     stakePnlpTokens(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
-      stakeInput.toString(),
+      stakeInput !== "" ? stakeInput.toString() : "0",
       selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
       walletAddress,
       transactionSubmitModal,
