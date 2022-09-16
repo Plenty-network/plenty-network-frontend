@@ -22,7 +22,7 @@ import { InputSearchBox } from "../../src/components/Pools/Component/SearchInput
 import { getEpochData, setSelectedEpoch } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
 import { addRemainingVotesDust, getVeNFTsList } from "../../src/api/votes";
-import { ISelectedPool, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
+import { ELocksState, ISelectedPool, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
@@ -164,7 +164,8 @@ export default function Vote() {
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
       ).then((res) => {
         const filteredList = res.veNFTData.filter(
-          (veNFT) => veNFT.locksState === 0 || veNFT.locksState === 1
+          (veNFT) =>
+            veNFT.locksState === ELocksState.AVAILABLE || veNFT.locksState === ELocksState.CONSUMED
         );
 
         setVeNFTlist(filteredList);
