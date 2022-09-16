@@ -26,6 +26,9 @@ export interface IVeNFTData {
   tokenId: BigNumber;
   baseValue: BigNumber;
   votingPower: BigNumber;
+  epochVotingPower: BigNumber;
+  consumedVotingPower: BigNumber;
+  locksState: ELocksState;
 }
 
 export interface ISelectedPool {
@@ -104,4 +107,11 @@ export interface IVotePageDataResponse {
 
 export interface IFeesDataObject {
   [key: string]: VolumeVeData;
+}
+
+export enum ELocksState {
+  AVAILABLE,
+  CONSUMED,
+  DISABLED,
+  EXPIRED,
 }

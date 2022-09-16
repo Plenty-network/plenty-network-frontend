@@ -94,19 +94,7 @@ export const stakePnlpTokens = async (
               pnlpAmountToStake.toString(),
               tokenId
             )
-          )
-          .withContractCall(
-            voteEscrowInstance.methods.update_operators([
-              {
-                remove_operator: {
-                  owner: userTezosAddress,
-                  operator: gaugeAddress,
-                  token_id: tokenId,
-                },
-              },
-            ])
           );
-          //TODO: Check if remove_operator required for voteEscrowInstance
       } else if (PNLP_TOKEN.variant === TokenVariant.FA2) {
         batch = Tezos.wallet
           .batch()
@@ -139,17 +127,6 @@ export const stakePnlpTokens = async (
             )
           )
           .withContractCall(
-            voteEscrowInstance.methods.update_operators([
-              {
-                remove_operator: {
-                  owner: userTezosAddress,
-                  operator: gaugeAddress,
-                  token_id: tokenId,
-                },
-              },
-            ])
-          )
-          .withContractCall(
             pnlpTokenContractInstance.methods.update_operators([
               {
                 remove_operator: {
@@ -160,7 +137,6 @@ export const stakePnlpTokens = async (
               },
             ])
           );
-          //TODO: Check if remove_operator required for voteEscrowInstance
       } else {
         throw new Error(
           'Invalid token variant for the PNLP selected. Token variants can be FA1.2 or FA2.'

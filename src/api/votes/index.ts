@@ -6,6 +6,7 @@ import { getStorage, getTzktBigMapData, getTzktStorageData } from "../util/stora
 import { voteEscrowStorageType, voterStorageType } from "./data";
 import { MAX_TIME, PLY_DECIMAL_MULTIPLIER, VOTES_CHART_LIMIT, WEEK } from "../../constants/global";
 import {
+  ELocksState,
   IAllVotesData,
   IAllVotesResponse,
   IBribesResponse,
@@ -367,23 +368,44 @@ export const votesPageDataWrapper = async (
       `${Config.VE_INDEXER}locks?address=${userTezosAddress}&epoch=${epochNumber}&timestamp=${epochTimestamp}`
     );
     const locksData = locksResponse.data.result;
-    const initalLocksArray: IVeNFTData[] = [];
 
-    const finalVeNFTData: IVeNFTData[] = locksData.reduce(
-      (finalLocks: IVeNFTData[], lock: any): IVeNFTData[] => {
-        if (
-          new BigNumber(lock.epochtVotingPower).isFinite() &&
-          new BigNumber(lock.epochtVotingPower).isGreaterThan(0)
-        ) {
-          finalLocks.push({
-            tokenId: new BigNumber(lock.id),
-            baseValue: new BigNumber(lock.baseValue).dividedBy(PLY_DECIMAL_MULTIPLIER),
-            votingPower: new BigNumber(lock.availableVotingPower).dividedBy(PLY_DECIMAL_MULTIPLIER),
-          });
+    const finalVeNFTData: IVeNFTData[] = [];
+    const currentTimestamp: BigNumber = new BigNumber(Date.now())
+      .dividedBy(1000)
+      .decimalPlaces(0, 1);
+    
+    locksData.forEach((lock: any) => {
+      const epochVotingPower = new BigNumber(lock.epochtVotingPower);
+      const availableVotingPower = new BigNumber(lock.availableVotingPower);
+      const consumedVotingPower = epochVotingPower.minus(availableVotingPower);
+      const lockEndTimestamp = new BigNumber(lock.endTs);
+      const finalLock: IVeNFTData = {
+        tokenId: new BigNumber(lock.id),
+        baseValue: new BigNumber(lock.baseValue).dividedBy(PLY_DECIMAL_MULTIPLIER),
+        votingPower: new BigNumber(0),
+        epochVotingPower: epochVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
+        consumedVotingPower: consumedVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
+        locksState: ELocksState.DISABLED,
+      };
+
+      if (epochVotingPower.isFinite() && epochVotingPower.isGreaterThan(0)) {
+        if (availableVotingPower.isGreaterThan(0)) {
+          finalLock.votingPower = availableVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER);
+          finalLock.locksState = ELocksState.AVAILABLE;
+        } else {
+          finalLock.locksState = ELocksState.CONSUMED;
         }
-        return finalLocks;
-      },
-      initalLocksArray
+      } else {
+        if (currentTimestamp.isGreaterThan(lockEndTimestamp)) {
+          finalLock.locksState = ELocksState.EXPIRED;
+        } else {
+          finalLock.locksState = ELocksState.DISABLED;
+        }
+      }
+      finalVeNFTData.push(finalLock);
+    });
+    finalVeNFTData.sort(
+      (a, b) => a.locksState - b.locksState || b.votingPower.minus(a.votingPower).toNumber()
     );
 
     return {
