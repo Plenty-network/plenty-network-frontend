@@ -72,6 +72,7 @@ body {
   width: 15px !important;
   height: 15px !important;
 }
+
 @media (min-width: 320px) and (max-width: 768px) {
   .infoIcon {
     width: 12px !important;

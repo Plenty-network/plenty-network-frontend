@@ -183,7 +183,11 @@ const Table = <D extends object>({
                               ? "justify-start"
                               : "justify-end"
                           } ${
-                            TableName === "lockPosition"
+                            TableName === "poolsRewards"
+                              ? i === 0 || i == 2
+                                ? "w-[200px]"
+                                : "w-[100px]"
+                              : TableName === "lockPosition"
                               ? i === 0
                                 ? " w-[150px]"
                                 : i === 1 || i === 5 || i === 6 || i === 4
@@ -204,7 +208,10 @@ const Table = <D extends object>({
                               : i === 0
                               ? "w-[150px]"
                               : " flex-1"
-                          } ${TableName === "poolsPosition" && i === 5 && "ml-auto"}`}
+                          } ${
+                            (TableName === "poolsPosition" && i === 5 && "ml-auto") ||
+                            (TableName === "poolsRewards" && i == 2 && "ml-auto")
+                          }`}
                         >
                           {cell.render("Cell")}
                         </td>
