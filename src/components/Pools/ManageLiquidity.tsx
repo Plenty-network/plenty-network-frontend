@@ -42,6 +42,7 @@ import { ConfirmStakeLiquidity } from "./ConfirmStaking";
 import { ConfirmUnStakeLiquidity } from "./ConfirmUnstake";
 import { IVePLYData } from "../../api/stake/types";
 import { ELiquidityProcess } from "../../api/liquidity/types";
+import { ELocksState } from "../../api/votes/types";
 
 export interface IManageLiquidityProps {
   closeFn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -67,6 +68,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     tokenId: "",
     boostValue: "",
     votingPower: "",
+    lockState: 0 as ELocksState,
   });
   const [isAddLiquidity, setIsAddLiquidity] = useState(true);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
@@ -139,7 +141,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }
       });
     } else {
-      setSelectedDropDown({ tokenId: "", boostValue: "", votingPower: "" });
+      setSelectedDropDown({
+        tokenId: "",
+        boostValue: "",
+        votingPower: "",
+        lockState: 0 as ELocksState,
+      });
     }
   }, [vePLYOptions]);
   useEffect(() => {

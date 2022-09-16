@@ -47,7 +47,9 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
           </div>
         </div>
         <div className="mt-4 font-body4 text-text-250">Your staking</div>
-        <div className="mt-1 text-white font-title2">{props.stakeInput} PNLP</div>
+        <div className="mt-1 text-white font-title2">
+          {props.stakeInput ? props.stakeInput : 0} PNLP
+        </div>
       </div>
 
       <div className="mt-5">
