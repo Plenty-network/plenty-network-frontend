@@ -6,20 +6,20 @@ import lighting from "../../assets/icon/vote/lighting.svg";
 import arrow from "../../assets/icon/vote/arrowNFT.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { IVeNFTData } from "../../api/votes/types";
+import { useDispatch } from "react-redux";
+import { AppDispatch, store } from "../../redux";
+import { setisMyportfolio, setSelectedDropDown } from "../../redux/veNFT";
 
 export interface IDropdownProps {
   Options: IVeNFTData[];
   onClick: Function;
-  selectedText: {
-    votingPower: string;
-    tokenId: string;
-  };
   title: string;
   className?: string;
   isConfirmStake?: boolean;
 }
 
 export function VeNFT(props: IDropdownProps) {
+  const selectedDropDown = store.getState().veNFT.selectedDropDown;
   const [isDropDownActive, setIsDropDownActive] = React.useState(false);
   const reff = React.useRef(null);
   useOutsideClick(reff, () => {
@@ -37,7 +37,7 @@ export function VeNFT(props: IDropdownProps) {
             ? "border-border-200 bg-card-200 hover:bg-card-200 hover:border-border-200"
             : isDropDownActive
             ? "border-muted-50 bg-muted-500 hover:border-muted-50 hover:bg-muted-500"
-            : props.selectedText.votingPower === ""
+            : selectedDropDown.votingPower === ""
             ? "border-[0.8px] border-primary-500 bg-card-500 text-text-400"
             : "border-text-800 bg-text-800/[0.25]",
 
@@ -54,22 +54,22 @@ export function VeNFT(props: IDropdownProps) {
 
             props.Options.length === 0
               ? "text-text-700"
-              : props.selectedText.votingPower === ""
+              : selectedDropDown.votingPower === ""
               ? "text-text-600"
               : "text-text-500"
           )}
         >
-          {props.selectedText.votingPower !== "" && props.selectedText.tokenId !== "" ? (
+          {selectedDropDown.votingPower !== "" && selectedDropDown.tokenId !== "" ? (
             <>
               <Image src={lighting} />
               <span className="ml-1 font-body4 text-white">
-                {Number(props.selectedText.votingPower) > 0
-                  ? Number(props.selectedText.votingPower) < 0.001
+                {Number(selectedDropDown.votingPower) > 0
+                  ? Number(selectedDropDown.votingPower) < 0.001
                     ? `<0.001`
-                    : Number(props.selectedText.votingPower).toFixed(3)
+                    : Number(selectedDropDown.votingPower).toFixed(3)
                   : "0"}
               </span>
-              <span className="font-body3 text-text-500">(#{props.selectedText.tokenId})</span>
+              <span className="font-body3 text-text-500">(#{selectedDropDown.tokenId})</span>
             </>
           ) : (
             <>
@@ -107,16 +107,24 @@ export function VeNFT(props: IDropdownProps) {
   );
 
   function Options(props: { onClick: Function; votingPower: string; tokenId: string }) {
+    const dispatch = useDispatch<AppDispatch>();
     return (
       <div
         onClick={() => {
+          dispatch(
+            setSelectedDropDown({
+              votingPower: props.votingPower,
+              tokenId: props.tokenId,
+            })
+          );
+          dispatch(setisMyportfolio(false));
           props.onClick({
             votingPower: props.votingPower,
             tokenId: props.tokenId,
           });
           setIsDropDownActive(false);
         }}
-        className="  hover:bg-muted-500 px-4 flex items-center h-[36px] cursor-pointer flex"
+        className="  hover:bg-muted-500 px-4 flex items-center h-[36px] cursor-pointer flex py-2.5"
       >
         <Image src={lighting} />
         <span className="ml-1 font-body4 text-white">

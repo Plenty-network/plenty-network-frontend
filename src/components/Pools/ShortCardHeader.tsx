@@ -26,17 +26,27 @@ export function Tabs(props: ITabsProps) {
       className={`flex cursor-pointer font-subtitle1 text-text-50 text-left  ${
         props.isFirstRow || props.text?.includes("Pool") ? "justify-start" : "justify-end "
       } ${
-        props.TableName === "PoolsPosition"
+        props.TableName === "lockPosition"
           ? props.index === 0
             ? " w-[150px]"
             : props.index === 1 || props.index === 5 || props.index === 6 || props.index === 4
             ? "w-[200px]"
             : " w-[130px]"
-          : props.isVotesTable
-          ? "w-[120px] md:w-[220px]"
-          : props.isFirstRow
+          : props.TableName === "poolsPosition"
+          ? props.index === 0
+            ? "w-[200px]"
+            : props.index === 5
+            ? "w-[200px]"
+            : "w-[140px]"
+          : props.TableName === "votesTable"
+          ? props.index === 4
+            ? "w-[120px] md:w-[220px]"
+            : props.index === 0
+            ? "w-[150px]"
+            : "w-[112px]"
+          : props.index === 0
           ? "w-[150px]"
-          : "flex-1  w-[120px]"
+          : " flex-1"
       } `}
       onClick={() => (props.onClick ? props.onClick() : {})}
     >
