@@ -26,13 +26,13 @@ function ConfirmLocking(props: IConfirmLockingProps) {
 
   return (
     <>
-      <div className="flex">
+      <div className="px-4 md:px-6 flex">
         <div className="cursor-pointer" onClick={() => props.setScreen("1")}>
           <Image src={arrowLeft} />
         </div>
         <div className="mx-2 text-white font-title3">Confirm locking </div>
       </div>
-      <div className="rounded-lg mt-5 border border-text-800 bg-card-200 py-5">
+      <div className="mx-4 md:mx-6 rounded-lg mt-5 border border-text-800 bg-card-200 py-5">
         <div className="flex items-center">
           <div className="text-text-250 font-subtitle1 md:font-subtitle3 px-3 md:px-5">
             Your will receive a veNFT with a voting power of{" "}
@@ -70,7 +70,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
         </div>
       </div>
 
-      <div className="mt-[18px]">
+      <div className="px-4 md:px-6 mt-[18px]">
         <Button color="primary" onClick={props.handleLockOperation}>
           Create lock
         </Button>

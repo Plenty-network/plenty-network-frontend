@@ -1,6 +1,7 @@
 import { getLpTokenSymbol } from '../util/fetchConfig';
 import { BigNumber } from "bignumber.js";
 import {
+  ELiquidityProcess,
   ICurrentPoolShareResponse,
   IOtherTokenOutput,
   IOutputTokensAmountResponse,
@@ -212,18 +213,24 @@ export const getCurrentPoolShare = async (
  */
 export const getPoolShareForPnlp = (
   pnlpAmount: string | BigNumber,
-  lpTokenSupply: string | BigNumber
+  lpTokenSupply: string | BigNumber,
+  liquidityProcess: ELiquidityProcess
 ): IPnlpPoolShareResponse => {
   try {
-    const pnlpPoolShare = new BigNumber(pnlpAmount).multipliedBy(100).dividedBy(lpTokenSupply).toString();
+    const lpAmount = new BigNumber(pnlpAmount);
+    const lpSupply = new BigNumber(lpTokenSupply);
+    const pnlpPoolShare =
+      liquidityProcess === ELiquidityProcess.REMOVE
+        ? lpAmount.multipliedBy(100).dividedBy(lpSupply).toString()
+        : lpAmount.multipliedBy(100).dividedBy(lpSupply.plus(lpAmount)).toString();
     return {
       success: true,
       pnlpPoolShare,
-    }
+    };
   } catch (error: any) {
     return {
       success: false,
-      pnlpPoolShare: '0',
+      pnlpPoolShare: "0",
       error: error.message,
     };
   }

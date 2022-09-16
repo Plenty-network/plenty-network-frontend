@@ -4,6 +4,8 @@ import { ConnectWalletBtnDeskTop } from "../Button/ConnectWalletDesktop";
 import myPostion from "../../assets/icon/common/myPosition.svg";
 import plentyIcon from "../../assets/icon/common//plentyIcon.svg";
 import { Epoch } from "../Epoch";
+
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 export interface ITopNavBarProps {
   setShowNotification: Function;
@@ -38,7 +40,9 @@ export function TopNavBar(props: ITopNavBarProps) {
         <Epoch />
         <div className="flex flex-row gap-7 ">
           <div className="flex flex-row gap-3.5 ">
+            {/* <Link className={`cursor-pointer hover:opacity-90 `} href={"/MyPortfolio"}> */}
             <Image src={myPostion} className="cursor-pointer hover:opacity-90" />
+            {/* </Link> */}
             <div className="my-1 flex items-center">
               <IconBTN image={"verticalline.svg"} />
             </div>

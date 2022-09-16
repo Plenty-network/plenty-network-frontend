@@ -9,8 +9,8 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { AppDispatch, useAppSelector } from "../../src/redux";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
-import { getConfig } from "../../src/redux/config/config";
-import { getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
+import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
+import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getEpochData } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
@@ -28,6 +28,8 @@ export default function Pools(props: IIndexProps) {
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
+  const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const amm = useAppSelector((state) => state.config.AMMs);
 
   useEffect(() => {
     if (epochError) {
@@ -56,6 +58,12 @@ export default function Pools(props: IIndexProps) {
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
+  useEffect(() => {
+    Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+  }, [tokenPrices]);
+  useEffect(() => {
+    Object.keys(amm).length !== 0 && dispatch(createGaugeConfig())
+  }, [amm]);
   const [searchValue, setSearchValue] = React.useState("");
   return (
     <>

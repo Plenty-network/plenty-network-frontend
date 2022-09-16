@@ -127,3 +127,13 @@ export interface IContractsConfig {
   STANDARD: ITokens;
   AMM: IAmmContracts;
 }
+
+export interface IGaugeConfigData {
+  ammAddress: string;
+  tokenOneSymbol: string;
+  tokenTwoSymbol: string;
+}
+
+export interface IGaugeConfig {
+  [key: string]: IGaugeConfigData;
+}

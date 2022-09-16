@@ -9,6 +9,7 @@ import { getDexAddress } from '../util/fetchConfig';
 import { getStorage } from '../util/storageProvider';
 import { IVePLYData, IVePLYListResponse } from './types';
 import { PLY_DECIMAL_MULTIPLIER } from '../../constants/global';
+import { ELocksState } from '../votes/types';
 
 /**
  * Returns the list of veNFTs with boost value for a user, for a particular gauge.
@@ -71,9 +72,14 @@ export const getVePLYListForUser = async (
 
     const totalVotingPower = state.pools.totalVotingPower; // Fetch the total voting power stored in redux store
 
+    const currentTimestamp: BigNumber = new BigNumber(Date.now())
+      .dividedBy(1000)
+      .decimalPlaces(0, 1);
+
     const finalVePLYData: IVePLYData[] = [];
 
     locksData.forEach((lock: any) => {
+      const lockEndTimestamp = new BigNumber(lock.endTs);
       const votingPower = new BigNumber(lock.currentVotingPower).dividedBy(PLY_DECIMAL_MULTIPLIER);
       const boostedValue = getBoostValue(
         finalUserStakedBalance,
@@ -86,12 +92,16 @@ export const getVePLYListForUser = async (
           tokenId: lock.id,
           boostValue: boostedValue.toFixed(1),
           votingPower: votingPower.toString(),
+          lockState: currentTimestamp.isGreaterThan(lockEndTimestamp) ? ELocksState.EXPIRED : ELocksState.AVAILABLE
         };
         finalVePLYData.push(updatedLockData);
       }
     });
     if(finalVePLYData.length > 0) {
-      finalVePLYData.sort(compareVePLYData)
+      // finalVePLYData.sort(compareVePLYData);
+      finalVePLYData.sort(
+        (a, b) => a.lockState - b.lockState || new BigNumber(b.boostValue).minus(new BigNumber(a.boostValue)).toNumber()
+      );
     }
     return {
       success: true,

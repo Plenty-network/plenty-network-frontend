@@ -221,12 +221,11 @@ export const getLPTokenPrices =async (tokenPrice: { [id: string]: number }) : Pr
     const state = store.getState();
     const AMM = state.config.AMMs;
     
-    const lpPrices: { [id: string]: BigNumber } = {};
-    Object.keys(AMM).forEach(async function (key) {
+    let lpPrices: { [id: string]: BigNumber } = {};
+    for(const key in AMM) {
       const price = await getLPTokenPrice(AMM[key].token1.symbol , AMM[key].token2.symbol , tokenPrice);
-      lpPrices[AMM[key].lpToken.symbol] = price.lpTokenPrice;
-    });
-
+      lpPrices = {...lpPrices, [AMM[key].lpToken.symbol]: price.lpTokenPrice};
+    }
     return {
       success : true , 
       lpPrices,

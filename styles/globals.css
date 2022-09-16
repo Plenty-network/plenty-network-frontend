@@ -72,6 +72,7 @@ body {
   width: 15px !important;
   height: 15px !important;
 }
+
 @media (min-width: 320px) and (max-width: 768px) {
   .infoIcon {
     width: 12px !important;
@@ -287,6 +288,10 @@ input[type='number'] {
   .font-input-text {
     @apply font-medium;
     @apply text-f28;
+  }
+  .font-input-text1 {
+    @apply font-semibold;
+    @apply text-f2836;
   }
   .font-mobile-text {
     @apply font-medium;

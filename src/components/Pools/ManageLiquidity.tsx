@@ -41,6 +41,8 @@ import { getVePLYListForUser } from "../../api/stake";
 import { ConfirmStakeLiquidity } from "./ConfirmStaking";
 import { ConfirmUnStakeLiquidity } from "./ConfirmUnstake";
 import { IVePLYData } from "../../api/stake/types";
+import { ELiquidityProcess } from "../../api/liquidity/types";
+import { ELocksState } from "../../api/votes/types";
 
 export interface IManageLiquidityProps {
   closeFn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -66,6 +68,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     tokenId: "",
     boostValue: "",
     votingPower: "",
+    lockState: 0 as ELocksState,
   });
   const [isAddLiquidity, setIsAddLiquidity] = useState(true);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
@@ -106,18 +109,24 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [vePLYOptions, setVePLYOptions] = useState<IVePLYData[]>([]);
 
   useEffect(() => {
-    if (stakeInput === "") {
-      //setVePLYOptions([]);
-      setSelectedDropDown({ tokenId: "", boostValue: "", votingPower: "" });
-    }
+    // if (stakeInput === "") {
+    //   //setVePLYOptions([]);
+    //   setSelectedDropDown({ tokenId: "", boostValue: "", votingPower: "" });
+    // }
     if (walletAddress || (screen === "2" && props.activeState === ActiveLiquidity.Staking)) {
+      console.log(
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        stakeInput === "" ? undefined : stakeInput.toString(),
+        walletAddress
+      );
       getVePLYListForUser(
         props.tokenIn.symbol,
         props.tokenOut.symbol,
-        stakeInput.toString(),
+        stakeInput === "" ? undefined : stakeInput.toString(),
         walletAddress
       ).then((res) => {
-        console.log(res.vePLYData);
+        console.log(res);
         const veplyData = res.vePLYData;
         setVePLYOptions(veplyData);
       });
@@ -132,7 +141,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }
       });
     } else {
-      setSelectedDropDown({ tokenId: "", boostValue: "", votingPower: "" });
+      setSelectedDropDown({
+        tokenId: "",
+        boostValue: "",
+        votingPower: "",
+        lockState: 0 as ELocksState,
+      });
     }
   }, [vePLYOptions]);
   useEffect(() => {
@@ -230,10 +244,18 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         swapData.current.lpToken
       );
       setPnlpEstimates(res.pnlpEstimate);
-      const sharePool = getPoolShareForPnlp(res.pnlpEstimate, swapData.current.lpTokenSupply);
+      const sharePool = getPoolShareForPnlp(
+        res.pnlpEstimate,
+        swapData.current.lpTokenSupply,
+        ELiquidityProcess.ADD
+      );
       setSharePool(sharePool.pnlpPoolShare);
     } else if (burnAmount > 0 && !isAddLiquidity) {
-      const sharePool = getPoolShareForPnlp(burnAmount.toString(), swapData.current.lpTokenSupply);
+      const sharePool = getPoolShareForPnlp(
+        burnAmount.toString(),
+        swapData.current.lpTokenSupply,
+        ELiquidityProcess.REMOVE
+      );
       setSharePool(sharePool.pnlpPoolShare);
     }
   }, [firstTokenAmountLiq, secondTokenAmountLiq, screen, burnAmount]);
@@ -307,7 +329,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     stakePnlpTokens(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
-      stakeInput.toString(),
+      stakeInput !== "" ? stakeInput.toString() : "0",
       selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
       walletAddress,
       transactionSubmitModal,

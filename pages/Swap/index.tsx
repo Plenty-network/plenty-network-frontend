@@ -9,8 +9,8 @@ import { useAppSelector } from "../../src/redux/index";
 import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { getConfig } from "../../src/redux/config/config";
-import { getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
+import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
+import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { useInterval } from "../../src/hooks/useInterval";
 import { getEpochData } from "../../src/redux/epoch/epoch";
@@ -20,6 +20,8 @@ const Home: NextPage = (props) => {
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
+  const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const amm = useAppSelector((state) => state.config.AMMs);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -52,6 +54,12 @@ const Home: NextPage = (props) => {
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
+  useEffect(() => {
+    Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+  }, [tokenPrices]);
+  useEffect(() => {
+    Object.keys(amm).length !== 0 && dispatch(createGaugeConfig())
+  }, [amm]);
   const disconnectUserWallet = async () => {
     if (userAddress) {
       return dispatch(walletDisconnection());

@@ -32,6 +32,7 @@ const Table = <D extends object>({
   isFetched = false,
   isVotesTable = false,
   noSearchResult = false,
+  TableName,
 }: {
   columns: Column<D>[];
   data: D[];
@@ -40,6 +41,7 @@ const Table = <D extends object>({
   isConnectWalletRequired?: boolean;
   isFetched?: boolean;
   isVotesTable?: boolean;
+  TableName?: string;
 }) => {
   const [shortByGroup, setshortByGroup] = useState({
     id: shortby ?? "usd",
@@ -107,7 +109,19 @@ const Table = <D extends object>({
 
   return (
     <div>
-      <table className={clsx("w-full flex flex-col ", isVotesTable ? "gap-1.5" : "gap-3")}>
+      <table
+        className={clsx(
+          " flex flex-col ",
+          isVotesTable ? "gap-1.5" : "gap-1.5",
+          TableName === "lockPosition"
+            ? "min-w-[1049px]"
+            : TableName === "poolsPosition"
+            ? "min-w-[900px]"
+            : TableName === "votesTable"
+            ? "min-w-[733px]"
+            : "w-full"
+        )}
+      >
         <thead ref={headerRef}>
           {headerGroups.map((headerGroup, index) => (
             <tr
@@ -119,6 +133,8 @@ const Table = <D extends object>({
                   key={`tabls_${column.render("Header")?.toString()}_${i}`}
                   text={column.render("Header")?.toString()}
                   className="justify-start"
+                  TableName={TableName}
+                  index={i}
                   isFirstRow={i == 0}
                   isVotesTable={isVotesTable ? i === headerGroup.headers.length - 1 : false}
                   isToolTipEnabled={column.hasOwnProperty("isToolTipEnabled")}
@@ -141,7 +157,7 @@ const Table = <D extends object>({
           ))}
         </thead>
         <tbody
-          className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-2")}
+          className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-1")}
           style={{ height: `${heightBody}px` }}
         >
           {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
@@ -156,20 +172,45 @@ const Table = <D extends object>({
                 return (
                   // eslint-disable-next-line react/jsx-key
                   <tr
-                    className={`border border-borderCommon  bg-cardBackGround flex md:pr-3 md:pl-11 md:py-3 px-1 py-1 items-center justify-between rounded-lg slideFromTop `}
+                    className={`border border-borderCommon  bg-cardBackGround flex md:pr-3 md:pl-11 md:py-3 px-1 py-1 items-center  rounded-lg slideFromTop `}
                   >
                     {row.cells.map((cell: any, i: any) => {
                       return (
                         // eslint-disable-next-line react/jsx-key
                         <td
                           className={` flex items-center ${
-                            i == 0 ? "justify-start" : "justify-end"
+                            i == 0 || (TableName === "lockPosition" && i === 1)
+                              ? "justify-start"
+                              : "justify-end"
                           } ${
-                            isVotesTable && i === row.cells.length - 1
-                              ? "w-[100px] md:w-[220px]"
-                              : i == 0
+                            TableName === "poolsRewards"
+                              ? i === 0 || i == 2
+                                ? "w-[200px]"
+                                : "w-[100px]"
+                              : TableName === "lockPosition"
+                              ? i === 0
+                                ? " w-[150px]"
+                                : i === 1 || i === 5 || i === 6 || i === 4
+                                ? "w-[200px]"
+                                : " w-[130px]"
+                              : TableName === "poolsPosition"
+                              ? i === 0
+                                ? "w-[180px]"
+                                : i === 5
+                                ? "w-[200px]"
+                                : "w-[120px]"
+                              : TableName === "votesTable"
+                              ? i === 4
+                                ? "w-[120px] md:w-[220px]"
+                                : i === 0
+                                ? "w-[150px]"
+                                : "w-[112px]"
+                              : i === 0
                               ? "w-[150px]"
-                              : "flex-1 w-[100px]"
+                              : " flex-1"
+                          } ${
+                            (TableName === "poolsPosition" && i === 5 && "ml-auto") ||
+                            (TableName === "poolsRewards" && i == 2 && "ml-auto")
                           }`}
                         >
                           {cell.render("Cell")}

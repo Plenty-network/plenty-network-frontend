@@ -137,7 +137,7 @@ export function Staking(props: IStakingProps) {
           Connect Wallet
         </Button>
       );
-    } else if (Number(props.stakeInput) <= 0) {
+    } else if (Number(props.stakeInput) <= 0 && props.selectedDropDown.boostValue === "") {
       return (
         <Button onClick={() => null} color={"disabled"}>
           Stake

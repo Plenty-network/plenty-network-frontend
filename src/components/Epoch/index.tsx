@@ -120,7 +120,9 @@ export function Epoch(props: IEpochProps) {
             <p className="text-text-250 text-f12">
               Epoch{" "}
               <span className="text-white">
-                {selectedEpoch?.epochNumber
+                {!router.pathname.includes("Vote")
+                  ? epochData[indexOfCurrent]?.epochNumber
+                  : selectedEpoch?.epochNumber
                   ? selectedEpoch.epochNumber
                   : epochData[indexOfCurrent]?.epochNumber
                   ? epochData[indexOfCurrent].epochNumber
