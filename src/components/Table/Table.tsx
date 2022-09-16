@@ -191,10 +191,10 @@ const Table = <D extends object>({
                                 : " w-[130px]"
                               : TableName === "poolsPosition"
                               ? i === 0
-                                ? "w-[200px]"
+                                ? "w-[180px]"
                                 : i === 5
                                 ? "w-[200px]"
-                                : "w-[140px]"
+                                : "w-[120px]"
                               : TableName === "votesTable"
                               ? i === 4
                                 ? "w-[120px] md:w-[220px]"

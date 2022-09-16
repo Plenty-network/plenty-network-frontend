@@ -23,7 +23,6 @@ export interface IEpochProps {
 
 export function Epoch(props: IEpochProps) {
   const router = useRouter();
-  console.log(router);
   const [isDropDownActive, setIsDropDownActive] = React.useState(false);
   const epochData = store.getState().epoch.epochData;
   const currentEpoch = store.getState().epoch.currentEpoch;

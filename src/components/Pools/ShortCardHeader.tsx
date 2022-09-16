@@ -34,10 +34,10 @@ export function Tabs(props: ITabsProps) {
             : " w-[130px]"
           : props.TableName === "poolsPosition"
           ? props.index === 0
-            ? "w-[200px]"
+            ? "w-[180px]"
             : props.index === 5
             ? "w-[200px]"
-            : "w-[140px]"
+            : "w-[120px]"
           : props.TableName === "votesTable"
           ? props.index === 4
             ? "w-[120px] md:w-[220px]"
