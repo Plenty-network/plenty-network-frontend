@@ -20,7 +20,7 @@ function SelectNFT(props: ISelectNFT) {
             <VeNFT
               title={props.veNFTlist.length === 0 ? "No veNFT available" : "No NFTs selected"}
               Options={props.veNFTlist}
-              selectedText={props.selectedText}
+              //selectedText={props.selectedText}
               onClick={props.setSelectedDropDown}
             />
           </ToolTip>
@@ -28,7 +28,7 @@ function SelectNFT(props: ISelectNFT) {
           <VeNFT
             title="No NFTs selected"
             Options={props.veNFTlist}
-            selectedText={props.selectedText}
+            //selectedText={props.selectedText}
             onClick={props.setSelectedDropDown}
           />
         )}

@@ -6,7 +6,7 @@ import StatsCard from "./StatsCard";
 
 function Stats(props: IStatsProps) {
   return (
-    <div className="flex gap-5">
+    <div className="flex min-w-[1053px]  gap-5">
       <StatsCard
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"TVL"}
