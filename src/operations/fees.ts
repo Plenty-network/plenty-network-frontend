@@ -58,7 +58,7 @@ export const claimAllFees = async (
     id : number,
     address : string,
     amms : string[],
-    epochVoteShare : IEpochVoteShare[] ,
+    epochVoteShare : { [id: string] : IEpochVoteShare[] } ,
     transactionSubmitModal: TTransactionSubmitModal,
     resetAllValues: TResetAllValues,
     setShowConfirmTransaction: TSetShowConfirmTransaction
@@ -78,7 +78,7 @@ export const claimAllFees = async (
         for (const amm of amms) {
           feesBatch.push({
             kind: OpKind.TRANSACTION,
-            ...feeDistributorInstance.methods.claim(id, address , amm, epochVoteShare).toTransferParams(),
+            ...feeDistributorInstance.methods.claim(id, address , amm, epochVoteShare[amm]).toTransferParams(),
           });
         }
       const batch =  Tezos.wallet.batch(feesBatch);    
