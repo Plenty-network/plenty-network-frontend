@@ -171,7 +171,7 @@ const Table = <D extends object>({
                         // eslint-disable-next-line react/jsx-key
                         <td
                           className={` flex items-center ${
-                            i == 0 || (TableName === "lockPosition" && i === 1)
+                            i == 0 || (!isMobile && TableName === "lockPosition" && i === 1)
                               ? "justify-start"
                               : "justify-end"
                           } ${
@@ -182,6 +182,12 @@ const Table = <D extends object>({
                               : TableName === "lockPosition"
                               ? i === 0
                                 ? " w-[150px]"
+                                : isMobile && i === 1
+                                ? "w-[100px] flex-1"
+                                : isMobile && i === 2
+                                ? "w-[85px]"
+                                : isMobile && i === 3
+                                ? "w-[100px]"
                                 : i === 1 || i === 5 || i === 6 || i === 4
                                 ? "w-[200px]"
                                 : " w-[130px]"
@@ -205,7 +211,7 @@ const Table = <D extends object>({
                           } ${
                             (TableName === "poolsPosition" && i === 5 && "ml-auto") ||
                             (TableName === "poolsRewards" && i == 2 && "ml-auto")
-                          }`}
+                          } ${i === 0 && "pl-3  md:pl-0"}`}
                         >
                           {cell.render("Cell")}
                         </td>

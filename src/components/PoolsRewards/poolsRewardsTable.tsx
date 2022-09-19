@@ -108,19 +108,19 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         ),
       },
       {
-        Header: "Your liquidity",
-        id: "your liquidity",
+        Header: "PLY emissions",
+        id: "PLY emissions",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => 324564,
+        accessor: (x: any) => "$234.58",
       },
+
       {
-        Header: "Staked percentage",
-        id: "Staked percentage",
-        isToolTipEnabled: true,
-        canShort: true,
-        accessor: (x: any) => 2123,
+        Header: "",
+        id: "claim",
+        minWidth: 151,
+        accessor: (x) => <ClaimBtn />,
       },
     ],
     [valueFormat]

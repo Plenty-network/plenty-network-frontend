@@ -37,6 +37,12 @@ export function Tabs(props: ITabsProps) {
           : props.TableName === "lockPosition"
           ? props.index === 0
             ? " w-[150px]"
+            : isMobile && props.index === 1
+            ? "w-[100px] "
+            : isMobile && props.index === 2
+            ? "w-[85px]"
+            : isMobile && props.index === 3
+            ? "w-[100px]"
             : props.index === 1 || props.index === 5 || props.index === 6 || props.index === 4
             ? "w-[200px]"
             : " w-[130px]"
@@ -57,7 +63,7 @@ export function Tabs(props: ITabsProps) {
           : props.index === 0
           ? "w-[150px]"
           : " flex-1"
-      } `}
+      } ${props.index === 0 && "pl-3 md:pl-0"}`}
       onClick={() => (props.onClick ? props.onClick() : {})}
     >
       <div className="flex gap-0 flex-col">
@@ -67,7 +73,8 @@ export function Tabs(props: ITabsProps) {
               "text-right ",
               (props.TableName === "poolsPosition" && props.index == 2) ||
                 (props.TableName === "poolsRewards" && props.index === 1) ||
-                (props.TableName === "poolsPosition" && isMobile && props.index === 1)
+                (props.TableName === "poolsPosition" && isMobile && props.index === 1) ||
+                (props.TableName === "lockPosition" && isMobile && props.index === 1)
                 ? ""
                 : "flex gap-1"
             )}
@@ -75,7 +82,8 @@ export function Tabs(props: ITabsProps) {
             {props.isToolTipEnabled &&
               ((props.TableName === "poolsPosition" && props.index == 2) ||
               (props.TableName === "poolsRewards" && props.index === 1) ||
-              (props.TableName === "poolsPosition" && isMobile && props.index === 1) ? (
+              (props.TableName === "poolsPosition" && isMobile && props.index === 1) ||
+              (props.TableName === "lockPosition" && isMobile && props.index === 1) ? (
                 <span className="relative top-[3px] mr-1">
                   <Image src={info} />
                 </span>

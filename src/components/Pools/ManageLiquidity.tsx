@@ -114,19 +114,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     //   setSelectedDropDown({ tokenId: "", boostValue: "", votingPower: "" });
     // }
     if (walletAddress || (screen === "2" && props.activeState === ActiveLiquidity.Staking)) {
-      console.log(
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        stakeInput === "" ? undefined : stakeInput.toString(),
-        walletAddress
-      );
       getVePLYListForUser(
         props.tokenIn.symbol,
         props.tokenOut.symbol,
         stakeInput === "" ? undefined : stakeInput.toString(),
         walletAddress
       ).then((res) => {
-        console.log(res);
         const veplyData = res.vePLYData;
         setVePLYOptions(veplyData);
       });

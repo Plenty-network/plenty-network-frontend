@@ -3,8 +3,11 @@ import { useState } from "react";
 import Image from "next/image";
 import { IStatsProps } from "./types";
 import StatsCard from "./StatsCard";
+import { store } from "../../redux";
 
 function Stats(props: IStatsProps) {
+  const tokenPrice = store.getState().tokenPrice.tokenPrice;
+
   return (
     <div className="flex min-w-[1053px]  gap-5">
       <StatsCard
@@ -28,8 +31,8 @@ function Stats(props: IStatsProps) {
         isLast={true}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"PLY Balance"}
-        value={"322"}
-        subValue={"$35.38"}
+        value={props.plyBalance}
+        subValue={1 * Number(props.plyBalance)}
       />
     </div>
   );

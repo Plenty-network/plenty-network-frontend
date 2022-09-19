@@ -328,4 +328,8 @@ input[type='number'] {
     @apply font-normal;
     @apply text-f11;
   }
+  .font-f11-600 {
+    @apply font-semibold;
+    @apply text-f11;
+  }
 }

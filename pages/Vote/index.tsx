@@ -376,8 +376,13 @@ export default function Vote() {
                     setSelectedDropDown={setSelectednft}
                   />
                 </div>
-                <div className="ml-auto">
-                  <InputSearchBox className="" value={searchValue} onChange={setSearchValue} />
+                <div className="ml-auto ">
+                  <InputSearchBox
+                    className=""
+                    value={searchValue}
+                    onChange={setSearchValue}
+                    width={"md:w-245px xl:w-[260px]"}
+                  />
                 </div>
               </div>
               <div className="md:hidden block flex flex-row justify-between items-center px-3 md:px-0 py-2 md:py-0 border-b border-text-800/[0.5]">

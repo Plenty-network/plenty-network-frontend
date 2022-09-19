@@ -21,4 +21,7 @@ export interface IManageBtnProps {
 export interface ILocksColumnProps {}
 export interface ILockExpiryProps {}
 export interface IPlyLockedProps {}
-export interface IPieChartProps {}
+export interface IPieChartProps {
+  violet: number;
+  transparent: number;
+}

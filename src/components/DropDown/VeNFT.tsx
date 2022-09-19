@@ -20,6 +20,12 @@ export interface IDropdownProps {
 }
 
 export function VeNFT(props: IDropdownProps) {
+  const epochData = store.getState().epoch.currentEpoch;
+  const totalTime = epochData.endTimestamp - epochData.startTimestamp;
+  const remainingTime = epochData.endTimestamp - new Date().getTime();
+  const remainingPercentage = (remainingTime * 100) / totalTime;
+
+  // currentTS = new Date().getTime() if epoch start and end TS are in milliseconds or Math.floor(new Date().getTime() /1000)
   const selectedDropDown = store.getState().veNFT.selectedDropDown;
   const [isDropDownActive, setIsDropDownActive] = React.useState(false);
   const reff = React.useRef(null);
@@ -189,7 +195,10 @@ export function VeNFT(props: IDropdownProps) {
           {(props.lockState === ELocksState.CONSUMED ||
             props.lockState === ELocksState.DISABLED) && (
             <span className="ml-[6px]">
-              <PieChartButton />
+              <PieChartButton
+                violet={remainingPercentage}
+                transparent={100 - remainingPercentage}
+              />
             </span>
           )}
         </span>

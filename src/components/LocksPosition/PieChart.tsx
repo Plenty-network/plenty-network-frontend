@@ -1,15 +1,16 @@
 import React from "react";
 import { PieChart, Pie, Cell } from "recharts";
-export default function PieChartButton() {
-  const COLORS = ["#9D5CFF", "transparent"];
+import { IPieChartProps } from "./types";
+export default function PieChartButton(props: IPieChartProps) {
+  const COLORS = ["#9D5CFF", "#372159"];
   const pieData = [
     {
       name: "violet",
-      value: 90,
+      value: props.violet,
     },
     {
       name: "transaparent",
-      value: 10,
+      value: props.transparent,
     },
   ];
 
