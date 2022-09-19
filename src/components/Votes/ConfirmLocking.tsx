@@ -9,6 +9,7 @@ import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import { IConfirmLockingProps } from "./types";
 import { store } from "../../redux";
+import { increaseLockEnd } from "../../operations/locks";
 
 function ConfirmLocking(props: IConfirmLockingProps) {
   const epochData = store.getState().epoch.currentEpoch;

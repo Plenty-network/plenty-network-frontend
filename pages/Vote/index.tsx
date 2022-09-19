@@ -658,7 +658,6 @@ export default function Vote() {
       )}
       {showCreateLockModal && (
         <CreateLock
-          module={MODULE.VOTE}
           show={showCreateLockModal}
           setPlyInput={setPlyInput}
           plyInput={plyInput}

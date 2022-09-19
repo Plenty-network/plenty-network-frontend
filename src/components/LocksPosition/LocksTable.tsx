@@ -207,7 +207,6 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           className="bg-primary-500/10 md:w-[151px] w-[78px] cursor-pointer  text-primary-500 hover:opacity-90  md:font-subtitle4 font-f11-600  rounded-lg flex items-center h-[40px] justify-center"
           onClick={() => {
             props.setIsManageLock(true);
-            props.setShowCreateLockModal(true);
           }}
         >
           Manage

@@ -56,9 +56,14 @@ body {
 .inner::-webkit-scrollbar-track-piece:end {
   margin-right: 350px; 
 }
-
 .inner::-webkit-scrollbar-track-piece:start {
   margin-left: 350px;
+}
+.manage::-webkit-scrollbar-track-piece:end {
+  margin-right: 300px; 
+}
+.manage::-webkit-scrollbar-track-piece:start {
+  margin-left: 30px; 
 }
 .slider-input:focus::placeholder {
   color: transparent;

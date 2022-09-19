@@ -32,12 +32,18 @@ import CreateLock from "../../src/components/Votes/CreateLock";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
 import { setLoading } from "../../src/redux/isLoading/action";
-import { createLock } from "../../src/operations/locks";
+import {
+  createLock,
+  increaseLockAndValue,
+  increaseLockEnd,
+  increaseLockValue,
+} from "../../src/operations/locks";
 import { LocksTablePosition } from "../../src/components/LocksPosition/LocksTable";
 import clsx from "clsx";
 import StatsRewards from "../../src/components/Rewards/Stats";
 import { MODULE } from "../../src/components/Votes/types";
 import { PoolsTableRewards } from "../../src/components/PoolsRewards/poolsRewardsTable";
+import ManageLock from "../../src/components/LocksPosition/ManageLock";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -59,6 +65,7 @@ export default function MyPortfolio() {
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
   const [isManageLock, setIsManageLock] = useState(false);
   const [plyInput, setPlyInput] = useState("");
+  const [updatedPlyVoteValue, setUpdatedPlyVoteValue] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [lockingDate, setLockingDate] = useState("");
@@ -152,6 +159,104 @@ export default function MyPortfolio() {
       userAddress,
       new BigNumber(plyInput),
       new BigNumber(lockingEndData.lockingDate),
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setLoading(false));
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setLoading(false));
+      }
+    });
+  };
+  const handleIncreaseVoteOperation = () => {
+    setContentTransaction(`Locking ${plyInput} ply`);
+    setShowCreateLockModal(false);
+    setShowConfirmTransaction(true);
+    dispatch(setLoading(true));
+    increaseLockAndValue(
+      23,
+      new BigNumber(plyInput),
+      new BigNumber(lockingEndData.lockingDate),
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setLoading(false));
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setLoading(false));
+      }
+    });
+  };
+
+  const IncreaseLockEndOperation = () => {
+    setContentTransaction(`Locking ${plyInput} ply`);
+    setShowCreateLockModal(false);
+    setShowConfirmTransaction(true);
+    dispatch(setLoading(true));
+    increaseLockEnd(
+      23,
+      new BigNumber(lockingEndData.lockingDate),
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setLoading(false));
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setLoading(false));
+      }
+    });
+  };
+  const IncreaseLockValueOperation = () => {
+    setContentTransaction(`Locking ${plyInput} ply`);
+    setShowCreateLockModal(false);
+    setShowConfirmTransaction(true);
+    dispatch(setLoading(true));
+    increaseLockValue(
+      23,
+      new BigNumber(updatedPlyVoteValue),
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction
@@ -283,13 +388,35 @@ export default function MyPortfolio() {
             </>
           ) : null)}
       </SideBarHOC>
-      {(isManageLock || showCreateLockModal) && (
+      {isManageLock && (
+        <ManageLock
+          setUpdatedPlyVoteValue={setUpdatedPlyVoteValue}
+          updatedPlyVoteValue={updatedPlyVoteValue}
+          show={isManageLock}
+          setShow={handleCloseLock}
+          setShowConfirmTransaction={setShowConfirmTransaction}
+          showConfirmTransaction={showConfirmTransaction}
+          setShowTransactionSubmitModal={setShowTransactionSubmitModal}
+          showTransactionSubmitModal={showTransactionSubmitModal}
+          setShowCreateLockModal={setShowCreateLockModal}
+          handleLockOperation={handleLockOperation}
+          setLockingDate={setLockingDate}
+          lockingDate={lockingDate}
+          setLockingEndData={setLockingEndData}
+          lockingEndData={lockingEndData}
+          tokenPrice={tokenPrice}
+          plyBalance={plyBalance}
+          IncreaseLockEndOperation={IncreaseLockEndOperation}
+          IncreaseLockValueOperation={IncreaseLockValueOperation}
+          handleIncreaseVoteOperation={handleIncreaseVoteOperation}
+        />
+      )}
+      {showCreateLockModal && (
         <CreateLock
-          module={isManageLock ? MODULE.MY_PORTFOLIO : MODULE.VOTE}
           show={showCreateLockModal}
+          setShow={handleCloseLock}
           setPlyInput={setPlyInput}
           plyInput={plyInput}
-          setShow={handleCloseLock}
           setShowConfirmTransaction={setShowConfirmTransaction}
           showConfirmTransaction={showConfirmTransaction}
           setShowTransactionSubmitModal={setShowTransactionSubmitModal}

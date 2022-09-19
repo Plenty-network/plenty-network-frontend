@@ -10,7 +10,7 @@ import link from "../../assets/icon/myPortfolio/link.svg";
 export function TopBar(props: ILockExpiryProps) {
   return (
     <>
-      <div className="bg-card-800 px-6 py-3 mt-3">
+      <div className="bg-card-800 px-6 py-3 mt-3 overflow-x-auto manage">
         <div className=" flex items-center">
           <div className="cursor-pointer">
             <Image src={info} />
@@ -18,7 +18,7 @@ export function TopBar(props: ILockExpiryProps) {
           <div className="text-white font-body2 relative -top-0.5 ml-1">My Lock</div>
         </div>
 
-        <div className="flex gap-2 mt-2">
+        <div className="flex gap-2 mt-2 min-w-[521px]">
           <p className="border border-text-800 bg-card-900 flex  pl-4 items-center h-16 w-[156px] rounded-lg">
             <p>
               <Image src={veNFT} />
