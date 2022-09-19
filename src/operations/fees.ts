@@ -9,6 +9,9 @@ import {
 } from "./types";
 
 
+// TO BE DELETED
+// HANDLED IN VOTER :(
+
 export const claimFees = async (
   id : number,
   address : string,
