@@ -1,3 +1,4 @@
+import { OpKind } from '@taquito/taquito';
 import { getDexAddress } from '../api/util/fetchConfig';
 import { dappClient } from '../common/walletconnect';
 import { store } from '../redux';
@@ -40,6 +41,55 @@ export const harvestRewards = async (
     const gaugeInstance = await Tezos.wallet.at(gaugeAddress);
 
     const operation = await gaugeInstance.methods.get_reward([["unit"]]).send();
+
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+    transactionSubmitModal && transactionSubmitModal(operation.opHash);
+    resetAllValues && resetAllValues();
+    await operation.confirmation();
+
+    return {
+      success: true,
+      operationId: operation.opHash,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      operationId: undefined,
+      error: error.message,
+    };
+  }
+};
+
+// Harvests Rewards from all guages
+export const harvestAllRewards = async (
+  guages : string[],
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+): Promise<IOperationsResponse> => {
+  try {
+    
+    const { CheckIfWalletConnected } = dappClient();
+    const walletResponse = await CheckIfWalletConnected();
+    if (!walletResponse.success) {
+      throw new Error("Wallet connection failed");
+    }
+    const Tezos = await dappClient().tezos();
+
+    const promises = [];
+    for(var guage of guages){
+      promises.push(await Tezos.wallet.at(guage));
+    }
+    const response = await Promise.all(promises);
+    const harvestBatch : any = [];
+        for (const key in response) {
+          harvestBatch.push({
+            kind: OpKind.TRANSACTION,
+            ...response[key].methods.get_reward([["unit"]]).toTransferParams(),
+          });
+        }
+        const batch =  Tezos.wallet.batch(harvestBatch);
+        const operation = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(operation.opHash);
