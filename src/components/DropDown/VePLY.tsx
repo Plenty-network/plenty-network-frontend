@@ -4,6 +4,7 @@ import clsx from "clsx";
 import vectorIcon from "../../assets//icon/common/vector.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { IVePLYData } from "../../api/stake/types";
+import { ELocksState } from "../../api/votes/types";
 
 export interface IDropdownProps {
   Options: IVePLYData[];
@@ -84,6 +85,7 @@ export function VePLY(props: IDropdownProps) {
               key={`${text.tokenId}_${i}`}
               boostValue={text.boostValue}
               tokenId={text.tokenId}
+              options={text}
             />
           ))}
         </div>
@@ -91,20 +93,46 @@ export function VePLY(props: IDropdownProps) {
     </div>
   );
 
-  function Options(props: { onClick: Function; boostValue: string; tokenId: string }) {
+  function Options(props: {
+    onClick: Function;
+    boostValue: string;
+    tokenId: string;
+    options: IVePLYData;
+  }) {
     return (
       <div
-        onClick={() => {
-          props.onClick({
-            boostValue: props.boostValue,
-            tokenId: props.tokenId,
-          });
-          setIsDropDownActive(false);
-        }}
-        className="  hover:bg-muted-500 px-4 py-2 flex items-center h-[36px] cursor-pointer flex"
+        onClick={
+          props.options.lockState === ELocksState.EXPIRED
+            ? () => {}
+            : () => {
+                props.onClick({
+                  boostValue: props.boostValue,
+                  tokenId: props.tokenId,
+                });
+                setIsDropDownActive(false);
+              }
+        }
+        className={clsx(
+          "  hover:bg-muted-500 px-4 py-2 flex items-center h-[36px]  flex",
+          props.options.lockState === ELocksState.EXPIRED ? "cursor-not-allowed" : "cursor-pointer"
+        )}
       >
-        <span className="font-body4 text-white">{props.boostValue}x</span>
-        <span className="ml-auto font-body3 text-text-500">#{props.tokenId}</span>
+        <span
+          className={clsx(
+            "font-body4 ",
+            props.options.lockState === ELocksState.EXPIRED ? "text-text-800" : "text-white"
+          )}
+        >
+          {props.boostValue}x
+        </span>
+        <span
+          className={clsx(
+            "ml-auto font-body3 ",
+            props.options.lockState === ELocksState.EXPIRED ? "text-text-800" : "text-text-500"
+          )}
+        >
+          #{props.tokenId}
+        </span>
       </div>
     );
   }

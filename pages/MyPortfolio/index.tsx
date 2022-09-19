@@ -37,6 +37,7 @@ import { LocksTablePosition } from "../../src/components/LocksPosition/LocksTabl
 import clsx from "clsx";
 import StatsRewards from "../../src/components/Rewards/Stats";
 import { MODULE } from "../../src/components/Votes/types";
+import { PoolsTableRewards } from "../../src/components/PoolsRewards/poolsRewardsTable";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -128,7 +129,7 @@ export default function MyPortfolio() {
     Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
   }, [tokenPrice]);
   useEffect(() => {
-    Object.keys(amm).length !== 0 && dispatch(createGaugeConfig())
+    Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
   const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
     {} as { [id: string]: IVotePageData }
@@ -244,7 +245,22 @@ export default function MyPortfolio() {
         {activeStateTab === MyPortfolioHeader.Pools &&
           (activeSection === MyPortfolioSection.Positions ? (
             <PoolsTablePosition className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
-          ) : null)}
+          ) : (
+            <>
+              <div className="flex px-[25px] mt-5">
+                <p>
+                  <div className="text-white font-title3">List of my PLY emissions</div>
+                  <div className="text-text-250 font-body1">
+                    Discover veNFTs on the largest NFT marketplace on Tezos.
+                  </div>
+                </p>
+                <p className="flex items-center font-title3-bold text-black ml-auto h-[54px] px-[40px] bg-primary-500 rounded-xl">
+                  Claim all
+                </p>
+              </div>
+              <PoolsTableRewards className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
+            </>
+          ))}
         {activeStateTab === MyPortfolioHeader.Locks &&
           (activeSection === MyPortfolioSection.Positions ? (
             <>

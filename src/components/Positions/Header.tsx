@@ -35,7 +35,6 @@ export enum MyPortfolioHeader {
 }
 export function MyPortfolioCardHeader(props: ICardHeaderProps) {
   const { activeStateTab, setActiveStateTab } = props;
-  const ListOfTabs = ["All", "Stable", "Volatile", "My pools"];
   return (
     <div className="flex md:justify-between justify-center border-b border-b-borderCommon  ">
       <div
