@@ -258,7 +258,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
   }
   return (
     <>
-      <div className={`overflow-x-auto  ${props.className}`}>
+      <div className={`overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
@@ -267,6 +267,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           isFetched={!noSearchResult && votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName={"lockPosition"}
+          TableWidth="md:min-w-[1049px]"
         />
       </div>
       {/* {showLiquidityModal && (

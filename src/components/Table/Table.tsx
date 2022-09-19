@@ -6,6 +6,8 @@ import { getHeightOfElement } from "../../utils/getHeight";
 import { NoContentAvailable, WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
 import { Tabs } from "../Pools/ShortCardHeader";
 import { NoSearchResult } from "../Votes/NoSearchResult";
+
+import { isMobile } from "react-device-detect";
 export interface ISimmerEffectProps {
   lines: number;
 }
@@ -33,6 +35,7 @@ const Table = <D extends object>({
   isVotesTable = false,
   noSearchResult = false,
   TableName,
+  TableWidth,
 }: {
   columns: Column<D>[];
   data: D[];
@@ -42,6 +45,7 @@ const Table = <D extends object>({
   isFetched?: boolean;
   isVotesTable?: boolean;
   TableName?: string;
+  TableWidth?: string;
 }) => {
   const [shortByGroup, setshortByGroup] = useState({
     id: shortby ?? "usd",
@@ -109,19 +113,7 @@ const Table = <D extends object>({
 
   return (
     <div>
-      <table
-        className={clsx(
-          " flex flex-col ",
-          isVotesTable ? "gap-1.5" : "gap-1.5",
-          TableName === "lockPosition"
-            ? "min-w-[1049px]"
-            : TableName === "poolsPosition"
-            ? "min-w-[900px]"
-            : TableName === "votesTable"
-            ? "min-w-[733px]"
-            : "w-full"
-        )}
-      >
+      <table className={clsx(" flex flex-col ", isVotesTable ? "gap-1.5" : "gap-1.5", TableWidth)}>
         <thead ref={headerRef}>
           {headerGroups.map((headerGroup, index) => (
             <tr
@@ -198,7 +190,9 @@ const Table = <D extends object>({
                                 ? "w-[180px]"
                                 : i === 5
                                 ? "w-[200px]"
-                                : "w-[120px]"
+                                : isMobile && i === 2
+                                ? "w-[120px] flex-1"
+                                : "w-[80px] md:w-[120px]"
                               : TableName === "votesTable"
                               ? i === 4
                                 ? "w-[120px] md:w-[220px]"

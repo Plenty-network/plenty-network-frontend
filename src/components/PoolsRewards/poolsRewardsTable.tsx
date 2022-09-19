@@ -10,10 +10,13 @@ import { tokenParameterLiquidity } from "../Liquidity/types";
 import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 import { IPoolsTableRewards } from "./types";
 import { IManageBtnProps } from "../PoolsPosition/types";
+import ClaimPly from "./ClaimPopup";
 
 export function PoolsTableRewards(props: IPoolsTableRewards) {
   const { valueFormat } = useTableNumberUtils();
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
+  const [showClaimPly, setShowClaimPly] = React.useState(false);
+
   const votesArray = Object.entries(props.voteData);
   const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
     new Array(votesArray.length).fill(0)
@@ -170,9 +173,9 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
     if (true) {
       return (
         <div
-          className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
+          className="bg-primary-500/10 md:w-[151px] w-[78px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
           onClick={() => {
-            setShowLiquidityModal(true);
+            setShowClaimPly(true);
           }}
         >
           Claim
@@ -182,7 +185,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
   }
   return (
     <>
-      <div className={` overflow-x-auto  ${props.className}`}>
+      <div className={` overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
@@ -191,8 +194,10 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
           isFetched={!noSearchResult && votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsRewards"
+          TableWidth=""
         />
       </div>
+      {showClaimPly && <ClaimPly show={showClaimPly} setShow={setShowClaimPly} />}
     </>
   );
 }

@@ -4,11 +4,11 @@ export default function PieChartButton() {
   const COLORS = ["#9D5CFF", "transparent"];
   const pieData = [
     {
-      name: "Apple",
+      name: "violet",
       value: 90,
     },
     {
-      name: "Samsung",
+      name: "transaparent",
       value: 10,
     },
   ];

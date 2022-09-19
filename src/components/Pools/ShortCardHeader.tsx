@@ -3,6 +3,7 @@ import * as React from "react";
 import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
 import arrowDown from "../../assets/icon/common/arrowDown.svg";
 
+import { isMobile } from "react-device-detect";
 import info from "../../assets/icon/common/infoIcon.svg";
 import clsx from "clsx";
 
@@ -44,7 +45,9 @@ export function Tabs(props: ITabsProps) {
             ? "w-[180px]"
             : props.index === 5
             ? "w-[200px]"
-            : "w-[120px]"
+            : isMobile && props.index === 2
+            ? "w-[120px] flex-1"
+            : "w-[80px] md:w-[120px]"
           : props.TableName === "votesTable"
           ? props.index === 4
             ? "w-[120px] md:w-[220px]"
@@ -63,14 +66,16 @@ export function Tabs(props: ITabsProps) {
             className={clsx(
               "text-right ",
               (props.TableName === "poolsPosition" && props.index == 2) ||
-                (props.TableName === "poolsRewards" && props.index === 1)
+                (props.TableName === "poolsRewards" && props.index === 1) ||
+                (props.TableName === "poolsPosition" && isMobile && props.index === 1)
                 ? ""
                 : "flex gap-1"
             )}
           >
             {props.isToolTipEnabled &&
               ((props.TableName === "poolsPosition" && props.index == 2) ||
-              (props.TableName === "poolsRewards" && props.index === 1) ? (
+              (props.TableName === "poolsRewards" && props.index === 1) ||
+              (props.TableName === "poolsPosition" && isMobile && props.index === 1) ? (
                 <span className="relative top-[3px] mr-1">
                   <Image src={info} />
                 </span>

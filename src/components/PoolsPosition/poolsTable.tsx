@@ -110,14 +110,13 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => 324564,
+        accessor: (x: any) => 32,
       },
       {
-        Header: "Staked percentage",
-        id: "Staked percentage",
-        isToolTipEnabled: true,
-        canShort: true,
-        accessor: (x: any) => 2123,
+        Header: "",
+        id: "manage",
+        minWidth: 151,
+        accessor: (x) => <ManageBtn />,
       },
     ],
     [valueFormat]
@@ -193,7 +192,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       //isstaked
       return (
         <div
-          className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
+          className="bg-primary-500/10 md:w-[151px] w-[115px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
           onClick={() => {
             setShowLiquidityModal(true);
           }}
@@ -204,7 +203,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
     } else if (false) {
       return (
         <div
-          className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
+          className="bg-primary-500 md:w-[151px] w-[115px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
           onClick={() => {}}
         >
           Stake
@@ -214,7 +213,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
   }
   return (
     <>
-      <div className={` overflow-x-auto  ${props.className}`}>
+      <div className={` overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
@@ -223,6 +222,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           isFetched={!noSearchResult && votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsPosition"
+          TableWidth="md:min-w-[900px]"
         />
       </div>
       {showLiquidityModal && (

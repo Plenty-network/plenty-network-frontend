@@ -190,11 +190,11 @@ export default function MyPortfolio() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
-        <div className="pt-5 px-[24px]">
+        <div className="pt-5 md:px-[24px] ">
           <div className="flex gap-1">
             <p
               className={clsx(
-                " font-title3 h-[40px] px-[24px] flex items-center  rounded-lg gap-1",
+                " font-title3 md:h-[40px] h-[52px] px-[24px] flex items-center  rounded-lg gap-1",
                 activeSection === MyPortfolioSection.Positions
                   ? "text-primary-500 bg-primary-500/[0.1]"
                   : "text-text-250"
@@ -210,7 +210,7 @@ export default function MyPortfolio() {
             </p>
             <p
               className={clsx(
-                "rounded-lg  font-title3 h-[40px] px-[24px] flex items-center gap-1",
+                "rounded-lg  font-title3  md:h-[40px] h-[52px] px-[24px] flex items-center gap-1",
                 activeSection === MyPortfolioSection.Rewards
                   ? "text-primary-500 bg-primary-500/[0.1]"
                   : "text-text-250"
@@ -226,7 +226,7 @@ export default function MyPortfolio() {
             </p>
           </div>
 
-          <div className="mt-5 overflow-x-auto">
+          <div className="mt-5 pl-5  md:pl-0 overflow-x-auto inner">
             {activeSection === MyPortfolioSection.Positions ? (
               <Stats setShowCreateLockModal={setShowCreateLockModal} />
             ) : (
@@ -235,7 +235,7 @@ export default function MyPortfolio() {
           </div>
         </div>
         <div className="border-t border-text-800/[0.5] mt-5"></div>
-        <div className=" px-[24px]">
+        <div className=" md:px-[24px]">
           <MyPortfolioCardHeader
             activeStateTab={activeStateTab}
             setActiveStateTab={setActiveStateTab}
@@ -244,39 +244,39 @@ export default function MyPortfolio() {
         </div>
         {activeStateTab === MyPortfolioHeader.Pools &&
           (activeSection === MyPortfolioSection.Positions ? (
-            <PoolsTablePosition className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
+            <PoolsTablePosition className="md:px-5 md:py-4   py-4" voteData={voteData} />
           ) : (
             <>
-              <div className="flex px-[25px] mt-5">
+              <div className="flex md:px-[25px] px-4  mt-5">
                 <p>
                   <div className="text-white font-title3">List of my PLY emissions</div>
                   <div className="text-text-250 font-body1">
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="flex items-center font-title3-bold text-black ml-auto h-[54px] px-[40px] bg-primary-500 rounded-xl">
+                <p className="flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[54px] px-[40px] bg-primary-500 rounded-xl">
                   Claim all
                 </p>
               </div>
-              <PoolsTableRewards className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
+              <PoolsTableRewards className="md:px-5 md:py-4   py-4" voteData={voteData} />
             </>
           ))}
         {activeStateTab === MyPortfolioHeader.Locks &&
           (activeSection === MyPortfolioSection.Positions ? (
             <>
-              <div className="flex px-[25px] mt-5">
+              <div className="flex md:px-[25px] px-4 mt-5">
                 <p>
                   <div className="text-white font-title3">List of my locks</div>
                   <div className="text-text-250 font-body1">
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="flex items-center font-title3-bold text-primary-500 ml-auto h-[54px] px-[26px] bg-primary-500/[0.1] rounded-xl">
+                <p className="flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[54px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px] ">
                   Trade locks
                 </p>
               </div>
               <LocksTablePosition
-                className="md:px-5 md:py-4  px-2 py-4"
+                className="md:px-5 md:py-4   py-4"
                 voteData={voteData}
                 setIsManageLock={setIsManageLock}
                 setShowCreateLockModal={setShowCreateLockModal}

@@ -265,13 +265,14 @@ export function ShortCard(props: IShortCardProps) {
           activeState={activeState}
         />
       )}
-      <div className={`w-full  ${props.className}`}>
+      <div className={` overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={poolsTableData}
           shortby="fees"
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
+          TableWidth="md:min-w-[1032px]"
         />
       </div>
     </>

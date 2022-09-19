@@ -53,6 +53,13 @@ body {
   border-radius: 8px;
   background: #3b2f4f; 
 }
+.inner::-webkit-scrollbar-track-piece:end {
+  margin-right: 350px; 
+}
+
+.inner::-webkit-scrollbar-track-piece:start {
+  margin-left: 350px;
+}
 .slider-input:focus::placeholder {
   color: transparent;
 }
@@ -316,5 +323,9 @@ input[type='number'] {
   .font-mobile-f9 {
     @apply font-normal;
     @apply text-f9;
+  }
+  .font-f11 {
+    @apply font-normal;
+    @apply text-f11;
   }
 }
