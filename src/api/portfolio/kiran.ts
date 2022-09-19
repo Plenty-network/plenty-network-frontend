@@ -3,6 +3,10 @@ import axios from "axios";
 import Config from "../../config/config";
 import { PLY_DECIMAL_MULTIPLIER } from "../../constants/global";
 import {
+  IAllLocksPositionData,
+  IAllLocksPositionResponse,
+  IAttachedData,
+  IAttachedTzktResponse,
   IPositionsData,
   IPositionsIndexerData,
   IPositionsResponse,
@@ -11,7 +15,11 @@ import {
 } from "./types";
 import { store } from "../../redux";
 import { ILpTokenPriceList, ITokenPriceList } from "../util/types";
+import { ELocksState } from "../votes/types";
+import { voteEscrowAddress } from "../../common/walletconnect";
+import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
 
+// Stats
 /**
  * Returns the statistical data (tvl, total epoch power and total PLY locked) for positions of my porfolio.
  * @param userTezosAddress - Tezos wallet address of the user
@@ -64,6 +72,7 @@ export const getPositionStatsData = async (
   }
 };
 
+// Stats
 /**
  * Calculates the total epoch voting power and total PLY tokens locked for all locks held by a user.
  * @param userTezosAddress - Tezos wallet address of the user
@@ -106,6 +115,7 @@ const getVotesStatsData = async (
   }
 };
 
+// Pools
 /**
  * Returns the pools data for a user (positions).
  * @param userTezosAddress - Tezos wallet address of the user
@@ -171,6 +181,115 @@ export const getPositionsData = async (
       success: false,
       liquidityAmountSum: new BigNumber(0),
       positionPoolsData: [],
+      error: error.message,
+    };
+  }
+};
+
+
+
+// Locks
+/**
+ * Returns the list of all the locks created by a user along with the pool attached if any.
+ * @param userTezosAddress - Tezos wallet address of the user
+ */
+export const getAllLocksPositionData = async (
+  userTezosAddress: string
+): Promise<IAllLocksPositionResponse> => {
+  try {
+    if (!userTezosAddress) {
+      throw new Error("Invalid or empty arguments.");
+    }
+    const state = store.getState();
+    const GAUGES = state.config.gauges;
+
+    const [locksResponse, veStorageResponse] = await Promise.all([
+      axios.get(`${Config.VE_INDEXER}locks?address=${userTezosAddress}`),
+      getTzktStorageData(voteEscrowAddress),
+    ]);
+    const locksData = locksResponse.data.result;
+    const attachedLocksBigMapId: string = Number(veStorageResponse.data.attached).toString();
+
+    const attachedLocksResponse = await getTzktBigMapData(
+      attachedLocksBigMapId,
+      `active=true&select=key,value`
+    );
+    const attachedLocksData: IAttachedTzktResponse[] = attachedLocksResponse.data;
+
+    const attachedLocks: IAttachedData = attachedLocksData.reduce(
+      (finalAttached: IAttachedData, data: IAttachedTzktResponse) => (
+        (finalAttached[data.key] = data.value), finalAttached
+      ),
+      {}
+    );
+
+    const finalVeNFTData: IAllLocksPositionData[] = [];
+    const currentTimestamp: BigNumber = new BigNumber(Date.now())
+      .dividedBy(1000)
+      .decimalPlaces(0, 1);
+
+    for (const lock of locksData) {
+      const tokenId = new BigNumber(lock.id);
+      const epochVotingPower = new BigNumber(lock.epochtVotingPower);
+      const availableVotingPower = new BigNumber(lock.availableVotingPower);
+      const consumedVotingPower = epochVotingPower.minus(availableVotingPower);
+      const currentVotingPower = new BigNumber(lock.currentVotingPower).dividedBy(PLY_DECIMAL_MULTIPLIER);
+      const lockEndTimestamp = new BigNumber(lock.endTs);
+      const attached = Boolean(lock.attached);
+      const finalLock: IAllLocksPositionData = {
+        tokenId,
+        baseValue: new BigNumber(lock.baseValue).dividedBy(PLY_DECIMAL_MULTIPLIER),
+        votingPower: new BigNumber(0),
+        epochVotingPower: epochVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
+        consumedVotingPower: consumedVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
+        currentVotingPower,
+        locksState: ELocksState.DISABLED,
+        endTimeStamp: lockEndTimestamp.toNumber(),
+        attached,
+        attachedGaugeAddress: undefined,
+        attachedAmmAddress: undefined,
+        attachedTokenASymbol: undefined,
+        attachedTokenBSymbol: undefined,
+      };
+
+      if (epochVotingPower.isFinite() && epochVotingPower.isGreaterThan(0)) {
+        if (availableVotingPower.isGreaterThan(0)) {
+          finalLock.votingPower = availableVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER);
+          finalLock.locksState = ELocksState.AVAILABLE;
+        } else {
+          finalLock.locksState = ELocksState.CONSUMED;
+        }
+      } else {
+        if (currentTimestamp.isGreaterThan(lockEndTimestamp)) {
+          finalLock.locksState = ELocksState.EXPIRED;
+        } else {
+          finalLock.locksState = ELocksState.DISABLED;
+        }
+      }
+
+      if (
+        attached &&
+        attachedLocks[tokenId.toString()] &&
+        GAUGES[attachedLocks[tokenId.toString()]]
+      ) {
+        const gaugeAttached = attachedLocks[tokenId.toString()];
+        finalLock.attachedGaugeAddress = gaugeAttached;
+        finalLock.attachedAmmAddress = GAUGES[gaugeAttached].ammAddress;
+        finalLock.attachedTokenASymbol = GAUGES[gaugeAttached].tokenOneSymbol;
+        finalLock.attachedTokenBSymbol = GAUGES[gaugeAttached].tokenTwoSymbol;
+      }
+      finalVeNFTData.push(finalLock);
+    }
+    finalVeNFTData.sort((a, b) => b.tokenId.minus(a.tokenId).toNumber());
+    return {
+      success: true,
+      allLocksData: finalVeNFTData,
+    };
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      allLocksData: [],
       error: error.message,
     };
   }
