@@ -26,7 +26,6 @@ export interface ITabsProps {
 
 export function Tabs(props: ITabsProps) {
   return (
-    // need to refactor this conditions
     <th
       className={`flex cursor-pointer font-subtitle1 text-text-50 text-left  ${
         props.isFirstRow || props.text?.includes("Pool") ? "justify-start" : "justify-end "
