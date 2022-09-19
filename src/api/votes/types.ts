@@ -28,6 +28,7 @@ export interface IVeNFTData {
   votingPower: BigNumber;
   epochVotingPower: BigNumber;
   consumedVotingPower: BigNumber;
+  currentVotingPower: BigNumber;
   locksState: ELocksState;
 }
 
