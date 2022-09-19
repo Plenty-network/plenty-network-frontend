@@ -378,6 +378,7 @@ export const votesPageDataWrapper = async (
       const epochVotingPower = new BigNumber(lock.epochtVotingPower);
       const availableVotingPower = new BigNumber(lock.availableVotingPower);
       const consumedVotingPower = epochVotingPower.minus(availableVotingPower);
+      const currentVotingPower = new BigNumber(lock.currentVotingPower).dividedBy(PLY_DECIMAL_MULTIPLIER);
       const lockEndTimestamp = new BigNumber(lock.endTs);
       const finalLock: IVeNFTData = {
         tokenId: new BigNumber(lock.id),
@@ -385,6 +386,7 @@ export const votesPageDataWrapper = async (
         votingPower: new BigNumber(0),
         epochVotingPower: epochVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
         consumedVotingPower: consumedVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
+        currentVotingPower,
         locksState: ELocksState.DISABLED,
       };
 

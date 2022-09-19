@@ -45,7 +45,6 @@ export interface IPositionStatsResponse {
 }
 
 export interface IAllLocksPositionData extends IVeNFTData {
-  currentVotingPower: BigNumber;
   endTimeStamp: number;
   attached: boolean;
   attachedGaugeAddress: string | undefined;
