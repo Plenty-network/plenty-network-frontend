@@ -233,6 +233,7 @@ export const getAllLocksPositionData = async (
       const epochVotingPower = new BigNumber(lock.epochtVotingPower);
       const availableVotingPower = new BigNumber(lock.availableVotingPower);
       const consumedVotingPower = epochVotingPower.minus(availableVotingPower);
+      const currentVotingPower = new BigNumber(lock.currentVotingPower).dividedBy(PLY_DECIMAL_MULTIPLIER);
       const lockEndTimestamp = new BigNumber(lock.endTs);
       const attached = Boolean(lock.attached);
       const finalLock: IAllLocksPositionData = {
@@ -242,6 +243,7 @@ export const getAllLocksPositionData = async (
         epochVotingPower: epochVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
         consumedVotingPower: consumedVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
         locksState: ELocksState.DISABLED,
+        currentVotingPower,
         endTimeStamp: lockEndTimestamp.toNumber(),
         attached,
         attachedGaugeAddress: undefined,
