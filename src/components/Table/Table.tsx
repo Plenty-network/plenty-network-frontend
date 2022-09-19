@@ -169,6 +169,7 @@ const Table = <D extends object>({
                     {row.cells.map((cell: any, i: any) => {
                       return (
                         // eslint-disable-next-line react/jsx-key
+                        // need to refactor this conditions
                         <td
                           className={` flex items-center ${
                             i == 0 || (!isMobile && TableName === "lockPosition" && i === 1)
