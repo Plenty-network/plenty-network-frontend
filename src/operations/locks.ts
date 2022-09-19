@@ -104,7 +104,7 @@ export const increaseLockEnd = async (
 
 export const increaseLockValue = async (
   id: number,
-  value = BigNumber,
+  value : BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
   setShowConfirmTransaction: TSetShowConfirmTransaction
@@ -115,7 +115,8 @@ export const increaseLockValue = async (
     if (!WALLET_RESP.success) {
       throw new Error("Wallet connection failed");
     }
-
+    // Making value to it's proper decimal form
+    value = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
     const Tezos = await dappClient().tezos();
     const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
     const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
@@ -150,7 +151,7 @@ export const increaseLockValue = async (
 
 export const increaseLockAndValue = async (
   id: number,
-  value = BigNumber,
+  value : BigNumber,
   newEnd: BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
@@ -162,7 +163,8 @@ export const increaseLockAndValue = async (
     if (!WALLET_RESP.success) {
       throw new Error("Wallet connection failed");
     }
-
+    // Making value to it's proper decimal form
+    value = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
     const Tezos = await dappClient().tezos();
     const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
     const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
