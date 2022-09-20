@@ -9,7 +9,6 @@ import { IManageBtnProps, IPoolsTablePosition } from "./types";
 import { ManageLiquidity } from "../Pools/ManageLiquidity";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
-import { Boost } from "./Boost";
 import { IPositionsData } from "../../api/portfolio/types";
 import { YourLiquidity } from "./YourLiquidity";
 import { StakePercentage } from "./StakedPercentage";
@@ -22,10 +21,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
-  //const votesArray = Object.entries(props.voteData);
-  // const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
-  //   new Array(votesArray.length).fill(0)
-  // );
+
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
@@ -41,33 +37,6 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: "USDT.e",
   });
-  // const [votedata, setVotedata] = React.useState(votedataArray);
-  // React.useEffect(() => {
-  //   if (votedataArray.length !== 0) setVotedata(votedataArray);
-  //   else setVotedata([]);
-  // }, [votedataArray.length]);
-  // React.useEffect(() => {
-  //   if (props.searchValue && props.searchValue.length) {
-  //     const _votesTableData = votedataArray.filter((e: any) => {
-  //       return (
-  //         e.votes.tokenA.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-  //         e.votes.tokenB.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-  //         (props.searchValue.toLowerCase() === "xtz" &&
-  //           e.votes.tokenA.toLowerCase().search(/\btez\b/) >= 0) ||
-  //         (props.searchValue.toLowerCase() === "xtz" &&
-  //           e.votes.tokenB.toLowerCase().search(/\btez\b/) >= 0)
-  //       );
-  //     });
-  //     if (_votesTableData.length === 0) {
-  //       setNoSearchResult(true);
-  //     } else {
-  //       setNoSearchResult(false);
-  //     }
-  //     setVotedata(_votesTableData);
-  //   } else {
-  //     setVotedata(votedataArray);
-  //   }
-  // }, [props.searchValue]);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
@@ -108,7 +77,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => 32,
+        accessor: (x: any) => <YourLiquidity value={x.totalLiquidityAmount} />,
       },
       {
         Header: "",

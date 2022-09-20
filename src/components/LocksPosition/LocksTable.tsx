@@ -66,38 +66,41 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         Header: "Pool",
         id: "pools",
         showOnMobile: true,
-        accessor: (x: any) => (
-          <div className=" flex justify-center items-center">
-            <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-              <Image src={getImagesPath(x.attachedTokenASymbol)} width={"20px"} height={"20px"} />
-            </div>
-            <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image src={getImagesPath(x.attachedTokenBSymbol)} width={"20px"} height={"20px"} />
-            </div>
-            <div>
-              <div className="font-body4">
-                {" "}
-                {tEZorCTEZtoUppercase(x.attachedTokenASymbol.toString())}/
-                {tEZorCTEZtoUppercase(x.attachedTokenBSymbol.toString())}
+        accessor: (x: any) =>
+          x.attached ? (
+            <div className=" flex justify-center items-center">
+              <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
+                <Image src={getImagesPath(x.attachedTokenASymbol)} width={"20px"} height={"20px"} />
               </div>
-              <div className="font-subtitle1 text-text-500">{} Pool</div>
+              <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
+                <Image src={getImagesPath(x.attachedTokenBSymbol)} width={"20px"} height={"20px"} />
+              </div>
+              <div>
+                <div className="font-body4">
+                  {" "}
+                  {tEZorCTEZtoUppercase(x.attachedTokenASymbol.toString())}/
+                  {tEZorCTEZtoUppercase(x.attachedTokenBSymbol.toString())}
+                </div>
+                <div className="font-subtitle1 text-text-500">{} Pool</div>
+              </div>
             </div>
-          </div>
-        ),
+          ) : (
+            <div className="flex justify-center items-center">--</div>
+          ),
       },
       {
-        Header: "Your liquidity",
-        id: "your liquidity",
+        Header: "Voting Power",
+        id: "Voting Power",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => 32,
+        accessor: (x: any) => <VotingPower value={x.currentVotingPower} />,
       },
       {
         Header: "",
         id: "vote",
         minWidth: 200,
-        accessor: (x) => <LockExpiry endTime={x.endTimeStamp} />,
+        accessor: (x) => <VoteBtn locksState={x.locksState} id={Number(x.tokenId)} />,
       },
       {
         Header: "",
