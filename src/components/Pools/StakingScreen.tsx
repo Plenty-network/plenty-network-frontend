@@ -42,6 +42,7 @@ export interface IStakingScreenProps {
   setSelectedDropDown: React.Dispatch<React.SetStateAction<IVePLYData>>;
   selectedDropDown: IVePLYData;
   vePLYOptions: IVePLYData[];
+  isListLoading: boolean;
 }
 export interface IStakingProps {
   setStakingScreen: Function;
@@ -57,6 +58,7 @@ export interface IStakingProps {
   setSelectedDropDown: React.Dispatch<React.SetStateAction<IVePLYData>>;
   selectedDropDown: IVePLYData;
   vePLYOptions: IVePLYData[];
+  isListLoading: boolean;
 }
 
 export interface IUnstakingProps {
@@ -89,6 +91,7 @@ export function StakingScreen(props: IStakingScreenProps) {
           setSelectedDropDown={props.setSelectedDropDown}
           selectedDropDown={props.selectedDropDown}
           vePLYOptions={props.vePLYOptions}
+          isListLoading={props.isListLoading}
         />
       )}
       {props.stakingScreen === StakingScreenType.Unstaking && (
@@ -187,6 +190,7 @@ export function Staking(props: IStakingProps) {
             Options={props.vePLYOptions}
             selectedText={props.selectedDropDown}
             onClick={props.setSelectedDropDown}
+            isListLoading={props.isListLoading}
           />
           <div className="font-mobile-f9 md:text-f12 text-text-400 ml-2 max-w-[300px] text-center">
             Based on how much vePLY a user owns, they may be able to receive up to 2.5x more PLY

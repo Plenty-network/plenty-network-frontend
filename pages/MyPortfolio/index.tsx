@@ -68,6 +68,7 @@ export default function MyPortfolio() {
     MyPortfolioSection.Positions
   );
   const userAddress = store.getState().wallet.address;
+  const isLoading = store.getState().isLoadingWallet.isLoading;
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
@@ -95,6 +96,8 @@ export default function MyPortfolio() {
   const [locksPosition, setLocksPosition] = useState<IAllLocksPositionData[]>(
     [] as IAllLocksPositionData[]
   );
+
+  const [lockOperation, setLockOperation] = useState(false);
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -158,19 +161,39 @@ export default function MyPortfolio() {
       lockingDate: 0,
     });
   };
+  useEffect(() => {
+    if (userAddress) {
+      setLocksPosition([] as IAllLocksPositionData[]);
+      setStatsPosition({} as IPositionStatsResponse);
+      setPoolsPosition([] as IPositionsData[]);
+
+      getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+        setStatsPosition(res);
+      });
+      getPositionsData(userAddress, lpTokenPrice).then((res) => {
+        setPoolsPosition(res.positionPoolsData);
+      });
+      getAllLocksPositionData(userAddress).then((res) => {
+        setLocksPosition(res.allLocksData);
+      });
+    }
+  }, [lockOperation, isLoading]);
 
   useEffect(() => {
     if (
       userAddress &&
       Object.keys(lpTokenPrice).length !== 0 &&
       Object.keys(tokenPrice).length !== 0
-    )
+    ) {
+      setStatsPosition({} as IPositionStatsResponse);
+      setPoolsPosition([] as IPositionsData[]);
       getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
         setStatsPosition(res);
       });
-    getPositionsData(userAddress, lpTokenPrice).then((res) => {
-      setPoolsPosition(res.positionPoolsData);
-    });
+      getPositionsData(userAddress, lpTokenPrice).then((res) => {
+        setPoolsPosition(res.positionPoolsData);
+      });
+    }
   }, [userAddress, lpTokenPrice]);
 
   const resetAllValues = () => {
@@ -196,7 +219,12 @@ export default function MyPortfolio() {
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
-
+        setTimeout(() => {
+          setLockOperation(true);
+        }, 6000);
+        setTimeout(() => {
+          setLockOperation(false);
+        }, 20000);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
@@ -231,7 +259,12 @@ export default function MyPortfolio() {
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
-
+        setTimeout(() => {
+          setLockOperation(true);
+        }, 6000);
+        setTimeout(() => {
+          setLockOperation(false);
+        }, 20000);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
@@ -252,7 +285,7 @@ export default function MyPortfolio() {
 
   const IncreaseLockEndOperation = () => {
     setIsManageLock(false);
-    setContentTransaction(`Locking ${plyInput} ply`);
+    setContentTransaction(`Increase lock`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setLoading(true));
@@ -265,7 +298,12 @@ export default function MyPortfolio() {
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
-
+        setTimeout(() => {
+          setLockOperation(true);
+        }, 6000);
+        setTimeout(() => {
+          setLockOperation(false);
+        }, 20000);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
@@ -285,7 +323,7 @@ export default function MyPortfolio() {
   };
   const IncreaseLockValueOperation = () => {
     setIsManageLock(false);
-    setContentTransaction(`Locking ${plyInput} ply`);
+    setContentTransaction(`Increase lock`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setLoading(true));
@@ -298,7 +336,12 @@ export default function MyPortfolio() {
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
-
+        setTimeout(() => {
+          setLockOperation(true);
+        }, 6000);
+        setTimeout(() => {
+          setLockOperation(false);
+        }, 20000);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
