@@ -18,6 +18,7 @@ import { ILpTokenPriceList, ITokenPriceList } from "../util/types";
 import { ELocksState } from "../votes/types";
 import { voteEscrowAddress } from "../../common/walletconnect";
 import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
+import { getRewards } from "../rewards";
 
 // Stats
 /**
@@ -244,7 +245,7 @@ export const getAllLocksPositionData = async (
         consumedVotingPower: consumedVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
         currentVotingPower,
         locksState: ELocksState.DISABLED,
-        endTimeStamp: lockEndTimestamp.toNumber(),
+        endTimeStamp: lockEndTimestamp.multipliedBy(1000).toNumber(),
         attached,
         attachedGaugeAddress: undefined,
         attachedAmmAddress: undefined,
@@ -294,3 +295,6 @@ export const getAllLocksPositionData = async (
     };
   }
 };
+
+
+
