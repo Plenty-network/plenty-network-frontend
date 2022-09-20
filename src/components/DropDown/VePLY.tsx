@@ -12,7 +12,7 @@ export interface IDropdownProps {
   selectedText: IVePLYData;
   className?: string;
   isConfirmStake?: boolean;
-  isListLoading: boolean;
+  isListLoading?: boolean;
 }
 
 export function VePLY(props: IDropdownProps) {
