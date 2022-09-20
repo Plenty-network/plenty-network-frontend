@@ -78,9 +78,7 @@ export const getPositionStatsData = async (
  * Calculates the total epoch voting power and total PLY tokens locked for all locks held by a user.
  * @param userTezosAddress - Tezos wallet address of the user
  */
-const getVotesStatsData = async (
-  userTezosAddress: string
-): Promise<IVotesStatsDataResponse> => {
+const getVotesStatsData = async (userTezosAddress: string): Promise<IVotesStatsDataResponse> => {
   try {
     // let totalEpochVotingPower = new BigNumber(0),
     //   totalPlyLocked = new BigNumber(0);
@@ -187,8 +185,6 @@ export const getPositionsData = async (
   }
 };
 
-
-
 // Locks
 /**
  * Returns the list of all the locks created by a user along with the pool attached if any.
@@ -234,7 +230,9 @@ export const getAllLocksPositionData = async (
       const epochVotingPower = new BigNumber(lock.epochtVotingPower);
       const availableVotingPower = new BigNumber(lock.availableVotingPower);
       const consumedVotingPower = epochVotingPower.minus(availableVotingPower);
-      const currentVotingPower = new BigNumber(lock.currentVotingPower).dividedBy(PLY_DECIMAL_MULTIPLIER);
+      const currentVotingPower = new BigNumber(lock.currentVotingPower).dividedBy(
+        PLY_DECIMAL_MULTIPLIER
+      );
       const lockEndTimestamp = new BigNumber(lock.endTs);
       const attached = Boolean(lock.attached);
       const finalLock: IAllLocksPositionData = {
@@ -295,6 +293,3 @@ export const getAllLocksPositionData = async (
     };
   }
 };
-
-
-

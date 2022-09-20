@@ -10,29 +10,27 @@ import { ManageLiquidity } from "../Pools/ManageLiquidity";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 import { Boost } from "./Boost";
+import { IPositionsData } from "../../api/portfolio/types";
+import { YourLiquidity } from "./YourLiquidity";
+import { StakePercentage } from "./StakedPercentage";
+import { BoostValue } from "./BoostValue";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../redux";
+import { getTotalVotingPower } from "../../redux/pools";
 
 export function PoolsTablePosition(props: IPoolsTablePosition) {
+  const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
-  const votesArray = Object.entries(props.voteData);
-  const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
-    new Array(votesArray.length).fill(0)
-  );
+  //const votesArray = Object.entries(props.voteData);
+  // const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
+  //   new Array(votesArray.length).fill(0)
+  // );
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
   const [noSearchResult, setNoSearchResult] = React.useState(false);
-  const votedataArray = React.useMemo(() => {
-    votesArray.map((data, index) => {
-      totalVotes1[index] = Number(data[1].myVotesPercentage.toFixed(0));
-    });
 
-    return votesArray.map((data, index) => ({
-      index: index,
-      amm: data[0],
-      votes: data[1],
-    }));
-  }, [votesArray.length]);
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "USDC.e",
     image: `/assets/tokens/USDC.e.png`,
@@ -43,11 +41,11 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: "USDT.e",
   });
-  const [votedata, setVotedata] = React.useState(votedataArray);
-  React.useEffect(() => {
-    if (votedataArray.length !== 0) setVotedata(votedataArray);
-    else setVotedata([]);
-  }, [votedataArray.length]);
+  // const [votedata, setVotedata] = React.useState(votedataArray);
+  // React.useEffect(() => {
+  //   if (votedataArray.length !== 0) setVotedata(votedataArray);
+  //   else setVotedata([]);
+  // }, [votedataArray.length]);
   // React.useEffect(() => {
   //   if (props.searchValue && props.searchValue.length) {
   //     const _votesTableData = votedataArray.filter((e: any) => {
@@ -79,7 +77,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
   const tEZorCTEZtoUppercase = (a: string) =>
     a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
-  const mobilecolumns = React.useMemo<Column<IVotePageData>[]>(
+  const mobilecolumns = React.useMemo<Column<IPositionsData>[]>(
     () => [
       {
         Header: "Pool",
@@ -88,18 +86,18 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-              <Image src={getImagesPath(x.votes.tokenA)} width={"20px"} height={"20px"} />
+              <Image src={getImagesPath(x.tokenA)} width={"20px"} height={"20px"} />
             </div>
             <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image src={getImagesPath(x.votes.tokenB)} width={"20px"} height={"20px"} />
+              <Image src={getImagesPath(x.tokenB)} width={"20px"} height={"20px"} />
             </div>
             <div>
               <div className="font-body4">
                 {" "}
-                {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
+                {tEZorCTEZtoUppercase(x.tokenB.toString())}
               </div>
-              <div className="font-subtitle1 text-text-500">{x.votes.poolType} Pool</div>
+              <div className="font-subtitle1 text-text-500">{x.ammType} Pool</div>
             </div>
           </div>
         ),
@@ -116,13 +114,19 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         Header: "",
         id: "manage",
         minWidth: 151,
-        accessor: (x) => <ManageBtn />,
+        accessor: (x) => (
+          <ManageBtn
+            isManage={Number(x.stakedPercentage) > 0}
+            tokenA={x.tokenA.toString()}
+            tokenB={x.tokenB.toString()}
+          />
+        ),
       },
     ],
     [valueFormat]
   );
 
-  const desktopcolumns = React.useMemo<Column<IVotePageData>[]>(
+  const desktopcolumns = React.useMemo<Column<IPositionsData>[]>(
     () => [
       {
         Header: "Pool",
@@ -131,18 +135,18 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-              <Image src={getImagesPath(x.votes.tokenA)} width={"24px"} height={"24px"} />
+              <Image src={getImagesPath(x.tokenA)} width={"24px"} height={"24px"} />
             </div>
             <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-              <Image src={getImagesPath(x.votes.tokenB)} width={"24px"} height={"24px"} />
+              <Image src={getImagesPath(x.tokenB)} width={"24px"} height={"24px"} />
             </div>
             <div>
               <div className="font-body4">
                 {" "}
-                {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
+                {tEZorCTEZtoUppercase(x.tokenB.toString())}
               </div>
-              <div className="font-subtitle1 text-text-500">{x.votes.poolType} Pool</div>
+              <div className="font-subtitle1 text-text-500">{x.ammType} Pool</div>
             </div>
           </div>
         ),
@@ -153,7 +157,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => 2345,
+        accessor: (x: any) => <YourLiquidity value={x.totalLiquidityAmount} />,
       },
       {
         Header: `Staked percentage`,
@@ -161,7 +165,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
 
         canShort: true,
         isToolTipEnabled: true,
-        accessor: (x: any) => 345,
+        accessor: (x: any) => <StakePercentage value={x.stakedPercentage} />,
       },
       {
         Header: "your APR",
@@ -169,42 +173,79 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
 
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x: any) => 345,
+        accessor: (x: any) => <StakePercentage value={x.userAPR} />,
       },
       {
         Header: "Boost",
         id: "Boost",
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x: any) => <Boost />,
+        accessor: (x: any) => <BoostValue value={x.boostValue} />,
       },
       {
         Header: "",
         id: "manage",
         minWidth: 151,
-        accessor: (x) => <ManageBtn />,
+        accessor: (x) => (
+          <ManageBtn
+            isManage={Number(x.stakedPercentage) > 0}
+            tokenA={x.tokenA.toString()}
+            tokenB={x.tokenB.toString()}
+          />
+        ),
       },
     ],
     [valueFormat]
   );
   function ManageBtn(props: IManageBtnProps): any {
-    if (true) {
-      //isstaked
+    if (props.isManage) {
       return (
         <div
           className="bg-primary-500/10 md:w-[151px] w-[115px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
           onClick={() => {
             setShowLiquidityModal(true);
+            dispatch(getTotalVotingPower());
+            props.isManage
+              ? setActiveState(ActiveLiquidity.Rewards)
+              : setActiveState(ActiveLiquidity.Staking);
+
+            setTokenIn({
+              name: props.tokenA,
+              image: getImagesPath(props.tokenA.toString()),
+              symbol: props.tokenA,
+            });
+            setTokenOut({
+              name: props.tokenB,
+              image: getImagesPath(props.tokenB.toString()),
+              symbol: props.tokenB,
+            });
           }}
         >
           Manage
         </div>
       );
-    } else if (false) {
+    } else {
       return (
         <div
           className="bg-primary-500 md:w-[151px] w-[115px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
-          onClick={() => {}}
+          onClick={() => {
+            setShowLiquidityModal(true);
+            dispatch(getTotalVotingPower());
+            props.isManage
+              ? setActiveState(ActiveLiquidity.Rewards)
+              : setActiveState(ActiveLiquidity.Staking);
+
+            setTokenIn({
+              name: props.tokenA,
+              image: getImagesPath(props.tokenA.toString()),
+              symbol: props.tokenA,
+            });
+            setTokenOut({
+              name: props.tokenB,
+              image: getImagesPath(props.tokenB.toString()),
+              symbol: props.tokenB,
+            });
+          }}
         >
           Stake
         </div>
@@ -216,10 +257,10 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       <div className={` overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={votedata}
+          data={props.poolsPosition}
           noSearchResult={noSearchResult}
           shortby="Myvotes"
-          isFetched={!noSearchResult && votedata.length === 0 ? false : true}
+          isFetched={props.poolsPosition.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsPosition"
           TableWidth="md:min-w-[900px]"

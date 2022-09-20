@@ -27,7 +27,7 @@ import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTabl
 import { votesPageDataWrapper } from "../../src/api/votes";
 import { IVotePageData } from "../../src/api/votes/types";
 import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
-import { IAllBalanceResponse } from "../../src/api/util/types";
+import { IAllBalanceResponse, ILpTokenPriceList, ITokenPriceList } from "../../src/api/util/types";
 import CreateLock from "../../src/components/Votes/CreateLock";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
@@ -44,6 +44,18 @@ import StatsRewards from "../../src/components/Rewards/Stats";
 import { MODULE } from "../../src/components/Votes/types";
 import { PoolsTableRewards } from "../../src/components/PoolsRewards/poolsRewardsTable";
 import ManageLock from "../../src/components/LocksPosition/ManageLock";
+import {
+  getAllLocksPositionData,
+  getPositionsData,
+  getPositionStatsData,
+} from "../../src/api/portfolio/kiran";
+import {
+  IAllLocksPositionData,
+  IPositionsData,
+  IPositionStatsResponse,
+} from "../../src/api/portfolio/types";
+import { getLPTokenPrices, getTokenPrices } from "../../src/api/util/price";
+import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -61,7 +73,6 @@ export default function MyPortfolio() {
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const amm = useAppSelector((state) => state.config.AMMs);
-
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
   const [isManageLock, setIsManageLock] = useState(false);
   const [plyInput, setPlyInput] = useState("");
@@ -70,14 +81,20 @@ export default function MyPortfolio() {
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [lockingDate, setLockingDate] = useState("");
   const tokenPrice = store.getState().tokenPrice.tokenPrice;
+  const lpTokenPrice = store.getState().tokenPrice.lpTokenPrices;
   const [transactionId, setTransactionId] = useState("");
   const [balanceUpdate, setBalanceUpdate] = useState(false);
+  const [manageData, setManageData] = useState<IAllLocksPositionData>({} as IAllLocksPositionData);
   const [lockingEndData, setLockingEndData] = useState({
     selected: 0,
     lockingDate: 0,
   });
   const [contentTransaction, setContentTransaction] = useState("");
   const [plyBalance, setPlyBalance] = useState(new BigNumber(0));
+  const [poolsPosition, setPoolsPosition] = useState<IPositionsData[]>([] as IPositionsData[]);
+  const [locksPosition, setLocksPosition] = useState<IAllLocksPositionData[]>(
+    [] as IAllLocksPositionData[]
+  );
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -90,10 +107,12 @@ export default function MyPortfolio() {
   useInterval(() => {
     dispatch(getEpochData());
   }, 60000);
-
   useEffect(() => {
     if (userAddress) {
       dispatch(getTotalVotingPower());
+      getAllLocksPositionData(userAddress).then((res) => {
+        setLocksPosition(res.allLocksData);
+      });
     }
   }, [userAddress]);
   useEffect(() => {
@@ -113,7 +132,9 @@ export default function MyPortfolio() {
   const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
     {} as { [id: string]: IVotePageData }
   );
-
+  const [statsPositions, setStatsPosition] = useState<IPositionStatsResponse>(
+    {} as IPositionStatsResponse
+  );
   useEffect(() => {
     if (userAddress) {
       getUserBalanceByRpc("PLY", userAddress).then((res) => {
@@ -131,16 +152,26 @@ export default function MyPortfolio() {
     setPlyInput("");
     setIsManageLock(false);
     setLockingDate("");
+    setUpdatedPlyVoteValue("");
     setLockingEndData({
       selected: 0,
       lockingDate: 0,
     });
   };
+
   useEffect(() => {
-    votesPageDataWrapper(722, undefined).then((res) => {
-      setVoteData(res.allData);
+    if (
+      userAddress &&
+      Object.keys(lpTokenPrice).length !== 0 &&
+      Object.keys(tokenPrice).length !== 0
+    )
+      getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+        setStatsPosition(res);
+      });
+    getPositionsData(userAddress, lpTokenPrice).then((res) => {
+      setPoolsPosition(res.positionPoolsData);
     });
-  }, []);
+  }, [userAddress, lpTokenPrice]);
 
   const resetAllValues = () => {
     setPlyInput("");
@@ -184,12 +215,14 @@ export default function MyPortfolio() {
     });
   };
   const handleIncreaseVoteOperation = () => {
+    setIsManageLock(false);
     setContentTransaction(`Locking ${plyInput} ply`);
     setShowCreateLockModal(false);
+
     setShowConfirmTransaction(true);
     dispatch(setLoading(true));
     increaseLockAndValue(
-      23,
+      manageData.tokenId.toNumber(),
       new BigNumber(plyInput),
       new BigNumber(lockingEndData.lockingDate),
       transactionSubmitModal,
@@ -218,12 +251,13 @@ export default function MyPortfolio() {
   };
 
   const IncreaseLockEndOperation = () => {
+    setIsManageLock(false);
     setContentTransaction(`Locking ${plyInput} ply`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setLoading(true));
     increaseLockEnd(
-      23,
+      manageData.tokenId.toNumber(),
       new BigNumber(lockingEndData.lockingDate),
       transactionSubmitModal,
       resetAllValues,
@@ -250,12 +284,13 @@ export default function MyPortfolio() {
     });
   };
   const IncreaseLockValueOperation = () => {
+    setIsManageLock(false);
     setContentTransaction(`Locking ${plyInput} ply`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setLoading(true));
     increaseLockValue(
-      23,
+      manageData.tokenId.toNumber(),
       new BigNumber(updatedPlyVoteValue),
       transactionSubmitModal,
       resetAllValues,
@@ -332,6 +367,7 @@ export default function MyPortfolio() {
                 setShowCreateLockModal={setShowCreateLockModal}
                 plyBalance={plyBalance}
                 tokenPricePly={tokenPrice["PLY"]}
+                statsPositions={statsPositions}
               />
             ) : (
               <StatsRewards />
@@ -348,7 +384,7 @@ export default function MyPortfolio() {
         </div>
         {activeStateTab === MyPortfolioHeader.Pools &&
           (activeSection === MyPortfolioSection.Positions ? (
-            <PoolsTablePosition className="md:px-5 md:py-4   py-4" voteData={voteData} />
+            <PoolsTablePosition className="md:px-5 md:py-4   py-4" poolsPosition={poolsPosition} />
           ) : (
             <>
               <div className="flex md:px-[25px] px-4  mt-5">
@@ -381,15 +417,17 @@ export default function MyPortfolio() {
               </div>
               <LocksTablePosition
                 className="md:px-5 md:py-4   py-4"
-                voteData={voteData}
+                locksPosition={locksPosition}
                 setIsManageLock={setIsManageLock}
                 setShowCreateLockModal={setShowCreateLockModal}
+                setManageData={setManageData}
               />
             </>
           ) : null)}
       </SideBarHOC>
       {isManageLock && (
         <ManageLock
+          manageData={manageData}
           setUpdatedPlyVoteValue={setUpdatedPlyVoteValue}
           updatedPlyVoteValue={updatedPlyVoteValue}
           show={isManageLock}

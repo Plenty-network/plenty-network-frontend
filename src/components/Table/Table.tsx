@@ -53,12 +53,12 @@ const Table = <D extends object>({
   });
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const headerRef = useRef(null);
-  const [heightBody, setheightBody] = useState(480);
+  const [heightBody, setheightBody] = useState<number>(480);
 
-  useEffect(() => {
-    const heightOfbody = getHeightOfElement(headerRef.current);
-    setheightBody(window.innerHeight - heightOfbody);
-  }, [headerRef]);
+  // useEffect(() => {
+  //   const heightOfbody = getHeightOfElement(headerRef.current);
+  //   setheightBody(window.innerHeight - heightOfbody);
+  // }, [headerRef]);
   const {
     getTableProps,
     headerGroups,
@@ -75,7 +75,7 @@ const Table = <D extends object>({
       data,
       initialState: {
         pageIndex: 0,
-        pageSize: 10,
+        pageSize: 100,
         sortBy: [shortByGroup],
       },
       autoResetPage: false,
@@ -113,8 +113,11 @@ const Table = <D extends object>({
 
   return (
     <div>
-      <table className={clsx(" flex flex-col ", isVotesTable ? "gap-1.5" : "gap-1.5", TableWidth)}>
-        <thead ref={headerRef}>
+      <table
+        ref={headerRef}
+        className={clsx(" flex flex-col ", isVotesTable ? "gap-1.5" : "gap-1.5", TableWidth)}
+      >
+        <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr
               key={`headerGroup_${index}`}

@@ -1,16 +1,18 @@
-import { IVotePageData } from "../../api/votes/types";
+import { ELocksState, IVotePageData } from "../../api/votes/types";
 import { BigNumber } from "bignumber.js";
+import { IAllLocksPositionData } from "../../api/portfolio/types";
 
 export interface ILocksTablePosition {
-  voteData: {
-    [id: string]: IVotePageData;
-  };
+  setManageData: React.Dispatch<React.SetStateAction<IAllLocksPositionData>>;
+  locksPosition: IAllLocksPositionData[];
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
   setIsManageLock: React.Dispatch<React.SetStateAction<boolean>>;
   className?: string;
   isConnectWalletRequired?: boolean;
 }
 export interface IManageBtnProps {
+  manageData: IAllLocksPositionData;
+  setManageData: React.Dispatch<React.SetStateAction<IAllLocksPositionData>>;
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
   setIsManageLock: React.Dispatch<React.SetStateAction<boolean>>;
   isLiquidityAvailable?: boolean;
@@ -19,15 +21,31 @@ export interface IManageBtnProps {
   tokenB?: string;
 }
 
-export interface ILocksColumnProps {}
-export interface ILockExpiryProps {}
-export interface IPlyLockedProps {}
+export interface IVoteBtnProps {
+  id: number;
+  locksState: ELocksState;
+}
+export interface ILocksColumnProps {
+  id: BigNumber;
+}
+export interface ILockExpiryProps {
+  endTime: number;
+}
+
+export interface IPlyLockedProps {
+  value: BigNumber;
+}
 export interface IPieChartProps {
   violet: number;
   transparent: number;
 }
 
+export interface ITopBar {
+  manageData: IAllLocksPositionData;
+}
+
 export interface IManageLockProps {
+  manageData: IAllLocksPositionData;
   IncreaseLockEndOperation: () => void;
   IncreaseLockValueOperation: () => void;
   handleIncreaseVoteOperation: () => void;

@@ -1,29 +1,27 @@
-import clsx from "clsx";
-import { useState } from "react";
-import Image from "next/image";
 import { IStatsProps } from "./types";
 import StatsCard from "./StatsCard";
-import { store } from "../../redux";
 
 function Stats(props: IStatsProps) {
-  const tokenPrice = store.getState().tokenPrice.tokenPrice;
-
   return (
     <div className="flex min-w-[1053px]  gap-5">
       <StatsCard
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"TVL"}
-        value={"$12.3 K "}
+        value={
+          props.statsPositions?.tvl || Number(props.statsPositions?.tvl) <= 0
+            ? `$${props.statsPositions?.tvl?.toFixed(1)}`
+            : undefined
+        }
       />
       <StatsCard
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total voting power"}
-        value={"488"}
+        value={props.statsPositions?.totalEpochVotingPower?.toFixed(1)}
       />
       <StatsCard
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total locked"}
-        value={"488"}
+        value={props.statsPositions?.totalPLYLocked?.toFixed(1)}
         subValue={"PLY"}
       />
 
@@ -31,8 +29,8 @@ function Stats(props: IStatsProps) {
         isLast={true}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"PLY Balance"}
-        value={props.plyBalance}
-        subValue={1 * Number(props.plyBalance)}
+        value={props.plyBalance.toFixed(1)}
+        subValue={`$${1 * Number(props.plyBalance)}`}
       />
     </div>
   );

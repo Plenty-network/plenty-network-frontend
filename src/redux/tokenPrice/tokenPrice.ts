@@ -31,7 +31,6 @@ export const getLpTokenPrice = createAsyncThunk(
     const res: ILpTokenPriceList = await getLPTokenPrices(tokenPrices).then(
       (resp) => resp.lpPrices
     );
-
     return res;
   }
 );
