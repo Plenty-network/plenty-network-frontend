@@ -128,6 +128,7 @@ module.exports = {
       f13: ["13px", "2.6px"],
       f9: ["9px", "13.5px"],
       f2836: ["28px", "36px"],
+      f11: ["11px", "16px"],
     },
 
     extend: {

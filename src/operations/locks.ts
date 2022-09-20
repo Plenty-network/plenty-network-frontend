@@ -79,7 +79,7 @@ export const increaseLockEnd = async (
 
     let batch = null;
 
-    batch = Tezos.wallet.batch().withContractCall(veInstance.methods.increase_lock_end(id , newEnd));
+    batch = Tezos.wallet.batch().withContractCall(veInstance.methods.increase_lock_end(id, newEnd));
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
@@ -104,7 +104,7 @@ export const increaseLockEnd = async (
 
 export const increaseLockValue = async (
   id: number,
-  value = BigNumber,
+  value: BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
   setShowConfirmTransaction: TSetShowConfirmTransaction
@@ -150,7 +150,7 @@ export const increaseLockValue = async (
 
 export const increaseLockAndValue = async (
   id: number,
-  value = BigNumber,
+  value: BigNumber,
   newEnd: BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
@@ -195,8 +195,6 @@ export const increaseLockAndValue = async (
     };
   }
 };
-
-
 
 export const withdrawLock = async (
   id: number,
@@ -258,9 +256,10 @@ export const withdrawLockWithInflation = async (
 
     let batch = null;
 
-    batch = Tezos.wallet.batch()
-    .withContractCall(veInstance.methods.claim_inflation(id,epochs))
-    .withContractCall(veInstance.methods.withdraw(id));
+    batch = Tezos.wallet
+      .batch()
+      .withContractCall(veInstance.methods.claim_inflation(id, epochs))
+      .withContractCall(veInstance.methods.withdraw(id));
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
@@ -283,7 +282,6 @@ export const withdrawLockWithInflation = async (
   }
 };
 
-
 export const claimInflation = async (
   epochs: number[],
   id: number,
@@ -303,7 +301,7 @@ export const claimInflation = async (
 
     let batch = null;
 
-    batch = Tezos.wallet.batch().withContractCall(veInstance.methods.claim_inflation(id , epochs));
+    batch = Tezos.wallet.batch().withContractCall(veInstance.methods.claim_inflation(id, epochs));
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);

@@ -26,18 +26,24 @@ import {
 import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTable";
 import { votesPageDataWrapper } from "../../src/api/votes";
 import { IVotePageData } from "../../src/api/votes/types";
-import { getCompleteUserBalace } from "../../src/api/util/balance";
+import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 import { IAllBalanceResponse } from "../../src/api/util/types";
 import CreateLock from "../../src/components/Votes/CreateLock";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
 import { setLoading } from "../../src/redux/isLoading/action";
-import { createLock } from "../../src/operations/locks";
+import {
+  createLock,
+  increaseLockAndValue,
+  increaseLockEnd,
+  increaseLockValue,
+} from "../../src/operations/locks";
 import { LocksTablePosition } from "../../src/components/LocksPosition/LocksTable";
 import clsx from "clsx";
 import StatsRewards from "../../src/components/Rewards/Stats";
 import { MODULE } from "../../src/components/Votes/types";
 import { PoolsTableRewards } from "../../src/components/PoolsRewards/poolsRewardsTable";
+import ManageLock from "../../src/components/LocksPosition/ManageLock";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -50,9 +56,16 @@ export default function MyPortfolio() {
     MyPortfolioSection.Positions
   );
   const userAddress = store.getState().wallet.address;
+  const dispatch = useDispatch<AppDispatch>();
+  const token = useAppSelector((state) => state.config.tokens);
+  const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
+  const epochError = useAppSelector((state) => state.epoch).epochFetchError;
+  const amm = useAppSelector((state) => state.config.AMMs);
+
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
   const [isManageLock, setIsManageLock] = useState(false);
   const [plyInput, setPlyInput] = useState("");
+  const [updatedPlyVoteValue, setUpdatedPlyVoteValue] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [lockingDate, setLockingDate] = useState("");
@@ -64,61 +77,27 @@ export default function MyPortfolio() {
     lockingDate: 0,
   });
   const [contentTransaction, setContentTransaction] = useState("");
-
-  const [allBalance, setAllBalance] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
-  useEffect(() => {
-    if (userAddress) {
-      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-        setAllBalance(response);
-      });
-    } else {
-      setAllBalance({ success: false, userBalance: {} });
-    }
-  }, [userAddress, tokenPrice, balanceUpdate]);
-  const transactionSubmitModal = (id: string) => {
-    setTransactionId(id);
-    setShowTransactionSubmitModal(true);
-  };
-  const handleCloseLock = () => {
-    setShowCreateLockModal(false);
-    setPlyInput("");
-    setIsManageLock(false);
-    setLockingDate("");
-    setLockingEndData({
-      selected: 0,
-      lockingDate: 0,
-    });
-  };
-  const dispatch = useDispatch<AppDispatch>();
-  const token = useAppSelector((state) => state.config.tokens);
-  const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
-  const epochError = useAppSelector((state) => state.epoch).epochFetchError;
-  const amm = useAppSelector((state) => state.config.AMMs);
-
-  useEffect(() => {
-    if (epochError) {
-      dispatch(getEpochData());
-    }
-  }, [epochError]);
-
-  useInterval(() => {
-    dispatch(getEpochData());
-  }, 60000);
-  const walletAddress = useAppSelector((state) => state.wallet.address);
+  const [plyBalance, setPlyBalance] = useState(new BigNumber(0));
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
   }, []);
   useEffect(() => {
-    if (walletAddress) {
+    if (epochError) {
+      dispatch(getEpochData());
+    }
+  }, [epochError]);
+  useInterval(() => {
+    dispatch(getEpochData());
+  }, 60000);
+
+  useEffect(() => {
+    if (userAddress) {
       dispatch(getTotalVotingPower());
     }
-  }, [walletAddress]);
+  }, [userAddress]);
   useEffect(() => {
-    if (walletAddress && totalVotingPowerError) {
+    if (userAddress && totalVotingPowerError) {
       dispatch(getTotalVotingPower());
     }
   }, [totalVotingPowerError]);
@@ -134,6 +113,29 @@ export default function MyPortfolio() {
   const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
     {} as { [id: string]: IVotePageData }
   );
+
+  useEffect(() => {
+    if (userAddress) {
+      getUserBalanceByRpc("PLY", userAddress).then((res) => {
+        setPlyBalance(res.balance);
+      });
+    }
+  }, [userAddress, tokenPrice, balanceUpdate, token]);
+
+  const transactionSubmitModal = (id: string) => {
+    setTransactionId(id);
+    setShowTransactionSubmitModal(true);
+  };
+  const handleCloseLock = () => {
+    setShowCreateLockModal(false);
+    setPlyInput("");
+    setIsManageLock(false);
+    setLockingDate("");
+    setLockingEndData({
+      selected: 0,
+      lockingDate: 0,
+    });
+  };
   useEffect(() => {
     votesPageDataWrapper(722, undefined).then((res) => {
       setVoteData(res.allData);
@@ -181,6 +183,104 @@ export default function MyPortfolio() {
       }
     });
   };
+  const handleIncreaseVoteOperation = () => {
+    setContentTransaction(`Locking ${plyInput} ply`);
+    setShowCreateLockModal(false);
+    setShowConfirmTransaction(true);
+    dispatch(setLoading(true));
+    increaseLockAndValue(
+      23,
+      new BigNumber(plyInput),
+      new BigNumber(lockingEndData.lockingDate),
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setLoading(false));
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setLoading(false));
+      }
+    });
+  };
+
+  const IncreaseLockEndOperation = () => {
+    setContentTransaction(`Locking ${plyInput} ply`);
+    setShowCreateLockModal(false);
+    setShowConfirmTransaction(true);
+    dispatch(setLoading(true));
+    increaseLockEnd(
+      23,
+      new BigNumber(lockingEndData.lockingDate),
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setLoading(false));
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setLoading(false));
+      }
+    });
+  };
+  const IncreaseLockValueOperation = () => {
+    setContentTransaction(`Locking ${plyInput} ply`);
+    setShowCreateLockModal(false);
+    setShowConfirmTransaction(true);
+    dispatch(setLoading(true));
+    increaseLockValue(
+      23,
+      new BigNumber(updatedPlyVoteValue),
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setLoading(false));
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setLoading(false));
+      }
+    });
+  };
 
   return (
     <>
@@ -190,11 +290,11 @@ export default function MyPortfolio() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
-        <div className="pt-5 px-[24px]">
+        <div className="pt-5 md:px-[24px] ">
           <div className="flex gap-1">
             <p
               className={clsx(
-                " font-title3 h-[40px] px-[24px] flex items-center  rounded-lg gap-1",
+                " font-title3 cursor-pointer md:h-[40px] h-[52px] px-[24px] flex items-center  rounded-lg gap-1",
                 activeSection === MyPortfolioSection.Positions
                   ? "text-primary-500 bg-primary-500/[0.1]"
                   : "text-text-250"
@@ -210,7 +310,7 @@ export default function MyPortfolio() {
             </p>
             <p
               className={clsx(
-                "rounded-lg  font-title3 h-[40px] px-[24px] flex items-center gap-1",
+                "rounded-lg cursor-pointer font-title3  md:h-[40px] h-[52px] px-[24px] flex items-center gap-1",
                 activeSection === MyPortfolioSection.Rewards
                   ? "text-primary-500 bg-primary-500/[0.1]"
                   : "text-text-250"
@@ -226,16 +326,20 @@ export default function MyPortfolio() {
             </p>
           </div>
 
-          <div className="mt-5 overflow-x-auto">
+          <div className="mt-5 pl-5  md:pl-0 overflow-x-auto inner">
             {activeSection === MyPortfolioSection.Positions ? (
-              <Stats setShowCreateLockModal={setShowCreateLockModal} />
+              <Stats
+                setShowCreateLockModal={setShowCreateLockModal}
+                plyBalance={plyBalance}
+                tokenPricePly={tokenPrice["PLY"]}
+              />
             ) : (
               <StatsRewards />
             )}
           </div>
         </div>
         <div className="border-t border-text-800/[0.5] mt-5"></div>
-        <div className=" px-[24px]">
+        <div className=" md:px-[24px]">
           <MyPortfolioCardHeader
             activeStateTab={activeStateTab}
             setActiveStateTab={setActiveStateTab}
@@ -244,39 +348,39 @@ export default function MyPortfolio() {
         </div>
         {activeStateTab === MyPortfolioHeader.Pools &&
           (activeSection === MyPortfolioSection.Positions ? (
-            <PoolsTablePosition className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
+            <PoolsTablePosition className="md:px-5 md:py-4   py-4" voteData={voteData} />
           ) : (
             <>
-              <div className="flex px-[25px] mt-5">
+              <div className="flex md:px-[25px] px-4  mt-5">
                 <p>
                   <div className="text-white font-title3">List of my PLY emissions</div>
                   <div className="text-text-250 font-body1">
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="flex items-center font-title3-bold text-black ml-auto h-[54px] px-[40px] bg-primary-500 rounded-xl">
+                <p className="flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[54px] md:px-[40px] px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center">
                   Claim all
                 </p>
               </div>
-              <PoolsTableRewards className="md:px-5 md:py-4  px-2 py-4" voteData={voteData} />
+              <PoolsTableRewards className="md:px-5 md:py-4   py-4" voteData={voteData} />
             </>
           ))}
         {activeStateTab === MyPortfolioHeader.Locks &&
           (activeSection === MyPortfolioSection.Positions ? (
             <>
-              <div className="flex px-[25px] mt-5">
+              <div className="flex md:px-[25px] px-4 mt-5">
                 <p>
                   <div className="text-white font-title3">List of my locks</div>
                   <div className="text-text-250 font-body1">
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="flex items-center font-title3-bold text-primary-500 ml-auto h-[54px] px-[26px] bg-primary-500/[0.1] rounded-xl">
+                <p className="flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[54px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
                   Trade locks
                 </p>
               </div>
               <LocksTablePosition
-                className="md:px-5 md:py-4  px-2 py-4"
+                className="md:px-5 md:py-4   py-4"
                 voteData={voteData}
                 setIsManageLock={setIsManageLock}
                 setShowCreateLockModal={setShowCreateLockModal}
@@ -284,12 +388,11 @@ export default function MyPortfolio() {
             </>
           ) : null)}
       </SideBarHOC>
-      {(isManageLock || showCreateLockModal) && (
-        <CreateLock
-          module={isManageLock ? MODULE.MY_PORTFOLIO : MODULE.VOTE}
-          show={showCreateLockModal}
-          setPlyInput={setPlyInput}
-          plyInput={plyInput}
+      {isManageLock && (
+        <ManageLock
+          setUpdatedPlyVoteValue={setUpdatedPlyVoteValue}
+          updatedPlyVoteValue={updatedPlyVoteValue}
+          show={isManageLock}
           setShow={handleCloseLock}
           setShowConfirmTransaction={setShowConfirmTransaction}
           showConfirmTransaction={showConfirmTransaction}
@@ -302,7 +405,30 @@ export default function MyPortfolio() {
           setLockingEndData={setLockingEndData}
           lockingEndData={lockingEndData}
           tokenPrice={tokenPrice}
-          plyBalance={allBalance.userBalance["PLY"]}
+          plyBalance={plyBalance}
+          IncreaseLockEndOperation={IncreaseLockEndOperation}
+          IncreaseLockValueOperation={IncreaseLockValueOperation}
+          handleIncreaseVoteOperation={handleIncreaseVoteOperation}
+        />
+      )}
+      {showCreateLockModal && (
+        <CreateLock
+          show={showCreateLockModal}
+          setShow={handleCloseLock}
+          setPlyInput={setPlyInput}
+          plyInput={plyInput}
+          setShowConfirmTransaction={setShowConfirmTransaction}
+          showConfirmTransaction={showConfirmTransaction}
+          setShowTransactionSubmitModal={setShowTransactionSubmitModal}
+          showTransactionSubmitModal={showTransactionSubmitModal}
+          setShowCreateLockModal={setShowCreateLockModal}
+          handleLockOperation={handleLockOperation}
+          setLockingDate={setLockingDate}
+          lockingDate={lockingDate}
+          setLockingEndData={setLockingEndData}
+          lockingEndData={lockingEndData}
+          tokenPrice={tokenPrice}
+          plyBalance={plyBalance}
         />
       )}
       {showConfirmTransaction && (

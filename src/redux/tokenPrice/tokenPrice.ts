@@ -1,17 +1,17 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getLPTokenPrices, getTokenPrices } from '../../api/util/price';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getLPTokenPrices, getTokenPrices } from "../../api/util/price";
 import { BigNumber } from "bignumber.js";
 
 interface ILpTokenPriceList {
-  [id: string]: BigNumber
+  [id: string]: BigNumber;
 }
 
 interface ITokenPriceList {
-  [id: string]: number
+  [id: string]: number;
 }
 interface TokenPriceState {
   tokenPrice: ITokenPriceList;
-  lpTokenPrices : ILpTokenPriceList;
+  lpTokenPrices: ILpTokenPriceList;
 }
 
 const initialState: TokenPriceState = {
@@ -19,26 +19,25 @@ const initialState: TokenPriceState = {
   lpTokenPrices: {},
 };
 
-export const getTokenPrice = createAsyncThunk(
-  'tokenPrice/getTokenPrice',
-  async (thunkAPI) => {
-    const res = await getTokenPrices().then((resp) => resp.tokenPrice);
+export const getTokenPrice = createAsyncThunk("tokenPrice/getTokenPrice", async (thunkAPI) => {
+  const res = await getTokenPrices().then((resp) => resp.tokenPrice);
 
-    return res;
-  }
-);
+  return res;
+});
 
 export const getLpTokenPrice = createAsyncThunk(
-  'tokenPrice/getLpTokenPrice',
-  async (tokenPrices:ITokenPriceList, thunkAPI) => {
-    const res: ILpTokenPriceList = await getLPTokenPrices(tokenPrices).then((resp) => resp.lpPrices);
+  "tokenPrice/getLpTokenPrice",
+  async (tokenPrices: ITokenPriceList, thunkAPI) => {
+    const res: ILpTokenPriceList = await getLPTokenPrices(tokenPrices).then(
+      (resp) => resp.lpPrices
+    );
 
     return res;
   }
 );
 
 const TokenPriceSlice = createSlice({
-  name: 'tokenPrice',
+  name: "tokenPrice",
   initialState,
   reducers: {},
   extraReducers: {

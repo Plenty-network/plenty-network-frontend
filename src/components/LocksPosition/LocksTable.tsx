@@ -6,7 +6,7 @@ import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
 import { IVotePageData, IVotesData } from "../../api/votes/types";
 import { ILocksTablePosition, IManageBtnProps } from "./types";
-import { ManageLiquidity } from "../Pools/ManageLiquidity";
+import lockDisable from "../../assets/icon/myPortfolio/voteDisable.svg";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 import { LocksCloumn } from "./LockColumn";
@@ -14,14 +14,17 @@ import { PlyLocked } from "./PlyLocked";
 import { LockExpiry } from "./LockExpiry";
 import PieChartButton from "./PieChart";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux";
+import { AppDispatch, store } from "../../redux";
 import { setSelectedDropDown } from "../../redux/veNFT";
 import Vote from "../../../pages/Vote";
 import { useRouter } from "next/router";
 
 export function LocksTablePosition(props: ILocksTablePosition) {
+  const epochData = store.getState().epoch.currentEpoch;
+  const totalTime = epochData.endTimestamp - epochData.startTimestamp;
+  const remainingTime = epochData.endTimestamp - new Date().getTime();
+  const remainingPercentage = (remainingTime * 100) / totalTime;
   const { valueFormat } = useTableNumberUtils();
-  const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   const votesArray = Object.entries(props.voteData);
   const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
     new Array(votesArray.length).fill(0)
@@ -96,14 +99,24 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => 324564,
+        accessor: (x: any) => 32,
       },
       {
-        Header: "Staked percentage",
-        id: "Staked percentage",
-        isToolTipEnabled: true,
-        canShort: true,
-        accessor: (x: any) => 2123,
+        Header: "",
+        id: "vote",
+        minWidth: 200,
+        accessor: (x) => <VoteBtn />,
+      },
+      {
+        Header: "",
+        id: "manage",
+        minWidth: 151,
+        accessor: (x) => (
+          <ManageBtn
+            setIsManageLock={props.setIsManageLock}
+            setShowCreateLockModal={props.setShowCreateLockModal}
+          />
+        ),
       },
     ],
     [valueFormat]
@@ -114,7 +127,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "Locks",
         id: "Locks",
-
+        width: "300px",
         canShort: true,
         showOnMobile: true,
         accessor: (x: any) => <LocksCloumn />,
@@ -122,6 +135,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "Pool",
         id: "pool",
+
         showOnMobile: true,
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
@@ -190,10 +204,9 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       //isstaked
       return (
         <div
-          className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
+          className="bg-primary-500/10 md:w-[151px] w-[78px] cursor-pointer  text-primary-500 hover:opacity-90  md:font-subtitle4 font-f11-600  rounded-lg flex items-center h-[40px] justify-center"
           onClick={() => {
             props.setIsManageLock(true);
-            props.setShowCreateLockModal(true);
           }}
         >
           Manage
@@ -202,7 +215,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
     } else if (false) {
       return (
         <div
-          className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
+          className="bg-primary-500 md:w-[151px] w-[78px] cursor-pointer  md:font-subtitle4 font-f11-600 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
           onClick={() => {}}
         >
           Stake
@@ -213,52 +226,102 @@ export function LocksTablePosition(props: ILocksTablePosition) {
   function VoteBtn(): any {
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
-    if (true) {
-      //isstaked
-      return (
-        // <Link >
-        <div
-          className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
-          onClick={() => {
-            dispatch(
-              setSelectedDropDown({
-                votingPower: "1.952",
-                tokenId: "75",
-              })
-            );
-            router.push("/Vote");
-          }}
-        >
-          Voted{" "}
-          <span className="ml-2">
-            <PieChartButton />
-          </span>
-        </div>
-        // </Link>
-      );
-    } else if (false) {
-      return (
-        <div
-          className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
-          onClick={() => {}}
-        >
-          Vote
-        </div>
-      );
-    } else if (false) {
-      return (
-        <div
-          className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
-          onClick={() => {}}
-        >
-          Withdraw
-        </div>
-      );
+    if (isMobile) {
+      if (true) {
+        //isstaked
+        return (
+          <div
+            className="bg-primary-500/10 w-[59px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
+            onClick={() => {
+              dispatch(
+                setSelectedDropDown({
+                  votingPower: "1.952",
+                  tokenId: "75",
+                })
+              );
+              router.push("/Vote");
+            }}
+          >
+            <span className="relative top-0.5">
+              <Image src={lockDisable} />
+            </span>
+
+            <span className="ml-1">
+              <PieChartButton
+                violet={remainingPercentage}
+                transparent={100 - remainingPercentage}
+              />
+            </span>
+          </div>
+        );
+      } else if (false) {
+        return (
+          <div
+            className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
+            onClick={() => {}}
+          >
+            Vote
+          </div>
+        );
+      } else if (false) {
+        return (
+          <div
+            className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
+            onClick={() => {}}
+          >
+            Withdraw
+          </div>
+        );
+      }
+    } else {
+      if (true) {
+        //isstaked
+        return (
+          <div
+            className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
+            onClick={() => {
+              dispatch(
+                setSelectedDropDown({
+                  votingPower: "1.952",
+                  tokenId: "75",
+                })
+              );
+              router.push("/Vote");
+            }}
+          >
+            Voted{" "}
+            <span className="ml-2">
+              <PieChartButton
+                violet={remainingPercentage}
+                transparent={100 - remainingPercentage}
+              />
+            </span>
+          </div>
+        );
+      } else if (false) {
+        return (
+          <div
+            className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
+            onClick={() => {}}
+          >
+            Vote
+          </div>
+        );
+      } else if (false) {
+        return (
+          <div
+            className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
+            onClick={() => {}}
+          >
+            Withdraw
+          </div>
+        );
+      }
     }
   }
   return (
     <>
-      <div className={`overflow-x-auto  ${props.className}`}>
+      <div className={`overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
@@ -267,6 +330,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           isFetched={!noSearchResult && votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName={"lockPosition"}
+          TableWidth="md:min-w-[1049px]"
         />
       </div>
       {/* {showLiquidityModal && (

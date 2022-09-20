@@ -163,17 +163,23 @@ export default function Vote() {
         userAddress,
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
       ).then((res) => {
-        const filteredList = res.veNFTData.filter(
-          (veNFT) =>
-            veNFT.locksState === ELocksState.AVAILABLE || veNFT.locksState === ELocksState.CONSUMED
-        );
-
-        setVeNFTlist(filteredList);
+        setVeNFTlist(res.veNFTData);
       });
     } else {
       setVeNFTlist([]);
     }
   }, [userAddress, selectedEpoch?.epochNumber, lockOperation]);
+  useEffect(() => {
+    //setVeNFTlist([]);
+    if (userAddress && lockOperation) {
+      getVeNFTsList(
+        userAddress,
+        selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
+      ).then((res) => {
+        setVeNFTlist(res.veNFTData);
+      });
+    }
+  }, [lockOperation]);
 
   useInterval(() => {
     dispatch(getEpochData());
@@ -186,12 +192,21 @@ export default function Vote() {
       veNFTlist.map((list) => {
         if (Number(list.tokenId) === Number(selectedDropDown.tokenId)) {
           flag = true;
-          dispatch(
-            setSelectedDropDown({
-              votingPower: list.votingPower.toString(),
-              tokenId: list.tokenId.toString(),
-            })
-          );
+          if (list.locksState === ELocksState.CONSUMED) {
+            dispatch(
+              setSelectedDropDown({
+                votingPower: list.consumedVotingPower.toString(),
+                tokenId: list.tokenId.toString(),
+              })
+            );
+          } else {
+            dispatch(
+              setSelectedDropDown({
+                votingPower: list.votingPower.toString(),
+                tokenId: list.tokenId.toString(),
+              })
+            );
+          }
         }
       });
       if (!flag) {
@@ -342,7 +357,7 @@ export default function Vote() {
       </Head>
       <SideBarHOC>
         <div className="md:flex ">
-          <div className="min-w-[562px] ">
+          <div className="md:min-w-[562px] ">
             <HeadInfo
               className="px-2 md:px-3"
               title="Vote"
@@ -361,8 +376,13 @@ export default function Vote() {
                     setSelectedDropDown={setSelectednft}
                   />
                 </div>
-                <div className="ml-auto">
-                  <InputSearchBox className="" value={searchValue} onChange={setSearchValue} />
+                <div className="ml-auto ">
+                  <InputSearchBox
+                    className=""
+                    value={searchValue}
+                    onChange={setSearchValue}
+                    width={"md:w-245px xl:w-[260px]"}
+                  />
                 </div>
               </div>
               <div className="md:hidden block flex flex-row justify-between items-center px-3 md:px-0 py-2 md:py-0 border-b border-text-800/[0.5]">
@@ -472,7 +492,7 @@ export default function Vote() {
                 </div>
               </div>
               <VotesTable
-                className="md:px-5 py-4 px-2"
+                className="md:px-5 py-4 "
                 searchValue={searchValue}
                 sumOfVotes={sumOfVotes}
                 setSearchValue={setSearchValue}
@@ -638,7 +658,6 @@ export default function Vote() {
       )}
       {showCreateLockModal && (
         <CreateLock
-          module={MODULE.VOTE}
           show={showCreateLockModal}
           setPlyInput={setPlyInput}
           plyInput={plyInput}

@@ -22,10 +22,10 @@ function StatsCard(props: IStatsCardProps) {
             <Image src={info} />
           </div>
           <div className="font-input-text1 text-white mt-2">
-            {props.value}{" "}
+            {props.value?.toString()}{" "}
             {props.subValue && (
               <span className="font-subtitle5 text-border-400">
-                {props.subValue ? props.subValue : "0.0"}
+                ${props.subValue ? Number(props.value) * 1 : "0.0"}
               </span>
             )}
           </div>

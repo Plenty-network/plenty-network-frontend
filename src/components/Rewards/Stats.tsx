@@ -7,7 +7,7 @@ import StatsCardFirst from "./StatsCardFirst";
 
 function StatsRewards(props: IStatsCardProps) {
   return (
-    <div className="flex gap-5">
+    <div className="flex gap-5 min-w-[994px]">
       <StatsCardFirst />
       <StatsCard title={"Bribes"} value={"$12.3 K "} />
       <StatsCard title={"Unclaimed Inflation"} value={"322 PLY "} subValue={"$35.38"} />
