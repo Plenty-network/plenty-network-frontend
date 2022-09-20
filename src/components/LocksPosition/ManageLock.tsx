@@ -59,11 +59,13 @@ function ManageLock(props: IManageLockProps) {
   }, []);
   useEffect(() => {
     const res = estimateVotingPower(
-      new BigNumber(props.updatedPlyVoteValue),
-      props.lockingEndData.lockingDate
+      new BigNumber(Number(props.updatedPlyVoteValue) + Number(props.manageData.baseValue)),
+      props.lockingEndData.lockingDate === 0
+        ? props.manageData.endTimeStamp / 1000
+        : props.lockingEndData.lockingDate
     );
     setVotingPower(res);
-  }, [props.updatedPlyVoteValue, props.lockingDate]);
+  }, [props.updatedPlyVoteValue, props.lockingDate, props.manageData.baseValue]);
   const handlePlyInput = async (input: string | number) => {
     if (input === "" || isNaN(Number(input))) {
       props.setUpdatedPlyVoteValue("");
@@ -73,8 +75,10 @@ function ManageLock(props: IManageLockProps) {
       props.setUpdatedPlyVoteValue(input.toString());
       if (Number(props.lockingEndData.lockingDate) > 0) {
         const res = estimateVotingPower(
-          new BigNumber(props.updatedPlyVoteValue),
-          props.lockingEndData.lockingDate
+          new BigNumber(Number(props.updatedPlyVoteValue) + Number(props.manageData.baseValue)),
+          props.lockingEndData.lockingDate === 0
+            ? props.manageData.endTimeStamp / 1000
+            : props.lockingEndData.lockingDate
         );
 
         setVotingPower(res);
@@ -84,7 +88,7 @@ function ManageLock(props: IManageLockProps) {
   const dateFormat = (dates: number) => {
     var date = new Date(dates);
 
-    return `${date.getDate()}/${("0" + (date.getMonth() + 1)).slice(-2)}/${date.getFullYear()}`;
+    return `${date.getDate()}/${("0" + date.getMonth()).slice(-2)}/${date.getFullYear()}`;
   };
   const handleDateSelection = (days: number | undefined, userSelectedDate: string | undefined) => {
     const DAY = connectedNetwork === "testnet" ? 480 : 86400;
@@ -103,7 +107,10 @@ function ManageLock(props: IManageLockProps) {
 
     props.setLockingDate(dateFormat(lockEnd * 1000));
     if (Number(props.updatedPlyVoteValue) > 0) {
-      const res = estimateVotingPower(new BigNumber(props.updatedPlyVoteValue), lockEnd);
+      const res = estimateVotingPower(
+        new BigNumber(Number(props.updatedPlyVoteValue) + Number(props.manageData.baseValue)),
+        lockEnd
+      );
       setVotingPower(res);
     }
     props.setLockingEndData({ selected: days ? days : 0, lockingDate: lockEnd });
@@ -157,7 +164,7 @@ function ManageLock(props: IManageLockProps) {
       {screen === "1" ? (
         <>
           <div className="px-4 md:px-6  mx-2 text-white font-title3">Manage Lock</div>
-          <TopBar />
+          <TopBar manageData={props.manageData} />
           <div
             className={clsx(
               "mx-4 md:mx-6 border pl-4 pr-5  bg-muted-200/[0.1] items-center flex  rounded-2xl h-[86px] hover:border-text-700 ",
@@ -323,7 +330,9 @@ function ManageLock(props: IManageLockProps) {
               : props.IncreaseLockEndOperation
           }
           votingPower={votingPower}
-          endDate={props.lockingDate}
+          endDate={
+            props.lockingDate === "" ? dateFormat(props.manageData.endTimeStamp) : props.lockingDate
+          }
         />
       )}
     </PopUpModal>

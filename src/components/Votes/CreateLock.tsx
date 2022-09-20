@@ -82,7 +82,7 @@ function CreateLock(props: ICreateLockProps) {
   const dateFormat = (dates: number) => {
     var date = new Date(dates);
 
-    return `${date.getDate()}/${("0" + (date.getMonth() + 1)).slice(-2)}/${date.getFullYear()}`;
+    return `${date.getDate()}/${("0" + date.getMonth()).slice(-2)}/${date.getFullYear()}`;
   };
   const handleDateSelection = (days: number | undefined, userSelectedDate: string | undefined) => {
     const now = Math.floor(new Date().getTime() / 1000);

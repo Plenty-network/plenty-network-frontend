@@ -169,7 +169,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
     ],
     [valueFormat]
   );
-  function ClaimBtn(props: IManageBtnProps): any {
+  function ClaimBtn(): any {
     if (true) {
       return (
         <div
