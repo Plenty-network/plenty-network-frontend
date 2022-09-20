@@ -145,11 +145,13 @@ export const getPositionsData = async (
         const lpTokenPrice = lPTokenPrices[AMM[pool.amm].lpToken.symbol] ?? new BigNumber(0);
         const lpBalance = new BigNumber(pool.lqtBalance);
         const staked = new BigNumber(pool.stakedBalance);
+        const baseBalance = staked.multipliedBy(40).dividedBy(100);
         const totalLiquidity = lpBalance.plus(staked);
         const derived = new BigNumber(pool.derivedBalance);
         const poolApr = new BigNumber(pool.poolAPR);
         const stakedPercentage = staked.multipliedBy(100).dividedBy(totalLiquidity);
-        const boostValue = derived.dividedBy(staked);
+        const boostValue = derived.dividedBy(baseBalance);
+        console.log(boostValue.toFixed(1));
         const userAPR = poolApr.multipliedBy(boostValue);
         const totalLiquidityAmount = totalLiquidity
           .dividedBy(lpTokenDecimalMultplier)
