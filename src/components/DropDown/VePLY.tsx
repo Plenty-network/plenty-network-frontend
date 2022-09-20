@@ -12,6 +12,7 @@ export interface IDropdownProps {
   selectedText: IVePLYData;
   className?: string;
   isConfirmStake?: boolean;
+  isListLoading: boolean;
 }
 
 export function VePLY(props: IDropdownProps) {
@@ -58,8 +59,14 @@ export function VePLY(props: IDropdownProps) {
             </>
           ) : (
             <>
-              <span className={clsx("hidden md:block  md:font-body4")}>Select</span>{" "}
-              <span className="font-subtitle1 md:font-body4">vePLY</span>
+              <span className={clsx("hidden md:block  md:font-body4")}>
+                {props.isListLoading
+                  ? "Loading..."
+                  : props.Options.length !== 0
+                  ? "Select vePLY"
+                  : "No vePLY!"}
+              </span>{" "}
+              <span className="font-subtitle1 md:font-body4 md:hidden">vePLY</span>
             </>
           )}
         </p>
