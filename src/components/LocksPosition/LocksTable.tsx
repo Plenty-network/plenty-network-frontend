@@ -85,7 +85,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
               </div>
             </div>
           ) : (
-            <div className="flex justify-center items-center">--</div>
+            <div className="flex justify-center items-center font-body4 text-right">Not staked</div>
           ),
       },
       {
@@ -150,7 +150,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
               </div>
             </div>
           ) : (
-            <div className="flex justify-center items-center">--</div>
+            <div className="flex justify-center items-center font-body4 ">Not staked</div>
           ),
       },
       {
@@ -362,7 +362,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           isFetched={props.locksPosition.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName={"lockPosition"}
-          TableWidth="md:min-w-[1049px]"
+          TableWidth="md:min-w-[1100px]"
         />
       </div>
     </>

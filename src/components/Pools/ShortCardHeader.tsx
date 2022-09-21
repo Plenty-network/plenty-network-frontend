@@ -28,7 +28,7 @@ export function Tabs(props: ITabsProps) {
   return (
     <th
       className={`flex cursor-pointer font-subtitle1 text-text-50 text-left  ${
-        props.isFirstRow || props.text?.includes("Pool") ? "justify-start" : "justify-end "
+        props.index === 0 ? "justify-start" : "justify-end "
       } ${
         props.TableName === "poolsRewards"
           ? props.index === 0 || props.index == 2
@@ -37,6 +37,8 @@ export function Tabs(props: ITabsProps) {
           : props.TableName === "lockPosition"
           ? props.index === 0
             ? " w-[150px]"
+            : props.index === 2
+            ? "w-[164px]"
             : isMobile && props.index === 1
             ? "w-[100px] "
             : isMobile && props.index === 2
