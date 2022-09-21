@@ -18,6 +18,7 @@ import { ILpTokenPriceList, ITokenPriceList } from "../util/types";
 import { ELocksState } from "../votes/types";
 import { voteEscrowAddress } from "../../common/walletconnect";
 import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
+import { getRewards } from "../rewards";
 
 // Stats
 /**
@@ -77,9 +78,7 @@ export const getPositionStatsData = async (
  * Calculates the total epoch voting power and total PLY tokens locked for all locks held by a user.
  * @param userTezosAddress - Tezos wallet address of the user
  */
-const getVotesStatsData = async (
-  userTezosAddress: string
-): Promise<IVotesStatsDataResponse> => {
+const getVotesStatsData = async (userTezosAddress: string): Promise<IVotesStatsDataResponse> => {
   try {
     // let totalEpochVotingPower = new BigNumber(0),
     //   totalPlyLocked = new BigNumber(0);
@@ -146,11 +145,13 @@ export const getPositionsData = async (
         const lpTokenPrice = lPTokenPrices[AMM[pool.amm].lpToken.symbol] ?? new BigNumber(0);
         const lpBalance = new BigNumber(pool.lqtBalance);
         const staked = new BigNumber(pool.stakedBalance);
+        const baseBalance = staked.multipliedBy(40).dividedBy(100);
         const totalLiquidity = lpBalance.plus(staked);
         const derived = new BigNumber(pool.derivedBalance);
         const poolApr = new BigNumber(pool.poolAPR);
         const stakedPercentage = staked.multipliedBy(100).dividedBy(totalLiquidity);
-        const boostValue = derived.dividedBy(staked);
+        const boostValue = derived.dividedBy(baseBalance);
+        console.log(boostValue.toFixed(1));
         const userAPR = poolApr.multipliedBy(boostValue);
         const totalLiquidityAmount = totalLiquidity
           .dividedBy(lpTokenDecimalMultplier)
@@ -185,8 +186,6 @@ export const getPositionsData = async (
     };
   }
 };
-
-
 
 // Locks
 /**
@@ -233,7 +232,9 @@ export const getAllLocksPositionData = async (
       const epochVotingPower = new BigNumber(lock.epochtVotingPower);
       const availableVotingPower = new BigNumber(lock.availableVotingPower);
       const consumedVotingPower = epochVotingPower.minus(availableVotingPower);
-      const currentVotingPower = new BigNumber(lock.currentVotingPower).dividedBy(PLY_DECIMAL_MULTIPLIER);
+      const currentVotingPower = new BigNumber(lock.currentVotingPower).dividedBy(
+        PLY_DECIMAL_MULTIPLIER
+      );
       const lockEndTimestamp = new BigNumber(lock.endTs);
       const attached = Boolean(lock.attached);
       const finalLock: IAllLocksPositionData = {
@@ -244,7 +245,7 @@ export const getAllLocksPositionData = async (
         consumedVotingPower: consumedVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
         currentVotingPower,
         locksState: ELocksState.DISABLED,
-        endTimeStamp: lockEndTimestamp.toNumber(),
+        endTimeStamp: lockEndTimestamp.multipliedBy(1000).toNumber(),
         attached,
         attachedGaugeAddress: undefined,
         attachedAmmAddress: undefined,

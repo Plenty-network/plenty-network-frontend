@@ -107,31 +107,23 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const stakedTokenLp = React.useRef<string>("");
   const [contentTransaction, setContentTransaction] = useState("");
   const [vePLYOptions, setVePLYOptions] = useState<IVePLYData[]>([]);
+  const [isListLoading, setIsListLoading] = useState(false);
 
   useEffect(() => {
-    // if (stakeInput === "") {
-    //   //setVePLYOptions([]);
-    //   setSelectedDropDown({ tokenId: "", boostValue: "", votingPower: "" });
-    // }
     if (walletAddress || (screen === "2" && props.activeState === ActiveLiquidity.Staking)) {
-      console.log(
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        stakeInput === "" ? undefined : stakeInput.toString(),
-        walletAddress
-      );
+      setIsListLoading(true);
       getVePLYListForUser(
         props.tokenIn.symbol,
         props.tokenOut.symbol,
         stakeInput === "" ? undefined : stakeInput.toString(),
         walletAddress
       ).then((res) => {
-        console.log(res);
+        setIsListLoading(false);
         const veplyData = res.vePLYData;
         setVePLYOptions(veplyData);
       });
     }
-  }, [stakeInput, walletAddress, screen]);
+  }, [stakeInput, walletAddress, screen, props.activeState]);
 
   useEffect(() => {
     if (vePLYOptions.length > 0) {
@@ -551,6 +543,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 setSelectedDropDown={setSelectedDropDown}
                 selectedDropDown={selectedDropDown}
                 vePLYOptions={vePLYOptions}
+                isListLoading={isListLoading}
               />
             )}
             {props.activeState === ActiveLiquidity.Rewards && (

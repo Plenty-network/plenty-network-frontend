@@ -79,7 +79,7 @@ export const increaseLockEnd = async (
 
     let batch = null;
 
-    batch = Tezos.wallet.batch().withContractCall(veInstance.methods.increase_lock_end(id , newEnd));
+    batch = Tezos.wallet.batch().withContractCall(veInstance.methods.increase_lock_end(id, newEnd));
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
@@ -104,7 +104,7 @@ export const increaseLockEnd = async (
 
 export const increaseLockValue = async (
   id: number,
-  value : BigNumber,
+  value: BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
   setShowConfirmTransaction: TSetShowConfirmTransaction
@@ -115,8 +115,9 @@ export const increaseLockValue = async (
     if (!WALLET_RESP.success) {
       throw new Error("Wallet connection failed");
     }
+    
     // Making value to it's proper decimal form
-    value = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
+    const plyToBeAdded = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
     const Tezos = await dappClient().tezos();
     const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
     const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
@@ -125,8 +126,8 @@ export const increaseLockValue = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value))
-      .withContractCall(veInstance.methods.increase_lock_value(id, value));
+      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded))
+      .withContractCall(veInstance.methods.increase_lock_value(id, plyToBeAdded));
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
@@ -151,7 +152,7 @@ export const increaseLockValue = async (
 
 export const increaseLockAndValue = async (
   id: number,
-  value : BigNumber,
+  value: BigNumber,
   newEnd: BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
@@ -164,7 +165,8 @@ export const increaseLockAndValue = async (
       throw new Error("Wallet connection failed");
     }
     // Making value to it's proper decimal form
-    value = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
+    const plyToBeAdded = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
+
     const Tezos = await dappClient().tezos();
     const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
     const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
@@ -173,8 +175,8 @@ export const increaseLockAndValue = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value))
-      .withContractCall(veInstance.methods.increase_lock_value(id, value))
+      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded))
+      .withContractCall(veInstance.methods.increase_lock_value(id, plyToBeAdded))
       .withContractCall(veInstance.methods.increase_lock_end(id, newEnd));
 
     const batchOp = await batch.send();
@@ -197,8 +199,6 @@ export const increaseLockAndValue = async (
     };
   }
 };
-
-
 
 export const withdrawLock = async (
   id: number,
@@ -260,9 +260,10 @@ export const withdrawLockWithInflation = async (
 
     let batch = null;
 
-    batch = Tezos.wallet.batch()
-    .withContractCall(veInstance.methods.claim_inflation(id,epochs))
-    .withContractCall(veInstance.methods.withdraw(id));
+    batch = Tezos.wallet
+      .batch()
+      .withContractCall(veInstance.methods.claim_inflation(id, epochs))
+      .withContractCall(veInstance.methods.withdraw(id));
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
@@ -285,7 +286,6 @@ export const withdrawLockWithInflation = async (
   }
 };
 
-
 export const claimInflation = async (
   epochs: number[],
   id: number,
@@ -305,7 +305,7 @@ export const claimInflation = async (
 
     let batch = null;
 
-    batch = Tezos.wallet.batch().withContractCall(veInstance.methods.claim_inflation(id , epochs));
+    batch = Tezos.wallet.batch().withContractCall(veInstance.methods.claim_inflation(id, epochs));
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);

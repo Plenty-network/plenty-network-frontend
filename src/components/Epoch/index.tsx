@@ -38,6 +38,30 @@ export function Epoch(props: IEpochProps) {
     dispatch(setSelectedEpoch(currentEpoch));
   }, [epochData[indexOfCurrent]?.epochNumber, currentEpoch?.endTimestamp]);
 
+  const dateFormat = (startDate: number) => {
+    var date = new Date(startDate);
+
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Decr",
+    ];
+
+    var year = date.getFullYear();
+    var month = date.getMonth();
+    var day = date.getDate();
+    return `(${day}-${monthNames[month]}-${year.toString().substr(-2)})`;
+  };
+
   function Options(props: {
     startDate: number;
     epochNumber: number;
@@ -71,11 +95,14 @@ export function Epoch(props: IEpochProps) {
           dispatch(setSelectedEpoch(props.epoch));
           setIsDropDownActive(false);
         }}
-        className="hover:bg-primary-700 px-5 flex font-body4 text-text-50 items-center h-[36px] cursor-pointer"
+        className="hover:bg-primary-700 px-5 flex font-body4 text-white items-center h-[36px] cursor-pointer flex"
       >
-        {props.isCurrent
-          ? `Epoch${props.epochNumber} (current)`
-          : `Epoch${props.epochNumber} (${day}-${monthNames[month]}-${year.toString().substr(-2)})`}
+        {props.isCurrent ? `Epoch ${props.epochNumber} ` : `Epoch ${props.epochNumber} `}
+        <span className="font-body2 text-text-250 ml-1">
+          {props.isCurrent
+            ? "(current)"
+            : `(${day}-${monthNames[month]}-${year.toString().substr(-2)})`}
+        </span>
       </div>
     );
   }
@@ -117,7 +144,7 @@ export function Epoch(props: IEpochProps) {
               </ToolTip>
             </p>
 
-            <p className="text-text-250 text-f12">
+            <p className="text-text-250 font-body4">
               Epoch{" "}
               <span className="text-white">
                 {!router.pathname.includes("Vote")
@@ -127,8 +154,11 @@ export function Epoch(props: IEpochProps) {
                   : epochData[indexOfCurrent]?.epochNumber
                   ? epochData[indexOfCurrent].epochNumber
                   : 0}
-                {selectedEpoch?.epochNumber === epochData[indexOfCurrent]?.epochNumber &&
-                  " (current) "}
+                <span className="font-body2 text-text-250 ml-1">
+                  {selectedEpoch?.epochNumber === epochData[indexOfCurrent]?.epochNumber
+                    ? " (current) "
+                    : dateFormat(selectedEpoch?.startTimestamp)}
+                </span>
               </span>
             </p>
             <p className="relative -top-[1.5px]">

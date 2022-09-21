@@ -35,7 +35,7 @@ export function PopUpModal(props: IPopUpModalProps) {
     >
       <div
         className={clsx(
-          "broder relative border-popUpNotification  max-w-[460px] w-[calc(100vw_-_38px)]  bg-sideBar  rounded-3xl border flex  flex-col px-6 py-5",
+          "broder relative border-popUpNotification  max-w-[460px] w-[calc(100vw_-_38px)]  bg-sideBar  rounded-3xl border flex  flex-col px-2 md:px-4  py-5",
           props.title === "Select Token" && "h-[576px] ",
           props.Name === "Manage" ? "py-3" : "py-5",
           props.className
