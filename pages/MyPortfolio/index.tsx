@@ -166,13 +166,14 @@ export default function MyPortfolio() {
       setLocksPosition([] as IAllLocksPositionData[]);
       setStatsPosition({} as IPositionStatsResponse);
       setPoolsPosition([] as IPositionsData[]);
-
-      getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
-        setStatsPosition(res);
-      });
-      getPositionsData(userAddress, lpTokenPrice).then((res) => {
-        setPoolsPosition(res.positionPoolsData);
-      });
+      if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
+        getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+          setStatsPosition(res);
+        });
+        getPositionsData(userAddress, lpTokenPrice).then((res) => {
+          setPoolsPosition(res.positionPoolsData);
+        });
+      }
       getAllLocksPositionData(userAddress).then((res) => {
         setLocksPosition(res.allLocksData);
       });
