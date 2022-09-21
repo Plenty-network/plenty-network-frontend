@@ -115,7 +115,7 @@ export const increaseLockValue = async (
     if (!WALLET_RESP.success) {
       throw new Error("Wallet connection failed");
     }
-
+    const plyToBeAdded = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
     const Tezos = await dappClient().tezos();
     const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
     const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
@@ -124,8 +124,8 @@ export const increaseLockValue = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value))
-      .withContractCall(veInstance.methods.increase_lock_value(id, value));
+      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded))
+      .withContractCall(veInstance.methods.increase_lock_value(id, plyToBeAdded));
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
@@ -162,7 +162,7 @@ export const increaseLockAndValue = async (
     if (!WALLET_RESP.success) {
       throw new Error("Wallet connection failed");
     }
-
+    const plyToBeAdded = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
     const Tezos = await dappClient().tezos();
     const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
     const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
@@ -171,8 +171,8 @@ export const increaseLockAndValue = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value))
-      .withContractCall(veInstance.methods.increase_lock_value(id, value))
+      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded))
+      .withContractCall(veInstance.methods.increase_lock_value(id, plyToBeAdded))
       .withContractCall(veInstance.methods.increase_lock_end(id, newEnd));
 
     const batchOp = await batch.send();
