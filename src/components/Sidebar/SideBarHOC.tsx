@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { PopUpModal } from '../Modal/popupModal';
 import { NotificationBar } from '../Notification';
 import BottomNavigationBar from './BottomNavBar';
 import { SideBar } from './Sidebar';
