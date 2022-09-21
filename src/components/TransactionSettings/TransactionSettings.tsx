@@ -62,14 +62,18 @@ function TransactionSettings(props: ITransactionSettingsProps) {
     props.setEnableMultiHop(!props.enableMultiHop);
   };
   const handleSlippage = (input: any) => {
-    props.setSlippage(input);
-    walletAddress !== null &&
-      dispatch(
-        setUserSettingsSlippage({
-          address: walletAddress,
-          slippage: input,
-        })
-      );
+    if (input === "" || isNaN(Number(input))) {
+      props.setSlippage("");
+    } else {
+      props.setSlippage(input);
+      walletAddress !== null &&
+        dispatch(
+          setUserSettingsSlippage({
+            address: walletAddress,
+            slippage: input,
+          })
+        );
+    }
   };
 
   const handleAutoSlippage = () => {

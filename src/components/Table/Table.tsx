@@ -6,6 +6,8 @@ import { getHeightOfElement } from "../../utils/getHeight";
 import { NoContentAvailable, WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
 import { Tabs } from "../Pools/ShortCardHeader";
 import { NoSearchResult } from "../Votes/NoSearchResult";
+
+import { isMobile } from "react-device-detect";
 export interface ISimmerEffectProps {
   lines: number;
 }
@@ -33,6 +35,7 @@ const Table = <D extends object>({
   isVotesTable = false,
   noSearchResult = false,
   TableName,
+  TableWidth,
 }: {
   columns: Column<D>[];
   data: D[];
@@ -42,6 +45,7 @@ const Table = <D extends object>({
   isFetched?: boolean;
   isVotesTable?: boolean;
   TableName?: string;
+  TableWidth?: string;
 }) => {
   const [shortByGroup, setshortByGroup] = useState({
     id: shortby ?? "usd",
@@ -49,12 +53,12 @@ const Table = <D extends object>({
   });
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const headerRef = useRef(null);
-  const [heightBody, setheightBody] = useState(480);
+  const [heightBody, setheightBody] = useState<number>(480);
 
-  useEffect(() => {
-    const heightOfbody = getHeightOfElement(headerRef.current);
-    setheightBody(window.innerHeight - heightOfbody);
-  }, [headerRef]);
+  // useEffect(() => {
+  //   const heightOfbody = getHeightOfElement(headerRef.current);
+  //   setheightBody(window.innerHeight - heightOfbody);
+  // }, [headerRef]);
   const {
     getTableProps,
     headerGroups,
@@ -71,7 +75,7 @@ const Table = <D extends object>({
       data,
       initialState: {
         pageIndex: 0,
-        pageSize: 10,
+        pageSize: 100,
         sortBy: [shortByGroup],
       },
       autoResetPage: false,
@@ -110,19 +114,10 @@ const Table = <D extends object>({
   return (
     <div>
       <table
-        className={clsx(
-          " flex flex-col ",
-          isVotesTable ? "gap-1.5" : "gap-1.5",
-          TableName === "lockPosition"
-            ? "min-w-[1049px]"
-            : TableName === "poolsPosition"
-            ? "min-w-[900px]"
-            : TableName === "votesTable"
-            ? "min-w-[733px]"
-            : "w-full"
-        )}
+        ref={headerRef}
+        className={clsx(" flex flex-col ", isVotesTable ? "gap-1.5" : "gap-1.5", TableWidth)}
       >
-        <thead ref={headerRef}>
+        <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr
               key={`headerGroup_${index}`}
@@ -179,9 +174,7 @@ const Table = <D extends object>({
                         // eslint-disable-next-line react/jsx-key
                         <td
                           className={` flex items-center ${
-                            i == 0 || (TableName === "lockPosition" && i === 1)
-                              ? "justify-start"
-                              : "justify-end"
+                            i == 0 ? "justify-start" : "justify-end"
                           } ${
                             TableName === "poolsRewards"
                               ? i === 0 || i == 2
@@ -190,6 +183,14 @@ const Table = <D extends object>({
                               : TableName === "lockPosition"
                               ? i === 0
                                 ? " w-[150px]"
+                                : i === 2
+                                ? "w-[164px]"
+                                : isMobile && i === 1
+                                ? "w-[100px] flex-1"
+                                : isMobile && i === 2
+                                ? "w-[85px]"
+                                : isMobile && i === 3
+                                ? "w-[100px]"
                                 : i === 1 || i === 5 || i === 6 || i === 4
                                 ? "w-[200px]"
                                 : " w-[130px]"
@@ -198,7 +199,9 @@ const Table = <D extends object>({
                                 ? "w-[180px]"
                                 : i === 5
                                 ? "w-[200px]"
-                                : "w-[120px]"
+                                : isMobile && i === 2
+                                ? "w-[120px] flex-1"
+                                : "w-[80px] md:w-[120px]"
                               : TableName === "votesTable"
                               ? i === 4
                                 ? "w-[120px] md:w-[220px]"
@@ -211,7 +214,7 @@ const Table = <D extends object>({
                           } ${
                             (TableName === "poolsPosition" && i === 5 && "ml-auto") ||
                             (TableName === "poolsRewards" && i == 2 && "ml-auto")
-                          }`}
+                          } ${i === 0 && "pl-3  md:pl-0"}`}
                         >
                           {cell.render("Cell")}
                         </td>

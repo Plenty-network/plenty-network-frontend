@@ -137,7 +137,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
           )}
         </div>
       </div>
-      <div className="relative -top-[9px] left-[138.5px]">
+      <div className="relative -top-[9px] left-[95px] md:left-[162.5px]">
         <Image src={add} width={"24px"} height={"24px"} />
       </div>
       <div className="border -mt-[25px] flex border-text-800/[0.5] rounded-2xl h-[88px]">

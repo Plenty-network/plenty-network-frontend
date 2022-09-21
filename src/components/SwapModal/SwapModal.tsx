@@ -42,7 +42,6 @@ function SwapModal(props: ISwapModalProps) {
 
   const topTokensListArray = useMemo(() => {
     const tokensArray = Object.entries(topTokens);
-    console.log(tokensArray);
     return tokensArray.map((token) => ({
       name: token[0],
       image: `/assets/Tokens/${token[0]}.png`,

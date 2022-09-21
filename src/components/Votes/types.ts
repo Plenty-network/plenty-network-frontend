@@ -15,10 +15,8 @@ export interface ITransactionSubmittedProps {
   onBtnClick: any;
 }
 export interface ICreateLockProps {
-  module: MODULE;
   plyBalance: BigNumber;
   show: boolean;
-
   setLockingEndData: React.Dispatch<
     React.SetStateAction<{
       selected: number;
@@ -46,6 +44,7 @@ export interface ICreateLockProps {
 }
 
 export interface IConfirmLockingProps {
+  ctaText?: string;
   show?: boolean;
   endDate: string;
   votingPower: number;

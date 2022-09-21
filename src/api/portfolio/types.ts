@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import { AMM_TYPE } from '../../config/types';
+import { IVeNFTData } from '../votes/types';
 
 export interface IVotesStatsDataResponse {
   success: boolean;
@@ -40,5 +41,29 @@ export interface IPositionStatsResponse {
   tvl: BigNumber;
   totalEpochVotingPower: BigNumber;
   totalPLYLocked: BigNumber;
+  error?: string;
+}
+
+export interface IAllLocksPositionData extends IVeNFTData {
+  endTimeStamp: number;
+  attached: boolean;
+  attachedGaugeAddress: string | undefined;
+  attachedAmmAddress: string | undefined;
+  attachedTokenASymbol: string | undefined;
+  attachedTokenBSymbol: string | undefined;
+}
+
+export interface IAttachedTzktResponse {
+  key: string;
+  value: string;
+}
+
+export interface IAttachedData {
+  [key: string]: string;
+}
+
+export interface IAllLocksPositionResponse {
+  success: boolean;
+  allLocksData: IAllLocksPositionData[];
   error?: string;
 }

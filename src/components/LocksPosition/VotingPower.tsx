@@ -3,7 +3,7 @@ import { BigNumber } from "bignumber.js";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IPlyLockedProps } from "./types";
 
-export function PlyLocked(props: IPlyLockedProps) {
+export function VotingPower(props: IPlyLockedProps) {
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
       return num.dividedBy(1000000000).toFixed(0) + "B";
@@ -31,7 +31,6 @@ export function PlyLocked(props: IPlyLockedProps) {
               : Number(nFormatter(props.value))
             : "0"}
         </div>
-        <div className="mt-0.5 text-text-500 font-body3">PLY</div>
       </ToolTip>
     </>
   );

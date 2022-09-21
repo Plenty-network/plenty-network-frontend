@@ -278,7 +278,9 @@ function SwapTab(props: ISwapTabProps) {
           onClick={() => setSettingsShow(!settingsShow)}
         >
           <Image src={settings} height={"20px"} width={"20px"} />
-          <span className="text-white font-body4 ml-2 relative -top-[3px]">{props.slippage}%</span>
+          <span className="text-white font-body4 ml-2 relative -top-[3px]">
+            {props.slippage ? props.slippage : "0.5"}%
+          </span>
         </div>
         <TransactionSettings
           show={settingsShow}

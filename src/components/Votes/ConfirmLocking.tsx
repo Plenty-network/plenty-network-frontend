@@ -9,6 +9,7 @@ import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import { IConfirmLockingProps } from "./types";
 import { store } from "../../redux";
+import { increaseLockEnd } from "../../operations/locks";
 
 function ConfirmLocking(props: IConfirmLockingProps) {
   const epochData = store.getState().epoch.currentEpoch;
@@ -72,7 +73,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
 
       <div className="px-4 md:px-6 mt-[18px]">
         <Button color="primary" onClick={props.handleLockOperation}>
-          Create lock
+          {props.ctaText ? props.ctaText : "Create lock"}
         </Button>
       </div>
     </>

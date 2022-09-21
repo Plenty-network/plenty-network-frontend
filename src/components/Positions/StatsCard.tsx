@@ -22,11 +22,13 @@ function StatsCard(props: IStatsCardProps) {
             <Image src={info} />
           </div>
           <div className="font-input-text1 text-white mt-2">
-            {props.value}{" "}
+            {props.value === undefined || Number(props.value) <= 0 ? (
+              <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+            ) : (
+              props.value?.toString()
+            )}
             {props.subValue && (
-              <span className="font-subtitle5 text-border-400">
-                {props.subValue ? props.subValue : "0.0"}
-              </span>
+              <span className="font-subtitle5 text-border-400 ml-1">{props.subValue}</span>
             )}
           </div>
         </p>
@@ -36,6 +38,7 @@ function StatsCard(props: IStatsCardProps) {
               color={"primary"}
               height={"h-[50px]"}
               width={" w-[148px] "}
+              borderRadius={"rounded-xl"}
               onClick={() => props.setShowCreateLockModal(true)}
             >
               Lock Ply

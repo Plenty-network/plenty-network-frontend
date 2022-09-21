@@ -8,7 +8,7 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 function SelectNFT(props: ISelectNFT) {
   return (
-    <div className="md:flex md:items-center">
+    <div className="md:flex md:items-center mr-3">
       <div className="hidden md:block text-white font-body1 px-[23px]">Select your veNFT:</div>
       <div>
         {props.veNFTlist.length === 0 ? (
