@@ -139,7 +139,7 @@ function SwapModal(props: ISwapModalProps) {
           ) : (
             <div
               id="tokensList"
-              className="border relative max-h-[300px] h-[300px] overflow-y-auto border-text-800 bg-muted-200 rounded-xl  w-full pb-5 mt-5"
+              className="border relative max-h-[300px] h-[300px] modal overflow-y-auto border-text-800 bg-muted-200 rounded-xl  w-full pb-5 mt-5"
             >
               {tokensToShow.map((token, index) => {
                 return (

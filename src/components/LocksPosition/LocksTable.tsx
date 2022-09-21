@@ -100,7 +100,15 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         Header: "",
         id: "vote",
         minWidth: 200,
-        accessor: (x) => <VoteBtn locksState={x.locksState} id={Number(x.tokenId)} />,
+        accessor: (x) => (
+          <VoteBtn
+            locksState={x.locksState}
+            id={Number(x.tokenId)}
+            setWithdraw={props.setShowWithdraw}
+            manageData={x}
+            setManageData={props.setManageData}
+          />
+        ),
       },
       {
         Header: "",
@@ -180,7 +188,15 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         Header: "",
         id: "vote",
         minWidth: 200,
-        accessor: (x) => <VoteBtn locksState={x.locksState} id={Number(x.tokenId)} />,
+        accessor: (x) => (
+          <VoteBtn
+            locksState={x.locksState}
+            id={Number(x.tokenId)}
+            setWithdraw={props.setShowWithdraw}
+            setManageData={props.setManageData}
+            manageData={x}
+          />
+        ),
       },
       {
         Header: "",
@@ -297,6 +313,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
             className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
             onClick={() => {
               var flag = false;
+
               veNFTlist.map((list) => {
                 if (Number(list.tokenId) === Number(props.id)) {
                   flag = true;
@@ -328,7 +345,10 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         return (
           <div
             className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
-            onClick={() => {}}
+            onClick={() => {
+              props.setWithdraw(true);
+              props.setManageData(props.manageData);
+            }}
           >
             Withdraw
           </div>

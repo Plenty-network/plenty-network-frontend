@@ -25,7 +25,7 @@ body {
 }
 /* width */
 ::-webkit-scrollbar {
-  width: 2px;
+  width: 4px;
   height: 5px;
   border-radius: 8px;
 }
@@ -64,6 +64,15 @@ body {
 }
 .manage::-webkit-scrollbar-track-piece:start {
   margin-left: 30px; 
+}
+
+.modal::-webkit-scrollbar-track-piece:end {
+ 
+  margin-bottom: 40px;
+}
+.modal::-webkit-scrollbar-track-piece:start {
+ 
+  margin-top: 20px;
 }
 .slider-input:focus::placeholder {
   color: transparent;

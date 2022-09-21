@@ -175,7 +175,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
             setShowLiquidityModal(true);
             dispatch(getTotalVotingPower());
             props.isManage
-              ? setActiveState(ActiveLiquidity.Rewards)
+              ? setActiveState(ActiveLiquidity.Liquidity)
               : setActiveState(ActiveLiquidity.Staking);
 
             setTokenIn({
@@ -201,7 +201,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
             setShowLiquidityModal(true);
             dispatch(getTotalVotingPower());
             props.isManage
-              ? setActiveState(ActiveLiquidity.Rewards)
+              ? setActiveState(ActiveLiquidity.Liquidity)
               : setActiveState(ActiveLiquidity.Staking);
 
             setTokenIn({
