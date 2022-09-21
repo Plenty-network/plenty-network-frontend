@@ -10,6 +10,7 @@ import Button from "../Button/Button";
 import { IConfirmLockingProps } from "./types";
 import { store } from "../../redux";
 import { increaseLockEnd } from "../../operations/locks";
+import clsx from "clsx";
 
 function ConfirmLocking(props: IConfirmLockingProps) {
   const epochData = store.getState().epoch.currentEpoch;
@@ -33,7 +34,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
         </div>
         <div className="mx-2 text-white font-title3">Confirm locking </div>
       </div>
-      <div className="mx-4 md:mx-6 rounded-lg mt-5 border border-text-800 bg-card-200 py-5">
+      <div className="mx-4 md:mx-6 rounded-lg mt-3 border border-text-800 bg-card-200 py-5">
         <div className="flex items-center">
           <div className="text-text-250 font-subtitle1 md:font-subtitle3 px-3 md:px-5">
             Your will receive a veNFT with a voting power of{" "}
@@ -47,7 +48,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
           <Image src={nft} />
         </div>
         <div className="border-t mt-5 mb-2  border-text-800/[0.5]"></div>
-        <div className="mt-3 px-3 md:px-5 flex items-center">
+        <div className={clsx("mt-3 px-3 md:px-5 flex items-center", props.ctaText && "hidden")}>
           <span className="hidden md:block flex">
             <span className="text-text-250 font-body2 mr-1">You can start voting after </span>
             <span className="relative top-0.5">

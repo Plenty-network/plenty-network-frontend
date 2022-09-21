@@ -115,13 +115,6 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         showOnMobile: true,
         accessor: (x: any) => "$234.58",
       },
-
-      {
-        Header: "",
-        id: "claim",
-        minWidth: 151,
-        accessor: (x) => <ClaimBtn />,
-      },
     ],
     [valueFormat]
   );
@@ -152,8 +145,8 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         ),
       },
       {
-        Header: "PLY emissions",
-        id: "PLY emissions",
+        Header: "Reward",
+        id: "Reward",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -161,28 +154,17 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
       },
 
       {
-        Header: "",
-        id: "claim",
-        minWidth: 151,
-        accessor: (x) => <ClaimBtn />,
+        Header: "Boost",
+        id: "Boost",
+        isToolTipEnabled: true,
+        canShort: true,
+        showOnMobile: true,
+        accessor: (x: any) => "$234.58",
       },
     ],
     [valueFormat]
   );
-  function ClaimBtn(): any {
-    if (true) {
-      return (
-        <div
-          className="bg-primary-500/10 md:w-[151px] w-[78px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
-          onClick={() => {
-            setShowClaimPly(true);
-          }}
-        >
-          Claim
-        </div>
-      );
-    }
-  }
+
   return (
     <>
       <div className={` overflow-x-auto inner ${props.className}`}>
