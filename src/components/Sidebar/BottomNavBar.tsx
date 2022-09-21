@@ -33,19 +33,19 @@ export interface ISubMenuListProps {
 const mainMenu: Array<ISingleSideBarProps> = [
   {
     name: 'Swap',
-    iconName: 'swap',
+    iconName: 'u_exchange',
     pathName: '/Swap',
     activePathName: '/Swap',
   },
   {
     name: 'Pools',
-    iconName: 'pools',
+    iconName: 'verified-user',
     pathName: '/pools',
     activePathName: '/pools',
   },
   {
     name: "Vote",
-    iconName: "lock",
+    iconName: "verified-user",
     pathName: "/Vote",
     activePathName: "/Vote",
   },
@@ -58,9 +58,9 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
     setActiveSubMenu(MenuType.NoMenu);
   });
   return (
-    <div className="mobile fixed bottom-0 bg-sideBar w-screen p-0 ">
+    <div className="mobile fixed bottom-0 bg-sideBar w-screen p-0 " ref={reff} >
       {activeSubMenu === MenuType.Menu && <SubMenuList />}
-      {activeSubMenu === MenuType.MoreNavMenu && <MoreSubMenuList refWrapper={reff} />}
+      {activeSubMenu === MenuType.MoreNavMenu && <MoreSubMenuList />}
       <div className="justify-between flex w-screen">
         <>
         {mainMenu.map((e)=>(
@@ -74,7 +74,7 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
         ))}
         </>
         <MenuNoLink
-          onClick={() => setActiveSubMenu(MenuType.MoreNavMenu)}
+          onClick={() => setActiveSubMenu((e)=>e===MenuType.MoreNavMenu?MenuType.NoMenu:MenuType.MoreNavMenu)}
           text={''} 
           iconName={'moreMenu'}
           active={activeSubMenu === MenuType.MoreNavMenu}
@@ -87,8 +87,8 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
 export function MenuWithLink(props: IBottomNavMenuProps) {
   return (
     <Link href={props.link ? props.link : ""} >
-      <div className={`${props.active? "bg-sideBarHover border-t-primary-500": "border-t-borderColor"} ${ props.className} border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center gap-2  p-5  hover:bg-sideBarHover hover:border-t-primary-500 `}>
-     {props.iconName && <Image src={`/assets/icon/${props.iconName}.svg`} height={'11.67px'} width={'16.66px'} />}
+      <div className={`${props.active? "bg-sideBarHover border-t-primary-500": "border-t-borderColor"} ${ props.className} border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center gap-2  px-[18px] py-[9px]  hover:bg-sideBarHover hover:border-t-primary-500 `}>
+     {props.iconName && <Image src={`/assets/icon/${props.iconName}.svg`} height={'24px'} width={'24px'} />}
     <p>{props.text}</p>
   </div>
     </Link>
@@ -97,8 +97,8 @@ export function MenuWithLink(props: IBottomNavMenuProps) {
 export function MenuNoLink(props: IBottomMoreNavMenuProps) {
   return (<div
     onClick={props.onClick? () => {props.onClick && props.onClick();}: () => {}}
-    className={`${props.active? "bg-sideBarHover border-t-primary-500": "border-t-borderColor"} ${ props.className} border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center gap-2  p-5  hover:bg-sideBarHover hover:border-t-primary-500 `}>
-     {props.iconName && <Image src={`/assets/icon/${props.iconName}.svg`} height={'11.67px'} width={'16.66px'} />}
+    className={`${props.active? "bg-sideBarHover border-t-primary-500": "border-t-borderColor"} ${ props.className} border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center gap-2  px-[18px] py-[9px]  hover:bg-sideBarHover hover:border-t-primary-500 `}>
+     {props.iconName && <Image src={`/assets/icon/${props.iconName}.svg`} height={'24px'} width={'24px'} />}
     <p>{props.text}</p>
   </div>);
 }
