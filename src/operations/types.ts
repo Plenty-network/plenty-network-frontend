@@ -16,6 +16,11 @@ export interface IVotes {
     votes : BigNumber;
 }
 
+export interface IEpochVoteShare{
+    epoch : number,
+    share : BigNumber,
+}
+
 export type TTransactionSubmitModal = (id: string) => void;
 
 export type TSetShowConfirmTransaction = React.Dispatch<React.SetStateAction<boolean>>;

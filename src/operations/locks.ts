@@ -115,6 +115,8 @@ export const increaseLockValue = async (
     if (!WALLET_RESP.success) {
       throw new Error("Wallet connection failed");
     }
+    
+    // Making value to it's proper decimal form
     const plyToBeAdded = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
     const Tezos = await dappClient().tezos();
     const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
@@ -162,7 +164,9 @@ export const increaseLockAndValue = async (
     if (!WALLET_RESP.success) {
       throw new Error("Wallet connection failed");
     }
+    // Making value to it's proper decimal form
     const plyToBeAdded = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
+
     const Tezos = await dappClient().tezos();
     const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
     const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
