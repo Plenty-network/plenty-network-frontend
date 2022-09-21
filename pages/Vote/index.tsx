@@ -390,14 +390,14 @@ export default function Vote() {
                   Verify your vote percentage and cast vote
                 </div>
 
-                <div className="border border-muted-50 px-4 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
+                <div className="border border-muted-50 px-4 bg-muted-300 h-[50px]  flex items-center justify-center rounded-xl">
                   {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
                 </div>
                 <div className="">
                   {alreadyVoted ? (
                     <div
                       className={clsx(
-                        "px-4   h-[52px] flex items-center justify-center rounded-xl ",
+                        "px-4   h-[50px] flex items-center justify-center rounded-xl ",
 
                         "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                       )}
@@ -415,7 +415,7 @@ export default function Vote() {
                     >
                       <div
                         className={clsx(
-                          " px-4 h-[52px] flex items-center justify-center rounded-xl ",
+                          " px-4 h-[50px] flex items-center justify-center rounded-xl ",
                           votes.length !== 0 &&
                             (selectedEpoch?.epochNumber
                               ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
@@ -447,7 +447,7 @@ export default function Vote() {
                   ) : sumOfVotes === 100 ? (
                     <div
                       className={clsx(
-                        "px-4   h-[52px] flex items-center justify-center rounded-xl ",
+                        "px-4   h-[50px] flex items-center justify-center rounded-xl ",
 
                         "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                       )}
@@ -457,7 +457,7 @@ export default function Vote() {
                   ) : (
                     <div
                       className={clsx(
-                        "px-4   h-[52px] flex items-center justify-center rounded-xl ",
+                        "px-4   h-[50px] flex items-center justify-center rounded-xl ",
 
                         votes.length !== 0 &&
                           (selectedEpoch?.epochNumber
@@ -525,7 +525,7 @@ export default function Vote() {
               Verify your vote percentage and cast vote
             </div>
             <div className="flex flex-row gap-2 mt-[14px]">
-              <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[52px]  flex items-center justify-center rounded-xl">
+              <div className="basis-1/4 border border-muted-50 bg-muted-300 h-[50px]  flex items-center justify-center rounded-xl">
                 <span className="cursor-pointer relative top-0.5">
                   <ToolTip
                     id="tooltip2"
@@ -544,7 +544,7 @@ export default function Vote() {
                 {alreadyVoted ? (
                   <div
                     className={clsx(
-                      "px-4   h-[52px] flex items-center justify-center rounded-xl ",
+                      "px-4   h-[50px] flex items-center justify-center rounded-xl ",
 
                       "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                     )}
@@ -562,7 +562,7 @@ export default function Vote() {
                   >
                     <div
                       className={clsx(
-                        "  h-[52px] flex items-center justify-center rounded-xl ",
+                        "  h-[50px] flex items-center justify-center rounded-xl ",
                         votes.length !== 0 &&
                           (selectedEpoch?.epochNumber
                             ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
@@ -594,7 +594,7 @@ export default function Vote() {
                 ) : sumOfVotes === 100 ? (
                   <div
                     className={clsx(
-                      "  h-[52px] flex items-center justify-center rounded-xl ",
+                      "  h-[50px] flex items-center justify-center rounded-xl ",
 
                       "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                     )}
@@ -604,7 +604,7 @@ export default function Vote() {
                 ) : (
                   <div
                     className={clsx(
-                      "  h-[52px] flex items-center justify-center rounded-xl ",
+                      "  h-[50px] flex items-center justify-center rounded-xl ",
                       votes.length !== 0 &&
                         (selectedEpoch?.epochNumber
                           ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber

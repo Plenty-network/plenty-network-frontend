@@ -140,7 +140,7 @@ module.exports = {
         30: "30px",
       },
       height: {
-        13: "52px",
+        13: "50px",
       },
       width: {
         640: "640px",

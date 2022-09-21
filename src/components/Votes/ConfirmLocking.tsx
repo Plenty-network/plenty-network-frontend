@@ -73,7 +73,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
 
       <div className="px-4 md:px-6 mt-[18px]">
         <Button color="primary" onClick={props.handleLockOperation}>
-          Create lock
+          {props.ctaText ? props.ctaText : "Create lock"}
         </Button>
       </div>
     </>

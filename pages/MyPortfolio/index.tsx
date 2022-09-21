@@ -113,9 +113,6 @@ export default function MyPortfolio() {
   useEffect(() => {
     if (userAddress) {
       dispatch(getTotalVotingPower());
-      getAllLocksPositionData(userAddress).then((res) => {
-        setLocksPosition(res.allLocksData);
-      });
     }
   }, [userAddress]);
   useEffect(() => {
@@ -178,24 +175,24 @@ export default function MyPortfolio() {
         setLocksPosition(res.allLocksData);
       });
     }
-  }, [lockOperation, isLoading]);
+  }, [isLoading, userAddress, lpTokenPrice]);
 
-  useEffect(() => {
-    if (
-      userAddress &&
-      Object.keys(lpTokenPrice).length !== 0 &&
-      Object.keys(tokenPrice).length !== 0
-    ) {
-      setStatsPosition({} as IPositionStatsResponse);
-      setPoolsPosition([] as IPositionsData[]);
-      getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
-        setStatsPosition(res);
-      });
-      getPositionsData(userAddress, lpTokenPrice).then((res) => {
-        setPoolsPosition(res.positionPoolsData);
-      });
-    }
-  }, [userAddress, lpTokenPrice]);
+  // useEffect(() => {
+  //   if (
+  //     userAddress &&
+  //     Object.keys(lpTokenPrice).length !== 0 &&
+  //     Object.keys(tokenPrice).length !== 0
+  //   ) {
+  //     setStatsPosition({} as IPositionStatsResponse);
+  //     setPoolsPosition([] as IPositionsData[]);
+  //     getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+  //       setStatsPosition(res);
+  //     });
+  //     getPositionsData(userAddress, lpTokenPrice).then((res) => {
+  //       setPoolsPosition(res.positionPoolsData);
+  //     });
+  //   }
+  // }, [userAddress, lpTokenPrice]);
 
   const resetAllValues = () => {
     setPlyInput("");
@@ -438,7 +435,7 @@ export default function MyPortfolio() {
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[54px] md:px-[40px] px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center">
+                <p className="flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] md:px-[40px] px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center">
                   Claim all
                 </p>
               </div>
@@ -455,7 +452,7 @@ export default function MyPortfolio() {
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[54px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
+                <p className="flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
                   Trade locks
                 </p>
               </div>

@@ -1,7 +1,8 @@
 import Image from "next/image";
 import * as React from "react";
 import { ConnectWalletBtnDeskTop } from "../Button/ConnectWalletDesktop";
-import myPostion from "../../assets/icon/common/myPosition.svg";
+import myPostion from "../../assets/icon/myPortfolio/portfolio-nav.svg";
+
 import plentyIcon from "../../assets/icon/common//plentyIcon.svg";
 import { Epoch } from "../Epoch";
 
@@ -40,9 +41,12 @@ export function TopNavBar(props: ITopNavBarProps) {
         <Epoch />
         <div className="flex flex-row gap-7 ">
           <div className="flex flex-row gap-3.5 ">
-            <Link className={`cursor-pointer hover:opacity-90 `} href={"/MyPortfolio"}>
-              <Image src={myPostion} className="cursor-pointer hover:opacity-90" />
-            </Link>
+            {/* <Link className={`cursor-pointer hover:opacity-90 `} href={"/MyPortfolio"}> */}
+            <span className="cursor-pointer hover:opacity-90 flex items-center border border-primary-750 bg-primary-850 px-[14px] h-[44px] rounded-xl mt-[10px]">
+              <Image src={myPostion} />
+              <span className="text-primary-500 font-body4 ml-1">My portfolio</span>
+            </span>
+            {/* </Link> */}
             <div className="my-1 flex items-center">
               <IconBTN image={"verticalline.svg"} />
             </div>
