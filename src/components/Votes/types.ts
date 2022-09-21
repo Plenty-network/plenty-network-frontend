@@ -44,6 +44,7 @@ export interface ICreateLockProps {
 }
 
 export interface IConfirmLockingProps {
+  ctaText?: string;
   show?: boolean;
   endDate: string;
   votingPower: number;

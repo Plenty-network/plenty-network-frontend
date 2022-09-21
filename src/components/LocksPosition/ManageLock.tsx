@@ -330,6 +330,7 @@ function ManageLock(props: IManageLockProps) {
               : props.IncreaseLockEndOperation
           }
           votingPower={votingPower}
+          ctaText={"Increase Lock"}
           endDate={
             props.lockingDate === "" ? dateFormat(props.manageData.endTimeStamp) : props.lockingDate
           }
