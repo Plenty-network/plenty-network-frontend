@@ -13,7 +13,7 @@ const Config: IConfig = {
     tezToolTokenPrice: 'https://api.teztools.io/token/prices',
   },
   RPC_NODES: {
-    testnet: 'https://ghostnet.smartpy.io/',
+    testnet: 'https://rpc.tzkt.io/ghostnet',
     mainnet: 'https://mifx20dfsr.windmill.tools/',
   },
   TZKT_NODES: {
@@ -35,11 +35,6 @@ const Config: IConfig = {
   PLY_TOKEN : {
     mainnet : '',
     testnet : 'KT1ArfQ6At3NhzMbiGwLzGtvekytjXq6Gy2G',
-  },
-
-  FEE_DISTRIBUTOR : {
-    mainnet : '',
-    testnet : 'KT1LvtCwLnW6qTZRQLzVTZx9jRDC1FKK6guq',
   },
 
   VE_INDEXER : 'https://veplyindexer.plentydefi.com/v1/',

@@ -15,7 +15,6 @@ export const tzktNode = Config.TZKT_NODES[connectedNetwork];
 export const voteEscrowAddress = Config.VOTE_ESCROW[connectedNetwork];
 export const voterAddress = Config.VOTER[connectedNetwork];
 export const veSwapAddress = Config.VE_SWAP[connectedNetwork];
-export const feeDistributorAddress = Config.FEE_DISTRIBUTOR[connectedNetwork];
 
 export function dappClient() {
   let instance: BeaconWallet | undefined
