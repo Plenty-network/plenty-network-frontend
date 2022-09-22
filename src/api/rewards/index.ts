@@ -42,16 +42,18 @@ export const getDepositedAmounts = (
  * @param tokenOneSymbol - Symbol of the first token of the selected pair
  * @param tokenTwoSymbol - Symbol of the second token of the selected pair
  * @param userTezosAddress - Tezos wallet address of the user
+ * @param ammAddress - Amm address of the pair selected (optional)
  */
 export const getRewards = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
-  userTezosAddress: string
+  userTezosAddress: string,
+  ammAddress?: string
 ): Promise<IRewardsResponse> => {
   try {
     const state = store.getState();
     const AMM = state.config.AMMs;
-    const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
+    const dexContractAddress = ammAddress || getDexAddress(tokenOneSymbol, tokenTwoSymbol);
     if (dexContractAddress === "false") {
       throw new Error("AMM does not exist for the selected pair.");
     }
