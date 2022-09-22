@@ -28,7 +28,7 @@ export function VotingPower(props: IPlyLockedProps) {
           {Number(props.value) > 0
             ? props.value.isLessThan(0.01)
               ? "<0.01"
-              : Number(nFormatter(props.value))
+              : nFormatter(props.value)
             : "0"}
         </div>
       </ToolTip>
