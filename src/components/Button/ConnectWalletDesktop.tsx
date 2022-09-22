@@ -20,7 +20,7 @@ export interface IConnectWalletBtnDeskTopProps {}
 
 export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
-  const isConnectWalletLoading = useAppSelector((state) => state.isLoadingWallet.isLoading);
+  const isConnectWalletLoading = useAppSelector((state) => state.walletLoading.isLoading);
 
   const dispatch = useAppDispatch();
   const reff = React.useRef(null);

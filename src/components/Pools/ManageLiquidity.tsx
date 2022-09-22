@@ -29,7 +29,6 @@ import {
   TOKEN_A_LIQ,
   TOKEN_B_LIQ,
 } from "../../constants/localStorage";
-import { setLoading } from "../../redux/isLoading/action";
 import { addLiquidity } from "../../operations/addLiquidity";
 import { removeLiquidity } from "../../operations/removeLiquidity";
 import { getLPTokenPrice } from "../../api/util/price";
@@ -43,6 +42,7 @@ import { ConfirmUnStakeLiquidity } from "./ConfirmUnstake";
 import { IVePLYData } from "../../api/stake/types";
 import { ELiquidityProcess } from "../../api/liquidity/types";
 import { ELocksState } from "../../api/votes/types";
+import { setIsLoadingWallet } from "../../redux/walletLoading";
 
 export interface IManageLiquidityProps {
   closeFn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -276,7 +276,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           : props.tokenOut.name
       } `
     );
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
 
@@ -297,7 +297,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
@@ -307,14 +307,14 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           setShowTransactionSubmitModal(false);
         }, 2000);
 
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       }
     });
   };
   const handleStakeOperation = () => {
     setContentTransaction(`Stake ${Number(stakeInput).toFixed(2)} PNLP`);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
 
@@ -335,7 +335,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
@@ -345,14 +345,14 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           setShowTransactionSubmitModal(false);
         }, 2000);
 
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       }
     });
   };
   const handleUnStakeOperation = () => {
     setContentTransaction(`Unstake ${Number(unStakeInput).toFixed(2)} PNLP`);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     // setStakingScreen(StakingScreenType.Unstaking);
     setScreen("1");
@@ -373,7 +373,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
@@ -383,14 +383,14 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           setShowTransactionSubmitModal(false);
         }, 2000);
 
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       }
     });
   };
   const handleRewardsOperation = () => {
     setContentTransaction(`Harvest `);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
     harvestRewards(
@@ -405,7 +405,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
@@ -414,14 +414,14 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           setShowTransactionSubmitModal(false);
         }, 2000);
 
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       }
     });
   };
   const handleRemoveLiquidityOperation = () => {
     setContentTransaction(`Burn ${Number(burnAmount).toFixed(2)} PNLP`);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
     removeLiquidity(
@@ -442,7 +442,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
@@ -452,7 +452,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           setShowTransactionSubmitModal(false);
         }, 2000);
 
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       }
     });

@@ -27,7 +27,7 @@ import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/b
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
 import { createLock } from "../../src/operations/locks";
-import { setLoading } from "../../src/redux/isLoading/action";
+import { setIsLoadingWallet } from "../../src/redux/walletLoading";
 import AllocationPopup from "../../src/components/Votes/AllocationPopup";
 import { InfoIconToolTip } from "../../src/components/Tooltip/InfoIconTooltip";
 import { IAllBalanceResponse } from "../../src/api/util/types";
@@ -268,7 +268,7 @@ export default function Vote() {
     setContentTransaction(`Locking ${plyInput} ply`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     createLock(
       userAddress,
       new BigNumber(plyInput),
@@ -289,7 +289,7 @@ export default function Vote() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       } else {
         setBalanceUpdate(true);
 
@@ -298,7 +298,7 @@ export default function Vote() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
@@ -306,7 +306,7 @@ export default function Vote() {
     setContentTransaction(`Casting vote`);
     setShowCastVoteModal(false);
     setShowConfirmTransaction(true);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setAlreadyVoted(true);
     const finalVotes = addRemainingVotesDust(selectedDropDown.votingPower, totalVotingPower, votes);
     vote(
@@ -330,7 +330,7 @@ export default function Vote() {
           setCastVoteOperation(false);
         }, 20000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       } else {
         setAlreadyVoted(false);
         setBalanceUpdate(true);
@@ -339,7 +339,7 @@ export default function Vote() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };

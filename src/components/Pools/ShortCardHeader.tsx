@@ -33,8 +33,6 @@ export function Tabs(props: ITabsProps) {
         props.TableName === "poolsRewards"
           ? props.index === 0
             ? "w-[200px]"
-            : props.index === 1
-            ? "ml-auto"
             : "w-[150px]"
           : props.TableName === "lockPosition"
           ? props.index === 0

@@ -31,6 +31,7 @@ import {
 import { store, useAppDispatch, useAppSelector } from "../../redux";
 import { setLoading } from "../../redux/isLoading/action";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { setIsLoadingWallet } from "../../redux/walletLoading";
 
 interface ISwapTabProps {
   className?: string;
@@ -140,7 +141,7 @@ function SwapTab(props: ISwapTabProps) {
     setConvert(!isConvert);
   };
   const handleConfirmSwap = () => {
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
 
     localStorage.setItem(
       TOKEN_A,
@@ -180,7 +181,7 @@ function SwapTab(props: ISwapTabProps) {
           props.setShowTransactionSubmitModal(false);
         }, 2000);
 
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       } else {
         props.setBalanceUpdate(true);
         props.resetAllValues;
@@ -189,7 +190,7 @@ function SwapTab(props: ISwapTabProps) {
           props.setShowTransactionSubmitModal(false);
         }, 2000);
 
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
