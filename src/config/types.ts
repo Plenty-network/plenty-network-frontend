@@ -31,7 +31,6 @@ export interface IConfig {
   VE_SWAP: { mainnet: string; testnet: string };
   VOTER: { mainnet: string; testnet: string };
   VOTE_ESCROW: { mainnet: string; testnet: string };
-  FEE_DISTRIBUTOR: { mainnet: string; testnet: string };
   VE_INDEXER : string;
   PLY_INDEXER : string;
   PLY_TOKEN: { mainnet: string; testnet: string };
