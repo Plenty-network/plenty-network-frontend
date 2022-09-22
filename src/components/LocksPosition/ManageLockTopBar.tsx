@@ -56,7 +56,7 @@ export function TopBar(props: ITopBar) {
               {Number(props.manageData.currentVotingPower) > 0
                 ? props.manageData.currentVotingPower.isLessThan(0.01)
                   ? "<0.01"
-                  : Number(nFormatter(props.manageData.currentVotingPower))
+                  : nFormatter(props.manageData.currentVotingPower)
                 : "0"}
             </div>
           </p>
@@ -66,7 +66,7 @@ export function TopBar(props: ITopBar) {
               {Number(props.manageData.baseValue) > 0
                 ? props.manageData.baseValue.isLessThan(0.01)
                   ? "<0.01"
-                  : Number(nFormatter(props.manageData.baseValue))
+                  : nFormatter(props.manageData.baseValue)
                 : "0"}{" "}
               PLY
             </div>

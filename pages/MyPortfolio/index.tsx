@@ -58,7 +58,6 @@ import {
 import { getLPTokenPrices, getTokenPrices } from "../../src/api/util/price";
 import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
 import WithdrawPly from "../../src/components/LocksPosition/WithdrawPopup";
-import { is } from "immer/dist/internal";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
