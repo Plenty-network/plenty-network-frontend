@@ -11,13 +11,13 @@ function StatsCard(props: IStatsCardProps) {
     <>
       <div
         className={clsx(
-          "h-[96px] py-4 px-6 border border-text-800/[0.5] flex bg-primary-150 rounded-xl"
+          "h-[96px] py-4 px-4 w-[277px] border border-text-800/[0.5] flex bg-primary-150 rounded-xl"
         )}
       >
         <p>
-          <div className="flex gap-2.5">
-            <p className="text-white font-body3 ">{props.title}</p>
+          <div className="flex gap-1 ">
             <Image src={info} />
+            <p className="text-white font-body1 ">{props.title}</p>
           </div>
           <div className="font-input-text1 text-white mt-2">
             {props.value}{" "}
@@ -26,8 +26,10 @@ function StatsCard(props: IStatsCardProps) {
             )}
           </div>
         </p>
-        <p className="ml-5">
-          <Image src={claim} />
+        <p className="ml-auto">
+          <div className="flex items-center md:font-title3-bold font-subtitle4 text-primary-500  h-[50px] px-5 bg-primary-500/[0.1] rounded-xl   justify-center">
+            Claim
+          </div>
         </p>
       </div>
     </>

@@ -105,7 +105,7 @@ export interface IMyVotesProps {
 }
 export interface IRewardsDataProps {
   className?: string;
-  bribes: number;
+  bribes: BigNumber;
   fees: number;
   token1Name: string;
   token2Name: string;

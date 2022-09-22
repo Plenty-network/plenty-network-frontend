@@ -58,6 +58,7 @@ import {
 import { getLPTokenPrices, getTokenPrices } from "../../src/api/util/price";
 import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
 import WithdrawPly from "../../src/components/LocksPosition/WithdrawPopup";
+import { is } from "immer/dist/internal";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -176,6 +177,7 @@ export default function MyPortfolio() {
       setPoolsPosition([] as IPositionsData[]);
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+          console.log(res);
           setStatsPosition(res);
         });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
@@ -183,16 +185,39 @@ export default function MyPortfolio() {
         });
       }
     }
-  }, [isLoading, userAddress, lpTokenPrice, activeSection, lockOperation]);
+  }, [userAddress, lpTokenPrice, activeSection]);
   useEffect(() => {
     if (userAddress) {
       setLocksPosition([] as IAllLocksPositionData[]);
       getAllLocksPositionData(userAddress).then((res) => {
         console.log(res);
-        setLocksPosition(res.allLocksData);
+        setLocksPosition(res.allLocksData.reverse());
       });
     }
-  }, [isLoading, userAddress, activeSection, lockOperation]);
+  }, [userAddress, activeSection]);
+  useEffect(() => {
+    console.log(lockOperation, isLoading);
+    //need to check and refactor
+
+    if (lockOperation && !isLoading) {
+      setLocksPosition([] as IAllLocksPositionData[]);
+      setStatsPosition({} as IPositionStatsResponse);
+      setPoolsPosition([] as IPositionsData[]);
+      getAllLocksPositionData(userAddress).then((res) => {
+        console.log(res);
+        setLocksPosition(res.allLocksData.reverse());
+      });
+      if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
+        getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+          console.log(res);
+          setStatsPosition(res);
+        });
+        getPositionsData(userAddress, lpTokenPrice).then((res) => {
+          setPoolsPosition(res.positionPoolsData);
+        });
+      }
+    }
+  }, [lockOperation, isLoading]);
 
   const resetAllValues = () => {
     setPlyInput("");
@@ -220,6 +245,7 @@ export default function MyPortfolio() {
         setBalanceUpdate(true);
         setTimeout(() => {
           dispatch(setLoading(false));
+          setLockOperation(true);
         }, 6000);
         setTimeout(() => {
           setLockOperation(false);
@@ -335,6 +361,7 @@ export default function MyPortfolio() {
       if (response.success) {
         setBalanceUpdate(true);
         setTimeout(() => {
+          dispatch(setLoading(false));
           setLockOperation(true);
         }, 6000);
         setTimeout(() => {
@@ -373,6 +400,7 @@ export default function MyPortfolio() {
       if (response.success) {
         setBalanceUpdate(true);
         setTimeout(() => {
+          dispatch(setLoading(false));
           setLockOperation(true);
         }, 6000);
         setTimeout(() => {
@@ -503,7 +531,30 @@ export default function MyPortfolio() {
                 setShowWithdraw={setShowWithdraw}
               />
             </>
-          ) : null)}
+          ) : (
+            <>
+              <div className="flex md:px-[25px] px-4 mt-5">
+                <p>
+                  <div className="text-white font-title3">List of my locks</div>
+                  <div className="text-text-250 font-body1">
+                    Discover veNFTs on the largest NFT marketplace on Tezos.
+                  </div>
+                </p>
+                <p className="flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center">
+                  Claim all
+                </p>
+              </div>
+              <div className="border-b border-text-800/[0.5] mt-[15px]"></div>
+              <LocksTablePosition
+                className="md:px-5 md:py-4   py-4"
+                locksPosition={locksPosition}
+                setIsManageLock={setIsManageLock}
+                setShowCreateLockModal={setShowCreateLockModal}
+                setManageData={setManageData}
+                setShowWithdraw={setShowWithdraw}
+              />
+            </>
+          ))}
       </SideBarHOC>
       {isManageLock && (
         <ManageLock
