@@ -121,7 +121,10 @@ const Table = <D extends object>({
           {headerGroups.map((headerGroup, index) => (
             <tr
               key={`headerGroup_${index}`}
-              className="border border-borderCommon bg-cardBackGround flex md:pr-5 md:pl-11 md:py-3 px-1 py-3  items-center rounded-t-xl	rounded-b "
+              className={clsx(
+                "border border-borderCommon bg-cardBackGround flex md:pr-5 md:pl-11 md:py-3 px-1 py-3  items-center rounded-t-xl	rounded-b ",
+                TableName === "poolsRewards" && "justify-between"
+              )}
             >
               {headerGroup.headers.map((column, i) => (
                 <Tabs
@@ -167,7 +170,9 @@ const Table = <D extends object>({
                 return (
                   // eslint-disable-next-line react/jsx-key
                   <tr
-                    className={`border border-borderCommon  bg-cardBackGround flex md:pr-3 md:pl-11 md:py-3 px-1 py-1 items-center  rounded-lg slideFromTop `}
+                    className={`border border-borderCommon  bg-cardBackGround flex md:pr-3 md:pl-11 md:py-3 px-1 py-1 items-center  rounded-lg slideFromTop ${
+                      TableName === "poolsRewards" && "justify-between"
+                    }`}
                   >
                     {row.cells.map((cell: any, i: any) => {
                       return (
@@ -211,10 +216,9 @@ const Table = <D extends object>({
                               : i === 0
                               ? "w-[150px]"
                               : " flex-1"
-                          } ${
-                            (TableName === "poolsPosition" && i === 5 && "ml-auto") ||
-                            (TableName === "poolsRewards" && i == 1 && "ml-auto")
-                          } ${i === 0 && "pl-3  md:pl-0"}`}
+                          } ${TableName === "poolsPosition" && i === 5 && "ml-auto"} ${
+                            i === 0 && "pl-3  md:pl-0"
+                          }`}
                         >
                           {cell.render("Cell")}
                         </td>

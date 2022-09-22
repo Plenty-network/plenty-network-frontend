@@ -38,7 +38,7 @@ export function MyPortfolioCardHeader(props: ICardHeaderProps) {
   return (
     <div className="flex md:justify-between justify-center border-b border-b-borderCommon  ">
       <div
-        className={`${props.className} flex justify-center items-center border-b border-b-borderCommon md:justify-start w-full md:w-max  md:px-0 justify-between `}
+        className={`${props.className} flex justify-center items-center border-b border-b-borderCommon md:justify-start w-full md:w-max  md:px-[24px] justify-between `}
       >
         {PoolsHeaderCard("Pools", 0, "")}
         {PoolsHeaderCard("Locks", 1, "")}

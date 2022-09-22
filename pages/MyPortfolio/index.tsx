@@ -24,14 +24,13 @@ import {
   MyPortfolioHeader,
 } from "../../src/components/Positions/Header";
 import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTable";
-import { votesPageDataWrapper } from "../../src/api/votes";
-import { IVotePageData } from "../../src/api/votes/types";
+import { getVeNFTsList, votesPageDataWrapper } from "../../src/api/votes";
+import { IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 import { IAllBalanceResponse, ILpTokenPriceList, ITokenPriceList } from "../../src/api/util/types";
 import CreateLock from "../../src/components/Votes/CreateLock";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
-import { setLoading } from "../../src/redux/isLoading/action";
 import {
   createLock,
   increaseLockAndValue,
@@ -58,6 +57,10 @@ import {
 import { getLPTokenPrices, getTokenPrices } from "../../src/api/util/price";
 import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
 import WithdrawPly from "../../src/components/LocksPosition/WithdrawPopup";
+import { setIsLoadingWallet } from "../../src/redux/walletLoading";
+import SelectNFT from "../../src/components/Votes/SelectNFT";
+import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
+import { LocksTableRewards } from "../../src/components/LocksRewards/LocksRewardsTable";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -70,19 +73,21 @@ export default function MyPortfolio() {
     MyPortfolioSection.Positions
   );
   const userAddress = store.getState().wallet.address;
-  const isLoading = store.getState().isLoadingWallet.isLoading;
+  const isLoading = store.getState().walletLoading.isLoading;
+  const operationSuccesful = store.getState().walletLoading.operationSuccesful;
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const amm = useAppSelector((state) => state.config.AMMs);
+
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
   const [isManageLock, setIsManageLock] = useState(false);
   const [plyInput, setPlyInput] = useState("");
+  const selectedDropDown = store.getState().veNFT.selectedDropDown;
   const [updatedPlyVoteValue, setUpdatedPlyVoteValue] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [showWithdraw, setShowWithdraw] = useState(false);
-
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [lockingDate, setLockingDate] = useState("");
   const tokenPrice = store.getState().tokenPrice.tokenPrice;
@@ -94,12 +99,16 @@ export default function MyPortfolio() {
     selected: 0,
     lockingDate: 0,
   });
+  const [searchValue, setSearchValue] = useState("");
+  const [selectednft, setSelectednft] = useState(selectedDropDown);
+  const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   const [contentTransaction, setContentTransaction] = useState("");
   const [plyBalance, setPlyBalance] = useState(new BigNumber(0));
   const [poolsPosition, setPoolsPosition] = useState<IPositionsData[]>([] as IPositionsData[]);
   const [locksPosition, setLocksPosition] = useState<IAllLocksPositionData[]>(
     [] as IAllLocksPositionData[]
   );
+  const currentEpoch = store.getState().epoch.currentEpoch;
 
   const [lockOperation, setLockOperation] = useState(false);
   useEffect(() => {
@@ -170,8 +179,6 @@ export default function MyPortfolio() {
   };
   useEffect(() => {
     if (userAddress) {
-      console.log(isLoading, userAddress, lpTokenPrice);
-
       setStatsPosition({} as IPositionStatsResponse);
       setPoolsPosition([] as IPositionsData[]);
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
@@ -186,6 +193,16 @@ export default function MyPortfolio() {
     }
   }, [userAddress, lpTokenPrice, activeSection]);
   useEffect(() => {
+    //setVeNFTlist([]);
+    if (userAddress) {
+      getVeNFTsList(userAddress, currentEpoch?.epochNumber).then((res) => {
+        setVeNFTlist(res.veNFTData);
+      });
+    } else {
+      setVeNFTlist([]);
+    }
+  }, [userAddress, currentEpoch?.epochNumber]);
+  useEffect(() => {
     if (userAddress) {
       setLocksPosition([] as IAllLocksPositionData[]);
       getAllLocksPositionData(userAddress).then((res) => {
@@ -195,10 +212,8 @@ export default function MyPortfolio() {
     }
   }, [userAddress, activeSection]);
   useEffect(() => {
-    console.log(lockOperation, isLoading);
-    //need to check and refactor
-
-    if (lockOperation && !isLoading) {
+    console.log(isLoading, operationSuccesful);
+    if (!isLoading && operationSuccesful) {
       setLocksPosition([] as IAllLocksPositionData[]);
       setStatsPosition({} as IPositionStatsResponse);
       setPoolsPosition([] as IPositionsData[]);
@@ -216,7 +231,7 @@ export default function MyPortfolio() {
         });
       }
     }
-  }, [lockOperation, isLoading]);
+  }, [operationSuccesful, isLoading]);
 
   const resetAllValues = () => {
     setPlyInput("");
@@ -233,7 +248,7 @@ export default function MyPortfolio() {
     setContentTransaction(`Withdraw ${manageData.baseValue.toNumber()} ply`);
     setShowWithdraw(false);
     setShowConfirmTransaction(true);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     withdrawLock(
       manageData.tokenId.toNumber(),
       transactionSubmitModal,
@@ -243,9 +258,9 @@ export default function MyPortfolio() {
       if (response.success) {
         setBalanceUpdate(true);
         setTimeout(() => {
-          dispatch(setLoading(false));
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 6000);
+        }, 2000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -261,7 +276,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
@@ -269,7 +284,7 @@ export default function MyPortfolio() {
     setContentTransaction(`Locking ${plyInput} ply`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     createLock(
       userAddress,
       new BigNumber(plyInput),
@@ -281,8 +296,9 @@ export default function MyPortfolio() {
       if (response.success) {
         setBalanceUpdate(true);
         setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 6000);
+        }, 2000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -290,7 +306,6 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
       } else {
         setBalanceUpdate(true);
 
@@ -299,7 +314,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
@@ -309,7 +324,7 @@ export default function MyPortfolio() {
     setShowCreateLockModal(false);
 
     setShowConfirmTransaction(true);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     increaseLockAndValue(
       manageData.tokenId.toNumber(),
       new BigNumber(plyInput),
@@ -321,8 +336,9 @@ export default function MyPortfolio() {
       if (response.success) {
         setBalanceUpdate(true);
         setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 6000);
+        }, 2000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -330,7 +346,6 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
       } else {
         setBalanceUpdate(true);
 
@@ -339,7 +354,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
@@ -349,7 +364,7 @@ export default function MyPortfolio() {
     setContentTransaction(`Increase lock`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     increaseLockEnd(
       manageData.tokenId.toNumber(),
       new BigNumber(lockingEndData.lockingDate),
@@ -360,9 +375,9 @@ export default function MyPortfolio() {
       if (response.success) {
         setBalanceUpdate(true);
         setTimeout(() => {
-          dispatch(setLoading(false));
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 6000);
+        }, 2000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -370,7 +385,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       } else {
         setBalanceUpdate(true);
 
@@ -379,7 +394,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
@@ -388,7 +403,7 @@ export default function MyPortfolio() {
     setContentTransaction(`Increase lock`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     increaseLockValue(
       manageData.tokenId.toNumber(),
       new BigNumber(updatedPlyVoteValue),
@@ -399,9 +414,9 @@ export default function MyPortfolio() {
       if (response.success) {
         setBalanceUpdate(true);
         setTimeout(() => {
-          dispatch(setLoading(false));
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 6000);
+        }, 2000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -409,7 +424,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       } else {
         setBalanceUpdate(true);
 
@@ -418,7 +433,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
@@ -481,11 +496,11 @@ export default function MyPortfolio() {
           </div>
         </div>
         <div className="border-t border-text-800/[0.5] mt-5"></div>
-        <div className=" md:px-[24px]">
+        <div className=" ">
           <MyPortfolioCardHeader
             activeStateTab={activeStateTab}
             setActiveStateTab={setActiveStateTab}
-            className="md:px-3"
+            className=""
           />
         </div>
         {activeStateTab === MyPortfolioHeader.Pools &&
@@ -543,15 +558,26 @@ export default function MyPortfolio() {
                   Claim all
                 </p>
               </div>
+
               <div className="border-b border-text-800/[0.5] mt-[15px]"></div>
-              <LocksTablePosition
-                className="md:px-5 md:py-4   py-4"
-                locksPosition={locksPosition}
-                setIsManageLock={setIsManageLock}
-                setShowCreateLockModal={setShowCreateLockModal}
-                setManageData={setManageData}
-                setShowWithdraw={setShowWithdraw}
-              />
+              <div className="flex items-center px-3 md:px-0 py-2 md:py-3 ">
+                <div>
+                  <SelectNFT
+                    veNFTlist={veNFTlist}
+                    selectedText={selectedDropDown}
+                    setSelectedDropDown={setSelectednft}
+                  />
+                </div>
+                <div className="ml-auto ">
+                  <InputSearchBox
+                    className=""
+                    value={searchValue}
+                    onChange={setSearchValue}
+                    width={"md:w-245px xl:w-[260px]"}
+                  />
+                </div>
+              </div>
+              <LocksTableRewards className="md:px-5 md:pb-4   " voteData={voteData} />
             </>
           ))}
       </SideBarHOC>
