@@ -64,6 +64,8 @@ import { setIsLoadingWallet } from "../../src/redux/walletLoading";
 import SelectNFT from "../../src/components/Votes/SelectNFT";
 import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
 import { LocksTableRewards } from "../../src/components/LocksRewards/LocksRewardsTable";
+import ClaimAll from "../../src/components/Rewards/ClaimAll";
+import { harvestAllRewards } from "../../src/operations/rewards";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -77,9 +79,9 @@ function MyPortfolio(props: any) {
   );
   const userAddress = store.getState().wallet.address;
   //const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv";
-  // const isLoading = store.getState().walletLoading.isLoading;
-  // const operationSuccesful = store.getState().walletLoading.operationSuccesful;
   const dispatch = useDispatch<AppDispatch>();
+
+  const [showClaimAllPly, setShowClaimAllPly] = React.useState(false);
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
@@ -276,7 +278,7 @@ function MyPortfolio(props: any) {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 2000);
+        }, 6000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -354,7 +356,7 @@ function MyPortfolio(props: any) {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 4000);
+        }, 6000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -393,7 +395,7 @@ function MyPortfolio(props: any) {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 4000);
+        }, 6000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -401,7 +403,7 @@ function MyPortfolio(props: any) {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        //dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       } else {
         setBalanceUpdate(true);
 
@@ -432,7 +434,7 @@ function MyPortfolio(props: any) {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 4000);
+        }, 6000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -440,7 +442,42 @@ function MyPortfolio(props: any) {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
+  const handleClaimAll = () => {
+    setShowClaimAllPly(false);
+    setContentTransaction(`Claim All ply`);
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    harvestAllRewards(
+      poolsRewards.gaugeAddresses,
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          setLockOperation(true);
+        }, 6000);
+        setTimeout(() => {
+          setLockOperation(false);
+        }, 20000);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
       } else {
         setBalanceUpdate(true);
 
@@ -507,7 +544,10 @@ function MyPortfolio(props: any) {
                 statsPositions={statsPositions}
               />
             ) : (
-              <StatsRewards plyEmission={poolsRewards.gaugeEmissionsTotal} />
+              <StatsRewards
+                plyEmission={poolsRewards.gaugeEmissionsTotal}
+                setShowClaimAllPly={setShowClaimAllPly}
+              />
             )}
           </div>
         </div>
@@ -531,7 +571,10 @@ function MyPortfolio(props: any) {
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
+                <p
+                  className="cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center"
+                  onClick={() => setShowClaimAllPly(true)}
+                >
                   Claim all
                 </p>
               </div>
@@ -551,7 +594,7 @@ function MyPortfolio(props: any) {
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
+                <p className="cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
                   Trade locks
                 </p>
               </div>
@@ -573,7 +616,10 @@ function MyPortfolio(props: any) {
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center">
+                <p
+                  className="cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center"
+                  onClick={() => setShowClaimAllPly(true)}
+                >
                   Claim all
                 </p>
               </div>
@@ -667,6 +713,16 @@ function MyPortfolio(props: any) {
             transactionId ? () => window.open(`https://tzkt.io/${transactionId}`, "_blank") : null
           }
           content={contentTransaction}
+        />
+      )}
+      {showClaimAllPly && (
+        <ClaimAll
+          show={showClaimAllPly}
+          setShow={setShowClaimAllPly}
+          data={poolsRewards.poolsRewardsData}
+          totalValue={poolsRewards.gaugeEmissionsTotal}
+          tokenPrice={tokenPrice}
+          handleClaimAll={handleClaimAll}
         />
       )}
     </>
