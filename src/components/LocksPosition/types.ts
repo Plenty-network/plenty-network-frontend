@@ -3,6 +3,7 @@ import { BigNumber } from "bignumber.js";
 import { IAllLocksPositionData } from "../../api/portfolio/types";
 
 export interface ILocksTablePosition {
+  setShowWithdraw: React.Dispatch<React.SetStateAction<boolean>>;
   setManageData: React.Dispatch<React.SetStateAction<IAllLocksPositionData>>;
   locksPosition: IAllLocksPositionData[];
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,8 +23,11 @@ export interface IManageBtnProps {
 }
 
 export interface IVoteBtnProps {
+  setWithdraw: React.Dispatch<React.SetStateAction<boolean>>;
   id: number;
   locksState: ELocksState;
+  manageData: IAllLocksPositionData;
+  setManageData: React.Dispatch<React.SetStateAction<IAllLocksPositionData>>;
 }
 export interface ILocksColumnProps {
   id: BigNumber;

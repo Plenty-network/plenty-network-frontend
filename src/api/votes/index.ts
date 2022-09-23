@@ -134,6 +134,8 @@ export const votingPower = async (tokenId: number, ts2: number, time: number): P
 
 const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataResponse> => {
   try {
+    const state = store.getState();
+    const TOKENS = state.config.tokens;
     const bribes = await axios.get(`${Config.VE_INDEXER}bribes?epoch=${epoch}`);
     const bribesData: IBribesResponse[] = bribes.data;
 
@@ -167,11 +169,15 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
         bribe = new BigNumber(0);
       } else {
         for (var y of x.bribes) {
-          bribe = bribe.plus(new BigNumber(new BigNumber(y.value).multipliedBy(y.price)));
+          bribe = bribe.plus(
+            new BigNumber(y.value)
+              .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+              .multipliedBy(y.price)
+          );
           bribes.push({
             name: y.name,
-            value: new BigNumber(y.value),
-            price : new BigNumber(y.price)
+            value: new BigNumber(y.value).dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals)),
+            price: new BigNumber(y.price),
           });
         }
       }

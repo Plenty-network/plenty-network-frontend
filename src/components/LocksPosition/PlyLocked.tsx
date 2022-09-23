@@ -28,7 +28,7 @@ export function PlyLocked(props: IPlyLockedProps) {
           {Number(props.value) > 0
             ? props.value.isLessThan(0.01)
               ? "<0.01"
-              : Number(nFormatter(props.value))
+              : nFormatter(props.value)
             : "0"}
         </div>
         <div className="mt-0.5 text-text-500 font-body3">PLY</div>

@@ -67,3 +67,21 @@ export interface IAllLocksPositionResponse {
   allLocksData: IAllLocksPositionData[];
   error?: string;
 }
+
+export interface IPoolsRewardsData {
+  tokenOneSymbol: string;
+  tokenTwoSymbol: string;
+  ammAddress: string;
+  ammType: AMM_TYPE;
+  gaugeAddress: string | undefined;
+  gaugeEmission: BigNumber;
+  boostValue: BigNumber;
+}
+
+export interface IPoolsRewardsResponse {
+  success: boolean;
+  gaugeEmissionsTotal: BigNumber;
+  poolsRewardsData: IPoolsRewardsData[];
+  gaugeAddresses: string[];
+  error?: string;
+}

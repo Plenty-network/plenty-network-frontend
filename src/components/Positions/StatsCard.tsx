@@ -16,14 +16,14 @@ function StatsCard(props: IStatsCardProps) {
         )}
       >
         <p>
-          <div className="flex gap-2.5">
+          <div className="flex gap-1">
             {props.isLast && <Image src={ply} />}
-            <p className="text-white font-body3 ">{props.title}</p>
             <Image src={info} />
+            <p className="text-white font-body3 ">{props.title}</p>
           </div>
           <div className="font-input-text1 text-white mt-2">
             {props.value === undefined || Number(props.value) <= 0 ? (
-              <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+              <p className=" my-[4px] w-[60px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
             ) : (
               props.value?.toString()
             )}

@@ -11,6 +11,7 @@ import { IAMM, IAmmContracts } from '../../config/types';
 import { getPnlpBalance, getStakedBalance } from '../util/balance';
 import Config from '../../config/config';
 import { EMPTY_POOLS_OBJECT } from '../../constants/global';
+import { store } from '../../redux';
 
 export const poolsDataWrapper = async (
   address: string | undefined,
@@ -21,8 +22,9 @@ export const poolsDataWrapper = async (
 }> => {
   try {
     // TODO : UnComment when launching
-    // const state = store.getState();
+    const state = store.getState();
     // const AMMS = state.config.AMMs;
+    const TOKENS = state.config.tokens;
 
     // TODO: Remove this get call
     const AMMResponse = await axios.get(
@@ -70,14 +72,14 @@ export const poolsDataWrapper = async (
       } else {
         for (var y of poolData.bribes) {
           bribe = bribe.plus(
-            new BigNumber(
-              new BigNumber(y.value).multipliedBy(y.price)
-            )
+            new BigNumber(y.value)
+              .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+              .multipliedBy(y.price)
           );
           bribes.push({
             name: y.name,
-            value: new BigNumber(y.value),
-            price : new BigNumber(y.price)
+            value: new BigNumber(y.value).dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals)),
+            price: new BigNumber(y.price),
           });
         }
       }

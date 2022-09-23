@@ -35,7 +35,7 @@ export function MyVotesValue(props: IMyVotesValueProps) {
               {Number(props.myVotes) > 0
                 ? props.myVotes.isLessThan(0.01)
                   ? "<0.01"
-                  : Number(nFormatter(props.myVotes))
+                  : nFormatter(props.myVotes)
                 : "-"}
             </span>
           </div>

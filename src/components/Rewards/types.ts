@@ -1,3 +1,4 @@
+import { BigNumber } from "bignumber.js";
 export interface IStatsProps {}
 export interface IStatsCardProps {
   setShowCreateLockModal?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -5,4 +6,7 @@ export interface IStatsCardProps {
   value?: string;
   subValue?: string;
   isLast?: boolean;
+}
+export interface IStatsRewardsProps {
+  plyEmission: BigNumber;
 }

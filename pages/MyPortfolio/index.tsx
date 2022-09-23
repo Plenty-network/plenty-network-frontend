@@ -1,10 +1,11 @@
 import Head from "next/head";
 import Image from "next/image";
+import PropTypes from "prop-types";
 import * as React from "react";
 import { BigNumber } from "bignumber.js";
 import { useEffect, useState, useRef } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
-import { useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../src/redux";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
@@ -24,19 +25,19 @@ import {
   MyPortfolioHeader,
 } from "../../src/components/Positions/Header";
 import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTable";
-import { votesPageDataWrapper } from "../../src/api/votes";
-import { IVotePageData } from "../../src/api/votes/types";
+import { getVeNFTsList, votesPageDataWrapper } from "../../src/api/votes";
+import { IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 import { IAllBalanceResponse, ILpTokenPriceList, ITokenPriceList } from "../../src/api/util/types";
 import CreateLock from "../../src/components/Votes/CreateLock";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
-import { setLoading } from "../../src/redux/isLoading/action";
 import {
   createLock,
   increaseLockAndValue,
   increaseLockEnd,
   increaseLockValue,
+  withdrawLock,
 } from "../../src/operations/locks";
 import { LocksTablePosition } from "../../src/components/LocksPosition/LocksTable";
 import clsx from "clsx";
@@ -46,21 +47,28 @@ import { PoolsTableRewards } from "../../src/components/PoolsRewards/poolsReward
 import ManageLock from "../../src/components/LocksPosition/ManageLock";
 import {
   getAllLocksPositionData,
+  getPoolsRewardsData,
   getPositionsData,
   getPositionStatsData,
 } from "../../src/api/portfolio/kiran";
 import {
   IAllLocksPositionData,
+  IPoolsRewardsResponse,
   IPositionsData,
   IPositionStatsResponse,
 } from "../../src/api/portfolio/types";
 import { getLPTokenPrices, getTokenPrices } from "../../src/api/util/price";
 import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
+import WithdrawPly from "../../src/components/LocksPosition/WithdrawPopup";
+import { setIsLoadingWallet } from "../../src/redux/walletLoading";
+import SelectNFT from "../../src/components/Votes/SelectNFT";
+import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
+import { LocksTableRewards } from "../../src/components/LocksRewards/LocksRewardsTable";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
 }
-export default function MyPortfolio() {
+function MyPortfolio(props: any) {
   const [activeStateTab, setActiveStateTab] = React.useState<MyPortfolioHeader>(
     MyPortfolioHeader.Pools
   );
@@ -68,17 +76,22 @@ export default function MyPortfolio() {
     MyPortfolioSection.Positions
   );
   const userAddress = store.getState().wallet.address;
-  const isLoading = store.getState().isLoadingWallet.isLoading;
+  //const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv";
+  // const isLoading = store.getState().walletLoading.isLoading;
+  // const operationSuccesful = store.getState().walletLoading.operationSuccesful;
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const amm = useAppSelector((state) => state.config.AMMs);
+
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
   const [isManageLock, setIsManageLock] = useState(false);
   const [plyInput, setPlyInput] = useState("");
+  const selectedDropDown = store.getState().veNFT.selectedDropDown;
   const [updatedPlyVoteValue, setUpdatedPlyVoteValue] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
+  const [showWithdraw, setShowWithdraw] = useState(false);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [lockingDate, setLockingDate] = useState("");
   const tokenPrice = store.getState().tokenPrice.tokenPrice;
@@ -90,12 +103,19 @@ export default function MyPortfolio() {
     selected: 0,
     lockingDate: 0,
   });
+  const [searchValue, setSearchValue] = useState("");
+  const [selectednft, setSelectednft] = useState(selectedDropDown);
+  const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   const [contentTransaction, setContentTransaction] = useState("");
   const [plyBalance, setPlyBalance] = useState(new BigNumber(0));
   const [poolsPosition, setPoolsPosition] = useState<IPositionsData[]>([] as IPositionsData[]);
+  const [poolsRewards, setPoolsRewards] = useState<IPoolsRewardsResponse>(
+    {} as IPoolsRewardsResponse
+  );
   const [locksPosition, setLocksPosition] = useState<IAllLocksPositionData[]>(
     [] as IAllLocksPositionData[]
   );
+  const currentEpoch = store.getState().epoch.currentEpoch;
 
   const [lockOperation, setLockOperation] = useState(false);
   useEffect(() => {
@@ -136,6 +156,12 @@ export default function MyPortfolio() {
     {} as IPositionStatsResponse
   );
   useEffect(() => {
+    votesPageDataWrapper(934, undefined).then((res) => {
+      setVoteData(res.allData);
+    });
+  }, []);
+
+  useEffect(() => {
     if (userAddress) {
       getUserBalanceByRpc("PLY", userAddress).then((res) => {
         setPlyBalance(res.balance);
@@ -160,53 +186,121 @@ export default function MyPortfolio() {
   };
   useEffect(() => {
     if (userAddress) {
-      setLocksPosition([] as IAllLocksPositionData[]);
       setStatsPosition({} as IPositionStatsResponse);
       setPoolsPosition([] as IPositionsData[]);
+      setPoolsRewards({} as IPoolsRewardsResponse);
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+          console.log(res);
           setStatsPosition(res);
         });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
+          console.log(res);
           setPoolsPosition(res.positionPoolsData);
         });
       }
+      if (Object.keys(tokenPrice).length !== 0) {
+        getPoolsRewardsData(userAddress, tokenPrice).then((res) => {
+          console.log(res);
+          setPoolsRewards(res);
+        });
+      }
+    }
+  }, [userAddress, lpTokenPrice]);
+  useEffect(() => {
+    //setVeNFTlist([]);
+    if (userAddress) {
+      getVeNFTsList(userAddress, currentEpoch?.epochNumber).then((res) => {
+        setVeNFTlist(res.veNFTData);
+      });
+    } else {
+      setVeNFTlist([]);
+    }
+  }, [userAddress, currentEpoch?.epochNumber]);
+  useEffect(() => {
+    if (userAddress) {
+      setLocksPosition([] as IAllLocksPositionData[]);
       getAllLocksPositionData(userAddress).then((res) => {
-        setLocksPosition(res.allLocksData);
+        console.log(res);
+        setLocksPosition(res.allLocksData.reverse());
       });
     }
-  }, [isLoading, userAddress, lpTokenPrice]);
-
-  // useEffect(() => {
-  //   if (
-  //     userAddress &&
-  //     Object.keys(lpTokenPrice).length !== 0 &&
-  //     Object.keys(tokenPrice).length !== 0
-  //   ) {
-  //     setStatsPosition({} as IPositionStatsResponse);
-  //     setPoolsPosition([] as IPositionsData[]);
-  //     getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
-  //       setStatsPosition(res);
-  //     });
-  //     getPositionsData(userAddress, lpTokenPrice).then((res) => {
-  //       setPoolsPosition(res.positionPoolsData);
-  //     });
-  //   }
-  // }, [userAddress, lpTokenPrice]);
+  }, [userAddress, activeSection, currentEpoch?.epochNumber]);
+  useEffect(() => {
+    console.log(props.isLoading, props.operationSuccesful);
+    if (!props.isLoading && props.operationSuccesful) {
+      setLocksPosition([] as IAllLocksPositionData[]);
+      setStatsPosition({} as IPositionStatsResponse);
+      setPoolsPosition([] as IPositionsData[]);
+      getAllLocksPositionData(userAddress).then((res) => {
+        console.log(res);
+        setLocksPosition(res.allLocksData.reverse());
+      });
+      if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
+        getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+          console.log(res);
+          setStatsPosition(res);
+        });
+        getPositionsData(userAddress, lpTokenPrice).then((res) => {
+          console.log(res);
+          setPoolsPosition(res.positionPoolsData);
+        });
+      }
+    }
+  }, [props.operationSuccesful, props.isLoading]);
 
   const resetAllValues = () => {
     setPlyInput("");
     setLockingDate("");
+
+    setUpdatedPlyVoteValue("");
     setLockingEndData({
       selected: 0,
       lockingDate: 0,
+    });
+  };
+
+  const handleWithdrawOperation = () => {
+    setContentTransaction(`Withdraw ${manageData.baseValue.toNumber()} ply`);
+    setShowWithdraw(false);
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    withdrawLock(
+      manageData.tokenId.toNumber(),
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          setLockOperation(true);
+        }, 2000);
+        setTimeout(() => {
+          setLockOperation(false);
+        }, 20000);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
     });
   };
   const handleLockOperation = () => {
     setContentTransaction(`Locking ${plyInput} ply`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     createLock(
       userAddress,
       new BigNumber(plyInput),
@@ -218,6 +312,7 @@ export default function MyPortfolio() {
       if (response.success) {
         setBalanceUpdate(true);
         setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
         }, 6000);
         setTimeout(() => {
@@ -227,7 +322,6 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
       } else {
         setBalanceUpdate(true);
 
@@ -236,7 +330,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
@@ -246,7 +340,7 @@ export default function MyPortfolio() {
     setShowCreateLockModal(false);
 
     setShowConfirmTransaction(true);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     increaseLockAndValue(
       manageData.tokenId.toNumber(),
       new BigNumber(plyInput),
@@ -258,8 +352,9 @@ export default function MyPortfolio() {
       if (response.success) {
         setBalanceUpdate(true);
         setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 6000);
+        }, 4000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -267,7 +362,6 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
       } else {
         setBalanceUpdate(true);
 
@@ -276,7 +370,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
@@ -286,7 +380,7 @@ export default function MyPortfolio() {
     setContentTransaction(`Increase lock`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     increaseLockEnd(
       manageData.tokenId.toNumber(),
       new BigNumber(lockingEndData.lockingDate),
@@ -297,8 +391,9 @@ export default function MyPortfolio() {
       if (response.success) {
         setBalanceUpdate(true);
         setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 6000);
+        }, 4000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -306,7 +401,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       } else {
         setBalanceUpdate(true);
 
@@ -315,7 +410,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
@@ -324,7 +419,7 @@ export default function MyPortfolio() {
     setContentTransaction(`Increase lock`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
-    dispatch(setLoading(true));
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     increaseLockValue(
       manageData.tokenId.toNumber(),
       new BigNumber(updatedPlyVoteValue),
@@ -335,8 +430,9 @@ export default function MyPortfolio() {
       if (response.success) {
         setBalanceUpdate(true);
         setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 6000);
+        }, 4000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -344,7 +440,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       } else {
         setBalanceUpdate(true);
 
@@ -353,7 +449,7 @@ export default function MyPortfolio() {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
-        dispatch(setLoading(false));
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
@@ -370,10 +466,10 @@ export default function MyPortfolio() {
           <div className="flex gap-1">
             <p
               className={clsx(
-                " font-title3 cursor-pointer md:h-[40px] h-[52px] px-[24px] flex items-center  rounded-lg gap-1",
+                " font-title3 cursor-pointer h-[50px] px-[24px] flex items-center   gap-1",
                 activeSection === MyPortfolioSection.Positions
-                  ? "text-primary-500 bg-primary-500/[0.1]"
-                  : "text-text-250"
+                  ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
+                  : "text-text-250 bg-muted-700"
               )}
               onClick={() => setActiveSection(MyPortfolioSection.Positions)}
             >
@@ -386,10 +482,10 @@ export default function MyPortfolio() {
             </p>
             <p
               className={clsx(
-                "rounded-lg cursor-pointer font-title3  md:h-[40px] h-[52px] px-[24px] flex items-center gap-1",
+                " cursor-pointer font-title3  h-[50px] px-[24px] flex items-center gap-1",
                 activeSection === MyPortfolioSection.Rewards
-                  ? "text-primary-500 bg-primary-500/[0.1]"
-                  : "text-text-250"
+                  ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
+                  : "text-text-250 bg-muted-700"
               )}
               onClick={() => setActiveSection(MyPortfolioSection.Rewards)}
             >
@@ -411,16 +507,16 @@ export default function MyPortfolio() {
                 statsPositions={statsPositions}
               />
             ) : (
-              <StatsRewards />
+              <StatsRewards plyEmission={poolsRewards.gaugeEmissionsTotal} />
             )}
           </div>
         </div>
         <div className="border-t border-text-800/[0.5] mt-5"></div>
-        <div className=" md:px-[24px]">
+        <div className=" ">
           <MyPortfolioCardHeader
             activeStateTab={activeStateTab}
             setActiveStateTab={setActiveStateTab}
-            className="md:px-3"
+            className=""
           />
         </div>
         {activeStateTab === MyPortfolioHeader.Pools &&
@@ -435,11 +531,14 @@ export default function MyPortfolio() {
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] md:px-[40px] px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center">
+                <p className="flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
                   Claim all
                 </p>
               </div>
-              <PoolsTableRewards className="md:px-5 md:py-4   py-4" voteData={voteData} />
+              <PoolsTableRewards
+                className="md:px-5 md:py-4   py-4"
+                poolsData={poolsRewards.poolsRewardsData}
+              />
             </>
           ))}
         {activeStateTab === MyPortfolioHeader.Locks &&
@@ -462,9 +561,44 @@ export default function MyPortfolio() {
                 setIsManageLock={setIsManageLock}
                 setShowCreateLockModal={setShowCreateLockModal}
                 setManageData={setManageData}
+                setShowWithdraw={setShowWithdraw}
               />
             </>
-          ) : null)}
+          ) : (
+            <>
+              <div className="flex md:px-[25px] px-4 mt-5">
+                <p>
+                  <div className="text-white font-title3">List of my locks</div>
+                  <div className="text-text-250 font-body1">
+                    Discover veNFTs on the largest NFT marketplace on Tezos.
+                  </div>
+                </p>
+                <p className="flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center">
+                  Claim all
+                </p>
+              </div>
+
+              <div className="border-b border-text-800/[0.5] mt-[15px]"></div>
+              <div className="flex items-center px-3 md:px-0 py-2 md:py-3 ">
+                <div>
+                  <SelectNFT
+                    veNFTlist={veNFTlist}
+                    selectedText={selectedDropDown}
+                    setSelectedDropDown={setSelectednft}
+                  />
+                </div>
+                <div className="ml-auto ">
+                  <InputSearchBox
+                    className=""
+                    value={searchValue}
+                    onChange={setSearchValue}
+                    width={"md:w-245px xl:w-[260px]"}
+                  />
+                </div>
+              </div>
+              <LocksTableRewards className="md:px-5 md:pb-4   " voteData={voteData} />
+            </>
+          ))}
       </SideBarHOC>
       {isManageLock && (
         <ManageLock
@@ -517,6 +651,14 @@ export default function MyPortfolio() {
           content={contentTransaction}
         />
       )}
+      {showWithdraw && (
+        <WithdrawPly
+          show={showWithdraw}
+          setShow={setShowWithdraw}
+          handleWithdraw={handleWithdrawOperation}
+          ply={manageData.baseValue}
+        />
+      )}
       {showTransactionSubmitModal && (
         <TransactionSubmitted
           show={showTransactionSubmitModal}
@@ -530,3 +672,19 @@ export default function MyPortfolio() {
     </>
   );
 }
+
+MyPortfolio.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
+  operationSuccesful: PropTypes.bool.isRequired,
+};
+function mapStateToProps(
+  state: { walletLoading: { isLoading: boolean; operationSuccesful: boolean } },
+  ownProps: any
+) {
+  return {
+    isLoading: state.walletLoading.isLoading,
+    operationSuccesful: state.walletLoading.operationSuccesful,
+  };
+}
+
+export default connect(mapStateToProps)(MyPortfolio);

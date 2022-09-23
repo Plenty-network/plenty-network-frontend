@@ -33,7 +33,7 @@ export function TotalVotes(props: ITotalVotesProps) {
             {Number(props.totalvotes) > 0
               ? props.totalvotes.isLessThan(0.01)
                 ? "<0.01"
-                : Number(nFormatter(props.totalvotes))
+                : nFormatter(props.totalvotes)
               : "0"}
           </div>
           <div className="font-subtitle4 relative top-[10px]">

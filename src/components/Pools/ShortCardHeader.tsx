@@ -31,9 +31,9 @@ export function Tabs(props: ITabsProps) {
         props.index === 0 ? "justify-start" : "justify-end "
       } ${
         props.TableName === "poolsRewards"
-          ? props.index === 0 || props.index == 2
+          ? props.index === 0
             ? "w-[200px]"
-            : "w-[100px]"
+            : "w-[150px]"
           : props.TableName === "lockPosition"
           ? props.index === 0
             ? " w-[150px]"

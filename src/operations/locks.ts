@@ -9,6 +9,7 @@ import {
 } from "./types";
 import Config from "../config/config";
 import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
+import { OpKind } from "@taquito/taquito";
 
 export const createLock = async (
   address: string,
@@ -115,7 +116,9 @@ export const increaseLockValue = async (
     if (!WALLET_RESP.success) {
       throw new Error("Wallet connection failed");
     }
-
+    
+    // Making value to it's proper decimal form
+    const plyToBeAdded = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
     const Tezos = await dappClient().tezos();
     const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
     const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
@@ -124,8 +127,8 @@ export const increaseLockValue = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value))
-      .withContractCall(veInstance.methods.increase_lock_value(id, value));
+      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded))
+      .withContractCall(veInstance.methods.increase_lock_value(id, plyToBeAdded));
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
@@ -162,6 +165,8 @@ export const increaseLockAndValue = async (
     if (!WALLET_RESP.success) {
       throw new Error("Wallet connection failed");
     }
+    // Making value to it's proper decimal form
+    const plyToBeAdded = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
 
     const Tezos = await dappClient().tezos();
     const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
@@ -171,8 +176,8 @@ export const increaseLockAndValue = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value))
-      .withContractCall(veInstance.methods.increase_lock_value(id, value))
+      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded))
+      .withContractCall(veInstance.methods.increase_lock_value(id, plyToBeAdded))
       .withContractCall(veInstance.methods.increase_lock_end(id, newEnd));
 
     const batchOp = await batch.send();
@@ -282,6 +287,7 @@ export const withdrawLockWithInflation = async (
   }
 };
 
+//Might be depracated
 export const claimInflation = async (
   epochs: number[],
   id: number,
@@ -324,12 +330,8 @@ export const claimInflation = async (
   }
 };
 
-// TODO : Ask Update Attachments
-
-export const updateAttachments = async (
-  attachments: number[],
-  id: number,
-  remove: boolean,
+export const claimAllInflation = async (
+  inflationData : {id : number , epochs : number[]}[],
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
   setShowConfirmTransaction: TSetShowConfirmTransaction
@@ -344,26 +346,15 @@ export const updateAttachments = async (
     const Tezos = await dappClient().tezos();
     const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
 
-    let batch = null;
-
-    //  TODO :  Confirm how to send attachments
-
-    let attachmentLiteral: IAttachmentLiteral[] = [];
-    if (remove) {
-      for (var x of attachments) {
-        attachmentLiteral.push({ remove_attachment: { remove_attachemnt: attachments[x] } });
-      }
-    } else {
-      for (var x of attachments) {
-        attachmentLiteral.push({ add_attachment: { add_attachemnt: attachments[x] } });
-      }
-    }
-
-    // TODO : Check Calling
-
-    batch = Tezos.wallet
-      .batch()
-      .withContractCall(veInstance.methods.update_attachments(id, attachmentLiteral));
+    const bribeBatch : any = [];
+        for (const inflation of inflationData) {
+          bribeBatch.push({
+            kind: OpKind.TRANSACTION,
+            ...veInstance.methods.claim_inflation(inflation.id , inflation.epochs
+            ).toTransferParams(),
+          });
+        }
+      const batch =  Tezos.wallet.batch(bribeBatch);
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
@@ -385,3 +376,5 @@ export const updateAttachments = async (
     };
   }
 };
+
+

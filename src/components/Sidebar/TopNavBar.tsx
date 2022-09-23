@@ -42,7 +42,7 @@ export function TopNavBar(props: ITopNavBarProps) {
         <div className="flex flex-row gap-7 ">
           <div className="flex flex-row gap-3.5 ">
             {/* <Link className={`cursor-pointer hover:opacity-90 `} href={"/MyPortfolio"}> */}
-            <span className="cursor-pointer hover:opacity-90 flex items-center border border-primary-750 bg-primary-850 px-[14px] h-[44px] rounded-xl mt-[10px]">
+            <span className="cursor-pointer hover:opacity-90 flex items-center border border-primary-750 bg-primary-850 px-[14px] h-[44px] rounded-xl mt-[14px]">
               <Image src={myPostion} />
               <span className="text-primary-500 font-body4 ml-1">My portfolio</span>
             </span>

@@ -13,7 +13,7 @@ const Config: IConfig = {
     tezToolTokenPrice: 'https://api.teztools.io/token/prices',
   },
   RPC_NODES: {
-    testnet: 'https://ghostnet.smartpy.io/',
+    testnet: 'https://rpc.tzkt.io/ghostnet/',
     mainnet: 'https://mifx20dfsr.windmill.tools/',
   },
   TZKT_NODES: {

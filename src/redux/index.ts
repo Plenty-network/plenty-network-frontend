@@ -12,6 +12,7 @@ import { userSettings } from "./userSettings/userSettings";
 import { veNFT } from "./veNFT";
 import { pools } from "./pools";
 import { epoch } from "./epoch/epoch";
+import { walletLoading } from "./walletLoading";
 
 const reducers = combineReducers({
   wallet: wallet,
@@ -22,12 +23,13 @@ const reducers = combineReducers({
   pools: pools,
   epoch: epoch,
   veNFT: veNFT,
+  walletLoading: walletLoading,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["userSettings", "config", "pools", "epoch"],
+  whitelist: ["userSettings", "config", "pools", "epoch", "tokenPrice"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

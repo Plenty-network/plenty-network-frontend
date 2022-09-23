@@ -9,13 +9,16 @@ import { IYourLiquidityProps } from "./types";
 export function YourLiquidity(props: IYourLiquidityProps) {
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(0) + "B";
+      console.log(num.toFixed());
+      return num.dividedBy(1000000000).toFixed(2) + "B";
     }
     if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(0) + "M";
+      console.log(num.toFixed());
+      return num.dividedBy(1000000).toFixed(2) + "M";
     }
     if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(0) + "K";
+      console.log(num.toFixed());
+      return num.dividedBy(1000).toFixed(2) + "K";
     }
 
     return num.toFixed(2);
@@ -33,7 +36,7 @@ export function YourLiquidity(props: IYourLiquidityProps) {
             {Number(props.value) > 0
               ? props.value.isLessThan(0.01)
                 ? "<0.01"
-                : Number(nFormatter(props.value))
+                : nFormatter(props.value)
               : "0"}
           </div>
         </ToolTip>

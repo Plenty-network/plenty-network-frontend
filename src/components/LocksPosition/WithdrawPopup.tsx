@@ -1,6 +1,7 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
 
+import { BigNumber } from "bignumber.js";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import ply from "../../assets/Tokens/ply.png";
@@ -8,8 +9,9 @@ import Button from "../Button/Button";
 
 interface IWithdrawPlyProps {
   show: boolean;
-
+  handleWithdraw: () => void;
   setShow: any;
+  ply: BigNumber;
 }
 function WithdrawPly(props: IWithdrawPlyProps) {
   const closeModal = () => {
@@ -33,13 +35,17 @@ function WithdrawPly(props: IWithdrawPlyProps) {
             <div className="text-text-400 font-body1 ">Your will receive </div>
             <div className="flex mt-[11px] items-center">
               <Image src={ply} width={"28px"} height={"28px"} />
-              <span className="text-white font-body4 ml-2">0</span>
+              <span className="text-white font-body4 ml-2">
+                {props.ply ? props.ply.toNumber() : "0"}
+              </span>
               <span className="text-text-500 font-body3 ml-1">PLY</span>
             </div>
           </div>
           <div className="mt-3 font-body2 text-text-250 pl-2">Lorem Ipsum Lorem Ipsum</div>
           <div className="mt-[24px]">
-            <Button color={"primary"}>Withdraw</Button>
+            <Button color={"primary"} onClick={props.handleWithdraw}>
+              Withdraw
+            </Button>
           </div>
         </>
       }
