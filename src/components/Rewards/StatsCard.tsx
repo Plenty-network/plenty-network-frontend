@@ -31,7 +31,16 @@ function StatsCard(props: IStatsCardProps) {
           </div>
         </p>
         <p className="ml-auto">
-          <div className="flex items-center md:font-title3-bold font-subtitle4 text-primary-500  h-[50px] px-5 bg-primary-500/[0.1] rounded-xl   justify-center">
+          <div
+            className="flex items-center md:font-title3-bold font-subtitle4 text-primary-500  h-[50px] px-5 bg-primary-500/[0.1] rounded-xl   justify-center"
+            onClick={
+              !props.disable
+                ? () => {
+                    props.setShowClaimAllPly(true);
+                  }
+                : () => {}
+            }
+          >
             Claim
           </div>
         </p>
