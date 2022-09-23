@@ -9,6 +9,7 @@ import {
 } from "./types";
 import Config from "../config/config";
 import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
+import { OpKind } from "@taquito/taquito";
 
 export const createLock = async (
   address: string,
@@ -286,6 +287,7 @@ export const withdrawLockWithInflation = async (
   }
 };
 
+//Might be depracated
 export const claimInflation = async (
   epochs: number[],
   id: number,
@@ -306,6 +308,53 @@ export const claimInflation = async (
     let batch = null;
 
     batch = Tezos.wallet.batch().withContractCall(veInstance.methods.claim_inflation(id, epochs));
+
+    const batchOp = await batch.send();
+    setShowConfirmTransaction(false);
+    resetAllValues();
+
+    transactionSubmitModal(batchOp.opHash);
+
+    await batchOp.confirmation();
+    return {
+      success: true,
+      operationId: batchOp.opHash,
+    };
+  } catch (error: any) {
+    console.error(error);
+    return {
+      success: false,
+      operationId: undefined,
+      error: error.message,
+    };
+  }
+};
+
+export const claimAllInflation = async (
+  inflationData : {id : number , epochs : number[]}[],
+  transactionSubmitModal: TTransactionSubmitModal,
+  resetAllValues: TResetAllValues,
+  setShowConfirmTransaction: TSetShowConfirmTransaction
+): Promise<IOperationsResponse> => {
+  try {
+    const { CheckIfWalletConnected } = dappClient();
+    const WALLET_RESP = await CheckIfWalletConnected();
+    if (!WALLET_RESP.success) {
+      throw new Error("Wallet connection failed");
+    }
+
+    const Tezos = await dappClient().tezos();
+    const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
+
+    const bribeBatch : any = [];
+        for (const inflation of inflationData) {
+          bribeBatch.push({
+            kind: OpKind.TRANSACTION,
+            ...veInstance.methods.claim_inflation(inflation.id , inflation.epochs
+            ).toTransferParams(),
+          });
+        }
+      const batch =  Tezos.wallet.batch(bribeBatch);
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
