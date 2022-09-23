@@ -1,6 +1,7 @@
 import { OpKind } from '@taquito/taquito';
-import { dappClient, voterAddress } from '../common/walletconnect';
+import { dappClient, voteEscrowAddress, voterAddress } from '../common/walletconnect';
 import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShowConfirmTransaction, IVotes } from './types';
+import {BigNumber} from 'bignumber.js';
 
 
 
@@ -113,7 +114,8 @@ export const vote = async (
     }
   };
 
-  export const claimAllBribe = async (
+  // FOR STAT
+  export const claimAllBribeForAllLocks = async (
     bribeData : {tokenId : number,epoch : number,bribeId : number,amm : string}[],
     transactionSubmitModal: TTransactionSubmitModal,
     resetAllValues: TResetAllValues,
@@ -266,6 +268,7 @@ export const vote = async (
     }
   };
 
+  // FOR STAT
   export const claimAllFeeForAllLocks = async (
     feeData : {id : number , epoch : number[] , amm:string}[],
     transactionSubmitModal: TTransactionSubmitModal,
@@ -313,10 +316,70 @@ export const vote = async (
     }
   };
 
+  // FOR MID LEVEL CLAIM (FEES and BRIBES)
+  export const claimAllRewardsForAllLocks = async (
+    bribeData : {tokenId : number,epoch : number,bribeId : number,amm : string}[],
+    feeData : {id : number , epoch : number[] , amm:string}[],
+    transactionSubmitModal: TTransactionSubmitModal,
+    resetAllValues: TResetAllValues,
+    setShowConfirmTransaction: TSetShowConfirmTransaction
+  ): Promise<IOperationsResponse> => {
+    try {
+      const {CheckIfWalletConnected}=dappClient()
+      const WALLET_RESP = await CheckIfWalletConnected();
+      if (!WALLET_RESP.success) {
+        throw new Error('Wallet connection failed');
+      }
+  
+      const Tezos = await dappClient().tezos();
+      const voterInstance: any = await Tezos.contract.at(voterAddress);
+
+      const allBatch : any = [];
+        for (const feeObj of feeData) {
+          allBatch.push({
+            kind: OpKind.TRANSACTION,
+            ...voterInstance.methods.claim_fee(feeObj.id, feeObj.amm, feeObj.epoch).toTransferParams(),
+          });
+        }
+
+        for (const bribe of bribeData) {
+          allBatch.push({
+            kind: OpKind.TRANSACTION,
+            ...voterInstance.methods.claim_bribe(bribe.tokenId,bribe.amm,bribe.epoch,bribe.bribeId
+            ).toTransferParams(),
+          });
+        }
+
+      const batch =  Tezos.wallet.batch(allBatch);
+
+        const batchOp = await batch.send();
+        setShowConfirmTransaction(false);
+        resetAllValues();
+  
+        transactionSubmitModal(batchOp.opHash);
+  
+        await batchOp.confirmation();
+        return {
+          success: true,
+          operationId: batchOp.opHash,
+        };
+      
+    } catch (error : any) {
+      console.error(error);
+      return {
+        success: false,
+        operationId: undefined,
+        error : error.message,
+      };
+    }
+  };
+
+
+  // FOR EPOCH LEVEL CLAIM
   export const claimAllForEpoch = async (
     tokenId : number,
-    epoch : number[],
-    bribeData : {bribeId : number, amm : string}[],
+    epoch : number,
+    bribeData : {bribeId : BigNumber, amm : string}[],
     feeAmms : string[],
     transactionSubmitModal: TTransactionSubmitModal,
     resetAllValues: TResetAllValues,
@@ -372,3 +435,88 @@ export const vote = async (
       };
     }
   };
+
+  // CLAIMS EVERYTHING (ALL STATS)
+  export const claimSupernova = async (
+    guages : string[],
+    feeData : {id : number , epoch : number[] , amm:string}[],
+    bribeData : {tokenId : number,epoch : number,bribeId : number,amm : string}[],
+    inflationData : {id : number , epochs : number[]}[],
+    transactionSubmitModal: TTransactionSubmitModal,
+    resetAllValues: TResetAllValues,
+    setShowConfirmTransaction: TSetShowConfirmTransaction
+  ): Promise<IOperationsResponse> => {
+    try {
+      const {CheckIfWalletConnected}=dappClient()
+      const WALLET_RESP = await CheckIfWalletConnected();
+      if (!WALLET_RESP.success) {
+        throw new Error('Wallet connection failed');
+      }
+  
+      const Tezos = await dappClient().tezos();
+      const voterInstance: any = await Tezos.contract.at(voterAddress);
+      const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
+
+      const allBatch : any = [];
+
+      const promises = [];
+      for(var guage of guages){
+        promises.push(await Tezos.wallet.at(guage));
+      }
+      const response = await Promise.all(promises);
+          for (const key in response) {
+            allBatch.push({
+              kind: OpKind.TRANSACTION,
+              ...response[key].methods.get_reward([["unit"]]).toTransferParams(),
+            });
+          }
+        
+          for (const feeObj of feeData) {
+            allBatch.push({
+              kind: OpKind.TRANSACTION,
+              ...voterInstance.methods.claim_fee(feeObj.id, feeObj.amm, feeObj.epoch).toTransferParams(),
+            });
+          }
+
+          for (const bribe of bribeData) {
+            allBatch.push({
+              kind: OpKind.TRANSACTION,
+              ...voterInstance.methods.claim_bribe(bribe.tokenId,bribe.amm,bribe.epoch,bribe.bribeId
+              ).toTransferParams(),
+            });
+          }
+
+          for (const inflation of inflationData) {
+            allBatch.push({
+              kind: OpKind.TRANSACTION,
+              ...veInstance.methods.claim_inflation(inflation.id , inflation.epochs
+              ).toTransferParams(),
+            });
+          }
+
+        const batch =  Tezos.wallet.batch(allBatch);
+
+        const batchOp = await batch.send();
+        setShowConfirmTransaction(false);
+        resetAllValues();
+  
+        transactionSubmitModal(batchOp.opHash);
+  
+        await batchOp.confirmation();
+        return {
+          success: true,
+          operationId: batchOp.opHash,
+        };
+      
+    } catch (error : any) {
+      console.error(error);
+      return {
+        success: false,
+        operationId: undefined,
+        error : error.message,
+      };
+    }
+  };
+
+
+
