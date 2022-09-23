@@ -72,6 +72,7 @@ export interface IPoolsRewardsData {
   tokenOneSymbol: string;
   tokenTwoSymbol: string;
   ammAddress: string;
+  ammType: AMM_TYPE;
   gaugeAddress: string | undefined;
   gaugeEmission: BigNumber;
   boostValue: BigNumber;

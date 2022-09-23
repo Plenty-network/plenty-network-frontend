@@ -348,6 +348,7 @@ export const getPoolsRewardsData = async (
           tokenOneSymbol,
           tokenTwoSymbol,
           ammAddress,
+          ammType: AMM[ammAddress].type,
           gaugeAddress: gaugeAddress,
           gaugeEmission: plyEmissions,
           boostValue: boostValue.isFinite() ? boostValue : new BigNumber(0),
