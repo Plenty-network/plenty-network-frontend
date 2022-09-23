@@ -23,7 +23,7 @@ function StatsCard(props: IStatsCardProps) {
           </div>
           <div className="font-input-text1 text-white mt-2">
             {props.value === undefined || Number(props.value) <= 0 ? (
-              <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+              <p className=" my-[4px] w-[60px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
             ) : (
               props.value?.toString()
             )}

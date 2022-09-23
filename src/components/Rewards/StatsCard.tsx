@@ -20,9 +20,13 @@ function StatsCard(props: IStatsCardProps) {
             <p className="text-white font-body1 ">{props.title}</p>
           </div>
           <div className="font-input-text1 text-white mt-2">
-            {props.value}{" "}
+            {props.value === undefined || Number(props.value) <= 0 ? (
+              <p className=" my-[4px] w-[60px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+            ) : (
+              props.value?.toString()
+            )}
             {props.subValue && (
-              <span className="font-subtitle5 text-border-400">{props.subValue}</span>
+              <span className="font-subtitle5 text-border-400 ml-1">{props.subValue}</span>
             )}
           </div>
         </p>
