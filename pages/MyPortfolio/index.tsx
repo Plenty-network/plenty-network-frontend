@@ -1,10 +1,11 @@
 import Head from "next/head";
 import Image from "next/image";
+import PropTypes from "prop-types";
 import * as React from "react";
 import { BigNumber } from "bignumber.js";
 import { useEffect, useState, useRef } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
-import { useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../src/redux";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
@@ -46,11 +47,13 @@ import { PoolsTableRewards } from "../../src/components/PoolsRewards/poolsReward
 import ManageLock from "../../src/components/LocksPosition/ManageLock";
 import {
   getAllLocksPositionData,
+  getPoolsRewardsData,
   getPositionsData,
   getPositionStatsData,
 } from "../../src/api/portfolio/kiran";
 import {
   IAllLocksPositionData,
+  IPoolsRewardsResponse,
   IPositionsData,
   IPositionStatsResponse,
 } from "../../src/api/portfolio/types";
@@ -65,7 +68,7 @@ export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
 }
-export default function MyPortfolio() {
+function MyPortfolio(props: any) {
   const [activeStateTab, setActiveStateTab] = React.useState<MyPortfolioHeader>(
     MyPortfolioHeader.Pools
   );
@@ -73,8 +76,9 @@ export default function MyPortfolio() {
     MyPortfolioSection.Positions
   );
   const userAddress = store.getState().wallet.address;
-  const isLoading = store.getState().walletLoading.isLoading;
-  const operationSuccesful = store.getState().walletLoading.operationSuccesful;
+  //const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv";
+  // const isLoading = store.getState().walletLoading.isLoading;
+  // const operationSuccesful = store.getState().walletLoading.operationSuccesful;
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
@@ -105,6 +109,9 @@ export default function MyPortfolio() {
   const [contentTransaction, setContentTransaction] = useState("");
   const [plyBalance, setPlyBalance] = useState(new BigNumber(0));
   const [poolsPosition, setPoolsPosition] = useState<IPositionsData[]>([] as IPositionsData[]);
+  const [poolsRewards, setPoolsRewards] = useState<IPoolsRewardsResponse>(
+    {} as IPoolsRewardsResponse
+  );
   const [locksPosition, setLocksPosition] = useState<IAllLocksPositionData[]>(
     [] as IAllLocksPositionData[]
   );
@@ -181,17 +188,25 @@ export default function MyPortfolio() {
     if (userAddress) {
       setStatsPosition({} as IPositionStatsResponse);
       setPoolsPosition([] as IPositionsData[]);
+      setPoolsRewards({} as IPoolsRewardsResponse);
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
           console.log(res);
           setStatsPosition(res);
         });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
+          console.log(res);
           setPoolsPosition(res.positionPoolsData);
         });
       }
+      if (Object.keys(tokenPrice).length !== 0) {
+        getPoolsRewardsData(userAddress, tokenPrice).then((res) => {
+          console.log(res);
+          setPoolsRewards(res);
+        });
+      }
     }
-  }, [userAddress, lpTokenPrice, activeSection]);
+  }, [userAddress, lpTokenPrice]);
   useEffect(() => {
     //setVeNFTlist([]);
     if (userAddress) {
@@ -210,10 +225,10 @@ export default function MyPortfolio() {
         setLocksPosition(res.allLocksData.reverse());
       });
     }
-  }, [userAddress, activeSection]);
+  }, [userAddress, activeSection, currentEpoch?.epochNumber]);
   useEffect(() => {
-    console.log(isLoading, operationSuccesful);
-    if (!isLoading && operationSuccesful) {
+    console.log(props.isLoading, props.operationSuccesful);
+    if (!props.isLoading && props.operationSuccesful) {
       setLocksPosition([] as IAllLocksPositionData[]);
       setStatsPosition({} as IPositionStatsResponse);
       setPoolsPosition([] as IPositionsData[]);
@@ -227,11 +242,12 @@ export default function MyPortfolio() {
           setStatsPosition(res);
         });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
+          console.log(res);
           setPoolsPosition(res.positionPoolsData);
         });
       }
     }
-  }, [operationSuccesful, isLoading]);
+  }, [props.operationSuccesful, props.isLoading]);
 
   const resetAllValues = () => {
     setPlyInput("");
@@ -298,7 +314,7 @@ export default function MyPortfolio() {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 2000);
+        }, 6000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -338,7 +354,7 @@ export default function MyPortfolio() {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 2000);
+        }, 4000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -377,7 +393,7 @@ export default function MyPortfolio() {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 2000);
+        }, 4000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -416,7 +432,7 @@ export default function MyPortfolio() {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setLockOperation(true);
-        }, 2000);
+        }, 4000);
         setTimeout(() => {
           setLockOperation(false);
         }, 20000);
@@ -450,10 +466,10 @@ export default function MyPortfolio() {
           <div className="flex gap-1">
             <p
               className={clsx(
-                " font-title3 cursor-pointer md:h-[40px] h-[52px] px-[24px] flex items-center  rounded-lg gap-1",
+                " font-title3 cursor-pointer h-[50px] px-[24px] flex items-center   gap-1",
                 activeSection === MyPortfolioSection.Positions
-                  ? "text-primary-500 bg-primary-500/[0.1]"
-                  : "text-text-250"
+                  ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
+                  : "text-text-250 bg-muted-700"
               )}
               onClick={() => setActiveSection(MyPortfolioSection.Positions)}
             >
@@ -466,10 +482,10 @@ export default function MyPortfolio() {
             </p>
             <p
               className={clsx(
-                "rounded-lg cursor-pointer font-title3  md:h-[40px] h-[52px] px-[24px] flex items-center gap-1",
+                " cursor-pointer font-title3  h-[50px] px-[24px] flex items-center gap-1",
                 activeSection === MyPortfolioSection.Rewards
-                  ? "text-primary-500 bg-primary-500/[0.1]"
-                  : "text-text-250"
+                  ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
+                  : "text-text-250 bg-muted-700"
               )}
               onClick={() => setActiveSection(MyPortfolioSection.Rewards)}
             >
@@ -491,7 +507,7 @@ export default function MyPortfolio() {
                 statsPositions={statsPositions}
               />
             ) : (
-              <StatsRewards />
+              <StatsRewards plyEmission={poolsRewards.gaugeEmissionsTotal} />
             )}
           </div>
         </div>
@@ -519,7 +535,10 @@ export default function MyPortfolio() {
                   Claim all
                 </p>
               </div>
-              <PoolsTableRewards className="md:px-5 md:py-4   py-4" voteData={voteData} />
+              <PoolsTableRewards
+                className="md:px-5 md:py-4   py-4"
+                poolsData={poolsRewards.poolsRewardsData}
+              />
             </>
           ))}
         {activeStateTab === MyPortfolioHeader.Locks &&
@@ -653,3 +672,19 @@ export default function MyPortfolio() {
     </>
   );
 }
+
+MyPortfolio.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
+  operationSuccesful: PropTypes.bool.isRequired,
+};
+function mapStateToProps(
+  state: { walletLoading: { isLoading: boolean; operationSuccesful: boolean } },
+  ownProps: any
+) {
+  return {
+    isLoading: state.walletLoading.isLoading,
+    operationSuccesful: state.walletLoading.operationSuccesful,
+  };
+}
+
+export default connect(mapStateToProps)(MyPortfolio);
