@@ -29,7 +29,7 @@ const reducers = combineReducers({
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["userSettings", "config", "pools", "epoch"],
+  whitelist: ["userSettings", "config", "pools", "epoch", "tokenPrice"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
