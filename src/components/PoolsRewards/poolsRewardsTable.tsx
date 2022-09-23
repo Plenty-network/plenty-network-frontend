@@ -174,7 +174,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
       <div className={` overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={props.poolsData}
+          data={props.poolsData ? props.poolsData : []}
           noSearchResult={noSearchResult}
           shortby="Myvotes"
           isFetched={props.poolsData?.length === 0 ? false : true}
