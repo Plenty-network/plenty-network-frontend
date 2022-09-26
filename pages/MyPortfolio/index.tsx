@@ -70,6 +70,8 @@ import { InputSearchBox } from "../../src/components/Pools/Component/SearchInput
 import { LocksTableRewards } from "../../src/components/LocksRewards/LocksRewardsTable";
 import ClaimAll from "../../src/components/Rewards/ClaimAll";
 import { harvestAllRewards } from "../../src/operations/rewards";
+import { fetchAllLocksRewardsData, fetchAllRewardsOperationsData } from "../../src/redux/myPortfolio/rewards";
+import { API_RE_ATTAMPT_DELAY } from "../../src/constants/global";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -131,6 +133,8 @@ function MyPortfolio(props: any) {
   const currentEpoch = store.getState().epoch.currentEpoch;
 
   const [lockOperation, setLockOperation] = useState(false);
+  const locksRewardsDataError = useAppSelector((state) => state.portfolioRewards.locksRewardsDataError);
+  const rewardsOperationDataError = useAppSelector((state) => state.portfolioRewards.rewardsOperationDataError);
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -162,6 +166,26 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  useEffect(() => {
+    if(userAddress && Object.keys(tokenPrice).length !== 0) {
+      dispatch(fetchAllLocksRewardsData({userTezosAddress: userAddress, tokenPrices: tokenPrice}));
+      dispatch(fetchAllRewardsOperationsData(userAddress));
+    }
+  }, [userAddress, tokenPrice]);
+  useEffect(() => {
+    if(userAddress && Object.keys(tokenPrice).length !== 0 && locksRewardsDataError) {
+      setTimeout(() => {
+        dispatch(fetchAllLocksRewardsData({userTezosAddress: userAddress, tokenPrices: tokenPrice}));
+      }, API_RE_ATTAMPT_DELAY);
+    }
+  },[locksRewardsDataError]);
+  useEffect(() => {
+    if(userAddress && Object.keys(tokenPrice).length !== 0 && rewardsOperationDataError) {
+      setTimeout(() => {
+        dispatch(fetchAllRewardsOperationsData(userAddress));
+      }, API_RE_ATTAMPT_DELAY);
+    }
+  },[rewardsOperationDataError]);
   const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
     {} as { [id: string]: IVotePageData }
   );

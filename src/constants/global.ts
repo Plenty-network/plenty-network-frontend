@@ -55,3 +55,6 @@ export const EMPTY_POOLS_OBJECT: VolumeVeData = {
   feesEpoch: { value: '0', token1: '0', token2: '0' },
   tvl: { value: '0', token1: '0', token2: '0' },
 };
+
+export const API_RE_ATTEMPTS: number = 3;
+export const API_RE_ATTAMPT_DELAY: number = 5000;

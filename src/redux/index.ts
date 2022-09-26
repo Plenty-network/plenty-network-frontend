@@ -13,6 +13,7 @@ import { veNFT } from "./veNFT";
 import { pools } from "./pools";
 import { epoch } from "./epoch/epoch";
 import { walletLoading } from "./walletLoading";
+import { portfolioRewards } from "./myPortfolio/rewards";
 
 const reducers = combineReducers({
   wallet: wallet,
@@ -24,6 +25,7 @@ const reducers = combineReducers({
   epoch: epoch,
   veNFT: veNFT,
   walletLoading: walletLoading,
+  portfolioRewards: portfolioRewards
 });
 
 const persistConfig = {
