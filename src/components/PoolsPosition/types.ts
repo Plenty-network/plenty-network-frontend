@@ -3,6 +3,7 @@ import { IVotePageData } from "../../api/votes/types";
 
 import { BigNumber } from "bignumber.js";
 export interface IPoolsTablePosition {
+  isfetched: boolean;
   poolsPosition: IPositionsData[];
 
   className?: string;

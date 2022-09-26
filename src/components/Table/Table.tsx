@@ -36,6 +36,7 @@ const Table = <D extends object>({
   noSearchResult = false,
   TableName,
   TableWidth,
+  NoData,
 }: {
   columns: Column<D>[];
   data: D[];
@@ -46,6 +47,7 @@ const Table = <D extends object>({
   isVotesTable?: boolean;
   TableName?: string;
   TableWidth?: string;
+  NoData?: JSX.Element;
 }) => {
   const [shortByGroup, setshortByGroup] = useState({
     id: shortby ?? "usd",
@@ -164,19 +166,22 @@ const Table = <D extends object>({
             <NoContentAvailable />
           ) : null}
           {isFetched && noSearchResult ? <NoSearchResult /> : null}
+          {isFetched && data.length === 0 && NoData && NoData}
           {isConnectWalletRequired && !walletAddress && isFetched ? <WalletNotConnected /> : null}
           {!isFetched ? <SimmerEffect lines={6} /> : null}
           {isFetched && data.length
             ? page.map((row: any) => {
                 prepareRow(row);
+                //console.log(row.original);
                 return (
                   // eslint-disable-next-line react/jsx-key
+
                   <tr
                     className={`border border-borderCommon  bg-cardBackGround flex  md:py-3 px-1 py-1 items-center  rounded-lg slideFromTop ${
                       TableName === "poolsRewards"
                         ? "justify-between pl-11 pr-11"
                         : "md:pr-3 md:pl-11"
-                    }`}
+                    } `}
                   >
                     {row.cells.map((cell: any, i: any) => {
                       return (
