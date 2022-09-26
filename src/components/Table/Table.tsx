@@ -172,7 +172,6 @@ const Table = <D extends object>({
           {isFetched && data.length
             ? page.map((row: any) => {
                 prepareRow(row);
-                console.log(row.original);
                 if (row.original.index === 2 && TableName === "locksRewards") {
                   return (
                     <tr
