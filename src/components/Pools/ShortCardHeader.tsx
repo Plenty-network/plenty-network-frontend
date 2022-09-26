@@ -65,7 +65,9 @@ export function Tabs(props: ITabsProps) {
           : props.index === 0
           ? "w-[150px]"
           : " flex-1"
-      } ${props.index === 0 && "pl-3 md:pl-0"}`}
+      } ${props.index === 0 && "pl-3 md:pl-0"} ${
+        props.TableName === "votesTable" && props.index === 4 && !isMobile && "ml-auto"
+      }`}
       onClick={() => (props.onClick ? props.onClick() : {})}
     >
       <div className="flex gap-0 flex-col">

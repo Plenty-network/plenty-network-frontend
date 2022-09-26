@@ -206,7 +206,7 @@ const Table = <D extends object>({
                           // eslint-disable-next-line react/jsx-key
                           <td
                             className={`pr-1 flex items-center ${
-                              i == 0 ? "justify-start" : "md:justify-end justify-start"
+                              i == 0 ? "justify-start" : "justify-end "
                             } ${
                               TableName === "poolsRewards"
                                 ? i === 0
@@ -245,7 +245,7 @@ const Table = <D extends object>({
                                 : " flex-1"
                             } ${TableName === "poolsPosition" && i === 5 && "ml-auto"} ${
                               i === 0 && "pl-3  md:pl-0"
-                            }`}
+                            } ${TableName === "votesTable" && i === data.length && "ml-auto"}`}
                           >
                             {cell.render("Cell")}
                           </td>
