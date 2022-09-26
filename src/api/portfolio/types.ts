@@ -88,3 +88,144 @@ export interface IPoolsRewardsResponse {
   gaugeAddresses: string[];
   error?: string;
 }
+
+
+export enum EFeesStatus {
+  GENERATED,
+  NOT_PULLED,
+  CLAIMED
+}
+
+export interface ILockRewardsBribeData {
+  bribeId: string;//BigNumber;
+  bribeValue: string;//BigNumber;
+  tokenSymbol: string;
+}
+
+export interface ILockRewardsFeeData {
+  tokenAFees: string;//BigNumber;
+  tokenBFees: string;//BigNumber;
+}
+
+export interface ILockRewardsEpochData {
+  ammAddress: string;
+  tokenASymbol: string;
+  tokenBSymbol: string;
+  ammType: AMM_TYPE;
+  votes: string;//BigNumber;
+  votesPercentage: string;//BigNumber;
+  bribesAmount: string;//BigNumber;
+  feesAmount: string;//BigNumber;
+  feesStatus: EFeesStatus;
+  feesData: ILockRewardsFeeData;
+  bribesData: ILockRewardsBribeData[];
+}
+
+export interface ILocksRewardsTokenData {
+  [epoch: string]: ILockRewardsEpochData[];
+}
+
+export interface IAllLocksRewardsData {
+  [tokenId: string]: ILocksRewardsTokenData;
+}
+
+export interface IAllLocksRewardsResponse {
+  allLocksRewardsData: IAllLocksRewardsData;
+  totalTradingFeesAmount: BigNumber;
+  totalBribesAmount: BigNumber;
+}
+
+export interface IBribesValueAndData {
+  bribesValue: string;//BigNumber;
+  bribesData: ILockRewardsBribeData[];
+}
+
+export interface IFeesValueAndData {
+  feesAmount: string;//BigNumber;
+  feesStatus: EFeesStatus;
+  feesData: ILockRewardsFeeData;
+}
+
+
+//Claim rewards of locks operations Types
+export interface IAllEpochClaimBribeData {
+  bribeId: number;
+  amm: string;
+}
+
+export interface IAllEpochClaimData {
+  tokenId: number;
+  epoch: number;
+  bribeData: IAllEpochClaimBribeData[];
+  feeData: string[];
+}
+
+export interface IAllEpochClaimTokenData {
+  [epoch: string]: IAllEpochClaimData;
+}
+
+export interface IAllEpochClaimOperationData {
+  [tokenId: string]: IAllEpochClaimTokenData;
+}
+
+export interface IAllBribesOperationData {
+  tokenId: number;
+  epoch: number;
+  bribeId: number;
+  amm: string;
+}
+
+export interface IAmmEpochData {
+  [amm: string]: number[]; //"amm_address_as_key": array_of_epoch_numbers[]
+}
+
+export interface IAllFeesOperationData {
+  tokenId: number;
+  amms: IAmmEpochData;
+}
+
+export interface IAllClaimableFeesData {
+  tokenId: number;
+  amm: string;
+  epoch: number[];
+}
+
+export interface IAllRewardsOperationsData {
+  epochClaimData: IAllEpochClaimOperationData;
+  feesClaimData: IAllClaimableFeesData[];
+  bribesClaimData: IAllBribesOperationData[];
+}
+
+
+// Indexer Responses Types
+export interface IAllLocksRewardsIndexerData {
+  votesUnclaimed: IVotesUnclaimedIndexer[];
+  lockId: string;
+}
+
+export interface IVotesUnclaimedIndexer {
+  epoch: string;
+  amm: string;
+  votes: string;
+  fee: IFeeIndexer;
+  bribes: IBribeIndexer[];
+  unclaimedBribes: number[];
+  feeClaimed: boolean;
+  voteShare: string;
+}
+
+export interface IBribeIndexer {
+  amm: string;
+  epoch: string;
+  bribeId: string;
+  provider: string;
+  value: string;
+  name: string;
+}
+
+export interface IFeeIndexer {
+  token1Fee: string;
+  token2Fee: string;
+  token1Symbol: string;
+  token2Symbol: string;
+}
