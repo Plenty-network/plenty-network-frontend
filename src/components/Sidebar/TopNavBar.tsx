@@ -7,6 +7,7 @@ import { Epoch } from "../Epoch";
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { NotificationIcon, NotiFicationType } from "../NotificationIcon";
 export interface ITopNavBarProps {
   setShowNotification: Function;
 }
@@ -46,9 +47,9 @@ export function TopNavBar(props: ITopNavBarProps) {
             <div className="my-1 flex items-center">
               <IconBTN image={"verticalline.svg"} />
             </div>
-            <IconBTN
+            <NotificationIcon
               className="cursor-pointer hover:opacity-90"
-              image={"bellicon.svg"}
+              type={NotiFicationType.haveNotification}
               onClick={props.setShowNotification}
             />
           </div>
