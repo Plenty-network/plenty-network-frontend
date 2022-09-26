@@ -14,6 +14,7 @@ import {
   IPositionsResponse,
   IPositionStatsResponse,
   IVotesStatsDataResponse,
+  ITvlStatsResponse,
 } from "./types";
 import { store } from "../../redux";
 import { ILpTokenPriceList, ITokenPriceList } from "../util/types";
@@ -21,6 +22,56 @@ import { ELocksState } from "../votes/types";
 import { voteEscrowAddress } from "../../common/walletconnect";
 import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
 import { getRewards } from "../rewards";
+import { IAMM, ITokens } from "../../config/types";
+
+// Stats
+/**
+ * Returns the statistical data of TVL for positions of my porfolio.
+ * @param userTezosAddress - Tezos wallet address of the user
+ * @param tokenPrices - Object of prices of all standard tokens
+ * @param lPTokenPrices - Object of prices of all LP tokens
+ */
+export const getTvlStatsData = async (
+  userTezosAddress: string,
+  tokenPrices: ITokenPriceList,
+  lPTokenPrices: ILpTokenPriceList
+): Promise<ITvlStatsResponse> => {
+  try {
+    if (
+      !userTezosAddress ||
+      Object.keys(tokenPrices).length === 0 ||
+      Object.keys(lPTokenPrices).length === 0
+    ) {
+      throw new Error("Invalid or empty arguments.");
+    }
+    // const state = store.getState();
+    // const tokenPrices = state.tokenPrice.tokenPrice;
+    const PLYPrice = new BigNumber(tokenPrices["PLY"] ?? 0);
+
+    const [votesStatsData, positionsData] = await Promise.all([
+      getVotesStatsData(userTezosAddress),
+      getPositionsData(userTezosAddress, lPTokenPrices),
+    ]);
+    if (!votesStatsData.success && !positionsData.success) {
+      throw new Error(`${votesStatsData.error as string}, ${positionsData.error as string}`);
+    }
+
+    const liquidityAmountSum = positionsData.liquidityAmountSum;
+    const totalPLYAmount = votesStatsData.totalPlyLocked.multipliedBy(PLYPrice);
+    const tvl = liquidityAmountSum.plus(totalPLYAmount);
+
+    return {
+      success: true,
+      tvl,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      tvl: new BigNumber(0),
+      error: error.message,
+    };
+  }
+};
 
 // Stats
 /**
@@ -29,7 +80,7 @@ import { getRewards } from "../rewards";
  * @param tokenPrices - Object of prices of all standard tokens
  * @param lPTokenPrices - Object of prices of all LP tokens
  */
-export const getPositionStatsData = async (
+ export const getPositionStatsData = async (
   userTezosAddress: string,
   tokenPrices: ITokenPriceList,
   lPTokenPrices: ILpTokenPriceList
@@ -75,12 +126,15 @@ export const getPositionStatsData = async (
   }
 };
 
+
 // Stats
 /**
  * Calculates the total epoch voting power and total PLY tokens locked for all locks held by a user.
  * @param userTezosAddress - Tezos wallet address of the user
  */
-const getVotesStatsData = async (userTezosAddress: string): Promise<IVotesStatsDataResponse> => {
+export const getVotesStatsData = async (
+  userTezosAddress: string
+): Promise<IVotesStatsDataResponse> => {
   try {
     // let totalEpochVotingPower = new BigNumber(0),
     //   totalPlyLocked = new BigNumber(0);
@@ -373,3 +427,6 @@ export const getPoolsRewardsData = async (
     };
   }
 };
+
+
+
