@@ -58,7 +58,7 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
     setActiveSubMenu(MenuType.NoMenu);
   });
   return (
-    <div className="mobile fixed bottom-0 bg-sideBar w-screen p-0 " ref={reff} >
+    <div className="mobile fixed bottom-0 bg-sideBar w-screen p-0 h-[60px] " ref={reff} >
       {activeSubMenu === MenuType.Menu && <SubMenuList />}
       {activeSubMenu === MenuType.MoreNavMenu && <MoreSubMenuList />}
       <div className="justify-between flex w-screen">
@@ -87,9 +87,9 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
 export function MenuWithLink(props: IBottomNavMenuProps) {
   return (
     <Link href={props.link ? props.link : ""} >
-      <div className={`${props.active? "bg-sideBarHover border-t-primary-500": "border-t-borderColor"} ${ props.className} border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center gap-2  px-[18px] py-[9px]  hover:bg-sideBarHover hover:border-t-primary-500 `}>
+      <div className={`${props.active? "bg-sideBarHover border-t-primary-500": "border-t-borderColor"} ${ props.className} border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center   px-[18px] py-[9px]  hover:bg-sideBarHover hover:border-t-primary-500 `}>
      {props.iconName && <Image src={`/assets/icon/${props.iconName}.svg`} height={'24px'} width={'24px'} />}
-    <p>{props.text}</p>
+    <p className="text-f1015">{props.text}</p>
   </div>
     </Link>
   );

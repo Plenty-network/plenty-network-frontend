@@ -11,6 +11,7 @@ import { getTokenPrice } from "../src/redux/tokenPrice/tokenPrice";
 import { getTotalVotingPower } from "../src/redux/pools";
 import { getEpochData } from "../src/redux/epoch/epoch";
 import { Datepicker } from "../src/components/DatePicker";
+import { Success } from "../src/components/FlashScreen";
 
 const Home: NextPage = () => {
   const token = useAppSelector((state) => state.config.tokens);
@@ -33,6 +34,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
+        <Success/>
       </SideBarHOC>
     </>
   );

@@ -20,7 +20,7 @@ export function AprInfo(props: IAprInfoProps) {
           </p>
         }
       >
-        <div className="bg-muted-200 border text-f14 cursor-pointer text-white border-border-500 rounded-lg py-[3px] px-2 ">
+        <div className="bg-muted-200 border md:text-f14 text-f12 cursor-pointer text-white border-border-500 rounded-lg py-[3px] px-2 ">
           {props.currentApr}%
         </div>
       </ToolTip>
@@ -34,7 +34,7 @@ export function AprInfo(props: IAprInfoProps) {
         position={Position.top}
       >
         <div
-          className={`text-f14 cursor-pointer text-white py-[3px] px-2 ${
+          className={`md:text-f14 text-f12 cursor-pointer text-white py-[3px] px-2 ${
             props.isMobile ? "flex gap-2" : ""
           }`}
         >
