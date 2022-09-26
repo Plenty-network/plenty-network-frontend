@@ -160,7 +160,6 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         />
       </div>
       {showClaimPly && <ClaimPly show={showClaimPly} setShow={setShowClaimPly} />}
-      {showClaimAllPly && <ClaimAll show={showClaimAllPly} setShow={setShowClaimAllPly} />}
     </>
   );
 }
