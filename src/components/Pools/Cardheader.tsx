@@ -41,7 +41,7 @@ export function CardHeader(props: ICardHeaderProps) {
   const { activeStateTab, setActiveStateTab,setSearchValue,searchValue } = props; 
   const ListOfTabs = ["All", "Stable", "Volatile", "My pools"];
   return (
-    <div className="flex md:justify-between justify-center border-b border-b-borderCommon  bg-cardBackGround">
+    <div className="flex md:justify-between items-center justify-center border-b border-b-borderCommon  bg-cardBackGround">
     <div
       className={`${props.className} flex  items-center border-b border-b-borderCommon md:justify-start w-full md:w-max px-4 md:px-0 justify-between bg-cardBackGround`}
     >

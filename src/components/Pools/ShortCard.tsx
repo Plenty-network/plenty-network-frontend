@@ -4,7 +4,7 @@ import { usePoolsMain } from "../../api/pools/query/poolsmain.query";
 import { IPoolsDataWrapperResponse } from "../../api/pools/types";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
-import { CircularImageInfo } from "./Component/CircularImageInfo";
+import { CircularImageInfo, CircularOverLappingImage } from "./Component/CircularImageInfo";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { AprInfo } from "./Component/AprInfo";
@@ -92,10 +92,9 @@ export function ShortCard(props: IShortCardProps) {
         showOnMobile: true,
         accessor: (x) => (
           <div className="flex gap-1 items-center max-w-[153px]">
-            <CircularImageInfo
-              isSecoundIconBorder
-              className="w-7 h-7"
-              imageArray={[getImagesPath(x.tokenA.toString()), getImagesPath(x.tokenB.toString())]}
+            <CircularOverLappingImage 
+            src1={getImagesPath(x.tokenA.toString())}
+            src2={getImagesPath(x.tokenB.toString())}
             />
             <div className="flex flex-col gap-[2px]">
               <span className="md:text-f14 text-f12 text-white ">
@@ -148,9 +147,9 @@ export function ShortCard(props: IShortCardProps) {
         showOnMobile: true,
         accessor: (x) => (
           <div className="flex gap-2 items-center max-w-[153px]">
-            <CircularImageInfo
-            isSecoundIconBorder
-              imageArray={[getImagesPath(x.tokenA.toString()), getImagesPath(x.tokenB.toString())]}
+            <CircularOverLappingImage 
+            src1={getImagesPath(x.tokenA.toString())}
+            src2={getImagesPath(x.tokenB.toString())}
             />
             <div className="flex flex-col gap-[2px]">
               <span className="md:text-f14 text-f12 text-white ">
