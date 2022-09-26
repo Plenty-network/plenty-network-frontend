@@ -19,14 +19,14 @@ function StatsCard(props: IStatsCardProps) {
             <Image src={info} />
             <p className="text-white font-body1 ">{props.title}</p>
           </div>
-          <div className="font-input-text1 text-white mt-2">
+          <div className="font-input-text1 text-white mt-2 flex items-end">
             {props.value === undefined ? (
-              <p className=" my-[4px] w-[60px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+              <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
             ) : (
               props.value?.toString()
             )}
             {props.subValue && (
-              <span className="font-subtitle5 text-border-400 ml-1">{props.subValue}</span>
+              <p className="font-subtitle5 text-border-400 ml-1 mb-px">{props.subValue}</p>
             )}
           </div>
         </p>

@@ -16,12 +16,12 @@ function Stats(props: IStatsProps) {
       <StatsCard
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total voting power"}
-        value={props.statsPositions?.totalEpochVotingPower?.toFixed(1)}
+        value={props.stats1?.totalEpochVotingPower?.toFixed(1)}
       />
       <StatsCard
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total locked"}
-        value={props.statsPositions?.totalPLYLocked?.toFixed(1)}
+        value={props.stats1?.totalPlyLocked?.toFixed(1)}
         subValue={"PLY"}
       />
 

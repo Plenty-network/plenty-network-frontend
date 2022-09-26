@@ -50,12 +50,16 @@ import {
   getPoolsRewardsData,
   getPositionsData,
   getPositionStatsData,
+  getTvlStatsData,
+  getVotesStatsData,
 } from "../../src/api/portfolio/kiran";
 import {
   IAllLocksPositionData,
   IPoolsRewardsResponse,
   IPositionsData,
   IPositionStatsResponse,
+  ITvlStatsResponse,
+  IVotesStatsDataResponse,
 } from "../../src/api/portfolio/types";
 import { getLPTokenPrices, getTokenPrices } from "../../src/api/util/price";
 import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
@@ -161,9 +165,8 @@ function MyPortfolio(props: any) {
   const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
     {} as { [id: string]: IVotePageData }
   );
-  const [statsPositions, setStatsPosition] = useState<IPositionStatsResponse>(
-    {} as IPositionStatsResponse
-  );
+  const [statsPositions, setStatsPosition] = useState<ITvlStatsResponse>({} as ITvlStatsResponse);
+  const [stats1, setStats1] = useState<IVotesStatsDataResponse>({} as IVotesStatsDataResponse);
 
   useEffect(() => {
     votesPageDataWrapper(934, undefined).then((res) => {
@@ -196,11 +199,12 @@ function MyPortfolio(props: any) {
   };
   useEffect(() => {
     if (userAddress) {
-      setStatsPosition({} as IPositionStatsResponse);
+      setStatsPosition({} as ITvlStatsResponse);
       setPoolsPosition({ data: [] as IPositionsData[], isfetched: false });
       setPoolsRewards({ data: {} as IPoolsRewardsResponse, isfetched: false });
+
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
-        getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+        getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
           console.log(res);
           setStatsPosition(res);
         });
@@ -230,6 +234,11 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (userAddress) {
       setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
+      setStats1({} as IVotesStatsDataResponse);
+      getVotesStatsData(userAddress).then((res) => {
+        console.log(res);
+        setStats1(res);
+      });
       getAllLocksPositionData(userAddress).then((res) => {
         console.log(res);
         setLocksPosition({ data: res.allLocksData.reverse(), isfetched: true });
@@ -550,6 +559,7 @@ function MyPortfolio(props: any) {
                 plyBalance={plyBalance}
                 tokenPricePly={tokenPrice["PLY"]}
                 statsPositions={statsPositions}
+                stats1={stats1}
               />
             ) : (
               <StatsRewards
