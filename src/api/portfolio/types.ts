@@ -36,12 +36,15 @@ export interface IPositionsResponse {
   error?: string;
 }
 
-export interface IPositionStatsResponse {
+export interface ITvlStatsResponse {
   success: boolean;
   tvl: BigNumber;
+  error?: string;
+}
+
+export interface IPositionStatsResponse extends ITvlStatsResponse {
   totalEpochVotingPower: BigNumber;
   totalPLYLocked: BigNumber;
-  error?: string;
 }
 
 export interface IAllLocksPositionData extends IVeNFTData {

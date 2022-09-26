@@ -42,7 +42,7 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
   });
   if (userAddress) {
     return (
-      <div className="relative" ref={reff}>
+      <div className="relative flex" ref={reff}>
         <Image
           src={mobileConnectWallet}
           onClick={() => {

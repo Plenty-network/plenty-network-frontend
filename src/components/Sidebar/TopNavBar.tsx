@@ -8,6 +8,7 @@ import { Epoch } from "../Epoch";
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { NotificationIcon, NotiFicationType } from "../NotificationIcon";
 export interface ITopNavBarProps {
   setShowNotification: Function;
 }
@@ -37,7 +38,7 @@ export function TopNavBar(props: ITopNavBarProps) {
       <div className="h-full w-[240px] border-border-500/50 border-r flex items-center pl-[26px]">
         <Image src={plentyIcon} />
       </div>
-      <div className="flex justify-between flex-1">
+      <div className="flex justify-between flex-1 h-full">
         <Epoch />
         <div className="flex flex-row gap-7 ">
           <div className="flex flex-row gap-3.5 ">
@@ -50,9 +51,9 @@ export function TopNavBar(props: ITopNavBarProps) {
             <div className="my-1 flex items-center">
               <IconBTN image={"verticalline.svg"} />
             </div>
-            <IconBTN
+            <NotificationIcon
               className="cursor-pointer hover:opacity-90"
-              image={"bellicon.svg"}
+              type={NotiFicationType.haveNotification}
               onClick={props.setShowNotification}
             />
           </div>
