@@ -76,6 +76,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         id: "your liquidity",
         isToolTipEnabled: true,
         canShort: true,
+        accessorFn:(x:any)=>x.totalLiquidityAmount,
         showOnMobile: true,
         accessor: (x: any) => <YourLiquidity value={x.totalLiquidityAmount} />,
       },

@@ -37,7 +37,7 @@ export function TopNavBar(props: ITopNavBarProps) {
       <div className="h-full w-[240px] border-border-500/50 border-r flex items-center pl-[26px]">
         <Image src={plentyIcon} />
       </div>
-      <div className="flex justify-between flex-1">
+      <div className="flex justify-between flex-1 h-full">
         <Epoch />
         <div className="flex flex-row gap-7 ">
           <div className="flex flex-row gap-3.5 ">

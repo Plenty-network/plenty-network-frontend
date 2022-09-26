@@ -5,13 +5,20 @@ import * as React from "react";
 export interface ICircularImageInfoProps {
   imageArray?: Array<any>;
   className?:string;
+  isSecoundIconBorder?:boolean;
 }
 
 export function CircularImageInfo(props: ICircularImageInfoProps) {
   const { className='' } =props;
+  
   return (
     <div className={`pl-1 flex flex-row ${className}`} >
-     {props.imageArray?.map((token,i)=> <ImageCircle key={`CircularImageInfo_${i}`} src={token} />)}
+     {props.imageArray?.map((token,i)=>{ 
+    if(props.isSecoundIconBorder){
+      return (<ImageCircle  key={`CircularImageInfo_${i}`} className={`border-[0.94px] border-muted-235 rounded-full z-${i}`} src={token} />)
+    }
+     return (<ImageCircle  key={`CircularImageInfo_${i}`} src={token} />)
+     })}
     </div>
   );
 }
