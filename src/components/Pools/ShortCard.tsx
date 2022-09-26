@@ -79,7 +79,7 @@ export function ShortCard(props: IShortCardProps) {
               imageArray={[getImagesPath(x.tokenA.toString()), getImagesPath(x.tokenB.toString())]}
             />
             <div className="flex flex-col gap-[2px]">
-              <span className="text-f14 text-white ">
+              <span className="md:text-f14 text-f12 text-white ">
                 {tEZorCTEZtoUppercase(x.tokenA.toString())}/
                 {tEZorCTEZtoUppercase(x.tokenB.toString())}
               </span>
@@ -132,7 +132,7 @@ export function ShortCard(props: IShortCardProps) {
               imageArray={[getImagesPath(x.tokenA.toString()), getImagesPath(x.tokenB.toString())]}
             />
             <div className="flex flex-col gap-[2px]">
-              <span className="text-f14 text-white ">
+              <span className="md:text-f14 text-f12 text-white ">
                 {tEZorCTEZtoUppercase(x.tokenA.toString())}/
                 {tEZorCTEZtoUppercase(x.tokenB.toString())}
               </span>
@@ -268,7 +268,7 @@ export function ShortCard(props: IShortCardProps) {
       <div className={` overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={poolsTableData}
+          data={[...poolsTableData,...poolsTableData,...poolsTableData,...poolsTableData,...poolsTableData,...poolsTableData]}
           shortby="fees"
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}

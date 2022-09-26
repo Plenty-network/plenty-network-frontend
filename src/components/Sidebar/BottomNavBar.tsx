@@ -58,7 +58,7 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
     setActiveSubMenu(MenuType.NoMenu);
   });
   return (
-    <div className="mobile fixed bottom-0 bg-sideBar w-screen p-0 " ref={reff} >
+    <div className="mobile fixed bottom-0 bg-sideBar w-screen p-0 h-[60px] " ref={reff} >
       {activeSubMenu === MenuType.Menu && <SubMenuList />}
       {activeSubMenu === MenuType.MoreNavMenu && <MoreSubMenuList />}
       <div className="justify-between flex w-screen">

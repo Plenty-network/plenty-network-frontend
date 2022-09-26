@@ -55,10 +55,10 @@ const Table = <D extends object>({
   const headerRef = useRef(null);
   const [heightBody, setheightBody] = useState<number>(480);
 
-  // useEffect(() => {
-  //   const heightOfbody = getHeightOfElement(headerRef.current);
-  //   setheightBody(window.innerHeight - heightOfbody);
-  // }, [headerRef]);
+  useEffect(() => {
+    const heightOfbody = getHeightOfElement(headerRef.current);
+    isMobile?setheightBody(heightOfbody-64):setheightBody(heightOfbody);
+  }, [headerRef,isMobile]);
   const {
     getTableProps,
     headerGroups,
@@ -114,12 +114,12 @@ const Table = <D extends object>({
   return (
     <div>
       <table
-        ref={headerRef}
         className={clsx(" flex flex-col ", isVotesTable ? "gap-1.5" : "gap-1.5", TableWidth)}
       >
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr
+            ref={headerRef}
               key={`headerGroup_${index}`}
               className="border border-borderCommon bg-cardBackGround flex md:pr-5 md:pl-11 md:py-3 px-1 py-3  items-center rounded-t-xl	rounded-b "
             >
@@ -176,7 +176,7 @@ const Table = <D extends object>({
                           className={` flex items-center ${
                             i == 0 || (!isMobile && TableName === "lockPosition" && i === 1)
                               ? "justify-start"
-                              : "justify-end"
+                              : "md:justify-end justify-start"
                           } ${
                             TableName === "poolsRewards"
                               ? i === 0 || i == 2

@@ -21,7 +21,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   return (
     <div
-      className={`${props.className} flex justify-between items-center border-b border-b-borderCommon py-2 pt-7 md:pt-2 bg-cardBackGround`}
+      className={`${props.className} flex justify-between items-center border-b border-b-borderCommon py-2 pt-2 md:pt-2 bg-cardBackGround`}
     >
       <div className="flex gap-1">
         <div className="p-2 text-f18 font-medium text-white">
