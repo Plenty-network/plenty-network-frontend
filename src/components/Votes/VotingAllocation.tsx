@@ -6,6 +6,8 @@ import { COLORSdataChart } from "./PiChartComponent";
 import Protocol from "./Protocol";
 import { IAllocationProps } from "./types";
 import { tEZorCTEZTtoUpperCase } from "../../utils/commonUtils";
+import Image from "next/image";
+import loadingLogo from "../../assets/icon/common/loadingLogo.svg";
 const PiChart = dynamic(() => import("./PiChartComponent"), {
   loading: () => <></>,
 });
@@ -44,13 +46,25 @@ function VotingAllocation(props: IVotingAllocationProps) {
         />
       </div>
       <div className="flex flex-col items-center  mt-5  gap-2 justify-center w-[350px] ">
-        {piChartData?.allData && (
-          <PiChart
+        {piChartData?.allData ? (
+          <>
+          {piChartData.allData.length>0 ?<PiChart
             piChartData={piChartData}
             selectedColorIndex={selectedColorIndex}
             setSelectedColorIndex={setSelectedColorIndex}
-          />
-        )}
+          />:
+      <div className="h-[252px] flex flex-col justify-center" >
+        <div className="flex-col felx gap-1.5 justify-center items-center px-[42px] text-center" >
+          <div className="text-text-200 text-f16 ">You havent voted in this Epoch</div>
+          <div className="text-text-500 text-f14">Lorem Ipsum is simply dummy text of the printing and typeset.</div>
+        </div>
+      </div>}
+          </>
+        ):
+        <div className="h-[252px] flex flex-col justify-center" >
+          <Image height={50} width={50} src={loadingLogo} className="spin"/>
+        </div>
+        }
         <div className="grid grid-cols-2 justify-between   gap-[11px] gap-x-10 w-[300px]">
           {piChartData?.allData ? (
             piChartData.allData.map((e, i) => (
@@ -64,7 +78,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
               />
             ))
           ) : (
-            <></>
+           <></>
           )}
         </div>
       </div>
