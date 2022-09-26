@@ -3,6 +3,7 @@ import { BigNumber } from "bignumber.js";
 import { IAllLocksPositionData } from "../../api/portfolio/types";
 
 export interface ILocksTablePosition {
+  isfetched: boolean;
   setShowWithdraw: React.Dispatch<React.SetStateAction<boolean>>;
   setManageData: React.Dispatch<React.SetStateAction<IAllLocksPositionData>>;
   locksPosition: IAllLocksPositionData[];

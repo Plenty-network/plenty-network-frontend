@@ -31,22 +31,21 @@ export interface IManageBtnProps {
   tokenA: string;
   tokenB: string;
 }
-function compareNumericString(inp:any,inp2:any) {
-
-  console.log("hello world -1",inp);
- const rowA=inp;
- const rowB=inp[1];
- const id='volume';
- const desc=false;
+function compareNumericString(inp: any, inp2: any) {
+  const rowA = inp;
+  const rowB = inp[1];
+  const id = "volume";
+  const desc = false;
   let a = Number.parseFloat(rowA.original[id]);
   let b = Number.parseFloat(rowB.original[id]);
-  if (Number.isNaN(a)) {  // Blanks and non-numeric strings to bottom
-      a = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+  if (Number.isNaN(a)) {
+    // Blanks and non-numeric strings to bottom
+    a = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
   }
   if (Number.isNaN(b)) {
-      b = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+    b = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
   }
-  if (a > b) return 1; 
+  if (a > b) return 1;
   if (a < b) return -1;
   return 0;
 }
@@ -92,9 +91,9 @@ export function ShortCard(props: IShortCardProps) {
         showOnMobile: true,
         accessor: (x) => (
           <div className="flex gap-1 items-center max-w-[153px]">
-            <CircularOverLappingImage 
-            src1={getImagesPath(x.tokenA.toString())}
-            src2={getImagesPath(x.tokenB.toString())}
+            <CircularOverLappingImage
+              src1={getImagesPath(x.tokenA.toString())}
+              src2={getImagesPath(x.tokenB.toString())}
             />
             <div className="flex flex-col gap-[2px]">
               <span className="md:text-f14 text-f12 text-white ">
@@ -113,7 +112,7 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessorFn:(x:any)=>parseInt(x.arp),
+        accessorFn: (x: any) => parseInt(x.arp),
         accessor: (x) => (
           <AprInfo
             currentApr={x.apr.toString()}
@@ -147,9 +146,9 @@ export function ShortCard(props: IShortCardProps) {
         showOnMobile: true,
         accessor: (x) => (
           <div className="flex gap-2 items-center max-w-[153px]">
-            <CircularOverLappingImage 
-            src1={getImagesPath(x.tokenA.toString())}
-            src2={getImagesPath(x.tokenB.toString())}
+            <CircularOverLappingImage
+              src1={getImagesPath(x.tokenA.toString())}
+              src2={getImagesPath(x.tokenB.toString())}
             />
             <div className="flex flex-col gap-[2px]">
               <span className="md:text-f14 text-f12 text-white ">
@@ -182,8 +181,8 @@ export function ShortCard(props: IShortCardProps) {
         subText: "24h",
         isToolTipEnabled: true,
         canShort: true,
-        sortType:(a:any,b:any)=>compareNumericString(a,b),
-        accessor: (x:any) => (
+        sortType: (a: any, b: any) => compareNumericString(a, b),
+        accessor: (x: any) => (
           <PoolsTextWithTooltip
             text={valueFormat(x.volume.toNumber())}
             token1={x.volumeTokenA.toString()}
@@ -289,7 +288,14 @@ export function ShortCard(props: IShortCardProps) {
       <div className={` overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={[...poolsTableData,...poolsTableData,...poolsTableData,...poolsTableData,...poolsTableData,...poolsTableData]}
+          data={[
+            ...poolsTableData,
+            ...poolsTableData,
+            ...poolsTableData,
+            ...poolsTableData,
+            ...poolsTableData,
+            ...poolsTableData,
+          ]}
           shortby="fees"
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}

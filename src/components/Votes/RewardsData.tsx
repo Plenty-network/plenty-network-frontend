@@ -8,17 +8,13 @@ import { IRewardsDataProps } from "./types";
 
 export function RewardsData(props: IRewardsDataProps) {
   function nFormatter(num: BigNumber) {
-    console.log(num.toFixed());
     if (num.isGreaterThanOrEqualTo(1000000000)) {
-      console.log(num.toFixed());
       return num.dividedBy(1000000000).toFixed(0) + "B";
     }
     if (num.isGreaterThanOrEqualTo(1000000)) {
-      console.log(num.dividedBy(1000000).toFixed(0) + "M");
       return num.dividedBy(1000000).toFixed(0) + "M";
     }
     if (num.isGreaterThanOrEqualTo(1000)) {
-      console.log(num.toFixed());
       return num.dividedBy(1000).toFixed(0) + "K";
     }
 

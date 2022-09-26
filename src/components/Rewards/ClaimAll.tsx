@@ -88,7 +88,9 @@ function ClaimAll(props: IClaimProps) {
                       {tEZorCTEZtoUppercase(pool.tokenTwoSymbol)}
                     </span>
                   </div>
-                  <div className="ml-auto font-body4 text-white">{20}%</div>
+                  <div className="ml-auto font-body4 text-white">
+                    ${pool.gaugeEmission.toFixed(2)}
+                  </div>
                 </div>
               );
             })}

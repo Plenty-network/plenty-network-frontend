@@ -491,7 +491,15 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 {props.activeState === ActiveLiquidity.Rewards && "Your positions & Rewards"}
               </p>
               <p className="ml-1 relative top-[6px]">
-                <InfoIconToolTip message="Hello world" />
+                <InfoIconToolTip
+                  message={
+                    props.activeState === ActiveLiquidity.Liquidity
+                      ? "Add or remove liquidity from the selected pool."
+                      : props.activeState === ActiveLiquidity.Staking
+                      ? "Stake your liquidity tokens to get rewarded in PLY. Optionally, attach a veNFT to your stake and boost your rewards by up to 2.5x."
+                      : "View and harvest the PLY reward accrued by your stake."
+                  }
+                />
               </p>
             </div>
             <ManageLiquidityHeader
