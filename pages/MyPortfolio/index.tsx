@@ -61,8 +61,6 @@ import {
   ITvlStatsResponse,
   IVotesStatsDataResponse,
 } from "../../src/api/portfolio/types";
-import { getLPTokenPrices, getTokenPrices } from "../../src/api/util/price";
-import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
 import WithdrawPly from "../../src/components/LocksPosition/WithdrawPopup";
 import { setIsLoadingWallet } from "../../src/redux/walletLoading";
 import SelectNFT from "../../src/components/Votes/SelectNFT";
@@ -86,8 +84,9 @@ function MyPortfolio(props: any) {
   const [activeSection, setActiveSection] = React.useState<MyPortfolioSection>(
     MyPortfolioSection.Positions
   );
-  const userAddress = store.getState().wallet.address;
-  //const userAddress = "tz1NaGu7EisUCyfJpB16ktNxgSqpuMo8aSEk";
+  //const userAddress = store.getState().wallet.address;
+  const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv"; //kiran
+  //const userAddress = "tz1NaGu7EisUCyfJpB16ktNxgSqpuMo8aSEk"; //udit
   //tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv kiran
 
   const dispatch = useDispatch<AppDispatch>();
@@ -117,7 +116,11 @@ function MyPortfolio(props: any) {
     lockingDate: 0,
   });
   const [searchValue, setSearchValue] = useState("");
+  const allLocksRewardsData = store.getState().portfolioRewards.allLocksRewardsData;
   const [selectednft, setSelectednft] = useState(selectedDropDown);
+
+  const bribesStats = store.getState().portfolioRewards.totalBribesAmount;
+  const tradingfeeStats = store.getState().portfolioRewards.totalTradingFeesAmount;
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   const [contentTransaction, setContentTransaction] = useState("");
   const [plyBalance, setPlyBalance] = useState(new BigNumber(0));
@@ -232,6 +235,7 @@ function MyPortfolio(props: any) {
       lockingDate: 0,
     });
   };
+  console.log(allLocksRewardsData);
   useEffect(() => {
     if (userAddress) {
       setStatsPosition({} as ITvlStatsResponse);
@@ -320,7 +324,7 @@ function MyPortfolio(props: any) {
             " font-title3 cursor-pointer h-[50px] px-[24px] flex items-center   gap-1",
             activeSection === MyPortfolioSection.Positions
               ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
-              : "text-text-250 bg-muted-700"
+              : "text-text-250 bg-muted-700 rounded-l-lg"
           )}
           onClick={() => setActiveSection(MyPortfolioSection.Positions)}
         >
@@ -601,6 +605,8 @@ function MyPortfolio(props: any) {
               <StatsRewards
                 plyEmission={poolsRewards.data.gaugeEmissionsTotal}
                 setShowClaimAllPly={setShowClaimAllPly}
+                tradingfeeStats={tradingfeeStats}
+                bribesStats={bribesStats}
               />
             )}
           </div>
@@ -702,7 +708,12 @@ function MyPortfolio(props: any) {
                   />
                 </div>
               </div>
-              <LocksTableRewards className="md:px-5 md:pb-4   " voteData={voteData} />
+              <LocksTableRewards
+                className="md:px-5 md:pb-4   "
+                voteData={voteData}
+                allLocksRewardsData={allLocksRewardsData}
+                selectedDropDown={selectedDropDown}
+              />
             </>
           ))}
       </SideBarHOC>

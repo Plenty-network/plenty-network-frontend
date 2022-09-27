@@ -2,7 +2,13 @@ import { IVotePageData } from "../../api/votes/types";
 import { BigNumber } from "bignumber.js";
 
 import { Bribes } from "../../api/pools/types";
+import { IAllLocksRewardsData } from "../../api/portfolio/types";
 export interface IVotesTableRewards {
+  allLocksRewardsData: IAllLocksRewardsData;
+  selectedDropDown: {
+    votingPower: string;
+    tokenId: string;
+  };
   voteData: {
     [id: string]: IVotePageData;
   };
@@ -20,4 +26,7 @@ export interface IRewardsDataProps {
   fees2: number;
   bribesData: Bribes[];
 }
-export interface IVotingPowerProps {}
+export interface IVotingPowerProps {
+  votes: BigNumber;
+  percentage: BigNumber;
+}

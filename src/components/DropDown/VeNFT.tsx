@@ -111,7 +111,12 @@ export function VeNFT(props: IDropdownProps) {
                   key={`${text.tokenId}_${i}`}
                   votingPower={text.votingPower.toString()}
                   tokenId={text.tokenId.toString()}
-                  veNFT={text.locksState === ELocksState.AVAILABLE ? true : false}
+                  veNFT={
+                    text.locksState === ELocksState.AVAILABLE ||
+                    text.locksState === ELocksState.CONSUMED
+                      ? true
+                      : false
+                  }
                   lockState={text.locksState}
                   veNFTObj={text}
                 />
@@ -157,13 +162,19 @@ export function VeNFT(props: IDropdownProps) {
             ? () => {
                 dispatch(
                   setSelectedDropDown({
-                    votingPower: props.votingPower,
+                    votingPower:
+                      props.lockState === ELocksState.CONSUMED
+                        ? Number(props.veNFTObj.consumedVotingPower).toFixed(3)
+                        : props.votingPower,
                     tokenId: props.tokenId,
                   })
                 );
                 dispatch(setisMyportfolio(false));
                 props.onClick({
-                  votingPower: props.votingPower,
+                  votingPower:
+                    props.lockState === ELocksState.CONSUMED
+                      ? Number(props.veNFTObj.consumedVotingPower).toFixed(3)
+                      : props.votingPower,
                   tokenId: props.tokenId,
                 });
                 setIsDropDownActive(false);
@@ -179,7 +190,7 @@ export function VeNFT(props: IDropdownProps) {
         <span
           className={clsx(
             "ml-1 font-body4 ",
-            props.veNFT ? "text-white" : "text-text-800",
+            props.lockState === ELocksState.AVAILABLE ? "text-white" : "text-text-800",
             props.lockState === ELocksState.CONSUMED || props.lockState === ELocksState.DISABLED
               ? "flex"
               : ""

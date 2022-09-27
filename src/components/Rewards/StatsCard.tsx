@@ -23,7 +23,7 @@ function StatsCard(props: IStatsCardProps) {
             {props.value === undefined ? (
               <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
             ) : (
-              props.value?.toString()
+              `${props.isDollar ? "$" : ""}${props.value?.toString()}`
             )}
             {props.subValue && (
               <p className="font-subtitle5 text-border-400 ml-1 mb-px">{props.subValue}</p>
