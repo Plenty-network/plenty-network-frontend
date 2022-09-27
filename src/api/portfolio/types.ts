@@ -97,14 +97,14 @@ export enum EFeesStatus {
 }
 
 export interface ILockRewardsBribeData {
-  bribeId: string;//BigNumber;
-  bribeValue: string;//BigNumber;
+  bribeId: BigNumber;
+  bribeValue: BigNumber;
   tokenSymbol: string;
 }
 
 export interface ILockRewardsFeeData {
-  tokenAFees: string;//BigNumber;
-  tokenBFees: string;//BigNumber;
+  tokenAFees: BigNumber;
+  tokenBFees: BigNumber;
 }
 
 export interface ILockRewardsEpochData {
@@ -112,10 +112,10 @@ export interface ILockRewardsEpochData {
   tokenASymbol: string;
   tokenBSymbol: string;
   ammType: AMM_TYPE;
-  votes: string;//BigNumber;
-  votesPercentage: string;//BigNumber;
-  bribesAmount: string;//BigNumber;
-  feesAmount: string;//BigNumber;
+  votes: BigNumber;
+  votesPercentage: BigNumber;
+  bribesAmount: BigNumber;
+  feesAmount: BigNumber;
   feesStatus: EFeesStatus;
   feesData: ILockRewardsFeeData;
   bribesData: ILockRewardsBribeData[];
@@ -136,12 +136,12 @@ export interface IAllLocksRewardsResponse {
 }
 
 export interface IBribesValueAndData {
-  bribesValue: string;//BigNumber;
+  bribesValue: BigNumber;
   bribesData: ILockRewardsBribeData[];
 }
 
 export interface IFeesValueAndData {
-  feesAmount: string;//BigNumber;
+  feesAmount: BigNumber;
   feesStatus: EFeesStatus;
   feesData: ILockRewardsFeeData;
 }
