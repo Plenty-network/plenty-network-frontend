@@ -30,7 +30,7 @@ export function VotingPower(props: IVotingPowerProps) {
           toolTipChild={<div className="text-center"></div>}
         >
           <div className=" ">
-            <span className="font-f13">3783</span>
+            <span className="font-f13">{props.votes.toFixed(2)}</span>
             <span className="relative top-1 ml-px">
               <Image alt={"alt"} src={light} width={"16px"} height={"16px"} />
             </span>
@@ -42,7 +42,7 @@ export function VotingPower(props: IVotingPowerProps) {
           toolTipChild={<div className="text-center"></div>}
         >
           <div className=" ">
-            <span className="font-f13">70%</span>
+            <span className="font-f13">{props.percentage.toFixed(0)}%</span>
           </div>
         </ToolTip>
       </div>

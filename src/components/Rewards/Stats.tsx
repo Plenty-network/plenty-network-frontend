@@ -17,21 +17,24 @@ function StatsRewards(props: IStatsRewardsProps) {
       />
       <StatsCard
         title={"Trading fees"}
-        value={"$12.3 K "}
+        value={props.tradingfeeStats.toFixed(2)}
         setShowClaimAllPly={props.setShowClaimAllPly}
         disable={true}
+        isDollar={true}
       />
       <StatsCard
         title={"Bribes"}
-        value={"$12.3 K "}
+        value={props.bribesStats.toFixed(2)}
         setShowClaimAllPly={props.setShowClaimAllPly}
         disable={true}
+        isDollar={true}
       />
       <StatsCard
         title={"Unclaimed Inflation"}
         value={"322 PLY "}
         setShowClaimAllPly={props.setShowClaimAllPly}
         disable={true}
+        isDollar={true}
       />
     </div>
   );

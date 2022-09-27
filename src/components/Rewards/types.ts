@@ -7,9 +7,13 @@ export interface IStatsCardProps {
   subValue?: string;
   isLast?: boolean;
   disable: boolean;
+  isDollar?: boolean;
   setShowClaimAllPly: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IStatsRewardsProps {
+  tradingfeeStats: BigNumber;
+  bribesStats: BigNumber;
+
   setShowClaimAllPly: React.Dispatch<React.SetStateAction<boolean>>;
   plyEmission: BigNumber;
 }
