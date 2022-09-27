@@ -77,7 +77,7 @@ const Home: NextPage = (props) => {
         <meta name="description" content="plenty network" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <SideBarHOC>
+      <SideBarHOC makeTopBarScroll>
         <Swap otherProps={otherPageProps} />
       </SideBarHOC>
     </>
