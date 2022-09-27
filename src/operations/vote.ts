@@ -494,9 +494,9 @@ export const vote = async (
             });
           }
 
-        const batch =  Tezos.wallet.batch(allBatch);
+          const batch =  Tezos.wallet.batch(allBatch);
 
-        const batchOp = await batch.send();
+          const batchOp = await batch.send();
         setShowConfirmTransaction(false);
         resetAllValues();
   
