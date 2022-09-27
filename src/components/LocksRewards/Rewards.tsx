@@ -22,7 +22,7 @@ export function RewardsData(props: IRewardsDataProps) {
   }
   return (
     <>
-      <div className="flex flex-col  items-end">
+      <div className="flex flex-col justify-center items-center">
         <ToolTip
           position={Position.top}
           disable={props.bribesData.length === 0 ? true : false}

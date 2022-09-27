@@ -32,7 +32,7 @@ export function TopBar(props: ITopBar) {
       <div className="bg-card-800 px-6 py-3 mt-3 overflow-x-auto md:overflow-x-none manage">
         <div className=" flex items-center">
           <div className="cursor-pointer">
-            <Image src={info} />
+            <Image alt={"alt"} src={info} />
           </div>
           <div className="text-white font-body2 relative -top-0.5 ml-1">My Lock</div>
         </div>
@@ -40,13 +40,13 @@ export function TopBar(props: ITopBar) {
         <div className="flex gap-2 mt-2  min-w-[521px] sm:min-w-full">
           <p className="border border-text-800 bg-card-900 flex  pl-4 items-center h-16 w-[156px] rounded-lg">
             <p>
-              <Image src={veNFT} />
+              <Image alt={"alt"} src={veNFT} />
             </p>
             <p className="ml-2">
               <div className="text-white font-subtitle3">#{Number(props.manageData.tokenId)}</div>
               <div className="flex mt-0.5">
                 <p className="font-subtitle1 text-text-500 mr-1">vePLY</p>
-                <Image src={link} />
+                <Image alt={"alt"} src={link} />
               </div>
             </p>
           </p>

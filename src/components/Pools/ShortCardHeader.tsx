@@ -35,12 +35,14 @@ export function Tabs(props: ITabsProps) {
             ? "w-[200px]"
             : "w-[150px]"
           : props.TableName === "lockPosition"
-          ? props.index === 0
+          ? !isMobile && props.index === 0
             ? " w-[150px]"
-            : props.index === 2
+            : !isMobile && props.index === 2
             ? "w-[164px]"
+            : isMobile && props.index === 0
+            ? "w-[200px]"
             : isMobile && props.index === 1
-            ? "w-[100px] "
+            ? "w-[80px] pr-3"
             : isMobile && props.index === 2
             ? "w-[85px]"
             : isMobile && props.index === 3
@@ -58,7 +60,7 @@ export function Tabs(props: ITabsProps) {
             : "w-[80px] md:w-[120px]"
           : props.TableName === "votesTable"
           ? props.index === 4
-            ? "w-[120px] md:w-[220px]"
+            ? "w-[120px] md:w-[260px]"
             : props.index === 0
             ? "w-[150px]"
             : "w-[112px]"
@@ -89,7 +91,7 @@ export function Tabs(props: ITabsProps) {
               (props.TableName === "poolsPosition" && isMobile && props.index === 1) ||
               (props.TableName === "lockPosition" && isMobile && props.index === 1) ? (
                 <span className="relative top-[3px] mr-1">
-                  <Image src={info} />
+                  <Image alt={"alt"} src={info} />
                 </span>
               ) : (
                 <InfoIconToolTip message="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry" />
@@ -107,13 +109,16 @@ export function Tabs(props: ITabsProps) {
           props.arrowUp && (
             <div>
               <Image
+                alt={"alt"}
                 src={arrowDown}
                 className={props.arrowUp === "up" ? "rotate-0" : "rotate-180"}
+                width={"13px"}
+                height={"13px"}
               />
             </div>
           )
           // : (
-          //   <Image src={arrowDown} className={"opacity-0"} />
+          //   <Image alt={'alt'} src={arrowDown} className={"opacity-0"} />
           // )
         }
       </div>

@@ -31,7 +31,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
     <>
       <div className="px-4 md:px-6 flex">
         <div className="cursor-pointer" onClick={() => props.setScreen("1")}>
-          <Image src={arrowLeft} />
+          <Image alt={"alt"} src={arrowLeft} />
         </div>
         <div className="mx-2 text-white font-title3">Confirm locking </div>
       </div>
@@ -46,7 +46,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
         </div>
         <div className="border-t mt-2 mb-5 border-text-800/[0.5]"></div>
         <div className="flex justify-center">
-          <Image src={nft} />
+          <Image alt={"alt"} src={nft} />
         </div>
         <div className="border-t mt-5 mb-2  border-text-800/[0.5]"></div>
         <div className={clsx("mt-3 px-3 md:px-5 flex items-center")}>
@@ -61,7 +61,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
                   </div>
                 }
               >
-                <Image src={info} className="cursor-pointer" />
+                <Image alt={"alt"} src={info} className="cursor-pointer" />
               </ToolTip>
             </span>
             <span className="text-white ml-1 font-subtitle2 ">{dateFormat} UTC</span>
@@ -78,14 +78,14 @@ function ConfirmLocking(props: IConfirmLockingProps) {
                     </div>
                   }
                 >
-                  <Image src={info} className="cursor-pointer" />
+                  <Image alt={"alt"} src={info} className="cursor-pointer" />
                 </ToolTip>
               </span>
               <span className="text-white ml-1 font-subtitle2 block">{dateFormat} UTC</span>
             </div>
           </span>
           <span className="ml-auto flex rounded-lg bg-primary-500/[0.2] h-[32px] items-center px-3">
-            <Image src={lockPurple} />
+            <Image alt={"alt"} src={lockPurple} />
             <span className="font-subtitle2 text-primary-500 ml-1">{props.endDate}</span>
           </span>
         </div>

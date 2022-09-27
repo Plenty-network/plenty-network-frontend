@@ -19,7 +19,7 @@ export function InfoIconToolTip(props: IInfoIconToolTipProps) {
         message={props.message}
         toolTipChild={props.toolTipChild}
       >
-        <Image src={infoIcon} />
+        <Image alt={"alt"} src={infoIcon} />
       </ToolTip>
     </span>
   );

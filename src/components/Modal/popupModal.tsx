@@ -51,7 +51,7 @@ export function PopUpModal(props: IPopUpModalProps) {
           }}
         >
           {/* close btn */}
-          <Image src={close} />
+          <Image alt={"alt"} src={close} />
         </div>
         {props.headerChild && <div className="font-title3">{props.headerChild}</div>}
         {props.title && <div className="font-title3">{props.title}</div>}

@@ -16,7 +16,7 @@ function StatsCard(props: IStatsCardProps) {
       >
         <p>
           <div className="flex gap-1 ">
-            <Image src={info} />
+            <Image alt={"alt"} src={info} />
             <p className="text-white font-body1 ">{props.title}</p>
           </div>
           <div className="font-input-text1 text-white mt-2 flex items-end">

@@ -37,11 +37,11 @@ function CastVote(props: ICastVoteProps) {
         <>
           <div className="flex">
             <div className="cursor-pointer" onClick={() => props.setShow(false)}>
-              <Image src={arrowLeft} />
+              <Image alt={"alt"} src={arrowLeft} />
             </div>
             <div className="mx-2 text-white font-title3">Cast Vote </div>
             {/* <div className="relative top-[2px]">
-              <Image src={info} />
+              <Image alt={'alt'} src={info} />
             </div> */}
           </div>
           <div className="border bg-card-200 mt-2 border-text-800 rounded-2xl  pt-[22px] pb-[20px]">
@@ -52,7 +52,7 @@ function CastVote(props: ICastVoteProps) {
                 <span className="font-body1 text-text-250 ml-1">distributed between</span>
               </div>
               <div className="ml-auto bg-text-800/[0.5] relative -top-[9px] rounded-lg flex items-center h-[36px] px-2">
-                <Image src={lock} />
+                <Image alt={"alt"} src={lock} />
                 <span className="font-body4 text-white">
                   {Number(props.selectedDropDown.votingPower).toFixed(3)} /
                 </span>
@@ -70,10 +70,20 @@ function CastVote(props: ICastVoteProps) {
                   <div className="flex items-center">
                     <span className="flex">
                       <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                        <Image src={getImagesPath(pool.tokenA)} width={"24px"} height={"24px"} />
+                        <Image
+                          alt={"alt"}
+                          src={getImagesPath(pool.tokenA)}
+                          width={"24px"}
+                          height={"24px"}
+                        />
                       </div>
                       <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                        <Image src={getImagesPath(pool.tokenB)} width={"24px"} height={"24px"} />
+                        <Image
+                          alt={"alt"}
+                          src={getImagesPath(pool.tokenB)}
+                          width={"24px"}
+                          height={"24px"}
+                        />
                       </div>
                     </span>
                     <span className="text-white font-body4  relative top-[1px]">
@@ -90,14 +100,14 @@ function CastVote(props: ICastVoteProps) {
               </span>
               <span className="hidden md:block">
                 <span className="relative top-0.5">
-                  <Image src={info} className="cursor-pointer" />
+                  <Image alt={"alt"} src={info} className="cursor-pointer" />
                 </span>
                 <span className="text-white ml-1 font-subtitle2 ">{dateFormat} UTC</span>
               </span>
               <span className="block md:hidden">
                 <div>
                   <span className="relative top-0.5">
-                    <Image src={info} className="cursor-pointer" />
+                    <Image alt={"alt"} src={info} className="cursor-pointer" />
                   </span>
                   <span className="text-white ml-1 font-subtitle2 ">{dateFormat} UTC</span>
                 </div>

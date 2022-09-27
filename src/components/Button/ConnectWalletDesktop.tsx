@@ -52,7 +52,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
           }}
           className="flex flex-row justify-center items-center gap-2 bg-primary-500/10 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/30"
         >
-          <Image src={templeLogo} />
+          <Image alt={"alt"} src={templeLogo} />
           <p
             className="text-f14 "
             style={{
@@ -64,8 +64,8 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
           >
             {truncateMiddle(userAddress, 4, 4, "...")}
           </p>
-          {isConnectWalletLoading && <Image src={loadingLogo} className="spin" />}
-          <Image src={settingLogo} />
+          {isConnectWalletLoading && <Image alt={"alt"} src={loadingLogo} className="spin" />}
+          <Image alt={"alt"} src={settingLogo} />
         </button>
         {showMenu && (
           <div className="absolute w-[320px] fade-in-3  right-0 top-[55px] mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
@@ -77,23 +77,23 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
               className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-context-menu text-white text-f14"
               onClick={() => copy(userAddress)}
             >
-              <Image src={copyLogo} />
+              <Image alt={"alt"} src={copyLogo} />
               <span>Copy address</span>
             </p>
             <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-not-allowed text-white text-f14">
-              <Image src={fiatLogo} />
+              <Image alt={"alt"} src={fiatLogo} />
               <span>Fiat</span>
             </p>
             <p
               className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
               onClick={switchWalletFunction}
             >
-              <Image src={switchLogo} />
+              <Image alt={"alt"} src={switchLogo} />
               <span>Switch account</span>
             </p>
 
             <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-not-allowed text-white text-f14">
-              <Image src={nodeSelectorLogo} />
+              <Image alt={"alt"} src={nodeSelectorLogo} />
               <span>Node Selector</span>
             </p>
 
@@ -101,7 +101,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
               onClick={disconnectUserWallet}
               className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
             >
-              <Image src={disconnectLogo} />
+              <Image alt={"alt"} src={disconnectLogo} />
               <span>Disconnect</span>
             </p>
           </div>
