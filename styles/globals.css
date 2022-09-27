@@ -14,13 +14,16 @@ body.swap {
     url('/assets/image/Noise4.png');
   color: #ffffff;
 }
-body {
-  background-color: #090015;
-  background-size: cover;
-  background-image: url('/assets/image/plentyBackgroundWithoutline.svg'),
-    url('/assets/image/Noise4.png');
-  /* background: linear-gradient(195.23deg, #090015 20.19%, rgba(59, 8, 133, 0.3) 82.41%, rgba(98, 2, 239, 0.5) 219.63%, rgba(9, 0, 21, 0.29) 340.7%); */
+html{
+  height: -webkit-fill-available;
+} 
 
+body{
+  height: 100%;
+}
+body {
+  background: linear-gradient(205.75deg, #090015 25.13%, #220449 81.59%);
+  background-color: black;
   color: #ffffff;
 }
 /* width */
