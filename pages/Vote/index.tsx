@@ -357,7 +357,7 @@ export default function Vote() {
       </Head>
       <SideBarHOC>
         <div className="md:flex ">
-          <div className="md:min-w-[562px] ">
+          <div className="md:min-w-[562px] md:w-full">
             <HeadInfo
               className="px-2 md:px-3"
               title="Vote"
@@ -409,7 +409,9 @@ export default function Vote() {
                       ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                       : true) ? (
                     <ToolTip
-                      message={"Cast 100% of your Votes to proceed "}
+                      message={
+                        "Percentage allocation of the veNFT’s voting power. A 100% allocation is required to cast a vote."
+                      }
                       id="tooltip8"
                       position={Position.top}
                     >
@@ -530,7 +532,10 @@ export default function Vote() {
                   <ToolTip
                     id="tooltip2"
                     toolTipChild={
-                      <div className="w-[200px]">Verify your vote percentage and cast vote</div>
+                      <div className="w-[200px]">
+                        Percentage allocation of the veNFT’s voting power. A 100% allocation is
+                        required to cast a vote.
+                      </div>
                     }
                   >
                     <Image src={info} className="infoIcon " />

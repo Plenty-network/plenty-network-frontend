@@ -76,7 +76,7 @@ export default function Pools(props: IIndexProps) {
         {/* className='' */}
         <div>
           <HeadInfo
-            className="md:px-3"
+           className="px-2 md:px-3 md:py-[11px]"
             title="Pools"
             toolTipContent="Watch how to add liquidity, stake, and earn PLY. "
             searchValue={searchValue}

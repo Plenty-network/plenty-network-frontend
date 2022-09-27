@@ -155,7 +155,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           shortby="Myvotes"
           isFetched={!noSearchResult && votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
-          TableName="poolsRewards"
+          TableName="locksRewards"
           TableWidth=""
         />
       </div>

@@ -4,7 +4,7 @@ import { usePoolsMain } from "../../api/pools/query/poolsmain.query";
 import { IPoolsDataWrapperResponse } from "../../api/pools/types";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
-import { CircularImageInfo } from "./Component/CircularImageInfo";
+import { CircularImageInfo, CircularOverLappingImage } from "./Component/CircularImageInfo";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { AprInfo } from "./Component/AprInfo";
@@ -31,7 +31,24 @@ export interface IManageBtnProps {
   tokenA: string;
   tokenB: string;
 }
-
+function compareNumericString(inp: any, inp2: any) {
+  const rowA = inp;
+  const rowB = inp[1];
+  const id = "volume";
+  const desc = false;
+  let a = Number.parseFloat(rowA.original[id]);
+  let b = Number.parseFloat(rowB.original[id]);
+  if (Number.isNaN(a)) {
+    // Blanks and non-numeric strings to bottom
+    a = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+  }
+  if (Number.isNaN(b)) {
+    b = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+  }
+  if (a > b) return 1;
+  if (a < b) return -1;
+  return 0;
+}
 export function ShortCard(props: IShortCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
@@ -74,12 +91,12 @@ export function ShortCard(props: IShortCardProps) {
         showOnMobile: true,
         accessor: (x) => (
           <div className="flex gap-1 items-center max-w-[153px]">
-            <CircularImageInfo
-              className="w-7 h-7"
-              imageArray={[getImagesPath(x.tokenA.toString()), getImagesPath(x.tokenB.toString())]}
+            <CircularOverLappingImage
+              src1={getImagesPath(x.tokenA.toString())}
+              src2={getImagesPath(x.tokenB.toString())}
             />
             <div className="flex flex-col gap-[2px]">
-              <span className="text-f14 text-white ">
+              <span className="md:text-f14 text-f12 text-white ">
                 {tEZorCTEZtoUppercase(x.tokenA.toString())}/
                 {tEZorCTEZtoUppercase(x.tokenB.toString())}
               </span>
@@ -95,6 +112,7 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
+        accessorFn: (x: any) => parseInt(x.arp),
         accessor: (x) => (
           <AprInfo
             currentApr={x.apr.toString()}
@@ -128,11 +146,12 @@ export function ShortCard(props: IShortCardProps) {
         showOnMobile: true,
         accessor: (x) => (
           <div className="flex gap-2 items-center max-w-[153px]">
-            <CircularImageInfo
-              imageArray={[getImagesPath(x.tokenA.toString()), getImagesPath(x.tokenB.toString())]}
+            <CircularOverLappingImage
+              src1={getImagesPath(x.tokenA.toString())}
+              src2={getImagesPath(x.tokenB.toString())}
             />
             <div className="flex flex-col gap-[2px]">
-              <span className="text-f14 text-white ">
+              <span className="md:text-f14 text-f12 text-white ">
                 {tEZorCTEZtoUppercase(x.tokenA.toString())}/
                 {tEZorCTEZtoUppercase(x.tokenB.toString())}
               </span>
@@ -162,7 +181,8 @@ export function ShortCard(props: IShortCardProps) {
         subText: "24h",
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x) => (
+        sortType: (a: any, b: any) => compareNumericString(a, b),
+        accessor: (x: any) => (
           <PoolsTextWithTooltip
             text={valueFormat(x.volume.toNumber())}
             token1={x.volumeTokenA.toString()}
@@ -229,7 +249,7 @@ export function ShortCard(props: IShortCardProps) {
   function ManageBtn(props: IManageBtnProps): any {
     return (
       <div
-        className="bg-primary-500/10 cursor-pointer  text-primary-500 hover:opacity-90 px-7 py-2 rounded-lg"
+        className="bg-primary-500/10 hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-7 py-2 rounded-lg"
         onClick={() => {
           dispatch(getTotalVotingPower());
           props.isLiquidityAvailable
@@ -268,7 +288,14 @@ export function ShortCard(props: IShortCardProps) {
       <div className={` overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={poolsTableData}
+          data={[
+            ...poolsTableData,
+            ...poolsTableData,
+            ...poolsTableData,
+            ...poolsTableData,
+            ...poolsTableData,
+            ...poolsTableData,
+          ]}
           shortby="fees"
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}

@@ -14,70 +14,13 @@ import ClaimPly from "./ClaimPopup";
 import { IPoolsRewardsData } from "../../api/portfolio/types";
 import { PLYEmission } from "./PLYEmisiion";
 import { Boost } from "./Boost";
+import { NoPoolsPosition } from "../Rewards/NoContent";
 
 export function PoolsTableRewards(props: IPoolsTableRewards) {
-  console.log(props.poolsData);
   const { valueFormat } = useTableNumberUtils();
-  const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   const [showClaimPly, setShowClaimPly] = React.useState(false);
 
-  //const votesArray = Object.entries(props.voteData);
-  // const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
-  //   new Array(votesArray.length).fill(0)
-  // );
-  const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
-    ActiveLiquidity.Liquidity
-  );
   const [noSearchResult, setNoSearchResult] = React.useState(false);
-  // const votedataArray = React.useMemo(() => {
-  //   votesArray.map((data, index) => {
-  //     totalVotes1[index] = Number(data[1].myVotesPercentage.toFixed(0));
-  //   });
-
-  //   return votesArray.map((data, index) => ({
-  //     index: index,
-  //     amm: data[0],
-  //     votes: data[1],
-  //   }));
-  // }, [votesArray.length]);
-  const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
-    name: "USDC.e",
-    image: `/assets/tokens/USDC.e.png`,
-    symbol: "USDC.e",
-  });
-  const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
-    name: "USDT.e",
-    image: `/assets/tokens/USDT.e.png`,
-    symbol: "USDT.e",
-  });
-  //const [votedata, setVotedata] = React.useState(votedataArray);
-  // React.useEffect(() => {
-  //   if (votedataArray.length !== 0) setVotedata(votedataArray);
-  //   else setVotedata([]);
-  // }, [votedataArray.length]);
-  // React.useEffect(() => {
-  //   if (props.searchValue && props.searchValue.length) {
-  //     const _votesTableData = votedataArray.filter((e: any) => {
-  //       return (
-  //         e.votes.tokenA.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-  //         e.votes.tokenB.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-  //         (props.searchValue.toLowerCase() === "xtz" &&
-  //           e.votes.tokenA.toLowerCase().search(/\btez\b/) >= 0) ||
-  //         (props.searchValue.toLowerCase() === "xtz" &&
-  //           e.votes.tokenB.toLowerCase().search(/\btez\b/) >= 0)
-  //       );
-  //     });
-  //     if (_votesTableData.length === 0) {
-  //       setNoSearchResult(true);
-  //     } else {
-  //       setNoSearchResult(false);
-  //     }
-  //     setVotedata(_votesTableData);
-  //   } else {
-  //     setVotedata(votedataArray);
-  //   }
-  // }, [props.searchValue]);
-
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
@@ -85,7 +28,9 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
   };
   const tEZorCTEZtoUppercase = (a: string) =>
     a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
-
+  const NoData = React.useMemo(() => {
+    return <NoPoolsPosition />;
+  }, []);
   const mobilecolumns = React.useMemo<Column<IPoolsRewardsData>[]>(
     () => [
       {
@@ -177,10 +122,11 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
           data={props.poolsData ? props.poolsData : []}
           noSearchResult={noSearchResult}
           shortby="Myvotes"
-          isFetched={props.poolsData?.length === 0 ? false : true}
+          isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsRewards"
           TableWidth=""
+          NoData={NoData}
         />
       </div>
       {showClaimPly && <ClaimPly show={showClaimPly} setShow={setShowClaimPly} />}

@@ -50,12 +50,16 @@ import {
   getPoolsRewardsData,
   getPositionsData,
   getPositionStatsData,
+  getTvlStatsData,
+  getVotesStatsData,
 } from "../../src/api/portfolio/kiran";
 import {
   IAllLocksPositionData,
   IPoolsRewardsResponse,
   IPositionsData,
   IPositionStatsResponse,
+  ITvlStatsResponse,
+  IVotesStatsDataResponse,
 } from "../../src/api/portfolio/types";
 import { getLPTokenPrices, getTokenPrices } from "../../src/api/util/price";
 import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
@@ -66,6 +70,11 @@ import { InputSearchBox } from "../../src/components/Pools/Component/SearchInput
 import { LocksTableRewards } from "../../src/components/LocksRewards/LocksRewardsTable";
 import ClaimAll from "../../src/components/Rewards/ClaimAll";
 import { harvestAllRewards } from "../../src/operations/rewards";
+import {
+  fetchAllLocksRewardsData,
+  fetchAllRewardsOperationsData,
+} from "../../src/redux/myPortfolio/rewards";
+import { API_RE_ATTAMPT_DELAY } from "../../src/constants/global";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -78,7 +87,9 @@ function MyPortfolio(props: any) {
     MyPortfolioSection.Positions
   );
   const userAddress = store.getState().wallet.address;
-  //const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv";
+  //const userAddress = "tz1NaGu7EisUCyfJpB16ktNxgSqpuMo8aSEk";
+  //tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv kiran
+
   const dispatch = useDispatch<AppDispatch>();
 
   const [showClaimAllPly, setShowClaimAllPly] = React.useState(false);
@@ -110,16 +121,27 @@ function MyPortfolio(props: any) {
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   const [contentTransaction, setContentTransaction] = useState("");
   const [plyBalance, setPlyBalance] = useState(new BigNumber(0));
-  const [poolsPosition, setPoolsPosition] = useState<IPositionsData[]>([] as IPositionsData[]);
-  const [poolsRewards, setPoolsRewards] = useState<IPoolsRewardsResponse>(
-    {} as IPoolsRewardsResponse
-  );
-  const [locksPosition, setLocksPosition] = useState<IAllLocksPositionData[]>(
-    [] as IAllLocksPositionData[]
-  );
+  const [poolsPosition, setPoolsPosition] = useState<{
+    data: IPositionsData[];
+    isfetched: boolean;
+  }>({ data: [] as IPositionsData[], isfetched: false });
+  const [poolsRewards, setPoolsRewards] = useState<{
+    data: IPoolsRewardsResponse;
+    isfetched: boolean;
+  }>({ data: {} as IPoolsRewardsResponse, isfetched: false });
+  const [locksPosition, setLocksPosition] = useState<{
+    data: IAllLocksPositionData[];
+    isfetched: boolean;
+  }>({ data: [] as IAllLocksPositionData[], isfetched: false });
   const currentEpoch = store.getState().epoch.currentEpoch;
 
   const [lockOperation, setLockOperation] = useState(false);
+  const locksRewardsDataError = useAppSelector(
+    (state) => state.portfolioRewards.locksRewardsDataError
+  );
+  const rewardsOperationDataError = useAppSelector(
+    (state) => state.portfolioRewards.rewardsOperationDataError
+  );
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -151,12 +173,36 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  useEffect(() => {
+    if (userAddress && Object.keys(tokenPrice).length !== 0) {
+      dispatch(
+        fetchAllLocksRewardsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+      );
+      dispatch(fetchAllRewardsOperationsData(userAddress));
+    }
+  }, [userAddress, tokenPrice]);
+  useEffect(() => {
+    if (userAddress && Object.keys(tokenPrice).length !== 0 && locksRewardsDataError) {
+      setTimeout(() => {
+        dispatch(
+          fetchAllLocksRewardsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+        );
+      }, API_RE_ATTAMPT_DELAY);
+    }
+  }, [locksRewardsDataError]);
+  useEffect(() => {
+    if (userAddress && Object.keys(tokenPrice).length !== 0 && rewardsOperationDataError) {
+      setTimeout(() => {
+        dispatch(fetchAllRewardsOperationsData(userAddress));
+      }, API_RE_ATTAMPT_DELAY);
+    }
+  }, [rewardsOperationDataError]);
   const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
     {} as { [id: string]: IVotePageData }
   );
-  const [statsPositions, setStatsPosition] = useState<IPositionStatsResponse>(
-    {} as IPositionStatsResponse
-  );
+  const [statsPositions, setStatsPosition] = useState<ITvlStatsResponse>({} as ITvlStatsResponse);
+  const [stats1, setStats1] = useState<IVotesStatsDataResponse>({} as IVotesStatsDataResponse);
+
   useEffect(() => {
     votesPageDataWrapper(934, undefined).then((res) => {
       setVoteData(res.allData);
@@ -188,23 +234,24 @@ function MyPortfolio(props: any) {
   };
   useEffect(() => {
     if (userAddress) {
-      setStatsPosition({} as IPositionStatsResponse);
-      setPoolsPosition([] as IPositionsData[]);
-      setPoolsRewards({} as IPoolsRewardsResponse);
+      setStatsPosition({} as ITvlStatsResponse);
+      setPoolsPosition({ data: [] as IPositionsData[], isfetched: false });
+      setPoolsRewards({ data: {} as IPoolsRewardsResponse, isfetched: false });
+
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
-        getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+        getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
           console.log(res);
           setStatsPosition(res);
         });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
           console.log(res);
-          setPoolsPosition(res.positionPoolsData);
+          setPoolsPosition({ data: res.positionPoolsData, isfetched: true });
         });
       }
       if (Object.keys(tokenPrice).length !== 0) {
         getPoolsRewardsData(userAddress, tokenPrice).then((res) => {
           console.log(res);
-          setPoolsRewards(res);
+          setPoolsRewards({ data: res, isfetched: true });
         });
       }
     }
@@ -221,22 +268,26 @@ function MyPortfolio(props: any) {
   }, [userAddress, currentEpoch?.epochNumber]);
   useEffect(() => {
     if (userAddress) {
-      setLocksPosition([] as IAllLocksPositionData[]);
+      setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
+      setStats1({} as IVotesStatsDataResponse);
+      getVotesStatsData(userAddress).then((res) => {
+        console.log(res);
+        setStats1(res);
+      });
       getAllLocksPositionData(userAddress).then((res) => {
         console.log(res);
-        setLocksPosition(res.allLocksData.reverse());
+        setLocksPosition({ data: res.allLocksData.reverse(), isfetched: true });
       });
     }
   }, [userAddress, activeSection, currentEpoch?.epochNumber]);
   useEffect(() => {
-    console.log(props.isLoading, props.operationSuccesful);
     if (!props.isLoading && props.operationSuccesful) {
-      setLocksPosition([] as IAllLocksPositionData[]);
+      setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
       setStatsPosition({} as IPositionStatsResponse);
-      setPoolsPosition([] as IPositionsData[]);
+      setPoolsPosition({ data: [] as IPositionsData[], isfetched: false });
       getAllLocksPositionData(userAddress).then((res) => {
         console.log(res);
-        setLocksPosition(res.allLocksData.reverse());
+        setLocksPosition({ data: res.allLocksData.reverse(), isfetched: true });
       });
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
@@ -245,7 +296,7 @@ function MyPortfolio(props: any) {
         });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
           console.log(res);
-          setPoolsPosition(res.positionPoolsData);
+          setPoolsPosition({ data: res.positionPoolsData, isfetched: true });
         });
       }
     }
@@ -460,7 +511,7 @@ function MyPortfolio(props: any) {
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     harvestAllRewards(
-      poolsRewards.gaugeAddresses,
+      poolsRewards.data.gaugeAddresses,
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction
@@ -542,10 +593,11 @@ function MyPortfolio(props: any) {
                 plyBalance={plyBalance}
                 tokenPricePly={tokenPrice["PLY"]}
                 statsPositions={statsPositions}
+                stats1={stats1}
               />
             ) : (
               <StatsRewards
-                plyEmission={poolsRewards.gaugeEmissionsTotal}
+                plyEmission={poolsRewards.data.gaugeEmissionsTotal}
                 setShowClaimAllPly={setShowClaimAllPly}
               />
             )}
@@ -561,7 +613,11 @@ function MyPortfolio(props: any) {
         </div>
         {activeStateTab === MyPortfolioHeader.Pools &&
           (activeSection === MyPortfolioSection.Positions ? (
-            <PoolsTablePosition className="md:px-5 md:py-4   py-4" poolsPosition={poolsPosition} />
+            <PoolsTablePosition
+              className="md:px-5 md:py-4   py-4"
+              poolsPosition={poolsPosition.data}
+              isfetched={poolsPosition.isfetched}
+            />
           ) : (
             <>
               <div className="flex md:px-[25px] px-4  mt-5">
@@ -580,7 +636,8 @@ function MyPortfolio(props: any) {
               </div>
               <PoolsTableRewards
                 className="md:px-5 md:py-4   py-4"
-                poolsData={poolsRewards.poolsRewardsData}
+                poolsData={poolsRewards.data.poolsRewardsData}
+                isfetched={poolsRewards.isfetched}
               />
             </>
           ))}
@@ -600,7 +657,8 @@ function MyPortfolio(props: any) {
               </div>
               <LocksTablePosition
                 className="md:px-5 md:py-4   py-4"
-                locksPosition={locksPosition}
+                locksPosition={locksPosition.data}
+                isfetched={locksPosition.isfetched}
                 setIsManageLock={setIsManageLock}
                 setShowCreateLockModal={setShowCreateLockModal}
                 setManageData={setManageData}
@@ -719,8 +777,8 @@ function MyPortfolio(props: any) {
         <ClaimAll
           show={showClaimAllPly}
           setShow={setShowClaimAllPly}
-          data={poolsRewards.poolsRewardsData}
-          totalValue={poolsRewards.gaugeEmissionsTotal}
+          data={poolsRewards.data.poolsRewardsData}
+          totalValue={poolsRewards.data.gaugeEmissionsTotal}
           tokenPrice={tokenPrice}
           handleClaimAll={handleClaimAll}
         />

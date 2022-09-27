@@ -13,7 +13,7 @@ const initialState: IPoolsState = {
 }
 
 export const getTotalVotingPower = createAsyncThunk(
-  'config/getTotalVotingPower',
+  'pools/getTotalVotingPower',
   async (thunkAPI) => {
     const res = await fetchTotalVotingPower();
     return res;

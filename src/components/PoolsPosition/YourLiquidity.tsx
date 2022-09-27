@@ -9,15 +9,12 @@ import { IYourLiquidityProps } from "./types";
 export function YourLiquidity(props: IYourLiquidityProps) {
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
-      console.log(num.toFixed());
       return num.dividedBy(1000000000).toFixed(2) + "B";
     }
     if (num.isGreaterThanOrEqualTo(1000000)) {
-      console.log(num.toFixed());
       return num.dividedBy(1000000).toFixed(2) + "M";
     }
     if (num.isGreaterThanOrEqualTo(1000)) {
-      console.log(num.toFixed());
       return num.dividedBy(1000).toFixed(2) + "K";
     }
 

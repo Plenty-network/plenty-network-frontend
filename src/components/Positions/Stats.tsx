@@ -16,12 +16,12 @@ function Stats(props: IStatsProps) {
       <StatsCard
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total voting power"}
-        value={props.statsPositions?.totalEpochVotingPower?.toFixed(1)}
+        value={props.stats1?.totalEpochVotingPower?.toFixed(1)}
       />
       <StatsCard
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total locked"}
-        value={props.statsPositions?.totalPLYLocked?.toFixed(1)}
+        value={props.stats1?.totalPlyLocked?.toFixed(1)}
         subValue={"PLY"}
       />
 
@@ -30,7 +30,7 @@ function Stats(props: IStatsProps) {
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"PLY Balance"}
         value={props.plyBalance.toFixed(1)}
-        subValue={`$${1 * Number(props.plyBalance)}`}
+        subValue={`$${(1 * Number(props.plyBalance)).toFixed(1)}`}
       />
     </div>
   );

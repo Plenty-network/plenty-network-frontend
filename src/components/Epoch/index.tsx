@@ -118,8 +118,8 @@ export function Epoch(props: IEpochProps) {
   }, 5000);
 
   return (
-    <>
-      <div className="relative flex gap-[10px] p-[14px]" ref={reff}>
+    <div className="h-full border-border-500/50 border-r flex flex-col justify-center">
+      <div className="relative flex gap-[10px] pl-[20px] pr-[25px]  " ref={reff}>
         <Image src={epoachIcon} />
         <div
           className={clsx(
@@ -190,6 +190,6 @@ export function Epoch(props: IEpochProps) {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
