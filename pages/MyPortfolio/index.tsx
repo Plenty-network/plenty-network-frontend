@@ -3,7 +3,7 @@ import Image from "next/image";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { BigNumber } from "bignumber.js";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { connect, useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../src/redux";
@@ -542,6 +542,45 @@ function MyPortfolio(props: any) {
     });
   };
 
+  const Title = useMemo(() => {
+    return (
+      <div className="flex gap-1">
+        <p
+          className={clsx(
+            " font-title3 cursor-pointer h-[50px] px-[24px] flex items-center   gap-1",
+            activeSection === MyPortfolioSection.Positions
+              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
+              : "text-text-250 bg-muted-700"
+          )}
+          onClick={() => setActiveSection(MyPortfolioSection.Positions)}
+        >
+          Positions{" "}
+          {activeSection === MyPortfolioSection.Positions ? (
+            <Image src={positionsViolet} />
+          ) : (
+            <Image src={position} />
+          )}
+        </p>
+        <p
+          className={clsx(
+            " cursor-pointer font-title3  h-[50px] px-[24px] flex items-center gap-1",
+            activeSection === MyPortfolioSection.Rewards
+              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
+              : "text-text-250 bg-muted-700"
+          )}
+          onClick={() => setActiveSection(MyPortfolioSection.Rewards)}
+        >
+          Rewards
+          {activeSection === MyPortfolioSection.Rewards ? (
+            <Image src={rewardsViolet} />
+          ) : (
+            <Image src={rewards} />
+          )}
+        </p>
+      </div>
+    );
+  }, [activeSection]);
+
   return (
     <>
       <Head>
@@ -550,42 +589,8 @@ function MyPortfolio(props: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
-        <div className="pt-5 md:px-[24px] ">
-          <div className="flex gap-1">
-            <p
-              className={clsx(
-                " font-title3 cursor-pointer h-[50px] px-[24px] flex items-center   gap-1",
-                activeSection === MyPortfolioSection.Positions
-                  ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
-                  : "text-text-250 bg-muted-700"
-              )}
-              onClick={() => setActiveSection(MyPortfolioSection.Positions)}
-            >
-              Positions{" "}
-              {activeSection === MyPortfolioSection.Positions ? (
-                <Image src={positionsViolet} />
-              ) : (
-                <Image src={position} />
-              )}
-            </p>
-            <p
-              className={clsx(
-                " cursor-pointer font-title3  h-[50px] px-[24px] flex items-center gap-1",
-                activeSection === MyPortfolioSection.Rewards
-                  ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
-                  : "text-text-250 bg-muted-700"
-              )}
-              onClick={() => setActiveSection(MyPortfolioSection.Rewards)}
-            >
-              Rewards
-              {activeSection === MyPortfolioSection.Rewards ? (
-                <Image src={rewardsViolet} />
-              ) : (
-                <Image src={rewards} />
-              )}
-            </p>
-          </div>
-
+        <div className="pt-5 md:px-[24px] px-2">
+          {Title}
           <div className="mt-5 pl-5  md:pl-0 overflow-x-auto inner">
             {activeSection === MyPortfolioSection.Positions ? (
               <Stats
@@ -768,7 +773,9 @@ function MyPortfolio(props: any) {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId ? () => window.open(`https://tzkt.io/${transactionId}`, "_blank") : null
+            transactionId
+              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              : null
           }
           content={contentTransaction}
         />

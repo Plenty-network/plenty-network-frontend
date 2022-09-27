@@ -209,7 +209,15 @@ function TransactionSettings(props: ITransactionSettingsProps) {
           <div>
             <span className="font-caption1 text-text-200 ">Add recipient</span>
             <span className="relative top-0.5 left-[5px]">
-              <ToolTip message="Add recipient" id="tooltipC" position={Position.top}>
+              <ToolTip
+                toolTipChild={
+                  <div className="w-[200px]">
+                    The output tokens of the trade will be transferred to the recipient's address.
+                  </div>
+                }
+                id="tooltipC"
+                position={Position.top}
+              >
                 <Image src={info} width={"11px"} height={"11px"} className="cursor-pointer" />
               </ToolTip>
             </span>

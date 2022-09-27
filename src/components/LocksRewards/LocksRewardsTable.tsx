@@ -1,5 +1,6 @@
 import * as React from "react";
 import Image from "next/image";
+import { BigNumber } from "bignumber.js";
 import { Column } from "react-table";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
@@ -12,6 +13,8 @@ import { IManageBtnProps } from "../PoolsPosition/types";
 import { IVotesTableRewards } from "./types";
 import ClaimPly from "../PoolsRewards/ClaimPopup";
 import ClaimAll from "../Rewards/ClaimAll";
+import { RewardsData } from "./Rewards";
+import { VotingPower } from "./VotingPower";
 
 export function LocksTableRewards(props: IVotesTableRewards) {
   const { valueFormat } = useTableNumberUtils();
@@ -130,7 +133,17 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => "$234.58",
+        accessor: (x: any) => (
+          <RewardsData
+            bribes={new BigNumber(0)}
+            fees={0}
+            token1Name={tEZorCTEZtoUppercase(x.votes.tokenA.toString())}
+            token2Name={tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
+            fees1={Number(0)}
+            fees2={Number(1)}
+            bribesData={x.votes.bribesData}
+          />
+        ),
       },
 
       {
@@ -139,7 +152,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => "$234.58",
+        accessor: (x: any) => <VotingPower />,
       },
     ],
     [valueFormat]

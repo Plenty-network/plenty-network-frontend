@@ -694,7 +694,9 @@ export default function Vote() {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId ? () => window.open(`https://tzkt.io/${transactionId}`, "_blank") : null
+            transactionId
+              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              : null
           }
           content={contentTransaction}
         />

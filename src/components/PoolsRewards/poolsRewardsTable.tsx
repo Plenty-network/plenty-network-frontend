@@ -4,12 +4,7 @@ import { Column } from "react-table";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
-import { IVotePageData, IVotesData } from "../../api/votes/types";
-import { ManageLiquidity } from "../Pools/ManageLiquidity";
-import { tokenParameterLiquidity } from "../Liquidity/types";
-import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 import { IPoolsTableRewards } from "./types";
-import { IManageBtnProps } from "../PoolsPosition/types";
 import ClaimPly from "./ClaimPopup";
 import { IPoolsRewardsData } from "../../api/portfolio/types";
 import { PLYEmission } from "./PLYEmisiion";
@@ -57,12 +52,21 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         ),
       },
       {
-        Header: "PLY emissions",
-        id: "PLY emissions",
+        Header: "Reward",
+        id: "Reward",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
         accessor: (x: any) => <PLYEmission value={x.gaugeEmission} />,
+      },
+
+      {
+        Header: "Boost",
+        id: "Boost",
+        isToolTipEnabled: true,
+        canShort: true,
+        showOnMobile: true,
+        accessor: (x: any) => <Boost value={x.boostValue} />,
       },
     ],
     [valueFormat]

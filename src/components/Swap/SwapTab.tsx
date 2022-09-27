@@ -1052,7 +1052,9 @@ function SwapTab(props: ISwapTabProps) {
           show={props.showTransactionSubmitModal}
           setShow={props.setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId ? () => window.open(`https://tzkt.io/${transactionId}`, "_blank") : null
+            transactionId
+              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              : null
           }
           content={`Swap ${Number(localStorage.getItem(FIRST_TOKEN_AMOUNT)).toFixed(
             2

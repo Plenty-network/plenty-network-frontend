@@ -35,12 +35,14 @@ export function Tabs(props: ITabsProps) {
             ? "w-[200px]"
             : "w-[150px]"
           : props.TableName === "lockPosition"
-          ? props.index === 0
+          ? !isMobile && props.index === 0
             ? " w-[150px]"
-            : props.index === 2
+            : !isMobile && props.index === 2
             ? "w-[164px]"
+            : isMobile && props.index === 0
+            ? "w-[200px]"
             : isMobile && props.index === 1
-            ? "w-[100px] "
+            ? "w-[80px] pr-3"
             : isMobile && props.index === 2
             ? "w-[85px]"
             : isMobile && props.index === 3
@@ -58,7 +60,7 @@ export function Tabs(props: ITabsProps) {
             : "w-[80px] md:w-[120px]"
           : props.TableName === "votesTable"
           ? props.index === 4
-            ? "w-[120px] md:w-[220px]"
+            ? "w-[120px] md:w-[260px]"
             : props.index === 0
             ? "w-[150px]"
             : "w-[112px]"
