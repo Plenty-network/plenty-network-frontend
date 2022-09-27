@@ -20,11 +20,11 @@ export function AprInfo(props: IAprInfoProps) {
           </p>
         }
       >
-        <div className="bg-muted-200 border text-f14 cursor-pointer text-white border-border-500 rounded-lg py-[3px] px-2 ">
-          {props.currentApr}%
+        <div className="bg-muted-200 border md:text-f14 text-f12 cursor-pointer text-white border-border-500 rounded-lg py-[3px] px-2 ">
+          {parseInt(props.currentApr).toFixed(1)}%
         </div>
       </ToolTip>
-      {!props.isMobile && <Image src={subtractSvg} />}
+      {!props.isMobile && <Image alt={"alt"} src={subtractSvg} />}
       <ToolTip
         toolTipChild={
           <p>
@@ -34,11 +34,12 @@ export function AprInfo(props: IAprInfoProps) {
         position={Position.top}
       >
         <div
-          className={`text-f14 cursor-pointer text-white py-[3px] px-2 ${
+          className={`md:text-f14 text-f12 cursor-pointer text-white py-[3px] px-2 ${
             props.isMobile ? "flex gap-2" : ""
           }`}
         >
-          {props.boostedApr}%{props.isMobile && <Image src={subtractSvg} />}
+          {" "}
+          {parseInt(props.boostedApr).toFixed(1)}%{props.isMobile && <Image src={subtractSvg} />}
         </div>
       </ToolTip>
     </div>

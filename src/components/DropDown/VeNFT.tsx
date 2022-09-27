@@ -71,7 +71,7 @@ export function VeNFT(props: IDropdownProps) {
         >
           {selectedDropDown.votingPower !== "" && selectedDropDown.tokenId !== "" ? (
             <>
-              <Image src={lighting} />
+              <Image alt={"alt"} src={lighting} />
               <span className="ml-1 font-body4 text-white">
                 {Number(selectedDropDown.votingPower) > 0
                   ? Number(selectedDropDown.votingPower) < 0.001
@@ -175,7 +175,7 @@ export function VeNFT(props: IDropdownProps) {
           props.veNFT ? "cursor-pointer" : "cursor-not-allowed"
         )}
       >
-        <Image src={lighting} />
+        <Image alt={"alt"} src={lighting} />
         <span
           className={clsx(
             "ml-1 font-body4 ",

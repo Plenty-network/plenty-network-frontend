@@ -8,17 +8,13 @@ import { IRewardsDataProps } from "./types";
 
 export function RewardsData(props: IRewardsDataProps) {
   function nFormatter(num: BigNumber) {
-    console.log(num.toFixed());
     if (num.isGreaterThanOrEqualTo(1000000000)) {
-      console.log(num.toFixed());
       return num.dividedBy(1000000000).toFixed(0) + "B";
     }
     if (num.isGreaterThanOrEqualTo(1000000)) {
-      console.log(num.dividedBy(1000000).toFixed(0) + "M");
       return num.dividedBy(1000000).toFixed(0) + "M";
     }
     if (num.isGreaterThanOrEqualTo(1000)) {
-      console.log(num.toFixed());
       return num.dividedBy(1000).toFixed(0) + "K";
     }
 
@@ -26,7 +22,7 @@ export function RewardsData(props: IRewardsDataProps) {
   }
   return (
     <>
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col  items-end">
         <ToolTip
           position={Position.top}
           disable={props.bribesData.length === 0 ? true : false}
@@ -58,7 +54,7 @@ export function RewardsData(props: IRewardsDataProps) {
                 : "0.00"}
             </span>
             <span className="relative top-1 ml-px">
-              <Image src={dollar} width={"16px"} height={"16px"} />
+              <Image alt={"alt"} src={dollar} width={"16px"} height={"16px"} />
             </span>
           </div>
         </ToolTip>
@@ -81,7 +77,7 @@ export function RewardsData(props: IRewardsDataProps) {
           <div className=" ">
             <span className="font-f13">${props.fees.toFixed(2)}</span>
             <span className="relative top-1 ml-px">
-              <Image src={tradingFee} width={"16px"} height={"16px"} />
+              <Image alt={"alt"} src={tradingFee} width={"16px"} height={"16px"} />
             </span>
           </div>
         </ToolTip>

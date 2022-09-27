@@ -23,7 +23,7 @@ export function InputSearchBox(props: IInputSearchBoxProps) {
           : "border-border-500/50"
       } ${props.width ? props.width : "md:w-[265px]"}`}
     >
-      <Image src={searchImagr} width={"16px"} height={"16px"} />
+      <Image alt={"alt"} src={searchImagr} width={"16px"} height={"16px"} />
       <input
         value={props.value}
         placeholder="Search"

@@ -61,7 +61,13 @@ function TransactionSettingsLiquidity(props: ITransactionSettingsProps) {
         <span className="font-caption1 text-text-200 ">Slippage tolerance</span>
         <span className="relative top-0.5 left-[5px]">
           <ToolTip message="slippage" id="tooltipD" position={Position.top}>
-            <Image src={info} width={"11px"} height={"11px"} className="cursor-pointer" />
+            <Image
+              alt={"alt"}
+              src={info}
+              width={"11px"}
+              height={"11px"}
+              className="cursor-pointer"
+            />
           </ToolTip>
         </span>
       </div>

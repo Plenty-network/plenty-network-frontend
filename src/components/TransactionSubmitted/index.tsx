@@ -1,8 +1,8 @@
-import { PopUpModal } from '../Modal/popupModal';
-import Image from 'next/image';
-import externalLink from '../../../src/assets/icon/common/externalLink.svg';
-import animation from '../../assets/animations/transaction-submitted.json';
-import Lottie from 'lottie-react';
+import { PopUpModal } from "../Modal/popupModal";
+import Image from "next/image";
+import externalLink from "../../../src/assets/icon/common/externalLink.svg";
+import animation from "../../assets/animations/transaction-submitted.json";
+import Lottie from "lottie-react";
 
 interface ITransactionSubmittedProps {
   show: boolean;
@@ -23,7 +23,7 @@ function TransactionSubmitted(props: ITransactionSubmittedProps) {
             <Lottie
               animationData={animation}
               loop={false}
-              style={{ height: '150px', width: '150px' }}
+              style={{ height: "150px", width: "150px" }}
             />
           </div>
           <div className="mt-11 border border-border-100/[0.4] rounded-2xl bg-secondary-100/[0.02] flex justify-center items-center h-[52px] font-subtitle4">
@@ -35,7 +35,7 @@ function TransactionSubmitted(props: ITransactionSubmittedProps) {
           >
             View on Block Explorer
             <span className="ml-2">
-              <Image src={externalLink} width={'12px'} height={'12px'} />
+              <Image alt={"alt"} src={externalLink} width={"12px"} height={"12px"} />
             </span>
           </div>
         </>

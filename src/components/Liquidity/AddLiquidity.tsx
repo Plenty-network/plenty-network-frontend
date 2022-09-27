@@ -114,7 +114,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
           {walletAddress && (
             <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-2 md:px-3">
               <div className="relative top-0.5 md:top-0">
-                <Image src={wallet} className="walletIcon" />
+                <Image alt={"alt"} src={wallet} className="walletIcon" />
               </div>
               <div
                 className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
@@ -138,7 +138,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
         </div>
       </div>
       <div className="relative -top-[9px] left-[95px] md:left-[162.5px]">
-        <Image src={add} width={"24px"} height={"24px"} />
+        <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
       </div>
       <div className="border -mt-[25px] flex border-text-800/[0.5] rounded-2xl h-[88px]">
         <div className="w-[50%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
@@ -191,7 +191,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
           {walletAddress && (
             <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-2 md:px-3">
               <div className="relative top-0.5 md:top-0">
-                <Image src={wallet} className="walletIcon" />
+                <Image alt={"alt"} src={wallet} className="walletIcon" />
               </div>
               <div className="ml-1 flex text-primary-500 font-caption1-small md:font-body2">
                 {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (

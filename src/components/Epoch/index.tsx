@@ -118,9 +118,9 @@ export function Epoch(props: IEpochProps) {
   }, 5000);
 
   return (
-    <>
-      <div className="relative flex gap-[10px] p-[14px]" ref={reff}>
-        <Image src={epoachIcon} />
+    <div className="h-full border-border-500/50 border-r flex flex-col justify-center">
+      <div className="relative flex gap-[10px] pl-[20px] pr-[25px]  " ref={reff}>
+        <Image alt={"alt"} src={epoachIcon} />
         <div
           className={clsx(
             " flex flex-col gap-[6px]",
@@ -140,7 +140,7 @@ export function Epoch(props: IEpochProps) {
                   </div>
                 }
               >
-                <Image src={info} width={"14px"} height={"14px"} />
+                <Image alt={"alt"} src={info} width={"14px"} height={"14px"} />
               </ToolTip>
             </p>
 
@@ -162,7 +162,7 @@ export function Epoch(props: IEpochProps) {
               </span>
             </p>
             <p className="relative -top-[1.5px]">
-              <Image className="rotate-180" src={vectorDown} />
+              <Image alt={"alt"} className="rotate-180" src={vectorDown} />
             </p>
           </div>
           <div className="flex gap-2 -mt-[6px] text-f12 text-white font-semibold cursor-pointer">
@@ -190,6 +190,6 @@ export function Epoch(props: IEpochProps) {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }

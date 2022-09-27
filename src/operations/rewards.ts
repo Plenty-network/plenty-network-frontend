@@ -60,7 +60,7 @@ export const harvestRewards = async (
   }
 };
 
-// Harvests Rewards from all guages
+// FOR STAT Harvest 
 export const harvestAllRewards = async (
   guages : string[],
   transactionSubmitModal: TTransactionSubmitModal | undefined,

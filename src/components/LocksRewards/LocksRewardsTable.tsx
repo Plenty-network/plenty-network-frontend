@@ -1,5 +1,6 @@
 import * as React from "react";
 import Image from "next/image";
+import { BigNumber } from "bignumber.js";
 import { Column } from "react-table";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
@@ -12,6 +13,8 @@ import { IManageBtnProps } from "../PoolsPosition/types";
 import { IVotesTableRewards } from "./types";
 import ClaimPly from "../PoolsRewards/ClaimPopup";
 import ClaimAll from "../Rewards/ClaimAll";
+import { RewardsData } from "./Rewards";
+import { VotingPower } from "./VotingPower";
 
 export function LocksTableRewards(props: IVotesTableRewards) {
   const { valueFormat } = useTableNumberUtils();
@@ -71,10 +74,20 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-              <Image src={getImagesPath(x.votes.tokenA)} width={"20px"} height={"20px"} />
+              <Image
+                alt={"alt"}
+                src={getImagesPath(x.votes.tokenA)}
+                width={"20px"}
+                height={"20px"}
+              />
             </div>
             <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image src={getImagesPath(x.votes.tokenB)} width={"20px"} height={"20px"} />
+              <Image
+                alt={"alt"}
+                src={getImagesPath(x.votes.tokenB)}
+                width={"20px"}
+                height={"20px"}
+              />
             </div>
             <div>
               <div className="font-body4">
@@ -108,10 +121,20 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-              <Image src={getImagesPath(x.votes.tokenA)} width={"24px"} height={"24px"} />
+              <Image
+                alt={"alt"}
+                src={getImagesPath(x.votes.tokenA)}
+                width={"24px"}
+                height={"24px"}
+              />
             </div>
             <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-              <Image src={getImagesPath(x.votes.tokenB)} width={"24px"} height={"24px"} />
+              <Image
+                alt={"alt"}
+                src={getImagesPath(x.votes.tokenB)}
+                width={"24px"}
+                height={"24px"}
+              />
             </div>
             <div>
               <div className="font-body4">
@@ -130,7 +153,17 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => "$234.58",
+        accessor: (x: any) => (
+          <RewardsData
+            bribes={new BigNumber(0)}
+            fees={0}
+            token1Name={tEZorCTEZtoUppercase(x.votes.tokenA.toString())}
+            token2Name={tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
+            fees1={Number(0)}
+            fees2={Number(1)}
+            bribesData={x.votes.bribesData}
+          />
+        ),
       },
 
       {
@@ -139,7 +172,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessor: (x: any) => "$234.58",
+        accessor: (x: any) => <VotingPower />,
       },
     ],
     [valueFormat]
@@ -155,12 +188,11 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           shortby="Myvotes"
           isFetched={!noSearchResult && votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
-          TableName="poolsRewards"
+          TableName="locksRewards"
           TableWidth=""
         />
       </div>
       {showClaimPly && <ClaimPly show={showClaimPly} setShow={setShowClaimPly} />}
-      {showClaimAllPly && <ClaimAll show={showClaimAllPly} setShow={setShowClaimAllPly} />}
     </>
   );
 }

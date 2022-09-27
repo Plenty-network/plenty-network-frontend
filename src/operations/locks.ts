@@ -330,6 +330,7 @@ export const claimInflation = async (
   }
 };
 
+// FOR STAT
 export const claimAllInflation = async (
   inflationData : {id : number , epochs : number[]}[],
   transactionSubmitModal: TTransactionSubmitModal,
@@ -346,15 +347,15 @@ export const claimAllInflation = async (
     const Tezos = await dappClient().tezos();
     const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
 
-    const bribeBatch : any = [];
+    const inflationBatch : any = [];
         for (const inflation of inflationData) {
-          bribeBatch.push({
+          inflationBatch.push({
             kind: OpKind.TRANSACTION,
             ...veInstance.methods.claim_inflation(inflation.id , inflation.epochs
             ).toTransferParams(),
           });
         }
-      const batch =  Tezos.wallet.batch(bribeBatch);
+      const batch =  Tezos.wallet.batch(inflationBatch);
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);

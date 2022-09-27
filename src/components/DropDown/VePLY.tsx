@@ -72,6 +72,7 @@ export function VePLY(props: IDropdownProps) {
         </p>
         <Image
           src={vectorIcon}
+          alt={"vectorIcon"}
           className={!isDropDownActive ? "rotate-180" : "rotate-0"}
           {...((props.isConfirmStake && props.selectedText.boostValue !== "") ||
           props.Options.length === 0

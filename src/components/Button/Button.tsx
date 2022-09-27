@@ -18,7 +18,7 @@ function Button(props: IButtonProps) {
       className={clsx(
         "bg-primary-500      h-13 text-black w-full",
         props.color === "disabled" && "bg-primary-600 text-text-600",
-        props.color === "error" && "bg-error-900 text-text-600",
+        props.color === "error" && "bg-error-100 text-error-200",
         props.width ? props.width : "w-full",
         props.height,
         props.borderRadius ? props.borderRadius : "rounded-2xl",

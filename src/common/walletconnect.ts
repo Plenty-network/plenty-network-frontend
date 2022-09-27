@@ -1,10 +1,48 @@
 import {
   AccountInfo,
+  BlockExplorer,
   ColorMode,
   DAppClientOptions,
+  Network,
+  NetworkType,
 } from '@airgap/beacon-sdk'
 import type { BeaconWallet } from '@taquito/beacon-wallet'
 import Config from '../config/config';
+
+
+class TzktBlockExplorer extends BlockExplorer {
+  
+  constructor(
+    public readonly rpcUrls : {[key in NetworkType]: string } ={
+      [NetworkType.MAINNET]: "https://tzkt.io/",
+      [NetworkType.DELPHINET]: "https://delphi.tzkt.io/",
+      [NetworkType.EDONET]: "https://edo.tzkt.io/",
+      [NetworkType.FLORENCENET]: "https://florence.tzkt.io/",
+      [NetworkType.GRANADANET]: "https://granada.tzkt.io/",
+      [NetworkType.HANGZHOUNET]: "https://hangzhou.tzkt.io/",
+      [NetworkType.ITHACANET]: "https://ithacanet.tzkt.io/",
+      [NetworkType.JAKARTANET]: "https://jakartanet.tzkt.io/",
+      [NetworkType.CUSTOM]: "https://ghostnet.tzkt.io/",
+      [NetworkType.GHOSTNET]: "https://ghostnet.tzkt.io/",
+      [NetworkType.MONDAYNET]: "https://mondaynet.tzkt.io/",
+      [NetworkType.DAILYNET]: "https://mondaynet.tzkt.io/",
+      [NetworkType.KATHMANDUNET]: "https://kathmandunet.tzkt.io/",
+    }
+  ) {
+    super(rpcUrls)
+  }
+
+  public async getAddressLink(address: string, network: Network): Promise<string> {
+    const blockExplorer = await this.getLinkForNetwork(network)
+
+    return `${blockExplorer}${address}/operations`
+  }
+  public async getTransactionLink(transactionId: string, network: Network): Promise<string> {
+    const blockExplorer = await this.getLinkForNetwork(network)
+
+    return `${blockExplorer}${transactionId}`
+  }
+}
 
 export const connectedNetwork = Config.NETWORK;
 export const walletNetwork = Config.WALLET_NETWORK;
@@ -25,6 +63,7 @@ export function dappClient() {
       name: 'Plenty Network',
       preferredNetwork: walletNetwork,
       colorMode: ColorMode.DARK,
+      blockExplorer : new TzktBlockExplorer() as any,
     }
 
     return new BeaconWallet(dAppInfo)

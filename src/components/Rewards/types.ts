@@ -6,7 +6,10 @@ export interface IStatsCardProps {
   value?: string;
   subValue?: string;
   isLast?: boolean;
+  disable: boolean;
+  setShowClaimAllPly: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IStatsRewardsProps {
+  setShowClaimAllPly: React.Dispatch<React.SetStateAction<boolean>>;
   plyEmission: BigNumber;
 }
