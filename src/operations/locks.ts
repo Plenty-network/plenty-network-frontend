@@ -330,6 +330,7 @@ export const claimInflation = async (
   }
 };
 
+// FOR STAT
 export const claimAllInflation = async (
   inflationData : {id : number , epochs : number[]}[],
   transactionSubmitModal: TTransactionSubmitModal,
