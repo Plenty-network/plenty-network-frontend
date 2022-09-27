@@ -22,8 +22,9 @@ export function LocksTableRewards(props: IVotesTableRewards) {
   const { valueFormat } = useTableNumberUtils();
 
   const [showClaimPly, setShowClaimPly] = React.useState(false);
-
-  const votesArray = Object.entries(props.allLocksRewardsData["76"]);
+  const [votesArray, setvotesArray] = React.useState<[string, ILockRewardsEpochData[]][]>(
+    [] as [string, ILockRewardsEpochData[]][]
+  );
 
   const [noSearchResult, setNoSearchResult] = React.useState(false);
   const [newArr, setNewArr] = React.useState<
@@ -32,6 +33,14 @@ export function LocksTableRewards(props: IVotesTableRewards) {
   const [newdata, setNewdata] = React.useState<
     { epoch: string; votes: ILockRewardsEpochData | [] }[]
   >([] as { epoch: string; votes: ILockRewardsEpochData }[]);
+  React.useEffect(() => {
+    setvotesArray([] as [string, ILockRewardsEpochData[]][]);
+    setNewArr([] as { epoch: string; votes: ILockRewardsEpochData }[]);
+    setNewdata([] as { epoch: string; votes: ILockRewardsEpochData }[]);
+    if (props.selectedDropDown.tokenId !== "") {
+      setvotesArray(Object.entries(props.allLocksRewardsData[props.selectedDropDown.tokenId]));
+    }
+  }, [props.selectedDropDown.tokenId]);
   React.useMemo(() => {
     votesArray.reverse().map((data, index) => {
       newArr.push({ epoch: data[0], votes: [] });
@@ -42,7 +51,6 @@ export function LocksTableRewards(props: IVotesTableRewards) {
       }
     });
   }, [votesArray.length]);
-  console.log(newArr);
   React.useEffect(() => {
     setNewdata(newArr.reverse());
   }, [newArr]);

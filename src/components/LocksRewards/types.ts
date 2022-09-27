@@ -2,7 +2,7 @@ import { IVotePageData } from "../../api/votes/types";
 import { BigNumber } from "bignumber.js";
 
 import { Bribes } from "../../api/pools/types";
-import { IAllLocksRewardsData } from "../../api/portfolio/types";
+import { IAllLocksRewardsData, ILocksRewardsTokenData } from "../../api/portfolio/types";
 export interface IVotesTableRewards {
   allLocksRewardsData: IAllLocksRewardsData;
   selectedDropDown: {

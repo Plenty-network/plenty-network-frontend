@@ -177,7 +177,6 @@ const Table = <D extends object>({
           {isFetched && data.length
             ? page.map((row: any) => {
                 prepareRow(row);
-                console.log(row.original);
                 return (
                   // eslint-disable-next-line react/jsx-key
 

@@ -26,7 +26,7 @@ import {
 } from "../../src/components/Positions/Header";
 import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTable";
 import { getVeNFTsList, votesPageDataWrapper } from "../../src/api/votes";
-import { IVeNFTData, IVotePageData } from "../../src/api/votes/types";
+import { ELocksState, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 import { IAllBalanceResponse, ILpTokenPriceList, ITokenPriceList } from "../../src/api/util/types";
 import CreateLock from "../../src/components/Votes/CreateLock";
@@ -235,7 +235,6 @@ function MyPortfolio(props: any) {
       lockingDate: 0,
     });
   };
-  console.log(allLocksRewardsData);
   useEffect(() => {
     if (userAddress) {
       setStatsPosition({} as ITvlStatsResponse);
@@ -270,6 +269,21 @@ function MyPortfolio(props: any) {
       setVeNFTlist([]);
     }
   }, [userAddress, currentEpoch?.epochNumber]);
+
+  useEffect(() => {
+    console.log(veNFTlist, selectednft.votingPower);
+    if (veNFTlist.length > 0 && selectednft.votingPower === "") {
+      setSelectednft({
+        votingPower: veNFTlist[0].votingPower.toString(),
+        tokenId: veNFTlist[0].tokenId.toString(),
+      });
+    } else {
+      setSelectednft({
+        votingPower: "",
+        tokenId: "",
+      });
+    }
+  }, [veNFTlist]);
   useEffect(() => {
     if (userAddress) {
       setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
@@ -695,7 +709,7 @@ function MyPortfolio(props: any) {
                 <div>
                   <SelectNFT
                     veNFTlist={veNFTlist}
-                    selectedText={selectedDropDown}
+                    selectedText={selectednft}
                     setSelectedDropDown={setSelectednft}
                   />
                 </div>
@@ -712,7 +726,7 @@ function MyPortfolio(props: any) {
                 className="md:px-5 md:pb-4   "
                 voteData={voteData}
                 allLocksRewardsData={allLocksRewardsData}
-                selectedDropDown={selectedDropDown}
+                selectedDropDown={selectednft}
               />
             </>
           ))}
