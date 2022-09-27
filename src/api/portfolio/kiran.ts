@@ -498,8 +498,8 @@ export const getAllLocksRewardsData = async (
           tokenASymbol: amm.token1.symbol,
           tokenBSymbol: amm.token2.symbol,
           ammType: amm.type,
-          votes: new BigNumber(voteData.votes).dividedBy(PLY_DECIMAL_MULTIPLIER).toString(),
-          votesPercentage: new BigNumber(voteData.voteShare).toString(),
+          votes: new BigNumber(voteData.votes).dividedBy(PLY_DECIMAL_MULTIPLIER),
+          votesPercentage: new BigNumber(voteData.voteShare),
           bribesAmount: bribesValueAndData.bribesValue,
           bribesData: bribesValueAndData.bribesData,
           feesStatus: feesValueAndData.feesStatus,
@@ -541,13 +541,13 @@ const getBribesData = (
       const amount = value.multipliedBy(tokenPrices[bribeData.name]);
       bribesValue = bribesValue.plus(amount);
       bribesData.push({
-        bribeId: new BigNumber(bribeData.bribeId).toString(),
-        bribeValue: value.toString(),
+        bribeId: new BigNumber(bribeData.bribeId),
+        bribeValue: value,
         tokenSymbol: bribeData.name,
       });
     }
     return {
-      bribesValue: bribesValue.toString(),
+      bribesValue,
       bribesData,
     };
   } catch (error: any) {
@@ -567,8 +567,12 @@ const getFeesData = (
   try {
     const token1Symbol = feeData.token1Symbol;
     const token2Symbol = feeData.token2Symbol;
-    const tokenOneDecimal = new BigNumber(10).pow(TOKENS[token1Symbol] ? TOKENS[token1Symbol].decimals : 0);
-    const tokenTwoDecimal = new BigNumber(10).pow(TOKENS[token2Symbol] ? TOKENS[token2Symbol].decimals : 0);
+    const tokenOneDecimal = new BigNumber(10).pow(
+      TOKENS[token1Symbol] ? TOKENS[token1Symbol].decimals : 0
+    );
+    const tokenTwoDecimal = new BigNumber(10).pow(
+      TOKENS[token2Symbol] ? TOKENS[token2Symbol].decimals : 0
+    );
 
     const tokenOneFeeValue = new BigNumber(feeData.token1Fee).dividedBy(tokenOneDecimal);
     const tokenTwoFeeValue = new BigNumber(feeData.token2Fee).dividedBy(tokenTwoDecimal);
@@ -583,10 +587,10 @@ const getFeesData = (
       ? EFeesStatus.NOT_PULLED
       : EFeesStatus.GENERATED;
     const feesAmount = feesOneAmount.plus(feesTwoAmount);
-    const feesData: ILockRewardsFeeData = { tokenAFees: tokenAFees.toString(), tokenBFees: tokenBFees.toString() };
+    const feesData: ILockRewardsFeeData = { tokenAFees, tokenBFees };
     return {
       feesStatus,
-      feesAmount: feesAmount.toString(),
+      feesAmount,
       feesData,
     };
   } catch (error: any) {

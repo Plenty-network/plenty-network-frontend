@@ -5,14 +5,15 @@ import { API_RE_ATTEMPTS } from "../../constants/global";
 import { IAllLocksRewardArgument, IPorfolioRewardsData } from "./types";
 
 const initialState: IPorfolioRewardsData = {
-  allLocksRewardsData: {},
-  totalTradingFeesAmount: new BigNumber(0),
-  totalBribesAmount: new BigNumber(0),
-  epochClaimData: {},
-  feesClaimData: [],
-  bribesClaimData: [],
+  allLocksRewardsData: {},  // For table display
+  totalTradingFeesAmount: new BigNumber(0),  // For trading fees stats
+  totalBribesAmount: new BigNumber(0),  // For bribes stats
+  epochClaimData: {},  // For operations
+  feesClaimData: [],   // For operations
+  bribesClaimData: [],   // For operations
   locksRewardsDataError: false,
   locksRewardsDataAttempts: 0,
+  fetchingLocksRewardsData: false,    // To identify fetching operation for shimmer loading.
   rewardsOperationDataError: false,
   rewardsOperationDataAttempts: 0,
 };
@@ -43,23 +44,24 @@ const PortfolioRewards = createSlice({
     // Unclaimed Rewards(Bribes & Fees) data fetch for all user locks
     [fetchAllLocksRewardsData.pending.toString()]: (state: any) => {
       state.locksRewardsDataError = false;
+      state.fetchingLocksRewardsData = true;
       console.log('Fetching all locks rewards data');
     },
     [fetchAllLocksRewardsData.fulfilled.toString()]: (state: any, action: any) => {
       state.locksRewardsDataError = false;
       state.locksRewardsDataAttempts = 0;
+      state.fetchingLocksRewardsData = false;
       state.allLocksRewardsData = action.payload.allLocksRewardsData;
       state.totalTradingFeesAmount = action.payload.totalTradingFeesAmount;
       state.totalBribesAmount = action.payload.totalBribesAmount;
       console.log('All locks rewards data fetching completed');
     },
     [fetchAllLocksRewardsData.rejected.toString()]: (state: any, action: any) => {
+      state.fetchingLocksRewardsData = false;
       if(state.locksRewardsDataAttempts < API_RE_ATTEMPTS) {
         state.locksRewardsDataError = true;
         state.locksRewardsDataAttempts += 1;
         console.log('Re-attempting to fetch all locks rewards data.');
-      } else {
-        state.locksRewardsDataAttempts = 0;
       }
       state.allLocksRewardsData = {};
       state.totalTradingFeesAmount = new BigNumber(0);
@@ -84,8 +86,6 @@ const PortfolioRewards = createSlice({
         state.rewardsOperationDataError = true;
         state.rewardsOperationDataAttempts += 1;
         console.log('Re-attempting to fetch all rewards operations data.');
-      } else {
-        state.rewardsOperationDataAttempts = 0;
       }
       state.epochClaimData = {};
       state.bribesClaimData = [];
