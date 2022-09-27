@@ -380,7 +380,7 @@ export const claimAllForEpoch = async (
     for (const amm of feeData) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
-        ...voterInstance.methods.claim_fee(tokenId, amm, epoch).toTransferParams(),
+        ...voterInstance.methods.claim_fee(tokenId, amm, [epoch]).toTransferParams(),
       });
     }
 
