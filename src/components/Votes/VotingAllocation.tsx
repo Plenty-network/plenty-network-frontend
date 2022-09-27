@@ -45,7 +45,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
           setSelectedDropDown={setSelectedDropDown}
         />
       </div>
-      <div className="flex flex-col items-center  mt-5  gap-2 justify-center w-[350px] ">
+      <div className="flex flex-col items-center  mt-5  gap-2 justify-center  ">
         {piChartData?.allData ? (
           <>
           {piChartData.allData.length>0 ?<PiChart
@@ -53,8 +53,8 @@ function VotingAllocation(props: IVotingAllocationProps) {
             selectedColorIndex={selectedColorIndex}
             setSelectedColorIndex={setSelectedColorIndex}
           />:
-      <div className="h-[252px] flex flex-col justify-center" >
-        <div className="flex-col felx gap-1.5 justify-center items-center px-[42px] text-center" >
+      <div className="h-[252px]  flex flex-col justify-center items-center" >
+        <div className="flex-col felx max-w-[265px] gap-1.5 justify-center items-center  text-center" >
           <div className="text-text-200 text-f16 ">You havent voted in this Epoch</div>
           <div className="text-text-500 text-f14">Lorem Ipsum is simply dummy text of the printing and typeset.</div>
         </div>
