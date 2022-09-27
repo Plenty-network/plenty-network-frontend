@@ -16,6 +16,7 @@ export interface IPorfolioRewardsData {
   bribesClaimData: IAllBribesOperationData[];
   locksRewardsDataError: boolean;
   locksRewardsDataAttempts: number;
+  fetchingLocksRewardsData: boolean;
   rewardsOperationDataError: boolean;
   rewardsOperationDataAttempts: number;
 }
