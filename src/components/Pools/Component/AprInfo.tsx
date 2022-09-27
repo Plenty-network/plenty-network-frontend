@@ -24,7 +24,7 @@ export function AprInfo(props: IAprInfoProps) {
           {props.currentApr}%
         </div>
       </ToolTip>
-      {!props.isMobile && <Image src={subtractSvg} />}
+      {!props.isMobile && <Image alt={"alt"} src={subtractSvg} />}
       <ToolTip
         toolTipChild={
           <p>
@@ -38,7 +38,7 @@ export function AprInfo(props: IAprInfoProps) {
             props.isMobile ? "flex gap-2" : ""
           }`}
         >
-          {props.boostedApr}%{props.isMobile && <Image src={subtractSvg} />}
+          {props.boostedApr}%{props.isMobile && <Image alt={"alt"} src={subtractSvg} />}
         </div>
       </ToolTip>
     </div>

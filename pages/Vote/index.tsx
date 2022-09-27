@@ -490,7 +490,7 @@ export default function Vote() {
                 </div>
 
                 <div onClick={() => setShowCastVotingAllocation(true)}>
-                  <Image src={chartMobile} width={"24px"} height={"24px"} />
+                  <Image alt={"alt"} src={chartMobile} width={"24px"} height={"24px"} />
                 </div>
               </div>
               <VotesTable
@@ -538,7 +538,7 @@ export default function Vote() {
                       </div>
                     }
                   >
-                    <Image src={info} className="infoIcon " />
+                    <Image alt={"alt"} src={info} className="infoIcon " />
                   </ToolTip>
                 </span>
                 <span className="ml-1">

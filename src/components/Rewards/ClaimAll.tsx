@@ -35,16 +35,16 @@ function ClaimAll(props: IClaimProps) {
         <>
           <div className="flex">
             <div className="cursor-pointer" onClick={closeModal}>
-              <Image src={arrowLeft} />
+              <Image alt={"alt"} src={arrowLeft} />
             </div>
             <div className="mx-2 text-white font-title3">Claim all Ply </div>
             {/* <div className="relative top-[2px] cursor-pointer">
-              <Image src={info} />
+              <Image alt={'alt'} src={info} />
             </div> */}
           </div>
           <div className="border border-text-800 bg-card-200 py-4 mt-3 rounded-2xl">
             <div className="flex mt-[2px] items-center px-4 mb-5">
-              {/* <Image src={ply} width={"28px"} height={"28px"} /> */}
+              {/* <Image alt={'alt'} src={ply} width={"28px"} height={"28px"} /> */}
               <div>
                 <div className="text-text-400 font-body1">Your Rewards</div>
                 <span className="font-title2 text-white">
@@ -53,7 +53,7 @@ function ClaimAll(props: IClaimProps) {
                 <span className="font-body1 text-text-250 ml-1">distributed between</span>
               </div>
               {/* <div className="ml-auto bg-text-800/[0.5] relative top-[4px] rounded-lg flex items-center h-[36px] px-2">
-                <Image src={timer} />
+                <Image alt={'alt'} src={timer} />
                 <span className="font-body4 text-white ml-0.5">Epoch</span>
                 <span className="font-body4 text-text-500 ml-1">23</span>
               </div> */}

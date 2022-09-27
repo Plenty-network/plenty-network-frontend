@@ -27,7 +27,7 @@ export function IconBTN(props: IIconBTNProps) {
         props.onClick && props.onClick();
       }}
     >
-      <Image src={`/assets/icon/${props.image}`} height={"26px"} width={"26px"} />
+      <Image alt={"alt"} src={`/assets/icon/${props.image}`} height={"26px"} width={"26px"} />
     </div>
   );
 }
@@ -38,7 +38,7 @@ export function TopNavBar(props: ITopNavBarProps) {
   return (
     <nav className="hidden md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   px-10 pl-0 topNavblurEffect z-50">
       <div className="h-full w-[240px] border-border-500/50 border-r flex items-center pl-[26px]">
-        <Image src={plentyIcon} />
+        <Image alt={"alt"} src={plentyIcon} />
       </div>
       <div className="flex justify-between flex-1 h-full">
         <Epoch />
@@ -47,7 +47,7 @@ export function TopNavBar(props: ITopNavBarProps) {
             {userAddress && (
               <Link className={`cursor-pointer hover:opacity-90 `} href={"/MyPortfolio"}>
                 <span className="cursor-pointer hover:opacity-90 flex items-center border border-primary-750 bg-primary-850 px-[14px] h-[44px] rounded-xl mt-[14px]">
-                  <Image src={myPostion} />
+                  <Image alt={"alt"} src={myPostion} />
                   <span className="text-primary-500 font-body4 ml-1">My portfolio</span>
                 </span>
               </Link>

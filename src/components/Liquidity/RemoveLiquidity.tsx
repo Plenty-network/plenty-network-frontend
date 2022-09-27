@@ -132,7 +132,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
         {walletAddress && (
           <div className="ml-auto w-[79%] sm:w-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3">
             <div>
-              <Image src={wallet} width={"32px"} height={"32px"} />
+              <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
             </div>
             <div
               className="ml-1 text-primary-500 font-body2 cursor-pointer"

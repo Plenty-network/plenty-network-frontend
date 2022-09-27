@@ -32,7 +32,7 @@ export function VotingPower(props: IVotingPowerProps) {
           <div className=" ">
             <span className="font-f13">3783</span>
             <span className="relative top-1 ml-px">
-              <Image src={light} width={"16px"} height={"16px"} />
+              <Image alt={"alt"} src={light} width={"16px"} height={"16px"} />
             </span>
           </div>
         </ToolTip>

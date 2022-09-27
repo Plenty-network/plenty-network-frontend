@@ -17,8 +17,8 @@ function StatsCard(props: IStatsCardProps) {
       >
         <p>
           <div className="flex gap-1">
-            {props.isLast && <Image src={ply} />}
-            <Image src={info} />
+            {props.isLast && <Image alt={"alt"} src={ply} />}
+            <Image alt={"alt"} src={info} />
             <p className="text-white font-body3 ">{props.title}</p>
           </div>
           <div className="font-input-text1 text-white mt-2 flex items-end">

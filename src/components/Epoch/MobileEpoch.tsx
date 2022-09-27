@@ -25,7 +25,11 @@ export function MobileEpoch(props: IMobileEpochProps) {
         <span>
           Epoch {selectedEpoch.epochNumber} {selectedEpoch.isCurrent ? "(current)" : ""}
         </span>
-        <Image className={isDropDownActive ? "rotate-0" : "rotate-180"} src={vectorDown} />
+        <Image
+          alt={"alt"}
+          className={isDropDownActive ? "rotate-0" : "rotate-180"}
+          src={vectorDown}
+        />
       </div>
       {isDropDownActive && (
         <>

@@ -91,7 +91,7 @@ export function Tabs(props: ITabsProps) {
               (props.TableName === "poolsPosition" && isMobile && props.index === 1) ||
               (props.TableName === "lockPosition" && isMobile && props.index === 1) ? (
                 <span className="relative top-[3px] mr-1">
-                  <Image src={info} />
+                  <Image alt={"alt"} src={info} />
                 </span>
               ) : (
                 <InfoIconToolTip message="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry" />
@@ -109,13 +109,16 @@ export function Tabs(props: ITabsProps) {
           props.arrowUp && (
             <div>
               <Image
+                alt={"alt"}
                 src={arrowDown}
                 className={props.arrowUp === "up" ? "rotate-0" : "rotate-180"}
+                width={"13px"}
+                height={"13px"}
               />
             </div>
           )
           // : (
-          //   <Image src={arrowDown} className={"opacity-0"} />
+          //   <Image alt={'alt'} src={arrowDown} className={"opacity-0"} />
           // )
         }
       </div>

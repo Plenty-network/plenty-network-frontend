@@ -178,9 +178,10 @@ const Table = <D extends object>({
                       className={` flex  md:py-1 font-title3 px-1 py-1 flex items-center  rounded-lg slideFromTop ${
                         TableName === "locksRewards" && " md:pl-11 "
                       } `}
+                      key={row}
                     >
                       <div className="flex gap-1">
-                        <Image src={epoachIcon} width={"22px"} height={"22px"} />
+                        <Image alt={"alt"} src={epoachIcon} width={"22px"} height={"22px"} />
                         <span className="text-text-250">Epoch</span>
                         <span className="text-white">22</span>
                         <span className="text-text-50">(current)</span>
@@ -200,6 +201,7 @@ const Table = <D extends object>({
                           ? "justify-between md:pl-11 md:pr-11 px-3"
                           : "md:pr-3 md:pl-11 px-1"
                       } `}
+                      key={row}
                     >
                       {row.cells.map((cell: any, i: any) => {
                         return (

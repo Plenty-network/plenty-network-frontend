@@ -105,7 +105,7 @@ function SwapModal(props: ISwapModalProps) {
                   </div>
                 }
               >
-                <Image src={infogrey} />
+                <Image alt={"alt"} src={infogrey} />
               </ToolTip>
             </span>
           </div>
@@ -125,7 +125,7 @@ function SwapModal(props: ISwapModalProps) {
                     : { onClick: () => props.selectToken(token) })}
                 >
                   <span className="w-[18px] h-[18px] relative top-1">
-                    <Image src={token.image} width={"18px"} height={"18px"} />{" "}
+                    <Image alt={"alt"} src={token.image} width={"18px"} height={"18px"} />{" "}
                   </span>
                   <span className="font-body3">{tEZorCTEZtoUppercase(token.name)}</span>
                 </div>
@@ -157,7 +157,7 @@ function SwapModal(props: ISwapModalProps) {
                   >
                     <div>
                       <span className="w-[30px] h-[30px] relative top-1">
-                        <Image src={token.image} width={"30px"} height={"30px"} />{" "}
+                        <Image alt={"alt"} src={token.image} width={"30px"} height={"30px"} />{" "}
                       </span>
                     </div>
                     <div className="ml-2">

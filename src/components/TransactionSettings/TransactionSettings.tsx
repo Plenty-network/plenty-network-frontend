@@ -112,7 +112,13 @@ function TransactionSettings(props: ITransactionSettingsProps) {
               </div>
             }
           >
-            <Image src={info} width={"11px"} height={"11px"} className="cursor-pointer" />
+            <Image
+              alt={"alt"}
+              src={info}
+              width={"11px"}
+              height={"11px"}
+              className="cursor-pointer"
+            />
           </ToolTip>
         </span>
       </div>
@@ -173,7 +179,13 @@ function TransactionSettings(props: ITransactionSettingsProps) {
                 id="tooltipA"
                 position={Position.top}
               >
-                <Image src={info} width={"11px"} height={"11px"} className="cursor-pointer" />
+                <Image
+                  alt={"alt"}
+                  src={info}
+                  width={"11px"}
+                  height={"11px"}
+                  className="cursor-pointer"
+                />
               </ToolTip>
             </span>
           </div>
@@ -195,7 +207,13 @@ function TransactionSettings(props: ITransactionSettingsProps) {
                   </div>
                 }
               >
-                <Image src={info} width={"11px"} height={"11px"} className="cursor-pointer" />
+                <Image
+                  alt={"alt"}
+                  src={info}
+                  width={"11px"}
+                  height={"11px"}
+                  className="cursor-pointer"
+                />
               </ToolTip>
             </span>
           </div>
@@ -212,13 +230,20 @@ function TransactionSettings(props: ITransactionSettingsProps) {
               <ToolTip
                 toolTipChild={
                   <div className="w-[200px]">
-                    The output tokens of the trade will be transferred to the recipient's address.
+                    The output tokens of the trade will be transferred to the recipient &apos;s
+                    address.
                   </div>
                 }
                 id="tooltipC"
                 position={Position.top}
               >
-                <Image src={info} width={"11px"} height={"11px"} className="cursor-pointer" />
+                <Image
+                  alt={"alt"}
+                  src={info}
+                  width={"11px"}
+                  height={"11px"}
+                  className="cursor-pointer"
+                />
               </ToolTip>
             </span>
           </div>

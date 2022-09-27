@@ -199,7 +199,7 @@ function ManageLock(props: IManageLockProps) {
               onClick={onClickAmount}
             >
               <div>
-                <Image src={wallet} width={"32px"} height={"32px"} />
+                <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
               </div>
               <div className=" ml-1 text-primary-500 font-body2">
                 {Number(props.plyBalance) >= 0 ? Number(props.plyBalance) : "0.00"} PLY
@@ -266,7 +266,7 @@ function ManageLock(props: IManageLockProps) {
                 />{" "}
               </div>
               <div className="ml-auto cursor-pointer">
-                <Image src={calender} onClick={() => setIsDatePickerOpen(true)} />
+                <Image alt={"alt"} src={calender} onClick={() => setIsDatePickerOpen(true)} />
                 <Datepicker
                   selectedDate={new Date()}
                   startTimeStamp={dateRange.startTimeStamp}

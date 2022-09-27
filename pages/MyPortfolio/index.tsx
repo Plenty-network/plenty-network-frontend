@@ -312,7 +312,44 @@ function MyPortfolio(props: any) {
       lockingDate: 0,
     });
   };
-
+  const Title = useMemo(() => {
+    return (
+      <div className="flex gap-1">
+        <p
+          className={clsx(
+            " font-title3 cursor-pointer h-[50px] px-[24px] flex items-center   gap-1",
+            activeSection === MyPortfolioSection.Positions
+              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
+              : "text-text-250 bg-muted-700"
+          )}
+          onClick={() => setActiveSection(MyPortfolioSection.Positions)}
+        >
+          Positions{" "}
+          {activeSection === MyPortfolioSection.Positions ? (
+            <Image alt={"alt"} src={positionsViolet} />
+          ) : (
+            <Image alt={"alt"} src={position} />
+          )}
+        </p>
+        <p
+          className={clsx(
+            " cursor-pointer font-title3  h-[50px] px-[24px] flex items-center gap-1",
+            activeSection === MyPortfolioSection.Rewards
+              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
+              : "text-text-250 bg-muted-700"
+          )}
+          onClick={() => setActiveSection(MyPortfolioSection.Rewards)}
+        >
+          Rewards
+          {activeSection === MyPortfolioSection.Rewards ? (
+            <Image alt={"alt"} src={rewardsViolet} />
+          ) : (
+            <Image alt={"alt"} src={rewards} />
+          )}
+        </p>
+      </div>
+    );
+  }, [activeSection]);
   const handleWithdrawOperation = () => {
     setContentTransaction(`Withdraw ${manageData.baseValue.toNumber()} ply`);
     setShowWithdraw(false);
@@ -541,46 +578,6 @@ function MyPortfolio(props: any) {
       }
     });
   };
-
-  const Title = useMemo(() => {
-    return (
-      <div className="flex gap-1">
-        <p
-          className={clsx(
-            " font-title3 cursor-pointer h-[50px] px-[24px] flex items-center   gap-1",
-            activeSection === MyPortfolioSection.Positions
-              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
-              : "text-text-250 bg-muted-700"
-          )}
-          onClick={() => setActiveSection(MyPortfolioSection.Positions)}
-        >
-          Positions{" "}
-          {activeSection === MyPortfolioSection.Positions ? (
-            <Image src={positionsViolet} />
-          ) : (
-            <Image src={position} />
-          )}
-        </p>
-        <p
-          className={clsx(
-            " cursor-pointer font-title3  h-[50px] px-[24px] flex items-center gap-1",
-            activeSection === MyPortfolioSection.Rewards
-              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
-              : "text-text-250 bg-muted-700"
-          )}
-          onClick={() => setActiveSection(MyPortfolioSection.Rewards)}
-        >
-          Rewards
-          {activeSection === MyPortfolioSection.Rewards ? (
-            <Image src={rewardsViolet} />
-          ) : (
-            <Image src={rewards} />
-          )}
-        </p>
-      </div>
-    );
-  }, [activeSection]);
-
   return (
     <>
       <Head>

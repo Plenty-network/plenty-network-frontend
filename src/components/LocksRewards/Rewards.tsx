@@ -54,7 +54,7 @@ export function RewardsData(props: IRewardsDataProps) {
                 : "0.00"}
             </span>
             <span className="relative top-1 ml-px">
-              <Image src={dollar} width={"16px"} height={"16px"} />
+              <Image alt={"alt"} src={dollar} width={"16px"} height={"16px"} />
             </span>
           </div>
         </ToolTip>
@@ -77,7 +77,7 @@ export function RewardsData(props: IRewardsDataProps) {
           <div className=" ">
             <span className="font-f13">${props.fees.toFixed(2)}</span>
             <span className="relative top-1 ml-px">
-              <Image src={tradingFee} width={"16px"} height={"16px"} />
+              <Image alt={"alt"} src={tradingFee} width={"16px"} height={"16px"} />
             </span>
           </div>
         </ToolTip>

@@ -76,10 +76,20 @@ export function VotesTable(props: IVotesTableProps) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-              <Image src={getImagesPath(x.votes.tokenA)} width={"20px"} height={"20px"} />
+              <Image
+                alt={"alt"}
+                src={getImagesPath(x.votes.tokenA)}
+                width={"20px"}
+                height={"20px"}
+              />
             </div>
             <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image src={getImagesPath(x.votes.tokenB)} width={"20px"} height={"20px"} />
+              <Image
+                alt={"alt"}
+                src={getImagesPath(x.votes.tokenB)}
+                width={"20px"}
+                height={"20px"}
+              />
             </div>
             <div>
               <div className="font-body4">
@@ -150,10 +160,20 @@ export function VotesTable(props: IVotesTableProps) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-              <Image src={getImagesPath(x.votes.tokenA)} width={"24px"} height={"24px"} />
+              <Image
+                alt={"alt"}
+                src={getImagesPath(x.votes.tokenA)}
+                width={"24px"}
+                height={"24px"}
+              />
             </div>
             <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-              <Image src={getImagesPath(x.votes.tokenB)} width={"24px"} height={"24px"} />
+              <Image
+                alt={"alt"}
+                src={getImagesPath(x.votes.tokenB)}
+                width={"24px"}
+                height={"24px"}
+              />
             </div>
             <div>
               <div className="font-body4">
@@ -249,7 +269,7 @@ export function VotesTable(props: IVotesTableProps) {
           isConnectWalletRequired={props.isConnectWalletRequired}
           isVotesTable={true}
           TableName="votesTable"
-          TableWidth="md:min-w-[773px]"
+          TableWidth="md:min-w-[805px]"
         />
       </div>
     </>
