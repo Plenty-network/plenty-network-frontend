@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import Image from "next/image";
+import { BigNumber } from "bignumber.js";
 import { IStatsCardProps } from "./types";
 import info from "../../assets/icon/common/infoIcon.svg";
 
@@ -37,6 +38,8 @@ function StatsCard(props: IStatsCardProps) {
               !props.disable
                 ? () => {
                     props.setShowClaimAllPly(true);
+                    props.setClaimValueDollar(new BigNumber(props.value));
+                    props.setClaimState(props.state);
                   }
                 : () => {}
             }

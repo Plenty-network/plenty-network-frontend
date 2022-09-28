@@ -2,16 +2,22 @@ import { BigNumber } from "bignumber.js";
 import { IVeNFTData } from "../../api/votes/types";
 export interface IStatsProps {}
 export interface IStatsCardProps {
+  setClaimValueDollar: React.Dispatch<React.SetStateAction<BigNumber>>;
   setShowCreateLockModal?: React.Dispatch<React.SetStateAction<boolean>>;
   title?: string;
-  value?: string;
+  value: string;
   subValue?: string;
   isLast?: boolean;
   disable: boolean;
   isDollar?: boolean;
   setShowClaimAllPly: React.Dispatch<React.SetStateAction<boolean>>;
+  setClaimState: React.Dispatch<React.SetStateAction<EClaimAllState>>;
+  state: EClaimAllState;
 }
 export interface IStatsRewardsProps {
+  setClaimState: React.Dispatch<React.SetStateAction<EClaimAllState>>;
+  setShowClaimPly: React.Dispatch<React.SetStateAction<boolean>>;
+  setClaimValueDollar: React.Dispatch<React.SetStateAction<BigNumber>>;
   tradingfeeStats: BigNumber;
   bribesStats: BigNumber;
 
@@ -30,4 +36,13 @@ export interface ISelectNFT {
       tokenId: string;
     }>
   >;
+}
+export enum EClaimAllState {
+  BRIBES,
+  TRADINGFEE,
+  PLYEMISSION,
+  LOCKS,
+  REWARDS,
+  EPOCH,
+  UNCLAIMED,
 }
