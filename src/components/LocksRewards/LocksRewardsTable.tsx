@@ -8,18 +8,20 @@ import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
 import { IVotePageData, IVotesData } from "../../api/votes/types";
 import { IVotesTableRewards } from "./types";
-import ClaimPly from "../PoolsRewards/ClaimPopup";
 import { RewardsData } from "./Rewards";
 import { VotingPower } from "./VotingPower";
 import { ILockRewardsEpochData } from "../../api/portfolio/types";
 import { NoPoolsPosition } from "../Rewards/NoContent";
 import { NoNFTAvailable } from "../Rewards/NoNFT";
-import { compareNumericString } from "../../utils/commonUtils";
+import ClaimAllEpoch from "./ClaimAllEpoch";
 
 export function LocksTableRewards(props: IVotesTableRewards) {
   const { valueFormat } = useTableNumberUtils();
 
   const [showClaimPly, setShowClaimPly] = React.useState(false);
+  const [claimAllData, setClaimAllData] = React.useState<ILockRewardsEpochData[]>(
+    [] as ILockRewardsEpochData[]
+  );
   const [votesArray, setvotesArray] = React.useState<[string, ILockRewardsEpochData[]][]>(
     [] as [string, ILockRewardsEpochData[]][]
   );
@@ -50,13 +52,18 @@ export function LocksTableRewards(props: IVotesTableRewards) {
   const NoData = React.useMemo(() => {
     if (props.selectedDropDown.tokenId === "") {
       return <NoNFTAvailable />;
-    } else if (!(props.selectedDropDown.tokenId in props.allLocksRewardsData)) {
+    } else if (
+      !(props.selectedDropDown.tokenId in props.allLocksRewardsData) ||
+      newArr.length === 0
+    ) {
       return <NoPoolsPosition />;
     }
-  }, [props.selectedDropDown.tokenId]);
+  }, [props.selectedDropDown.tokenId, newArr]);
   React.useMemo(() => {
     votesArray.reverse().map((data, index) => {
-      newArr.push({ epoch: data[0], votes: [] });
+      if (data[1].length > 0) {
+        newArr.push({ epoch: data[0], votes: [] });
+      }
       if (data[1].length > 0) {
         data[1].forEach(function (vote) {
           newArr.push({ epoch: "", votes: vote });
@@ -65,7 +72,9 @@ export function LocksTableRewards(props: IVotesTableRewards) {
     });
   }, [votesArray]);
   React.useEffect(() => {
-    setNewdata(newArr.reverse());
+    if (newArr.length > 0) {
+      setNewdata(newArr.reverse());
+    }
   }, [newArr]);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
@@ -198,7 +207,14 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           x.epoch === "" ? (
             <VotingPower votes={x.votes.votes} percentage={x.votes.votesPercentage} />
           ) : (
-            <div className="cursor-pointer flex items-center md:font-body4 font-subtitle4 text-primary-500 ml-auto h-[44px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[120px]  justify-center">
+            <div
+              className="cursor-pointer flex items-center md:font-body4 font-subtitle4 text-primary-500 ml-auto h-[44px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[120px]  justify-center"
+              onClick={() => {
+                setClaimAllData(props.allLocksRewardsData[props.selectedDropDown.tokenId][x.epoch]);
+                setShowClaimPly(true);
+                props.setEpochClaim(x.epoch);
+              }}
+            >
               Claim
             </div>
           ),
@@ -222,7 +238,14 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           NoData={NoData}
         />
       </div>
-      {showClaimPly && <ClaimPly show={showClaimPly} setShow={setShowClaimPly} />}
+      {showClaimPly && (
+        <ClaimAllEpoch
+          show={showClaimPly}
+          setShow={setShowClaimPly}
+          handleClick={props.handleClick}
+          data={claimAllData}
+        />
+      )}
     </>
   );
 }

@@ -73,6 +73,14 @@ import {
 } from "../../src/redux/myPortfolio/rewards";
 import { API_RE_ATTAMPT_DELAY } from "../../src/constants/global";
 import SelectNFTLocks from "../../src/components/Rewards/SelectNFTLocks";
+import {
+  claimAllBribeForAllLocks,
+  claimAllFeeForAllLocks,
+  claimAllForEpoch,
+  claimAllRewardsForAllLocks,
+} from "../../src/operations/vote";
+import ClaimPly from "../../src/components/PoolsRewards/ClaimPopup";
+import { EClaimAllState } from "../../src/components/Rewards/types";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -84,8 +92,12 @@ function MyPortfolio(props: any) {
   const [activeSection, setActiveSection] = React.useState<MyPortfolioSection>(
     MyPortfolioSection.Positions
   );
-  const userAddress = store.getState().wallet.address;
-  //const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv"; //kiran
+
+  const [showClaimPly, setShowClaimPly] = React.useState(false);
+
+  const [epochClaim, setEpochClaim] = React.useState("");
+  //const userAddress = store.getState().wallet.address;
+  const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv"; //kiran
   //const userAddress = "tz1NaGu7EisUCyfJpB16ktNxgSqpuMo8aSEk"; //udit
   //tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv kiran
 
@@ -115,15 +127,18 @@ function MyPortfolio(props: any) {
     selected: 0,
     lockingDate: 0,
   });
-  const [searchValue, setSearchValue] = useState("");
+  const [claimState, setClaimState] = useState<EClaimAllState>(-1 as EClaimAllState);
   const allLocksRewardsData = store.getState().portfolioRewards.allLocksRewardsData;
   const [selectednft, setSelectednft] = useState(selectedDropDown);
-
+  const bribesClaimData = store.getState().portfolioRewards.bribesClaimData;
+  const epochClaimData = store.getState().portfolioRewards.epochClaimData;
+  const feeClaimData = store.getState().portfolioRewards.feesClaimData;
   const bribesStats = store.getState().portfolioRewards.totalBribesAmount;
   const tradingfeeStats = store.getState().portfolioRewards.totalTradingFeesAmount;
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   const [contentTransaction, setContentTransaction] = useState("");
   const [plyBalance, setPlyBalance] = useState(new BigNumber(0));
+  const [claimValueDollar, setClaimValueDollar] = useState(new BigNumber(0));
   const [poolsPosition, setPoolsPosition] = useState<{
     data: IPositionsData[];
     isfetched: boolean;
@@ -587,6 +602,138 @@ function MyPortfolio(props: any) {
       }
     });
   };
+  const handleClaimBribes = () => {
+    setContentTransaction(`Claim all bribes`);
+    setShowClaimPly(false);
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    claimAllBribeForAllLocks(
+      bribesClaimData,
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        }, 6000);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
+  const handleClaimFees = () => {
+    setContentTransaction(`Claim all bribes`);
+    setShowClaimPly(false);
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    claimAllFeeForAllLocks(
+      feeClaimData,
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        }, 6000);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
+  const handleClaimALLFeesAndBribes = () => {
+    setContentTransaction(`Claim all bribes`);
+    setShowClaimPly(false);
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    claimAllRewardsForAllLocks(
+      bribesClaimData,
+      feeClaimData,
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        }, 6000);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
+  const handleClaimALLEpoch = () => {
+    setContentTransaction(`Claim all bribes`);
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    claimAllForEpoch(
+      epochClaimData[selectednft.tokenId][epochClaim],
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        }, 6000);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
   return (
     <>
       <Head>
@@ -612,6 +759,11 @@ function MyPortfolio(props: any) {
                 setShowClaimAllPly={setShowClaimAllPly}
                 tradingfeeStats={tradingfeeStats}
                 bribesStats={bribesStats}
+                setClaimValueDollar={setClaimValueDollar}
+                setShowClaimPly={setShowClaimPly}
+                setClaimState={setClaimState}
+                bribesClaimData={bribesClaimData}
+                feeClaimData={feeClaimData}
               />
             )}
           </div>
@@ -688,8 +840,21 @@ function MyPortfolio(props: any) {
                   </div>
                 </p>
                 <p
-                  className="cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center"
-                  onClick={() => setShowClaimAllPly(true)}
+                  className={clsx(
+                    " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center",
+                    bribesClaimData.length === 0 || feeClaimData.length === 0
+                      ? "cursor-not-allowed"
+                      : "cursor-pointer"
+                  )}
+                  onClick={
+                    bribesClaimData.length === 0 || feeClaimData.length === 0
+                      ? () => {}
+                      : () => {
+                          setShowClaimPly(true);
+                          setClaimValueDollar(tradingfeeStats.plus(bribesStats));
+                          setClaimState(EClaimAllState.LOCKS);
+                        }
+                  }
                 >
                   Claim all
                 </p>
@@ -718,6 +883,8 @@ function MyPortfolio(props: any) {
                 voteData={voteData}
                 allLocksRewardsData={allLocksRewardsData}
                 selectedDropDown={selectednft}
+                handleClick={handleClaimALLEpoch}
+                setEpochClaim={setEpochClaim}
               />
             </>
           ))}
@@ -801,6 +968,32 @@ function MyPortfolio(props: any) {
           totalValue={poolsRewards.data.gaugeEmissionsTotal}
           tokenPrice={tokenPrice}
           handleClaimAll={handleClaimAll}
+        />
+      )}
+      {showClaimPly && (
+        <ClaimPly
+          show={showClaimPly}
+          setShow={setShowClaimPly}
+          isPly={false}
+          value={claimValueDollar}
+          title={
+            claimState === EClaimAllState.BRIBES
+              ? "Claim All Bribes"
+              : claimState === EClaimAllState.TRADINGFEE
+              ? "Claim All Trading Fee"
+              : claimState === EClaimAllState.LOCKS
+              ? "Claim All Locks"
+              : ""
+          }
+          handleClick={
+            claimState === EClaimAllState.BRIBES
+              ? handleClaimBribes
+              : claimState === EClaimAllState.TRADINGFEE
+              ? handleClaimFees
+              : claimState === EClaimAllState.LOCKS
+              ? handleClaimALLFeesAndBribes
+              : () => {}
+          }
         />
       )}
     </>
