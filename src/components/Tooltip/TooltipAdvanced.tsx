@@ -5,7 +5,6 @@ import * as React from "react";
 import closeIcon from "../../assets/icon/common/closeCross.svg";
 import { generateRandomString } from "../../utils/commonUtils";
 import ReactTooltip from "./ReactTooltipExtends";
-
 export enum Position {
   top = "top",
   right = "right",
@@ -28,6 +27,7 @@ export interface IToolTipProps {
   classNameAncorToolTip?: string;
   isShowInnitially?: boolean;
   disable?: boolean;
+  dontHideToolTip?:boolean;
 }
 
 export function ToolTip(props: IToolTipProps) {

@@ -4,7 +4,7 @@ import { usePoolsMain } from "../../api/pools/query/poolsmain.query";
 import { IPoolsDataWrapperResponse } from "../../api/pools/types";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
-import { CircularImageInfo } from "./Component/CircularImageInfo";
+import { CircularImageInfo, CircularOverLappingImage } from "./Component/CircularImageInfo";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { AprInfo } from "./Component/AprInfo";
@@ -17,6 +17,7 @@ import { ActiveLiquidity } from "./ManageLiquidityHeader";
 import { AppDispatch } from "../../redux";
 import { useDispatch } from "react-redux";
 import { getTotalVotingPower } from "../../redux/pools";
+import { compareNumericString } from "../../utils/commonUtils";
 
 export interface IShortCardProps {
   className?: string;
@@ -31,25 +32,7 @@ export interface IManageBtnProps {
   tokenA: string;
   tokenB: string;
 }
-function compareNumericString(inp:any,inp2:any) {
 
-  console.log("hello world -1",inp);
- const rowA=inp;
- const rowB=inp[1];
- const id='volume';
- const desc=false;
-  let a = Number.parseFloat(rowA.original[id]);
-  let b = Number.parseFloat(rowB.original[id]);
-  if (Number.isNaN(a)) {  // Blanks and non-numeric strings to bottom
-      a = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
-  }
-  if (Number.isNaN(b)) {
-      b = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
-  }
-  if (a > b) return 1; 
-  if (a < b) return -1;
-  return 0;
-}
 export function ShortCard(props: IShortCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
@@ -90,12 +73,13 @@ export function ShortCard(props: IShortCardProps) {
         Header: "Pools",
         id: "pools",
         showOnMobile: true,
+        canShort: true,
+        sortType:(a:any,b:any)=>compareNumericString(a,b,'tokenA',true),
         accessor: (x) => (
           <div className="flex gap-1 items-center max-w-[153px]">
-            <CircularImageInfo
-              isSecoundIconBorder
-              className="w-7 h-7"
-              imageArray={[getImagesPath(x.tokenA.toString()), getImagesPath(x.tokenB.toString())]}
+            <CircularOverLappingImage 
+            src1={getImagesPath(x.tokenA.toString())}
+            src2={getImagesPath(x.tokenB.toString())}
             />
             <div className="flex flex-col gap-[2px]">
               <span className="md:text-f14 text-f12 text-white ">
@@ -114,7 +98,7 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        accessorFn:(x:any)=>parseInt(x.arp),
+        sortType:(a:any,b:any)=>compareNumericString(a,b,'apr'),
         accessor: (x) => (
           <AprInfo
             currentApr={x.apr.toString()}
@@ -145,12 +129,14 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "Pools",
         id: "pools",
+        canShort: true,
         showOnMobile: true,
+        sortType:(a:any,b:any)=>compareNumericString(a,b,'tokenA',true),
         accessor: (x) => (
           <div className="flex gap-2 items-center max-w-[153px]">
-            <CircularImageInfo
-            isSecoundIconBorder
-              imageArray={[getImagesPath(x.tokenA.toString()), getImagesPath(x.tokenB.toString())]}
+            <CircularOverLappingImage 
+            src1={getImagesPath(x.tokenA.toString())}
+            src2={getImagesPath(x.tokenB.toString())}
             />
             <div className="flex flex-col gap-[2px]">
               <span className="md:text-f14 text-f12 text-white ">
@@ -169,6 +155,7 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
+        sortType:(a:any,b:any)=>compareNumericString(a,b,'apr'),
         accessor: (x: any) => (
           <AprInfo
             currentApr={valueFormat(x.apr, { percentChange: true }).toString()}
@@ -183,7 +170,7 @@ export function ShortCard(props: IShortCardProps) {
         subText: "24h",
         isToolTipEnabled: true,
         canShort: true,
-        sortType:(a:any,b:any)=>compareNumericString(a,b),
+        sortType:(a:any,b:any)=>compareNumericString(a,b,'volume'),
         accessor: (x:any) => (
           <PoolsTextWithTooltip
             text={valueFormat(x.volume.toNumber())}
@@ -199,6 +186,7 @@ export function ShortCard(props: IShortCardProps) {
         id: "TVL",
         isToolTipEnabled: true,
         canShort: true,
+        sortType:(a:any,b:any)=>compareNumericString(a,b,'tvl'),
         accessor: (x) => (
           <PoolsTextWithTooltip
             text={valueFormat(x.tvl.toNumber())}
@@ -215,6 +203,7 @@ export function ShortCard(props: IShortCardProps) {
         subText: "current epoch",
         isToolTipEnabled: true,
         canShort: true,
+        sortType:(a:any,b:any)=>compareNumericString(a,b,'fees'),
         accessor: (x) => (
           <PoolsTextWithTooltip
             text={valueFormat(x.fees.toNumber())}
@@ -250,8 +239,9 @@ export function ShortCard(props: IShortCardProps) {
 
   function ManageBtn(props: IManageBtnProps): any {
     return (
+      <div className="pl-3 pr-2 md:pr-0 md:pl-0">
       <div
-        className="bg-primary-500/10 hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-7 py-2 rounded-lg"
+        className="bg-primary-500/10 text-f12 md:text-f14 hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-7 md:px-7 py-2 rounded-lg"
         onClick={() => {
           dispatch(getTotalVotingPower());
           props.isLiquidityAvailable
@@ -274,6 +264,7 @@ export function ShortCard(props: IShortCardProps) {
       >
         Manage
       </div>
+      </div>
     );
   }
   return (
@@ -287,11 +278,12 @@ export function ShortCard(props: IShortCardProps) {
           activeState={activeState}
         />
       )}
-      <div className={` overflow-x-auto inner ${props.className}`}>
+      <div className={` overflow-x-auto inner  ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={[...poolsTableData,...poolsTableData,...poolsTableData,...poolsTableData,...poolsTableData,...poolsTableData]}
           shortby="fees"
+          tableType="pool"
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableWidth="md:min-w-[1032px]"

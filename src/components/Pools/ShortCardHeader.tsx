@@ -102,17 +102,19 @@ export function Tabs(props: ITabsProps) {
       </div>
       <div className="relative top-px">
         {
-          props.arrowUp && (
-            <div>
+          props.arrowUp ? (
+            <div className="absolute -right-3">
               <Image
                 src={arrowDown}
                 className={props.arrowUp === "up" ? "rotate-0" : "rotate-180"}
               />
             </div>
           )
-          // : (
-          //   <Image src={arrowDown} className={"opacity-0"} />
-          // )
+          : (
+            <div className="absolute -right-3">
+            <Image src={arrowDown} className={"opacity-0"} />
+            </div>
+          )
         }
       </div>
     </th>

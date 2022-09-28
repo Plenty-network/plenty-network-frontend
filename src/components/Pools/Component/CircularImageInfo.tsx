@@ -22,6 +22,18 @@ export function CircularImageInfo(props: ICircularImageInfoProps) {
     </div>
   );
 }
+export const CircularOverLappingImage=(props:{src1:string,src2:string})=>{
+  return (
+    <div className=" flex justify-center items-center">
+  <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
+  <Image src={props.src1} width={"24px"} height={"24px"} />
+</div>
+<div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
+  <Image src={props.src2} width={"24px"} height={"24px"} />
+</div>
+</div>
+);
+}
 
 export interface IImageCircleProps {
   src?: any;
