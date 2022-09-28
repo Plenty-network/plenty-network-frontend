@@ -75,7 +75,7 @@ export function VotesTable(props: IVotesTableProps) {
         id: "pools",
         showOnMobile: true,
         canShort: true,
-        sortType:(a:any,b:any)=>compareNumericString(a,b,'votes.tokenA',true),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.tokenA", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
@@ -111,6 +111,7 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.bribes"),
         accessor: (x: any) => (
           <RewardsData
             bribes={x.votes.bribes}
@@ -161,7 +162,7 @@ export function VotesTable(props: IVotesTableProps) {
         id: "pools",
         showOnMobile: true,
         canShort: true,
-        sortType:(a:any,b:any)=>compareNumericString(a,b,'votes.tokenA',true),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.tokenA", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
@@ -197,6 +198,7 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.bribes"),
         accessor: (x: any) => (
           <RewardsData
             bribes={x.votes.bribes}
@@ -214,6 +216,7 @@ export function VotesTable(props: IVotesTableProps) {
         id: "Total votes",
         canShort: true,
         isToolTipEnabled: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.totalVotesPercentage"),
         accessor: (x: any) => (
           <TotalVotes
             totalvotes={x.votes.totalVotes}
@@ -224,9 +227,10 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "My votes",
         id: "Myvotes",
-
+        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.myVotesPercentage"),
         isToolTipEnabled: true,
         canShort: true,
+
         accessor: (x: any) => (
           <MyVotesValue myVotes={x.votes.myVotes} myVotesPercentage={x.votes.myVotesPercentage} />
         ),
@@ -236,6 +240,8 @@ export function VotesTable(props: IVotesTableProps) {
         id: "Myvotess",
         isToolTipEnabled: true,
         canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.totalVotes"),
+
         accessor: (x: any) => (
           <MyVotes
             isMobile={false}

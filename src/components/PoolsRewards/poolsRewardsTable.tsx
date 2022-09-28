@@ -10,6 +10,7 @@ import { IPoolsRewardsData } from "../../api/portfolio/types";
 import { PLYEmission } from "./PLYEmisiion";
 import { Boost } from "./Boost";
 import { NoPoolsPosition } from "../Rewards/NoContent";
+import { compareNumericString } from "../../utils/commonUtils";
 
 export function PoolsTableRewards(props: IPoolsTableRewards) {
   const { valueFormat } = useTableNumberUtils();
@@ -31,6 +32,8 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
       {
         Header: "Pool",
         id: "pools",
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol"),
         showOnMobile: true,
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
@@ -67,6 +70,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "gaugeEmission"),
         accessor: (x: any) => <PLYEmission value={x.gaugeEmission} />,
       },
 
@@ -76,6 +80,8 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
+
         accessor: (x: any) => <Boost value={x.boostValue} />,
       },
     ],
@@ -88,6 +94,8 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         Header: "Pool",
         id: "pool",
         showOnMobile: true,
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol"),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
@@ -123,6 +131,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "gaugeEmission"),
         accessor: (x: any) => <PLYEmission value={x.gaugeEmission} />,
       },
 
@@ -132,6 +141,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
         accessor: (x: any) => <Boost value={x.boostValue} />,
       },
     ],

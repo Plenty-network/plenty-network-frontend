@@ -7,16 +7,14 @@ import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
 import { IVotePageData, IVotesData } from "../../api/votes/types";
-import { ManageLiquidity } from "../Pools/ManageLiquidity";
-import { tokenParameterLiquidity } from "../Liquidity/types";
-import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
-import { IManageBtnProps } from "../PoolsPosition/types";
 import { IVotesTableRewards } from "./types";
 import ClaimPly from "../PoolsRewards/ClaimPopup";
-import ClaimAll from "../Rewards/ClaimAll";
 import { RewardsData } from "./Rewards";
 import { VotingPower } from "./VotingPower";
 import { ILockRewardsEpochData } from "../../api/portfolio/types";
+import { NoPoolsPosition } from "../Rewards/NoContent";
+import { NoNFTAvailable } from "../Rewards/NoNFT";
+import { compareNumericString } from "../../utils/commonUtils";
 
 export function LocksTableRewards(props: IVotesTableRewards) {
   const { valueFormat } = useTableNumberUtils();
@@ -25,7 +23,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
   const [votesArray, setvotesArray] = React.useState<[string, ILockRewardsEpochData[]][]>(
     [] as [string, ILockRewardsEpochData[]][]
   );
-
+  const [isFetched, setIsFetched] = React.useState(false);
   const [noSearchResult, setNoSearchResult] = React.useState(false);
   const [newArr, setNewArr] = React.useState<
     { epoch: string; votes: ILockRewardsEpochData | [] }[]
@@ -37,8 +35,23 @@ export function LocksTableRewards(props: IVotesTableRewards) {
     setvotesArray([] as [string, ILockRewardsEpochData[]][]);
     setNewArr([] as { epoch: string; votes: ILockRewardsEpochData }[]);
     setNewdata([] as { epoch: string; votes: ILockRewardsEpochData }[]);
-    if (props.selectedDropDown.tokenId !== "") {
+
+    if (
+      props.selectedDropDown.tokenId !== "" &&
+      props.selectedDropDown.tokenId in props.allLocksRewardsData
+    ) {
+      setIsFetched(true);
       setvotesArray(Object.entries(props.allLocksRewardsData[props.selectedDropDown.tokenId]));
+    } else {
+      setIsFetched(true);
+      setvotesArray([]);
+    }
+  }, [props.selectedDropDown.tokenId]);
+  const NoData = React.useMemo(() => {
+    if (props.selectedDropDown.tokenId === "") {
+      return <NoNFTAvailable />;
+    } else if (!(props.selectedDropDown.tokenId in props.allLocksRewardsData)) {
+      return <NoPoolsPosition />;
     }
   }, [props.selectedDropDown.tokenId]);
   React.useMemo(() => {
@@ -50,7 +63,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         });
       }
     });
-  }, [votesArray.length]);
+  }, [votesArray]);
   React.useEffect(() => {
     setNewdata(newArr.reverse());
   }, [newArr]);
@@ -102,7 +115,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         Header: "PLY emissions",
         id: "PLY emissions",
         isToolTipEnabled: true,
-        canShort: true,
+
         showOnMobile: true,
         accessor: (x: any) => "$234.58",
       },
@@ -116,6 +129,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         Header: "Pool",
         id: "pool",
         showOnMobile: true,
+
         accessor: (x: any) =>
           x.epoch === "" ? (
             <div className=" flex justify-center items-center">
@@ -159,7 +173,6 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         Header: "Reward",
         id: "Reward",
         isToolTipEnabled: true,
-        canShort: true,
         showOnMobile: true,
         accessor: (x: any) =>
           x.epoch === "" ? (
@@ -168,9 +181,9 @@ export function LocksTableRewards(props: IVotesTableRewards) {
               fees={x.votes.feesAmount}
               token1Name={tEZorCTEZtoUppercase(x.votes.tokenASymbol.toString())}
               token2Name={tEZorCTEZtoUppercase(x.votes.tokenBSymbol.toString())}
-              fees1={Number(0)}
-              fees2={Number(1)}
+              feesData={x.votes.feesData}
               bribesData={x.votes.bribesData}
+              feesStatus={x.votes.feesStatus}
             />
           ) : null,
       },
@@ -179,8 +192,8 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         Header: "Voting power",
         id: "Voting power",
         isToolTipEnabled: true,
-        canShort: true,
         showOnMobile: true,
+
         accessor: (x: any) =>
           x.epoch === "" ? (
             <VotingPower votes={x.votes.votes} percentage={x.votes.votesPercentage} />
@@ -202,10 +215,11 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           data={newdata}
           noSearchResult={noSearchResult}
           shortby="Myvotes"
-          isFetched={!noSearchResult && newdata.length === 0 ? false : true}
+          isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="locksRewards"
           TableWidth=""
+          NoData={NoData}
         />
       </div>
       {showClaimPly && <ClaimPly show={showClaimPly} setShow={setShowClaimPly} />}

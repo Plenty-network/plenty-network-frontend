@@ -63,7 +63,6 @@ import {
 } from "../../src/api/portfolio/types";
 import WithdrawPly from "../../src/components/LocksPosition/WithdrawPopup";
 import { setIsLoadingWallet } from "../../src/redux/walletLoading";
-import SelectNFT from "../../src/components/Votes/SelectNFT";
 import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
 import { LocksTableRewards } from "../../src/components/LocksRewards/LocksRewardsTable";
 import ClaimAll from "../../src/components/Rewards/ClaimAll";
@@ -73,6 +72,7 @@ import {
   fetchAllRewardsOperationsData,
 } from "../../src/redux/myPortfolio/rewards";
 import { API_RE_ATTAMPT_DELAY } from "../../src/constants/global";
+import SelectNFTLocks from "../../src/components/Rewards/SelectNFTLocks";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -84,8 +84,8 @@ function MyPortfolio(props: any) {
   const [activeSection, setActiveSection] = React.useState<MyPortfolioSection>(
     MyPortfolioSection.Positions
   );
-  //const userAddress = store.getState().wallet.address;
-  const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv"; //kiran
+  const userAddress = store.getState().wallet.address;
+  //const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv"; //kiran
   //const userAddress = "tz1NaGu7EisUCyfJpB16ktNxgSqpuMo8aSEk"; //udit
   //tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv kiran
 
@@ -243,17 +243,14 @@ function MyPortfolio(props: any) {
 
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
-          console.log(res);
           setStatsPosition(res);
         });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
-          console.log(res);
           setPoolsPosition({ data: res.positionPoolsData, isfetched: true });
         });
       }
       if (Object.keys(tokenPrice).length !== 0) {
         getPoolsRewardsData(userAddress, tokenPrice).then((res) => {
-          console.log(res);
           setPoolsRewards({ data: res, isfetched: true });
         });
       }
@@ -271,8 +268,7 @@ function MyPortfolio(props: any) {
   }, [userAddress, currentEpoch?.epochNumber]);
 
   useEffect(() => {
-    console.log(veNFTlist, selectednft.votingPower);
-    if (veNFTlist.length > 0 && selectednft.votingPower === "") {
+    if (veNFTlist.length > 0) {
       setSelectednft({
         votingPower: veNFTlist[0].votingPower.toString(),
         tokenId: veNFTlist[0].tokenId.toString(),
@@ -289,36 +285,31 @@ function MyPortfolio(props: any) {
       setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
       setStats1({} as IVotesStatsDataResponse);
       getVotesStatsData(userAddress).then((res) => {
-        console.log(res);
         setStats1(res);
       });
       getAllLocksPositionData(userAddress).then((res) => {
-        console.log(res);
         setLocksPosition({ data: res.allLocksData.reverse(), isfetched: true });
       });
     }
   }, [userAddress, activeSection, currentEpoch?.epochNumber]);
   useEffect(() => {
-    if (!props.isLoading && props.operationSuccesful) {
+    if (!props.isLoading && props.operationSuccesful && userAddress) {
       setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
       setStatsPosition({} as IPositionStatsResponse);
       setPoolsPosition({ data: [] as IPositionsData[], isfetched: false });
       getAllLocksPositionData(userAddress).then((res) => {
-        console.log(res);
         setLocksPosition({ data: res.allLocksData.reverse(), isfetched: true });
       });
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
-          console.log(res);
           setStatsPosition(res);
         });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
-          console.log(res);
           setPoolsPosition({ data: res.positionPoolsData, isfetched: true });
         });
       }
     }
-  }, [props.operationSuccesful, props.isLoading]);
+  }, [props.operationSuccesful, props.isLoading, userAddress]);
 
   const resetAllValues = () => {
     setPlyInput("");
@@ -707,20 +698,20 @@ function MyPortfolio(props: any) {
               <div className="border-b border-text-800/[0.5] mt-[15px]"></div>
               <div className="flex items-center px-3 md:px-0 py-2 md:py-3 ">
                 <div>
-                  <SelectNFT
+                  <SelectNFTLocks
                     veNFTlist={veNFTlist}
                     selectedText={selectednft}
                     setSelectedDropDown={setSelectednft}
                   />
                 </div>
-                <div className="ml-auto ">
+                {/* <div className="ml-auto ">
                   <InputSearchBox
                     className=""
                     value={searchValue}
                     onChange={setSearchValue}
                     width={"md:w-245px xl:w-[260px]"}
                   />
-                </div>
+                </div> */}
               </div>
               <LocksTableRewards
                 className="md:px-5 md:pb-4   "

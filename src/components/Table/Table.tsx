@@ -51,7 +51,7 @@ const Table = <D extends object>({
   isVotesTable?: boolean;
   TableName?: string;
   TableWidth?: string;
-  tableType?:string;
+  tableType?: string;
   NoData?: JSX.Element;
   test?: any;
 }) => {
@@ -62,7 +62,6 @@ const Table = <D extends object>({
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const headerRef = useRef(null);
   const [heightBody, setheightBody] = useState<number>(480);
-  
 
   useEffect(() => {
     const heightOfbody = getHeightOfElement(headerRef.current);
@@ -197,9 +196,7 @@ const Table = <D extends object>({
                         // eslint-disable-next-line react/jsx-key
                         <td
                           className={` flex items-center ${
-                            i == 0 || (!isMobile && TableName === "lockPosition" && i === 1)
-                              ? "justify-start"
-                              : "justify-end "
+                            i == 0 ? "justify-start" : "justify-end "
                           } ${
                             TableName === "locksRewards" && i === 0
                               ? "w-[220px]"
