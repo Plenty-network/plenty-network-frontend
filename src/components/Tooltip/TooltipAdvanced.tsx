@@ -68,7 +68,7 @@ export function ToolTip(props: IToolTipProps) {
           effect="solid"
         >
           <div className="absolute right-2 top-1 cursor-pointer">
-            <Image src={closeIcon} />
+            <Image alt={"alt"} src={closeIcon} />
           </div>
           <div className="flex flex-col gap-1 mr-2   relative">
             <div className="text-f12 font-medium">{props.title}</div>

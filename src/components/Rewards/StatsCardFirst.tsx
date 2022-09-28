@@ -17,7 +17,7 @@ function StatsCardFirst(props: IStatsCardProps) {
         <p>
           <div className="flex gap-2.5">
             <p className="text-white font-body3 ">Gauge emissions</p>
-            <Image src={info} />
+            <Image alt={"alt"} src={info} />
           </div>
           <div className="font-input-text1 text-white mt-2">
             488 <span className="font-subtitle5 text-border-400">PLY</span>
@@ -27,12 +27,12 @@ function StatsCardFirst(props: IStatsCardProps) {
         <p>
           <div className="flex gap-2.5">
             <p className="text-white font-body3 ">Trading fees</p>
-            <Image src={info} />
+            <Image alt={"alt"} src={info} />
           </div>
           <div className="font-input-text1 text-white mt-2">$488 </div>
         </p>
         <p className="ml-5">
-          <Image src={claim} />
+          <Image alt={"alt"} src={claim} />
         </p>
       </div>
     </>

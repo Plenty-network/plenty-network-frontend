@@ -24,17 +24,17 @@ function WithdrawPly(props: IWithdrawPlyProps) {
         <>
           <div className="flex">
             <div className="cursor-pointer" onClick={closeModal}>
-              <Image src={arrowLeft} />
+              <Image alt={"alt"} src={arrowLeft} />
             </div>
             <div className="mx-2 text-white font-title3">Withdraw locks</div>
             {/* <div className="relative top-[2px] cursor-pointer">
-              <Image src={info} />
+              <Image alt={'alt'} src={info} />
             </div> */}
           </div>
           <div className="border border-text-800 bg-card-200 p-4 mt-3 rounded-2xl">
             <div className="text-text-400 font-body1 ">Your will receive </div>
             <div className="flex mt-[11px] items-center">
-              <Image src={ply} width={"28px"} height={"28px"} />
+              <Image alt={"alt"} src={ply} width={"28px"} height={"28px"} />
               <span className="text-white font-body4 ml-2">
                 {props.ply ? props.ply.toNumber() : "0"}
               </span>

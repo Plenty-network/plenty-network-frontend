@@ -13,6 +13,10 @@ import PieChartButton from "../LocksPosition/PieChart";
 
 export interface IDropdownProps {
   Options: IVeNFTData[];
+  selectedText: {
+    votingPower: string;
+    tokenId: string;
+  };
   onClick: Function;
   title: string;
   className?: string;
@@ -26,7 +30,7 @@ export function VeNFT(props: IDropdownProps) {
   const remainingPercentage = (remainingTime * 100) / totalTime;
 
   // currentTS = new Date().getTime() if epoch start and end TS are in milliseconds or Math.floor(new Date().getTime() /1000)
-  const selectedDropDown = store.getState().veNFT.selectedDropDown;
+  //const props.selectedText = store.getState().veNFT.props.selectedText;
   const [isDropDownActive, setIsDropDownActive] = React.useState(false);
   const reff = React.useRef(null);
   useOutsideClick(reff, () => {
@@ -47,7 +51,7 @@ export function VeNFT(props: IDropdownProps) {
             ? "border-border-200 bg-card-200 hover:bg-card-200 hover:border-border-200"
             : isDropDownActive
             ? "border-muted-50 bg-muted-500 hover:border-muted-50 hover:bg-muted-500"
-            : selectedDropDown.votingPower === ""
+            : props.selectedText.votingPower === ""
             ? "border-[0.8px] border-primary-500 bg-card-500 text-text-400"
             : "border-text-800 bg-text-800/[0.25]",
 
@@ -64,22 +68,22 @@ export function VeNFT(props: IDropdownProps) {
 
             props.Options.length === 0
               ? "text-text-700"
-              : selectedDropDown.votingPower === ""
+              : props.selectedText.votingPower === ""
               ? "text-text-600"
               : "text-text-500"
           )}
         >
-          {selectedDropDown.votingPower !== "" && selectedDropDown.tokenId !== "" ? (
+          {props.selectedText.votingPower !== "" && props.selectedText.tokenId !== "" ? (
             <>
-              <Image src={lighting} />
+              <Image alt={"alt"} src={lighting} />
               <span className="ml-1 font-body4 text-white">
-                {Number(selectedDropDown.votingPower) > 0
-                  ? Number(selectedDropDown.votingPower) < 0.001
+                {Number(props.selectedText.votingPower) > 0
+                  ? Number(props.selectedText.votingPower) < 0.001
                     ? `<0.001`
-                    : Number(selectedDropDown.votingPower).toFixed(3)
+                    : Number(props.selectedText.votingPower).toFixed(3)
                   : "0"}
               </span>
-              <span className="font-body3 text-text-500">(#{selectedDropDown.tokenId})</span>
+              <span className="font-body3 text-text-500">(#{props.selectedText.tokenId})</span>
             </>
           ) : (
             <>
@@ -111,7 +115,12 @@ export function VeNFT(props: IDropdownProps) {
                   key={`${text.tokenId}_${i}`}
                   votingPower={text.votingPower.toString()}
                   tokenId={text.tokenId.toString()}
-                  veNFT={text.locksState === ELocksState.AVAILABLE ? true : false}
+                  veNFT={
+                    text.locksState === ELocksState.AVAILABLE ||
+                    text.locksState === ELocksState.CONSUMED
+                      ? true
+                      : false
+                  }
                   lockState={text.locksState}
                   veNFTObj={text}
                 />
@@ -157,13 +166,19 @@ export function VeNFT(props: IDropdownProps) {
             ? () => {
                 dispatch(
                   setSelectedDropDown({
-                    votingPower: props.votingPower,
+                    votingPower:
+                      props.lockState === ELocksState.CONSUMED
+                        ? Number(props.veNFTObj.consumedVotingPower).toFixed(3)
+                        : props.votingPower,
                     tokenId: props.tokenId,
                   })
                 );
                 dispatch(setisMyportfolio(false));
                 props.onClick({
-                  votingPower: props.votingPower,
+                  votingPower:
+                    props.lockState === ELocksState.CONSUMED
+                      ? Number(props.veNFTObj.consumedVotingPower).toFixed(3)
+                      : props.votingPower,
                   tokenId: props.tokenId,
                 });
                 setIsDropDownActive(false);
@@ -175,11 +190,11 @@ export function VeNFT(props: IDropdownProps) {
           props.veNFT ? "cursor-pointer" : "cursor-not-allowed"
         )}
       >
-        <Image src={lighting} />
+        <Image alt={"alt"} src={lighting} />
         <span
           className={clsx(
             "ml-1 font-body4 ",
-            props.veNFT ? "text-white" : "text-text-800",
+            props.lockState === ELocksState.AVAILABLE ? "text-white" : "text-text-800",
             props.lockState === ELocksState.CONSUMED || props.lockState === ELocksState.DISABLED
               ? "flex"
               : ""

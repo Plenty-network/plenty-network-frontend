@@ -17,13 +17,13 @@ export function LocksCloumn(props: ILocksColumnProps) {
       >
         <div className="flex  justify-center items-center">
           <p>
-            <Image src={veNFT} />
+            <Image alt={"alt"} src={veNFT} />
           </p>
           <p className="ml-2">
             <div className="text-white font-subtitle3 text-left">#{Number(props.id)}</div>
             <div className="flex mt-0.5">
               <p className="font-subtitle1 text-text-500 mr-1">vePLY</p>
-              <Image src={link} />
+              <Image alt={"alt"} src={link} />
             </div>
           </p>
         </div>

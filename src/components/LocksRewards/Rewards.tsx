@@ -22,27 +22,11 @@ export function RewardsData(props: IRewardsDataProps) {
   }
   return (
     <>
-      <div className="flex flex-col  items-end">
+      <div className="flex flex-col justify-center items-center">
         <ToolTip
           position={Position.top}
           disable={props.bribesData.length === 0 ? true : false}
-          toolTipChild={
-            <div className="text-center">
-              <div className="text-text-200 font-body3">Breakdown of bribes</div>
-              <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
-                <div className={`text-white font-medium pr-1 `}>
-                  {props.bribesData[0]?.value.toFixed(2)}
-                </div>
-                <div className="">{props.bribesData[0]?.name}</div>
-              </div>
-              <div className="text-text-500 text-f14 font-normal flex gap-1 justify-end">
-                <div className={`text-white font-medium pr-1`}>
-                  {props.bribesData[1]?.value.toFixed(2)}
-                </div>
-                <div className="">{props.bribesData[1]?.name}</div>
-              </div>
-            </div>
-          }
+          toolTipChild={<div className="text-center"></div>}
         >
           <div className=" ">
             <span className="font-f13">
@@ -58,22 +42,7 @@ export function RewardsData(props: IRewardsDataProps) {
             </span>
           </div>
         </ToolTip>
-        <ToolTip
-          position={Position.top}
-          toolTipChild={
-            <div className="text-center">
-              <div className="text-text-200 font-body3">Breakdown of fees</div>
-              <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
-                <div className={`text-white font-medium pr-1 `}>{props.fees1.toFixed(2)}</div>
-                <div className="">{props.token1Name}</div>
-              </div>
-              <div className="text-text-500 text-f14 font-normal flex gap-1 justify-end">
-                <div className={`text-white font-medium pr-1`}>{props.fees2.toFixed(2)}</div>
-                <div className="">{props.token2Name}</div>
-              </div>
-            </div>
-          }
-        >
+        <ToolTip position={Position.top} toolTipChild={<div className="text-center"></div>}>
           <div className=" ">
             <span className="font-f13">${props.fees.toFixed(2)}</span>
             <span className="relative top-1 ml-px">

@@ -6,10 +6,10 @@ import { NotificationIcon, NotiFicationType } from '../NotificationIcon';
 import plentyIcon from "../../assets/icon/common/plentyIcon.svg";
 
 export interface ITopNavBarMobileProps {
-  setShowNotification:Function,
+  setShowNotification: Function;
 }
 
-export function TopNavBarMobile (props: ITopNavBarMobileProps) {
+export function TopNavBarMobile(props: ITopNavBarMobileProps) {
   return (
     <div className='flex fixed w-screen bottomNavBarMobile px-5 h-[61px] justify-between border-b border-b-borderColor'>
          <Image src={plentyIcon} height={'22.47px'}  width='100%' />

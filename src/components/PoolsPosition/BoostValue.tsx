@@ -26,7 +26,7 @@ export function BoostValue(props: IYourLiquidityProps) {
             {Number(props.value) > 0 ? `${props.value.toFixed(1)}x` : "-"}
             {Number(props.value) > 0 && Number(props.value) < 2.5 && (
               <span className="relative top-1">
-                <Image src={arrow} />
+                <Image alt={"alt"} src={arrow} />
               </span>
             )}
           </div>

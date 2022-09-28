@@ -43,7 +43,7 @@ export const routerSwap = async (
       DataLiteral[i] = {
         exchangeAddress: dexAddress,
         minimumOutput: minOut,
-        requiredTokenAddress: tokenAddress,
+        requiredTokenAddress: tokenAddress ?? "KT1Uw1oio434UoWFuZTNKFgt5wTM9tfuf7m7",
         requiredTokenId: tokenId,
       };
     }
@@ -87,7 +87,7 @@ export const routerSwap = async (
           .withContractCall(
             routerInstance.methods.routerSwap(DataMap, swapAmount, recipent)
           );
-      } else {
+      } else if(tokenInCallType === TokenVariant.FA2) {
         // FA2 Call
         batch = Tezos.wallet
           .batch()
@@ -108,6 +108,9 @@ export const routerSwap = async (
           .withContractCall(
             routerInstance.methods.routerSwap(DataMap, swapAmount, recipent)
           );
+      }
+      else{
+        throw new Error("Invalid Variant");
       }
 
       const batchOp = await batch.send();

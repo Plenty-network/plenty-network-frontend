@@ -1,16 +1,16 @@
-import Image from 'next/image';
-import * as React from 'react';
-export enum NotiFicationType{
-    noNotification,
-    haveNotification,
+import Image from "next/image";
+import * as React from "react";
+export enum NotiFicationType {
+  noNotification,
+  haveNotification,
 }
 export interface INotificationIconProps {
-    type:NotiFicationType,
-    onClick:Function,
-    className:string,
+  type: NotiFicationType;
+  onClick: Function;
+  className: string;
 }
 
-export function NotificationIcon (props: INotificationIconProps) {
+export function NotificationIcon(props: INotificationIconProps) {
   return (
     <div
       className={`flex items-center ${props.className}`}
@@ -18,7 +18,16 @@ export function NotificationIcon (props: INotificationIconProps) {
         props.onClick && props.onClick();
       }}
     >
-      <Image src={props.type===NotiFicationType.noNotification?'/assets/icon/bellicon.svg':'/assets/icon/bellIconWithDot.svg'} height={"26px"} width={"26px"} />
+      <Image
+        alt={"alt"}
+        src={
+          props.type === NotiFicationType.noNotification
+            ? "/assets/icon/bellicon.svg"
+            : "/assets/icon/bellIconWithDot.svg"
+        }
+        height={"26px"}
+        width={"26px"}
+      />
     </div>
   );
 }

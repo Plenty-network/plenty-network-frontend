@@ -1,10 +1,15 @@
 import { BigNumber } from "bignumber.js";
-import { IPositionStatsResponse } from "../../api/portfolio/types";
+import {
+  IPositionStatsResponse,
+  ITvlStatsResponse,
+  IVotesStatsDataResponse,
+} from "../../api/portfolio/types";
 export interface IStatsProps {
   tokenPricePly: number;
   plyBalance: BigNumber;
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
-  statsPositions: IPositionStatsResponse;
+  statsPositions: ITvlStatsResponse;
+  stats1: IVotesStatsDataResponse;
 }
 export interface IStatsCardProps {
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;

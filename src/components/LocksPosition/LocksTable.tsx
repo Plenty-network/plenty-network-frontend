@@ -46,6 +46,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
+  console.log(props.locksPosition);
   const tEZorCTEZtoUppercase = (a: string) =>
     a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
@@ -59,10 +60,20 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           x.attached ? (
             <div className=" flex justify-center items-center">
               <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-                <Image src={getImagesPath(x.attachedTokenASymbol)} width={"20px"} height={"20px"} />
+                <Image
+                  alt={"alt"}
+                  src={getImagesPath(x.attachedTokenASymbol)}
+                  width={"20px"}
+                  height={"20px"}
+                />
               </div>
               <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-                <Image src={getImagesPath(x.attachedTokenBSymbol)} width={"20px"} height={"20px"} />
+                <Image
+                  alt={"alt"}
+                  src={getImagesPath(x.attachedTokenBSymbol)}
+                  width={"20px"}
+                  height={"20px"}
+                />
               </div>
               <div>
                 <div className="font-body4">
@@ -135,10 +146,20 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           x.attached ? (
             <div className=" flex justify-center items-center">
               <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                <Image src={getImagesPath(x.attachedTokenASymbol)} width={"24px"} height={"24px"} />
+                <Image
+                  alt={"alt"}
+                  src={getImagesPath(x.attachedTokenASymbol)}
+                  width={"24px"}
+                  height={"24px"}
+                />
               </div>
               <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                <Image src={getImagesPath(x.attachedTokenBSymbol)} width={"24px"} height={"24px"} />
+                <Image
+                  alt={"alt"}
+                  src={getImagesPath(x.attachedTokenBSymbol)}
+                  width={"24px"}
+                  height={"24px"}
+                />
               </div>
               <div>
                 <div className="font-body4">
@@ -174,7 +195,6 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         canShort: true,
         accessor: (x: any) => <LockExpiry endTime={x.endTimeStamp} />,
       },
-
       {
         Header: "",
         id: "vote",
@@ -251,7 +271,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
             }}
           >
             <span className="relative top-0.5">
-              <Image src={lockDisable} />
+              <Image alt={"alt"} src={lockDisable} />
             </span>
 
             <span className="ml-1">

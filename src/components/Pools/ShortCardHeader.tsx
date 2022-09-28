@@ -30,17 +30,21 @@ export function Tabs(props: ITabsProps) {
       className={`flex cursor-pointer font-subtitle1 text-text-50 text-left  ${
         props.index === 0 ? "justify-start" : "justify-end "
       } ${
-        props.TableName === "poolsRewards"
+        props.TableName === "locksRewards" && props.index === 0
+          ? "w-[220px]"
+          : props.TableName === "poolsRewards"
           ? props.index === 0
             ? "w-[200px]"
             : "w-[150px]"
           : props.TableName === "lockPosition"
-          ? props.index === 0
+          ? !isMobile && props.index === 0
             ? " w-[150px]"
-            : props.index === 2
+            : !isMobile && props.index === 2
             ? "w-[164px]"
+            : isMobile && props.index === 0
+            ? "w-[200px]"
             : isMobile && props.index === 1
-            ? "w-[100px] "
+            ? "w-[80px] pr-3"
             : isMobile && props.index === 2
             ? "w-[85px]"
             : isMobile && props.index === 3
@@ -58,14 +62,16 @@ export function Tabs(props: ITabsProps) {
             : "w-[80px] md:w-[120px]"
           : props.TableName === "votesTable"
           ? props.index === 4
-            ? "w-[120px] md:w-[220px]"
+            ? "w-[120px] md:w-[260px]"
             : props.index === 0
             ? "w-[150px]"
             : "w-[112px]"
           : props.index === 0
           ? "w-[150px]"
           : " flex-1"
-      } ${props.index === 0 && "pl-3 md:pl-0"}`}
+      } ${props.index === 0 && "pl-3 md:pl-0"} ${
+        props.TableName === "votesTable" && props.index === 4 && !isMobile && "ml-auto"
+      }`}
       onClick={() => (props.onClick ? props.onClick() : {})}
     >
       <div className="flex gap-0 flex-col">
@@ -87,7 +93,7 @@ export function Tabs(props: ITabsProps) {
               (props.TableName === "poolsPosition" && isMobile && props.index === 1) ||
               (props.TableName === "lockPosition" && isMobile && props.index === 1) ? (
                 <span className="relative top-[3px] mr-1">
-                  <Image src={info} />
+                  <Image alt={"alt"} src={info} />
                 </span>
               ) : (
                 <InfoIconToolTip message="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry" />
@@ -105,16 +111,25 @@ export function Tabs(props: ITabsProps) {
           props.arrowUp ? (
             <div className="absolute -right-3">
               <Image
+                alt={"alt"}
                 src={arrowDown}
                 className={props.arrowUp === "up" ? "rotate-0" : "rotate-180"}
+                width={"13px"}
+                height={"13px"}
               />
             </div>
           )
+<<<<<<< HEAD
           : (
             <div className="absolute -right-3">
             <Image src={arrowDown} className={"opacity-0"} />
             </div>
           )
+=======
+          // : (
+          //   <Image alt={'alt'} src={arrowDown} className={"opacity-0"} />
+          // )
+>>>>>>> 18f6621f936ba657e66ba8b50db1a72940c03aa4
         }
       </div>
     </th>

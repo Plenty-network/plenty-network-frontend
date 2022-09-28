@@ -30,11 +30,11 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
     <>
       <div className="flex">
         <div className="cursor-pointer" onClick={() => props.setScreen("1")}>
-          <Image src={arrowLeft} />
+          <Image alt={"alt"} src={arrowLeft} />
         </div>
         <div className="mx-2 text-white font-title3">Confirm Remove liquidity </div>
         <div className="relative cursor-pointer top-[2px]">
-          <Image src={info} />
+          <Image alt={"alt"} src={info} />
         </div>
       </div>
       <div className="mt-5 text-text-500 font-body4">
@@ -45,7 +45,7 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
         <div className="flex mt-3 h-[50px] items-center border-t border-b border-text-800/[0.5] bg-card-500 px-5">
           <div className="flex items-center">
             <span className="relative top-[3px]">
-              <Image src={props.tokenIn.image} width={"24px"} height={"24px"} />
+              <Image alt={"alt"} src={props.tokenIn.image} width={"24px"} height={"24px"} />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
               {props.removeTokenAmount.tokenOneAmount}{" "}
@@ -67,7 +67,7 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
         <div className="flex  h-[50px] items-center border-b border-text-800/[0.5] bg-card-500 px-5">
           <div className="flex items-center">
             <span className="relative top-[3px]">
-              <Image src={ctez} width={"24px"} height={"24px"} />
+              <Image alt={"alt"} src={ctez} width={"24px"} height={"24px"} />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
               {props.removeTokenAmount.tokenTwoAmount}{" "}

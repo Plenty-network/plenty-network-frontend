@@ -152,7 +152,7 @@ function Liquidity(props: ILiquidityProps) {
             className="py-1 ml-auto px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] ml-2"
             onClick={() => setSettingsShow(!settingsShow)}
           >
-            <Image src={settings} height={"20px"} width={"20px"} />
+            <Image alt={"alt"} src={settings} height={"20px"} width={"20px"} />
             <span className="text-white font-body4 ml-2 relative -top-[3px]">
               {props.slippage ? Number(props.slippage) : 0.5}%
             </span>
@@ -202,14 +202,14 @@ function Liquidity(props: ILiquidityProps) {
             <>
               <div className="flex cursor-pointer">
                 <span>
-                  <Image src={info} width={"14px"} height={"14px"} />
+                  <Image alt={"alt"} src={info} width={"14px"} height={"14px"} />
                 </span>
                 <span className="font-subtitle1 relative top-[1.5px] ml-2">Your position</span>
               </div>
 
               <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] items-center flex px-3">
                 <div>
-                  <Image src={wallet} width={"32px"} height={"32px"} />
+                  <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
                 </div>
                 <div className="ml-1 text-primary-500 font-body2">
                   {Number(props.pnlpBalance).toFixed(4)} PNLP

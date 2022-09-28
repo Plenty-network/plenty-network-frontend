@@ -271,14 +271,14 @@ function SwapTab(props: ISwapTabProps) {
           className="py-1 cursor-pointer px-15 h-8 border border-text-700 rounded-[21px] ml-auto"
           onClick={() => refreshAllData(true)}
         >
-          <Image src={refresh} height={"14px"} width={"15px"} />
+          <Image alt={"alt"} src={refresh} height={"14px"} width={"15px"} />
         </div>
         <div
           ref={refSettingTab}
           className="py-1 px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] ml-2"
           onClick={() => setSettingsShow(!settingsShow)}
         >
-          <Image src={settings} height={"20px"} width={"20px"} />
+          <Image alt={"alt"} src={settings} height={"20px"} width={"20px"} />
           <span className="text-white font-body4 ml-2 relative -top-[3px]">
             {props.slippage ? props.slippage : "0.5"}%
           </span>
@@ -404,7 +404,7 @@ function SwapTab(props: ISwapTabProps) {
       >
         <div className="p-[11.5px] bg-card-500 rounded-2xl  w-[68px] h-[68px]">
           <div className="bg-primary-500 p-2  w-[46px] h-[46px] rounded-lg ">
-            <Image src={switchsvg} height={"32px"} width={"32px"} />
+            <Image alt={"alt"} src={switchsvg} height={"32px"} width={"32px"} />
           </div>
         </div>
       </div>
@@ -594,7 +594,13 @@ function SwapTab(props: ISwapTabProps) {
                       }
                       position={Position.left}
                     >
-                      <Image src={info} className="cursor-pointer" width={"15px"} height={"15px"} />
+                      <Image
+                        alt={"alt"}
+                        src={info}
+                        className="cursor-pointer"
+                        width={"15px"}
+                        height={"15px"}
+                      />
                     </ToolTip>
                   </span>
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
@@ -639,7 +645,7 @@ function SwapTab(props: ISwapTabProps) {
                     </ToolTip>
                   </span>
                   <span className="relative top-px">
-                    <Image src={ratesrefresh} onClick={(e) => convertRates(e)} />
+                    <Image alt={"alt"} src={ratesrefresh} onClick={(e) => convertRates(e)} />
                   </span>
                 </div>
                 <div className="ml-auto">
@@ -767,7 +773,7 @@ function SwapTab(props: ISwapTabProps) {
                     }
                   >
                     <div className="mr-2.5 lg:mr-6 h-[36px] flex justify-center rounded bg-shimmer-100 p-2">
-                      <Image src={router} width={"20px"} height={"20px"} />
+                      <Image alt={"alt"} src={router} width={"20px"} height={"20px"} />
                       <span className="ml-1 font-bold3 lg:font-subtitle4 text-primary-500">{`${Number(
                         props.routeDetails.finalFeePerc
                       ).toFixed(2)} %`}</span>
@@ -806,7 +812,7 @@ function SwapTab(props: ISwapTabProps) {
                       </div>
                     }
                   >
-                    <Image src={info} className="infoIcon cursor-pointer" />
+                    <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
                   </ToolTip>
                 </span>
               </div>
@@ -846,7 +852,7 @@ function SwapTab(props: ISwapTabProps) {
                       </div>
                     }
                   >
-                    <Image src={info} className="infoIcon cursor-pointer" />
+                    <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
                   </ToolTip>
                 </span>
               </div>
@@ -883,7 +889,7 @@ function SwapTab(props: ISwapTabProps) {
                       </div>
                     }
                   >
-                    <Image src={info} className="infoIcon cursor-pointer" />
+                    <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
                   </ToolTip>
                 </span>
               </div>
@@ -912,7 +918,7 @@ function SwapTab(props: ISwapTabProps) {
                       </div>
                     }
                   >
-                    <Image src={info} className="infoIcon cursor-pointer" />
+                    <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
                   </ToolTip>
                 </span>
               </div>
@@ -935,7 +941,12 @@ function SwapTab(props: ISwapTabProps) {
                               )}
                               <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
                                 <span className="w-[28px] h-[28px]">
-                                  <Image src={token?.image} width={"28px"} height={"28px"} />
+                                  <Image
+                                    alt={"alt"}
+                                    src={token?.image}
+                                    width={"28px"}
+                                    height={"28px"}
+                                  />
                                 </span>
                               </div>
                               {idx === 0 && <div className="w-1.5 h-2 bg-card-500 z-50"></div>}
@@ -955,7 +966,12 @@ function SwapTab(props: ISwapTabProps) {
                                   {props.routeDetails.isStable[idx] && (
                                     <div className="border-2 border-primary-500/[0.2] z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
                                       <span className="w-[18px] h-[18px]">
-                                        <Image src={stableSwap} width={"18px"} height={"18px"} />
+                                        <Image
+                                          alt={"alt"}
+                                          src={stableSwap}
+                                          width={"18px"}
+                                          height={"18px"}
+                                        />
                                       </span>
                                     </div>
                                   )}
@@ -966,7 +982,12 @@ function SwapTab(props: ISwapTabProps) {
                                     )}
                                   >
                                     <span className="w-[28px] h-[28px]">
-                                      <Image src={token?.image} width={"28px"} height={"28px"} />
+                                      <Image
+                                        alt={"alt"}
+                                        src={token?.image}
+                                        width={"28px"}
+                                        height={"28px"}
+                                      />
                                     </span>
                                   </div>
                                   <div
@@ -1052,7 +1073,9 @@ function SwapTab(props: ISwapTabProps) {
           show={props.showTransactionSubmitModal}
           setShow={props.setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId ? () => window.open(`https://tzkt.io/${transactionId}`, "_blank") : null
+            transactionId
+              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              : null
           }
           content={`Swap ${Number(localStorage.getItem(FIRST_TOKEN_AMOUNT)).toFixed(
             2

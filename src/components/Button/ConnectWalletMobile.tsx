@@ -70,23 +70,23 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
               className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-not-allowed text-white text-f14"
               onClick={() => copy(userAddress)}
             >
-              <Image src={copyLogo} />
+              <Image alt={"alt"} src={copyLogo} />
               <span>Copy address</span>
             </p>
             <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-not-allowed text-white text-f14">
-              <Image src={fiatLogo} />
+              <Image alt={"alt"} src={fiatLogo} />
               <span>Fiat</span>
             </p>
             <p
               className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
               onClick={switchWalletFunction}
             >
-              <Image src={switchLogo} />
+              <Image alt={"alt"} src={switchLogo} />
               <span>Switch account</span>
             </p>
 
             <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-not-allowed text-white text-f14">
-              <Image src={nodeSelectorLogo} />
+              <Image alt={"alt"} src={nodeSelectorLogo} />
               <span>Node Selector</span>
             </p>
 
@@ -94,7 +94,7 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
               onClick={disconnectUserWallet}
               className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
             >
-              <Image src={disconnectLogo} />
+              <Image alt={"alt"} src={disconnectLogo} />
               <span>Disconnect</span>
             </p>
 
