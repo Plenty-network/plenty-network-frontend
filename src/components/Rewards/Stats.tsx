@@ -22,7 +22,7 @@ function StatsRewards(props: IStatsRewardsProps) {
         title={"Trading fees"}
         value={props.tradingfeeStats.toFixed(2)}
         setShowClaimAllPly={props.setShowClaimPly}
-        disable={false}
+        disable={props.feeClaimData.length === 0}
         isDollar={true}
         setClaimValueDollar={props.setClaimValueDollar}
         setClaimState={props.setClaimState}
@@ -32,7 +32,7 @@ function StatsRewards(props: IStatsRewardsProps) {
         title={"Bribes"}
         value={props.bribesStats.toFixed(2)}
         setShowClaimAllPly={props.setShowClaimPly}
-        disable={false}
+        disable={props.bribesClaimData.length === 0}
         isDollar={true}
         setClaimValueDollar={props.setClaimValueDollar}
         setClaimState={props.setClaimState}

@@ -60,7 +60,7 @@ function ClaimAll(props: IClaimProps) {
               {/* <span className="text-white font-body4 ml-2">0</span>
               <span className="text-text-500 font-body3 ml-1">PLY</span> */}
             </div>
-            {props.data.map((pool, index) => {
+            {props.data?.map((pool, index) => {
               return (
                 <div
                   className="flex h-[50px]  items-center border-t border-b border-text-800/[0.5] bg-card-500 px-3 md:px-5"

@@ -1,4 +1,5 @@
 import { BigNumber } from "bignumber.js";
+import { IAllBribesOperationData, IAllClaimableFeesData } from "../../api/portfolio/types";
 import { IVeNFTData } from "../../api/votes/types";
 export interface IStatsProps {}
 export interface IStatsCardProps {
@@ -15,6 +16,8 @@ export interface IStatsCardProps {
   state: EClaimAllState;
 }
 export interface IStatsRewardsProps {
+  bribesClaimData: IAllBribesOperationData[];
+  feeClaimData: IAllClaimableFeesData[];
   setClaimState: React.Dispatch<React.SetStateAction<EClaimAllState>>;
   setShowClaimPly: React.Dispatch<React.SetStateAction<boolean>>;
   setClaimValueDollar: React.Dispatch<React.SetStateAction<BigNumber>>;

@@ -762,6 +762,8 @@ function MyPortfolio(props: any) {
                 setClaimValueDollar={setClaimValueDollar}
                 setShowClaimPly={setShowClaimPly}
                 setClaimState={setClaimState}
+                bribesClaimData={bribesClaimData}
+                feeClaimData={feeClaimData}
               />
             )}
           </div>
@@ -838,12 +840,21 @@ function MyPortfolio(props: any) {
                   </div>
                 </p>
                 <p
-                  className="cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center"
-                  onClick={() => {
-                    setShowClaimPly(true);
-                    setClaimValueDollar(tradingfeeStats.plus(bribesStats));
-                    setClaimState(EClaimAllState.LOCKS);
-                  }}
+                  className={clsx(
+                    " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center",
+                    bribesClaimData.length === 0 || feeClaimData.length === 0
+                      ? "cursor-not-allowed"
+                      : "cursor-pointer"
+                  )}
+                  onClick={
+                    bribesClaimData.length === 0 || feeClaimData.length === 0
+                      ? () => {}
+                      : () => {
+                          setShowClaimPly(true);
+                          setClaimValueDollar(tradingfeeStats.plus(bribesStats));
+                          setClaimState(EClaimAllState.LOCKS);
+                        }
+                  }
                 >
                   Claim all
                 </p>
