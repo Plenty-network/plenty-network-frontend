@@ -16,6 +16,7 @@ import { BoostValue } from "./BoostValue";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
 import { getTotalVotingPower } from "../../redux/pools";
+import { NoPoolsPosition } from "../Rewards/NoContent";
 
 export function PoolsTablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,7 +38,9 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: "USDT.e",
   });
-
+  const NoData = React.useMemo(() => {
+    return <NoPoolsPosition />;
+  }, []);
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
@@ -230,10 +233,11 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           data={props.poolsPosition}
           noSearchResult={noSearchResult}
           shortby="Myvotes"
-          isFetched={props.poolsPosition.length === 0 ? false : true}
+          isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsPosition"
           TableWidth="md:min-w-[900px]"
+          NoData={NoData}
         />
       </div>
       {showLiquidityModal && (

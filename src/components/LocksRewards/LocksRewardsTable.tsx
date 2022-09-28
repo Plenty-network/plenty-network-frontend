@@ -7,16 +7,13 @@ import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
 import { IVotePageData, IVotesData } from "../../api/votes/types";
-import { ManageLiquidity } from "../Pools/ManageLiquidity";
-import { tokenParameterLiquidity } from "../Liquidity/types";
-import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
-import { IManageBtnProps } from "../PoolsPosition/types";
 import { IVotesTableRewards } from "./types";
 import ClaimPly from "../PoolsRewards/ClaimPopup";
-import ClaimAll from "../Rewards/ClaimAll";
 import { RewardsData } from "./Rewards";
 import { VotingPower } from "./VotingPower";
 import { ILockRewardsEpochData } from "../../api/portfolio/types";
+import { NoPoolsPosition } from "../Rewards/NoContent";
+import { NoNFTAvailable } from "../Rewards/NoNFT";
 
 export function LocksTableRewards(props: IVotesTableRewards) {
   const { valueFormat } = useTableNumberUtils();
@@ -25,7 +22,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
   const [votesArray, setvotesArray] = React.useState<[string, ILockRewardsEpochData[]][]>(
     [] as [string, ILockRewardsEpochData[]][]
   );
-
+  const [isFetched, setIsFetched] = React.useState(false);
   const [noSearchResult, setNoSearchResult] = React.useState(false);
   const [newArr, setNewArr] = React.useState<
     { epoch: string; votes: ILockRewardsEpochData | [] }[]
@@ -37,8 +34,34 @@ export function LocksTableRewards(props: IVotesTableRewards) {
     setvotesArray([] as [string, ILockRewardsEpochData[]][]);
     setNewArr([] as { epoch: string; votes: ILockRewardsEpochData }[]);
     setNewdata([] as { epoch: string; votes: ILockRewardsEpochData }[]);
-    if (props.selectedDropDown.tokenId !== "") {
+    console.log(
+      props.selectedDropDown.tokenId,
+      props.selectedDropDown.tokenId in props.allLocksRewardsData
+    );
+    if (
+      props.selectedDropDown.tokenId !== "" &&
+      props.selectedDropDown.tokenId in props.allLocksRewardsData
+    ) {
+      console.log("1");
+      setIsFetched(true);
       setvotesArray(Object.entries(props.allLocksRewardsData[props.selectedDropDown.tokenId]));
+    } else {
+      console.log("2");
+      setIsFetched(true);
+      setvotesArray([]);
+    }
+  }, [props.selectedDropDown.tokenId]);
+  const NoData = React.useMemo(() => {
+    console.log(
+      props.selectedDropDown.tokenId,
+      props.selectedDropDown.tokenId in props.allLocksRewardsData
+    );
+    if (props.selectedDropDown.tokenId === "") {
+      console.log("3");
+      return <NoNFTAvailable />;
+    } else if (!(props.selectedDropDown.tokenId in props.allLocksRewardsData)) {
+      console.log("4");
+      return <NoPoolsPosition />;
     }
   }, [props.selectedDropDown.tokenId]);
   React.useMemo(() => {
@@ -50,10 +73,11 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         });
       }
     });
-  }, [votesArray.length]);
+  }, [votesArray]);
   React.useEffect(() => {
     setNewdata(newArr.reverse());
   }, [newArr]);
+  console.log(newdata);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
@@ -168,9 +192,9 @@ export function LocksTableRewards(props: IVotesTableRewards) {
               fees={x.votes.feesAmount}
               token1Name={tEZorCTEZtoUppercase(x.votes.tokenASymbol.toString())}
               token2Name={tEZorCTEZtoUppercase(x.votes.tokenBSymbol.toString())}
-              fees1={Number(0)}
-              fees2={Number(1)}
+              feesData={x.votes.feesData}
               bribesData={x.votes.bribesData}
+              feesStatus={x.votes.feesStatus}
             />
           ) : null,
       },
@@ -202,10 +226,11 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           data={newdata}
           noSearchResult={noSearchResult}
           shortby="Myvotes"
-          isFetched={!noSearchResult && newdata.length === 0 ? false : true}
+          isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="locksRewards"
           TableWidth=""
+          NoData={NoData}
         />
       </div>
       {showClaimPly && <ClaimPly show={showClaimPly} setShow={setShowClaimPly} />}

@@ -25,6 +25,7 @@ import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import { VotingPower } from "./VotingPower";
 import { getVeNFTsList } from "../../api/votes";
+import { NoPoolsPosition } from "../Rewards/NoContent";
 TimeAgo.addDefaultLocale(en);
 
 export function LocksTablePosition(props: ILocksTablePosition) {
@@ -40,7 +41,9 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       setVeNFTlist(res.veNFTData);
     });
   }, []);
-
+  const NoData = React.useMemo(() => {
+    return <NoPoolsPosition />;
+  }, []);
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
@@ -390,10 +393,11 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={props.locksPosition}
           shortby="Myvotes"
-          isFetched={props.locksPosition.length === 0 ? false : true}
+          isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName={"lockPosition"}
           TableWidth="md:min-w-[1100px]"
+          NoData={NoData}
         />
       </div>
     </>

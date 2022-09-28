@@ -1,4 +1,5 @@
 import { BigNumber } from "bignumber.js";
+import { IVeNFTData } from "../../api/votes/types";
 export interface IStatsProps {}
 export interface IStatsCardProps {
   setShowCreateLockModal?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,4 +17,17 @@ export interface IStatsRewardsProps {
 
   setShowClaimAllPly: React.Dispatch<React.SetStateAction<boolean>>;
   plyEmission: BigNumber;
+}
+export interface ISelectNFT {
+  veNFTlist: IVeNFTData[];
+  selectedText: {
+    votingPower: string;
+    tokenId: string;
+  };
+  setSelectedDropDown: React.Dispatch<
+    React.SetStateAction<{
+      votingPower: string;
+      tokenId: string;
+    }>
+  >;
 }
