@@ -119,17 +119,11 @@ export function Tabs(props: ITabsProps) {
               />
             </div>
           )
-<<<<<<< HEAD
           : (
             <div className="absolute -right-3">
             <Image src={arrowDown} className={"opacity-0"} />
             </div>
           )
-=======
-          // : (
-          //   <Image alt={'alt'} src={arrowDown} className={"opacity-0"} />
-          // )
->>>>>>> 18f6621f936ba657e66ba8b50db1a72940c03aa4
         }
       </div>
     </th>

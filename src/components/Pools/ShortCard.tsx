@@ -32,28 +32,6 @@ export interface IManageBtnProps {
   tokenA: string;
   tokenB: string;
 }
-<<<<<<< HEAD
-
-=======
-function compareNumericString(inp: any, inp2: any) {
-  const rowA = inp;
-  const rowB = inp[1];
-  const id = "volume";
-  const desc = false;
-  let a = Number.parseFloat(rowA.original[id]);
-  let b = Number.parseFloat(rowB.original[id]);
-  if (Number.isNaN(a)) {
-    // Blanks and non-numeric strings to bottom
-    a = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
-  }
-  if (Number.isNaN(b)) {
-    b = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
-  }
-  if (a > b) return 1;
-  if (a < b) return -1;
-  return 0;
-}
->>>>>>> 18f6621f936ba657e66ba8b50db1a72940c03aa4
 export function ShortCard(props: IShortCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
