@@ -105,11 +105,13 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
     );
   }
   return (
+    <div className="flex flex-col justify-center">
     <button
       onClick={() => connectTempleWallet()}
-      className="bg-primary-500/5 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/100"
+      className="bg-primary-500/5 px-[12px] py-[6.5px] hover:bg-opacity-95 rounded-md border text-primary-500 border-primary-500/100"
     >
       Connect
     </button>
+    </div>
   );
 }

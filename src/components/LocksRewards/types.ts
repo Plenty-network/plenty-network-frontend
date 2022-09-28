@@ -2,7 +2,13 @@ import { IVotePageData } from "../../api/votes/types";
 import { BigNumber } from "bignumber.js";
 
 import { Bribes } from "../../api/pools/types";
-import { IAllLocksRewardsData, ILocksRewardsTokenData } from "../../api/portfolio/types";
+import {
+  EFeesStatus,
+  IAllLocksRewardsData,
+  ILockRewardsBribeData,
+  ILockRewardsFeeData,
+  ILocksRewardsTokenData,
+} from "../../api/portfolio/types";
 export interface IVotesTableRewards {
   allLocksRewardsData: IAllLocksRewardsData;
   selectedDropDown: {
@@ -17,14 +23,14 @@ export interface IVotesTableRewards {
   isConnectWalletRequired?: boolean;
 }
 export interface IRewardsDataProps {
+  feesData: ILockRewardsFeeData;
+  feesStatus: EFeesStatus;
   className?: string;
   bribes: BigNumber;
   fees: number;
   token1Name: string;
   token2Name: string;
-  fees1: number;
-  fees2: number;
-  bribesData: Bribes[];
+  bribesData: ILockRewardsBribeData[];
 }
 export interface IVotingPowerProps {
   votes: BigNumber;

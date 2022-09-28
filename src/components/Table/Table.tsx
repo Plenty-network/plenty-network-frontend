@@ -32,6 +32,7 @@ const Table = <D extends object>({
   columns,
   data,
   shortby,
+  tableType,
   isConnectWalletRequired = false,
   isFetched = false,
   isVotesTable = false,
@@ -50,6 +51,7 @@ const Table = <D extends object>({
   isVotesTable?: boolean;
   TableName?: string;
   TableWidth?: string;
+  tableType?: string;
   NoData?: JSX.Element;
   test?: any;
 }) => {
@@ -161,10 +163,7 @@ const Table = <D extends object>({
           ))}
         </thead>
         <tbody
-          className={clsx(
-            " flex-col flex overflow-y-auto",
-            TableName === "locksRewards" ? "" : "gap-1"
-          )}
+          className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-1")}
           style={{ height: `${heightBody}px` }}
         >
           {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
@@ -196,7 +195,7 @@ const Table = <D extends object>({
                       return (
                         // eslint-disable-next-line react/jsx-key
                         <td
-                          className={`pr-1 flex items-center ${
+                          className={` flex items-center ${
                             i == 0 ? "justify-start" : "justify-end "
                           } ${
                             TableName === "locksRewards" && i === 0

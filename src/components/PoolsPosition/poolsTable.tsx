@@ -16,6 +16,8 @@ import { BoostValue } from "./BoostValue";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
 import { getTotalVotingPower } from "../../redux/pools";
+import { NoPoolsPosition } from "../Rewards/NoContent";
+import { compareNumericString } from "../../utils/commonUtils";
 
 export function PoolsTablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,7 +39,9 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: "USDT.e",
   });
-
+  const NoData = React.useMemo(() => {
+    return <NoPoolsPosition />;
+  }, []);
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
@@ -101,7 +105,9 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "Pool",
         id: "pool",
+        canShort: true,
         showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA"),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
@@ -127,12 +133,13 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "totalLiquidityAmount"),
         accessor: (x: any) => <YourLiquidity value={x.totalLiquidityAmount} />,
       },
       {
         Header: `Staked percentage`,
         id: "Staked percentage",
-
+        sortType: (a: any, b: any) => compareNumericString(a, b, "stakedPercentage"),
         canShort: true,
         isToolTipEnabled: true,
         accessor: (x: any) => <StakePercentage value={x.stakedPercentage} />,
@@ -140,7 +147,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "your APR",
         id: "your APR",
-
+        sortType: (a: any, b: any) => compareNumericString(a, b, "userAPR"),
         isToolTipEnabled: true,
         canShort: true,
         accessor: (x: any) => <StakePercentage value={x.userAPR} />,
@@ -150,6 +157,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         id: "Boost",
         isToolTipEnabled: true,
         canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
         accessor: (x: any) => <BoostValue value={x.boostValue} />,
       },
       {
@@ -230,10 +238,11 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           data={props.poolsPosition}
           noSearchResult={noSearchResult}
           shortby="Myvotes"
-          isFetched={props.poolsPosition.length === 0 ? false : true}
+          isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsPosition"
           TableWidth="md:min-w-[900px]"
+          NoData={NoData}
         />
       </div>
       {showLiquidityModal && (
