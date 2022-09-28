@@ -164,7 +164,7 @@ const Table = <D extends object>({
         </thead>
         <tbody
           className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-1")}
-          // style={{ height: `${heightBody}px` }}
+          style={{ height: `${heightBody}px` }}
         >
           {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
             <NoContentAvailable />
