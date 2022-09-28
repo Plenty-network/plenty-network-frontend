@@ -26,6 +26,7 @@ import en from "javascript-time-ago/locale/en.json";
 import { VotingPower } from "./VotingPower";
 import { getVeNFTsList } from "../../api/votes";
 import { NoPoolsPosition } from "../Rewards/NoContent";
+import { compareNumericString } from "../../utils/commonUtils";
 TimeAgo.addDefaultLocale(en);
 
 export function LocksTablePosition(props: ILocksTablePosition) {
@@ -49,7 +50,6 @@ export function LocksTablePosition(props: ILocksTablePosition) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  console.log(props.locksPosition);
   const tEZorCTEZtoUppercase = (a: string) =>
     a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
@@ -138,6 +138,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         Header: "Locks",
         id: "Locks",
         canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenId"),
         showOnMobile: true,
         accessor: (x: any) => <LocksCloumn id={x.tokenId} />,
       },
@@ -145,6 +146,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         Header: "Pool",
         id: "pool",
         showOnMobile: true,
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "attachedTokenASymbol"),
         accessor: (x: any) =>
           x.attached ? (
             <div className=" flex justify-center items-center">
@@ -182,6 +185,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "currentVotingPower"),
         accessor: (x: any) => <VotingPower value={x.currentVotingPower} />,
       },
       {
@@ -189,6 +193,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         id: "PLY locked",
         canShort: true,
         isToolTipEnabled: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "baseValue"),
         accessor: (x: any) => <PlyLocked value={x.baseValue} />,
       },
       {
@@ -196,6 +201,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         id: "Lock expiry",
         isToolTipEnabled: true,
         canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
+
         accessor: (x: any) => <LockExpiry endTime={x.endTimeStamp} />,
       },
       {
