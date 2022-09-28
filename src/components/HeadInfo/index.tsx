@@ -21,7 +21,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   return (
     <div
-      className={`${props.className} flex justify-between items-center border-b border-b-borderCommon py-2 pt-2 md:pt-2 bg-cardBackGround`}
+      className={`${props.className} flex h-[68px] justify-between items-center border-b border-b-borderCommon py-2 pt-2 md:pt-2 bg-cardBackGround`}
     >
       <div className="flex gap-1">
         <div className="p-2 text-f18 font-medium text-white">
@@ -51,7 +51,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
         onChange={props.setSearchValue}
       />
       {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"Bh5zuEI4M9o"} />}
-      {props.title === "Vote" && (
+      {props.title === "Vote" ? (
         <div
           className={clsx(
             "ml-auto h-[52px] font-subtitle2 md:font-subtitle4 flex items-center px-4 md:px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1] hover:bg-primary-500/[0.2] mr-4 md:mr-0",
@@ -61,7 +61,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
         >
           Create Lock
         </div>
-      )}
+      ):(<></>)}
     </div>
   );
 }

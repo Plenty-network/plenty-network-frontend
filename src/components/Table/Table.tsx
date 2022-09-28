@@ -30,6 +30,7 @@ const Table = <D extends object>({
   columns,
   data,
   shortby,
+  tableType,
   isConnectWalletRequired = false,
   isFetched = false,
   isVotesTable = false,
@@ -46,6 +47,7 @@ const Table = <D extends object>({
   isVotesTable?: boolean;
   TableName?: string;
   TableWidth?: string;
+  tableType?:string;
 }) => {
   const [shortByGroup, setshortByGroup] = useState({
     id: shortby ?? "usd",
@@ -54,6 +56,7 @@ const Table = <D extends object>({
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const headerRef = useRef(null);
   const [heightBody, setheightBody] = useState<number>(480);
+  
 
   useEffect(() => {
     const heightOfbody = getHeightOfElement(headerRef.current);
@@ -153,7 +156,7 @@ const Table = <D extends object>({
         </thead>
         <tbody
           className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-1")}
-          style={{ height: `${heightBody}px` }}
+          // style={{ height: `${heightBody}px` }}
         >
           {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
             <NoContentAvailable />
@@ -176,7 +179,7 @@ const Table = <D extends object>({
                           className={` flex items-center ${
                             i == 0 || (!isMobile && TableName === "lockPosition" && i === 1)
                               ? "justify-start"
-                              : "md:justify-end justify-start"
+                              : "justify-end "
                           } ${
                             TableName === "poolsRewards"
                               ? i === 0 || i == 2
