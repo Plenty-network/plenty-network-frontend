@@ -97,11 +97,7 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-<<<<<<< HEAD
         sortType:(a:any,b:any)=>compareNumericString(a,b,'apr'),
-=======
-        accessorFn: (x: any) => parseInt(x.arp),
->>>>>>> 18f6621f936ba657e66ba8b50db1a72940c03aa4
         accessor: (x) => (
           <AprInfo
             currentApr={x.apr.toString()}
@@ -173,13 +169,8 @@ export function ShortCard(props: IShortCardProps) {
         subText: "24h",
         isToolTipEnabled: true,
         canShort: true,
-<<<<<<< HEAD
         sortType:(a:any,b:any)=>compareNumericString(a,b,'volume'),
         accessor: (x:any) => (
-=======
-        sortType: (a: any, b: any) => compareNumericString(a, b),
-        accessor: (x: any) => (
->>>>>>> 18f6621f936ba657e66ba8b50db1a72940c03aa4
           <PoolsTextWithTooltip
             text={valueFormat(x.volume.toNumber())}
             token1={x.volumeTokenA.toString()}
