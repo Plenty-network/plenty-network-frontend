@@ -261,7 +261,7 @@ export function ShortCard(props: IShortCardProps) {
           });
         }}
       >
-        Manage
+        Manage 
       </div>
       </div>
     );
