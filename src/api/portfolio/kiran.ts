@@ -477,36 +477,38 @@ export const getAllLocksRewardsData = async (
         if (!locksRewardsTokenData[voteData.epoch]) {
           locksRewardsTokenData[voteData.epoch] = [];
         }
-        const amm = AMM[voteData.amm];
-        const bribesValueAndData: IBribesValueAndData = getBribesData(
-          voteData.bribes,
-          tokenPrices,
-          TOKENS
-        );
-        const feesValueAndData: IFeesValueAndData = getFeesData(
-          voteData.fee,
-          voteData.feeClaimed,
-          tokenPrices,
-          amm,
-          TOKENS
-        );
-        totalTradingFeesAmount = totalTradingFeesAmount.plus(feesValueAndData.feesAmount);
-        totalBribesAmount = totalBribesAmount.plus(bribesValueAndData.bribesValue);
-        
-        const locksRewardsEpochData: ILockRewardsEpochData = {
-          ammAddress: voteData.amm,
-          tokenASymbol: amm.token1.symbol,
-          tokenBSymbol: amm.token2.symbol,
-          ammType: amm.type,
-          votes: new BigNumber(voteData.votes).dividedBy(PLY_DECIMAL_MULTIPLIER),
-          votesPercentage: new BigNumber(voteData.voteShare),
-          bribesAmount: bribesValueAndData.bribesValue,
-          bribesData: bribesValueAndData.bribesData,
-          feesStatus: feesValueAndData.feesStatus,
-          feesAmount: feesValueAndData.feesAmount,
-          feesData: feesValueAndData.feesData,
-        };
-        locksRewardsTokenData[voteData.epoch].push(locksRewardsEpochData);
+        if (isFeeClaimable(voteData) || voteData.bribes.length !== 0) {
+          const amm = AMM[voteData.amm];
+          const bribesValueAndData: IBribesValueAndData = getBribesData(
+            voteData.bribes,
+            tokenPrices,
+            TOKENS
+          );
+          const feesValueAndData: IFeesValueAndData = getFeesData(
+            voteData.fee,
+            voteData.feeClaimed,
+            tokenPrices,
+            amm,
+            TOKENS
+          );
+          totalTradingFeesAmount = totalTradingFeesAmount.plus(feesValueAndData.feesAmount);
+          totalBribesAmount = totalBribesAmount.plus(bribesValueAndData.bribesValue);
+
+          const locksRewardsEpochData: ILockRewardsEpochData = {
+            ammAddress: voteData.amm,
+            tokenASymbol: amm.token1.symbol,
+            tokenBSymbol: amm.token2.symbol,
+            ammType: amm.type,
+            votes: new BigNumber(voteData.votes).dividedBy(PLY_DECIMAL_MULTIPLIER),
+            votesPercentage: new BigNumber(voteData.voteShare),
+            bribesAmount: bribesValueAndData.bribesValue,
+            bribesData: bribesValueAndData.bribesData,
+            feesStatus: feesValueAndData.feesStatus,
+            feesAmount: feesValueAndData.feesAmount,
+            feesData: feesValueAndData.feesData,
+          };
+          locksRewardsTokenData[voteData.epoch].push(locksRewardsEpochData);
+        }   
         console.log(voteData);
       }
       allLocksRewardsData[lockData.lockId] = locksRewardsTokenData;
@@ -690,8 +692,8 @@ const isFeeClaimable = (voteData: IVotesUnclaimedIndexer): boolean => {
     !voteData.feeClaimed &&
     voteData.fee.token1Symbol !== "" &&
     voteData.fee.token2Symbol !== "" &&
-    new BigNumber(voteData.fee.token1Fee).isGreaterThan(0) &&
-    new BigNumber(voteData.fee.token2Fee).isGreaterThan(0)
+    (new BigNumber(voteData.fee.token1Fee).isGreaterThan(0) ||
+      new BigNumber(voteData.fee.token2Fee).isGreaterThan(0))
   ) {
     return true;
   } else {
