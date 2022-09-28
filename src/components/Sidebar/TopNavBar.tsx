@@ -1,9 +1,8 @@
 import Image from "next/image";
 import * as React from "react";
 import { ConnectWalletBtnDeskTop } from "../Button/ConnectWalletDesktop";
-import myPostion from "../../assets/icon/myPortfolio/portfolio-nav.svg";
-
-import plentyIcon from "../../assets/icon/common//plentyIcon.svg";
+import myPostion from "../../assets/icon/common/myPosition.svg";
+import plentyIcon from "../../assets/icon/common/plentyIcon.svg";
 import { Epoch } from "../Epoch";
 
 import Link from "next/link";
