@@ -47,4 +47,5 @@ export enum EClaimAllState {
   REWARDS,
   EPOCH,
   UNCLAIMED,
+  SUPERNOVA,
 }

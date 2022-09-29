@@ -1,6 +1,7 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
 
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BigNumber } from "bignumber.js";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import timer from "../../../src/assets/icon/myPortfolio/timer.svg";
@@ -13,20 +14,24 @@ interface IClaimProps {
   show: boolean;
   data: ILockRewardsEpochData[];
   setShow: any;
-
+  epochClaim: string;
   handleClick: () => void;
 }
 function ClaimAllEpoch(props: IClaimProps) {
   const closeModal = () => {
     props.setShow(false);
   };
-  const getImagesPath = (name: string, isSvg?: boolean) => {
-    if (isSvg) return `/assets/tokens/${name}.svg`;
-    if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
-    else return "";
-  };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    var sum = 0;
+    for (var pool of props.data) {
+      console.log(Number(pool.bribesAmount), Number(pool.feesAmount), Number(sum));
+      sum += Number(pool.bribesAmount);
+      sum += Number(pool.feesAmount);
+    }
+    setValue(sum);
+  }, [props.data]);
 
   return props.show ? (
     <PopUpModal onhide={closeModal}>
@@ -36,61 +41,21 @@ function ClaimAllEpoch(props: IClaimProps) {
             <div className="cursor-pointer" onClick={closeModal}>
               <Image alt={"alt"} src={arrowLeft} />
             </div>
-            <div className="mx-2 text-white font-title3">Claim all Ply </div>
-            {/* <div className="relative top-[2px] cursor-pointer">
-              <Image alt={'alt'} src={info} />
-            </div> */}
+            <div className="mx-2 text-white font-title3">Claim rewards</div>
           </div>
           <div className="border border-text-800 bg-card-200 py-4 mt-3 rounded-2xl">
-            <div className="flex mt-[2px] items-center px-4 mb-5">
-              {/* <Image alt={'alt'} src={ply} width={"28px"} height={"28px"} /> */}
+            <div className="flex mt-[2px] items-center px-4 ">
               <div>
                 <div className="text-text-400 font-body1">Your Rewards</div>
-                <span className="font-title2 text-white">${0}</span>
-                <span className="font-body1 text-text-250 ml-1">distributed between</span>
+                <span className="font-title2 text-white mt-1">${value.toFixed(4)}</span>
+                <span className="font-body1 text-text-250 ml-1 mt-1">distributed between</span>
               </div>
-              {/* <div className="ml-auto bg-text-800/[0.5] relative top-[4px] rounded-lg flex items-center h-[36px] px-2">
-                <Image alt={'alt'} src={timer} />
+              <div className="ml-auto bg-text-800/[0.5] relative top-[4px] rounded-lg flex items-center h-[36px] px-2">
+                <Image alt={"alt"} src={timer} />
                 <span className="font-body4 text-white ml-0.5">Epoch</span>
-                <span className="font-body4 text-text-500 ml-1">23</span>
-              </div> */}
-              {/* <span className="text-white font-body4 ml-2">0</span>
-              <span className="text-text-500 font-body3 ml-1">PLY</span> */}
+                <span className="font-body4 text-text-500 ml-1">{props.epochClaim}</span>
+              </div>
             </div>
-            {props.data.map((pool, index) => {
-              return (
-                <div
-                  className="flex h-[50px]  items-center border-t border-b border-text-800/[0.5] bg-card-500 px-3 md:px-5"
-                  key={index}
-                >
-                  <div className="flex items-center">
-                    <span className="flex">
-                      <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                        <Image
-                          src={getImagesPath(pool.tokenASymbol)}
-                          width={"24px"}
-                          height={"24px"}
-                        />
-                      </div>
-                      <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                        <Image
-                          src={getImagesPath(pool.tokenBSymbol)}
-                          width={"24px"}
-                          height={"24px"}
-                        />
-                      </div>
-                    </span>
-                    <span className="text-white font-body4  relative top-[1px]">
-                      {tEZorCTEZtoUppercase(pool.tokenASymbol)} /
-                      {tEZorCTEZtoUppercase(pool.tokenBSymbol)}
-                    </span>
-                  </div>
-                  <div className="ml-auto font-body4 text-white">
-                    ${pool.bribesAmount.plus(pool.feesAmount).toFixed(2)}
-                  </div>
-                </div>
-              );
-            })}
           </div>
 
           <div className="mt-[24px]">
