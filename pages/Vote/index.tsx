@@ -29,15 +29,12 @@ import TransactionSubmitted from "../../src/components/TransactionSubmitted";
 import { createLock } from "../../src/operations/locks";
 import { setIsLoadingWallet } from "../../src/redux/walletLoading";
 import AllocationPopup from "../../src/components/Votes/AllocationPopup";
-import { InfoIconToolTip } from "../../src/components/Tooltip/InfoIconTooltip";
 import { IAllBalanceResponse } from "../../src/api/util/types";
 import { vote } from "../../src/operations/vote";
 import { votesPageDataWrapper } from "../../src/api/votes";
 import { IVotes } from "../../src/operations/types";
 import clsx from "clsx";
 import EpochPopup from "../../src/components/Votes/EpochPopup";
-import { MODULE } from "../../src/components/Votes/types";
-import { useRouter } from "next/router";
 import { setSelectedDropDown } from "../../src/redux/veNFT";
 
 export default function Vote() {
@@ -46,6 +43,7 @@ export default function Vote() {
   const epochData = useAppSelector((state) => state.epoch.epochData);
   const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const userAddress = useAppSelector((state) => state.wallet.address);
+  //const userAddress = "tz1VKAzp3FoerqzvKZTv8aRrg2AD16NjNx9S";
   const token = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
@@ -163,6 +161,7 @@ export default function Vote() {
         userAddress,
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
       ).then((res) => {
+        console.log(res);
         setVeNFTlist(res.veNFTData);
       });
     } else {
