@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import Image from "next/image";
+import { BigNumber } from "bignumber.js";
 import { IStatsCardProps } from "./types";
 import info from "../../assets/icon/common/infoIcon.svg";
 
@@ -23,7 +24,7 @@ function StatsCard(props: IStatsCardProps) {
             {props.value === undefined ? (
               <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
             ) : (
-              props.value?.toString()
+              `${props.isDollar ? "$" : ""}${props.value?.toString()}`
             )}
             {props.subValue && (
               <p className="font-subtitle5 text-border-400 ml-1 mb-px">{props.subValue}</p>
@@ -32,11 +33,16 @@ function StatsCard(props: IStatsCardProps) {
         </p>
         <p className="ml-auto">
           <div
-            className="cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-primary-500  h-[50px] px-5 bg-primary-500/[0.1] rounded-xl   justify-center"
+            className={clsx(
+              " flex items-center md:font-title3-bold font-subtitle4 text-primary-500  h-[50px] px-5 bg-primary-500/[0.1] rounded-xl   justify-center",
+              props.disable ? "cursor-not-allowed" : "cursor-pointer"
+            )}
             onClick={
               !props.disable
                 ? () => {
                     props.setShowClaimAllPly(true);
+                    props.setClaimValueDollar(new BigNumber(props.value));
+                    props.setClaimState(props.state);
                   }
                 : () => {}
             }

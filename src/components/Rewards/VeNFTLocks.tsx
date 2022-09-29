@@ -23,7 +23,7 @@ export interface IDropdownProps {
   isConfirmStake?: boolean;
 }
 
-export function VeNFT(props: IDropdownProps) {
+export function VeNFTLocks(props: IDropdownProps) {
   const epochData = store.getState().epoch.currentEpoch;
   const totalTime = epochData.endTimestamp - epochData.startTimestamp;
   const remainingTime = epochData.endTimestamp - new Date().getTime();
@@ -135,7 +135,7 @@ export function VeNFT(props: IDropdownProps) {
                   key={`${text.tokenId}_${i}`}
                   votingPower={text.votingPower.toString()}
                   tokenId={text.tokenId.toString()}
-                  veNFT={false}
+                  veNFT={true}
                   lockState={text.locksState}
                   veNFTObj={text}
                 />
@@ -164,16 +164,6 @@ export function VeNFT(props: IDropdownProps) {
         onClick={
           props.veNFT
             ? () => {
-                dispatch(
-                  setSelectedDropDown({
-                    votingPower:
-                      props.lockState === ELocksState.CONSUMED
-                        ? Number(props.veNFTObj.consumedVotingPower).toFixed(3)
-                        : props.votingPower,
-                    tokenId: props.tokenId,
-                  })
-                );
-                dispatch(setisMyportfolio(false));
                 props.onClick({
                   votingPower:
                     props.lockState === ELocksState.CONSUMED
@@ -194,7 +184,7 @@ export function VeNFT(props: IDropdownProps) {
         <span
           className={clsx(
             "ml-1 font-body4 ",
-            props.lockState === ELocksState.AVAILABLE ? "text-white" : "text-text-800",
+            props.lockState !== ELocksState.DISABLED ? "text-white" : "text-text-800",
             props.lockState === ELocksState.CONSUMED || props.lockState === ELocksState.DISABLED
               ? "flex"
               : ""
@@ -218,7 +208,10 @@ export function VeNFT(props: IDropdownProps) {
           )}
         </span>
         <span
-          className={clsx("ml-auto font-body3", props.veNFT ? "text-text-500" : "text-text-800")}
+          className={clsx(
+            "ml-auto font-body3",
+            props.lockState !== ELocksState.DISABLED ? "text-text-500" : "text-text-800"
+          )}
         >
           #{props.tokenId}
         </span>

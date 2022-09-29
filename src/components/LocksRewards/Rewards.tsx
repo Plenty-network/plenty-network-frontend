@@ -5,6 +5,7 @@ import Image from "next/image";
 import { BigNumber } from "bignumber.js";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IRewardsDataProps } from "./types";
+import { EFeesStatus } from "../../api/portfolio/types";
 
 export function RewardsData(props: IRewardsDataProps) {
   function nFormatter(num: BigNumber) {
@@ -29,18 +30,19 @@ export function RewardsData(props: IRewardsDataProps) {
           toolTipChild={
             <div className="text-center">
               <div className="text-text-200 font-body3">Breakdown of bribes</div>
-              <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
-                <div className={`text-white font-medium pr-1 `}>
-                  {props.bribesData[0]?.value.toFixed(2)}
-                </div>
-                <div className="">{props.bribesData[0]?.name}</div>
-              </div>
-              <div className="text-text-500 text-f14 font-normal flex gap-1 justify-end">
-                <div className={`text-white font-medium pr-1`}>
-                  {props.bribesData[1]?.value.toFixed(2)}
-                </div>
-                <div className="">{props.bribesData[1]?.name}</div>
-              </div>
+              {props.bribesData.map((data, index) => {
+                return (
+                  <div
+                    className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end "
+                    key={index}
+                  >
+                    <div className={`text-white font-medium pr-1 `}>
+                      {data?.bribeValue.toString()}
+                    </div>
+                    <div className="">{data?.tokenSymbol}</div>
+                  </div>
+                );
+              })}
             </div>
           }
         >
@@ -61,17 +63,26 @@ export function RewardsData(props: IRewardsDataProps) {
         <ToolTip
           position={Position.top}
           toolTipChild={
-            <div className="text-center">
-              <div className="text-text-200 font-body3">Breakdown of fees</div>
-              <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
-                <div className={`text-white font-medium pr-1 `}>{props.fees1.toFixed(2)}</div>
-                <div className="">{props.token1Name}</div>
+            props.feesStatus === EFeesStatus.GENERATED ? (
+              <div className="text-center">
+                <div className="text-text-200 font-body3">Breakdown of fees</div>
+
+                <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
+                  <div className={`text-white font-medium pr-1 `}>
+                    {props.feesData.tokenAFees.toString()}
+                  </div>
+                  <div className="">{props.token1Name}</div>
+                </div>
+                <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
+                  <div className={`text-white font-medium pr-1 `}>
+                    {props.feesData.tokenBFees.toString()}
+                  </div>
+                  <div className="">{props.token2Name}</div>
+                </div>
               </div>
-              <div className="text-text-500 text-f14 font-normal flex gap-1 justify-end">
-                <div className={`text-white font-medium pr-1`}>{props.fees2.toFixed(2)}</div>
-                <div className="">{props.token2Name}</div>
-              </div>
-            </div>
+            ) : (
+              <div>not pulled or claimed</div>
+            )
           }
         >
           <div className=" ">

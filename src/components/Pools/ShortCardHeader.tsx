@@ -30,7 +30,9 @@ export function Tabs(props: ITabsProps) {
       className={`flex cursor-pointer font-subtitle1 text-text-50 text-left  ${
         props.index === 0 ? "justify-start" : "justify-end "
       } ${
-        props.TableName === "poolsRewards"
+        props.TableName === "locksRewards" && props.index === 0
+          ? "w-[220px]"
+          : props.TableName === "poolsRewards"
           ? props.index === 0
             ? "w-[200px]"
             : "w-[150px]"
@@ -106,8 +108,8 @@ export function Tabs(props: ITabsProps) {
       </div>
       <div className="relative top-px">
         {
-          props.arrowUp && (
-            <div>
+          props.arrowUp ? (
+            <div className="absolute -right-3">
               <Image
                 alt={"alt"}
                 src={arrowDown}
@@ -117,9 +119,11 @@ export function Tabs(props: ITabsProps) {
               />
             </div>
           )
-          // : (
-          //   <Image alt={'alt'} src={arrowDown} className={"opacity-0"} />
-          // )
+          : (
+            <div className="absolute -right-3">
+            <Image src={arrowDown} className={"opacity-0"} />
+            </div>
+          )
         }
       </div>
     </th>

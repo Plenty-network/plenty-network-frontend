@@ -1,11 +1,9 @@
 import Image from "next/image";
 import * as React from "react";
 import { ConnectWalletBtnDeskTop } from "../Button/ConnectWalletDesktop";
-import myPostion from "../../assets/icon/myPortfolio/portfolio-nav.svg";
-
-import plentyIcon from "../../assets/icon/common//plentyIcon.svg";
+import myportfolionav from "../../assets/icon/myPortfolio/myportfolionav.svg";
+import plentyIcon from "../../assets/icon/common/plentyIcon.svg";
 import { Epoch } from "../Epoch";
-
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NotificationIcon, NotiFicationType } from "../NotificationIcon";
@@ -47,7 +45,7 @@ export function TopNavBar(props: ITopNavBarProps) {
             {userAddress && (
               // <Link className={`cursor-pointer hover:opacity-90 `} href={"/MyPortfolio"}>
               <span className="cursor-pointer hover:opacity-90 flex items-center border border-primary-750 bg-primary-850 px-[14px] h-[44px] rounded-xl mt-[14px]">
-                <Image alt={"alt"} src={myPostion} />
+                <Image alt={"alt"} src={myportfolionav} />
                 <span className="text-primary-500 font-body4 ml-1">My portfolio</span>
               </span>
               // </Link>

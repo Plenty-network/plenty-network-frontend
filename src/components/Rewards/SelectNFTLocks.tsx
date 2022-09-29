@@ -5,8 +5,9 @@ import * as React from "react";
 import { ISelectNFT } from "./types";
 import { VeNFT } from "../DropDown/VeNFT";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { VeNFTLocks } from "./VeNFTLocks";
 
-function SelectNFT(props: ISelectNFT) {
+function SelectNFTLocks(props: ISelectNFT) {
   return (
     <div className="md:flex md:items-center mr-3">
       <div className="hidden md:block text-white font-body1 px-[23px]">Select your veNFT:</div>
@@ -17,7 +18,7 @@ function SelectNFT(props: ISelectNFT) {
             id="tooltip1"
             position={Position.top}
           >
-            <VeNFT
+            <VeNFTLocks
               title={props.veNFTlist.length === 0 ? "No veNFT available" : "No NFTs selected"}
               Options={props.veNFTlist}
               selectedText={props.selectedText}
@@ -25,7 +26,7 @@ function SelectNFT(props: ISelectNFT) {
             />
           </ToolTip>
         ) : (
-          <VeNFT
+          <VeNFTLocks
             title="No NFTs selected"
             Options={props.veNFTlist}
             selectedText={props.selectedText}
@@ -37,4 +38,4 @@ function SelectNFT(props: ISelectNFT) {
   );
 }
 
-export default SelectNFT;
+export default SelectNFTLocks;

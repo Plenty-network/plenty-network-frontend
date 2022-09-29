@@ -6,18 +6,17 @@ import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import timer from "../../../src/assets/icon/myPortfolio/timer.svg";
 import ply from "../../assets/Tokens/ply.png";
 import Button from "../Button/Button";
-import { IPoolsRewardsData } from "../../api/portfolio/types";
+import { ILockRewardsEpochData, IPoolsRewardsData } from "../../api/portfolio/types";
 import { ITokenPriceList } from "../../api/util/types";
 
 interface IClaimProps {
   show: boolean;
-  data: IPoolsRewardsData[];
+  data: ILockRewardsEpochData[];
   setShow: any;
-  totalValue: BigNumber;
-  tokenPrice: ITokenPriceList;
-  handleClaimAll: () => void;
+
+  handleClick: () => void;
 }
-function ClaimAll(props: IClaimProps) {
+function ClaimAllEpoch(props: IClaimProps) {
   const closeModal = () => {
     props.setShow(false);
   };
@@ -47,9 +46,7 @@ function ClaimAll(props: IClaimProps) {
               {/* <Image alt={'alt'} src={ply} width={"28px"} height={"28px"} /> */}
               <div>
                 <div className="text-text-400 font-body1">Your Rewards</div>
-                <span className="font-title2 text-white">
-                  ${(Number(props.totalValue) * props.tokenPrice["PLY"]).toFixed(2)}
-                </span>
+                <span className="font-title2 text-white">${0}</span>
                 <span className="font-body1 text-text-250 ml-1">distributed between</span>
               </div>
               {/* <div className="ml-auto bg-text-800/[0.5] relative top-[4px] rounded-lg flex items-center h-[36px] px-2">
@@ -60,7 +57,7 @@ function ClaimAll(props: IClaimProps) {
               {/* <span className="text-white font-body4 ml-2">0</span>
               <span className="text-text-500 font-body3 ml-1">PLY</span> */}
             </div>
-            {props.data?.map((pool, index) => {
+            {props.data.map((pool, index) => {
               return (
                 <div
                   className="flex h-[50px]  items-center border-t border-b border-text-800/[0.5] bg-card-500 px-3 md:px-5"
@@ -70,26 +67,26 @@ function ClaimAll(props: IClaimProps) {
                     <span className="flex">
                       <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
                         <Image
-                          src={getImagesPath(pool.tokenOneSymbol)}
+                          src={getImagesPath(pool.tokenASymbol)}
                           width={"24px"}
                           height={"24px"}
                         />
                       </div>
                       <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
                         <Image
-                          src={getImagesPath(pool.tokenTwoSymbol)}
+                          src={getImagesPath(pool.tokenBSymbol)}
                           width={"24px"}
                           height={"24px"}
                         />
                       </div>
                     </span>
                     <span className="text-white font-body4  relative top-[1px]">
-                      {tEZorCTEZtoUppercase(pool.tokenOneSymbol)} /
-                      {tEZorCTEZtoUppercase(pool.tokenTwoSymbol)}
+                      {tEZorCTEZtoUppercase(pool.tokenASymbol)} /
+                      {tEZorCTEZtoUppercase(pool.tokenBSymbol)}
                     </span>
                   </div>
                   <div className="ml-auto font-body4 text-white">
-                    ${pool.gaugeEmission.toFixed(2)}
+                    ${pool.bribesAmount.plus(pool.feesAmount).toFixed(2)}
                   </div>
                 </div>
               );
@@ -97,7 +94,7 @@ function ClaimAll(props: IClaimProps) {
           </div>
 
           <div className="mt-[24px]">
-            <Button color={"primary"} onClick={props.handleClaimAll}>
+            <Button color={"primary"} onClick={props.handleClick}>
               Claim
             </Button>
           </div>
@@ -107,4 +104,4 @@ function ClaimAll(props: IClaimProps) {
   ) : null;
 }
 
-export default ClaimAll;
+export default ClaimAllEpoch;

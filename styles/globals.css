@@ -350,3 +350,12 @@ input[type='number'] {
     @apply text-f11;
   }
 }
+
+.ReactTable .rt-thead {
+  background-color: white;
+  position: fixed;
+  top: 1;
+  z-index: 1;
+  width: calc(100% - 17px);
+  height: 31px;
+}

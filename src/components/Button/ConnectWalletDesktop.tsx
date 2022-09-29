@@ -15,12 +15,15 @@ import { AppDispatch, store } from "../../redux/index";
 import { useAppDispatch, useAppSelector } from "../../redux/index";
 import { switchWallet, walletConnection, walletDisconnection } from "../../redux/wallet/wallet";
 import { useOutsideClick } from "../../utils/outSideClickHook";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export interface IConnectWalletBtnDeskTopProps {}
 
 export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const isConnectWalletLoading = useAppSelector((state) => state.walletLoading.isLoading);
+  const router = useRouter();
 
   const dispatch = useAppDispatch();
   const reff = React.useRef(null);
@@ -96,13 +99,26 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
               <Image alt={"alt"} src={nodeSelectorLogo} />
               <span>Node Selector</span>
             </p>
-
-            <p
-              onClick={disconnectUserWallet}
-              className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
-            >
-              <Image alt={"alt"} src={disconnectLogo} />
-              <span>Disconnect</span>
+            <p>
+              {router.pathname.includes("MyPortfolio") ? (
+                <Link className={``} href={"/Swap"}>
+                  <p
+                    onClick={disconnectUserWallet}
+                    className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+                  >
+                    <Image alt={"alt"} src={disconnectLogo} />
+                    <span>Disconnect</span>
+                  </p>
+                </Link>
+              ) : (
+                <p
+                  onClick={disconnectUserWallet}
+                  className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+                >
+                  <Image alt={"alt"} src={disconnectLogo} />
+                  <span>Disconnect</span>
+                </p>
+              )}
             </p>
           </div>
         )}
