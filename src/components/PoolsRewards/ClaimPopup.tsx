@@ -42,12 +42,15 @@ function ClaimPly(props: IClaimProps) {
                 <span className="text-text-500 font-body3 ml-1">PLY</span>
               </div>
             ) : (
-              <div className="flex mt-[11px] items-center">
-                <span className="text-white font-body4 ml-2">${props.value.toFixed(2)}</span>
+              <div className="flex mt-[2px] items-end">
+                <span className="text-white font-title2 ">${props.value.toFixed(2)}</span>
+                <span className="text-text-250 font-body1 ml-2 mb-px">
+                  sum of all the unclaimed rewards
+                </span>
               </div>
             )}
           </div>
-          <div className="mt-3 font-body2 text-text-250 pl-2">Lorem Ipsum Lorem Ipsum</div>
+          {/* <div className="mt-3 font-body2 text-text-250 pl-2">Lorem Ipsum Lorem Ipsum</div> */}
           <div className="mt-[24px]">
             <Button color={"primary"} onClick={props.handleClick}>
               Claim

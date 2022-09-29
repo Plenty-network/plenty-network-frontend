@@ -12,8 +12,8 @@ function StatsRewards(props: IStatsRewardsProps) {
         title={"PLY emisisons"}
         value={props.plyEmission?.toFixed(1)}
         subValue={"PLY"}
-        disable={false}
-        setShowClaimAllPly={props.setShowClaimAllPly}
+        disable={props.plyEmission?.isEqualTo(0)}
+        setShowClaimAllPly={props.setShowClaimPly}
         setClaimValueDollar={props.setClaimValueDollar}
         setClaimState={props.setClaimState}
         state={EClaimAllState.PLYEMISSION}
@@ -41,7 +41,7 @@ function StatsRewards(props: IStatsRewardsProps) {
       <StatsCard
         title={"Unclaimed Inflation"}
         value={"322 PLY "}
-        setShowClaimAllPly={props.setShowClaimAllPly}
+        setShowClaimAllPly={props.setShowClaimPly}
         disable={true}
         isDollar={true}
         setClaimValueDollar={props.setClaimValueDollar}
