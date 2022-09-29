@@ -78,12 +78,14 @@ export interface IPoolsRewardsData {
   ammType: AMM_TYPE;
   gaugeAddress: string | undefined;
   gaugeEmission: BigNumber;
+  gaugeEmissionValue: BigNumber;
   boostValue: BigNumber;
 }
 
 export interface IPoolsRewardsResponse {
   success: boolean;
   gaugeEmissionsTotal: BigNumber;
+  gaugeEmissionsTotalValue: BigNumber;
   poolsRewardsData: IPoolsRewardsData[];
   gaugeAddresses: string[];
   error?: string;
@@ -146,6 +148,16 @@ export interface IFeesValueAndData {
   feesData: ILockRewardsFeeData;
 }
 
+export interface IUnclaimedInflationData {
+  unclaimedInflationAmount: BigNumber;
+  unclaimedInflationValue: BigNumber;
+}
+
+export interface IUnclaimedInflationResponse {
+  unclaimedInflationData: IUnclaimedInflationData;
+  claimAllInflationData: IClaimInflationOperationData[];
+}
+
 
 //Claim rewards of locks operations Types
 export interface IAllEpochClaimBribeData {
@@ -196,6 +208,11 @@ export interface IAllRewardsOperationsData {
   bribesClaimData: IAllBribesOperationData[];
 }
 
+export interface IClaimInflationOperationData {
+  tokenId: number;
+  epochs: number[]
+}
+
 
 // Indexer Responses Types
 export interface IAllLocksRewardsIndexerData {
@@ -228,4 +245,15 @@ export interface IFeeIndexer {
   token2Fee: string;
   token1Symbol: string;
   token2Symbol: string;
+}
+
+
+export interface IEpochInflationIndexer {
+  epoch: string;
+  inflationShare: string;
+}
+
+export interface IUnclaimedInflationIndexer {
+  id: string;
+  unclaimedInflation: IEpochInflationIndexer[];
 }
