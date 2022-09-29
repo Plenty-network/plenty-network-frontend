@@ -10,6 +10,8 @@ import {
   ILocksRewardsTokenData,
 } from "../../api/portfolio/types";
 export interface IVotesTableRewards {
+  setEpochClaim: React.Dispatch<React.SetStateAction<string>>;
+  handleClick: () => void;
   allLocksRewardsData: IAllLocksRewardsData;
   selectedDropDown: {
     votingPower: string;

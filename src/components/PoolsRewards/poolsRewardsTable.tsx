@@ -163,7 +163,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
           NoData={NoData}
         />
       </div>
-      {showClaimPly && <ClaimPly show={showClaimPly} setShow={setShowClaimPly} />}
+      {/* {showClaimPly && <ClaimPly show={showClaimPly} setShow={setShowClaimPly} />} */}
     </>
   );
 }

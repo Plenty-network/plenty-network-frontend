@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useState } from "react";
 import Image from "next/image";
-import { IStatsCardProps, IStatsProps, IStatsRewardsProps } from "./types";
+import { EClaimAllState, IStatsCardProps, IStatsProps, IStatsRewardsProps } from "./types";
 import StatsCard from "./StatsCard";
 import StatsCardFirst from "./StatsCardFirst";
 
@@ -14,20 +14,29 @@ function StatsRewards(props: IStatsRewardsProps) {
         subValue={"PLY"}
         disable={false}
         setShowClaimAllPly={props.setShowClaimAllPly}
+        setClaimValueDollar={props.setClaimValueDollar}
+        setClaimState={props.setClaimState}
+        state={EClaimAllState.PLYEMISSION}
       />
       <StatsCard
         title={"Trading fees"}
         value={props.tradingfeeStats.toFixed(2)}
-        setShowClaimAllPly={props.setShowClaimAllPly}
-        disable={true}
+        setShowClaimAllPly={props.setShowClaimPly}
+        disable={props.feeClaimData.length === 0}
         isDollar={true}
+        setClaimValueDollar={props.setClaimValueDollar}
+        setClaimState={props.setClaimState}
+        state={EClaimAllState.TRADINGFEE}
       />
       <StatsCard
         title={"Bribes"}
         value={props.bribesStats.toFixed(2)}
-        setShowClaimAllPly={props.setShowClaimAllPly}
-        disable={true}
+        setShowClaimAllPly={props.setShowClaimPly}
+        disable={props.bribesClaimData.length === 0}
         isDollar={true}
+        setClaimValueDollar={props.setClaimValueDollar}
+        setClaimState={props.setClaimState}
+        state={EClaimAllState.BRIBES}
       />
       <StatsCard
         title={"Unclaimed Inflation"}
@@ -35,6 +44,9 @@ function StatsRewards(props: IStatsRewardsProps) {
         setShowClaimAllPly={props.setShowClaimAllPly}
         disable={true}
         isDollar={true}
+        setClaimValueDollar={props.setClaimValueDollar}
+        setClaimState={props.setClaimState}
+        state={EClaimAllState.UNCLAIMED}
       />
     </div>
   );
