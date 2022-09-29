@@ -12,6 +12,9 @@ export interface IFlashMessageProps {
     flashType:Flashtype;
     onCloseClick:Function;
     className?:string;
+    headerText:string;
+    trailingText:string;
+    linkText:string;
 }
 export enum Flashtype{
     Success,
@@ -41,6 +44,9 @@ export function FlashMessage (props: IFlashMessageProps) {
         return info;  
     }
   return <Flash
+      headerText={props.headerText}
+      trailingText={props.trailingText}
+      linkText={props.linkText}
       onClick={props.onClick}
       flashType={props.flashType}
       imageSrc={imageSrc()}

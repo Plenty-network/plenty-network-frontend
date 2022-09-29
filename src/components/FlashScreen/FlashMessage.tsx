@@ -41,12 +41,12 @@ export function Flash (props: IInfoProps) {
       </div>
       <div className="p-4 flex-1 flex flex-col gap-[4px] pr-[56px] text-f12 leading-4" >
          <div className="flex gap-[4px]">
-           <span>Transaction successful</span> 
+           <span>{props.headerText}</span> 
            <span className="text-text-238 text-f10 leading-[14px]">now</span>
          </div>
-         <div>Trading 0.05 tez for 0.3838784 WBTC has been confirmed</div>
+         <div>{props.trailingText}</div>
          {props.onClick && <div className="flex gap-2.5 items-center mt-1 cursor-pointer" onClick={handleClick}>
-          <span className="text-f12 leading-4 text-primary-500 font-semibold ">View in explorer</span>
+          <span className="text-f12 leading-4 text-primary-500 font-semibold ">{props.linkText}</span>
           <Image height={12} width={12} src={openInNewTab} />
          </div>}
       </div>
