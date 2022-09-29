@@ -3,7 +3,7 @@ import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { unsetFlashMessage } from '../../redux/flashMessage';
 import { FlashMessage, Flashtype } from './index';
-const FLASH_MESSAGE_SHOW_TIME=5000;
+const FLASH_MESSAGE_SHOW_TIME=2000;
 export interface IFlashMessageHOCProps {
 }
 
@@ -17,7 +17,7 @@ export function FlashMessageHOC (props: IFlashMessageHOCProps) {
     timeOutTimer &&  clearTimeout(timeOutTimer);
      if(isLoading){
         timeOutTimer = setTimeout(()=>{
-           dispatch(unsetFlashMessage());
+          dispatch(unsetFlashMessage());
         },FLASH_MESSAGE_SHOW_TIME);    
      }else{
         timeOutTimer &&  clearTimeout(timeOutTimer);
@@ -27,7 +27,7 @@ export function FlashMessageHOC (props: IFlashMessageHOCProps) {
  if(isFlashVisiable){
   return (
     <div className='absolute right-2 md:bottom-10 bottom-[77px] z-50'>
-      <FlashMessage headerText={headerText} trailingText={trailingText} linkText={linkText} onClick={onClick?()=>onClick():undefined} className={!animationState?'slide-out-blurred-top':''} flashType={flashType} onCloseClick={()=>{dispatch(unsetFlashMessage())}} />
+      <FlashMessage headerText={headerText} duration={FLASH_MESSAGE_SHOW_TIME} trailingText={trailingText} linkText={linkText} onClick={onClick?()=>onClick():undefined} className={!animationState?'slide-out-blurred-top':''} flashType={flashType} onCloseClick={()=>{dispatch(unsetFlashMessage())}} />
     </div>
   );
  }

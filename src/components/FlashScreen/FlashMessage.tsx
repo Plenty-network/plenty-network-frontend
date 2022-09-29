@@ -4,6 +4,7 @@ import epclose from "../../assets/icon/common/epclose.svg";
 import openInNewTab from "../../assets/icon/common/openInNewTab.svg";
 import Image from "next/image";
 import { Flashtype, IFlashMessageProps } from "./index";
+import { useEffect, useState } from "react";
 
 export interface IInfoProps extends IFlashMessageProps {
    imageSrc:any;
@@ -11,10 +12,28 @@ export interface IInfoProps extends IFlashMessageProps {
 
 
 export function Flash (props: IInfoProps) {
+  const [stateWidth,setStateWidth]=useState(0);
   const handleClick=()=>{
     if(props.onClick)
        props.onClick();
   }
+  const TIME_TO_DIE=props.duration;
+  const SMOOTHNESS=40;
+  const step=359/SMOOTHNESS;
+  useEffect(()=>{
+  let currentTime=TIME_TO_DIE/10
+   const interval= setInterval(()=>{
+     currentTime+=currentTime;
+     setStateWidth(o=>{
+      if(o>359){
+        clearInterval(interval);
+      }
+       return o+step
+      });
+      
+    },TIME_TO_DIE/SMOOTHNESS);
+    return ()=>{clearInterval(interval)}
+  },[]);
   const bgColor=()=>{
       if(props.flashType===Flashtype.Info){
         return 'bg-info-500/20';
@@ -52,6 +71,9 @@ export function Flash (props: IInfoProps) {
       </div>
       <div className="absolute right-4 top-4 cursor-pointer hover:opacity-95" onClick={()=>props.onCloseClick()} >
       <Image height={24} width={24} src={epclose} />
+      </div>
+      <div className="w-[359px] absolute bottom-0 h-[3px] bg-primary-500/10">
+        <div className="bg-primary-401  h-[3px] " style={{width:stateWidth+'px'}}></div>
       </div>
     </div>
   );
