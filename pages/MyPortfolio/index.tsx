@@ -96,8 +96,8 @@ function MyPortfolio(props: any) {
   const [showClaimPly, setShowClaimPly] = React.useState(false);
 
   const [epochClaim, setEpochClaim] = React.useState("");
-  //const userAddress = store.getState().wallet.address;
-  const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv"; //kiran
+  const userAddress = store.getState().wallet.address;
+  //const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv"; //kiran
   //const userAddress = "tz1NaGu7EisUCyfJpB16ktNxgSqpuMo8aSEk"; //udit
   //tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv kiran
 
@@ -154,6 +154,7 @@ function MyPortfolio(props: any) {
   const currentEpoch = store.getState().epoch.currentEpoch;
 
   const [lockOperation, setLockOperation] = useState(false);
+  const [claimOperation, setClaimOperation] = useState(false);
   const locksRewardsDataError = useAppSelector(
     (state) => state.portfolioRewards.locksRewardsDataError
   );
@@ -325,6 +326,14 @@ function MyPortfolio(props: any) {
       }
     }
   }, [props.operationSuccesful, props.isLoading, userAddress]);
+  useEffect(() => {
+    if (claimOperation) {
+      dispatch(
+        fetchAllLocksRewardsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+      );
+      dispatch(fetchAllRewardsOperationsData(userAddress));
+    }
+  }, [claimOperation]);
 
   const resetAllValues = () => {
     setPlyInput("");
@@ -581,10 +590,10 @@ function MyPortfolio(props: any) {
         setBalanceUpdate(true);
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-          setLockOperation(true);
+          setClaimOperation(true);
         }, 6000);
         setTimeout(() => {
-          setLockOperation(false);
+          setClaimOperation(false);
         }, 20000);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -617,8 +626,11 @@ function MyPortfolio(props: any) {
         setBalanceUpdate(true);
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          setClaimOperation(true);
         }, 6000);
-
+        setTimeout(() => {
+          setClaimOperation(false);
+        }, 20000);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
         }, 2000);
@@ -650,7 +662,11 @@ function MyPortfolio(props: any) {
         setBalanceUpdate(true);
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          setClaimOperation(true);
         }, 6000);
+        setTimeout(() => {
+          setClaimOperation(false);
+        }, 20000);
 
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -684,7 +700,11 @@ function MyPortfolio(props: any) {
         setBalanceUpdate(true);
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          setClaimOperation(true);
         }, 6000);
+        setTimeout(() => {
+          setClaimOperation(false);
+        }, 20000);
 
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -716,7 +736,11 @@ function MyPortfolio(props: any) {
         setBalanceUpdate(true);
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          setClaimOperation(true);
         }, 6000);
+        setTimeout(() => {
+          setClaimOperation(false);
+        }, 20000);
 
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -743,7 +767,19 @@ function MyPortfolio(props: any) {
       </Head>
       <SideBarHOC>
         <div className="pt-5 md:px-[24px] px-2">
-          {Title}
+          <div className="flex">
+            {Title}
+            {activeSection === MyPortfolioSection.Rewards && (
+              <div
+                className={clsx(
+                  " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[40px] bg-primary-500 rounded-xl w-[155px]  justify-center",
+                  true ? "cursor-not-allowed" : "cursor-pointer"
+                )}
+              >
+                Claim all
+              </div>
+            )}
+          </div>
           <div className="mt-5 pl-5  md:pl-0 overflow-x-auto inner">
             {activeSection === MyPortfolioSection.Positions ? (
               <Stats
@@ -756,7 +792,6 @@ function MyPortfolio(props: any) {
             ) : (
               <StatsRewards
                 plyEmission={poolsRewards.data.gaugeEmissionsTotal}
-                setShowClaimAllPly={setShowClaimAllPly}
                 tradingfeeStats={tradingfeeStats}
                 bribesStats={bribesStats}
                 setClaimValueDollar={setClaimValueDollar}
@@ -793,8 +828,17 @@ function MyPortfolio(props: any) {
                   </div>
                 </p>
                 <p
-                  className="cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center"
-                  onClick={() => setShowClaimAllPly(true)}
+                  className={clsx(
+                    " flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
+                    poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                      ? "cursor-not-allowed"
+                      : "cursor-pointer"
+                  )}
+                  onClick={
+                    poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                      ? () => {}
+                      : () => setShowClaimAllPly(true)
+                  }
                 >
                   Claim all
                 </p>
@@ -978,11 +1022,13 @@ function MyPortfolio(props: any) {
           value={claimValueDollar}
           title={
             claimState === EClaimAllState.BRIBES
-              ? "Claim All Bribes"
+              ? "Claim all Bribes"
               : claimState === EClaimAllState.TRADINGFEE
-              ? "Claim All Trading Fee"
+              ? "Claim all Trading Fee"
               : claimState === EClaimAllState.LOCKS
-              ? "Claim All Locks"
+              ? "Claim all Locks"
+              : claimState === EClaimAllState.PLYEMISSION
+              ? "Claim all PLY"
               : ""
           }
           handleClick={
@@ -992,6 +1038,8 @@ function MyPortfolio(props: any) {
               ? handleClaimFees
               : claimState === EClaimAllState.LOCKS
               ? handleClaimALLFeesAndBribes
+              : claimState === EClaimAllState.PLYEMISSION
+              ? handleClaimAll
               : () => {}
           }
         />

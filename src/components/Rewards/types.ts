@@ -24,7 +24,6 @@ export interface IStatsRewardsProps {
   tradingfeeStats: BigNumber;
   bribesStats: BigNumber;
 
-  setShowClaimAllPly: React.Dispatch<React.SetStateAction<boolean>>;
   plyEmission: BigNumber;
 }
 export interface ISelectNFT {
