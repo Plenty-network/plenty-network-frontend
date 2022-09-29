@@ -10,6 +10,7 @@ import {
 import Config from "../config/config";
 import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
 import { OpKind } from "@taquito/taquito";
+import { IClaimInflationOperationData } from "../api/portfolio/types";
 
 export const createLock = async (
   address: string,
@@ -332,10 +333,10 @@ export const claimInflation = async (
 
 // FOR STAT
 export const claimAllInflation = async (
-  inflationData : {id : number , epochs : number[]}[],
-  transactionSubmitModal: TTransactionSubmitModal,
-  resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  inflationData : IClaimInflationOperationData[],
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -351,17 +352,18 @@ export const claimAllInflation = async (
         for (const inflation of inflationData) {
           inflationBatch.push({
             kind: OpKind.TRANSACTION,
-            ...veInstance.methods.claim_inflation(inflation.id , inflation.epochs
+            ...veInstance.methods.claim_inflation(inflation.tokenId , inflation.epochs
             ).toTransferParams(),
           });
         }
       const batch =  Tezos.wallet.batch(inflationBatch);
-
+    // Tezos.estimate.batch(inflationBatch).then((est) => console.log(est));
     const batchOp = await batch.send();
-    setShowConfirmTransaction(false);
-    resetAllValues();
 
-    transactionSubmitModal(batchOp.opHash);
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+    resetAllValues && resetAllValues();
+
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
 
     await batchOp.confirmation();
     return {

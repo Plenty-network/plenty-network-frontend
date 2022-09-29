@@ -34,6 +34,10 @@ import {
   IAllClaimableFeesData,
   IAllRewardsOperationsData,
   ITvlStatsResponse,
+  IUnclaimedInflationIndexer,
+  IClaimInflationOperationData,
+  IUnclaimedInflationData,
+  IUnclaimedInflationResponse,
 } from "./types";
 import { store } from "../../redux";
 import { ILpTokenPriceList, ITokenPriceList } from "../util/types";
@@ -742,3 +746,60 @@ const filterEmptyEpochClaimData = (
   return claimableEpochData;
 };
 
+
+
+
+//Stats
+export const getUnclaimedInflationData = async (
+  userTezosAddress: string,
+  tokenPrices: ITokenPriceList
+): Promise<IUnclaimedInflationResponse> => {
+  try {
+    if (!userTezosAddress || Object.keys(tokenPrices).length === 0) {
+      throw new Error("Invalid or empty arguments.");
+    }
+
+    let totalUnclaimedPLYValue: BigNumber = new BigNumber(0);
+    const inflationOpertionData: IClaimInflationOperationData[] = [];
+
+    const inflationIndexerResponse = await axios.get(
+      `${Config.VE_INDEXER}inflation?address=${userTezosAddress}`
+    );
+    const inflationIndexerData: IUnclaimedInflationIndexer[] = inflationIndexerResponse.data;
+
+    for (const lockData of inflationIndexerData) {
+      const epochsList: number[] = [];
+      for (const inflationData of lockData.unclaimedInflation) {
+        const inflation = new BigNumber(inflationData.inflationShare);
+        totalUnclaimedPLYValue = totalUnclaimedPLYValue.plus(inflation.isFinite() ? inflation : 0);
+        if (inflation.isFinite() && inflation.isGreaterThan(0)) {
+          epochsList.push(Number(inflationData.epoch));
+        }
+      }
+      if (epochsList.length > 0) {
+        inflationOpertionData.push({ tokenId: Number(lockData.id), epochs: epochsList });
+      }
+      // console.log(lockData);
+      console.log(inflationOpertionData);
+    }
+    totalUnclaimedPLYValue = totalUnclaimedPLYValue.dividedBy(PLY_DECIMAL_MULTIPLIER);
+    const unclaimedInflationData: IUnclaimedInflationData = {
+      unclaimedInflationValue: totalUnclaimedPLYValue.multipliedBy(
+        new BigNumber(tokenPrices["PLY"] || 0)
+      ),
+      unclaimedInflationAmount: totalUnclaimedPLYValue,
+    };
+    console.log(
+      unclaimedInflationData.unclaimedInflationAmount.toString(),
+      unclaimedInflationData.unclaimedInflationValue.toString()
+    );
+    return {
+      unclaimedInflationData,
+      claimAllInflationData: inflationOpertionData,
+    };
+    // console.log(inflationIndexerData);
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+};

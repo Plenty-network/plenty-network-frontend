@@ -4,6 +4,8 @@ import {
   IAllClaimableFeesData,
   IAllEpochClaimOperationData,
   IAllLocksRewardsData,
+  IClaimInflationOperationData,
+  IUnclaimedInflationData,
 } from "../../api/portfolio/types";
 import { ITokenPriceList } from "../../api/util/types";
 
@@ -11,14 +13,19 @@ export interface IPorfolioRewardsData {
   allLocksRewardsData: IAllLocksRewardsData;
   totalTradingFeesAmount: BigNumber;
   totalBribesAmount: BigNumber;
+  unclaimedInflationData: IUnclaimedInflationData;
   epochClaimData: IAllEpochClaimOperationData;
   feesClaimData: IAllClaimableFeesData[];
   bribesClaimData: IAllBribesOperationData[];
+  claimAllInflationData: IClaimInflationOperationData[];
   locksRewardsDataError: boolean;
   locksRewardsDataAttempts: number;
   fetchingLocksRewardsData: boolean;
   rewardsOperationDataError: boolean;
   rewardsOperationDataAttempts: number;
+  unclaimedInflationDataError: boolean;
+  unclaimedInflationDataAttempts: number;
+  fetchingUnclaimedInflationData: boolean;
 }
 
 export interface IAllLocksRewardArgument {
