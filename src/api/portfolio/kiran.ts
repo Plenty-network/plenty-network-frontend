@@ -424,6 +424,7 @@ export const getPoolsRewardsData = async (
           ammType: AMM[ammAddress].type,
           gaugeAddress: gaugeAddress,
           gaugeEmission: plyEmissions,
+          gaugeEmissionValue: plyEmissions.multipliedBy(new BigNumber(tokenPrices["PLY"] || 0)),
           boostValue: boostValue.isFinite() ? boostValue : new BigNumber(0),
         });
       }
@@ -432,6 +433,7 @@ export const getPoolsRewardsData = async (
     return {
       success: true,
       gaugeEmissionsTotal: plyEmmissonsTotal,
+      gaugeEmissionsTotalValue: plyEmmissonsTotal.multipliedBy(new BigNumber(tokenPrices["PLY"] || 0)),
       poolsRewardsData: poolsData,
       gaugeAddresses,
     };
@@ -440,6 +442,7 @@ export const getPoolsRewardsData = async (
     return {
       success: false,
       gaugeEmissionsTotal: new BigNumber(0),
+      gaugeEmissionsTotalValue: new BigNumber(0),
       poolsRewardsData: [],
       gaugeAddresses: [],
       error: error.message,
@@ -738,3 +741,4 @@ const filterEmptyEpochClaimData = (
   });
   return claimableEpochData;
 };
+
