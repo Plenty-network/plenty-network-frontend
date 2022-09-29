@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { isMobile,isTablet } from 'react-device-detect';
+import { FlashMessageHOC } from '../FlashScreen/FlashMessageHOC';
 import { NotificationBar } from '../Notification';
 import BottomNavigationBar from './BottomNavBar';
 import { SideBar } from './Sidebar';
@@ -27,6 +28,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
         <div className="circle2"></div>
         <div className="circle3"></div>
       </div> */}
+      <FlashMessageHOC/>
       <div className="flex flex-no-wrap flex-col">
         {!isMobile && <TopNavBar setShowNotification={showNotificationClick} />}   
         {showNotification && <NotificationBar  onhide={()=>{setShowNotification(false)}}/>}
