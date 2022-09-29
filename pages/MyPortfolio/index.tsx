@@ -70,6 +70,7 @@ import { harvestAllRewards } from "../../src/operations/rewards";
 import {
   fetchAllLocksRewardsData,
   fetchAllRewardsOperationsData,
+  fetchUnclaimedInflationData,
 } from "../../src/redux/myPortfolio/rewards";
 import { API_RE_ATTAMPT_DELAY } from "../../src/constants/global";
 import SelectNFTLocks from "../../src/components/Rewards/SelectNFTLocks";
@@ -161,6 +162,7 @@ function MyPortfolio(props: any) {
   const rewardsOperationDataError = useAppSelector(
     (state) => state.portfolioRewards.rewardsOperationDataError
   );
+  const unclaimedInflationDataError = useAppSelector((state) => state.portfolioRewards.unclaimedInflationDataError);
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -198,6 +200,9 @@ function MyPortfolio(props: any) {
         fetchAllLocksRewardsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
       dispatch(fetchAllRewardsOperationsData(userAddress));
+      dispatch(
+        fetchUnclaimedInflationData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+      );
     }
   }, [userAddress, tokenPrice]);
   useEffect(() => {
@@ -216,6 +221,15 @@ function MyPortfolio(props: any) {
       }, API_RE_ATTAMPT_DELAY);
     }
   }, [rewardsOperationDataError]);
+  useEffect(() => {
+    if (userAddress && Object.keys(tokenPrice).length !== 0 && unclaimedInflationDataError) {
+      setTimeout(() => {
+        dispatch(
+          fetchUnclaimedInflationData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+        );
+      }, API_RE_ATTAMPT_DELAY);
+    }
+  }, [unclaimedInflationDataError]);
   const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
     {} as { [id: string]: IVotePageData }
   );

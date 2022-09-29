@@ -12,6 +12,7 @@ import {
   IAllBribesOperationData,
   IAllClaimableFeesData,
   IAllEpochClaimData,
+  IClaimInflationOperationData,
 } from "../api/portfolio/types";
 
 export const vote = async (
@@ -419,12 +420,12 @@ export const claimAllForEpoch = async (
 // CLAIMS EVERYTHING (ALL STATS)
 export const claimSupernova = async (
   guages: string[],
-  feeData: { id: number; epoch: number[]; amm: string }[],
-  bribeData: { tokenId: number; epoch: number; bribeId: number; amm: string }[],
-  inflationData: { id: number; epochs: number[] }[],
-  transactionSubmitModal: TTransactionSubmitModal,
-  resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  feeData: IAllClaimableFeesData[],
+  bribeData: IAllBribesOperationData[],
+  inflationData: IClaimInflationOperationData[],
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -454,7 +455,7 @@ export const claimSupernova = async (
     for (const feeObj of feeData) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
-        ...voterInstance.methods.claim_fee(feeObj.id, feeObj.amm, feeObj.epoch).toTransferParams(),
+        ...voterInstance.methods.claim_fee(feeObj.tokenId, feeObj.amm, feeObj.epoch).toTransferParams(),
       });
     }
 
@@ -470,17 +471,17 @@ export const claimSupernova = async (
     for (const inflation of inflationData) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
-        ...veInstance.methods.claim_inflation(inflation.id, inflation.epochs).toTransferParams(),
+        ...veInstance.methods.claim_inflation(inflation.tokenId, inflation.epochs).toTransferParams(),
       });
     }
 
     const batch = Tezos.wallet.batch(allBatch);
 
     const batchOp = await batch.send();
-    setShowConfirmTransaction(false);
-    resetAllValues();
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+    resetAllValues && resetAllValues();
 
-    transactionSubmitModal(batchOp.opHash);
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
 
     await batchOp.confirmation();
     return {
