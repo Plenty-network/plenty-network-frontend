@@ -161,7 +161,6 @@ export default function Vote() {
         userAddress,
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
       ).then((res) => {
-        console.log(res);
         setVeNFTlist(res.veNFTData);
       });
     } else {
