@@ -71,7 +71,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "gaugeEmission"),
-        accessor: (x: any) => <PLYEmission value={x.gaugeEmission} />,
+        accessor: (x: any) => <PLYEmission value={x.gaugeEmission} dollar={x.gaugeEmissionValue} />,
       },
 
       {
@@ -132,7 +132,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "gaugeEmission"),
-        accessor: (x: any) => <PLYEmission value={x.gaugeEmission} />,
+        accessor: (x: any) => <PLYEmission value={x.gaugeEmission} dollar={x.gaugeEmissionValue} />,
       },
 
       {

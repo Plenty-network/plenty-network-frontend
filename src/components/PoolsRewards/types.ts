@@ -9,5 +9,9 @@ export interface IPoolsTableRewards {
 }
 
 export interface IPLYEmissionProps {
+  dollar: BigNumber;
+  value: BigNumber;
+}
+export interface IBoostProps {
   value: BigNumber;
 }

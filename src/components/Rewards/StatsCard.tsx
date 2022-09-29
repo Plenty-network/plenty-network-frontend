@@ -4,9 +4,6 @@ import { BigNumber } from "bignumber.js";
 import { IStatsCardProps } from "./types";
 import info from "../../assets/icon/common/infoIcon.svg";
 
-import claim from "../../assets/icon/myPortfolio/claim.svg";
-import Button from "../Button/Button";
-
 function StatsCard(props: IStatsCardProps) {
   return (
     <>

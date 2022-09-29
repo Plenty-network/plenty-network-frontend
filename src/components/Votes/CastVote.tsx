@@ -15,7 +15,7 @@ function CastVote(props: ICastVoteProps) {
   };
   const dateFormat = useMemo(() => {
     var date = new Date(currentEpoch.endTimestamp);
-    return `${date.getUTCDate()}/${("0" + date.getUTCMonth()).slice(
+    return `${("0" + date.getUTCDate()).slice(-2)}/${("0" + (date.getUTCMonth() + 1)).slice(
       -2
     )}/${date.getUTCFullYear()}, ${("0" + date.getUTCHours()).slice(-2)}:${(
       "0" + date.getUTCMinutes()

@@ -9,7 +9,6 @@ import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import { IConfirmLockingProps } from "./types";
 import { store } from "../../redux";
-import { increaseLockEnd } from "../../operations/locks";
 import clsx from "clsx";
 import { ToolTip } from "../Tooltip/TooltipAdvanced";
 
@@ -20,7 +19,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
   };
   const dateFormat = useMemo(() => {
     var date = new Date(epochData.endTimestamp);
-    return `${date.getUTCDate()}/${("0" + date.getUTCMonth()).slice(
+    return `${("0" + date.getUTCDate()).slice(-2)}/${("0" + (date.getUTCMonth() + 1)).slice(
       -2
     )}/${date.getUTCFullYear()}, ${("0" + date.getUTCHours()).slice(-2)}:${(
       "0" + date.getUTCMinutes()

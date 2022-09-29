@@ -26,7 +26,6 @@ function ClaimAllEpoch(props: IClaimProps) {
   useEffect(() => {
     var sum = 0;
     for (var pool of props.data) {
-      console.log(Number(pool.bribesAmount), Number(pool.feesAmount), Number(sum));
       sum += Number(pool.bribesAmount);
       sum += Number(pool.feesAmount);
     }
