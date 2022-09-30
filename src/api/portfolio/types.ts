@@ -153,11 +153,42 @@ export interface IUnclaimedInflationData {
   unclaimedInflationValue: BigNumber;
 }
 
+export interface ILockInflationData {
+  epoch: number;
+  inflationValue: BigNumber;
+  inflationInPly: BigNumber;
+}
+
+export interface IAllLocksInflationData {
+  [tokenId: string]: ILockInflationData[];
+}
+
 export interface IUnclaimedInflationResponse {
   unclaimedInflationData: IUnclaimedInflationData;
   claimAllInflationData: IClaimInflationOperationData[];
+  allLocksInflationData: IAllLocksInflationData;
 }
 
+export interface ILockRewardsData {
+  unclaimedFeesValue: BigNumber;
+  unclaimedBribesValue: BigNumber;
+  unclaimedInflationValue: BigNumber;
+  unclaimedInflationInPLY: BigNumber;
+}
+
+export interface ILockRewardsOperationData {
+  lockFeesClaimData: IAllClaimableFeesData[];
+  lockBribesClaimData: IAllBribesOperationData[];
+  lockInflationClaimData: IClaimInflationOperationData[];
+}
+
+export interface IUnclaimedRewardsForLockData {
+  success: boolean;
+  unclaimedRewardsExist: boolean;
+  lockRewardsData: ILockRewardsData;
+  lockRewardsOperationData: ILockRewardsOperationData;
+  error?: string;
+}
 
 //Claim rewards of locks operations Types
 export interface IAllEpochClaimBribeData {
