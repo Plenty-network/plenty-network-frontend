@@ -768,12 +768,17 @@ export const getUnclaimedInflationData = async (
     const inflationIndexerData: IUnclaimedInflationIndexer[] = inflationIndexerResponse.data;
 
     for (const lockData of inflationIndexerData) {
-      const epochsList: number[] = [];
+      let epochsList: number[] = [];
       for (const inflationData of lockData.unclaimedInflation) {
         const inflation = new BigNumber(inflationData.inflationShare);
         totalUnclaimedPLYValue = totalUnclaimedPLYValue.plus(inflation.isFinite() ? inflation : 0);
         if (inflation.isFinite() && inflation.isGreaterThan(0)) {
           epochsList.push(Number(inflationData.epoch));
+        }
+        // Create chunks of epoch data for a token
+        if(epochsList.length === 5) {
+          inflationOpertionData.push({ tokenId: Number(lockData.id), epochs: epochsList });
+          epochsList = [];
         }
       }
       if (epochsList.length > 0) {
