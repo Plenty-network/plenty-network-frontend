@@ -84,6 +84,9 @@ import {
 } from "../../src/operations/vote";
 import ClaimPly from "../../src/components/PoolsRewards/ClaimPopup";
 import { EClaimAllState } from "../../src/components/Rewards/types";
+import { setFlashMessage } from "../../src/redux/flashMessage";
+import { Flashtype } from "../../src/components/FlashScreen";
+import { CLAIM, FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_ID } from "../../src/constants/localStorage";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -99,8 +102,8 @@ function MyPortfolio(props: any) {
   const [showClaimPly, setShowClaimPly] = React.useState(false);
 
   const [epochClaim, setEpochClaim] = React.useState("");
-  //const userAddress = store.getState().wallet.address;
-  const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv"; //kiran
+  const userAddress = store.getState().wallet.address;
+  //const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv"; //kiran
   //const userAddress = "tz1NaGu7EisUCyfJpB16ktNxgSqpuMo8aSEk"; //udit
   //tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv kiran
 
@@ -354,7 +357,26 @@ function MyPortfolio(props: any) {
       );
     }
   }, [claimOperation]);
+  const dateFormat = (dates: number) => {
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Decr",
+    ];
+    var date = new Date(dates);
+    var month = date.getMonth();
 
+    return `${("0" + date.getDate()).slice(-2)}-${monthNames[month]}-${date.getFullYear()}`;
+  };
   const resetAllValues = () => {
     setPlyInput("");
     setLockingDate("");
@@ -408,6 +430,7 @@ function MyPortfolio(props: any) {
     setShowWithdraw(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(TOKEN_ID, manageData.tokenId.toString());
     withdrawLock(
       manageData.tokenId.toNumber(),
       transactionSubmitModal,
@@ -418,6 +441,18 @@ function MyPortfolio(props: any) {
         setBalanceUpdate(true);
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
 
         setTimeout(() => {
@@ -432,6 +467,16 @@ function MyPortfolio(props: any) {
           setShowTransactionSubmitModal(false);
         }, 2000);
         setContentTransaction("");
+        dispatch(
+          setFlashMessage({
+            flashType: Flashtype.Rejected,
+            headerText: "Rejected",
+            trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
+            linkText: "",
+            isLoading: true,
+            onClick: () => {},
+          })
+        );
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
@@ -441,6 +486,8 @@ function MyPortfolio(props: any) {
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, plyInput);
+    localStorage.setItem(TOKEN_A, dateFormat(lockingEndData.lockingDate * 1000));
     createLock(
       userAddress,
       new BigNumber(plyInput),
@@ -453,6 +500,20 @@ function MyPortfolio(props: any) {
         setBalanceUpdate(true);
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Lock ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} PLY till ${localStorage.getItem(TOKEN_A)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
 
         setTimeout(() => {
@@ -465,6 +526,18 @@ function MyPortfolio(props: any) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Lock ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} PLY till ${localStorage.getItem(TOKEN_A)}`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -478,6 +551,7 @@ function MyPortfolio(props: any) {
 
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(TOKEN_ID, manageData.tokenId.toString());
     increaseLockAndValue(
       manageData.tokenId.toNumber(),
       new BigNumber(plyInput),
@@ -490,6 +564,18 @@ function MyPortfolio(props: any) {
         setBalanceUpdate(true);
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
 
         setTimeout(() => {
@@ -502,6 +588,16 @@ function MyPortfolio(props: any) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -515,6 +611,7 @@ function MyPortfolio(props: any) {
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(TOKEN_ID, manageData.tokenId.toString());
     increaseLockEnd(
       manageData.tokenId.toNumber(),
       new BigNumber(lockingEndData.lockingDate),
@@ -526,6 +623,18 @@ function MyPortfolio(props: any) {
         setBalanceUpdate(true);
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
 
         setTimeout(() => {
@@ -539,6 +648,16 @@ function MyPortfolio(props: any) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -551,6 +670,7 @@ function MyPortfolio(props: any) {
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(TOKEN_ID, manageData.tokenId.toString());
     increaseLockValue(
       manageData.tokenId.toNumber(),
       new BigNumber(updatedPlyVoteValue),
@@ -562,6 +682,18 @@ function MyPortfolio(props: any) {
         setBalanceUpdate(true);
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
 
         setTimeout(() => {
@@ -574,17 +706,28 @@ function MyPortfolio(props: any) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
-  const handleClaimAll = () => {
+  const handleClaimAllPly = () => {
     setShowClaimPly(false);
-    setContentTransaction(`Claim All ply`);
+    setContentTransaction(`Claim ${poolsRewards.data.gaugeEmissionsTotal.toFixed(2)} PLY`);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(CLAIM, poolsRewards.data.gaugeEmissionsTotal.toFixed(6));
     harvestAllRewards(
       poolsRewards.data.gaugeAddresses,
       transactionSubmitModal,
@@ -596,6 +739,18 @@ function MyPortfolio(props: any) {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setClaimOperation(true);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Claim ${localStorage.getItem(CLAIM)} PLY`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
         setTimeout(() => {
           setClaimOperation(false);
@@ -610,6 +765,16 @@ function MyPortfolio(props: any) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Claim ${localStorage.getItem(CLAIM)} PLY`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -617,10 +782,11 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimBribes = () => {
-    setContentTransaction(`Claim all bribes`);
+    setContentTransaction(` Claim bribes $${bribesStats.toFixed(2)}`);
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(CLAIM, bribesStats.toFixed(6));
     claimAllBribeForAllLocks(
       bribesClaimData,
       transactionSubmitModal,
@@ -632,6 +798,18 @@ function MyPortfolio(props: any) {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setClaimOperation(true);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Claim bribes $${localStorage.getItem(CLAIM)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
         setTimeout(() => {
           setClaimOperation(false);
@@ -646,6 +824,16 @@ function MyPortfolio(props: any) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Claim bribes $${localStorage.getItem(CLAIM)}`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -653,10 +841,11 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimFees = () => {
-    setContentTransaction(`Claim all bribes`);
+    setContentTransaction(`Claim trading fees $${tradingfeeStats.toFixed(2)}`);
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(CLAIM, tradingfeeStats.toFixed(6));
     claimAllFeeForAllLocks(
       feeClaimData,
       transactionSubmitModal,
@@ -668,6 +857,18 @@ function MyPortfolio(props: any) {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setClaimOperation(true);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Claim trading fees $${localStorage.getItem(CLAIM)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
         setTimeout(() => {
           setClaimOperation(false);
@@ -683,6 +884,16 @@ function MyPortfolio(props: any) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Claim trading fees $${localStorage.getItem(CLAIM)}`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -690,10 +901,11 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimALLFeesAndBribes = () => {
-    setContentTransaction(`Claim all bribes`);
+    setContentTransaction(`Claim all lock rewards`);
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    //localStorage.setItem(CLAIM, poolsRewards.data.gaugeEmissionsTotal.toString());
     claimAllRewardsForAllLocks(
       bribesClaimData,
       feeClaimData,
@@ -706,6 +918,18 @@ function MyPortfolio(props: any) {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setClaimOperation(true);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Claim all lock rewards`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
         setTimeout(() => {
           setClaimOperation(false);
@@ -721,6 +945,16 @@ function MyPortfolio(props: any) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Claim all lock rewards`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -728,10 +962,11 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimALLEpoch = () => {
-    setContentTransaction(`Claim all bribes`);
+    setContentTransaction(`Claim lock rewards for <Epoch ${epochClaim}`);
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(CLAIM, epochClaim.toString());
     claimAllForEpoch(
       epochClaimData[selectednft.tokenId][epochClaim],
       transactionSubmitModal,
@@ -743,6 +978,18 @@ function MyPortfolio(props: any) {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setClaimOperation(true);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Claim lock rewards for <Epoch ${localStorage.getItem(CLAIM)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
         setTimeout(() => {
           setClaimOperation(false);
@@ -758,6 +1005,16 @@ function MyPortfolio(props: any) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Claim lock rewards for <Epoch ${localStorage.getItem(CLAIM)}`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -765,10 +1022,11 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimALLUnClaimed = () => {
-    setContentTransaction(`Claim all unclaimed`);
+    setContentTransaction(`Claim inflation ${unclaimInflation.unclaimedInflationAmount} PLY`);
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(CLAIM, unclaimInflation.unclaimedInflationAmount.toFixed(6));
     claimAllInflation(
       inflationData,
       transactionSubmitModal,
@@ -780,6 +1038,18 @@ function MyPortfolio(props: any) {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setClaimOperation(true);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Claim inflation ${localStorage.getItem(CLAIM)} PLY`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
         setTimeout(() => {
           setClaimOperation(false);
@@ -795,6 +1065,16 @@ function MyPortfolio(props: any) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Claim inflation ${localStorage.getItem(CLAIM)} PLY`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -802,10 +1082,12 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimALLSuperNova = () => {
-    setContentTransaction(`Claim all unclaimed`);
+    setContentTransaction(`Claim all emissions, inflation, fees and bribes
+    `);
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    //localStorage.setItem(CLAIM, poolsRewards.data.gaugeEmissionsTotal.toString());
     claimSupernova(
       poolsRewards.data.gaugeAddresses,
       feeClaimData,
@@ -820,6 +1102,18 @@ function MyPortfolio(props: any) {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setClaimOperation(true);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Claim all emissions, inflation, fees and bribes`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
         setTimeout(() => {
           setClaimOperation(false);
@@ -835,6 +1129,16 @@ function MyPortfolio(props: any) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Claim all emissions, inflation, fees and bribes`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -1160,7 +1464,7 @@ function MyPortfolio(props: any) {
               : claimState === EClaimAllState.LOCKS
               ? handleClaimALLFeesAndBribes
               : claimState === EClaimAllState.PLYEMISSION
-              ? handleClaimAll
+              ? handleClaimAllPly
               : claimState === EClaimAllState.UNCLAIMED
               ? handleClaimALLUnClaimed
               : claimState === EClaimAllState.SUPERNOVA

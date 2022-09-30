@@ -32,6 +32,8 @@ import { store, useAppDispatch, useAppSelector } from "../../redux";
 import { setLoading } from "../../redux/isLoading/action";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
+import { setFlashMessage } from "../../redux/flashMessage";
+import { Flashtype } from "../FlashScreen";
 
 interface ISwapTabProps {
   className?: string;
@@ -142,7 +144,6 @@ function SwapTab(props: ISwapTabProps) {
   };
   const handleConfirmSwap = () => {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-
     localStorage.setItem(
       TOKEN_A,
       props.tokenIn.name === "tez"
@@ -179,6 +180,22 @@ function SwapTab(props: ISwapTabProps) {
         props.resetAllValues;
         setTimeout(() => {
           props.setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Swap ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} for ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -188,6 +205,18 @@ function SwapTab(props: ISwapTabProps) {
         props.setShowConfirmTransaction(false);
         setTimeout(() => {
           props.setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Swap ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)}`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
