@@ -21,14 +21,6 @@ import { getPnlpOutputEstimate, getPoolShareForPnlp } from "../../api/liquidity"
 import { loadSwapDataWrapper } from "../../api/swap/wrappers";
 import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
-import {
-  BURN_AMOUNT,
-  FIRST_TOKEN_AMOUNT_LIQ,
-  SECOND_TOKEN_AMOUNT_LIQ,
-  TOKEN_A,
-  TOKEN_A_LIQ,
-  TOKEN_B_LIQ,
-} from "../../constants/localStorage";
 import { addLiquidity } from "../../operations/addLiquidity";
 import { removeLiquidity } from "../../operations/removeLiquidity";
 import { getLPTokenPrice } from "../../api/util/price";
