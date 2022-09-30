@@ -3,7 +3,6 @@ import Image from "next/image";
 import lock from "../../assets/icon/myPortfolio/purple_lock.svg";
 import { BigNumber } from "bignumber.js";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import info from "../../../src/assets/icon/common/infoIcon.svg";
 import ply from "../../assets/Tokens/ply.png";
 import Button from "../Button/Button";
 import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
@@ -87,31 +86,39 @@ function ClaimPly(props: IClaimProps) {
               ))}
             {props.isSuperNova && (
               <>
-                <div className="flex mt-[2px] items-end">
-                  <span className="text-white font-title2 ">${props.value.toFixed(2)} +</span>
-                  <span className="flex items-center font-body3">
-                    <span className="ml-1">
-                      <ToolTip
-                        message={"Unclaimed inflation"}
-                        id="tooltip8"
-                        type={TooltipType.withoutArrowsAndTitle}
-                        position={Position.top}
-                      >
-                        <Image alt={"alt"} src={lock} width={"16px"} height={"16px"} />
-                      </ToolTip>
+                <div className="md:flex mt-[2px] items-end">
+                  <div className="flex items-end">
+                    <span className="text-white font-body3 md:font-title2 ">
+                      ${props.value.toFixed(2)} +
                     </span>
-                    <span className="text-white ml-0.5">
-                      {Number(props.plyValue) > 0
-                        ? props.plyValue?.isLessThan(0.01)
-                          ? "<0.01"
-                          : nFormatter(props.plyValue)
-                        : "0"}{" "}
-                      PLY
+                    <span className="flex items-center font-body1 md:font-body3">
+                      <span className="ml-1 relative top-px">
+                        <ToolTip
+                          message={"Unclaimed inflation"}
+                          id="tooltip8"
+                          type={TooltipType.withoutArrowsAndTitle}
+                          position={Position.top}
+                        >
+                          <Image alt={"alt"} src={lock} width={"16px"} height={"16px"} />
+                        </ToolTip>
+                      </span>
+                      <span className="text-white ml-0.5">
+                        {Number(props.plyValue) > 0
+                          ? props.plyValue?.isLessThan(0.01)
+                            ? "<0.01"
+                            : nFormatter(props.plyValue)
+                          : "0"}{" "}
+                        PLY
+                      </span>
                     </span>
-                  </span>
-                  {props.subValue && (
-                    <span className="text-text-250 font-body1 ml-2 mb-px">{props.subValue}</span>
-                  )}
+                  </div>
+                  <div>
+                    {props.subValue && (
+                      <span className="text-text-250 font-body1 md:ml-2 md:mb-px">
+                        {props.subValue}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </>
             )}

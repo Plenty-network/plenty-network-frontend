@@ -346,7 +346,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -431,7 +430,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               )} ${localStorage.getItem(TOKEN_B)} PNLP`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -515,7 +513,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               )} ${localStorage.getItem(TOKEN_B)} PNLP`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -569,7 +566,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               trailingText: `Claim ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -655,7 +651,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               )} ${localStorage.getItem(TOKEN_B)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);

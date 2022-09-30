@@ -3,7 +3,7 @@ import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { unsetFlashMessage } from '../../redux/flashMessage';
 import { FlashMessage, Flashtype } from './index';
-const FLASH_MESSAGE_SHOW_TIME=2000;
+const FLASH_MESSAGE_SHOW_TIME=8000;
 export interface IFlashMessageHOCProps {
 }
 

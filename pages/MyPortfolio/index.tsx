@@ -33,6 +33,7 @@ import CreateLock from "../../src/components/Votes/CreateLock";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
 import {
+  claimAllAndWithdrawLock,
   claimAllInflation,
   createLock,
   increaseLockAndValue,
@@ -52,6 +53,7 @@ import {
   getPositionsData,
   getPositionStatsData,
   getTvlStatsData,
+  getUnclaimedRewardsForLock,
   getVotesStatsData,
 } from "../../src/api/portfolio/kiran";
 import {
@@ -60,6 +62,7 @@ import {
   IPositionsData,
   IPositionStatsResponse,
   ITvlStatsResponse,
+  IUnclaimedRewardsForLockData,
   IVotesStatsDataResponse,
 } from "../../src/api/portfolio/types";
 import WithdrawPly from "../../src/components/LocksPosition/WithdrawPopup";
@@ -357,6 +360,16 @@ function MyPortfolio(props: any) {
       );
     }
   }, [claimOperation]);
+  const [unclaimedDataTokenId, setUnclaimedDataTokenId] = useState<IUnclaimedRewardsForLockData>(
+    {} as IUnclaimedRewardsForLockData
+  );
+  useEffect(() => {
+    setUnclaimedDataTokenId({} as IUnclaimedRewardsForLockData);
+    if (manageData.tokenId) {
+      setUnclaimedDataTokenId(getUnclaimedRewardsForLock(Number(manageData.tokenId)));
+    }
+  }, [manageData.tokenId]);
+
   const dateFormat = (dates: number) => {
     const monthNames = [
       "Jan",
@@ -474,7 +487,64 @@ function MyPortfolio(props: any) {
             trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
             linkText: "",
             isLoading: true,
-            onClick: () => {},
+          })
+        );
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
+  const handleWithdrawClaimOperation = () => {
+    setContentTransaction(`Withdraw and Claim ${manageData.baseValue.toNumber()} ply`);
+    setShowWithdraw(false);
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(TOKEN_ID, manageData.tokenId.toString());
+    claimAllAndWithdrawLock(
+      manageData.tokenId.toNumber(),
+      unclaimedDataTokenId.lockRewardsOperationData.lockFeesClaimData,
+      unclaimedDataTokenId.lockRewardsOperationData.lockBribesClaimData,
+      unclaimedDataTokenId.lockRewardsOperationData.lockInflationClaimData,
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Withdraw and claim lock #${localStorage.getItem(TOKEN_ID)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
+        }, 6000);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(
+          setFlashMessage({
+            flashType: Flashtype.Rejected,
+            headerText: "Rejected",
+            trailingText: `Withdraw and claim lock #${localStorage.getItem(TOKEN_ID)}`,
+            linkText: "",
+            isLoading: true,
           })
         );
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -535,7 +605,6 @@ function MyPortfolio(props: any) {
               )} PLY till ${localStorage.getItem(TOKEN_A)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -595,7 +664,6 @@ function MyPortfolio(props: any) {
               trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -655,7 +723,6 @@ function MyPortfolio(props: any) {
               trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -713,7 +780,6 @@ function MyPortfolio(props: any) {
               trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -772,7 +838,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim ${localStorage.getItem(CLAIM)} PLY`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -831,7 +896,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim bribes $${localStorage.getItem(CLAIM)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -891,7 +955,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim trading fees $${localStorage.getItem(CLAIM)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -952,7 +1015,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim all lock rewards`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -1012,7 +1074,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim lock rewards for <Epoch ${localStorage.getItem(CLAIM)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -1072,7 +1133,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim inflation ${localStorage.getItem(CLAIM)} PLY`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -1136,7 +1196,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim all emissions, inflation, fees and bribes`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -1160,18 +1219,20 @@ function MyPortfolio(props: any) {
               <div
                 className={clsx(
                   " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[12px] md:px-[40px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
-                  poolsRewards.data?.gaugeAddresses?.length === 0 &&
+                  (poolsRewards.data?.gaugeAddresses?.length === 0 &&
                     feeClaimData?.length === 0 &&
                     bribesClaimData?.length === 0 &&
-                    inflationData?.length === 0
+                    inflationData?.length === 0) ||
+                    poolsRewards.data?.gaugeAddresses === undefined
                     ? "cursor-not-allowed"
                     : "cursor-pointer"
                 )}
                 onClick={
-                  poolsRewards.data?.gaugeAddresses?.length === 0 &&
-                  feeClaimData?.length === 0 &&
-                  bribesClaimData?.length === 0 &&
-                  inflationData?.length === 0
+                  (poolsRewards.data?.gaugeAddresses?.length === 0 &&
+                    feeClaimData?.length === 0 &&
+                    bribesClaimData?.length === 0 &&
+                    inflationData?.length === 0) ||
+                  poolsRewards.data?.gaugeAddresses === undefined
                     ? () => {}
                     : () => {
                         setClaimValueDollar(
@@ -1334,6 +1395,7 @@ function MyPortfolio(props: any) {
                 allLocksRewardsData={allLocksRewardsData}
                 selectedDropDown={selectednft}
                 handleClick={handleClaimALLEpoch}
+                setShowCreateLockModal={setShowCreateLockModal}
                 setEpochClaim={setEpochClaim}
                 epochClaim={epochClaim}
               />
@@ -1397,6 +1459,8 @@ function MyPortfolio(props: any) {
           setShow={setShowWithdraw}
           handleWithdraw={handleWithdrawOperation}
           ply={manageData.baseValue}
+          unclaimedDataTokenId={unclaimedDataTokenId}
+          handleWithdrawClaimOperation={handleWithdrawClaimOperation}
         />
       )}
       {showTransactionSubmitModal && (
