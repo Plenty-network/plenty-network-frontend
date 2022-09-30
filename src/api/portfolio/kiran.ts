@@ -38,6 +38,9 @@ import {
   IClaimInflationOperationData,
   IUnclaimedInflationData,
   IUnclaimedInflationResponse,
+  IAllLocksInflationData,
+  ILockInflationData,
+  IUnclaimedRewardsForLockData,
 } from "./types";
 import { store } from "../../redux";
 import { ILpTokenPriceList, ITokenPriceList } from "../util/types";
@@ -761,6 +764,7 @@ export const getUnclaimedInflationData = async (
 
     let totalUnclaimedPLYValue: BigNumber = new BigNumber(0);
     const inflationOpertionData: IClaimInflationOperationData[] = [];
+    const allLocksInflationData: IAllLocksInflationData = {};
 
     const inflationIndexerResponse = await axios.get(
       `${Config.VE_INDEXER}inflation?address=${userTezosAddress}`
@@ -768,20 +772,37 @@ export const getUnclaimedInflationData = async (
     const inflationIndexerData: IUnclaimedInflationIndexer[] = inflationIndexerResponse.data;
 
     for (const lockData of inflationIndexerData) {
-      const epochsList: number[] = [];
+      let epochsList: number[] = [];
+      const lockInflationData: ILockInflationData[] = [];
       for (const inflationData of lockData.unclaimedInflation) {
         const inflation = new BigNumber(inflationData.inflationShare);
         totalUnclaimedPLYValue = totalUnclaimedPLYValue.plus(inflation.isFinite() ? inflation : 0);
         if (inflation.isFinite() && inflation.isGreaterThan(0)) {
+          const inflationWithDecimals = inflation.dividedBy(PLY_DECIMAL_MULTIPLIER);
           epochsList.push(Number(inflationData.epoch));
+          lockInflationData.push({
+            epoch: Number(inflationData.epoch),
+            inflationInPly: inflationWithDecimals,
+            inflationValue: inflationWithDecimals.multipliedBy(
+              new BigNumber(tokenPrices["PLY"] || 0)
+            ),
+          });
+        }
+        // Create chunks of epoch data for a token
+        if(epochsList.length === 5) {
+          inflationOpertionData.push({ tokenId: Number(lockData.id), epochs: epochsList });
+          epochsList = [];
         }
       }
+      // Add remaining epoch data for a token
       if (epochsList.length > 0) {
         inflationOpertionData.push({ tokenId: Number(lockData.id), epochs: epochsList });
       }
+      allLocksInflationData[lockData.id] = lockInflationData;
       // console.log(lockData);
       console.log(inflationOpertionData);
     }
+    console.log(allLocksInflationData);
     totalUnclaimedPLYValue = totalUnclaimedPLYValue.dividedBy(PLY_DECIMAL_MULTIPLIER);
     const unclaimedInflationData: IUnclaimedInflationData = {
       unclaimedInflationValue: totalUnclaimedPLYValue.multipliedBy(
@@ -796,10 +817,101 @@ export const getUnclaimedInflationData = async (
     return {
       unclaimedInflationData,
       claimAllInflationData: inflationOpertionData,
+      allLocksInflationData,
     };
     // console.log(inflationIndexerData);
   } catch (error: any) {
     console.log(error);
     throw new Error(error.message);
+  }
+};
+
+
+
+//Locks
+export const getUnclaimedRewardsForLock = (tokenId: number): IUnclaimedRewardsForLockData => {
+  try {
+    const state = store.getState();
+    const allLocksRewardsData = state.portfolioRewards.allLocksRewardsData;
+    const epochClaimData = state.portfolioRewards.epochClaimData;
+    const feesClaimData = state.portfolioRewards.feesClaimData;
+    const bribesClaimData = state.portfolioRewards.bribesClaimData;
+    const allLocksInflationData = state.portfolioRewards.allLocksInflationData;
+    const inflationOpertionData = state.portfolioRewards.claimAllInflationData;
+
+    let unclaimedFeeBribeExist: boolean = false;
+    let unclaimedInflationExist: boolean = false;
+    let lockFeesClaimData: IAllClaimableFeesData[] = [];
+    let lockBribesClaimData: IAllBribesOperationData[] = [];
+    let lockInflationClaimData: IClaimInflationOperationData[] = [];
+    let unclaimedFeesValue: BigNumber = new BigNumber(0);
+    let unclaimedBribesValue: BigNumber = new BigNumber(0);
+    let unclaimedInflationValue: BigNumber = new BigNumber(0);
+    let unclaimedInflationInPLY: BigNumber = new BigNumber(0);
+
+    if (
+      epochClaimData[tokenId.toString()] &&
+      Object.keys(epochClaimData[tokenId.toString()]).length !== 0
+    ) {
+      unclaimedFeeBribeExist = true;
+      const lockData = allLocksRewardsData[tokenId.toString()];
+      for (const epoch of Object.keys(lockData)) {
+        lockData[epoch].forEach((epochData) => {
+          unclaimedFeesValue = unclaimedFeesValue.plus(epochData.feesAmount);
+          unclaimedBribesValue = unclaimedBribesValue.plus(epochData.bribesAmount);
+        });
+      }
+      lockFeesClaimData = feesClaimData.filter((feeData) => feeData.tokenId === tokenId);
+      lockBribesClaimData = bribesClaimData.filter((bribeData) => bribeData.tokenId === tokenId);
+    }
+    if (
+      allLocksInflationData[tokenId.toString()] &&
+      Object.keys(allLocksInflationData[tokenId.toString()]).length !== 0
+    ) {
+      unclaimedInflationExist = true;
+      const lockData = allLocksInflationData[tokenId.toString()];
+      for (const epochData of lockData) {
+        unclaimedInflationValue = unclaimedInflationValue.plus(epochData.inflationValue);
+        unclaimedInflationInPLY = unclaimedInflationInPLY.plus(epochData.inflationInPly);
+      }
+      lockInflationClaimData = inflationOpertionData.filter(
+        (inflationData) => inflationData.tokenId === tokenId
+      );
+    }
+
+    const unclaimedRewardsExist = unclaimedFeeBribeExist || unclaimedInflationExist;
+    return {
+      success: true,
+      unclaimedRewardsExist,
+      lockRewardsData: {
+        unclaimedFeesValue,
+        unclaimedBribesValue,
+        unclaimedInflationValue,
+        unclaimedInflationInPLY,
+      },
+      lockRewardsOperationData: {
+        lockFeesClaimData,
+        lockBribesClaimData,
+        lockInflationClaimData,
+      },
+    };
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      unclaimedRewardsExist: false,
+      lockRewardsData: {
+        unclaimedFeesValue: new BigNumber(0),
+        unclaimedBribesValue: new BigNumber(0),
+        unclaimedInflationValue: new BigNumber(0),
+        unclaimedInflationInPLY: new BigNumber(0),
+      },
+      lockRewardsOperationData: {
+        lockFeesClaimData: [],
+        lockBribesClaimData: [],
+        lockInflationClaimData: [],
+      },
+      error: error.message,
+    };
   }
 };
