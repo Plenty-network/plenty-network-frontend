@@ -342,7 +342,6 @@ export default function Vote() {
               )} PLY till ${localStorage.getItem(TOKEN_A)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -408,7 +407,6 @@ export default function Vote() {
               ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} VePLY`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);

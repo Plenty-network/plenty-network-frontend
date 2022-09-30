@@ -474,7 +474,6 @@ function MyPortfolio(props: any) {
             trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
             linkText: "",
             isLoading: true,
-            onClick: () => {},
           })
         );
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -535,7 +534,6 @@ function MyPortfolio(props: any) {
               )} PLY till ${localStorage.getItem(TOKEN_A)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -595,7 +593,6 @@ function MyPortfolio(props: any) {
               trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -655,7 +652,6 @@ function MyPortfolio(props: any) {
               trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -713,7 +709,6 @@ function MyPortfolio(props: any) {
               trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -772,7 +767,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim ${localStorage.getItem(CLAIM)} PLY`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -831,7 +825,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim bribes $${localStorage.getItem(CLAIM)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -891,7 +884,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim trading fees $${localStorage.getItem(CLAIM)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -952,7 +944,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim all lock rewards`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -1012,7 +1003,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim lock rewards for <Epoch ${localStorage.getItem(CLAIM)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -1072,7 +1062,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim inflation ${localStorage.getItem(CLAIM)} PLY`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -1136,7 +1125,6 @@ function MyPortfolio(props: any) {
               trailingText: `Claim all emissions, inflation, fees and bribes`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);
@@ -1334,6 +1322,7 @@ function MyPortfolio(props: any) {
                 allLocksRewardsData={allLocksRewardsData}
                 selectedDropDown={selectednft}
                 handleClick={handleClaimALLEpoch}
+                setShowCreateLockModal={setShowCreateLockModal}
                 setEpochClaim={setEpochClaim}
                 epochClaim={epochClaim}
               />
