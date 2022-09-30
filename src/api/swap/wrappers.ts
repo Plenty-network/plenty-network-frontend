@@ -2,6 +2,7 @@ import { AMM_TYPE } from "../../config/types";
 import { getDexType } from "../util/fetchConfig";
 import {
   calculateTokensInGeneralStable,
+  calculateTokensInTezCtez,
   calculateTokensOutGeneralStable,
   calculateTokensOutTezCtez,
   loadSwapDataGeneralStable,
@@ -156,7 +157,7 @@ export const calculateTokensInWrapper = (
       );
     } else {
       if (tokenIn === "tez" && tokenOut === "ctez" && target) {
-        outputData = calculateTokensOutTezCtez(
+        outputData = calculateTokensInTezCtez(
           tokenInSupply,
           tokenOutSupply,
           tokenInAmount,
@@ -166,7 +167,7 @@ export const calculateTokensInWrapper = (
           tokenIn
         );
       } else if (tokenIn === "ctez" && tokenOut === "tez" && target) {
-        outputData = calculateTokensOutTezCtez(
+        outputData = calculateTokensInTezCtez(
           tokenOutSupply,
           tokenInSupply,
           tokenInAmount,

@@ -192,6 +192,125 @@ export const calculateTokensOutTezCtez = (
   }
 };
 
+export const calculateTokensInTezCtez = (
+  tezSupply: BigNumber,
+  ctezSupply: BigNumber,
+  tokenInAmount: BigNumber,
+  pairFeeDenom: BigNumber,
+  slippage: BigNumber,
+  target: BigNumber,
+  tokenIn: string
+): ICalculateTokenResponse => {
+
+  const feePerc = new BigNumber(0.1);
+  tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(6));
+  tezSupply = tezSupply.multipliedBy(new BigNumber(10).pow(6));
+  ctezSupply = ctezSupply.multipliedBy(new BigNumber(10).pow(6));
+  try {
+    if (tokenIn === 'ctez') {
+      const dy = newton_dx_to_dy(
+        target.multipliedBy(ctezSupply),
+        tezSupply.multipliedBy(new BigNumber(2).pow(48)),
+        tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(target),
+        5
+      ).dividedBy(new BigNumber(2).pow(48));
+      let fee = dy.dividedBy(pairFeeDenom);
+      let tokenOut = dy.minus(fee);
+      let minOut = tokenOut.minus(
+        slippage.multipliedBy(tokenOut).dividedBy(100)
+      );
+      minOut = minOut.dividedBy(new BigNumber(10).pow(6));
+      const exchangeRate = tokenOut.dividedBy(tokenInAmount); 
+
+      const updatedCtezSupply = ctezSupply.plus(tokenInAmount);
+      const updatedTezSupply = tezSupply.minus(tokenOut);
+
+      const nextDy = newton_dx_to_dy(
+        target.multipliedBy(updatedCtezSupply),
+        updatedTezSupply.multipliedBy(new BigNumber(2).pow(48)),
+        tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(target),
+        5
+      ).dividedBy(new BigNumber(2).pow(48));
+
+      const nextFee = nextDy.dividedBy(pairFeeDenom);
+      const nextTokenOut = nextDy.minus(nextFee);
+      let priceImpact = tokenOut.minus(nextTokenOut).dividedBy(tokenOut);
+      priceImpact = priceImpact.multipliedBy(100);
+      priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
+      const tokenOutAmount = new BigNumber(tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6 , 1));
+      const fees = fee.dividedBy(new BigNumber(10).pow(6));
+      const minimumOut = new BigNumber(minOut.decimalPlaces(6 , 1));
+
+      return {
+        tokenOutAmount,
+        fees,
+        feePerc,
+        minimumOut,
+        exchangeRate,
+        priceImpact,
+      };
+    } else if (tokenIn === 'tez') {
+      const dy = newton_dx_to_dy(
+        tezSupply.multipliedBy(new BigNumber(2).pow(48)),
+        target.multipliedBy(ctezSupply),
+        tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(new BigNumber(2).pow(48)),
+        5
+      ).dividedBy(target);
+      let fee = dy.dividedBy(pairFeeDenom);
+      let tokenOut = dy.minus(fee);
+      let minOut = tokenOut.minus(
+        slippage.multipliedBy(tokenOut).dividedBy(100)
+      );
+      minOut = minOut.dividedBy(new BigNumber(10).pow(6));
+      const exchangeRate = tokenOut.dividedBy(tokenInAmount);
+
+      const updatedCtezSupply = ctezSupply.minus(tokenOut);
+      const updatedTezSupply = tezSupply.plus(tokenInAmount);
+
+      const nextDy = newton_dx_to_dy(
+        updatedTezSupply.multipliedBy(new BigNumber(2).pow(48)),
+        target.multipliedBy(updatedCtezSupply),
+        tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(new BigNumber(2).pow(48)),
+        5
+      ).dividedBy(target);
+      const nextFee = nextDy.dividedBy(pairFeeDenom);
+      const nextTokenOut = nextDy.minus(nextFee);
+      let priceImpact = tokenOut.minus(nextTokenOut).dividedBy(tokenOut);
+      priceImpact = priceImpact.multipliedBy(100);
+      priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
+      const tokenOutAmount  = new BigNumber(tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6 , 1));
+      const fees = fee.dividedBy(new BigNumber(10).pow(6));
+      const minimumOut = new BigNumber(minOut.decimalPlaces(6 , 1));
+      return {
+        tokenOutAmount,
+        fees,
+        feePerc,
+        minimumOut,
+        exchangeRate,
+        priceImpact,
+      };
+    }
+    return {
+      tokenOutAmount: new BigNumber(0),
+      fees: new BigNumber(0),
+      feePerc : new BigNumber(0),
+      minimumOut: new BigNumber(0),
+      exchangeRate: new BigNumber(0),
+      priceImpact: new BigNumber(0),
+    };
+  } catch (error) {
+    return {
+      tokenOutAmount: new BigNumber(0),
+      fees: new BigNumber(0),
+      feePerc : new BigNumber(0),
+      minimumOut: new BigNumber(0),
+      exchangeRate: new BigNumber(0),
+      priceImpact: new BigNumber(0),
+      error,
+    };
+  }
+};
+
 export const loadSwapDataTezCtez = async (
   tokenIn: string,
   tokenOut: string
