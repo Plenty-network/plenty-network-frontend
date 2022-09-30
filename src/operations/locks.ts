@@ -9,8 +9,9 @@ import {
 } from "./types";
 import Config from "../config/config";
 import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
-import { OpKind } from "@taquito/taquito";
+import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { IAllBribesOperationData, IAllClaimableFeesData, IClaimInflationOperationData } from "../api/portfolio/types";
+import { getMaxPossibleBatchArray } from "../api/util/operations";
 
 export const createLock = async (
   address: string,
@@ -348,15 +349,22 @@ export const claimAllInflation = async (
     const Tezos = await dappClient().tezos();
     const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
 
-    const inflationBatch : any = [];
-        for (const inflation of inflationData) {
-          inflationBatch.push({
-            kind: OpKind.TRANSACTION,
-            ...veInstance.methods.claim_inflation(inflation.tokenId , inflation.epochs
-            ).toTransferParams(),
-          });
-        }
-      const batch =  Tezos.wallet.batch(inflationBatch);
+    const inflationBatch: WalletParamsWithKind[] = [];
+    for (const inflation of inflationData) {
+      inflationBatch.push({
+        kind: OpKind.TRANSACTION,
+        ...veInstance.methods
+          .claim_inflation(inflation.tokenId, inflation.epochs)
+          .toTransferParams(),
+      });
+    }
+    console.log("original batch:", inflationBatch);
+    console.time("getMaxBatch");
+    const maxPossibleBatch: WalletParamsWithKind[] = await getMaxPossibleBatchArray(inflationBatch);
+    console.timeEnd("getMaxBatch");
+    console.log("max possible batch:",maxPossibleBatch);
+    const batch =  Tezos.wallet.batch(maxPossibleBatch);
+      // const batch =  Tezos.wallet.batch(inflationBatch);
     // Tezos.estimate.batch(inflationBatch).then((est) => console.log(est));
     const batchOp = await batch.send();
 
