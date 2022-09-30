@@ -3,6 +3,7 @@ import {
   IAllBribesOperationData,
   IAllClaimableFeesData,
   IAllEpochClaimOperationData,
+  IAllLocksInflationData,
   IAllLocksRewardsData,
   IClaimInflationOperationData,
   IUnclaimedInflationData,
@@ -14,6 +15,7 @@ export interface IPorfolioRewardsData {
   totalTradingFeesAmount: BigNumber;
   totalBribesAmount: BigNumber;
   unclaimedInflationData: IUnclaimedInflationData;
+  allLocksInflationData: IAllLocksInflationData;
   epochClaimData: IAllEpochClaimOperationData;
   feesClaimData: IAllClaimableFeesData[];
   bribesClaimData: IAllBribesOperationData[];

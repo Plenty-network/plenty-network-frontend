@@ -16,6 +16,7 @@ const initialState: IPorfolioRewardsData = {
   feesClaimData: [], // For operations
   bribesClaimData: [], // For operations
   claimAllInflationData: [],  //For operations on inflation
+  allLocksInflationData: {},
   locksRewardsDataError: false,
   locksRewardsDataAttempts: 0,
   fetchingLocksRewardsData: false, // To identify fetching operation for shimmer loading.
@@ -121,6 +122,7 @@ const PortfolioRewards = createSlice({
       state.fetchingUnclaimedInflationData = false;
       state.unclaimedInflationData = action.payload.unclaimedInflationData;
       state.claimAllInflationData = action.payload.claimAllInflationData;
+      state.allLocksInflationData = action.payload.allLocksInflationData;
       console.log("All locks unclaimed inflation data fetching completed");
     },
     [fetchUnclaimedInflationData.rejected.toString()]: (state: any, action: any) => {
