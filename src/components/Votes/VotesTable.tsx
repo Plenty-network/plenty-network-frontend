@@ -127,7 +127,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Votes",
         id: "Myvotess",
-        isToolTipEnabled: true,
+
         canShort: true,
         accessor: (x: any) => (
           <MyVotes
@@ -238,7 +238,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Votes",
         id: "Myvotess",
-        isToolTipEnabled: true,
+
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.totalVotes"),
 
@@ -275,7 +275,7 @@ export function VotesTable(props: IVotesTableProps) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
           noSearchResult={noSearchResult}
-          shortby="Myvotes"
+          shortby="pools"
           isFetched={!noSearchResult && votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
           isVotesTable={true}

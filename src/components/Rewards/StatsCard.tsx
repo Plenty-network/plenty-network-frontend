@@ -3,6 +3,7 @@ import Image from "next/image";
 import { BigNumber } from "bignumber.js";
 import { IStatsCardProps } from "./types";
 import info from "../../assets/icon/common/infoIcon.svg";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 function StatsCard(props: IStatsCardProps) {
   return (
@@ -13,8 +14,16 @@ function StatsCard(props: IStatsCardProps) {
         )}
       >
         <p>
-          <div className="flex gap-1 ">
-            <Image alt={"alt"} src={info} />
+          <div className="flex gap-1 items-center">
+            <p className="relative top-px">
+              <ToolTip
+                toolTipChild={<div className="w-[150px]">{props.toolTipMessage}</div>}
+                id="tooltip8"
+                position={Position.top}
+              >
+                <Image alt={"alt"} src={info} />
+              </ToolTip>
+            </p>
             <p className="text-white font-body1 ">{props.title}</p>
           </div>
           <div className="font-input-text1 text-white mt-2 flex items-end">

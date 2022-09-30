@@ -33,8 +33,18 @@ export function TopBar(props: ITopBar) {
     <>
       <div className="bg-card-800 px-6 py-3 mt-3 overflow-x-auto md:overflow-x-none manage">
         <div className=" flex items-center">
-          <div className="cursor-pointer">
-            <Image alt={"alt"} src={info} />
+          <div className="cursor-pointer relative -top-px">
+            <ToolTip
+              toolTipChild={
+                <div className="w-[200px]">
+                  Modify your lock by increasing the underlying PLY or extending the locking period.
+                </div>
+              }
+              id="tooltip8"
+              position={Position.left}
+            >
+              <Image alt={"alt"} src={info} />
+            </ToolTip>
           </div>
           <div className="text-white font-body2 relative -top-0.5 ml-1">My Lock</div>
         </div>
