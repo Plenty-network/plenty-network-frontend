@@ -155,7 +155,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={props.poolsData ? props.poolsData : []}
           noSearchResult={noSearchResult}
-          shortby="Myvotes"
+          shortby="pools"
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsRewards"

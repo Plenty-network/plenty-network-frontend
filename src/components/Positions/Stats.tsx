@@ -5,6 +5,7 @@ function Stats(props: IStatsProps) {
   return (
     <div className="flex min-w-[1053px]  gap-5">
       <StatsCard
+        toolTipMessage={"Total value locked across your positions on the platform."}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"TVL"}
         value={
@@ -14,11 +15,13 @@ function Stats(props: IStatsProps) {
         }
       />
       <StatsCard
+        toolTipMessage={"Total voting power of all your veNFTs."}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total voting power"}
         value={props.stats1?.totalEpochVotingPower?.toFixed(1)}
       />
       <StatsCard
+        toolTipMessage={"Total amount PLY locked as vote escrow.s"}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total locked"}
         value={props.stats1?.totalPlyLocked?.toFixed(1)}
@@ -26,6 +29,7 @@ function Stats(props: IStatsProps) {
       />
 
       <StatsCard
+        toolTipMessage={""}
         isLast={true}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"PLY Balance"}

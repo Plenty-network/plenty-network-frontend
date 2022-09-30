@@ -237,7 +237,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={props.poolsPosition}
           noSearchResult={noSearchResult}
-          shortby="Myvotes"
+          shortby="pools"
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsPosition"

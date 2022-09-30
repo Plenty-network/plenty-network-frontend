@@ -12,6 +12,7 @@ export interface IStatsProps {
   stats1: IVotesStatsDataResponse;
 }
 export interface IStatsCardProps {
+  toolTipMessage: string;
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
   title?: string;
   value?: BigNumber | string;
