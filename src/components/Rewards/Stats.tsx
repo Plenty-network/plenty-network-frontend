@@ -11,6 +11,7 @@ function StatsRewards(props: IStatsRewardsProps) {
   return (
     <div className="flex gap-2.5 min-w-[1130px]">
       <StatsCard
+        toolTipMessage={"PLY rewards through gauges."}
         title={"PLY emisisons"}
         value={props.plyEmission?.toFixed(1)}
         subValue={"PLY"}
@@ -22,6 +23,7 @@ function StatsRewards(props: IStatsRewardsProps) {
       />
       <StatsCard
         title={"Trading fees"}
+        toolTipMessage={"Trading fees from the AMMs you voted for."}
         value={props.tradingfeeStats.toFixed(2)}
         setShowClaimAllPly={props.setShowClaimPly}
         disable={props.feeClaimData.length === 0}
@@ -32,6 +34,7 @@ function StatsRewards(props: IStatsRewardsProps) {
       />
       <StatsCard
         title={"Bribes"}
+        toolTipMessage={"Bribes through AMMs you have voted for."}
         value={props.bribesStats.toFixed(2)}
         setShowClaimAllPly={props.setShowClaimPly}
         disable={props.bribesClaimData.length === 0}
@@ -42,6 +45,9 @@ function StatsRewards(props: IStatsRewardsProps) {
       />
       <StatsCard
         title={"Unclaimed Inflation"}
+        toolTipMessage={
+          "Anti dilution inflation of the lockers. Claimed amount is added to your existing lockers."
+        }
         value={props.unclaimInflation.unclaimedInflationAmount.toFixed(2)}
         subValue={"PLY"}
         setShowClaimAllPly={props.setShowClaimPly}

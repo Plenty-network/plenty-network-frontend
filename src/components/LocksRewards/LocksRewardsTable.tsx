@@ -276,7 +276,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={newdata}
           noSearchResult={noSearchResult}
-          shortby="Myvotes"
+          shortby=""
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="locksRewards"

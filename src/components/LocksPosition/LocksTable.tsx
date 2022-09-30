@@ -400,7 +400,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={props.locksPosition}
-          shortby="Myvotes"
+          shortby="Locks"
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName={"lockPosition"}
