@@ -25,7 +25,9 @@ export function TopBar(props: ITopBar) {
   }
   const dateFormat = useMemo(() => {
     var date = new Date(props.manageData.endTimeStamp);
-    return `${date.getUTCFullYear()}-${("0" + date.getUTCMonth()).slice(-2)}-${date.getUTCDate()}`;
+    return `${date.getUTCFullYear()}-${("0" + (date.getUTCMonth() + 1)).slice(-2)}-${(
+      "0" + date.getUTCDate()
+    ).slice(-2)}`;
   }, [props.manageData.endTimeStamp]);
   return (
     <>

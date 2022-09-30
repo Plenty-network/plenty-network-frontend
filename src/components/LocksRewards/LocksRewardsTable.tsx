@@ -19,6 +19,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
   const { valueFormat } = useTableNumberUtils();
 
   const [showClaimPly, setShowClaimPly] = React.useState(false);
+  const [epochNo, setEpochNo] = React.useState("");
   const [claimAllData, setClaimAllData] = React.useState<ILockRewardsEpochData[]>(
     [] as ILockRewardsEpochData[]
   );
@@ -74,6 +75,8 @@ export function LocksTableRewards(props: IVotesTableRewards) {
   React.useEffect(() => {
     if (newArr.length > 0) {
       setNewdata(newArr.reverse());
+    } else {
+      setNewdata([]);
     }
   }, [newArr]);
 
@@ -91,78 +94,30 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         Header: "Pool",
         id: "pools",
         showOnMobile: true,
-        accessor: (x: any) => (
-          <div className=" flex justify-center items-center">
-            <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-              <Image
-                alt={"alt"}
-                src={getImagesPath(x.votes.tokenASymbol)}
-                width={"20px"}
-                height={"20px"}
-              />
-            </div>
-            <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image
-                alt={"alt"}
-                src={getImagesPath(x.votes.tokenBSymbol)}
-                width={"20px"}
-                height={"20px"}
-              />
-            </div>
-            <div>
-              <div className="font-body4">
-                {" "}
-                {tEZorCTEZtoUppercase(x.votes.tokenASymbol.toString())}/
-                {tEZorCTEZtoUppercase(x.votes.tokenBSymbol.toString())}
-              </div>
-              <div className="font-subtitle1 text-text-500">{x.votes.ammType} Pool</div>
-            </div>
-          </div>
-        ),
-      },
-      {
-        Header: "PLY emissions",
-        id: "PLY emissions",
-        isToolTipEnabled: true,
-
-        showOnMobile: true,
-        accessor: (x: any) => "$234.58",
-      },
-    ],
-    [valueFormat]
-  );
-
-  const desktopcolumns = React.useMemo<Column<IVotePageData>[]>(
-    () => [
-      {
-        Header: "Pool",
-        id: "pool",
-        showOnMobile: true,
-
         accessor: (x: any) =>
           x.epoch === "" ? (
             <div className=" flex justify-center items-center">
-              <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
+              <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
                 <Image
                   alt={"alt"}
                   src={getImagesPath(x.votes.tokenASymbol)}
-                  width={"24px"}
-                  height={"24px"}
+                  width={"20px"}
+                  height={"20px"}
                 />
               </div>
-              <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
+              <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
                 <Image
                   alt={"alt"}
                   src={getImagesPath(x.votes.tokenBSymbol)}
-                  width={"24px"}
-                  height={"24px"}
+                  width={"20px"}
+                  height={"20px"}
                 />
               </div>
               <div>
                 <div className="font-body4">
                   {" "}
-                  {tEZorCTEZtoUppercase(x.votes.tokenASymbol.toString())}/
-                  {tEZorCTEZtoUppercase(x.votes.tokenBSymbol.toString())}
+                  {tEZorCTEZtoUppercase(x.votes.tokenASymbol?.toString())}/
+                  {tEZorCTEZtoUppercase(x.votes.tokenBSymbol?.toString())}
                 </div>
                 <div className="font-subtitle1 text-text-500">{x.votes.ammType} Pool</div>
               </div>
@@ -188,8 +143,98 @@ export function LocksTableRewards(props: IVotesTableRewards) {
             <RewardsData
               bribes={x.votes.bribesAmount}
               fees={x.votes.feesAmount}
-              token1Name={tEZorCTEZtoUppercase(x.votes.tokenASymbol.toString())}
-              token2Name={tEZorCTEZtoUppercase(x.votes.tokenBSymbol.toString())}
+              token1Name={tEZorCTEZtoUppercase(x.votes.tokenASymbol?.toString())}
+              token2Name={tEZorCTEZtoUppercase(x.votes.tokenBSymbol?.toString())}
+              feesData={x.votes.feesData}
+              bribesData={x.votes.bribesData}
+              feesStatus={x.votes.feesStatus}
+            />
+          ) : null,
+      },
+      {
+        Header: "Voting power",
+        id: "Voting power",
+        isToolTipEnabled: true,
+        showOnMobile: true,
+
+        accessor: (x: any) =>
+          x.epoch === "" ? (
+            <VotingPower votes={x.votes.votes} percentage={x.votes.votesPercentage} />
+          ) : (
+            <div
+              className="cursor-pointer flex items-center md:font-body4 font-subtitle4 text-primary-500 ml-auto h-[44px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[120px]  justify-center"
+              onClick={() => {
+                setEpochNo(x.epoch);
+                setClaimAllData(props.allLocksRewardsData[props.selectedDropDown.tokenId][x.epoch]);
+                setShowClaimPly(true);
+                props.setEpochClaim(x.epoch);
+              }}
+            >
+              Claim
+            </div>
+          ),
+      },
+    ],
+    [valueFormat]
+  );
+
+  const desktopcolumns = React.useMemo<Column<IVotePageData>[]>(
+    () => [
+      {
+        Header: "Pool",
+        id: "pool",
+        showOnMobile: true,
+        accessor: (x: any) =>
+          x.epoch === "" ? (
+            <div className=" flex justify-center items-center">
+              <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
+                <Image
+                  alt={"alt"}
+                  src={getImagesPath(x.votes.tokenASymbol)}
+                  width={"24px"}
+                  height={"24px"}
+                />
+              </div>
+              <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
+                <Image
+                  alt={"alt"}
+                  src={getImagesPath(x.votes.tokenBSymbol)}
+                  width={"24px"}
+                  height={"24px"}
+                />
+              </div>
+              <div>
+                <div className="font-body4">
+                  {" "}
+                  {tEZorCTEZtoUppercase(x.votes.tokenASymbol?.toString())}/
+                  {tEZorCTEZtoUppercase(x.votes.tokenBSymbol?.toString())}
+                </div>
+                <div className="font-subtitle1 text-text-500">{x.votes.ammType} Pool</div>
+              </div>
+            </div>
+          ) : (
+            <div>
+              {" "}
+              <div className="flex gap-1">
+                <Image alt={"alt"} src={epoachIcon} width={"22px"} height={"22px"} />
+                <span className="text-text-250">Epoch</span>
+                <span className="text-white">{x.epoch}</span>
+              </div>
+            </div>
+          ),
+      },
+      {
+        Header: "Reward",
+        id: "Reward",
+        isToolTipEnabled: true,
+        showOnMobile: true,
+        accessor: (x: any) =>
+          x.epoch === "" ? (
+            <RewardsData
+              bribes={x.votes.bribesAmount}
+              fees={x.votes.feesAmount}
+              token1Name={tEZorCTEZtoUppercase(x.votes.tokenASymbol?.toString())}
+              token2Name={tEZorCTEZtoUppercase(x.votes.tokenBSymbol?.toString())}
               feesData={x.votes.feesData}
               bribesData={x.votes.bribesData}
               feesStatus={x.votes.feesStatus}
@@ -210,9 +255,10 @@ export function LocksTableRewards(props: IVotesTableRewards) {
             <div
               className="cursor-pointer flex items-center md:font-body4 font-subtitle4 text-primary-500 ml-auto h-[44px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[120px]  justify-center"
               onClick={() => {
+                setEpochNo(x.epoch);
+                props.setEpochClaim(x.epoch);
                 setClaimAllData(props.allLocksRewardsData[props.selectedDropDown.tokenId][x.epoch]);
                 setShowClaimPly(true);
-                props.setEpochClaim(x.epoch);
               }}
             >
               Claim
@@ -244,6 +290,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           setShow={setShowClaimPly}
           handleClick={props.handleClick}
           data={claimAllData}
+          epochClaim={epochNo}
         />
       )}
     </>

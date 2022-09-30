@@ -8,10 +8,8 @@ import { useEffect } from "react";
 import { fetchWallet } from "../src/redux/wallet/wallet";
 import { getConfig } from "../src/redux/config/config";
 import { getTokenPrice } from "../src/redux/tokenPrice/tokenPrice";
-import { getTotalVotingPower } from "../src/redux/pools";
 import { getEpochData } from "../src/redux/epoch/epoch";
-import { Datepicker } from "../src/components/DatePicker";
-import { Success } from "../src/components/FlashScreen";
+import  Router  from "next/router";
 
 const Home: NextPage = () => {
   const token = useAppSelector((state) => state.config.tokens);
@@ -26,6 +24,9 @@ const Home: NextPage = () => {
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
+  useEffect(() => {  
+    Router.push('/Swap')
+  });
   return (
     <>
       <Head>
@@ -34,7 +35,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SideBarHOC>
-        <Success/>
+        
       </SideBarHOC>
     </>
   );

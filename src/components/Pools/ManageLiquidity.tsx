@@ -21,14 +21,6 @@ import { getPnlpOutputEstimate, getPoolShareForPnlp } from "../../api/liquidity"
 import { loadSwapDataWrapper } from "../../api/swap/wrappers";
 import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
-import {
-  BURN_AMOUNT,
-  FIRST_TOKEN_AMOUNT_LIQ,
-  SECOND_TOKEN_AMOUNT_LIQ,
-  TOKEN_A,
-  TOKEN_A_LIQ,
-  TOKEN_B_LIQ,
-} from "../../constants/localStorage";
 import { addLiquidity } from "../../operations/addLiquidity";
 import { removeLiquidity } from "../../operations/removeLiquidity";
 import { getLPTokenPrice } from "../../api/util/price";
@@ -43,6 +35,14 @@ import { IVePLYData } from "../../api/stake/types";
 import { ELiquidityProcess } from "../../api/liquidity/types";
 import { ELocksState } from "../../api/votes/types";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
+import { setFlashMessage } from "../../redux/flashMessage";
+import { Flashtype } from "../FlashScreen";
+import {
+  FIRST_TOKEN_AMOUNT,
+  SECOND_TOKEN_AMOUNT,
+  TOKEN_A,
+  TOKEN_B,
+} from "../../constants/localStorage";
 
 export interface IManageLiquidityProps {
   closeFn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -276,6 +276,24 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           : props.tokenOut.name
       } `
     );
+    localStorage.setItem(
+      TOKEN_A,
+      props.tokenIn.name === "tez"
+        ? "TEZ"
+        : props.tokenIn.name === "ctez"
+        ? "CTEZ"
+        : props.tokenIn.name
+    );
+    localStorage.setItem(
+      TOKEN_B,
+      props.tokenOut.name === "tez"
+        ? "TEZ"
+        : props.tokenOut.name === "ctez"
+        ? "CTEZ"
+        : props.tokenOut.name
+    );
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(firstTokenAmountLiq).toFixed(2));
+    localStorage.setItem(SECOND_TOKEN_AMOUNT, Number(secondTokenAmountLiq).toFixed(2));
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
@@ -296,6 +314,20 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         //resetAllValues();
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+                TOKEN_A
+              )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 2000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
@@ -305,6 +337,18 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+                TOKEN_A
+              )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -317,6 +361,23 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
+    localStorage.setItem(
+      TOKEN_A,
+      props.tokenIn.name === "tez"
+        ? "TEZ"
+        : props.tokenIn.name === "ctez"
+        ? "CTEZ"
+        : props.tokenIn.name
+    );
+    localStorage.setItem(
+      TOKEN_B,
+      props.tokenOut.name === "tez"
+        ? "TEZ"
+        : props.tokenOut.name === "ctez"
+        ? "CTEZ"
+        : props.tokenOut.name
+    );
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(stakeInput).toFixed(2));
 
     stakePnlpTokens(
       props.tokenIn.symbol,
@@ -334,6 +395,22 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         //resetAllValues();
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Stake ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)} PNLP`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 2000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
@@ -343,6 +420,20 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Stake ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)} PNLP`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -357,7 +448,23 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     // setStakingScreen(StakingScreenType.Unstaking);
     setScreen("1");
     setIsAddLiquidity(false);
-
+    localStorage.setItem(
+      TOKEN_A,
+      props.tokenIn.name === "tez"
+        ? "TEZ"
+        : props.tokenIn.name === "ctez"
+        ? "CTEZ"
+        : props.tokenIn.name
+    );
+    localStorage.setItem(
+      TOKEN_B,
+      props.tokenOut.name === "tez"
+        ? "TEZ"
+        : props.tokenOut.name === "ctez"
+        ? "CTEZ"
+        : props.tokenOut.name
+    );
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(unStakeInput).toFixed(2));
     unstakePnlpTokens(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
@@ -372,6 +479,22 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         //resetAllValues();
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Unstake ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)} PNLP`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 2000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
@@ -381,6 +504,20 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Unstake ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)} PNLP`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -391,6 +528,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const handleRewardsOperation = () => {
     setContentTransaction(`Harvest `);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(rewardToken).toFixed(2));
     setShowConfirmTransaction(true);
     setScreen("1");
     harvestRewards(
@@ -404,6 +542,18 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setBalanceUpdate(true);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Claim ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 2000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
@@ -412,6 +562,16 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Claim ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -421,6 +581,24 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   };
   const handleRemoveLiquidityOperation = () => {
     setContentTransaction(`Burn ${Number(burnAmount).toFixed(2)} PNLP`);
+    localStorage.setItem(
+      TOKEN_A,
+      props.tokenIn.name === "tez"
+        ? "TEZ"
+        : props.tokenIn.name === "ctez"
+        ? "CTEZ"
+        : props.tokenIn.name
+    );
+    localStorage.setItem(
+      TOKEN_B,
+      props.tokenOut.name === "tez"
+        ? "TEZ"
+        : props.tokenOut.name === "ctez"
+        ? "CTEZ"
+        : props.tokenOut.name
+    );
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(firstTokenAmountLiq).toFixed(2));
+    localStorage.setItem(SECOND_TOKEN_AMOUNT, Number(secondTokenAmountLiq).toFixed(2));
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
@@ -441,6 +619,22 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setBalanceUpdate(true);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Remove ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} and ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 2000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
@@ -450,6 +644,20 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Remove ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} and ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)}`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));

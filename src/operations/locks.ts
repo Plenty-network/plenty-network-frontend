@@ -1,5 +1,5 @@
 import { BigNumber } from "bignumber.js";
-import { connectedNetwork, dappClient, voteEscrowAddress } from "../common/walletconnect";
+import { connectedNetwork, dappClient, voteEscrowAddress, voterAddress } from "../common/walletconnect";
 import {
   IOperationsResponse,
   TResetAllValues,
@@ -10,6 +10,7 @@ import {
 import Config from "../config/config";
 import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
 import { OpKind } from "@taquito/taquito";
+import { IAllBribesOperationData, IAllClaimableFeesData, IClaimInflationOperationData } from "../api/portfolio/types";
 
 export const createLock = async (
   address: string,
@@ -332,10 +333,10 @@ export const claimInflation = async (
 
 // FOR STAT
 export const claimAllInflation = async (
-  inflationData : {id : number , epochs : number[]}[],
-  transactionSubmitModal: TTransactionSubmitModal,
-  resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  inflationData : IClaimInflationOperationData[],
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -351,17 +352,18 @@ export const claimAllInflation = async (
         for (const inflation of inflationData) {
           inflationBatch.push({
             kind: OpKind.TRANSACTION,
-            ...veInstance.methods.claim_inflation(inflation.id , inflation.epochs
+            ...veInstance.methods.claim_inflation(inflation.tokenId , inflation.epochs
             ).toTransferParams(),
           });
         }
       const batch =  Tezos.wallet.batch(inflationBatch);
-
+    // Tezos.estimate.batch(inflationBatch).then((est) => console.log(est));
     const batchOp = await batch.send();
-    setShowConfirmTransaction(false);
-    resetAllValues();
 
-    transactionSubmitModal(batchOp.opHash);
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+    resetAllValues && resetAllValues();
+
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
 
     await batchOp.confirmation();
     return {
@@ -379,3 +381,82 @@ export const claimAllInflation = async (
 };
 
 
+// For claim all rewards and withdraw for a lock
+export const claimAllAndWithdrawLock = async (
+  lockId: number,
+  feeData: IAllClaimableFeesData[],
+  bribeData: IAllBribesOperationData[],
+  inflationData: IClaimInflationOperationData[],
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+): Promise<IOperationsResponse> => {
+  try {
+    const { CheckIfWalletConnected } = dappClient();
+    const WALLET_RESP = await CheckIfWalletConnected();
+    if (!WALLET_RESP.success) {
+      throw new Error("Wallet connection failed");
+    }
+
+    const Tezos = await dappClient().tezos();
+    const voterInstance: any = await Tezos.contract.at(voterAddress);
+    const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
+
+    const allBatch: any = [];
+
+    for (const feeObj of feeData) {
+      if(feeObj.tokenId === lockId) {
+        allBatch.push({
+          kind: OpKind.TRANSACTION,
+          ...voterInstance.methods.claim_fee(feeObj.tokenId, feeObj.amm, feeObj.epoch).toTransferParams(),
+        });
+      }
+    }
+
+    for (const bribe of bribeData) {
+      if(bribe.tokenId === lockId) {
+        allBatch.push({
+          kind: OpKind.TRANSACTION,
+          ...voterInstance.methods
+            .claim_bribe(bribe.tokenId, bribe.amm, bribe.epoch, bribe.bribeId)
+            .toTransferParams(),
+        });
+      }
+    }
+
+    for (const inflation of inflationData) {
+      if(inflation.tokenId === lockId) {
+        allBatch.push({
+          kind: OpKind.TRANSACTION,
+          ...veInstance.methods.claim_inflation(inflation.tokenId, inflation.epochs).toTransferParams(),
+        });
+      }
+    }
+
+    allBatch.push({
+      kind: OpKind.TRANSACTION,
+      ...veInstance.methods.withdraw(lockId).toTransferParams(),
+    })
+
+    const batch = Tezos.wallet.batch(allBatch);
+
+    const batchOp = await batch.send();
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+    resetAllValues && resetAllValues();
+
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
+
+    await batchOp.confirmation();
+    return {
+      success: true,
+      operationId: batchOp.opHash,
+    };
+  } catch (error: any) {
+    console.error(error);
+    return {
+      success: false,
+      operationId: undefined,
+      error: error.message,
+    };
+  }
+};

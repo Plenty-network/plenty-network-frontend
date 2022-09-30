@@ -36,6 +36,9 @@ import { IVotes } from "../../src/operations/types";
 import clsx from "clsx";
 import EpochPopup from "../../src/components/Votes/EpochPopup";
 import { setSelectedDropDown } from "../../src/redux/veNFT";
+import { setFlashMessage } from "../../src/redux/flashMessage";
+import { Flashtype } from "../../src/components/FlashScreen";
+import { FIRST_TOKEN_AMOUNT, TOKEN_A } from "../../src/constants/localStorage";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -90,6 +93,26 @@ export default function Vote() {
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
+  };
+  const dateFormat = (dates: number) => {
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Decr",
+    ];
+    var date = new Date(dates);
+    var month = date.getMonth();
+
+    return `${("0" + date.getDate()).slice(-2)}-${monthNames[month]}-${date.getFullYear()}`;
   };
   useEffect(() => {
     dispatch(fetchWallet());
@@ -161,7 +184,6 @@ export default function Vote() {
         userAddress,
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
       ).then((res) => {
-        console.log(res);
         setVeNFTlist(res.veNFTData);
       });
     } else {
@@ -268,6 +290,8 @@ export default function Vote() {
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, plyInput);
+    localStorage.setItem(TOKEN_A, dateFormat(lockingEndData.lockingDate * 1000));
     createLock(
       userAddress,
       new BigNumber(plyInput),
@@ -280,6 +304,20 @@ export default function Vote() {
         setBalanceUpdate(true);
         setTimeout(() => {
           setLockOperation(true);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Lock ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} PLY till ${localStorage.getItem(TOKEN_A)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
         setTimeout(() => {
           setLockOperation(false);
@@ -295,6 +333,18 @@ export default function Vote() {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Lock ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} PLY till ${localStorage.getItem(TOKEN_A)}`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -308,6 +358,7 @@ export default function Vote() {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setAlreadyVoted(true);
     const finalVotes = addRemainingVotesDust(selectedDropDown.votingPower, totalVotingPower, votes);
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, selectedDropDown.tokenId);
     vote(
       Number(selectedDropDown.tokenId),
       finalVotes,
@@ -321,6 +372,19 @@ export default function Vote() {
         setAlreadyVoted(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Vote with #
+              ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} VePLY`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 2000);
         setTimeout(() => {
           setCastVoteOperation(true);
@@ -336,6 +400,17 @@ export default function Vote() {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Vote with #
+              ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} VePLY`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));

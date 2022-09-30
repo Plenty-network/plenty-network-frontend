@@ -9,8 +9,8 @@ export function PLYEmission(props: IPLYEmissionProps) {
       <div className="">
         <ToolTip
           position={Position.top}
-          disable={true}
-          toolTipChild={<div className="text-center"></div>}
+          disable={props.dollar ? false : true}
+          message={`$${props.dollar?.toFixed(2)}`}
         >
           <div className="font-body4  text-white">
             {Number(props.value) > 0 ? `${props.value.toFixed(2)} ` : "0"} PLY

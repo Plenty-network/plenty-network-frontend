@@ -9,8 +9,8 @@ import { VeNFTLocks } from "./VeNFTLocks";
 
 function SelectNFTLocks(props: ISelectNFT) {
   return (
-    <div className="md:flex md:items-center mr-3">
-      <div className="hidden md:block text-white font-body1 px-[23px]">Select your veNFT:</div>
+    <div className="flex items-center mr-3">
+      <div className="block text-white font-body1 px-2 md:px-[23px]">Select your veNFT:</div>
       <div>
         {props.veNFTlist.length === 0 ? (
           <ToolTip
