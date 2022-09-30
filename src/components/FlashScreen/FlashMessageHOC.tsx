@@ -17,7 +17,7 @@ export function FlashMessageHOC (props: IFlashMessageHOCProps) {
     timeOutTimer &&  clearTimeout(timeOutTimer);
      if(isLoading){
         timeOutTimer = setTimeout(()=>{
-         // dispatch(unsetFlashMessage());
+          dispatch(unsetFlashMessage());
         },FLASH_MESSAGE_SHOW_TIME);    
      }else{
         timeOutTimer &&  clearTimeout(timeOutTimer);

@@ -18,7 +18,7 @@ export function Flash (props: IInfoProps) {
        props.onClick();
   }
   const TIME_TO_DIE=props.duration;
-  const SMOOTHNESS=40;
+  const SMOOTHNESS=80;
   const step=359/SMOOTHNESS;
   useEffect(()=>{
   let currentTime=TIME_TO_DIE/10
