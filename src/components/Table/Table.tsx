@@ -152,7 +152,7 @@ const Table = <D extends object>({
                       : () => {}
                   }
                   arrowUp={
-                    shortByGroup.id == column.id ? (shortByGroup.desc ? "down" : "up") : undefined
+                    shortByGroup.id == column.id ? (shortByGroup.desc ? "up" : "down") : undefined
                   }
                   subText={
                     column.hasOwnProperty("subText") ? column.render("subText")?.toString() : ""
