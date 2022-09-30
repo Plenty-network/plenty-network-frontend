@@ -287,8 +287,10 @@ export const calculateTokensOutGeneralStable = (
       tokenInAmount.multipliedBy(tokenInPrecision),
       5
     );
+
     let fee = dy.dividedBy(Exchangefee);
     let tokenOutAmt = dy.minus(fee).dividedBy(tokenOutPrecision);
+
     let minOut = tokenOutAmt.minus(
       slippage.multipliedBy(tokenOutAmt).dividedBy(100)
     );
@@ -317,6 +319,97 @@ export const calculateTokensOutGeneralStable = (
     const exchangeRate = tokenOutAmount.dividedBy(
       tokenInAmount.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals))
     );
+    return {
+      tokenOutAmount,
+      fees,
+      feePerc,
+      minimumOut,
+      exchangeRate,
+      priceImpact,
+    };
+  } catch (error) {
+    return {
+      tokenOutAmount: new BigNumber(0),
+      fees: new BigNumber(0),
+      feePerc : new BigNumber(0),
+      minimumOut: new BigNumber(0),
+      exchangeRate: new BigNumber(0),
+      priceImpact: new BigNumber(0),
+      error,
+    };
+  }
+};
+
+export const calculateTokensInGeneralStable = (
+  tokenInSupply: BigNumber,
+  tokenOutSupply: BigNumber,
+  tokenInAmount: BigNumber,
+  Exchangefee: BigNumber,
+  slippage: BigNumber,
+  tokenIn: string,
+  tokenOut: string,
+  tokenInPrecision: BigNumber,
+  tokenOutPrecision: BigNumber
+): ICalculateTokenResponse => {
+  const state = store.getState();
+  const TOKEN = state.config.standard;
+  const feePerc = new BigNumber(0.1);
+
+  tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
+  tokenInSupply = tokenInSupply.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
+  tokenOutSupply = tokenOutSupply.multipliedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+
+  try {
+    tokenInSupply = tokenInSupply.multipliedBy(tokenInPrecision);
+    tokenOutSupply = tokenOutSupply.multipliedBy(tokenOutPrecision);
+
+    const dy = newton_dx_to_dy(
+      tokenInSupply,
+      tokenOutSupply,
+      tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(tokenInPrecision),
+      5
+    );
+      console.log(dy.toString());
+
+
+      let fee = dy.dividedBy(Exchangefee);
+      let tokenOutAmt = dy.minus(fee).dividedBy(tokenOutPrecision);
+  
+      let minOut = tokenOutAmt.minus(
+        slippage.multipliedBy(tokenOutAmt).dividedBy(100)
+      );
+      minOut = minOut.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+  
+      const updatedTokenInPool = tokenInSupply.plus(tokenInAmount);
+      const updatedTokenOutPool = tokenOutSupply.minus(tokenOutAmt);
+  
+      const nextDy = newton_dx_to_dy(
+        updatedTokenInPool,
+        updatedTokenOutPool,
+        tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(tokenInPrecision),
+        5
+      );
+      const nextFee = nextDy.dividedBy(Exchangefee);
+      const nextTokenOut = nextDy.minus(nextFee).dividedBy(tokenOutPrecision);
+      let priceImpact = tokenOutAmt.minus(nextTokenOut).dividedBy(tokenOutAmt);
+      priceImpact = priceImpact.multipliedBy(100);
+      priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
+      tokenOutAmt = tokenOutAmt.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+      fee = fee.dividedBy(tokenOutPrecision);
+      fee = fee.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+      const tokenOutAmount = new BigNumber(tokenOutAmt.decimalPlaces(TOKEN[tokenOut].decimals , 1));
+      const minimumOut = new BigNumber(minOut.decimalPlaces(TOKEN[tokenOut].decimals , 1));
+      const fees = fee;
+      const exchangeRate = tokenOutAmount.dividedBy(
+        tokenInAmount.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals))
+      );
+    console.log(tokenOutAmount.toString(),
+      fees.toString(),
+      feePerc.toString(),
+      minimumOut.toString(),
+      exchangeRate.toString(),
+      priceImpact.toString(),);
+
     return {
       tokenOutAmount,
       fees,
