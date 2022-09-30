@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import Link from "next/link";
 export interface IWalletNotConnectedProps {}
 
 export function NoPoolsPosition(props: IWalletNotConnectedProps) {
@@ -10,8 +11,12 @@ export function NoPoolsPosition(props: IWalletNotConnectedProps) {
         You do not have active Liquidity positions
       </div>
       <div className="border-b border-navBarBorder/[0.4] w-[120px] mt-[14px]"></div>
-      <div className="border border-primary-500 text-primary-500 font-body4 px-4 bg-primary-500/[0.05] h-[48px] flex items-center mt-5">
-        View Pools
+      <div className="cursor-pointer">
+        <Link href={"/pools"}>
+          <div className="border border-primary-500 text-primary-500 font-body4 px-4 bg-primary-500/[0.05] h-[48px] flex items-center mt-5">
+            View Pools
+          </div>
+        </Link>
       </div>
     </div>
   );

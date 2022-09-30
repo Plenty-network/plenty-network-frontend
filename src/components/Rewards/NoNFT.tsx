@@ -1,6 +1,8 @@
 import * as React from "react";
 
-export interface IWalletNotConnectedProps {}
+export interface IWalletNotConnectedProps {
+  setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 export function NoNFTAvailable(props: IWalletNotConnectedProps) {
   return (
@@ -10,7 +12,10 @@ export function NoNFTAvailable(props: IWalletNotConnectedProps) {
         You do not have any veNFT. please create a lock
       </div>
       <div className="border-b border-navBarBorder/[0.4] w-[120px] mt-[14px]"></div>
-      <div className="border border-primary-500 text-primary-500 font-body4 px-4 bg-primary-500/[0.05] h-[48px] flex items-center mt-5">
+      <div
+        className="cursor-pointer border border-primary-500 text-primary-500 font-body4 px-4 bg-primary-500/[0.05] h-[48px] flex items-center mt-5"
+        onClick={() => props.setShowCreateLockModal(true)}
+      >
         Create Lock
       </div>
     </div>
