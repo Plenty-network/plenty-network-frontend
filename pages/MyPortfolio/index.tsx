@@ -86,7 +86,7 @@ import ClaimPly from "../../src/components/PoolsRewards/ClaimPopup";
 import { EClaimAllState } from "../../src/components/Rewards/types";
 import { setFlashMessage } from "../../src/redux/flashMessage";
 import { Flashtype } from "../../src/components/FlashScreen";
-import { CLAIM, TOKEN_ID } from "../../src/constants/localStorage";
+import { CLAIM, FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_ID } from "../../src/constants/localStorage";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -357,7 +357,26 @@ function MyPortfolio(props: any) {
       );
     }
   }, [claimOperation]);
+  const dateFormat = (dates: number) => {
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Decr",
+    ];
+    var date = new Date(dates);
+    var month = date.getMonth();
 
+    return `${("0" + date.getDate()).slice(-2)}-${monthNames[month]}-${date.getFullYear()}`;
+  };
   const resetAllValues = () => {
     setPlyInput("");
     setLockingDate("");
@@ -467,6 +486,8 @@ function MyPortfolio(props: any) {
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, plyInput);
+    localStorage.setItem(TOKEN_A, dateFormat(lockingEndData.lockingDate * 1000));
     createLock(
       userAddress,
       new BigNumber(plyInput),
@@ -479,6 +500,20 @@ function MyPortfolio(props: any) {
         setBalanceUpdate(true);
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Lock ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} PLY till ${localStorage.getItem(TOKEN_A)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+              },
+            })
+          );
         }, 6000);
 
         setTimeout(() => {
@@ -491,6 +526,18 @@ function MyPortfolio(props: any) {
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              headerText: "Rejected",
+              trailingText: `Lock ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} PLY till ${localStorage.getItem(TOKEN_A)}`,
+              linkText: "",
+              isLoading: true,
+              onClick: () => {},
+            })
+          );
         }, 2000);
         setContentTransaction("");
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
