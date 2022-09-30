@@ -3,7 +3,7 @@ import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { unsetFlashMessage } from '../../redux/flashMessage';
 import { FlashMessage, Flashtype } from './index';
-const FLASH_MESSAGE_SHOW_TIME=2000;
+const FLASH_MESSAGE_SHOW_TIME=8000;
 export interface IFlashMessageHOCProps {
 }
 
@@ -17,7 +17,7 @@ export function FlashMessageHOC (props: IFlashMessageHOCProps) {
     timeOutTimer &&  clearTimeout(timeOutTimer);
      if(isLoading){
         timeOutTimer = setTimeout(()=>{
-          dispatch(unsetFlashMessage());
+         // dispatch(unsetFlashMessage());
         },FLASH_MESSAGE_SHOW_TIME);    
      }else{
         timeOutTimer &&  clearTimeout(timeOutTimer);
