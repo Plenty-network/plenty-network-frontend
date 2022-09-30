@@ -1,25 +1,33 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
 
+import lock from "../../assets/icon/myPortfolio/purple_lock.svg";
 import { BigNumber } from "bignumber.js";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import ply from "../../assets/Tokens/ply.png";
 import Button from "../Button/Button";
+import { IUnclaimedRewardsForLockData } from "../../api/portfolio/types";
+import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
 
 interface IWithdrawPlyProps {
   show: boolean;
   handleWithdraw: () => void;
   setShow: any;
   ply: BigNumber;
+  dollarValue?: BigNumber;
+  unclaimedDataTokenId: IUnclaimedRewardsForLockData;
+  handleWithdrawClaimOperation: () => void;
 }
 function WithdrawPly(props: IWithdrawPlyProps) {
   const closeModal = () => {
     props.setShow(false);
   };
-
   return props.show ? (
-    <PopUpModal onhide={closeModal}>
+    <PopUpModal
+      onhide={closeModal}
+      className="w-[400px] max-w-[400px]  md:w-[602px] md:max-w-[602px]"
+    >
       {
         <>
           <div className="flex">
@@ -27,9 +35,6 @@ function WithdrawPly(props: IWithdrawPlyProps) {
               <Image alt={"alt"} src={arrowLeft} />
             </div>
             <div className="mx-2 text-white font-title3">Withdraw locks</div>
-            {/* <div className="relative top-[2px] cursor-pointer">
-              <Image alt={'alt'} src={info} />
-            </div> */}
           </div>
           <div className="border border-text-800 bg-card-200 p-4 mt-3 rounded-2xl">
             <div className="text-text-400 font-body1 ">Your will receive </div>
@@ -41,10 +46,48 @@ function WithdrawPly(props: IWithdrawPlyProps) {
               <span className="text-text-500 font-body3 ml-1">PLY</span>
             </div>
           </div>
-          <div className="mt-3 font-body2 text-text-250 pl-2">Lorem Ipsum Lorem Ipsum</div>
+          {props.unclaimedDataTokenId.unclaimedRewardsExist && (
+            <div className="mt-3 font-body2 text-text-250 pl-2 md:flex md:items-center">
+              Unclaimed rewards that would be claimed before withdrawing{" "}
+              <span className="flex items-center">
+                <span className="text-white font-body2 ml-1">
+                  $
+                  {props.unclaimedDataTokenId.lockRewardsData.unclaimedBribesValue
+                    .plus(props.unclaimedDataTokenId.lockRewardsData.unclaimedFeesValue)
+                    .toFixed(2)}{" "}
+                  +
+                </span>
+                <span className="flex items-center font-body2">
+                  <span className="ml-1 relative top-px">
+                    <ToolTip
+                      message={"Unclaimed inflation"}
+                      id="tooltip8"
+                      type={TooltipType.withoutArrowsAndTitle}
+                      position={Position.top}
+                    >
+                      <Image alt={"alt"} src={lock} width={"16px"} height={"16px"} />
+                    </ToolTip>
+                  </span>
+                  <span className="text-white ml-0.5">
+                    {props.unclaimedDataTokenId.lockRewardsData.unclaimedInflationInPLY.toFixed(2)}{" "}
+                    PLY
+                  </span>
+                </span>
+              </span>
+            </div>
+          )}
           <div className="mt-[24px]">
-            <Button color={"primary"} onClick={props.handleWithdraw}>
-              Withdraw
+            <Button
+              color={"primary"}
+              onClick={
+                true
+                  ? () => {}
+                  : props.unclaimedDataTokenId.unclaimedRewardsExist
+                  ? props.handleWithdrawClaimOperation
+                  : props.handleWithdraw
+              }
+            >
+              {props.unclaimedDataTokenId.unclaimedRewardsExist ? "Claim and Withdraw" : "Withdraw"}
             </Button>
           </div>
         </>

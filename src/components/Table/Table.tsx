@@ -40,7 +40,6 @@ const Table = <D extends object>({
   TableName,
   TableWidth,
   NoData,
-  test,
 }: {
   columns: Column<D>[];
   data: D[];
@@ -53,7 +52,6 @@ const Table = <D extends object>({
   TableWidth?: string;
   tableType?: string;
   NoData?: JSX.Element;
-  test?: any;
 }) => {
   const [shortByGroup, setshortByGroup] = useState({
     id: shortby ?? "usd",

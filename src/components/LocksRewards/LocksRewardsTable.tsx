@@ -52,7 +52,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
   }, [props.selectedDropDown.tokenId]);
   const NoData = React.useMemo(() => {
     if (props.selectedDropDown.tokenId === "") {
-      return <NoNFTAvailable />;
+      return <NoNFTAvailable setShowCreateLockModal={props.setShowCreateLockModal} />;
     } else if (
       !(props.selectedDropDown.tokenId in props.allLocksRewardsData) ||
       newArr.length === 0
@@ -276,7 +276,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={newdata}
           noSearchResult={noSearchResult}
-          shortby="Myvotes"
+          shortby=""
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="locksRewards"

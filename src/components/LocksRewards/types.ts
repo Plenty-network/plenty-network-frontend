@@ -10,6 +10,7 @@ import {
   ILocksRewardsTokenData,
 } from "../../api/portfolio/types";
 export interface IVotesTableRewards {
+  setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
   epochClaim: string;
   setEpochClaim: React.Dispatch<React.SetStateAction<string>>;
   handleClick: () => void;

@@ -214,7 +214,6 @@ function SwapTab(props: ISwapTabProps) {
               )} ${localStorage.getItem(TOKEN_A)}`,
               linkText: "",
               isLoading: true,
-              onClick: () => {},
             })
           );
         }, 2000);

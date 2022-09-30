@@ -27,6 +27,7 @@ import { VotingPower } from "./VotingPower";
 import { getVeNFTsList } from "../../api/votes";
 import { NoPoolsPosition } from "../Rewards/NoContent";
 import { compareNumericString } from "../../utils/commonUtils";
+import { NoLocks } from "../Rewards/NoLocks";
 TimeAgo.addDefaultLocale(en);
 
 export function LocksTablePosition(props: ILocksTablePosition) {
@@ -43,7 +44,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
     });
   }, []);
   const NoData = React.useMemo(() => {
-    return <NoPoolsPosition />;
+    return <NoLocks setShowCreateLockModal={props.setShowCreateLockModal} />;
   }, []);
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
@@ -399,7 +400,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={props.locksPosition}
-          shortby="Myvotes"
+          shortby="Locks"
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName={"lockPosition"}
