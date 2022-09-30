@@ -4,8 +4,10 @@ import Image from "next/image";
 import { EClaimAllState, IStatsCardProps, IStatsProps, IStatsRewardsProps } from "./types";
 import StatsCard from "./StatsCard";
 import StatsCardFirst from "./StatsCardFirst";
+import { store } from "../../redux";
 
 function StatsRewards(props: IStatsRewardsProps) {
+  const claimAllInflationData = store.getState().portfolioRewards.claimAllInflationData;
   return (
     <div className="flex gap-2.5 min-w-[1130px]">
       <StatsCard
@@ -40,10 +42,10 @@ function StatsRewards(props: IStatsRewardsProps) {
       />
       <StatsCard
         title={"Unclaimed Inflation"}
-        value={"322 PLY "}
+        value={props.unclaimInflation.unclaimedInflationAmount.toFixed(2)}
+        subValue={"PLY"}
         setShowClaimAllPly={props.setShowClaimPly}
-        disable={true}
-        isDollar={true}
+        disable={claimAllInflationData.length === 0}
         setClaimValueDollar={props.setClaimValueDollar}
         setClaimState={props.setClaimState}
         state={EClaimAllState.UNCLAIMED}

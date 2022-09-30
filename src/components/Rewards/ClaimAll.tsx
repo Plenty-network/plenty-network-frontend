@@ -44,7 +44,6 @@ function ClaimAll(props: IClaimProps) {
           </div>
           <div className="border border-text-800 bg-card-200 py-4 mt-3 rounded-2xl">
             <div className="flex mt-[2px] items-center px-4 mb-5">
-              {/* <Image alt={'alt'} src={ply} width={"28px"} height={"28px"} /> */}
               <div>
                 <div className="text-text-400 font-body1">Your Rewards</div>
                 <span className="font-title2 text-white">
@@ -52,13 +51,11 @@ function ClaimAll(props: IClaimProps) {
                 </span>
                 <span className="font-body1 text-text-250 ml-1">distributed between</span>
               </div>
-              {/* <div className="ml-auto bg-text-800/[0.5] relative top-[4px] rounded-lg flex items-center h-[36px] px-2">
-                <Image alt={'alt'} src={timer} />
+              <div className="ml-auto bg-text-800/[0.5] relative top-[4px] rounded-lg flex items-center h-[36px] px-2">
+                <Image alt={"alt"} src={timer} />
                 <span className="font-body4 text-white ml-0.5">Epoch</span>
                 <span className="font-body4 text-text-500 ml-1">23</span>
-              </div> */}
-              {/* <span className="text-white font-body4 ml-2">0</span>
-              <span className="text-text-500 font-body3 ml-1">PLY</span> */}
+              </div>
             </div>
             {props.data?.map((pool, index) => {
               return (

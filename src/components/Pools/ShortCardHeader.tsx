@@ -30,11 +30,21 @@ export function Tabs(props: ITabsProps) {
       className={`flex cursor-pointer font-subtitle1 text-text-50 text-left  ${
         props.index === 0 ? "justify-start" : "justify-end "
       } ${
-        props.TableName === "locksRewards" && props.index === 0
-          ? "w-[220px]"
+        props.TableName === "locksRewards"
+          ? props.index === 0 && !isMobile
+            ? "w-[220px]"
+            : props.index === 1 && !isMobile
+            ? "md:ml-[26px]"
+            : isMobile && props.index === 0
+            ? "w-[180px]"
+            : isMobile && props.index === 1
+            ? "w-[90px]"
+            : isMobile && props.index === 2 && "ml-auto w-[100px]"
           : props.TableName === "poolsRewards"
           ? props.index === 0
             ? "w-[200px]"
+            : isMobile && props.index !== 0
+            ? "w-[110px]"
             : "w-[150px]"
           : props.TableName === "lockPosition"
           ? !isMobile && props.index === 0
@@ -44,7 +54,7 @@ export function Tabs(props: ITabsProps) {
             : isMobile && props.index === 0
             ? "w-[200px]"
             : isMobile && props.index === 1
-            ? "w-[80px] pr-3"
+            ? "w-[90px] pr-2"
             : isMobile && props.index === 2
             ? "w-[85px]"
             : isMobile && props.index === 3
@@ -82,7 +92,8 @@ export function Tabs(props: ITabsProps) {
               (props.TableName === "poolsPosition" && props.index == 2) ||
                 (props.TableName === "poolsRewards" && props.index === 1) ||
                 (props.TableName === "poolsPosition" && isMobile && props.index === 1) ||
-                (props.TableName === "lockPosition" && isMobile && props.index === 1)
+                (props.TableName === "lockPosition" && isMobile && props.index === 1) ||
+                (props.TableName === "locksRewards" && isMobile && props.index === 2)
                 ? ""
                 : "flex gap-1"
             )}
@@ -91,7 +102,8 @@ export function Tabs(props: ITabsProps) {
               ((props.TableName === "poolsPosition" && props.index == 2) ||
               (props.TableName === "poolsRewards" && props.index === 1) ||
               (props.TableName === "poolsPosition" && isMobile && props.index === 1) ||
-              (props.TableName === "lockPosition" && isMobile && props.index === 1) ? (
+              (props.TableName === "lockPosition" && isMobile && props.index === 1) ||
+              (props.TableName === "locksRewards" && isMobile && props.index === 2) ? (
                 <span className="relative top-[3px] mr-1">
                   <Image alt={"alt"} src={info} />
                 </span>
@@ -107,24 +119,21 @@ export function Tabs(props: ITabsProps) {
         )}
       </div>
       <div className="relative top-px">
-        {
-          props.arrowUp ? (
-            <div className="absolute -right-3">
-              <Image
-                alt={"alt"}
-                src={arrowDown}
-                className={props.arrowUp === "up" ? "rotate-0" : "rotate-180"}
-                width={"13px"}
-                height={"13px"}
-              />
-            </div>
-          )
-          : (
-            <div className="absolute -right-3">
+        {props.arrowUp ? (
+          <div className="absolute -right-3">
+            <Image
+              alt={"alt"}
+              src={arrowDown}
+              className={props.arrowUp === "up" ? "rotate-0" : "rotate-180"}
+              width={"13px"}
+              height={"13px"}
+            />
+          </div>
+        ) : (
+          <div className="absolute -right-3">
             <Image src={arrowDown} className={"opacity-0"} />
-            </div>
-          )
-        }
+          </div>
+        )}
       </div>
     </th>
   );

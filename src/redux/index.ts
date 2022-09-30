@@ -8,6 +8,7 @@ import { wallet } from "./wallet/wallet";
 import { config } from "./config/config";
 import { tokenPrice } from "./tokenPrice/tokenPrice";
 import isLoadingWallet from "./isLoading/reducer";
+import {flashMessage} from "./flashMessage";
 import { userSettings } from "./userSettings/userSettings";
 import { veNFT } from "./veNFT";
 import { pools } from "./pools";
@@ -25,7 +26,8 @@ const reducers = combineReducers({
   epoch: epoch,
   veNFT: veNFT,
   walletLoading: walletLoading,
-  portfolioRewards: portfolioRewards
+  portfolioRewards: portfolioRewards,
+  flashMessage:flashMessage,
 });
 
 const persistConfig = {
