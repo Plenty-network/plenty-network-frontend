@@ -1,11 +1,10 @@
+import clsx from "clsx";
 import Image from "next/image";
 import * as React from "react";
-import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
-import arrowDown from "../../assets/icon/common/arrowDown.svg";
-
 import { isMobile } from "react-device-detect";
+import arrowDown from "../../assets/icon/common/arrowDown.svg";
 import info from "../../assets/icon/common/infoIcon.svg";
-import clsx from "clsx";
+import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
 
 export interface IShortCardHeaderProps {}
 export interface ITabsProps {
@@ -108,7 +107,7 @@ export function Tabs(props: ITabsProps) {
                   <Image alt={"alt"} src={info} />
                 </span>
               ) : (
-                <InfoIconToolTip message="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry" />
+                <InfoIconToolTip message={props.toolTipChild} />
               ))}
 
             <span>{props.text}</span>

@@ -1,7 +1,6 @@
 import Image from "next/image";
 import * as React from "react";
 // import ReactTooltip from 'react-tooltip';
-
 import closeIcon from "../../assets/icon/common/closeCross.svg";
 import { generateRandomString } from "../../utils/commonUtils";
 import ReactTooltip from "./ReactTooltipExtends";
@@ -27,7 +26,8 @@ export interface IToolTipProps {
   classNameAncorToolTip?: string;
   isShowInnitially?: boolean;
   disable?: boolean;
-  dontHideToolTip?:boolean;
+  dontHideToolTip?: boolean;
+  classNameToolTipContainer?: string;
 }
 
 export function ToolTip(props: IToolTipProps) {
@@ -41,7 +41,7 @@ export function ToolTip(props: IToolTipProps) {
         <ReactTooltip
           disable={props.disable}
           showInitial={props.isShowInnitially}
-          className="tooltipCustom"
+          className={`tooltipCustom ${props.classNameToolTipContainer}`}
           arrowColor="rgba(60, 60, 60,0)"
           place={props.position ? props.position : "right"}
           id={`tooltip_${randomId}`}
@@ -61,7 +61,7 @@ export function ToolTip(props: IToolTipProps) {
         <ReactTooltip
           disable={props.disable}
           showInitial={props.isShowInnitially}
-          className="tooltipCustom"
+          className={`tooltipCustom ${props.classNameToolTipContainer}`}
           arrowColor="#341E54"
           place={props.position ? props.position : "right"}
           id={`tooltip_${randomId}`}
@@ -90,7 +90,7 @@ export function ToolTip(props: IToolTipProps) {
       <ReactTooltip
         disable={props.disable}
         showInitial={props.isShowInnitially}
-        className="tooltipCustom"
+        className={`tooltipCustom ${props.classNameToolTipContainer}`}
         arrowColor="#341E54"
         place={props.position ? props.position : "right"}
         id={`tooltip_${randomId}`}
