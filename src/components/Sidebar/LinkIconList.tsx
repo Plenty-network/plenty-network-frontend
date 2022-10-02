@@ -22,7 +22,7 @@ export function HrefIcon(props: IHrefIconProps) {
             height={"11.67px"}
             width={"16.66px"}
           />
-          <p>{props.name}</p>
+          <p className="text-text-250" >{props.name}</p>
         </div>
         <Image alt={"alt"} src={"/assets/icon/HrefIcon.svg"} height={"11.67px"} width={"16.66px"} />
       </a>

@@ -45,7 +45,7 @@ const mainMenu: Array<ISingleSideBarProps> = [
   },
   {
     name: "Vote",
-    iconName: "verified-user",
+    iconName: "lock_mobile",
     pathName: "/Vote",
     activePathName: "/Vote",
   },
@@ -58,7 +58,8 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
     setActiveSubMenu(MenuType.NoMenu);
   });
   return (
-    <div className="mobile fixed bottom-0 bg-sideBar w-screen p-0 h-[60px] " ref={reff}>
+    <div className={`${activeSubMenu==MenuType.NoMenu?'h-[60px]':'h-screen'} topNavblurEffect flex items-end w-screen fixed bottom-0 bg-sideBar p-0 `} >
+      <div className="bg-cardBackGround" ref={reff}>
       {activeSubMenu === MenuType.Menu && <SubMenuList />}
       {activeSubMenu === MenuType.MoreNavMenu && <MoreSubMenuList />}
       <div className="justify-between flex w-screen">
@@ -85,6 +86,7 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
         />
       </div>
     </div>
+    </div>
   );
 }
 
@@ -101,6 +103,7 @@ export function MenuWithLink(props: IBottomNavMenuProps) {
         {props.iconName && (
           <Image
             alt={"alt"}
+            className={props.active?'':'opacity-40'}
             src={`/assets/icon/${props.iconName}.svg`}
             height={"24px"}
             width={"24px"}
@@ -130,6 +133,7 @@ export function MenuNoLink(props: IBottomMoreNavMenuProps) {
       {props.iconName && (
         <Image
           alt={"alt"}
+          className={props.active?'opacity-100':'opacity-40'}
           src={`/assets/icon/${props.iconName}.svg`}
           height={"24px"}
           width={"24px"}
@@ -151,8 +155,6 @@ export function SubMenuList(props: ISubMenuListProps) {
   return (
     <div className="w-screen flex flex-col text-f12 bg-topBar ">
       <BottomSubMenu />
-      <BottomSubMenu />
-      <BottomSubMenu />
     </div>
   );
 }
@@ -161,25 +163,25 @@ export function MoreSubMenuList(props: ISubMenuListProps) {
     <div className="w-screen flex flex-col text-f12 bg-topBar " ref={props.refWrapper}>
       {/*  */}
       <div className="p-0 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
-        <SingleSideBar name="Swap" className="px-9" iconName="swap" isBottomMenu />
+        <SingleSideBar  name="Bridge" className="px-9" iconName="bridgeIconMobile" isBottomMenu />
       </div>
       {/*  */}
 
       {/*  */}
       <div className=" border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
-        <SingleSideBar name="Swap" className="px-9" iconName="swap" isBottomMenu />
+        <SingleSideBar  name="Robocoin" className="px-9" iconName="roboIconMobile" isBottomMenu />
       </div>
       {/*  */}
 
       {/*  */}
       <div className=" border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
-        <SingleSideBar name="Swap" className="px-9" iconName="swap" isBottomMenu />
+        <SingleSideBar  name="Migrate" className="px-9" iconName="migrateIconMobile" isBottomMenu />
       </div>
       {/*  */}
 
       {/*  */}
       <div className=" border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
-        <SingleSideBar name="Swap" className="px-9" iconName="swap" isBottomMenu />
+        <SingleSideBar  name="Fiat" className="px-9" iconName="flateIconMobile" isBottomMenu />
       </div>
 
       <div className="px-3">
