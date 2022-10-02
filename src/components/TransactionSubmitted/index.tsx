@@ -1,8 +1,8 @@
-import { PopUpModal } from "../Modal/popupModal";
+import Lottie from "lottie-react";
 import Image from "next/image";
 import externalLink from "../../../src/assets/icon/common/externalLink.svg";
 import animation from "../../assets/animations/transaction-submitted.json";
-import Lottie from "lottie-react";
+import { PopUpModal } from "../Modal/popupModal";
 
 interface ITransactionSubmittedProps {
   show: boolean;
@@ -16,7 +16,7 @@ function TransactionSubmitted(props: ITransactionSubmittedProps) {
   };
 
   return props.show ? (
-    <PopUpModal title="Transaction Submitted" onhide={closeModal}>
+    <PopUpModal title="Transaction Submitted" noGlassEffect={true} isAnimteToLoader={true} onhide={closeModal} >
       {
         <>
           <div className="flex justify-center mt-10">

@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import HeadInfo from "../src/components/HeadInfo";
+import { useState } from "react";
 import { SideBarHOC } from "../src/components/Sidebar/SideBarHOC";
+import TransactionSubmitted from "../src/components/TransactionSubmitted";
 import { useAppDispatch } from "../src/redux";
 
 const Test: NextPage = () => {
@@ -9,6 +10,7 @@ const Test: NextPage = () => {
   const clickRedirectToaPage = () => {
     window.open("https://www.google.com", "_blank");
   };
+  const [u,s]=useState(false);
   return (
     <>
       <Head>
@@ -18,13 +20,14 @@ const Test: NextPage = () => {
       </Head>
       <SideBarHOC>
         <div className="m-14 flex flex-col gap-10 border p-14 border-white">
-          <HeadInfo
-            className="px-2 md:px-3"
-            title="Vote"
-            toolTipContent=""
-            searchValue=""
-            setSearchValue={() => {}}
-          />
+          <button onClick={()=>s(true)}>Hello world</button>
+          {u&&<TransactionSubmitted
+          content="hosk"
+          onBtnClick={()=>{}}
+          setShow={s}
+          show={u}
+          
+          />}
         </div>
       </SideBarHOC>
     </>
