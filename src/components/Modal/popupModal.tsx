@@ -1,7 +1,7 @@
 import clsx from "clsx";
+import Image from "next/image";
 import * as React from "react";
 import close from "../../assets/icon/swap/closeIcon.svg";
-import Image from "next/image";
 
 export interface IPopUpModalProps {
   children: React.ReactNode;
@@ -11,17 +11,21 @@ export interface IPopUpModalProps {
   headerChild?: any;
   footerChild?: any;
   Name?: string;
+  noGlassEffect?:boolean;
+  isAnimteToLoader?:boolean;
 }
-
+const TIME_TO_CLOSE=300;
+const TIME_TO_TRANSACTION_CLOSE=600;
 export function PopUpModal(props: IPopUpModalProps) {
   const [isClose, setIsClose] = React.useState(false);
+  const currentTimeToClose=props.isAnimteToLoader?TIME_TO_TRANSACTION_CLOSE:TIME_TO_CLOSE;
   const clickedInModal = (e: any) => {
     try {
       if (e.target.id === "modal_outer") {
         setIsClose(true);
         setTimeout(() => {
           props.onhide && props.onhide();
-        }, 300);
+        }, currentTimeToClose);
       }
     } catch (e) {}
   };
@@ -29,9 +33,12 @@ export function PopUpModal(props: IPopUpModalProps) {
     <div
       onClick={clickedInModal}
       id="modal_outer"
-      className={`z-index-max fixed top-0 left-0 flex flex-col gap-2 w-screen h-screen topNavblurEffect z-50 items-center justify-center ${
+      className={`z-index-max fixed top-0 left-0 flex flex-col gap-2 w-screen h-screen  z-50 items-center justify-center ${
         isClose ? "fade-out-3" : "fade-in-3"
-      }`}
+      }
+      ${props.noGlassEffect?'':'topNavblurEffect'}
+      ${props.isAnimteToLoader && isClose?'scale-out-tr':''}
+      `}
     >
       <div
         className={clsx(
@@ -47,7 +54,7 @@ export function PopUpModal(props: IPopUpModalProps) {
             setIsClose(true);
             setTimeout(() => {
               props.onhide && props.onhide();
-            }, 280);
+            }, currentTimeToClose);
           }}
         >
           {/* close btn */}
