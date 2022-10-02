@@ -1,48 +1,46 @@
-import { StakingScreen, StakingScreenType } from "./StakingScreen";
-import { RewardsScreen } from "./RewardsScreen";
-import * as React from "react";
-import Liquidity from "../Liquidity";
-import { PopUpModal } from "../Modal/popupModal";
-import { VideoModal } from "../Modal/videoModal";
-import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
-import { ActiveLiquidity, ManageLiquidityHeader } from "./ManageLiquidityHeader";
-
 import { BigNumber } from "bignumber.js";
-
-import { useEffect, useMemo, useRef, useState } from "react";
-import playBtn from "../../assets/icon/common/playBtn.svg";
 import Image from "next/image";
-import ConfirmAddLiquidity from "../Liquidity/ConfirmAddLiquidity";
-import ConfirmRemoveLiquidity from "../Liquidity/ConfirmRemoveLiquidity";
-import { store, useAppDispatch, useAppSelector } from "../../redux";
-import { getPnlpBalance, getStakedBalance, getUserBalanceByRpc } from "../../api/util/balance";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import * as React from "react";
+import { useEffect, useState } from "react";
 import { getPnlpOutputEstimate, getPoolShareForPnlp } from "../../api/liquidity";
-import { loadSwapDataWrapper } from "../../api/swap/wrappers";
-import ConfirmTransaction from "../ConfirmTransaction";
-import TransactionSubmitted from "../TransactionSubmitted";
-import { addLiquidity } from "../../operations/addLiquidity";
-import { removeLiquidity } from "../../operations/removeLiquidity";
-import { getLPTokenPrice } from "../../api/util/price";
-import { stakePnlpTokens } from "../../operations/stake";
-import { unstakePnlpTokens } from "../../operations/unstake";
-import { harvestRewards } from "../../operations/rewards";
+import { ELiquidityProcess } from "../../api/liquidity/types";
 import { getDepositedAmounts, getRewards } from "../../api/rewards";
 import { getVePLYListForUser } from "../../api/stake";
-import { ConfirmStakeLiquidity } from "./ConfirmStaking";
-import { ConfirmUnStakeLiquidity } from "./ConfirmUnstake";
 import { IVePLYData } from "../../api/stake/types";
-import { ELiquidityProcess } from "../../api/liquidity/types";
+import { loadSwapDataWrapper } from "../../api/swap/wrappers";
+import { getPnlpBalance, getStakedBalance, getUserBalanceByRpc } from "../../api/util/balance";
+import { getLPTokenPrice } from "../../api/util/price";
 import { ELocksState } from "../../api/votes/types";
-import { setIsLoadingWallet } from "../../redux/walletLoading";
-import { setFlashMessage } from "../../redux/flashMessage";
-import { Flashtype } from "../FlashScreen";
+import playBtn from "../../assets/icon/common/playBtn.svg";
 import {
   FIRST_TOKEN_AMOUNT,
   SECOND_TOKEN_AMOUNT,
   TOKEN_A,
   TOKEN_B,
 } from "../../constants/localStorage";
+import { addLiquidity } from "../../operations/addLiquidity";
+import { removeLiquidity } from "../../operations/removeLiquidity";
+import { harvestRewards } from "../../operations/rewards";
+import { stakePnlpTokens } from "../../operations/stake";
+import { unstakePnlpTokens } from "../../operations/unstake";
+import { useAppDispatch, useAppSelector } from "../../redux";
+import { setFlashMessage } from "../../redux/flashMessage";
+import { setIsLoadingWallet } from "../../redux/walletLoading";
+import ConfirmTransaction from "../ConfirmTransaction";
+import { Flashtype } from "../FlashScreen";
+import Liquidity from "../Liquidity";
+import ConfirmAddLiquidity from "../Liquidity/ConfirmAddLiquidity";
+import ConfirmRemoveLiquidity from "../Liquidity/ConfirmRemoveLiquidity";
+import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import { PopUpModal } from "../Modal/popupModal";
+import { VideoModal } from "../Modal/videoModal";
+import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
+import TransactionSubmitted from "../TransactionSubmitted";
+import { ConfirmStakeLiquidity } from "./ConfirmStaking";
+import { ConfirmUnStakeLiquidity } from "./ConfirmUnstake";
+import { ActiveLiquidity, ManageLiquidityHeader } from "./ManageLiquidityHeader";
+import { RewardsScreen } from "./RewardsScreen";
+import { StakingScreen, StakingScreenType } from "./StakingScreen";
 
 export interface IManageLiquidityProps {
   closeFn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -690,7 +688,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               <p className="text-white">
                 {props.activeState === ActiveLiquidity.Liquidity && "Manage Liquidity"}
                 {props.activeState === ActiveLiquidity.Staking && "Staking Liquidity"}
-
                 {props.activeState === ActiveLiquidity.Rewards && "Your positions & Rewards"}
               </p>
               <p className="ml-1 relative top-[6px]">

@@ -1,16 +1,16 @@
-import * as React from "react";
 import Image from "next/image";
-import { Column } from "react-table";
-import { useTableNumberUtils } from "../../hooks/useTableUtils";
-import Table from "../Table/Table";
+import * as React from "react";
 import { isMobile } from "react-device-detect";
-import { IVotesTableProps } from "./types";
+import { Column } from "react-table";
+import { IVotePageData } from "../../api/votes/types";
+import { useTableNumberUtils } from "../../hooks/useTableUtils";
+import { compareNumericString } from "../../utils/commonUtils";
+import Table from "../Table/Table";
+import { MyVotes } from "./MyVotes";
+import { MyVotesValue } from "./MyVotesValue";
 import { RewardsData } from "./RewardsData";
 import { TotalVotes } from "./TotalVotes";
-import { MyVotes } from "./MyVotes";
-import { IVotePageData, IVotesData } from "../../api/votes/types";
-import { MyVotesValue } from "./MyVotesValue";
-import { compareNumericString } from "../../utils/commonUtils";
+import { IVotesTableProps } from "./types";
 
 export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
@@ -109,6 +109,8 @@ export function VotesTable(props: IVotesTableProps) {
         Header: "Rewards",
         id: "Rewards",
         isToolTipEnabled: true,
+        tooltipMessage:
+          "Trading fees and bribes to be distributed across the voters of this pool. The reward may increase as the epoch progresses.",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.bribes"),
@@ -127,7 +129,8 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Votes",
         id: "Myvotess",
-
+        tooltipMessage: "Number of votes given through the selected veNFT to this pool.",
+        isToolTipEnabled: true,
         canShort: true,
         accessor: (x: any) => (
           <MyVotes
@@ -195,6 +198,8 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Rewards",
         id: "Rewards",
+        tooltipMessage:
+          "Trading fees and bribes to be distributed across the voters of this pool. The reward may increase as the epoch progresses.",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -215,6 +220,7 @@ export function VotesTable(props: IVotesTableProps) {
         Header: "Total votes",
         id: "Total votes",
         canShort: true,
+        tooltipMessage: "Total votes received by the pool in the current epoch.",
         isToolTipEnabled: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.totalVotesPercentage"),
         accessor: (x: any) => (
@@ -227,8 +233,9 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "My votes",
         id: "Myvotes",
-        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.myVotesPercentage"),
+        tooltipMessage: "Number of votes given through the selected veNFT to this pool.",
         isToolTipEnabled: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.myVotesPercentage"),
         canShort: true,
 
         accessor: (x: any) => (
