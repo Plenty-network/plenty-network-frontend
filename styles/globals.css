@@ -32,7 +32,13 @@ body {
   height: 5px;
   border-radius: 8px;
 }
-
+.footerInteraction:hover > rect{ 
+  stroke: #9D5CFF;
+  stroke-opacity:0.5;
+}
+.footerInteraction:hover > path{ 
+  fill: #9D5CFF;
+}
 /* Track */
 ::-webkit-scrollbar-track {
   

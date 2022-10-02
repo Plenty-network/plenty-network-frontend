@@ -45,9 +45,8 @@ export default function NotificationBar(props: INotificationBarProps) {
           </div>
           <div className='flex-1 flex flex-col p-5 justify-center items-center'>
             <div className='text-f14'>You’re all caught up</div>
-            <div className='text-center text-f10 border-b border-b-navBarBorder' >This is where  you’ll see notifications about
+            <div className='text-center text-f10 ' >This is where  you’ll see notifications about
               your Plenty transactions</div>
-            <div className='text-primary-200 text-f10'>Swap your assets</div>
           </div>
         </div>
       </div>
