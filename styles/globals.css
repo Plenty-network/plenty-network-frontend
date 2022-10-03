@@ -3,6 +3,7 @@
 @tailwind utilities;
 @import './animation.css';
 @import './animateTransactionOut.css';
+@import './animateRing.css';
 @import './switch.css';
 @import './switchWithIcon.css';
 @import './datePicker.css';

@@ -1,13 +1,13 @@
 import Image from "next/image";
-import * as React from "react";
-import { ConnectWalletBtnDeskTop } from "../Button/ConnectWalletDesktop";
-import myportfolionav from "../../assets/icon/myPortfolio/myportfolionav.svg";
-import plentyIcon from "../../assets/icon/common/plentyIcon.svg";
-import { Epoch } from "../Epoch";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { NotificationIcon, NotiFicationType } from "../NotificationIcon";
+import * as React from "react";
+import { useState } from "react";
+import plentyIcon from "../../assets/icon/common/plentyIcon.svg";
+import myportfolionav from "../../assets/icon/myPortfolio/myportfolionav.svg";
 import { store } from "../../redux";
+import { ConnectWalletBtnDeskTop } from "../Button/ConnectWalletDesktop";
+import { Epoch } from "../Epoch";
+import { NotificationIcon } from "../NotificationIcon";
 export interface ITopNavBarProps {
   setShowNotification: Function;
 }
@@ -57,7 +57,6 @@ export function TopNavBar(props: ITopNavBarProps) {
             </div>
             <NotificationIcon
               className="cursor-pointer hover:opacity-90"
-              type={NotiFicationType.haveNotification}
               onClick={props.setShowNotification}
             />
           </div>

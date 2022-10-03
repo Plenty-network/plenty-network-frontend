@@ -1,9 +1,8 @@
 import Image from 'next/image';
 import * as React from 'react';
-import settingLogo from '../../assets/icon/common/settingLogo.svg';
-import { ConnectWalletBtnMobile } from '../Button/ConnectWalletMobile';
-import { NotificationIcon, NotiFicationType } from '../NotificationIcon';
 import plentyIcon from "../../assets/icon/common/plentyIcon.svg";
+import { ConnectWalletBtnMobile } from '../Button/ConnectWalletMobile';
+import { NotificationIcon } from '../NotificationIcon';
 
 export interface ITopNavBarMobileProps {
   setShowNotification: Function;
@@ -16,7 +15,6 @@ export function TopNavBarMobile(props: ITopNavBarMobileProps) {
       <div className='flex gap-3'>
       <NotificationIcon
               className="cursor-pointer hover:opacity-90"
-              type={NotiFicationType.haveNotification}
               onClick={props.setShowNotification}
             />
       <ConnectWalletBtnMobile/>
