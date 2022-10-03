@@ -1,11 +1,11 @@
-import * as React from 'react';
 import dynamic from "next/dynamic";
+import * as React from 'react';
 import { isMobile } from "react-device-detect";
 
 const NotificationMobile = dynamic(() => import("./Mobile"), {
   loading: () => <></>,
 });
-const NotificationDesktop = dynamic(() => import("./desktop"), {
+const NotificationDesktop = dynamic(() => import("./Desktop"), {
   loading: () => <></>,
 });
 export interface INotificationBarProps {
