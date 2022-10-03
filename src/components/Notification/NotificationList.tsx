@@ -18,7 +18,7 @@ export function NotificationList (props: INotificationListProps) {
   }
   return (
     <div>
-      {notificationList.map((e)=><SingleNotification {...e} />)}
+      {notificationList.map((e)=><SingleNotification key={e.currentTimeStamp} {...e} />)}
     </div>
   );
 }
