@@ -485,14 +485,15 @@ export const calculateTokensInGeneralStable = (
     const dy = newton_dx_to_dy(
       tokenInSupply,
       tokenOutSupply,
-      tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(tokenInPrecision),
+      tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(998.99999)).multipliedBy(tokenInPrecision),
       5
     );
       console.log(dy.toString());
 
 
       let fee = dy.dividedBy(Exchangefee);
-      let tokenOutAmt = dy.minus(fee).dividedBy(tokenOutPrecision);
+      // let tokenOutAmt = dy.minus(fee).dividedBy(tokenOutPrecision);
+      let tokenOutAmt = dy.dividedBy(tokenOutPrecision);
   
       let minOut = tokenOutAmt.minus(
         slippage.multipliedBy(tokenOutAmt).dividedBy(100)

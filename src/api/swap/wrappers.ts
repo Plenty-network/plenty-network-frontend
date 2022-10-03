@@ -285,6 +285,12 @@ export const computeReverseCalculationWrapper = (
     const forwardPass = computeAllPaths(  paths2 , bestPath.tokenOutAmount , slippage , swapData2);
 
 
+    console.log(paths , paths2);
+    console.log(bestPath.tokenOutAmount.toString());
+    console.log(forwardPass);
+    console.log(forwardPass.tokenOutAmount.toString());
+
+
     const isStable: boolean[] = [];
     let finalPriceImpact = new BigNumber(0);
     let finalFeePerc = new BigNumber(0);
