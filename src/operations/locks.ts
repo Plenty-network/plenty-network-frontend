@@ -244,6 +244,7 @@ export const withdrawLock = async (
   }
 };
 
+// CHECK FLOW ONCE
 export const withdrawLockWithInflation = async (
   id: number,
   epochs: number[],
