@@ -298,7 +298,7 @@ export function ShortCard(props: IShortCardProps) {
           tableType="pool"
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
-          TableWidth="md:min-w-[1032px]"
+          TableWidth="lg:min-w-[1032px]"
         />
       </div>
     </>

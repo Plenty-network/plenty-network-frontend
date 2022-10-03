@@ -287,7 +287,7 @@ export function VotesTable(props: IVotesTableProps) {
           isConnectWalletRequired={props.isConnectWalletRequired}
           isVotesTable={true}
           TableName="votesTable"
-          TableWidth="md:min-w-[805px]"
+          TableWidth="lg:min-w-[805px]"
         />
       </div>
     </>

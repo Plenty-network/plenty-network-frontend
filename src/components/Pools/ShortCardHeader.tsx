@@ -5,6 +5,7 @@ import { isMobile } from "react-device-detect";
 import arrowDown from "../../assets/icon/common/arrowDown.svg";
 import info from "../../assets/icon/common/infoIcon.svg";
 import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 export interface IShortCardHeaderProps {}
 export interface ITabsProps {
@@ -104,7 +105,12 @@ export function Tabs(props: ITabsProps) {
               (props.TableName === "lockPosition" && isMobile && props.index === 1) ||
               (props.TableName === "locksRewards" && isMobile && props.index === 2) ? (
                 <span className="relative top-[3px] mr-1">
-                  <Image alt={"alt"} src={info} />
+                  <ToolTip
+                    position={Position.top}
+                    toolTipChild={<div className="text-center">{props.toolTipChild}</div>}
+                  >
+                    <Image alt={"alt"} src={info} />
+                  </ToolTip>
                 </span>
               ) : (
                 <InfoIconToolTip message={props.toolTipChild} />

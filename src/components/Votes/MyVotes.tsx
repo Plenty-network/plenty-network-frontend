@@ -4,7 +4,7 @@ import { IMyVotesProps } from "./types";
 
 export function MyVotes(props: IMyVotesProps) {
   return (
-    <div className="flex md:flex-1 md:ml-5">
+    <div className="">
       <RangeSlider
         isMobile={props.isMobile}
         tokenA={props.tokenA}
