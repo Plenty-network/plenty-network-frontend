@@ -215,7 +215,8 @@ export const calculateTokensInTezCtez = (
         5
       ).dividedBy(new BigNumber(2).pow(48));
       let fee = dy.dividedBy(pairFeeDenom);
-      let tokenOut = dy.minus(fee);
+      // let tokenOut = dy.minus(fee);
+      let tokenOut = dy;
       let minOut = tokenOut.minus(
         slippage.multipliedBy(tokenOut).dividedBy(100)
       );
@@ -257,7 +258,8 @@ export const calculateTokensInTezCtez = (
         5
       ).dividedBy(target);
       let fee = dy.dividedBy(pairFeeDenom);
-      let tokenOut = dy.minus(fee);
+      // let tokenOut = dy.minus(fee);
+      let tokenOut = dy;
       let minOut = tokenOut.minus(
         slippage.multipliedBy(tokenOut).dividedBy(100)
       );

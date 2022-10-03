@@ -149,7 +149,6 @@ function Swap(props: ISwapProps) {
             success: true,
             exchangeRate: new BigNumber(0),
           });
-
       allPaths(tokenIn.name, tokenOut.name, enableMultiHop).then((res) => {
         loading.current = {
           isLoadingfirst: false,
