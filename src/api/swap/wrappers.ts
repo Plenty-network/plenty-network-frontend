@@ -290,35 +290,38 @@ export const computeReverseCalculationWrapper = (
     console.log(forwardPass);
     console.log(forwardPass.tokenOutAmount.toString());
 
+    // Check difference bw forwardpass.tokenOut and bestPath.tokenOut
+
 
     const isStable: boolean[] = [];
     let finalPriceImpact = new BigNumber(0);
     let finalFeePerc = new BigNumber(0);
 
-    for (var x of bestPath.priceImpact) {
+    for (var x of forwardPass.priceImpact) {
       finalPriceImpact = finalPriceImpact.plus(x);
     }
 
-    for (var x of bestPath.feePerc) {
+    for (var x of forwardPass.feePerc) {
       finalFeePerc = finalFeePerc.plus(x);
       if (x.isEqualTo(new BigNumber(0.1))) isStable.push(true);
       else isStable.push(false);
     }
 
     const exchangeRate = new BigNumber(
-      new BigNumber(tokenPrice[bestPath.path[0]]).dividedBy(
-        tokenPrice[bestPath.path[bestPath.path.length - 1]]
+      new BigNumber(tokenPrice[forwardPass.path[0]]).dividedBy(
+        tokenPrice[forwardPass.path[forwardPass.path.length - 1]]
       )
-    ).decimalPlaces(TOKEN[bestPath.path[bestPath.path.length - 1]].decimals);
+    ).decimalPlaces(TOKEN[forwardPass.path[forwardPass.path.length - 1]].decimals);
 
     return {
-      path: bestPath.path.reverse(),
+      path: forwardPass.path,
       tokenOutAmount: bestPath.tokenOutAmount,
+      userFinalTokenOut : forwardPass.tokenOutAmount,
       finalMinimumTokenOut: forwardPass.minimumTokenOut[forwardPass.minimumTokenOut.length - 1],
       minimumTokenOut: forwardPass.minimumTokenOut,
       finalPriceImpact: finalPriceImpact,
       finalFeePerc: finalFeePerc,
-      feePerc: bestPath.feePerc,
+      feePerc: forwardPass.feePerc,
       isStable: isStable,
       exchangeRate: exchangeRate,
     };

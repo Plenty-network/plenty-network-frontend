@@ -28,6 +28,7 @@ export interface ICalculateTokenResponse {
 export interface IRouterResponse {
   path: string[];
   tokenOutAmount: BigNumber;
+  userFinalTokenOut ?: BigNumber;
   finalMinimumTokenOut: BigNumber;
   minimumTokenOut: BigNumber[];
   finalPriceImpact: BigNumber;
