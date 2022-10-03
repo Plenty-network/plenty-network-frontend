@@ -59,6 +59,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "Pool",
         id: "pools",
+        isToolTipEnabled: true,
+        tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
         showOnMobile: true,
         accessor: (x: any) =>
           x.attached ? (
@@ -97,6 +99,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "Voting Power",
         id: "Voting Power",
+        tooltipMessage:
+          " Your current voting power. This is different from your epoch voting power which is recorded at the beginning of each epoch.",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -147,6 +151,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         Header: "Pool",
         id: "pool",
         showOnMobile: true,
+        isToolTipEnabled: true,
+        tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "attachedTokenASymbol"),
         accessor: (x: any) =>
@@ -184,6 +190,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         Header: "Voting Power",
         id: "Voting Power",
         isToolTipEnabled: true,
+        tooltipMessage:
+          " Your current voting power. This is different from your epoch voting power which is recorded at the beginning of each epoch.",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "currentVotingPower"),
@@ -192,6 +200,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: `PLY locked`,
         id: "PLY locked",
+        tooltipMessage: "Amount of PLY locked up until expiry.",
         canShort: true,
         isToolTipEnabled: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "baseValue"),
@@ -201,6 +210,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         Header: "Lock expiry",
         id: "Lock expiry",
         isToolTipEnabled: true,
+        tooltipMessage:
+          " The lock is unusable once it expires and underlying PLY may be withdrawn.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
 
@@ -404,7 +415,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName={"lockPosition"}
-          TableWidth="md:min-w-[1100px]"
+          TableWidth="lg:min-w-[1100px]"
           NoData={NoData}
         />
       </div>
