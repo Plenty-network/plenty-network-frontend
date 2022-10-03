@@ -429,7 +429,7 @@ export default function Vote() {
       </Head>
       <SideBarHOC>
         <div className="md:flex ">
-          <div className="md:min-w-[562px] md:w-full">
+          <div className="md:min-w-[416px] lg:min-w-[562px] md:w-full">
             <HeadInfo
               className="px-2 md:px-3"
               title="Vote"
