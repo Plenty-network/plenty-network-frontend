@@ -1,12 +1,11 @@
-import Image from "next/image";
 import clsx from "clsx";
+import Image from "next/image";
 import * as React from "react";
 import playIcon from "../../assets/icon/pools/playIcon.svg";
+import { store } from "../../redux";
 import { VideoModal } from "../Modal/videoModal";
 import { InputSearchBox } from "../Pools/Component/SearchInputBox";
-import Tooltip from "../Tooltip/Tooltip";
-import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
-import { store } from "../../redux";
+import { ToolTip } from "../Tooltip/TooltipAdvanced";
 export interface IHeadInfoProps {
   className?: string;
   title: string;
@@ -28,10 +27,13 @@ export default function HeadInfo(props: IHeadInfoProps) {
           {props.title ? props.title : "Pools"}
         </div>
         <ToolTip
-          message={
-            props.toolTipContent
-              ? props.toolTipContent
-              : "Watch how to add liquidity, stake, and earn PLY"
+          classNameToolTipContainer="playIconTooltip"
+          toolTipChild={
+            props.toolTipContent ? (
+              <p className="px-2 py-3">{props.toolTipContent}</p>
+            ) : (
+              <p className="px-2 py-3">Watch how to add liquidity, stake, and earn PLY</p>
+            )
           }
           classNameAncorToolTip="pushtoCenter"
           isShowInnitially={props.toolTipContent ? true : false}
@@ -61,7 +63,9 @@ export default function HeadInfo(props: IHeadInfoProps) {
         >
           Create Lock
         </div>
-      ):(<></>)}
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

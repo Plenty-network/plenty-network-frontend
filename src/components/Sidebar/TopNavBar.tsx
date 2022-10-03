@@ -36,7 +36,9 @@ export function TopNavBar(props: ITopNavBarProps) {
   return (
     <nav className="hidden md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   px-10 pl-0 topNavblurEffect z-50">
       <div className="h-full w-[240px] border-border-500/50 border-r flex items-center pl-[26px]">
-        <Image alt={"alt"} src={plentyIcon} />
+       <Link href={'/'} >
+         <Image className="cursor-pointer" alt={"alt"} src={plentyIcon} />
+       </Link>
       </div>
       <div className="flex justify-between flex-1 h-full">
         <Epoch />

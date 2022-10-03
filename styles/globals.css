@@ -2,9 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 @import './animation.css';
+@import './animateTransactionOut.css';
 @import './switch.css';
 @import './switchWithIcon.css';
 @import './datePicker.css';
+
 
 
 body.swap {
@@ -32,7 +34,13 @@ body {
   height: 5px;
   border-radius: 8px;
 }
-
+.footerInteraction:hover > rect{ 
+  stroke: #9D5CFF;
+  stroke-opacity:0.5;
+}
+.footerInteraction:hover > path{ 
+  fill: #9D5CFF;
+}
 /* Track */
 ::-webkit-scrollbar-track {
   
@@ -188,6 +196,19 @@ input[type='number'] {
   border-radius: 12px !important;
   box-shadow: rgba(255, 255, 255, 0.064) 0px 3px 8px !important;
   padding: 8px 19px !important;
+}
+.playIconTooltip::after{
+    content: '' !important;
+    left: -17px !important;
+    top: 50% !important;
+    margin-top: 0 !important;
+    width: 16px !important;
+    height: 16px !important;
+    transform: translate(50%, -50%) rotate(45deg) !important;
+    border: none !important;
+    border-left: 1px solid #341e54 !important;
+    border-bottom: 1px solid #341e54 !important;
+    background-color: #160d24 !important;
 }
 .sideNavactive {
   @apply border-r-primary-500  bg-sideBarHover;
