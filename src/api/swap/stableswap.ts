@@ -216,7 +216,7 @@ export const calculateTokensInTezCtez = (
       ).dividedBy(new BigNumber(2).pow(48));
       let fee = dy.dividedBy(pairFeeDenom);
       // let tokenOut = dy.minus(fee);
-      let tokenOut = dy;
+      let tokenOut = dy.plus(dy.multipliedBy(0.001));
       let minOut = tokenOut.minus(
         slippage.multipliedBy(tokenOut).dividedBy(100)
       );
@@ -259,7 +259,7 @@ export const calculateTokensInTezCtez = (
       ).dividedBy(target);
       let fee = dy.dividedBy(pairFeeDenom);
       // let tokenOut = dy.minus(fee);
-      let tokenOut = dy;
+      let tokenOut = dy.plus(dy.multipliedBy(0.001));
       let minOut = tokenOut.minus(
         slippage.multipliedBy(tokenOut).dividedBy(100)
       );
@@ -487,7 +487,7 @@ export const calculateTokensInGeneralStable = (
     const dy = newton_dx_to_dy(
       tokenInSupply,
       tokenOutSupply,
-      tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(998.99999)).multipliedBy(tokenInPrecision),
+      tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(tokenInPrecision),
       5
     );
       console.log(dy.toString());
@@ -496,6 +496,7 @@ export const calculateTokensInGeneralStable = (
       let fee = dy.dividedBy(Exchangefee);
       // let tokenOutAmt = dy.minus(fee).dividedBy(tokenOutPrecision);
       let tokenOutAmt = dy.dividedBy(tokenOutPrecision);
+      tokenOutAmt = tokenOutAmt.plus(tokenOutAmt.multipliedBy(0.001));
   
       let minOut = tokenOutAmt.minus(
         slippage.multipliedBy(tokenOutAmt).dividedBy(100)

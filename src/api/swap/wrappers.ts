@@ -8,7 +8,7 @@ import {
   loadSwapDataGeneralStable,
   loadSwapDataTezCtez,
 } from "./stableswap";
-import { calculateTokenOutputVolatile, loadSwapDataVolatile } from "./volatile";
+import { calculateTokenInputVolatile, calculateTokenOutputVolatile, loadSwapDataVolatile } from "./volatile";
 import { BigNumber } from "bignumber.js";
 import { ISwapDataResponse, ICalculateTokenResponse, IRouterResponse } from "./types";
 import { computeAllPaths, computeAllPathsReverse } from "./router";
@@ -147,12 +147,13 @@ export const calculateTokensInWrapper = (
     let outputData: ICalculateTokenResponse;
 
     if (type === AMM_TYPE.VOLATILE && tokenInSupply && tokenOutSupply) {
-      outputData = calculateTokenOutputVolatile(
+      outputData = calculateTokenInputVolatile(
         tokenInAmount,
         tokenInSupply,
         tokenOutSupply,
         Exchangefee,
         slippage,
+        tokenIn,
         tokenOut
       );
     } else {
@@ -282,6 +283,7 @@ export const computeReverseCalculationWrapper = (
     const TOKEN = state.config.standard;
 
     const bestPath = computeAllPathsReverse(paths, tokenInAmount, slippage, swapData);
+    // const increasedInput = bestPath.tokenOutAmount.plus(bestPath.tokenOutAmount.multipliedBy(0.001));
     const forwardPass = computeAllPaths(  paths2 , bestPath.tokenOutAmount , slippage , swapData2);
 
 
