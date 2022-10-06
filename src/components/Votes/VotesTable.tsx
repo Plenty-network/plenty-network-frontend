@@ -73,6 +73,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Pools",
         id: "pools",
+        columnWidth: "w-[150px]",
         showOnMobile: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.tokenA", true),
@@ -95,7 +96,7 @@ export function VotesTable(props: IVotesTableProps) {
               />
             </div>
             <div>
-              <div className="font-body4">
+              <div className="font-body2 md:font-body4">
                 {" "}
                 {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
                 {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
@@ -108,6 +109,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Rewards",
         id: "Rewards",
+        columnWidth: "w-[100px] flex-1",
         isToolTipEnabled: true,
         tooltipMessage:
           "Trading fees and bribes to be distributed across the voters of this pool. The reward may increase as the epoch progresses.",
@@ -131,6 +133,7 @@ export function VotesTable(props: IVotesTableProps) {
         id: "Myvotess",
         tooltipMessage: "Number of votes given through the selected veNFT to this pool.",
         isToolTipEnabled: true,
+        columnWidth: "w-[100px] ml-auto mr-2",
         canShort: true,
         accessor: (x: any) => (
           <MyVotes
@@ -164,6 +167,7 @@ export function VotesTable(props: IVotesTableProps) {
         Header: "Pools",
         id: "pools",
         showOnMobile: true,
+        columnWidth: "w-[160px]",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.tokenA", true),
         accessor: (x: any) => (
@@ -198,6 +202,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Rewards",
         id: "Rewards",
+        columnWidth: "w-[112px]",
         tooltipMessage:
           "Trading fees and bribes to be distributed across the voters of this pool. The reward may increase as the epoch progresses.",
         isToolTipEnabled: true,
@@ -219,6 +224,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Total votes",
         id: "Total votes",
+        columnWidth: "w-[112px]",
         canShort: true,
         tooltipMessage: "Total votes received by the pool in the current epoch.",
         isToolTipEnabled: true,
@@ -233,6 +239,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "My votes",
         id: "Myvotes",
+        columnWidth: "w-[112px]",
         tooltipMessage: "Number of votes given through the selected veNFT to this pool.",
         isToolTipEnabled: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.myVotesPercentage"),
@@ -245,7 +252,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Votes",
         id: "Myvotess",
-
+        columnWidth: "w-[237px] ml-auto",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.totalVotes"),
 

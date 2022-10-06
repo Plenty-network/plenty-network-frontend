@@ -11,7 +11,7 @@ import Config from "../config/config";
 import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { IAllBribesOperationData, IAllClaimableFeesData, IClaimInflationOperationData } from "../api/portfolio/types";
-import { getMaxPossibleBatchArray } from "../api/util/operations";
+import { getMaxPossibleBatchArray, getMaxPossibleBatchArrayV2 } from "../api/util/operations";
 
 export const createLock = async (
   address: string,
@@ -359,11 +359,9 @@ export const claimAllInflation = async (
           .toTransferParams(),
       });
     }
-    console.log("original batch:", inflationBatch);
-    console.time("getMaxBatch");
-    const maxPossibleBatch: WalletParamsWithKind[] = await getMaxPossibleBatchArray(inflationBatch);
-    console.timeEnd("getMaxBatch");
-    console.log("max possible batch:",maxPossibleBatch);
+
+    const maxPossibleBatch: WalletParamsWithKind[] = await getMaxPossibleBatchArrayV2(inflationBatch);
+    
     const batch =  Tezos.wallet.batch(maxPossibleBatch);
       // const batch =  Tezos.wallet.batch(inflationBatch);
     // Tezos.estimate.batch(inflationBatch).then((est) => console.log(est));
@@ -447,7 +445,8 @@ export const claimAllAndWithdrawLock = async (
       ...veInstance.methods.withdraw(lockId).toTransferParams(),
     })
 
-    const batch = Tezos.wallet.batch(allBatch);
+    const bestPossibleBatch = await getMaxPossibleBatchArrayV2(allBatch);
+    const batch = Tezos.wallet.batch(bestPossibleBatch);
 
     const batchOp = await batch.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);

@@ -55,6 +55,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "Pool",
         id: "pools",
+        columnWidth: "w-[150px]",
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA"),
         accessor: (x: any) => (
@@ -66,7 +67,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
               <Image alt={"alt"} src={getImagesPath(x.tokenB)} width={"20px"} height={"20px"} />
             </div>
             <div>
-              <div className="font-body4">
+              <div className="font-body2 md:font-body4">
                 {" "}
                 {tEZorCTEZtoUppercase(x.tokenA.toString())}/
                 {tEZorCTEZtoUppercase(x.tokenB.toString())}
@@ -79,6 +80,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "Your liquidity",
         id: "your liquidity",
+        columnWidth: "w-[80px]",
         isToolTipEnabled: true,
         tooltipMessage: "Value of tokens supplied to the pair.",
         canShort: true,
@@ -90,7 +92,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "",
         id: "manage",
-        minWidth: 151,
+        columnWidth: "w-[120px] flex-1",
         accessor: (x) => (
           <ManageBtn
             isManage={Number(x.stakedPercentage) > 0}
@@ -108,6 +110,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "Pool",
         id: "pool",
+        columnWidth: "w-[170px]",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA"),
@@ -133,6 +136,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "Your liquidity",
         id: "Your liquidity",
+        columnWidth: "w-[124px]",
         tooltipMessage: "Value of tokens supplied to the pair.",
         isToolTipEnabled: true,
         canShort: true,
@@ -143,6 +147,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: `Staked percentage`,
         id: "Staked percentage",
+        columnWidth: "w-[124px]",
         tooltipMessage: "Percentage liquidity staked in the pool’s gauge.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "stakedPercentage"),
         canShort: true,
@@ -152,6 +157,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "your APR",
         id: "your APR",
+        columnWidth: "w-[124px]",
         tooltipMessage: "Annual percentage rate of return on your staked position.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "userAPR"),
         isToolTipEnabled: true,
@@ -161,6 +167,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "Boost",
         id: "Boost",
+        columnWidth: "w-[124px]",
         isToolTipEnabled: true,
         tooltipMessage: "Boost received on the gauge APR by attaching a veNFT.",
         canShort: true,
@@ -170,7 +177,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "",
         id: "manage",
-        minWidth: 151,
+        columnWidth: "w-[200px] ml-auto",
         accessor: (x) => (
           <ManageBtn
             isManage={Number(x.stakedPercentage) > 0}

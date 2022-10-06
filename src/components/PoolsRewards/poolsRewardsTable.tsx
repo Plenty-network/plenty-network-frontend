@@ -33,6 +33,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         Header: "Pool",
         id: "pools",
         canShort: true,
+        columnWidth: "w-[170px]",
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol"),
         showOnMobile: true,
         accessor: (x: any) => (
@@ -54,7 +55,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
               />
             </div>
             <div>
-              <div className="font-body4">
+              <div className="font-body2 md:font-body4">
                 {" "}
                 {tEZorCTEZtoUppercase(x.tokenOneSymbol.toString())}/
                 {tEZorCTEZtoUppercase(x.tokenTwoSymbol.toString())}
@@ -67,6 +68,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
       {
         Header: "Reward",
         id: "Reward",
+        columnWidth: "w-[110px]",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -77,6 +79,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
       {
         Header: "Boost",
         id: "Boost",
+        columnWidth: "w-[110px]",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -95,6 +98,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         id: "pool",
         showOnMobile: true,
         canShort: true,
+        columnWidth: "w-[200px]",
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol"),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
@@ -128,6 +132,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
       {
         Header: "Reward",
         id: "Reward",
+        columnWidth: "w-[150px]",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -138,6 +143,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
       {
         Header: "Boost",
         id: "Boost",
+        columnWidth: "w-[150px]",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,

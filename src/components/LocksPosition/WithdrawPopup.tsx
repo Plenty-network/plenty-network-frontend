@@ -1,6 +1,7 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
 
+import infoblue from "../../assets/icon/myPortfolio/Info_fill.svg";
 import lock from "../../assets/icon/myPortfolio/purple_lock.svg";
 import { BigNumber } from "bignumber.js";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
@@ -80,16 +81,25 @@ function WithdrawPly(props: IWithdrawPlyProps) {
             <Button
               color={"primary"}
               onClick={
-                true
-                  ? () => {}
-                  : props.unclaimedDataTokenId.unclaimedRewardsExist
+                props.unclaimedDataTokenId.unclaimedRewardsExist
                   ? props.handleWithdrawClaimOperation
                   : props.handleWithdraw
               }
             >
-              {props.unclaimedDataTokenId.unclaimedRewardsExist ? "Claim and Withdraw" : "Withdraw"}
+              {props.unclaimedDataTokenId.unclaimedRewardsExist
+                ? "Withdraw with claiming"
+                : "Withdraw"}
             </Button>
           </div>
+          {props.unclaimedDataTokenId.unclaimedRewardsExist && (
+            <div className="flex items-center mt-5 ml-1">
+              <Image src={infoblue} />
+              <span className="font-body2 text-info-500 ml-3">
+                Rewards cannot be claimed in a single transaction due to gas limit. Please claim
+                manually before withdrawing
+              </span>
+            </div>
+          )}
         </>
       }
     </PopUpModal>
