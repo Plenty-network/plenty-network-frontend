@@ -468,6 +468,12 @@ function MyPortfolio(props: any) {
             })
           );
         }, 6000);
+        setTimeout(() => {
+          setClaimOperation(true);
+        }, 10000);
+        setTimeout(() => {
+          setClaimOperation(false);
+        }, 30000);
 
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -526,6 +532,13 @@ function MyPortfolio(props: any) {
             })
           );
         }, 6000);
+
+        setTimeout(() => {
+          setClaimOperation(true);
+        }, 10000);
+        setTimeout(() => {
+          setClaimOperation(false);
+        }, 30000);
 
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
