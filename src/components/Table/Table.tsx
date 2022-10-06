@@ -1,15 +1,13 @@
 import clsx from "clsx";
-import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import { useTable, Column, useFilters, useSortBy, usePagination } from "react-table";
+import { isMobile, isTablet } from "react-device-detect";
+import { Column, useFilters, usePagination, useSortBy, useTable } from "react-table";
 import { useAppSelector } from "../../redux";
-import epoachIcon from "../../assets/icon/common/epochTimeIcon.svg";
 import { getHeightOfElement } from "../../utils/getHeight";
 import { NoContentAvailable, WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
 import { Tabs } from "../Pools/ShortCardHeader";
 import { NoSearchResult } from "../Votes/NoSearchResult";
 
-import { isMobile } from "react-device-detect";
 export interface ISimmerEffectProps {
   lines: number;
 }
@@ -52,6 +50,7 @@ const Table = <D extends object>({
   TableWidth?: string;
   tableType?: string;
   NoData?: JSX.Element;
+  tooltipMessage?: string;
 }) => {
   const [shortByGroup, setshortByGroup] = useState({
     id: shortby ?? "usd",
@@ -142,6 +141,11 @@ const Table = <D extends object>({
                   isFirstRow={i == 0}
                   isVotesTable={isVotesTable ? i === headerGroup.headers.length - 1 : false}
                   isToolTipEnabled={column.hasOwnProperty("isToolTipEnabled")}
+                  toolTipChild={
+                    column.hasOwnProperty("tooltipMessage")
+                      ? column.render("tooltipMessage")?.toString()
+                      : ""
+                  }
                   onClick={
                     column.hasOwnProperty("canShort")
                       ? () => {
@@ -181,10 +185,10 @@ const Table = <D extends object>({
                     className={` flex   items-center  rounded-lg slideFromTop ${
                       TableName === "poolsRewards" || TableName === "locksRewards"
                         ? "justify-between  md:px-11  px-3"
-                        : "md:pr-3 md:pl-11 px-2"
+                        : "lg:pr-3 lg:pl-11 px-2"
                     } ${
                       TableName === "locksRewards" && row.original?.epoch !== ""
-                        ? "py-1 md:pr-9"
+                        ? "py-1 lg:pr-9"
                         : "border border-borderCommon  bg-cardBackGround md:py-3  py-1 "
                     }`}
                     key={row}
@@ -245,7 +249,11 @@ const Table = <D extends object>({
                               : " flex-1"
                           } ${TableName === "poolsPosition" && i === 5 && "ml-auto"} ${
                             i === 0 && "pl-3  md:pl-0"
-                          } ${TableName === "votesTable" && i === 4 && "ml-auto"}`}
+                          } ${
+                            TableName === "votesTable"
+                              ? i === 4 && "ml-auto"
+                              : isTablet && i === 2 && "ml-auto"
+                          }`}
                         >
                           {cell.render("Cell")}
                         </td>

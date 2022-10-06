@@ -1,23 +1,22 @@
 import * as React from "react";
-import { Column } from "react-table";
-import { usePoolsMain } from "../../api/pools/query/poolsmain.query";
-import { IPoolsDataWrapperResponse } from "../../api/pools/types";
-import { useTableNumberUtils } from "../../hooks/useTableUtils";
-import Table from "../Table/Table";
-import { CircularImageInfo, CircularOverLappingImage } from "./Component/CircularImageInfo";
-import { ManageLiquidity } from "./ManageLiquidity";
-import { tokenParameterLiquidity } from "../Liquidity/types";
-import { AprInfo } from "./Component/AprInfo";
-import { PoolsText, PoolsTextWithTooltip } from "./Component/PoolsText";
 import { isMobile } from "react-device-detect";
+import { useDispatch } from "react-redux";
+import { Column } from "react-table";
 import { AMM_TYPE } from "../../../pages/pools";
+import { IPoolsDataWrapperResponse } from "../../api/pools/types";
 import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
 import { usePoolsTableSearch } from "../../hooks/usePoolsTableSearch";
-import { ActiveLiquidity } from "./ManageLiquidityHeader";
+import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import { AppDispatch } from "../../redux";
-import { useDispatch } from "react-redux";
 import { getTotalVotingPower } from "../../redux/pools";
 import { compareNumericString } from "../../utils/commonUtils";
+import { tokenParameterLiquidity } from "../Liquidity/types";
+import Table from "../Table/Table";
+import { AprInfo } from "./Component/AprInfo";
+import { CircularOverLappingImage } from "./Component/CircularImageInfo";
+import { PoolsText, PoolsTextWithTooltip } from "./Component/PoolsText";
+import { ManageLiquidity } from "./ManageLiquidity";
+import { ActiveLiquidity } from "./ManageLiquidityHeader";
 
 export interface IShortCardProps {
   className?: string;
@@ -73,7 +72,7 @@ export function ShortCard(props: IShortCardProps) {
         id: "pools",
         showOnMobile: true,
         canShort: true,
-        sortType:(a:any,b:any)=>compareNumericString(a,b,'tokenA',true),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x) => (
           <div className="flex gap-1 items-center max-w-[153px]">
             <CircularOverLappingImage
@@ -93,11 +92,12 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "APR",
         id: "apr",
-        subText: "current Epoch",
+        subText: "current epoch",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        sortType:(a:any,b:any)=>compareNumericString(a,b,'apr'),
+        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
+        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
         accessor: (x) => (
           <AprInfo
             currentApr={x.apr.toString()}
@@ -130,7 +130,7 @@ export function ShortCard(props: IShortCardProps) {
         id: "pools",
         canShort: true,
         showOnMobile: true,
-        sortType:(a:any,b:any)=>compareNumericString(a,b,'tokenA',true),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x) => (
           <div className="flex gap-2 items-center max-w-[153px]">
             <CircularOverLappingImage
@@ -150,11 +150,12 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "APR",
         id: "apr",
-        subText: "current Epoch",
+        subText: "current epoch",
+        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        sortType:(a:any,b:any)=>compareNumericString(a,b,'apr'),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
         accessor: (x: any) => (
           <AprInfo
             currentApr={valueFormat(x.apr, { percentChange: true }).toString()}
@@ -168,9 +169,10 @@ export function ShortCard(props: IShortCardProps) {
         id: "Volume24h",
         subText: "24h",
         isToolTipEnabled: true,
+        tooltipMessage: "Pool’s trading volume in the last 24 hours.",
         canShort: true,
-        sortType:(a:any,b:any)=>compareNumericString(a,b,'volume'),
-        accessor: (x:any) => (
+        sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
+        accessor: (x: any) => (
           <PoolsTextWithTooltip
             text={valueFormat(x.volume.toNumber())}
             token1={x.volumeTokenA.toString()}
@@ -183,9 +185,10 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "TVL",
         id: "TVL",
+        tooltipMessage: "Total value locked up in the pool.",
         isToolTipEnabled: true,
         canShort: true,
-        sortType:(a:any,b:any)=>compareNumericString(a,b,'tvl'),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
         accessor: (x) => (
           <PoolsTextWithTooltip
             text={valueFormat(x.tvl.toNumber())}
@@ -200,9 +203,10 @@ export function ShortCard(props: IShortCardProps) {
         Header: "Fees",
         id: "fees",
         subText: "current epoch",
+        tooltipMessage: "Trading fees collected by the pool in the current epoch.",
         isToolTipEnabled: true,
         canShort: true,
-        sortType:(a:any,b:any)=>compareNumericString(a,b,'fees'),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
         accessor: (x) => (
           <PoolsTextWithTooltip
             text={valueFormat(x.fees.toNumber())}
@@ -216,6 +220,8 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "Bribes",
         id: "Bribes",
+        tooltipMessage:
+          "Incentives provided by the protocols to boost the liquidity of their tokens.",
         isToolTipEnabled: true,
         accessor: (x) => <PoolsText text={valueFormat(x.bribeUSD.toNumber())} />,
       },
@@ -238,31 +244,31 @@ export function ShortCard(props: IShortCardProps) {
 
   function ManageBtn(props: IManageBtnProps): any {
     return (
-      <div className="pl-3 pr-2 md:pr-0 md:pl-0">
-      <div
-        className="bg-primary-500/10 text-f12 md:text-f14 hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-7 md:px-7 py-2 rounded-lg"
-        onClick={() => {
-          dispatch(getTotalVotingPower());
-          props.isLiquidityAvailable
-            ? props.isStakeAvailable
-              ? setActiveState(ActiveLiquidity.Rewards)
-              : setActiveState(ActiveLiquidity.Staking)
-            : setActiveState(ActiveLiquidity.Liquidity);
-          setShowLiquidityModal(true);
-          setTokenIn({
-            name: props.tokenA,
-            image: getImagesPath(props.tokenA.toString()),
-            symbol: props.tokenA,
-          });
-          setTokenOut({
-            name: props.tokenB,
-            image: getImagesPath(props.tokenB.toString()),
-            symbol: props.tokenB,
-          });
-        }}
-      >
-        Manage 
-      </div>
+      <div className="pl-0 pr-1 md:pr-0 md:pl-0">
+        <div
+          className="bg-primary-500/10 text-f12 md:text-f14 hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-5 md:px-7 py-2 rounded-lg"
+          onClick={() => {
+            dispatch(getTotalVotingPower());
+            props.isLiquidityAvailable
+              ? props.isStakeAvailable
+                ? setActiveState(ActiveLiquidity.Rewards)
+                : setActiveState(ActiveLiquidity.Staking)
+              : setActiveState(ActiveLiquidity.Liquidity);
+            setShowLiquidityModal(true);
+            setTokenIn({
+              name: props.tokenA,
+              image: getImagesPath(props.tokenA.toString()),
+              symbol: props.tokenA,
+            });
+            setTokenOut({
+              name: props.tokenB,
+              image: getImagesPath(props.tokenB.toString()),
+              symbol: props.tokenB,
+            });
+          }}
+        >
+          Manage
+        </div>
       </div>
     );
   }
@@ -292,7 +298,7 @@ export function ShortCard(props: IShortCardProps) {
           tableType="pool"
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
-          TableWidth="md:min-w-[1032px]"
+          TableWidth="lg:min-w-[1032px]"
         />
       </div>
     </>

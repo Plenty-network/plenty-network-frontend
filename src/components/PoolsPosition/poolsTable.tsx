@@ -56,6 +56,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         Header: "Pool",
         id: "pools",
         showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA"),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
@@ -79,9 +80,11 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         Header: "Your liquidity",
         id: "your liquidity",
         isToolTipEnabled: true,
+        tooltipMessage: "Value of tokens supplied to the pair.",
         canShort: true,
         accessorFn: (x: any) => x.totalLiquidityAmount,
         showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "totalLiquidityAmount"),
         accessor: (x: any) => <YourLiquidity value={x.totalLiquidityAmount} />,
       },
       {
@@ -130,6 +133,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "Your liquidity",
         id: "Your liquidity",
+        tooltipMessage: "Value of tokens supplied to the pair.",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -139,6 +143,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: `Staked percentage`,
         id: "Staked percentage",
+        tooltipMessage: "Percentage liquidity staked in the pool’s gauge.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "stakedPercentage"),
         canShort: true,
         isToolTipEnabled: true,
@@ -147,6 +152,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "your APR",
         id: "your APR",
+        tooltipMessage: "Annual percentage rate of return on your staked position.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "userAPR"),
         isToolTipEnabled: true,
         canShort: true,
@@ -156,6 +162,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         Header: "Boost",
         id: "Boost",
         isToolTipEnabled: true,
+        tooltipMessage: "Boost received on the gauge APR by attaching a veNFT.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
         accessor: (x: any) => <BoostValue value={x.boostValue} />,
@@ -241,7 +248,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsPosition"
-          TableWidth="md:min-w-[900px]"
+          TableWidth="md:min-w-[787px] lg:min-w-[900px]"
           NoData={NoData}
         />
       </div>

@@ -142,3 +142,103 @@ export const calculateTokenOutputVolatile = (
     };
   }
 };
+
+export const calculateTokenInputVolatile = (
+  tokenInAmount: BigNumber,
+  tokenInSupply: BigNumber,
+  tokenOutSupply: BigNumber,
+  exchangeFee: BigNumber,
+  slippage: BigNumber,
+  tokenIn : string,
+  tokenOut: string
+): ICalculateTokenResponse => {
+  try {
+    const state = store.getState();
+    const TOKEN = state.config.standard;
+
+    const feePerc = new BigNumber(0.35);
+    let tokenOutAmount = new BigNumber(0);
+    console.log(exchangeFee.toString());
+
+    tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
+    tokenInSupply = tokenInSupply.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
+    tokenOutSupply = tokenOutSupply.multipliedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+
+    let fee = tokenInAmount.multipliedBy(exchangeFee);
+    tokenInAmount = tokenInAmount.plus(fee);
+    tokenInAmount = tokenInAmount.plus(tokenInAmount.multipliedBy(0.001));
+
+    let invariant = tokenInSupply.multipliedBy(tokenOutSupply);
+    tokenOutAmount = (invariant.dividedBy(tokenInSupply.minus(tokenInAmount))).minus(tokenOutSupply);
+
+    tokenInAmount = tokenInAmount.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
+    tokenInSupply = tokenInSupply.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
+    tokenOutSupply = tokenOutSupply.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+    tokenOutAmount = tokenOutAmount.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+
+
+
+    // tokenOutAmount = new BigNumber(1)
+    //   .minus(exchangeFee)
+    //   .multipliedBy(tokenOutSupply)
+    //   .multipliedBy(tokenInAmount);
+    // tokenOutAmount = tokenOutAmount.dividedBy(
+    //   tokenInSupply.plus(
+    //     new BigNumber(1).minus(exchangeFee).multipliedBy(tokenInAmount)
+    //   )
+    // );
+
+    tokenOutAmount = new BigNumber(
+      tokenOutAmount.decimalPlaces(TOKEN[tokenOut].decimals , 1)
+    );
+
+    const fees = tokenInAmount.multipliedBy(exchangeFee);
+    let minimumOut = tokenOutAmount.minus(
+      slippage.multipliedBy(tokenOutAmount).dividedBy(100)
+    );
+
+    minimumOut = new BigNumber(
+      minimumOut.decimalPlaces(TOKEN[tokenOut].decimals , 1)
+    );
+
+    const updatedTokenInSupply = tokenInSupply.minus(tokenInAmount);
+    const updatedTokenOutSupply = tokenOutSupply.minus(tokenOutAmount);
+    let nextTokenOutAmount = new BigNumber(1)
+      .minus(exchangeFee)
+      .multipliedBy(updatedTokenOutSupply)
+      .multipliedBy(tokenInAmount);
+    nextTokenOutAmount = nextTokenOutAmount.dividedBy(
+      updatedTokenInSupply.plus(
+        new BigNumber(1).minus(exchangeFee).multipliedBy(tokenInAmount)
+      )
+    );
+    let priceImpact = tokenOutAmount
+      .minus(nextTokenOutAmount)
+      .dividedBy(tokenOutAmount);
+    priceImpact = priceImpact.multipliedBy(100);
+    priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
+    priceImpact = priceImpact.multipliedBy(100);
+    const exchangeRate = tokenOutAmount.dividedBy(tokenInAmount);
+
+    return {
+      tokenOutAmount,
+      fees,
+      feePerc,
+      minimumOut,
+      exchangeRate,
+      priceImpact,
+    };
+  } catch (error) {
+    return {
+      tokenOutAmount: new BigNumber(0),
+      fees: new BigNumber(0),
+      feePerc: new BigNumber(0),
+      minimumOut: new BigNumber(0),
+      exchangeRate: new BigNumber(0),
+      priceImpact: new BigNumber(0),
+      error
+    };
+  }
+};
+
+

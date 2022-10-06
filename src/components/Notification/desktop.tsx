@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { NotificationList } from './NotificationList';
+import { removeAllNotification } from './notificationMessageSave';
 
 export interface INotificationBarProps {
   onhide: Function;
@@ -18,6 +20,10 @@ export default function NotificationBar(props: INotificationBarProps) {
     setTimeout(() => {
       props.onhide && props.onhide();
     }, 300);
+  }
+  const clearNotification=()=>{
+    removeAllNotification();
+    closeModalFunction();
   }
   return (
     <div
@@ -39,16 +45,12 @@ export default function NotificationBar(props: INotificationBarProps) {
           <div className='absolute bg-popUpNotificationHeader z-10 rotate-45 w-8 h-8 right-[13px] -top-[2px]'>
               
           </div>
-          <div className='bg-popUpNotificationHeader h-[44px] rounded-t-[4px] z-20 flex justify-between font-semibold items-center px-4 text-f14'>
+          <div className='bg-popUpNotificationHeader h-[44px] rounded-t-[4px] z-20 flex justify-between font-semibold items-center px-4 !py-[13px] text-f14'>
             <p>Notification</p>
-            <p  onClick={closeModalFunction} className='cursor-pointer'>Clear</p>
+            <p  onClick={clearNotification} className='cursor-pointer'>Clear</p>
           </div>
-          <div className='flex-1 flex flex-col p-5 justify-center items-center'>
-            <div className='text-f14'>You’re all caught up</div>
-            <div className='text-center text-f10 border-b border-b-navBarBorder' >This is where  you’ll see notifications about
-              your Plenty transactions</div>
-            <div className='text-primary-200 text-f10'>Swap your assets</div>
-          </div>
+          {/*  */}
+          <NotificationList/>
         </div>
       </div>
     </div>

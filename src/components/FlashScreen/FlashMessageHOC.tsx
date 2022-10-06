@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useStateAnimate } from '../../hooks/useAnimateUseState';
 import { useAppDispatch, useAppSelector } from '../../redux';
 import { unsetFlashMessage } from '../../redux/flashMessage';
-import { FlashMessage, Flashtype } from './index';
+import { setNotificationMessage } from '../Notification/notificationMessageSave';
+import { FlashMessage } from './index';
 const FLASH_MESSAGE_SHOW_TIME=8000;
 export interface IFlashMessageHOCProps {
 }
@@ -10,12 +11,27 @@ export interface IFlashMessageHOCProps {
 export function FlashMessageHOC (props: IFlashMessageHOCProps) {
     const dispatch = useAppDispatch();
     const {isLoading,onClick,headerText,trailingText,linkText,flashType} = useAppSelector((state) => state.flashMessage);
+    const walletAddress = useAppSelector((state) => state.wallet.address);
     const [isFlashVisiable,setIsFlashVisiable,animationState]=useStateAnimate(false,300);
     let timeOutTimer:any=null;
    React.useEffect(()=>{
     console.log("flashMessage",isLoading)
     timeOutTimer &&  clearTimeout(timeOutTimer);
      if(isLoading){
+       //setting local store
+       const timeinmillisec=(new Date()).getTime();
+       setNotificationMessage(
+        {
+          onClick:onClick??undefined,
+          flashType:flashType,
+          headerText:headerText,
+          trailingText:trailingText,
+          linkText:linkText,
+          currentTimeStamp:timeinmillisec,
+      },
+          walletAddress
+      );
+
         timeOutTimer = setTimeout(()=>{
           dispatch(unsetFlashMessage());
         },FLASH_MESSAGE_SHOW_TIME);    

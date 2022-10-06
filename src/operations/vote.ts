@@ -14,6 +14,7 @@ import {
   IAllEpochClaimData,
   IClaimInflationOperationData,
 } from "../api/portfolio/types";
+import { getMaxPossibleBatchArray } from "../api/util/operations";
 
 export const vote = async (
   id: number,
@@ -134,7 +135,10 @@ export const claimAllBribeForAllLocks = async (
           .toTransferParams(),
       });
     }
-    const batch = Tezos.wallet.batch(bribeBatch);
+
+    const bestPossibleBatch = await getMaxPossibleBatchArray(bribeBatch);
+
+    const batch = Tezos.wallet.batch(bestPossibleBatch);
 
     const batchOp = await batch.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);
@@ -276,7 +280,9 @@ export const claimAllFeeForAllLocks = async (
           .toTransferParams(),
       });
     }
-    const batch = Tezos.wallet.batch(feesBatch);
+    const bestPossibleBatch = await getMaxPossibleBatchArray(feesBatch);
+
+    const batch = Tezos.wallet.batch(bestPossibleBatch);
 
     const batchOp = await batch.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);
@@ -336,7 +342,9 @@ export const claimAllRewardsForAllLocks = async (
       });
     }
 
-    const batch = Tezos.wallet.batch(allBatch);
+    const bestPossibleBatch = await getMaxPossibleBatchArray(allBatch);
+
+    const batch = Tezos.wallet.batch(bestPossibleBatch);
 
     const batchOp = await batch.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);
@@ -475,7 +483,8 @@ export const claimSupernova = async (
       });
     }
 
-    const batch = Tezos.wallet.batch(allBatch);
+    const bestPossibleBatch = await getMaxPossibleBatchArray(allBatch);
+    const batch = Tezos.wallet.batch(bestPossibleBatch);
 
     const batchOp = await batch.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { NotificationList } from './NotificationList';
 
 export interface INotificationBarProps {
   onhide: Function;
@@ -39,12 +40,7 @@ export default function NotificationBar(props: INotificationBarProps) {
        '
         >
           <div className='bg-popUpNotificationHeader py-4 px-3'>Notification</div>
-          <div className='flex-1 flex flex-col p-5 justify-center items-center'>
-            <div className='text-f14'>You’re all caught up</div>
-            <div className='text-center text-f10 border-b border-b-navBarBorder' >This is where  you’ll see notifications about
-              your Plenty transactions</div>
-            <div className='text-primary-200 text-f10'>Swap your assets</div>
-          </div>
+          <NotificationList/>
         </div>
         <div className='flex justify-end '>
           <div className='pt-2 pr-2 cursor-pointer hover:opacity-90' onClick={closeModalFunction}>Clear All</div>
