@@ -17,7 +17,7 @@ export function NotificationList (props: INotificationListProps) {
     </div>)
   }
   return (
-    <div>
+    <div className='overflow-y-scroll' >
       {notificationList.map((e)=><SingleNotification key={e.currentTimeStamp} {...e} />)}
     </div>
   );
