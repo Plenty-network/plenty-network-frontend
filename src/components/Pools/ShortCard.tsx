@@ -70,6 +70,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "Pools",
         id: "pools",
+        columnWidth: "w-[130px]",
         showOnMobile: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
@@ -93,6 +94,7 @@ export function ShortCard(props: IShortCardProps) {
         Header: "APR",
         id: "apr",
         subText: "current epoch",
+        columnWidth: "w-[100px]",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -110,7 +112,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "",
         id: "lools",
-        minWidth: 151,
+        columnWidth: "w-[150px] ml-auto",
         accessor: (x) => (
           <ManageBtn
             isLiquidityAvailable={x.isLiquidityAvailable}
@@ -128,6 +130,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "Pools",
         id: "pools",
+        columnWidth: "w-[160px]",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
@@ -150,6 +153,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "APR",
         id: "apr",
+        columnWidth: "w-[169px]",
         subText: "current epoch",
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         isToolTipEnabled: true,
@@ -168,6 +172,7 @@ export function ShortCard(props: IShortCardProps) {
         Header: "Volume",
         id: "Volume24h",
         subText: "24h",
+        columnWidth: "w-[129px]",
         isToolTipEnabled: true,
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
         canShort: true,
@@ -185,6 +190,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "TVL",
         id: "TVL",
+        columnWidth: "w-[122px]",
         tooltipMessage: "Total value locked up in the pool.",
         isToolTipEnabled: true,
         canShort: true,
@@ -202,6 +208,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "Fees",
         id: "fees",
+        columnWidth: "w-[122px]",
         subText: "current epoch",
         tooltipMessage: "Trading fees collected by the pool in the current epoch.",
         isToolTipEnabled: true,
@@ -220,6 +227,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "Bribes",
         id: "Bribes",
+        columnWidth: "w-[123px]",
         tooltipMessage:
           "Incentives provided by the protocols to boost the liquidity of their tokens.",
         isToolTipEnabled: true,
@@ -228,6 +236,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "",
         id: "lools",
+        columnWidth: "w-[200px] ml-auto",
         minWidth: 151,
         accessor: (x) => (
           <ManageBtn

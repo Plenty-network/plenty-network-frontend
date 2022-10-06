@@ -22,66 +22,15 @@ export interface ITabsProps {
   isVotesTable?: boolean;
   TableName: string | undefined;
   index: number;
+  columnWidth?: string | undefined;
 }
 
 export function Tabs(props: ITabsProps) {
   return (
     <th
-      className={`flex cursor-pointer font-subtitle1 text-text-50 text-left  ${
+      className={`flex cursor-pointer font-subtitle1 text-text-50 text-left ${props.columnWidth} ${
         props.index === 0 ? "justify-start" : "justify-end "
-      } ${
-        props.TableName === "locksRewards"
-          ? props.index === 0 && !isMobile
-            ? "w-[220px]"
-            : props.index === 1 && !isMobile
-            ? "md:ml-[26px]"
-            : isMobile && props.index === 0
-            ? "w-[180px]"
-            : isMobile && props.index === 1
-            ? "w-[90px]"
-            : isMobile && props.index === 2 && "ml-auto w-[100px]"
-          : props.TableName === "poolsRewards"
-          ? props.index === 0
-            ? "w-[200px]"
-            : isMobile && props.index !== 0
-            ? "w-[110px]"
-            : "w-[150px]"
-          : props.TableName === "lockPosition"
-          ? !isMobile && props.index === 0
-            ? " w-[150px]"
-            : !isMobile && props.index === 2
-            ? "w-[164px]"
-            : isMobile && props.index === 0
-            ? "w-[200px]"
-            : isMobile && props.index === 1
-            ? "w-[90px] pr-2"
-            : isMobile && props.index === 2
-            ? "w-[85px]"
-            : isMobile && props.index === 3
-            ? "w-[100px]"
-            : props.index === 1 || props.index === 5 || props.index === 6 || props.index === 4
-            ? "w-[200px]"
-            : " w-[130px]"
-          : props.TableName === "poolsPosition"
-          ? props.index === 0
-            ? "w-[180px]"
-            : props.index === 5
-            ? "w-[200px]"
-            : isMobile && props.index === 2
-            ? "w-[120px] flex-1"
-            : "w-[80px] md:w-[120px]"
-          : props.TableName === "votesTable"
-          ? props.index === 4
-            ? "w-[120px] md:w-[260px]"
-            : props.index === 0
-            ? "w-[150px]"
-            : "w-[112px]"
-          : props.index === 0
-          ? "w-[150px]"
-          : " flex-1"
-      } ${props.index === 0 && "pl-3 md:pl-0"} ${
-        props.TableName === "votesTable" && props.index === 4 && !isMobile && "ml-auto"
-      }`}
+      }  `}
       onClick={() => (props.onClick ? props.onClick() : {})}
     >
       <div className="flex gap-0 flex-col">

@@ -59,6 +59,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "Pool",
         id: "pools",
+        columnWidth: "w-[126px]",
         isToolTipEnabled: true,
         tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
         showOnMobile: true,
@@ -82,7 +83,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
                 />
               </div>
               <div>
-                <div className="font-body4">
+                <div className="font-body2 md:font-body4">
                   {" "}
                   {tEZorCTEZtoUppercase(x.attachedTokenASymbol.toString())}/
                   {tEZorCTEZtoUppercase(x.attachedTokenBSymbol.toString())}
@@ -91,7 +92,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
               </div>
             </div>
           ) : (
-            <div className="flex justify-center items-center font-body4 text-right">
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
               Not attached
             </div>
           ),
@@ -99,6 +100,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "Voting Power",
         id: "Voting Power",
+        columnWidth: "w-[70px]",
         tooltipMessage:
           " Your current voting power. This is different from your epoch voting power which is recorded at the beginning of each epoch.",
         isToolTipEnabled: true,
@@ -109,7 +111,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "",
         id: "vote",
-        minWidth: 200,
+        columnWidth: "w-[82px]",
+
         accessor: (x) => (
           <VoteBtn
             locksState={x.locksState}
@@ -123,7 +126,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "",
         id: "manage",
-        minWidth: 151,
+        columnWidth: "w-[93px]",
+
         accessor: (x) => (
           <ManageBtn
             setIsManageLock={props.setIsManageLock}
@@ -142,6 +146,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "Locks",
         id: "Locks",
+        columnWidth: "w-[157px]",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenId"),
         showOnMobile: true,
@@ -150,6 +155,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "Pool",
         id: "pool",
+        columnWidth: "w-[160px]",
         showOnMobile: true,
         isToolTipEnabled: true,
         tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
@@ -189,6 +195,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "Voting Power",
         id: "Voting Power",
+        columnWidth: "w-[124px]",
         isToolTipEnabled: true,
         tooltipMessage:
           " Your current voting power. This is different from your epoch voting power which is recorded at the beginning of each epoch.",
@@ -200,6 +207,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: `PLY locked`,
         id: "PLY locked",
+        columnWidth: "w-[124px]",
         tooltipMessage: "Amount of PLY locked up until expiry.",
         canShort: true,
         isToolTipEnabled: true,
@@ -209,6 +217,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "Lock expiry",
         id: "Lock expiry",
+        columnWidth: "w-[172px]",
         isToolTipEnabled: true,
         tooltipMessage:
           " The lock is unusable once it expires and underlying PLY may be withdrawn.",
@@ -220,7 +229,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "",
         id: "vote",
-        minWidth: 200,
+        columnWidth: "ml-auto w-[160px]",
+
         accessor: (x) => (
           <VoteBtn
             locksState={x.locksState}
@@ -234,7 +244,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "",
         id: "manage",
-        minWidth: 151,
+        columnWidth: "w-[160px]",
+
         accessor: (x) =>
           x.locksState !== ELocksState.EXPIRED && (
             <ManageBtn
@@ -415,7 +426,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName={"lockPosition"}
-          TableWidth="lg:min-w-[1100px]"
+          TableWidth="lg:min-w-[1136px]"
           NoData={NoData}
         />
       </div>

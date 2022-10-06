@@ -93,6 +93,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
       {
         Header: "Pool",
         id: "pools",
+        columnWidth: "w-[120px]",
         showOnMobile: true,
         accessor: (x: any) =>
           x.epoch === "" ? (
@@ -114,7 +115,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
                 />
               </div>
               <div>
-                <div className="font-body4">
+                <div className="font-body2 md:font-body4">
                   {" "}
                   {tEZorCTEZtoUppercase(x.votes.tokenASymbol?.toString())}/
                   {tEZorCTEZtoUppercase(x.votes.tokenBSymbol?.toString())}
@@ -136,6 +137,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
       {
         Header: "Reward",
         id: "Reward",
+        columnWidth: "w-[111px]",
         isToolTipEnabled: true,
         showOnMobile: true,
         accessor: (x: any) =>
@@ -154,6 +156,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
       {
         Header: "Voting power",
         id: "Voting power",
+        columnWidth: "w-[127px]",
         isToolTipEnabled: true,
         showOnMobile: true,
 
@@ -183,6 +186,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
       {
         Header: "Pool",
         id: "pool",
+        columnWidth: "w-[180px] lg:w-[220px]",
         showOnMobile: true,
         accessor: (x: any) =>
           x.epoch === "" ? (
@@ -204,7 +208,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
                 />
               </div>
               <div>
-                <div className="font-body4">
+                <div className="font-body2 md:font-body4">
                   {" "}
                   {tEZorCTEZtoUppercase(x.votes.tokenASymbol?.toString())}/
                   {tEZorCTEZtoUppercase(x.votes.tokenBSymbol?.toString())}
@@ -227,6 +231,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         Header: "Reward",
         id: "Reward",
         isToolTipEnabled: true,
+        columnWidth: "w-[111px]",
         showOnMobile: true,
         accessor: (x: any) =>
           x.epoch === "" ? (
@@ -245,6 +250,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
       {
         Header: "Voting power",
         id: "Voting power",
+        columnWidth: "w-[140px]",
         isToolTipEnabled: true,
         showOnMobile: true,
 
