@@ -85,7 +85,7 @@ export interface ITokenInterface {
   address?: string;
   symbol: string;
   variant: TokenVariant;
-  type: TokenVariant;
+  type: TokenType;
   tokenId?: number;
   decimals: number;
   mapId?: number;
