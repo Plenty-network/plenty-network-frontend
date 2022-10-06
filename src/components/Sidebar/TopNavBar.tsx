@@ -1,13 +1,13 @@
 import Image from "next/image";
-import * as React from "react";
-import { ConnectWalletBtnDeskTop } from "../Button/ConnectWalletDesktop";
-import myportfolionav from "../../assets/icon/myPortfolio/myportfolionav.svg";
-import plentyIcon from "../../assets/icon/common/plentyIcon.svg";
-import { Epoch } from "../Epoch";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { NotificationIcon, NotiFicationType } from "../NotificationIcon";
+import * as React from "react";
+import { useState } from "react";
+import plentyIcon from "../../assets/icon/common/plentyIcon.svg";
+import myportfolionav from "../../assets/icon/myPortfolio/myportfolionav.svg";
 import { store } from "../../redux";
+import { ConnectWalletBtnDeskTop } from "../Button/ConnectWalletDesktop";
+import { Epoch } from "../Epoch";
+import { NotificationIcon } from "../NotificationIcon";
 export interface ITopNavBarProps {
   setShowNotification: Function;
 }
@@ -36,7 +36,9 @@ export function TopNavBar(props: ITopNavBarProps) {
   return (
     <nav className="hidden md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   px-10 pl-0 topNavblurEffect z-50">
       <div className="h-full w-[240px] border-border-500/50 border-r flex items-center pl-[26px]">
-        <Image alt={"alt"} src={plentyIcon} />
+       <Link href={'/'} >
+         <Image className="cursor-pointer" alt={"alt"} src={plentyIcon} />
+       </Link>
       </div>
       <div className="flex justify-between flex-1 h-full">
         <Epoch />
@@ -55,7 +57,6 @@ export function TopNavBar(props: ITopNavBarProps) {
             </div>
             <NotificationIcon
               className="cursor-pointer hover:opacity-90"
-              type={NotiFicationType.haveNotification}
               onClick={props.setShowNotification}
             />
           </div>

@@ -90,6 +90,7 @@ import { EClaimAllState } from "../../src/components/Rewards/types";
 import { setFlashMessage } from "../../src/redux/flashMessage";
 import { Flashtype } from "../../src/components/FlashScreen";
 import { CLAIM, FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_ID } from "../../src/constants/localStorage";
+import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -1216,37 +1217,47 @@ function MyPortfolio(props: any) {
           <div className="flex">
             {Title}
             {activeSection === MyPortfolioSection.Rewards && (
-              <div
-                className={clsx(
-                  " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[12px] md:px-[40px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
-                  (poolsRewards.data?.gaugeAddresses?.length === 0 &&
-                    feeClaimData?.length === 0 &&
-                    bribesClaimData?.length === 0 &&
-                    inflationData?.length === 0) ||
-                    poolsRewards.data?.gaugeAddresses === undefined
-                    ? "cursor-not-allowed"
-                    : "cursor-pointer"
-                )}
-                onClick={
-                  (poolsRewards.data?.gaugeAddresses?.length === 0 &&
-                    feeClaimData?.length === 0 &&
-                    bribesClaimData?.length === 0 &&
-                    inflationData?.length === 0) ||
-                  poolsRewards.data?.gaugeAddresses === undefined
-                    ? () => {}
-                    : () => {
-                        setClaimValueDollar(
-                          poolsRewards.data?.gaugeEmissionsTotalValue
-                            .plus(bribesStats)
-                            .plus(tradingfeeStats)
-                        );
-                        setShowClaimPly(true);
+              <div className="ml-auto ">
+                <ToolTip
+                  id="tooltipM"
+                  position={Position.bottom}
+                  toolTipChild={
+                    <div className="w-[180px]">Claim maximum possible rewards within gas limit</div>
+                  }
+                >
+                  <div
+                    className={clsx(
+                      " flex items-center md:font-title3-bold font-subtitle4 text-black h-[50px] px-[12px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
+                      (poolsRewards.data?.gaugeAddresses?.length === 0 &&
+                        feeClaimData?.length === 0 &&
+                        bribesClaimData?.length === 0 &&
+                        inflationData?.length === 0) ||
+                        poolsRewards.data?.gaugeAddresses === undefined
+                        ? "cursor-not-allowed"
+                        : "cursor-pointer"
+                    )}
+                    onClick={
+                      (poolsRewards.data?.gaugeAddresses?.length === 0 &&
+                        feeClaimData?.length === 0 &&
+                        bribesClaimData?.length === 0 &&
+                        inflationData?.length === 0) ||
+                      poolsRewards.data?.gaugeAddresses === undefined
+                        ? () => {}
+                        : () => {
+                            setClaimValueDollar(
+                              poolsRewards.data?.gaugeEmissionsTotalValue
+                                .plus(bribesStats)
+                                .plus(tradingfeeStats)
+                            );
+                            setShowClaimPly(true);
 
-                        setClaimState(EClaimAllState.SUPERNOVA);
-                      }
-                }
-              >
-                Claim all
+                            setClaimState(EClaimAllState.SUPERNOVA);
+                          }
+                    }
+                  >
+                    Claim max
+                  </div>
+                </ToolTip>
               </div>
             )}
           </div>

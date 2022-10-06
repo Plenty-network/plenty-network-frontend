@@ -19,7 +19,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
     return (
       <Link className={`flex flex-col ${props?.className}`} href={props.pathName}>
         <div
-          className={`flex w-full justify-between py-3.5 ${props.isActive ? "sideNavactive" : ""} ${
+          className={`flex w-full justify-between py-3.5 ${props.isActive ? "sideNavactive text-white" : "text-text-250"} ${
             !props.isBottomMenu ? "px-6" : ""
           } text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-muted-250/60 ${
             !props.isBottomMenu ? "border-x-2" : ""
@@ -29,6 +29,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
             {props.iconName && (
               <Image
                 alt={"alt"}
+                className={props.isActive?'opacity-100':'opacity-40'}
                 src={`/assets/icon/${props.iconName}.svg`}
                 height={"11.67px"}
                 width={"16.66px"}
@@ -52,7 +53,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
   return (
     <div className={`flex flex-col ${props?.className}`} onClick={props.onClick}>
       <div
-        className={`flex w-full justify-between py-3.5 ${props.isActive ? "sideNavactive" : ""} ${
+        className={`flex w-full justify-between py-3.5 ${props.isActive ? "sideNavactive text-white" : "text-text-250"} ${
           !props.isBottomMenu ? "px-6" : ""
         } text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-muted-250/60 ${
           !props.isBottomMenu ? "border-x-2" : ""
@@ -62,6 +63,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
           {props.iconName && (
             <Image
               alt={"alt"}
+              className={props.isActive?'opacity-100':'opacity-40'}
               src={`/assets/icon/${props.iconName}.svg`}
               height={"11.67px"}
               width={"16.66px"}

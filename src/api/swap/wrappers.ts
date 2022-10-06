@@ -1,15 +1,17 @@
 import { AMM_TYPE } from "../../config/types";
 import { getDexType } from "../util/fetchConfig";
 import {
+  calculateTokensInGeneralStable,
+  calculateTokensInTezCtez,
   calculateTokensOutGeneralStable,
   calculateTokensOutTezCtez,
   loadSwapDataGeneralStable,
   loadSwapDataTezCtez,
 } from "./stableswap";
-import { calculateTokenOutputVolatile, loadSwapDataVolatile } from "./volatile";
+import { calculateTokenInputVolatile, calculateTokenOutputVolatile, loadSwapDataVolatile } from "./volatile";
 import { BigNumber } from "bignumber.js";
 import { ISwapDataResponse, ICalculateTokenResponse, IRouterResponse } from "./types";
-import { computeAllPaths } from "./router";
+import { computeAllPaths, computeAllPathsReverse } from "./router";
 import { store } from "../../redux";
 import axios from "axios";
 import Config from "../../config/config";
@@ -128,6 +130,85 @@ export const calculateTokensOutWrapper = (
   }
 };
 
+export const calculateTokensInWrapper = (
+  tokenInAmount: BigNumber,
+  Exchangefee: BigNumber,
+  slippage: BigNumber,
+  tokenIn: string,
+  tokenOut: string,
+  tokenInSupply: BigNumber,
+  tokenOutSupply: BigNumber,
+  tokenInPrecision?: BigNumber,
+  tokenOutPrecision?: BigNumber,
+  target?: BigNumber
+): ICalculateTokenResponse => {
+  try {
+    const type = getDexType(tokenIn, tokenOut);
+    let outputData: ICalculateTokenResponse;
+
+    if (type === AMM_TYPE.VOLATILE && tokenInSupply && tokenOutSupply) {
+      outputData = calculateTokenInputVolatile(
+        tokenInAmount,
+        tokenInSupply,
+        tokenOutSupply,
+        Exchangefee,
+        slippage,
+        tokenIn,
+        tokenOut
+      );
+    } else {
+      if (tokenIn === "tez" && tokenOut === "ctez" && target) {
+        outputData = calculateTokensInTezCtez(
+          tokenInSupply,
+          tokenOutSupply,
+          tokenInAmount,
+          Exchangefee,
+          slippage,
+          target,
+          tokenIn
+        );
+      } else if (tokenIn === "ctez" && tokenOut === "tez" && target) {
+        outputData = calculateTokensInTezCtez(
+          tokenOutSupply,
+          tokenInSupply,
+          tokenInAmount,
+          Exchangefee,
+          slippage,
+          target,
+          tokenIn
+        );
+      } else if (tokenInSupply && tokenOutSupply && tokenInPrecision && tokenOutPrecision) {
+        outputData = calculateTokensInGeneralStable(
+          tokenInSupply,
+          tokenOutSupply,
+          tokenInAmount,
+          Exchangefee,
+          slippage,
+          tokenIn,
+          tokenOut,
+          tokenInPrecision,
+          tokenOutPrecision
+        );
+      } else {
+        throw new Error("Invalid Parameter");
+      }
+    }
+
+    return outputData;
+  } catch (error) {
+    console.log({ message: "swap data error", error });
+    return {
+      tokenOutAmount: new BigNumber(0),
+      fees: new BigNumber(0),
+      feePerc: new BigNumber(0),
+      minimumOut: new BigNumber(0),
+      exchangeRate: new BigNumber(0),
+      priceImpact: new BigNumber(0),
+      error,
+    };
+  }
+};
+
 export const computeAllPathsWrapper = (
   paths: string[],
   tokenInAmount: BigNumber,
@@ -187,6 +268,82 @@ export const computeAllPathsWrapper = (
     };
   }
 };
+
+export const computeReverseCalculationWrapper = (
+  paths: string[],
+  tokenInAmount: BigNumber,
+  slippage: BigNumber,
+  swapData: ISwapDataResponse[][],
+  tokenPrice: { [id: string]: number },
+  paths2 : string[],
+  swapData2 : ISwapDataResponse[][]
+): IRouterResponse => {
+  try {
+    const state = store.getState();
+    const TOKEN = state.config.standard;
+
+    const bestPath = computeAllPathsReverse(paths, tokenInAmount, slippage, swapData);
+    // const increasedInput = bestPath.tokenOutAmount.plus(bestPath.tokenOutAmount.multipliedBy(0.001));
+    const forwardPass = computeAllPaths(  paths2 , bestPath.tokenOutAmount , slippage , swapData2);
+
+
+    console.log(paths , paths2);
+    console.log(bestPath.tokenOutAmount.toString());
+    console.log(forwardPass);
+    console.log(forwardPass.tokenOutAmount.toString());
+
+    // Check difference bw forwardpass.tokenOut and bestPath.tokenOut
+
+
+    const isStable: boolean[] = [];
+    let finalPriceImpact = new BigNumber(0);
+    let finalFeePerc = new BigNumber(0);
+
+    for (var x of forwardPass.priceImpact) {
+      finalPriceImpact = finalPriceImpact.plus(x);
+    }
+
+    for (var x of forwardPass.feePerc) {
+      finalFeePerc = finalFeePerc.plus(x);
+      if (x.isEqualTo(new BigNumber(0.1))) isStable.push(true);
+      else isStable.push(false);
+    }
+
+    const exchangeRate = new BigNumber(
+      new BigNumber(tokenPrice[forwardPass.path[0]]).dividedBy(
+        tokenPrice[forwardPass.path[forwardPass.path.length - 1]]
+      )
+    ).decimalPlaces(TOKEN[forwardPass.path[forwardPass.path.length - 1]].decimals);
+
+    return {
+      path: forwardPass.path,
+      tokenOutAmount: bestPath.tokenOutAmount,
+      userFinalTokenOut : forwardPass.tokenOutAmount,
+      finalMinimumTokenOut: forwardPass.minimumTokenOut[forwardPass.minimumTokenOut.length - 1],
+      minimumTokenOut: forwardPass.minimumTokenOut,
+      finalPriceImpact: finalPriceImpact,
+      finalFeePerc: finalFeePerc,
+      feePerc: forwardPass.feePerc,
+      isStable: isStable,
+      exchangeRate: exchangeRate,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      path: [],
+      tokenOutAmount: new BigNumber(0),
+      finalMinimumTokenOut: new BigNumber(0),
+      minimumTokenOut: [],
+      finalPriceImpact: new BigNumber(0),
+      finalFeePerc: new BigNumber(0),
+      feePerc: [],
+      isStable: [],
+      exchangeRate: new BigNumber(0),
+    };
+  }
+};
+
+
 
 // TODO : Check this api for large amounts
 export const reverseCalculation = (
