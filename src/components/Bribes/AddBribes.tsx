@@ -104,7 +104,7 @@ function AddBribes(props: IAddBribes) {
       >
         {
           <>
-            <div className="flex">
+            <div className="flex ">
               {/* <div className="cursor-pointer" onClick={() => props.setShow(false)}>
               <Image alt={"alt"} src={arrowLeft} />
             </div> */}
@@ -113,7 +113,7 @@ function AddBribes(props: IAddBribes) {
                 <Image alt={"alt"} src={info} />
               </div>
             </div>
-            <div className="border bg-card-200 mt-2 border-text-800 rounded-2xl  pt-[22px] pb-[20px]">
+            <div className="border bg-card-200 mt-3 border-text-800 rounded-2xl  pt-[16px] pb-[20px]">
               <div className="text-text-250 font-body4 px-3 md:px-4">Select epochs</div>
               <div className="flex items-center mt-[14px] px-[18px]">
                 <Image src={checkDisable} />
@@ -143,7 +143,7 @@ function AddBribes(props: IAddBribes) {
               </div>
               <div
                 className={clsx(
-                  " mt-4 h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700",
+                  " mt-4 h-[102px] border bg-muted-200/[0.1]  mx-4  rounded-2xl px-4 hover:border-text-700",
 
                   true ? "border-text-700" : "border-text-800 "
                 )}
@@ -223,9 +223,39 @@ function AddBribes(props: IAddBribes) {
                   </div>
                 </div>
               </div>
+              <div className="flex h-[50px] items-center border-t border-b border-text-800/[0.5] bg-card-500 mt-[22px] px-5">
+                <div className="flex items-center ">
+                  <span className="flex">
+                    <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
+                      <Image
+                        alt={"alt"}
+                        src={getImagesPath("ctez")}
+                        width={"24px"}
+                        height={"24px"}
+                      />
+                    </div>
+                    <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
+                      <Image
+                        alt={"alt"}
+                        src={getImagesPath("tez")}
+                        width={"24px"}
+                        height={"24px"}
+                      />
+                    </div>
+                  </span>
+                  <span className="text-white font-body4  relative top-[1px]">CTEZ/TEZ</span>
+                </div>
+                <div className="ml-auto font-body4 text-white">$23.34</div>
+              </div>
+              <div className="font-body2 text-text-250 mt-4 mx-5">
+                You are adding a bribe of
+                <span className="text-white ml-1">150 USDT</span> from Epoch 23-26 ( 29 Sep,2022 to
+                12 Oct 2022)
+              </div>
             </div>
+
             <div className="mt-[18px]">
-              <Button color="primary">Confirm vote</Button>
+              <Button color="primary">Add bribes</Button>
             </div>
           </>
         }
