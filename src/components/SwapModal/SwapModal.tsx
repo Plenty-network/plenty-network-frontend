@@ -44,7 +44,7 @@ function SwapModal(props: ISwapModalProps) {
     const tokensArray = Object.entries(topTokens);
     return tokensArray.map((token) => ({
       name: token[0],
-      image: `/assets/TokensNew/${token[0]}.png`,
+      image: `/assets/Tokens/${token[0]}.png`,
     }));
   }, [topTokens]);
 
