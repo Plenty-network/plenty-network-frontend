@@ -9,7 +9,7 @@ import { store } from "../../redux";
 function StatsRewards(props: IStatsRewardsProps) {
   const claimAllInflationData = store.getState().portfolioRewards.claimAllInflationData;
   return (
-    <div className="flex gap-2.5 min-w-[1130px]">
+    <div className="flex gap-2.5 min-w-[1130px] w-full justify-between ">
       <StatsCard
         toolTipMessage={"PLY rewards through gauges."}
         title={"PLY emisisons"}

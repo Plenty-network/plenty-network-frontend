@@ -45,7 +45,7 @@ export default function NotificationBar(props: INotificationBarProps) {
           <div className='absolute bg-popUpNotificationHeader z-10 rotate-45 w-8 h-8 right-[13px] -top-[2px]'>
               
           </div>
-          <div className='bg-popUpNotificationHeader h-[44px] rounded-t-[4px] z-20 flex justify-between font-semibold items-center px-4 text-f14'>
+          <div className='bg-popUpNotificationHeader h-[44px] rounded-t-[4px] z-20 flex justify-between font-semibold items-center px-4 !py-[13px] text-f14'>
             <p>Notification</p>
             <p  onClick={clearNotification} className='cursor-pointer'>Clear</p>
           </div>
