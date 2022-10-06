@@ -6,6 +6,10 @@ import concat from "lodash-es/concat";
 import findLastIndex from "lodash-es/findLastIndex"
 import { dappClient } from "../../common/walletconnect";
 
+/**
+ * Find and return the maximum possible length of batch possible to run without exhausting the gas.
+ * @param operationsBatch - Array of all batch operations
+ */
 export const getMaxPossibleBatchArray = async (
   operationsBatch: WalletParamsWithKind[]
 ): Promise<WalletParamsWithKind[]> => {
@@ -49,7 +53,11 @@ export const getMaxPossibleBatchArray = async (
   }
 };
 
-
+/**
+ * Find and return the maximum possible length of batch possible to run without exhausting the gas,
+ * optimised to reduce network fetch time.
+ * @param operationsBatch - Array of all batch operations
+ */
 export const getMaxPossibleBatchArrayV2 = async (
   operationsBatch: WalletParamsWithKind[]
 ): Promise<WalletParamsWithKind[]> => {
@@ -61,8 +69,16 @@ export const getMaxPossibleBatchArrayV2 = async (
     const listOfLeftoverBatches: ParamsWithKind[][] = [];
     const Tezos = await dappClient().tezos();
     // Add complete list as first possibility
-    listOfAllBatches.push(maxPossibleBatch);
-    listOfLeftoverBatches.push([]);
+    // listOfAllBatches.push(maxPossibleBatch);
+    // listOfLeftoverBatches.push([]);
+    // Check if it's possible to execute the original batch and return immediately if so.
+    const isTransactionPossible: boolean = await Tezos.estimate
+        .batch(maxPossibleBatch)
+        .then((_est) => true)
+        .catch((_err) => false);
+    if(isTransactionPossible) {
+      return maxPossibleBatch as WalletParamsWithKind[];
+    }
     // Create the approx max possible batches list
     while (maxPossibleBatch.length > 0) {
       const midIndex = Math.floor(maxPossibleBatch.length / 2);
