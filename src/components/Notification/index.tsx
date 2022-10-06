@@ -5,7 +5,7 @@ import { isMobile } from "react-device-detect";
 const NotificationMobile = dynamic(() => import("./Mobile"), {
   loading: () => <></>,
 });
-const NotificationDesktop = dynamic(() => import("./Desktop"), {
+const NotificationDesktop = dynamic(() => import("./desktop"), {
   loading: () => <></>,
 });
 export interface INotificationBarProps {
