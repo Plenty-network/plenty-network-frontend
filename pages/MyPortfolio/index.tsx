@@ -1359,7 +1359,7 @@ function MyPortfolio(props: any) {
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
+                <p className="cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[15px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
                   Trade locks
                 </p>
               </div>
@@ -1499,16 +1499,7 @@ function MyPortfolio(props: any) {
           content={contentTransaction}
         />
       )}
-      {/* {showClaimAllPly && (
-        <ClaimAll
-          show={showClaimAllPly}
-          setShow={setShowClaimAllPly}
-          data={poolsRewards.data.poolsRewardsData}
-          totalValue={poolsRewards.data.gaugeEmissionsTotal}
-          tokenPrice={tokenPrice}
-          handleClaimAll={handleClaimAll}
-        />
-      )} */}
+
       {showClaimPly && (
         <ClaimPly
           show={showClaimPly}
