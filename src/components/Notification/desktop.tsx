@@ -8,6 +8,7 @@ export interface INotificationBarProps {
 
 export default function NotificationBar(props: INotificationBarProps) {
   const [isClose, setIsClose] = React.useState(false);
+  const [isClearNotification, setClearNotification] = React.useState(false);
   const clickedInModal = (e: any) => {
     try {
       if (e.target.id === 'modal_outer') {
@@ -22,8 +23,10 @@ export default function NotificationBar(props: INotificationBarProps) {
     }, 300);
   }
   const clearNotification=()=>{
+    setTimeout(()=>{
+      setClearNotification((currentState)=>!currentState);  
+      },500);
     removeAllNotification();
-    closeModalFunction();
   }
   return (
     <div
@@ -50,7 +53,7 @@ export default function NotificationBar(props: INotificationBarProps) {
             <p  onClick={clearNotification} className='cursor-pointer'>Clear</p>
           </div>
           {/*  */}
-          <NotificationList/>
+          <NotificationList isClearNotification={isClearNotification}/>
         </div>
       </div>
     </div>

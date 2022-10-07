@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { NotificationList } from './NotificationList';
+import { removeAllNotification } from './notificationMessageSave';
 
 export interface INotificationBarProps {
   onhide: Function;
@@ -7,6 +8,7 @@ export interface INotificationBarProps {
 
 export default function NotificationBar(props: INotificationBarProps) {
   const [isClose, setIsClose] = React.useState(false);
+  const [isClearNotification, setClearNotification] = React.useState(false);
   const clickedInModal = (e: any) => {
     try {
       if (e.target.id === 'modal_outer') {
@@ -19,6 +21,12 @@ export default function NotificationBar(props: INotificationBarProps) {
     setTimeout(() => {
       props.onhide && props.onhide();
     }, 300);
+  }
+  const clearNotification=()=>{
+    setTimeout(()=>{
+    setClearNotification((currentState)=>!currentState);  
+    },500);
+    removeAllNotification()
   }
   return (
     <div
@@ -40,10 +48,10 @@ export default function NotificationBar(props: INotificationBarProps) {
        '
         >
           <div className='bg-popUpNotificationHeader py-4 px-3'>Notification</div>
-          <NotificationList/>
+          <NotificationList isClearNotification={isClearNotification}/>
         </div>
         <div className='flex justify-end '>
-          <div className='pt-2 pr-2 cursor-pointer hover:opacity-90' onClick={closeModalFunction}>Clear All</div>
+          <div className='pt-2 pr-2 cursor-pointer hover:opacity-90' onClick={clearNotification}>Clear All</div>
         </div>
       </div>
     </div>
