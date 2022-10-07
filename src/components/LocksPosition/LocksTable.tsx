@@ -108,10 +108,25 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         showOnMobile: true,
         accessor: (x: any) => <VotingPower value={x.currentVotingPower} />,
       },
+
+      {
+        Header: "",
+        id: "manage",
+        columnWidth: "w-[93px] ml-auto",
+
+        accessor: (x) => (
+          <ManageBtn
+            setIsManageLock={props.setIsManageLock}
+            setShowCreateLockModal={props.setShowCreateLockModal}
+            setManageData={props.setManageData}
+            manageData={x}
+          />
+        ),
+      },
       {
         Header: "",
         id: "vote",
-        columnWidth: "w-[82px]",
+        columnWidth: "w-[82px] ",
 
         accessor: (x) => (
           <VoteBtn
@@ -120,20 +135,6 @@ export function LocksTablePosition(props: ILocksTablePosition) {
             setWithdraw={props.setShowWithdraw}
             manageData={x}
             setManageData={props.setManageData}
-          />
-        ),
-      },
-      {
-        Header: "",
-        id: "manage",
-        columnWidth: "w-[93px]",
-
-        accessor: (x) => (
-          <ManageBtn
-            setIsManageLock={props.setIsManageLock}
-            setShowCreateLockModal={props.setShowCreateLockModal}
-            setManageData={props.setManageData}
-            manageData={x}
           />
         ),
       },
@@ -226,25 +227,11 @@ export function LocksTablePosition(props: ILocksTablePosition) {
 
         accessor: (x: any) => <LockExpiry endTime={x.endTimeStamp} />,
       },
-      {
-        Header: "",
-        id: "vote",
-        columnWidth: "ml-auto w-[160px]",
 
-        accessor: (x) => (
-          <VoteBtn
-            locksState={x.locksState}
-            id={Number(x.tokenId)}
-            setWithdraw={props.setShowWithdraw}
-            setManageData={props.setManageData}
-            manageData={x}
-          />
-        ),
-      },
       {
         Header: "",
         id: "manage",
-        columnWidth: "w-[160px]",
+        columnWidth: "w-[180px] ml-auto",
 
         accessor: (x) =>
           x.locksState !== ELocksState.EXPIRED && (
@@ -256,6 +243,21 @@ export function LocksTablePosition(props: ILocksTablePosition) {
             />
           ),
       },
+      {
+        Header: "",
+        id: "vote",
+        columnWidth: " w-[160px]",
+
+        accessor: (x) => (
+          <VoteBtn
+            locksState={x.locksState}
+            id={Number(x.tokenId)}
+            setWithdraw={props.setShowWithdraw}
+            setManageData={props.setManageData}
+            manageData={x}
+          />
+        ),
+      },
     ],
     [valueFormat]
   );
@@ -264,7 +266,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       //isstaked
       return (
         <div
-          className="bg-primary-500/10 md:w-[151px] w-[78px] cursor-pointer  text-primary-500 hover:opacity-90  md:font-subtitle4 font-f11-600  rounded-lg flex items-center h-[40px] justify-center"
+          className="bg-primary-500/10 md:w-[151px] w-[78px] cursor-pointer  text-primary-500 hover:opacity-90  md:font-subtitle4 font-f11-500  rounded-lg flex items-center h-[40px] justify-center"
           onClick={() => {
             props.setIsManageLock(true);
             props.setManageData(props.manageData);
@@ -292,7 +294,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         //isstaked
         return (
           <div
-            className="bg-primary-500/10 w-[59px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
+            className="bg-primary-500/10 w-[59px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
             onClick={() => {
               dispatch(
                 setSelectedDropDown({
@@ -339,7 +341,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         //isstaked
         return (
           <div
-            className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
+            className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
             onClick={() => {}}
           >
             Voted{" "}
@@ -401,7 +403,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         //isstaked
         return (
           <div
-            className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
+            className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
             onClick={() => {}}
           >
             Vote{" "}
@@ -426,7 +428,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName={"lockPosition"}
-          TableWidth="lg:min-w-[1136px]"
+          TableWidth="lg:min-w-[1180px]"
           NoData={NoData}
         />
       </div>
