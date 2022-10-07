@@ -195,7 +195,7 @@ function CreateLock(props: ICreateLockProps) {
                 <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
               </div>
               <div className=" ml-1 text-primary-500 font-body2">
-                {Number(props.plyBalance) >= 0 ? Number(props.plyBalance) : "0.00"} PLY
+                {Number(props.plyBalance) >= 0 ? props.plyBalance.toFixed(2) : "0.00"} PLY
               </div>
             </div>
           </div>
