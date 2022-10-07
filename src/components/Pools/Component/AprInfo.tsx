@@ -21,18 +21,18 @@ export function AprInfo(props: IAprInfoProps) {
           </div>
         }
       >
-        <div className={props.isMobile ? "flex gap-2 flex-col" : "flex gap-2 "}>
+        <div className={props.isMobile ? "flex  flex-col gap-[7px]" : "flex  "}>
         <div className="bg-muted-200 border md:text-f14 text-f12 cursor-pointer text-white border-border-500 rounded-lg py-[3px] px-2 ">
           {parseInt(props.currentApr).toFixed(1)}%
         </div>
-      {!props.isMobile && <Image alt={"alt"} src={subtractSvg} />}
+      {!props.isMobile && <Image width={20} height={20} alt={"alt"} src={subtractSvg} />}
         <div
-          className={`md:text-f14 text-f12 cursor-pointer text-white py-[3px] px-2 pr-0 ${
-            props.isMobile ? "flex gap-2" : ""
+          className={`md:text-f14 text-f12 cursor-pointer text-white py-[3px]  pr-0 ${
+            props.isMobile ? "flex " : ""
           }`}
         >
           {" "}
-          {parseInt(props.boostedApr).toFixed(1)}%{props.isMobile && <Image src={subtractSvg} />}
+          {parseInt(props.boostedApr).toFixed(1)}%{props.isMobile && <Image width={20} height={20} src={subtractSvg} />}
         </div>
         </div>
       </ToolTip>

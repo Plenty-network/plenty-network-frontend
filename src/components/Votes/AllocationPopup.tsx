@@ -8,7 +8,7 @@ function AllocationPopup(props: IAllocationProps) {
   };
 
   return props.show ? (
-    <PopUpModal onhide={closeModal} className="rounded-none w-[400px] max-w-[400px] px-5 ">
+    <PopUpModal onhide={closeModal} className="rounded-none w-[400px] max-w-[400px]">
       <VotingAllocation
         show={props.show}
         setShow={props.setShow}

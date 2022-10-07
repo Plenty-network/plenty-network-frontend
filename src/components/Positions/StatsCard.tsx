@@ -12,7 +12,7 @@ function StatsCard(props: IStatsCardProps) {
     <>
       <div
         className={clsx(
-          "h-[96px] py-4 px-6 border border-text-800/[0.5] flex bg-primary-150 rounded-xl",
+          "h-[96px] py-4 px-6 border border-text-800/[0.5] flex items-center bg-primary-150 rounded-xl",
           props.isLast ? "w-[410px] " : "w-[222px] "
         )}
       >

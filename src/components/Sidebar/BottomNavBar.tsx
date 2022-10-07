@@ -95,9 +95,10 @@ export function MenuWithLink(props: IBottomNavMenuProps) {
     <Link href={props.link ? props.link : ""}>
       <div
         className={`${
-          props.active ? "bg-sideBarHover border-t-primary-500" : "border-t-borderColor"
+          props.active ? "bg-sideBarHover border-t-primary-500 text-white" : "border-t-borderColor text-text-250"
         } ${
           props.className
+          
         } border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center   px-[18px] py-[9px]  hover:bg-sideBarHover hover:border-t-primary-500 `}
       >
         {props.iconName && (

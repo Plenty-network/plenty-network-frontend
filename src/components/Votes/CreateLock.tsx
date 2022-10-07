@@ -63,6 +63,11 @@ function CreateLock(props: ICreateLockProps) {
     setVotingPower(res);
   }, [props.plyInput, props.lockingDate]);
   const handlePlyInput = async (input: string | number) => {
+    if (input == ".") {
+      props.setPlyInput("0.");
+
+      return;
+    }
     if (input === "" || isNaN(Number(input))) {
       props.setPlyInput("");
 
@@ -153,7 +158,7 @@ function CreateLock(props: ICreateLockProps) {
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
-      className="w-[400px] max-w-[400px] px-4 md:px-6 md:w-[602px] md:max-w-[602px]"
+      className="w-[400px] max-w-[400px]  md:w-[602px] md:max-w-[602px]"
     >
       {screen === "1" ? (
         <>

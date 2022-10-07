@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Image from "next/image";
 import PropTypes from "prop-types";
 import * as React from "react";
@@ -47,15 +46,7 @@ import StatsRewards from "../../src/components/Rewards/Stats";
 import { MODULE } from "../../src/components/Votes/types";
 import { PoolsTableRewards } from "../../src/components/PoolsRewards/poolsRewardsTable";
 import ManageLock from "../../src/components/LocksPosition/ManageLock";
-import {
-  getAllLocksPositionData,
-  getPoolsRewardsData,
-  getPositionsData,
-  getPositionStatsData,
-  getTvlStatsData,
-  getUnclaimedRewardsForLock,
-  getVotesStatsData,
-} from "../../src/api/portfolio/kiran";
+import { getAllLocksPositionData, getUnclaimedRewardsForLock } from "../../src/api/portfolio/locks";
 import {
   IAllLocksPositionData,
   IPoolsRewardsResponse,
@@ -91,6 +82,12 @@ import { setFlashMessage } from "../../src/redux/flashMessage";
 import { Flashtype } from "../../src/components/FlashScreen";
 import { CLAIM, FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_ID } from "../../src/constants/localStorage";
 import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
+import {
+  getPositionStatsData,
+  getTvlStatsData,
+  getVotesStatsData,
+} from "../../src/api/portfolio/stats";
+import { getPoolsRewardsData, getPositionsData } from "../../src/api/portfolio/pools";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -1222,11 +1219,6 @@ function MyPortfolio(props: any) {
   };
   return (
     <>
-      <Head>
-        <title className="font-medium1">Plenty network</title>
-        <meta name="description" content="plenty network" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <SideBarHOC>
         <div className="pt-5 md:px-[24px] px-2">
           <div className="flex">

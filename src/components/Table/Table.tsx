@@ -125,10 +125,11 @@ const Table = <D extends object>({
               ref={headerRef}
               key={`headerGroup_${index}`}
               className={clsx(
-                "border border-borderCommon bg-cardBackGround flex  md:py-3  py-3  items-center rounded-t-xl	rounded-b md:pl-[50px] pl-5 pr-4  md:pr-[25px]",
+                "border border-borderCommon bg-cardBackGround flex  md:py-3  py-3  items-center rounded-t-xl	rounded-b  pl-5 pr-4  lg:pr-[25px]",
                 TableName === "poolsRewards" || TableName === "locksRewards"
                   ? "justify-between "
-                  : ""
+                  : "",
+                TableName === "lockPosition" ? "lg:pl-[30px]" : "lg:pl-[50px] "
               )}
             >
               {headerGroup.headers.map((column, i) => (
@@ -187,11 +188,13 @@ const Table = <D extends object>({
                   // eslint-disable-next-line react/jsx-key
 
                   <tr
-                    className={` flex   items-center  rounded-lg slideFromTop md:pl-[50px] pl-5 pr-4  md:pr-[25px] ${
+                    className={` flex   items-center  rounded-lg slideFromTop pl-5 pr-4  lg:pr-[25px]  ${
                       TableName === "poolsRewards" || TableName === "locksRewards"
                         ? "justify-between  "
                         : ""
-                    } ${
+                    } 
+                    ${TableName === "lockPosition" ? "lg:pl-[30px]" : "lg:pl-[50px] "}
+                    ${
                       TableName === "locksRewards" && row.original?.epoch !== ""
                         ? "py-1 "
                         : "border border-borderCommon  bg-cardBackGround md:py-3  py-1 "

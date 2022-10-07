@@ -1,44 +1,42 @@
-import Head from "next/head";
+import { BigNumber } from "bignumber.js";
+import clsx from "clsx";
 import Image from "next/image";
 import * as React from "react";
-import { BigNumber } from "bignumber.js";
-import HeadInfo from "../../src/components/HeadInfo";
-import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useEffect, useState, useRef } from "react";
-import { AppDispatch, store, useAppSelector } from "../../src/redux";
-import { fetchWallet } from "../../src/redux/wallet/wallet";
-import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
-import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
-import SelectNFT from "../../src/components/Votes/SelectNFT";
-import chartMobile from "../../src/assets/icon/vote/chartMobile.svg";
+import { getCompleteUserBalace } from "../../src/api/util/balance";
+import { IAllBalanceResponse } from "../../src/api/util/types";
+import { addRemainingVotesDust, getVeNFTsList, votesPageDataWrapper } from "../../src/api/votes";
+import { ELocksState, ISelectedPool, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import info from "../../src/assets/icon/swap/info.svg";
+import chartMobile from "../../src/assets/icon/vote/chartMobile.svg";
+import ConfirmTransaction from "../../src/components/ConfirmTransaction";
+import { Flashtype } from "../../src/components/FlashScreen";
+import HeadInfo from "../../src/components/HeadInfo";
+import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
+import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
-import { VotesTable } from "../../src/components/Votes/VotesTable";
+import TransactionSubmitted from "../../src/components/TransactionSubmitted";
+import AllocationPopup from "../../src/components/Votes/AllocationPopup";
 import CastVote from "../../src/components/Votes/CastVote";
 import CreateLock from "../../src/components/Votes/CreateLock";
-import VotingAllocation from "../../src/components/Votes/VotingAllocation";
-import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
-import { getEpochData, setSelectedEpoch } from "../../src/redux/epoch/epoch";
-import { useInterval } from "../../src/hooks/useInterval";
-import { addRemainingVotesDust, getVeNFTsList } from "../../src/api/votes";
-import { ELocksState, ISelectedPool, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
-import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
-import ConfirmTransaction from "../../src/components/ConfirmTransaction";
-import TransactionSubmitted from "../../src/components/TransactionSubmitted";
-import { createLock } from "../../src/operations/locks";
-import { setIsLoadingWallet } from "../../src/redux/walletLoading";
-import AllocationPopup from "../../src/components/Votes/AllocationPopup";
-import { IAllBalanceResponse } from "../../src/api/util/types";
-import { vote } from "../../src/operations/vote";
-import { votesPageDataWrapper } from "../../src/api/votes";
-import { IVotes } from "../../src/operations/types";
-import clsx from "clsx";
 import EpochPopup from "../../src/components/Votes/EpochPopup";
-import { setSelectedDropDown } from "../../src/redux/veNFT";
-import { setFlashMessage } from "../../src/redux/flashMessage";
-import { Flashtype } from "../../src/components/FlashScreen";
+import SelectNFT from "../../src/components/Votes/SelectNFT";
+import { VotesTable } from "../../src/components/Votes/VotesTable";
+import VotingAllocation from "../../src/components/Votes/VotingAllocation";
 import { FIRST_TOKEN_AMOUNT, TOKEN_A } from "../../src/constants/localStorage";
+import { useInterval } from "../../src/hooks/useInterval";
+import { createLock } from "../../src/operations/locks";
+import { IVotes } from "../../src/operations/types";
+import { vote } from "../../src/operations/vote";
+import { AppDispatch, store, useAppSelector } from "../../src/redux";
+import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
+import { getEpochData, setSelectedEpoch } from "../../src/redux/epoch/epoch";
+import { setFlashMessage } from "../../src/redux/flashMessage";
+import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
+import { setSelectedDropDown } from "../../src/redux/veNFT";
+import { fetchWallet } from "../../src/redux/wallet/wallet";
+import { setIsLoadingWallet } from "../../src/redux/walletLoading";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -422,11 +420,7 @@ export default function Vote() {
 
   return (
     <>
-      <Head>
-        <title className="font-medium1">Plenty network</title>
-        <meta name="description" content="plenty network" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      
       <SideBarHOC>
         <div className="md:flex ">
           <div className="md:min-w-[416px] lg:min-w-[562px] md:w-full">
@@ -458,18 +452,18 @@ export default function Vote() {
                 </div>
               </div>
               <div className="md:hidden block flex flex-row justify-between items-center px-3 md:px-0 py-2 md:py-0 border-b border-text-800/[0.5]">
-                <div className="font-mobile-400 w-[134px]">
+                <div className="font-mobile-400 w-[134px] text-text-50">
                   Verify your vote percentage and cast vote
                 </div>
 
-                <div className="border border-muted-50 px-4 bg-muted-300 h-[50px]  flex items-center justify-center rounded-xl">
+                <div className="border border-muted-50 px-5 bg-muted-300 h-[38px]  flex items-center justify-center rounded-xl">
                   {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
                 </div>
                 <div className="">
                   {alreadyVoted ? (
                     <div
                       className={clsx(
-                        "px-4   h-[50px] flex items-center justify-center rounded-xl ",
+                        "px-4   h-[38px] flex items-center justify-center rounded-xl ",
 
                         "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                       )}
@@ -489,7 +483,7 @@ export default function Vote() {
                     >
                       <div
                         className={clsx(
-                          " px-4 h-[50px] flex items-center justify-center rounded-xl ",
+                          " px-4  h-[38px] ] flex items-center justify-center rounded-xl ",
                           votes.length !== 0 &&
                             (selectedEpoch?.epochNumber
                               ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
@@ -521,7 +515,7 @@ export default function Vote() {
                   ) : sumOfVotes === 100 ? (
                     <div
                       className={clsx(
-                        "px-4   h-[50px] flex items-center justify-center rounded-xl ",
+                        "px-4    h-[38px]  flex items-center justify-center rounded-xl ",
 
                         "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                       )}
@@ -531,7 +525,7 @@ export default function Vote() {
                   ) : (
                     <div
                       className={clsx(
-                        "px-4   h-[50px] flex items-center justify-center rounded-xl ",
+                        "px-4    h-[38px]  flex items-center justify-center rounded-xl ",
 
                         votes.length !== 0 &&
                           (selectedEpoch?.epochNumber
