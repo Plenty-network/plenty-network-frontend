@@ -1,8 +1,8 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import lock from "../../../src/assets/icon/vote/lock.svg";
 
+import drop from "../../../src/assets/icon/bribes/addBribes.svg";
 import checkDisable from "../../../src/assets/icon/bribes/checkDisable.svg";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
@@ -67,16 +67,24 @@ function AddBribes(props: IAddBribes) {
       ? handleTokenInput(Number(allBalance.userBalance[props.bribeToken.name]) - 0.02)
       : handleTokenInput(allBalance.userBalance[props.bribeToken.name].toNumber());
   };
-  const [selectedDropDown, setSelectedDropDown] = useState("");
-  const dateFormat = useMemo(() => {
-    var date = new Date(currentEpoch.endTimestamp);
-    return `${("0" + date.getUTCDate()).slice(-2)}/${("0" + (date.getUTCMonth() + 1)).slice(
-      -2
-    )}/${date.getUTCFullYear()}, ${("0" + date.getUTCHours()).slice(-2)}:${(
-      "0" + date.getUTCMinutes()
-    ).slice(-2)}`;
-  }, [currentEpoch.endTimestamp]);
-  let Options = ["My votes", "Protocol"];
+  const [selectedDropDown, setSelectedDropDown] = useState<{
+    epoch: number;
+    start: number;
+    end: number;
+  }>(
+    {} as {
+      epoch: number;
+      start: number;
+      end: number;
+    }
+  );
+
+  let Options = [
+    { epoch: 23, start: 1665135456, end: 1665135456 },
+    { epoch: 24, start: 1665135456, end: 1665135456 },
+    { epoch: 25, start: 1665135456, end: 1665135456 },
+    { epoch: 26, start: 1665135456, end: 1665135456 },
+  ];
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
@@ -245,7 +253,10 @@ function AddBribes(props: IAddBribes) {
                   </span>
                   <span className="text-white font-body4  relative top-[1px]">CTEZ/TEZ</span>
                 </div>
-                <div className="ml-auto font-body4 text-white">$23.34</div>
+                <div className="ml-auto font-body4 text-white flex items-center">
+                  <Image src={drop} />
+                  $23.34
+                </div>
               </div>
               <div className="font-body2 text-text-250 mt-4 mx-5">
                 You are adding a bribe of

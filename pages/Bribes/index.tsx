@@ -59,11 +59,6 @@ const Bribes: NextPage = () => {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
-  const disconnectUserWallet = async () => {
-    if (userAddress) {
-      return dispatch(walletDisconnection());
-    }
-  };
 
   return (
     <>
