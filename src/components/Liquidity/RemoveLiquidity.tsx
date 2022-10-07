@@ -35,7 +35,11 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
   };
   const handleRemoveLiquidityInput = async (input: string | number) => {
     props.setBurnAmount(input);
+    if (input == ".") {
+      props.setBurnAmount("0.");
 
+      return;
+    }
     if (input === "" || isNaN(Number(input))) {
       props.setBurnAmount("");
       props.setRemoveTokenAmount({

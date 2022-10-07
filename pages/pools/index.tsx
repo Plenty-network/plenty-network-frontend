@@ -1,19 +1,17 @@
-import Head from "next/head";
-import Image from "next/image";
 import * as React from "react";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import HeadInfo from "../../src/components/HeadInfo";
 import { CardHeader, PoolsCardHeader } from "../../src/components/Pools/Cardheader";
 import { ShortCard as PoolsTable } from "../../src/components/Pools/ShortCard";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { AppDispatch, useAppSelector } from "../../src/redux";
-import { fetchWallet } from "../../src/redux/wallet/wallet";
-import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
-import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
-import { getTotalVotingPower } from "../../src/redux/pools";
-import { getEpochData } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
+import { AppDispatch, useAppSelector } from "../../src/redux";
+import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
+import { getEpochData } from "../../src/redux/epoch/epoch";
+import { getTotalVotingPower } from "../../src/redux/pools";
+import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
+import { fetchWallet } from "../../src/redux/wallet/wallet";
 export interface IIndexProps {}
 export enum AMM_TYPE {
   VOLATILE = "VOLATILE",
@@ -67,11 +65,7 @@ export default function Pools(props: IIndexProps) {
   const [searchValue, setSearchValue] = React.useState("");
   return (
     <>
-      <Head>
-        <title className="font-medium1">Plenty network</title>
-        <meta name="description" content="plenty network" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      
       <SideBarHOC>
         {/* className='' */}
         <div>

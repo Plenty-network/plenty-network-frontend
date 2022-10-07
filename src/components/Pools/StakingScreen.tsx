@@ -118,6 +118,11 @@ export function Staking(props: IStakingProps) {
     props.setStakeInput(value * Number(props.pnlpBalance));
   };
   const handleStakeInput = async (input: string | number) => {
+    if (input == ".") {
+      props.setStakeInput("0.");
+
+      return;
+    }
     if (input === "" || isNaN(Number(input))) {
       props.setStakeInput("");
 
@@ -297,6 +302,11 @@ export function Unstaking(props: IUnstakingProps) {
     props.setUnStakeInput(value * Number(props.stakedToken));
   };
   const handleUnStakeInput = async (input: string | number) => {
+    if (input == ".") {
+      props.setUnStakeInput("0.");
+
+      return;
+    }
     if (input === "" || isNaN(Number(input))) {
       props.setUnStakeInput("");
 

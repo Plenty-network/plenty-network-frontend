@@ -62,7 +62,6 @@ export const getAllNotification=(walletAddress:string)=>{
     const currentMessage:IFinalMessageProps=JSON.parse(localStore);
     if(currentMessage.currentWalletId!=walletAddress){
         localStorage.setItem(MESSAGE_ID,'');
-        alert('90')
         return []
     }else{
          return currentMessage.messageArray;
