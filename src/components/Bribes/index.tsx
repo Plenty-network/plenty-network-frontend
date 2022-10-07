@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import { CardHeader } from "../Pools/Cardheader";
 import { BribesCardHeader, BribesHeader } from "./BribesHeader";
 import { IAllLocksPositionData } from "../../api/portfolio/types";
-import { getAllLocksPositionData } from "../../api/portfolio/kiran";
+import { getAllLocksPositionData } from "../../api/portfolio/locks";
 import { store } from "../../redux";
 import { PoolsTableBribes } from "./PoolsTableBribes";
 import AddBribes from "./AddBribes";

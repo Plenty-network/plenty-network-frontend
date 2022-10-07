@@ -49,13 +49,8 @@ import { PoolsTableRewards } from "../../src/components/PoolsRewards/poolsReward
 import ManageLock from "../../src/components/LocksPosition/ManageLock";
 import {
   getAllLocksPositionData,
-  getPoolsRewardsData,
-  getPositionsData,
-  getPositionStatsData,
-  getTvlStatsData,
   getUnclaimedRewardsForLock,
-  getVotesStatsData,
-} from "../../src/api/portfolio/kiran";
+} from "../../src/api/portfolio/locks";
 import {
   IAllLocksPositionData,
   IPoolsRewardsResponse,
@@ -91,6 +86,8 @@ import { setFlashMessage } from "../../src/redux/flashMessage";
 import { Flashtype } from "../../src/components/FlashScreen";
 import { CLAIM, FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_ID } from "../../src/constants/localStorage";
 import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
+import { getPositionStatsData, getTvlStatsData, getVotesStatsData } from "../../src/api/portfolio/stats";
+import { getPoolsRewardsData, getPositionsData } from "../../src/api/portfolio/pools";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
