@@ -1,56 +1,16 @@
-import Head from "next/head";
+import { BigNumber } from "bignumber.js";
+import clsx from "clsx";
 import Image from "next/image";
 import PropTypes from "prop-types";
 import * as React from "react";
-import { BigNumber } from "bignumber.js";
-import { useEffect, useState, useRef, useMemo } from "react";
-import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
+import { useEffect, useMemo, useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import { AppDispatch, store, useAppSelector } from "../../src/redux";
-import { fetchWallet } from "../../src/redux/wallet/wallet";
-import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
-import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
-import { getTotalVotingPower } from "../../src/redux/pools";
-import { getEpochData } from "../../src/redux/epoch/epoch";
-import { useInterval } from "../../src/hooks/useInterval";
-
-import rewardsViolet from "../../src/assets/icon/myPortfolio/rewardsViolet.svg";
-import positionsViolet from "../../src/assets/icon/myPortfolio/positionsViolet.svg";
-import rewards from "../../src/assets/icon/myPortfolio/rewards.svg";
-import position from "../../src/assets/icon/myPortfolio/positions.svg";
-import Stats from "../../src/components/Positions/Stats";
-import {
-  Header,
-  MyPortfolioCardHeader,
-  MyPortfolioHeader,
-} from "../../src/components/Positions/Header";
-import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTable";
-import { getVeNFTsList, votesPageDataWrapper } from "../../src/api/votes";
-import { ELocksState, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
-import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
-import { IAllBalanceResponse, ILpTokenPriceList, ITokenPriceList } from "../../src/api/util/types";
-import CreateLock from "../../src/components/Votes/CreateLock";
-import ConfirmTransaction from "../../src/components/ConfirmTransaction";
-import TransactionSubmitted from "../../src/components/TransactionSubmitted";
-import {
-  claimAllAndWithdrawLock,
-  claimAllInflation,
-  createLock,
-  increaseLockAndValue,
-  increaseLockEnd,
-  increaseLockValue,
-  withdrawLock,
-} from "../../src/operations/locks";
-import { LocksTablePosition } from "../../src/components/LocksPosition/LocksTable";
-import clsx from "clsx";
-import StatsRewards from "../../src/components/Rewards/Stats";
-import { MODULE } from "../../src/components/Votes/types";
-import { PoolsTableRewards } from "../../src/components/PoolsRewards/poolsRewardsTable";
-import ManageLock from "../../src/components/LocksPosition/ManageLock";
 import {
   getAllLocksPositionData,
-  getUnclaimedRewardsForLock,
+  getUnclaimedRewardsForLock
 } from "../../src/api/portfolio/locks";
+import { getPoolsRewardsData, getPositionsData } from "../../src/api/portfolio/pools";
+import { getPositionStatsData, getTvlStatsData, getVotesStatsData } from "../../src/api/portfolio/stats";
 import {
   IAllLocksPositionData,
   IPoolsRewardsResponse,
@@ -58,36 +18,70 @@ import {
   IPositionStatsResponse,
   ITvlStatsResponse,
   IUnclaimedRewardsForLockData,
-  IVotesStatsDataResponse,
+  IVotesStatsDataResponse
 } from "../../src/api/portfolio/types";
+import { getUserBalanceByRpc } from "../../src/api/util/balance";
+import { getVeNFTsList, votesPageDataWrapper } from "../../src/api/votes";
+import { IVeNFTData, IVotePageData } from "../../src/api/votes/types";
+import position from "../../src/assets/icon/myPortfolio/positions.svg";
+import positionsViolet from "../../src/assets/icon/myPortfolio/positionsViolet.svg";
+import rewards from "../../src/assets/icon/myPortfolio/rewards.svg";
+import rewardsViolet from "../../src/assets/icon/myPortfolio/rewardsViolet.svg";
+import ConfirmTransaction from "../../src/components/ConfirmTransaction";
+import { Flashtype } from "../../src/components/FlashScreen";
+import { LocksTablePosition } from "../../src/components/LocksPosition/LocksTable";
+import ManageLock from "../../src/components/LocksPosition/ManageLock";
 import WithdrawPly from "../../src/components/LocksPosition/WithdrawPopup";
-import { setIsLoadingWallet } from "../../src/redux/walletLoading";
-import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
 import { LocksTableRewards } from "../../src/components/LocksRewards/LocksRewardsTable";
-import ClaimAll from "../../src/components/Rewards/ClaimAll";
-import { harvestAllRewards } from "../../src/operations/rewards";
+import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTable";
+import ClaimPly from "../../src/components/PoolsRewards/ClaimPopup";
+import { PoolsTableRewards } from "../../src/components/PoolsRewards/poolsRewardsTable";
 import {
-  fetchAllLocksRewardsData,
-  fetchAllRewardsOperationsData,
-  fetchUnclaimedInflationData,
-} from "../../src/redux/myPortfolio/rewards";
-import { API_RE_ATTAMPT_DELAY } from "../../src/constants/global";
+  MyPortfolioCardHeader,
+  MyPortfolioHeader
+} from "../../src/components/Positions/Header";
+import Stats from "../../src/components/Positions/Stats";
 import SelectNFTLocks from "../../src/components/Rewards/SelectNFTLocks";
+import StatsRewards from "../../src/components/Rewards/Stats";
+import { EClaimAllState } from "../../src/components/Rewards/types";
+import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
+import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
+import TransactionSubmitted from "../../src/components/TransactionSubmitted";
+import CreateLock from "../../src/components/Votes/CreateLock";
+import { API_RE_ATTAMPT_DELAY } from "../../src/constants/global";
+import { CLAIM, FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_ID } from "../../src/constants/localStorage";
+import { useInterval } from "../../src/hooks/useInterval";
+import {
+  claimAllAndWithdrawLock,
+  claimAllInflation,
+  createLock,
+  increaseLockAndValue,
+  increaseLockEnd,
+  increaseLockValue,
+  withdrawLock
+} from "../../src/operations/locks";
+import { harvestAllRewards } from "../../src/operations/rewards";
 import {
   claimAllBribeForAllLocks,
   claimAllFeeForAllLocks,
   claimAllForEpoch,
   claimAllRewardsForAllLocks,
-  claimSupernova,
+  claimSupernova
 } from "../../src/operations/vote";
-import ClaimPly from "../../src/components/PoolsRewards/ClaimPopup";
-import { EClaimAllState } from "../../src/components/Rewards/types";
+import { AppDispatch, store, useAppSelector } from "../../src/redux";
+import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
+import { getEpochData } from "../../src/redux/epoch/epoch";
 import { setFlashMessage } from "../../src/redux/flashMessage";
-import { Flashtype } from "../../src/components/FlashScreen";
-import { CLAIM, FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_ID } from "../../src/constants/localStorage";
-import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
-import { getPositionStatsData, getTvlStatsData, getVotesStatsData } from "../../src/api/portfolio/stats";
-import { getPoolsRewardsData, getPositionsData } from "../../src/api/portfolio/pools";
+import {
+  fetchAllLocksRewardsData,
+  fetchAllRewardsOperationsData,
+  fetchUnclaimedInflationData
+} from "../../src/redux/myPortfolio/rewards";
+import { getTotalVotingPower } from "../../src/redux/pools";
+import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
+import { fetchWallet } from "../../src/redux/wallet/wallet";
+import { setIsLoadingWallet } from "../../src/redux/walletLoading";
+
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -1219,11 +1213,7 @@ function MyPortfolio(props: any) {
   };
   return (
     <>
-      <Head>
-        <title className="font-medium1">Plenty network</title>
-        <meta name="description" content="plenty network" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      
       <SideBarHOC>
         <div className="pt-5 md:px-[24px] px-2">
           <div className="flex">
