@@ -47,10 +47,7 @@ import StatsRewards from "../../src/components/Rewards/Stats";
 import { MODULE } from "../../src/components/Votes/types";
 import { PoolsTableRewards } from "../../src/components/PoolsRewards/poolsRewardsTable";
 import ManageLock from "../../src/components/LocksPosition/ManageLock";
-import {
-  getAllLocksPositionData,
-  getUnclaimedRewardsForLock,
-} from "../../src/api/portfolio/locks";
+import { getAllLocksPositionData, getUnclaimedRewardsForLock } from "../../src/api/portfolio/locks";
 import {
   IAllLocksPositionData,
   IPoolsRewardsResponse,
@@ -86,7 +83,11 @@ import { setFlashMessage } from "../../src/redux/flashMessage";
 import { Flashtype } from "../../src/components/FlashScreen";
 import { CLAIM, FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_ID } from "../../src/constants/localStorage";
 import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
-import { getPositionStatsData, getTvlStatsData, getVotesStatsData } from "../../src/api/portfolio/stats";
+import {
+  getPositionStatsData,
+  getTvlStatsData,
+  getVotesStatsData,
+} from "../../src/api/portfolio/stats";
 import { getPoolsRewardsData, getPositionsData } from "../../src/api/portfolio/pools";
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -1323,7 +1324,7 @@ function MyPortfolio(props: any) {
                 </p>
                 <p
                   className={clsx(
-                    " flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
+                    " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
                     poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
                       ? "cursor-not-allowed"
                       : "cursor-pointer"
@@ -1358,7 +1359,7 @@ function MyPortfolio(props: any) {
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[15px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
+                <p className="cursor-pointer flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[15px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
                   Trade locks
                 </p>
               </div>

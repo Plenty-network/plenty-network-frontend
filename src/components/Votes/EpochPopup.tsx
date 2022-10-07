@@ -11,7 +11,7 @@ function EpochPopup(props: IEpochPopup) {
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
-      className="w-[400px] max-w-[400px] px-4 md:px-6 md:w-[460px] md:max-w-[460px]"
+      className="w-[400px] max-w-[400px]  md:w-[460px] md:max-w-[460px]"
     >
       {
         <>

@@ -193,7 +193,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
     if (props.isManage) {
       return (
         <div
-          className="bg-primary-500/10 md:w-[151px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
+          className="bg-primary-500/10 md:w-[151px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
           onClick={() => {
             setShowLiquidityModal(true);
             dispatch(getTotalVotingPower());

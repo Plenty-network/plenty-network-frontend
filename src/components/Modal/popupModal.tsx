@@ -11,15 +11,15 @@ export interface IPopUpModalProps {
   headerChild?: any;
   footerChild?: any;
   Name?: string;
-  noGlassEffect?:boolean;
-  isAnimteToLoader?:boolean;
-  isFullSizeOnMobile?:boolean;
+  noGlassEffect?: boolean;
+  isAnimteToLoader?: boolean;
+  isFullSizeOnMobile?: boolean;
 }
-const TIME_TO_CLOSE=300;
-const TIME_TO_TRANSACTION_CLOSE=600;
+const TIME_TO_CLOSE = 300;
+const TIME_TO_TRANSACTION_CLOSE = 600;
 export function PopUpModal(props: IPopUpModalProps) {
   const [isClose, setIsClose] = React.useState(false);
-  const currentTimeToClose=props.isAnimteToLoader?TIME_TO_TRANSACTION_CLOSE:TIME_TO_CLOSE;
+  const currentTimeToClose = props.isAnimteToLoader ? TIME_TO_TRANSACTION_CLOSE : TIME_TO_CLOSE;
   const clickedInModal = (e: any) => {
     try {
       if (e.target.id === "modal_outer") {
@@ -37,17 +37,17 @@ export function PopUpModal(props: IPopUpModalProps) {
       className={`z-index-max fixed top-0 left-0 flex flex-col gap-2 w-screen h-screen  z-50 items-center justify-center ${
         isClose ? "fade-out-3" : "fade-in-3"
       }
-      ${props.noGlassEffect?'':'topNavblurEffect'}
-      ${props.isAnimteToLoader && isClose?'scale-out-tr':''}
+      ${props.noGlassEffect ? "" : "topNavblurEffect"}
+      ${props.isAnimteToLoader && isClose ? "scale-out-tr" : ""}
       `}
     >
       <div
-        id='popuploadermain'
+        id="popuploadermain"
         className={clsx(
           "broder relative border-popUpNotification  max-w-[460px]    bg-sideBar  rounded-3xl border flex  flex-col   py-5",
           props.title === "Select Token" && "h-[576px] ",
-          props.Name === "Manage" ? "px-0 py-3" : "py-5 px-2 md:px-4",
-          props.isFullSizeOnMobile?'w-full md:w-[calc(100vw_-_38px)]':'w-[calc(100vw_-_38px)]',
+          props.Name === "Manage" ? "px-0 py-3" : "py-5 px-2 md:px-5",
+          props.isFullSizeOnMobile ? "w-full md:w-[calc(100vw_-_38px)]" : "w-[calc(100vw_-_38px)]",
           props.className
         )}
       >

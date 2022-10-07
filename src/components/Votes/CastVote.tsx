@@ -31,7 +31,7 @@ function CastVote(props: ICastVoteProps) {
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
-      className="w-[400px] max-w-[400px] px-4 md:px-6 md:w-[602px] md:max-w-[602px]"
+      className="w-[400px] max-w-[400px]  md:w-[602px] md:max-w-[602px]"
     >
       {
         <>
