@@ -440,7 +440,7 @@ function MyPortfolio(props: any) {
     );
   }, [activeSection]);
   const handleWithdrawOperation = () => {
-    setContentTransaction(`Withdraw ${manageData.baseValue.toNumber()} ply`);
+    setContentTransaction(`Withdraw ${manageData.baseValue.toFixed(2)} ply`);
     setShowWithdraw(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -501,7 +501,7 @@ function MyPortfolio(props: any) {
     });
   };
   const handleWithdrawClaimOperation = () => {
-    setContentTransaction(`Withdraw and Claim ${manageData.baseValue.toNumber()} ply`);
+    setContentTransaction(`Withdraw and Claim ${manageData.baseValue.toFixed(2)} ply`);
     setShowWithdraw(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -1097,7 +1097,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimALLUnClaimed = () => {
-    setContentTransaction(`Claim inflation ${unclaimInflation.unclaimedInflationAmount} PLY`);
+    setContentTransaction(
+      `Claim inflation ${unclaimInflation.unclaimedInflationAmount.toFixed(2)} PLY`
+    );
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
