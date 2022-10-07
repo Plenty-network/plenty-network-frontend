@@ -398,9 +398,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               headerText: "Success",
               trailingText: `Stake ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
-                SECOND_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_B)} PNLP`,
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(TOKEN_B)} PNLP`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -423,9 +421,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               headerText: "Rejected",
               trailingText: `Stake ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
-                SECOND_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_B)} PNLP`,
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(TOKEN_B)} PNLP`,
               linkText: "",
               isLoading: true,
             })
@@ -481,9 +477,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               headerText: "Success",
               trailingText: `Unstake ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
-                SECOND_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_B)} PNLP`,
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(TOKEN_B)} PNLP`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -506,9 +500,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               headerText: "Rejected",
               trailingText: `Unstake ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
-                SECOND_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_B)} PNLP`,
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(TOKEN_B)} PNLP`,
               linkText: "",
               isLoading: true,
             })

@@ -672,7 +672,7 @@ function MyPortfolio(props: any) {
             setFlashMessage({
               flashType: Flashtype.Rejected,
               headerText: "Rejected",
-              trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
+              trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
               isLoading: true,
             })
@@ -731,7 +731,7 @@ function MyPortfolio(props: any) {
             setFlashMessage({
               flashType: Flashtype.Rejected,
               headerText: "Rejected",
-              trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
+              trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
               isLoading: true,
             })
@@ -788,7 +788,7 @@ function MyPortfolio(props: any) {
             setFlashMessage({
               flashType: Flashtype.Rejected,
               headerText: "Rejected",
-              trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
+              trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
               isLoading: true,
             })
