@@ -4,11 +4,15 @@ import { getAllNotification } from './notificationMessageSave';
 import { SingleNotification } from './SingleNotification';
 
 export interface INotificationListProps {
+  isClearNotification:boolean;
 }
 
 export function NotificationList (props: INotificationListProps) {
     const walletAddress = useAppSelector((state) => state.wallet.address);
-    const notificationList= getAllNotification(walletAddress);
+    let notificationList= getAllNotification(walletAddress);
+    React.useEffect(()=>{
+      notificationList= getAllNotification(walletAddress);
+    },[props.isClearNotification])
   if(!notificationList.length){
       return (<div className='flex-1 flex flex-col p-5 justify-center items-center'>
       <div className='text-f14'>You’re all caught up</div>

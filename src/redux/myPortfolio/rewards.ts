@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { BigNumber } from "bignumber.js";
-import { getAllLocksRewardsData, getAllRewardsOperationsData, getUnclaimedInflationData } from "../../api/portfolio/kiran";
+import { getAllLocksRewardsData, getAllRewardsOperationsData } from "../../api/portfolio/locks";
+import { getUnclaimedInflationData } from "../../api/portfolio/stats";
 import { API_RE_ATTEMPTS } from "../../constants/global";
 import { IAllLocksRewardArgument, IPorfolioRewardsData } from "./types";
 

@@ -13,6 +13,7 @@ export interface IPopUpModalProps {
   Name?: string;
   noGlassEffect?:boolean;
   isAnimteToLoader?:boolean;
+  isFullSizeOnMobile?:boolean;
 }
 const TIME_TO_CLOSE=300;
 const TIME_TO_TRANSACTION_CLOSE=600;
@@ -41,10 +42,12 @@ export function PopUpModal(props: IPopUpModalProps) {
       `}
     >
       <div
+        id='popuploadermain'
         className={clsx(
-          "broder relative border-popUpNotification  max-w-[460px] w-[calc(100vw_-_38px)]  bg-sideBar  rounded-3xl border flex  flex-col   py-5",
+          "broder relative border-popUpNotification  max-w-[460px]    bg-sideBar  rounded-3xl border flex  flex-col   py-5",
           props.title === "Select Token" && "h-[576px] ",
           props.Name === "Manage" ? "px-0 py-3" : "py-5 px-2 md:px-4",
+          props.isFullSizeOnMobile?'w-full md:w-[calc(100vw_-_38px)]':'w-[calc(100vw_-_38px)]',
           props.className
         )}
       >

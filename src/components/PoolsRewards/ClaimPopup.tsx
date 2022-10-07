@@ -86,7 +86,7 @@ function ClaimPly(props: IClaimProps) {
               ))}
             {props.isSuperNova && (
               <>
-                <div className="md:flex mt-[2px] items-end">
+                <div className=" mt-[2px] items-end">
                   <div className="flex items-end">
                     <span className="text-white font-body3 md:font-title2 ">
                       ${props.value.toFixed(2)} +
@@ -114,9 +114,7 @@ function ClaimPly(props: IClaimProps) {
                   </div>
                   <div>
                     {props.subValue && (
-                      <span className="text-text-250 font-body1 md:ml-2 md:mb-px">
-                        {props.subValue}
-                      </span>
+                      <span className="text-text-250 font-body1  md:mb-px">{props.subValue}</span>
                     )}
                   </div>
                 </div>
