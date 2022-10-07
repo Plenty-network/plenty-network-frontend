@@ -1,19 +1,17 @@
 import type { NextPage } from "next";
 import PropTypes from "prop-types";
-import Head from "next/head";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import Swap from "../../src/components/Swap";
-import { AppDispatch } from "../../src/redux/index";
-
-import { useAppSelector } from "../../src/redux/index";
-import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
-import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
-import { getTotalVotingPower } from "../../src/redux/pools";
 import { useInterval } from "../../src/hooks/useInterval";
+import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getEpochData } from "../../src/redux/epoch/epoch";
+import { AppDispatch, useAppSelector } from "../../src/redux/index";
+import { getTotalVotingPower } from "../../src/redux/pools";
+import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
+import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
+
 
 const Home: NextPage = (props) => {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -72,11 +70,7 @@ const Home: NextPage = (props) => {
   };
   return (
     <>
-      <Head>
-        <title className="font-medium1">Plenty network</title>
-        <meta name="description" content="plenty network" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      
       <SideBarHOC makeTopBarScroll>
         <Swap otherProps={otherPageProps} />
       </SideBarHOC>

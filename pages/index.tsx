@@ -1,15 +1,14 @@
 import type { NextPage } from "next";
-import Head from "next/head";
+import Router from "next/router";
 import PropTypes from "prop-types";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { SideBarHOC } from "../src/components/Sidebar/SideBarHOC";
 import { AppDispatch, useAppSelector } from "../src/redux";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { fetchWallet } from "../src/redux/wallet/wallet";
 import { getConfig } from "../src/redux/config/config";
-import { getTokenPrice } from "../src/redux/tokenPrice/tokenPrice";
 import { getEpochData } from "../src/redux/epoch/epoch";
-import  Router  from "next/router";
+import { getTokenPrice } from "../src/redux/tokenPrice/tokenPrice";
+import { fetchWallet } from "../src/redux/wallet/wallet";
 
 const Home: NextPage = () => {
   const token = useAppSelector((state) => state.config.tokens);
@@ -29,11 +28,7 @@ const Home: NextPage = () => {
   });
   return (
     <>
-      <Head>
-        <title className="font-medium1">Plenty network</title>
-        <meta name="description" content="plenty network" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      
       <SideBarHOC>
         
       </SideBarHOC>

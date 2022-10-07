@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Image from "next/image";
 import PropTypes from "prop-types";
 import * as React from "react";
@@ -1220,11 +1219,6 @@ function MyPortfolio(props: any) {
   };
   return (
     <>
-      <Head>
-        <title className="font-medium1">Plenty network</title>
-        <meta name="description" content="plenty network" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <SideBarHOC>
         <div className="pt-5 md:px-[24px] px-2">
           <div className="flex">
@@ -1324,7 +1318,7 @@ function MyPortfolio(props: any) {
                 </p>
                 <p
                   className={clsx(
-                    " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
+                    " flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
                     poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
                       ? "cursor-not-allowed"
                       : "cursor-pointer"
@@ -1359,7 +1353,7 @@ function MyPortfolio(props: any) {
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="cursor-pointer flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[15px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
+                <p className="cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[15px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
                   Trade locks
                 </p>
               </div>
