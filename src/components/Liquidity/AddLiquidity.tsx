@@ -1,11 +1,10 @@
-import clsx from "clsx";
-import Image from "next/image";
-import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import { BigNumber } from "bignumber.js";
+import Image from "next/image";
 import add from "../../../src/assets/icon/pools/addIcon.svg";
-import { ISwapData, tokenParameterLiquidity } from "./types";
+import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import { estimateOtherTokenAmount } from "../../api/liquidity";
 import { useAppSelector } from "../../redux";
+import { ISwapData, tokenParameterLiquidity } from "./types";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -28,7 +27,12 @@ function AddLiquidity(props: IAddLiquidityProps) {
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
   ) => {
-    if (input === "" || isNaN(Number(input))) {
+    if(input=="."){
+      props.setSecondTokenAmount('0.');
+      props.setFirstTokenAmount('0.');
+      return;
+    }
+    if (input === ""  || isNaN(Number(input))) {
       props.setSecondTokenAmount("");
       props.setFirstTokenAmount("");
       return;
