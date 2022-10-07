@@ -13,7 +13,7 @@ export function NoPoolsPosition(props: IWalletNotConnectedProps) {
       <div className="border-b border-navBarBorder/[0.4] w-[120px] mt-[14px]"></div>
       <div className="cursor-pointer">
         <Link href={"/pools"}>
-          <div className="border border-primary-500 text-primary-500 font-body4 px-4 bg-primary-500/[0.05] h-[48px] flex items-center mt-5">
+          <div className="border border-primary-500 text-primary-500 font-body4 px-4 bg-primary-500/[0.05] h-[48px] flex items-center mt-5 rounded-lg">
             View Pools
           </div>
         </Link>

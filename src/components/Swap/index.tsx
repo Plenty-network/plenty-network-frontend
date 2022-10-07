@@ -208,6 +208,14 @@ function Swap(props: ISwapProps) {
   }, [tokenIn, tokenOut, tokenType, enableMultiHop, tokenPrice, isSwitchClicked.current]);
 
   const handleSwapTokenInput = (input: string | number, tokenType: "tokenIn" | "tokenOut") => {
+    if (input == ".") {
+      if (tokenType === "tokenIn") {
+        setFirstTokenAmount("0.");
+      } else {
+        setSecondTokenAmount("0.");
+      }
+      return;
+    }
     if (Object.keys(tokenOut).length !== 0) {
       loading.current = {
         isLoadingSecond: true,
