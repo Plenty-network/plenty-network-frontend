@@ -30,3 +30,9 @@ export interface IAddBribes {
   bribeInputValue: string;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+export interface IConfirmAddBribes {
+  show: boolean;
+
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+}

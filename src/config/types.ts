@@ -18,21 +18,21 @@ export interface IConfig {
     mainnet: Record<string, string>;
   };
   ROUTER: { mainnet: string; testnet: string };
-  
+
   WRAPPED_ASSETS: {
     testnet: Record<string, IWrappedToken>;
     mainnet: Record<string, IWrappedToken>;
   };
 
-  NETWORK: 'mainnet' | 'testnet';
+  NETWORK: "mainnet" | "testnet";
   WALLET_NETWORK: NetworkType;
   ADMIN_ADDRESS: string;
   BURNER: string;
   VE_SWAP: { mainnet: string; testnet: string };
   VOTER: { mainnet: string; testnet: string };
   VOTE_ESCROW: { mainnet: string; testnet: string };
-  VE_INDEXER : string;
-  PLY_INDEXER : string;
+  VE_INDEXER: string;
+  PLY_INDEXER: string;
   PLY_TOKEN: { mainnet: string; testnet: string };
 }
 
@@ -106,19 +106,19 @@ export interface IAMM {
 }
 
 export enum AMM_TYPE {
-  VOLATILE = 'VOLATILE',
-  STABLE = 'STABLE',
+  VOLATILE = "VOLATILE",
+  STABLE = "STABLE",
 }
 
 export enum TokenType {
-  STANDARD = 'STANDARD',
-  LP = 'LP',
+  STANDARD = "STANDARD",
+  LP = "LP",
 }
 
 export enum TokenVariant {
-  TEZ = 'TEZ',
-  FA12 = 'FA1.2',
-  FA2 = 'FA2',
+  TEZ = "TEZ",
+  FA12 = "FA1.2",
+  FA2 = "FA2",
 }
 
 export interface IContractsConfig {
