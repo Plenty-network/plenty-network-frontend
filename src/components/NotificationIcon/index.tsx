@@ -13,19 +13,21 @@ export interface INotificationIconProps {
 
 export function NotificationIcon(props: INotificationIconProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
-  const {isLoading} = useAppSelector((state) => state.flashMessage);
-  const [ringAnimate,setRingAnimate]=React.useState(false);
-  const [type,setType]=React.useState(NotiFicationType.noNotification);
-  React.useEffect(()=>{
-    const typeInnitial:NotiFicationType=getAllNotification(walletAddress).length?NotiFicationType.haveNotification:NotiFicationType.noNotification;
-    if(typeInnitial==NotiFicationType.haveNotification){
+  const { isLoading } = useAppSelector((state) => state.flashMessage);
+  const [ringAnimate, setRingAnimate] = React.useState(false);
+  const [type, setType] = React.useState(NotiFicationType.noNotification);
+  React.useEffect(() => {
+    const typeInnitial: NotiFicationType = getAllNotification(walletAddress).length
+      ? NotiFicationType.haveNotification
+      : NotiFicationType.noNotification;
+    if (typeInnitial == NotiFicationType.haveNotification) {
       setRingAnimate(true);
-      setTimeout(()=>{
+      setTimeout(() => {
         setRingAnimate(false);
-      },1000)
+      }, 1000);
     }
-    setType(typeInnitial)
-  },[isLoading,walletAddress])
+    setType(typeInnitial);
+  }, [isLoading, walletAddress]);
   return (
     <div
       className={`flex items-center ${props.className}`}
@@ -35,7 +37,7 @@ export function NotificationIcon(props: INotificationIconProps) {
     >
       <Image
         alt={"alt"}
-        className={ringAnimate?'ringAnimate':''}
+        className={ringAnimate ? "ringAnimate" : ""}
         src={
           type === NotiFicationType.noNotification
             ? "/assets/icon/bellicon.svg"
