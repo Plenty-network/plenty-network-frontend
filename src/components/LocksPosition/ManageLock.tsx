@@ -159,7 +159,7 @@ function ManageLock(props: IManageLockProps) {
     <PopUpModal
       onhide={closeModal}
       Name={"Manage"}
-      className="w-[400px] max-w-[400px] py-2 px-0 md:w-[602px] md:max-w-[602px]"
+      className="w-[400px] max-w-[400px]  md:w-[602px] md:max-w-[602px]"
     >
       {screen === "1" ? (
         <>
