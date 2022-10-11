@@ -158,15 +158,16 @@ function CreateLock(props: ICreateLockProps) {
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
+      Name="Manage"
       className="w-[400px] max-w-[400px]  md:w-[602px] md:max-w-[602px]"
     >
       {screen === "1" ? (
         <>
-          <div className="mx-2 text-white font-title3">Create Lock </div>
+          <div className="mx-2 px-2 md:px-5 text-white font-title3">Create Lock </div>
 
           <div
             className={clsx(
-              "border pl-4 pr-5 mt-[22px] bg-muted-200/[0.1] items-center flex  rounded-2xl h-[86px] hover:border-text-700",
+              "border mx-2 md:mx-5 pl-4 pr-5 mt-[22px] bg-muted-200/[0.1] items-center flex  rounded-2xl h-[86px] hover:border-text-700",
               isFirstInputFocus ? "border-text-700" : "border-text-800 "
             )}
           >
@@ -204,7 +205,7 @@ function CreateLock(props: ICreateLockProps) {
               </div>
             </div>
           </div>
-          <div className="ml-auto mt-3 flex font-body4">
+          <div className="ml-auto mt-3 pr-5 flex font-body4">
             <p
               className={clsx(
                 "cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
@@ -245,7 +246,7 @@ function CreateLock(props: ICreateLockProps) {
               75%
             </p>
           </div>
-          <div className="bg-muted-400 border border-text-800 rounded-2xl py-5 mt-5">
+          <div className="bg-muted-400 border border-text-800 rounded-2xl py-5 mt-5 mx-2 md:mx-5 ">
             <div className=" px-3 md:px-5 text-text-50 font-subtitle1">Choose lock end </div>
             <div className="mt-2 rounded-lg ml-5 mr-[24px] border-[1.3px] border-border-200 pr-5 pl-4 flex items-center h-[62px] hover:border-text-700">
               <div>
@@ -340,7 +341,7 @@ function CreateLock(props: ICreateLockProps) {
             </div>
           </div>
 
-          <div className="mt-[18px]">{ProceedButton}</div>
+          <div className="mt-[18px] mx-2 md:mx-5 ">{ProceedButton}</div>
         </>
       ) : (
         <ConfirmLocking
