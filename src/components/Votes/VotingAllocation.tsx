@@ -36,7 +36,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
     }
   }, [props.epochNumber, props.selectedDropDown, props.show, selectedDropDown]);
   return (
-    <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px] md:h-[calc(100vh_-_225px)]">
+    <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px] md:h-[calc(100vh_-_285px)] lg:h-[calc(100vh_-_225px)]">
       <div className="font-body3 text-white pr-2">Voting allocation</div>
       <div className="font-body3 text-white mt-[18px]">
         <Protocol
@@ -55,8 +55,8 @@ function VotingAllocation(props: IVotingAllocationProps) {
                 setSelectedColorIndex={setSelectedColorIndex}
               />
             ) : (
-              <div className="h-[252px]  flex flex-col justify-center items-center">
-                <div className="flex-col felx max-w-[265px] gap-1.5 justify-center items-center  text-center">
+              <div className="flex flex-col justify-center items-center pt-[60px] ">
+                <div className=" flex-col felx max-w-[265px] gap-1.5 justify-center items-center  text-center">
                   <div className="text-text-200 text-f16 ">You havent voted in this Epoch</div>
                   <div className="text-text-500 text-f14">
                     Lorem Ipsum is simply dummy text of the printing and typeset.
