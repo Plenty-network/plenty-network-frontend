@@ -31,10 +31,9 @@ TimeAgo.addDefaultLocale(en);
 export function PoolsTableBribes(props: IPoolsTableBribes) {
   const epochData = store.getState().epoch.currentEpoch;
   const userAddress = store.getState().wallet.address;
-  const totalTime = epochData.endTimestamp - epochData.startTimestamp;
-  const remainingTime = epochData.endTimestamp - new Date().getTime();
+
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
-  const remainingPercentage = (remainingTime * 100) / totalTime;
+
   const { valueFormat } = useTableNumberUtils();
   useEffect(() => {
     getVeNFTsList(userAddress, epochData?.epochNumber).then((res) => {
@@ -58,6 +57,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         Header: "Pool",
         id: "pools",
         isToolTipEnabled: true,
+        columnWidth: "w-[153px]",
         tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
         showOnMobile: true,
         accessor: (x: any) =>
@@ -95,20 +95,63 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
           ),
       },
       {
-        Header: "Voting Power",
-        id: "Voting Power",
+        Header: "Bribes",
+        id: "Bribes",
+        columnWidth: "w-[100px]",
+        subText: "current epoch",
+        isToolTipEnabled: true,
         tooltipMessage:
           " Your current voting power. This is different from your epoch voting power which is recorded at the beginning of each epoch.",
-        isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "currentVotingPower"),
         accessor: (x: any) => <YourLiquidity value={new BigNumber(12)} />,
       },
+      {
+        Header: `Liquidity`,
+        id: "Liquidity",
+        subText: "current",
+        columnWidth: "w-[100px]",
+        tooltipMessage: "Amount of PLY locked up until expiry.",
+        canShort: true,
+        isToolTipEnabled: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "baseValue"),
+        accessor: (x: any) => <YourLiquidity value={new BigNumber(12)} />,
+      },
+      {
+        Header: "Vote Share",
+        id: "VoteShare",
+        columnWidth: "w-[100px]",
+        subText: "current epoch",
+        isToolTipEnabled: true,
+        tooltipMessage:
+          " The lock is unusable once it expires and underlying PLY may be withdrawn.",
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
 
+        accessor: (x: any) => (
+          <VoteShare value={new BigNumber(12)} percentage={new BigNumber(12)} />
+        ),
+      },
+      {
+        Header: "Vote Share",
+        id: "VoteShare1",
+        columnWidth: "w-[100px]",
+        subText: "previous epoch",
+        isToolTipEnabled: true,
+        tooltipMessage:
+          " The lock is unusable once it expires and underlying PLY may be withdrawn.",
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
+
+        accessor: (x: any) => (
+          <VoteShare value={new BigNumber(12)} percentage={new BigNumber(12)} />
+        ),
+      },
       {
         Header: "",
         id: "vote",
-        minWidth: 200,
+        columnWidth: "ml-auto",
         accessor: (x) => <BribeBtn setShowAddBribes={props.setShowAddBribes} />,
       },
     ],
@@ -241,7 +284,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
           shortby="Locks"
           isFetched={props.isfetched}
           TableName={""}
-          TableWidth="lg:min-w-[1200px]"
+          TableWidth="min-w-[700px] lg:min-w-[1200px]"
         />
       </div>
     </>
