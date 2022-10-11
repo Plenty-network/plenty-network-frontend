@@ -159,7 +159,7 @@ function ManageLock(props: IManageLockProps) {
     <PopUpModal
       onhide={closeModal}
       Name={"Manage"}
-      className="w-[400px] max-w-[400px] py-2 px-0 md:w-[602px] md:max-w-[602px]"
+      className="w-[400px] max-w-[400px]  md:w-[602px] md:max-w-[602px]"
     >
       {screen === "1" ? (
         <>
@@ -202,7 +202,7 @@ function ManageLock(props: IManageLockProps) {
                 <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
               </div>
               <div className=" ml-1 text-primary-500 font-body2">
-                {Number(props.plyBalance) >= 0 ? Number(props.plyBalance) : "0.00"} PLY
+                {Number(props.plyBalance) >= 0 ? props.plyBalance.toFixed(2) : "0.00"} PLY
               </div>
             </div>
           </div>

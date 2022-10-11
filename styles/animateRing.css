@@ -1,5 +1,5 @@
 .ringAnimate{
-    animation: ring 4s .7s ease-in-out 
+    animation: ring  3s .9s ease-in-out 
 }
 @-webkit-keyframes ring {
     0% { -webkit-transform: rotateZ(0); }
