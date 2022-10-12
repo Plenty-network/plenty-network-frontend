@@ -226,12 +226,20 @@ input[type='number'] {
     @apply font-medium;
     @apply text-f32;
   }
+  .font-big {
+    @apply font-medium;
+    @apply text-f60;
+  }
   .font-medium2 {
     @apply font-medium;
     @apply text-f24;
   }
   .font-title1 {
     @apply font-medium;
+    @apply text-f20;
+  }
+  .font-title-f20 {
+    @apply font-normal;
     @apply text-f20;
   }
   .font-title2 {

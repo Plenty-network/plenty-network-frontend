@@ -284,7 +284,7 @@ export function VotesTable(props: IVotesTableProps) {
 
   return (
     <>
-      <div className={`overflow-x-auto  ${props.className}`}>
+      <div className={`overflow-x-auto md:pr-4 ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
@@ -294,7 +294,7 @@ export function VotesTable(props: IVotesTableProps) {
           isConnectWalletRequired={props.isConnectWalletRequired}
           isVotesTable={true}
           TableName="votesTable"
-          TableWidth="lg:min-w-[805px]"
+          TableWidth="lg:min-w-[762px]"
         />
       </div>
     </>

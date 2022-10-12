@@ -27,7 +27,7 @@ export function AprInfo(props: IAprInfoProps) {
         </div>
       }
     >
-      <div className={props.isMobile ? "flex  flex-col gap-[7px]" : "flex  "}>
+      <div className={props.isMobile ? "flex  flex-col gap-[7px]" : "flex  items-center "}>
         <div className="bg-muted-200  md:text-f14 text-f12 cursor-pointer text-text-50 border-border-500 rounded-lg py-[3px] px-2 ">
           {parseInt(props.currentApr).toFixed(1)}%
         </div>
