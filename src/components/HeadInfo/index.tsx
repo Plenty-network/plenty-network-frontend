@@ -27,16 +27,16 @@ export default function HeadInfo(props: IHeadInfoProps) {
           {props.title ? props.title : "Pools"}
         </div>
         <ToolTip
-          classNameToolTipContainer="playIconTooltip"
+          classNameToolTipContainer={`playIconTooltip-right`}
           toolTipChild={
             props.toolTipContent ? (
-              <p className="px-2 py-3">{props.toolTipContent}</p>
+              <p className="">{props.toolTipContent}</p>
             ) : (
-              <p className="px-2 py-3">Watch how to add liquidity, stake, and earn PLY</p>
+              <p className="">Watch how to add liquidity, stake, and earn PLY</p>
             )
           }
           classNameAncorToolTip="pushtoCenter"
-          isShowInnitially={props.toolTipContent ? true : false}
+          isShowInnitially={true}
         >
           <Image
             src={playIcon}

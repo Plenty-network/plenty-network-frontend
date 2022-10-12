@@ -18,6 +18,7 @@
     "clsx": "^1.1.1",
     "conseiljs": "^5.1.0",
     "copy-to-clipboard": "^3.3.2",
+    "from-exponential": "^1.1.1",
     "javascript-time-ago": "^2.5.7",
     "lodash-es": "^4.17.21",
     "lottie-react": "^2.3.1",

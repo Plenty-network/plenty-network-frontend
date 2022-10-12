@@ -2,7 +2,7 @@ import Image from "next/image";
 import * as React from "react";
 import infoIcon from "../../assets/icon/common/infoIcon.svg";
 import { generateRandomString } from "../../utils/commonUtils";
-import { ToolTip } from "./TooltipAdvanced";
+import { Position, ToolTip } from "./TooltipAdvanced";
 
 export interface IInfoIconToolTipProps {
   toolTipChild?: any;
@@ -16,12 +16,13 @@ export function InfoIconToolTip(props: IInfoIconToolTipProps) {
       <ToolTip
         classNameAncorToolTip="pushtoCenter"
         id={`info${randomId}`}
+        position={Position.top}
         message={""}
         toolTipChild={
           props.toolTipChild ? (
             props.toolTipChild
           ) : (
-            <div className="max-w-[300px]">{props.message}</div>
+            <div className="max-w-[280px] font-body1">{props.message}</div>
           )
         }
       >

@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { useState } from "react";
 import Image from "next/image";
 import { EClaimAllState, IStatsCardProps, IStatsProps, IStatsRewardsProps } from "./types";
+
 import StatsCard from "./StatsCard";
 import StatsCardFirst from "./StatsCardFirst";
 import { store } from "../../redux";
@@ -48,6 +49,7 @@ function StatsRewards(props: IStatsRewardsProps) {
         toolTipMessage={
           "Anti dilution inflation of the lockers. Claimed amount is added to your existing lockers."
         }
+        tooltipWidth={"w-[300px]"}
         value={props.unclaimInflation.unclaimedInflationAmount.toFixed(2)}
         subValue={"PLY"}
         setShowClaimAllPly={props.setShowClaimPly}

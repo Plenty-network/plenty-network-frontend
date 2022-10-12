@@ -420,7 +420,6 @@ export default function Vote() {
 
   return (
     <>
-      
       <SideBarHOC>
         <div className="md:flex ">
           <div className="md:min-w-[416px] lg:min-w-[562px] md:w-full">
@@ -597,8 +596,9 @@ export default function Vote() {
                 <span className="cursor-pointer relative top-0.5">
                   <ToolTip
                     id="tooltip2"
+                    position={Position.top}
                     toolTipChild={
-                      <div className="w-[200px]">
+                      <div className="w-[100px] md:w-[250px]">
                         Percentage allocation of the veNFT’s voting power. A 100% allocation is
                         required to cast a vote.
                       </div>

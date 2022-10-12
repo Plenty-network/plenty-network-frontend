@@ -9,7 +9,7 @@ import info from "../../../src/assets/icon/swap/info.svg";
 import { BigNumber } from "bignumber.js";
 import stableSwap from "../../../src/assets/icon/swap/stableswapViolet.svg";
 import { tokensList } from "../../constants/tokensList";
-import { ToolTip } from "../Tooltip/TooltipAdvanced";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 interface IConfirmSwapProps {
   show: boolean;
@@ -144,6 +144,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   <span className="relative top-0.5">
                     <ToolTip
                       id="tooltipM"
+                      position={Position.top}
                       toolTipChild={
                         <div className="w-[200px]">
                           Your transaction will revert if there is a large, unfavorable price
@@ -179,6 +180,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   <span className="relative top-0.5">
                     <ToolTip
                       id="tooltipN"
+                      position={Position.top}
                       toolTipChild={
                         <div className="w-[200px]">
                           The difference between the market price and estimated price due to trade
@@ -211,6 +213,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   <span className="relative top-0.5">
                     <ToolTip
                       id="tooltipO"
+                      position={Position.top}
                       toolTipChild={
                         <div className="w-[200px]">
                           Fees are 0.35% for each volatile swap and 0.10% for each stable swap.
@@ -234,6 +237,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   <span className="relative top-0.5">
                     <ToolTip
                       id="tooltipP"
+                      position={Position.top}
                       toolTipChild={
                         <div className="w-[200px]">
                           Routing through these tokens results in the best price for your trade.

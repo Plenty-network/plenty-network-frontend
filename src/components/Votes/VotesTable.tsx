@@ -131,8 +131,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Votes",
         id: "Myvotess",
-        tooltipMessage: "Number of votes given through the selected veNFT to this pool.",
-        isToolTipEnabled: true,
+
         columnWidth: "w-[100px] ml-auto mr-2",
         canShort: true,
         accessor: (x: any) => (
@@ -294,7 +293,7 @@ export function VotesTable(props: IVotesTableProps) {
           isConnectWalletRequired={props.isConnectWalletRequired}
           isVotesTable={true}
           TableName="votesTable"
-          TableWidth="lg:min-w-[762px]"
+          TableWidth="lg:min-w-[805px]"
         />
       </div>
     </>
