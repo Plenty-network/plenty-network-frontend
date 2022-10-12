@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { useState } from "react";
 import Image from "next/image";
 import { EClaimAllState, IStatsCardProps, IStatsProps, IStatsRewardsProps } from "./types";
+
 import StatsCard from "./StatsCard";
 import StatsCardFirst from "./StatsCardFirst";
 import { store } from "../../redux";

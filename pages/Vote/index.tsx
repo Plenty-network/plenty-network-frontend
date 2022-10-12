@@ -598,7 +598,7 @@ export default function Vote() {
                     id="tooltip2"
                     position={Position.top}
                     toolTipChild={
-                      <div className="w-[250px]">
+                      <div className="w-[100px] md:w-[250px]">
                         Percentage allocation of the veNFT’s voting power. A 100% allocation is
                         required to cast a vote.
                       </div>

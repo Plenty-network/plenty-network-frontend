@@ -131,8 +131,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Votes",
         id: "Myvotess",
-        tooltipMessage: "Number of votes given through the selected veNFT to this pool.",
-        isToolTipEnabled: true,
+
         columnWidth: "w-[100px] ml-auto mr-2",
         canShort: true,
         accessor: (x: any) => (

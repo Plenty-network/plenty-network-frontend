@@ -1,5 +1,7 @@
 import clsx from "clsx";
 import Image from "next/image";
+
+import { isMobile } from "react-device-detect";
 import { BigNumber } from "bignumber.js";
 import { IStatsCardProps } from "./types";
 import info from "../../assets/icon/common/infoIcon.svg";
@@ -18,12 +20,14 @@ function StatsCard(props: IStatsCardProps) {
             <p className="relative top-px">
               <ToolTip
                 toolTipChild={
-                  <div className={props.tooltipWidth ? props.tooltipWidth : "w-[150px]"}>
+                  <div
+                    className={props.tooltipWidth ? props.tooltipWidth : "w-[100px] md:w-[150px]"}
+                  >
                     {props.toolTipMessage}
                   </div>
                 }
                 id="tooltip8"
-                position={Position.top}
+                position={isMobile ? Position.bottom : Position.top}
               >
                 <Image alt={"alt"} src={info} />
               </ToolTip>
