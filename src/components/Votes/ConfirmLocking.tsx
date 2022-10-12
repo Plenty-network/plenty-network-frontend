@@ -34,7 +34,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
         </div>
         <div className="mx-2 text-white font-title3">Confirm locking </div>
       </div>
-      <div className="mx-4 md:px-5 rounded-lg mt-3 border border-text-800 bg-card-200 py-5">
+      <div className="mx-5  rounded-lg mt-3 border border-text-800 bg-card-200 py-5">
         <div className="flex items-center">
           <div className="text-text-250 font-subtitle1 md:font-subtitle3 px-3 md:px-5">
             Your will receive a veNFT with a voting power of{" "}
