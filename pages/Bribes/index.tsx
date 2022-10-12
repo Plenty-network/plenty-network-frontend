@@ -59,10 +59,8 @@ const Bribes: NextPage = () => {
 
   return (
     <>
-      <SideBarHOC isBribes={true} makeTopBarScroll>
-        {!isBribesMain && <Landing setBribesMain={setBribesMain} />}
-        {isBribesMain && <BribesMain />}
-      </SideBarHOC>
+      {!isBribesMain && <Landing setBribesMain={setBribesMain} />}
+      {isBribesMain && <BribesMain />}
     </>
   );
 };

@@ -11,6 +11,7 @@ export interface ISideBarHOCProps {
   children: any;
   makeTopBarScroll?: boolean;
   isBribes?: boolean;
+  isBribesLanding?: boolean;
 }
 
 export function SideBarHOC(props: ISideBarHOCProps) {
@@ -26,8 +27,14 @@ export function SideBarHOC(props: ISideBarHOCProps) {
     <>
       <FlashMessageHOC />
       <div className="flex flex-no-wrap flex-col">
-        {!isMobile && <TopNavBar setShowNotification={showNotificationClick} />}
-        {showNotification && (
+        {!isMobile && (
+          <TopNavBar
+            setShowNotification={showNotificationClick}
+            isLanding={props.isBribesLanding ? props.isBribesLanding : false}
+            isBribes={props.isBribes ? props.isBribes : false}
+          />
+        )}
+        {showNotification && !props.isBribesLanding && (
           <NotificationBar
             onhide={() => {
               setShowNotification(false);
@@ -52,8 +59,10 @@ export function SideBarHOC(props: ISideBarHOCProps) {
             </div>
           </div>
         </div>
-        {isMobile && <BottomNavigationBar />}
-        {isMobile && <TopNavBarMobile setShowNotification={showNotificationClick} />}
+        {isMobile && props.isBribes && <BottomNavigationBar />}
+        {isMobile && props.isBribes && (
+          <TopNavBarMobile setShowNotification={showNotificationClick} />
+        )}
       </div>
     </>
   );
