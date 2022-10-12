@@ -36,3 +36,6 @@ export interface IConfirmAddBribes {
 
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
+export interface IToken {
+  value: string;
+}
