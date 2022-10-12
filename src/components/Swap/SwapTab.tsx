@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import "animate.css";
 import refresh from "../../../src/assets/icon/swap/refresh.svg";
 import settings from "../../../src/assets/icon/swap/settings.svg";
 import arrowDown from "../../../src/assets/icon/swap/arrowDown.svg";
@@ -823,8 +824,8 @@ function SwapTab(props: ISwapTabProps) {
 
         {openSwapDetails && props.routeDetails.success && (
           <div
-            className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 ${
-              animateOpenSwapDetails ? "opendown-animation" : "closeup-animation"
+            className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 animate__animated ${
+              animateOpenSwapDetails ? "animate__fadeInDown animate__fast" : "animate__fadeOutUp"
             }`}
           >
             <div className="flex">
