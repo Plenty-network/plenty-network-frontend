@@ -230,9 +230,13 @@ export const computeAllPathsWrapper = (
       finalPriceImpact = finalPriceImpact.plus(x);
     }
 
-    for (var x of bestPath.feePerc) {
-      finalFeePerc = finalFeePerc.plus(x);
-      if (x.isEqualTo(new BigNumber(0.1))) isStable.push(true);
+    for (var y of bestPath.feePerc) {
+      finalFeePerc = finalFeePerc.plus(y);
+    }
+
+    for( var z = 0 ; z < bestPath.path.length-1 ; z++){
+      const dexType = getDexType(bestPath.path[z] , bestPath.path[z+1]);
+      if(dexType === AMM_TYPE.STABLE) isStable.push(true);
       else isStable.push(false);
     }
 
@@ -283,17 +287,41 @@ export const computeReverseCalculationWrapper = (
     const TOKEN = state.config.standard;
 
     const bestPath = computeAllPathsReverse(paths, tokenInAmount, slippage, swapData);
-    // const increasedInput = bestPath.tokenOutAmount.plus(bestPath.tokenOutAmount.multipliedBy(0.001));
-    const forwardPass = computeAllPaths(  paths2 , bestPath.tokenOutAmount , slippage , swapData2);
+    let temp = computeAllPaths(paths2 , bestPath.tokenOutAmount , slippage , swapData2);
 
+    //BINARY SEARCH FOR USER AMOUNT
+    let low = bestPath.tokenOutAmount;
+    while(temp.tokenOutAmount.isGreaterThan(tokenInAmount) && temp.tokenOutAmount.isGreaterThan(new BigNumber(0))){
+      low = low.minus(1);
+      temp = computeAllPaths(paths2 , low , slippage , swapData2);
+    }
+    
+    let high = low.plus(1);
+    let mid = new BigNumber(0);
 
-    console.log(paths , paths2);
-    console.log(bestPath.tokenOutAmount.toString());
-    console.log(forwardPass);
-    console.log(forwardPass.tokenOutAmount.toString());
+    const path = paths[0].split(" ");
+    const tokenIn = path[0];
+    const tokenInData = TOKEN[tokenIn];
 
-    // Check difference bw forwardpass.tokenOut and bestPath.tokenOut
+    while(low.isLessThanOrEqualTo(high)){
+      console.log(low.toString()   , high.toString());
+      console.log("inside loop");
+      mid = (low.plus(high)).dividedBy(2).decimalPlaces(tokenInData.decimals , 1);
+      let currAns = computeAllPaths(paths2 , mid , slippage , swapData2);
 
+      if(currAns.tokenOutAmount.isEqualTo(tokenInAmount)){
+        console.log('inside best case');
+        break;
+      }
+      else if(tokenInAmount.isGreaterThan(currAns.tokenOutAmount)){
+        low = mid.plus(new BigNumber(1).dividedBy(new BigNumber(10).pow(tokenInData.decimals)));
+      }else{
+        high = mid.minus(new BigNumber(1).dividedBy(new BigNumber(10).pow(tokenInData.decimals)));
+      }
+
+    }
+
+    const forwardPass = computeAllPaths(paths2 , mid , slippage , swapData2);
 
     const isStable: boolean[] = [];
     let finalPriceImpact = new BigNumber(0);
@@ -305,7 +333,11 @@ export const computeReverseCalculationWrapper = (
 
     for (var x of forwardPass.feePerc) {
       finalFeePerc = finalFeePerc.plus(x);
-      if (x.isEqualTo(new BigNumber(0.1))) isStable.push(true);
+    }
+
+    for( var z = 0 ; z < forwardPass.path.length-1 ; z++){
+      const dexType = getDexType(forwardPass.path[z] , forwardPass.path[z+1]);
+      if(dexType === AMM_TYPE.STABLE) isStable.push(true);
       else isStable.push(false);
     }
 
@@ -317,7 +349,7 @@ export const computeReverseCalculationWrapper = (
 
     return {
       path: forwardPass.path,
-      tokenOutAmount: bestPath.tokenOutAmount,
+      tokenOutAmount: mid,
       userFinalTokenOut : forwardPass.tokenOutAmount,
       finalMinimumTokenOut: forwardPass.minimumTokenOut[forwardPass.minimumTokenOut.length - 1],
       minimumTokenOut: forwardPass.minimumTokenOut,
@@ -344,8 +376,9 @@ export const computeReverseCalculationWrapper = (
 };
 
 
-
-// TODO : Check this api for large amounts
+/**
+ * @deprecated Remove when computeReverseCalculationWrapper is in place
+ */
 export const reverseCalculation = (
   tokenIn: string,
   tokenOut: string,
