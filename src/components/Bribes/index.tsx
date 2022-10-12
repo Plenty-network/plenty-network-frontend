@@ -34,7 +34,7 @@ function BribesMain() {
   return (
     <div>
       <HeadInfo
-        className="px-2 md:px-3"
+        className="px-2 md:px-5"
         title="Bribes"
         toolTipContent=""
         searchValue={searchValue}

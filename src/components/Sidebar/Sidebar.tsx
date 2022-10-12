@@ -9,17 +9,17 @@ export const FooterMenu: Array<IHrefIconProps> = [
   {
     name: "Analytics",
     iconName: "VectorfooterMenu",
-    href: "https://google.com",
+    href: "https://plenty-analytics-test.netlify.app/",
   },
   {
     name: "Docs",
     iconName: "VectorfooterMenu-1",
-    href: "https://google.com",
+    href: "https://whitepaper.plenty.network/tokenomics/emissions",
   },
   {
     name: "Feedback",
     iconName: "VectorfooterMenu-2",
-    href: "https://google.com",
+    href: "https://discord.com/invite/9wZ4CuvkuJ",
   },
 ];
 

@@ -47,7 +47,11 @@ export function PopUpModal(props: IPopUpModalProps) {
           "broder relative border-popUpNotification  max-w-[460px]    bg-sideBar   border flex  flex-col   py-5",
           props.title === "Select Token" && "h-[576px] ",
           props.Name === "Manage" ? "px-0 py-3" : "py-5 px-2 md:px-5",
-          props.isFullSizeOnMobile ? "w-full md:w-[calc(100vw_-_38px)]" : "w-[calc(100vw_-_38px)]",
+          props.Name === "video"
+            ? "md:w-max"
+            : props.isFullSizeOnMobile
+            ? "w-full md:w-[calc(100vw_-_38px)]"
+            : "w-[calc(100vw_-_38px)]",
           props.Name === "addBribes" ? "md:rounded-3xl" : "rounded-3xl",
           props.className
         )}
