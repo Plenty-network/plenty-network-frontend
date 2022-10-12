@@ -196,20 +196,59 @@ input[type='number'] {
   border: 1px solid #341e54 !important;
   border-radius: 12px !important;
   box-shadow: rgba(255, 255, 255, 0.064) 0px 3px 8px !important;
-  padding: 8px 19px !important;
+  padding: 16px 19px !important;
 }
-.playIconTooltip::after{
+.playIconTooltip-left::after{
     content: '' !important;
-    left: -17px !important;
+    right: -1px !important;
     top: 50% !important;
     margin-top: 0 !important;
     width: 16px !important;
     height: 16px !important;
-    transform: translate(50%, -50%) rotate(45deg) !important;
+    transform: translate(50%, -50%) rotate(217deg) !important;
     border: none !important;
     border-left: 1px solid #341e54 !important;
     border-bottom: 1px solid #341e54 !important;
     background-color: #160d24 !important;
+}
+.playIconTooltip-right::after{
+  content: '' !important;
+  left: -17px !important;
+  top: 50% !important;
+  margin-top: 0 !important;
+  width: 16px !important;
+  height: 16px !important;
+  transform: translate(50%, -50%) rotate(45deg) !important;
+  border: none !important;
+  border-left: 1px solid #341e54 !important;
+  border-bottom: 1px solid #341e54 !important;
+  background-color: #160d24 !important;
+}
+.playIconTooltip-top::after{
+  content: '' !important;
+  left: 48% !important;
+  top: 100% !important;
+  margin-top: 0 !important;
+  width: 16px !important;
+  height: 16px !important;
+  transform: translate(50%, -50%) rotate(-45deg) !important;
+  border: none !important;
+  border-left: 1px solid #341e54 !important;
+  border-bottom: 1px solid #341e54 !important;
+  background-color: #160d24 !important;
+}
+.playIconTooltip-bottom::after{
+  content: '' !important;
+  left: 48% !important;
+  top: 0% !important;
+  margin-top: 0 !important;
+  width: 16px !important;
+  height: 16px !important;
+  transform: translate(50%, -50%) rotate(134deg) !important;
+  border: none !important;
+  border-left: 1px solid #341e54 !important;
+  border-bottom: 1px solid #341e54 !important;
+  background-color: #160d24 !important;
 }
 .sideNavactive {
   @apply border-r-primary-500  bg-sideBarHover;
@@ -226,12 +265,20 @@ input[type='number'] {
     @apply font-medium;
     @apply text-f32;
   }
+  .font-big {
+    @apply font-medium;
+    @apply text-f60;
+  }
   .font-medium2 {
     @apply font-medium;
     @apply text-f24;
   }
   .font-title1 {
     @apply font-medium;
+    @apply text-f20;
+  }
+  .font-title-f20 {
+    @apply font-normal;
     @apply text-f20;
   }
   .font-title2 {

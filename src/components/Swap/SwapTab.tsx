@@ -1,5 +1,7 @@
 import clsx from "clsx";
 import "animate.css";
+
+import fromExponential from "from-exponential";
 import refresh from "../../../src/assets/icon/swap/refresh.svg";
 import settings from "../../../src/assets/icon/swap/settings.svg";
 import arrowDown from "../../../src/assets/icon/swap/arrowDown.svg";
@@ -401,7 +403,7 @@ function SwapTab(props: ISwapTabProps) {
             <span className="font-body4 text-primary-500 ">
               {Number(props.userBalances[props.tokenIn.name]) >= 0 ? (
                 <ToolTip
-                  message={props.userBalances[props.tokenIn.name].toString()}
+                  message={fromExponential(props.userBalances[props.tokenIn.name].toString())}
                   id="tooltip8"
                   position={Position.right}
                 >
@@ -511,7 +513,7 @@ function SwapTab(props: ISwapTabProps) {
                 {Object.keys(props.tokenOut).length !== 0 &&
                 Number(props.userBalances[props.tokenOut.name]) >= 0 ? (
                   <ToolTip
-                    message={props.userBalances[props.tokenOut.name].toString()}
+                    message={fromExponential(props.userBalances[props.tokenOut.name].toString())}
                     id="tooltip9"
                     position={Position.right}
                   >
@@ -573,6 +575,7 @@ function SwapTab(props: ISwapTabProps) {
                   <span className="relative top-0.5">
                     <ToolTip
                       id="tooltip1"
+                      position={Position.top}
                       toolTipChild={
                         <p>
                           <div
@@ -621,7 +624,6 @@ function SwapTab(props: ISwapTabProps) {
                           </div>
                         </p>
                       }
-                      position={Position.left}
                     >
                       <Image
                         alt={"alt"}
@@ -825,7 +827,7 @@ function SwapTab(props: ISwapTabProps) {
         {openSwapDetails && props.routeDetails.success && (
           <div
             className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 animate__animated ${
-              animateOpenSwapDetails ? "animate__fadeInDown animate__fast" : "animate__fadeOutUp"
+              animateOpenSwapDetails ? "animate__fadeInDown animate__faster" : "animate__fadeOutUp"
             }`}
           >
             <div className="flex">
@@ -833,6 +835,7 @@ function SwapTab(props: ISwapTabProps) {
                 <span className="mr-[5px]">Minimum received</span>
                 <span className="relative top-1 lg:top-0.5">
                   <ToolTip
+                    position={Position.top}
                     id="tooltip2"
                     toolTipChild={
                       <div className="w-[323px]">
@@ -852,7 +855,7 @@ function SwapTab(props: ISwapTabProps) {
               ) : (
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
                   <ToolTip
-                    message={props.routeDetails.minimumOut.toString()}
+                    message={fromExponential(props.routeDetails.minimumOut.toNumber())}
                     id="tooltip6"
                     position={Position.top}
                   >
@@ -874,6 +877,7 @@ function SwapTab(props: ISwapTabProps) {
                 <span className="relative top-1 lg:top-0.5">
                   <ToolTip
                     id="tooltip4"
+                    position={Position.top}
                     toolTipChild={
                       <div className="w-[323px]">
                         The difference between the market price and estimated price due to trade
@@ -897,7 +901,7 @@ function SwapTab(props: ISwapTabProps) {
                   )}
                 >
                   <ToolTip
-                    message={props.routeDetails.priceImpact.toString()}
+                    message={fromExponential(props.routeDetails.priceImpact.toString())}
                     id="tooltip5"
                     position={Position.top}
                   >
@@ -912,6 +916,7 @@ function SwapTab(props: ISwapTabProps) {
                 <span className="relative top-1 lg:top-0.5">
                   <ToolTip
                     id="tooltip3"
+                    position={Position.top}
                     toolTipChild={
                       <div className="w-[323px]">
                         Fees are 0.35% for each volatile swap and 0.10% for each stable swap.
@@ -941,6 +946,7 @@ function SwapTab(props: ISwapTabProps) {
                 <span className="relative top-1 lg:top-0.5">
                   <ToolTip
                     id="tooltip4"
+                    position={Position.top}
                     toolTipChild={
                       <div className="w-[323px]">
                         Routing through these tokens results in the best price for your trade.

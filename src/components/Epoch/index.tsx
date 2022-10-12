@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch, store } from "../../redux";
 import { getEpochData, setSelectedEpoch } from "../../redux/epoch/epoch";
 import { useInterval } from "../../hooks/useInterval";
-import { ToolTip } from "../Tooltip/TooltipAdvanced";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { useRouter } from "next/router";
 
 export interface IEpochProps {
@@ -134,8 +134,9 @@ export function Epoch(props: IEpochProps) {
             <p className="relative top-[2px]">
               <ToolTip
                 id="tooltipM"
+                position={Position.bottom}
                 toolTipChild={
-                  <div className="w-[200px]">
+                  <div className="w-[220px]">
                     A weekly voting period that starts every Thursday, 12:00 AM (UTC)
                   </div>
                 }
@@ -161,9 +162,11 @@ export function Epoch(props: IEpochProps) {
                 </span>
               </span>
             </p>
-            <p className="relative -top-[1.5px]">
-              <Image alt={"alt"} className="rotate-180" src={vectorDown} />
-            </p>
+            {router.pathname.includes("Vote") && (
+              <p className="relative -top-[1.5px]">
+                <Image alt={"alt"} className="rotate-180" src={vectorDown} />
+              </p>
+            )}
           </div>
           <div className="flex gap-2 -mt-[6px] text-f12 text-white font-semibold cursor-pointer">
             <span className="flex gap-1">

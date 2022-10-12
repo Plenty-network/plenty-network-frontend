@@ -155,6 +155,15 @@ function CreateLock(props: ICreateLockProps) {
   const onClickAmount = () => {
     handlePlyInput(Number(props.plyBalance));
   };
+  const [showTooltip, setShowTooltip] = useState(false);
+  useEffect(() => {
+    setShowTooltip(true);
+
+    setTimeout(() => {
+      setShowTooltip(false);
+    }, 5000);
+  }, []);
+  console.log(showTooltip);
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
@@ -275,10 +284,10 @@ function CreateLock(props: ICreateLockProps) {
             <div className="mt-3 px-3 md:px-5 flex gap-2">
               <p
                 className={clsx(
-                  "rounded-[32px] cursor-pointer border px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3",
+                  "rounded-[32px] cursor-pointer border px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3",
                   props.lockingEndData.selected === WEEK
-                    ? "bg-card-500 border-primary-500"
-                    : "bg-muted-200/[0.1] border-border-200"
+                    ? "bg-primary-500/[0.2] border-primary-500 text-white"
+                    : "bg-muted-200/[0.1] border-border-200 text-text-500"
                 )}
                 onClick={() => handleDateSelection(WEEK, undefined)}
               >
@@ -286,10 +295,10 @@ function CreateLock(props: ICreateLockProps) {
               </p>
               <p
                 className={clsx(
-                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
+                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3 cursor-pointer",
                   props.lockingEndData.selected === 4 * WEEK
-                    ? "bg-card-500 border-primary-500"
-                    : "bg-muted-200/[0.1] border-border-200"
+                    ? "bg-primary-500/[0.2] border-primary-500 text-white"
+                    : "bg-muted-200/[0.1] border-border-200 text-text-500"
                 )}
                 onClick={() => handleDateSelection(4 * WEEK, undefined)}
               >
@@ -297,10 +306,10 @@ function CreateLock(props: ICreateLockProps) {
               </p>
               <p
                 className={clsx(
-                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
+                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3 cursor-pointer",
                   props.lockingEndData.selected === YEAR
-                    ? "bg-card-500 border-primary-500"
-                    : "bg-muted-200/[0.1] border-border-200"
+                    ? "bg-primary-500/[0.2] border-primary-500 text-white"
+                    : "bg-muted-200/[0.1] border-border-200 text-text-500"
                 )}
                 onClick={() => handleDateSelection(YEAR, undefined)}
               >
@@ -313,15 +322,18 @@ function CreateLock(props: ICreateLockProps) {
                       Lock for 4 years for maximum voting power of 4000
                     </div>
                   }
+                  isShowInnitially={true}
                   id="tooltip8"
                   position={Position.top}
                 >
                   <p
                     className={clsx(
-                      "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
-                      props.lockingEndData.selected === MAX_TIME
-                        ? "bg-card-500 border-primary-500"
-                        : "bg-muted-200/[0.1] border-border-200"
+                      "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3 cursor-pointer",
+                      showTooltip
+                        ? "border-[0.5px] border-primary-500 bg-card-500"
+                        : props.lockingEndData.selected === MAX_TIME
+                        ? "bg-primary-500/[0.2] border-primary-500 text-white"
+                        : "bg-muted-200/[0.1] border-border-200 text-text-500"
                     )}
                     onClick={() => handleDateSelection(MAX_TIME, undefined)}
                   >

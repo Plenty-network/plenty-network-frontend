@@ -28,10 +28,10 @@ export function RewardsData(props: IRewardsDataProps) {
           toolTipChild={
             <>
               <div className="text-center">
-                <div className="text-text-200 font-body3">Breakdown of bribes</div>
+                <div className="text-text-200 font-body3 text-right">Breakdown of bribes</div>
                 <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
                   <div className={`text-white font-medium pr-1 `}>
-                    {props.bribesData[0] ? props.bribesData[0].value.toFixed(2) : 0}
+                    {props.bribesData[0] ? props.bribesData[0].value.toFixed(2) : "--"}
                   </div>
                   <div className="">{props.bribesData[0]?.name}</div>
                 </div>
@@ -43,7 +43,7 @@ export function RewardsData(props: IRewardsDataProps) {
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-text-200 font-body3">Breakdown of fees</div>
+                <div className="text-text-200 font-body3 text-right">Breakdown of fees</div>
                 <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
                   <div className={`text-white font-medium pr-1 `}>{props.fees1.toFixed(2)}</div>
                   <div className="">{props.token1Name}</div>
@@ -56,7 +56,7 @@ export function RewardsData(props: IRewardsDataProps) {
             </>
           }
         >
-          <div className=" ">
+          <div className=" text-right">
             <span className="font-f13">
               $
               {Number(props.bribes) > 0
@@ -70,7 +70,7 @@ export function RewardsData(props: IRewardsDataProps) {
             </span>
           </div>
 
-          <div className=" ">
+          <div className="text-right ">
             <span className="font-f13">${props.fees.toFixed(2)}</span>
             <span className="relative top-1 ml-px">
               <Image alt={"alt"} src={tradingFee} width={"16px"} height={"16px"} />

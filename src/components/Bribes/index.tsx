@@ -10,6 +10,8 @@ import { store } from "../../redux";
 import { PoolsTableBribes } from "./PoolsTableBribes";
 import AddBribes from "./AddBribes";
 import { tokenParameter } from "../../constants/swap";
+import { MyBribesTableBribes } from "./MyBribes";
+import { SideBarHOC } from "../Sidebar/SideBarHOC";
 
 function BribesMain() {
   const [searchValue, setSearchValue] = useState("");
@@ -32,40 +34,50 @@ function BribesMain() {
   }, [userAddress]);
 
   return (
-    <div>
-      <HeadInfo
-        className="px-2 md:px-3"
-        title="Bribes"
-        toolTipContent=""
-        searchValue={searchValue}
-        setSearchValue={setSearchValue}
-      />
-      <BribesHeader
-        activeStateTab={activeStateTab}
-        setActiveStateTab={setActiveStateTab}
-        className="md:px-3"
-        searchValue={searchValue}
-        setSearchValue={setSearchValue}
-      />
-      {BribesCardHeader.Pools && (
-        <PoolsTableBribes
-          className="md:px-5 md:py-4   py-4"
-          locksPosition={locksPosition.data}
-          isfetched={locksPosition.isfetched}
-          setShowAddBribes={setShowAddBribes}
+    <SideBarHOC isBribes={true} makeTopBarScroll>
+      <div>
+        <HeadInfo
+          className="px-2 md:px-5"
+          title="Bribes"
+          toolTipContent=""
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
         />
-      )}
-      {showAddBribes && (
-        <AddBribes
-          show={showAddBribes}
-          setShow={setShowAddBribes}
-          setBribeInputValue={setBribeInputValue}
-          bribeInputValue={bribeInputValue}
-          setBribeToken={setBribeToken}
-          bribeToken={bribeToken}
+        <BribesHeader
+          activeStateTab={activeStateTab}
+          setActiveStateTab={setActiveStateTab}
+          className="md:px-3"
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
         />
-      )}
-    </div>
+        {activeStateTab === BribesCardHeader.Pools && (
+          <PoolsTableBribes
+            className="md:px-5 md:py-4   py-4"
+            locksPosition={locksPosition.data}
+            isfetched={locksPosition.isfetched}
+            setShowAddBribes={setShowAddBribes}
+          />
+        )}
+        {activeStateTab === BribesCardHeader.Mybribes && (
+          <MyBribesTableBribes
+            className="md:px-5 md:py-4   py-4"
+            locksPosition={locksPosition.data}
+            isfetched={locksPosition.isfetched}
+            setShowAddBribes={setShowAddBribes}
+          />
+        )}
+        {showAddBribes && (
+          <AddBribes
+            show={showAddBribes}
+            setShow={setShowAddBribes}
+            setBribeInputValue={setBribeInputValue}
+            bribeInputValue={bribeInputValue}
+            setBribeToken={setBribeToken}
+            bribeToken={bribeToken}
+          />
+        )}
+      </div>
+    </SideBarHOC>
   );
 }
 

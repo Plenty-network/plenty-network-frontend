@@ -10,7 +10,7 @@ import Button from "../Button/Button";
 import { IConfirmLockingProps } from "./types";
 import { store } from "../../redux";
 import clsx from "clsx";
-import { ToolTip } from "../Tooltip/TooltipAdvanced";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 function ConfirmLocking(props: IConfirmLockingProps) {
   const epochData = store.getState().epoch.currentEpoch;
@@ -54,6 +54,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
             <span className="relative top-0.5">
               <ToolTip
                 id="tooltip2"
+                position={Position.top}
                 toolTipChild={
                   <div className="w-[150px]">
                     New locks are required to wait until the end of the present epoch to vote.
@@ -71,6 +72,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
               <span className="relative -top-0.5">
                 <ToolTip
                   id="tooltip2"
+                  position={Position.top}
                   toolTipChild={
                     <div className="w-[150px]">
                       New locks are required to wait until the end of the present epoch to vote.

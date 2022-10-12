@@ -31,7 +31,6 @@ export function Tabs(props: ITabsProps) {
       className={`flex cursor-pointer font-subtitle1 text-text-50 text-left ${props.columnWidth} ${
         props.index === 0 ? "justify-start" : "justify-end "
       }  `}
-      onClick={() => (props.onClick ? props.onClick() : {})}
     >
       <div className="flex gap-0 flex-col">
         <div className={`flex  ${props.isFirstRow ? "justify-start" : "justify-end"} `}>
@@ -65,7 +64,7 @@ export function Tabs(props: ITabsProps) {
                 <InfoIconToolTip message={props.toolTipChild} />
               ))}
 
-            <span>{props.text}</span>
+            <span onClick={() => (props.onClick ? props.onClick() : {})}>{props.text}</span>
           </p>
         </div>
         {props.subText && (

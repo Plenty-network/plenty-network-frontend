@@ -403,9 +403,9 @@ function MyPortfolio(props: any) {
       <div className="flex gap-1">
         <p
           className={clsx(
-            " font-title3 cursor-pointer h-[50px] px-4 md:px-[24px] flex items-center   gap-1",
+            " font-title3 cursor-pointer box-border py-3 w-[147px] flex items-center justify-center  gap-1",
             activeSection === MyPortfolioSection.Positions
-              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
+              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6] rounded-l-lg"
               : "text-text-250 bg-muted-700 rounded-l-lg"
           )}
           onClick={() => setActiveSection(MyPortfolioSection.Positions)}
@@ -419,10 +419,10 @@ function MyPortfolio(props: any) {
         </p>
         <p
           className={clsx(
-            " cursor-pointer font-title3  h-[50px] px-4 md:px-[24px] flex items-center gap-1",
+            " cursor-pointer font-title3 py-3 box-border  w-[147px] flex items-center justify-center  gap-1",
             activeSection === MyPortfolioSection.Rewards
-              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
-              : "text-text-250 bg-muted-700"
+              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6] rounded-r-lg"
+              : "text-text-250 bg-muted-700 rounded-r-lg"
           )}
           onClick={() => setActiveSection(MyPortfolioSection.Rewards)}
         >
@@ -1227,9 +1227,11 @@ function MyPortfolio(props: any) {
               <div className="ml-auto ">
                 <ToolTip
                   id="tooltipM"
-                  position={Position.bottom}
+                  position={Position.left}
                   toolTipChild={
-                    <div className="w-[180px]">Claim maximum possible rewards within gas limit</div>
+                    <div className="w-[100px] md:w-[180px]">
+                      Claim maximum possible rewards within gas limit
+                    </div>
                   }
                 >
                   <div
@@ -1268,7 +1270,7 @@ function MyPortfolio(props: any) {
               </div>
             )}
           </div>
-          <div className="mt-5 pl-5  md:pl-0 overflow-x-auto inner">
+          <div className="mt-5 pl-0  md:pl-0 overflow-x-auto inner">
             {activeSection === MyPortfolioSection.Positions ? (
               <Stats
                 setShowCreateLockModal={setShowCreateLockModal}
@@ -1318,7 +1320,7 @@ function MyPortfolio(props: any) {
                 </p>
                 <p
                   className={clsx(
-                    " flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
+                    " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
                     poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
                       ? "cursor-not-allowed"
                       : "cursor-pointer"
@@ -1353,7 +1355,7 @@ function MyPortfolio(props: any) {
                     Discover veNFTs on the largest NFT marketplace on Tezos.
                   </div>
                 </p>
-                <p className="cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[15px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
+                <p className="cursor-pointer flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[15px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
                   Trade locks
                 </p>
               </div>

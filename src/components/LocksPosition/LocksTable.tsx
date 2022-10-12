@@ -420,7 +420,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
   }
   return (
     <>
-      <div className={`overflow-x-auto inner ${props.className}`}>
+      <div className={`overflow-x-auto pr-5 inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={props.locksPosition}
@@ -428,7 +428,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName={"lockPosition"}
-          TableWidth="lg:min-w-[1180px]"
+          TableWidth="lg:min-w-[1147px]"
           NoData={NoData}
         />
       </div>
