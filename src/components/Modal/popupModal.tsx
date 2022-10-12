@@ -37,8 +37,8 @@ export function PopUpModal(props: IPopUpModalProps) {
       className={`z-index-max fixed top-0 left-0 flex flex-col gap-2 w-screen h-screen  z-50 items-center justify-center ${
         isClose ? "fade-out-3" : "fade-in-3"
       }
-      ${props.noGlassEffect ? "" : "topNavblurEffect"}
-      ${props.isAnimteToLoader && isClose ? "scale-out-tr" : ""}
+      
+      ${props.isAnimteToLoader && isClose ? "scale-out-tr" : "topNavblurEffect"}
       `}
     >
       <div
