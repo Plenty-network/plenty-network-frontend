@@ -304,13 +304,10 @@ export const computeReverseCalculationWrapper = (
     const tokenInData = TOKEN[tokenIn];
 
     while(low.isLessThanOrEqualTo(high)){
-      console.log(low.toString()   , high.toString());
-      console.log("inside loop");
       mid = (low.plus(high)).dividedBy(2).decimalPlaces(tokenInData.decimals , 1);
       let currAns = computeAllPaths(paths2 , mid , slippage , swapData2);
 
       if(currAns.tokenOutAmount.isEqualTo(tokenInAmount)){
-        console.log('inside best case');
         break;
       }
       else if(tokenInAmount.isGreaterThan(currAns.tokenOutAmount)){
