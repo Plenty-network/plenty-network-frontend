@@ -1227,7 +1227,7 @@ function MyPortfolio(props: any) {
               <div className="ml-auto ">
                 <ToolTip
                   id="tooltipM"
-                  position={Position.bottom}
+                  position={Position.left}
                   toolTipChild={
                     <div className="w-[180px]">Claim maximum possible rewards within gas limit</div>
                   }

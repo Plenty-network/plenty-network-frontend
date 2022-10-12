@@ -106,6 +106,7 @@ function TransactionSettings(props: ITransactionSettingsProps) {
         <span className="relative top-0.5 left-[5px]">
           <ToolTip
             id="tooltipD"
+            position={Position.top}
             toolTipChild={
               <div className="w-[250px]">
                 Change the slippage tolerance in the transaction settings.
@@ -201,6 +202,7 @@ function TransactionSettings(props: ITransactionSettingsProps) {
             <span className="relative top-0.5 left-[5px]">
               <ToolTip
                 id="tooltipB"
+                position={Position.top}
                 toolTipChild={
                   <div className="w-[250px]">
                     Bypass confirmation modals and allows high slippage trades. Use at your own risk

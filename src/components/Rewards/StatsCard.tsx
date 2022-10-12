@@ -17,7 +17,11 @@ function StatsCard(props: IStatsCardProps) {
           <div className="flex gap-1 items-center">
             <p className="relative top-px">
               <ToolTip
-                toolTipChild={<div className="w-[150px]">{props.toolTipMessage}</div>}
+                toolTipChild={
+                  <div className={props.tooltipWidth ? props.tooltipWidth : "w-[150px]"}>
+                    {props.toolTipMessage}
+                  </div>
+                }
                 id="tooltip8"
                 position={Position.top}
               >

@@ -48,6 +48,7 @@ function StatsRewards(props: IStatsRewardsProps) {
         toolTipMessage={
           "Anti dilution inflation of the lockers. Claimed amount is added to your existing lockers."
         }
+        tooltipWidth={"w-[300px]"}
         value={props.unclaimInflation.unclaimedInflationAmount.toFixed(2)}
         subValue={"PLY"}
         setShowClaimAllPly={props.setShowClaimPly}
