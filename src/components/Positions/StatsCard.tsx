@@ -4,6 +4,7 @@ import { IStatsCardProps } from "./types";
 import info from "../../assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 
+import { isMobile } from "react-device-detect";
 import ply from "../../assets/icon/myPortfolio/plyIcon.svg";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
@@ -21,7 +22,11 @@ function StatsCard(props: IStatsCardProps) {
             {props.isLast && <Image alt={"alt"} src={ply} />}
             {!props.isLast && (
               <p className="relative -top-px">
-                <ToolTip message={props.toolTipMessage} id="tooltip8" position={Position.top}>
+                <ToolTip
+                  message={props.toolTipMessage}
+                  id="tooltip8"
+                  position={isMobile ? Position.bottom : Position.top}
+                >
                   <Image alt={"alt"} src={info} />
                 </ToolTip>
               </p>

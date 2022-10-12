@@ -7,6 +7,7 @@ import {
 import { IVeNFTData } from "../../api/votes/types";
 export interface IStatsProps {}
 export interface IStatsCardProps {
+  tooltipWidth?: string;
   toolTipMessage: string;
   setClaimValueDollar: React.Dispatch<React.SetStateAction<BigNumber>>;
   setShowCreateLockModal?: React.Dispatch<React.SetStateAction<boolean>>;

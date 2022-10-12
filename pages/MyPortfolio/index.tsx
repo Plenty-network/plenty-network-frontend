@@ -1227,9 +1227,11 @@ function MyPortfolio(props: any) {
               <div className="ml-auto ">
                 <ToolTip
                   id="tooltipM"
-                  position={Position.bottom}
+                  position={Position.left}
                   toolTipChild={
-                    <div className="w-[180px]">Claim maximum possible rewards within gas limit</div>
+                    <div className="w-[100px] md:w-[180px]">
+                      Claim maximum possible rewards within gas limit
+                    </div>
                   }
                 >
                   <div
@@ -1268,7 +1270,7 @@ function MyPortfolio(props: any) {
               </div>
             )}
           </div>
-          <div className="mt-5 pl-5  md:pl-0 overflow-x-auto inner">
+          <div className="mt-5 pl-0  md:pl-0 overflow-x-auto inner">
             {activeSection === MyPortfolioSection.Positions ? (
               <Stats
                 setShowCreateLockModal={setShowCreateLockModal}
