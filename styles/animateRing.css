@@ -60,17 +60,17 @@
   @keyframes ring {
     0% { -webkit-transform: rotateZ(0); }
     5% { -webkit-transform: rotateZ(20deg); }
-    10% { -webkit-transform: rotateZ(-28deg); }
-    15% { -webkit-transform: rotateZ(34deg); }
-    20% { -webkit-transform: rotateZ(-32deg); }
-    25% { -webkit-transform: rotateZ(20deg); }
-    30% { -webkit-transform: rotateZ(-28deg); }
-    35% { -webkit-transform: rotateZ(26deg); }
-    40% { -webkit-transform: rotateZ(-24deg); }
-    45% { -webkit-transform: rotateZ(32deg); }
-    50% { -webkit-transform: rotateZ(-20deg); }
-    55% { -webkit-transform: rotateZ(38deg); }
-    60% { -webkit-transform: rotateZ(-16deg); }
+    10% { -webkit-transform: rotateZ(-20deg); }
+    15% { -webkit-transform: rotateZ(18deg); }
+    20% { -webkit-transform: rotateZ(-18deg); }
+    25% { -webkit-transform: rotateZ(15deg); }
+    30% { -webkit-transform: rotateZ(-15deg); }
+    35% { -webkit-transform: rotateZ(10deg); }
+    40% { -webkit-transform: rotateZ(-10deg); }
+    45% { -webkit-transform: rotateZ(5deg); }
+    50% { -webkit-transform: rotateZ(-5deg); }
+    /* 55% { -webkit-transform: rotateZ(38deg); }
+    60% { -webkit-transform: rotateZ(-16deg); } */
     65% { -webkit-transform: rotateZ(0deg); }
     /* 70% { -webkit-transform: rotateZ(-12deg); }
     75% { -webkit-transform: rotateZ(10deg); }

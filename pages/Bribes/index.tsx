@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import BribesMain from "../../src/components/Bribes";
+import Landing from "../../src/components/Bribes/LandingPage";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { useInterval } from "../../src/hooks/useInterval";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
@@ -10,7 +11,6 @@ import { AppDispatch, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
-
 
 const Bribes: NextPage = () => {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -55,12 +55,13 @@ const Bribes: NextPage = () => {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  const [isBribesMain, setBribesMain] = useState(false);
 
   return (
     <>
-      
-      <SideBarHOC makeTopBarScroll>
-        <BribesMain />
+      <SideBarHOC isBribes={true} makeTopBarScroll>
+        {!isBribesMain && <Landing setBribesMain={setBribesMain} />}
+        {isBribesMain && <BribesMain />}
       </SideBarHOC>
     </>
   );

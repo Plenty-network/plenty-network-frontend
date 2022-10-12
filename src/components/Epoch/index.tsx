@@ -161,9 +161,11 @@ export function Epoch(props: IEpochProps) {
                 </span>
               </span>
             </p>
-            <p className="relative -top-[1.5px]">
-              <Image alt={"alt"} className="rotate-180" src={vectorDown} />
-            </p>
+            {router.pathname.includes("Vote") && (
+              <p className="relative -top-[1.5px]">
+                <Image alt={"alt"} className="rotate-180" src={vectorDown} />
+              </p>
+            )}
           </div>
           <div className="flex gap-2 -mt-[6px] text-f12 text-white font-semibold cursor-pointer">
             <span className="flex gap-1">
