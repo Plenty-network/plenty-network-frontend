@@ -129,9 +129,6 @@ function AddBribes(props: IAddBribes) {
           {
             <>
               <div className="flex ">
-                {/* <div className="cursor-pointer" onClick={() => props.setShow(false)}>
-              <Image alt={"alt"} src={arrowLeft} />
-            </div> */}
                 <div className="mx-2 text-white font-title3">Add bribes</div>
                 <div className="relative top-[2px]">
                   <Image alt={"alt"} src={info} />
@@ -192,7 +189,7 @@ function AddBribes(props: IAddBribes) {
                   )}
                 >
                   <div className="flex ">
-                    <div className={clsx(" mt-4", "w-full sm:w-auto")}>
+                    <div className={clsx(" mt-4", "w-full ")}>
                       {Object.keys(props.bribeToken).length !== 0 ? (
                         <TokenDropdown
                           onClick={() => handleTokenType()}
