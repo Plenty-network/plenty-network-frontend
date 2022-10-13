@@ -15,7 +15,7 @@ import { BigNumber } from "bignumber.js";
 import { IEpochData, IEpochResponse, ITokenPriceList } from "../util/types";
 import { IBribesResponse } from "../votes/types";
 import { Bribes, VolumeVeData } from "../pools/types";
-import { fetchEpochData } from "../util/epoch";
+import { fetchEpochData, getNextListOfEpochsMODIFY } from "../util/epoch";
 import { IAmmContracts } from "../../config/types";
 import { getAllVotesData } from "../votes";
 import { getDexAddress } from "../util/fetchConfig";
@@ -71,6 +71,9 @@ export const getUserBribeData = async (
       }
     }
 
+    const epochDataResponse = await getNextListOfEpochsMODIFY(10);
+    const epochData = epochDataResponse.epochData;
+
     for (let entry of groupedConsecData) {
       const splitKey = entry.key.split("_");
       //0 : value , 1 : name , 2 : amm  
@@ -83,11 +86,14 @@ export const getUserBribeData = async (
 
       const epochStart = epochs[0];
       const epochEnd = epochs[epochs.length-1];
-      const startDataResponse = await fetchEpochData(epochStart);
-      const startDate = startDataResponse.epochData as IEpochData;
+
+      const pastEpochDataResponse = await fetchEpochData(epochStart);
+      const pastEpochData = pastEpochDataResponse.epochData as IEpochData;
+
+      const startDate = epochData[epochStart]?.epochStartTimestamp ?? pastEpochData.epochStartTimestamp;
 
       const epochDuration: number = connectedNetwork === "testnet" ? EPOCH_DURATION_TESTNET/1000 : EPOCH_DURATION_MAINNET/1000;
-      const endDate = startDate.epochStartTimestamp + (epochDuration * epochs.length);
+      const endDate = startDate + (epochDuration * epochs.length);
 
       allData.push({
         ammAddress: AMM.address,
@@ -99,11 +105,13 @@ export const getUserBribeData = async (
         bribeToken: splitKey[1],
         epochStart : epochStart ,
         epochEnd : epochEnd ,
-        epochStartDate : startDate.epochStartTimestamp,
+        epochStartDate : startDate,
         epochEndDate : endDate
       });
  
   }
+
+  console.log(allData);
 
     return {
       success: true,
