@@ -18,6 +18,8 @@ import { fetchEpochData } from "../util/epoch";
 import { IAmmContracts } from "../../config/types";
 import { getAllVotesData } from "../votes";
 import { getDexAddress } from "../util/fetchConfig";
+import { connectedNetwork } from "../../common/walletconnect";
+import { EPOCH_DURATION_MAINNET, EPOCH_DURATION_TESTNET } from "../../constants/global";
 
 /**
  * Returns all the bribes created by a provider(user).
@@ -47,13 +49,15 @@ export const getUserBribeData = async (
       if(groupedData.has(key)){
         const epochs = groupedData.get(key) as number[];
         epochs.push(Number(bribe.epoch));
-        epochs.sort();   // might not be reqd if data is given sorted
+        epochs.sort(function(a, b){return a - b});
         groupedData.set(key , epochs);   // might not be reqd if arrays are stored in memory
       }
       else{
         groupedData.set(key , [Number(bribe.epoch)]);
       }
     }
+
+    console.log(groupedData);
 
     for (let entry of groupedData.entries()) {
       const splitKey = entry[0].split("_");
@@ -67,9 +71,10 @@ export const getUserBribeData = async (
       const epochStart = epochs[0];
       const epochEnd = epochs[epochs.length-1];
       const startDataResponse = await fetchEpochData(epochStart);
-      const endDataResponse = await fetchEpochData(epochEnd);
-      const startData = startDataResponse.epochData as IEpochData;
-      const endData = endDataResponse.epochData as IEpochData;
+      const startDate = startDataResponse.epochData as IEpochData;
+
+      const epochDuration: number = connectedNetwork === "testnet" ? EPOCH_DURATION_TESTNET/1000 : EPOCH_DURATION_MAINNET/1000;
+      const endDate = startDate.epochStartTimestamp + (epochDuration * epochs.length);
 
       allData.push({
         ammAddress: AMM.address,
@@ -81,8 +86,8 @@ export const getUserBribeData = async (
         bribeToken: splitKey[1],
         epochStart : epochStart ,
         epochEnd : epochEnd ,
-        epochStartDate : startData.epochStartTimestamp,
-        epochEndDate : endData.epochEndTimestamp
+        epochStartDate : startDate.epochStartTimestamp,
+        epochEndDate : endDate
       });
  
   }
