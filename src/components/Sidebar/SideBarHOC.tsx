@@ -59,10 +59,8 @@ export function SideBarHOC(props: ISideBarHOCProps) {
             </div>
           </div>
         </div>
-        {isMobile && props.isBribes && <BottomNavigationBar />}
-        {isMobile && props.isBribes && (
-          <TopNavBarMobile setShowNotification={showNotificationClick} />
-        )}
+        {isMobile && <BottomNavigationBar />}
+        {isMobile && <TopNavBarMobile setShowNotification={showNotificationClick} />}
       </div>
     </>
   );

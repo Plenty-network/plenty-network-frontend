@@ -117,6 +117,13 @@ const MainMenu: Array<ISingleSideBarProps> = [
     pathName: "/Vote",
     activePathName: "/Vote",
   },
+  {
+    name: "Bribes",
+    iconName: "bribes",
+    pathName: "/Bribes",
+    activePathName: "/Bribes",
+    isHrefIcon: true,
+  },
 ];
 
 export function SideBar(props: ISideBarProps) {
@@ -151,6 +158,7 @@ export function SideBar(props: ISideBarProps) {
               isMenuOpen={activeMenu === `menuItem${index}`}
               subMenu={menuItem.subMenu ? menuItem.subMenu : false}
               pathName={menuItem.pathName}
+              isHrefIcon={menuItem.isHrefIcon}
             />
           ))}
         </div>

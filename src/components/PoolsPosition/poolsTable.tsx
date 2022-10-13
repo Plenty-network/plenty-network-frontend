@@ -249,7 +249,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       <div className={` overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={props.poolsPosition}
+          data={[...props.poolsPosition, ...props.poolsPosition, ...props.poolsPosition]}
           noSearchResult={noSearchResult}
           shortby="pools"
           isFetched={props.isfetched}

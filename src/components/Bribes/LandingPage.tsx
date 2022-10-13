@@ -11,19 +11,21 @@ function Landing(props: ILanding) {
 
   return (
     <SideBarHOC isBribesLanding={true} isBribes={true} makeTopBarScroll>
-      <div className="flex px-5 mt-10 items-center justify-center">
-        <div className="max-w-[557px] ">
-          <div className="font-big  text-secondary-200">Boost your Token Liquidity</div>
-          <div className="font-title-f20 text-text-50 mt-4">
+      <div className="md:flex px-5 mt-10 items-center justify-center">
+        <div className="md:max-w-[557px] ">
+          <div className="font-big1 md:font-big  text-secondary-200">
+            Boost your Token Liquidity
+          </div>
+          <div className="font-subtitle5  md:font-title-f20 text-text-50 mt-4">
             Bribe the voters and incentivise them to direct liquidity to your token pools.
           </div>
-          <div className="mt-[40px] w-[350px]">
+          <div className="mt-5 md:mt-[40px] md:w-[350px]">
             <Button color={"primary"} onClick={() => props.setBribesMain(true)}>
               Enter dapp
             </Button>
           </div>
         </div>
-        <div className="ml-5">
+        <div className="mt-10 md:mt-0 md:ml-5">
           <Image src={bribes} />
         </div>
       </div>
