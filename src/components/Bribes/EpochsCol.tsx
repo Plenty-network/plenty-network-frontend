@@ -38,10 +38,12 @@ export function EpochCol(props: IEpochCol) {
   return (
     <div className="text-right">
       <div className=" text-text-50 font-f13">
-        Epoch {props.epochStart} - {props.epochEnd}
+        {props.epochStart === props.epochEnd
+          ? `Epoch ${props.epochStart} `
+          : `Epoch ${props.epochStart} - ${props.epochEnd}`}
       </div>
       <div className=" mt-2 text-white font-subtitle4">
-        {dateFormat(props.startEpoch)} to {dateFormat(props.endEpoch)}
+        {dateFormat(props.startEpoch * 1000)} to {dateFormat(props.endEpoch * 1000)}
       </div>
     </div>
   );

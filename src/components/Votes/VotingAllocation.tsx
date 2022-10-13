@@ -34,7 +34,13 @@ function VotingAllocation(props: IVotingAllocationProps) {
         });
       }
     }
-  }, [props.epochNumber, props.selectedDropDown, props.show, selectedDropDown]);
+  }, [
+    props.epochNumber,
+    props.selectedDropDown,
+    props.show,
+    selectedDropDown,
+    props.castVoteOperation,
+  ]);
   return (
     <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px] md:h-[calc(100vh_-_285px)] lg:h-[calc(100vh_-_225px)] lg:min-h-[475px]">
       <div className="font-body3 text-white pr-2">Voting allocation</div>

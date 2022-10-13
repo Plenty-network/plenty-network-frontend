@@ -9,11 +9,13 @@ import {
 interface WalletState {
   address: string | "";
   loading: boolean;
+  hasNotification: boolean;
 }
 
 const initialState: WalletState = {
   address: "",
   loading: false,
+  hasNotification: false,
 };
 
 export const walletConnection = createAsyncThunk("wallet/walletConnection", async (thunkAPI) => {
@@ -40,7 +42,11 @@ export const switchWallet = createAsyncThunk("wallet/switchWallet", async (thunk
 const walletSlice = createSlice({
   name: "wallet",
   initialState,
-  reducers: {},
+  reducers: {
+    setHasNotification: (state, action: any) => {
+      state.hasNotification = action.payload;
+    },
+  },
   extraReducers: {
     [walletConnection.pending.toString()]: (state: any) => {
       state.loading = true;
@@ -66,5 +72,5 @@ const walletSlice = createSlice({
     },
   },
 });
-
+export const { setHasNotification } = walletSlice.actions;
 export const wallet = walletSlice.reducer;

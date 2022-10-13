@@ -1,9 +1,11 @@
 import * as React from "react";
-import { useAppSelector } from "../../redux";
+import { AppDispatch, useAppSelector } from "../../redux";
 import { getAllNotification } from "./notificationMessageSave";
 import { SingleNotification } from "./SingleNotification";
 import { isMobile } from "react-device-detect";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { setHasNotification } from "../../redux/wallet/wallet";
 
 export interface INotificationListProps {
   isClearNotification: boolean;
@@ -12,9 +14,13 @@ export interface INotificationListProps {
 export function NotificationList(props: INotificationListProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
   let notificationList = getAllNotification(walletAddress);
+  const dispatch = useDispatch<AppDispatch>();
   React.useEffect(() => {
     notificationList = getAllNotification(walletAddress);
   }, [props.isClearNotification]);
+  React.useEffect(() => {
+    notificationList.length > 0 && dispatch(setHasNotification(true));
+  }, [notificationList]);
   if (!notificationList.length) {
     return (
       <div className="flex-1 flex flex-col p-5 justify-center items-center">
@@ -31,7 +37,7 @@ export function NotificationList(props: INotificationListProps) {
     );
   }
   return (
-    <div className="overflow-y-scroll">
+    <div className="overflow-y-auto">
       {notificationList.map((e) => (
         <SingleNotification key={e.currentTimeStamp} {...e} />
       ))}

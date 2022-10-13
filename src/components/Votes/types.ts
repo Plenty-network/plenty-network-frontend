@@ -153,6 +153,7 @@ export interface ISelectNFT {
   >;
 }
 export interface IAllocationProps {
+  castVoteOperation: boolean;
   show: boolean;
   setShow: any;
   epochData: IEpochListObject[];

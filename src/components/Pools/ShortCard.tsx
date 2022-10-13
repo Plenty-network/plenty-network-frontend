@@ -163,7 +163,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "APR",
         id: "apr",
-        columnWidth: "w-[169px]",
+        columnWidth: "w-[177px]",
         subText: "current epoch",
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         isToolTipEnabled: true,

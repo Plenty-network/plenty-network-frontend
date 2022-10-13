@@ -260,7 +260,7 @@ export function Staking(props: IStakingProps) {
 
         {/* Start of Wallet app section */}
         <div className="border flex  items-center bg-muted-200/10 border-border-500/50 rounded-2xl">
-          <div className=" flex flex-col py-3.5 px-4">
+          <div className=" flex flex-col py-3.5 px-4 w-full">
             <InputText value={props.stakeInput} onChange={handleStakeInput} />
             <div className="font-body2 md:font-body4 text-text-400">
               ~$
@@ -270,7 +270,7 @@ export function Staking(props: IStakingProps) {
             </div>
           </div>
           {walletAddress && (
-            <div className="pr-2 md:pr-5  w-[79%] sm:w-auto">
+            <div className="pr-2 md:pr-5  w-[40%] ">
               <BtnWithWalletIcon
                 text={`${Number(props.pnlpBalance).toFixed(4)} PNLP`}
                 onClick={onClickAmount}

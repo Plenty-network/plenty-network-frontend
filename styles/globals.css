@@ -191,6 +191,9 @@ input[type='number'] {
 .selectAtoken{
   box-shadow: 1px 16px 24px rgba(0, 0, 0, 0.75);
 }
+.z-index-max-pro {
+  z-index: 99999999999;
+}
 .tooltipCustom {
   opacity: 0.98 !important;
   background-color: #160d24 !important;
