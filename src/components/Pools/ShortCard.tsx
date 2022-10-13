@@ -7,13 +7,14 @@ import { IPoolsDataWrapperResponse } from "../../api/pools/types";
 import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
 import { usePoolsTableSearch } from "../../hooks/usePoolsTableSearch";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
-import { AppDispatch } from "../../redux";
+import { AppDispatch, store } from "../../redux";
 import { getTotalVotingPower } from "../../redux/pools";
 import { compareNumericString } from "../../utils/commonUtils";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import Table from "../Table/Table";
 import { AprInfo } from "./Component/AprInfo";
 import { CircularOverLappingImage } from "./Component/CircularImageInfo";
+import { NoContentAvailable } from "./Component/ConnectWalletOrNoToken";
 import { PoolsText, PoolsTextWithTooltip } from "./Component/PoolsText";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
@@ -24,6 +25,7 @@ export interface IShortCardProps {
   isConnectWalletRequired?: boolean;
   searchValue: string;
   setSearchValue?: Function;
+  setActiveStateTab: React.Dispatch<React.SetStateAction<string>>;
 }
 export interface IManageBtnProps {
   isLiquidityAvailable: boolean;
@@ -52,6 +54,13 @@ export function ShortCard(props: IShortCardProps) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
+  const NoData = React.useMemo(() => {
+    if (userAddress) {
+      return <NoContentAvailable setActiveStateTab={props.setActiveStateTab} />;
+    } else {
+      <></>;
+    }
+  }, []);
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "USDC.e",
     image: `/assets/tokens/USDC.e.png`,
@@ -209,7 +218,7 @@ export function ShortCard(props: IShortCardProps) {
         Header: "Fees",
         id: "fees",
         columnWidth: "w-[122px]",
-        subText: "current epoch",
+        subText: "7D",
         tooltipMessage: "Trading fees collected by the pool in the current epoch.",
         isToolTipEnabled: true,
         canShort: true,
@@ -227,6 +236,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "Bribes",
         id: "Bribes",
+        subText: "current epoch",
         columnWidth: "w-[123px]",
         tooltipMessage:
           "Incentives provided by the protocols to boost the liquidity of their tokens.",
@@ -281,6 +291,7 @@ export function ShortCard(props: IShortCardProps) {
       </div>
     );
   }
+  const userAddress = store.getState().wallet.address;
   return (
     <>
       {showLiquidityModal && (
@@ -295,19 +306,13 @@ export function ShortCard(props: IShortCardProps) {
       <div className={` overflow-x-auto inner  ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={[
-            ...poolsTableData,
-            ...poolsTableData,
-            ...poolsTableData,
-            ...poolsTableData,
-            ...poolsTableData,
-            ...poolsTableData,
-          ]}
+          data={poolsTableData}
           shortby="fees"
           tableType="pool"
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableWidth="lg:min-w-[1032px]"
+          NoData={NoData}
         />
       </div>
     </>

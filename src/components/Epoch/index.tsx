@@ -168,7 +168,7 @@ export function Epoch(props: IEpochProps) {
               </p>
             )}
           </div>
-          <div className="flex gap-2 -mt-[6px] text-f12 text-white font-semibold cursor-pointer">
+          <div className="flex gap-2 -mt-[6px] text-f12 text-white font-semibold ">
             <span className="flex gap-1">
               <span>{days} d</span>:<span>{hours} h</span>:<span>{minutes} m</span>:
               <span>{seconds} s</span>

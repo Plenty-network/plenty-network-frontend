@@ -517,6 +517,9 @@ function Swap(props: ISwapProps) {
       address: token[1].address,
     }));
   }, [tokens]);
+  tokensListConfig.sort(
+    (a, b) => Number(allBalance.userBalance[b.name]) - Number(allBalance.userBalance[a.name])
+  );
 
   return (
     <>

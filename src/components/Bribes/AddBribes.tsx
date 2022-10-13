@@ -9,7 +9,7 @@ import checkDisable from "../../../src/assets/icon/bribes/checkDisable.svg";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import React, { useState, useMemo, useEffect } from "react";
-import { store } from "../../redux";
+import { AppDispatch, store } from "../../redux";
 import { IAddBribes } from "./types";
 import { EpochDropdown } from "./EpochDropdown";
 import clsx from "clsx";
@@ -23,6 +23,8 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { tokensModal } from "../../constants/swap";
 import { getNextListOfEpochs } from "../../api/util/epoch";
 import ConfirmAddBribes from "./ConfirmBribes";
+import { useDispatch } from "react-redux";
+import { walletConnection } from "../../redux/wallet/wallet";
 
 function AddBribes(props: IAddBribes) {
   const [swapModalShow, setSwapModalShow] = useState(false);
@@ -65,6 +67,9 @@ function AddBribes(props: IAddBribes) {
       address: token[1].address,
     }));
   }, [tokens]);
+  const tEZorCTEZtoUppercase = (a: string) =>
+    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   const currentEpoch = store.getState().epoch.currentEpoch;
   const closeModal = () => {
     props.setShow(false);
@@ -75,6 +80,32 @@ function AddBribes(props: IAddBribes) {
     } else {
       props.setBribeInputValue(input.toString());
     }
+  };
+
+  const dateFormat = (dates: number) => {
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Decr",
+    ];
+    var date = new Date(dates);
+    var month = date.getMonth();
+
+    return `${("0" + date.getDate()).slice(-2)} ${monthNames[month]},${date.getFullYear()}`;
+  };
+  const dispatch = useDispatch<AppDispatch>();
+
+  const connectTempleWallet = () => {
+    return dispatch(walletConnection());
   };
   const onClickAmount = () => {
     props.setBribeInputValue("");
@@ -117,6 +148,74 @@ function AddBribes(props: IAddBribes) {
 
     setSwapModalShow(false);
   };
+  const [bottomValue, setBottomValue] = useState(0);
+  useEffect(() => {
+    if (isSelectedEpoch) {
+      setBottomValue(Number(props.bribeInputValue));
+      setSelectedEndDropDown({} as IEpochListObject);
+      if (selectedDropDown.epochNumber > 0) {
+        props.setEpochArray([selectedDropDown.epochNumber]);
+      }
+    } else if (
+      selectedEndDropDown.epochNumber > 0 &&
+      selectedDropDown.epochNumber > 0 &&
+      Number(props.bribeInputValue) > 0
+    ) {
+      setBottomValue(
+        (selectedEndDropDown.epochNumber - selectedDropDown.epochNumber) *
+          Number(props.bribeInputValue)
+      );
+      for (let i = selectedDropDown.epochNumber; i <= selectedEndDropDown.epochNumber; i++) {
+        props.epochArray.push(i);
+      }
+    } else {
+      setBottomValue(0);
+      props.setEpochArray([]);
+    }
+  }, [
+    selectedDropDown.epochNumber,
+    selectedEndDropDown.epochNumber,
+    props.bribeInputValue,
+    isSelectedEpoch,
+  ]);
+  const BribesButton = useMemo(() => {
+    console.log(Number(props.bribeInputValue) > 0);
+    if (userAddress) {
+      if (
+        Number(props.bribeInputValue) > 0 &&
+        (!isSelectedEpoch ? selectedEndDropDown.epochNumber > 0 : selectedDropDown.epochNumber > 0)
+      ) {
+        return (
+          <Button
+            color="primary"
+            width="w-full"
+            onClick={() => {
+              setIsConfirm(true);
+            }}
+          >
+            Add bribes
+          </Button>
+        );
+      } else {
+        return (
+          <Button color="disabled" width="w-full">
+            Add Bribes
+          </Button>
+        );
+      }
+    } else {
+      return (
+        <Button color="primary" onClick={connectTempleWallet} width="w-full">
+          Connect Wallet
+        </Button>
+      );
+    }
+  }, [
+    props.bribeInputValue,
+    selectedDropDown.epochNumber,
+    selectedEndDropDown.epochNumber,
+    isSelectedEpoch,
+  ]);
   return (
     <>
       {props.show ? (
@@ -273,7 +372,7 @@ function AddBribes(props: IAddBribes) {
                       <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
                         <Image
                           alt={"alt"}
-                          src={getImagesPath("ctez")}
+                          src={getImagesPath(props.selectedPool.tokenA)}
                           width={"24px"}
                           height={"24px"}
                         />
@@ -281,31 +380,39 @@ function AddBribes(props: IAddBribes) {
                       <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
                         <Image
                           alt={"alt"}
-                          src={getImagesPath("tez")}
+                          src={getImagesPath(props.selectedPool.tokenB)}
                           width={"24px"}
                           height={"24px"}
                         />
                       </div>
                     </span>
-                    <span className="text-white font-body4  relative top-[1px]">CTEZ/TEZ</span>
+                    <span className="text-white font-body4  relative top-[1px]">
+                      {tEZorCTEZtoUppercase(props.selectedPool.tokenA)}/
+                      {tEZorCTEZtoUppercase(props.selectedPool.tokenB)}
+                    </span>
                   </div>
                   <div className="ml-auto font-body4 text-white flex items-center">
-                    <Image src={drop} />
-                    $23.34
+                    <Image src={drop} />${props.selectedPool.liquidity.toFixed(2)}
                   </div>
                 </div>
-                <div className="font-body2 text-text-250 mt-4 mx-5">
-                  You are adding a bribe of
-                  <span className="text-white ml-1">150 USDT</span> from Epoch 23-26 ( 29 Sep,2022
-                  to 12 Oct 2022)
-                </div>
+                {bottomValue > 0 && (
+                  <div className="font-body2 text-text-250 mt-4 mx-5">
+                    You are adding a bribe of
+                    <span className="text-white ml-1">
+                      {bottomValue} {tEZorCTEZtoUppercase(props.bribeToken.name)}
+                    </span>{" "}
+                    from Epoch {selectedDropDown.epochNumber} {!isSelectedEpoch && "-"}
+                    {!isSelectedEpoch && selectedEndDropDown.epochNumber} (
+                    {dateFormat(selectedDropDown.startTimestamp)} to{" "}
+                    {isSelectedEpoch
+                      ? dateFormat(selectedDropDown.endTimestamp)
+                      : dateFormat(selectedEndDropDown.endTimestamp)}
+                    )
+                  </div>
+                )}
               </div>
 
-              <div className="mt-[18px]">
-                <Button color="primary" onClick={() => setIsConfirm(true)}>
-                  Add bribes
-                </Button>
-              </div>
+              <div className="mt-[18px]">{BribesButton}</div>
             </>
           }
         </PopUpModal>
@@ -318,7 +425,17 @@ function AddBribes(props: IAddBribes) {
         onhide={setSwapModalShow}
         tokenIn={props.bribeToken}
       />
-      <ConfirmAddBribes show={isConfirm} setShow={setIsConfirm} />
+      <ConfirmAddBribes
+        show={isConfirm}
+        setShow={setIsConfirm}
+        selectedPool={props.selectedPool}
+        value={props.bribeInputValue}
+        token={props.bribeToken}
+        selectedDropDown={selectedDropDown}
+        selectedEndDropDown={selectedEndDropDown}
+        isSelectedEpoch={isSelectedEpoch}
+        handleOperation={props.handleOperation}
+      />
     </>
   );
 }
