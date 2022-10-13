@@ -40,7 +40,7 @@ export interface IEpochData {
 
 export interface IEpochResponse {
   success: boolean;
-  epochData: IEpochData;
+  epochData: IEpochData | {};
   error?: string;
 }
 
