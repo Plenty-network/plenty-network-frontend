@@ -30,7 +30,7 @@ export function VePLY(props: IDropdownProps) {
           props.Options.length === 0
             ? "border-border-200 bg-card-200 hover:bg-card-200 hover:border-border-200"
             : props.selectedText.boostValue === ""
-            ? "border-text-700 bg-text-800/[0.25]"
+            ? "border-primary-800 bg-text-800/[0.25]"
             : "border-primary-800 bg-primary-250",
 
           props.Options.length === 0 ||
@@ -38,7 +38,9 @@ export function VePLY(props: IDropdownProps) {
             ? "cursor-not-allowed"
             : "cursor-pointer"
         )}
-        // onClick={() => setIsDropDownActive(true)}
+        onClick={
+          props.Options.length === 0 ? () => {} : () => setIsDropDownActive(!isDropDownActive)
+        }
       >
         <p
           className={clsx(
@@ -63,10 +65,10 @@ export function VePLY(props: IDropdownProps) {
                 {props.isListLoading
                   ? "Loading..."
                   : props.Options.length !== 0
-                  ? "Select vePLY"
-                  : "No vePLY!"}
+                  ? "Select veNFT"
+                  : "No veNFT!"}
               </span>{" "}
-              <span className="font-subtitle1 md:font-body4 md:hidden">vePLY</span>
+              <span className="font-subtitle1 md:font-body4 md:hidden">veNFT</span>
             </>
           )}
         </p>
@@ -74,10 +76,6 @@ export function VePLY(props: IDropdownProps) {
           src={vectorIcon}
           alt={"vectorIcon"}
           className={!isDropDownActive ? "rotate-180" : "rotate-0"}
-          {...((props.isConfirmStake && props.selectedText.boostValue !== "") ||
-          props.Options.length === 0
-            ? {}
-            : { onClick: () => setIsDropDownActive(!isDropDownActive) })}
         />
       </div>
       {isDropDownActive && props.Options.length > 0 && (

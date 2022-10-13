@@ -14,7 +14,7 @@ export const FooterMenu: Array<IHrefIconProps> = [
   {
     name: "Docs",
     iconName: "VectorfooterMenu-1",
-    href: "https://whitepaper.plenty.network/tokenomics/emissions",
+    href: "https://whitepaper.plenty.network/",
   },
   {
     name: "Feedback",

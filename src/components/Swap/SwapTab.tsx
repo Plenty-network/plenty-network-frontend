@@ -919,7 +919,7 @@ function SwapTab(props: ISwapTabProps) {
                     position={Position.top}
                     toolTipChild={
                       <div className="w-[323px]">
-                        Fees are 0.35% for each volatile swap and 0.10% for each stable swap.
+                        Fees is 0.05% for both volatile and stable swap
                       </div>
                     }
                   >

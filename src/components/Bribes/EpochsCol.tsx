@@ -37,8 +37,12 @@ export function EpochCol(props: IEpochCol) {
   };
   return (
     <div className="text-right">
-      <div className=" text-text-50 font-f13">Epoch {props.epochNumber}</div>
-      <div className=" mt-2 text-white font-subtitle4"></div>
+      <div className=" text-text-50 font-f13">
+        Epoch {props.epochStart} - {props.epochEnd}
+      </div>
+      <div className=" mt-2 text-white font-subtitle4">
+        {dateFormat(props.startEpoch)} to {dateFormat(props.endEpoch)}
+      </div>
     </div>
   );
 }
