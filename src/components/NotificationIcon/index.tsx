@@ -1,6 +1,8 @@
 import Image from "next/image";
 import * as React from "react";
-import { useAppSelector } from "../../redux";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { store, useAppSelector } from "../../redux";
 import { getAllNotification } from "../Notification/notificationMessageSave";
 export enum NotiFicationType {
   noNotification,
@@ -16,7 +18,11 @@ export function NotificationIcon(props: INotificationIconProps) {
   const { isLoading } = useAppSelector((state) => state.flashMessage);
   const [ringAnimate, setRingAnimate] = React.useState(false);
   const [type, setType] = React.useState(NotiFicationType.noNotification);
+  const hasNotification = store.getState().wallet.hasNotification;
+  const length = getAllNotification(walletAddress).length;
+  console.log(hasNotification);
   React.useEffect(() => {
+    console.log(hasNotification);
     const typeInnitial: NotiFicationType = getAllNotification(walletAddress).length
       ? NotiFicationType.haveNotification
       : NotiFicationType.noNotification;
@@ -27,7 +33,7 @@ export function NotificationIcon(props: INotificationIconProps) {
       }, 1000);
     }
     setType(typeInnitial);
-  }, [isLoading, walletAddress]);
+  }, [isLoading, walletAddress, length]);
   return (
     <div
       className={`flex items-center ${props.className}`}
@@ -37,9 +43,9 @@ export function NotificationIcon(props: INotificationIconProps) {
     >
       <Image
         alt={"alt"}
-        className={ringAnimate ? "ringAnimate" : ""}
+        className={true ? "ringAnimate" : ""}
         src={
-          type === NotiFicationType.noNotification
+          type === NotiFicationType.noNotification && !hasNotification
             ? "/assets/icon/bellicon.svg"
             : "/assets/icon/bellIconWithDot.svg"
         }

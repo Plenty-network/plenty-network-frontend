@@ -101,6 +101,7 @@ interface ISwapTabProps {
   setEnableMultiHop: React.Dispatch<React.SetStateAction<boolean>>;
   enableMultiHop: boolean;
   setBalanceUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  isLiqError: boolean;
 }
 
 function SwapTab(props: ISwapTabProps) {
@@ -265,7 +266,15 @@ function SwapTab(props: ISwapTabProps) {
             Insufficient balance
           </Button>
         );
-      } else if (expertMode && Number(props.routeDetails.priceImpact) > 3) {
+      }
+      //  else if (props.isLiqError) {
+      //   return (
+      //     <Button color="disabled" width="w-full">
+      //       Insufficient Liquidity for this trade
+      //     </Button>
+      //   );
+      // }
+      else if (expertMode && Number(props.routeDetails.priceImpact) > 3) {
         return (
           <Button color="error" width="w-full" onClick={handleSwap}>
             Swap Anyway

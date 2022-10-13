@@ -12,6 +12,7 @@ function AllocationPopup(props: IAllocationProps) {
       <VotingAllocation
         show={props.show}
         setShow={props.setShow}
+        castVoteOperation={props.castVoteOperation}
         selectedDropDown={props.selectedDropDown} // veNFT selected
         epochData={props.epochData} // epoch data
         alreadyVoted={props.alreadyVoted}

@@ -157,6 +157,7 @@ function CreateLock(props: ICreateLockProps) {
   };
   const [showTooltip, setShowTooltip] = useState(false);
   useEffect(() => {
+    // handleDateSelection(MAX_TIME, undefined);
     setShowTooltip(true);
 
     setTimeout(() => {
@@ -179,7 +180,7 @@ function CreateLock(props: ICreateLockProps) {
               isFirstInputFocus ? "border-text-700" : "border-text-800 "
             )}
           >
-            <div className="w-[50%]">
+            <div className="">
               <p>
                 <input
                   type="text"

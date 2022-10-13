@@ -29,6 +29,7 @@ import { VoteShare } from "./VoteShare";
 import { EpochCol } from "./EpochsCol";
 import { Token } from "./Token";
 import { IUserBribeData } from "../../api/bribes/types";
+import { BribeValue } from "./Bribe";
 TimeAgo.addDefaultLocale(en);
 
 export function MyBribesTableBribes(props: IBribesTableBribes) {
@@ -88,7 +89,9 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "currentVotingPower"),
-        accessor: (x: any) => <YourLiquidity value={x.bribeValue} />,
+        accessor: (x: any) => (
+          <BribeValue value={x.bribeValue} valuePerEpoch={x.bribeValuePerEpoch} />
+        ),
       },
       {
         Header: `Token`,
@@ -160,7 +163,9 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "currentVotingPower"),
-        accessor: (x: any) => <YourLiquidity value={x.bribeValue} />,
+        accessor: (x: any) => (
+          <BribeValue value={x.bribeValue} valuePerEpoch={x.bribeValuePerEpoch} />
+        ),
       },
       {
         Header: `Token`,

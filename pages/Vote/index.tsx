@@ -586,6 +586,7 @@ export default function Vote() {
           <div className="hidden md:block md:basis-1/3 md:pr-[25px] w-[350px]">
             <VotingAllocation
               show={showCastVotingAllocation}
+              castVoteOperation={castVoteOperation}
               setShow={setShowCastVotingAllocation}
               selectedDropDown={selectedDropDown} // veNFT selected
               epochData={epochData} // epoch data
@@ -719,6 +720,7 @@ export default function Vote() {
           epochData={epochData} // epoch data
           alreadyVoted={sumOfVotes === 100}
           epochNumber={selectedEpoch ? selectedEpoch.epochNumber : 0}
+          castVoteOperation={castVoteOperation}
         />
       )}
       {showCastVoteModal && (

@@ -128,6 +128,7 @@ function Swap(props: ISwapProps) {
     }
   }, [tokenPrice]);
 
+  const [isLiqError, setIsLiqError] = useState(false);
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(tokenIn, "name") &&
@@ -306,6 +307,9 @@ function Swap(props: ISwapProps) {
             success: true,
             exchangeRate: res.exchangeRate,
           };
+          res.tokenOutAmount.isLessThan(0)
+            ? setErrorMessage("Insufficient Liquidity for this trade")
+            : setErrorMessage("");
           setSecondTokenAmount(
             res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString()
           );
@@ -341,6 +345,9 @@ function Swap(props: ISwapProps) {
             success: true,
             exchangeRate: res.exchangeRate,
           };
+          res.tokenOutAmount.isLessThan(0)
+            ? setErrorMessage("Insufficient Liquidity for this trade")
+            : setErrorMessage("");
           setFirstTokenAmount(res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString());
         }
       }
@@ -454,7 +461,9 @@ function Swap(props: ISwapProps) {
             success: true,
             exchangeRate: res.exchangeRate,
           };
-
+          res.tokenOutAmount.isLessThan(0)
+            ? setErrorMessage("Insufficient Liquidity for this trade")
+            : setErrorMessage("");
           setSecondTokenAmount(
             res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString()
           );
@@ -571,6 +580,7 @@ function Swap(props: ISwapProps) {
           setEnableMultiHop={setEnableMultiHop}
           enableMultiHop={enableMultiHop}
           setBalanceUpdate={setBalanceUpdate}
+          isLiqError={isLiqError}
         />
       </div>
       <SwapModal
