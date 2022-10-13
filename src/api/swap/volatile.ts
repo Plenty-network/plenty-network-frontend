@@ -78,7 +78,7 @@ export const calculateTokenOutputVolatile = (
     const state = store.getState();
     const TOKEN = state.config.standard;
 
-    const feePerc = new BigNumber(0.35);
+    const feePerc = new BigNumber(0.05);
     let tokenOutAmount = new BigNumber(0);
     tokenOutAmount = new BigNumber(1)
       .minus(exchangeFee)
@@ -156,9 +156,8 @@ export const calculateTokenInputVolatile = (
     const state = store.getState();
     const TOKEN = state.config.standard;
 
-    const feePerc = new BigNumber(0.35);
+    const feePerc = new BigNumber(0.05);
     let tokenOutAmount = new BigNumber(0);
-    console.log(exchangeFee.toString());
 
     tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
     tokenInSupply = tokenInSupply.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
@@ -166,7 +165,6 @@ export const calculateTokenInputVolatile = (
 
     let fee = tokenInAmount.multipliedBy(exchangeFee);
     tokenInAmount = tokenInAmount.plus(fee);
-    tokenInAmount = tokenInAmount.plus(tokenInAmount.multipliedBy(0.001));
 
     let invariant = tokenInSupply.multipliedBy(tokenOutSupply);
     tokenOutAmount = (invariant.dividedBy(tokenInSupply.minus(tokenInAmount))).minus(tokenOutSupply);
@@ -177,16 +175,6 @@ export const calculateTokenInputVolatile = (
     tokenOutAmount = tokenOutAmount.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
 
 
-
-    // tokenOutAmount = new BigNumber(1)
-    //   .minus(exchangeFee)
-    //   .multipliedBy(tokenOutSupply)
-    //   .multipliedBy(tokenInAmount);
-    // tokenOutAmount = tokenOutAmount.dividedBy(
-    //   tokenInSupply.plus(
-    //     new BigNumber(1).minus(exchangeFee).multipliedBy(tokenInAmount)
-    //   )
-    // );
 
     tokenOutAmount = new BigNumber(
       tokenOutAmount.decimalPlaces(TOKEN[tokenOut].decimals , 1)

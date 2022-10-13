@@ -50,6 +50,10 @@ export const claim = async (
     }
   };
 
+
+  // PLENTY = sp.nat(0)
+  // WRAP = sp.nat(1) 
+  
   export const exchange = async (
     token : number,
     value : BigNumber,
