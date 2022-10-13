@@ -1217,6 +1217,32 @@ function MyPortfolio(props: any) {
       }
     });
   };
+  // const headerRef = useRef(null);
+  // const getHeightOfElement = (el: any) => {
+  //   console.log("el", el);
+  //   try {
+  //     console.log("el", el);
+  //     const rect = el.getBoundingClientRect();
+  //     console.log("isj", rect);
+  //     return rect.top;
+  //   } catch (e) {
+  //     return 0;
+  //   }
+  // };
+  // const [initTop, setTop] = useState(0);
+  // const [isScroll, setScroll] = useState(false);
+  // useEffect(() => {
+  //   setTop(getHeightOfElement(headerRef.current));
+  // }, [headerRef.current?.getBoundingClientRect().]);
+  // useEffect(() => {
+  //   const r = getHeightOfElement(headerRef.current);
+  //   console.log("isddddd", r, initTop);
+  //   if (r === initTop) {
+  //     setScroll(false);
+  //   } else {
+  //     setScroll(true);
+  //   }
+  // }, [initTop]);
   return (
     <>
       <SideBarHOC>
@@ -1319,25 +1345,27 @@ function MyPortfolio(props: any) {
                       Discover veNFTs on the largest NFT marketplace on Tezos.
                     </div>
                   </p>
-                  <p
-                    className={clsx(
-                      " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
-                      poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
-                        ? "cursor-not-allowed"
-                        : "cursor-pointer"
-                    )}
-                    onClick={
-                      poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
-                        ? () => {}
-                        : () => {
-                            setShowClaimPly(true);
-                            setClaimValueDollar(poolsRewards.data.gaugeEmissionsTotal);
-                            setClaimState(EClaimAllState.PLYEMISSION);
-                          }
-                    }
-                  >
-                    Claim all
-                  </p>
+                  {true && (
+                    <p
+                      className={clsx(
+                        " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
+                        poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                          ? "cursor-not-allowed"
+                          : "cursor-pointer"
+                      )}
+                      onClick={
+                        poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                          ? () => {}
+                          : () => {
+                              setShowClaimPly(true);
+                              setClaimValueDollar(poolsRewards.data.gaugeEmissionsTotal);
+                              setClaimState(EClaimAllState.PLYEMISSION);
+                            }
+                      }
+                    >
+                      Claim all
+                    </p>
+                  )}
                 </div>
                 <PoolsTableRewards
                   className="md:px-5 md:py-4   py-4"
@@ -1357,9 +1385,16 @@ function MyPortfolio(props: any) {
                       Discover veNFTs on the largest NFT marketplace on Tezos.
                     </div>
                   </p>
-                  <p className="cursor-pointer flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[15px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
-                    Trade locks
-                  </p>
+                  <a
+                    href={"https://objkt.com/"}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="ml-auto"
+                  >
+                    <p className="cursor-pointer flex items-center md:font-title3 font-subtitle4 text-primary-500  h-[50px] px-[15px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
+                      Trade locks
+                    </p>
+                  </a>
                 </div>
                 <LocksTablePosition
                   className="md:px-5 md:pb-4 md:pt-2  py-4"
@@ -1380,25 +1415,27 @@ function MyPortfolio(props: any) {
                       Discover veNFTs on the largest NFT marketplace on Tezos.
                     </div>
                   </p>
-                  <p
-                    className={clsx(
-                      " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center",
-                      bribesClaimData.length === 0 || feeClaimData.length === 0
-                        ? "cursor-not-allowed"
-                        : "cursor-pointer"
-                    )}
-                    onClick={
-                      bribesClaimData.length === 0 || feeClaimData.length === 0
-                        ? () => {}
-                        : () => {
-                            setShowClaimPly(true);
-                            setClaimValueDollar(tradingfeeStats.plus(bribesStats));
-                            setClaimState(EClaimAllState.LOCKS);
-                          }
-                    }
-                  >
-                    Claim all
-                  </p>
+                  {true && (
+                    <p
+                      className={clsx(
+                        " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center",
+                        bribesClaimData.length === 0 || feeClaimData.length === 0
+                          ? "cursor-not-allowed"
+                          : "cursor-pointer"
+                      )}
+                      onClick={
+                        bribesClaimData.length === 0 || feeClaimData.length === 0
+                          ? () => {}
+                          : () => {
+                              setShowClaimPly(true);
+                              setClaimValueDollar(tradingfeeStats.plus(bribesStats));
+                              setClaimState(EClaimAllState.LOCKS);
+                            }
+                      }
+                    >
+                      Claim all
+                    </p>
+                  )}
                 </div>
 
                 <div className="border-b border-text-800/[0.5] pt-[15px] "></div>

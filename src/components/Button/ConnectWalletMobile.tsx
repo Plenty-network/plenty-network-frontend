@@ -67,7 +67,7 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
               )
             </p>
             <p
-              className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-not-allowed text-white text-f14"
+              className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
               onClick={() => copy(userAddress)}
             >
               <Image alt={"alt"} src={copyLogo} />
@@ -106,12 +106,12 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
   }
   return (
     <div className="flex flex-col justify-center">
-    <button
-      onClick={() => connectTempleWallet()}
-      className="bg-primary-500/5 px-[12px] py-[6.5px] hover:bg-opacity-95 rounded-md border text-primary-500 border-primary-500/100"
-    >
-      Connect
-    </button>
+      <button
+        onClick={() => connectTempleWallet()}
+        className="bg-primary-500/5 px-[12px] py-[6.5px] hover:bg-opacity-95 rounded-md border text-primary-500 border-primary-500/100"
+      >
+        Connect
+      </button>
     </div>
   );
 }

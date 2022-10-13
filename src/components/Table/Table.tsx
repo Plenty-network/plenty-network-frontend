@@ -173,13 +173,14 @@ const Table = <D extends object>({
         </thead>
         <tbody
           className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-1")}
-          {...(!router.pathname.includes("MyPortfolio") && {
-            style: { height: `${heightBody}px` },
-          })}
+          {...(!router.pathname.includes("MyPortfolio") &&
+            !router.pathname.includes("pools") && {
+              style: { height: `${heightBody}px` },
+            })}
         >
-          {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
+          {/* {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
             <NoContentAvailable />
-          ) : null}
+          ) : null} */}
           {isFetched && noSearchResult ? <NoSearchResult /> : null}
           {isFetched && data.length === 0 && NoData && NoData}
           {isConnectWalletRequired && !walletAddress && isFetched ? <WalletNotConnected /> : null}
