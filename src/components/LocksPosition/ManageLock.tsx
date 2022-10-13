@@ -113,7 +113,7 @@ function ManageLock(props: IManageLockProps) {
       );
       setVotingPower(res);
     }
-    props.setLockingEndData({ selected: days ? days : 0, lockingDate: lockEnd });
+    props.setLockingEndData({ selected: timeSpan ? timeSpan : 0, lockingDate: lockEnd });
   };
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
