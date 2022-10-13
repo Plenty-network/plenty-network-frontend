@@ -4,6 +4,7 @@ import { voterStorageType } from "../votes/data";
 import { getStorage, getTzktBigMapData, getTzktStorageData } from "./storageProvider";
 import {
   IDatesEnabledRangeData,
+  IEpochData,
   IEpochDataResponse,
   IEpochListObject,
   IEpochResponse,
@@ -287,3 +288,50 @@ export const getCalendarRangeToEnable = (): IDatesEnabledRangeData => {
     };
   }
 };
+
+export const getNextListOfEpochsMODIFY = async (
+  nextEpochsRequired: number = 8
+) : Promise<{success : boolean , epochData : { [id: number]: IEpochData} , error? : any }>=> {
+  try {
+    const epochDuration: number =
+      connectedNetwork === "testnet" ? EPOCH_DURATION_TESTNET : EPOCH_DURATION_MAINNET;
+    const voterStorageResponse = await getTzktStorageData(voterContractAddress);
+    const currentEpochNumber: number = new BigNumber(voterStorageResponse.data.epoch).toNumber();
+    const epochEndBigMapId: number = voterStorageResponse.data.epoch_end;
+    const voterEpochResponse = await getTzktBigMapData(`${epochEndBigMapId}`,`key=${currentEpochNumber}`);
+    if(voterEpochResponse.data.length === 0) {
+      throw new Error("Error fetching epoch data");
+    }
+    const currentEpochEnd = new Date(voterEpochResponse.data[0].value).getTime();
+    const currentEpochStart = currentEpochEnd - epochDuration;
+
+    const allData : { [id: number]: IEpochData} = {};
+
+    allData[currentEpochNumber] = {isCurrent: true,
+      epochStartTimestamp: currentEpochStart,
+      epochEndTimestamp: currentEpochEnd};
+
+    let nextEpochStart = currentEpochEnd;
+    for (let i: number = 1; i <= nextEpochsRequired; i++) {
+      const epochStart = nextEpochStart;
+      const epochEnd = epochStart + epochDuration;
+      allData[currentEpochNumber + i] = {isCurrent: false,
+        epochStartTimestamp: epochStart,
+        epochEndTimestamp: epochEnd};
+     
+      nextEpochStart = epochEnd;
+    }
+
+    return {
+      success: true,
+      epochData: allData,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      epochData: {},
+      error: error.message,
+    };
+  }
+};
+

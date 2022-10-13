@@ -23,6 +23,11 @@ export interface IUserBribeData {
   epochEndDate : number;
 }
 
+export interface IGroupedData{
+  key : string;
+  value : number[];
+}
+
 export interface IUserBribeDataResponse {
   success: boolean;
   userBribesData: IUserBribeData[];
