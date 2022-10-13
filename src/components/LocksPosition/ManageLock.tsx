@@ -275,7 +275,7 @@ function ManageLock(props: IManageLockProps) {
                   isOpen={isDatePickerOpen}
                   setIsOpen={setIsDatePickerOpen}
                   yearsToEnable={dateRange.years}
-                  alloweDates={dateRange.alloweDates}
+                  alloweDates={dateRange.alloweDates ? dateRange.alloweDates.filter((date) => date > props.manageData.endTimeStamp ) : dateRange.alloweDates}
                 />
               </div>
             </div>
