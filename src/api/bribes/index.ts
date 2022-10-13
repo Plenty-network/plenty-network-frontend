@@ -9,6 +9,7 @@ import {
   IPoolsBribeLiquidityData,
   IPoolsDataObject,
   IPoolsForBribesData,
+  IGroupedData,
 } from "./types";
 import { BigNumber } from "bignumber.js";
 import { IEpochData, IEpochResponse, ITokenPriceList } from "../util/types";
@@ -20,6 +21,7 @@ import { getAllVotesData } from "../votes";
 import { getDexAddress } from "../util/fetchConfig";
 import { connectedNetwork } from "../../common/walletconnect";
 import { EPOCH_DURATION_MAINNET, EPOCH_DURATION_TESTNET } from "../../constants/global";
+import { group } from "console";
 
 /**
  * Returns all the bribes created by a provider(user).
@@ -56,18 +58,29 @@ export const getUserBribeData = async (
         groupedData.set(key , [Number(bribe.epoch)]);
       }
     }
+    
+    let groupedConsecData : IGroupedData[] = [];
 
-    console.log(groupedData);
+    // USE RANGE CODE 
+    // if same val , token , amm  with diff epochs , there exist a case they may not be continuous 
+    // each discontinuous range is a seperate entry 
+    for(let entry of groupedData.entries()){
+      const consec = consecutiveRanges(entry[1]);
+      for(const group of consec){
+        groupedConsecData.push({key : entry[0] , value : group});
+      }
+    }
 
-    for (let entry of groupedData.entries()) {
-      const splitKey = entry[0].split("_");
+    for (let entry of groupedConsecData) {
+      const splitKey = entry.key.split("_");
       //0 : value , 1 : name , 2 : amm  
 
       const AMM = AMMS[splitKey[2]];
       const bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]]);
-      const bribeValue = bribeValuePerEpoch.multipliedBy(entry[1].length);
+      const bribeValue = bribeValuePerEpoch.multipliedBy(entry.value.length);
 
-      const epochs = entry[1];
+      const epochs = entry.value;
+
       const epochStart = epochs[0];
       const epochEnd = epochs[epochs.length-1];
       const startDataResponse = await fetchEpochData(epochStart);
@@ -91,8 +104,6 @@ export const getUserBribeData = async (
       });
  
   }
-
-  console.log(allData);
 
     return {
       success: true,
@@ -187,6 +198,33 @@ export const getUserBribeData = async (
     throw new Error(error.message);
   }
 };
+
+const consecutiveRanges = (arr : number[]) => {
+  let len = 1;
+  let list = []; 
+
+   for(let i = 1 ; i<=arr.length ; i++){
+     if( i === arr.length || arr[i] - arr[i-1] != 1){
+       if(len === 1){
+        list.push([arr[i - len]]);
+       }
+       else{
+        const temp : number[] = [];
+
+        for(let j = arr[i-len] ; j<= arr[i-1] ; j++)
+        temp.push(j);
+
+        list.push(temp);
+       }
+       len = 1;
+     }
+     else{
+       len++;
+     }
+   }
+   return list;
+  
+}
 
 /**
  * Returns the list of pools with their bribes, liquidity and votes data(current and previous).
