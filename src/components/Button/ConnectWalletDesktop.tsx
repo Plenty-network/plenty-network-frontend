@@ -77,7 +77,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
               <span className="text-text-50">{truncateMiddle(userAddress, 4, 4, "...")}</span>)
             </p>
             <p
-              className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-context-menu text-white text-f14"
+              className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
               onClick={() => copy(userAddress)}
             >
               <Image alt={"alt"} src={copyLogo} />

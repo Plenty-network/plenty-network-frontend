@@ -13,6 +13,7 @@ export interface IHeadInfoProps {
   setSearchValue: Function;
   toolTipContent: string;
   handleCreateLock?: () => void;
+  isFirst?: boolean;
 }
 
 export default function HeadInfo(props: IHeadInfoProps) {
@@ -36,7 +37,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
             )
           }
           classNameAncorToolTip="pushtoCenter"
-          isShowInnitially={true}
+          isShowInnitially={props.isFirst ? true : false}
         >
           <Image
             src={playIcon}

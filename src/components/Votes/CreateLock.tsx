@@ -163,7 +163,6 @@ function CreateLock(props: ICreateLockProps) {
       setShowTooltip(false);
     }, 5000);
   }, []);
-  console.log(showTooltip);
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
@@ -258,7 +257,7 @@ function CreateLock(props: ICreateLockProps) {
           <div className="bg-muted-400 border border-text-800 rounded-2xl py-5 mt-5 mx-2 md:mx-5 ">
             <div className=" px-3 md:px-5 text-text-50 font-subtitle1">Choose lock end </div>
             <div className="mt-2 rounded-lg ml-5 mr-[24px] border-[1.3px] border-border-200 pr-5 pl-4 flex items-center h-[62px] hover:border-text-700">
-              <div>
+              <div onClick={() => setIsDatePickerOpen(true)}>
                 <input
                   type="text"
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-subtitle6  md:font-subtitle6 outline-none w-[100%] placeholder:text-text-500"

@@ -1,13 +1,15 @@
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { getPoolsDataForBribes, getUserBribeData } from "../../src/api/bribes";
+import { IPoolsForBribesResponse, IUserBribeData } from "../../src/api/bribes/types";
 import BribesMain from "../../src/components/Bribes";
 import Landing from "../../src/components/Bribes/LandingPage";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { useInterval } from "../../src/hooks/useInterval";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getEpochData } from "../../src/redux/epoch/epoch";
-import { AppDispatch, useAppSelector } from "../../src/redux/index";
+import { AppDispatch, store, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
@@ -20,6 +22,8 @@ const Bribes: NextPage = () => {
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
   const dispatch = useDispatch<AppDispatch>();
+  const epoch = store.getState().epoch.currentEpoch;
+
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
@@ -57,10 +61,33 @@ const Bribes: NextPage = () => {
   }, [amm]);
   const [isBribesMain, setBribesMain] = useState(false);
 
+  const tokenPrice = store.getState().tokenPrice.tokenPrice;
+  useEffect(() => {
+    if (Object.keys(tokenPrice).length !== 0)
+      getUserBribeData(userAddress, tokenPrice).then((res) => {
+        console.log(res);
+        setBribesArr({ data: res.userBribesData, isfetched: true });
+      });
+  }, [userAddress, tokenPrice]);
+  const [poolsArr, setPoolsArr] = useState<{
+    data: IPoolsForBribesResponse;
+    isfetched: boolean;
+  }>({ data: {} as IPoolsForBribesResponse, isfetched: false });
+  const [bribesArr, setBribesArr] = useState<{
+    data: IUserBribeData[];
+    isfetched: boolean;
+  }>({ data: [] as IUserBribeData[], isfetched: false });
+  useEffect(() => {
+    getPoolsDataForBribes(epoch.epochNumber).then((res) => {
+      console.log(res);
+      setPoolsArr({ data: res, isfetched: true });
+    });
+  }, [epoch.epochNumber]);
+
   return (
     <>
       {!isBribesMain && <Landing setBribesMain={setBribesMain} />}
-      {isBribesMain && <BribesMain />}
+      {isBribesMain && <BribesMain poolsArr={poolsArr} bribesArr={bribesArr} />}
     </>
   );
 };
