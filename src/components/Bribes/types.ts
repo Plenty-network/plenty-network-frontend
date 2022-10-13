@@ -82,3 +82,9 @@ export interface IEpochCol {
   epochStart: number;
   epochEnd: number;
 }
+
+export interface IBribeColProps {
+  value: BigNumber;
+
+  valuePerEpoch: BigNumber;
+}
