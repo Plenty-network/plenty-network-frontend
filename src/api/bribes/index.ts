@@ -79,8 +79,8 @@ export const getUserBribeData = async (
         bribeValue: bribeValue,
         bribeValuePerEpoch : bribeValuePerEpoch,
         bribeToken: splitKey[1],
-        epochStart : 1 ,
-        epochEnd : 1 ,
+        epochStart : epochStart ,
+        epochEnd : epochEnd ,
         epochStartDate : startData.epochStartTimestamp,
         epochEndDate : endData.epochEndTimestamp
       });

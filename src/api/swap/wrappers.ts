@@ -487,3 +487,32 @@ export const topTokensList = async (): Promise<{
     };
   }
 };
+
+export const topTokenListGhostnet = async (): Promise<{
+  success: boolean;
+  topTokens: { [id: string]: number };
+}> => {
+  try {
+    const topTokens: { [id: string]: number } = {};
+
+    topTokens['tez']=0;
+    topTokens['ctez']=1;
+    topTokens['USDC.e']=2;
+    topTokens['USDT.e']=3;
+    topTokens['USDtz']=4;
+    topTokens['DAI.e']=5;
+    topTokens['WBTC.e']=6;
+    topTokens['LINK.e']=7;
+
+    return {
+      success: true,
+      topTokens: topTokens,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      topTokens: {},
+    };
+  }
+};
