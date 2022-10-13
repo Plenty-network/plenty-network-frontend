@@ -15,10 +15,10 @@ export function Token(props: IToken) {
   return (
     <>
       <div className="flex items-center justify-center">
-        <div className="font-subtitle3 text-white">{tEZorCTEZtoUppercase(props.value)}</div>
-        <div className="ml-2 relative top-0.5">
+        <div className="mr-2 relative top-0.5">
           <Image alt={"alt"} src={getImagesPath(props.value)} width={"20px"} height={"20px"} />
         </div>
+        <div className="font-subtitle3 text-white">{tEZorCTEZtoUppercase(props.value)}</div>
       </div>
     </>
   );

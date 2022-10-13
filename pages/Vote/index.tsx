@@ -126,6 +126,9 @@ export default function Vote() {
     });
   }, []);
   useEffect(() => {
+    localStorage.setItem("vote", userAddress);
+  }, []);
+  useEffect(() => {
     if (selectedEpoch?.epochNumber) {
       setVoteData({} as { [id: string]: IVotePageData });
       setSelectedPools([] as ISelectedPool[]);
@@ -430,6 +433,7 @@ export default function Vote() {
               handleCreateLock={handleCreateLock}
               searchValue={searchValue}
               setSearchValue={setSearchValue}
+              isFirst={localStorage.getItem("vote") !== userAddress}
             />
 
             <div className="">

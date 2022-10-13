@@ -280,7 +280,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
       <div className={` overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={[...newdata, ...newdata, ...newdata, ...newdata]}
+          data={newdata}
           noSearchResult={noSearchResult}
           shortby=""
           isFetched={isFetched}

@@ -256,7 +256,7 @@ function SwapTab(props: ISwapTabProps) {
       ) {
         return (
           <Button color="disabled" width="w-full">
-            Enter a amount
+            Enter an amount
           </Button>
         );
       } else if (props.firstTokenAmount > props.userBalances[props.tokenIn.name]) {

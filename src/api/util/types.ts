@@ -53,9 +53,9 @@ export interface IDatesEnabledRangeData {
 }
 
 export interface ILpTokenPriceList {
-  [id: string]: BigNumber
+  [id: string]: BigNumber;
 }
 
 export interface ITokenPriceList {
-  [id: string]: number
+  [id: string]: number;
 }
