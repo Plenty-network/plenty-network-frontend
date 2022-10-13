@@ -15,8 +15,12 @@ export interface IUserBribeData {
   tokenB: string;
   poolType: AMM_TYPE;
   bribeValue: BigNumber;
+  bribeValuePerEpoch : BigNumber;
   bribeToken: string;
-  epoch: number;
+  epochStart: number;
+  epochEnd: number;
+  epochStartDate : number;
+  epochEndDate : number;
 }
 
 export interface IUserBribeDataResponse {

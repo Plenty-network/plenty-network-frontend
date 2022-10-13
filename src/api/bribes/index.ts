@@ -40,21 +40,54 @@ export const getUserBribeData = async (
 
     const allData: IUserBribeData[] = [];
 
-    for (const bribe of myBribesData) {
-      const AMM = AMMS[bribe.amm];
-      const bribeValue = new BigNumber(bribe.value);
+    let groupedData : Map<string , number[]> = new Map();
+    for(const bribe of myBribesData){
+      const key = bribe.value+'_'+bribe.name+'_'+bribe.amm;
+
+      if(groupedData.has(key)){
+        const epochs = groupedData.get(key) as number[];
+        epochs.push(Number(bribe.epoch));
+        epochs.sort();   // might not be reqd if data is given sorted
+        groupedData.set(key , epochs);   // might not be reqd if arrays are stored in memory
+      }
+      else{
+        groupedData.set(key , [Number(bribe.epoch)]);
+      }
+    }
+
+    for (let entry of groupedData.entries()) {
+      const splitKey = entry[0].split("_");
+      //0 : value , 1 : name , 2 : amm  
+
+      const AMM = AMMS[splitKey[2]];
+      const bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]]);
+      const bribeValue = bribeValuePerEpoch.multipliedBy(entry[1].length);
+
+      const epochs = entry[1];
+      const epochStart = epochs[0];
+      const epochEnd = epochs[epochs.length-1];
+      const startDataResponse = await fetchEpochData(epochStart);
+      const endDataResponse = await fetchEpochData(epochEnd);
+      const startData = startDataResponse.epochData as IEpochData;
+      const endData = endDataResponse.epochData as IEpochData;
+
       allData.push({
         ammAddress: AMM.address,
         tokenA: AMM.token1.symbol,
         tokenB: AMM.token2.symbol,
         poolType: AMM.type,
-        bribeValue: bribeValue
-          .dividedBy(new BigNumber(10).pow(TOKEN[bribe.name].decimals))
-          .multipliedBy(tokenPrice[bribe.name]),
-        bribeToken: bribe.name,
-        epoch: Number(bribe.epoch),
+        bribeValue: bribeValue,
+        bribeValuePerEpoch : bribeValuePerEpoch,
+        bribeToken: splitKey[1],
+        epochStart : epochStart ,
+        epochEnd : epochEnd ,
+        epochStartDate : startData.epochStartTimestamp,
+        epochEndDate : endData.epochEndTimestamp
       });
-    }
+ 
+  }
+
+  console.log(allData);
 
     return {
       success: true,
