@@ -41,7 +41,7 @@ export function ToolTip(props: IToolTipProps) {
         <ReactTooltip
           disable={props.disable}
           showInitial={props.isShowInnitially}
-          className={`tooltipCustom ${props.classNameToolTipContainer}-${
+          className={` tooltipCustom ${props.classNameToolTipContainer}-${
             props.position ? props.position : "right"
           }`}
           arrowColor="rgba(60, 60, 60,0)"
@@ -63,7 +63,7 @@ export function ToolTip(props: IToolTipProps) {
         <ReactTooltip
           disable={props.disable}
           showInitial={props.isShowInnitially}
-          className={`tooltipCustom ${props.classNameToolTipContainer}`}
+          className={` tooltipCustom ${props.classNameToolTipContainer}`}
           arrowColor="#341E54"
           place={props.position ? props.position : "right"}
           id={`tooltip_${randomId}`}
@@ -92,7 +92,7 @@ export function ToolTip(props: IToolTipProps) {
       <ReactTooltip
         disable={props.disable}
         showInitial={props.isShowInnitially}
-        className={`tooltipCustom playIconTooltip-${props.position ? props.position : "right"}`}
+        className={` tooltipCustom playIconTooltip-${props.position ? props.position : "right"}`}
         arrowColor="#341E54"
         place={props.position ? props.position : "right"}
         id={`tooltip_${randomId}`}

@@ -12,6 +12,7 @@ export interface ISingleSideBarProps {
   isBottomMenu?: boolean;
   isActive?: boolean;
   activePathName?: string;
+  isHrefIcon?: boolean;
 }
 
 export function SingleSideBar(props: ISingleSideBarProps) {
@@ -27,7 +28,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
             !props.isBottomMenu ? "border-x-2" : ""
           } border border-transprent `}
         >
-          <div className="flex gap-4">
+          <div className="flex  gap-4">
             {props.iconName && (
               <Image
                 alt={"alt"}
@@ -38,6 +39,16 @@ export function SingleSideBar(props: ISingleSideBarProps) {
               />
             )}
             <p>{props.name}</p>
+            {props.isHrefIcon && (
+              <p className="w-[11px] h-[11px] relative top-px ml-20">
+                <Image
+                  alt={"alt"}
+                  src={"/assets/icon/HrefIcon.svg"}
+                  height={"15px"}
+                  width={"15px"}
+                />
+              </p>
+            )}
           </div>
           {props.subMenu && props.subMenu.length && (
             <Image
@@ -74,6 +85,9 @@ export function SingleSideBar(props: ISingleSideBarProps) {
             />
           )}
           <p>{props.name}</p>
+          {props.isHrefIcon && (
+            <Image alt={"alt"} src={"/assets/icon/HrefIcon.svg"} height={"15px"} width={"15px"} />
+          )}
         </div>
         {props.subMenu && props.subMenu.length && (
           <Image

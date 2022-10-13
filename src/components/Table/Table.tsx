@@ -2,6 +2,7 @@ import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
 import { isMobile, isTablet } from "react-device-detect";
 import { Column, useFilters, usePagination, useSortBy, useTable } from "react-table";
+import { useRouter } from "next/router";
 import { useAppSelector } from "../../redux";
 import { getHeightOfElement } from "../../utils/getHeight";
 import { NoContentAvailable, WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
@@ -115,7 +116,7 @@ const Table = <D extends object>({
       ]);
     }
   };
-
+  const router = useRouter();
   return (
     <div>
       <table className={clsx(" flex flex-col ", isVotesTable ? "gap-1.5" : "gap-1.5", TableWidth)}>
@@ -172,7 +173,9 @@ const Table = <D extends object>({
         </thead>
         <tbody
           className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-1")}
-          style={{ height: `${heightBody}px` }}
+          {...(!router.pathname.includes("MyPortfolio") && {
+            style: { height: `${heightBody}px` },
+          })}
         >
           {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
             <NoContentAvailable />
