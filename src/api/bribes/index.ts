@@ -41,7 +41,6 @@ export const getUserBribeData = async (
       `${Config.VE_INDEXER}bribes-provider?address=${address}`
     );
     const myBribesData: IUserBribeIndexerData[] = userBribeResponse.data;
-
     const allData: IUserBribeData[] = [];
 
     let groupedData : Map<string , number[]> = new Map();
