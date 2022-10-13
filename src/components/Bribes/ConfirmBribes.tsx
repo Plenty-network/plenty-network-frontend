@@ -10,17 +10,6 @@ import Button from "../Button/Button";
 import React, { useState, useMemo, useEffect } from "react";
 import { store } from "../../redux";
 import { IAddBribes, IConfirmAddBribes } from "./types";
-import { EpochDropdown } from "./EpochDropdown";
-import clsx from "clsx";
-import TokenDropdown from "../TokenDropdown/TokenDropdown";
-import { Chain } from "../../config/types";
-import TokenModal from "./TokenModal";
-import { BigNumber } from "bignumber.js";
-import { IAllBalanceResponse, IEpochDataResponse, IEpochListObject } from "../../api/util/types";
-import { getCompleteUserBalace } from "../../api/util/balance";
-import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { tokensModal } from "../../constants/swap";
-import { getNextListOfEpochs } from "../../api/util/epoch";
 
 function ConfirmAddBribes(props: IConfirmAddBribes) {
   const closeModal = () => {
@@ -31,6 +20,26 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
     if (isSvg) return `/assets/tokens/${name}.svg`;
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
+  };
+  const dateFormat = (dates: number) => {
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Decr",
+    ];
+    var date = new Date(dates);
+    var month = date.getMonth();
+
+    return `${("0" + date.getDate()).slice(-2)} ${monthNames[month]},${date.getFullYear()}`;
   };
 
   const tEZorCTEZtoUppercase = (a: string) =>
@@ -61,11 +70,11 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
                   <p className="text-text-50 font-body2 md:font-body4">
                     Your are adding bribes for
                   </p>
-                  <p className="ml-auto flex justify-center items-center">
+                  <p className="ml-auto mr-2 flex justify-center items-center">
                     <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
                       <Image
                         alt={"alt"}
-                        src={getImagesPath("ctez")}
+                        src={getImagesPath(props.selectedPool.tokenA)}
                         width={"24px"}
                         height={"24px"}
                       />
@@ -73,7 +82,7 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
                     <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
                       <Image
                         alt={"alt"}
-                        src={getImagesPath("tez")}
+                        src={getImagesPath(props.selectedPool.tokenB)}
                         width={"24px"}
                         height={"24px"}
                       />
@@ -81,8 +90,8 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
                     <div>
                       <div className="font-body4">
                         {" "}
-                        {tEZorCTEZtoUppercase("ctez".toString())}/
-                        {tEZorCTEZtoUppercase("tez".toString())}
+                        {tEZorCTEZtoUppercase(props.selectedPool.tokenA.toString())}/
+                        {tEZorCTEZtoUppercase(props.selectedPool.tokenB.toString())}
                       </div>
                     </div>
                   </p>
@@ -90,21 +99,32 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
 
                 <div className="text-text-500 mt-[14px] font-body3 mx-3 md:mx-5">Token:</div>
                 <div className="mx-3 md:mx-5 flex items-center mt-1.5">
-                  <Image src={getImagesPath("ctez")} width={"25px"} height={"25px"} />
-                  <span className="font-body4 ml-2">38.90 USDT</span>
+                  <Image src={getImagesPath(props.token.name)} width={"25px"} height={"25px"} />
+                  <span className="font-body4 ml-2">
+                    {props.value} {tEZorCTEZtoUppercase(props.token.name)}
+                  </span>
                 </div>
                 <div className="mt-5 mx-3 md:mx-5 font-body3 text-text-500">For a period of:</div>
                 <div className="mx-3 md:mx-5 flex items-center mt-1.5">
                   <Image src={epoachIcon} width={"26px"} height={"26px"} />
-                  <span className="font-body4 ml-2">Epoch 23-29 </span>
+                  <span className="font-body4 ml-2">
+                    Epoch {props.selectedDropDown.epochNumber} {!props.isSelectedEpoch && "-"}
+                    {!props.isSelectedEpoch && props.selectedEndDropDown.epochNumber}
+                  </span>
                 </div>
                 <div className="font-body3 text-text-500 mx-3 md:mx-5 mt-2 mb-5">
-                  (29 Sep,2022 to 06 Sep,2022)
+                  ({dateFormat(props.selectedDropDown.startTimestamp)} to{" "}
+                  {props.isSelectedEpoch
+                    ? dateFormat(props.selectedDropDown.endTimestamp)
+                    : dateFormat(props.selectedEndDropDown.endTimestamp)}
+                  )
                 </div>
               </div>
 
               <div className="mt-[18px]">
-                <Button color="primary">Confirm</Button>
+                <Button color="primary" onClick={props.handleOperation}>
+                  Confirm
+                </Button>
               </div>
             </>
           }
