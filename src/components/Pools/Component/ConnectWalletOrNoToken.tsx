@@ -19,7 +19,7 @@ export function NoContentAvailable(props: IWalletNotConnectedProps) {
 
       <Link href={"/pools"}>
         <div
-          className="border border-primary-500 text-primary-500 font-body4 px-4 bg-primary-500/[0.05] h-[48px] flex items-center mt-5 rounded-lg"
+          className="cursor-pointer border border-primary-500 text-primary-500 font-body4 px-4 bg-primary-500/[0.05] h-[48px] flex items-center mt-5 rounded-lg"
           onClick={
             props.setActiveStateTab ? () => props.setActiveStateTab(PoolsCardHeader.All) : () => {}
           }

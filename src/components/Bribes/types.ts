@@ -77,4 +77,8 @@ export interface IToken {
 
 export interface IEpochCol {
   epochNumber: number;
+  startEpoch: number;
+  endEpoch: number;
+  epochStart: number;
+  epochEnd: number;
 }

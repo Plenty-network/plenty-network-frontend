@@ -34,7 +34,7 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
       <div className="border rounded-2xl mt-[24px] border-text-800 bg-card-200 pt-[28px] px-4 pb-5">
         <div className="flex pl-[5px] px-[10px] items-center">
           <div className="text-text-400 font-body1 w-[208px]">
-            Are you sure you want to continues with less PLY rewards?
+            Are you sure you want to continue without boosting your rewards?
           </div>
           <div className="ml-auto">
             {" "}
@@ -46,7 +46,7 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
             />
           </div>
         </div>
-        <div className="mt-4 font-body4 text-text-250">Your staking</div>
+        <div className="mt-4 font-body4 text-text-250">You’re staking</div>
         <div className="mt-1 text-white font-title2">
           {props.stakeInput ? props.stakeInput : 0} PNLP
         </div>

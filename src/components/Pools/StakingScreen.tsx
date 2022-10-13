@@ -19,6 +19,7 @@ import { walletConnection } from "../../redux/wallet/wallet";
 import { IVePLYData } from "../../api/stake/types";
 
 import { VePLY } from "../DropDown/VePLY";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 export enum StakingScreenType {
   Staking = "Staking",
@@ -131,6 +132,8 @@ export function Staking(props: IStakingProps) {
       props.setStakeInput(input);
     }
   };
+  const tEZorCTEZtoUppercase = (a: string) =>
+    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
   const onClickAmount = () => {
     handleStakeInput(props.pnlpBalance);
   };
@@ -169,7 +172,7 @@ export function Staking(props: IStakingProps) {
             props.setScreen("2");
           }}
         >
-          Stake
+          {props.stakeInput <= 0 && props.selectedDropDown.tokenId !== "" ? "Boost" : "Stake"}
         </Button>
       );
     }
@@ -191,15 +194,22 @@ export function Staking(props: IStakingProps) {
         </div>
         {/* dropDown And InfoTab */}
         <div className="flex py-2 px-2 md:px-4 justify-between">
-          <VePLY
-            Options={props.vePLYOptions}
-            selectedText={props.selectedDropDown}
-            onClick={props.setSelectedDropDown}
-            isListLoading={props.isListLoading}
-          />
+          <ToolTip
+            message=" Select a veNFT to Boost"
+            isShowInnitially={true}
+            id="tooltip8"
+            position={Position.top}
+          >
+            <VePLY
+              Options={props.vePLYOptions}
+              selectedText={props.selectedDropDown}
+              onClick={props.setSelectedDropDown}
+              isListLoading={props.isListLoading}
+            />
+          </ToolTip>
           <div className="font-mobile-f9 md:text-f12 text-text-400 ml-2 max-w-[300px] text-center">
-            Based on how much vePLY a user owns, they may be able to receive up to 2.5x more PLY
-            rewards.
+            Based on how much voting power the veNFT has, you may be able to boost your PLY rewards
+            up to 2.5x
           </div>
         </div>
         {/* End of dropDown info */}
@@ -282,7 +292,8 @@ export function Staking(props: IStakingProps) {
             <div className="flex gap-2 items-center pl-4">
               <CircularImageInfo imageArray={[props.tokenIn.image, props.tokenOut.image]} />
               <span className="text-f14 text-white ">
-                {props.tokenIn.symbol} / {props.tokenOut.symbol}
+                {tEZorCTEZtoUppercase(props.tokenIn.symbol)} /
+                {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
               </span>
             </div>
             <BtnWithStakeIcon text={`${Number(props.stakedToken).toFixed(4)} PNLP`} />
@@ -359,7 +370,7 @@ export function Unstaking(props: IUnstakingProps) {
     }
   }, [props]);
   return (
-    <div className="border rounded-2xl border-text-800 bg-card-200 px-3.5 pt-4 pb-6  mb-5">
+    <div className="border rounded-2xl border-text-800 bg-card-200 px-3.5 pt-4 pb-6  ">
       {/* staking UnStaking Switch */}
       <div className="flex items-center justify-between flex-row  relative">
         <div className="flex gap-2 items-center">

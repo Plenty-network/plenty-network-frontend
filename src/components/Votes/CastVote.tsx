@@ -45,7 +45,7 @@ function CastVote(props: ICastVoteProps) {
             </div> */}
           </div>
           <div className="border bg-card-200 mt-2 border-text-800 rounded-2xl  pt-[22px] pb-[20px]">
-            <div className="text-text-50 font-body4 px-3 md:px-5">Your votes power</div>
+            <div className="text-text-50 font-body4 px-3 md:px-5">Your voting power</div>
             <div className="flex mt-1 mb-3 px-3 md:px-5">
               <div>
                 <span className="font-title2 text-white">{props.totalVotingPower}%</span>

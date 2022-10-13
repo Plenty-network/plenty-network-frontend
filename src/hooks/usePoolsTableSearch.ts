@@ -9,7 +9,7 @@ export const usePoolsTableSearch = (
   useEffect(() => setPoolsTableData(poolsTable), [poolsTable.length]);
   useEffect(() => {
     if (searchText && searchText.length) {
-      const _poolsTableData = poolsTableData.filter((e: any) => {
+      const _poolsTableData = poolsTable.filter((e: any) => {
         return (
           e.tokenA.toLowerCase().includes(searchText) ||
           e.tokenB.toLowerCase().includes(searchText) ||

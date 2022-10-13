@@ -57,10 +57,11 @@ function VotingAllocation(props: IVotingAllocationProps) {
             ) : (
               <div className="min-h-[252px] flex flex-col justify-center items-center  ">
                 <div className=" flex-col felx max-w-[265px] gap-1.5 justify-center items-center  text-center">
-                  <div className="text-text-200 text-f16 ">You havent voted in this Epoch</div>
-                  <div className="text-text-500 text-f14">
-                    Lorem Ipsum is simply dummy text of the printing and typeset.
-                  </div>
+                  {selectedDropDown === "Protocol" ? (
+                    <div className="text-text-200 text-f16 ">No votes in this epoch</div>
+                  ) : (
+                    <div className="text-text-200 text-f16 ">You havent voted in this Epoch</div>
+                  )}
                 </div>
               </div>
             )}
