@@ -634,7 +634,7 @@ function MyPortfolio(props: any) {
     localStorage.setItem(TOKEN_ID, manageData.tokenId.toString());
     increaseLockAndValue(
       manageData.tokenId.toNumber(),
-      new BigNumber(plyInput),
+      new BigNumber(updatedPlyVoteValue),
       new BigNumber(lockingEndData.lockingDate),
       transactionSubmitModal,
       resetAllValues,
