@@ -110,7 +110,15 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
 
-        accessor: (x: any) => <EpochCol epochNumber={x.epoch} />,
+        accessor: (x: any) => (
+          <EpochCol
+            epochNumber={x.epoch}
+            startEpoch={x.epochStartDate}
+            endEpoch={x.epochEndDate}
+            epochStart={x.epochStart}
+            epochEnd={x.epochEnd}
+          />
+        ),
       },
     ],
     [valueFormat]
@@ -174,7 +182,15 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
 
-        accessor: (x: any) => <EpochCol epochNumber={x.epoch} />,
+        accessor: (x: any) => (
+          <EpochCol
+            epochNumber={x.epoch}
+            startEpoch={x.epochStartDate}
+            endEpoch={x.epochEndDate}
+            epochStart={x.epochStart}
+            epochEnd={x.epochEnd}
+          />
+        ),
       },
     ],
     [valueFormat]

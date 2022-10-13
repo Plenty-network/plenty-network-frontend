@@ -8,7 +8,7 @@ import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import clsx from "clsx";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { topTokensList } from "../../api/swap/wrappers";
+import { topTokenListGhostnet } from "../../api/swap/wrappers";
 
 interface ISwapModalProps {
   tokens: tokensModal[];
@@ -35,7 +35,7 @@ function SwapModal(props: ISwapModalProps) {
     }
   );
   useEffect(() => {
-    topTokensList().then((res) => {
+    topTokenListGhostnet().then((res) => {
       setTopTokens(res.topTokens);
     });
   }, []);

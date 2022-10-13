@@ -306,7 +306,9 @@ function Swap(props: ISwapProps) {
             success: true,
             exchangeRate: res.exchangeRate,
           };
-          setSecondTokenAmount(res.tokenOutAmount.toString());
+          setSecondTokenAmount(
+            res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString()
+          );
         }
       } else if (tokenType === "tokenOut") {
         setSecondTokenAmount(input.toString());
@@ -339,7 +341,7 @@ function Swap(props: ISwapProps) {
             success: true,
             exchangeRate: res.exchangeRate,
           };
-          setFirstTokenAmount(res.tokenOutAmount.toString());
+          setFirstTokenAmount(res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString());
         }
       }
     }
@@ -453,7 +455,9 @@ function Swap(props: ISwapProps) {
             exchangeRate: res.exchangeRate,
           };
 
-          setSecondTokenAmount(res.tokenOutAmount.toString());
+          setSecondTokenAmount(
+            res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString()
+          );
           loading.current = {
             isLoadingSecond: false,
             isLoadingfirst: false,

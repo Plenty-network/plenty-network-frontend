@@ -34,6 +34,7 @@ export interface IManageBtnProps {
   tokenB: string;
 }
 export function ShortCard(props: IShortCardProps) {
+  const userAddress = store.getState().wallet.address;
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
@@ -60,7 +61,7 @@ export function ShortCard(props: IShortCardProps) {
     } else {
       <></>;
     }
-  }, []);
+  }, [userAddress]);
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "USDC.e",
     image: `/assets/tokens/USDC.e.png`,
@@ -291,7 +292,6 @@ export function ShortCard(props: IShortCardProps) {
       </div>
     );
   }
-  const userAddress = store.getState().wallet.address;
   return (
     <>
       {showLiquidityModal && (
