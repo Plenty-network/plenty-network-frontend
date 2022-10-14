@@ -211,8 +211,8 @@ export function VeNFT(props: IDropdownProps) {
             props.lockState === ELocksState.DISABLED) && (
             <span className="ml-[6px]">
               <PieChartButton
-                violet={remainingPercentage}
-                transparent={100 - remainingPercentage}
+                violet={100 - remainingPercentage}
+                transparent={remainingPercentage}
               />
             </span>
           )}

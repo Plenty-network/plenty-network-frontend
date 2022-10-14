@@ -27,12 +27,12 @@ function AddLiquidity(props: IAddLiquidityProps) {
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
   ) => {
-    if(input=="."){
-      props.setSecondTokenAmount('0.');
-      props.setFirstTokenAmount('0.');
+    if (input == ".") {
+      props.setSecondTokenAmount("0.");
+      props.setFirstTokenAmount("0.");
       return;
     }
-    if (input === ""  || isNaN(Number(input))) {
+    if (input === "" || isNaN(Number(input))) {
       props.setSecondTokenAmount("");
       props.setFirstTokenAmount("");
       return;
@@ -128,7 +128,9 @@ function AddLiquidity(props: IAddLiquidityProps) {
                   <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances[props.tokenIn.name]).toFixed(4)}{" "}
+                    {Number(props.userBalances[props.tokenIn.name]) > 0
+                      ? Number(props.userBalances[props.tokenIn.name]).toFixed(4)
+                      : 0}{" "}
                   </span>
                 )}
                 {props.tokenIn.name === "tez"
@@ -202,7 +204,9 @@ function AddLiquidity(props: IAddLiquidityProps) {
                   <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances[props.tokenOut.name]).toFixed(4)}{" "}
+                    {Number(props.userBalances[props.tokenOut.name]) > 0
+                      ? Number(props.userBalances[props.tokenOut.name]).toFixed(4)
+                      : 0}{" "}
                   </span>
                 )}
                 {props.tokenOut.name === "tez"

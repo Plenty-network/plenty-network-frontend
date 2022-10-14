@@ -1,6 +1,7 @@
 import { PopUpModal } from "../Modal/popupModal";
 import calender from "../../../src/assets/icon/vote/calender.svg";
 import { useState, useMemo, useEffect } from "react";
+import fromExponential from "from-exponential";
 import { BigNumber } from "bignumber.js";
 import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import Image from "next/image";
@@ -156,14 +157,14 @@ function CreateLock(props: ICreateLockProps) {
     handlePlyInput(Number(props.plyBalance));
   };
   const [showTooltip, setShowTooltip] = useState(false);
-  useEffect(() => {
-    // handleDateSelection(MAX_TIME, undefined);
-    setShowTooltip(true);
+  // useEffect(() => {
+  //   // handleDateSelection(MAX_TIME, undefined);
+  //   setShowTooltip(true);
 
-    setTimeout(() => {
-      setShowTooltip(false);
-    }, 5000);
-  }, []);
+  //   setTimeout(() => {
+  //     setShowTooltip(false);
+  //   }, 5000);
+  // }, []);
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
@@ -209,9 +210,16 @@ function CreateLock(props: ICreateLockProps) {
               <div>
                 <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
               </div>
-              <div className=" ml-1 text-primary-500 font-body2">
-                {Number(props.plyBalance) >= 0 ? props.plyBalance.toFixed(2) : "0.00"} PLY
-              </div>
+              <ToolTip
+                id="tooltipM"
+                disable={Number(props.plyBalance) > 0 ? false : true}
+                position={Position.top}
+                message={fromExponential(props.plyBalance.toString())}
+              >
+                <div className=" ml-1 text-primary-500 font-body2">
+                  {Number(props.plyBalance) > 0 ? props.plyBalance.toFixed(2) : "0"} PLY
+                </div>
+              </ToolTip>
             </div>
           </div>
           <div className="ml-auto mt-3 pr-5 flex font-body4">
@@ -322,16 +330,13 @@ function CreateLock(props: ICreateLockProps) {
                       Lock for 4 years for maximum voting power of 4000
                     </div>
                   }
-                  isShowInnitially={true}
                   id="tooltip8"
                   position={Position.top}
                 >
                   <p
                     className={clsx(
                       "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3 cursor-pointer",
-                      showTooltip
-                        ? "border-[0.5px] border-primary-500 bg-card-500"
-                        : props.lockingEndData.selected === MAX_TIME
+                      props.lockingEndData.selected === MAX_TIME
                         ? "bg-primary-500/[0.2] border-primary-500 text-white"
                         : "bg-muted-200/[0.1] border-border-200 text-text-500"
                     )}

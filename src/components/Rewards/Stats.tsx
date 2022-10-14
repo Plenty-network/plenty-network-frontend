@@ -3,18 +3,32 @@ import { useState } from "react";
 import Image from "next/image";
 import { EClaimAllState, IStatsCardProps, IStatsProps, IStatsRewardsProps } from "./types";
 
+import { BigNumber } from "bignumber.js";
 import StatsCard from "./StatsCard";
 import StatsCardFirst from "./StatsCardFirst";
 import { store } from "../../redux";
 
 function StatsRewards(props: IStatsRewardsProps) {
   const claimAllInflationData = store.getState().portfolioRewards.claimAllInflationData;
+  function nFormatter(num: BigNumber) {
+    if (num.isGreaterThanOrEqualTo(1000000000)) {
+      return num.dividedBy(1000000000).toFixed(2) + "B";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000)) {
+      return num.dividedBy(1000000).toFixed(2) + "M";
+    }
+    if (num.isGreaterThanOrEqualTo(1000)) {
+      return num.dividedBy(1000).toFixed(2) + "K";
+    }
+
+    return num.toFixed(2);
+  }
   return (
     <div className="flex gap-2.5 min-w-[1130px] w-full justify-between ">
       <StatsCard
         toolTipMessage={"PLY rewards through gauges."}
         title={"PLY emisisons"}
-        value={props.plyEmission?.toFixed(1)}
+        value={nFormatter(props.plyEmission)}
         subValue={"PLY"}
         disable={props.plyEmission?.isEqualTo(0)}
         setShowClaimAllPly={props.setShowClaimPly}
@@ -25,7 +39,7 @@ function StatsRewards(props: IStatsRewardsProps) {
       <StatsCard
         title={"Trading fees"}
         toolTipMessage={"Trading fees from the AMMs you voted for."}
-        value={props.tradingfeeStats.toFixed(2)}
+        value={nFormatter(props.tradingfeeStats)}
         setShowClaimAllPly={props.setShowClaimPly}
         disable={props.feeClaimData.length === 0}
         isDollar={true}
@@ -36,7 +50,7 @@ function StatsRewards(props: IStatsRewardsProps) {
       <StatsCard
         title={"Bribes"}
         toolTipMessage={"Bribes through AMMs you have voted for."}
-        value={props.bribesStats.toFixed(2)}
+        value={nFormatter(props.bribesStats)}
         setShowClaimAllPly={props.setShowClaimPly}
         disable={props.bribesClaimData.length === 0}
         isDollar={true}
@@ -50,7 +64,7 @@ function StatsRewards(props: IStatsRewardsProps) {
           "Anti dilution inflation of the lockers. Claimed amount is added to your existing lockers."
         }
         tooltipWidth={"w-[300px]"}
-        value={props.unclaimInflation.unclaimedInflationAmount.toFixed(2)}
+        value={nFormatter(props.unclaimInflation.unclaimedInflationAmount)}
         subValue={"PLY"}
         setShowClaimAllPly={props.setShowClaimPly}
         disable={claimAllInflationData.length === 0}

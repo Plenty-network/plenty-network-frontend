@@ -172,13 +172,23 @@ function MyPortfolio(props: any) {
   const unclaimedInflationDataError = useAppSelector(
     (state) => state.portfolioRewards.unclaimedInflationDataError
   );
-  const statsTvl: BigNumber = useAppSelector((state) => state.portfolioStatsTvl.userTvl);
+  const statsTvl: BigNumber = store.getState().portfolioStatsTvl.userTvl;
   const statsTvlError: boolean = useAppSelector((state) => state.portfolioStatsTvl.userTvlError);
-  const statsTvlFetching: boolean = useAppSelector((state) => state.portfolioStatsTvl.userTvlFetching);
-  const statsTotalEpochVotingPower: BigNumber = useAppSelector((state) => state.portfolioStatsVotes.totalEpochVotingPower);
-  const statsTotalPlyLocked: BigNumber = useAppSelector((state) => state.portfolioStatsVotes.totalPlyLocked);
-  const statsVotesError: boolean = useAppSelector((state) => state.portfolioStatsVotes.votesStatsError);
-  const statsVotesFetching: boolean = useAppSelector((state) => state.portfolioStatsVotes.votesStatsFetching);
+  const statsTvlFetching: boolean = useAppSelector(
+    (state) => state.portfolioStatsTvl.userTvlFetching
+  );
+  const statsTotalEpochVotingPower: BigNumber = useAppSelector(
+    (state) => state.portfolioStatsVotes.totalEpochVotingPower
+  );
+  const statsTotalPlyLocked: BigNumber = useAppSelector(
+    (state) => state.portfolioStatsVotes.totalPlyLocked
+  );
+  const statsVotesError: boolean = useAppSelector(
+    (state) => state.portfolioStatsVotes.votesStatsError
+  );
+  const statsVotesFetching: boolean = useAppSelector(
+    (state) => state.portfolioStatsVotes.votesStatsFetching
+  );
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -249,8 +259,17 @@ function MyPortfolio(props: any) {
   const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
     {} as { [id: string]: IVotePageData }
   );
-  const [statsPositions, setStatsPosition] = useState<ITvlStatsResponse>({} as ITvlStatsResponse);
-  const [stats1, setStats1] = useState<IVotesStatsDataResponse>({} as IVotesStatsDataResponse);
+  const [statsPositions, setStatsPosition] = useState({
+    success: true,
+    tvl: statsTvl,
+    isFetching: statsTvlFetching,
+  });
+  const [stats1, setStats1] = useState({
+    success: true,
+    totalEpochVotingPower: statsTotalEpochVotingPower,
+    totalPlyLocked: statsTotalPlyLocked,
+    isFetching: statsVotesFetching,
+  });
 
   useEffect(() => {
     votesPageDataWrapper(934, undefined).then((res) => {
@@ -283,13 +302,17 @@ function MyPortfolio(props: any) {
   };
   useEffect(() => {
     if (userAddress) {
-      setStatsPosition({} as ITvlStatsResponse);
+      //setStatsPosition({} as ITvlStatsResponse);
       // setPoolsPosition({ data: [] as IPositionsData[], isfetched: true });
       // setPoolsRewards({ data: {} as IPoolsRewardsResponse, isfetched: true });
 
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
-          setStatsPosition({success: true, tvl:res});
+          setStatsPosition({
+            success: true,
+            tvl: res,
+            isFetching: false,
+          });
         });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
           setPoolsPosition({ data: res.positionPoolsData, isfetched: true });
@@ -329,9 +352,14 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (userAddress) {
       setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
-      setStats1({} as IVotesStatsDataResponse);
+      //setStats1({} as IVotesStatsDataResponse);
       getVotesStatsData(userAddress).then((res) => {
-        setStats1(res);
+        setStats1({
+          success: true,
+          totalEpochVotingPower: res.totalEpochVotingPower,
+          totalPlyLocked: res.totalPlyLocked,
+          isFetching: false,
+        });
       });
       getAllLocksPositionData(userAddress).then((res) => {
         setLocksPosition({ data: res.allLocksData.reverse(), isfetched: true });
@@ -341,14 +369,34 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (!props.isLoading && props.operationSuccesful && userAddress) {
       setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
-      setStatsPosition({} as IPositionStatsResponse);
+      getVotesStatsData(userAddress).then((res) => {
+        setStats1({
+          success: true,
+          totalEpochVotingPower: res.totalEpochVotingPower,
+          totalPlyLocked: res.totalPlyLocked,
+          isFetching: false,
+        });
+      });
+      dispatch(fetchVotesStatsData(userAddress));
+      //setStatsPosition({} as IPositionStatsResponse);
       setPoolsPosition({ data: [] as IPositionsData[], isfetched: false });
       getAllLocksPositionData(userAddress).then((res) => {
         setLocksPosition({ data: res.allLocksData.reverse(), isfetched: true });
       });
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
-        getPositionStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
-          setStatsPosition(res);
+        dispatch(
+          fetchTvlStatsData({
+            userTezosAddress: userAddress,
+            tokenPrices: tokenPrice,
+            lpTokenPrices: lpTokenPrice,
+          })
+        );
+        getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+          setStatsPosition({
+            success: true,
+            tvl: res,
+            isFetching: false,
+          });
         });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
           setPoolsPosition({ data: res.positionPoolsData, isfetched: true });

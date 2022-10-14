@@ -20,9 +20,8 @@ export function NotificationIcon(props: INotificationIconProps) {
   const [type, setType] = React.useState(NotiFicationType.noNotification);
   const hasNotification = store.getState().wallet.hasNotification;
   const length = getAllNotification(walletAddress).length;
-  console.log(hasNotification);
+
   React.useEffect(() => {
-    console.log(hasNotification);
     const typeInnitial: NotiFicationType = getAllNotification(walletAddress).length
       ? NotiFicationType.haveNotification
       : NotiFicationType.noNotification;

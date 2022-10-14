@@ -1,5 +1,6 @@
 import { ISimpleButtonProps, SimpleButton } from "./Component/SimpleButton";
 import React, { useState, useMemo } from "react";
+import fromExponential from "from-exponential";
 import clsx from "clsx";
 import { SwitchWithIcon } from "../SwitchCheckbox/switchWithIcon";
 import { InputText } from "./Component/InputText";
@@ -271,10 +272,19 @@ export function Staking(props: IStakingProps) {
           </div>
           {walletAddress && (
             <div className="pr-2 md:pr-5  w-[40%] ">
-              <BtnWithWalletIcon
-                text={`${Number(props.pnlpBalance).toFixed(4)} PNLP`}
-                onClick={onClickAmount}
-              />
+              <ToolTip
+                disable={Number(props.pnlpBalance) > 0 ? false : true}
+                message={fromExponential(props.pnlpBalance)}
+                id="tooltip8"
+                position={Position.top}
+              >
+                <BtnWithWalletIcon
+                  text={`${
+                    Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(2) : 0
+                  } PNLP`}
+                  onClick={onClickAmount}
+                />
+              </ToolTip>
             </div>
           )}
         </div>
@@ -431,7 +441,7 @@ export function Unstaking(props: IUnstakingProps) {
 
       {/* Start of Wallet app section */}
       <div className="border flex  items-center bg-muted-200/10 border-border-500/50 mb-5 rounded-2xl">
-        <div className=" flex flex-col py-3.5 px-4">
+        <div className=" flex flex-col py-3.5 px-4 w-full">
           <InputText value={props.unStakeInput} onChange={handleUnStakeInput} />
           <div className="font-body2 md:font-body4 text-text-400">
             ~$
@@ -441,11 +451,20 @@ export function Unstaking(props: IUnstakingProps) {
           </div>
         </div>
         {walletAddress && (
-          <div className="pr-2 md:pr-5  w-[82%] sm:w-auto">
-            <BtnWithUnStakeIcon
-              text={`${Number(props.stakedToken).toFixed(4)} PNLP`}
-              onClick={onClickAmount}
-            />
+          <div className="pr-2 md:pr-5  w-[40%] ">
+            <ToolTip
+              disable={Number(props.stakedToken) > 0 ? false : true}
+              message={fromExponential(props.stakedToken)}
+              id="tooltip8"
+              position={Position.top}
+            >
+              <BtnWithUnStakeIcon
+                text={`${
+                  Number(props.stakedToken) > 0 ? Number(props.stakedToken).toFixed(2) : 0
+                } PNLP`}
+                onClick={onClickAmount}
+              />
+            </ToolTip>
           </div>
         )}
       </div>

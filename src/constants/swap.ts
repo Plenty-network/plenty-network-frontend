@@ -3,7 +3,7 @@ export interface tokenParameter {
   image: any;
 }
 
-export type tokenType = 'tokenIn' | 'tokenOut';
+export type tokenType = "tokenIn" | "tokenOut";
 
 export interface tokensModal {
   name: string;
@@ -15,8 +15,9 @@ export interface tokensModal {
 }
 
 export const ERRORMESSAGES = {
-  TRANSACTIONSETTINGSWARNING: 'Your transaction may be frontrun',
-  TRANSACTIONSETTINGSERROR: 'Enter a valid slippage percentage',
+  INSUFFICIENT_LIQUIDITY: "Insufficient Liquidity for this trade",
+  TRANSACTIONSETTINGSWARNING: "Your transaction may be frontrun",
+  TRANSACTIONSETTINGSERROR: "Enter a valid slippage percentage",
   SWAPROUTER:
     "The exchange route doesn't exist for the selected tokens. Please try with other tokens.",
   SWAPMULTIHOP:

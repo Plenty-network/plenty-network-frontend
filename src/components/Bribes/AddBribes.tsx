@@ -54,7 +54,6 @@ function AddBribes(props: IAddBribes) {
   useEffect(() => {
     getNextListOfEpochs().then((res) => {
       setListofEpoch(res);
-      console.log(res);
     });
   }, []);
   const tokensArray = Object.entries(tokens);
@@ -127,7 +126,6 @@ function AddBribes(props: IAddBribes) {
           return e.epochNumber > selectedDropDown.epochNumber;
         });
         setListofendEpoch(d);
-        console.log(d);
       });
     }
   }, [selectedDropDown.epochNumber]);
@@ -179,7 +177,6 @@ function AddBribes(props: IAddBribes) {
     isSelectedEpoch,
   ]);
   const BribesButton = useMemo(() => {
-    console.log(Number(props.bribeInputValue) > 0);
     if (userAddress) {
       if (
         Number(props.bribeInputValue) > 0 &&
@@ -345,10 +342,17 @@ function AddBribes(props: IAddBribes) {
                         {Number(allBalance.userBalance[props.bribeToken.name]) >= 0 ? (
                           <ToolTip
                             message={allBalance.userBalance[props.bribeToken.name].toString()}
+                            disable={
+                              Number(allBalance.userBalance[props.bribeToken.name]) > 0
+                                ? false
+                                : true
+                            }
                             id="tooltip8"
                             position={Position.right}
                           >
-                            {Number(allBalance.userBalance[props.bribeToken.name]).toFixed(4)}
+                            {Number(allBalance.userBalance[props.bribeToken.name]) > 0
+                              ? Number(allBalance.userBalance[props.bribeToken.name]).toFixed(4)
+                              : 0}
                           </ToolTip>
                         ) : (
                           "--"

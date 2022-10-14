@@ -5,11 +5,20 @@ import {
   IVotesStatsDataResponse,
 } from "../../api/portfolio/types";
 export interface IStatsProps {
+  statsPositions: {
+    success: boolean;
+    tvl: BigNumber;
+    isFetching: boolean;
+  };
   tokenPricePly: number;
   plyBalance: BigNumber;
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
-  statsPositions: ITvlStatsResponse;
-  stats1: IVotesStatsDataResponse;
+  stats1: {
+    success: boolean;
+    totalEpochVotingPower: BigNumber;
+    totalPlyLocked: BigNumber;
+    isFetching: boolean;
+  };
 }
 export interface IStatsCardProps {
   toolTipMessage: string;
