@@ -275,8 +275,8 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (userAddress) {
       setStatsPosition({} as ITvlStatsResponse);
-      setPoolsPosition({ data: [] as IPositionsData[], isfetched: false });
-      setPoolsRewards({ data: {} as IPoolsRewardsResponse, isfetched: false });
+      // setPoolsPosition({ data: [] as IPositionsData[], isfetched: true });
+      // setPoolsRewards({ data: {} as IPoolsRewardsResponse, isfetched: true });
 
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {

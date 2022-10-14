@@ -162,7 +162,7 @@ function AddBribes(props: IAddBribes) {
       Number(props.bribeInputValue) > 0
     ) {
       setBottomValue(
-        (selectedEndDropDown.epochNumber - selectedDropDown.epochNumber) *
+        (selectedEndDropDown.epochNumber - selectedDropDown.epochNumber + 1) *
           Number(props.bribeInputValue)
       );
       for (let i = selectedDropDown.epochNumber; i <= selectedEndDropDown.epochNumber; i++) {
