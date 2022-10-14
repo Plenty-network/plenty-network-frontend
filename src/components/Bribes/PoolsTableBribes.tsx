@@ -30,7 +30,6 @@ import { IPoolsForBribesData } from "../../api/bribes/types";
 TimeAgo.addDefaultLocale(en);
 
 export function PoolsTableBribes(props: IPoolsTableBribes) {
-  console.log(props);
   const epochData = store.getState().epoch.currentEpoch;
   const userAddress = store.getState().wallet.address;
 

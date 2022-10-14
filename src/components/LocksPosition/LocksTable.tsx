@@ -311,8 +311,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
 
             <span className="ml-1">
               <PieChartButton
-                violet={remainingPercentage}
-                transparent={100 - remainingPercentage}
+                violet={100 - remainingPercentage}
+                transparent={remainingPercentage}
               />
             </span>
           </div>
@@ -347,8 +347,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
             Voted{" "}
             <span className="ml-2">
               <PieChartButton
-                violet={remainingPercentage}
-                transparent={100 - remainingPercentage}
+                violet={100 - remainingPercentage}
+                transparent={remainingPercentage}
               />
             </span>
           </div>
@@ -388,17 +388,31 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           </div>
         );
       } else if (props.locksState === ELocksState.EXPIRED) {
-        return (
-          <div
-            className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
-            onClick={() => {
-              props.setWithdraw(true);
-              props.setManageData(props.manageData);
-            }}
-          >
-            Withdraw
-          </div>
-        );
+        if (props.manageData.attached) {
+          return (
+            <div
+              className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
+              onClick={() => {
+                props.setWithdraw(true);
+                props.setManageData(props.manageData);
+              }}
+            >
+              Detach
+            </div>
+          );
+        } else {
+          return (
+            <div
+              className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
+              onClick={() => {
+                props.setWithdraw(true);
+                props.setManageData(props.manageData);
+              }}
+            >
+              Withdraw
+            </div>
+          );
+        }
       } else if (props.locksState === ELocksState.DISABLED) {
         //isstaked
         return (
@@ -409,8 +423,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
             Vote{" "}
             <span className="ml-2">
               <PieChartButton
-                violet={remainingPercentage}
-                transparent={100 - remainingPercentage}
+                violet={100 - remainingPercentage}
+                transparent={remainingPercentage}
               />
             </span>
           </div>

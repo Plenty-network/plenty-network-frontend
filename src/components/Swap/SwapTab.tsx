@@ -386,7 +386,6 @@ function SwapTab(props: ISwapTabProps) {
                     placeholder="0.0"
                     lang="en"
                     onChange={(e) => props.handleSwapTokenInput(e.target.value, "tokenIn")}
-                    disabled={props.errorMessage !== ""}
                     value={props.firstTokenAmount}
                     onFocus={() => setIsFirstInputFocus(true)}
                     onBlur={() => setIsFirstInputFocus(false)}
@@ -413,10 +412,13 @@ function SwapTab(props: ISwapTabProps) {
               {Number(props.userBalances[props.tokenIn.name]) >= 0 ? (
                 <ToolTip
                   message={fromExponential(props.userBalances[props.tokenIn.name].toString())}
+                  disable={Number(props.userBalances[props.tokenIn.name]) > 0 ? false : true}
                   id="tooltip8"
                   position={Position.right}
                 >
-                  {Number(props.userBalances[props.tokenIn.name]).toFixed(4)}
+                  {Number(props.userBalances[props.tokenIn.name]) > 0
+                    ? Number(props.userBalances[props.tokenIn.name]).toFixed(4)
+                    : 0}
                 </ToolTip>
               ) : (
                 "--"
@@ -523,10 +525,13 @@ function SwapTab(props: ISwapTabProps) {
                 Number(props.userBalances[props.tokenOut.name]) >= 0 ? (
                   <ToolTip
                     message={fromExponential(props.userBalances[props.tokenOut.name].toString())}
+                    disable={Number(props.userBalances[props.tokenOut.name]) > 0 ? false : true}
                     id="tooltip9"
                     position={Position.right}
                   >
-                    {Number(props.userBalances[props.tokenOut.name]).toFixed(4)}
+                    {Number(props.userBalances[props.tokenOut.name]) > 0
+                      ? Number(props.userBalances[props.tokenOut.name]).toFixed(4)
+                      : 0}
                   </ToolTip>
                 ) : (
                   "--"
