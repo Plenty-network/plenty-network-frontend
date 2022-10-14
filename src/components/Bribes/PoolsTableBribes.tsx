@@ -65,20 +65,10 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-              <Image
-                alt={"alt"}
-                src={getImagesPath(x.attachedTokenASymbol)}
-                width={"20px"}
-                height={"20px"}
-              />
+              <Image alt={"alt"} src={getImagesPath(x.tokenA)} width={"20px"} height={"20px"} />
             </div>
             <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image
-                alt={"alt"}
-                src={getImagesPath(x.attachedTokenBSymbol)}
-                width={"20px"}
-                height={"20px"}
-              />
+              <Image alt={"alt"} src={getImagesPath(x.tokenB)} width={"20px"} height={"20px"} />
             </div>
             <div className="flex flex-col gap-[2px]">
               <span className="font-body4">
@@ -101,7 +91,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "currentVotingPower"),
-        accessor: (x: any) => <YourLiquidity value={new BigNumber(12)} />,
+        accessor: (x: any) => <YourLiquidity value={x.bribes} />,
       },
       {
         Header: `Liquidity`,
@@ -112,7 +102,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         canShort: true,
         isToolTipEnabled: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "baseValue"),
-        accessor: (x: any) => <YourLiquidity value={new BigNumber(12)} />,
+        accessor: (x: any) => <YourLiquidity value={x.liquidity} />,
       },
       {
         Header: "Vote Share",
@@ -126,7 +116,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
 
         accessor: (x: any) => (
-          <VoteShare value={new BigNumber(12)} percentage={new BigNumber(12)} />
+          <VoteShare value={x.totalVotesCurrent} percentage={x.totalVotesPercentageCurrent} />
         ),
       },
       {
@@ -141,7 +131,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
 
         accessor: (x: any) => (
-          <VoteShare value={new BigNumber(12)} percentage={new BigNumber(12)} />
+          <VoteShare value={x.totalVotesPrevious} percentage={x.totalVotesPercentagePrevious} />
         ),
       },
       {
@@ -278,11 +268,11 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
       <div className={`overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={props.locksPosition}
+          data={props.locksPosition ? props.locksPosition : []}
           shortby="Locks"
           isFetched={props.isfetched}
           TableName={""}
-          TableWidth="min-w-[700px] lg:min-w-[1200px]"
+          TableWidth="min-w-[800px] lg:min-w-[1200px]"
         />
       </div>
     </>

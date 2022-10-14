@@ -60,7 +60,6 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
       {
         Header: "Pool",
         id: "pools",
-
         columnWidth: "w-[153px]",
 
         showOnMobile: true,
@@ -85,7 +84,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
       {
         Header: "Bribe",
         id: "Bribes",
-        columnWidth: "w-[180px]",
+        columnWidth: "w-[100px]",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "currentVotingPower"),
@@ -97,7 +96,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         Header: `Token`,
         id: "Token",
 
-        columnWidth: "w-[180px]",
+        columnWidth: "w-[100px]",
 
         canShort: true,
 

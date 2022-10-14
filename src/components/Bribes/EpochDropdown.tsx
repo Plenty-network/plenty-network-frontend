@@ -2,6 +2,7 @@ import Image from "next/image";
 import * as React from "react";
 import clsx from "clsx";
 
+import { isMobile } from "react-device-detect";
 import arrow from "../../assets/icon/vote/arrowNFT.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { IEpochListObject } from "../../api/util/types";
@@ -74,7 +75,7 @@ export function EpochDropdown(props: IDropdownProps) {
                 <p
                   style={{
                     textOverflow: "ellipsis",
-                    width: "97px",
+                    width: `${isMobile ? "40px" : "97px"}`,
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                   }}

@@ -8,6 +8,7 @@ import { NotificationIcon } from "../NotificationIcon";
 
 export interface ITopNavBarMobileProps {
   setShowNotification: Function;
+  isBribes: boolean;
 }
 
 export function TopNavBarMobile(props: ITopNavBarMobileProps) {
@@ -16,16 +17,18 @@ export function TopNavBarMobile(props: ITopNavBarMobileProps) {
       <Link href={"/"}>
         <Image src={plentyIcon} height={"22.47px"} width="100%" />
       </Link>
-      <div className="flex gap-3">
-        <Link href={"/MyPortfolio"}>
-          <Image src={portfolio} />
-        </Link>
-        <NotificationIcon
-          className="cursor-pointer hover:opacity-90"
-          onClick={props.setShowNotification}
-        />
-        <ConnectWalletBtnMobile />
-      </div>
+      {!props.isBribes && (
+        <div className="flex gap-3">
+          <Link href={"/MyPortfolio"}>
+            <Image src={portfolio} />
+          </Link>
+          <NotificationIcon
+            className="cursor-pointer hover:opacity-90"
+            onClick={props.setShowNotification}
+          />
+          <ConnectWalletBtnMobile />
+        </div>
+      )}
     </div>
   );
 }
