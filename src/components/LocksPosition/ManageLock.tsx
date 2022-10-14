@@ -202,7 +202,7 @@ function ManageLock(props: IManageLockProps) {
                 <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
               </div>
               <div className=" ml-1 text-primary-500 font-body2">
-                {Number(props.plyBalance) >= 0 ? props.plyBalance.toFixed(2) : "0.00"} PLY
+                {Number(props.plyBalance) >= 0 ? props.plyBalance.toFixed(2) : "0"} PLY
               </div>
             </div>
           </div>
@@ -275,7 +275,11 @@ function ManageLock(props: IManageLockProps) {
                   isOpen={isDatePickerOpen}
                   setIsOpen={setIsDatePickerOpen}
                   yearsToEnable={dateRange.years}
-                  alloweDates={dateRange.alloweDates ? dateRange.alloweDates.filter((date) => date > props.manageData.endTimeStamp ) : dateRange.alloweDates}
+                  alloweDates={
+                    dateRange.alloweDates
+                      ? dateRange.alloweDates.filter((date) => date > props.manageData.endTimeStamp)
+                      : dateRange.alloweDates
+                  }
                 />
               </div>
             </div>

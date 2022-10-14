@@ -66,7 +66,6 @@ export const getTvlStatsData = async (
   }
 };
 
-
 /**
  * Returns the statistical data (tvl, total epoch power and total PLY locked) for positions of my porfolio.
  * @param userTezosAddress - Tezos wallet address of the user
@@ -119,7 +118,6 @@ export const getPositionStatsData = async (
   }
 };
 
-
 /**
  * Calculates the total epoch voting power and total PLY tokens locked for all locks held by a user.
  * @param userTezosAddress - Tezos wallet address of the user
@@ -148,7 +146,7 @@ export const getVotesStatsData = async (
       totalPlyLocked.dividedBy(PLY_DECIMAL_MULTIPLIER),
     ];
     return {
-      // success: true,
+      success: true,
       totalEpochVotingPower,
       totalPlyLocked,
     };
@@ -162,7 +160,6 @@ export const getVotesStatsData = async (
     throw new Error(error.message);
   }
 };
-
 
 /**
  * Returns the unclaimed inflation data for a user.

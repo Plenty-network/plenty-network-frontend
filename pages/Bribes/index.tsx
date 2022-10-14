@@ -65,7 +65,6 @@ const Bribes: NextPage = () => {
   useEffect(() => {
     if (Object.keys(tokenPrice).length !== 0)
       getUserBribeData(userAddress, tokenPrice).then((res) => {
-        console.log(res);
         setBribesArr({ data: res.userBribesData, isfetched: true });
       });
   }, [userAddress, tokenPrice]);
@@ -79,7 +78,6 @@ const Bribes: NextPage = () => {
   }>({ data: [] as IUserBribeData[], isfetched: false });
   useEffect(() => {
     getPoolsDataForBribes(epoch.epochNumber).then((res) => {
-      console.log(res);
       setPoolsArr({ data: res, isfetched: true });
     });
   }, [epoch.epochNumber]);

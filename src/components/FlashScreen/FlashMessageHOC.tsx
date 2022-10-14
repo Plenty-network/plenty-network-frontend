@@ -16,7 +16,6 @@ export function FlashMessageHOC(props: IFlashMessageHOCProps) {
   const [isFlashVisiable, setIsFlashVisiable, animationState] = useStateAnimate(false, 300);
   let timeOutTimer: any = null;
   React.useEffect(() => {
-    console.log("flashMessage", isLoading);
     timeOutTimer && clearTimeout(timeOutTimer);
     if (isLoading) {
       //setting local store

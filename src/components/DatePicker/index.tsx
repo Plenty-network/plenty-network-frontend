@@ -51,7 +51,7 @@ export function Datepicker(props: IDatePickerProps) {
     }
     props.setIsOpen(false);
   };
-  console.log(props.isOpen);
+
   return (
     <div ref={reff}>
       {props.isOpen && (

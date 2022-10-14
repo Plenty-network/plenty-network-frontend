@@ -142,7 +142,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
               className="ml-1 text-primary-500 font-body2 cursor-pointer"
               onClick={onClickAmount}
             >
-              {Number(props.pnlpBalance).toFixed(4)} PNLP
+              {Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(4) : 0} PNLP
             </div>
           </div>
         )}
