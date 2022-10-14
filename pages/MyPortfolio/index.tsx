@@ -88,6 +88,8 @@ import {
   getVotesStatsData,
 } from "../../src/api/portfolio/stats";
 import { getPoolsRewardsData, getPositionsData } from "../../src/api/portfolio/pools";
+import { fetchTvlStatsData } from "../../src/redux/myPortfolio/tvl";
+import { fetchVotesStatsData } from "../../src/redux/myPortfolio/votesStats";
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -170,6 +172,13 @@ function MyPortfolio(props: any) {
   const unclaimedInflationDataError = useAppSelector(
     (state) => state.portfolioRewards.unclaimedInflationDataError
   );
+  const statsTvl: BigNumber = useAppSelector((state) => state.portfolioStatsTvl.userTvl);
+  const statsTvlError: boolean = useAppSelector((state) => state.portfolioStatsTvl.userTvlError);
+  const statsTvlFetching: boolean = useAppSelector((state) => state.portfolioStatsTvl.userTvlFetching);
+  const statsTotalEpochVotingPower: BigNumber = useAppSelector((state) => state.portfolioStatsVotes.totalEpochVotingPower);
+  const statsTotalPlyLocked: BigNumber = useAppSelector((state) => state.portfolioStatsVotes.totalPlyLocked);
+  const statsVotesError: boolean = useAppSelector((state) => state.portfolioStatsVotes.votesStatsError);
+  const statsVotesFetching: boolean = useAppSelector((state) => state.portfolioStatsVotes.votesStatsFetching);
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -280,7 +289,7 @@ function MyPortfolio(props: any) {
 
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
-          setStatsPosition(res);
+          setStatsPosition({success: true, tvl:res});
         });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
           setPoolsPosition({ data: res.positionPoolsData, isfetched: true });
@@ -367,6 +376,51 @@ function MyPortfolio(props: any) {
       setUnclaimedDataTokenId(getUnclaimedRewardsForLock(Number(manageData.tokenId)));
     }
   }, [manageData.tokenId]);
+
+  useEffect(() => {
+    if (userAddress) {
+      if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
+        dispatch(
+          fetchTvlStatsData({
+            userTezosAddress: userAddress,
+            tokenPrices: tokenPrice,
+            lpTokenPrices: lpTokenPrice,
+          })
+        );
+      }
+    }
+  }, [userAddress, lpTokenPrice]);
+  useEffect(() => {
+    if (
+      userAddress &&
+      Object.keys(tokenPrice).length !== 0 &&
+      Object.keys(lpTokenPrice).length !== 0 &&
+      statsTvlError
+    ) {
+      setTimeout(() => {
+        dispatch(
+          fetchTvlStatsData({
+            userTezosAddress: userAddress,
+            tokenPrices: tokenPrice,
+            lpTokenPrices: lpTokenPrice,
+          })
+        );
+      }, API_RE_ATTAMPT_DELAY);
+    }
+  }, [statsTvlError]);
+
+  useEffect(() => {
+    if (userAddress) {
+      dispatch(fetchVotesStatsData(userAddress));
+    }
+  }, [userAddress]);
+  useEffect(() => {
+    if (userAddress && statsVotesError) {
+      setTimeout(() => {
+        dispatch(fetchVotesStatsData(userAddress));
+      }, API_RE_ATTAMPT_DELAY);
+    }
+  }, [statsVotesError]);
 
   const dateFormat = (dates: number) => {
     const monthNames = [

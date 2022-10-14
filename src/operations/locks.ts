@@ -12,6 +12,8 @@ import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { IAllBribesOperationData, IAllClaimableFeesData, IClaimInflationOperationData } from "../api/portfolio/types";
 import { getMaxPossibleBatchArray, getMaxPossibleBatchArrayV2 } from "../api/util/operations";
+import { store } from "../redux";
+import { getDexAddress } from "../api/util/fetchConfig";
 
 export const createLock = async (
   address: string,
@@ -461,6 +463,67 @@ export const claimAllAndWithdrawLock = async (
     };
   } catch (error: any) {
     console.error(error);
+    return {
+      success: false,
+      operationId: undefined,
+      error: error.message,
+    };
+  }
+};
+
+
+/**
+ * Detach a vePLY from selected gauge
+ * @param tokenOneSymbol - Symbol of first token of the pair
+ * @param tokenTwoSymbol - Symbol of second token of the pair
+ * @param transactionSubmitModal - Callback to open modal when transaction is submiited
+ * @param resetAllValues - Callback to reset values when transaction is submitted
+ * @param setShowConfirmTransaction - Callback to show transaction confirmed
+ * @param ammAddress - Contract address of the selected pool(optional)
+ */
+ export const detachLockFromGauge = async (
+  tokenOneSymbol: string,
+  tokenTwoSymbol: string,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  ammAddress?: string
+): Promise<IOperationsResponse> => {
+  try {
+    const state = store.getState();
+    const AMM = state.config.AMMs;
+    const dexContractAddress = ammAddress || getDexAddress(tokenOneSymbol, tokenTwoSymbol);
+    if (dexContractAddress === 'false') {
+      throw new Error('AMM does not exist for the selected pair.');
+    }
+    const gaugeAddress: string | undefined =
+      AMM[dexContractAddress].gaugeAddress;
+    if (gaugeAddress === undefined) {
+      throw new Error('Gauge does not exist for the selected pair.');
+    }
+
+    const { CheckIfWalletConnected } = dappClient();
+    const walletResponse = await CheckIfWalletConnected();
+    if (!walletResponse.success) {
+      throw new Error('Wallet connection failed.');
+    }
+    const Tezos = await dappClient().tezos();
+
+    const gaugeContractInstance = await Tezos.wallet.at(gaugeAddress);
+
+    const operation = await gaugeContractInstance.methods.stake(0, 0).send();
+
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+    transactionSubmitModal &&
+      transactionSubmitModal(operation.opHash as string);
+    resetAllValues && resetAllValues();
+
+    await operation.confirmation();
+    return {
+      success: true,
+      operationId: operation.opHash,
+    };
+  } catch (error: any) {
     return {
       success: false,
       operationId: undefined,

@@ -15,6 +15,8 @@ import { pools } from "./pools";
 import { epoch } from "./epoch/epoch";
 import { walletLoading } from "./walletLoading";
 import { portfolioRewards } from "./myPortfolio/rewards";
+import { portfolioStatsTvl } from "./myPortfolio/tvl";
+import { portfolioStatsVotes } from "./myPortfolio/votesStats";
 
 const reducers = combineReducers({
   wallet: wallet,
@@ -28,12 +30,22 @@ const reducers = combineReducers({
   walletLoading: walletLoading,
   portfolioRewards: portfolioRewards,
   flashMessage:flashMessage,
+  portfolioStatsTvl: portfolioStatsTvl,
+  portfolioStatsVotes: portfolioStatsVotes,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["userSettings", "config", "pools", "epoch", "tokenPrice"],
+  whitelist: [
+    "userSettings",
+    "config",
+    "pools",
+    "epoch",
+    "tokenPrice",
+    "portfolioStatsTvl",
+    "portfolioStatsVotes",
+  ],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

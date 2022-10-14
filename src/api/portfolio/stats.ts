@@ -26,7 +26,7 @@ export const getTvlStatsData = async (
   userTezosAddress: string,
   tokenPrices: ITokenPriceList,
   lPTokenPrices: ILpTokenPriceList
-): Promise<ITvlStatsResponse> => {
+): Promise<BigNumber> => {
   try {
     if (
       !userTezosAddress ||
@@ -43,24 +43,26 @@ export const getTvlStatsData = async (
       getVotesStatsData(userTezosAddress),
       getPositionsData(userTezosAddress, lPTokenPrices),
     ]);
-    if (!votesStatsData.success && !positionsData.success) {
-      throw new Error(`${votesStatsData.error as string}, ${positionsData.error as string}`);
+    if (!positionsData.success) {
+      throw new Error(positionsData.error as string);
     }
 
     const liquidityAmountSum = positionsData.liquidityAmountSum;
     const totalPLYAmount = votesStatsData.totalPlyLocked.multipliedBy(PLYPrice);
     const tvl = liquidityAmountSum.plus(totalPLYAmount);
 
-    return {
-      success: true,
-      tvl,
-    };
+    // return {
+    //   success: true,
+    //   tvl,
+    // };
+    return tvl;
   } catch (error: any) {
-    return {
-      success: false,
-      tvl: new BigNumber(0),
-      error: error.message,
-    };
+    throw new Error(error.message);
+    // return {
+    //   success: false,
+    //   tvl: new BigNumber(0),
+    //   error: error.message,
+    // };
   }
 };
 
@@ -92,8 +94,8 @@ export const getPositionStatsData = async (
       getVotesStatsData(userTezosAddress),
       getPositionsData(userTezosAddress, lPTokenPrices),
     ]);
-    if (!votesStatsData.success && !positionsData.success) {
-      throw new Error(`${votesStatsData.error as string}, ${positionsData.error as string}`);
+    if (!positionsData.success) {
+      throw new Error(positionsData.error as string);
     }
 
     const liquidityAmountSum = positionsData.liquidityAmountSum;
@@ -146,17 +148,18 @@ export const getVotesStatsData = async (
       totalPlyLocked.dividedBy(PLY_DECIMAL_MULTIPLIER),
     ];
     return {
-      success: true,
+      // success: true,
       totalEpochVotingPower,
       totalPlyLocked,
     };
   } catch (error: any) {
-    return {
-      success: false,
-      totalEpochVotingPower: new BigNumber(0),
-      totalPlyLocked: new BigNumber(0),
-      error: error.message,
-    };
+    // return {
+    //   success: false,
+    //   totalEpochVotingPower: new BigNumber(0),
+    //   totalPlyLocked: new BigNumber(0),
+    //   error: error.message,
+    // };
+    throw new Error(error.message);
   }
 };
 
