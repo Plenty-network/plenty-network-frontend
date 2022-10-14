@@ -146,7 +146,7 @@ export const getVotesStatsData = async (
       totalPlyLocked.dividedBy(PLY_DECIMAL_MULTIPLIER),
     ];
     return {
-      success: true,
+      //success: true,
       totalEpochVotingPower,
       totalPlyLocked,
     };
