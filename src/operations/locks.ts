@@ -531,3 +531,104 @@ export const claimAllAndWithdrawLock = async (
     };
   }
 };
+
+//Claim all rewards, detach if attached and then withdraw lock
+export const claimAllDetachAndWithdrawLock = async (
+  lockId: number,
+  feeData: IAllClaimableFeesData[],
+  bribeData: IAllBribesOperationData[],
+  inflationData: IClaimInflationOperationData[],
+  isAttached: boolean,
+  ammAddress: string | undefined,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+): Promise<IOperationsResponse> => {
+  try {
+    const { CheckIfWalletConnected } = dappClient();
+    const WALLET_RESP = await CheckIfWalletConnected();
+    if (!WALLET_RESP.success) {
+      throw new Error("Wallet connection failed");
+    }
+
+    const Tezos = await dappClient().tezos();
+    const voterInstance: any = await Tezos.contract.at(voterAddress);
+    const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
+
+    const allBatch: any = [];
+
+    for (const feeObj of feeData) {
+      if(feeObj.tokenId === lockId) {
+        allBatch.push({
+          kind: OpKind.TRANSACTION,
+          ...voterInstance.methods.claim_fee(feeObj.tokenId, feeObj.amm, feeObj.epoch).toTransferParams(),
+        });
+      }
+    }
+
+    for (const bribe of bribeData) {
+      if(bribe.tokenId === lockId) {
+        allBatch.push({
+          kind: OpKind.TRANSACTION,
+          ...voterInstance.methods
+            .claim_bribe(bribe.tokenId, bribe.amm, bribe.epoch, bribe.bribeId)
+            .toTransferParams(),
+        });
+      }
+    }
+
+    for (const inflation of inflationData) {
+      if(inflation.tokenId === lockId) {
+        allBatch.push({
+          kind: OpKind.TRANSACTION,
+          ...veInstance.methods.claim_inflation(inflation.tokenId, inflation.epochs).toTransferParams(),
+        });
+      }
+    }
+    // Check if lock is attched to a gauge and add detach op to batch if valid amm and gauge exist.
+    if (isAttached) {
+      const state = store.getState();
+      const AMM = state.config.AMMs;
+      const dexContractAddress = ammAddress;
+      if (dexContractAddress === "false" || dexContractAddress === undefined) {
+        throw new Error("AMM does not exist for the selected pair.");
+      }
+      const gaugeAddress: string | undefined = AMM[dexContractAddress].gaugeAddress;
+      if (gaugeAddress === undefined) {
+        throw new Error("Gauge does not exist for the selected pair.");
+      }
+      const gaugeContractInstance = await Tezos.wallet.at(gaugeAddress);
+      allBatch.push({
+        kind: OpKind.TRANSACTION,
+        ...gaugeContractInstance.methods.stake(0, 0).toTransferParams(),
+      });
+    }
+
+    allBatch.push({
+      kind: OpKind.TRANSACTION,
+      ...veInstance.methods.withdraw(lockId).toTransferParams(),
+    })
+
+    const bestPossibleBatch = await getMaxPossibleBatchArrayV2(allBatch);
+    const batch = Tezos.wallet.batch(bestPossibleBatch);
+
+    const batchOp = await batch.send();
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+    resetAllValues && resetAllValues();
+
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
+
+    await batchOp.confirmation();
+    return {
+      success: true,
+      operationId: batchOp.opHash,
+    };
+  } catch (error: any) {
+    console.error(error);
+    return {
+      success: false,
+      operationId: undefined,
+      error: error.message,
+    };
+  }
+};
