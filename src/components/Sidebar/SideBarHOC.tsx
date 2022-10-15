@@ -24,12 +24,14 @@ export function SideBarHOC(props: ISideBarHOCProps) {
   const showPopupModalClick = () => {
     setShowPopupModal(!showPopupModal);
   };
+  const [showNodeSelector, setNodeSelector] = useState(false);
   return (
     <>
       <FlashMessageHOC />
       <div className="flex flex-no-wrap flex-col">
         {!isMobile && (
           <TopNavBar
+            setNodeSelector={setNodeSelector}
             setShowNotification={showNotificationClick}
             isLanding={props.isBribesLanding ? props.isBribesLanding : false}
             isBribes={props.isBribes ? props.isBribes : false}
@@ -68,7 +70,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
           />
         )}
       </div>
-      <NodeSelector show={false} setShow={true} />
+      <NodeSelector show={showNodeSelector} setShow={setNodeSelector} />
     </>
   );
 }

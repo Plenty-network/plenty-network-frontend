@@ -1,5 +1,5 @@
 import { ISimpleButtonProps, SimpleButton } from "./Component/SimpleButton";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import fromExponential from "from-exponential";
 import clsx from "clsx";
 import walletIcon from "../../assets/icon/pools/wallet.svg";
@@ -20,7 +20,7 @@ import { tokenParameterLiquidity } from "../Liquidity/types";
 import { AppDispatch, store } from "../../redux";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
-import { IVePLYData } from "../../api/stake/types";
+import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 
 import { VePLY } from "../DropDown/VePLY";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
@@ -28,6 +28,7 @@ import { detachLockFromGauge } from "../../operations/locks";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
+import { getStakedData } from "../../api/stake";
 
 export enum StakingScreenType {
   Staking = "Staking",
@@ -126,6 +127,15 @@ export function Staking(props: IStakingProps) {
   const handleInputPercentage = (value: number) => {
     props.setStakeInput(value * Number(props.pnlpBalance));
   };
+  const [boost, setBoost] = useState<IStakedDataResponse>();
+  useEffect(() => {
+    if (walletAddress) {
+      getStakedData(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
+        setBoost(res);
+      });
+    }
+  }, []);
+
   const handleStakeInput = async (input: string | number) => {
     if (input == ".") {
       props.setStakeInput("0.");
@@ -349,12 +359,9 @@ export function Staking(props: IStakingProps) {
               </span>
             </div>
             <div className="ml-auto flex gap-2">
-              <BtnwithBoost
-                text={`${
-                  Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(2) : 0
-                } x`}
-                onClick={handleDetach}
-              />
+              {boost?.stakedData.isBoosted && (
+                <BtnwithBoost text={`${boost.stakedData.boostValue} x`} onClick={handleDetach} />
+              )}
               <BtnWithWalletIconEnd
                 text={`${
                   Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(2) : 0

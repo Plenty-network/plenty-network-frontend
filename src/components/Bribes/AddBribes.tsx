@@ -180,6 +180,17 @@ function AddBribes(props: IAddBribes) {
     if (userAddress) {
       if (
         Number(props.bribeInputValue) > 0 &&
+        new BigNumber(props.bribeInputValue).isGreaterThan(
+          allBalance.userBalance[props.bribeToken.name]
+        )
+      ) {
+        return (
+          <Button color="disabled" width="w-full">
+            InSufficient Balance
+          </Button>
+        );
+      } else if (
+        Number(props.bribeInputValue) > 0 &&
         (!isSelectedEpoch ? selectedEndDropDown.epochNumber > 0 : selectedDropDown.epochNumber > 0)
       ) {
         return (
@@ -213,6 +224,7 @@ function AddBribes(props: IAddBribes) {
     selectedEndDropDown.epochNumber,
     isSelectedEpoch,
   ]);
+
   return (
     <>
       {props.show ? (
@@ -267,7 +279,7 @@ function AddBribes(props: IAddBribes) {
                   <EpochDropdown
                     title={isMobile ? "Select end epoch" : "Select your end epoch"}
                     Options={listofendEpoch}
-                    isDisabled={selectedDropDown.epochNumber <= 0 || isSelectedEpoch}
+                    isDisabled={selectedDropDown.epochNumber == undefined || isSelectedEpoch}
                     selectedText={selectedEndDropDown}
                     onClick={setSelectedEndDropDown}
                     className=""

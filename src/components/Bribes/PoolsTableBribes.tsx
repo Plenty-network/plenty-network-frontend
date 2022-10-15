@@ -59,7 +59,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         id: "pools",
         isToolTipEnabled: true,
         columnWidth: "w-[153px]",
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
         showOnMobile: true,
         accessor: (x: any) => (
@@ -160,7 +160,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         columnWidth: "w-[153px]",
         tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
