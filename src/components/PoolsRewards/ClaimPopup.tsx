@@ -71,7 +71,15 @@ function ClaimPly(props: IClaimProps) {
                     position={Position.top}
                   >
                     <>
-                      <span className="text-white font-body4 ml-2">{props.value.toFixed(2)}</span>
+                      <span className="text-white font-body4 ml-2">
+                        {props.state === EClaimAllState.UNCLAIMED
+                          ? Number(props.plyValue) > 0
+                            ? props.plyValue?.isLessThan(0.01)
+                              ? "<0.01"
+                              : nFormatter(props.plyValue)
+                            : "0"
+                          : props.value.toFixed(2)}
+                      </span>
                       <span className="text-text-500 font-body3 ml-1">PLY</span>
                     </>
                   </ToolTip>

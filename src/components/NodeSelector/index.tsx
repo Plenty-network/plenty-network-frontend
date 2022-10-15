@@ -77,14 +77,10 @@ function NodeSelector(props: any) {
     }
     var matchedNode = "";
     for (const [key, value] of Object.entries(LOCAL_RPC_NODES)) {
-      console.log(`${key}: ${value}`);
       if (value === RPCNodeInLS) {
         matchedNode = RPCNodeInLS;
       }
     }
-    // const matchedNode = Object.keys(LOCAL_RPC_NODES).find((value) => {
-    //   console.log(value, RPCNodeInLS);
-    // });
 
     if (matchedNode === "") {
       setCurrentRPC("CUSTOM");

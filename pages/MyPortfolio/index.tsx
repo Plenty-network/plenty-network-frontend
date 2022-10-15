@@ -423,7 +423,6 @@ function MyPortfolio(props: any) {
     setUnclaimedDataTokenId({} as IUnclaimedRewardsForLockData);
     if (manageData.tokenId) {
       setUnclaimedDataTokenId(getUnclaimedRewardsForLock(Number(manageData.tokenId)));
-      console.log("lala", getUnclaimedRewardsForLock(Number(manageData.tokenId)));
     }
   }, [manageData.tokenId]);
 
