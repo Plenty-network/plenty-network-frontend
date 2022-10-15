@@ -61,7 +61,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         Header: "Pool",
         id: "pools",
         columnWidth: "w-[153px]",
-
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA"),
         showOnMobile: true,
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
@@ -87,7 +87,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         columnWidth: "w-[100px]",
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "currentVotingPower"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "bribeValue"),
         accessor: (x: any) => (
           <BribeValue value={x.bribeValue} valuePerEpoch={x.bribeValuePerEpoch} />
         ),
@@ -100,7 +100,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
 
         canShort: true,
 
-        sortType: (a: any, b: any) => compareNumericString(a, b, "baseValue"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "bribeToken"),
         accessor: (x: any) => <Token value={x.bribeToken} />,
       },
 
@@ -110,7 +110,6 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         columnWidth: "ml-auto w-[280px]",
 
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
 
         accessor: (x: any) => (
           <EpochCol
@@ -136,7 +135,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         columnWidth: "w-[153px]",
 
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "attachedTokenASymbol"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA"),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
@@ -161,7 +160,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         columnWidth: "w-[180px]",
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "currentVotingPower"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "bribeValue"),
         accessor: (x: any) => (
           <BribeValue value={x.bribeValue} valuePerEpoch={x.bribeValuePerEpoch} />
         ),
@@ -174,7 +173,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
 
         canShort: true,
 
-        sortType: (a: any, b: any) => compareNumericString(a, b, "baseValue"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "bribeToken"),
         accessor: (x: any) => <Token value={x.bribeToken} />,
       },
 
@@ -182,10 +181,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         Header: "Epochs",
         id: "Epochs",
         columnWidth: "ml-auto w-[280px]",
-
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
-
         accessor: (x: any) => (
           <EpochCol
             epochNumber={x.epoch}

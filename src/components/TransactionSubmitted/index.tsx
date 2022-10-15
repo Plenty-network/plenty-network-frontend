@@ -16,7 +16,12 @@ function TransactionSubmitted(props: ITransactionSubmittedProps) {
   };
 
   return props.show ? (
-    <PopUpModal title="Transaction Submitted" noGlassEffect={false} isAnimteToLoader={true} onhide={closeModal} >
+    <PopUpModal
+      title="Transaction Submitted"
+      noGlassEffect={true}
+      isAnimteToLoader={true}
+      onhide={closeModal}
+    >
       {
         <>
           <div className="flex justify-center mt-10">

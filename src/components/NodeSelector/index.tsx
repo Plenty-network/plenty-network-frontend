@@ -24,10 +24,10 @@ export enum NODES {
   CUSTOM = "",
 }
 export enum NODENAME {
-  PLENTY,
-  GIGANODE,
-  CRYPTOMIC,
-  CUSTOM,
+  "PLENTY",
+  "GIGANODE",
+  "CRYPTOMIC",
+  "CUSTOM",
 }
 async function isValidURL(userInput: string) {
   try {
@@ -42,8 +42,13 @@ async function isValidURL(userInput: string) {
   }
 }
 function NodeSelector(props: any) {
-  const Nodes = [NODES.PLENTY, NODES.GIGANODE, NODES.CRYPTOMIC, NODES.CUSTOM];
-  const [selectedNode, setSelectedNode] = useState(NODES.PLENTY);
+  const Nodes = [
+    { text: NODES.PLENTY, url: "https://mifx20dfsr.windmill.tools/", name: "PLENTY" },
+    { text: NODES.GIGANODE, url: "https://mainnet-tezos.giganode.io/", name: "GIGANODE" },
+    { text: NODES.CRYPTOMIC, url: "https://tezos-prod.cryptonomic-infra.tech/", name: "CRYPTOMIC" },
+    { text: NODES.CUSTOM, url: "", name: "CUSTOM" },
+  ];
+  const [selectedNode, setSelectedNode] = useState(Nodes[0]);
   const closeModal = () => {
     props.setShow(false);
   };
@@ -96,49 +101,53 @@ function NodeSelector(props: any) {
     setCurrentRPC(matchedNode);
   };
 
-  // const setRPCInLS = async () => {
-  //   if (currentRPC !== "CUSTOM") {
-  //     localStorage.setItem(RPC_NODE, LOCAL_RPC_NODES[currentRPC]);
-  //     props.setNode(LOCAL_RPC_NODES[currentRPC]);
-  //     //props.closeNodeSelectorModal();
-  //   } else {
-  //     let _customRPC = customRPC;
-  //     if (!_customRPC.match(/\/$/)) {
-  //       _customRPC += "/";
-  //     }
-  //     const response = await isValidURL(_customRPC);
+  const setRPCInLS = async () => {
+    if (currentRPC !== "CUSTOM") {
+      const s = selectedNode.name;
+      localStorage.setItem(RPC_NODE, selectedNode.url);
+      props.setRpcNode(selectedNode.url);
+      //props.closeNodeSelectorModal();
+    } else {
+      let _customRPC = customRPC;
+      if (!_customRPC.match(/\/$/)) {
+        _customRPC += "/";
+      }
+      const response = await isValidURL(_customRPC);
 
-  //     if (!response) {
-  //       props.setLoaderMessage({ type: "error", message: "Invalid RPC URL" });
-  //       setTimeout(() => {
-  //         props.setLoaderMessage({});
-  //       }, 5000);
-  //     } else {
-  //       localStorage.setItem(RPC_NODE, _customRPC);
-  //       props.setNode(_customRPC);
-  //       // props.closeNodeSelectorModal(_customRPC);
-  //     }
-  //   }
-  // };
-  function Options(props: { onClick: Function; text: string }) {
-    if (props.text === "") {
+      if (!response) {
+        console.log("invalid url");
+      } else {
+        localStorage.setItem(RPC_NODE, _customRPC);
+        props.setRpcNode(_customRPC);
+        // props.closeNodeSelectorModal(_customRPC);
+      }
+    }
+  };
+  function Options(props: {
+    onClick: Function;
+    nodes: {
+      text: NODES;
+      url: string;
+    };
+  }) {
+    if (props.nodes.text === "") {
       return (
         <div
           className="flex gap-[15px]"
           onClick={() => {
-            props.onClick(props.text);
+            props.onClick(props.nodes);
           }}
         >
           <div
             className={clsx(
               " justify-center border  flex items-center h-[54px] w-[54px] z-10 cursor-pointer font-body4 rounded-2xl mt-4 ",
-              props.text === selectedNode
+              props.nodes.text.includes(selectedNode.text)
                 ? "bg-muted-500 border-primary-500  text-primary-500"
                 : "text-text-700 bg-card-500 border-text-800"
             )}
           >
             {" "}
-            {props.text === selectedNode ? (
+            {props.nodes.text === selectedNode.text ? (
               <Image src={violetNode} height={"20px"} width={"20px"} />
             ) : (
               <Image src={greyNode} height={"20px"} width={"20px"} />
@@ -147,7 +156,7 @@ function NodeSelector(props: any) {
           <div
             className={clsx(
               "  px-4 border  flex items-center h-[54px] z-10 w-[343px] cursor-pointer font-body4 rounded-2xl mt-4 ",
-              props.text === selectedNode
+              props.nodes.text === selectedNode.text
                 ? "bg-muted-500 border-primary-500  text-primary-500"
                 : "text-text-700 bg-card-500 border-text-800"
             )}
@@ -170,21 +179,21 @@ function NodeSelector(props: any) {
       return (
         <div
           onClick={() => {
-            props.onClick(props.text);
+            props.onClick(props.nodes);
           }}
           className={clsx(
             "  px-4 border  flex items-center h-[54px] z-10 cursor-pointer font-body4 rounded-2xl mt-4 ",
-            props.text === selectedNode
+            props.nodes.text === selectedNode.text
               ? "bg-muted-500 border-primary-500  text-primary-500"
               : "text-text-700 bg-card-500 border-text-800"
           )}
         >
-          {props.text === selectedNode ? (
+          {props.nodes.text === selectedNode.text ? (
             <Image src={violetNode} height={"20px"} width={"20px"} />
           ) : (
             <Image src={greyNode} height={"20px"} width={"20px"} />
           )}
-          <span className="ml-4">{props.text}</span>
+          <span className="ml-4">{props.nodes.text}</span>
         </div>
       );
     }
@@ -205,11 +214,13 @@ function NodeSelector(props: any) {
           </div>
           <div className="px-2">
             {Nodes.map((text, i) => (
-              <Options onClick={setSelectedNode} key={`${text}_${i}`} text={text} />
+              <Options onClick={setSelectedNode} key={`${text}_${i}`} nodes={text} />
             ))}
           </div>
           <div className="mt-[18px]">
-            <Button color={"primary"}>Set Node</Button>
+            <Button color={"primary"} onClick={setRPCInLS}>
+              Set Node
+            </Button>
           </div>
         </>
       }

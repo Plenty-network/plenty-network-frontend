@@ -68,7 +68,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
           />
         )}
       </div>
-      <NodeSelector show={false} setShow={true} />
+      <NodeSelector show={true} setShow={true} />
     </>
   );
 }
