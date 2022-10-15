@@ -84,15 +84,19 @@ export const getAllLocksPositionData = async (
       const currentVotingPower = new BigNumber(lock.currentVotingPower).dividedBy(
         PLY_DECIMAL_MULTIPLIER
       );
+      const nextEpochVotingPower = new BigNumber(lock.nextEpochVotingPower).dividedBy(
+        PLY_DECIMAL_MULTIPLIER
+      );
       const lockEndTimestamp = new BigNumber(lock.endTs);
       const attached = Boolean(lock.attached);
       const finalLock: IAllLocksPositionData = {
         tokenId,
         baseValue: new BigNumber(lock.baseValue).dividedBy(PLY_DECIMAL_MULTIPLIER),
-        votingPower: new BigNumber(0),
+        votingPower: availableVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
         epochVotingPower: epochVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
         consumedVotingPower: consumedVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER),
         currentVotingPower,
+        nextEpochVotingPower,
         locksState: ELocksState.DISABLED,
         endTimeStamp: lockEndTimestamp.multipliedBy(1000).toNumber(),
         attached,
@@ -104,7 +108,7 @@ export const getAllLocksPositionData = async (
 
       if (epochVotingPower.isFinite() && epochVotingPower.isGreaterThan(0)) {
         if (availableVotingPower.isGreaterThan(0)) {
-          finalLock.votingPower = availableVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER);
+          // finalLock.votingPower = availableVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER);
           finalLock.locksState = ELocksState.AVAILABLE;
         } else {
           finalLock.locksState = ELocksState.CONSUMED;
