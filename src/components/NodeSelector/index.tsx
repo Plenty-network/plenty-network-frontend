@@ -96,6 +96,30 @@ function NodeSelector(props: any) {
     setCurrentRPC(matchedNode);
   };
 
+  // const setRPCInLS = async () => {
+  //   if (currentRPC !== "CUSTOM") {
+  //     localStorage.setItem(RPC_NODE, LOCAL_RPC_NODES[currentRPC]);
+  //     props.setNode(LOCAL_RPC_NODES[currentRPC]);
+  //     //props.closeNodeSelectorModal();
+  //   } else {
+  //     let _customRPC = customRPC;
+  //     if (!_customRPC.match(/\/$/)) {
+  //       _customRPC += "/";
+  //     }
+  //     const response = await isValidURL(_customRPC);
+
+  //     if (!response) {
+  //       props.setLoaderMessage({ type: "error", message: "Invalid RPC URL" });
+  //       setTimeout(() => {
+  //         props.setLoaderMessage({});
+  //       }, 5000);
+  //     } else {
+  //       localStorage.setItem(RPC_NODE, _customRPC);
+  //       props.setNode(_customRPC);
+  //       // props.closeNodeSelectorModal(_customRPC);
+  //     }
+  //   }
+  // };
   function Options(props: { onClick: Function; text: string }) {
     if (props.text === "") {
       return (
@@ -134,6 +158,10 @@ function NodeSelector(props: any) {
                 "text-white bg-card-500/[0.1] text-left border-0 font-body3 outline-none w-[100%] placeholder:text-text-700"
               )}
               placeholder="https://custom.tezos.node"
+              value={customRPC}
+              onChange={(e) => {
+                setCustomRPC(e.target.value);
+              }}
             />
           </div>
         </div>
