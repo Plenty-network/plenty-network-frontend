@@ -6,7 +6,7 @@ import { BigNumber } from "bignumber.js";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IYourLiquidityProps } from "./types";
 import clsx from "clsx";
-import arrow from "../../assets/icon/myPortfolio/boostArrow.svg";
+import arrow from "../../assets/icon/myPortfolio/boostBlue.svg";
 
 export function BoostValue(props: IYourLiquidityProps) {
   return (

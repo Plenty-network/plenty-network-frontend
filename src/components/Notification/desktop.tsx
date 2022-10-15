@@ -39,7 +39,7 @@ export default function NotificationBar(props: INotificationBarProps) {
       id="modal_outer"
       className={`fixed z-50 w-screen h-screen   ${isClose ? "fade-out-3" : "fade-in-3"}`}
     >
-      <div className="absolute top-[3.8rem] right-[14.6rem]">
+      <div className="notificationShadow absolute top-[3.8rem] right-[14.6rem]">
         <div
           className="   relative 
        w-[364px] 
@@ -52,10 +52,10 @@ export default function NotificationBar(props: INotificationBarProps) {
 
        "
         >
-          <div className="absolute bg-popUpNotificationHeader z-10 rotate-45 w-8 h-8 right-[13px] -top-[2px]"></div>
+          <div className="notificationShadow absolute bg-popUpNotificationHeader z-10 rotate-45 w-8 h-8 right-[13px] -top-[2px]"></div>
           <div className="bg-popUpNotificationHeader h-[44px] rounded-t-[4px] z-20 flex justify-between font-semibold items-center px-4 !py-[13px] text-f14">
             <p>Notification</p>
-            <p onClick={clearNotification} className="cursor-pointer">
+            <p onClick={clearNotification} className="cursor-pointer font-body1">
               Clear
             </p>
           </div>
