@@ -183,6 +183,9 @@ input::-webkit-inner-spin-button {
 .inputSecond {
   background: rgba(14, 8, 23, 0.02);
 }
+.notificationShadow{
+  filter: drop-shadow(3px 17px 48px rgba(0, 0, 0, 0.08));
+}
 
 /* Firefox */
 input[type='number'] {
