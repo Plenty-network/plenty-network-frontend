@@ -267,7 +267,7 @@ function AddBribes(props: IAddBribes) {
                   <EpochDropdown
                     title={isMobile ? "Select end epoch" : "Select your end epoch"}
                     Options={listofendEpoch}
-                    isDisabled={isSelectedEpoch}
+                    isDisabled={selectedDropDown.epochNumber <= 0 || isSelectedEpoch}
                     selectedText={selectedEndDropDown}
                     onClick={setSelectedEndDropDown}
                     className=""

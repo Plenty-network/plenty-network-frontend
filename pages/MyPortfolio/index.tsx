@@ -76,6 +76,7 @@ import {
   claimAllRewardsForAllLocks,
   claimSupernova,
 } from "../../src/operations/vote";
+import { claimAllDetachAndWithdrawLock } from "../../src/operations/locks";
 import ClaimPly from "../../src/components/PoolsRewards/ClaimPopup";
 import { EClaimAllState } from "../../src/components/Rewards/types";
 import { setFlashMessage } from "../../src/redux/flashMessage";
@@ -422,6 +423,7 @@ function MyPortfolio(props: any) {
     setUnclaimedDataTokenId({} as IUnclaimedRewardsForLockData);
     if (manageData.tokenId) {
       setUnclaimedDataTokenId(getUnclaimedRewardsForLock(Number(manageData.tokenId)));
+      console.log("lala", getUnclaimedRewardsForLock(Number(manageData.tokenId)));
     }
   }, [manageData.tokenId]);
 
@@ -605,11 +607,19 @@ function MyPortfolio(props: any) {
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     localStorage.setItem(TOKEN_ID, manageData.tokenId.toString());
-    claimAllAndWithdrawLock(
+    claimAllDetachAndWithdrawLock(
       manageData.tokenId.toNumber(),
-      unclaimedDataTokenId.lockRewardsOperationData.lockFeesClaimData,
-      unclaimedDataTokenId.lockRewardsOperationData.lockBribesClaimData,
-      unclaimedDataTokenId.lockRewardsOperationData.lockInflationClaimData,
+      unclaimedDataTokenId.unclaimedRewardsExist
+        ? unclaimedDataTokenId.lockRewardsOperationData.lockFeesClaimData
+        : [],
+      unclaimedDataTokenId.unclaimedRewardsExist
+        ? unclaimedDataTokenId.lockRewardsOperationData.lockBribesClaimData
+        : [],
+      unclaimedDataTokenId.unclaimedRewardsExist
+        ? unclaimedDataTokenId.lockRewardsOperationData.lockInflationClaimData
+        : [],
+      manageData.attached ? manageData.attached : false,
+      manageData.attached ? manageData.attachedAmmAddress : undefined,
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction

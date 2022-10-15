@@ -332,6 +332,7 @@ function CreateLock(props: ICreateLockProps) {
                   }
                   id="tooltip8"
                   position={Position.top}
+                  isShowInnitially={true}
                 >
                   <p
                     className={clsx(

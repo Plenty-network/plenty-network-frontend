@@ -16,7 +16,7 @@ export function Flash(props: IInfoProps) {
     if (props.onClick) props.onClick();
   };
   const TIME_TO_DIE = props.duration;
-  const SMOOTHNESS = 110;
+  const SMOOTHNESS = 120;
   const step = 359 / SMOOTHNESS;
   useEffect(() => {
     let currentTime = TIME_TO_DIE / 10;
@@ -51,7 +51,7 @@ export function Flash(props: IInfoProps) {
     }
     return "bg-info-500/20";
   };
-  const height = props.onClick ? "h-[112px]" : "h-[88px]";
+  const height = props.onClick ? "" : "";
   return (
     <div
       className={`w-[359px] slide-top relative flex bg-primary-255 border overflow-hidden border-primary-256 rounded-xl font-normal z-index-max-pro ${height} ${props.className} `}
@@ -59,7 +59,7 @@ export function Flash(props: IInfoProps) {
       <div className={`${bgColor()} w-12 flex justify-center ${height}`}>
         <Image height={30} width={30} src={props.imageSrc} />
       </div>
-      <div className="p-4 flex-1 flex flex-col gap-[4px] pr-[56px] font-normal text-f12 leading-4">
+      <div className="py-4 pl-4 flex-1 flex flex-col gap-[4px] pr-[56px] font-normal text-f12 leading-4">
         <div className="flex gap-[4px]">
           <span>{props.headerText}</span>
           <span className="text-text-238 text-f10 leading-[14px]">now</span>

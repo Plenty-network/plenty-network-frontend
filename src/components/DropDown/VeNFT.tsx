@@ -113,7 +113,11 @@ export function VeNFT(props: IDropdownProps) {
                 <Options
                   onClick={props.onClick}
                   key={`${text.tokenId}_${i}`}
-                  votingPower={text.votingPower.toString()}
+                  votingPower={
+                    text.locksState === ELocksState.DISABLED
+                      ? text.nextEpochVotingPower.toString()
+                      : text.votingPower.toString()
+                  }
                   tokenId={text.tokenId.toString()}
                   veNFT={
                     text.locksState === ELocksState.AVAILABLE ||
@@ -168,7 +172,7 @@ export function VeNFT(props: IDropdownProps) {
                   setSelectedDropDown({
                     votingPower:
                       props.lockState === ELocksState.CONSUMED
-                        ? Number(props.veNFTObj.consumedVotingPower).toFixed(3)
+                        ? Number(props.veNFTObj.nextEpochVotingPower).toFixed(3)
                         : props.votingPower,
                     tokenId: props.tokenId,
                   })
@@ -177,7 +181,7 @@ export function VeNFT(props: IDropdownProps) {
                 props.onClick({
                   votingPower:
                     props.lockState === ELocksState.CONSUMED
-                      ? Number(props.veNFTObj.consumedVotingPower).toFixed(3)
+                      ? Number(props.veNFTObj.nextEpochVotingPower).toFixed(3)
                       : props.votingPower,
                   tokenId: props.tokenId,
                 });
@@ -201,7 +205,7 @@ export function VeNFT(props: IDropdownProps) {
           )}
         >
           {props.lockState === ELocksState.CONSUMED
-            ? Number(props.veNFTObj.consumedVotingPower).toFixed(3)
+            ? Number(props.veNFTObj.nextEpochVotingPower).toFixed(3)
             : Number(props.votingPower) > 0
             ? Number(props.votingPower) < 0.001
               ? `< ${Number(props.votingPower).toFixed(3)}`

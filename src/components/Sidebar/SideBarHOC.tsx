@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
 import { FlashMessageHOC } from "../FlashScreen/FlashMessageHOC";
+import NodeSelector from "../NodeSelector";
 import { NotificationBar } from "../Notification";
 import BottomNavigationBar from "./BottomNavBar";
 import { SideBar } from "./Sidebar";
@@ -67,6 +68,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
           />
         )}
       </div>
+      <NodeSelector show={true} setShow={true} />
     </>
   );
 }
