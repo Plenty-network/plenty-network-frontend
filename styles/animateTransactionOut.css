@@ -1,6 +1,6 @@
 .scale-out-tr {
-	-webkit-animation: scale-out-tr 0.7s cubic-bezier(0.755, 0.050, 0.855, 0.060) both;
-	        animation: scale-out-tr 0.7s cubic-bezier(0.755, 0.050, 0.855, 0.060) both;
+	-webkit-animation: scale-out-tr 0.5s cubic-bezier(0.755, 0.050, 0.855, 0.060) both;
+	        animation: scale-out-tr 0.5s cubic-bezier(0.755, 0.050, 0.855, 0.060) both;
 }
  @-webkit-keyframes scale-out-tr {
     0% {

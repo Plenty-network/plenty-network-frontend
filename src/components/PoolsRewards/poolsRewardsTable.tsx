@@ -34,7 +34,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         id: "pools",
         canShort: true,
         columnWidth: "w-[170px]",
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol", true),
         showOnMobile: true,
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
@@ -101,7 +101,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         showOnMobile: true,
         canShort: true,
         columnWidth: "w-[200px]",
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">

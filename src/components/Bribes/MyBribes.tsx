@@ -61,7 +61,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         Header: "Pool",
         id: "pools",
         columnWidth: "w-[153px]",
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         showOnMobile: true,
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
@@ -135,7 +135,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         columnWidth: "w-[153px]",
 
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">

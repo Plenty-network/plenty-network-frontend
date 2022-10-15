@@ -57,7 +57,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         id: "pools",
         columnWidth: "w-[150px]",
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
@@ -113,7 +113,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         columnWidth: "w-[170px]",
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">

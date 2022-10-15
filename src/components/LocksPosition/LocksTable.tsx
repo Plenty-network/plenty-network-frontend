@@ -62,6 +62,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         columnWidth: "w-[126px]",
         isToolTipEnabled: true,
         tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
+        sortType: (a: any, b: any) => compareNumericString(a, b, "attachedTokenASymbol", true),
         showOnMobile: true,
         accessor: (x: any) =>
           x.attached ? (
@@ -161,7 +162,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         isToolTipEnabled: true,
         tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "attachedTokenASymbol"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "attachedTokenASymbol", true),
         accessor: (x: any) =>
           x.attached ? (
             <div className=" flex justify-center items-center">

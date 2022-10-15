@@ -21,7 +21,7 @@ export function SimmerEffect(props: ISimmerEffectProps) {
         .map((_, i) => (
           <tr
             key={`simmerEffect_${i}`}
-            className={`border border-borderCommon h-16 bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg animate-pulse `}
+            className={` border border-borderCommon h-16 bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg animate-pulse `}
           ></tr>
         ))}
     </>
@@ -172,7 +172,11 @@ const Table = <D extends object>({
           ))}
         </thead>
         <tbody
-          className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-1")}
+          className={clsx(
+            " flex-col flex ",
+            isVotesTable ? "gap-1" : "gap-1",
+            isFetched ? "overflow-y-auto" : ""
+          )}
           {...(!router.pathname.includes("MyPortfolio") &&
             !router.pathname.includes("pools") && {
               style: { height: `${heightBody}px` },

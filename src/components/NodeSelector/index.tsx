@@ -11,12 +11,6 @@ import { RPC_NODE } from "../../constants/localStorage";
 import { connect } from "react-redux";
 import { setRpcNode } from "../../redux/wallet/wallet";
 
-interface INodeSelectorProps {
-  show: boolean;
-  // content: string;
-  setShow: any;
-  // onBtnClick: any;
-}
 export enum NODES {
   PLENTY = "Plenty node",
   GIGANODE = "Giganode",
@@ -122,6 +116,7 @@ function NodeSelector(props: any) {
         // props.closeNodeSelectorModal(_customRPC);
       }
     }
+    props.setShow(false);
   };
   function Options(props: {
     onClick: Function;
@@ -239,7 +234,7 @@ const mapDispatchToProps = (dispatch: (arg0: any) => any) => ({
 NodeSelector.propTypes = {
   rpcNode: PropTypes.string.isRequired,
   show: PropTypes.bool.isRequired,
-  setShow: PropTypes.bool.isRequired,
+  setShow: PropTypes.func,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NodeSelector);

@@ -12,6 +12,7 @@ export interface ITopNavBarProps {
   setShowNotification: Function;
   isLanding: boolean;
   isBribes: boolean;
+  setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IIconBTNProps {
   onClick?: Function;
@@ -68,7 +69,7 @@ export function TopNavBar(props: ITopNavBarProps) {
                 onClick={props.setShowNotification}
               />
             </div>
-            <ConnectWalletBtnDeskTop />
+            <ConnectWalletBtnDeskTop setNodeSelector={props.setNodeSelector} />
           </div>
         </div>
       )}
