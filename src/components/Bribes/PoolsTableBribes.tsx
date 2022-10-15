@@ -59,6 +59,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         id: "pools",
         isToolTipEnabled: true,
         columnWidth: "w-[153px]",
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
         showOnMobile: true,
         accessor: (x: any) => (
@@ -89,7 +90,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
           " Your current voting power. This is different from your epoch voting power which is recorded at the beginning of each epoch.",
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "currentVotingPower"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "bribes"),
         accessor: (x: any) => <YourLiquidity value={x.bribes} />,
       },
       {
@@ -100,7 +101,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         tooltipMessage: "Amount of PLY locked up until expiry.",
         canShort: true,
         isToolTipEnabled: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "baseValue"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "liquidity"),
         accessor: (x: any) => <YourLiquidity value={x.liquidity} />,
       },
       {
@@ -112,7 +113,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         tooltipMessage:
           " The lock is unusable once it expires and underlying PLY may be withdrawn.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "totalVotesCurrent"),
 
         accessor: (x: any) => (
           <VoteShare value={x.totalVotesCurrent} percentage={x.totalVotesPercentageCurrent} />
@@ -127,7 +128,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         tooltipMessage:
           " The lock is unusable once it expires and underlying PLY may be withdrawn.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "totalVotesPrevious"),
 
         accessor: (x: any) => (
           <VoteShare value={x.totalVotesPrevious} percentage={x.totalVotesPercentagePrevious} />
@@ -159,7 +160,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         columnWidth: "w-[153px]",
         tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "attachedTokenASymbol"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
@@ -188,7 +189,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
           " Your current voting power. This is different from your epoch voting power which is recorded at the beginning of each epoch.",
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "currentVotingPower"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "bribes"),
         accessor: (x: any) => <YourLiquidity value={x.bribes} />,
       },
       {
@@ -199,7 +200,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         tooltipMessage: "Amount of PLY locked up until expiry.",
         canShort: true,
         isToolTipEnabled: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "baseValue"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "liquidity"),
         accessor: (x: any) => <YourLiquidity value={x.liquidity} />,
       },
       {
@@ -211,7 +212,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         tooltipMessage:
           " The lock is unusable once it expires and underlying PLY may be withdrawn.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "totalVotesCurrent"),
 
         accessor: (x: any) => (
           <VoteShare value={x.totalVotesCurrent} percentage={x.totalVotesPercentageCurrent} />
@@ -226,7 +227,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         tooltipMessage:
           " The lock is unusable once it expires and underlying PLY may be withdrawn.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "endTimeStamp"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "totalVotesPrevious"),
 
         accessor: (x: any) => (
           <VoteShare value={x.totalVotesPrevious} percentage={x.totalVotesPercentagePrevious} />

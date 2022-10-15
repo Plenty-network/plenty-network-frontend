@@ -77,10 +77,10 @@ const Bribes: NextPage = () => {
     isfetched: boolean;
   }>({ data: [] as IUserBribeData[], isfetched: false });
   useEffect(() => {
-    getPoolsDataForBribes(epoch.epochNumber).then((res) => {
+    getPoolsDataForBribes(epoch?.epochNumber).then((res) => {
       setPoolsArr({ data: res, isfetched: true });
     });
-  }, [epoch.epochNumber]);
+  }, [epoch?.epochNumber]);
 
   return (
     <>

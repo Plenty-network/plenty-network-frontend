@@ -19,7 +19,9 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import NodeSelector from "../NodeSelector";
 
-export interface IConnectWalletBtnDeskTopProps {}
+export interface IConnectWalletBtnDeskTopProps {
+  setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -97,7 +99,10 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
                 <span>Switch account</span>
               </p>
 
-              <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+              <p
+                className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+                onClick={() => props.setNodeSelector(true)}
+              >
                 <Image alt={"alt"} src={nodeSelectorLogo} />
                 <span>Node Selector</span>
               </p>
