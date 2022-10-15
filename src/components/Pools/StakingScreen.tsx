@@ -2,12 +2,15 @@ import { ISimpleButtonProps, SimpleButton } from "./Component/SimpleButton";
 import React, { useState, useMemo } from "react";
 import fromExponential from "from-exponential";
 import clsx from "clsx";
+import walletIcon from "../../assets/icon/pools/wallet.svg";
 import { SwitchWithIcon } from "../SwitchCheckbox/switchWithIcon";
 import { InputText } from "./Component/InputText";
 import {
+  BtnwithBoost,
   BtnWithStakeIcon,
   BtnWithUnStakeIcon,
   BtnWithWalletIcon,
+  BtnWithWalletIconEnd,
 } from "./Component/BtnWithWalletIcon";
 
 import { BigNumber } from "bignumber.js";
@@ -21,6 +24,10 @@ import { IVePLYData } from "../../api/stake/types";
 
 import { VePLY } from "../DropDown/VePLY";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { detachLockFromGauge } from "../../operations/locks";
+import { setIsLoadingWallet } from "../../redux/walletLoading";
+import { setFlashMessage } from "../../redux/flashMessage";
+import { Flashtype } from "../FlashScreen";
 
 export enum StakingScreenType {
   Staking = "Staking",
@@ -142,6 +149,41 @@ export function Staking(props: IStakingProps) {
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
+  const handleDetach = () => {
+    detachLockFromGauge(
+      props.tokenIn.name,
+      props.tokenOut.name,
+      undefined,
+      undefined,
+      undefined
+    ).then((response) => {
+      if (response.success) {
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Detach is succesfull`,
+              linkText: "View in Explorer",
+              isLoading: true,
+            })
+          );
+        }, 6000);
+      } else {
+        dispatch(
+          setFlashMessage({
+            flashType: Flashtype.Rejected,
+            headerText: "Rejected",
+            trailingText: `Detach operation rejected`,
+            linkText: "",
+            isLoading: true,
+          })
+        );
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
   const stakeButton = useMemo(() => {
     if (!walletAddress) {
       return (
@@ -194,7 +236,7 @@ export function Staking(props: IStakingProps) {
           </div>
         </div>
         {/* dropDown And InfoTab */}
-        <div className="flex py-2 px-2 md:px-4 justify-between">
+        <div className="flex py-2 px-2 md:px-2.5 justify-between bg-primary-850 border border-secondary-300">
           <ToolTip
             message=" Select a veNFT to Boost"
             isShowInnitially={true}
@@ -208,7 +250,7 @@ export function Staking(props: IStakingProps) {
               isListLoading={props.isListLoading}
             />
           </ToolTip>
-          <div className="font-mobile-f9 md:text-f12 text-text-400 ml-2 max-w-[300px] text-center">
+          <div className="font-mobile-f9 md:text-f12 text-text-400 ml-2 max-w-[321px] text-center">
             Based on how much voting power the veNFT has, you may be able to boost your PLY rewards
             up to 2.5x
           </div>
@@ -306,7 +348,20 @@ export function Staking(props: IStakingProps) {
                 {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
               </span>
             </div>
-            <BtnWithStakeIcon text={`${Number(props.stakedToken).toFixed(4)} PNLP`} />
+            <div className="ml-auto flex gap-2">
+              <BtnwithBoost
+                text={`${
+                  Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(2) : 0
+                } x`}
+                onClick={handleDetach}
+              />
+              <BtnWithWalletIconEnd
+                text={`${
+                  Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(2) : 0
+                } PNLP`}
+              />
+              <BtnWithStakeIcon text={`${Number(props.stakedToken).toFixed(4)} PNLP`} />
+            </div>
           </>
         ) : (
           <div className="font-body2 text-white pl-4">No Staked positions</div>

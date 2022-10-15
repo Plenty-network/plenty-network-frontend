@@ -217,7 +217,7 @@ export default function Vote() {
           if (list.locksState === ELocksState.CONSUMED) {
             dispatch(
               setSelectedDropDown({
-                votingPower: list.consumedVotingPower.toString(),
+                votingPower: list.nextEpochVotingPower.toString(),
                 tokenId: list.tokenId.toString(),
               })
             );
