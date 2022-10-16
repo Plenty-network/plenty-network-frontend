@@ -108,7 +108,7 @@ function TransactionSettings(props: ITransactionSettingsProps) {
             id="tooltipD"
             position={Position.top}
             toolTipChild={
-              <div className="w-[250px]">
+              <div className="w-[180px] md:w-[250px]">
                 Change the slippage tolerance in the transaction settings.
               </div>
             }
