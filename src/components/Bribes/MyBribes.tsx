@@ -13,7 +13,6 @@ import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 import { useDispatch } from "react-redux";
 import { AppDispatch, store } from "../../redux";
 import { setSelectedDropDown } from "../../redux/veNFT";
-import Vote from "../../../pages/vote";
 import { useRouter } from "next/router";
 import { IAllLocksPositionData } from "../../api/portfolio/types";
 

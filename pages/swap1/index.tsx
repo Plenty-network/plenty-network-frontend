@@ -12,7 +12,6 @@ import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
 
-
 const Home: NextPage = (props) => {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
@@ -56,7 +55,7 @@ const Home: NextPage = (props) => {
     Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
   }, [tokenPrices]);
   useEffect(() => {
-    Object.keys(amm).length !== 0 && dispatch(createGaugeConfig())
+    Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
   const disconnectUserWallet = async () => {
     if (userAddress) {
@@ -70,7 +69,6 @@ const Home: NextPage = (props) => {
   };
   return (
     <>
-      
       <SideBarHOC makeTopBarScroll>
         <Swap otherProps={otherPageProps} />
       </SideBarHOC>
