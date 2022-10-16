@@ -145,6 +145,7 @@ function MyPortfolio(props: any) {
   const feeClaimData = store.getState().portfolioRewards.feesClaimData;
   const bribesStats = store.getState().portfolioRewards.totalBribesAmount;
   const tradingfeeStats = store.getState().portfolioRewards.totalTradingFeesAmount;
+  const fetchingTradingfee = store.getState().portfolioRewards.fetchingLocksRewardsData;
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   const [contentTransaction, setContentTransaction] = useState("");
   const [plyBalance, setPlyBalance] = useState(new BigNumber(0));
@@ -565,6 +566,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -594,6 +596,7 @@ function MyPortfolio(props: any) {
             trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
             linkText: "",
             isLoading: true,
+            transactionId: "",
           })
         );
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -637,6 +640,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -667,6 +671,7 @@ function MyPortfolio(props: any) {
             trailingText: `Withdraw and claim lock #${localStorage.getItem(TOKEN_ID)}`,
             linkText: "",
             isLoading: true,
+            transactionId: "",
           })
         );
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -704,6 +709,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -721,6 +727,7 @@ function MyPortfolio(props: any) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Lock ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
@@ -765,6 +772,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -782,6 +790,7 @@ function MyPortfolio(props: any) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
@@ -823,6 +832,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -841,6 +851,7 @@ function MyPortfolio(props: any) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
@@ -881,6 +892,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -898,6 +910,7 @@ function MyPortfolio(props: any) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
@@ -937,6 +950,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -956,6 +970,7 @@ function MyPortfolio(props: any) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Claim ${localStorage.getItem(CLAIM)} PLY`,
               linkText: "",
@@ -995,6 +1010,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -1014,6 +1030,7 @@ function MyPortfolio(props: any) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Claim bribes $${localStorage.getItem(CLAIM)}`,
               linkText: "",
@@ -1053,6 +1070,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -1073,6 +1091,7 @@ function MyPortfolio(props: any) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Claim trading fees $${localStorage.getItem(CLAIM)}`,
               linkText: "",
@@ -1113,6 +1132,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -1133,6 +1153,7 @@ function MyPortfolio(props: any) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Claim all lock rewards`,
               linkText: "",
@@ -1172,6 +1193,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -1192,6 +1214,7 @@ function MyPortfolio(props: any) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Claim lock rewards for <Epoch ${localStorage.getItem(CLAIM)}`,
               linkText: "",
@@ -1233,6 +1256,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -1253,6 +1277,7 @@ function MyPortfolio(props: any) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Claim inflation ${localStorage.getItem(CLAIM)} PLY`,
               linkText: "",
@@ -1296,6 +1321,7 @@ function MyPortfolio(props: any) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -1316,6 +1342,7 @@ function MyPortfolio(props: any) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Claim all emissions, inflation, fees and bribes`,
               linkText: "",
@@ -1328,32 +1355,6 @@ function MyPortfolio(props: any) {
       }
     });
   };
-  // const headerRef = useRef(null);
-  // const getHeightOfElement = (el: any) => {
-  //   console.log("el", el);
-  //   try {
-  //     console.log("el", el);
-  //     const rect = el.getBoundingClientRect();
-  //     console.log("isj", rect);
-  //     return rect.top;
-  //   } catch (e) {
-  //     return 0;
-  //   }
-  // };
-  // const [initTop, setTop] = useState(0);
-  // const [isScroll, setScroll] = useState(false);
-  // useEffect(() => {
-  //   setTop(getHeightOfElement(headerRef.current));
-  // }, [headerRef.current?.getBoundingClientRect().]);
-  // useEffect(() => {
-  //   const r = getHeightOfElement(headerRef.current);
-  //   console.log("isddddd", r, initTop);
-  //   if (r === initTop) {
-  //     setScroll(false);
-  //   } else {
-  //     setScroll(true);
-  //   }
-  // }, [initTop]);
   return (
     <>
       <SideBarHOC>
@@ -1420,6 +1421,7 @@ function MyPortfolio(props: any) {
               <StatsRewards
                 plyEmission={poolsRewards.data.gaugeEmissionsTotal}
                 tradingfeeStats={tradingfeeStats}
+                fetchingTradingfee={fetchingTradingfee}
                 bribesStats={bribesStats}
                 setClaimValueDollar={setClaimValueDollar}
                 setShowClaimPly={setShowClaimPly}
@@ -1433,7 +1435,7 @@ function MyPortfolio(props: any) {
         </div>
         <div className="border-t border-text-800/[0.5] mt-5"></div>
         <div>
-          <div className="bg-card-50 sticky top-0 z-10">
+          <div className="bg-card-50 sticky -top-[3px] md:top-0 z-10">
             <MyPortfolioCardHeader
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
@@ -1456,27 +1458,27 @@ function MyPortfolio(props: any) {
                       Claim voting rewards for your locks
                     </div>
                   </p>
-                  {true && (
-                    <p
-                      className={clsx(
-                        " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
-                        poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
-                          ? "cursor-not-allowed"
-                          : "cursor-pointer"
-                      )}
-                      onClick={
-                        poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
-                          ? () => {}
-                          : () => {
-                              setShowClaimPly(true);
-                              setClaimValueDollar(poolsRewards.data.gaugeEmissionsTotal);
-                              setClaimState(EClaimAllState.PLYEMISSION);
-                            }
-                      }
-                    >
-                      Claim all
-                    </p>
-                  )}
+
+                  <p
+                    id="backToTop"
+                    className={clsx(
+                      " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
+                      poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                        ? "cursor-not-allowed"
+                        : "cursor-pointer"
+                    )}
+                    onClick={
+                      poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                        ? () => {}
+                        : () => {
+                            setShowClaimPly(true);
+                            setClaimValueDollar(poolsRewards.data.gaugeEmissionsTotal);
+                            setClaimState(EClaimAllState.PLYEMISSION);
+                          }
+                    }
+                  >
+                    Claim all
+                  </p>
                 </div>
                 <PoolsTableRewards
                   className="md:px-5 md:py-4   py-4"

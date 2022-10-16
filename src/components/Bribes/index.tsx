@@ -84,6 +84,7 @@ function BribesMain(props: BribesMainProps) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -101,6 +102,7 @@ function BribesMain(props: BribesMainProps) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Add Bribes`,
               linkText: "",

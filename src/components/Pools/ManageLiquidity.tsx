@@ -324,6 +324,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 2000);
@@ -338,6 +339,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
                 TOKEN_A
@@ -404,6 +406,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 2000);
@@ -418,6 +421,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Stake ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
@@ -483,6 +487,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 2000);
@@ -497,6 +502,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Unstake ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
@@ -539,6 +545,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 2000);
@@ -552,6 +559,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Claim ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
               linkText: "",
@@ -619,6 +627,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 2000);
@@ -633,6 +642,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Remove ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
