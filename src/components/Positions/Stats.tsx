@@ -34,13 +34,21 @@ function Stats(props: IStatsProps) {
         toolTipMessage={"Total voting power of all your veNFTs."}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total voting power"}
-        value={nFormatter(new BigNumber(props.stats1?.totalEpochVotingPower))}
+        value={
+          !props.stats1?.isFetching
+            ? nFormatter(new BigNumber(props.stats1?.totalEpochVotingPower))
+            : undefined
+        }
       />
       <StatsCard
         toolTipMessage={"Total amount PLY locked as vote escrow.s"}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total locked"}
-        value={nFormatter(new BigNumber(props.stats1?.totalPlyLocked))}
+        value={
+          !props.stats1?.isFetching
+            ? nFormatter(new BigNumber(props.stats1?.totalPlyLocked))
+            : undefined
+        }
         subValue={"PLY"}
       />
 

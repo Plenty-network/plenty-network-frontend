@@ -35,7 +35,16 @@ export function SingleNotification(props: ISingleNotificationProps) {
     return info;
   };
   return (
-    <div className="flex p-4 gap-4 border-b  border-muted-236/40 bg-primary-900 hover:bg-primary-257">
+    <div
+      className="flex p-4 gap-4 border-b cursor-pointer border-muted-236/40 bg-primary-900 hover:bg-primary-257"
+      onClick={
+        props.transactionId && props.transactionId !== ""
+          ? () => {
+              window.open(`https://ghostnet.tzkt.io/${props.transactionId}`, "_blank");
+            }
+          : () => {}
+      }
+    >
       <div>
         <Image src={imageSrc()} height={20} width={20} />
       </div>
@@ -47,20 +56,14 @@ export function SingleNotification(props: ISingleNotificationProps) {
           </div>
         </div>
 
-        <div className="text-text-241">{props.trailingText}</div>
-        {props.onClick && (
-          <div
-            className="flex gap-[6px] items-center mt-2 cursor-pointer"
-            onClick={() => {
-              props.onClick && props.onClick();
-            }}
-          >
-            <span className="text-f12 leading-4 text-primary-500 font-medium ">
-              {props.linkText}
+        <div className="text-text-241 flex items-center">
+          {props.trailingText}
+          {props.transactionId && props.transactionId !== "" && (
+            <span className="ml-2 relative top-0.5">
+              <Image height={14} width={14} src={openInNewTab} />
             </span>
-            <Image height={12} width={12} src={openInNewTab} />
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

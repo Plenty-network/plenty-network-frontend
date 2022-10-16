@@ -177,6 +177,7 @@ export function Staking(props: IStakingProps) {
               trailingText: `Detach is succesfull`,
               linkText: "View in Explorer",
               isLoading: true,
+              transactionId: "",
             })
           );
         }, 6000);
@@ -184,6 +185,7 @@ export function Staking(props: IStakingProps) {
         dispatch(
           setFlashMessage({
             flashType: Flashtype.Rejected,
+            transactionId: "",
             headerText: "Rejected",
             trailingText: `Detach operation rejected`,
             linkText: "",
@@ -313,7 +315,7 @@ export function Staking(props: IStakingProps) {
 
         {/* Start of Wallet app section */}
         <div className="border flex  items-center bg-muted-200/10 border-border-500/50 rounded-2xl">
-          <div className=" flex flex-col py-3.5 px-4 w-full">
+          <div className=" flex flex-col py-3.5 px-4 flex-auto w-0">
             <InputText value={props.stakeInput} onChange={handleStakeInput} />
             <div className="font-body2 md:font-body4 text-text-400">
               ~$
@@ -323,7 +325,7 @@ export function Staking(props: IStakingProps) {
             </div>
           </div>
           {walletAddress && (
-            <div className="pr-2 md:pr-5  w-[40%] ">
+            <div className="pr-2 md:pr-5 ">
               <BtnWithWalletIcon
                 text={`${
                   Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(2) : 0
@@ -500,7 +502,7 @@ export function Unstaking(props: IUnstakingProps) {
 
       {/* Start of Wallet app section */}
       <div className="border flex  items-center bg-muted-200/10 border-border-500/50 mb-5 rounded-2xl">
-        <div className=" flex flex-col py-3.5 px-4 w-full">
+        <div className=" flex flex-col py-3.5 px-4 flex-auto w-0">
           <InputText value={props.unStakeInput} onChange={handleUnStakeInput} />
           <div className="font-body2 md:font-body4 text-text-400">
             ~$
@@ -510,7 +512,7 @@ export function Unstaking(props: IUnstakingProps) {
           </div>
         </div>
         {walletAddress && (
-          <div className="pr-2 md:pr-5  w-[40%] ">
+          <div className="pr-2 md:pr-5  ">
             <ToolTip
               disable={Number(props.stakedToken) > 0 ? false : true}
               message={fromExponential(props.stakedToken)}

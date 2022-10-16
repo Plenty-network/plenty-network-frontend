@@ -168,6 +168,7 @@ function CreateLock(props: ICreateLockProps) {
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
+      isFullSizeOnMobile={true}
       Name="Manage"
       className="w-[400px] max-w-[400px]  md:w-[602px] md:max-w-[602px]"
     >
@@ -181,7 +182,7 @@ function CreateLock(props: ICreateLockProps) {
               isFirstInputFocus ? "border-text-700" : "border-text-800 "
             )}
           >
-            <div className="w-full">
+            <div className="w-0 flex-auto">
               <p>
                 <input
                   type="text"
@@ -204,7 +205,7 @@ function CreateLock(props: ICreateLockProps) {
             </div>
 
             <div
-              className="cursor-pointer w-[30%] ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3"
+              className=" cursor-pointer  ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3"
               onClick={onClickAmount}
             >
               <div>

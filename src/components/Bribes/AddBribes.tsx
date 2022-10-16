@@ -305,7 +305,7 @@ function AddBribes(props: IAddBribes) {
                     <div
                       className={clsx(
                         " mt-4",
-                        Object.keys(props.bribeToken).length !== 0 ? "" : "w-full"
+                        Object.keys(props.bribeToken).length !== 0 ? "flex-none" : "w-full"
                       )}
                     >
                       {Object.keys(props.bribeToken).length !== 0 ? (

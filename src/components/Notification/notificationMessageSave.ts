@@ -1,12 +1,13 @@
 import { Flashtype } from "../FlashScreen";
 
 export interface ImessageProps {
-  onClick?: Function;
+  onClick?: () => void;
   flashType: Flashtype;
   headerText: string;
   trailingText: string;
   linkText: string;
   currentTimeStamp: number;
+  transactionId: string;
 }
 export interface IFinalMessageProps {
   currentWalletId: string | undefined;
@@ -23,7 +24,6 @@ export const setNotificationMessage = (message: ImessageProps, walletAddress: st
   }
   const localStore = localStorage.getItem(MESSAGE_ID);
   let currentMessage: IFinalMessageProps = defaultObject;
-
   // case when localStore is empty
   if (localStore === "" || localStore == null) {
     currentMessage.currentWalletId = walletAddress;

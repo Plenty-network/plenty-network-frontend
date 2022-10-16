@@ -7,6 +7,8 @@ import { isMobile } from "react-device-detect";
 import { ELocksState, IVeNFTData, IVotePageData, IVotesData } from "../../api/votes/types";
 import { ILocksTablePosition, IManageBtnProps, IVoteBtnProps } from "./types";
 import lockDisable from "../../assets/icon/myPortfolio/voteDisable.svg";
+import vote from "../../assets/icon/myPortfolio/vote.svg";
+import withdraw from "../../assets/icon/myPortfolio/withdraw.svg";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 import { LocksCloumn } from "./LockColumn";
@@ -112,21 +114,22 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       {
         Header: "",
         id: "manage",
-        columnWidth: "w-[93px] ml-auto",
+        columnWidth: "w-[100px] ml-auto",
 
-        accessor: (x) => (
-          <ManageBtn
-            setIsManageLock={props.setIsManageLock}
-            setShowCreateLockModal={props.setShowCreateLockModal}
-            setManageData={props.setManageData}
-            manageData={x}
-          />
-        ),
+        accessor: (x) =>
+          x.locksState !== ELocksState.EXPIRED && (
+            <ManageBtn
+              setIsManageLock={props.setIsManageLock}
+              setShowCreateLockModal={props.setShowCreateLockModal}
+              setManageData={props.setManageData}
+              manageData={x}
+            />
+          ),
       },
       {
         Header: "",
         id: "vote",
-        columnWidth: "w-[82px] ",
+        columnWidth: "w-[82px] ml-auto",
 
         accessor: (x) => (
           <VoteBtn
@@ -290,26 +293,16 @@ export function LocksTablePosition(props: ILocksTablePosition) {
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
     if (isMobile) {
-      if (true) {
-        //isstaked
+      if (props.locksState === ELocksState.CONSUMED) {
         return (
           <div
             className="bg-primary-500/10 w-[59px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
-            onClick={() => {
-              dispatch(
-                setSelectedDropDown({
-                  votingPower: "1.952",
-                  tokenId: "75",
-                })
-              );
-              router.push("/vote");
-            }}
+            onClick={() => {}}
           >
             <span className="relative top-0.5">
               <Image alt={"alt"} src={lockDisable} />
             </span>
-
-            <span className="ml-1">
+            <span className="ml-2">
               <PieChartButton
                 violet={100 - remainingPercentage}
                 transparent={remainingPercentage}
@@ -317,22 +310,72 @@ export function LocksTablePosition(props: ILocksTablePosition) {
             </span>
           </div>
         );
-      } else if (false) {
+      } else if (props.locksState === ELocksState.AVAILABLE) {
         return (
           <div
-            className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
-            onClick={() => {}}
+            className="bg-primary-500 w-[59px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
+            onClick={() => {
+              var flag = false;
+
+              veNFTlist.map((list) => {
+                if (Number(list.tokenId) === Number(props.id)) {
+                  flag = true;
+                  if (list.locksState === ELocksState.CONSUMED) {
+                    dispatch(
+                      setSelectedDropDown({
+                        votingPower: list.consumedVotingPower.toString(),
+                        tokenId: list.tokenId.toString(),
+                      })
+                    );
+                  } else {
+                    dispatch(
+                      setSelectedDropDown({
+                        votingPower: list.votingPower.toString(),
+                        tokenId: list.tokenId.toString(),
+                      })
+                    );
+                  }
+                }
+              });
+
+              router.push("/vote");
+            }}
           >
-            Vote
+            <span className="relative top-0.5">
+              <Image alt={"alt"} src={vote} />
+            </span>
           </div>
         );
-      } else if (false) {
+      } else if (props.locksState === ELocksState.EXPIRED) {
         return (
           <div
-            className="bg-primary-500 w-[151px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
+            className="bg-primary-500 w-[59px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
+            onClick={() => {
+              props.setWithdraw(true);
+              props.setManageData(props.manageData);
+            }}
+          >
+            <span className="relative top-0.5">
+              <Image alt={"alt"} src={withdraw} />
+            </span>
+          </div>
+        );
+      } else if (props.locksState === ELocksState.DISABLED) {
+        //isstaked
+        return (
+          <div
+            className="bg-primary-500 w-[59px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
             onClick={() => {}}
           >
-            Withdraw
+            <span className="relative top-0.5">
+              <Image alt={"alt"} src={vote} />
+            </span>
+            <span className="ml-2">
+              <PieChartButton
+                violet={100 - remainingPercentage}
+                transparent={remainingPercentage}
+              />
+            </span>
           </div>
         );
       }
@@ -420,7 +463,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
   }
   return (
     <>
-      <div className={`overflow-x-auto pr-5 inner ${props.className}`}>
+      <div className={`overflow-x-auto md:pr-5 inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={props.locksPosition}

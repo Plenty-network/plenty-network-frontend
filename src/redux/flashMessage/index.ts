@@ -9,6 +9,7 @@ export const initialState: IFlashMessageProps = {
   linkText: "",
   isLoading: false,
   onClick: () => {},
+  transactionId: "",
 };
 const flashMessages = createSlice({
   name: "flashMessage",
@@ -21,6 +22,7 @@ const flashMessages = createSlice({
       state.trailingText = action.payload.trailingText;
       state.linkText = action.payload.linkText;
       state.onClick = action.payload.onClick;
+      state.transactionId = action.payload.transactionId;
     },
     unsetFlashMessage: (state) => {
       state.isLoading = false;
