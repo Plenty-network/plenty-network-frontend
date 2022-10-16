@@ -104,7 +104,7 @@ export function ShortCard(props: IShortCardProps) {
         Header: "APR",
         id: "apr",
         subText: "current epoch",
-        columnWidth: "w-[100px]",
+        columnWidth: "w-[130px]",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,

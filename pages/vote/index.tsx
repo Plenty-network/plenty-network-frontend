@@ -317,6 +317,7 @@ export default function Vote() {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 6000);
@@ -337,6 +338,7 @@ export default function Vote() {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Lock ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
@@ -383,6 +385,7 @@ export default function Vote() {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 2000);
@@ -403,6 +406,7 @@ export default function Vote() {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Vote with #
               ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} VePLY`,

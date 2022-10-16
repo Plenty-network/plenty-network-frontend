@@ -109,7 +109,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Rewards",
         id: "Rewards",
-        columnWidth: "w-[100px] flex-1",
+        columnWidth: "w-[130px] flex-1",
         isToolTipEnabled: true,
         tooltipMessage:
           "Trading fees and bribes to be distributed across the voters of this pool. The reward may increase as the epoch progresses.",

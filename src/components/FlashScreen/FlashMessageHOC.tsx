@@ -9,9 +9,8 @@ export interface IFlashMessageHOCProps {}
 
 export function FlashMessageHOC(props: IFlashMessageHOCProps) {
   const dispatch = useAppDispatch();
-  const { isLoading, onClick, headerText, trailingText, linkText, flashType } = useAppSelector(
-    (state) => state.flashMessage
-  );
+  const { isLoading, onClick, headerText, trailingText, linkText, flashType, transactionId } =
+    useAppSelector((state) => state.flashMessage);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const [isFlashVisiable, setIsFlashVisiable, animationState] = useStateAnimate(false, 300);
   let timeOutTimer: any = null;
@@ -28,6 +27,7 @@ export function FlashMessageHOC(props: IFlashMessageHOCProps) {
           trailingText: trailingText,
           linkText: linkText,
           currentTimeStamp: timeinmillisec,
+          transactionId: transactionId,
         },
         walletAddress
       );

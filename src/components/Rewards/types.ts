@@ -22,6 +22,7 @@ export interface IStatsCardProps {
   state: EClaimAllState;
 }
 export interface IStatsRewardsProps {
+  fetchingTradingfee: boolean;
   unclaimInflation: IUnclaimedInflationData;
   bribesClaimData: IAllBribesOperationData[];
   feeClaimData: IAllClaimableFeesData[];

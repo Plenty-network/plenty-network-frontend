@@ -198,6 +198,7 @@ function SwapTab(props: ISwapTabProps) {
               onClick: () => {
                 window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
               },
+              transactionId: transactionId,
             })
           );
         }, 2000);
@@ -212,6 +213,7 @@ function SwapTab(props: ISwapTabProps) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Rejected,
+              transactionId: "",
               headerText: "Rejected",
               trailingText: `Swap ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT

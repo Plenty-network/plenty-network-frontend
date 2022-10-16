@@ -25,6 +25,7 @@ const Test: NextPage = () => {
               dispatch(
                 setFlashMessage({
                   flashType: Flashtype.Info,
+                  transactionId: "",
                   headerText: "Hello world",
                   trailingText: "PLY token value PLY token value PLY token value ",
                   linkText: "Click On me link",
