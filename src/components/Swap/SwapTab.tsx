@@ -875,6 +875,7 @@ function SwapTab(props: ISwapTabProps) {
                   <ToolTip
                     message={fromExponential(props.routeDetails.minimumOut.toNumber())}
                     id="tooltip6"
+                    disable={Number(props.routeDetails.minimumOut) < 0}
                     position={isMobile ? Position.left : Position.top}
                   >
                     {Number(props.routeDetails.minimumOut) < 0
