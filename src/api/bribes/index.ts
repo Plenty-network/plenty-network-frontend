@@ -89,7 +89,13 @@ export const getUserBribeData = async (
       const pastEpochDataResponse = await fetchEpochData(epochStart);  // div by 1000 ho rkha hai
       const pastEpochData = pastEpochDataResponse.epochData as IEpochData;
 
-      const startDate = epochData[epochStart]?.epochStartTimestamp ?? pastEpochData.epochStartTimestamp * 1000;
+      let startDate;
+      if(epochData[epochStart]){
+        startDate = epochData[epochStart].epochStartTimestamp / 1000;
+      }
+      else {
+        startDate =  pastEpochData.epochStartTimestamp;
+      }
 
       const epochDuration: number = connectedNetwork === "testnet" ? EPOCH_DURATION_TESTNET/1000 : EPOCH_DURATION_MAINNET/1000;
       const endDate = startDate + (epochDuration * epochs.length);
