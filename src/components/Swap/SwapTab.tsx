@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import "animate.css";
-
+import { isMobile } from "react-device-detect";
 import fromExponential from "from-exponential";
 import refresh from "../../../src/assets/icon/swap/refresh.svg";
 import settings from "../../../src/assets/icon/swap/settings.svg";
@@ -591,7 +591,7 @@ function SwapTab(props: ISwapTabProps) {
                   <span className="relative top-0.5">
                     <ToolTip
                       id="tooltip1"
-                      position={Position.top}
+                      position={isMobile ? Position.right : Position.top}
                       toolTipChild={
                         <p>
                           <div
@@ -702,7 +702,9 @@ function SwapTab(props: ISwapTabProps) {
                     toolTipChild={
                       <div
                         className={clsx(
-                          swapRoute && swapRoute?.length > 3 ? "w-[500px]" : "w-[400px]"
+                          swapRoute && swapRoute?.length > 3
+                            ? "w-[500px]"
+                            : "w-[300px] md:w-[400px]"
                         )}
                       >
                         <div className="mt-2 ">
@@ -854,7 +856,7 @@ function SwapTab(props: ISwapTabProps) {
                     position={Position.top}
                     id="tooltip2"
                     toolTipChild={
-                      <div className="w-[323px]">
+                      <div className="w-[200px] md:w-[323px]">
                         Your transaction will revert if there is a large, unfavorable price movement
                         before it is confirmed.
                       </div>
@@ -873,15 +875,23 @@ function SwapTab(props: ISwapTabProps) {
                   <ToolTip
                     message={fromExponential(props.routeDetails.minimumOut.toNumber())}
                     id="tooltip6"
-                    position={Position.top}
+                    position={isMobile ? Position.left : Position.top}
                   >
-                    {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${
-                      props.tokenOut.name === "tez"
-                        ? "TEZ"
-                        : props.tokenOut.name === "ctez"
-                        ? "CTEZ"
-                        : props.tokenOut.name
-                    }`}
+                    {Number(props.routeDetails.minimumOut) < 0
+                      ? `0 ${
+                          props.tokenOut.name === "tez"
+                            ? "TEZ"
+                            : props.tokenOut.name === "ctez"
+                            ? "CTEZ"
+                            : props.tokenOut.name
+                        }`
+                      : ` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${
+                          props.tokenOut.name === "tez"
+                            ? "TEZ"
+                            : props.tokenOut.name === "ctez"
+                            ? "CTEZ"
+                            : props.tokenOut.name
+                        }`}
                   </ToolTip>
                 </div>
               )}
@@ -893,9 +903,9 @@ function SwapTab(props: ISwapTabProps) {
                 <span className="relative top-1 lg:top-0.5">
                   <ToolTip
                     id="tooltip4"
-                    position={Position.top}
+                    position={isMobile ? Position.right : Position.top}
                     toolTipChild={
-                      <div className="w-[323px]">
+                      <div className="w-[200px]  md:w-[323px]">
                         The difference between the market price and estimated price due to trade
                         size.
                       </div>
@@ -919,7 +929,7 @@ function SwapTab(props: ISwapTabProps) {
                   <ToolTip
                     message={fromExponential(props.routeDetails.priceImpact.toString())}
                     id="tooltip5"
-                    position={Position.top}
+                    position={isMobile ? Position.left : Position.top}
                   >
                     {`${props.routeDetails.priceImpact.toFixed(4)} %`}{" "}
                   </ToolTip>
@@ -932,9 +942,9 @@ function SwapTab(props: ISwapTabProps) {
                 <span className="relative top-1 lg:top-0.5">
                   <ToolTip
                     id="tooltip3"
-                    position={Position.top}
+                    position={isMobile ? Position.right : Position.top}
                     toolTipChild={
-                      <div className="w-[323px]">
+                      <div className="w-[200px] md:w-[323px]">
                         Fees is 0.05% for both volatile and stable swap
                       </div>
                     }
@@ -962,9 +972,9 @@ function SwapTab(props: ISwapTabProps) {
                 <span className="relative top-1 lg:top-0.5">
                   <ToolTip
                     id="tooltip4"
-                    position={Position.top}
+                    position={isMobile ? Position.right : Position.top}
                     toolTipChild={
-                      <div className="w-[323px]">
+                      <div className="w-[200px] md:w-[323px]">
                         Routing through these tokens results in the best price for your trade.
                       </div>
                     }

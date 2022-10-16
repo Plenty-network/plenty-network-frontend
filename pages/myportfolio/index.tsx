@@ -2,7 +2,7 @@ import Image from "next/image";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { BigNumber } from "bignumber.js";
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef, useMemo, useLayoutEffect } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { connect, useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../src/redux";
@@ -90,6 +90,7 @@ import {
 import { getPoolsRewardsData, getPositionsData } from "../../src/api/portfolio/pools";
 import { fetchTvlStatsData } from "../../src/redux/myPortfolio/tvl";
 import { fetchVotesStatsData } from "../../src/redux/myPortfolio/votesStats";
+
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -364,6 +365,7 @@ function MyPortfolio(props: any) {
         });
       });
       getAllLocksPositionData(userAddress).then((res) => {
+        console.log(res);
         setLocksPosition({ data: res.allLocksData.reverse(), isfetched: true });
       });
     }
@@ -1355,6 +1357,7 @@ function MyPortfolio(props: any) {
       }
     });
   };
+
   return (
     <>
       <SideBarHOC>
@@ -1458,27 +1461,28 @@ function MyPortfolio(props: any) {
                       Claim voting rewards for your locks
                     </div>
                   </p>
-
-                  <p
-                    id="backToTop"
-                    className={clsx(
-                      " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
-                      poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
-                        ? "cursor-not-allowed"
-                        : "cursor-pointer"
-                    )}
-                    onClick={
-                      poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
-                        ? () => {}
-                        : () => {
-                            setShowClaimPly(true);
-                            setClaimValueDollar(poolsRewards.data.gaugeEmissionsTotal);
-                            setClaimState(EClaimAllState.PLYEMISSION);
-                          }
-                    }
-                  >
-                    Claim all
-                  </p>
+                  {true && (
+                    <p
+                      id="backToTop"
+                      className={clsx(
+                        " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
+                        poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                          ? "cursor-not-allowed"
+                          : "cursor-pointer"
+                      )}
+                      onClick={
+                        poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                          ? () => {}
+                          : () => {
+                              setShowClaimPly(true);
+                              setClaimValueDollar(poolsRewards.data.gaugeEmissionsTotal);
+                              setClaimState(EClaimAllState.PLYEMISSION);
+                            }
+                      }
+                    >
+                      Claim all
+                    </p>
+                  )}
                 </div>
                 <PoolsTableRewards
                   className="md:px-5 md:py-4   py-4"
