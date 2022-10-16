@@ -177,7 +177,7 @@ const Table = <D extends object>({
             isVotesTable ? "gap-1" : "gap-1",
             isFetched ? "overflow-y-auto" : ""
           )}
-          {...(!router.pathname.includes("MyPortfolio") &&
+          {...(!router.pathname.includes("myportfolio") &&
             !router.pathname.includes("pools") && {
               style: { height: `${heightBody}px` },
             })}

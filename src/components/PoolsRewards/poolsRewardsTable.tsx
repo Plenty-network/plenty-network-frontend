@@ -25,7 +25,13 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
   const tEZorCTEZtoUppercase = (a: string) =>
     a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
   const NoData = React.useMemo(() => {
-    return <NoPoolsPosition />;
+    return (
+      <NoPoolsPosition
+        h1={"No PLY emissions"}
+        subText={"You do not have unclaimed PLY rewards for your LPs."}
+        cta={"View pools"}
+      />
+    );
   }, []);
   const mobilecolumns = React.useMemo<Column<IPoolsRewardsData>[]>(
     () => [

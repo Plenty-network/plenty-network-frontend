@@ -13,7 +13,6 @@ import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 import { useDispatch } from "react-redux";
 import { AppDispatch, store } from "../../redux";
 import { setSelectedDropDown } from "../../redux/veNFT";
-import Vote from "../../../pages/Vote";
 import { useRouter } from "next/router";
 import { IAllLocksPositionData } from "../../api/portfolio/types";
 
@@ -109,8 +108,6 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         id: "Epochs",
         columnWidth: "ml-auto w-[280px]",
 
-        canShort: true,
-
         accessor: (x: any) => (
           <EpochCol
             epochNumber={x.epoch}
@@ -181,7 +178,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         Header: "Epochs",
         id: "Epochs",
         columnWidth: "ml-auto w-[280px]",
-        canShort: true,
+
         accessor: (x: any) => (
           <EpochCol
             epochNumber={x.epoch}

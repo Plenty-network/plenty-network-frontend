@@ -4,11 +4,13 @@ import wallet from "../../../assets/icon/pools/wallet.svg";
 import stakeIcon from "../../../assets/icon/pools/stakeIcon.svg";
 import boost from "../../../assets/icon/pools/boostGrey.svg";
 import close from "../../../assets/icon/pools/close.svg";
+import { Position, ToolTip } from "../../Tooltip/TooltipAdvanced";
 
 export interface IWalletBtnWithIconProps {
   text?: string | number;
   className?: string;
   onClick?: () => void;
+  tokenid?: string;
 }
 
 export function BtnWithWalletIcon(props: IWalletBtnWithIconProps) {
@@ -50,24 +52,29 @@ export function BtnWithWalletIconEnd(props: IWalletBtnWithIconProps) {
 
 export function BtnwithBoost(props: IWalletBtnWithIconProps) {
   return (
-    <div
-      className={`ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround  items-center flex px-3 h-[36px] cursor-pointer`}
-      onClick={props.onClick}
-    >
-      <div className="relative top-1">
-        <Image alt={"alt"} src={boost} width={"22px"} height={"22px"} />
+    <>
+      <div
+        className={`ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround  items-center flex px-3 h-[36px] cursor-pointer`}
+      >
+        <ToolTip message={` #${props.tokenid} `} id="tooltip8" position={Position.top}>
+          <div className="flex items-center">
+            <div className="relative top-1">
+              <Image alt={"alt"} src={boost} width={"22px"} height={"22px"} />
+            </div>
+            <div className="mx-1 flex text-primary-500 font-body2 cursor-pointer">
+              {!props.text ? (
+                <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
+              ) : (
+                <span className="mr-1">{props.text}</span>
+              )}
+            </div>
+          </div>
+        </ToolTip>
+        <div onClick={props.onClick}>
+          <Image alt={"alt"} src={close} width={"14px"} height={"14px"} />
+        </div>
       </div>
-      <div className="mx-1 flex text-primary-500 font-body2 cursor-pointer">
-        {!props.text ? (
-          <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
-        ) : (
-          <span className="mr-1">{props.text}</span>
-        )}
-      </div>
-      <div>
-        <Image alt={"alt"} src={close} width={"14px"} height={"14px"} />
-      </div>
-    </div>
+    </>
   );
 }
 

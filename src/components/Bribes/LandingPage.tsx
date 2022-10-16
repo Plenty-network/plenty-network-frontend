@@ -3,6 +3,7 @@ import bribes from "../../assets/icon/bribes/bribesLanding.svg";
 import Image from "next/image";
 import Button from "../Button/Button";
 import { SideBarHOC } from "../Sidebar/SideBarHOC";
+import Link from "next/link";
 export interface ILanding {
   setBribesMain: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -20,9 +21,9 @@ function Landing(props: ILanding) {
             Bribe the voters and incentivise them to direct liquidity to your token pools.
           </div>
           <div className="mt-5 md:mt-[40px] md:w-[350px]">
-            <Button color={"primary"} onClick={() => props.setBribesMain(true)}>
-              Enter dapp
-            </Button>
+            <Link href={"/bribes/dapp"}>
+              <Button color={"primary"}>Enter dapp</Button>
+            </Link>
           </div>
         </div>
         <div className="mt-10 md:mt-0 md:ml-5">

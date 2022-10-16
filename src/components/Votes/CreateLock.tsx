@@ -181,7 +181,7 @@ function CreateLock(props: ICreateLockProps) {
               isFirstInputFocus ? "border-text-700" : "border-text-800 "
             )}
           >
-            <div className="">
+            <div className="w-full">
               <p>
                 <input
                   type="text"
@@ -204,7 +204,7 @@ function CreateLock(props: ICreateLockProps) {
             </div>
 
             <div
-              className="cursor-pointer ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3"
+              className="cursor-pointer w-[30%] ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3"
               onClick={onClickAmount}
             >
               <div>
@@ -214,7 +214,7 @@ function CreateLock(props: ICreateLockProps) {
                 id="tooltipM"
                 disable={Number(props.plyBalance) > 0 ? false : true}
                 position={Position.top}
-                message={fromExponential(props.plyBalance.toString())}
+                message={fromExponential(props.plyBalance?.toString())}
               >
                 <div className=" ml-1 text-primary-500 font-body2">
                   {Number(props.plyBalance) > 0 ? props.plyBalance.toFixed(2) : "0"} PLY
@@ -266,7 +266,7 @@ function CreateLock(props: ICreateLockProps) {
           <div className="bg-muted-400 border border-text-800 rounded-2xl py-5 mt-5 mx-2 md:mx-5 ">
             <div className=" px-3 md:px-5 text-text-50 font-subtitle1">Choose lock end </div>
             <div className="mt-2 rounded-lg ml-5 mr-[24px] border-[1.3px] border-border-200 pr-5 pl-4 flex items-center h-[62px] hover:border-text-700">
-              <div onClick={() => setIsDatePickerOpen(true)}>
+              <div className="w-full" onClick={() => setIsDatePickerOpen(true)}>
                 <input
                   type="text"
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-subtitle6  md:font-subtitle6 outline-none w-[100%] placeholder:text-text-500"
@@ -327,7 +327,7 @@ function CreateLock(props: ICreateLockProps) {
                 <ToolTip
                   toolTipChild={
                     <div className="w-[210px] text-center">
-                      Lock for 4 years for maximum voting power of 4000
+                      Lock for 4 years for maximum voting power
                     </div>
                   }
                   id="tooltip8"

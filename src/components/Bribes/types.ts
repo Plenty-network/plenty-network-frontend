@@ -9,6 +9,8 @@ import { IEpochListObject } from "../../api/util/types";
 import { tokenParameter } from "../../constants/swap";
 
 export interface BribesMainProps {
+  setIsOperationComplete: React.Dispatch<React.SetStateAction<boolean>>;
+  isOperationComplete: boolean;
   poolsArr: {
     data: IPoolsForBribesResponse;
     isfetched: boolean;
@@ -37,10 +39,7 @@ export interface IVoteShare {
   value: BigNumber;
   percentage: BigNumber;
 }
-export interface BribesMainProps {}
-export interface BribesMainProps {}
 
-export interface BribesMainProps {}
 export interface IBribesBtn {
   data: IPoolsForBribesData;
   setSelectedPool: React.Dispatch<React.SetStateAction<IPoolsForBribesData>>;
@@ -60,6 +59,7 @@ export interface IAddBribes {
 }
 
 export interface IConfirmAddBribes {
+  perEpoch: string;
   isSelectedEpoch: boolean;
   handleOperation: () => void;
   show: boolean;
