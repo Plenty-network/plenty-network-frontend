@@ -2,7 +2,7 @@ import * as React from "react";
 import { isMobile } from "react-device-detect";
 import { useDispatch } from "react-redux";
 import { Column } from "react-table";
-import { AMM_TYPE } from "../../../pages/pools1";
+import { AMM_TYPE } from "../../../pages/pools";
 import { IPoolsDataWrapperResponse } from "../../api/pools/types";
 import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
 import { usePoolsTableSearch } from "../../hooks/usePoolsTableSearch";
