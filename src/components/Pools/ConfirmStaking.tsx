@@ -1,5 +1,7 @@
 import clsx from "clsx";
 import Image from "next/image";
+
+import "animate.css";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
@@ -31,10 +33,20 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
           <Image alt={"alt"} src={info} />
         </div>
       </div>
-      <div className="border rounded-2xl mt-[24px] border-text-800 bg-card-200 pt-[28px] px-4 pb-5">
-        <div className="flex pl-[5px] px-[10px] items-center">
+      <div
+        className={clsx(
+          "border rounded-2xl mt-[24px] border-text-800 bg-card-200  px-4 pb-5",
+          props.selectedDropDown.tokenId === "" ? "pt-[28px]" : ""
+        )}
+      >
+        <div
+          className={clsx(
+            "flex pl-[5px] px-[10px] items-center",
+            props.selectedDropDown.tokenId === "" ? "block" : "hidden"
+          )}
+        >
           <div className="text-text-400 font-body1 w-[208px]">
-            Are you sure you want to continues with less PLY rewards?
+            Are you sure you want to continue without boosting your rewards?
           </div>
           <div className="ml-auto">
             {" "}
@@ -46,9 +58,28 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
             />
           </div>
         </div>
-        <div className="mt-4 font-body4 text-text-250">Your staking</div>
-        <div className="mt-1 text-white font-title2">
-          {props.stakeInput ? props.stakeInput : 0} PNLP
+        <div className="flex items-end">
+          <p>
+            <div className="mt-4 font-body4 text-text-250">You’re staking</div>
+            <div className="mt-1 text-white font-title2">
+              {props.stakeInput ? props.stakeInput : 0} PNLP
+            </div>
+          </p>
+          <p
+            className={clsx(
+              "ml-auto",
+              props.selectedDropDown.tokenId !== ""
+                ? "block animate__animated animate__fadeInDown animate__faster"
+                : "hidden"
+            )}
+          >
+            <VePLY
+              Options={props.vePLYOptions}
+              selectedText={props.selectedDropDown}
+              onClick={props.setSelectedDropDown}
+              isConfirmStake={true}
+            />
+          </p>
         </div>
       </div>
 

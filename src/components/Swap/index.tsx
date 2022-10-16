@@ -62,6 +62,8 @@ function Swap(props: ISwapProps) {
     isLoadingfirst: false,
     isLoadingSecond: false,
   });
+  const tEZorCTEZtoUppercase = (a: string) =>
+    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const routeDetails = React.useRef<{
     path: string[];
@@ -128,6 +130,7 @@ function Swap(props: ISwapProps) {
     }
   }, [tokenPrice]);
 
+  const [isLiqError, setIsLiqError] = useState(false);
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(tokenIn, "name") &&
@@ -206,8 +209,20 @@ function Swap(props: ISwapProps) {
       });
     }
   }, [tokenIn, tokenOut, tokenType, enableMultiHop, tokenPrice, isSwitchClicked.current]);
+  const countDecimals = function (input: number) {
+    if (Math.floor(input) === input.valueOf()) return 0;
+
+    var str = input.toString();
+    if (str.indexOf(".") !== -1 && str.indexOf("-") !== -1) {
+      return str.split("-")[1] || 0;
+    } else if (str.indexOf(".") !== -1) {
+      return str.split(".")[1].length || 0;
+    }
+    return str.split("-")[1] || 0;
+  };
 
   const handleSwapTokenInput = (input: string | number, tokenType: "tokenIn" | "tokenOut") => {
+    var flag = 1;
     if (input == ".") {
       if (tokenType === "tokenIn") {
         setFirstTokenAmount("0.");
@@ -279,6 +294,24 @@ function Swap(props: ISwapProps) {
     } else {
       if (tokenType === "tokenIn") {
         setFirstTokenAmount(input);
+        const decimal = new BigNumber(input).decimalPlaces();
+
+        if (
+          input !== null &&
+          decimal !== null &&
+          new BigNumber(decimal).isGreaterThan(tokens[tokenIn.name].decimals)
+        ) {
+          flag = 0;
+          setErrorMessage(
+            `The Precision of ${tEZorCTEZtoUppercase(tokenIn.name)} token cant be greater than ${
+              tokens[tokenIn.name].decimals
+            } decimals`
+          );
+        }
+        // if (flag === 1) {
+        //   setErrorMessage("");
+        // }
+
         if (Object.keys(tokenOut).length !== 0) {
           loading.current = {
             isLoadingSecond: true,
@@ -306,10 +339,36 @@ function Swap(props: ISwapProps) {
             success: true,
             exchangeRate: res.exchangeRate,
           };
-          setSecondTokenAmount(res.tokenOutAmount.toString());
+          if (res.tokenOutAmount.isLessThan(0)) {
+            flag = 0;
+            setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY);
+          }
+          // res.tokenOutAmount.isLessThan(0)
+          //   ? setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY)
+          //   : setErrorMessage("");
+          setSecondTokenAmount(
+            res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString()
+          );
         }
       } else if (tokenType === "tokenOut") {
         setSecondTokenAmount(input.toString());
+        const decimal = new BigNumber(input).decimalPlaces();
+
+        if (
+          input !== null &&
+          decimal !== null &&
+          new BigNumber(decimal).isGreaterThan(tokens[tokenOut.name].decimals)
+        ) {
+          flag = 0;
+          setErrorMessage(
+            `The Precision of ${tEZorCTEZtoUppercase(tokenOut.name)} token cant be greater than ${
+              tokens[tokenOut.name].decimals
+            } decimals`
+          );
+        }
+        // if (flag === 1) {
+        //   setErrorMessage("");
+        // }
         if (Object.keys(tokenIn).length !== 0) {
           loading.current = {
             isLoadingfirst: true,
@@ -339,9 +398,20 @@ function Swap(props: ISwapProps) {
             success: true,
             exchangeRate: res.exchangeRate,
           };
-          setFirstTokenAmount(res.tokenOutAmount.toString());
+          if (res.tokenOutAmount.isLessThan(0)) {
+            flag = 0;
+            setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY);
+          }
+          // res.tokenOutAmount.isLessThan(0)
+          //   ? setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY)
+          //   : setErrorMessage("");
+          setFirstTokenAmount(res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString());
         }
       }
+    }
+
+    if (flag === 1) {
+      setErrorMessage("");
     }
   };
 
@@ -452,8 +522,12 @@ function Swap(props: ISwapProps) {
             success: true,
             exchangeRate: res.exchangeRate,
           };
-
-          setSecondTokenAmount(res.tokenOutAmount.toString());
+          res.tokenOutAmount.isLessThan(0)
+            ? setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY)
+            : setErrorMessage("");
+          setSecondTokenAmount(
+            res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString()
+          );
           loading.current = {
             isLoadingSecond: false,
             isLoadingfirst: false,
@@ -517,6 +591,9 @@ function Swap(props: ISwapProps) {
       address: token[1].address,
     }));
   }, [tokens]);
+  tokensListConfig.sort(
+    (a, b) => Number(allBalance.userBalance[b.name]) - Number(allBalance.userBalance[a.name])
+  );
 
   return (
     <>
@@ -564,6 +641,7 @@ function Swap(props: ISwapProps) {
           setEnableMultiHop={setEnableMultiHop}
           enableMultiHop={enableMultiHop}
           setBalanceUpdate={setBalanceUpdate}
+          isLiqError={isLiqError}
         />
       </div>
       <SwapModal

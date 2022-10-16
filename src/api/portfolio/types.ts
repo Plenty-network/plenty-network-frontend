@@ -3,7 +3,7 @@ import { AMM_TYPE } from '../../config/types';
 import { IVeNFTData } from '../votes/types';
 
 export interface IVotesStatsDataResponse {
-  success: boolean;
+  // success: boolean;
   totalEpochVotingPower: BigNumber;
   totalPlyLocked: BigNumber;
   error?: string;

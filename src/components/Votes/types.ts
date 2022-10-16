@@ -4,10 +4,6 @@ import { IVotes } from "../../operations/types";
 import { IEpochListObject } from "../../api/util/types";
 import { Bribes } from "../../api/pools/types";
 
-export enum MODULE {
-  VOTE = "Vote",
-  MY_PORTFOLIO = "MyPortfolio",
-}
 export interface ITransactionSubmittedProps {
   show: boolean;
   content: string;
@@ -153,6 +149,7 @@ export interface ISelectNFT {
   >;
 }
 export interface IAllocationProps {
+  castVoteOperation: boolean;
   show: boolean;
   setShow: any;
   epochData: IEpochListObject[];

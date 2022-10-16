@@ -11,34 +11,31 @@ const Test: NextPage = () => {
   const clickRedirectToaPage = () => {
     window.open("https://www.google.com", "_blank");
   };
-  const [u,s]=useState(false);
+  const [u, s] = useState(false);
   return (
     <>
-      
       <SideBarHOC>
         <div className="m-14 flex flex-col gap-10 border p-14 border-white">
-          <button onClick={()=>s(true)}>Hello world</button>
-          {u&&<TransactionSubmitted
-          content="hosk"
-          onBtnClick={()=>{}}
-          setShow={s}
-          show={u}
-          
-          />}
+          <button onClick={() => s(true)}>Hello world</button>
+          {u && <TransactionSubmitted content="hosk" onBtnClick={() => {}} setShow={s} show={u} />}
         </div>
         <div className="m-14 flex flex-col gap-10 border p-14 border-white">
-            <button onClick={()=>{
-              dispatch(setFlashMessage({
-              flashType:Flashtype.Info,
-              headerText:'Hello world',
-              trailingText:'PLY token value increased by more than 2% ',
-              linkText:'Click On me link',
-              isLoading:true,
-              onClick:clickRedirectToaPage
-            }));
-            
-            }} >Hello</button>
-
+          <button
+            onClick={() => {
+              dispatch(
+                setFlashMessage({
+                  flashType: Flashtype.Info,
+                  headerText: "Hello world",
+                  trailingText: "PLY token value PLY token value PLY token value ",
+                  linkText: "Click On me link",
+                  isLoading: true,
+                  onClick: clickRedirectToaPage,
+                })
+              );
+            }}
+          >
+            Hello
+          </button>
         </div>
       </SideBarHOC>
     </>

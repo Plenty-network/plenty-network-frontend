@@ -16,7 +16,6 @@ import PieChartButton from "./PieChart";
 import { useDispatch } from "react-redux";
 import { AppDispatch, store } from "../../redux";
 import { setSelectedDropDown } from "../../redux/veNFT";
-import Vote from "../../../pages/Vote";
 import { useRouter } from "next/router";
 import { IAllLocksPositionData } from "../../api/portfolio/types";
 
@@ -62,6 +61,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         columnWidth: "w-[126px]",
         isToolTipEnabled: true,
         tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
+        sortType: (a: any, b: any) => compareNumericString(a, b, "attachedTokenASymbol", true),
         showOnMobile: true,
         accessor: (x: any) =>
           x.attached ? (
@@ -161,7 +161,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         isToolTipEnabled: true,
         tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "attachedTokenASymbol"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "attachedTokenASymbol", true),
         accessor: (x: any) =>
           x.attached ? (
             <div className=" flex justify-center items-center">
@@ -302,7 +302,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
                   tokenId: "75",
                 })
               );
-              router.push("/Vote");
+              router.push("/vote");
             }}
           >
             <span className="relative top-0.5">
@@ -311,8 +311,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
 
             <span className="ml-1">
               <PieChartButton
-                violet={remainingPercentage}
-                transparent={100 - remainingPercentage}
+                violet={100 - remainingPercentage}
+                transparent={remainingPercentage}
               />
             </span>
           </div>
@@ -347,8 +347,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
             Voted{" "}
             <span className="ml-2">
               <PieChartButton
-                violet={remainingPercentage}
-                transparent={100 - remainingPercentage}
+                violet={100 - remainingPercentage}
+                transparent={remainingPercentage}
               />
             </span>
           </div>
@@ -381,7 +381,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
                 }
               });
 
-              router.push("/Vote");
+              router.push("/vote");
             }}
           >
             Vote
@@ -409,8 +409,8 @@ export function LocksTablePosition(props: ILocksTablePosition) {
             Vote{" "}
             <span className="ml-2">
               <PieChartButton
-                violet={remainingPercentage}
-                transparent={100 - remainingPercentage}
+                violet={100 - remainingPercentage}
+                transparent={remainingPercentage}
               />
             </span>
           </div>
@@ -420,7 +420,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
   }
   return (
     <>
-      <div className={`overflow-x-auto inner ${props.className}`}>
+      <div className={`overflow-x-auto pr-5 inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={props.locksPosition}
@@ -428,7 +428,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName={"lockPosition"}
-          TableWidth="lg:min-w-[1180px]"
+          TableWidth="lg:min-w-[1147px]"
           NoData={NoData}
         />
       </div>

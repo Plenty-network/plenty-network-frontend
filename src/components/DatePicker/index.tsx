@@ -7,7 +7,7 @@ export interface IDatePickerProps {
   selectedDate: Date;
   setStartDate: Function;
   isOpen: boolean;
-  setIsOpen: Function;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   startTimeStamp: number;
   endTimeStamp: number;
   yearsToEnable: number[];
@@ -49,8 +49,9 @@ export function Datepicker(props: IDatePickerProps) {
     if (isSetDate) {
       selectedDate ? props.setStartDate(undefined, new Date(selectedDate).toISOString()) : "";
     }
-    props.setIsOpen(!props.isOpen);
+    props.setIsOpen(false);
   };
+
   return (
     <div ref={reff}>
       {props.isOpen && (
@@ -60,7 +61,7 @@ export function Datepicker(props: IDatePickerProps) {
             inline
             wrapperClassName="custom-date !hidden"
             popperClassName=" absolute right-[36px] bottom-2"
-            includeDates={props.alloweDates.map((e)=>new Date(e))}
+            includeDates={props.alloweDates.map((e) => new Date(e))}
             renderCustomHeader={({
               date,
               changeYear,

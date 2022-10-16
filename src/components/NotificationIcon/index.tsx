@@ -1,6 +1,8 @@
 import Image from "next/image";
 import * as React from "react";
-import { useAppSelector } from "../../redux";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { store, useAppSelector } from "../../redux";
 import { getAllNotification } from "../Notification/notificationMessageSave";
 export enum NotiFicationType {
   noNotification,
@@ -13,19 +15,24 @@ export interface INotificationIconProps {
 
 export function NotificationIcon(props: INotificationIconProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
-  const {isLoading} = useAppSelector((state) => state.flashMessage);
-  const [ringAnimate,setRingAnimate]=React.useState(false);
-  const [type,setType]=React.useState(NotiFicationType.noNotification);
-  React.useEffect(()=>{
-    const typeInnitial:NotiFicationType=getAllNotification(walletAddress).length?NotiFicationType.haveNotification:NotiFicationType.noNotification;
-    if(typeInnitial==NotiFicationType.haveNotification){
+  const { isLoading } = useAppSelector((state) => state.flashMessage);
+  const [ringAnimate, setRingAnimate] = React.useState(false);
+  const [type, setType] = React.useState(NotiFicationType.noNotification);
+  const hasNotification = store.getState().wallet.hasNotification;
+  const length = getAllNotification(walletAddress).length;
+
+  React.useEffect(() => {
+    const typeInnitial: NotiFicationType = getAllNotification(walletAddress).length
+      ? NotiFicationType.haveNotification
+      : NotiFicationType.noNotification;
+    if (typeInnitial == NotiFicationType.haveNotification) {
       setRingAnimate(true);
-      setTimeout(()=>{
+      setTimeout(() => {
         setRingAnimate(false);
-      },1000)
+      }, 1000);
     }
-    setType(typeInnitial)
-  },[isLoading,walletAddress])
+    setType(typeInnitial);
+  }, [isLoading, walletAddress, length]);
   return (
     <div
       className={`flex items-center ${props.className}`}
@@ -35,9 +42,9 @@ export function NotificationIcon(props: INotificationIconProps) {
     >
       <Image
         alt={"alt"}
-        className={ringAnimate?'ringAnimate':''}
+        className={true ? "ringAnimate" : ""}
         src={
-          type === NotiFicationType.noNotification
+          type === NotiFicationType.noNotification && !hasNotification
             ? "/assets/icon/bellicon.svg"
             : "/assets/icon/bellIconWithDot.svg"
         }

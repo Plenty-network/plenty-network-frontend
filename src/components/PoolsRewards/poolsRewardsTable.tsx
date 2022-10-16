@@ -25,7 +25,13 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
   const tEZorCTEZtoUppercase = (a: string) =>
     a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
   const NoData = React.useMemo(() => {
-    return <NoPoolsPosition />;
+    return (
+      <NoPoolsPosition
+        h1={"No PLY emissions"}
+        subText={"You do not have unclaimed PLY rewards for your LPs."}
+        cta={"View pools"}
+      />
+    );
   }, []);
   const mobilecolumns = React.useMemo<Column<IPoolsRewardsData>[]>(
     () => [
@@ -34,7 +40,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         id: "pools",
         canShort: true,
         columnWidth: "w-[170px]",
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol", true),
         showOnMobile: true,
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
@@ -70,6 +76,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         id: "Reward",
         columnWidth: "w-[110px]",
         isToolTipEnabled: true,
+        tooltipMessage: "PLY emission through the gauge.",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "gaugeEmission"),
@@ -80,6 +87,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         Header: "Boost",
         id: "Boost",
         columnWidth: "w-[110px]",
+        tooltipMessage: "Multiplier received on the APR.",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -99,7 +107,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         showOnMobile: true,
         canShort: true,
         columnWidth: "w-[200px]",
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
@@ -133,6 +141,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         Header: "Reward",
         id: "Reward",
         columnWidth: "w-[150px]",
+        tooltipMessage: "PLY emission through the gauge.",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -144,6 +153,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         Header: "Boost",
         id: "Boost",
         columnWidth: "w-[150px]",
+        tooltipMessage: "Multiplier received on the APR.",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,

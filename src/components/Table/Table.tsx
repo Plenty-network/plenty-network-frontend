@@ -2,6 +2,7 @@ import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
 import { isMobile, isTablet } from "react-device-detect";
 import { Column, useFilters, usePagination, useSortBy, useTable } from "react-table";
+import { useRouter } from "next/router";
 import { useAppSelector } from "../../redux";
 import { getHeightOfElement } from "../../utils/getHeight";
 import { NoContentAvailable, WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
@@ -20,7 +21,7 @@ export function SimmerEffect(props: ISimmerEffectProps) {
         .map((_, i) => (
           <tr
             key={`simmerEffect_${i}`}
-            className={`border border-borderCommon h-16 bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg animate-pulse `}
+            className={` border border-borderCommon h-16 bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg animate-pulse `}
           ></tr>
         ))}
     </>
@@ -115,7 +116,7 @@ const Table = <D extends object>({
       ]);
     }
   };
-
+  const router = useRouter();
   return (
     <div>
       <table className={clsx(" flex flex-col ", isVotesTable ? "gap-1.5" : "gap-1.5", TableWidth)}>
@@ -171,12 +172,19 @@ const Table = <D extends object>({
           ))}
         </thead>
         <tbody
-          className={clsx(" flex-col flex overflow-y-auto", isVotesTable ? "gap-1" : "gap-1")}
-          style={{ height: `${heightBody}px` }}
+          className={clsx(
+            " flex-col flex ",
+            isVotesTable ? "gap-1" : "gap-1",
+            isFetched ? "overflow-y-auto" : ""
+          )}
+          {...(!router.pathname.includes("myportfolio") &&
+            !router.pathname.includes("pools") && {
+              style: { height: `${heightBody}px` },
+            })}
         >
-          {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
+          {/* {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
             <NoContentAvailable />
-          ) : null}
+          ) : null} */}
           {isFetched && noSearchResult ? <NoSearchResult /> : null}
           {isFetched && data.length === 0 && NoData && NoData}
           {isConnectWalletRequired && !walletAddress && isFetched ? <WalletNotConnected /> : null}

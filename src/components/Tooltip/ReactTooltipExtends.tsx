@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactTooltip from "react-tooltip";
 
-const TOOLTIP_HIDE_TIME = 3000;
+const TOOLTIP_HIDE_TIME = 4000;
 
 export default class Tooltip extends Component<any> {
   componentDidMount() {
@@ -20,8 +20,10 @@ export default class Tooltip extends Component<any> {
     }, 200);
   }
   hideTooltip() {
-    let tooltip = document.querySelectorAll(`[data-tip][data-for="${this.props.id}"]`)[0];
-    ReactTooltip.hide(tooltip);
+    setTimeout(() => {
+      let tooltip = document.querySelectorAll(`[data-tip][data-for="${this.props.id}"]`)[0];
+      ReactTooltip.hide(tooltip);
+    }, 1200);
   }
   render() {
     const { children, showInitial, ...props } = this.props;

@@ -4,6 +4,7 @@ import { IStatsCardProps } from "./types";
 import info from "../../assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 
+import { isMobile } from "react-device-detect";
 import ply from "../../assets/icon/myPortfolio/plyIcon.svg";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
@@ -12,7 +13,7 @@ function StatsCard(props: IStatsCardProps) {
     <>
       <div
         className={clsx(
-          "h-[96px] py-4 px-6 border border-text-800/[0.5] flex items-center bg-primary-150 rounded-xl",
+          "h-[96px] py-4 px-5 border border-text-800/[0.5] flex items-center bg-primary-150 rounded-xl",
           props.isLast ? "w-[410px] " : "w-[222px] "
         )}
       >
@@ -21,7 +22,11 @@ function StatsCard(props: IStatsCardProps) {
             {props.isLast && <Image alt={"alt"} src={ply} />}
             {!props.isLast && (
               <p className="relative -top-px">
-                <ToolTip message={props.toolTipMessage} id="tooltip8" position={Position.top}>
+                <ToolTip
+                  message={props.toolTipMessage}
+                  id="tooltip8"
+                  position={isMobile ? Position.bottom : Position.top}
+                >
                   <Image alt={"alt"} src={info} />
                 </ToolTip>
               </p>
@@ -48,7 +53,7 @@ function StatsCard(props: IStatsCardProps) {
               borderRadius={"rounded-xl"}
               onClick={() => props.setShowCreateLockModal(true)}
             >
-              Lock Ply
+              Lock PLY
             </Button>
           )}
         </p>

@@ -10,7 +10,7 @@ import Button from "../Button/Button";
 import { IConfirmLockingProps } from "./types";
 import { store } from "../../redux";
 import clsx from "clsx";
-import { ToolTip } from "../Tooltip/TooltipAdvanced";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 function ConfirmLocking(props: IConfirmLockingProps) {
   const epochData = store.getState().epoch.currentEpoch;
@@ -28,13 +28,13 @@ function ConfirmLocking(props: IConfirmLockingProps) {
 
   return (
     <>
-      <div className="px-4 md:px-1 flex">
+      <div className="px-4 md:px-5 flex">
         <div className="cursor-pointer" onClick={() => props.setScreen("1")}>
           <Image alt={"alt"} src={arrowLeft} />
         </div>
         <div className="mx-2 text-white font-title3">Confirm locking </div>
       </div>
-      <div className="mx-4 md:mx-1 rounded-lg mt-3 border border-text-800 bg-card-200 py-5">
+      <div className="mx-5  rounded-lg mt-3 border border-text-800 bg-card-200 py-5">
         <div className="flex items-center">
           <div className="text-text-250 font-subtitle1 md:font-subtitle3 px-3 md:px-5">
             Your will receive a veNFT with a voting power of{" "}
@@ -54,6 +54,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
             <span className="relative top-0.5">
               <ToolTip
                 id="tooltip2"
+                position={Position.top}
                 toolTipChild={
                   <div className="w-[150px]">
                     New locks are required to wait until the end of the present epoch to vote.
@@ -71,6 +72,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
               <span className="relative -top-0.5">
                 <ToolTip
                   id="tooltip2"
+                  position={Position.top}
                   toolTipChild={
                     <div className="w-[150px]">
                       New locks are required to wait until the end of the present epoch to vote.
@@ -90,7 +92,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
         </div>
       </div>
 
-      <div className="px-4 md:px-1 mt-[18px]">
+      <div className="px-4 md:px-5 mt-[18px]">
         <Button color="primary" onClick={props.handleLockOperation}>
           {props.ctaText ? props.ctaText : "Create lock"}
         </Button>

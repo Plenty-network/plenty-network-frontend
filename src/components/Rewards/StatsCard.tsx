@@ -1,5 +1,7 @@
 import clsx from "clsx";
 import Image from "next/image";
+
+import { isMobile } from "react-device-detect";
 import { BigNumber } from "bignumber.js";
 import { IStatsCardProps } from "./types";
 import info from "../../assets/icon/common/infoIcon.svg";
@@ -17,9 +19,15 @@ function StatsCard(props: IStatsCardProps) {
           <div className="flex gap-1 items-center">
             <p className="relative top-px">
               <ToolTip
-                toolTipChild={<div className="w-[150px]">{props.toolTipMessage}</div>}
+                toolTipChild={
+                  <div
+                    className={props.tooltipWidth ? props.tooltipWidth : "w-[100px] md:w-[150px]"}
+                  >
+                    {props.toolTipMessage}
+                  </div>
+                }
                 id="tooltip8"
-                position={Position.top}
+                position={isMobile ? Position.bottom : Position.top}
               >
                 <Image alt={"alt"} src={info} />
               </ToolTip>
@@ -27,7 +35,7 @@ function StatsCard(props: IStatsCardProps) {
             <p className="text-white font-body1 ">{props.title}</p>
           </div>
           <div className="font-input-text1 text-white mt-2 flex items-end">
-            {props.value === undefined ? (
+            {props.value === undefined || isNaN(Number(props.value)) ? (
               <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
             ) : (
               `${props.isDollar ? "$" : ""}${props.value?.toString()}`

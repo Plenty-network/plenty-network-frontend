@@ -41,7 +41,7 @@ export function TopBar(props: ITopBar) {
                 </div>
               }
               id="tooltip8"
-              position={Position.left}
+              position={Position.bottom}
             >
               <Image alt={"alt"} src={info} />
             </ToolTip>

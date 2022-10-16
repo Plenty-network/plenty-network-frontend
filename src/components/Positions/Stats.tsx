@@ -1,7 +1,23 @@
 import { IStatsProps } from "./types";
 import StatsCard from "./StatsCard";
 
+import { BigNumber } from "bignumber.js";
+
 function Stats(props: IStatsProps) {
+  function nFormatter(num: BigNumber) {
+    if (num.isGreaterThanOrEqualTo(1000000000)) {
+      return num.dividedBy(1000000000).toFixed(2) + "B";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000)) {
+      return num.dividedBy(1000000).toFixed(2) + "M";
+    }
+    if (num.isGreaterThanOrEqualTo(1000)) {
+      return num.dividedBy(1000).toFixed(2) + "K";
+    }
+
+    return num.toFixed(2);
+  }
+
   return (
     <div className="flex min-w-[1053px] w-full justify-between gap-5">
       <StatsCard
@@ -9,8 +25,8 @@ function Stats(props: IStatsProps) {
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"TVL"}
         value={
-          props.statsPositions?.tvl || Number(props.statsPositions?.tvl) <= 0
-            ? `$${props.statsPositions?.tvl?.toFixed(1)}`
+          !props.statsPositions.isFetching
+            ? `$${nFormatter(new BigNumber(props.statsPositions.tvl))}`
             : undefined
         }
       />
@@ -18,13 +34,13 @@ function Stats(props: IStatsProps) {
         toolTipMessage={"Total voting power of all your veNFTs."}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total voting power"}
-        value={props.stats1?.totalEpochVotingPower?.toFixed(1)}
+        value={nFormatter(new BigNumber(props.stats1?.totalEpochVotingPower))}
       />
       <StatsCard
         toolTipMessage={"Total amount PLY locked as vote escrow.s"}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total locked"}
-        value={props.stats1?.totalPlyLocked?.toFixed(1)}
+        value={nFormatter(new BigNumber(props.stats1?.totalPlyLocked))}
         subValue={"PLY"}
       />
 
@@ -32,7 +48,7 @@ function Stats(props: IStatsProps) {
         toolTipMessage={""}
         isLast={true}
         setShowCreateLockModal={props.setShowCreateLockModal}
-        title={"PLY Balance"}
+        title={"PLY balance"}
         value={props.plyBalance.toFixed(1)}
         subValue={`$${(1 * Number(props.plyBalance)).toFixed(1)}`}
       />

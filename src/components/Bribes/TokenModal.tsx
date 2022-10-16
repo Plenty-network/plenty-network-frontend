@@ -7,8 +7,8 @@ import { tokenParameter, tokensModal, tokenType } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import clsx from "clsx";
-import { ToolTip } from "../Tooltip/TooltipAdvanced";
-import { topTokensList } from "../../api/swap/wrappers";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { topTokenListGhostnet, topTokensList } from "../../api/swap/wrappers";
 
 interface ISwapModalProps {
   tokens: tokensModal[];
@@ -33,7 +33,7 @@ function TokenModal(props: ISwapModalProps) {
     }
   );
   useEffect(() => {
-    topTokensList().then((res) => {
+    topTokenListGhostnet().then((res) => {
       setTopTokens(res.topTokens);
     });
   }, []);
@@ -88,6 +88,7 @@ function TokenModal(props: ISwapModalProps) {
             <span className="relative top-0.5 ml-[5px]">
               <ToolTip
                 id="tooltipH"
+                position={Position.top}
                 toolTipChild={
                   <div className="w-[200px]">
                     These tokens are commonly paired with other tokens

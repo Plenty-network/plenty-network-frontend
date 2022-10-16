@@ -131,8 +131,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Votes",
         id: "Myvotess",
-        tooltipMessage: "Number of votes given through the selected veNFT to this pool.",
-        isToolTipEnabled: true,
+
         columnWidth: "w-[100px] ml-auto mr-2",
         canShort: true,
         accessor: (x: any) => (
@@ -284,7 +283,7 @@ export function VotesTable(props: IVotesTableProps) {
 
   return (
     <>
-      <div className={`overflow-x-auto  ${props.className}`}>
+      <div className={`overflow-x-auto md:pr-4 ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}

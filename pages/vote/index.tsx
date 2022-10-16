@@ -126,6 +126,9 @@ export default function Vote() {
     });
   }, []);
   useEffect(() => {
+    localStorage.setItem("vote", userAddress);
+  }, []);
+  useEffect(() => {
     if (selectedEpoch?.epochNumber) {
       setVoteData({} as { [id: string]: IVotePageData });
       setSelectedPools([] as ISelectedPool[]);
@@ -214,7 +217,7 @@ export default function Vote() {
           if (list.locksState === ELocksState.CONSUMED) {
             dispatch(
               setSelectedDropDown({
-                votingPower: list.consumedVotingPower.toString(),
+                votingPower: list.nextEpochVotingPower.toString(),
                 tokenId: list.tokenId.toString(),
               })
             );
@@ -420,7 +423,6 @@ export default function Vote() {
 
   return (
     <>
-      
       <SideBarHOC>
         <div className="md:flex ">
           <div className="md:min-w-[416px] lg:min-w-[562px] md:w-full">
@@ -431,6 +433,7 @@ export default function Vote() {
               handleCreateLock={handleCreateLock}
               searchValue={searchValue}
               setSearchValue={setSearchValue}
+              isFirst={localStorage.getItem("vote") !== userAddress}
             />
 
             <div className="">
@@ -583,6 +586,7 @@ export default function Vote() {
           <div className="hidden md:block md:basis-1/3 md:pr-[25px] w-[350px]">
             <VotingAllocation
               show={showCastVotingAllocation}
+              castVoteOperation={castVoteOperation}
               setShow={setShowCastVotingAllocation}
               selectedDropDown={selectedDropDown} // veNFT selected
               epochData={epochData} // epoch data
@@ -597,8 +601,9 @@ export default function Vote() {
                 <span className="cursor-pointer relative top-0.5">
                   <ToolTip
                     id="tooltip2"
+                    position={Position.top}
                     toolTipChild={
-                      <div className="w-[200px]">
+                      <div className="w-[100px] md:w-[250px]">
                         Percentage allocation of the veNFT’s voting power. A 100% allocation is
                         required to cast a vote.
                       </div>
@@ -715,6 +720,7 @@ export default function Vote() {
           epochData={epochData} // epoch data
           alreadyVoted={sumOfVotes === 100}
           epochNumber={selectedEpoch ? selectedEpoch.epochNumber : 0}
+          castVoteOperation={castVoteOperation}
         />
       )}
       {showCastVoteModal && (

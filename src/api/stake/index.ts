@@ -1,15 +1,15 @@
-import { BigNumber } from 'bignumber.js';
-import axios from 'axios';
-import { connectedNetwork, dappClient } from '../../common/walletconnect';
-import Config from '../../config/config';
-import { store } from '../../redux';
-import { gaugeStorageType } from '../rewards/data';
-import { getStakedBalance } from '../util/balance';
-import { getDexAddress } from '../util/fetchConfig';
-import { getStorage } from '../util/storageProvider';
-import { IVePLYData, IVePLYListResponse } from './types';
-import { PLY_DECIMAL_MULTIPLIER } from '../../constants/global';
-import { ELocksState } from '../votes/types';
+import { BigNumber } from "bignumber.js";
+import axios from "axios";
+import { connectedNetwork, dappClient } from "../../common/walletconnect";
+import Config from "../../config/config";
+import { store } from "../../redux";
+import { gaugeStorageType } from "../rewards/data";
+import { getStakedBalance } from "../util/balance";
+import { getDexAddress } from "../util/fetchConfig";
+import { getStorage, getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
+import { IStakedData, IStakedDataResponse, IVePLYData, IVePLYListResponse } from "./types";
+import { PLY_DECIMAL_MULTIPLIER } from "../../constants/global";
+import { ELocksState } from "../votes/types";
 
 /**
  * Returns the list of veNFTs with boost value for a user, for a particular gauge.
@@ -136,6 +136,102 @@ export const fetchTotalVotingPower = async (): Promise<BigNumber> => {
     return totalVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER);
   } catch (error: any) {
     throw new Error(error.message);
+  }
+};
+
+/**
+ * Returns the staked detals for a pool, if it's boosted or not and the respective attached lock.
+ * @param tokenOneSymbol - Symbol of the first token of the pair of selected pool
+ * @param tokenTwoSymbol - Symbol of the second token of the pair of selected pool
+ * @param userTezosAddress - Tezos wallet address of the user
+ * @param ammAddress - Contract address of the selected pool(optional)
+ */
+export const getStakedData = async (
+  tokenOneSymbol: string,
+  tokenTwoSymbol: string,
+  userTezosAddress: string,
+  ammAddress?: string
+): Promise<IStakedDataResponse> => {
+  try {
+    const state = store.getState();
+    const AMM = state.config.AMMs;
+    const dexContractAddress = ammAddress || getDexAddress(tokenOneSymbol, tokenTwoSymbol);
+    if (dexContractAddress === "false") {
+      throw new Error("AMM does not exist for the selected pair.");
+    }
+    const pnlpTokenDecimals = AMM[dexContractAddress].lpToken.decimals;
+    const gaugeAddress: string | undefined = AMM[dexContractAddress].gaugeAddress;
+    if (gaugeAddress === undefined) {
+      throw new Error("Gauge does not exist for the selected pair.");
+    }
+
+    const gaugeStorage = await getTzktStorageData(gaugeAddress);
+    const gaugeStorageData = gaugeStorage.data;
+    const balancesBigMapId = new BigNumber(gaugeStorageData.balances).toString();
+    const derivedBalancesBigMapId = new BigNumber(gaugeStorageData.derived_balances).toString();
+    const attachedTokensBigMapId = new BigNumber(gaugeStorageData.attached_tokens).toString();
+
+    let stakedBalance = new BigNumber(0);
+    let derivedBalance = new BigNumber(0);
+    let isBoosted = false;
+    let boostedLockId = new BigNumber(0);
+    // Fetch the staked balance for the user
+    const balancesResponse = await getTzktBigMapData(
+      balancesBigMapId,
+      `select=key,value&key=${userTezosAddress}&active=true`
+    );
+    if (balancesResponse.data.length !== 0) {
+      stakedBalance = new BigNumber(balancesResponse.data[0].value);
+    }
+    // Fetch the derived balance for the user
+    const derivedBalancesResponse = await getTzktBigMapData(
+      derivedBalancesBigMapId,
+      `select=key,value&key=${userTezosAddress}&active=true`
+    );
+    if (derivedBalancesResponse.data.length !== 0) {
+      derivedBalance = new BigNumber(derivedBalancesResponse.data[0].value);
+    }
+    // Fetch the attched lock for the gauge for the user if any
+    const attachedTokensResponse = await getTzktBigMapData(
+      attachedTokensBigMapId,
+      `select=key,value&key=${userTezosAddress}&active=true`
+    );
+    if (attachedTokensResponse.data.length !== 0) {
+      if (Object.keys(attachedTokensResponse.data[0]).length !== 0) {
+        isBoosted = true;
+        boostedLockId = new BigNumber(attachedTokensResponse.data[0].value);
+      }
+    }
+    // Calculate the base balance required for calculating boost value
+    const baseBalance = stakedBalance.multipliedBy(40).dividedBy(100);
+    const boostValue = derivedBalance.dividedBy(baseBalance);
+
+    const stakedData: IStakedData = {
+      isBoosted,
+      boostedLockId,
+      boostValue: boostValue.isFinite() ? boostValue.toFixed(1) : "0.0", // checking if boost value is a finite number which it is not in case of 0 stake
+      stakedBalance: stakedBalance.dividedBy(new BigNumber(10).pow(pnlpTokenDecimals)),
+      gaugeAddress,
+    };
+
+    return {
+      success: true,
+      stakedData,
+    };
+  } catch (error: any) {
+    console.log(error.message);
+    const stakedData: IStakedData = {
+      isBoosted: false,
+      boostedLockId: new BigNumber(0),
+      boostValue: "0.0",
+      stakedBalance: new BigNumber(0),
+      gaugeAddress: "",
+    };
+    return {
+      success: false,
+      stakedData,
+      error: error.message,
+    };
   }
 };
 

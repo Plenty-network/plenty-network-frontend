@@ -19,6 +19,11 @@ export interface IRewardsProps {
   handleOperation: () => void;
 }
 export function RewardsScreen(props: IRewardsProps) {
+  const getImagesPath = (name: string, isSvg?: boolean) => {
+    if (isSvg) return `/assets/tokens/${name}.svg`;
+    if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
+    else return "";
+  };
   const walletAddress = store.getState().wallet.address;
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
@@ -103,7 +108,22 @@ export function RewardsScreen(props: IRewardsProps) {
 
       <div className="flex border rounded-2xl border-text-800 bg-card-200 p-4 flex-col gap-[15px]">
         <div className="text-text-400 text-f12">Your Rewards</div>
-        <div className="flex flex-col">{InnerTab(token, Number(props.rewardToken), "", "PLY")}</div>
+        <div className="flex flex-col">
+          <div className="flex gap-2 items-center">
+            <ImageCircle src={getImagesPath("PLY")} />
+            {!isNaN(Number(props.rewardToken)) ? (
+              <div className="text-f14 text-white h-5 font-medium">
+                {Number(props.rewardToken).toFixed(6)}
+              </div>
+            ) : (
+              <div className=" w-12 mr-2  h-[18px] rounded animate-pulse bg-shimmer-100"></div>
+            )}
+
+            <div className={clsx("text-f14 ml-px h-5 font-medium", "text-white")}>
+              {tEZorCTEZtoUppercase("PLY")}
+            </div>
+          </div>
+        </div>
       </div>
 
       {harvestButton}

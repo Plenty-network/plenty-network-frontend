@@ -51,14 +51,20 @@ export function LocksTableRewards(props: IVotesTableRewards) {
     }
   }, [props.selectedDropDown.tokenId]);
   const NoData = React.useMemo(() => {
-    if (props.selectedDropDown.tokenId === "") {
-      return <NoNFTAvailable setShowCreateLockModal={props.setShowCreateLockModal} />;
-    } else if (
-      !(props.selectedDropDown.tokenId in props.allLocksRewardsData) ||
-      newArr.length === 0
-    ) {
-      return <NoPoolsPosition />;
-    }
+    // if (props.selectedDropDown.tokenId === "") {
+    //   return <NoNFTAvailable setShowCreateLockModal={props.setShowCreateLockModal} />;
+    // } else if (
+    //   !(props.selectedDropDown.tokenId in props.allLocksRewardsData) ||
+    //   newArr.length === 0
+    // ) {
+    return (
+      <NoPoolsPosition
+        h1={"No voting rewards"}
+        subText={"Your veNFT does not have unclaimed voting rewards."}
+        cta={"Vote"}
+      />
+    );
+    // }
   }, [props.selectedDropDown.tokenId, newArr]);
   React.useMemo(() => {
     votesArray.reverse().map((data, index) => {
@@ -138,6 +144,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         Header: "Reward",
         id: "Reward",
         columnWidth: "w-[111px]",
+        tooltipMessage: "Trading fees and bribes.",
         isToolTipEnabled: true,
         showOnMobile: true,
         accessor: (x: any) =>
@@ -159,7 +166,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         columnWidth: "w-[127px]",
         isToolTipEnabled: true,
         showOnMobile: true,
-
+        tooltipMessage: "Allocated voting power.",
         accessor: (x: any) =>
           x.epoch === "" ? (
             <VotingPower votes={x.votes.votes} percentage={x.votes.votesPercentage} />
@@ -232,6 +239,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         id: "Reward",
         isToolTipEnabled: true,
         columnWidth: "w-[111px]",
+        tooltipMessage: "Trading fees and bribes.",
         showOnMobile: true,
         accessor: (x: any) =>
           x.epoch === "" ? (
@@ -251,6 +259,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         Header: "Voting power",
         id: "Voting power",
         columnWidth: "w-[140px]",
+        tooltipMessage: "Allocated voting power.",
         isToolTipEnabled: true,
         showOnMobile: true,
 

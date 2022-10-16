@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch, store } from "../../redux";
 import { getEpochData, setSelectedEpoch } from "../../redux/epoch/epoch";
 import { useInterval } from "../../hooks/useInterval";
-import { ToolTip } from "../Tooltip/TooltipAdvanced";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { useRouter } from "next/router";
 
 export interface IEpochProps {
@@ -124,9 +124,9 @@ export function Epoch(props: IEpochProps) {
         <div
           className={clsx(
             " flex flex-col gap-[6px]",
-            router.pathname.includes("Vote") ? "cursor-pointer" : "cursor-not-allowed"
+            router.pathname.includes("vote") ? "cursor-pointer" : "cursor-not-allowed"
           )}
-          {...(router.pathname.includes("Vote")
+          {...(router.pathname.includes("vote")
             ? { onClick: () => setIsDropDownActive(!isDropDownActive) }
             : {})}
         >
@@ -134,8 +134,9 @@ export function Epoch(props: IEpochProps) {
             <p className="relative top-[2px]">
               <ToolTip
                 id="tooltipM"
+                position={Position.bottom}
                 toolTipChild={
-                  <div className="w-[200px]">
+                  <div className="w-[220px]">
                     A weekly voting period that starts every Thursday, 12:00 AM (UTC)
                   </div>
                 }
@@ -147,7 +148,7 @@ export function Epoch(props: IEpochProps) {
             <p className="text-text-250 font-body4">
               Epoch{" "}
               <span className="text-white">
-                {!router.pathname.includes("Vote")
+                {!router.pathname.includes("vote")
                   ? epochData[indexOfCurrent]?.epochNumber
                   : selectedEpoch?.epochNumber
                   ? selectedEpoch.epochNumber
@@ -161,11 +162,13 @@ export function Epoch(props: IEpochProps) {
                 </span>
               </span>
             </p>
-            <p className="relative -top-[1.5px]">
-              <Image alt={"alt"} className="rotate-180" src={vectorDown} />
-            </p>
+            {router.pathname.includes("vote") && (
+              <p className="relative -top-[1.5px]">
+                <Image alt={"alt"} className="rotate-180" src={vectorDown} />
+              </p>
+            )}
           </div>
-          <div className="flex gap-2 -mt-[6px] text-f12 text-white font-semibold cursor-pointer">
+          <div className="flex gap-2 -mt-[6px] text-f12 text-white font-semibold ">
             <span className="flex gap-1">
               <span>{days} d</span>:<span>{hours} h</span>:<span>{minutes} m</span>:
               <span>{seconds} s</span>

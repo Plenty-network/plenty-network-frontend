@@ -9,17 +9,17 @@ export const FooterMenu: Array<IHrefIconProps> = [
   {
     name: "Analytics",
     iconName: "VectorfooterMenu",
-    href: "https://google.com",
+    href: "https://plenty-analytics-test.netlify.app/",
   },
   {
     name: "Docs",
     iconName: "VectorfooterMenu-1",
-    href: "https://google.com",
+    href: "https://whitepaper.plenty.network/",
   },
   {
     name: "Feedback",
     iconName: "VectorfooterMenu-2",
-    href: "https://google.com",
+    href: "https://discord.com/invite/9wZ4CuvkuJ",
   },
 ];
 
@@ -102,8 +102,8 @@ const MainMenu: Array<ISingleSideBarProps> = [
   {
     name: "Swap",
     iconName: "swap",
-    pathName: "/Swap",
-    activePathName: "/Swap",
+    pathName: "/swap",
+    activePathName: "/swap",
   },
   {
     name: "Pools",
@@ -114,8 +114,16 @@ const MainMenu: Array<ISingleSideBarProps> = [
   {
     name: "Vote",
     iconName: "lock",
-    pathName: "/Vote",
-    activePathName: "/Vote",
+    pathName: "/vote",
+    activePathName: "/vote",
+  },
+  {
+    name: "Bribes",
+    iconName: "bribes",
+    pathName: "/bribes",
+    activePathName: "/bribes",
+    isHrefIcon: true,
+    openNewPage: true,
   },
 ];
 
@@ -123,7 +131,7 @@ export function SideBar(props: ISideBarProps) {
   const [activeMenu, setActiveMenu] = React.useState<string>("");
   const { pathname } = useRouter();
   try {
-    if (pathname == "/Swap") document.getElementsByTagName("body")[0].className = "swap";
+    if (pathname == "/swap") document.getElementsByTagName("body")[0].className = "swap";
     else document.getElementsByTagName("body")[0].className = "";
   } catch {}
   return (
@@ -151,6 +159,8 @@ export function SideBar(props: ISideBarProps) {
               isMenuOpen={activeMenu === `menuItem${index}`}
               subMenu={menuItem.subMenu ? menuItem.subMenu : false}
               pathName={menuItem.pathName}
+              isHrefIcon={menuItem.isHrefIcon}
+              openNewPage={menuItem.openNewPage}
             />
           ))}
         </div>

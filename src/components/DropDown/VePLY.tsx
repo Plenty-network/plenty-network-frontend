@@ -25,12 +25,12 @@ export function VePLY(props: IDropdownProps) {
     <div className={`relative min-w-[76px] md:min-w-[150px] ${props.className}`} ref={reff}>
       <div
         className={clsx(
-          "bg-text-800/[0.25]   flex gap-2 md:gap-4 py-2 px-2 md:px-3 md:justify-between border border-text-700 rounded-lg",
+          "  flex gap-2 md:gap-4 py-2.5 px-2 md:px-3 md:justify-between border border-text-700 rounded-lg",
           isDropDownActive ? "hover:bg-text-800/[0.25]" : "hover:bg-text-800/[0.5]",
           props.Options.length === 0
             ? "border-border-200 bg-card-200 hover:bg-card-200 hover:border-border-200"
             : props.selectedText.boostValue === ""
-            ? "border-text-700 bg-text-800/[0.25]"
+            ? "border-primary-800 bg-card-500"
             : "border-primary-800 bg-primary-250",
 
           props.Options.length === 0 ||
@@ -38,7 +38,9 @@ export function VePLY(props: IDropdownProps) {
             ? "cursor-not-allowed"
             : "cursor-pointer"
         )}
-        // onClick={() => setIsDropDownActive(true)}
+        onClick={
+          props.Options.length === 0 ? () => {} : () => setIsDropDownActive(!isDropDownActive)
+        }
       >
         <p
           className={clsx(
@@ -63,10 +65,10 @@ export function VePLY(props: IDropdownProps) {
                 {props.isListLoading
                   ? "Loading..."
                   : props.Options.length !== 0
-                  ? "Select vePLY"
-                  : "No vePLY!"}
+                  ? "Select veNFT"
+                  : "No veNFT!"}
               </span>{" "}
-              <span className="font-subtitle1 md:font-body4 md:hidden">vePLY</span>
+              <span className="font-subtitle1 md:font-body4 md:hidden">veNFT</span>
             </>
           )}
         </p>
@@ -74,10 +76,6 @@ export function VePLY(props: IDropdownProps) {
           src={vectorIcon}
           alt={"vectorIcon"}
           className={!isDropDownActive ? "rotate-180" : "rotate-0"}
-          {...((props.isConfirmStake && props.selectedText.boostValue !== "") ||
-          props.Options.length === 0
-            ? {}
-            : { onClick: () => setIsDropDownActive(!isDropDownActive) })}
         />
       </div>
       {isDropDownActive && props.Options.length > 0 && (

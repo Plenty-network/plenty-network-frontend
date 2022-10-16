@@ -1,6 +1,7 @@
 import { PopUpModal } from "../Modal/popupModal";
 import calender from "../../../src/assets/icon/vote/calender.svg";
 import { useState, useMemo, useEffect } from "react";
+import fromExponential from "from-exponential";
 import { BigNumber } from "bignumber.js";
 import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import Image from "next/image";
@@ -155,22 +156,32 @@ function CreateLock(props: ICreateLockProps) {
   const onClickAmount = () => {
     handlePlyInput(Number(props.plyBalance));
   };
+  const [showTooltip, setShowTooltip] = useState(false);
+  // useEffect(() => {
+  //   // handleDateSelection(MAX_TIME, undefined);
+  //   setShowTooltip(true);
+
+  //   setTimeout(() => {
+  //     setShowTooltip(false);
+  //   }, 5000);
+  // }, []);
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
+      Name="Manage"
       className="w-[400px] max-w-[400px]  md:w-[602px] md:max-w-[602px]"
     >
       {screen === "1" ? (
         <>
-          <div className="mx-2 text-white font-title3">Create Lock </div>
+          <div className="mx-2 px-2 md:px-5 text-white font-title3">Create Lock </div>
 
           <div
             className={clsx(
-              "border pl-4 pr-5 mt-[22px] bg-muted-200/[0.1] items-center flex  rounded-2xl h-[86px] hover:border-text-700",
+              "border mx-2 md:mx-5 pl-4 pr-5 mt-[22px] bg-muted-200/[0.1] items-center flex  rounded-2xl h-[86px] hover:border-text-700",
               isFirstInputFocus ? "border-text-700" : "border-text-800 "
             )}
           >
-            <div className="w-[50%]">
+            <div className="w-full">
               <p>
                 <input
                   type="text"
@@ -193,18 +204,25 @@ function CreateLock(props: ICreateLockProps) {
             </div>
 
             <div
-              className="cursor-pointer ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3"
+              className="cursor-pointer w-[30%] ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3"
               onClick={onClickAmount}
             >
               <div>
                 <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
               </div>
-              <div className=" ml-1 text-primary-500 font-body2">
-                {Number(props.plyBalance) >= 0 ? props.plyBalance.toFixed(2) : "0.00"} PLY
-              </div>
+              <ToolTip
+                id="tooltipM"
+                disable={Number(props.plyBalance) > 0 ? false : true}
+                position={Position.top}
+                message={fromExponential(props.plyBalance?.toString())}
+              >
+                <div className=" ml-1 text-primary-500 font-body2">
+                  {Number(props.plyBalance) > 0 ? props.plyBalance.toFixed(2) : "0"} PLY
+                </div>
+              </ToolTip>
             </div>
           </div>
-          <div className="ml-auto mt-3 flex font-body4">
+          <div className="ml-auto mt-3 pr-5 flex font-body4">
             <p
               className={clsx(
                 "cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
@@ -245,10 +263,10 @@ function CreateLock(props: ICreateLockProps) {
               75%
             </p>
           </div>
-          <div className="bg-muted-400 border border-text-800 rounded-2xl py-5 mt-5">
+          <div className="bg-muted-400 border border-text-800 rounded-2xl py-5 mt-5 mx-2 md:mx-5 ">
             <div className=" px-3 md:px-5 text-text-50 font-subtitle1">Choose lock end </div>
             <div className="mt-2 rounded-lg ml-5 mr-[24px] border-[1.3px] border-border-200 pr-5 pl-4 flex items-center h-[62px] hover:border-text-700">
-              <div>
+              <div className="w-full" onClick={() => setIsDatePickerOpen(true)}>
                 <input
                   type="text"
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-subtitle6  md:font-subtitle6 outline-none w-[100%] placeholder:text-text-500"
@@ -274,10 +292,10 @@ function CreateLock(props: ICreateLockProps) {
             <div className="mt-3 px-3 md:px-5 flex gap-2">
               <p
                 className={clsx(
-                  "rounded-[32px] cursor-pointer border px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3",
+                  "rounded-[32px] cursor-pointer border px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3",
                   props.lockingEndData.selected === WEEK
-                    ? "bg-card-500 border-primary-500"
-                    : "bg-muted-200/[0.1] border-border-200"
+                    ? "bg-primary-500/[0.2] border-primary-500 text-white"
+                    : "bg-muted-200/[0.1] border-border-200 text-text-500"
                 )}
                 onClick={() => handleDateSelection(WEEK, undefined)}
               >
@@ -285,10 +303,10 @@ function CreateLock(props: ICreateLockProps) {
               </p>
               <p
                 className={clsx(
-                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
+                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3 cursor-pointer",
                   props.lockingEndData.selected === 4 * WEEK
-                    ? "bg-card-500 border-primary-500"
-                    : "bg-muted-200/[0.1] border-border-200"
+                    ? "bg-primary-500/[0.2] border-primary-500 text-white"
+                    : "bg-muted-200/[0.1] border-border-200 text-text-500"
                 )}
                 onClick={() => handleDateSelection(4 * WEEK, undefined)}
               >
@@ -296,10 +314,10 @@ function CreateLock(props: ICreateLockProps) {
               </p>
               <p
                 className={clsx(
-                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
+                  "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3 cursor-pointer",
                   props.lockingEndData.selected === YEAR
-                    ? "bg-card-500 border-primary-500"
-                    : "bg-muted-200/[0.1] border-border-200"
+                    ? "bg-primary-500/[0.2] border-primary-500 text-white"
+                    : "bg-muted-200/[0.1] border-border-200 text-text-500"
                 )}
                 onClick={() => handleDateSelection(YEAR, undefined)}
               >
@@ -309,18 +327,19 @@ function CreateLock(props: ICreateLockProps) {
                 <ToolTip
                   toolTipChild={
                     <div className="w-[210px] text-center">
-                      Lock for 4 years for maximum voting power of 4000
+                      Lock for 4 years for maximum voting power
                     </div>
                   }
                   id="tooltip8"
                   position={Position.top}
+                  isShowInnitially={true}
                 >
                   <p
                     className={clsx(
-                      "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px] text-text-500 font-caption1-small md:font-subtitle3 cursor-pointer",
+                      "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3 cursor-pointer",
                       props.lockingEndData.selected === MAX_TIME
-                        ? "bg-card-500 border-primary-500"
-                        : "bg-muted-200/[0.1] border-border-200"
+                        ? "bg-primary-500/[0.2] border-primary-500 text-white"
+                        : "bg-muted-200/[0.1] border-border-200 text-text-500"
                     )}
                     onClick={() => handleDateSelection(MAX_TIME, undefined)}
                   >
@@ -340,7 +359,7 @@ function CreateLock(props: ICreateLockProps) {
             </div>
           </div>
 
-          <div className="mt-[18px]">{ProceedButton}</div>
+          <div className="mt-[18px] mx-2 md:mx-5 ">{ProceedButton}</div>
         </>
       ) : (
         <ConfirmLocking

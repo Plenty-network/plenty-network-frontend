@@ -113,7 +113,7 @@ function ManageLock(props: IManageLockProps) {
       );
       setVotingPower(res);
     }
-    props.setLockingEndData({ selected: days ? days : 0, lockingDate: lockEnd });
+    props.setLockingEndData({ selected: timeSpan ? timeSpan : 0, lockingDate: lockEnd });
   };
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
@@ -159,7 +159,7 @@ function ManageLock(props: IManageLockProps) {
     <PopUpModal
       onhide={closeModal}
       Name={"Manage"}
-      className="w-[400px] max-w-[400px] py-2 px-0 md:w-[602px] md:max-w-[602px]"
+      className="w-[400px] max-w-[400px]  md:w-[602px] md:max-w-[602px]"
     >
       {screen === "1" ? (
         <>
@@ -202,7 +202,7 @@ function ManageLock(props: IManageLockProps) {
                 <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
               </div>
               <div className=" ml-1 text-primary-500 font-body2">
-                {Number(props.plyBalance) >= 0 ? props.plyBalance.toFixed(2) : "0.00"} PLY
+                {Number(props.plyBalance) >= 0 ? props.plyBalance.toFixed(2) : "0"} PLY
               </div>
             </div>
           </div>
@@ -255,7 +255,7 @@ function ManageLock(props: IManageLockProps) {
           >
             <div className=" px-3 md:px-5 text-text-50 font-subtitle1">Choose lock end </div>
             <div className="mt-2 rounded-lg ml-5 mr-[24px] border-[1.3px] border-border-200 pr-5 pl-4 flex items-center h-[62px] hover:border-text-700">
-              <div>
+              <div onClick={() => setIsDatePickerOpen(true)} className={"w-full"}>
                 <input
                   type="text"
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-subtitle6  md:font-subtitle6 outline-none w-[100%] placeholder:text-text-500"
@@ -275,7 +275,11 @@ function ManageLock(props: IManageLockProps) {
                   isOpen={isDatePickerOpen}
                   setIsOpen={setIsDatePickerOpen}
                   yearsToEnable={dateRange.years}
-                  alloweDates={dateRange.alloweDates}
+                  alloweDates={
+                    dateRange.alloweDates
+                      ? dateRange.alloweDates.filter((date) => date > props.manageData.endTimeStamp)
+                      : dateRange.alloweDates
+                  }
                 />
               </div>
             </div>
@@ -284,7 +288,7 @@ function ManageLock(props: IManageLockProps) {
                 <ToolTip
                   toolTipChild={
                     <div className="w-[210px] text-center">
-                      Lock for 4 years for maximum voting power of 4000
+                      Lock for 4 years for maximum voting power
                     </div>
                   }
                   id="tooltip8"

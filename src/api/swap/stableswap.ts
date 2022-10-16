@@ -83,7 +83,7 @@ export const calculateTokensOutTezCtez = (
   tokenIn: string
 ): ICalculateTokenResponse => {
 
-  const feePerc = new BigNumber(0.1);
+  const feePerc = new BigNumber(0.05);
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(6));
   tezSupply = tezSupply.multipliedBy(new BigNumber(10).pow(6));
   ctezSupply = ctezSupply.multipliedBy(new BigNumber(10).pow(6));
@@ -202,7 +202,7 @@ export const calculateTokensInTezCtez = (
   tokenIn: string
 ): ICalculateTokenResponse => {
 
-  const feePerc = new BigNumber(0.1);
+  const feePerc = new BigNumber(0.05);
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(6));
   tezSupply = tezSupply.multipliedBy(new BigNumber(10).pow(6));
   ctezSupply = ctezSupply.multipliedBy(new BigNumber(10).pow(6));
@@ -216,7 +216,8 @@ export const calculateTokensInTezCtez = (
       ).dividedBy(new BigNumber(2).pow(48));
       let fee = dy.dividedBy(pairFeeDenom);
       // let tokenOut = dy.minus(fee);
-      let tokenOut = dy.plus(dy.multipliedBy(0.001));
+      let tokenOut = dy;
+      // let tokenOut = dy.plus(dy.multipliedBy(0.001));
       let minOut = tokenOut.minus(
         slippage.multipliedBy(tokenOut).dividedBy(100)
       );
@@ -259,7 +260,8 @@ export const calculateTokensInTezCtez = (
       ).dividedBy(target);
       let fee = dy.dividedBy(pairFeeDenom);
       // let tokenOut = dy.minus(fee);
-      let tokenOut = dy.plus(dy.multipliedBy(0.001));
+      let tokenOut = dy;
+      // let tokenOut = dy.plus(dy.multipliedBy(0.001));
       let minOut = tokenOut.minus(
         slippage.multipliedBy(tokenOut).dividedBy(100)
       );
@@ -392,7 +394,7 @@ export const calculateTokensOutGeneralStable = (
 ): ICalculateTokenResponse => {
   const state = store.getState();
   const TOKEN = state.config.standard;
-  const feePerc = new BigNumber(0.1);
+  const feePerc = new BigNumber(0.05);
 
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
   tokenInSupply = tokenInSupply.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
@@ -474,7 +476,7 @@ export const calculateTokensInGeneralStable = (
 ): ICalculateTokenResponse => {
   const state = store.getState();
   const TOKEN = state.config.standard;
-  const feePerc = new BigNumber(0.1);
+  const feePerc = new BigNumber(0.05);
 
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
   tokenInSupply = tokenInSupply.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
@@ -490,13 +492,11 @@ export const calculateTokensInGeneralStable = (
       tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(tokenInPrecision),
       5
     );
-      console.log(dy.toString());
-
 
       let fee = dy.dividedBy(Exchangefee);
       // let tokenOutAmt = dy.minus(fee).dividedBy(tokenOutPrecision);
       let tokenOutAmt = dy.dividedBy(tokenOutPrecision);
-      tokenOutAmt = tokenOutAmt.plus(tokenOutAmt.multipliedBy(0.001));
+      // tokenOutAmt = tokenOutAmt.plus(tokenOutAmt.multipliedBy(0.001));
   
       let minOut = tokenOutAmt.minus(
         slippage.multipliedBy(tokenOutAmt).dividedBy(100)
@@ -526,13 +526,7 @@ export const calculateTokensInGeneralStable = (
       const exchangeRate = tokenOutAmount.dividedBy(
         tokenInAmount.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals))
       );
-    console.log(tokenOutAmount.toString(),
-      fees.toString(),
-      feePerc.toString(),
-      minimumOut.toString(),
-      exchangeRate.toString(),
-      priceImpact.toString(),);
-
+      
     return {
       tokenOutAmount,
       fees,
