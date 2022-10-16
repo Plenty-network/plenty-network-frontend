@@ -7,6 +7,7 @@ import Button from "../Button/Button";
 import { ICastVoteProps } from "./types";
 import React, { useState, useMemo } from "react";
 import { store } from "../../redux";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 function CastVote(props: ICastVoteProps) {
   const currentEpoch = store.getState().epoch.currentEpoch;
@@ -99,16 +100,20 @@ function CastVote(props: ICastVoteProps) {
                 You can claim your rewards after
               </span>
               <span className="hidden md:block">
-                <span className="relative top-0.5">
-                  <Image alt={"alt"} src={info} className="cursor-pointer" />
-                </span>
+                <ToolTip position={Position.top} message={""} disable={true}>
+                  <span className="relative top-0.5">
+                    <Image alt={"alt"} src={info} className="cursor-pointer" />
+                  </span>
+                </ToolTip>
                 <span className="text-white ml-1 font-subtitle2 ">{dateFormat} UTC</span>
               </span>
               <span className="block md:hidden">
                 <div>
-                  <span className="relative top-0.5">
-                    <Image alt={"alt"} src={info} className="cursor-pointer" />
-                  </span>
+                  <ToolTip position={Position.top} message={""} disable={true}>
+                    <span className="relative top-0.5">
+                      <Image alt={"alt"} src={info} className="cursor-pointer" />
+                    </span>
+                  </ToolTip>
                   <span className="text-white ml-1 font-subtitle2 ">{dateFormat} UTC</span>
                 </div>
               </span>

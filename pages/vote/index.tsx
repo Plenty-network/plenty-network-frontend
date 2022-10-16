@@ -126,7 +126,10 @@ export default function Vote() {
     });
   }, []);
   useEffect(() => {
-    localStorage.setItem("vote", userAddress);
+    console.log(localStorage.getItem("vote"), userAddress);
+    if (!(localStorage.getItem("vote") === userAddress)) {
+      localStorage.setItem("vote", userAddress);
+    }
   }, []);
   useEffect(() => {
     if (selectedEpoch?.epochNumber) {
@@ -437,7 +440,7 @@ export default function Vote() {
               handleCreateLock={handleCreateLock}
               searchValue={searchValue}
               setSearchValue={setSearchValue}
-              isFirst={localStorage.getItem("vote") !== userAddress}
+              isFirst={userAddress !== null && localStorage.getItem("vote") !== userAddress}
             />
 
             <div className="">

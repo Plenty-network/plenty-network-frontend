@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import Button from "../Button/Button";
 import { PopUpModal } from "../Modal/popupModal";
+import { isMobile } from "react-device-detect";
 import Image from "next/image";
 import ratesrefresh from "../../../src/assets/icon/swap/ratesrefresh.svg";
 import { useMemo, useState } from "react";
@@ -180,7 +181,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   <span className="relative top-0.5">
                     <ToolTip
                       id="tooltipN"
-                      position={Position.top}
+                      position={isMobile ? Position.right : Position.top}
                       toolTipChild={
                         <div className="w-[200px]">
                           The difference between the market price and estimated price due to trade
@@ -213,7 +214,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   <span className="relative top-0.5">
                     <ToolTip
                       id="tooltipO"
-                      position={Position.top}
+                      position={isMobile ? Position.right : Position.top}
                       toolTipChild={
                         <div className="w-[200px]">
                           Fees are 0.35% for each volatile swap and 0.10% for each stable swap.
@@ -237,7 +238,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   <span className="relative top-0.5">
                     <ToolTip
                       id="tooltipP"
-                      position={Position.top}
+                      position={isMobile ? Position.right : Position.top}
                       toolTipChild={
                         <div className="w-[200px]">
                           Routing through these tokens results in the best price for your trade.
