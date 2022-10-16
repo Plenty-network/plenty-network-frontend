@@ -41,7 +41,7 @@ export function ToolTip(props: IToolTipProps) {
         <ReactTooltip
           disable={props.disable}
           showInitial={props.isShowInnitially}
-          className={` tooltipCustom ${props.classNameToolTipContainer}-${
+          className={` tooltipCustomWithoutArrow ${props.classNameToolTipContainer}-${
             props.position ? props.position : "right"
           }`}
           arrowColor="rgba(60, 60, 60,0)"

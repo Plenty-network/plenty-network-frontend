@@ -34,8 +34,8 @@ const mainMenu: Array<ISingleSideBarProps> = [
   {
     name: "Swap",
     iconName: "u_exchange",
-    pathName: "/Swap",
-    activePathName: "/Swap",
+    pathName: "/swap",
+    activePathName: "/swap",
   },
   {
     name: "Pools",
@@ -46,8 +46,8 @@ const mainMenu: Array<ISingleSideBarProps> = [
   {
     name: "Vote",
     iconName: "lock_mobile",
-    pathName: "/Vote",
-    activePathName: "/Vote",
+    pathName: "/vote",
+    activePathName: "/vote",
   },
 ];
 export default function BottomNavigationBar(props: IBottomNavigationBarProps) {

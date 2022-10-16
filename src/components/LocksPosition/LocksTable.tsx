@@ -16,7 +16,7 @@ import PieChartButton from "./PieChart";
 import { useDispatch } from "react-redux";
 import { AppDispatch, store } from "../../redux";
 import { setSelectedDropDown } from "../../redux/veNFT";
-import Vote from "../../../pages/Vote";
+import Vote from "../../../pages/vote";
 import { useRouter } from "next/router";
 import { IAllLocksPositionData } from "../../api/portfolio/types";
 
@@ -303,7 +303,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
                   tokenId: "75",
                 })
               );
-              router.push("/Vote");
+              router.push("/vote");
             }}
           >
             <span className="relative top-0.5">
@@ -382,7 +382,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
                 }
               });
 
-              router.push("/Vote");
+              router.push("/vote");
             }}
           >
             Vote

@@ -247,19 +247,19 @@ export function Staking(props: IStakingProps) {
         </div>
         {/* dropDown And InfoTab */}
         <div className="flex py-2 px-2 md:px-2.5 justify-between bg-primary-850 border border-secondary-300">
-          <ToolTip
+          {/* <ToolTip
             message=" Select a veNFT to Boost"
             isShowInnitially={true}
             id="tooltip8"
             position={Position.top}
-          >
-            <VePLY
-              Options={props.vePLYOptions}
-              selectedText={props.selectedDropDown}
-              onClick={props.setSelectedDropDown}
-              isListLoading={props.isListLoading}
-            />
-          </ToolTip>
+          > */}
+          <VePLY
+            Options={props.vePLYOptions}
+            selectedText={props.selectedDropDown}
+            onClick={props.setSelectedDropDown}
+            isListLoading={props.isListLoading}
+          />
+          {/* </ToolTip> */}
           <div className="font-mobile-f9 md:text-f12 text-text-400 ml-2 max-w-[321px] text-center">
             Based on how much voting power the veNFT has, you may be able to boost your PLY rewards
             up to 2.5x
@@ -324,19 +324,12 @@ export function Staking(props: IStakingProps) {
           </div>
           {walletAddress && (
             <div className="pr-2 md:pr-5  w-[40%] ">
-              <ToolTip
-                disable={Number(props.pnlpBalance) > 0 ? false : true}
-                message={fromExponential(props.pnlpBalance)}
-                id="tooltip8"
-                position={Position.top}
-              >
-                <BtnWithWalletIcon
-                  text={`${
-                    Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(2) : 0
-                  } PNLP`}
-                  onClick={onClickAmount}
-                />
-              </ToolTip>
+              <BtnWithWalletIcon
+                text={`${
+                  Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(2) : 0
+                } PNLP`}
+                onClick={onClickAmount}
+              />
             </div>
           )}
         </div>
@@ -360,7 +353,11 @@ export function Staking(props: IStakingProps) {
             </div>
             <div className="ml-auto flex gap-2">
               {boost?.stakedData.isBoosted && (
-                <BtnwithBoost text={`${boost.stakedData.boostValue} x`} onClick={handleDetach} />
+                <BtnwithBoost
+                  text={`${boost.stakedData.boostValue} x`}
+                  onClick={handleDetach}
+                  tokenid={boost.stakedData.boostedLockId.toString()}
+                />
               )}
               <BtnWithWalletIconEnd
                 text={`${

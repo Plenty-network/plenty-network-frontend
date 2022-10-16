@@ -124,9 +124,9 @@ export function Epoch(props: IEpochProps) {
         <div
           className={clsx(
             " flex flex-col gap-[6px]",
-            router.pathname.includes("Vote") ? "cursor-pointer" : "cursor-not-allowed"
+            router.pathname.includes("vote") ? "cursor-pointer" : "cursor-not-allowed"
           )}
-          {...(router.pathname.includes("Vote")
+          {...(router.pathname.includes("vote")
             ? { onClick: () => setIsDropDownActive(!isDropDownActive) }
             : {})}
         >
@@ -148,7 +148,7 @@ export function Epoch(props: IEpochProps) {
             <p className="text-text-250 font-body4">
               Epoch{" "}
               <span className="text-white">
-                {!router.pathname.includes("Vote")
+                {!router.pathname.includes("vote")
                   ? epochData[indexOfCurrent]?.epochNumber
                   : selectedEpoch?.epochNumber
                   ? selectedEpoch.epochNumber
@@ -162,7 +162,7 @@ export function Epoch(props: IEpochProps) {
                 </span>
               </span>
             </p>
-            {router.pathname.includes("Vote") && (
+            {router.pathname.includes("vote") && (
               <p className="relative -top-[1.5px]">
                 <Image alt={"alt"} className="rotate-180" src={vectorDown} />
               </p>

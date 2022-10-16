@@ -16,7 +16,7 @@ export interface IVotingAllocationProps extends IAllocationProps {}
 function VotingAllocation(props: IVotingAllocationProps) {
   const [selectedDropDown, setSelectedDropDown] = useState("");
   const [piChartData, setPiChartData] = useState<IVotesResponse>();
-  const [selectedColorIndex, setSelectedColorIndex] = useState<number>(-1);
+  const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0);
   useEffect(() => {
     if (props.epochNumber) {
       if (
@@ -63,10 +63,10 @@ function VotingAllocation(props: IVotingAllocationProps) {
             ) : (
               <div className="min-h-[252px] flex flex-col justify-center items-center  ">
                 <div className=" flex-col felx max-w-[265px] gap-1.5 justify-center items-center  text-center">
-                  {selectedDropDown === "Protocol" ? (
-                    <div className="text-text-200 text-f16 ">No votes in this epoch</div>
-                  ) : (
+                  {selectedDropDown === "My votes" ? (
                     <div className="text-text-200 text-f16 ">You havent voted in this Epoch</div>
+                  ) : (
+                    <div className="text-text-200 text-f16 ">No votes in this epoch</div>
                   )}
                 </div>
               </div>

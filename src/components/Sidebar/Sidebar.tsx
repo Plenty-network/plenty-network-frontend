@@ -102,8 +102,8 @@ const MainMenu: Array<ISingleSideBarProps> = [
   {
     name: "Swap",
     iconName: "swap",
-    pathName: "/Swap",
-    activePathName: "/Swap",
+    pathName: "/swap",
+    activePathName: "/swap",
   },
   {
     name: "Pools",
@@ -114,15 +114,16 @@ const MainMenu: Array<ISingleSideBarProps> = [
   {
     name: "Vote",
     iconName: "lock",
-    pathName: "/Vote",
-    activePathName: "/Vote",
+    pathName: "/vote",
+    activePathName: "/vote",
   },
   {
     name: "Bribes",
     iconName: "bribes",
-    pathName: "/Bribes",
-    activePathName: "/Bribes",
+    pathName: "/bribes",
+    activePathName: "/bribes",
     isHrefIcon: true,
+    openNewPage: true,
   },
 ];
 
@@ -130,7 +131,7 @@ export function SideBar(props: ISideBarProps) {
   const [activeMenu, setActiveMenu] = React.useState<string>("");
   const { pathname } = useRouter();
   try {
-    if (pathname == "/Swap") document.getElementsByTagName("body")[0].className = "swap";
+    if (pathname == "/swap") document.getElementsByTagName("body")[0].className = "swap";
     else document.getElementsByTagName("body")[0].className = "";
   } catch {}
   return (
@@ -159,6 +160,7 @@ export function SideBar(props: ISideBarProps) {
               subMenu={menuItem.subMenu ? menuItem.subMenu : false}
               pathName={menuItem.pathName}
               isHrefIcon={menuItem.isHrefIcon}
+              openNewPage={menuItem.openNewPage}
             />
           ))}
         </div>

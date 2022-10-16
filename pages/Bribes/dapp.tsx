@@ -14,7 +14,7 @@ import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
 
-const Bribes: NextPage = () => {
+const Dapp: NextPage = () => {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
@@ -50,6 +50,7 @@ const Bribes: NextPage = () => {
       dispatch(getTotalVotingPower());
     }
   }, [totalVotingPowerError]);
+  const [isOperationComplete, setIsOperationComplete] = useState(false);
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
@@ -62,12 +63,7 @@ const Bribes: NextPage = () => {
   const [isBribesMain, setBribesMain] = useState(false);
 
   const tokenPrice = store.getState().tokenPrice.tokenPrice;
-  useEffect(() => {
-    if (Object.keys(tokenPrice).length !== 0)
-      getUserBribeData(userAddress, tokenPrice).then((res) => {
-        setBribesArr({ data: res.userBribesData, isfetched: true });
-      });
-  }, [userAddress, tokenPrice]);
+
   const [poolsArr, setPoolsArr] = useState<{
     data: IPoolsForBribesResponse;
     isfetched: boolean;
@@ -80,14 +76,26 @@ const Bribes: NextPage = () => {
     getPoolsDataForBribes(epoch?.epochNumber).then((res) => {
       setPoolsArr({ data: res, isfetched: true });
     });
-  }, [epoch?.epochNumber]);
+  }, [epoch?.epochNumber, isOperationComplete]);
+  useEffect(() => {
+    if (Object.keys(tokenPrice).length !== 0)
+      getUserBribeData(userAddress, tokenPrice).then((res) => {
+        setBribesArr({ data: res.userBribesData, isfetched: true });
+      });
+  }, [userAddress, tokenPrice, isOperationComplete]);
 
   return (
     <>
-      {!isBribesMain && <Landing setBribesMain={setBribesMain} />}
-      {/* {isBribesMain && <Dapp />} */}
+      {
+        <BribesMain
+          poolsArr={poolsArr}
+          bribesArr={bribesArr}
+          setIsOperationComplete={setIsOperationComplete}
+          isOperationComplete={isOperationComplete}
+        />
+      }
     </>
   );
 };
 
-export default Bribes;
+export default Dapp;

@@ -40,7 +40,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
     symbol: "USDT.e",
   });
   const NoData = React.useMemo(() => {
-    return <NoPoolsPosition />;
+    return <NoPoolsPosition h1={"No active liquidity positions"} cta={"View Pools"} />;
   }, []);
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
