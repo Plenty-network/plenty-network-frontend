@@ -76,7 +76,7 @@ export default function Pools(props: IIndexProps) {
             toolTipContent="Watch how to add liquidity, stake, and earn PLY. "
             searchValue={searchValue}
             setSearchValue={setSearchValue}
-            isFirst={localStorage.getItem("pool") !== walletAddress}
+            isFirst={walletAddress !== null && localStorage.getItem("pool") !== walletAddress}
           />
           <div className="sticky top-0 z-10">
             <CardHeader
