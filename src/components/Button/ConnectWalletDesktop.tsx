@@ -107,8 +107,8 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
                 <span>Node Selector</span>
               </p>
               <p>
-                {router.pathname.includes("MyPortfolio") ? (
-                  <Link className={``} href={"/Swap"}>
+                {router.pathname.includes("myportfolio") ? (
+                  <Link className={``} href={"/swap"}>
                     <p
                       onClick={disconnectUserWallet}
                       className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"

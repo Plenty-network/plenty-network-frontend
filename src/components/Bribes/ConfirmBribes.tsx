@@ -39,7 +39,7 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
     var date = new Date(dates);
     var month = date.getMonth();
 
-    return `${("0" + date.getDate()).slice(-2)} ${monthNames[month]},${date.getFullYear()}`;
+    return `${("0" + date.getDate()).slice(-2)}-${monthNames[month]}-${date.getFullYear()}`;
   };
 
   const tEZorCTEZtoUppercase = (a: string) =>
@@ -97,18 +97,19 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
                   </p>
                 </div>
 
-                <div className="text-text-500 mt-[14px] font-body3 mx-3 md:mx-5">Token:</div>
+                <div className="text-text-500 mt-[14px] font-body3 mx-3 md:mx-5">Bribe:</div>
                 <div className="mx-3 md:mx-5 flex items-center mt-1.5">
                   <Image src={getImagesPath(props.token.name)} width={"25px"} height={"25px"} />
                   <span className="font-body4 ml-2">
                     {props.value} {tEZorCTEZtoUppercase(props.token.name)}
                   </span>
+                  <span className="text-text-500 font-body4 ml-1">{`(${props.perEpoch}/epoch)`}</span>
                 </div>
                 <div className="mt-5 mx-3 md:mx-5 font-body3 text-text-500">For a period of:</div>
                 <div className="mx-3 md:mx-5 flex items-center mt-1.5">
                   <Image src={epoachIcon} width={"26px"} height={"26px"} />
                   <span className="font-body4 ml-2">
-                    Epoch {props.selectedDropDown.epochNumber} {!props.isSelectedEpoch && "-"}
+                    Epoch {props.selectedDropDown.epochNumber} {!props.isSelectedEpoch && "-"}{" "}
                     {!props.isSelectedEpoch && props.selectedEndDropDown.epochNumber}
                   </span>
                 </div>

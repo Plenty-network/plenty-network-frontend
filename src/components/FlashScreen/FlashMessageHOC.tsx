@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useStateAnimate } from "../../hooks/useAnimateUseState";
-import { useAppDispatch, useAppSelector } from "../../redux";
+import { store, useAppDispatch, useAppSelector } from "../../redux";
 import { unsetFlashMessage } from "../../redux/flashMessage";
 import { setNotificationMessage } from "../Notification/notificationMessageSave";
 import { FlashMessage } from "./index";

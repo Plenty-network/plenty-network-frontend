@@ -14,6 +14,7 @@ export interface INotificationListProps {
 export function NotificationList(props: INotificationListProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
   let notificationList = getAllNotification(walletAddress);
+
   const dispatch = useDispatch<AppDispatch>();
   React.useEffect(() => {
     notificationList = getAllNotification(walletAddress);
@@ -29,7 +30,7 @@ export function NotificationList(props: INotificationListProps) {
           This is where you’ll see notifications about your Plenty transactions
         </div>
         {isMobile && (
-          <Link href={"/Swap"}>
+          <Link href={"/swap"}>
             <div className="text-primary-500 font-caption1-small mt-[18px]">Swap your assets</div>
           </Link>
         )}

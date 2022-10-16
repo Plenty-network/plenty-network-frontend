@@ -255,7 +255,7 @@ function ManageLock(props: IManageLockProps) {
           >
             <div className=" px-3 md:px-5 text-text-50 font-subtitle1">Choose lock end </div>
             <div className="mt-2 rounded-lg ml-5 mr-[24px] border-[1.3px] border-border-200 pr-5 pl-4 flex items-center h-[62px] hover:border-text-700">
-              <div onClick={() => setIsDatePickerOpen(true)}>
+              <div onClick={() => setIsDatePickerOpen(true)} className={"w-full"}>
                 <input
                   type="text"
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-subtitle6  md:font-subtitle6 outline-none w-[100%] placeholder:text-text-500"
@@ -265,8 +265,8 @@ function ManageLock(props: IManageLockProps) {
                   onChange={(e) => props.setLockingDate(e.target.value)}
                 />{" "}
               </div>
-              <div className="ml-auto cursor-pointer" onClick={() => setIsDatePickerOpen(true)}>
-                <Image alt={"alt"} src={calender} />
+              <div className="ml-auto cursor-pointer">
+                <Image alt={"alt"} src={calender} onClick={() => setIsDatePickerOpen(true)} />
                 <Datepicker
                   selectedDate={new Date()}
                   startTimeStamp={dateRange.startTimeStamp}
@@ -288,7 +288,7 @@ function ManageLock(props: IManageLockProps) {
                 <ToolTip
                   toolTipChild={
                     <div className="w-[210px] text-center">
-                      Lock for 4 years for maximum voting power of 4000
+                      Lock for 4 years for maximum voting power
                     </div>
                   }
                   id="tooltip8"

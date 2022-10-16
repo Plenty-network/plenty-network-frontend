@@ -23,15 +23,12 @@ const Home: NextPage = () => {
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
-  useEffect(() => {  
-    Router.push('/Swap')
+  useEffect(() => {
+    Router.push("/swap");
   });
   return (
     <>
-      
-      <SideBarHOC>
-        
-      </SideBarHOC>
+      <SideBarHOC>{}</SideBarHOC>
     </>
   );
 };

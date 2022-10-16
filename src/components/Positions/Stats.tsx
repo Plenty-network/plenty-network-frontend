@@ -48,7 +48,7 @@ function Stats(props: IStatsProps) {
         toolTipMessage={""}
         isLast={true}
         setShowCreateLockModal={props.setShowCreateLockModal}
-        title={"PLY Balance"}
+        title={"PLY balance"}
         value={props.plyBalance.toFixed(1)}
         subValue={`$${(1 * Number(props.plyBalance)).toFixed(1)}`}
       />

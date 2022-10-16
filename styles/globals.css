@@ -208,6 +208,17 @@ input[type='number'] {
   box-shadow:  0px 4px 24px rgb(0 0 0 / 40%) !important;
   padding: 16px 19px !important;
 }
+.tooltipCustomWithoutArrow {
+  opacity: 0.98 !important;
+  background-color: #160d24 !important;
+  border-color: #341e54 !important;
+  color: white !important;
+  text-align: left !important;
+  border: 1px solid #341e54 !important;
+  border-radius: 12px !important;
+  box-shadow:  0px 4px 24px rgb(0 0 0 / 40%) !important;
+  padding: 8px 19px !important;
+}
 .playIconTooltip-left::after{
     content: '' !important;
     right: -1px !important;

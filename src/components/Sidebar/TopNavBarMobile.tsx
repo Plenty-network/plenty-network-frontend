@@ -19,7 +19,7 @@ export function TopNavBarMobile(props: ITopNavBarMobileProps) {
       </Link>
       {!props.isBribes && (
         <div className="flex gap-3">
-          <Link href={"/MyPortfolio"}>
+          <Link href={"/myportfolio"}>
             <Image src={portfolio} />
           </Link>
           <NotificationIcon

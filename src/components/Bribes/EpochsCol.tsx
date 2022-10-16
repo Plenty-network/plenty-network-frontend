@@ -8,13 +8,6 @@ import { IEpochData } from "../../api/util/types";
 import { fetchEpochData } from "../../api/util/epoch";
 
 export function EpochCol(props: IEpochCol) {
-  // const [data, setData] = useState<IEpochData>({} as IEpochData);
-  // useEffect(() => {
-  //   fetchEpochData(props.epochNumber).then((res) => {
-  //     setData(res.epochData);
-  //   });
-  // }, [props.epochNumber]);
-
   const dateFormat = (dates: number) => {
     const monthNames = [
       "Jan",

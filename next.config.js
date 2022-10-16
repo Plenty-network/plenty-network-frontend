@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-}
+};
 
 module.exports = {
   target: "serverless",
@@ -17,10 +17,10 @@ module.exports = {
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/Swap',
+        source: "/",
+        destination: "/swap",
         permanent: true,
       },
-    ]
-  }
+    ];
+  },
 };

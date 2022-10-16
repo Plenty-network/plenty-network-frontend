@@ -23,12 +23,13 @@ function StatsRewards(props: IStatsRewardsProps) {
 
     return num.toFixed(2);
   }
+
   return (
     <div className="flex gap-2.5 min-w-[1130px] w-full justify-between ">
       <StatsCard
         toolTipMessage={"PLY rewards through gauges."}
         title={"PLY emisisons"}
-        value={nFormatter(props.plyEmission)}
+        value={nFormatter(new BigNumber(props.plyEmission))}
         subValue={"PLY"}
         disable={props.plyEmission?.isEqualTo(0)}
         setShowClaimAllPly={props.setShowClaimPly}

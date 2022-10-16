@@ -43,7 +43,6 @@ import {
 import { LocksTablePosition } from "../../src/components/LocksPosition/LocksTable";
 import clsx from "clsx";
 import StatsRewards from "../../src/components/Rewards/Stats";
-import { MODULE } from "../../src/components/Votes/types";
 import { PoolsTableRewards } from "../../src/components/PoolsRewards/poolsRewardsTable";
 import ManageLock from "../../src/components/LocksPosition/ManageLock";
 import { getAllLocksPositionData, getUnclaimedRewardsForLock } from "../../src/api/portfolio/locks";
@@ -328,6 +327,7 @@ function MyPortfolio(props: any) {
   }, [userAddress, lpTokenPrice]);
   useEffect(() => {
     //setVeNFTlist([]);
+
     if (userAddress) {
       getVeNFTsList(userAddress, currentEpoch?.epochNumber).then((res) => {
         setVeNFTlist(res.veNFTData);
@@ -1453,7 +1453,7 @@ function MyPortfolio(props: any) {
                   <p>
                     <div className="text-white font-title3">List of my PLY emissions</div>
                     <div className="text-text-250 font-body1">
-                      Discover veNFTs on the largest NFT marketplace on Tezos.
+                      Claim voting rewards for your locks
                     </div>
                   </p>
                   {true && (
@@ -1523,7 +1523,7 @@ function MyPortfolio(props: any) {
                   <p>
                     <div className="text-white font-title3">List of my locks</div>
                     <div className="text-text-250 font-body1">
-                      Discover veNFTs on the largest NFT marketplace on Tezos.
+                      Claim voting rewards for your locks
                     </div>
                   </p>
                   {true && (

@@ -66,6 +66,9 @@ function AddBribes(props: IAddBribes) {
       address: token[1].address,
     }));
   }, [tokens]);
+  tokensListConfig.sort(
+    (a, b) => Number(allBalance.userBalance[b.name]) - Number(allBalance.userBalance[a.name])
+  );
   const tEZorCTEZtoUppercase = (a: string) =>
     a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
@@ -99,7 +102,7 @@ function AddBribes(props: IAddBribes) {
     var date = new Date(dates);
     var month = date.getMonth();
 
-    return `${("0" + date.getDate()).slice(-2)} ${monthNames[month]},${date.getFullYear()}`;
+    return `${("0" + date.getDate()).slice(-2)}-${monthNames[month]}-${date.getFullYear()}`;
   };
   const dispatch = useDispatch<AppDispatch>();
 
@@ -179,10 +182,11 @@ function AddBribes(props: IAddBribes) {
   const BribesButton = useMemo(() => {
     if (userAddress) {
       if (
-        Number(props.bribeInputValue) > 0 &&
-        new BigNumber(props.bribeInputValue).isGreaterThan(
-          allBalance.userBalance[props.bribeToken.name]
-        )
+        (Number(props.bribeInputValue) > 0 &&
+          new BigNumber(props.bribeInputValue).isGreaterThan(
+            allBalance.userBalance[props.bribeToken.name]
+          )) ||
+        new BigNumber(bottomValue).isGreaterThan(allBalance.userBalance[props.bribeToken.name])
       ) {
         return (
           <Button color="disabled" width="w-full">
@@ -223,6 +227,7 @@ function AddBribes(props: IAddBribes) {
     selectedDropDown.epochNumber,
     selectedEndDropDown.epochNumber,
     isSelectedEpoch,
+    bottomValue,
   ]);
 
   return (
@@ -297,7 +302,12 @@ function AddBribes(props: IAddBribes) {
                   )}
                 >
                   <div className="flex ">
-                    <div className={clsx(" mt-4", "w-full ")}>
+                    <div
+                      className={clsx(
+                        " mt-4",
+                        Object.keys(props.bribeToken).length !== 0 ? "" : "w-full"
+                      )}
+                    >
                       {Object.keys(props.bribeToken).length !== 0 ? (
                         <TokenDropdown
                           onClick={() => handleTokenType()}
@@ -324,7 +334,7 @@ function AddBribes(props: IAddBribes) {
                           <input
                             type="text"
                             className={clsx(
-                              "text-white bg-card-500 text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%] placeholder:text-text-500"
+                              "text-white bg-card-500/[0.1] text-right border-0 font-medium2  lg:font-medium1 outline-none w-[100%] placeholder:text-text-500"
                             )}
                             placeholder="0.0"
                             lang="en"
@@ -414,10 +424,19 @@ function AddBribes(props: IAddBribes) {
                 {bottomValue > 0 && (
                   <div className="font-body2 text-text-250 mt-4 mx-5">
                     You are adding a bribe of
-                    <span className="text-white ml-1">
+                    <span
+                      className={clsx(
+                        "ml-1",
+                        new BigNumber(bottomValue).isGreaterThan(
+                          allBalance.userBalance[props.bribeToken.name]
+                        )
+                          ? "text-error-500"
+                          : "text-white"
+                      )}
+                    >
                       {bottomValue} {tEZorCTEZtoUppercase(props.bribeToken.name)}
                     </span>{" "}
-                    from Epoch {selectedDropDown.epochNumber} {!isSelectedEpoch && "-"}
+                    from Epoch {selectedDropDown.epochNumber} {!isSelectedEpoch && "-"}{" "}
                     {!isSelectedEpoch && selectedEndDropDown.epochNumber} (
                     {dateFormat(selectedDropDown.startTimestamp)} to{" "}
                     {isSelectedEpoch
@@ -445,7 +464,8 @@ function AddBribes(props: IAddBribes) {
         show={isConfirm}
         setShow={setIsConfirm}
         selectedPool={props.selectedPool}
-        value={props.bribeInputValue}
+        value={bottomValue.toString()}
+        perEpoch={props.bribeInputValue}
         token={props.bribeToken}
         selectedDropDown={selectedDropDown}
         selectedEndDropDown={selectedEndDropDown}

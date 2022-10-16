@@ -15,16 +15,16 @@ export interface IAprInfoProps {
 export function AprInfo(props: IAprInfoProps) {
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(1) + "B";
+      return num.dividedBy(1000000000).toFixed(2) + "B";
     }
     if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(1) + "M";
+      return num.dividedBy(1000000).toFixed(2) + "M";
     }
     if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(1) + "K";
+      return num.dividedBy(1000).toFixed(2) + "K";
     }
 
-    return num.toFixed(1);
+    return num.toFixed(2);
   }
   return (
     <ToolTip

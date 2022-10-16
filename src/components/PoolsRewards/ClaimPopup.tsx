@@ -65,7 +65,11 @@ function ClaimPly(props: IClaimProps) {
                     height={"28px"}
                   />
                   <ToolTip
-                    message={`$${tokenPrice["PLY"] * Number(props.value)}`}
+                    message={
+                      props.state === EClaimAllState.UNCLAIMED
+                        ? `$${tokenPrice["PLY"] * Number(props.plyValue)}`
+                        : `$${tokenPrice["PLY"] * Number(props.value)}`
+                    }
                     id="tooltip8"
                     type={TooltipType.withoutArrowsAndTitle}
                     position={Position.top}

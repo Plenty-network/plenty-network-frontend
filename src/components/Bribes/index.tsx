@@ -71,7 +71,9 @@ function BribesMain(props: BribesMainProps) {
       setShowConfirmTransaction
     ).then((response) => {
       if (response.success) {
+        props.setIsOperationComplete(true);
         setTimeout(() => {
+          props.setIsOperationComplete(false);
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Success,
