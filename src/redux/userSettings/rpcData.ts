@@ -6,7 +6,7 @@ interface IRpcNodeData {
 
 const initialState: IRpcNodeData = {
   rpcNode: undefined,
-}
+};
 
 const rpcDataSlice = createSlice({
   name: "rpcData",

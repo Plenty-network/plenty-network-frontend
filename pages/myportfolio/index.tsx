@@ -257,9 +257,7 @@ function MyPortfolio(props: any) {
       }, API_RE_ATTAMPT_DELAY);
     }
   }, [unclaimedInflationDataError]);
-  const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
-    {} as { [id: string]: IVotePageData }
-  );
+
   const [statsPositions, setStatsPosition] = useState({
     success: true,
     tvl: statsTvl,
@@ -286,12 +284,6 @@ function MyPortfolio(props: any) {
       isFetching: statsVotesFetching,
     });
   }, [statsVotesFetching]);
-
-  useEffect(() => {
-    votesPageDataWrapper(934, undefined).then((res) => {
-      setVoteData(res.allData);
-    });
-  }, []);
 
   useEffect(() => {
     if (userAddress) {
@@ -368,7 +360,7 @@ function MyPortfolio(props: any) {
   }, [veNFTlist]);
   useEffect(() => {
     if (userAddress) {
-      setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
+      //setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
       //setStats1({} as IVotesStatsDataResponse);
       // getVotesStatsData(userAddress).then((res) => {
       //   setStats1({
@@ -1614,7 +1606,6 @@ function MyPortfolio(props: any) {
                 </div>
                 <LocksTableRewards
                   className="md:px-5 md:pb-4   "
-                  voteData={voteData}
                   allLocksRewardsData={allLocksRewardsData}
                   selectedDropDown={selectednft}
                   handleClick={handleClaimALLEpoch}
