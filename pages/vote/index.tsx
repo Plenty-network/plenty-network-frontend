@@ -380,8 +380,8 @@ export default function Vote() {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Vote with #
-              ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} VePLY`,
+              trailingText: `Vote with VeNFT #
+              ${localStorage.getItem(FIRST_TOKEN_AMOUNT)}`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -410,8 +410,8 @@ export default function Vote() {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Vote with #
-              ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} VePLY`,
+              trailingText: `Vote with VeNFT #
+              ${localStorage.getItem(FIRST_TOKEN_AMOUNT)}`,
               linkText: "",
               isLoading: true,
             })

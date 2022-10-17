@@ -57,7 +57,7 @@ export function TopBar(props: ITopBar) {
             <p className="ml-2">
               <div className="text-white font-subtitle3">#{Number(props.manageData.tokenId)}</div>
               <div className="flex mt-0.5">
-                <p className="font-subtitle1 text-text-500 mr-1">vePLY</p>
+                <p className="font-subtitle1 text-text-500 mr-1">veNFT</p>
                 <Image alt={"alt"} src={link} />
               </div>
             </p>

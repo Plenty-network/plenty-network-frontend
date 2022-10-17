@@ -29,6 +29,7 @@ import { setIsLoadingWallet } from "../../redux/walletLoading";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
 import { getStakedData } from "../../api/stake";
+import { FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_B } from "../../constants/localStorage";
 
 export enum StakingScreenType {
   Staking = "Staking",
@@ -160,6 +161,14 @@ export function Staking(props: IStakingProps) {
     return dispatch(walletConnection());
   };
   const handleDetach = () => {
+    localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.symbol));
+    localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.symbol));
+    if (boost?.stakedData.boostedLockId) {
+      localStorage.setItem(
+        FIRST_TOKEN_AMOUNT,
+        boost ? boost?.stakedData?.boostedLockId.toString() : ""
+      );
+    }
     detachLockFromGauge(
       props.tokenIn.name,
       props.tokenOut.name,
@@ -174,7 +183,10 @@ export function Staking(props: IStakingProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Detach is succesfull`,
+              trailingText: ` Detach # ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool
+              `,
               linkText: "View in Explorer",
               isLoading: true,
               transactionId: "",
@@ -187,7 +199,9 @@ export function Staking(props: IStakingProps) {
             flashType: Flashtype.Rejected,
             transactionId: "",
             headerText: "Rejected",
-            trailingText: `Detach operation rejected`,
+            trailingText: `Detach # ${localStorage.getItem(
+              FIRST_TOKEN_AMOUNT
+            )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool`,
             linkText: "",
             isLoading: true,
           })

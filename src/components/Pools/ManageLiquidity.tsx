@@ -356,10 +356,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     });
   };
   const handleStakeOperation = () => {
-    setContentTransaction(`Stake ${Number(stakeInput).toFixed(2)} PNLP`);
-    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    setShowConfirmTransaction(true);
-    setScreen("1");
     localStorage.setItem(
       TOKEN_A,
       props.tokenIn.name === "tez"
@@ -377,6 +373,17 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         : props.tokenOut.name
     );
     localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(stakeInput).toFixed(2));
+    localStorage.setItem(SECOND_TOKEN_AMOUNT, selectedDropDown.tokenId.toString());
+    setContentTransaction(
+      stakeInput !== ""
+        ? `Stake ${Number(stakeInput).toFixed(2)} PNLP`
+        : `Boost ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+            TOKEN_B
+          )} pool stake with # ${localStorage.getItem(SECOND_TOKEN_AMOUNT)}`
+    );
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    setShowConfirmTransaction(true);
+    setScreen("1");
 
     stakePnlpTokens(
       props.tokenIn.symbol,
@@ -398,9 +405,14 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Stake ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(TOKEN_B)} PNLP`,
+              trailingText:
+                stakeInput !== ""
+                  ? `Stake ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+                      TOKEN_A
+                    )} / ${localStorage.getItem(TOKEN_B)} PNLP`
+                  : `Boost ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+                      TOKEN_B
+                    )} pool stake with # ${localStorage.getItem(SECOND_TOKEN_AMOUNT)}`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -423,9 +435,14 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Stake ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(TOKEN_B)} PNLP`,
+              trailingText:
+                stakeInput !== ""
+                  ? `Stake ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+                      TOKEN_A
+                    )} / ${localStorage.getItem(TOKEN_B)} PNLP`
+                  : `Boost ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+                      TOKEN_B
+                    )} pool stake with # ${localStorage.getItem(SECOND_TOKEN_AMOUNT)}`,
               linkText: "",
               isLoading: true,
             })

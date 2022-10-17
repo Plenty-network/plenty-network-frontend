@@ -28,6 +28,7 @@ import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
 import { getCompleteUserBalace } from "../../api/util/balance";
 import { IAllBalanceResponse } from "../../api/util/types";
+import { TOKEN_A, TOKEN_B } from "../../constants/localStorage";
 
 function BribesMain(props: BribesMainProps) {
   const [contentTransaction, setContentTransaction] = useState("");
@@ -67,9 +68,14 @@ function BribesMain(props: BribesMainProps) {
     setBribeToken({} as tokenParameter);
   };
   const dispatch = useDispatch<AppDispatch>();
-
+  const tEZorCTEZtoUppercase = (a: string) =>
+    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
   const handleOperation = () => {
-    setContentTransaction(`Add Bribes`);
+    localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(selectedPool.tokenA));
+    localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(selectedPool.tokenB));
+    setContentTransaction(
+      `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool.`
+    );
     setShowAddBribes(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -95,7 +101,9 @@ function BribesMain(props: BribesMainProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Add Bribes`,
+              trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+                TOKEN_B
+              )} pool.`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -121,7 +129,10 @@ function BribesMain(props: BribesMainProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Add Bribes`,
+              trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+                TOKEN_B
+              )} pool.
+              `,
               linkText: "",
               isLoading: true,
             })
