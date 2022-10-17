@@ -50,6 +50,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
           />
         </ToolTip>
       </div>
+
       <InputSearchBox
         className={clsx("md:hidden", props.title === "Vote" && "hidden")}
         value={props.searchValue}

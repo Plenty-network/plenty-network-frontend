@@ -350,7 +350,7 @@ function SwapTab(props: ISwapTabProps) {
           <div
             className={clsx(
               " mt-4",
-              "w-full sm:w-auto"
+              "flex-none"
               // Object.keys(props.tokenIn).length !== 0 ? "flex-[0_0_38%]" : "flex-[0_0_45%]"
             )}
           >
@@ -463,7 +463,7 @@ function SwapTab(props: ISwapTabProps) {
             <div
               className={clsx(
                 " mt-4",
-                "w-full sm:w-auto"
+                "flex-none"
                 // Object.keys(props.tokenOut).length !== 0 ? "flex-[0_0_38%]" : "flex-[0_0_45%]"
               )}
             >

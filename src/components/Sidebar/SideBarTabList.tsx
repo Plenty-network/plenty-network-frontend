@@ -41,17 +41,17 @@ export function SingleSideBar(props: ISingleSideBarProps) {
                 />
               )}
               <p>{props.name}</p>
-              {props.isHrefIcon && (
-                <p className="w-[11px] h-[11px] relative top-px ml-60 md:ml-20">
-                  <Image
-                    alt={"alt"}
-                    src={"/assets/icon/HrefIcon.svg"}
-                    height={"15px"}
-                    width={"15px"}
-                  />
-                </p>
-              )}
             </div>
+            {props.isHrefIcon && (
+              <p className="w-[11px] h-[11px] relative top-px ml-auto ">
+                <Image
+                  alt={"alt"}
+                  src={"/assets/icon/HrefIcon.svg"}
+                  height={"15px"}
+                  width={"15px"}
+                />
+              </p>
+            )}
             {props.subMenu && props.subMenu.length && (
               <Image
                 alt={"alt"}
