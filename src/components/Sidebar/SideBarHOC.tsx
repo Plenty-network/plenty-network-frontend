@@ -69,6 +69,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
           <TopNavBarMobile
             setShowNotification={showNotificationClick}
             isBribes={props.isBribes ? props.isBribes : false}
+            setNodeSelector={setNodeSelector}
           />
         )}
       </div>

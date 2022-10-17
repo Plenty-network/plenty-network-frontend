@@ -10,6 +10,7 @@ import { NotificationIcon } from "../NotificationIcon";
 export interface ITopNavBarMobileProps {
   setShowNotification: Function;
   isBribes: boolean;
+  setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function TopNavBarMobile(props: ITopNavBarMobileProps) {
@@ -30,7 +31,7 @@ export function TopNavBarMobile(props: ITopNavBarMobileProps) {
             className="cursor-pointer hover:opacity-90"
             onClick={props.setShowNotification}
           />
-          <ConnectWalletBtnMobile />
+          <ConnectWalletBtnMobile setNodeSelector={props.setNodeSelector} />
         </div>
       )}
     </div>
