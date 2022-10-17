@@ -17,7 +17,7 @@ import { walletLoading } from "./walletLoading";
 import { portfolioRewards } from "./myPortfolio/rewards";
 import { portfolioStatsTvl } from "./myPortfolio/tvl";
 import { portfolioStatsVotes } from "./myPortfolio/votesStats";
-import { rpcData } from "./userSettings/rpcNode";
+import { rpcData } from "./userSettings/rpcData";
 
 const reducers = combineReducers({
   wallet: wallet,
