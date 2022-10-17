@@ -39,7 +39,7 @@ export default function NotificationBar(props: INotificationBarProps) {
       id="modal_outer"
       className={`fixed z-50 w-screen h-screen   ${isClose ? "fade-out-3" : "fade-in-3"}`}
     >
-      <div className="notificationShadow absolute top-[3.8rem] right-[14.6rem]">
+      <div className="notificationShadow absolute top-[96px] right-[14.6rem]">
         <div
           className="   relative 
        w-[364px] 
