@@ -704,8 +704,8 @@ function SwapTab(props: ISwapTabProps) {
                       <div
                         className={clsx(
                           swapRoute && swapRoute?.length > 3
-                            ? "w-[380px] md:w-[460px]"
-                            : "w-[370px] md:w-[400px]"
+                            ? "w-[360px] md:w-[460px]"
+                            : "w-[360px] md:w-[400px]"
                         )}
                       >
                         <div className="mt-2 ">
