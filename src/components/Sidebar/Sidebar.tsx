@@ -138,9 +138,9 @@ export function SideBar(props: ISideBarProps) {
     <div
       className="fixed text-f14 bg-sideBar border-border-500/50 border-r shadow hidden md:block  "
       style={{
-        height: "calc(100vh - 64px)",
+        height: "calc(100vh - 103px)",
         width: "240px",
-        marginTop: "64px",
+        marginTop: "103px",
       }}
     >
       <div className="flex-col justify-between h-full flex overflow-y-auto">

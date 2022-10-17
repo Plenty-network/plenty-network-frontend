@@ -1,5 +1,6 @@
 import Image from "next/image";
 import * as React from "react";
+import { isMobile } from "react-device-detect";
 
 export interface ICircularImageInfoProps {
   imageArray?: Array<any>;
@@ -31,10 +32,20 @@ export const CircularOverLappingImage = (props: { src1: string; src2: string }) 
   return (
     <div className=" flex justify-center items-center">
       <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-        <Image alt={"alt"} src={props.src1} width={"24px"} height={"24px"} />
+        <Image
+          alt={"alt"}
+          src={props.src1}
+          width={isMobile ? "19px" : "24px"}
+          height={isMobile ? "19px" : "24px"}
+        />
       </div>
       <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-        <Image alt={"alt"} src={props.src2} width={"24px"} height={"24px"} />
+        <Image
+          alt={"alt"}
+          src={props.src2}
+          width={isMobile ? "19px" : "24px"}
+          height={isMobile ? "19px" : "24px"}
+        />
       </div>
     </div>
   );
@@ -50,8 +61,13 @@ export interface IImageCircleProps {
 export function ImageCircle(props: IImageCircleProps) {
   const { className = "" } = props;
   return (
-    <span className={`w-[28px] h-[28px] -ml-1 ${className}`}>
-      <Image alt={"alt"} src={props.src} width={"28px"} height={"28px"} />
+    <span className={`w-[19px] h-[19px] md:w-[28px] md:h-[28px] -ml-1 ${className}`}>
+      <Image
+        alt={"alt"}
+        src={props.src}
+        width={isMobile ? "19px" : "28px"}
+        height={isMobile ? "19px" : "28px"}
+      />
     </span>
   );
 }
