@@ -38,7 +38,7 @@ export function TopNavBar(props: ITopNavBarProps) {
   const userAddress = store.getState().wallet.address;
   return (
     <>
-      <nav className="hidden top-[39px] md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   px-10 pl-0 topNavblurEffect z-50">
+      <nav className="hidden top-[38px] md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   px-10 pl-0 topNavblurEffect z-50">
         <div className="h-full w-[240px] border-border-500/50 border-r flex items-center pl-[22px]">
           {!props.isBribes ? (
             <Link href={"/"}>
