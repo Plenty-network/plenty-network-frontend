@@ -1,4 +1,4 @@
-import { walletNetwork, rpcNode } from "../../common/walletconnect";
+import { walletNetwork, getRpcNode } from "../../common/walletconnect";
 import { dappClient } from "../../common/walletconnect";
 
 export const ConnectWalletAPI = async () => {
@@ -9,7 +9,7 @@ export const ConnectWalletAPI = async () => {
       await walletClient.requestPermissions({
         network: {
           type: walletNetwork,
-          rpcUrl: rpcNode,
+          rpcUrl: getRpcNode(),
         },
       });
       account = await walletClient.getActiveAccount();
@@ -71,7 +71,7 @@ export const switchWalletAccountAPI = async () => {
       await walletClient.requestPermissions({
         network: {
           type: walletNetwork,
-          rpcUrl: rpcNode,
+          rpcUrl: getRpcNode(),
         },
       });
       account = await walletClient.getActiveAccount();

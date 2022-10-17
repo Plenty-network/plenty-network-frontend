@@ -9,7 +9,7 @@ import Button from "../Button/Button";
 import { PopUpModal } from "../Modal/popupModal";
 import { RPC_NODE } from "../../constants/localStorage";
 import { connect } from "react-redux";
-import { setRpcNode } from "../../redux/wallet/wallet";
+import { setRpcNode } from "../../redux/userSettings/rpcData";
 import { store } from "../../redux";
 
 export enum NODES {
