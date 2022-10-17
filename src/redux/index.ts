@@ -17,6 +17,7 @@ import { walletLoading } from "./walletLoading";
 import { portfolioRewards } from "./myPortfolio/rewards";
 import { portfolioStatsTvl } from "./myPortfolio/tvl";
 import { portfolioStatsVotes } from "./myPortfolio/votesStats";
+import { rpcData } from "./userSettings/rpcNode";
 
 const reducers = combineReducers({
   wallet: wallet,
@@ -32,6 +33,7 @@ const reducers = combineReducers({
   flashMessage:flashMessage,
   portfolioStatsTvl: portfolioStatsTvl,
   portfolioStatsVotes: portfolioStatsVotes,
+  rpcData: rpcData,
 });
 
 const persistConfig = {
@@ -45,6 +47,7 @@ const persistConfig = {
     "tokenPrice",
     "portfolioStatsTvl",
     "portfolioStatsVotes",
+    "rpcData",
   ],
 };
 
