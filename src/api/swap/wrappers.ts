@@ -316,7 +316,8 @@ export const computeReverseCalculationWrapper = (
         high = mid.minus(new BigNumber(1).dividedBy(new BigNumber(10).pow(tokenInData.decimals)));
       }
 
-    }
+    } 
+    
 
     const forwardPass = computeAllPaths(paths2 , mid , slippage , swapData2);
 
