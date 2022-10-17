@@ -16,7 +16,7 @@ export interface ITopNavBarMobileProps {
 export function TopNavBarMobile(props: ITopNavBarMobileProps) {
   const userAddress = store.getState().wallet.address;
   return (
-    <div className="flex fixed w-screen bottomNavBarMobile px-5 h-[61px] justify-between border-b border-b-borderColor">
+    <div className="flex fixed top-[39px] w-screen bottomNavBarMobile px-5 h-[61px] justify-between border-b border-b-borderColor">
       <Link href={"/"}>
         <Image src={plentyIcon} height={"22.47px"} width="100%" />
       </Link>

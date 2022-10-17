@@ -66,11 +66,14 @@ export function SideBarHOC(props: ISideBarHOCProps) {
         </div>
         {isMobile && !props.isBribes && <BottomNavigationBar />}
         {isMobile && (
-          <TopNavBarMobile
-            setShowNotification={showNotificationClick}
-            isBribes={props.isBribes ? props.isBribes : false}
-            setNodeSelector={setNodeSelector}
-          />
+          <>
+            <Banner />
+            <TopNavBarMobile
+              setShowNotification={showNotificationClick}
+              isBribes={props.isBribes ? props.isBribes : false}
+              setNodeSelector={setNodeSelector}
+            />
+          </>
         )}
       </div>
       <NodeSelector show={showNodeSelector} setShow={setNodeSelector} />
