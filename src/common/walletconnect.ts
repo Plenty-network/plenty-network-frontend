@@ -8,6 +8,8 @@ import {
 } from '@airgap/beacon-sdk'
 import type { BeaconWallet } from '@taquito/beacon-wallet'
 import Config from '../config/config';
+import { RPC_NODE } from '../constants/localStorage';
+import { store } from '../redux';
 
 
 class TzktBlockExplorer extends BlockExplorer {
@@ -47,7 +49,7 @@ class TzktBlockExplorer extends BlockExplorer {
 export const connectedNetwork = Config.NETWORK;
 export const walletNetwork = Config.WALLET_NETWORK;
 export const configName = Config.NAME;
-// const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
+// const rpcNode = store.getState().wallet.rpcNode ?? Config.RPC_NODES[connectedNetwork];
 export const rpcNode = Config.RPC_NODES[connectedNetwork];
 export const tzktNode = Config.TZKT_NODES[connectedNetwork];
 export const voteEscrowAddress = Config.VOTE_ESCROW[connectedNetwork];
