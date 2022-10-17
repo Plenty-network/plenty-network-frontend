@@ -137,80 +137,85 @@ export const getUserBribeData = async (
  * return a list if all pools and their current bribe data and liquidity.
  * @param epoch - Epoch number
  */
- const getPoolsBribeLiquidityData = async (epoch: number): Promise<IPoolsBribeLiquidityData> => {
-  try {
-    const state = store.getState();
-    const TOKENS = state.config.tokens;
-    const bribes = await axios.get(`${Config.VE_INDEXER}bribes?epoch=${epoch}`);
-    const bribesData: IBribesResponse[] = bribes.data;
+ const getPoolsBribeLiquidityData = async (
+   epoch: number,
+   tokenPrices: ITokenPriceList
+ ): Promise<IPoolsBribeLiquidityData> => {
+   try {
+     const state = store.getState();
+     const TOKENS = state.config.tokens;
+     const bribes = await axios.get(`${Config.VE_INDEXER}bribes?epoch=${epoch}`);
+     const bribesData: IBribesResponse[] = bribes.data;
 
-    const res: IEpochResponse = await fetchEpochData(epoch);
-    let poolsData: VolumeVeData[];
+     const res: IEpochResponse = await fetchEpochData(epoch);
+     let poolsData: VolumeVeData[];
 
-    if (res.success) {
-      const epochData = res.epochData as IEpochData;
+     if (res.success) {
+       const epochData = res.epochData as IEpochData;
 
-      const poolssResponse = await axios.get(
-        `${Config.PLY_INDEXER}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
-      );
-      poolsData = poolssResponse.data;
-    } else {
-      throw new Error(res.error as string);
-    }
+       const poolssResponse = await axios.get(
+         `${Config.PLY_INDEXER}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
+       );
+       poolsData = poolssResponse.data;
+     } else {
+       throw new Error(res.error as string);
+     }
 
-    const poolsDataObject: IPoolsDataObject = poolsData.reduce(
-      (finalPoolsObject: IPoolsDataObject, poolData) => (
-        (finalPoolsObject[poolData.pool] = poolData), finalPoolsObject
-      ),
-      {}
-    );
+     const poolsDataObject: IPoolsDataObject = poolsData.reduce(
+       (finalPoolsObject: IPoolsDataObject, poolData) => (
+         (finalPoolsObject[poolData.pool] = poolData), finalPoolsObject
+       ),
+       {}
+     );
 
-    const finalData: IPoolsBribeLiquidityData = {};
-    
-    for (const x of bribesData) {
-      let bribe: BigNumber = new BigNumber(0);
-      let bribes: Bribes[] = [];
-      if (!x.bribes || x.bribes.length === 0) {
-        bribe = new BigNumber(0);
-      } else {
-        for (const y of x.bribes) {
-          bribe = bribe.plus(
-            new BigNumber(y.value)
-              .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
-              .multipliedBy(y.price)
-          );
-          bribes.push({
-            name: y.name,
-            value: new BigNumber(y.value).dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals)),
-            price: new BigNumber(y.price),
-          });
-        }
-      }
-      const liquidity = poolsDataObject[x.pool]
-        ? new BigNumber(poolsDataObject[x.pool].tvl.value)
-        : new BigNumber(0);
-      const liquidityTokenA = poolsDataObject[x.pool]
-        ? new BigNumber(poolsDataObject[x.pool].tvl.token1)
-        : new BigNumber(0);
-      const liquidityTokenB = poolsDataObject[x.pool]
-        ? new BigNumber(poolsDataObject[x.pool].tvl.token2)
-        : new BigNumber(0);
+     const finalData: IPoolsBribeLiquidityData = {};
 
-      finalData[x.pool] = {
-        liquidity,
-        bribes: bribe,
-        bribesData: bribes,
-        liquidityTokenA,
-        liquidityTokenB,
-      };
-    }
+     for (const x of bribesData) {
+       let bribe: BigNumber = new BigNumber(0);
+       let bribes: Bribes[] = [];
+       if (!x.bribes || x.bribes.length === 0) {
+         bribe = new BigNumber(0);
+       } else {
+         for (const y of x.bribes) {
+           bribe = bribe.plus(
+             new BigNumber(y.value)
+               .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+               .multipliedBy(tokenPrices[y.name])
+           );
+           bribes.push({
+             name: y.name,
+             value: new BigNumber(y.value).dividedBy(
+               new BigNumber(10).pow(TOKENS[y.name].decimals)
+             ),
+             price: new BigNumber(tokenPrices[y.name]),
+           });
+         }
+       }
+       const liquidity = poolsDataObject[x.pool]
+         ? new BigNumber(poolsDataObject[x.pool].tvl.value)
+         : new BigNumber(0);
+       const liquidityTokenA = poolsDataObject[x.pool]
+         ? new BigNumber(poolsDataObject[x.pool].tvl.token1)
+         : new BigNumber(0);
+       const liquidityTokenB = poolsDataObject[x.pool]
+         ? new BigNumber(poolsDataObject[x.pool].tvl.token2)
+         : new BigNumber(0);
 
-    return finalData;
-  } catch (error: any) {
-    console.log(error);
-    throw new Error(error.message);
-  }
-};
+       finalData[x.pool] = {
+         liquidity,
+         bribes: bribe,
+         bribesData: bribes,
+         liquidityTokenA,
+         liquidityTokenB,
+       };
+     }
+
+     return finalData;
+   } catch (error: any) {
+     console.log(error);
+     throw new Error(error.message);
+   }
+ };
 
 const consecutiveRanges = (arr : number[]) => {
   let len = 1;
@@ -243,7 +248,10 @@ const consecutiveRanges = (arr : number[]) => {
  * Returns the list of pools with their bribes, liquidity and votes data(current and previous).
  * @param epoch - Epoch number for which the pools data is required
  */
-export const getPoolsDataForBribes = async (epoch: number): Promise<IPoolsForBribesResponse> => {
+export const getPoolsDataForBribes = async (
+  epoch: number,
+  tokenPrices: ITokenPriceList
+): Promise<IPoolsForBribesResponse> => {
   try {
     // TODO : UnComment when launching
     // const state = store.getState();
@@ -254,7 +262,7 @@ export const getPoolsDataForBribes = async (epoch: number): Promise<IPoolsForBri
     const AMMS: IAmmContracts = AMMResponse.data;
 
     const [poolsData, votesDataCurrent, votesDataPrevious] = await Promise.all([
-      getPoolsBribeLiquidityData(epoch),
+      getPoolsBribeLiquidityData(epoch, tokenPrices),
       getAllVotesData(epoch, undefined),
       getAllVotesData(epoch - 1, undefined),
     ]);
