@@ -19,7 +19,7 @@ export interface ISingleSideBarProps {
 export function SingleSideBar(props: ISingleSideBarProps) {
   if (props.pathName) {
     return (
-      <Link className={`flex flex-col ${props?.className}`} href={props.pathName}>
+      <Link className={`md:flex flex-col ${props?.className}`} href={props.pathName}>
         <a target={props.openNewPage ? "_blank" : ""} rel="noopener noreferrer">
           <div
             className={`flex w-full items-center justify-between h-[50px] ${
@@ -42,7 +42,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
               )}
               <p>{props.name}</p>
               {props.isHrefIcon && (
-                <p className="w-[11px] h-[11px] relative top-px ml-20">
+                <p className="w-[11px] h-[11px] relative top-px ml-60 md:ml-20">
                   <Image
                     alt={"alt"}
                     src={"/assets/icon/HrefIcon.svg"}

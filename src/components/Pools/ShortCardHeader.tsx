@@ -55,7 +55,9 @@ export function Tabs(props: ITabsProps) {
                 <span className="relative top-[3px] mr-1">
                   <ToolTip
                     position={Position.top}
-                    toolTipChild={<div className="text-center">{props.toolTipChild}</div>}
+                    toolTipChild={
+                      <div className="text-center w-[200px] md:w-[350px]">{props.toolTipChild}</div>
+                    }
                   >
                     <Image alt={"alt"} src={info} />
                   </ToolTip>

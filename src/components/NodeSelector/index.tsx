@@ -42,6 +42,12 @@ function NodeSelector(props: any) {
     { text: NODES.CRYPTOMIC, url: "https://tezos-prod.cryptonomic-infra.tech/", name: "CRYPTOMIC" },
     { text: NODES.CUSTOM, url: "", name: "CUSTOM" },
   ];
+
+  useEffect(() => {
+    console.log(localStorage.getItem(RPC_NODE), props.rpcNode);
+    var d = Nodes.find((e) => e.url === localStorage.getItem(RPC_NODE));
+    d && setSelectedNode(d);
+  }, [localStorage.getItem(RPC_NODE), props.rpcNode]);
   const [selectedNode, setSelectedNode] = useState(Nodes[0]);
   const closeModal = () => {
     props.setShow(false);
@@ -96,7 +102,6 @@ function NodeSelector(props: any) {
       const s = selectedNode.name;
       localStorage.setItem(RPC_NODE, selectedNode.url);
       props.setRpcNode(selectedNode.url);
-      //props.closeNodeSelectorModal();
     } else {
       let _customRPC = customRPC;
       if (!_customRPC.match(/\/$/)) {

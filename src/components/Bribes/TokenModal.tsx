@@ -32,19 +32,6 @@ function TokenModal(props: ISwapModalProps) {
       [id: string]: number;
     }
   );
-  useEffect(() => {
-    topTokenListGhostnet().then((res) => {
-      setTopTokens(res.topTokens);
-    });
-  }, []);
-
-  const topTokensListArray = useMemo(() => {
-    const tokensArray = Object.entries(topTokens);
-    return tokensArray.map((token) => ({
-      name: token[0],
-      image: `/assets/Tokens/${token[0]}.png`,
-    }));
-  }, [topTokens]);
 
   const searchHits = useCallback(
     (token: tokensModal) => {
@@ -58,6 +45,9 @@ function TokenModal(props: ISwapModalProps) {
     [searchQuery]
   );
   useEffect(() => {
+    props.tokens.sort(
+      (a, b) => Number(props.allBalance[b.name]) - Number(props.allBalance[a.name])
+    );
     const filterTokens = () => {
       const filterTokenslist = props.tokens
         .filter(searchHits)
@@ -83,51 +73,14 @@ function TokenModal(props: ISwapModalProps) {
               onChange={(ev: any) => setSearchQuery(ev.target.value)}
             />
           </div>
-          <div className="text-text-400 mt-[20px] font-body1">
-            Common base
-            <span className="relative top-0.5 ml-[5px]">
-              <ToolTip
-                id="tooltipH"
-                position={Position.top}
-                toolTipChild={
-                  <div className="w-[200px]">
-                    These tokens are commonly paired with other tokens
-                  </div>
-                }
-              >
-                <Image alt={"alt"} src={infogrey} />
-              </ToolTip>
-            </span>
-          </div>
-          <div className="flex flex-wrap mt-1">
-            {topTokensListArray.map((token, index) => {
-              return (
-                <div
-                  className={clsx(
-                    "border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100",
-                    props.tokenIn.name === token.name ? "cursor-not-allowed" : "cursor-pointer"
-                  )}
-                  key={index}
-                  {...(props.tokenIn.name === token.name
-                    ? {}
-                    : { onClick: () => props.selectToken(token) })}
-                >
-                  <span className="w-[18px] h-[18px] relative top-1">
-                    <Image alt={"alt"} src={token.image} width={"18px"} height={"18px"} />{" "}
-                  </span>
-                  <span className="font-body3">{tEZorCTEZtoUppercase(token.name)}</span>
-                </div>
-              );
-            })}
-          </div>
           {Object.keys(tokensToShow).length === 0 ? (
-            <div className="border  h-[300px]  border-text-800 bg-muted-200 rounded-xl flex justify-center items-center px-[18px] w-full pb-5 mt-5 font-body4 text-white">
+            <div className="border  h-[419px]  border-text-800 bg-muted-200 rounded-xl flex justify-center items-center px-[18px] w-full pb-5 mt-5 font-body4 text-white">
               No Tokens found
             </div>
           ) : (
             <div
               id="tokensList"
-              className="border relative max-h-[300px] h-[300px] modal overflow-y-auto border-text-800 bg-muted-200 rounded-xl  w-full pb-5 mt-5"
+              className="border relative max-h-[419px] h-[419px] modal overflow-y-auto border-text-800 bg-muted-200 rounded-xl  w-full pb-5 mt-5"
             >
               {tokensToShow.map((token, index) => {
                 return (

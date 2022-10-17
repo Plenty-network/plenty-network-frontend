@@ -1,6 +1,7 @@
 import HeadInfo from "../HeadInfo";
 import { BribesMainProps } from "./types";
 
+import { BigNumber } from "bignumber.js";
 import { useEffect, useState, useRef } from "react";
 import { CardHeader } from "../Pools/Cardheader";
 import { BribesCardHeader, BribesHeader } from "./BribesHeader";
@@ -25,6 +26,8 @@ import { setIsLoadingWallet } from "../../redux/walletLoading";
 import { addBribe } from "../../operations/bribes";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
+import { getCompleteUserBalace } from "../../api/util/balance";
+import { IAllBalanceResponse } from "../../api/util/types";
 
 function BribesMain(props: BribesMainProps) {
   const [contentTransaction, setContentTransaction] = useState("");
@@ -40,11 +43,25 @@ function BribesMain(props: BribesMainProps) {
   const [activeStateTab, setActiveStateTab] = useState<BribesCardHeader | string>(
     BribesCardHeader.Pools
   );
+  const tokens = store.getState().config.standard;
   const [epochArray, setEpochArray] = useState<number[]>([] as number[]);
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
+  const [allBalance, setAllBalance] = useState<{
+    success: boolean;
+    userBalance: { [id: string]: BigNumber };
+  }>({ success: false, userBalance: {} });
+  useEffect(() => {
+    if (userAddress) {
+      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
+        setAllBalance(response);
+      });
+    } else {
+      setAllBalance({ success: false, userBalance: {} });
+    }
+  }, [userAddress, tokens]);
   const resetAllValues = () => {
     setBribeInputValue("");
     setBribeToken({} as tokenParameter);
@@ -139,6 +156,7 @@ function BribesMain(props: BribesMainProps) {
             locksPosition={props.poolsArr.data.poolsData}
             isfetched={props.poolsArr.isfetched}
             setShowAddBribes={setShowAddBribes}
+            searchValue={searchValue}
             setSelectedPool={setSelectedPool}
           />
         )}
@@ -147,7 +165,9 @@ function BribesMain(props: BribesMainProps) {
             className="md:px-5 md:py-4   py-4"
             locksPosition={props.bribesArr.data}
             isfetched={props.bribesArr.isfetched}
+            searchValue={searchValue}
             setShowAddBribes={setShowAddBribes}
+            setActiveStateTab={setActiveStateTab}
           />
         )}
         {showAddBribes && (
@@ -162,6 +182,7 @@ function BribesMain(props: BribesMainProps) {
             selectedPool={selectedPool}
             epochArray={epochArray}
             handleOperation={handleOperation}
+            allBalance={allBalance.userBalance}
           />
         )}
         {showConfirmTransaction && (

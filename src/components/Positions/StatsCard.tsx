@@ -23,9 +23,11 @@ function StatsCard(props: IStatsCardProps) {
             {!props.isLast && (
               <p className="relative -top-px">
                 <ToolTip
-                  message={props.toolTipMessage}
+                  toolTipChild={
+                    <div className="w-[200px] md:w-[280px]">{props.toolTipMessage}</div>
+                  }
                   id="tooltip8"
-                  position={isMobile ? Position.bottom : Position.top}
+                  position={isMobile ? Position.right : Position.top}
                 >
                   <Image alt={"alt"} src={info} />
                 </ToolTip>
@@ -34,7 +36,7 @@ function StatsCard(props: IStatsCardProps) {
             <p className="text-white font-body3 ">{props.title}</p>
           </div>
           <div className="font-input-text1 text-white mt-2 flex items-end">
-            {props.value === undefined ? (
+            {props.value === undefined || props.isLoading ? (
               <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
             ) : (
               props.value?.toString()

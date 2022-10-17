@@ -30,15 +30,25 @@ export function NoContentAvailable(props: IWalletNotConnectedProps) {
     </div>
   );
 }
-export function WalletNotConnected() {
+export interface IWallet {
+  h1: string;
+  subValue: string;
+}
+export function WalletNotConnected(props: IWallet) {
   const dispatch = useAppDispatch();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
   return (
-    <div className="flex justify-center items-center  mt-2 md:mt-12 gap-5 flex-col">
-      <Image alt={"alt"} src={walletNotConnected} />
-      <OutlineBtn text="Connect wallet" className="w-max" onClick={connectTempleWallet} />
+    <div className="flex justify-center items-center  mt-2 md:mt-12  text-text-200 flex-col font-title3 ">
+      {props.h1}
+      {props.subValue && <div className="text-text-500 font-body3 mt-2">{props.subValue}</div>}
+      <div className="border-b border-navBarBorder/[0.4] w-[120px] mt-[14px]"></div>
+      <div className="cursor-pointer" onClick={connectTempleWallet}>
+        <div className="border border-primary-500 text-primary-500 font-body4 px-4 bg-primary-500/[0.05] h-[48px] flex items-center mt-5 rounded-lg">
+          Connect wallet
+        </div>
+      </div>
     </div>
   );
 }

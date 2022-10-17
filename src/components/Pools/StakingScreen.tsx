@@ -248,20 +248,14 @@ export function Staking(props: IStakingProps) {
           </div>
         </div>
         {/* dropDown And InfoTab */}
-        <div className="flex py-2 px-2 md:px-2.5 justify-between bg-primary-850 border border-secondary-300">
-          {/* <ToolTip
-            message=" Select a veNFT to Boost"
-            isShowInnitially={true}
-            id="tooltip8"
-            position={Position.top}
-          > */}
+        <div className="flex py-2 px-2 rounded-2xl md:px-2.5 justify-between bg-primary-850 border border-secondary-300">
           <VePLY
             Options={props.vePLYOptions}
             selectedText={props.selectedDropDown}
             onClick={props.setSelectedDropDown}
             isListLoading={props.isListLoading}
           />
-          {/* </ToolTip> */}
+
           <div className="font-mobile-f9 md:text-f12 text-text-400 ml-2 max-w-[321px] text-center">
             Based on how much voting power the veNFT has, you may be able to boost your PLY rewards
             up to 2.5x

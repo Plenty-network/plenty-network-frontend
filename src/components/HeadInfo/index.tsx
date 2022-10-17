@@ -31,9 +31,11 @@ export default function HeadInfo(props: IHeadInfoProps) {
           classNameToolTipContainer={`playIconTooltip-right`}
           toolTipChild={
             props.toolTipContent ? (
-              <p className="">{props.toolTipContent}</p>
+              <p className="w-[200px] md:w-[312px]">{props.toolTipContent}</p>
             ) : (
-              <p className="">Watch how to add liquidity, stake, and earn PLY</p>
+              <p className="w-[200px] md:w-[312px]">
+                Watch how to add liquidity, stake, and earn PLY
+              </p>
             )
           }
           classNameAncorToolTip="pushtoCenter"

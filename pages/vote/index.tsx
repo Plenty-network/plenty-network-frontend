@@ -126,7 +126,6 @@ export default function Vote() {
     });
   }, []);
   useEffect(() => {
-    console.log(localStorage.getItem("vote"), userAddress);
     if (!(localStorage.getItem("vote") === userAddress)) {
       localStorage.setItem("vote", userAddress);
     }
@@ -290,7 +289,7 @@ export default function Vote() {
   };
 
   const handleLockOperation = () => {
-    setContentTransaction(`Locking ${plyInput} ply`);
+    setContentTransaction(`Locking ${plyInput} PLY`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
