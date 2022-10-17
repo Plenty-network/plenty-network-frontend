@@ -19,9 +19,6 @@ export interface IVotesTableRewards {
     votingPower: string;
     tokenId: string;
   };
-  voteData: {
-    [id: string]: IVotePageData;
-  };
 
   className?: string;
   isConnectWalletRequired?: boolean;

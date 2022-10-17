@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
+import { store } from "../../redux";
 import { FlashMessageHOC } from "../FlashScreen/FlashMessageHOC";
 import NodeSelector from "../NodeSelector";
 import { NotificationBar } from "../Notification";
@@ -8,6 +9,7 @@ import BottomNavigationBar from "./BottomNavBar";
 import { SideBar } from "./Sidebar";
 import { TopNavBar } from "./TopNavBar";
 import { TopNavBarMobile } from "./TopNavBarMobile";
+import "animate.css";
 
 export interface ISideBarHOCProps {
   children: any;
@@ -17,6 +19,11 @@ export interface ISideBarHOCProps {
 }
 
 export function SideBarHOC(props: ISideBarHOCProps) {
+  const isBannerOpen = store.getState().walletLoading.isBanner;
+  const [isBanner, setIsBanner] = React.useState(isBannerOpen);
+  React.useEffect(() => {
+    setIsBanner(isBannerOpen);
+  }, [isBannerOpen]);
   const [showNotification, setShowNotification] = useState(false);
   const showNotificationClick = () => {
     setShowNotification(!showNotification);
@@ -41,13 +48,14 @@ export function SideBarHOC(props: ISideBarHOCProps) {
         )}
         {showNotification && !props.isBribesLanding && (
           <NotificationBar
+            isBanner={isBanner}
             onhide={() => {
               setShowNotification(false);
             }}
           />
         )}
         <div className="flex flex-no-wrap">
-          {!isMobile && !props.isBribes && <SideBar />}
+          {!isMobile && !props.isBribes && <SideBar isBannerOpen={isBannerOpen} />}
           <div
             className={`mt-0 ${
               !isMobile && !props.isBribes ? "md:ml-[240px] md:w-[calc(100%_-_240px)]" : ""
@@ -56,7 +64,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
             <div
               className={`overflow-x-hidden h-screen   z-0  ${
                 props.makeTopBarScroll || true
-                  ? "static overflow-y-auto pt-[96px]"
+                  ? `static overflow-y-auto ${isBanner ? "pt-[96px]" : "pt-[64px]"} `
                   : "md:absolute fixed overflow-y-hidden top-16 !m-0  h-[calc(100%_-_121px)] md:h-[calc(100%_-_64px)] md:w-[calc(100%_-_240px)] w-full"
               }`}
             >

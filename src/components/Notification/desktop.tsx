@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
@@ -7,6 +8,7 @@ import { removeAllNotification } from "./notificationMessageSave";
 
 export interface INotificationBarProps {
   onhide: Function;
+  isBanner: boolean;
 }
 
 export default function NotificationBar(props: INotificationBarProps) {
@@ -39,7 +41,12 @@ export default function NotificationBar(props: INotificationBarProps) {
       id="modal_outer"
       className={`fixed z-50 w-screen h-screen   ${isClose ? "fade-out-3" : "fade-in-3"}`}
     >
-      <div className="notificationShadow absolute top-[96px] right-[14.6rem]">
+      <div
+        className={clsx(
+          "notificationShadow absolute  right-[14.6rem]",
+          props.isBanner ? "top-[96px]" : "top-[64px]"
+        )}
+      >
         <div
           className="   relative 
        w-[364px] 

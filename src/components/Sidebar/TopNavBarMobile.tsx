@@ -6,6 +6,8 @@ import portfolio from "../../assets/icon/common/portfolio-mobile.svg";
 import { store } from "../../redux";
 import { ConnectWalletBtnMobile } from "../Button/ConnectWalletMobile";
 import { NotificationIcon } from "../NotificationIcon";
+import "animate.css";
+import clsx from "clsx";
 
 export interface ITopNavBarMobileProps {
   setShowNotification: Function;
@@ -15,8 +17,14 @@ export interface ITopNavBarMobileProps {
 
 export function TopNavBarMobile(props: ITopNavBarMobileProps) {
   const userAddress = store.getState().wallet.address;
+  const isBanner = store.getState().walletLoading.isBanner;
   return (
-    <div className="flex fixed top-[38px] w-screen bottomNavBarMobile px-5 h-[61px] justify-between border-b border-b-borderColor">
+    <div
+      className={clsx(
+        "flex fixed  w-screen bottomNavBarMobile px-5 h-[61px] justify-between border-b border-b-borderColor",
+        isBanner ? "top-[38px]" : "animate__animated animate__fadeInUp animate__faster"
+      )}
+    >
       <Link href={"/"}>
         <Image src={plentyIcon} height={"22.47px"} width="100%" />
       </Link>

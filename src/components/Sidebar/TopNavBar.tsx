@@ -1,6 +1,8 @@
+import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
+import "animate.css";
 import { useState } from "react";
 import plentyIcon from "../../assets/icon/common/plentyLogo.svg";
 import myportfolionav from "../../assets/icon/myPortfolio/myportfolionav.svg";
@@ -36,9 +38,15 @@ export function IconBTN(props: IIconBTNProps) {
 
 export function TopNavBar(props: ITopNavBarProps) {
   const userAddress = store.getState().wallet.address;
+  const isBanner = store.getState().walletLoading.isBanner;
   return (
     <>
-      <nav className="hidden top-[38px] md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   px-10 pl-0 topNavblurEffect z-50">
+      <nav
+        className={clsx(
+          "hidden  md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   px-10 pl-0 topNavblurEffect z-50",
+          isBanner ? "top-[38px]" : "animate__animated animate__fadeInUp animate__faster"
+        )}
+      >
         <div className="h-full w-[240px] border-border-500/50 border-r flex items-center pl-[22px]">
           {!props.isBribes ? (
             <Link href={"/"}>
