@@ -73,10 +73,12 @@ const Dapp: NextPage = () => {
     isfetched: boolean;
   }>({ data: [] as IUserBribeData[], isfetched: false });
   useEffect(() => {
-    getPoolsDataForBribes(epoch?.epochNumber).then((res) => {
-      setPoolsArr({ data: res, isfetched: true });
-    });
-  }, [epoch?.epochNumber, isOperationComplete]);
+    if (Object.keys(tokenPrice).length !== 0) {
+      getPoolsDataForBribes(epoch?.epochNumber, tokenPrice).then((res) => {
+        setPoolsArr({ data: res, isfetched: true });
+      });
+    }
+  }, [epoch?.epochNumber, isOperationComplete, tokenPrice]);
   useEffect(() => {
     if (Object.keys(tokenPrice).length !== 0)
       getUserBribeData(userAddress, tokenPrice).then((res) => {

@@ -74,12 +74,12 @@ export const poolsDataWrapper = async (
           bribe = bribe.plus(
             new BigNumber(y.value)
               .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
-              .multipliedBy(y.price)
+              .multipliedBy(tokenPrice[y.name])
           );
           bribes.push({
             name: y.name,
             value: new BigNumber(y.value).dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals)),
-            price: new BigNumber(y.price),
+            price: new BigNumber(tokenPrice[y.name]),
           });
         }
       }
