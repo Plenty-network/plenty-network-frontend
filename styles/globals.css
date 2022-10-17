@@ -103,6 +103,9 @@ body {
 .mobile {
   @apply block md:hidden lg:hidden xl:hidden;
 }
+.gradient{
+  background:linear-gradient(90.87deg, #9D5CFF -21.13%, #3C0988 89.93%);
+}
 .veNFT{
   box-shadow: 0px 2px 41px 4px rgba(71, 16, 154, 0.3);
 }

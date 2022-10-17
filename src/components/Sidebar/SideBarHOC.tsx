@@ -3,6 +3,7 @@ import { isMobile } from "react-device-detect";
 import { FlashMessageHOC } from "../FlashScreen/FlashMessageHOC";
 import NodeSelector from "../NodeSelector";
 import { NotificationBar } from "../Notification";
+import Banner from "./Banner";
 import BottomNavigationBar from "./BottomNavBar";
 import { SideBar } from "./Sidebar";
 import { TopNavBar } from "./TopNavBar";
@@ -29,6 +30,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
     <>
       <FlashMessageHOC />
       <div className="flex flex-no-wrap flex-col">
+        <Banner />
         {!isMobile && (
           <TopNavBar
             setNodeSelector={setNodeSelector}
@@ -54,7 +56,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
             <div
               className={`overflow-x-hidden h-screen   z-0  ${
                 props.makeTopBarScroll || true
-                  ? "static overflow-y-auto pt-[64px]"
+                  ? "static overflow-y-auto pt-[96px]"
                   : "md:absolute fixed overflow-y-hidden top-16 !m-0  h-[calc(100%_-_121px)] md:h-[calc(100%_-_64px)] md:w-[calc(100%_-_240px)] w-full"
               }`}
             >
