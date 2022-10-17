@@ -54,6 +54,7 @@ export const tzktNode = Config.TZKT_NODES[connectedNetwork];
 export const voteEscrowAddress = Config.VOTE_ESCROW[connectedNetwork];
 export const voterAddress = Config.VOTER[connectedNetwork];
 export const veSwapAddress = Config.VE_SWAP[connectedNetwork];
+export const faucetAddress = Config.FAUCET;
 
 export const getRpcNode = () =>
   store.getState().rpcData.rpcNode || Config.RPC_NODES[connectedNetwork];
