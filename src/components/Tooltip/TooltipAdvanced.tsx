@@ -1,5 +1,8 @@
+import clsx from "clsx";
 import Image from "next/image";
 import * as React from "react";
+
+import { isMobile } from "react-device-detect";
 // import ReactTooltip from 'react-tooltip';
 import closeIcon from "../../assets/icon/common/closeCross.svg";
 import { generateRandomString } from "../../utils/commonUtils";
@@ -14,6 +17,8 @@ export enum TooltipType {
   withoutArrowsAndTitle,
   withoutTitle,
   withTitle,
+  swapRoute,
+  swap,
 }
 export interface IToolTipProps {
   position?: Position;
@@ -32,7 +37,29 @@ export interface IToolTipProps {
 
 export function ToolTip(props: IToolTipProps) {
   const randomId = generateRandomString(8);
-  if (props.type === TooltipType.withoutArrowsAndTitle) {
+  if (props.type === TooltipType.swapRoute) {
+    return (
+      <>
+        <a className={props.classNameAncorToolTip} data-tip data-for={`tooltip_${randomId}`}>
+          {props.children}
+        </a>
+        <ReactTooltip
+          disable={props.disable}
+          showInitial={props.isShowInnitially}
+          className={` tooltipCustomSwap ${props.classNameToolTipContainer}-${
+            props.position ? props.position : "right"
+          }`}
+          arrowColor={isMobile ? "rgba(60, 60, 60,0)" : "#341E54"}
+          place={props.position ? props.position : "right"}
+          id={`tooltip_${randomId}`}
+          effect="solid"
+        >
+          {props.message && <span className="font-normal">{props.message}</span>}
+          {props.toolTipChild}
+        </ReactTooltip>
+      </>
+    );
+  } else if (props.type === TooltipType.withoutArrowsAndTitle) {
     return (
       <>
         <a className={props.classNameAncorToolTip} data-tip data-for={`tooltip_${randomId}`}>
@@ -64,7 +91,7 @@ export function ToolTip(props: IToolTipProps) {
           disable={props.disable}
           showInitial={props.isShowInnitially}
           className={` tooltipCustom ${props.classNameToolTipContainer}`}
-          arrowColor="#341E54"
+          arrowColor={isMobile ? "rgba(60, 60, 60,0)" : "#341E54"}
           place={props.position ? props.position : "right"}
           id={`tooltip_${randomId}`}
           effect="solid"
@@ -82,6 +109,29 @@ export function ToolTip(props: IToolTipProps) {
         </ReactTooltip>
       </>
     );
+  } else if (props.type === TooltipType.swap) {
+    return (
+      <>
+        <a className={props.classNameAncorToolTip} data-tip data-for={`tooltip_${randomId}`}>
+          {props.children}
+        </a>
+        <ReactTooltip
+          disable={props.disable}
+          showInitial={props.isShowInnitially}
+          className={clsx(
+            " tooltipCustom",
+            isMobile ? "" : `playIconTooltip-${props.position ? props.position : "right"}`
+          )}
+          arrowColor={isMobile ? "rgba(60, 60, 60,0)" : "#341E54"}
+          place={props.position ? props.position : "right"}
+          id={`tooltip_${randomId}`}
+          effect="solid"
+        >
+          {props.message && <span className="font-body1">{props.message}</span>}
+          {props.toolTipChild}
+        </ReactTooltip>
+      </>
+    );
   }
 
   return (
@@ -92,8 +142,11 @@ export function ToolTip(props: IToolTipProps) {
       <ReactTooltip
         disable={props.disable}
         showInitial={props.isShowInnitially}
-        className={` tooltipCustom playIconTooltip-${props.position ? props.position : "right"}`}
-        arrowColor="#341E54"
+        className={clsx(
+          " tooltipCustom",
+          isMobile ? "" : `playIconTooltip-${props.position ? props.position : "right"}`
+        )}
+        arrowColor={isMobile ? "rgba(60, 60, 60,0)" : "#341E54"}
         place={props.position ? props.position : "right"}
         id={`tooltip_${randomId}`}
         effect="solid"

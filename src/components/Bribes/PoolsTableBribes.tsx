@@ -43,6 +43,34 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
   // const NoData = React.useMemo(() => {
   //   return <NoLocks setShowCreateLockModal={props.setShowCreateLockModal} />;
   // }, []);
+  const [noSearchResult, setNoSearchResult] = React.useState(false);
+  const [tabledata, setTabledata] = React.useState(props.locksPosition);
+  React.useEffect(() => {
+    setTabledata(props.locksPosition);
+  }, [props.locksPosition]);
+  React.useEffect(() => {
+    if (props.searchValue && props.searchValue.length) {
+      const filter = props.locksPosition.filter((e: any) => {
+        return (
+          e.tokenA.toLowerCase().includes(props.searchValue.toLowerCase()) ||
+          e.tokenB.toLowerCase().includes(props.searchValue.toLowerCase()) ||
+          (props.searchValue.toLowerCase() === "xtz" &&
+            e.tokenA.toLowerCase().search(/\btez\b/) >= 0) ||
+          (props.searchValue.toLowerCase() === "xtz" &&
+            e.tokenB.toLowerCase().search(/\btez\b/) >= 0)
+        );
+      });
+      if (filter.length === 0) {
+        setNoSearchResult(true);
+      } else {
+        setNoSearchResult(false);
+      }
+      setTabledata(filter);
+    } else {
+      setNoSearchResult(false);
+      setTabledata(props.locksPosition);
+    }
+  }, [props.searchValue]);
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
@@ -59,7 +87,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         isToolTipEnabled: true,
         columnWidth: "w-[153px]",
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
-        tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
+        tooltipMessage: "AMM token pair.",
         showOnMobile: true,
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
@@ -85,8 +113,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         columnWidth: "w-[100px]",
         subText: "current epoch",
         isToolTipEnabled: true,
-        tooltipMessage:
-          " Your current voting power. This is different from your epoch voting power which is recorded at the beginning of each epoch.",
+        tooltipMessage: "Voting bribes for the ongoing epoch.",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "bribes"),
@@ -97,7 +124,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         id: "Liquidity",
         subText: "current",
         columnWidth: "w-[100px]",
-        tooltipMessage: "Amount of PLY locked up until expiry.",
+        tooltipMessage: "Total value locked in the pool.",
         canShort: true,
         isToolTipEnabled: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "liquidity"),
@@ -109,8 +136,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         columnWidth: "w-[100px]",
         subText: "current epoch",
         isToolTipEnabled: true,
-        tooltipMessage:
-          " The lock is unusable once it expires and underlying PLY may be withdrawn.",
+        tooltipMessage: "Votes received by the pool in the ongoing epoch.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "totalVotesCurrent"),
 
@@ -124,8 +150,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         columnWidth: "w-[100px]",
         subText: "previous epoch",
         isToolTipEnabled: true,
-        tooltipMessage:
-          " The lock is unusable once it expires and underlying PLY may be withdrawn.",
+        tooltipMessage: "Votes received by the pool in the last epoch.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "totalVotesPrevious"),
 
@@ -157,7 +182,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         showOnMobile: true,
         isToolTipEnabled: true,
         columnWidth: "w-[153px]",
-        tooltipMessage: "Liquidity pool gauge to which the lock may be attached for boosting.",
+        tooltipMessage: "AMM token pair.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x: any) => (
@@ -184,8 +209,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         columnWidth: "w-[180px]",
         subText: "current epoch",
         isToolTipEnabled: true,
-        tooltipMessage:
-          " Your current voting power. This is different from your epoch voting power which is recorded at the beginning of each epoch.",
+        tooltipMessage: "Voting bribes for the ongoing epoch.",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "bribes"),
@@ -196,7 +220,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         id: "Liquidity",
         subText: "current",
         columnWidth: "w-[180px]",
-        tooltipMessage: "Amount of PLY locked up until expiry.",
+        tooltipMessage: "Total value locked in the pool.",
         canShort: true,
         isToolTipEnabled: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "liquidity"),
@@ -208,8 +232,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         columnWidth: "w-[180px]",
         subText: "current epoch",
         isToolTipEnabled: true,
-        tooltipMessage:
-          " The lock is unusable once it expires and underlying PLY may be withdrawn.",
+        tooltipMessage: "Votes received by the pool in the ongoing epoch.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "totalVotesCurrent"),
 
@@ -223,8 +246,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         columnWidth: "w-[180px]",
         subText: "previous epoch",
         isToolTipEnabled: true,
-        tooltipMessage:
-          " The lock is unusable once it expires and underlying PLY may be withdrawn.",
+        tooltipMessage: "Votes received by the pool in the last epoch.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "totalVotesPrevious"),
 
@@ -267,8 +289,9 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
       <div className={`overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={props.locksPosition ? props.locksPosition : []}
-          shortby="Locks"
+          data={tabledata ? tabledata : []}
+          noSearchResult={noSearchResult}
+          shortby="pool"
           isFetched={props.isfetched}
           TableName={""}
           TableWidth="min-w-[800px] lg:min-w-[1200px]"

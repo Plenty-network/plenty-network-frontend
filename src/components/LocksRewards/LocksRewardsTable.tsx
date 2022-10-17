@@ -51,12 +51,6 @@ export function LocksTableRewards(props: IVotesTableRewards) {
     }
   }, [props.selectedDropDown.tokenId]);
   const NoData = React.useMemo(() => {
-    // if (props.selectedDropDown.tokenId === "") {
-    //   return <NoNFTAvailable setShowCreateLockModal={props.setShowCreateLockModal} />;
-    // } else if (
-    //   !(props.selectedDropDown.tokenId in props.allLocksRewardsData) ||
-    //   newArr.length === 0
-    // ) {
     return (
       <NoPoolsPosition
         h1={"No voting rewards"}
@@ -64,7 +58,6 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         cta={"Vote"}
       />
     );
-    // }
   }, [props.selectedDropDown.tokenId, newArr]);
   React.useMemo(() => {
     votesArray.reverse().map((data, index) => {

@@ -1,8 +1,10 @@
 import Image from "next/image";
 import * as React from "react";
+
+import { isMobile } from "react-device-detect";
 import infoIcon from "../../assets/icon/common/infoIcon.svg";
 import { generateRandomString } from "../../utils/commonUtils";
-import { Position, ToolTip } from "./TooltipAdvanced";
+import { Position, ToolTip, TooltipType } from "./TooltipAdvanced";
 
 export interface IInfoIconToolTipProps {
   toolTipChild?: any;
@@ -22,7 +24,7 @@ export function InfoIconToolTip(props: IInfoIconToolTipProps) {
           props.toolTipChild ? (
             props.toolTipChild
           ) : (
-            <div className="md:max-w-[180px] max-w-[280px] font-body1">{props.message}</div>
+            <div className="max-w-[180px] md:max-w-[280px] font-body1">{props.message}</div>
           )
         }
       >

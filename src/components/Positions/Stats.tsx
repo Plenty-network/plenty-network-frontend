@@ -23,32 +23,23 @@ function Stats(props: IStatsProps) {
       <StatsCard
         toolTipMessage={"Total value locked across your positions on the platform."}
         setShowCreateLockModal={props.setShowCreateLockModal}
+        isLoading={props.statsPositions.isFetching && Number(props.statsPositions.tvl) === 0}
         title={"TVL"}
-        value={
-          !props.statsPositions.isFetching
-            ? `$${nFormatter(new BigNumber(props.statsPositions.tvl))}`
-            : undefined
-        }
+        value={`$${nFormatter(new BigNumber(props.statsPositions.tvl))}`}
       />
       <StatsCard
         toolTipMessage={"Total voting power of all your veNFTs."}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total voting power"}
-        value={
-          !props.stats1?.isFetching
-            ? nFormatter(new BigNumber(props.stats1?.totalEpochVotingPower))
-            : undefined
-        }
+        isLoading={props.stats1.isFetching && Number(props.stats1?.totalEpochVotingPower) === 0}
+        value={nFormatter(new BigNumber(props.stats1?.totalEpochVotingPower))}
       />
       <StatsCard
         toolTipMessage={"Total amount PLY locked as vote escrow.s"}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total locked"}
-        value={
-          !props.stats1?.isFetching
-            ? nFormatter(new BigNumber(props.stats1?.totalPlyLocked))
-            : undefined
-        }
+        isLoading={props.stats1.isFetching && Number(props.stats1?.totalPlyLocked) === 0}
+        value={nFormatter(new BigNumber(props.stats1?.totalPlyLocked))}
         subValue={"PLY"}
       />
 

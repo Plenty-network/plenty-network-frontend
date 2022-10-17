@@ -1,5 +1,6 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
+import { isMobile } from "react-device-detect";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import lock from "../../../src/assets/icon/vote/lock.svg";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
@@ -100,7 +101,14 @@ function CastVote(props: ICastVoteProps) {
                 You can claim your rewards after
               </span>
               <span className="hidden md:block">
-                <ToolTip position={Position.top} message={""} disable={true}>
+                <ToolTip
+                  position={isMobile ? Position.right : Position.top}
+                  toolTipChild={
+                    <div className="w-[200px] md:w-[220px]">
+                      Rewards are available at the end of the current epoch.
+                    </div>
+                  }
+                >
                   <span className="relative top-0.5">
                     <Image alt={"alt"} src={info} className="cursor-pointer" />
                   </span>
@@ -109,7 +117,14 @@ function CastVote(props: ICastVoteProps) {
               </span>
               <span className="block md:hidden">
                 <div>
-                  <ToolTip position={Position.top} message={""} disable={true}>
+                  <ToolTip
+                    position={isMobile ? Position.right : Position.top}
+                    toolTipChild={
+                      <div className="w-[200px] md:w-[220px]">
+                        Rewards are available at the end of the current epoch.
+                      </div>
+                    }
+                  >
                     <span className="relative top-0.5">
                       <Image alt={"alt"} src={info} className="cursor-pointer" />
                     </span>

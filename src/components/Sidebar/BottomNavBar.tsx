@@ -168,27 +168,35 @@ export function MoreSubMenuList(props: ISubMenuListProps) {
   return (
     <div className="w-screen flex flex-col text-f12 bg-topBar " ref={props.refWrapper}>
       {/*  */}
-      <div className="p-0 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
-        <SingleSideBar name="Bridge" className="px-9" iconName="bridgeIconMobile" isBottomMenu />
+      <div className="px-9 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
+        <SingleSideBar
+          name="Bribes"
+          className="px-9 justify-between"
+          iconName="bribes"
+          pathName={"/bribes"}
+          isBottomMenu
+          isHrefIcon={true}
+          openNewPage={true}
+        />
       </div>
       {/*  */}
 
       {/*  */}
-      <div className=" border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
+      {/* <div className=" border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
         <SingleSideBar name="Robocoin" className="px-9" iconName="roboIconMobile" isBottomMenu />
-      </div>
+      </div> */}
       {/*  */}
 
       {/*  */}
-      <div className=" border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
+      {/* <div className=" border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
         <SingleSideBar name="Migrate" className="px-9" iconName="migrateIconMobile" isBottomMenu />
-      </div>
+      </div> */}
       {/*  */}
 
       {/*  */}
-      <div className=" border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
+      {/* <div className=" border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
         <SingleSideBar name="Fiat" className="px-9" iconName="flateIconMobile" isBottomMenu />
-      </div>
+      </div> */}
 
       <div className="">
         {FooterMenu.map((e, i) => (

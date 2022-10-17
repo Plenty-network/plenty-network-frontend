@@ -42,7 +42,7 @@ export function NotificationIcon(props: INotificationIconProps) {
     >
       <Image
         alt={"alt"}
-        className={true ? "ringAnimate" : ""}
+        className={ringAnimate ? "ringAnimate" : ""}
         src={
           type === NotiFicationType.noNotification && !hasNotification
             ? "/assets/icon/bellicon.svg"

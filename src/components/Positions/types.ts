@@ -21,6 +21,7 @@ export interface IStatsProps {
   };
 }
 export interface IStatsCardProps {
+  isLoading?: boolean;
   toolTipMessage: string;
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
   title?: string;

@@ -22,6 +22,7 @@ export interface BribesMainProps {
 }
 
 export interface IPoolsTableBribes {
+  searchValue: string;
   className?: string;
   isfetched: boolean;
   setSelectedPool: React.Dispatch<React.SetStateAction<IPoolsForBribesData>>;
@@ -29,6 +30,8 @@ export interface IPoolsTableBribes {
   locksPosition: IPoolsForBribesData[];
 }
 export interface IBribesTableBribes {
+  setActiveStateTab: React.Dispatch<React.SetStateAction<string>>;
+  searchValue: string;
   className?: string;
   isfetched: boolean;
   setShowAddBribes: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,6 +49,9 @@ export interface IBribesBtn {
   setShowAddBribes: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IAddBribes {
+  allBalance: {
+    [id: string]: BigNumber;
+  };
   epochArray: number[];
   handleOperation: () => void;
   setEpochArray: React.Dispatch<React.SetStateAction<number[]>>;

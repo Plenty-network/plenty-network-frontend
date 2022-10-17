@@ -45,23 +45,27 @@ body {
 }
 /* Track */
 ::-webkit-scrollbar-track {
-  
   height: 5px;
   border-radius: 8px;
   background: transparent; 
 }
- 
+.swap::-webkit-scrollbar {
+  width: 0px;
+}
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  
   height: 5px;
   border-radius: 8px;
   background: #341e54; 
 }
-
+.swap::-webkit-scrollbar-track-piece:end {
+  margin-right: 150px; 
+}
+.swap::-webkit-scrollbar-track-piece:start {
+  margin-left: 150px;
+}
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  
   height: 5px;
   border-radius: 8px;
   background: #3b2f4f; 
@@ -207,6 +211,18 @@ input[type='number'] {
   border-radius: 12px !important;
   box-shadow:  0px 4px 24px rgb(0 0 0 / 40%) !important;
   padding: 16px 19px !important;
+}
+.tooltipCustomSwap {
+  opacity: 0.98 !important;
+  background-color: #160d24 !important;
+  border-color: #341e54 !important;
+  color: white !important;
+  text-align: left !important;
+  border: 1px solid #341e54 !important;
+  border-radius: 12px !important;
+  box-shadow:  0px 4px 24px rgb(0 0 0 / 40%) !important;
+  padding: 16px 10px !important;
+  left: 5px !important;
 }
 .tooltipCustomWithoutArrow {
   opacity: 0.98 !important;

@@ -56,6 +56,7 @@ export function VotesTable(props: IVotesTableProps) {
       }
       setVotedata(_votesTableData);
     } else {
+      setNoSearchResult(false);
       setVotedata(votedataArray);
     }
   }, [props.searchValue]);

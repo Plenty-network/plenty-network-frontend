@@ -12,7 +12,7 @@ export interface IStatsCardProps {
   setClaimValueDollar: React.Dispatch<React.SetStateAction<BigNumber>>;
   setShowCreateLockModal?: React.Dispatch<React.SetStateAction<boolean>>;
   title?: string;
-  value: string;
+  value: BigNumber;
   subValue?: string;
   isLast?: boolean;
   disable: boolean;
@@ -22,6 +22,7 @@ export interface IStatsCardProps {
   state: EClaimAllState;
 }
 export interface IStatsRewardsProps {
+  fetchingPly: boolean;
   fetchingTradingfee: boolean;
   unclaimInflation: IUnclaimedInflationData;
   bribesClaimData: IAllBribesOperationData[];

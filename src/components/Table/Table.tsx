@@ -187,7 +187,12 @@ const Table = <D extends object>({
           ) : null} */}
           {isFetched && noSearchResult ? <NoSearchResult /> : null}
           {isFetched && data.length === 0 && NoData && NoData}
-          {isConnectWalletRequired && !walletAddress && isFetched ? <WalletNotConnected /> : null}
+          {isConnectWalletRequired && !walletAddress && isFetched ? (
+            <WalletNotConnected
+              h1={"Connect your wallet"}
+              subValue={"Please connect you wallet to view your pools"}
+            />
+          ) : null}
           {!isFetched ? <SimmerEffect lines={3} /> : null}
           {isFetched && data.length
             ? page.map((row: any) => {
