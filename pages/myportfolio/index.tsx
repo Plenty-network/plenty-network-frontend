@@ -2,6 +2,8 @@ import Image from "next/image";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { BigNumber } from "bignumber.js";
+
+import playIcon from "../../src/assets/icon/pools/playIcon.svg";
 import { useEffect, useState, useRef, useMemo, useLayoutEffect } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { connect, useDispatch } from "react-redux";
@@ -82,14 +84,11 @@ import { setFlashMessage } from "../../src/redux/flashMessage";
 import { Flashtype } from "../../src/components/FlashScreen";
 import { CLAIM, FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_ID } from "../../src/constants/localStorage";
 import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
-import {
-  getPositionStatsData,
-  getTvlStatsData,
-  getVotesStatsData,
-} from "../../src/api/portfolio/stats";
 import { getPoolsRewardsData, getPositionsData } from "../../src/api/portfolio/pools";
 import { fetchTvlStatsData } from "../../src/redux/myPortfolio/tvl";
 import { fetchVotesStatsData } from "../../src/redux/myPortfolio/votesStats";
+import { VideoModal } from "../../src/components/Modal/videoModal";
+import { isMobile } from "react-device-detect";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -266,12 +265,27 @@ function MyPortfolio(props: any) {
     tvl: statsTvl,
     isFetching: statsTvlFetching,
   });
+  useEffect(() => {
+    setStatsPosition({
+      success: true,
+      tvl: statsTvl,
+      isFetching: statsTvlFetching,
+    });
+  }, [statsTvlFetching]);
   const [stats1, setStats1] = useState({
     success: true,
     totalEpochVotingPower: statsTotalEpochVotingPower,
     totalPlyLocked: statsTotalPlyLocked,
     isFetching: statsVotesFetching,
   });
+  useEffect(() => {
+    setStats1({
+      success: true,
+      totalEpochVotingPower: statsTotalEpochVotingPower,
+      totalPlyLocked: statsTotalPlyLocked,
+      isFetching: statsVotesFetching,
+    });
+  }, [statsVotesFetching]);
 
   useEffect(() => {
     votesPageDataWrapper(934, undefined).then((res) => {
@@ -306,16 +320,16 @@ function MyPortfolio(props: any) {
     if (userAddress) {
       //setStatsPosition({} as ITvlStatsResponse);
       // setPoolsPosition({ data: [] as IPositionsData[], isfetched: true });
-      // setPoolsRewards({ data: {} as IPoolsRewardsResponse, isfetched: true });
+      setPoolsRewards({ data: {} as IPoolsRewardsResponse, isfetched: false });
 
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
-        getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
-          setStatsPosition({
-            success: true,
-            tvl: res,
-            isFetching: false,
-          });
-        });
+        // getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+        //   setStatsPosition({
+        //     success: true,
+        //     tvl: res,
+        //     isFetching: false,
+        //   });
+        // });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
           setPoolsPosition({ data: res.positionPoolsData, isfetched: true });
         });
@@ -356,16 +370,15 @@ function MyPortfolio(props: any) {
     if (userAddress) {
       setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
       //setStats1({} as IVotesStatsDataResponse);
-      getVotesStatsData(userAddress).then((res) => {
-        setStats1({
-          success: true,
-          totalEpochVotingPower: res.totalEpochVotingPower,
-          totalPlyLocked: res.totalPlyLocked,
-          isFetching: false,
-        });
-      });
+      // getVotesStatsData(userAddress).then((res) => {
+      //   setStats1({
+      //     success: true,
+      //     totalEpochVotingPower: res.totalEpochVotingPower,
+      //     totalPlyLocked: res.totalPlyLocked,
+      //     isFetching: false,
+      //   });
+      // });
       getAllLocksPositionData(userAddress).then((res) => {
-        console.log(res);
         setLocksPosition({ data: res.allLocksData.reverse(), isfetched: true });
       });
     }
@@ -373,14 +386,14 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (!props.isLoading && props.operationSuccesful && userAddress) {
       setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
-      getVotesStatsData(userAddress).then((res) => {
-        setStats1({
-          success: true,
-          totalEpochVotingPower: res.totalEpochVotingPower,
-          totalPlyLocked: res.totalPlyLocked,
-          isFetching: false,
-        });
-      });
+      // getVotesStatsData(userAddress).then((res) => {
+      //   setStats1({
+      //     success: true,
+      //     totalEpochVotingPower: res.totalEpochVotingPower,
+      //     totalPlyLocked: res.totalPlyLocked,
+      //     isFetching: false,
+      //   });
+      // });
       dispatch(fetchVotesStatsData(userAddress));
       //setStatsPosition({} as IPositionStatsResponse);
       setPoolsPosition({ data: [] as IPositionsData[], isfetched: false });
@@ -395,13 +408,13 @@ function MyPortfolio(props: any) {
             lpTokenPrices: lpTokenPrice,
           })
         );
-        getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
-          setStatsPosition({
-            success: true,
-            tvl: res,
-            isFetching: false,
-          });
-        });
+        // getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
+        //   setStatsPosition({
+        //     success: true,
+        //     tvl: res,
+        //     isFetching: false,
+        //   });
+        // });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
           setPoolsPosition({ data: res.positionPoolsData, isfetched: true });
         });
@@ -504,9 +517,17 @@ function MyPortfolio(props: any) {
       lockingDate: 0,
     });
   };
+  useEffect(() => {
+    if (userAddress) {
+      if (!(localStorage.getItem("myportfolio") === userAddress)) {
+        localStorage.setItem("myportfolio", userAddress);
+      }
+    }
+  }, [userAddress]);
+  const [showVideoModal, setShowVideoModal] = React.useState(false);
   const Title = useMemo(() => {
     return (
-      <div className="flex gap-1">
+      <div className="flex gap-1 items-center">
         <p
           className={clsx(
             " font-title3 cursor-pointer box-border py-3 w-[147px] flex items-center justify-center  gap-1",
@@ -539,11 +560,36 @@ function MyPortfolio(props: any) {
             <Image alt={"alt"} src={rewards} />
           )}
         </p>
+        <p className="ml-2">
+          <ToolTip
+            classNameToolTipContainer={isMobile ? `playIconTooltip-left` : `playIconTooltip-right`}
+            position={isMobile ? Position.left : Position.right}
+            toolTipChild={
+              props.toolTipContent ? (
+                <p className="">{props.toolTipContent}</p>
+              ) : (
+                <p className="">Watch how to add liquidity, stake, and earn PLY</p>
+              )
+            }
+            classNameAncorToolTip="pushtoCenter"
+            isShowInnitially={
+              userAddress !== null && localStorage.getItem("myportfolio") !== userAddress
+            }
+          >
+            <Image
+              src={playIcon}
+              onClick={() => setShowVideoModal(true)}
+              height={"28px"}
+              width={"28px"}
+              className="cursor-pointer hover:opacity-90"
+            />
+          </ToolTip>
+        </p>
       </div>
     );
   }, [activeSection]);
   const handleWithdrawOperation = () => {
-    setContentTransaction(`Withdraw ${manageData.baseValue.toFixed(2)} ply`);
+    setContentTransaction(`Withdraw ${manageData.baseValue.toFixed(2)} PLY`);
     setShowWithdraw(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -606,7 +652,7 @@ function MyPortfolio(props: any) {
     });
   };
   const handleWithdrawClaimOperation = () => {
-    setContentTransaction(`Withdraw and Claim ${manageData.baseValue.toFixed(2)} ply`);
+    setContentTransaction(`Withdraw and Claim ${manageData.baseValue.toFixed(2)} PLY`);
     setShowWithdraw(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -681,7 +727,7 @@ function MyPortfolio(props: any) {
     });
   };
   const handleLockOperation = () => {
-    setContentTransaction(`Locking ${plyInput} ply`);
+    setContentTransaction(`Locking ${plyInput} PLY`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -746,7 +792,7 @@ function MyPortfolio(props: any) {
   };
   const handleIncreaseVoteOperation = () => {
     setIsManageLock(false);
-    setContentTransaction(`Locking ${plyInput} ply`);
+    setContentTransaction(`Locking ${plyInput} PLY`);
     setShowCreateLockModal(false);
 
     setShowConfirmTransaction(true);
@@ -1423,6 +1469,7 @@ function MyPortfolio(props: any) {
             ) : (
               <StatsRewards
                 plyEmission={poolsRewards.data.gaugeEmissionsTotal}
+                fetchingPly={poolsRewards.isfetched}
                 tradingfeeStats={tradingfeeStats}
                 fetchingTradingfee={fetchingTradingfee}
                 bribesStats={bribesStats}
@@ -1705,6 +1752,7 @@ function MyPortfolio(props: any) {
           }
         />
       )}
+      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"Bh5zuEI4M9o"} />}
     </>
   );
 }

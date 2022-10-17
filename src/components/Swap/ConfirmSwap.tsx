@@ -255,7 +255,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                     </ToolTip>
                   </span>
                 </div>
-                <>
+                <div className="swap overflow-x-auto w-[318px]">
                   <div className="border-dashed relative top-[24px]   border-t-2 border-muted-50 mx-2"></div>
                   <div className="mt-2 flex justify-between ">
                     {swapRoute?.map((token, idx) => {
@@ -397,7 +397,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                       );
                     })}
                   </div>
-                </>
+                </div>
               </div>
             </div>
             <div className="mt-4">

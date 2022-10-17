@@ -20,7 +20,7 @@ import { useEffect, useState, useRef } from "react";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import { getVeNFTsList } from "../../api/votes";
-import { NoPoolsPosition } from "../Rewards/NoContent";
+import { NoBribesPosition, NoPoolsPosition } from "../Rewards/NoContent";
 import { compareNumericString } from "../../utils/commonUtils";
 import { NoLocks } from "../Rewards/NoLocks";
 import { YourLiquidity } from "../PoolsPosition/YourLiquidity";
@@ -29,6 +29,7 @@ import { EpochCol } from "./EpochsCol";
 import { Token } from "./Token";
 import { IUserBribeData } from "../../api/bribes/types";
 import { BribeValue } from "./Bribe";
+import { WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
 TimeAgo.addDefaultLocale(en);
 
 export function MyBribesTableBribes(props: IBribesTableBribes) {
@@ -43,16 +44,62 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
       setVeNFTlist(res.veNFTData);
     });
   }, []);
-  // const NoData = React.useMemo(() => {
-  //   return <NoLocks setShowCreateLockModal={props.setShowCreateLockModal} />;
-  // }, []);
+
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
+
+  const [noSearchResult, setNoSearchResult] = React.useState(false);
+  const [tabledata, setTabledata] = React.useState(props.locksPosition);
   const tEZorCTEZtoUppercase = (a: string) =>
     a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+  useEffect(() => {
+    setTabledata(props.locksPosition);
+  }, [props.locksPosition]);
+  React.useEffect(() => {
+    if (props.searchValue && props.searchValue.length) {
+      const filter = props.locksPosition.filter((e: any) => {
+        return (
+          e.tokenA.toLowerCase().includes(props.searchValue.toLowerCase()) ||
+          e.tokenB.toLowerCase().includes(props.searchValue.toLowerCase()) ||
+          (props.searchValue.toLowerCase() === "xtz" &&
+            e.tokenA.toLowerCase().search(/\btez\b/) >= 0) ||
+          (props.searchValue.toLowerCase() === "xtz" &&
+            e.tokenB.toLowerCase().search(/\btez\b/) >= 0)
+        );
+      });
+      if (filter.length === 0) {
+        setNoSearchResult(true);
+      } else {
+        setNoSearchResult(false);
+      }
+      setTabledata(filter);
+    } else {
+      setNoSearchResult(false);
+      setTabledata(props.locksPosition);
+    }
+  }, [props.searchValue]);
+  const NoData = React.useMemo(() => {
+    if (!userAddress) {
+      return (
+        <WalletNotConnected
+          h1={"Connect your wallet"}
+          subValue={"Please connect you wallet to view your bribes"}
+        />
+      );
+    } else if (tabledata.length === 0) {
+      return (
+        <NoBribesPosition
+          h1={"No bribes added"}
+          subText={"You have not added any bribe for the voters of your pools."}
+          cta={"Add Bribes"}
+          setActiveStateTab={props.setActiveStateTab}
+        />
+      );
+    }
+  }, [userAddress, tabledata]);
 
   const mobilecolumns = React.useMemo<Column<IUserBribeData>[]>(
     () => [
@@ -198,10 +245,12 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
       <div className={`overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={props.locksPosition}
+          data={tabledata ? tabledata : []}
+          noSearchResult={noSearchResult}
           shortby="Locks"
           isFetched={props.isfetched}
           TableName={""}
+          NoData={NoData}
           TableWidth="min-w-[700px] lg:min-w-[1100px]"
         />
       </div>

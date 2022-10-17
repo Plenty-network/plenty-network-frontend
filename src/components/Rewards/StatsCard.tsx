@@ -6,8 +6,22 @@ import { BigNumber } from "bignumber.js";
 import { IStatsCardProps } from "./types";
 import info from "../../assets/icon/common/infoIcon.svg";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { store } from "../../redux";
 
 function StatsCard(props: IStatsCardProps) {
+  function nFormatter(num: BigNumber) {
+    if (num.isGreaterThanOrEqualTo(1000000000)) {
+      return num.dividedBy(1000000000).toFixed(2) + "B";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000)) {
+      return num.dividedBy(1000000).toFixed(2) + "M";
+    }
+    if (num.isGreaterThanOrEqualTo(1000)) {
+      return num.dividedBy(1000).toFixed(2) + "K";
+    }
+
+    return num.toFixed(2);
+  }
   return (
     <>
       <div
@@ -21,7 +35,7 @@ function StatsCard(props: IStatsCardProps) {
               <ToolTip
                 toolTipChild={
                   <div
-                    className={props.tooltipWidth ? props.tooltipWidth : "w-[100px] md:w-[150px]"}
+                    className={props.tooltipWidth ? props.tooltipWidth : "w-[200px] md:w-[250px]"}
                   >
                     {props.toolTipMessage}
                   </div>
@@ -38,7 +52,7 @@ function StatsCard(props: IStatsCardProps) {
             {props.value === undefined ? (
               <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
             ) : (
-              `${props.isDollar ? "$" : ""}${props.value?.toString()}`
+              `${props.isDollar ? "$" : ""}${nFormatter(props.value)}`
             )}
             {props.subValue && (
               <p className="font-subtitle5 text-border-400 ml-1 mb-px">{props.subValue}</p>

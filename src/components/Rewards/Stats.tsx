@@ -29,7 +29,7 @@ function StatsRewards(props: IStatsRewardsProps) {
       <StatsCard
         toolTipMessage={"PLY rewards through gauges."}
         title={"PLY emisisons"}
-        value={nFormatter(new BigNumber(props.plyEmission))}
+        value={props.plyEmission}
         subValue={"PLY"}
         disable={props.plyEmission?.isEqualTo(0)}
         setShowClaimAllPly={props.setShowClaimPly}
@@ -40,7 +40,7 @@ function StatsRewards(props: IStatsRewardsProps) {
       <StatsCard
         title={"Trading fees"}
         toolTipMessage={"Trading fees from the AMMs you voted for."}
-        value={nFormatter(new BigNumber(props.tradingfeeStats))}
+        value={props.tradingfeeStats}
         setShowClaimAllPly={props.setShowClaimPly}
         disable={props.feeClaimData.length === 0}
         isDollar={true}
@@ -51,7 +51,7 @@ function StatsRewards(props: IStatsRewardsProps) {
       <StatsCard
         title={"Bribes"}
         toolTipMessage={"Bribes through AMMs you have voted for."}
-        value={nFormatter(new BigNumber(props.bribesStats))}
+        value={props.bribesStats}
         setShowClaimAllPly={props.setShowClaimPly}
         disable={props.bribesClaimData.length === 0}
         isDollar={true}
@@ -65,7 +65,7 @@ function StatsRewards(props: IStatsRewardsProps) {
           "Anti dilution inflation of the lockers. Claimed amount is added to your existing lockers."
         }
         tooltipWidth={"w-[300px]"}
-        value={nFormatter(new BigNumber(props.unclaimInflation.unclaimedInflationAmount))}
+        value={props.unclaimInflation.unclaimedInflationAmount}
         subValue={"PLY"}
         setShowClaimAllPly={props.setShowClaimPly}
         disable={claimAllInflationData.length === 0}
