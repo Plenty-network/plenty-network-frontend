@@ -19,7 +19,7 @@ export const type1MapIds = [3956, 4353];
  /**
   * balance for these type3MapIds will be present in `response.data.args[0].int`
   */
- export const type3MapIds = [199, 36, 6901, 44140];
+ export const type3MapIds = [199, 36, 6901, 44140 , 176599];
  
  /**
   * balance for these type4MapIds will be present in `response.data.int`
