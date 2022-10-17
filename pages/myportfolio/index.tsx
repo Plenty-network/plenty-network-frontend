@@ -299,7 +299,7 @@ function MyPortfolio(props: any) {
         setPlyBalance(res.balance);
       });
     }
-  }, [userAddress, tokenPrice, balanceUpdate, token]);
+  }, [userAddress, tokenPrice, balanceUpdate, token, props.operationSuccesful, props.isLoading]);
 
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
