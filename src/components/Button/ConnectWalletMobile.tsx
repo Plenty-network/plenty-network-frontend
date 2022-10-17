@@ -4,16 +4,18 @@ import copyLogo from "../../assets/icon/common/copyLogo.svg";
 import disconnectLogo from "../../assets/icon/common/disconnectLogo.svg";
 import fiatLogo from "../../assets/icon/common/fiatLogo.svg";
 
+import "animate.css";
 import copy from "copy-to-clipboard";
 import truncateMiddle from "truncate-middle";
 import mobileConnectWallet from "../../assets/icon/common/mobileConnectWallet.svg";
 import nodeSelectorLogo from "../../assets/icon/common/nodeSelectorLogo.svg";
-import { useAppDispatch, useAppSelector } from "../../redux/index";
+import { store, useAppDispatch, useAppSelector } from "../../redux/index";
 import { switchWallet, walletConnection, walletDisconnection } from "../../redux/wallet/wallet";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { MobileEpoch } from "../Epoch/MobileEpoch";
 
 import switchLogo from "../../assets/icon/navigation/copy.svg";
+import clsx from "clsx";
 
 export interface IConnectWalletBtnMobileProps {
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,6 +44,11 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
   useOutsideClick(reff, () => {
     setShowMenu(false);
   });
+  const isBannerOpen = store.getState().walletLoading.isBanner;
+  const [isBanner, setIsBanner] = React.useState(isBannerOpen);
+  React.useEffect(() => {
+    setIsBanner(isBannerOpen);
+  }, [isBannerOpen]);
   if (userAddress) {
     return (
       <div className="relative flex" ref={reff}>
@@ -52,7 +59,12 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
           }}
         />
         {showMenu && (
-          <div className="absolute w-[320px] top-[52px] right-0 mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
+          <div
+            className={clsx(
+              "absolute w-[320px]  right-0 mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col",
+              isBanner ? "top-[52px]" : ""
+            )}
+          >
             <p className="bg-primary-755 text-f14 p-4 flex gap-2">
               <span className="text-text-400">Temple wallet</span>(
               <span
