@@ -11,7 +11,7 @@ import BigNumber from "bignumber.js";
 import { TokenVariant } from "../../config/types";
 import { packDataBytes, unpackDataBytes } from "@taquito/michel-codec";
 import { store } from "../../redux";
-import { rpcNode, dappClient } from "../../common/walletconnect";
+import { dappClient, getRpcNode } from "../../common/walletconnect";
 import { IBalanceResponse, IAllBalanceResponse, IPnlpBalanceResponse } from "./types";
 import { getDexAddress, getLpTokenSymbol } from "./fetchConfig";
 import { getBigMapData, getStorage } from "./storageProvider";
@@ -148,7 +148,7 @@ export const getUserBalanceByRpc = async (
       const decimal: number = token.decimals;
       const tokenId: number = token.tokenId ?? 0;
       const packedKey = getPackedKey(tokenId, address, type as TokenVariant);
-      const url = `${rpcNode}chains/main/blocks/head/context/big_maps/${mapId}/${packedKey}`;
+      const url = `${getRpcNode()}chains/main/blocks/head/context/big_maps/${mapId}/${packedKey}`;
       const response = await axios.get(url);
 
       const balance = (() => {

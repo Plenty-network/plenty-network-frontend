@@ -8,7 +8,6 @@ import {
 } from '@airgap/beacon-sdk'
 import type { BeaconWallet } from '@taquito/beacon-wallet'
 import Config from '../config/config';
-import { RPC_NODE } from '../constants/localStorage';
 import { store } from '../redux';
 
 
@@ -49,12 +48,15 @@ class TzktBlockExplorer extends BlockExplorer {
 export const connectedNetwork = Config.NETWORK;
 export const walletNetwork = Config.WALLET_NETWORK;
 export const configName = Config.NAME;
-// const rpcNode = store.getState().wallet.rpcNode ?? Config.RPC_NODES[connectedNetwork];
-export const rpcNode = Config.RPC_NODES[connectedNetwork];
+// const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
+// export const rpcNode = Config.RPC_NODES[connectedNetwork];
 export const tzktNode = Config.TZKT_NODES[connectedNetwork];
 export const voteEscrowAddress = Config.VOTE_ESCROW[connectedNetwork];
 export const voterAddress = Config.VOTER[connectedNetwork];
 export const veSwapAddress = Config.VE_SWAP[connectedNetwork];
+
+export const getRpcNode = () =>
+  store.getState().rpcData.rpcNode || Config.RPC_NODES[connectedNetwork];
 
 export function dappClient() {
   let instance: BeaconWallet | undefined
@@ -111,7 +113,7 @@ export function dappClient() {
         await client.requestPermissions({
           network: {
             type: walletNetwork,
-            rpcUrl: rpcNode,
+            rpcUrl: getRpcNode(),
           },
         });
       }
@@ -128,7 +130,7 @@ export function dappClient() {
   async function tezos() {
 
     const { TezosToolkit } = await import('@taquito/taquito')
-    const Tezos = new TezosToolkit(rpcNode)
+    const Tezos = new TezosToolkit(getRpcNode())
     const wallet=await getDAppClientWallet();
     if (wallet) Tezos.setWalletProvider(wallet)
     return Tezos

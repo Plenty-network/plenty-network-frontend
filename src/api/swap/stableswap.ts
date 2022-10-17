@@ -2,7 +2,7 @@ import CONFIG from '../../config/config';
 import BigNumber from 'bignumber.js';
 import { store } from '../../redux';
 import axios from 'axios';
-import { connectedNetwork, rpcNode } from '../../common/walletconnect';
+import { connectedNetwork, getRpcNode } from '../../common/walletconnect';
 import { getDexAddress } from '../util/fetchConfig';
 import { ISwapDataResponse , ICalculateTokenResponse, tezCtezStorageType, stableswapStorageType } from './types';
 import { getStorage } from '../util/storageProvider';
@@ -336,7 +336,7 @@ export const loadSwapDataTezCtez = async (
     const exchangeFee = new BigNumber(storageResponse.lpFee);
     const lpToken = AMM[dexContractAddress].lpToken;
     const ctezAddress = CONFIG.CTEZ[connectedNetwork];
-    const ctezStorageUrl = `${rpcNode}chains/main/blocks/head/context/contracts/${ctezAddress}/storage`;
+    const ctezStorageUrl = `${getRpcNode()}chains/main/blocks/head/context/contracts/${ctezAddress}/storage`;
     const ctezStorage = await axios.get(ctezStorageUrl);
     const target = new BigNumber(ctezStorage.data.args[2].int);
 
