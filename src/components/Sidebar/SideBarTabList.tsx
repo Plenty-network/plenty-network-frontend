@@ -43,7 +43,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
               <p>{props.name}</p>
             </div>
             {props.isHrefIcon && (
-              <p className="w-[11px] h-[11px] relative top-px ml-auto ">
+              <p className="w-[11px] h-[11px] relative -top-1 ml-auto ">
                 <Image
                   alt={"alt"}
                   src={"/assets/icon/HrefIcon.svg"}

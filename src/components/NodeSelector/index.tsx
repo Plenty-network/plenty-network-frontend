@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import Image from "next/image";
@@ -9,21 +9,9 @@ import Button from "../Button/Button";
 import { PopUpModal } from "../Modal/popupModal";
 import { RPC_NODE } from "../../constants/localStorage";
 import { connect } from "react-redux";
-import { setRpcNode } from "../../redux/wallet/wallet";
+import { setRpcNode } from "../../redux/userSettings/rpcData";
 import { store } from "../../redux";
 
-export enum NODES {
-  PLENTY = "Plenty node",
-  GIGANODE = "Giganode",
-  CRYPTOMIC = "Cryptonomic",
-  CUSTOM = "",
-}
-export enum NODENAME {
-  "PLENTY",
-  "GIGANODE",
-  "CRYPTOMIC",
-  "CUSTOM",
-}
 async function isValidURL(userInput: string) {
   try {
     const response = await axios({
@@ -37,172 +25,135 @@ async function isValidURL(userInput: string) {
   }
 }
 function NodeSelector(props: any) {
-  const Nodes = [
-    { text: NODES.PLENTY, url: "https://mifx20dfsr.windmill.tools/", name: "PLENTY" },
-    { text: NODES.GIGANODE, url: "https://mainnet-tezos.giganode.io/", name: "GIGANODE" },
-    { text: NODES.CRYPTOMIC, url: "https://tezos-prod.cryptonomic-infra.tech/", name: "CRYPTOMIC" },
-    { text: NODES.CUSTOM, url: "", name: "CUSTOM" },
-  ];
+  // const LOCAL_RPC_NODES: {
+  //   [id: string]: string;
+  // } = {
+  //   PLENTY: "https://mifx20dfsr.windmill.tools/",
+  //   GIGANODE: "https://mainnet-tezos.giganode.io/",
+  //   CRYPTONOMIC: "https://tezos-prod.cryptonomic-infra.tech/",
+  // };
+  const LOCAL_RPC_NODES: {
+    [id: string]: string;
+  } = {
+    TZKT: "https://rpc.tzkt.io/ghostnet/",
+    SmartPY: "https://ghostnet.smartpy.io/",
+  };
+  // const nodeNames = {
+  //   PLENTY: 'Plenty node',
+  //   GIGANODE: 'Giganode',
+  //   CRYPTONOMIC: 'Cryptonomic',
+  // };
+  const nodeNames = {
+    TZKT: "TZKT",
+    SmartPY: "SmartPY",
+  };
 
-  useEffect(() => {
-    console.log(localStorage.getItem(RPC_NODE), props.rpcNode);
-    var d = Nodes.find((e) => e.url === localStorage.getItem(RPC_NODE));
-    d && setSelectedNode(d);
-  }, [localStorage.getItem(RPC_NODE), props.rpcNode]);
-  const [selectedNode, setSelectedNode] = useState(Nodes[0]);
+  const [rpcNodeDetecting, setRpcNodeDetecting] = useState(false);
+  const setRPCRunning = useRef(false);
+
   const closeModal = () => {
     props.setShow(false);
   };
   const [currentRPC, setCurrentRPC] = useState("");
   const [customRPC, setCustomRPC] = useState("");
 
-  const LOCAL_RPC_NODES = {
-    PLENTY: "https://mifx20dfsr.windmill.tools/",
-    GIGANODE: "https://mainnet-tezos.giganode.io/",
-    CRYPTONOMIC: "https://tezos-prod.cryptonomic-infra.tech/",
-  };
-
   useEffect(() => {
-    rpcNodeDetect();
-  }, []);
+    if (props.show && !setRPCRunning.current) {
+      rpcNodeDetect();
+    }
+  }, [props.show]);
+  useEffect(() => {
+    if (currentRPC !== "") {
+      setErrorMessage("");
+    }
+  }, [currentRPC]);
   const rpcNodeDetect = async () => {
-    let RPCNodeInLS = localStorage.getItem(RPC_NODE);
+    setRpcNodeDetecting(true);
+    let RPCNodeInLS = props.rpcNode;
 
     if (!RPCNodeInLS) {
-      localStorage.setItem(RPC_NODE, LOCAL_RPC_NODES["CRYPTONOMIC"]);
-      props.setRpcNode(LOCAL_RPC_NODES["CRYPTONOMIC"]);
-      setCurrentRPC(LOCAL_RPC_NODES["CRYPTONOMIC"]);
-      RPCNodeInLS = LOCAL_RPC_NODES["CRYPTONOMIC"];
+      handleInput("");
+
+      props.setRpcNode(LOCAL_RPC_NODES["TZKT"]);
+      setCurrentRPC(LOCAL_RPC_NODES["TZKT"]);
+      RPCNodeInLS = LOCAL_RPC_NODES["TZKT"];
     }
 
     const valid = await isValidURL(RPCNodeInLS);
     if (!valid) {
-      localStorage.setItem(RPC_NODE, LOCAL_RPC_NODES["PLENTY"]);
-      props.setRpcNode(LOCAL_RPC_NODES["PLENTY"]);
-      setCurrentRPC(LOCAL_RPC_NODES["PLENTY"]);
+      handleInput("");
+      localStorage.setItem(RPC_NODE, LOCAL_RPC_NODES["SmartPY"]);
+      props.setRpcNode(LOCAL_RPC_NODES["SmartPY"]);
+      setCurrentRPC("SmartPY");
+      setRpcNodeDetecting(false);
       return;
     }
-    var matchedNode = "";
-    for (const [key, value] of Object.entries(LOCAL_RPC_NODES)) {
-      if (value === RPCNodeInLS) {
-        matchedNode = RPCNodeInLS;
-      }
-    }
 
-    if (matchedNode === "") {
+    const matchedNode = Object.keys(LOCAL_RPC_NODES).find(
+      (key) => LOCAL_RPC_NODES[key] === RPCNodeInLS
+    );
+
+    if (!matchedNode) {
       setCurrentRPC("CUSTOM");
       setCustomRPC(RPCNodeInLS);
+      setRpcNodeDetecting(false);
       return;
     }
-
+    setRpcNodeDetecting(false);
     setCurrentRPC(matchedNode);
   };
+
   const handleInput = (input: string) => {
     setCustomRPC(input);
   };
   const [errorMessage, setErrorMessage] = useState("");
+
   const setRPCInLS = async () => {
+    setRPCRunning.current = true;
     if (currentRPC !== "CUSTOM") {
-      const s = selectedNode.name;
-      localStorage.setItem(RPC_NODE, selectedNode.url);
-      props.setRpcNode(selectedNode.url);
+      handleInput("");
+      setErrorMessage("");
+      props.setRpcNode(LOCAL_RPC_NODES[currentRPC]);
+      props.setShow(false);
     } else {
       let _customRPC = customRPC;
       if (!_customRPC.match(/\/$/)) {
         _customRPC += "/";
       }
       const response = await isValidURL(_customRPC);
-
+      console.log(response);
       if (!response) {
-        setErrorMessage("Invalid rpc");
-        console.log("invalid url");
+        handleInput("");
+        setErrorMessage("Please enter valid rpc");
       } else {
         setErrorMessage("");
-        localStorage.setItem(RPC_NODE, _customRPC);
         props.setRpcNode(_customRPC);
-        // props.closeNodeSelectorModal(_customRPC);
+        props.setShow(false);
       }
     }
-    if (errorMessage !== "") {
-      props.setShow(false);
-    }
+    // if (errorMessage === "") {
+
+    //}
   };
-  function Options(props: {
-    onClick: Function;
-    nodes: {
-      text: NODES;
-      url: string;
-      name: string;
-    };
-  }) {
-    if (props.nodes.text === NODES.CUSTOM) {
-      return (
-        <div className="flex gap-[15px]">
-          <div
-            className={clsx(
-              " justify-center border  flex items-center h-[54px] w-[54px] z-10 cursor-pointer font-body4 rounded-2xl mt-4 ",
-              props.nodes.text.includes(selectedNode.text)
-                ? "bg-muted-500 border-primary-500  text-primary-500"
-                : "text-text-700 bg-card-500 border-text-800"
-            )}
-            onClick={() => {
-              props.onClick(props.nodes);
-            }}
-          >
-            {" "}
-            {props.nodes.text === selectedNode.text ? (
-              <Image src={violetNode} height={"20px"} width={"20px"} />
-            ) : (
-              <Image src={greyNode} height={"20px"} width={"20px"} />
-            )}
-          </div>
-          <div
-            className={clsx(
-              "  px-4 border  flex items-center h-[54px] z-10 w-[343px] cursor-pointer font-body4 rounded-2xl mt-4 ",
-              errorMessage !== ""
-                ? "bg-error-500"
-                : props.nodes.text === selectedNode.text
-                ? "bg-muted-500 border-primary-500  text-primary-500"
-                : "text-text-700 bg-card-500 border-text-800"
-            )}
-          >
-            <input
-              type="text"
-              className={clsx(
-                "text-white bg-card-500/[0.1] text-left border-0 font-body3 outline-none w-[100%] placeholder:text-text-700"
-              )}
-              placeholder="https://custom.tezos.node"
-              autoFocus
-              value={customRPC}
-              onChange={(e) => {
-                handleInput(e.target.value);
-              }}
-            />
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div
-          onClick={() => {
-            props.onClick(props.nodes);
-          }}
-          className={clsx(
-            "  px-4 border  flex items-center h-[54px] z-10 cursor-pointer font-body4 rounded-2xl mt-4 ",
-            props.nodes.text === selectedNode.text
-              ? "bg-muted-500 border-primary-500  text-primary-500"
-              : "text-text-700 bg-card-500 border-text-800"
-          )}
-        >
-          {props.nodes.text === selectedNode.text ? (
-            <Image src={violetNode} height={"20px"} width={"20px"} />
-          ) : (
-            <Image src={greyNode} height={"20px"} width={"20px"} />
-          )}
-          <span className="ml-4">{props.nodes.text}</span>
-        </div>
-      );
-    }
+  function Options(props: { currentRPC: string; identifier: string }) {
+    return (
+      <div
+        onClick={() => setCurrentRPC(props.identifier)}
+        className={clsx(
+          "  px-4 border  flex items-center h-[54px] z-10 cursor-pointer font-body4 rounded-2xl mt-4 ",
+          props.currentRPC === props.identifier
+            ? "bg-muted-500 border-primary-500  text-primary-500"
+            : "text-text-700 bg-card-500 border-text-800"
+        )}
+      >
+        {props.currentRPC === props.identifier ? (
+          <Image src={violetNode} height={"20px"} width={"20px"} />
+        ) : (
+          <Image src={greyNode} height={"20px"} width={"20px"} />
+        )}
+        <span className="ml-4">{props.identifier}</span>
+      </div>
+    );
   }
 
   return props.show ? (
@@ -219,13 +170,54 @@ function NodeSelector(props: any) {
             switching to a different node, or use a custom node.
           </div>
           <div className="px-2">
-            {Nodes.map((text, i) => (
-              <Options onClick={setSelectedNode} key={`${text}_${i}`} nodes={text} />
+            {Object.entries(nodeNames).map(([identifier, name]) => (
+              <Options key={identifier} currentRPC={currentRPC} identifier={identifier} />
             ))}
+            <div className="flex gap-[15px]">
+              <div
+                className={clsx(
+                  " justify-center border  flex items-center h-[54px] w-[54px] z-10 cursor-pointer font-body4 rounded-2xl mt-4 ",
+                  currentRPC === "CUSTOM"
+                    ? "bg-muted-500 border-primary-500  text-primary-500"
+                    : "text-text-700 bg-card-500 border-text-800"
+                )}
+                onClick={() => {
+                  setCurrentRPC("CUSTOM");
+                }}
+              >
+                {" "}
+                {currentRPC === "CUSTOM" ? (
+                  <Image src={violetNode} height={"20px"} width={"20px"} />
+                ) : (
+                  <Image src={greyNode} height={"20px"} width={"20px"} />
+                )}
+              </div>
+              <div
+                className={clsx(
+                  "  px-4 border  flex items-center h-[54px] z-10 w-[343px] cursor-pointer font-body4 rounded-2xl mt-4 ",
+                  currentRPC === "CUSTOM"
+                    ? "bg-muted-500 border-primary-500  text-primary-500"
+                    : "text-text-700 bg-card-500 border-text-800"
+                )}
+              >
+                <input
+                  type="text"
+                  className={clsx(
+                    "text-white bg-card-500/[0.1] text-left border-0 font-body3 outline-none w-[100%] placeholder:text-text-700"
+                  )}
+                  placeholder="https://custom.tezos.node"
+                  value={customRPC}
+                  onChange={(e) => {
+                    handleInput(e.target.value);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="text-error-500 font-body1 pl-20">{errorMessage}</div>
           </div>
           <div className="mt-[18px]">
-            <Button color={"primary"} onClick={setRPCInLS}>
-              Set Node
+            <Button color={rpcNodeDetecting ? "disabled" : "primary"} onClick={setRPCInLS}>
+              {"Set Node"}
             </Button>
           </div>
         </>
@@ -234,8 +226,8 @@ function NodeSelector(props: any) {
   ) : null;
 }
 
-const mapStateToProps = (state: { wallet: { rpcNode: any } }) => ({
-  rpcNode: state.wallet.rpcNode,
+const mapStateToProps = (state: { rpcData: { rpcNode: any } }) => ({
+  rpcNode: state.rpcData.rpcNode,
 });
 
 const mapDispatchToProps = (dispatch: (arg0: any) => any) => ({

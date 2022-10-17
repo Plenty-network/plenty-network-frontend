@@ -10,14 +10,12 @@ interface WalletState {
   address: string | "";
   loading: boolean;
   hasNotification: boolean;
-  rpcNode: "";
 }
 
 const initialState: WalletState = {
   address: "",
   loading: false,
   hasNotification: false,
-  rpcNode: "",
 };
 
 export const walletConnection = createAsyncThunk("wallet/walletConnection", async (thunkAPI) => {
@@ -48,9 +46,6 @@ const walletSlice = createSlice({
     setHasNotification: (state, action: any) => {
       state.hasNotification = action.payload;
     },
-    setRpcNode: (state, action: any) => {
-      state.rpcNode = action.payload;
-    },
   },
   extraReducers: {
     [walletConnection.pending.toString()]: (state: any) => {
@@ -77,5 +72,5 @@ const walletSlice = createSlice({
     },
   },
 });
-export const { setHasNotification, setRpcNode } = walletSlice.actions;
+export const { setHasNotification } = walletSlice.actions;
 export const wallet = walletSlice.reducer;
