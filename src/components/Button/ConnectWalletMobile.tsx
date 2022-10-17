@@ -52,7 +52,7 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
           }}
         />
         {showMenu && (
-          <div className="absolute w-[320px] right-0 mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
+          <div className="absolute w-[320px] top-[52px] right-0 mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
             <p className="bg-primary-755 text-f14 p-4 flex gap-2">
               <span className="text-text-400">Temple wallet</span>(
               <span
