@@ -15,7 +15,9 @@ import { MobileEpoch } from "../Epoch/MobileEpoch";
 
 import switchLogo from "../../assets/icon/navigation/copy.svg";
 
-export interface IConnectWalletBtnMobileProps {}
+export interface IConnectWalletBtnMobileProps {
+  setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -50,7 +52,7 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
           }}
         />
         {showMenu && (
-          <div className="absolute w-[320px] right-0 mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
+          <div className="absolute w-[320px] top-[52px] right-0 mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
             <p className="bg-primary-755 text-f14 p-4 flex gap-2">
               <span className="text-text-400">Temple wallet</span>(
               <span
@@ -85,7 +87,10 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
               <span>Switch account</span>
             </p>
 
-            <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-not-allowed text-white text-f14">
+            <p
+              className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+              onClick={() => props.setNodeSelector(true)}
+            >
               <Image alt={"alt"} src={nodeSelectorLogo} />
               <span>Node Selector</span>
             </p>

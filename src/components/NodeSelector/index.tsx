@@ -97,7 +97,10 @@ function NodeSelector(props: any) {
 
     setCurrentRPC(matchedNode);
   };
-
+  const handleInput = (input: string) => {
+    setCustomRPC(input);
+  };
+  const [errorMessage, setErrorMessage] = useState("");
   const setRPCInLS = async () => {
     if (currentRPC !== "CUSTOM") {
       const s = selectedNode.name;
@@ -111,30 +114,30 @@ function NodeSelector(props: any) {
       const response = await isValidURL(_customRPC);
 
       if (!response) {
+        setErrorMessage("Invalid rpc");
         console.log("invalid url");
       } else {
+        setErrorMessage("");
         localStorage.setItem(RPC_NODE, _customRPC);
         props.setRpcNode(_customRPC);
         // props.closeNodeSelectorModal(_customRPC);
       }
     }
-    props.setShow(false);
+    if (errorMessage !== "") {
+      props.setShow(false);
+    }
   };
   function Options(props: {
     onClick: Function;
     nodes: {
       text: NODES;
       url: string;
+      name: string;
     };
   }) {
-    if (props.nodes.text === "") {
+    if (props.nodes.text === NODES.CUSTOM) {
       return (
-        <div
-          className="flex gap-[15px]"
-          onClick={() => {
-            props.onClick(props.nodes);
-          }}
-        >
+        <div className="flex gap-[15px]">
           <div
             className={clsx(
               " justify-center border  flex items-center h-[54px] w-[54px] z-10 cursor-pointer font-body4 rounded-2xl mt-4 ",
@@ -142,6 +145,9 @@ function NodeSelector(props: any) {
                 ? "bg-muted-500 border-primary-500  text-primary-500"
                 : "text-text-700 bg-card-500 border-text-800"
             )}
+            onClick={() => {
+              props.onClick(props.nodes);
+            }}
           >
             {" "}
             {props.nodes.text === selectedNode.text ? (
@@ -153,7 +159,9 @@ function NodeSelector(props: any) {
           <div
             className={clsx(
               "  px-4 border  flex items-center h-[54px] z-10 w-[343px] cursor-pointer font-body4 rounded-2xl mt-4 ",
-              props.nodes.text === selectedNode.text
+              errorMessage !== ""
+                ? "bg-error-500"
+                : props.nodes.text === selectedNode.text
                 ? "bg-muted-500 border-primary-500  text-primary-500"
                 : "text-text-700 bg-card-500 border-text-800"
             )}
@@ -164,9 +172,10 @@ function NodeSelector(props: any) {
                 "text-white bg-card-500/[0.1] text-left border-0 font-body3 outline-none w-[100%] placeholder:text-text-700"
               )}
               placeholder="https://custom.tezos.node"
+              autoFocus
               value={customRPC}
               onChange={(e) => {
-                setCustomRPC(e.target.value);
+                handleInput(e.target.value);
               }}
             />
           </div>

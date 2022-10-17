@@ -10,12 +10,13 @@ import { NotificationIcon } from "../NotificationIcon";
 export interface ITopNavBarMobileProps {
   setShowNotification: Function;
   isBribes: boolean;
+  setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function TopNavBarMobile(props: ITopNavBarMobileProps) {
   const userAddress = store.getState().wallet.address;
   return (
-    <div className="flex fixed w-screen bottomNavBarMobile px-5 h-[61px] justify-between border-b border-b-borderColor">
+    <div className="flex fixed top-[39px] w-screen bottomNavBarMobile px-5 h-[61px] justify-between border-b border-b-borderColor">
       <Link href={"/"}>
         <Image src={plentyIcon} height={"22.47px"} width="100%" />
       </Link>
@@ -30,7 +31,7 @@ export function TopNavBarMobile(props: ITopNavBarMobileProps) {
             className="cursor-pointer hover:opacity-90"
             onClick={props.setShowNotification}
           />
-          <ConnectWalletBtnMobile />
+          <ConnectWalletBtnMobile setNodeSelector={props.setNodeSelector} />
         </div>
       )}
     </div>
