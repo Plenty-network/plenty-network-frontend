@@ -9,6 +9,7 @@ export interface IConfig {
   API: IApi;
   RPC_NODES: INodes;
   TZKT_NODES: INodes;
+  FAUCET : string;
   CTEZ: INodes;
   EXPLORER_LINKS: IExplorerLinks;
 
