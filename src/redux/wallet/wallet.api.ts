@@ -67,6 +67,7 @@ export const switchWalletAccountAPI = async () => {
     let account = await walletClient.getActiveAccount();
 
     if (account) {
+      const prevWalletAddress = account.address;
       await walletClient.clearActiveAccount();
       await walletClient.requestPermissions({
         network: {
@@ -75,21 +76,24 @@ export const switchWalletAccountAPI = async () => {
         },
       });
       account = await walletClient.getActiveAccount();
-      return {
-        success: account ? true : false,
-        wallet: account ? account.address : null,
-      };
+      // return {
+      //   success: account ? true : false,
+      //   wallet: account ? account.address : prevWalletAddress,
+      // };
+      return account ? account.address : prevWalletAddress;
     } else {
-      return {
-        success: false,
-        wallet: null,
-      };
+      // return {
+      //   success: false,
+      //   wallet: null,
+      // };
+      throw new Error("Not connected to wallet");
     }
-  } catch (error) {
-    return {
-      success: false,
-      wallet: null,
-      error,
-    };
+  } catch (error: any) {
+    // return {
+    //   success: false,
+    //   wallet: null,
+    //   error,
+    // };
+    throw new Error(error.message);
   }
 };

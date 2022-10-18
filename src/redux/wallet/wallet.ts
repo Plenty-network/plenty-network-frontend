@@ -34,9 +34,10 @@ export const fetchWallet = createAsyncThunk("wallet/fetchWallet", async (thunkAP
 });
 export const switchWallet = createAsyncThunk("wallet/switchWallet", async (thunkAPI) => {
   const res = await switchWalletAccountAPI();
-  if (res.success) {
-    return res.wallet;
-  }
+  return res;
+  // if (res.success) {
+  //   return res.wallet;
+  // }
 });
 
 const walletSlice = createSlice({
@@ -68,7 +69,8 @@ const walletSlice = createSlice({
       state.address = action.payload;
     },
     [switchWallet.rejected.toString()]: (state, action) => {
-      state.address = "";
+      // state.address = "";
+      console.log(`Error: ${action.error.message}`);
     },
   },
 });
