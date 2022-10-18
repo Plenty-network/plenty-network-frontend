@@ -44,6 +44,7 @@ function Banner(props: ISearchBarProps) {
       }
     });
   };
+  const [isHover, setHover] = useState(false);
   return (
     <div
       className={clsx(
@@ -64,7 +65,16 @@ function Banner(props: ISearchBarProps) {
           dispatch(setIsBanner(false));
         }}
       >
-        <div className="close"></div>
+        <div
+          className={clsx(
+            "w-[18px] h-[18px] rounded-full flex items-center justify-center ",
+            isHover ? "bg-info-200 closeboxShadow" : "bg-info-100"
+          )}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+        >
+          <div className={clsx(isHover ? "closeHover" : "close")}></div>
+        </div>
       </p>
     </div>
   );
