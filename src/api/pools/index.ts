@@ -103,7 +103,7 @@ export const poolsDataWrapper = async (
           poolData.apr != 'NaN'
             ? new BigNumber(poolData.apr)
             : new BigNumber(0),
-        prevApr: new BigNumber(poolData.previousApr) ?? new BigNumber(0),
+        futureApr: new BigNumber(poolData.futureApr) ?? new BigNumber(0),
         boostedApr:
           poolData.apr != 'NaN'
             ? new BigNumber(poolData.apr).multipliedBy(2.5)
