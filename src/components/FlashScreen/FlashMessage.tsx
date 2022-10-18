@@ -60,8 +60,8 @@ export function Flash(props: IInfoProps) {
         <Image height={30} width={30} src={props.imageSrc} />
       </div>
       <div className="py-4 pl-4 flex-1 flex flex-col gap-[4px] pr-[56px] font-normal text-f12 leading-4">
-        <div className="flex gap-[4px]">
-          <span>{props.headerText}</span>
+        <div className="flex items-end gap-[4px]">
+          <span className="font-body1">{props.headerText}</span>
           <span className="text-text-238 text-f10 leading-[14px]">now</span>
         </div>
         <div className="text-f14 font-semibold text-[#F3F2F3]">{props.trailingText}</div>

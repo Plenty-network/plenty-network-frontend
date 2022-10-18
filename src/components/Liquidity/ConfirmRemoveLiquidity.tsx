@@ -33,9 +33,9 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
           <Image alt={"alt"} src={arrowLeft} />
         </div>
         <div className="mx-2 text-white font-title3">Confirm Remove liquidity </div>
-        <div className="relative cursor-pointer top-[2px]">
+        {/* <div className="relative cursor-pointer top-[2px]">
           <Image alt={"alt"} src={info} />
-        </div>
+        </div> */}
       </div>
       <div className="mt-5 text-text-500 font-body4">
         Output is estimated. If the price changes by more than 0.5% your transaction will revert

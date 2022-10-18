@@ -61,9 +61,9 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
                   <Image alt={"alt"} src={arrowLeft} />
                 </div>
                 <div className="mx-2 text-white font-title3">Add bribes</div>
-                <div className="relative top-[2px]">
+                {/* <div className="relative top-[2px]">
                   <Image alt={"alt"} src={info} />
-                </div>
+                </div> */}
               </div>
               <div className="border bg-card-200 mt-3 border-text-800 rounded-2xl   ">
                 <div className="flex bg-card-500 rounded-t-2xl h-[51px] items-center ">

@@ -190,7 +190,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "APR",
         id: "apr1",
-        columnWidth: "w-[122px]",
+        columnWidth: "w-[110px]",
         subText: "future epoch",
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         isToolTipEnabled: true,
@@ -332,7 +332,7 @@ export function ShortCard(props: IShortCardProps) {
           tableType="pool"
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
-          TableWidth="min-w-[535px] lg:min-w-[1100px]"
+          TableWidth="min-w-[535px] lg:min-w-[1140px]"
           NoData={NoData}
         />
       </div>

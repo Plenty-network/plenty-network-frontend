@@ -305,7 +305,20 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      props.setActiveState
+      props.setActiveState,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+          TOKEN_A
+        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(
+          TOKEN_B
+        )} submitted.`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -394,7 +407,23 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      props.setActiveState
+      props.setActiveState,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText:
+          stakeInput !== ""
+            ? `Stake ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+                TOKEN_A
+              )} / ${localStorage.getItem(TOKEN_B)} PNLP submitted`
+            : `Boost ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+                TOKEN_B
+              )} pool stake with # ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -485,7 +514,18 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      props.setActiveState
+      props.setActiveState,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Unstake ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+          TOKEN_A
+        )} / ${localStorage.getItem(TOKEN_B)} PNLP submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -546,7 +586,16 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       props.tokenOut.symbol,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Claim ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -624,7 +673,19 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      undefined
+      undefined,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Remove ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+          TOKEN_A
+        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(
+          TOKEN_B
+        )} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);

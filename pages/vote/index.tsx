@@ -301,7 +301,17 @@ export default function Vote() {
       new BigNumber(lockingEndData.lockingDate),
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Lock ${localStorage.getItem(
+          FIRST_TOKEN_AMOUNT
+        )} PLY till ${localStorage.getItem(TOKEN_A)} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -368,7 +378,16 @@ export default function Vote() {
       finalVotes,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Vote with VeNFT #
+        ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setVotes([] as IVotes[]);

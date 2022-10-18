@@ -14,7 +14,14 @@ function Banner(props: ISearchBarProps) {
   const isBanner = store.getState().walletLoading.isBanner;
   const [isB, setIsB] = useState(isBanner);
   const handleFaucet = () => {
-    claimFaucet(undefined, undefined, undefined).then((res) => {
+    claimFaucet(undefined, undefined, undefined, {
+      flashType: Flashtype.Info,
+      headerText: "Transaction submitted",
+      trailingText: `Claim test tokens on Ghostnet submitted`,
+      linkText: "View in Explorer",
+      isLoading: true,
+      transactionId: "",
+    }).then((res) => {
       if (res.success) {
         setTimeout(() => {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
@@ -22,7 +29,7 @@ function Banner(props: ISearchBarProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Claim faucet`,
+              trailingText: `Claim test tokens on Ghostnet`,
               linkText: "View in Explorer",
               isLoading: true,
               transactionId: "",
@@ -35,7 +42,7 @@ function Banner(props: ISearchBarProps) {
             flashType: Flashtype.Rejected,
             transactionId: "",
             headerText: "Rejected",
-            trailingText: `Claim faucet`,
+            trailingText: `Claim test tokens on Ghostnet`,
             linkText: "",
             isLoading: true,
           })
@@ -48,15 +55,12 @@ function Banner(props: ISearchBarProps) {
   return (
     <div
       className={clsx(
-        "fixed w-full gradient h-[38px] flex items-center justify-center font-subtitle1 text-white z-10",
+        "fixed w-full gradient h-[38px] flex items-center justify-center font-mobile-f1020 md:font-subtitle1 text-white z-10",
         (!isBanner || !isB) && "hidden"
       )}
     >
-      <p className="w-full text-center">
-        YOU ARE LIVE ON GHOSTNET, CLAIM YOUR FAUCET{" "}
-        <span className="font-subtitle2 cursor-pointer" onClick={handleFaucet}>
-          HERE
-        </span>
+      <p className="w-full text-center cursor-pointer" onClick={handleFaucet}>
+        YOU ARE LIVE ON GHOSTNET, CLAIM YOUR TEST TOKENS HERE{" "}
       </p>
       <p
         className="text-right mr-2 md:mr-[10px] cursor-pointer"

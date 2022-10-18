@@ -91,7 +91,18 @@ function BribesMain(props: BribesMainProps) {
       userAddress,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      selectedPool.amm,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+          TOKEN_B
+        )} pool submitted.`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         props.setIsOperationComplete(true);
