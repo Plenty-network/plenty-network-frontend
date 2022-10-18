@@ -1,6 +1,9 @@
 import { dappClient, veSwapAddress } from '../common/walletconnect';
 import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShowConfirmTransaction, IVotes } from './types';
 import { BigNumber } from 'bignumber.js';
+import { store } from '../redux';
+import { setFlashMessage } from '../redux/flashMessage';
+import { IFlashMessageProps } from '../redux/flashMessage/type';
 
 
 // TODO : VERIFY OPERATIONS
@@ -8,7 +11,8 @@ import { BigNumber } from 'bignumber.js';
 export const claim = async (
     transactionSubmitModal: TTransactionSubmitModal,
     resetAllValues: TResetAllValues,
-    setShowConfirmTransaction: TSetShowConfirmTransaction
+    setShowConfirmTransaction: TSetShowConfirmTransaction,
+    flashMessageContent?: IFlashMessageProps
   ): Promise<IOperationsResponse> => {
     try {
       const {CheckIfWalletConnected}=dappClient()
@@ -33,6 +37,9 @@ export const claim = async (
         resetAllValues();
   
         transactionSubmitModal(batchOp.opHash);
+        if (flashMessageContent) {
+          store.dispatch(setFlashMessage(flashMessageContent));
+        }
   
         await batchOp.confirmation();
         return {
@@ -59,7 +66,8 @@ export const claim = async (
     value : BigNumber,
     transactionSubmitModal: TTransactionSubmitModal,
     resetAllValues: TResetAllValues,
-    setShowConfirmTransaction: TSetShowConfirmTransaction
+    setShowConfirmTransaction: TSetShowConfirmTransaction,
+    flashMessageContent?: IFlashMessageProps
   ): Promise<IOperationsResponse> => {
     try {
       const {CheckIfWalletConnected}=dappClient()
@@ -87,6 +95,9 @@ export const claim = async (
         resetAllValues();
   
         transactionSubmitModal(batchOp.opHash);
+        if (flashMessageContent) {
+          store.dispatch(setFlashMessage(flashMessageContent));
+        }
   
         await batchOp.confirmation();
         return {

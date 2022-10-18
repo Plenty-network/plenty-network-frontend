@@ -45,7 +45,7 @@ export const getUserBribeData = async (
 
     let groupedData : Map<string , number[]> = new Map();
     for(const bribe of myBribesData){
-      const key = bribe.value+'_'+bribe.name+'_'+bribe.amm;
+      const key = bribe.value+'_'+bribe.name+'_'+bribe.amm+'_'+bribe.price;
 
       if(groupedData.has(key)){
         const epochs = groupedData.get(key) as number[];
@@ -75,11 +75,10 @@ export const getUserBribeData = async (
 
     for (let entry of groupedConsecData) {
       const splitKey = entry.key.split("_");
-      //0 : value , 1 : name , 2 : amm  
+      //0 : value , 1 : name , 2 : amm  , 3 : price
 
       const AMM = AMMS[splitKey[2]];
-      const bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]]);
-      const bribeValue = bribeValuePerEpoch.multipliedBy(entry.value.length);
+      let bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]]);
 
       const epochs = entry.value;
 
@@ -92,13 +91,17 @@ export const getUserBribeData = async (
       let startDate;
       if(epochData[epochStart]){
         startDate = epochData[epochStart].epochStartTimestamp / 1000;
+        bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]]);
       }
       else {
         startDate =  pastEpochData.epochStartTimestamp;
+        bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(Number(splitKey[3]));
       }
 
       const epochDuration: number = connectedNetwork === "testnet" ? EPOCH_DURATION_TESTNET/1000 : EPOCH_DURATION_MAINNET/1000;
       const endDate = startDate + (epochDuration * epochs.length);
+
+      const bribeValue = bribeValuePerEpoch.multipliedBy(entry.value.length);
 
       allData.push({
         ammAddress: AMM.address,

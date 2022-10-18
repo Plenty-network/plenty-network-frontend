@@ -40,6 +40,8 @@ const Config: IConfig = {
   VE_INDEXER : 'https://veplyindexer.plentydefi.com/v1/',
   PLY_INDEXER : 'https://networkanalyticsindexer.plentydefi.com/',
 
+  FAUCET : 'KT1EsCTuMzG5oh7C2R6h3STuEJ3SAfjiVVpb',
+
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',
     testnet: 'KT1P7eP7gGuHgPVNWRLs1p4uRhc9Wbyku8B2',

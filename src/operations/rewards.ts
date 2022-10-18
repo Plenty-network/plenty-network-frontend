@@ -2,6 +2,8 @@ import { OpKind } from '@taquito/taquito';
 import { getDexAddress } from '../api/util/fetchConfig';
 import { dappClient } from '../common/walletconnect';
 import { store } from '../redux';
+import { setFlashMessage } from '../redux/flashMessage';
+import { IFlashMessageProps } from '../redux/flashMessage/type';
 import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from './types';
 
 /**
@@ -11,13 +13,15 @@ import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTran
  * @param transactionSubmitModal - Callback to open modal when transaction is submiited
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
 export const harvestRewards = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const state = store.getState();
@@ -45,6 +49,9 @@ export const harvestRewards = async (
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(operation.opHash);
     resetAllValues && resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
     await operation.confirmation();
 
     return {
@@ -65,7 +72,8 @@ export const harvestAllRewards = async (
   guages : string[],
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     
@@ -94,6 +102,9 @@ export const harvestAllRewards = async (
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(operation.opHash);
     resetAllValues && resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
     await operation.confirmation();
 
     return {

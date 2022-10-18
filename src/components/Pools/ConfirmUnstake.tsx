@@ -20,9 +20,9 @@ export function ConfirmUnStakeLiquidity(props: IConfirmUnStakeLiquidity) {
           <Image alt={"alt"} src={arrowLeft} />
         </div>
         <div className="mx-2 text-white font-title3">Confirm unstaking </div>
-        <div className="relative top-[2px] cursor-pointer">
+        {/* <div className="relative top-[2px] cursor-pointer">
           <Image alt={"alt"} src={info} />
-        </div>
+        </div> */}
       </div>
       <div className="border rounded-2xl mt-[24px] border-text-800 bg-card-200 pt-[20px] px-4 pb-5">
         <div className=" font-body4 text-text-250">Your unstaking</div>

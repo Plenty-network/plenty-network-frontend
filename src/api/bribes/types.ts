@@ -7,6 +7,7 @@ export interface IUserBribeIndexerData {
   name: string;
   amm: string;
   epoch: string;
+  price : string;
 }
 
 export interface IUserBribeData {

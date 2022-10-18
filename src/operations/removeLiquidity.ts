@@ -4,6 +4,8 @@ import { dappClient } from '../common/walletconnect';
 import { store } from '../redux';
 import { IOperationsResponse, TResetAllValues, TSetActiveState, TSetShowConfirmTransaction, TTransactionSubmitModal } from './types';
 import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
+import { IFlashMessageProps } from '../redux/flashMessage/type';
+import { setFlashMessage } from '../redux/flashMessage';
 
 /**
  * Remove liquidity operation for given pair of tokens.
@@ -18,6 +20,7 @@ import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
  * @param setActiveState - Callback to change active state
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
 export const removeLiquidity = async (
   tokenOneSymbol: string,
@@ -30,7 +33,8 @@ export const removeLiquidity = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  setActiveState: TSetActiveState | undefined
+  setActiveState: TSetActiveState | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     let removeLiquidityResult: IOperationsResponse;
@@ -45,7 +49,8 @@ export const removeLiquidity = async (
         transactionSubmitModal,
         resetAllValues,
         setShowConfirmTransaction,
-        setActiveState
+        setActiveState,
+        flashMessageContent
       );
     } else {
       removeLiquidityResult = await removeAllPairsLiquidity(
@@ -59,7 +64,8 @@ export const removeLiquidity = async (
         transactionSubmitModal,
         resetAllValues,
         setShowConfirmTransaction,
-        setActiveState
+        setActiveState,
+        flashMessageContent
       );
     }
     return {
@@ -89,6 +95,7 @@ export const removeLiquidity = async (
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
  * @param setActiveState - Callback to change active state
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
 const removeAllPairsLiquidity = async (
   tokenOneSymbol: string,
@@ -101,7 +108,8 @@ const removeAllPairsLiquidity = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  setActiveState: TSetActiveState | undefined
+  setActiveState: TSetActiveState | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     let firstTokenSymbol: string | undefined,
@@ -166,6 +174,9 @@ const removeAllPairsLiquidity = async (
     transactionSubmitModal && transactionSubmitModal(operation.opHash);
     setActiveState && setActiveState(ActiveLiquidity.Staking);
     resetAllValues && resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
     await operation.confirmation();
 
     return {
@@ -190,6 +201,7 @@ const removeAllPairsLiquidity = async (
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
  * @param setActiveState - Callback to change active state
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
  const removeTezPairsLiquidity = async (
    tokenOneSymbol: string,
@@ -201,7 +213,8 @@ const removeAllPairsLiquidity = async (
    transactionSubmitModal: TTransactionSubmitModal | undefined,
    resetAllValues: TResetAllValues | undefined,
    setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-   setActiveState: TSetActiveState | undefined
+   setActiveState: TSetActiveState | undefined,
+   flashMessageContent?: IFlashMessageProps
  ): Promise<IOperationsResponse> => {
    try {
      let tezSymbol: string | undefined,
@@ -254,6 +267,9 @@ const removeAllPairsLiquidity = async (
      transactionSubmitModal && transactionSubmitModal(operation.opHash);
      setActiveState && setActiveState(ActiveLiquidity.Staking);
      resetAllValues && resetAllValues();
+     if (flashMessageContent) {
+       store.dispatch(setFlashMessage(flashMessageContent));
+     }
      await operation.confirmation();
 
      return {

@@ -1,22 +1,20 @@
-import {
-  getDexAddress,
-  isGeneralStablePair,
-  isTezPair,
-} from '../api/util/fetchConfig';
-import { BigNumber } from 'bignumber.js';
-import { dappClient } from '../common/walletconnect';
-import { store } from '../redux';
-import { TokenVariant } from '../config/types';
+import { getDexAddress, isGeneralStablePair, isTezPair } from "../api/util/fetchConfig";
+import { BigNumber } from "bignumber.js";
+import { dappClient } from "../common/walletconnect";
+import { store } from "../redux";
+import { TokenVariant } from "../config/types";
 import {
   IOperationsResponse,
   TResetAllValues,
   TSetActiveState,
   TSetShowConfirmTransaction,
   TTransactionSubmitModal,
-} from './types';
+} from "./types";
 
-import { OpKind } from '@taquito/taquito';
-import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
+import { OpKind } from "@taquito/taquito";
+import { ActiveLiquidity } from "../components/Pools/ManageLiquidityHeader";
+import { IFlashMessageProps } from "../redux/flashMessage/type";
+import { setFlashMessage } from "../redux/flashMessage";
 
 /**
  * Add liquidity operation for given pair of tokens.
@@ -29,6 +27,7 @@ import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
  * @param setActiveState - Callback to change active state
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
 export const addLiquidity = async (
   tokenOneSymbol: string,
@@ -39,7 +38,8 @@ export const addLiquidity = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  setActiveState: TSetActiveState | undefined
+  setActiveState: TSetActiveState | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     let addLiquidityResult: IOperationsResponse;
@@ -53,7 +53,8 @@ export const addLiquidity = async (
         transactionSubmitModal,
         resetAllValues,
         setShowConfirmTransaction,
-        setActiveState
+        setActiveState,
+        flashMessageContent
       );
     } else {
       addLiquidityResult = await addAllPairsLiquidity(
@@ -65,7 +66,8 @@ export const addLiquidity = async (
         transactionSubmitModal,
         resetAllValues,
         setShowConfirmTransaction,
-        setActiveState
+        setActiveState,
+        flashMessageContent
       );
     }
     return {
@@ -93,6 +95,7 @@ export const addLiquidity = async (
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
  * @param setActiveState - Callback to change active state
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
 const addAllPairsLiquidity = async (
   tokenOneSymbol: string,
@@ -103,7 +106,8 @@ const addAllPairsLiquidity = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  setActiveState: TSetActiveState | undefined
+  setActiveState: TSetActiveState | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     let firstTokenSymbol: string | undefined,
@@ -113,15 +117,15 @@ const addAllPairsLiquidity = async (
     const { CheckIfWalletConnected } = dappClient();
     const walletResponse = await CheckIfWalletConnected();
     if (!walletResponse.success) {
-      throw new Error('Wallet connection failed');
+      throw new Error("Wallet connection failed");
     }
     const Tezos = await dappClient().tezos();
     const state = store.getState();
     const AMM = state.config.AMMs;
     const TOKENS = state.config.standard;
     const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
-    if (dexContractAddress === 'false') {
-      throw new Error('No dex found for the given pair of tokens.');
+    if (dexContractAddress === "false") {
+      throw new Error("No dex found for the given pair of tokens.");
     }
     // Make the order of tokens according to the order in contract.
     [firstTokenSymbol, firstTokenAmount] =
@@ -156,10 +160,7 @@ const addAllPairsLiquidity = async (
       batch = Tezos.wallet
         .batch()
         .withContractCall(
-          firstTokenInstance.methods.approve(
-            dexContractAddress,
-            firstTokenAmount.toString()
-          )
+          firstTokenInstance.methods.approve(dexContractAddress, firstTokenAmount.toString())
         )
         .withContractCall(
           secondTokenInstance.methods.update_operators([
@@ -185,9 +186,7 @@ const addAllPairsLiquidity = async (
                 secondTokenAmount.toString()
               )
         )
-        .withContractCall(
-          firstTokenInstance.methods.approve(dexContractAddress, 0)
-        )
+        .withContractCall(firstTokenInstance.methods.approve(dexContractAddress, 0))
         .withContractCall(
           secondTokenInstance.methods.update_operators([
             {
@@ -217,10 +216,7 @@ const addAllPairsLiquidity = async (
           ])
         )
         .withContractCall(
-          secondTokenInstance.methods.approve(
-            dexContractAddress,
-            secondTokenAmount.toString()
-          )
+          secondTokenInstance.methods.approve(dexContractAddress, secondTokenAmount.toString())
         )
         .withContractCall(
           isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
@@ -246,9 +242,7 @@ const addAllPairsLiquidity = async (
             },
           ])
         )
-        .withContractCall(
-          secondTokenInstance.methods.approve(dexContractAddress, 0)
-        );
+        .withContractCall(secondTokenInstance.methods.approve(dexContractAddress, 0));
     } else if (
       TOKENS[firstTokenSymbol].variant === TokenVariant.FA2 &&
       TOKENS[secondTokenSymbol].variant === TokenVariant.FA2
@@ -319,16 +313,10 @@ const addAllPairsLiquidity = async (
       batch = Tezos.wallet
         .batch()
         .withContractCall(
-          firstTokenInstance.methods.approve(
-            dexContractAddress,
-            firstTokenAmount.toString()
-          )
+          firstTokenInstance.methods.approve(dexContractAddress, firstTokenAmount.toString())
         )
         .withContractCall(
-          secondTokenInstance.methods.approve(
-            dexContractAddress,
-            secondTokenAmount.toString()
-          )
+          secondTokenInstance.methods.approve(dexContractAddress, secondTokenAmount.toString())
         )
         .withContractCall(
           isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
@@ -343,23 +331,19 @@ const addAllPairsLiquidity = async (
                 secondTokenAmount.toString()
               )
         )
-        .withContractCall(
-          firstTokenInstance.methods.approve(dexContractAddress, 0)
-        )
-        .withContractCall(
-          secondTokenInstance.methods.approve(dexContractAddress, 0)
-        );
+        .withContractCall(firstTokenInstance.methods.approve(dexContractAddress, 0))
+        .withContractCall(secondTokenInstance.methods.approve(dexContractAddress, 0));
     } else {
-      throw new Error(
-        'Invalid token variants. Token variants can be FA1.2 or FA2.'
-      );
+      throw new Error("Invalid token variants. Token variants can be FA1.2 or FA2.");
     }
     const batchOperation = await batch?.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    transactionSubmitModal &&
-      transactionSubmitModal(batchOperation?.opHash as string);
+    transactionSubmitModal && transactionSubmitModal(batchOperation?.opHash as string);
     setActiveState && setActiveState(ActiveLiquidity.Staking);
     resetAllValues && resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
     await batchOperation?.confirmation();
     return {
       success: true,
@@ -381,6 +365,7 @@ const addAllPairsLiquidity = async (
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
  * @param setActiveState - Callback to change active state
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
 const addTezPairsLiquidity = async (
   tokenOneSymbol: string,
@@ -391,7 +376,8 @@ const addTezPairsLiquidity = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  setActiveState: TSetActiveState | undefined
+  setActiveState: TSetActiveState | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     let tezSymbol: string | undefined,
@@ -401,17 +387,17 @@ const addTezPairsLiquidity = async (
     const { CheckIfWalletConnected } = dappClient();
     const walletResponse = await CheckIfWalletConnected();
     if (!walletResponse.success) {
-      throw new Error('Wallet connection failed');
+      throw new Error("Wallet connection failed");
     }
     const Tezos = await dappClient().tezos();
     const state = store.getState();
     const TOKENS = state.config.standard;
     const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
-    if (dexContractAddress === 'false') {
-      throw new Error('No dex found for the given pair of tokens.');
+    if (dexContractAddress === "false") {
+      throw new Error("No dex found for the given pair of tokens.");
     }
     // Make the order of tokens according to the order in contract.
-    if (tokenOneSymbol === 'tez') {
+    if (tokenOneSymbol === "tez") {
       tezSymbol = tokenOneSymbol;
       tezAmount = tokenOneAmount;
       secondTokenSymbol = tokenTwoSymbol;
@@ -428,9 +414,7 @@ const addTezPairsLiquidity = async (
     const secondTokenInstance = await Tezos.wallet.at(secondTokenAddress);
     const dexContractInstance = await Tezos.wallet.at(dexContractAddress);
 
-    tezAmount = tezAmount.multipliedBy(
-      new BigNumber(10).pow(TOKENS[tezSymbol].decimals)
-    );
+    tezAmount = tezAmount.multipliedBy(new BigNumber(10).pow(TOKENS[tezSymbol].decimals));
     secondTokenAmount = secondTokenAmount.multipliedBy(
       new BigNumber(10).pow(TOKENS[secondTokenSymbol].decimals)
     );
@@ -452,9 +436,7 @@ const addTezPairsLiquidity = async (
         },
         {
           kind: OpKind.TRANSACTION,
-          ...secondTokenInstance.methods
-            .approve(dexContractAddress, 0)
-            .toTransferParams(),
+          ...secondTokenInstance.methods.approve(dexContractAddress, 0).toTransferParams(),
         },
       ]);
     } else if (TOKENS[secondTokenSymbol].variant === TokenVariant.FA2) {
@@ -495,15 +477,18 @@ const addTezPairsLiquidity = async (
         },
       ]);
     } else {
-      throw new Error(
-        'Invalid token variant. Token variant can be FA1.2 or FA2.'
-      );
+      throw new Error("Invalid token variant. Token variant can be FA1.2 or FA2.");
     }
+
     const batchOperation = await batch?.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(batchOperation?.opHash);
     setActiveState && setActiveState(ActiveLiquidity.Staking);
     resetAllValues && resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
+
     await batchOperation?.confirmation();
     return {
       success: true,

@@ -213,7 +213,7 @@ function NodeSelector(props: any) {
                 />
               </div>
             </div>
-            <div className="text-error-500 font-body1 pl-20">{errorMessage}</div>
+            <div className="text-error-500 font-body1 pl-20 mt-1">{errorMessage}</div>
           </div>
           <div className="mt-[18px]">
             <Button color={rpcNodeDetecting ? "disabled" : "primary"} onClick={setRPCInLS}>

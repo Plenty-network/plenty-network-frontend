@@ -12,6 +12,9 @@ import { getEpochData } from "../../src/redux/epoch/epoch";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
+import info from "../../src/assets/icon/pools/InfoBlue.svg";
+import close from "../../src/assets/icon/pools/closeBlue.svg";
+import Image from "next/image";
 export interface IIndexProps {}
 export enum AMM_TYPE {
   VOLATILE = "VOLATILE",
@@ -65,6 +68,7 @@ export default function Pools(props: IIndexProps) {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
   const [searchValue, setSearchValue] = React.useState("");
+  const [isbanner, setisBanner] = React.useState(true);
   return (
     <>
       <SideBarHOC>
@@ -87,6 +91,20 @@ export default function Pools(props: IIndexProps) {
               setSearchValue={setSearchValue}
             />
           </div>
+          {isbanner && (
+            <div className="h-[42px] mx-4 md:mx-[23px] px-2 rounded-lg mt-3 flex items-center bg-info-500/[0.1]">
+              <p className="relative top-0.5">
+                <Image src={info} />
+              </p>
+              <p className="font-body2 text-info-500 px-3">APR for the first week will be 0</p>
+              <p
+                className="ml-auto relative top-[7px] cursor-pointer"
+                onClick={() => setisBanner(false)}
+              >
+                <Image src={close} />
+              </p>
+            </div>
+          )}
           {activeStateTab === PoolsCardHeader.All && (
             <PoolsTable
               className="md:px-5 md:py-4  px-2 py-4"
