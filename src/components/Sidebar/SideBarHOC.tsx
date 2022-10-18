@@ -19,11 +19,8 @@ export interface ISideBarHOCProps {
 }
 
 export function SideBarHOC(props: ISideBarHOCProps) {
-  const isBannerOpen = store.getState().walletLoading.isBanner;
-  const [isBanner, setIsBanner] = React.useState(isBannerOpen);
-  React.useEffect(() => {
-    setIsBanner(isBannerOpen);
-  }, [isBannerOpen]);
+  const [isBanner, setIsBanner] = React.useState(true);
+
   const [showNotification, setShowNotification] = useState(false);
   const showNotificationClick = () => {
     setShowNotification(!showNotification);
@@ -37,13 +34,14 @@ export function SideBarHOC(props: ISideBarHOCProps) {
     <>
       <FlashMessageHOC />
       <div className="flex flex-no-wrap flex-col">
-        <Banner />
+        {isBanner && <Banner isBanner={isBanner} setIsBanner={setIsBanner} />}
         {!isMobile && (
           <TopNavBar
             setNodeSelector={setNodeSelector}
             setShowNotification={showNotificationClick}
             isLanding={props.isBribesLanding ? props.isBribesLanding : false}
             isBribes={props.isBribes ? props.isBribes : false}
+            isBanner={isBanner}
           />
         )}
         {showNotification && !props.isBribesLanding && (
@@ -55,7 +53,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
           />
         )}
         <div className="flex flex-no-wrap">
-          {!isMobile && !props.isBribes && <SideBar isBannerOpen={isBannerOpen} />}
+          {!isMobile && !props.isBribes && <SideBar isBanner={isBanner} />}
           <div
             className={`mt-0 ${
               !isMobile && !props.isBribes ? "md:ml-[240px] md:w-[calc(100%_-_240px)]" : ""
@@ -75,11 +73,12 @@ export function SideBarHOC(props: ISideBarHOCProps) {
         {isMobile && !props.isBribes && <BottomNavigationBar />}
         {isMobile && (
           <>
-            <Banner />
+            <Banner isBanner={isBanner} setIsBanner={setIsBanner} />
             <TopNavBarMobile
               setShowNotification={showNotificationClick}
               isBribes={props.isBribes ? props.isBribes : false}
               setNodeSelector={setNodeSelector}
+              isBanner={isBanner}
             />
           </>
         )}

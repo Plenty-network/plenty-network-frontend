@@ -154,6 +154,7 @@ function AddBribes(props: IAddBribes) {
   };
   const [bottomValue, setBottomValue] = useState(0);
   useEffect(() => {
+    props.setEpochArray([]);
     if (isSelectedEpoch) {
       setBottomValue(Number(props.bribeInputValue));
       setSelectedEndDropDown({} as IEpochListObject);
@@ -170,7 +171,8 @@ function AddBribes(props: IAddBribes) {
           Number(props.bribeInputValue)
       );
       for (let i = selectedDropDown.epochNumber; i <= selectedEndDropDown.epochNumber; i++) {
-        props.epochArray.push(i);
+        // props.epochArray.push(i);
+        props.setEpochArray((prevArray: number[]) => ([...prevArray, i]));
       }
     } else {
       setBottomValue(0);

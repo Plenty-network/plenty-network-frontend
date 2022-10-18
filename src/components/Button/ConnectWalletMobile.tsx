@@ -19,6 +19,7 @@ import clsx from "clsx";
 
 export interface IConnectWalletBtnMobileProps {
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
+  isBanner: boolean;
 }
 
 export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
@@ -44,11 +45,6 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
   useOutsideClick(reff, () => {
     setShowMenu(false);
   });
-  const isBannerOpen = store.getState().walletLoading.isBanner;
-  const [isBanner, setIsBanner] = React.useState(isBannerOpen);
-  React.useEffect(() => {
-    setIsBanner(isBannerOpen);
-  }, [isBannerOpen]);
   if (userAddress) {
     return (
       <div className="relative flex" ref={reff}>
@@ -62,7 +58,7 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
           <div
             className={clsx(
               "absolute w-[320px]  right-0 mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col",
-              isBanner ? "top-[52px]" : ""
+              props.isBanner ? "top-[52px]" : ""
             )}
           >
             <p className="bg-primary-755 text-f14 p-4 flex gap-2">
