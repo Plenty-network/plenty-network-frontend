@@ -6,7 +6,7 @@ import { Position, ToolTip } from "../../Tooltip/TooltipAdvanced";
 import boostIcon from "../../../assets/icon/myPortfolio/boostBlue.svg";
 import { BigNumber } from "bignumber.js";
 export interface IAprInfoProps {
-  previousApr: BigNumber;
+  futureApr: BigNumber;
 }
 
 export function AprInfoFuture(props: IAprInfoProps) {
@@ -25,10 +25,10 @@ export function AprInfoFuture(props: IAprInfoProps) {
   }
   return (
     <div className="  md:text-f14 text-f12 cursor-pointer text-text-50  py-[3px]  text-right ">
-      {Number(props.previousApr) > 0
-        ? props.previousApr.isLessThan(0.01)
+      {Number(props.futureApr) > 0
+        ? props.futureApr.isLessThan(0.01)
           ? "<0.01"
-          : nFormatter(props.previousApr)
+          : nFormatter(props.futureApr)
         : "0.00"}
       %
     </div>
