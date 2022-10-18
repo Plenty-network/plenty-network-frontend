@@ -34,6 +34,7 @@ export function SingleNotification(props: ISingleNotificationProps) {
     }
     return info;
   };
+  console.log(props);
   return (
     <div
       className="flex p-4 gap-4 border-b cursor-pointer border-muted-236/40 bg-primary-900 hover:bg-primary-257"

@@ -181,7 +181,7 @@ export function Staking(props: IStakingProps) {
         headerText: "Transaction submitted",
         trailingText: ` Detach # ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
-        )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool submitted
+        )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool
         `,
         linkText: "View in Explorer",
         isLoading: true,

@@ -311,9 +311,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         headerText: "Transaction submitted",
         trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
           TOKEN_A
-        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(
-          TOKEN_B
-        )} submitted.`,
+        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}.`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -415,10 +413,10 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           stakeInput !== ""
             ? `Stake ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
                 TOKEN_A
-              )} / ${localStorage.getItem(TOKEN_B)} PNLP submitted`
+              )} / ${localStorage.getItem(TOKEN_B)} PNLP `
             : `Boost ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
                 TOKEN_B
-              )} pool stake with # ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} submitted`,
+              )} pool stake with # ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} `,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -520,7 +518,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         headerText: "Transaction submitted",
         trailingText: `Unstake ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
           TOKEN_A
-        )} / ${localStorage.getItem(TOKEN_B)} PNLP submitted`,
+        )} / ${localStorage.getItem(TOKEN_B)} PNLP`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -590,7 +588,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Claim ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY submitted`,
+        trailingText: `Claim ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -679,9 +677,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         headerText: "Transaction submitted",
         trailingText: `Remove ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
           TOKEN_A
-        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(
-          TOKEN_B
-        )} submitted`,
+        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",

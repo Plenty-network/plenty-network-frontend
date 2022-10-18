@@ -183,9 +183,7 @@ function SwapTab(props: ISwapTabProps) {
         headerText: "Transaction submitted",
         trailingText: `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
           TOKEN_A
-        )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(
-          TOKEN_B
-        )} submitted`,
+        )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `,
         linkText: "View in Explorer",
         isLoading: true,
         onClick: () => {
