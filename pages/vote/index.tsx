@@ -47,7 +47,10 @@ export default function Vote() {
   //const userAddress = "tz1VKAzp3FoerqzvKZTv8aRrg2AD16NjNx9S";
   const token = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
+  const [veNFTlist, setVeNFTlist] = useState<{ data: IVeNFTData[]; isfetching: boolean }>({
+    data: [] as IVeNFTData[],
+    isfetching: true,
+  });
   const [lockingDate, setLockingDate] = useState("");
   const [lockingEndData, setLockingEndData] = useState({
     selected: 0,
@@ -63,7 +66,7 @@ export default function Vote() {
   const [selectedPools, setSelectedPools] = useState<ISelectedPool[]>([] as ISelectedPool[]);
   const selectedDropDown = store.getState().veNFT.selectedDropDown;
 
-  const isMyPortfolio = store.getState().veNFT.isMyPortfolio;
+  const isMyPortfolio = useAppSelector((state) => state.veNFT.isMyPortfolio);
   const [selectednft, setSelectednft] = useState(selectedDropDown);
   const [voteData, setVoteData] = useState<{ [id: string]: IVotePageData }>(
     {} as { [id: string]: IVotePageData }
@@ -149,7 +152,7 @@ export default function Vote() {
         setSumofVotes(sum);
       });
     }
-  }, [selectedDropDown.tokenId, selectedEpoch?.epochNumber, selectednft.tokenId]);
+  }, [userAddress, selectedDropDown.tokenId, selectedEpoch?.epochNumber, selectednft.tokenId]);
   useEffect(() => {
     if (castVoteOperation) {
       setVoteData({} as { [id: string]: IVotePageData });
@@ -174,23 +177,23 @@ export default function Vote() {
           userAddress,
           selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
         ).then((res) => {
-          setVeNFTlist(res.veNFTData);
+          setVeNFTlist({ data: res.veNFTData, isfetching: false });
         });
       }
     }
   }, [castVoteOperation]);
 
   useEffect(() => {
-    //setVeNFTlist([]);
+    setVeNFTlist({ data: [] as IVeNFTData[], isfetching: true });
     if (userAddress) {
       getVeNFTsList(
         userAddress,
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
       ).then((res) => {
-        setVeNFTlist(res.veNFTData);
+        setVeNFTlist({ data: res.veNFTData, isfetching: false });
       });
     } else {
-      setVeNFTlist([]);
+      setVeNFTlist({ data: [] as IVeNFTData[], isfetching: false });
     }
   }, [userAddress, selectedEpoch?.epochNumber, lockOperation]);
   useEffect(() => {
@@ -200,7 +203,7 @@ export default function Vote() {
         userAddress,
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
       ).then((res) => {
-        setVeNFTlist(res.veNFTData);
+        setVeNFTlist({ data: res.veNFTData, isfetching: false });
       });
     }
   }, [lockOperation]);
@@ -210,10 +213,11 @@ export default function Vote() {
   }, 60000);
 
   useEffect(() => {
+    var flag = false;
+
     if (selectedDropDown.votingPower !== "" && isMyPortfolio) {
-    } else if (veNFTlist.length > 0 && selectedDropDown.votingPower !== "" && !isMyPortfolio) {
-      var flag = false;
-      veNFTlist.map((list) => {
+    } else if (veNFTlist.data.length > 0 && selectedDropDown.votingPower !== "" && !isMyPortfolio) {
+      veNFTlist.data.map((list) => {
         if (Number(list.tokenId) === Number(selectedDropDown.tokenId)) {
           flag = true;
           if (list.locksState === ELocksState.CONSUMED) {
@@ -233,23 +237,33 @@ export default function Vote() {
           }
         }
       });
+
       if (!flag) {
         dispatch(
           setSelectedDropDown({
-            votingPower: veNFTlist[0].votingPower.toString(),
-            tokenId: veNFTlist[0].tokenId.toString(),
+            votingPower: veNFTlist.data[0].votingPower.toString(),
+            tokenId: veNFTlist.data[0].tokenId.toString(),
           })
         );
       }
     } else {
-      dispatch(
-        setSelectedDropDown({
-          votingPower: "",
-          tokenId: "",
-        })
-      );
+      if (!flag && veNFTlist.data.length > 0) {
+        dispatch(
+          setSelectedDropDown({
+            votingPower: veNFTlist.data[0].votingPower.toString(),
+            tokenId: veNFTlist.data[0].tokenId.toString(),
+          })
+        );
+      } else {
+        dispatch(
+          setSelectedDropDown({
+            votingPower: "",
+            tokenId: "",
+          })
+        );
+      }
     }
-  }, [veNFTlist]);
+  }, [veNFTlist.data, userAddress]);
 
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
@@ -465,7 +479,8 @@ export default function Vote() {
               <div className="flex items-center px-3 md:px-0 py-2 md:py-2 ">
                 <div>
                   <SelectNFT
-                    veNFTlist={veNFTlist}
+                    veNFTlist={veNFTlist.data}
+                    isfetching={veNFTlist.isfetching}
                     selectedText={selectedDropDown}
                     setSelectedDropDown={setSelectednft}
                   />
@@ -588,7 +603,7 @@ export default function Vote() {
                 </div>
               </div>
               <VotesTable
-                className="md:px-5 py-4 "
+                className="md:px-5  "
                 searchValue={searchValue}
                 sumOfVotes={sumOfVotes}
                 setSearchValue={setSearchValue}

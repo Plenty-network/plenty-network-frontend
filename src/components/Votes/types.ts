@@ -136,6 +136,7 @@ export interface IManageBtnProps {
   isStakeAvailable: boolean;
 }
 export interface ISelectNFT {
+  isfetching: boolean;
   veNFTlist: IVeNFTData[];
   selectedText: {
     votingPower: string;

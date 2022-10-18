@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
-import { store } from "../../redux";
+import { AppDispatch, store } from "../../redux";
 import { FlashMessageHOC } from "../FlashScreen/FlashMessageHOC";
 import NodeSelector from "../NodeSelector";
 import { NotificationBar } from "../Notification";
@@ -10,6 +10,8 @@ import { SideBar } from "./Sidebar";
 import { TopNavBar } from "./TopNavBar";
 import { TopNavBarMobile } from "./TopNavBarMobile";
 import "animate.css";
+import { useDispatch } from "react-redux";
+import { setScrollY } from "../../redux/walletLoading";
 
 export interface ISideBarHOCProps {
   children: any;
@@ -28,6 +30,12 @@ export function SideBarHOC(props: ISideBarHOCProps) {
   const [showPopupModal, setShowPopupModal] = useState(false);
   const showPopupModalClick = () => {
     setShowPopupModal(!showPopupModal);
+  };
+
+  const dispatch = useDispatch<AppDispatch>();
+  const onScroll = (e: any) => {
+    console.log("iiiiiiii", e.target.scrollTop);
+    dispatch(setScrollY(e.target.scrollTop));
   };
   const [showNodeSelector, setNodeSelector] = useState(false);
   return (
@@ -60,6 +68,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
             } w-full mb-12 md:static absolute h-[calc(100%_-_121px)] md:mb-0`}
           >
             <div
+              onScroll={onScroll}
               className={`overflow-x-hidden h-screen   z-0  ${
                 props.makeTopBarScroll || true
                   ? `static overflow-y-auto ${isBanner ? "pt-[96px]" : "pt-[64px]"} `

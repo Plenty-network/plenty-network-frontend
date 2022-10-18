@@ -4,6 +4,7 @@ const initialState = {
   isLoading: false,
   operationSuccesful: false,
   isBanner: true,
+  scrollY: 0,
 };
 
 const IsLoadingSlice = createSlice({
@@ -17,7 +18,10 @@ const IsLoadingSlice = createSlice({
     setIsBanner: (state, action) => {
       state.isBanner = action.payload;
     },
+    setScrollY: (state, action) => {
+      state.scrollY = action.payload;
+    },
   },
 });
-export const { setIsLoadingWallet, setIsBanner } = IsLoadingSlice.actions;
+export const { setIsLoadingWallet, setIsBanner, setScrollY } = IsLoadingSlice.actions;
 export const walletLoading = IsLoadingSlice.reducer;

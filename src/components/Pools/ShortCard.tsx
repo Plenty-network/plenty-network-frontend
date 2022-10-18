@@ -127,7 +127,7 @@ export function ShortCard(props: IShortCardProps) {
       },
       {
         Header: "",
-        id: "lools",
+        id: "pools",
         columnWidth: "w-[150px] ml-auto",
         accessor: (x) => (
           <ManageBtn
@@ -258,7 +258,7 @@ export function ShortCard(props: IShortCardProps) {
       },
       {
         Header: "",
-        id: "lools",
+        id: "pools",
         columnWidth: "w-[180px] ml-auto",
         minWidth: 151,
         accessor: (x) => (
