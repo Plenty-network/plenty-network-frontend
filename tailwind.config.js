@@ -38,6 +38,8 @@ module.exports = {
       },
       info: {
         500: "#396CDB",
+        100: "#5721A9",
+        200: "#E6D4FF",
       },
       success: {
         500: "#78F33F",
