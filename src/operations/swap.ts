@@ -4,7 +4,7 @@ import { BigNumber } from "bignumber.js";
 import { TokenVariant } from "../config/types";
 import { OpKind } from "@taquito/taquito";
 import { routerSwap } from "./router";
-import { dappClient, dispatch } from "../common/walletconnect";
+import { dappClient } from "../common/walletconnect";
 import {
   IOperationsResponse,
   TResetAllValues,

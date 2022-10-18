@@ -37,11 +37,11 @@ export function AprInfo(props: IAprInfoProps) {
           </div>
           <div>
             Boosted APR :{" "}
-            <span className="font-semibold text-white">{props.previousApr.toFixed(2)}</span>
+            <span className="font-semibold text-white">{props.boostedApr.toFixed(2)}</span>
           </div>
           <div>
             Previous APR :{" "}
-            <span className="font-semibold text-white">{props.boostedApr.toFixed(2)}</span>
+            <span className="font-semibold text-white">{props.previousApr.toFixed(2)}</span>
           </div>
         </div>
       }
