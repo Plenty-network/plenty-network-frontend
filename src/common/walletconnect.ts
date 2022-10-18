@@ -5,16 +5,14 @@ import {
   DAppClientOptions,
   Network,
   NetworkType,
-} from '@airgap/beacon-sdk'
-import type { BeaconWallet } from '@taquito/beacon-wallet'
-import Config from '../config/config';
-import { store } from '../redux';
-
+} from "@airgap/beacon-sdk";
+import type { BeaconWallet } from "@taquito/beacon-wallet";
+import Config from "../config/config";
+import { store, useAppDispatch } from "../redux";
 
 class TzktBlockExplorer extends BlockExplorer {
-  
   constructor(
-    public readonly rpcUrls : {[key in NetworkType]: string } ={
+    public readonly rpcUrls: { [key in NetworkType]: string } = {
       [NetworkType.MAINNET]: "https://tzkt.io/",
       [NetworkType.DELPHINET]: "https://delphi.tzkt.io/",
       [NetworkType.EDONET]: "https://edo.tzkt.io/",
@@ -30,18 +28,18 @@ class TzktBlockExplorer extends BlockExplorer {
       [NetworkType.KATHMANDUNET]: "https://kathmandunet.tzkt.io/",
     }
   ) {
-    super(rpcUrls)
+    super(rpcUrls);
   }
 
   public async getAddressLink(address: string, network: Network): Promise<string> {
-    const blockExplorer = await this.getLinkForNetwork(network)
+    const blockExplorer = await this.getLinkForNetwork(network);
 
-    return `${blockExplorer}${address}/operations`
+    return `${blockExplorer}${address}/operations`;
   }
   public async getTransactionLink(transactionId: string, network: Network): Promise<string> {
-    const blockExplorer = await this.getLinkForNetwork(network)
+    const blockExplorer = await this.getLinkForNetwork(network);
 
-    return `${blockExplorer}${transactionId}`
+    return `${blockExplorer}${transactionId}`;
   }
 }
 
@@ -59,56 +57,57 @@ export const faucetAddress = Config.FAUCET;
 export const getRpcNode = () =>
   store.getState().rpcData.rpcNode || Config.RPC_NODES[connectedNetwork];
 
+export const dispatch = () => useAppDispatch();
+
 export function dappClient() {
-  let instance: BeaconWallet | undefined
+  let instance: BeaconWallet | undefined;
 
   async function init() {
-    const { BeaconWallet } = await import('@taquito/beacon-wallet')
+    const { BeaconWallet } = await import("@taquito/beacon-wallet");
     const dAppInfo: DAppClientOptions = {
-      name: 'Plenty Network',
+      name: "Plenty Network",
       preferredNetwork: walletNetwork,
       colorMode: ColorMode.DARK,
-      blockExplorer : new TzktBlockExplorer() as any,
-    }
+      blockExplorer: new TzktBlockExplorer() as any,
+    };
 
-    return new BeaconWallet(dAppInfo)
+    return new BeaconWallet(dAppInfo);
   }
   async function loadWallet() {
-    if (!instance) instance = await init()
-    return instance
+    if (!instance) instance = await init();
+    return instance;
   }
 
   async function getDAppClient() {
-    const wallet = await loadWallet()
-    return wallet.client
+    const wallet = await loadWallet();
+    return wallet.client;
   }
   async function getDAppClientWallet() {
-    const wallet = await loadWallet()
+    const wallet = await loadWallet();
     return wallet;
   }
 
   async function connectAccount() {
-    const client = await getDAppClient()
+    const client = await getDAppClient();
 
-    await client.clearActiveAccount()
+    await client.clearActiveAccount();
     return client.requestPermissions({
       network: {
         type: walletNetwork,
       },
-    })
+    });
   }
 
   async function swapAccount(account: AccountInfo) {
-    const client = await getDAppClient()
+    const client = await getDAppClient();
 
-    await client.clearActiveAccount()
-    await client.setActiveAccount(account)
-    return account
+    await client.clearActiveAccount();
+    await client.setActiveAccount(account);
+    return account;
   }
-  async function  CheckIfWalletConnected(){
-  
+  async function CheckIfWalletConnected() {
     try {
-    const client = await getDAppClient()
+      const client = await getDAppClient();
       const activeAccount = await client.getActiveAccount();
       if (!activeAccount) {
         await client.requestPermissions({
@@ -127,17 +126,16 @@ export function dappClient() {
         error,
       };
     }
-  };
+  }
   async function tezos() {
-
-    const { TezosToolkit } = await import('@taquito/taquito')
-    const Tezos = new TezosToolkit(getRpcNode())
-    const wallet=await getDAppClientWallet();
-    if (wallet) Tezos.setWalletProvider(wallet)
-    return Tezos
+    const { TezosToolkit } = await import("@taquito/taquito");
+    const Tezos = new TezosToolkit(getRpcNode());
+    const wallet = await getDAppClientWallet();
+    if (wallet) Tezos.setWalletProvider(wallet);
+    return Tezos;
   }
   async function disconnectWallet() {
-    const wallet=await getDAppClientWallet();
+    const wallet = await getDAppClientWallet();
     try {
       await wallet.disconnect();
       return {
@@ -159,6 +157,6 @@ export function dappClient() {
     swapAccount,
     CheckIfWalletConnected,
     tezos,
-    disconnectWallet
-  }
+    disconnectWallet,
+  };
 }

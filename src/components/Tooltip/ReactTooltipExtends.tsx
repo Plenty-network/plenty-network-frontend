@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactTooltip from "react-tooltip";
 
-const TOOLTIP_HIDE_TIME = 4000;
+const TOOLTIP_HIDE_TIME = 3000;
 
 export default class Tooltip extends Component<any> {
   componentDidMount() {

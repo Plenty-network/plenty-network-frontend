@@ -296,6 +296,38 @@ input[type='number'] {
 .progTitle {
   text-transform: lowercase;
 }
+/* .close{
+  width:18px;
+  height:18px;
+  background-color:#5721A9;
+  position:relative;
+  border-radius:50%;
+  
+}
+
+.close:before,.close:after{
+  content:'';
+  position:absolute;
+  width:6px;
+  height:4px;
+  background-color:white;
+  border-radius:2px;
+  top:16px;
+ 
+}
+
+.close:before{
+  -webkit-transform:rotate(45deg);
+  -moz-transform:rotate(45deg);
+  transform:rotate(45deg);
+  left:2px;
+}
+.close:after{
+  -webkit-transform:rotate(-45deg);
+  -moz-transform:rotate(-45deg);
+  transform:rotate(-45deg);
+  right:2px;
+} */
 
 .progTitle::first-letter {
   text-transform: uppercase;
