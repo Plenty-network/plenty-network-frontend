@@ -21,7 +21,6 @@ import { getAllVotesData } from "../votes";
 import { getDexAddress } from "../util/fetchConfig";
 import { connectedNetwork } from "../../common/walletconnect";
 import { EPOCH_DURATION_MAINNET, EPOCH_DURATION_TESTNET } from "../../constants/global";
-import { group } from "console";
 
 /**
  * Returns all the bribes created by a provider(user).
