@@ -537,7 +537,9 @@ function MyPortfolio(props: any) {
               props.toolTipContent ? (
                 <p className="">{props.toolTipContent}</p>
               ) : (
-                <p className="">Watch how to add liquidity, stake, and earn PLY</p>
+                <p className="w-[200px] md:min-w-[320px]">
+                  Watch how to add liquidity, stake, and earn PLY
+                </p>
               )
             }
             classNameAncorToolTip="pushtoCenter"
@@ -1493,222 +1495,224 @@ function MyPortfolio(props: any) {
   return (
     <>
       <SideBarHOC>
-        <div className="pt-5 md:px-[24px] px-2">
-          <div className="flex">
-            {Title}
-            {activeSection === MyPortfolioSection.Rewards && (
-              <div className="ml-auto ">
-                <ToolTip
-                  id="tooltipM"
-                  position={Position.left}
-                  toolTipChild={
-                    <div className="w-[100px] md:w-[180px]">
-                      Claim maximum possible rewards within gas limit
-                    </div>
-                  }
-                >
-                  <div
-                    className={clsx(
-                      " flex items-center md:font-title3-bold font-subtitle4 text-black h-[50px] px-[12px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
-                      (poolsRewards.data?.gaugeAddresses?.length === 0 &&
-                        feeClaimData?.length === 0 &&
-                        bribesClaimData?.length === 0 &&
-                        inflationData?.length === 0) ||
-                        poolsRewards.data?.gaugeAddresses === undefined
-                        ? "cursor-not-allowed"
-                        : "cursor-pointer"
-                    )}
-                    onClick={
-                      (poolsRewards.data?.gaugeAddresses?.length === 0 &&
-                        feeClaimData?.length === 0 &&
-                        bribesClaimData?.length === 0 &&
-                        inflationData?.length === 0) ||
-                      poolsRewards.data?.gaugeAddresses === undefined
-                        ? () => {}
-                        : () => {
-                            setClaimValueDollar(
-                              poolsRewards.data?.gaugeEmissionsTotalValue
-                                .plus(bribesStats)
-                                .plus(tradingfeeStats)
-                            );
-                            setShowClaimPly(true);
-
-                            setClaimState(EClaimAllState.SUPERNOVA);
-                          }
+        <div>
+          <div className="pt-5 md:px-[24px] px-2">
+            <div className="flex">
+              {Title}
+              {activeSection === MyPortfolioSection.Rewards && (
+                <div className="ml-auto ">
+                  <ToolTip
+                    id="tooltipM"
+                    position={Position.left}
+                    toolTipChild={
+                      <div className="w-[100px] md:w-[180px]">
+                        Claim maximum possible rewards within gas limit
+                      </div>
                     }
                   >
-                    Claim max
-                  </div>
-                </ToolTip>
-              </div>
-            )}
-          </div>
-          <div className="mt-5 pl-0  md:pl-0 overflow-x-auto inner">
-            {activeSection === MyPortfolioSection.Positions ? (
-              <Stats
-                setShowCreateLockModal={setShowCreateLockModal}
-                plyBalance={plyBalance}
-                tokenPricePly={tokenPrice["PLY"]}
-                statsPositions={statsPositions}
-                stats1={stats1}
-              />
-            ) : (
-              <StatsRewards
-                plyEmission={poolsRewards.data.gaugeEmissionsTotal}
-                fetchingPly={poolsRewards.isfetched}
-                tradingfeeStats={tradingfeeStats}
-                fetchingTradingfee={fetchingTradingfee}
-                bribesStats={bribesStats}
-                setClaimValueDollar={setClaimValueDollar}
-                setShowClaimPly={setShowClaimPly}
-                setClaimState={setClaimState}
-                bribesClaimData={bribesClaimData}
-                feeClaimData={feeClaimData}
-                unclaimInflation={unclaimInflation}
-              />
-            )}
-          </div>
-        </div>
-        <div className="border-t border-text-800/[0.5] mt-5"></div>
-        <div>
-          <div className="bg-card-50 sticky -top-[3px] md:top-0 z-10">
-            <MyPortfolioCardHeader
-              activeStateTab={activeStateTab}
-              setActiveStateTab={setActiveStateTab}
-              className=""
-            />
-          </div>
-          {activeStateTab === MyPortfolioHeader.Pools &&
-            (activeSection === MyPortfolioSection.Positions ? (
-              <PoolsTablePosition
-                className="md:px-5 md:py-4   py-4"
-                poolsPosition={poolsPosition.data}
-                isfetched={poolsPosition.isfetched}
-              />
-            ) : (
-              <>
-                <div className="flex md:px-[25px] px-4 bg-sideBar sticky top-[90px] mt-5">
-                  <p>
-                    <div className="text-white font-title3">List of my PLY emissions</div>
-                    <div className="text-text-250 font-body1">
-                      Claim voting rewards for your locks
-                    </div>
-                  </p>
-                  {true && (
-                    <p
-                      id="backToTop"
+                    <div
                       className={clsx(
-                        " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
-                        poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                        " flex items-center md:font-title3-bold font-subtitle4 text-black h-[50px] px-[12px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
+                        (poolsRewards.data?.gaugeAddresses?.length === 0 &&
+                          feeClaimData?.length === 0 &&
+                          bribesClaimData?.length === 0 &&
+                          inflationData?.length === 0) ||
+                          poolsRewards.data?.gaugeAddresses === undefined
                           ? "cursor-not-allowed"
                           : "cursor-pointer"
                       )}
                       onClick={
-                        poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                        (poolsRewards.data?.gaugeAddresses?.length === 0 &&
+                          feeClaimData?.length === 0 &&
+                          bribesClaimData?.length === 0 &&
+                          inflationData?.length === 0) ||
+                        poolsRewards.data?.gaugeAddresses === undefined
                           ? () => {}
                           : () => {
+                              setClaimValueDollar(
+                                poolsRewards.data?.gaugeEmissionsTotalValue
+                                  .plus(bribesStats)
+                                  .plus(tradingfeeStats)
+                              );
                               setShowClaimPly(true);
-                              setClaimValueDollar(poolsRewards.data.gaugeEmissionsTotal);
-                              setClaimState(EClaimAllState.PLYEMISSION);
+
+                              setClaimState(EClaimAllState.SUPERNOVA);
                             }
                       }
                     >
-                      Claim all
-                    </p>
-                  )}
+                      Claim max
+                    </div>
+                  </ToolTip>
                 </div>
-                <PoolsTableRewards
+              )}
+            </div>
+            <div className="mt-5 pl-0  md:pl-0 overflow-x-auto inner">
+              {activeSection === MyPortfolioSection.Positions ? (
+                <Stats
+                  setShowCreateLockModal={setShowCreateLockModal}
+                  plyBalance={plyBalance}
+                  tokenPricePly={tokenPrice["PLY"]}
+                  statsPositions={statsPositions}
+                  stats1={stats1}
+                />
+              ) : (
+                <StatsRewards
+                  plyEmission={poolsRewards.data.gaugeEmissionsTotal}
+                  fetchingPly={poolsRewards.isfetched}
+                  tradingfeeStats={tradingfeeStats}
+                  fetchingTradingfee={fetchingTradingfee}
+                  bribesStats={bribesStats}
+                  setClaimValueDollar={setClaimValueDollar}
+                  setShowClaimPly={setShowClaimPly}
+                  setClaimState={setClaimState}
+                  bribesClaimData={bribesClaimData}
+                  feeClaimData={feeClaimData}
+                  unclaimInflation={unclaimInflation}
+                />
+              )}
+            </div>
+          </div>
+          <div className="border-t border-text-800/[0.5] mt-5"></div>
+          <div>
+            <div className="bg-card-50 sticky -top-[3px] md:top-0 z-10">
+              <MyPortfolioCardHeader
+                activeStateTab={activeStateTab}
+                setActiveStateTab={setActiveStateTab}
+                className=""
+              />
+            </div>
+            {activeStateTab === MyPortfolioHeader.Pools &&
+              (activeSection === MyPortfolioSection.Positions ? (
+                <PoolsTablePosition
                   className="md:px-5 md:py-4   py-4"
-                  poolsData={poolsRewards.data.poolsRewardsData}
-                  isfetched={poolsRewards.isfetched}
+                  poolsPosition={poolsPosition.data}
+                  isfetched={poolsPosition.isfetched}
                 />
-              </>
-            ))}
-
-          {activeStateTab === MyPortfolioHeader.Locks &&
-            (activeSection === MyPortfolioSection.Positions ? (
-              <>
-                <div className="flex items-center pb-2 md:px-[25px] bg-sideBar sticky top-[58px] px-4 z-10 pt-5">
-                  <p>
-                    <div className="text-white font-title3">List of my locks</div>
-                    <div className="text-text-250 font-body1">
-                      Discover veNFTs on the largest NFT marketplace on Tezos.
-                    </div>
-                  </p>
-                  <a
-                    href={"https://objkt.com/"}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="ml-auto"
-                  >
-                    <p className="cursor-pointer flex items-center md:font-title3 font-subtitle4 text-primary-500  h-[50px] px-[15px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
-                      Trade locks
+              ) : (
+                <>
+                  <div className="flex md:px-[25px] px-4 bg-sideBar sticky top-[90px] mt-5">
+                    <p>
+                      <div className="text-white font-title3">List of my PLY emissions</div>
+                      <div className="text-text-250 font-body1">
+                        Claim voting rewards for your locks
+                      </div>
                     </p>
-                  </a>
-                </div>
-                <LocksTablePosition
-                  className="md:px-5 md:pb-4 md:pt-2  py-4"
-                  locksPosition={locksPosition.data}
-                  isfetched={locksPosition.isfetched}
-                  setIsManageLock={setIsManageLock}
-                  setShowCreateLockModal={setShowCreateLockModal}
-                  setManageData={setManageData}
-                  setShowWithdraw={setShowWithdraw}
-                />
-              </>
-            ) : (
-              <>
-                <div className="flex md:px-[25px] bg-sideBar sticky top-[58px]  z-10  px-4 pt-5">
-                  <p>
-                    <div className="text-white font-title3">List of my locks</div>
-                    <div className="text-text-250 font-body1">
-                      Claim voting rewards for your locks
-                    </div>
-                  </p>
-                  {true && (
-                    <p
-                      className={clsx(
-                        " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center",
-                        bribesClaimData.length === 0 || feeClaimData.length === 0
-                          ? "cursor-not-allowed"
-                          : "cursor-pointer"
-                      )}
-                      onClick={
-                        bribesClaimData.length === 0 || feeClaimData.length === 0
-                          ? () => {}
-                          : () => {
-                              setShowClaimPly(true);
-                              setClaimValueDollar(tradingfeeStats.plus(bribesStats));
-                              setClaimState(EClaimAllState.LOCKS);
-                            }
-                      }
-                    >
-                      Claim all
-                    </p>
-                  )}
-                </div>
-
-                <div className="border-b border-text-800/[0.5] pt-[15px] "></div>
-                <div className="flex items-center px-3 md:px-0 py-2 md:py-3 bg-sideBar sticky top-[128px]  z-10 ">
-                  <div>
-                    <SelectNFTLocks
-                      veNFTlist={veNFTlist}
-                      selectedText={selectednft}
-                      setSelectedDropDown={setSelectednft}
-                    />
+                    {true && (
+                      <p
+                        id="backToTop"
+                        className={clsx(
+                          " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
+                          poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                            ? "cursor-not-allowed"
+                            : "cursor-pointer"
+                        )}
+                        onClick={
+                          poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                            ? () => {}
+                            : () => {
+                                setShowClaimPly(true);
+                                setClaimValueDollar(poolsRewards.data.gaugeEmissionsTotal);
+                                setClaimState(EClaimAllState.PLYEMISSION);
+                              }
+                        }
+                      >
+                        Claim all
+                      </p>
+                    )}
                   </div>
-                </div>
-                <LocksTableRewards
-                  className="md:px-5 md:pb-4   "
-                  allLocksRewardsData={allLocksRewardsData}
-                  selectedDropDown={selectednft}
-                  handleClick={handleClaimALLEpoch}
-                  setShowCreateLockModal={setShowCreateLockModal}
-                  setEpochClaim={setEpochClaim}
-                  epochClaim={epochClaim}
-                />
-              </>
-            ))}
+                  <PoolsTableRewards
+                    className="md:px-5 md:py-4   py-4"
+                    poolsData={poolsRewards.data.poolsRewardsData}
+                    isfetched={poolsRewards.isfetched}
+                  />
+                </>
+              ))}
+
+            {activeStateTab === MyPortfolioHeader.Locks &&
+              (activeSection === MyPortfolioSection.Positions ? (
+                <>
+                  <div className="flex items-center pb-2 md:px-[25px] bg-sideBar sticky top-[58px] px-4 z-10 pt-5">
+                    <p>
+                      <div className="text-white font-title3">List of my locks</div>
+                      <div className="text-text-250 font-body1">
+                        Discover veNFTs on the largest NFT marketplace on Tezos.
+                      </div>
+                    </p>
+                    <a
+                      href={"https://objkt.com/"}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="ml-auto"
+                    >
+                      <p className="cursor-pointer flex items-center md:font-title3 font-subtitle4 text-primary-500  h-[50px] px-[15px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center">
+                        Trade locks
+                      </p>
+                    </a>
+                  </div>
+                  <LocksTablePosition
+                    className="md:px-5 md:pb-4 md:pt-2  py-4"
+                    locksPosition={locksPosition.data}
+                    isfetched={locksPosition.isfetched}
+                    setIsManageLock={setIsManageLock}
+                    setShowCreateLockModal={setShowCreateLockModal}
+                    setManageData={setManageData}
+                    setShowWithdraw={setShowWithdraw}
+                  />
+                </>
+              ) : (
+                <>
+                  <div className="flex md:px-[25px] bg-sideBar sticky top-[58px]  z-10  px-4 pt-5">
+                    <p>
+                      <div className="text-white font-title3">List of my locks</div>
+                      <div className="text-text-250 font-body1">
+                        Claim voting rewards for your locks
+                      </div>
+                    </p>
+                    {true && (
+                      <p
+                        className={clsx(
+                          " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center",
+                          bribesClaimData.length === 0 || feeClaimData.length === 0
+                            ? "cursor-not-allowed"
+                            : "cursor-pointer"
+                        )}
+                        onClick={
+                          bribesClaimData.length === 0 || feeClaimData.length === 0
+                            ? () => {}
+                            : () => {
+                                setShowClaimPly(true);
+                                setClaimValueDollar(tradingfeeStats.plus(bribesStats));
+                                setClaimState(EClaimAllState.LOCKS);
+                              }
+                        }
+                      >
+                        Claim all
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="border-b border-text-800/[0.5] pt-[15px] "></div>
+                  <div className="flex items-center px-3 md:px-0 py-2 md:py-3 bg-sideBar sticky top-[128px]  z-10 ">
+                    <div>
+                      <SelectNFTLocks
+                        veNFTlist={veNFTlist}
+                        selectedText={selectednft}
+                        setSelectedDropDown={setSelectednft}
+                      />
+                    </div>
+                  </div>
+                  <LocksTableRewards
+                    className="md:px-5 md:pb-4   "
+                    allLocksRewardsData={allLocksRewardsData}
+                    selectedDropDown={selectednft}
+                    handleClick={handleClaimALLEpoch}
+                    setShowCreateLockModal={setShowCreateLockModal}
+                    setEpochClaim={setEpochClaim}
+                    epochClaim={epochClaim}
+                  />
+                </>
+              ))}
+          </div>
         </div>
       </SideBarHOC>
       {isManageLock && (
