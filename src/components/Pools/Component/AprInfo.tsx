@@ -7,7 +7,7 @@ import boostIcon from "../../../assets/icon/myPortfolio/boostBlue.svg";
 import { BigNumber } from "bignumber.js";
 export interface IAprInfoProps {
   isMobile?: boolean;
-  previousApr: BigNumber;
+
   currentApr: BigNumber;
   boostedApr: BigNumber;
 }

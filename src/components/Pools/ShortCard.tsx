@@ -111,14 +111,7 @@ export function ShortCard(props: IShortCardProps) {
         showOnMobile: true,
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x) => (
-          <AprInfo
-            currentApr={x.apr}
-            previousApr={x.futureApr}
-            boostedApr={x.boostedApr}
-            isMobile={true}
-          />
-        ),
+        accessor: (x) => <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} isMobile={true} />,
       },
       {
         Header: "APR",
@@ -130,7 +123,7 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x: any) => <AprInfoFuture previousApr={x.futureApr} />,
+        accessor: (x: any) => <AprInfoFuture futureApr={x.futureApr} />,
       },
       {
         Header: "",
@@ -183,9 +176,7 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x: any) => (
-          <AprInfo currentApr={x.apr} previousApr={x.futureApr} boostedApr={x.boostedApr} />
-        ),
+        accessor: (x: any) => <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} />,
       },
       {
         Header: "APR",
@@ -197,7 +188,7 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x: any) => <AprInfoFuture previousApr={x.futureApr} />,
+        accessor: (x: any) => <AprInfoFuture futureApr={x.futureApr} />,
       },
       {
         Header: "Volume",
