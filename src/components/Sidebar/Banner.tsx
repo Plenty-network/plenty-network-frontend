@@ -55,7 +55,7 @@ function Banner(props: ISearchBarProps) {
   return (
     <div
       className={clsx(
-        "fixed w-full gradient h-[38px] flex items-center justify-center font-mobile-f1020 md:font-subtitle1 text-white z-10",
+        "fixed w-full gradient h-[38px] flex items-center justify-center font-f11-500 md:font-subtitle1 text-white z-10",
         (!isBanner || !isB) && "hidden"
       )}
     >
