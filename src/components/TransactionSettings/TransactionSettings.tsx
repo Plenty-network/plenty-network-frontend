@@ -115,7 +115,8 @@ function TransactionSettings(props: ITransactionSettingsProps) {
             position={Position.top}
             toolTipChild={
               <div className="w-[180px] md:w-[250px]">
-                Change the slippage tolerance in the transaction settings.
+                Your transaction will revert if the price changes unfavorably by more than this
+                percentage
               </div>
             }
           >

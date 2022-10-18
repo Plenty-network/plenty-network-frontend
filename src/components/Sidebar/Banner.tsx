@@ -20,7 +20,7 @@ function Banner(props: IBanner) {
     claimFaucet(undefined, undefined, undefined, {
       flashType: Flashtype.Info,
       headerText: "Transaction submitted",
-      trailingText: `Claim test tokens on Ghostnet submitted`,
+      trailingText: `Claim test tokens on Ghostnet `,
       linkText: "View in Explorer",
       isLoading: true,
       transactionId: "",

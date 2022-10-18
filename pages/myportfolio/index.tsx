@@ -4,7 +4,7 @@ import * as React from "react";
 import { BigNumber } from "bignumber.js";
 
 import playIcon from "../../src/assets/icon/pools/playIcon.svg";
-import { useEffect, useState, useRef, useMemo, useLayoutEffect } from "react";
+import { useEffect, useState, useRef, useMemo, useLayoutEffect, useCallback } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { connect, useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../src/redux";
@@ -576,7 +576,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)} submitted`,
+        trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -659,7 +659,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Withdraw and claim lock #${localStorage.getItem(TOKEN_ID)} submitted`,
+        trailingText: `Withdraw and claim lock #${localStorage.getItem(TOKEN_ID)}`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -737,7 +737,7 @@ function MyPortfolio(props: any) {
         headerText: "Transaction submitted",
         trailingText: `Lock ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
-        )} PLY till ${localStorage.getItem(TOKEN_A)} submitted`,
+        )} PLY till ${localStorage.getItem(TOKEN_A)}`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -811,7 +811,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)} submitted`,
+        trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -878,7 +878,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)} submitted`,
+        trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -947,7 +947,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)} submitted`,
+        trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -1013,7 +1013,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Claim ${localStorage.getItem(CLAIM)} PLY submitted`,
+        trailingText: `Claim ${localStorage.getItem(CLAIM)} PLY`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -1082,7 +1082,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Claim bribes $${localStorage.getItem(CLAIM)} submitted`,
+        trailingText: `Claim bribes $${localStorage.getItem(CLAIM)}`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -1151,7 +1151,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Claim trading fees $${localStorage.getItem(CLAIM)} submitted`,
+        trailingText: `Claim trading fees $${localStorage.getItem(CLAIM)}`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -1222,7 +1222,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Claim all lock rewards submitted`,
+        trailingText: `Claim all lock rewards`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -1292,7 +1292,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Claim lock rewards for <Epoch ${localStorage.getItem(CLAIM)} submitted`,
+        trailingText: `Claim lock rewards for <Epoch ${localStorage.getItem(CLAIM)}`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -1364,7 +1364,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Claim inflation ${localStorage.getItem(CLAIM)} PLY submitted`,
+        trailingText: `Claim inflation ${localStorage.getItem(CLAIM)} PLY`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -1494,6 +1494,28 @@ function MyPortfolio(props: any) {
     });
   };
 
+  // const [y, setY] = useState(window.scrollY);
+  // const handleNavigation = useCallback(
+  //   (e: any) => {
+  //     const window = e.currentTarget;
+  //     if (y > window.scrollY) {
+  //       console.log("pp", "scrolling up");
+  //     } else if (y < window.scrollY) {
+  //       console.log("pp", "scrolling down");
+  //     }
+  //     setY(window.scrollY);
+  //   },
+  //   [y]
+  // );
+  // useEffect(() => {
+  //   window.addEventListener("scroll", (e) => handleNavigation(e));
+
+  //   return () => {
+  //     // return a cleanup function to unregister our function since its gonna run multiple times
+  //     window.removeEventListener("scroll", (e) => handleNavigation(e));
+  //   };
+  // }, [y]);
+
   return (
     <>
       <SideBarHOC>
@@ -1523,7 +1545,7 @@ function MyPortfolio(props: any) {
                   >
                     <div
                       className={clsx(
-                        " flex items-center md:font-title3-bold font-subtitle4 text-black h-[50px] px-[12px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
+                        " flex items-center md:font-title3-bold font-subtitle4 text-black h-[44px] md:h-[50px] px-[20px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
                         (poolsRewards.data?.gaugeAddresses?.length === 0 &&
                           feeClaimData?.length === 0 &&
                           bribesClaimData?.length === 0 &&

@@ -25,10 +25,10 @@ export function PortfolioDropdown(props: IDropdownProps) {
     setIsDropDownActive(false);
   });
   return (
-    <div className={`relative min-w-[100px] md:min-w-[150px] ${props.className}`} ref={reff}>
+    <div className={`relative w-[150px] ${props.className}`} ref={reff}>
       <div
         className={clsx(
-          "bg-text-800/[0.25]  cursor-pointer flex gap-2 md:gap-4 py-2.5 px-2 md:px-3 md:justify-between border  rounded-lg hover:border-text-700 hover:bg-text-800/[0.25]",
+          "bg-text-800/[0.25]  cursor-pointer flex gap-2 md:gap-4 py-1.5 px-2 md:px-3 md:justify-between border  rounded-lg hover:border-text-700 hover:bg-text-800/[0.25]",
           isDropDownActive
             ? "bg-muted-500 border-muted-300 hover:bg-muted-500 hover:border-muted-300"
             : "border-text-800 bg-text-800/[0.25] hover:border-text-700 hover:bg-text-800/[0.25]",
@@ -64,7 +64,7 @@ export function PortfolioDropdown(props: IDropdownProps) {
         </p>
       </div>
       {isDropDownActive && !props.isDisabled && (
-        <div className="absolute  mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1 z-10">
+        <div className="absolute w-[150px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1 z-10">
           {props.Options.map((text, i) => (
             <Options onClick={props.onClick} key={`${text}_${i}`} text={text} />
           ))}
