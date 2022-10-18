@@ -12,18 +12,12 @@ function SelectNFT(props: ISelectNFT) {
       <div className="hidden md:block text-white font-body1 px-[23px]">Select your veNFT:</div>
       <div>
         {props.veNFTlist.length === 0 ? (
-          <ToolTip
-            message={"No VeNFT available, please create a lock "}
-            id="tooltip1"
-            position={Position.top}
-          >
-            <VeNFT
-              title={props.veNFTlist.length === 0 ? "No veNFT available" : "No NFTs selected"}
-              Options={props.veNFTlist}
-              selectedText={props.selectedText}
-              onClick={props.setSelectedDropDown}
-            />
-          </ToolTip>
+          <VeNFT
+            title={props.veNFTlist.length === 0 ? "No veNFT available" : "No NFTs selected"}
+            Options={props.veNFTlist}
+            selectedText={props.selectedText}
+            onClick={props.setSelectedDropDown}
+          />
         ) : (
           <VeNFT
             title="No NFTs selected"

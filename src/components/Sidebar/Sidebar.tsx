@@ -6,7 +6,7 @@ import { HrefIcon, IHrefIconProps } from "./LinkIconList";
 import { ISingleSideBarProps, SingleSideBar } from "./SideBarTabList";
 
 export interface ISideBarProps {
-  isBannerOpen: boolean;
+  isBanner: boolean;
 }
 export const FooterMenu: Array<IHrefIconProps> = [
   {
@@ -133,12 +133,6 @@ const MainMenu: Array<ISingleSideBarProps> = [
 export function SideBar(props: ISideBarProps) {
   const [activeMenu, setActiveMenu] = React.useState<string>("");
   const { pathname } = useRouter();
-  const isBannerOpen = store.getState().walletLoading.isBanner;
-  const [isBanner, setIsBanner] = React.useState(isBannerOpen);
-  React.useEffect(() => {
-    console.log(props.isBannerOpen);
-    setIsBanner(isBannerOpen);
-  }, [isBannerOpen, props.isBannerOpen]);
   try {
     if (pathname == "/swap") document.getElementsByTagName("body")[0].className = "swap";
     else document.getElementsByTagName("body")[0].className = "";
@@ -147,9 +141,9 @@ export function SideBar(props: ISideBarProps) {
     <div
       className="fixed text-f14 bg-sideBar border-border-500/50 border-r shadow hidden md:block  "
       style={{
-        height: `${isBanner ? "calc(100vh - 103px)" : "calc(100vh - 64px)"}`,
+        height: `${props.isBanner ? "calc(100vh - 103px)" : "calc(100vh - 64px)"}`,
         width: "240px",
-        marginTop: `${isBanner ? "103px" : "64px"}`,
+        marginTop: `${props.isBanner ? "103px" : "64px"}`,
       }}
     >
       <div className="flex-col justify-between h-full flex overflow-y-auto">
