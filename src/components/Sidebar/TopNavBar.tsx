@@ -13,6 +13,7 @@ import { NotificationIcon } from "../NotificationIcon";
 import Banner from "./Banner";
 export interface ITopNavBarProps {
   setShowNotification: Function;
+  isBanner: boolean;
   isLanding: boolean;
   isBribes: boolean;
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
@@ -38,13 +39,13 @@ export function IconBTN(props: IIconBTNProps) {
 
 export function TopNavBar(props: ITopNavBarProps) {
   const userAddress = store.getState().wallet.address;
-  const isBanner = store.getState().walletLoading.isBanner;
+  //const isBanner = store.getState().walletLoading.isBanner;
   return (
     <>
       <nav
         className={clsx(
           "hidden  md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   px-10 pl-0 topNavblurEffect z-50",
-          isBanner ? "top-[38px]" : "animate__animated animate__fadeInUp animate__faster"
+          props.isBanner ? "top-[38px]" : "animate__animated animate__fadeInUp animate__faster"
         )}
       >
         <div className="h-full w-[240px] border-border-500/50 border-r flex items-center pl-[22px]">

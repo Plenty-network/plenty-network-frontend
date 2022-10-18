@@ -12,17 +12,18 @@ import clsx from "clsx";
 export interface ITopNavBarMobileProps {
   setShowNotification: Function;
   isBribes: boolean;
+  isBanner: boolean;
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function TopNavBarMobile(props: ITopNavBarMobileProps) {
   const userAddress = store.getState().wallet.address;
-  const isBanner = store.getState().walletLoading.isBanner;
+  //const isBanner = store.getState().walletLoading.isBanner;
   return (
     <div
       className={clsx(
         "flex fixed  w-screen bottomNavBarMobile px-5 h-[61px] justify-between border-b border-b-borderColor",
-        isBanner ? "top-[38px]" : "animate__animated animate__fadeInUp animate__faster"
+        props.isBanner ? "top-[38px]" : "animate__animated animate__fadeInUp animate__faster"
       )}
     >
       <Link href={"/"}>
@@ -39,7 +40,10 @@ export function TopNavBarMobile(props: ITopNavBarMobileProps) {
             className="cursor-pointer hover:opacity-90"
             onClick={props.setShowNotification}
           />
-          <ConnectWalletBtnMobile setNodeSelector={props.setNodeSelector} />
+          <ConnectWalletBtnMobile
+            setNodeSelector={props.setNodeSelector}
+            isBanner={props.isBanner}
+          />
         </div>
       )}
     </div>
