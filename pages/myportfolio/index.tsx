@@ -360,16 +360,6 @@ function MyPortfolio(props: any) {
   }, [veNFTlist]);
   useEffect(() => {
     if (userAddress) {
-      //setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
-      //setStats1({} as IVotesStatsDataResponse);
-      // getVotesStatsData(userAddress).then((res) => {
-      //   setStats1({
-      //     success: true,
-      //     totalEpochVotingPower: res.totalEpochVotingPower,
-      //     totalPlyLocked: res.totalPlyLocked,
-      //     isFetching: false,
-      //   });
-      // });
       getAllLocksPositionData(userAddress).then((res) => {
         setLocksPosition({ data: res.allLocksData.reverse(), isfetched: true });
       });
@@ -378,14 +368,7 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (!props.isLoading && props.operationSuccesful && userAddress) {
       setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
-      // getVotesStatsData(userAddress).then((res) => {
-      //   setStats1({
-      //     success: true,
-      //     totalEpochVotingPower: res.totalEpochVotingPower,
-      //     totalPlyLocked: res.totalPlyLocked,
-      //     isFetching: false,
-      //   });
-      // });
+
       dispatch(fetchVotesStatsData(userAddress));
       //setStatsPosition({} as IPositionStatsResponse);
       setPoolsPosition({ data: [] as IPositionsData[], isfetched: false });
@@ -400,13 +383,7 @@ function MyPortfolio(props: any) {
             lpTokenPrices: lpTokenPrice,
           })
         );
-        // getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
-        //   setStatsPosition({
-        //     success: true,
-        //     tvl: res,
-        //     isFetching: false,
-        //   });
-        // });
+
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
           setPoolsPosition({ data: res.positionPoolsData, isfetched: true });
         });

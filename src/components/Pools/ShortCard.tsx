@@ -120,6 +120,20 @@ export function ShortCard(props: IShortCardProps) {
         ),
       },
       {
+        Header: "APR",
+        id: "apr",
+        columnWidth: "w-[122px]",
+        subText: "future epoch",
+        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
+        isToolTipEnabled: true,
+        canShort: true,
+        showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
+        accessor: (x: any) => (
+          <AprInfo currentApr={x.apr} previousApr={x.prevApr} boostedApr={x.boostedApr} />
+        ),
+      },
+      {
         Header: "",
         id: "lools",
         columnWidth: "w-[150px] ml-auto",
@@ -165,6 +179,20 @@ export function ShortCard(props: IShortCardProps) {
         id: "apr",
         columnWidth: "w-[177px]",
         subText: "current epoch",
+        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
+        isToolTipEnabled: true,
+        canShort: true,
+        showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
+        accessor: (x: any) => (
+          <AprInfo currentApr={x.apr} previousApr={x.prevApr} boostedApr={x.boostedApr} />
+        ),
+      },
+      {
+        Header: "APR",
+        id: "apr",
+        columnWidth: "w-[122px]",
+        subText: "future epoch",
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         isToolTipEnabled: true,
         canShort: true,
