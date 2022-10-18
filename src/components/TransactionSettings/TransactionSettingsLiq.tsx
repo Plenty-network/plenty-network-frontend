@@ -63,7 +63,8 @@ function TransactionSettingsLiquidity(props: ITransactionSettingsProps) {
           <ToolTip
             toolTipChild={
               <div className="w-[200px] md:w-[250px]">
-                Change the slippage tolerance in the transaction settings.
+                Your transaction will revert if the price changes unfavorably by more than this
+                percentage.
               </div>
             }
             id="tooltipD"

@@ -98,7 +98,7 @@ function BribesMain(props: BribesMainProps) {
         headerText: "Transaction submitted",
         trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
           TOKEN_B
-        )} pool submitted.`,
+        )} pool.`,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",

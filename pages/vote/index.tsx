@@ -307,7 +307,7 @@ export default function Vote() {
         headerText: "Transaction submitted",
         trailingText: `Lock ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
-        )} PLY till ${localStorage.getItem(TOKEN_A)} submitted`,
+        )} PLY till ${localStorage.getItem(TOKEN_A)}`,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -383,7 +383,7 @@ export default function Vote() {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Vote with VeNFT #
-        ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} submitted`,
+        ${localStorage.getItem(FIRST_TOKEN_AMOUNT)}`,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",

@@ -225,7 +225,8 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         Header: "Epochs",
         id: "Epochs",
         columnWidth: "ml-auto w-[280px]",
-
+        sortType: (a: any, b: any) => compareNumericString(a, b, "epochEnd"),
+        canShort: true,
         accessor: (x: any) => (
           <EpochCol
             epochNumber={x.epoch}
@@ -247,7 +248,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={tabledata ? tabledata : []}
           noSearchResult={noSearchResult}
-          shortby="Locks"
+          shortby="Epochs"
           isFetched={props.isfetched}
           TableName={""}
           NoData={NoData}
