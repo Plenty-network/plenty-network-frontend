@@ -13,6 +13,8 @@ import {
 
 import { OpKind } from "@taquito/taquito";
 import { ActiveLiquidity } from "../components/Pools/ManageLiquidityHeader";
+import { IFlashMessageProps } from "../redux/flashMessage/type";
+import { setFlashMessage } from "../redux/flashMessage";
 
 /**
  * Add liquidity operation for given pair of tokens.
@@ -25,6 +27,7 @@ import { ActiveLiquidity } from "../components/Pools/ManageLiquidityHeader";
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
  * @param setActiveState - Callback to change active state
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
 export const addLiquidity = async (
   tokenOneSymbol: string,
@@ -35,7 +38,8 @@ export const addLiquidity = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  setActiveState: TSetActiveState | undefined
+  setActiveState: TSetActiveState | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     let addLiquidityResult: IOperationsResponse;
@@ -49,7 +53,8 @@ export const addLiquidity = async (
         transactionSubmitModal,
         resetAllValues,
         setShowConfirmTransaction,
-        setActiveState
+        setActiveState,
+        flashMessageContent
       );
     } else {
       addLiquidityResult = await addAllPairsLiquidity(
@@ -61,7 +66,8 @@ export const addLiquidity = async (
         transactionSubmitModal,
         resetAllValues,
         setShowConfirmTransaction,
-        setActiveState
+        setActiveState,
+        flashMessageContent
       );
     }
     return {
@@ -89,6 +95,7 @@ export const addLiquidity = async (
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
  * @param setActiveState - Callback to change active state
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
 const addAllPairsLiquidity = async (
   tokenOneSymbol: string,
@@ -99,7 +106,8 @@ const addAllPairsLiquidity = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  setActiveState: TSetActiveState | undefined
+  setActiveState: TSetActiveState | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     let firstTokenSymbol: string | undefined,
@@ -333,6 +341,9 @@ const addAllPairsLiquidity = async (
     transactionSubmitModal && transactionSubmitModal(batchOperation?.opHash as string);
     setActiveState && setActiveState(ActiveLiquidity.Staking);
     resetAllValues && resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
     await batchOperation?.confirmation();
     return {
       success: true,
@@ -354,6 +365,7 @@ const addAllPairsLiquidity = async (
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
  * @param setActiveState - Callback to change active state
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
 const addTezPairsLiquidity = async (
   tokenOneSymbol: string,
@@ -364,7 +376,8 @@ const addTezPairsLiquidity = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  setActiveState: TSetActiveState | undefined
+  setActiveState: TSetActiveState | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     let tezSymbol: string | undefined,
@@ -472,6 +485,9 @@ const addTezPairsLiquidity = async (
     transactionSubmitModal && transactionSubmitModal(batchOperation?.opHash);
     setActiveState && setActiveState(ActiveLiquidity.Staking);
     resetAllValues && resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOperation?.confirmation();
     return {

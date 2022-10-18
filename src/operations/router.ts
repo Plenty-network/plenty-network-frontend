@@ -6,6 +6,8 @@ import { MichelsonMap, OpKind } from '@taquito/taquito';
 import Config from '../config/config';
 import { dappClient } from '../common/walletconnect';
 import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShowConfirmTransaction } from './types';
+import { IFlashMessageProps } from '../redux/flashMessage/type';
+import { setFlashMessage } from '../redux/flashMessage';
 
 export const routerSwap = async (
   path: string[],
@@ -15,7 +17,8 @@ export const routerSwap = async (
   amount: BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const {CheckIfWalletConnected}=dappClient()
@@ -71,6 +74,9 @@ export const routerSwap = async (
 
       setShowConfirmTransaction(false);
       transactionSubmitModal(batchOp.opHash);
+      if (flashMessageContent) {
+        store.dispatch(setFlashMessage(flashMessageContent));
+      }
       await batchOp.confirmation();
       return {
         success: true,

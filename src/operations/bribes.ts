@@ -4,6 +4,8 @@ import { getDexAddress } from "../api/util/fetchConfig";
 import { dappClient } from "../common/walletconnect";
 import { TokenVariant } from "../config/types";
 import { store } from "../redux";
+import { setFlashMessage } from "../redux/flashMessage";
+import { IFlashMessageProps } from "../redux/flashMessage/type";
 import {
   IOperationsResponse,
   TResetAllValues,
@@ -23,6 +25,7 @@ import {
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
  * @param ammAddress - Contract address of the selected pool(optional)
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
 export const addBribe = async (
   tokenOneSymbol: string,
@@ -34,7 +37,8 @@ export const addBribe = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  ammAddress?: string
+  ammAddress?: string,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const state = store.getState();
@@ -162,6 +166,9 @@ export const addBribe = async (
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(batchOperation.opHash as string);
     resetAllValues && resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOperation.confirmation();
     return {

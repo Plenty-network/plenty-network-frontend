@@ -14,6 +14,8 @@ import { IAllBribesOperationData, IAllClaimableFeesData, IClaimInflationOperatio
 import { getMaxPossibleBatchArray, getMaxPossibleBatchArrayV2 } from "../api/util/operations";
 import { store } from "../redux";
 import { getDexAddress } from "../api/util/fetchConfig";
+import { IFlashMessageProps } from "../redux/flashMessage/type";
+import { setFlashMessage } from "../redux/flashMessage";
 
 export const createLock = async (
   address: string,
@@ -21,7 +23,8 @@ export const createLock = async (
   endtime: BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -49,6 +52,9 @@ export const createLock = async (
     resetAllValues();
 
     transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -70,7 +76,8 @@ export const increaseLockEnd = async (
   newEnd: BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -91,6 +98,9 @@ export const increaseLockEnd = async (
     resetAllValues();
 
     transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -112,7 +122,8 @@ export const increaseLockValue = async (
   value: BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -139,6 +150,9 @@ export const increaseLockValue = async (
     resetAllValues();
 
     transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -161,7 +175,8 @@ export const increaseLockAndValue = async (
   newEnd: BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -189,6 +204,9 @@ export const increaseLockAndValue = async (
     resetAllValues();
 
     transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -209,7 +227,8 @@ export const withdrawLock = async (
   id: number,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -230,6 +249,9 @@ export const withdrawLock = async (
     resetAllValues();
 
     transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -247,6 +269,7 @@ export const withdrawLock = async (
 };
 
 // CHECK FLOW ONCE
+// Depricate
 export const withdrawLockWithInflation = async (
   id: number,
   epochs: number[],
@@ -292,7 +315,7 @@ export const withdrawLockWithInflation = async (
   }
 };
 
-//Might be depracated
+//depracated
 export const claimInflation = async (
   epochs: number[],
   id: number,
@@ -340,7 +363,8 @@ export const claimAllInflation = async (
   inflationData : IClaimInflationOperationData[],
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -373,6 +397,9 @@ export const claimAllInflation = async (
     resetAllValues && resetAllValues();
 
     transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -398,7 +425,8 @@ export const claimAllAndWithdrawLock = async (
   inflationData: IClaimInflationOperationData[],
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -455,6 +483,9 @@ export const claimAllAndWithdrawLock = async (
     resetAllValues && resetAllValues();
 
     transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -480,6 +511,7 @@ export const claimAllAndWithdrawLock = async (
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
  * @param ammAddress - Contract address of the selected pool(optional)
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
  export const detachLockFromGauge = async (
   tokenOneSymbol: string,
@@ -487,7 +519,8 @@ export const claimAllAndWithdrawLock = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  ammAddress?: string
+  ammAddress?: string,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const state = store.getState();
@@ -517,6 +550,9 @@ export const claimAllAndWithdrawLock = async (
     transactionSubmitModal &&
       transactionSubmitModal(operation.opHash as string);
     resetAllValues && resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await operation.confirmation();
     return {
@@ -542,7 +578,8 @@ export const claimAllDetachAndWithdrawLock = async (
   ammAddress: string | undefined,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -617,6 +654,9 @@ export const claimAllDetachAndWithdrawLock = async (
     resetAllValues && resetAllValues();
 
     transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
