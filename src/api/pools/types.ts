@@ -5,7 +5,7 @@ export interface VolumeV1Data {
   pool: string;
   bribes: Bribes[];
   apr: string;
-  previousApr : number
+  futureApr : number
 }
 
 export interface Volume24H {
@@ -65,7 +65,7 @@ export interface IPoolsDataWrapperResponse {
   tokenB : String;
   poolType : AMM_TYPE;
   apr : BigNumber;
-  prevApr : BigNumber;
+  futureApr : BigNumber;
   boostedApr : BigNumber;
   volume : BigNumber;
   volumeTokenA : BigNumber;

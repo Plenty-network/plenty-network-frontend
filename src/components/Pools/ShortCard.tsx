@@ -114,7 +114,7 @@ export function ShortCard(props: IShortCardProps) {
         accessor: (x) => (
           <AprInfo
             currentApr={x.apr}
-            previousApr={x.prevApr}
+            previousApr={x.futureApr}
             boostedApr={x.boostedApr}
             isMobile={true}
           />
@@ -130,7 +130,7 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x: any) => <AprInfoFuture previousApr={x.prevApr} />,
+        accessor: (x: any) => <AprInfoFuture previousApr={x.futureApr} />,
       },
       {
         Header: "",
@@ -184,7 +184,7 @@ export function ShortCard(props: IShortCardProps) {
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
         accessor: (x: any) => (
-          <AprInfo currentApr={x.apr} previousApr={x.prevApr} boostedApr={x.boostedApr} />
+          <AprInfo currentApr={x.apr} previousApr={x.futureApr} boostedApr={x.boostedApr} />
         ),
       },
       {
@@ -197,7 +197,7 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x: any) => <AprInfoFuture previousApr={x.prevApr} />,
+        accessor: (x: any) => <AprInfoFuture previousApr={x.futureApr} />,
       },
       {
         Header: "Volume",
