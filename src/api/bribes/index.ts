@@ -33,8 +33,6 @@ export const getUserBribeData = async (
   tokenPrice: ITokenPriceList
 ): Promise<IUserBribeDataResponse> => {
   try {
-    address = 'tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv';
-
     const state = store.getState();
     const AMMS = state.config.AMMs;
     const TOKEN = state.config.tokens;
