@@ -12,6 +12,7 @@ import { getTotalVotingPower } from "../../redux/pools";
 import { compareNumericString } from "../../utils/commonUtils";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import Table from "../Table/Table";
+import { AprInfoFuture } from "./Component/AprFuture";
 import { AprInfo } from "./Component/AprInfo";
 import { CircularOverLappingImage } from "./Component/CircularImageInfo";
 import { NoContentAvailable } from "./Component/ConnectWalletOrNoToken";
@@ -120,6 +121,18 @@ export function ShortCard(props: IShortCardProps) {
         ),
       },
       {
+        Header: "APR",
+        id: "apr1",
+        columnWidth: "w-[90px]",
+        subText: "future epoch",
+        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
+        isToolTipEnabled: true,
+        canShort: true,
+        showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
+        accessor: (x: any) => <AprInfoFuture previousApr={x.prevApr} />,
+      },
+      {
         Header: "",
         id: "lools",
         columnWidth: "w-[150px] ml-auto",
@@ -173,6 +186,18 @@ export function ShortCard(props: IShortCardProps) {
         accessor: (x: any) => (
           <AprInfo currentApr={x.apr} previousApr={x.prevApr} boostedApr={x.boostedApr} />
         ),
+      },
+      {
+        Header: "APR",
+        id: "apr1",
+        columnWidth: "w-[122px]",
+        subText: "future epoch",
+        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
+        isToolTipEnabled: true,
+        canShort: true,
+        showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
+        accessor: (x: any) => <AprInfoFuture previousApr={x.prevApr} />,
       },
       {
         Header: "Volume",
@@ -243,7 +268,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "",
         id: "lools",
-        columnWidth: "w-[200px] ml-auto",
+        columnWidth: "w-[180px] ml-auto",
         minWidth: 151,
         accessor: (x) => (
           <ManageBtn
@@ -307,7 +332,7 @@ export function ShortCard(props: IShortCardProps) {
           tableType="pool"
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
-          TableWidth="lg:min-w-[1032px]"
+          TableWidth="min-w-[535px] lg:min-w-[1100px]"
           NoData={NoData}
         />
       </div>
