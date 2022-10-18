@@ -12,7 +12,7 @@ import { getEpochData } from "../../src/redux/epoch/epoch";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
-import info from "../../src/assets/icon/pools/infoBlue.svg";
+import info from "../../src/assets/icon/pools/InfoBlue.svg";
 import close from "../../src/assets/icon/pools/closeBlue.svg";
 import Image from "next/image";
 export interface IIndexProps {}
