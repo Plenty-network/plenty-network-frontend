@@ -12,7 +12,7 @@ export const FooterMenu: Array<IHrefIconProps> = [
   {
     name: "Analytics",
     iconName: "VectorfooterMenu",
-    href: "https://plenty-analytics-test.netlify.app/",
+    href: "",
   },
   {
     name: "Docs",
@@ -25,81 +25,6 @@ export const FooterMenu: Array<IHrefIconProps> = [
     href: "https://discord.com/invite/9wZ4CuvkuJ",
   },
 ];
-
-// const MainMenu: Array<ISingleSideBarProps> = [
-//   {
-//     name: 'Swap',
-//     iconName: 'swap',
-//     pathName: '/Swap',
-//   },
-//   {
-//     name: 'Pools',
-//     iconName: 'pools',
-//     pathName: '/pools',
-//   },
-//   {
-//     name: 'komm',
-//     iconName: 'swap',
-//     subMenu: [
-//       {
-//         name: 'swap',
-//         iconName: 'swap',
-//         pathName: './limk',
-//       },
-//       {
-//         name: 'swap',
-//         iconName: 'swap',
-//         pathName: './limk',
-//       },
-//       {
-//         name: 'swap',
-//         iconName: 'swap',
-//         pathName: './limk',
-//       },
-//       {
-//         name: 'swap',
-//         iconName: 'swap',
-//         pathName: './limk',
-//       },
-//       {
-//         name: 'swap',
-//         iconName: 'swap',
-//         pathName: './limk',
-//       },
-//       {
-//         name: 'sap',
-//         iconName: 'swap',
-//         pathName: './limk',
-//       },
-//       {
-//         name: 'swap',
-//         iconName: 'swap',
-//         pathName: './limk',
-//       },
-//     ],
-//   },
-// {
-//   name: 'Earn',
-//   iconName: 'swap',
-//   subMenu: [
-//     {
-//       name: 'swap',
-//       iconName: 'swap',
-//       pathName: './limk',
-//     },
-//   ],
-// },
-//   {
-//     name: 'kokmm',
-//     iconName: 'swap',
-//     pathName: './limk',
-//   },
-//   {
-//     name: 'mopp',
-//     iconName: 'swap',
-//     pathName: './limk',
-//   },
-// ];
 
 const MainMenu: Array<ISingleSideBarProps> = [
   {
