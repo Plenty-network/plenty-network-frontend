@@ -33,11 +33,11 @@ export function AprInfo(props: IAprInfoProps) {
         <div className="flex flex-col gap-[7pxS] text-text-500 font-normal text-f14 p-1">
           <div>
             Current APR :{" "}
-            <span className="font-semibold text-white">{props.currentApr.toFixed(2)}</span>
+            <span className="font-semibold text-white">{props.currentApr.toFixed(2)}%</span>
           </div>
           <div>
             Boosted APR :{" "}
-            <span className="font-semibold text-white">{props.boostedApr.toFixed(2)}</span>
+            <span className="font-semibold text-white">{props.boostedApr.toFixed(2)}%</span>
           </div>
         </div>
       }
