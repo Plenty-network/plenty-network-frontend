@@ -29,9 +29,9 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
           <Image alt={"alt"} src={arrowLeft} />
         </div>
         <div className="mx-2 text-white font-title3">Confirm staking </div>
-        <div className="relative top-[2px] cursor-pointer">
+        {/* <div className="relative top-[2px] cursor-pointer">
           <Image alt={"alt"} src={info} />
-        </div>
+        </div> */}
       </div>
       <div
         className={clsx(

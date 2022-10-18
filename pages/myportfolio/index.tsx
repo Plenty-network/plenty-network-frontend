@@ -567,7 +567,16 @@ function MyPortfolio(props: any) {
       manageData.tokenId.toNumber(),
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -641,7 +650,16 @@ function MyPortfolio(props: any) {
       manageData.attached ? manageData.attachedAmmAddress : undefined,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Withdraw and claim lock #${localStorage.getItem(TOKEN_ID)} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -708,7 +726,18 @@ function MyPortfolio(props: any) {
       new BigNumber(lockingEndData.lockingDate),
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Lock ${localStorage.getItem(
+          FIRST_TOKEN_AMOUNT
+        )} PLY till ${localStorage.getItem(TOKEN_A)} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -773,7 +802,15 @@ function MyPortfolio(props: any) {
       new BigNumber(lockingEndData.lockingDate),
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -833,7 +870,16 @@ function MyPortfolio(props: any) {
       new BigNumber(lockingEndData.lockingDate),
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -893,7 +939,16 @@ function MyPortfolio(props: any) {
       new BigNumber(updatedPlyVoteValue),
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -950,7 +1005,16 @@ function MyPortfolio(props: any) {
       poolsRewards.data.gaugeAddresses,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Claim ${localStorage.getItem(CLAIM)} PLY submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -1010,7 +1074,16 @@ function MyPortfolio(props: any) {
       bribesClaimData,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Claim bribes $${localStorage.getItem(CLAIM)} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -1070,7 +1143,16 @@ function MyPortfolio(props: any) {
       feeClaimData,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Claim trading fees $${localStorage.getItem(CLAIM)} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -1132,7 +1214,16 @@ function MyPortfolio(props: any) {
       feeClaimData,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Claim all lock rewards submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -1193,7 +1284,16 @@ function MyPortfolio(props: any) {
       epochClaimData[selectednft.tokenId][epochClaim],
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Claim lock rewards for <Epoch ${localStorage.getItem(CLAIM)} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -1256,7 +1356,16 @@ function MyPortfolio(props: any) {
       inflationData,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Claim inflation ${localStorage.getItem(CLAIM)} PLY submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -1321,7 +1430,15 @@ function MyPortfolio(props: any) {
       inflationData,
       transactionSubmitModal,
       resetAllValues,
-      setShowConfirmTransaction
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Claim all emissions, inflation, fees and bribes`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);

@@ -174,7 +174,19 @@ export function Staking(props: IStakingProps) {
       props.tokenOut.name,
       undefined,
       undefined,
-      undefined
+      undefined,
+      boost ? boost?.stakedData?.gaugeAddress : undefined,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: ` Detach # ${localStorage.getItem(
+          FIRST_TOKEN_AMOUNT
+        )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool submitted
+        `,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
     ).then((response) => {
       if (response.success) {
         setTimeout(() => {
@@ -354,7 +366,7 @@ export function Staking(props: IStakingProps) {
       <div className="border mt-4 rounded-2xl flex flex-col justify-between items-center pr-2 py-1.5 border-border-500 bg-card-300 ">
         {Number(props.stakedToken) > 0 ? (
           <>
-            <div className="flex justify-between">
+            <div className="flex w-full justify-between">
               <div className="flex gap-1 md:gap-2 items-center pl-2 md:pl-4">
                 <CircularImageInfo imageArray={[props.tokenIn.image, props.tokenOut.image]} />
                 <span className="font-body2 md:text-f14 text-white ">

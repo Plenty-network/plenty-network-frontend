@@ -177,7 +177,22 @@ function SwapTab(props: ISwapTabProps) {
       recepientAddress,
       transactionSubmitModal,
       props.resetAllValues,
-      !expertMode && props.setShowConfirmTransaction
+      !expertMode && props.setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+          TOKEN_A
+        )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(
+          TOKEN_B
+        )} submitted`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        onClick: () => {
+          window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+        },
+        transactionId: transactionId,
+      }
     ).then((response) => {
       if (response.success) {
         props.setBalanceUpdate(true);
