@@ -5,6 +5,8 @@ import { dappClient, voteEscrowAddress } from '../common/walletconnect';
 import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 import { TokenVariant } from '../config/types';
 import { store } from '../redux';
+import { setFlashMessage } from '../redux/flashMessage';
+import { IFlashMessageProps } from '../redux/flashMessage/type';
 import {
   IOperationsResponse,
   TResetAllValues,
@@ -231,6 +233,7 @@ export const stakePnlpTokensV1 = async (
  * @param transactionSubmitModal - Callback to open modal when transaction is submiited
  * @param resetAllValues - Callback to reset values when transaction is submitted
  * @param setShowConfirmTransaction - Callback to show transaction confirmed
+ * @param flashMessageContent - Content for the flash message object(optional)
  */
  export const stakePnlpTokens = async (
   tokenOneSymbol: string,
@@ -241,7 +244,8 @@ export const stakePnlpTokensV1 = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  setActiveState: TSetActiveState | undefined
+  setActiveState: TSetActiveState | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const state = store.getState();
@@ -377,6 +381,9 @@ export const stakePnlpTokensV1 = async (
       transactionSubmitModal(batchOperation.opHash as string);
     setActiveState && setActiveState(ActiveLiquidity.Rewards);
     resetAllValues && resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
     await batchOperation.confirmation();
     return {
       success: true,

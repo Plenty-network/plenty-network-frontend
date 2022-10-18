@@ -13,6 +13,7 @@ import {
 } from "./types";
 import { setFlashMessage } from "../redux/flashMessage";
 import { Flashtype } from "../components/FlashScreen";
+import { IFlashMessageProps } from "../redux/flashMessage/type";
 
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,
@@ -22,7 +23,8 @@ export const allSwapWrapper = async (
   recipent: string,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     let res;
@@ -37,7 +39,8 @@ export const allSwapWrapper = async (
         caller,
         transactionSubmitModal,
         resetAllValues,
-        setShowConfirmTransaction
+        setShowConfirmTransaction,
+        flashMessageContent
       );
     } else {
       // routerSwap
@@ -49,7 +52,8 @@ export const allSwapWrapper = async (
         tokenInAmount,
         transactionSubmitModal,
         resetAllValues,
-        setShowConfirmTransaction
+        setShowConfirmTransaction,
+        flashMessageContent
       );
     }
     return {
@@ -76,7 +80,8 @@ export const directSwapWrapper = async (
   caller: string,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     let res;
@@ -89,7 +94,8 @@ export const directSwapWrapper = async (
         tokenInAmount,
         transactionSubmitModal,
         resetAllValues,
-        setShowConfirmTransaction
+        setShowConfirmTransaction,
+        flashMessageContent
       );
     } else if (tokenIn === "ctez" && tokenOut === "tez") {
       res = await ctez_to_tez(
@@ -100,7 +106,8 @@ export const directSwapWrapper = async (
         tokenInAmount,
         transactionSubmitModal,
         resetAllValues,
-        setShowConfirmTransaction
+        setShowConfirmTransaction,
+        flashMessageContent
       );
     } else {
       res = await swapTokens(
@@ -112,7 +119,8 @@ export const directSwapWrapper = async (
         caller,
         transactionSubmitModal,
         resetAllValues,
-        setShowConfirmTransaction
+        setShowConfirmTransaction,
+        flashMessageContent
       );
     }
     return {
@@ -139,7 +147,8 @@ const swapTokens = async (
   caller: string,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -225,6 +234,9 @@ const swapTokens = async (
 
     transactionSubmitModal(batchOperation.opHash);
     resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
     const opHash = await batchOperation.confirmation();
 
     return {
@@ -248,7 +260,8 @@ async function ctez_to_tez(
   tokenInAmount: BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -293,6 +306,9 @@ async function ctez_to_tez(
     setShowConfirmTransaction && setShowConfirmTransaction(false);
 
     transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
     resetAllValues();
     await batchOp.confirmation();
 
@@ -317,7 +333,8 @@ async function tez_to_ctez(
   tokenInAmount: BigNumber,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -355,6 +372,9 @@ async function tez_to_ctez(
 
     transactionSubmitModal(batchOp.opHash);
     resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
     // dispatch(
     //   setFlashMessage({
     //     flashType: Flashtype.Success,

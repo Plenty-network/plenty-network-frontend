@@ -15,13 +15,17 @@ import {
   IClaimInflationOperationData,
 } from "../api/portfolio/types";
 import { getMaxPossibleBatchArray, getMaxPossibleBatchArrayV2 } from "../api/util/operations";
+import { IFlashMessageProps } from "../redux/flashMessage/type";
+import { store } from "../redux";
+import { setFlashMessage } from "../redux/flashMessage";
 
 export const vote = async (
   id: number,
   votes: IVotes[],
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -46,6 +50,9 @@ export const vote = async (
     resetAllValues();
 
     transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -70,7 +77,8 @@ export const claimBribe = async (
   amm: string,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -93,6 +101,9 @@ export const claimBribe = async (
     resetAllValues();
 
     transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -114,7 +125,8 @@ export const claimAllBribeForAllLocks = async (
   bribeData: IAllBribesOperationData[],
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -145,6 +157,9 @@ export const claimAllBribeForAllLocks = async (
     resetAllValues && resetAllValues();
 
     transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -259,7 +274,8 @@ export const claimAllFeeForAllLocks = async (
   feeData: IAllClaimableFeesData[],
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -289,6 +305,9 @@ export const claimAllFeeForAllLocks = async (
     resetAllValues && resetAllValues();
 
     transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -311,7 +330,8 @@ export const claimAllRewardsForAllLocks = async (
   feeData: IAllClaimableFeesData[],
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -351,6 +371,9 @@ export const claimAllRewardsForAllLocks = async (
     resetAllValues && resetAllValues();
 
     transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -372,7 +395,8 @@ export const claimAllForEpoch = async (
   { tokenId, epoch, bribeData, feeData }: IAllEpochClaimData,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -409,6 +433,9 @@ export const claimAllForEpoch = async (
     resetAllValues && resetAllValues();
 
     transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
@@ -433,7 +460,8 @@ export const claimSupernova = async (
   inflationData: IClaimInflationOperationData[],
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -491,6 +519,9 @@ export const claimSupernova = async (
     resetAllValues && resetAllValues();
 
     transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
 
     await batchOp.confirmation();
     return {
