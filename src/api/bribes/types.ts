@@ -29,6 +29,11 @@ export interface IGroupedData{
   value : number[];
 }
 
+export interface IPreProcessedMap{
+  value : BigNumber;
+  price : number;
+}
+
 export interface IUserBribeDataResponse {
   success: boolean;
   userBribesData: IUserBribeData[];
