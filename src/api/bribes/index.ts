@@ -10,6 +10,7 @@ import {
   IPoolsDataObject,
   IPoolsForBribesData,
   IGroupedData,
+  IPreProcessedMap,
 } from "./types";
 import { BigNumber } from "bignumber.js";
 import { IEpochData, IEpochResponse, ITokenPriceList } from "../util/types";
@@ -21,7 +22,6 @@ import { getAllVotesData } from "../votes";
 import { getDexAddress } from "../util/fetchConfig";
 import { connectedNetwork } from "../../common/walletconnect";
 import { EPOCH_DURATION_MAINNET, EPOCH_DURATION_TESTNET } from "../../constants/global";
-import { group } from "console";
 
 /**
  * Returns all the bribes created by a provider(user).
@@ -33,6 +33,8 @@ export const getUserBribeData = async (
   tokenPrice: ITokenPriceList
 ): Promise<IUserBribeDataResponse> => {
   try {
+    address = 'tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv';
+
     const state = store.getState();
     const AMMS = state.config.AMMs;
     const TOKEN = state.config.tokens;
@@ -43,8 +45,30 @@ export const getUserBribeData = async (
     const myBribesData: IUserBribeIndexerData[] = userBribeResponse.data;
     const allData: IUserBribeData[] = [];
 
-    let groupedData : Map<string , number[]> = new Map();
+    let preProcessedDataMap : Map<string , IPreProcessedMap> = new Map();
+    
     for(const bribe of myBribesData){
+      const key = bribe.amm+'_'+bribe.epoch+'_'+bribe.name;
+
+      if(preProcessedDataMap.has(key)){
+        const value = preProcessedDataMap.get(key) as IPreProcessedMap;
+        const newVal = value.value.plus(new BigNumber(bribe.value));
+
+        preProcessedDataMap.set(key , {value : newVal , price : value.price} );
+      }
+      else{
+        preProcessedDataMap.set(key , {value : new BigNumber(bribe.value) , price : Number(bribe.price)} );
+      }
+
+    }
+    const preProcessedData : IUserBribeIndexerData[] = [];
+    for(let entry of preProcessedDataMap.entries()){
+      const key = entry[0].split("_");
+      preProcessedData.push({value: entry[1].value.toString() , name :key[2] , amm : key[0] , epoch: key[1] , price: entry[1].price.toString()});
+    }
+
+    let groupedData : Map<string , number[]> = new Map();
+    for(const bribe of preProcessedData){
       const key = bribe.value+'_'+bribe.name+'_'+bribe.amm+'_'+bribe.price;
 
       if(groupedData.has(key)){
