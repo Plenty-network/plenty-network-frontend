@@ -89,6 +89,7 @@ import { fetchTvlStatsData } from "../../src/redux/myPortfolio/tvl";
 import { fetchVotesStatsData } from "../../src/redux/myPortfolio/votesStats";
 import { VideoModal } from "../../src/components/Modal/videoModal";
 import { isMobile } from "react-device-detect";
+import { PortfolioDropdown } from "../../src/components/PortfolioSection";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -111,8 +112,6 @@ function MyPortfolio(props: any) {
   //tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv kiran
 
   const dispatch = useDispatch<AppDispatch>();
-
-  // const [showClaimAllPly, setShowClaimAllPly] = React.useState(false);
   const token = useAppSelector((state) => state.config.tokens);
   const inflationData = store.getState().portfolioRewards.claimAllInflationData;
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
@@ -529,36 +528,40 @@ function MyPortfolio(props: any) {
             <Image alt={"alt"} src={rewards} />
           )}
         </p>
-        <p className="ml-2">
-          <ToolTip
-            classNameToolTipContainer={isMobile ? `playIconTooltip-left` : `playIconTooltip-right`}
-            position={isMobile ? Position.left : Position.right}
-            toolTipChild={
-              props.toolTipContent ? (
-                <p className="">{props.toolTipContent}</p>
-              ) : (
-                <p className="w-[200px] md:min-w-[320px]">
-                  Watch how to add liquidity, stake, and earn PLY
-                </p>
-              )
-            }
-            classNameAncorToolTip="pushtoCenter"
-            isShowInnitially={
-              userAddress !== null && localStorage.getItem("myportfolio") !== userAddress
-            }
-          >
-            <Image
-              src={playIcon}
-              onClick={() => setShowVideoModal(true)}
-              height={"28px"}
-              width={"28px"}
-              className="cursor-pointer hover:opacity-90"
-            />
-          </ToolTip>
-        </p>
       </div>
     );
   }, [activeSection]);
+  const Tooltip = useMemo(() => {
+    return (
+      <p className="ml-2">
+        <ToolTip
+          classNameToolTipContainer={isMobile ? `playIconTooltip-left` : `playIconTooltip-right`}
+          position={isMobile ? Position.bottom : Position.right}
+          toolTipChild={
+            props.toolTipContent ? (
+              <p className="">{props.toolTipContent}</p>
+            ) : (
+              <p className="w-[200px] md:min-w-[320px]">
+                Watch how to add liquidity, stake, and earn PLY
+              </p>
+            )
+          }
+          classNameAncorToolTip="pushtoCenter"
+          isShowInnitially={
+            userAddress !== null && localStorage.getItem("myportfolio") !== userAddress
+          }
+        >
+          <Image
+            src={playIcon}
+            onClick={() => setShowVideoModal(true)}
+            height={"28px"}
+            width={"28px"}
+            className="cursor-pointer hover:opacity-90"
+          />
+        </ToolTip>
+      </p>
+    );
+  }, []);
   const handleWithdrawOperation = () => {
     setContentTransaction(`Withdraw ${manageData.baseValue.toFixed(2)} PLY`);
     setShowWithdraw(false);
@@ -859,7 +862,6 @@ function MyPortfolio(props: any) {
       }
     });
   };
-
   const IncreaseLockEndOperation = () => {
     setIsManageLock(false);
     setContentTransaction(`Increase lock`);
@@ -1497,8 +1499,17 @@ function MyPortfolio(props: any) {
       <SideBarHOC>
         <div>
           <div className="pt-5 md:px-[24px] px-2">
-            <div className="flex">
-              {Title}
+            <div className="flex items-center">
+              {isMobile ? (
+                <PortfolioDropdown
+                  Options={["Positions", "Rewards"]}
+                  onClick={setActiveSection}
+                  selectedText={activeSection}
+                />
+              ) : (
+                Title
+              )}
+              {Tooltip}
               {activeSection === MyPortfolioSection.Rewards && (
                 <div className="ml-auto ">
                   <ToolTip
