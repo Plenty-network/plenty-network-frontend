@@ -1,11 +1,18 @@
-import { getDexAddress } from '../api/util/fetchConfig';
-import { store } from '../redux';
-import { BigNumber } from 'bignumber.js';
-import { TokenVariant } from '../config/types';
-import { OpKind } from '@taquito/taquito';
-import { routerSwap } from './router';
-import { dappClient } from '../common/walletconnect';
-import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShowConfirmTransaction } from './types';
+import { getDexAddress } from "../api/util/fetchConfig";
+import { store, useAppDispatch } from "../redux";
+import { BigNumber } from "bignumber.js";
+import { TokenVariant } from "../config/types";
+import { OpKind } from "@taquito/taquito";
+import { routerSwap } from "./router";
+import { dappClient, dispatch } from "../common/walletconnect";
+import {
+  IOperationsResponse,
+  TResetAllValues,
+  TTransactionSubmitModal,
+  TSetShowConfirmTransaction,
+} from "./types";
+import { setFlashMessage } from "../redux/flashMessage";
+import { Flashtype } from "../components/FlashScreen";
 
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,
@@ -15,7 +22,7 @@ export const allSwapWrapper = async (
   recipent: string,
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  setShowConfirmTransaction: TSetShowConfirmTransaction
 ): Promise<IOperationsResponse> => {
   try {
     let res;
@@ -50,7 +57,7 @@ export const allSwapWrapper = async (
       operationId: res.operationId ?? undefined,
       error: res.error ?? undefined,
     };
-  } catch (error : any) {
+  } catch (error: any) {
     console.log(error);
     return {
       success: false,
@@ -73,7 +80,7 @@ export const directSwapWrapper = async (
 ): Promise<IOperationsResponse> => {
   try {
     let res;
-    if (tokenIn === 'tez' && tokenOut === 'ctez') {
+    if (tokenIn === "tez" && tokenOut === "ctez") {
       res = await tez_to_ctez(
         tokenIn,
         tokenOut,
@@ -84,7 +91,7 @@ export const directSwapWrapper = async (
         resetAllValues,
         setShowConfirmTransaction
       );
-    } else if (tokenIn === 'ctez' && tokenOut === 'tez') {
+    } else if (tokenIn === "ctez" && tokenOut === "tez") {
       res = await ctez_to_tez(
         tokenIn,
         tokenOut,
@@ -113,7 +120,7 @@ export const directSwapWrapper = async (
       operationId: res.operationId ?? undefined,
       error: res.error ?? undefined,
     };
-  } catch (error : any) {
+  } catch (error: any) {
     console.log(error);
     return {
       success: false,
@@ -133,12 +140,12 @@ const swapTokens = async (
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
   setShowConfirmTransaction: TSetShowConfirmTransaction
-) : Promise<IOperationsResponse> => {
+): Promise<IOperationsResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
     if (!WALLET_RESP.success) {
-      throw new Error('Wallet connection failed');
+      throw new Error("Wallet connection failed");
     }
 
     const state = store.getState();
@@ -154,25 +161,17 @@ const swapTokens = async (
     const Tezos = await dappClient().tezos();
     const tokenInAddress = TOKEN_IN.address as string;
     const tokenInInstance: any = await Tezos.contract.at(tokenInAddress);
-    const dexContractInstance: any = await Tezos.contract.at(
-      dexContractAddress
-    );
+    const dexContractInstance: any = await Tezos.contract.at(dexContractAddress);
 
-    tokenInAmount = tokenInAmount.multipliedBy(
-      new BigNumber(10).pow(TOKEN_IN.decimals)
-    );
-    minimumTokenOut = minimumTokenOut.multipliedBy(
-      new BigNumber(10).pow(TOKEN_OUT.decimals)
-    );
+    tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN_IN.decimals));
+    minimumTokenOut = minimumTokenOut.multipliedBy(new BigNumber(10).pow(TOKEN_OUT.decimals));
 
     let batch = null;
     // Approve call for FA1.2 type token
     if (TOKEN_IN.variant === TokenVariant.FA12) {
       batch = Tezos.wallet
         .batch()
-        .withContractCall(
-          tokenInInstance.methods.approve(dexContractAddress, tokenInAmount)
-        )
+        .withContractCall(tokenInInstance.methods.approve(dexContractAddress, tokenInAmount))
         .withContractCall(
           dexContractInstance.methods.Swap(
             minimumTokenOut.toString(),
@@ -232,11 +231,11 @@ const swapTokens = async (
       success: true,
       operationId: batchOperation.opHash,
     };
-  } catch (error : any) {
+  } catch (error: any) {
     console.log(error);
     return {
       success: false,
-      error : error.message,
+      error: error.message,
     };
   }
 };
@@ -250,12 +249,12 @@ async function ctez_to_tez(
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
   setShowConfirmTransaction: TSetShowConfirmTransaction
-) : Promise<IOperationsResponse> {
+): Promise<IOperationsResponse> {
   try {
     const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
     if (!WALLET_RESP.success) {
-      throw new Error('Wallet connection failed');
+      throw new Error("Wallet connection failed");
     }
     const state = store.getState();
     const TOKEN = state.config.standard;
@@ -273,19 +272,13 @@ async function ctez_to_tez(
       .withContractCall(
         ctez_contract.methods.approve(
           contractAddress,
-          tokenInAmount
-            .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
-            .toString()
+          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString()
         )
       )
       .withContractCall(
         contract.methods.ctez_to_tez(
-          tokenInAmount
-            .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
-            .toString(),
-          minimumTokenOut
-            .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
-            .toString(),
+          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString(),
+          minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString(),
           recipent
         )
       )
@@ -293,8 +286,8 @@ async function ctez_to_tez(
     const batchOp: any = await batch.send();
     {
       batchOp.opHash === null
-        ? console.log('operation getting injected')
-        : console.log('operation injected');
+        ? console.log("operation getting injected")
+        : console.log("operation injected");
     }
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
@@ -307,11 +300,11 @@ async function ctez_to_tez(
       success: true,
       operationId: batchOp.opHash,
     };
-  } catch (error : any) {
+  } catch (error: any) {
     console.log(error);
     return {
       success: false,
-      error : error.message,
+      error: error.message,
     };
   }
 }
@@ -325,12 +318,12 @@ async function tez_to_ctez(
   transactionSubmitModal: TTransactionSubmitModal,
   resetAllValues: TResetAllValues,
   setShowConfirmTransaction: TSetShowConfirmTransaction
-) : Promise<IOperationsResponse> {
+): Promise<IOperationsResponse> {
   try {
     const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
     if (!WALLET_RESP.success) {
-      throw new Error('Wallet connection failed');
+      throw new Error("Wallet connection failed");
     }
 
     const contractAddress = getDexAddress(tokenIn, tokenOut);
@@ -344,16 +337,12 @@ async function tez_to_ctez(
         kind: OpKind.TRANSACTION,
         ...contract.methods
           .tez_to_ctez(
-            minimumTokenOut
-              .multipliedBy(new BigNumber(10).pow(tokenOutDecimals))
-              .toString(),
+            minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenOutDecimals)).toString(),
             recipent
           )
           .toTransferParams({
             amount: Number(
-              tokenInAmount
-                .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
-                .toString()
+              tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString()
             ),
             mutez: true,
           }),
@@ -366,16 +355,26 @@ async function tez_to_ctez(
 
     transactionSubmitModal(batchOp.opHash);
     resetAllValues();
+    // dispatch(
+    //   setFlashMessage({
+    //     flashType: Flashtype.Success,
+    //     headerText: "Success",
+    //     trailingText: `Swap confirmed`,
+    //     linkText: "View in Explorer",
+    //     isLoading: true,
+    //     transactionId: "",
+    //   })
+    // );
     await batchOp.confirmation();
 
     return {
       success: true,
       operationId: batchOp.opHash,
     };
-  } catch (error : any) {
+  } catch (error: any) {
     return {
       success: false,
-      error : error.message,
+      error: error.message,
     };
   }
 }

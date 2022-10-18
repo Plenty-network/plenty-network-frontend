@@ -192,7 +192,7 @@ export function Staking(props: IStakingProps) {
               transactionId: "",
             })
           );
-        }, 6000);
+        }, 2000);
       } else {
         dispatch(
           setFlashMessage({

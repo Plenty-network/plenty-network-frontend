@@ -158,7 +158,7 @@ function Swap(props: ISwapProps) {
             isLoadingfirst: false,
             isLoadingSecond: false,
           };
-
+          console.log(res, isSwitchClicked.current, tokenIn.name, tokenOut.name);
           allPath.current = res.paths;
           if (allPath.current.length !== 0) {
             setAllPathState(res.paths);
@@ -195,6 +195,7 @@ function Swap(props: ISwapProps) {
             !isSwitchClicked.current && handleSwapTokenInput(firstTokenAmount, "tokenIn");
           }
           allPaths(tokenOut.name, tokenIn.name, enableMultiHop).then((res) => {
+            console.log(res, isSwitchClicked.current, tokenIn.name, tokenOut.name);
             allPath1.current = res.paths;
             if (allPath1.current.length !== 0) {
               setAllPathState(res.paths);
@@ -209,17 +210,6 @@ function Swap(props: ISwapProps) {
       });
     }
   }, [tokenIn, tokenOut, tokenType, enableMultiHop, tokenPrice, isSwitchClicked.current]);
-  const countDecimals = function (input: number) {
-    if (Math.floor(input) === input.valueOf()) return 0;
-
-    var str = input.toString();
-    if (str.indexOf(".") !== -1 && str.indexOf("-") !== -1) {
-      return str.split("-")[1] || 0;
-    } else if (str.indexOf(".") !== -1) {
-      return str.split(".")[1].length || 0;
-    }
-    return str.split("-")[1] || 0;
-  };
 
   const handleSwapTokenInput = (input: string | number, tokenType: "tokenIn" | "tokenOut") => {
     var flag = 1;
@@ -501,15 +491,15 @@ function Swap(props: ISwapProps) {
             exchangeRate: new BigNumber(0),
           };
           setAllPathState([]);
-          const res = computeReverseCalculationWrapper(
-            allPath1.current,
+
+          const res = computeAllPathsWrapper(
+            allPath.current,
             new BigNumber(inputValue),
             new BigNumber(slippage),
-            allPathSwapData1.current,
-            tokenPrice,
-            allPath.current,
-            allPathSwapData.current
+            allPathSwapData.current,
+            tokenPrice
           );
+          console.log(res.finalMinimumTokenOut.toString());
 
           routeDetails.current = {
             minimumOut: res.finalMinimumTokenOut,
@@ -532,7 +522,7 @@ function Swap(props: ISwapProps) {
             isLoadingSecond: false,
             isLoadingfirst: false,
           };
-        }, 1000);
+        }, 2000);
     } else if (Object.keys(tokenOut).length === 0) {
       loading.current = {
         isLoadingfirst: false,
