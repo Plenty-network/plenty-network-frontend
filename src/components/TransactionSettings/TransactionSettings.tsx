@@ -78,6 +78,12 @@ function TransactionSettings(props: ITransactionSettingsProps) {
 
   const handleAutoSlippage = () => {
     props.setSlippage(0.5);
+    dispatch(
+      setUserSettingsSlippage({
+        address: walletAddress,
+        slippage: 0.5,
+      })
+    );
   };
   useOutsideClick(refSetting, () => {
     props.setSettingsShow(false);
