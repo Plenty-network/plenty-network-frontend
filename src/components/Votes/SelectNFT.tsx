@@ -11,21 +11,18 @@ function SelectNFT(props: ISelectNFT) {
     <div className="md:flex md:items-center mr-3">
       <div className="hidden md:block text-white font-body1 px-[23px]">Select your veNFT:</div>
       <div>
-        {props.veNFTlist.length === 0 ? (
-          <VeNFT
-            title={props.veNFTlist.length === 0 ? "No veNFT available" : "No NFTs selected"}
-            Options={props.veNFTlist}
-            selectedText={props.selectedText}
-            onClick={props.setSelectedDropDown}
-          />
-        ) : (
-          <VeNFT
-            title="No NFTs selected"
-            Options={props.veNFTlist}
-            selectedText={props.selectedText}
-            onClick={props.setSelectedDropDown}
-          />
-        )}
+        <VeNFT
+          title={
+            props.isfetching
+              ? "loading..."
+              : props.veNFTlist.length === 0
+              ? "No veNFT available"
+              : "No NFTs selected"
+          }
+          Options={props.veNFTlist}
+          selectedText={props.selectedText}
+          onClick={props.setSelectedDropDown}
+        />
       </div>
     </div>
   );

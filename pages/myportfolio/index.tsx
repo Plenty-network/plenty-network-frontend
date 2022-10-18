@@ -2,7 +2,7 @@ import Image from "next/image";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { BigNumber } from "bignumber.js";
-
+import "animate.css";
 import playIcon from "../../src/assets/icon/pools/playIcon.svg";
 import { useEffect, useState, useRef, useMemo, useLayoutEffect, useCallback } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
@@ -112,7 +112,9 @@ function MyPortfolio(props: any) {
   //tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv kiran
 
   const dispatch = useDispatch<AppDispatch>();
+
   const token = useAppSelector((state) => state.config.tokens);
+  const scrollY = useAppSelector((state) => state.walletLoading.scrollY);
   const inflationData = store.getState().portfolioRewards.claimAllInflationData;
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
@@ -1494,27 +1496,27 @@ function MyPortfolio(props: any) {
     });
   };
 
-  // const [y, setY] = useState(window.scrollY);
-  // const handleNavigation = useCallback(
-  //   (e: any) => {
-  //     const window = e.currentTarget;
-  //     if (y > window.scrollY) {
-  //       console.log("pp", "scrolling up");
-  //     } else if (y < window.scrollY) {
-  //       console.log("pp", "scrolling down");
-  //     }
-  //     setY(window.scrollY);
-  //   },
-  //   [y]
-  // );
-  // useEffect(() => {
-  //   window.addEventListener("scroll", (e) => handleNavigation(e));
+  const [y, setY] = useState(window.scrollY);
+  const handleNavigation = useCallback(
+    (e: any) => {
+      const window = e.currentTarget;
+      if (y > window.scrollY) {
+        console.log("pp", "scrolling up");
+      } else if (y < window.scrollY) {
+        console.log("pp", "scrolling down");
+      }
+      setY(window.scrollY);
+    },
+    [y]
+  );
+  useEffect(() => {
+    window.addEventListener("scroll", (e) => handleNavigation(e));
 
-  //   return () => {
-  //     // return a cleanup function to unregister our function since its gonna run multiple times
-  //     window.removeEventListener("scroll", (e) => handleNavigation(e));
-  //   };
-  // }, [y]);
+    return () => {
+      // return a cleanup function to unregister our function since its gonna run multiple times
+      window.removeEventListener("scroll", (e) => handleNavigation(e));
+    };
+  }, [y]);
 
   return (
     <>
@@ -1623,18 +1625,18 @@ function MyPortfolio(props: any) {
                 />
               ) : (
                 <>
-                  <div className="flex md:px-[25px] px-4 bg-sideBar sticky top-[90px] mt-5">
+                  <div className="flex z-10 md:px-[25px] px-4 bg-sideBar sticky top-[58px] pt-5">
                     <p>
                       <div className="text-white font-title3">List of my PLY emissions</div>
                       <div className="text-text-250 font-body1">
                         Claim voting rewards for your locks
                       </div>
                     </p>
-                    {true && (
+                    {(isMobile ? scrollY > 100 : scrollY > 150) && (
                       <p
                         id="backToTop"
                         className={clsx(
-                          " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center",
+                          " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center animate__animated animate__zoomIn animate__faster",
                           poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
                             ? "cursor-not-allowed"
                             : "cursor-pointer"
@@ -1701,10 +1703,10 @@ function MyPortfolio(props: any) {
                         Claim voting rewards for your locks
                       </div>
                     </p>
-                    {true && (
+                    {(isMobile ? scrollY > 100 : scrollY > 150) && (
                       <p
                         className={clsx(
-                          " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center",
+                          " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center animate__animated animate__zoomIn animate__faster",
                           bribesClaimData.length === 0 || feeClaimData.length === 0
                             ? "cursor-not-allowed"
                             : "cursor-pointer"
