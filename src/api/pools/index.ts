@@ -82,7 +82,6 @@ export const poolsDataWrapper = async (
         tokenA: AMM.token1.symbol,
         tokenB: AMM.token2.symbol,
         poolType: AMM.type,
-
         apr:
           poolData.apr != 'NaN'
             ? new BigNumber(poolData.apr)
