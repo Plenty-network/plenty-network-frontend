@@ -15,6 +15,7 @@ import { fetchWallet } from "../../src/redux/wallet/wallet";
 import info from "../../src/assets/icon/pools/InfoBlue.svg";
 import close from "../../src/assets/icon/pools/closeBlue.svg";
 import Image from "next/image";
+import { USERADDRESS } from "../../src/constants/localStorage";
 export interface IIndexProps {}
 export enum AMM_TYPE {
   VOLATILE = "VOLATILE",
@@ -49,7 +50,7 @@ export default function Pools(props: IIndexProps) {
   }, []);
   useEffect(() => {
     if (walletAddress) {
-      localStorage.setItem("pool", walletAddress);
+      localStorage.setItem(USERADDRESS, walletAddress);
       dispatch(getTotalVotingPower());
     }
   }, [walletAddress]);
@@ -79,7 +80,7 @@ export default function Pools(props: IIndexProps) {
             toolTipContent="Watch how to add liquidity, stake, and earn PLY. "
             searchValue={searchValue}
             setSearchValue={setSearchValue}
-            isFirst={walletAddress !== null && localStorage.getItem("pool") !== walletAddress}
+            isFirst={walletAddress !== null && localStorage.getItem(USERADDRESS) !== walletAddress}
           />
           <div className="sticky top-0 z-10">
             <CardHeader
