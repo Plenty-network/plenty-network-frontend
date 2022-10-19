@@ -17,14 +17,22 @@ function ConfirmLocking(props: IConfirmLockingProps) {
   const closeModal = () => {
     props.setShow(false);
   };
+  // const dateFormat = useMemo(() => {
+  //   var date = new Date(epochData.endTimestamp);
+  //   return `${("0" + date.getUTCDate()).slice(-2)}/${("0" + (date.getUTCMonth() + 1)).slice(
+  //     -2
+  //   )}/${date.getUTCFullYear()}, ${("0" + date.getUTCHours()).slice(-2)}:${(
+  //     "0" + date.getUTCMinutes()
+  //   ).slice(-2)}`;
+  // }, [epochData.endTimestamp]);
   const dateFormat = useMemo(() => {
-    var date = new Date(epochData.endTimestamp);
+    var date = epochData ? new Date(epochData.endTimestamp) : new Date();
     return `${("0" + date.getUTCDate()).slice(-2)}/${("0" + (date.getUTCMonth() + 1)).slice(
       -2
     )}/${date.getUTCFullYear()}, ${("0" + date.getUTCHours()).slice(-2)}:${(
       "0" + date.getUTCMinutes()
     ).slice(-2)}`;
-  }, [epochData.endTimestamp]);
+  }, [epochData]);
 
   return (
     <>
