@@ -154,7 +154,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         accessor: (x: any) => <StakePercentage value={x.stakedPercentage} />,
       },
       {
-        Header: "your APR",
+        Header: "Your APR",
         id: "your APR",
         columnWidth: "w-[124px]",
         tooltipMessage: "Annual percentage rate of return on your staked position.",

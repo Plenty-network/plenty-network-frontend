@@ -35,7 +35,7 @@ function Stats(props: IStatsProps) {
         value={nFormatter(new BigNumber(props.stats1?.totalEpochVotingPower))}
       />
       <StatsCard
-        toolTipMessage={"Total amount PLY locked as vote escrow.s"}
+        toolTipMessage={"Total amount PLY locked as vote escrows."}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"Total locked"}
         isLoading={props.stats1.isFetching && Number(props.stats1?.totalPlyLocked) === 0}
