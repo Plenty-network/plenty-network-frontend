@@ -37,16 +37,8 @@ export const poolsDataWrapper = async (
       axios.get(`${Config.PLY_INDEXER}ve/pools`),
     ]);
 
-    // const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
-    // const poolsResponse = await axios.get(
-    //   'https://62d80fa990883139358a3999.mockapi.io/api/v1/ve'
-    // );
     const poolsData: VolumeV1Data[] = poolsResponse.data;
 
-    // const analyticsResponse = await axios.get(`${Config.PLY_INDEXER}ve/pools`);
-    // const analyticsResponse = await axios.get(
-    //   'https://62d80fa990883139358a3999.mockapi.io/api/v1/config'
-    // );
     const analyticsData: VolumeVeData[] = analyticsResponse.data;
     
     const analyticsDataObject: IAnalyticsDataObject = analyticsData.reduce(
@@ -138,36 +130,6 @@ export const poolsDataWrapper = async (
     return {
       success: false,
       allData: {},
-    };
-  }
-};
-
-const getAnalyticsObject = (
-  ammAddress: string,
-  analyticsData: VolumeVeData[]
-): VolumeVeData => {
-  try {
-    let analyticsObject: VolumeVeData | undefined;
-
-    for (var poolData of analyticsData) {
-      if (poolData.pool === ammAddress) {
-        analyticsObject = poolData;
-        break;
-      }
-    }
-
-    if (analyticsObject) return analyticsObject;
-    else throw new Error('No Analytics Data Available');
-  } catch (error) {
-    console.log(error);
-    return {
-      pool: '',
-      volume24H: { value: '0', token1: '0', token2: '0' },
-      volume7D: { value: '0', token1: '0', token2: '0' },
-      fees24H: { value: '0', token1: '0', token2: '0' },
-      fees7D: { value: '0', token1: '0', token2: '0' },
-      feesEpoch: { value: '0', token1: '0', token2: '0' },
-      tvl: { value: '0', token1: '0', token2: '0' },
     };
   }
 };
