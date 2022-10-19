@@ -73,7 +73,13 @@ import ClaimPly from "../../src/components/PoolsRewards/ClaimPopup";
 import { EClaimAllState } from "../../src/components/Rewards/types";
 import { setFlashMessage } from "../../src/redux/flashMessage";
 import { Flashtype } from "../../src/components/FlashScreen";
-import { CLAIM, FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_ID } from "../../src/constants/localStorage";
+import {
+  CLAIM,
+  FIRST_TOKEN_AMOUNT,
+  TOKEN_A,
+  TOKEN_ID,
+  USERADDRESS,
+} from "../../src/constants/localStorage";
 import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
 import { getPoolsRewardsData, getPositionsData } from "../../src/api/portfolio/pools";
 import { fetchTvlStatsData } from "../../src/redux/myPortfolio/tvl";
@@ -305,18 +311,9 @@ function MyPortfolio(props: any) {
   };
   useEffect(() => {
     if (userAddress) {
-      //setStatsPosition({} as ITvlStatsResponse);
-      // setPoolsPosition({ data: [] as IPositionsData[], isfetched: true });
       setPoolsRewards({ data: {} as IPoolsRewardsResponse, isfetched: false });
 
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
-        // getTvlStatsData(userAddress, tokenPrice, lpTokenPrice).then((res) => {
-        //   setStatsPosition({
-        //     success: true,
-        //     tvl: res,
-        //     isFetching: false,
-        //   });
-        // });
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
           setPoolsPosition({ data: res.positionPoolsData, isfetched: true });
         });
@@ -365,7 +362,6 @@ function MyPortfolio(props: any) {
       setLocksPosition({ data: [] as IAllLocksPositionData[], isfetched: false });
 
       dispatch(fetchVotesStatsData(userAddress));
-      //setStatsPosition({} as IPositionStatsResponse);
       setPoolsPosition({ data: [] as IPositionsData[], isfetched: false });
       getAllLocksPositionData(userAddress).then((res) => {
         setLocksPosition({ data: res.allLocksData.reverse(), isfetched: true });
@@ -488,8 +484,8 @@ function MyPortfolio(props: any) {
   };
   useEffect(() => {
     if (userAddress) {
-      if (!(localStorage.getItem("myportfolio") === userAddress)) {
-        localStorage.setItem("myportfolio", userAddress);
+      if (!(localStorage.getItem(USERADDRESS) === userAddress)) {
+        localStorage.setItem(USERADDRESS, userAddress);
       }
     }
   }, [userAddress]);
@@ -549,7 +545,7 @@ function MyPortfolio(props: any) {
           }
           classNameAncorToolTip="pushtoCenter"
           isShowInnitially={
-            userAddress !== null && localStorage.getItem("myportfolio") !== userAddress
+            userAddress !== null && localStorage.getItem(USERADDRESS) !== userAddress
           }
         >
           <Image

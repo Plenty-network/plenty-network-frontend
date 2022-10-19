@@ -24,7 +24,7 @@ import EpochPopup from "../../src/components/Votes/EpochPopup";
 import SelectNFT from "../../src/components/Votes/SelectNFT";
 import { VotesTable } from "../../src/components/Votes/VotesTable";
 import VotingAllocation from "../../src/components/Votes/VotingAllocation";
-import { FIRST_TOKEN_AMOUNT, TOKEN_A } from "../../src/constants/localStorage";
+import { FIRST_TOKEN_AMOUNT, TOKEN_A, USERADDRESS } from "../../src/constants/localStorage";
 import { useInterval } from "../../src/hooks/useInterval";
 import { createLock } from "../../src/operations/locks";
 import { IVotes } from "../../src/operations/types";
@@ -128,8 +128,8 @@ export default function Vote() {
     });
   }, []);
   useEffect(() => {
-    if (!(localStorage.getItem("vote") === userAddress)) {
-      localStorage.setItem("vote", userAddress);
+    if (!(localStorage.getItem(USERADDRESS) === userAddress)) {
+      localStorage.setItem(USERADDRESS, userAddress);
     }
   }, []);
   useEffect(() => {
@@ -488,7 +488,7 @@ export default function Vote() {
               handleCreateLock={handleCreateLock}
               searchValue={searchValue}
               setSearchValue={setSearchValue}
-              isFirst={userAddress !== null && localStorage.getItem("vote") !== userAddress}
+              isFirst={userAddress !== null && localStorage.getItem(USERADDRESS) !== userAddress}
             />
 
             <div className="">
