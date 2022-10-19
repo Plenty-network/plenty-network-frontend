@@ -158,7 +158,6 @@ function Swap(props: ISwapProps) {
             isLoadingfirst: false,
             isLoadingSecond: false,
           };
-          console.log(res, isSwitchClicked.current, tokenIn.name, tokenOut.name);
           allPath.current = res.paths;
           if (allPath.current.length !== 0) {
             setAllPathState(res.paths);
@@ -195,7 +194,6 @@ function Swap(props: ISwapProps) {
             !isSwitchClicked.current && handleSwapTokenInput(firstTokenAmount, "tokenIn");
           }
           allPaths(tokenOut.name, tokenIn.name, enableMultiHop).then((res) => {
-            console.log(res, isSwitchClicked.current, tokenIn.name, tokenOut.name);
             allPath1.current = res.paths;
             if (allPath1.current.length !== 0) {
               setAllPathState(res.paths);
@@ -499,7 +497,6 @@ function Swap(props: ISwapProps) {
             allPathSwapData.current,
             tokenPrice
           );
-          console.log(res.finalMinimumTokenOut.toString());
 
           routeDetails.current = {
             minimumOut: res.finalMinimumTokenOut,

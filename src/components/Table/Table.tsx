@@ -21,7 +21,7 @@ export function SimmerEffect(props: ISimmerEffectProps) {
         .map((_, i) => (
           <tr
             key={`simmerEffect_${i}`}
-            className={` border border-borderCommon h-16 bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg animate-pulse `}
+            className={` border border-borderCommon h-16 bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg animate-pulse-table `}
           ></tr>
         ))}
     </>

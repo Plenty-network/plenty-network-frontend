@@ -34,7 +34,6 @@ export function SideBarHOC(props: ISideBarHOCProps) {
 
   const dispatch = useDispatch<AppDispatch>();
   const onScroll = (e: any) => {
-    console.log("iiiiiiii", e.target.scrollTop);
     dispatch(setScrollY(e.target.scrollTop));
   };
   const [showNodeSelector, setNodeSelector] = useState(false);

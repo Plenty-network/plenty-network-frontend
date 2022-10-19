@@ -844,3 +844,20 @@
 	        animation: slide-out-blurred-top 0.45s cubic-bezier(0.755, 0.050, 0.855, 0.060) both;
 }
 /* end of fadding flash */
+.animate-pulse-table {
+	animation: tableLoading 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes tableLoading{
+0% {
+	-webkit-transform: scale3d(1, 1, 1);
+	transform: scale3d(1, 1, 1);
+}
+50% {
+	-webkit-transform: scale3d(1.05, 1.05, 1.05);
+	transform: scale3d(0.99, 0.90, 0.9);
+}
+100% {
+	-webkit-transform: scale3d(1, 1, 1);
+	transform: scale3d(1, 1, 1);
+}
+}

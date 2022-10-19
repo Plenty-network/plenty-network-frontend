@@ -34,7 +34,6 @@ export function SingleNotification(props: ISingleNotificationProps) {
     }
     return info;
   };
-  console.log(props);
   return (
     <div
       className="flex p-4 gap-4 border-b cursor-pointer border-muted-236/40 bg-primary-900 hover:bg-primary-257"
@@ -59,11 +58,13 @@ export function SingleNotification(props: ISingleNotificationProps) {
 
         <div className="text-text-241 flex items-center">
           {props.trailingText}
-          {props.transactionId && props.transactionId !== "" && (
-            <span className="ml-2 relative top-0.5">
-              <Image height={14} width={14} src={openInNewTab} />
-            </span>
-          )}
+          {props.flashType === Flashtype.Success &&
+            props.transactionId &&
+            props.transactionId !== "" && (
+              <span className="ml-2 relative top-0.5">
+                <Image height={14} width={14} src={openInNewTab} />
+              </span>
+            )}
         </div>
       </div>
     </div>
