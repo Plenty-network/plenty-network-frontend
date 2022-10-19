@@ -49,13 +49,15 @@ export function LocksTableRewards(props: IVotesTableRewards) {
     }
   }, [props.selectedDropDown.tokenId]);
   const NoData = React.useMemo(() => {
-    return (
-      <NoPoolsPosition
-        h1={"No voting rewards"}
-        subText={"Your veNFT does not have unclaimed voting rewards."}
-        cta={"Vote"}
-      />
-    );
+    if (isFetched && newArr.length === 0) {
+      return (
+        <NoPoolsPosition
+          h1={"No voting rewards"}
+          subText={"Your veNFT does not have unclaimed voting rewards."}
+          cta={"Vote"}
+        />
+      );
+    }
   }, [props.selectedDropDown.tokenId, newArr]);
   React.useMemo(() => {
     votesArray.reverse().map((data, index) => {

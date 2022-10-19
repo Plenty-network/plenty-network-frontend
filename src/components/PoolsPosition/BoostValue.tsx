@@ -17,11 +17,13 @@ export function BoostValue(props: IYourLiquidityProps) {
           <div
             className={clsx(
               "font-body4  ",
-              Number(props.value) > 0 && Number(props.value) < 2.5 ? "text-blue-100" : "text-white"
+              Number(props.value) > 0 && Number(props.value) === 2.5
+                ? "text-blue-100"
+                : "text-white"
             )}
           >
             {Number(props.value) > 0 ? `${props.value.toFixed(1)}x` : "-"}
-            {Number(props.value) > 0 && Number(props.value) < 2.5 && (
+            {Number(props.value) > 0 && Number(props.value) === 2.5 && (
               <span className="relative top-1">
                 <Image alt={"alt"} src={arrow} />
               </span>

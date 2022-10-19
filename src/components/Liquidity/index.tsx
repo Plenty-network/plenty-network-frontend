@@ -16,6 +16,7 @@ import { AppDispatch, useAppSelector } from "../../redux";
 import { ISwapData, tokenParameterLiquidity } from "./types";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 interface ILiquidityProps {
   firstTokenAmount: string | number;
@@ -200,9 +201,15 @@ function Liquidity(props: ILiquidityProps) {
           {Number(props.pnlpBalance) > 0 ? (
             <>
               <div className="flex cursor-pointer">
-                <span>
-                  <Image alt={"alt"} src={info} width={"14px"} height={"14px"} />
-                </span>
+                <ToolTip
+                  id="tooltipM"
+                  position={Position.top}
+                  toolTipChild={<div className="">LP tokens in your wallet</div>}
+                >
+                  <span>
+                    <Image alt={"alt"} src={info} width={"14px"} height={"14px"} />
+                  </span>
+                </ToolTip>
                 <span className="font-subtitle1 relative top-[1.5px] ml-2">Your position</span>
               </div>
 

@@ -1,6 +1,6 @@
-import { PopUpModal } from '../Modal/popupModal';
-import loader from '../../assets/animations/loader.json';
-import Lottie from 'lottie-react';
+import { PopUpModal } from "../Modal/popupModal";
+import loader from "../../assets/animations/loader.json";
+import Lottie from "lottie-react";
 
 interface IConfirmTransactionProps {
   show: boolean;
@@ -13,14 +13,14 @@ function ConfirmTransaction(props: IConfirmTransactionProps) {
   };
 
   return props.show ? (
-    <PopUpModal title="Confirm Transaction" onhide={closeModal}>
+    <PopUpModal title="Confirm transaction" onhide={closeModal}>
       {
         <>
           <div className="flex justify-center mt-10">
             <Lottie
               animationData={loader}
               loop={true}
-              style={{ height: '150px', width: '150px' }}
+              style={{ height: "150px", width: "150px" }}
             />
           </div>
           <div className="mt-11 border border-border-100/[0.4] rounded-2xl bg-secondary-100/[0.02] flex justify-center items-center h-[52px] font-subtitle4">

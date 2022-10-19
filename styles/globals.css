@@ -59,10 +59,10 @@ body {
   background: #341e54; 
 }
 .swap::-webkit-scrollbar-track-piece:end {
-  margin-right: 150px; 
+  margin-right: 120px; 
 }
 .swap::-webkit-scrollbar-track-piece:start {
-  margin-left: 150px;
+  margin-left: 120px;
 }
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
