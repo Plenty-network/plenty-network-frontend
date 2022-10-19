@@ -229,7 +229,7 @@ export const votesPageDataWrapper = async (
     // const AMMS = state.config.AMMs;
     console.log(`epoch:${epoch}, tokenId:${tokenId}`);
     // TODO: Remove this get call
-    const AMMResponse = await axios.get("https://config.plentydefi.com/v1/config/amm");
+    const AMMResponse = await axios.get("https://config.plenty.network/v1/config/amm");
     const AMMS: IAmmContracts = AMMResponse.data;
 
     const [rewardData, votesData] = await Promise.all([
