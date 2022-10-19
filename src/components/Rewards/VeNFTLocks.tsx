@@ -23,9 +23,10 @@ export interface IDropdownProps {
 
 export function VeNFTLocks(props: IDropdownProps) {
   const epochData = store.getState().epoch.currentEpoch;
-  const totalTime = epochData.endTimestamp - epochData.startTimestamp;
-  const remainingTime = epochData.endTimestamp - new Date().getTime();
-  const remainingPercentage = (remainingTime * 100) / totalTime;
+  const totalTime = epochData ? epochData.endTimestamp - epochData.startTimestamp : 0;
+  const remainingTime = epochData ? epochData.endTimestamp - new Date().getTime() : 0;
+  const remainingPercentage =
+    totalTime === 0 || remainingTime === 0 ? (remainingTime * 100) / totalTime : 0;
 
   // currentTS = new Date().getTime() if epoch start and end TS are in milliseconds or Math.floor(new Date().getTime() /1000)
   //const props.selectedText = store.getState().veNFT.props.selectedText;
