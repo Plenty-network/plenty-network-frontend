@@ -11,18 +11,20 @@ export const initialState: IFlashMessageProps = {
   onClick: () => {},
   transactionId: "",
 };
+
 const flashMessages = createSlice({
   name: "flashMessage",
   initialState,
   reducers: {
     setFlashMessage: (state, action: { type: any; payload: IFlashMessageProps }) => {
+      console.log(action.payload.transactionId);
       state.isLoading = action.payload.isLoading;
       state.flashType = action.payload.flashType;
+      state.transactionId = action.payload.transactionId;
       state.headerText = action.payload.headerText;
       state.trailingText = action.payload.trailingText;
       state.linkText = action.payload.linkText;
       state.onClick = action.payload.onClick;
-      state.transactionId = action.payload.transactionId;
     },
     unsetFlashMessage: (state) => {
       state.isLoading = false;

@@ -189,7 +189,7 @@ function SwapTab(props: ISwapTabProps) {
         onClick: () => {
           window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
         },
-        transactionId: transactionId,
+        transactionId: "",
       }
     ).then((response) => {
       if (response.success) {
