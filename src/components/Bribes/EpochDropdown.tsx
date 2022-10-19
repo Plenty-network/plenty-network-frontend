@@ -2,7 +2,7 @@ import Image from "next/image";
 import * as React from "react";
 import clsx from "clsx";
 import { isMobile } from "react-device-detect";
-import arrow from "../../assets/icon/vote/arrowNFT.svg";
+import arrow from "../../assets/icon/common/vector.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { IEpochListObject } from "../../api/util/types";
 
@@ -92,10 +92,10 @@ export function EpochDropdown(props: IDropdownProps) {
           )}
         </p>
         {!props.isDisabled && (
-          <p className="ml-auto relative top-1">
+          <p className="ml-auto relative -top-0">
             <Image
               src={arrow}
-              className={!isDropDownActive ? "rotate-0 ml-auto" : "rotate-180 ml-auto"}
+              className={isDropDownActive ? "rotate-0 ml-auto" : "rotate-180 ml-auto"}
             />
           </p>
         )}

@@ -2,7 +2,7 @@ import Image from "next/image";
 import * as React from "react";
 import clsx from "clsx";
 
-import arrow from "../../assets/icon/vote/arrowNFT.svg";
+import arrow from "../../assets/icon/common/vector.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 
 export interface IDropdownProps {
@@ -46,10 +46,10 @@ export function Dropdown(props: IDropdownProps) {
             </>
           )}
         </p>
-        <p className="ml-auto relative top-1">
+        <p className="ml-auto relative -top-0">
           <Image
             src={arrow}
-            className={!isDropDownActive ? "rotate-0 ml-auto" : "rotate-180 ml-auto"}
+            className={isDropDownActive ? "rotate-0 ml-auto" : "rotate-180 ml-auto"}
           />
         </p>
       </div>

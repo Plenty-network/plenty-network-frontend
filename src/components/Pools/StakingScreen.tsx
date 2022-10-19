@@ -273,21 +273,6 @@ export function Staking(props: IStakingProps) {
             <p className="text-f16 text-white relative -top-0.5">Stake Liquidity</p>
           </div>
         </div>
-        {/* dropDown And InfoTab */}
-        <div className="flex py-2 px-2 rounded-2xl md:px-2.5 justify-between bg-primary-850 border border-secondary-300">
-          <VePLY
-            Options={props.vePLYOptions}
-            selectedText={props.selectedDropDown}
-            onClick={props.setSelectedDropDown}
-            isListLoading={props.isListLoading}
-          />
-
-          <div className="font-mobile-f9 md:text-f12 text-text-400 ml-2 max-w-[321px] text-center">
-            Based on how much voting power the veNFT has, you may be able to boost your PLY rewards
-            up to 2.5x
-          </div>
-        </div>
-        {/* End of dropDown info */}
 
         {/* Start Of text and btn */}
         <div className="flex justify-between items-center py-2 md:px-4">
@@ -332,7 +317,6 @@ export function Staking(props: IStakingProps) {
           </div>
         </div>
         {/* end of text and btn */}
-
         {/* Start of Wallet app section */}
         <div className="border flex  items-center bg-muted-200/10 border-border-500/50 rounded-2xl">
           <div className=" flex flex-col py-3.5 px-4 flex-auto w-0">
@@ -356,6 +340,21 @@ export function Staking(props: IStakingProps) {
           )}
         </div>
         {/* end of Waller app section */}
+        {/* dropDown And InfoTab */}
+        <div className="flex py-2 px-2 rounded-2xl md:px-2.5 justify-between bg-primary-850 border border-secondary-300">
+          <VePLY
+            Options={props.vePLYOptions}
+            selectedText={props.selectedDropDown}
+            onClick={props.setSelectedDropDown}
+            isListLoading={props.isListLoading}
+          />
+
+          <div className="font-mobile-f9 md:text-f12 text-text-400 ml-2 max-w-[321px] text-center">
+            Based on how much voting power the veNFT has, you may be able to boost your PLY rewards
+            up to 2.5x
+          </div>
+        </div>
+        {/* End of dropDown info */}
       </div>
       {/* Button Stake */}
       {stakeButton}

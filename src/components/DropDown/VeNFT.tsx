@@ -3,7 +3,8 @@ import * as React from "react";
 import clsx from "clsx";
 
 import lighting from "../../assets/icon/vote/lighting.svg";
-import arrow from "../../assets/icon/vote/arrowNFT.svg";
+
+import arrow from "../../assets/icon/common/vector.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { ELocksState, IVeNFTData } from "../../api/votes/types";
 import { useDispatch } from "react-redux";
@@ -96,9 +97,9 @@ export function VeNFT(props: IDropdownProps) {
         </p>
         <Image
           src={arrow}
-          width={"18px"}
-          height={"18px"}
-          className={!isDropDownActive ? "rotate-0" : "rotate-180"}
+          width={"12px"}
+          height={"12px"}
+          className={isDropDownActive ? "rotate-0" : "rotate-180"}
         />
       </div>
       {isDropDownActive && props.Options.length > 0 && (
