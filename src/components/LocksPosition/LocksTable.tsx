@@ -30,10 +30,11 @@ TimeAgo.addDefaultLocale(en);
 export function LocksTablePosition(props: ILocksTablePosition) {
   const epochData = store.getState().epoch.currentEpoch;
   const userAddress = store.getState().wallet.address;
-  const totalTime = epochData.endTimestamp - epochData.startTimestamp;
-  const remainingTime = epochData.endTimestamp - new Date().getTime();
+  const totalTime = epochData ? epochData.endTimestamp - epochData.startTimestamp : 0;
+  const remainingTime = epochData ? epochData.endTimestamp - new Date().getTime() : 0;
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
-  const remainingPercentage = (remainingTime * 100) / totalTime;
+  const remainingPercentage =
+    totalTime === 0 || remainingTime === 0 ? (remainingTime * 100) / totalTime : 0;
   const { valueFormat } = useTableNumberUtils();
   useEffect(() => {
     getVeNFTsList(userAddress, epochData?.epochNumber).then((res) => {
