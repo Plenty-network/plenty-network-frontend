@@ -2,7 +2,7 @@ import Image from "next/image";
 import * as React from "react";
 import clsx from "clsx";
 
-import arrow from "../../assets/icon/vote/arrowNFT.svg";
+import arrow from "../../assets/icon/common/vector.svg";
 import Rewards from "../../assets/icon/myPortfolio/rewards.svg";
 import Positions from "../../assets/icon/myPortfolio/positions.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
@@ -56,10 +56,10 @@ export function PortfolioDropdown(props: IDropdownProps) {
             </span>
           )}
         </p>
-        <p className="ml-auto relative top-1.5">
+        <p className="ml-auto relative top-1">
           <Image
             src={arrow}
-            className={!isDropDownActive ? "rotate-0 ml-auto" : "rotate-180 ml-auto"}
+            className={isDropDownActive ? "rotate-0 ml-auto" : "rotate-180 ml-auto"}
           />
         </p>
       </div>

@@ -41,7 +41,7 @@ function CastVote(props: ICastVoteProps) {
             <div className="cursor-pointer" onClick={() => props.setShow(false)}>
               <Image alt={"alt"} src={arrowLeft} />
             </div>
-            <div className="mx-2 text-white font-title3">Cast Vote </div>
+            <div className="mx-2 text-white font-title3">Cast vote </div>
             {/* <div className="relative top-[2px]">
               <Image alt={'alt'} src={info} />
             </div> */}

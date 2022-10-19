@@ -74,10 +74,10 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
           </button>
           {showMenu && (
             <div className="absolute w-[320px] fade-in-3  right-0 top-[55px] mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
-              <p className="bg-primary-755 text-f14 p-4 flex gap-2">
+              {/* <p className="bg-primary-755 text-f14 p-4 flex gap-2">
                 <span className="text-text-400">Temple wallet</span>(
                 <span className="text-text-50">{truncateMiddle(userAddress, 4, 4, "...")}</span>)
-              </p>
+              </p> */}
               <p
                 className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
                 onClick={() => copy(userAddress)}
