@@ -51,7 +51,7 @@ export function RewardsScreen(props: IRewardsProps) {
     } else if (Number(props.rewardToken) === 0) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          No Rewards yet
+          No rewards yet
         </Button>
       );
     } else {

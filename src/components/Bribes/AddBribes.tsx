@@ -71,6 +71,19 @@ function AddBribes(props: IAddBribes) {
       props.setBribeInputValue(input.toString());
     }
   };
+  function nFormatter(num: BigNumber) {
+    if (num.isGreaterThanOrEqualTo(1000000000)) {
+      return num.dividedBy(1000000000).toFixed(2) + "B";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000)) {
+      return num.dividedBy(1000000).toFixed(2) + "M";
+    }
+    if (num.isGreaterThanOrEqualTo(1000)) {
+      return num.dividedBy(1000).toFixed(2) + "K";
+    }
+
+    return num.toFixed(2);
+  }
 
   const dateFormat = (dates: number) => {
     const monthNames = [
@@ -416,7 +429,12 @@ function AddBribes(props: IAddBribes) {
                     </span>
                   </div>
                   <div className="ml-auto font-body4 text-white flex items-center">
-                    <Image src={drop} />${props.selectedPool.liquidity.toFixed(2)}
+                    <Image src={drop} />$
+                    {Number(props.selectedPool.liquidity) > 0
+                      ? props.selectedPool.liquidity.isLessThan(0.01)
+                        ? "<0.01"
+                        : nFormatter(props.selectedPool.liquidity)
+                      : "0"}
                   </div>
                 </div>
                 {bottomValue > 0 && (
