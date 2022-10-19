@@ -24,9 +24,14 @@ export function BoostValue(props: IYourLiquidityProps) {
           >
             {Number(props.value) > 0 ? `${props.value.toFixed(1)}x` : "-"}
             {Number(props.value) > 0 && Number(props.value) === 2.5 && (
-              <span className="relative top-1">
-                <Image alt={"alt"} src={arrow} />
-              </span>
+              <ToolTip
+                position={Position.top}
+                toolTipChild={<div className="text-center">Max boost</div>}
+              >
+                <span className="relative top-1">
+                  <Image alt={"alt"} src={arrow} />
+                </span>
+              </ToolTip>
             )}
           </div>
         </ToolTip>

@@ -73,10 +73,12 @@ export function TopNavBar(props: ITopNavBarProps) {
                     <IconBTN image={"verticalline.svg"} />
                   </div>
                 )}
-                <NotificationIcon
-                  className="cursor-pointer hover:opacity-90"
-                  onClick={props.setShowNotification}
-                />
+                {userAddress && (
+                  <NotificationIcon
+                    className="cursor-pointer hover:opacity-90"
+                    onClick={props.setShowNotification}
+                  />
+                )}
               </div>
               <ConnectWalletBtnDeskTop setNodeSelector={props.setNodeSelector} />
             </div>
