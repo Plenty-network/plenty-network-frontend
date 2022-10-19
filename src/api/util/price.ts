@@ -105,7 +105,7 @@ export const getTokenPrices = async (): Promise<{
     const tokenPriceResponse = pricesResponse.data;
     const ctezPrice = await getCtezPrice();
     const uDEFIPrice = await getuDEFIPrice();
-    const agEurePrice = await getagEURePrice();
+    // const agEurePrice = await getagEURePrice();
     const xtzPrice = await getXtzDollarPrice();
 
     const tokenPrice: { [id: string]: number } = {};
@@ -160,7 +160,7 @@ export const getTokenPrices = async (): Promise<{
     }
     tokenPrice['ctez'] = ctezPrice.ctezPriceInUSD;
     tokenPrice['uDEFI'] = uDEFIPrice.uDEFIinUSD;
-    tokenPrice['agEUR.e'] = agEurePrice.agEUReInUSD;
+    // tokenPrice['agEUR.e'] = agEurePrice.agEUReInUSD;
     tokenPrice['tez'] = xtzPrice;
 
     // Hardcoding PLY Price for development
