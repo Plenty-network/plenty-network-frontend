@@ -7,6 +7,7 @@ import {
 import { IVeNFTData } from "../../api/votes/types";
 export interface IStatsProps {}
 export interface IStatsCardProps {
+  isLoading: boolean;
   tooltipWidth?: string;
   toolTipMessage: string;
   setClaimValueDollar: React.Dispatch<React.SetStateAction<BigNumber>>;
@@ -22,6 +23,7 @@ export interface IStatsCardProps {
   state: EClaimAllState;
 }
 export interface IStatsRewardsProps {
+  fetchingUnclaimedInflationData: boolean;
   fetchingPly: boolean;
   fetchingTradingfee: boolean;
   unclaimInflation: IUnclaimedInflationData;

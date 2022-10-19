@@ -170,6 +170,9 @@ function MyPortfolio(props: any) {
   const statsTvlFetching: boolean = useAppSelector(
     (state) => state.portfolioStatsTvl.userTvlFetching
   );
+  const fetchingUnclaimedInflationData: boolean = useAppSelector(
+    (state) => state.portfolioRewards.fetchingUnclaimedInflationData
+  );
   const statsTotalEpochVotingPower: BigNumber = useAppSelector(
     (state) => state.portfolioStatsVotes.totalEpochVotingPower
   );
@@ -384,6 +387,11 @@ function MyPortfolio(props: any) {
   }, [props.operationSuccesful, props.isLoading, userAddress]);
   useEffect(() => {
     if (claimOperation) {
+      if (Object.keys(tokenPrice).length !== 0) {
+        getPoolsRewardsData(userAddress, tokenPrice).then((res) => {
+          setPoolsRewards({ data: res, isfetched: true });
+        });
+      }
       dispatch(
         fetchAllLocksRewardsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
@@ -628,7 +636,7 @@ function MyPortfolio(props: any) {
     });
   };
   const handleWithdrawClaimOperation = () => {
-    setContentTransaction(`Withdraw and Claim ${manageData.baseValue.toFixed(2)} PLY`);
+    setContentTransaction(`Claim and withdraw ${manageData.baseValue.toFixed(2)} PLY`);
     setShowWithdraw(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -652,7 +660,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Withdraw and claim lock #${localStorage.getItem(TOKEN_ID)}`,
+        trailingText: `Claim and withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -667,7 +675,7 @@ function MyPortfolio(props: any) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Withdraw and claim lock #${localStorage.getItem(TOKEN_ID)}`,
+              trailingText: `Claim and withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -701,7 +709,7 @@ function MyPortfolio(props: any) {
           setFlashMessage({
             flashType: Flashtype.Rejected,
             headerText: "Rejected",
-            trailingText: `Withdraw and claim lock #${localStorage.getItem(TOKEN_ID)}`,
+            trailingText: `Claim and withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
             linkText: "",
             isLoading: true,
             transactionId: "",
@@ -1274,6 +1282,7 @@ function MyPortfolio(props: any) {
   const handleClaimALLEpoch = () => {
     setContentTransaction(`Claim lock rewards for <Epoch ${epochClaim}`);
     setShowClaimPly(false);
+
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     localStorage.setItem(CLAIM, epochClaim.toString());
@@ -1458,7 +1467,13 @@ function MyPortfolio(props: any) {
         }, 6000);
         setTimeout(() => {
           setClaimOperation(false);
-        }, 20000);
+        }, 9000);
+        setTimeout(() => {
+          setClaimOperation(true);
+        }, 10000);
+        setTimeout(() => {
+          setClaimOperation(false);
+        }, 30000);
 
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -1572,6 +1587,7 @@ function MyPortfolio(props: any) {
                   bribesClaimData={bribesClaimData}
                   feeClaimData={feeClaimData}
                   unclaimInflation={unclaimInflation}
+                  fetchingUnclaimedInflationData={fetchingUnclaimedInflationData}
                 />
               )}
             </div>
@@ -1708,6 +1724,7 @@ function MyPortfolio(props: any) {
                   <LocksTableRewards
                     className="md:px-5 md:pb-4   "
                     allLocksRewardsData={allLocksRewardsData}
+                    isFetching={fetchingTradingfee}
                     selectedDropDown={selectednft}
                     handleClick={handleClaimALLEpoch}
                     setShowCreateLockModal={setShowCreateLockModal}

@@ -717,7 +717,7 @@ function SwapTab(props: ISwapTabProps) {
                       <div
                         className={clsx(
                           swapRoute && swapRoute?.length > 3
-                            ? "w-[360px] md:w-[460px]"
+                            ? "w-[360px] md:w-[500px]"
                             : "w-[360px] md:w-[400px]"
                         )}
                       >
@@ -1004,7 +1004,7 @@ function SwapTab(props: ISwapTabProps) {
                 </div>
               ) : (
                 <div className="">
-                  <div className="swap overflow-x-auto min-w-[305px] md:min-w-[338px]">
+                  <div className="swap overflow-x-auto pb-2 min-w-[305px] md:min-w-[338px]">
                     <div className="border-dashed relative top-[24px]   border-t-2 border-muted-50 mx-2"></div>
                     <div className="mt-2 flex justify-between ">
                       {swapRoute?.map((token, idx) => {

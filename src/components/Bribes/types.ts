@@ -4,6 +4,7 @@ import {
   IPoolsForBribesResponse,
   IUserBribeData,
 } from "../../api/bribes/types";
+import { Bribes } from "../../api/pools/types";
 import { IEpochListObject } from "../../api/util/types";
 import { tokenParameter } from "../../constants/swap";
 
@@ -92,4 +93,8 @@ export interface IBribeColProps {
   value: BigNumber;
 
   valuePerEpoch: BigNumber;
+}
+export interface IBribesPoolProps {
+  value: BigNumber;
+  bribesData: Bribes[];
 }
