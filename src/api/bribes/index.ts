@@ -282,7 +282,7 @@ export const getPoolsDataForBribes = async (
     // const state = store.getState();
     // const AMMS = state.config.AMMs;
     // console.log(`epoch:${epoch}, tokenId:${tokenId}`);
-    // TODO: Remove this get call  
+    // TODO: Remove this get call
     const AMMResponse = await axios.get("https://config.plenty.network/v1/config/amm");
     const AMMS: IAmmContracts = AMMResponse.data;
 
