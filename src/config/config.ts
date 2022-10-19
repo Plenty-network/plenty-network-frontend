@@ -3,10 +3,10 @@ import { NetworkType } from "@airgap/beacon-types";
 
 const Config: IConfig = {
   NAME: 'Plenty Network',
-  STANDARD_CONFIG : 'https://config.plentydefi.com/v1/config/token?type=standard' ,
-  LP_CONFIG : "https://config.plentydefi.com/v1/config/token?type=lp",
-  TOKENS_CONFIG : "https://config.plentydefi.com/v1/config/token",
-  AMM_CONFIG : 'https://config.plentydefi.com/v1/config/amm' ,
+  STANDARD_CONFIG : 'https://config.plenty.network/v1/config/token?type=standard' ,
+  LP_CONFIG : "https://config.plenty.network/v1/config/token?type=lp",
+  TOKENS_CONFIG : "https://config.plenty.network/v1/config/token",
+  AMM_CONFIG : 'https://config.plenty.network/v1/config/amm' ,
   API: {
     url: 'https://api.coingecko.com/api/v3/coins/tezos?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false',
     API_KEY: '4824FE50-DB6E-4316-B099-72283C964891',
@@ -37,8 +37,8 @@ const Config: IConfig = {
     testnet : 'KT1ArfQ6At3NhzMbiGwLzGtvekytjXq6Gy2G',
   },
 
-  VE_INDEXER : 'https://veplyindexer.plentydefi.com/v1/',
-  PLY_INDEXER : 'https://networkanalyticsindexer.plentydefi.com/',
+  VE_INDEXER : 'https://ply-indexer.ghostnet.plenty.network/v1/',
+  PLY_INDEXER : 'https://analytics-indexer.plenty.network/',
 
   FAUCET : 'KT1EsCTuMzG5oh7C2R6h3STuEJ3SAfjiVVpb',
 
