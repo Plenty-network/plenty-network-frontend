@@ -18,6 +18,7 @@ import { compareNumericString } from "../../utils/commonUtils";
 import { YourLiquidity } from "../PoolsPosition/YourLiquidity";
 import { VoteShare } from "./VoteShare";
 import { IPoolsForBribesData } from "../../api/bribes/types";
+import { BribesPool } from "./BribesPools";
 TimeAgo.addDefaultLocale(en);
 
 export function PoolsTableBribes(props: IPoolsTableBribes) {
@@ -99,7 +100,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "bribes"),
-        accessor: (x: any) => <YourLiquidity value={x.bribes} />,
+        accessor: (x: any) => <BribesPool value={x.bribes} bribesData={x.bribesData} />,
       },
       {
         Header: `Liquidity`,
@@ -195,7 +196,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "bribes"),
-        accessor: (x: any) => <YourLiquidity value={x.bribes} />,
+        accessor: (x: any) => <BribesPool value={x.bribes} bribesData={x.bribesData} />,
       },
       {
         Header: `Liquidity`,

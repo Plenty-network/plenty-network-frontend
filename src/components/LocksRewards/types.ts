@@ -7,6 +7,7 @@ import {
   ILocksRewardsTokenData,
 } from "../../api/portfolio/types";
 export interface IVotesTableRewards {
+  isFetching: boolean;
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
   epochClaim: string;
   setEpochClaim: React.Dispatch<React.SetStateAction<string>>;
