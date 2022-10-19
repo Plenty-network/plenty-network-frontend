@@ -1,7 +1,5 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
-import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-
 import { isMobile } from "react-device-detect";
 import drop from "../../../src/assets/icon/bribes/addBribes.svg";
 import checkViolet from "../../../src/assets/icon/bribes/checkViolet.svg";
@@ -17,8 +15,7 @@ import TokenDropdown from "../TokenDropdown/TokenDropdown";
 import { Chain } from "../../config/types";
 import TokenModal from "./TokenModal";
 import { BigNumber } from "bignumber.js";
-import { IAllBalanceResponse, IEpochDataResponse, IEpochListObject } from "../../api/util/types";
-import { getCompleteUserBalace } from "../../api/util/balance";
+import { IEpochDataResponse, IEpochListObject } from "../../api/util/types";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { tokensModal } from "../../constants/swap";
 import { getNextListOfEpochs } from "../../api/util/epoch";
@@ -32,19 +29,7 @@ function AddBribes(props: IAddBribes) {
   const tokenPrice = store.getState().tokenPrice.tokenPrice;
   const userAddress = store.getState().wallet.address;
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
-  // const [allBalance, setAllBalance] = useState<{
-  //   success: boolean;
-  //   userBalance: { [id: string]: BigNumber };
-  // }>({ success: false, userBalance: {} });
-  // useEffect(() => {
-  //   if (userAddress) {
-  //     getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-  //       setAllBalance(response);
-  //     });
-  //   } else {
-  //     setAllBalance({ success: false, userBalance: {} });
-  //   }
-  // }, [userAddress, tokens]);
+
   const [listofEpoch, setListofEpoch] = useState<IEpochDataResponse>({} as IEpochDataResponse);
   const [listofendEpoch, setListofendEpoch] = useState<IEpochListObject[]>(
     [] as IEpochListObject[]
@@ -172,7 +157,7 @@ function AddBribes(props: IAddBribes) {
       );
       for (let i = selectedDropDown.epochNumber; i <= selectedEndDropDown.epochNumber; i++) {
         // props.epochArray.push(i);
-        props.setEpochArray((prevArray: number[]) => ([...prevArray, i]));
+        props.setEpochArray((prevArray: number[]) => [...prevArray, i]);
       }
     } else {
       setBottomValue(0);

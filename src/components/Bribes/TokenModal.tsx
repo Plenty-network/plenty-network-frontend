@@ -1,14 +1,10 @@
 import { PopUpModal } from "../Modal/popupModal";
 import SearchBar from "../SearchBar/SearchBar";
 import Image from "next/image";
-import infogrey from "../../assets/icon/swap/info-grey.svg";
-import plenty from "../../assets/Tokens/plenty.png";
-import { tokenParameter, tokensModal, tokenType } from "../../constants/swap";
+import { tokenParameter, tokensModal } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
-import { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { topTokenListGhostnet, topTokensList } from "../../api/swap/wrappers";
 
 interface ISwapModalProps {
   tokens: tokensModal[];

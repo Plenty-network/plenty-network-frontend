@@ -11,13 +11,11 @@ import switchLogo from "../../assets/icon/navigation/copy.svg";
 import fiatLogo from "../../assets/icon/common/fiatLogo.svg";
 import nodeSelectorLogo from "../../assets/icon/common/nodeSelectorLogo.svg";
 import disconnectLogo from "../../assets/icon/common/disconnectLogo.svg";
-import { AppDispatch, store } from "../../redux/index";
 import { useAppDispatch, useAppSelector } from "../../redux/index";
 import { switchWallet, walletConnection, walletDisconnection } from "../../redux/wallet/wallet";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import NodeSelector from "../NodeSelector";
 
 export interface IConnectWalletBtnDeskTopProps {
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;

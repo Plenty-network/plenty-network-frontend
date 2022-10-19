@@ -1,48 +1,30 @@
 import * as React from "react";
 import Image from "next/image";
 import { Column } from "react-table";
-import { BigNumber } from "bignumber.js";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
-import { ELocksState, IVeNFTData, IVotePageData, IVotesData } from "../../api/votes/types";
+import { IVeNFTData } from "../../api/votes/types";
 import { IBribesBtn, IPoolsTableBribes } from "./types";
-import lockDisable from "../../assets/icon/myPortfolio/voteDisable.svg";
-import { tokenParameterLiquidity } from "../Liquidity/types";
-import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
-import { useDispatch } from "react-redux";
-import { AppDispatch, store } from "../../redux";
-import { setSelectedDropDown } from "../../redux/veNFT";
-import { useRouter } from "next/router";
-import { IAllLocksPositionData } from "../../api/portfolio/types";
 
-import { useEffect, useState, useRef } from "react";
+import { store } from "../../redux";
+import { useEffect, useState } from "react";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import { getVeNFTsList } from "../../api/votes";
-import { NoPoolsPosition } from "../Rewards/NoContent";
+
 import { compareNumericString } from "../../utils/commonUtils";
-import { NoLocks } from "../Rewards/NoLocks";
+
 import { YourLiquidity } from "../PoolsPosition/YourLiquidity";
 import { VoteShare } from "./VoteShare";
 import { IPoolsForBribesData } from "../../api/bribes/types";
 TimeAgo.addDefaultLocale(en);
 
 export function PoolsTableBribes(props: IPoolsTableBribes) {
-  const epochData = store.getState().epoch.currentEpoch;
   const userAddress = store.getState().wallet.address;
 
-  const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
-
   const { valueFormat } = useTableNumberUtils();
-  useEffect(() => {
-    getVeNFTsList(userAddress, epochData?.epochNumber).then((res) => {
-      setVeNFTlist(res.veNFTData);
-    });
-  }, []);
-  // const NoData = React.useMemo(() => {
-  //   return <NoLocks setShowCreateLockModal={props.setShowCreateLockModal} />;
-  // }, []);
+
   const [noSearchResult, setNoSearchResult] = React.useState(false);
   const [tabledata, setTabledata] = React.useState(props.locksPosition);
   React.useEffect(() => {

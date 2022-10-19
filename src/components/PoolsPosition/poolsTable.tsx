@@ -4,7 +4,6 @@ import { Column } from "react-table";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
-import { IVotePageData, IVotesData } from "../../api/votes/types";
 import { IManageBtnProps, IPoolsTablePosition } from "./types";
 import { ManageLiquidity } from "../Pools/ManageLiquidity";
 import { tokenParameterLiquidity } from "../Liquidity/types";
@@ -155,7 +154,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         accessor: (x: any) => <StakePercentage value={x.stakedPercentage} />,
       },
       {
-        Header: "your APR",
+        Header: "Your APR",
         id: "your APR",
         columnWidth: "w-[124px]",
         tooltipMessage: "Annual percentage rate of return on your staked position.",

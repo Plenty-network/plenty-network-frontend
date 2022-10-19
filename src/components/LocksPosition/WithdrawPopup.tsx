@@ -1,11 +1,9 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
-
 import infoblue from "../../assets/icon/myPortfolio/Info_fill.svg";
 import lock from "../../assets/icon/myPortfolio/purple_lock.svg";
 import { BigNumber } from "bignumber.js";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import info from "../../../src/assets/icon/common/infoIcon.svg";
 import ply from "../../assets/Tokens/ply.png";
 import Button from "../Button/Button";
 import { IUnclaimedRewardsForLockData } from "../../api/portfolio/types";

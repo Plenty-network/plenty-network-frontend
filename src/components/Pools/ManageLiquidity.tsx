@@ -762,9 +762,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           <>
             <div className="flex gap-1">
               <p className="text-white">
-                {props.activeState === ActiveLiquidity.Liquidity && "Manage Liquidity"}
-                {props.activeState === ActiveLiquidity.Staking && "Staking Liquidity"}
-                {props.activeState === ActiveLiquidity.Rewards && "Your positions & Rewards"}
+                {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
+                {props.activeState === ActiveLiquidity.Staking && "Stake liquidity"}
+                {props.activeState === ActiveLiquidity.Rewards && "Your positions & rewards"}
               </p>
               <p className="ml-1 relative top-[6px]">
                 <InfoIconToolTip
@@ -853,6 +853,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               tokenPrice={tokenPrice}
               pnlpEstimates={pnlpEstimates}
               sharePool={sharePool}
+              slippage={slippage}
               handleAddLiquidityOperation={handleAddLiquidityOperation}
             />
           </>

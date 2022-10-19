@@ -403,7 +403,7 @@ export function Staking(props: IStakingProps) {
             </div>
           </>
         ) : (
-          <div className="font-body2 text-white pl-4">No Staked positions</div>
+          <div className="font-body2 text-white pl-4">No staked positions</div>
         )}
       </div>
 

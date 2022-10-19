@@ -1,5 +1,4 @@
 import * as React from "react";
-import { BigNumber } from "bignumber.js";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IPLYEmissionProps } from "./types";
 

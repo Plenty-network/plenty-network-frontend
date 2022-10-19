@@ -1,9 +1,5 @@
-import { Dropdown } from "../DropDown/Dropdown";
-
-import { useEffect, useMemo, useRef, useState } from "react";
 import * as React from "react";
 import { ISelectNFT } from "./types";
-import { VeNFT } from "../DropDown/VeNFT";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { VeNFTLocks } from "./VeNFTLocks";
 

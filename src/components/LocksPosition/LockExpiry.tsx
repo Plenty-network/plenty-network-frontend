@@ -1,8 +1,7 @@
 import * as React from "react";
-import { BigNumber } from "bignumber.js";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { ILockExpiryProps, IPlyLockedProps } from "./types";
+import { ILockExpiryProps } from "./types";
 import ReactTimeAgo from "react-time-ago";
 
 export function LockExpiry(props: ILockExpiryProps) {

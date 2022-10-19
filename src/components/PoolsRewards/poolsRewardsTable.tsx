@@ -5,7 +5,6 @@ import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
 import { IPoolsTableRewards } from "./types";
-import ClaimPly from "./ClaimPopup";
 import { IPoolsRewardsData } from "../../api/portfolio/types";
 import { PLYEmission } from "./PLYEmisiion";
 import { Boost } from "./Boost";

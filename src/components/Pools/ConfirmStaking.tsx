@@ -1,9 +1,7 @@
 import clsx from "clsx";
 import Image from "next/image";
-
 import "animate.css";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { IVePLYData } from "../../api/stake/types";
@@ -35,17 +33,17 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
       </div>
       <div
         className={clsx(
-          "border rounded-2xl mt-[24px] border-text-800 bg-card-200  px-4 pb-5",
-          props.selectedDropDown.tokenId === "" ? "pt-[28px]" : ""
+          "border rounded-2xl mt-[10px] border-text-800 bg-card-200  px-4 pb-5",
+          props.selectedDropDown.tokenId === "" ? "pt-[20px]" : ""
         )}
       >
         <div
           className={clsx(
-            "flex pl-[5px] px-[10px] items-center",
+            "flex pl-[5px] px-[10px] items-center bg-primary-850 border border-secondary-300 rounded-2xl py-2",
             props.selectedDropDown.tokenId === "" ? "block" : "hidden"
           )}
         >
-          <div className="text-text-400 font-body1 w-[208px]">
+          <div className="text-text-400  font-body1 w-[208px]">
             Are you sure you want to continue without boosting your rewards?
           </div>
           <div className="ml-auto">

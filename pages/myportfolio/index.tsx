@@ -4,7 +4,7 @@ import * as React from "react";
 import { BigNumber } from "bignumber.js";
 import "animate.css";
 import playIcon from "../../src/assets/icon/pools/playIcon.svg";
-import { useEffect, useState, useRef, useMemo, useLayoutEffect, useCallback } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { connect, useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../src/redux";
@@ -20,21 +20,16 @@ import positionsViolet from "../../src/assets/icon/myPortfolio/positionsViolet.s
 import rewards from "../../src/assets/icon/myPortfolio/rewards.svg";
 import position from "../../src/assets/icon/myPortfolio/positions.svg";
 import Stats from "../../src/components/Positions/Stats";
-import {
-  Header,
-  MyPortfolioCardHeader,
-  MyPortfolioHeader,
-} from "../../src/components/Positions/Header";
+import { MyPortfolioCardHeader, MyPortfolioHeader } from "../../src/components/Positions/Header";
 import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTable";
-import { getVeNFTsList, votesPageDataWrapper } from "../../src/api/votes";
-import { ELocksState, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
-import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
-import { IAllBalanceResponse, ILpTokenPriceList, ITokenPriceList } from "../../src/api/util/types";
+import { getVeNFTsList } from "../../src/api/votes";
+import { IVeNFTData } from "../../src/api/votes/types";
+import { getUserBalanceByRpc } from "../../src/api/util/balance";
+
 import CreateLock from "../../src/components/Votes/CreateLock";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
 import TransactionSubmitted from "../../src/components/TransactionSubmitted";
 import {
-  claimAllAndWithdrawLock,
   claimAllInflation,
   createLock,
   increaseLockAndValue,
@@ -52,16 +47,12 @@ import {
   IAllLocksPositionData,
   IPoolsRewardsResponse,
   IPositionsData,
-  IPositionStatsResponse,
-  ITvlStatsResponse,
   IUnclaimedRewardsForLockData,
-  IVotesStatsDataResponse,
 } from "../../src/api/portfolio/types";
 import WithdrawPly from "../../src/components/LocksPosition/WithdrawPopup";
 import { setIsLoadingWallet } from "../../src/redux/walletLoading";
-import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
+
 import { LocksTableRewards } from "../../src/components/LocksRewards/LocksRewardsTable";
-import ClaimAll from "../../src/components/Rewards/ClaimAll";
 import { harvestAllRewards } from "../../src/operations/rewards";
 import {
   fetchAllLocksRewardsData,
@@ -1495,28 +1486,6 @@ function MyPortfolio(props: any) {
       }
     });
   };
-
-  const [y, setY] = useState(window.scrollY);
-  const handleNavigation = useCallback(
-    (e: any) => {
-      const window = e.currentTarget;
-      if (y > window.scrollY) {
-        console.log("pp", "scrolling up");
-      } else if (y < window.scrollY) {
-        console.log("pp", "scrolling down");
-      }
-      setY(window.scrollY);
-    },
-    [y]
-  );
-  useEffect(() => {
-    window.addEventListener("scroll", (e) => handleNavigation(e));
-
-    return () => {
-      // return a cleanup function to unregister our function since its gonna run multiple times
-      window.removeEventListener("scroll", (e) => handleNavigation(e));
-    };
-  }, [y]);
 
   return (
     <>

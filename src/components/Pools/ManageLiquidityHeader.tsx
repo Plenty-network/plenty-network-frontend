@@ -1,10 +1,9 @@
 import * as React from "react";
-import { text } from "stream/consumers";
 
 export interface IManageLiquidityHeaderProps {
-    activeStateTab:any, 
-    setActiveStateTab:Function,
-    className?:string,
+  activeStateTab: any;
+  setActiveStateTab: Function;
+  className?: string;
 }
 
 export interface ITabProps {
@@ -13,8 +12,7 @@ export interface ITabProps {
   onClick: Function;
 }
 
-const active =
-  "border border-primary-500 rounded-xl bg-primary-500/20 text-white";
+const active = "border border-primary-500 rounded-xl bg-primary-500/20 text-white";
 
 export function Tab(props: ITabProps) {
   const { isActive, text, onClick } = props;
@@ -30,24 +28,25 @@ export function Tab(props: ITabProps) {
   );
 }
 export enum ActiveLiquidity {
-  Liquidity='Liquidity',
-  Staking='Staking',
-  Rewards='Rewards',
+  Liquidity = "Liquidity",
+  Staking = "Staking",
+  Rewards = "Rewards",
 }
 export function ManageLiquidityHeader(props: IManageLiquidityHeaderProps) {
-  const {activeStateTab, setActiveStateTab}=props;
+  const { activeStateTab, setActiveStateTab } = props;
   const ListOfTabs = ["Liquidity", "Staking", "Rewards"];
   return (
-    <div className={`flex row justify-between text-text-400 text-f16 bg-muted-500 rounded-xl ${props.className}`}>
-      {
-         ListOfTabs.map((tab,i)=>
-         <Tab 
-         key={tab+i}
-         isActive={activeStateTab===tab}  
-         text={tab}
-         onClick={()=>setActiveStateTab(tab)}
-         />)
-     }
+    <div
+      className={`flex row justify-between text-text-400 text-f16 bg-muted-500 rounded-xl ${props.className}`}
+    >
+      {ListOfTabs.map((tab, i) => (
+        <Tab
+          key={tab + i}
+          isActive={activeStateTab === tab}
+          text={tab}
+          onClick={() => setActiveStateTab(tab)}
+        />
+      ))}
     </div>
   );
 }

@@ -1,6 +1,4 @@
 import * as React from "react";
-
-import Link from "next/link";
 export interface IWalletNotConnectedProps {
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
 }

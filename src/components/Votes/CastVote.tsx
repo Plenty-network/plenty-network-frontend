@@ -6,7 +6,7 @@ import lock from "../../../src/assets/icon/vote/lock.svg";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import { ICastVoteProps } from "./types";
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import { store } from "../../redux";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 

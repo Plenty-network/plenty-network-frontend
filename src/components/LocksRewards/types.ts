@@ -1,7 +1,4 @@
-import { IVotePageData } from "../../api/votes/types";
 import { BigNumber } from "bignumber.js";
-
-import { Bribes } from "../../api/pools/types";
 import {
   EFeesStatus,
   IAllLocksRewardsData,

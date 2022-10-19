@@ -1,9 +1,7 @@
 import clsx from "clsx";
-import Image from "next/image";
-import { useState, useRef } from "react";
-import close from "../../assets/icon/common/closeDefault.svg";
+import { useState } from "react";
 import { claimFaucet } from "../../operations/faucet";
-import { store, useAppDispatch } from "../../redux";
+import { useAppDispatch } from "../../redux";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { setIsBanner, setIsLoadingWallet } from "../../redux/walletLoading";
 import { Flashtype } from "../FlashScreen";

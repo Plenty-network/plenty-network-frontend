@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import * as React from "react";
-import { store } from "../../redux";
 import { FooterInfoIcon } from "./FooterIconList";
 import { HrefIcon, IHrefIconProps } from "./LinkIconList";
 import { ISingleSideBarProps, SingleSideBar } from "./SideBarTabList";

@@ -2,8 +2,6 @@ import Image from "next/image";
 import * as React from "react";
 import clsx from "clsx";
 import epoachIcon from "../../assets/icon/common/epochTimeIcon.svg";
-import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
-
 import info from "../../assets/icon/swap/info.svg";
 import vectorDown from "../../assets/icon/common/vector.svg";
 import { useCountdown } from "../../hooks/useCountDown";

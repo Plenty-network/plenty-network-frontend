@@ -24,9 +24,6 @@ const Dapp: NextPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const epoch = store.getState().epoch.currentEpoch;
 
-  const connectTempleWallet = () => {
-    return dispatch(walletConnection());
-  };
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -60,7 +57,6 @@ const Dapp: NextPage = () => {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
-  const [isBribesMain, setBribesMain] = useState(false);
 
   const tokenPrice = store.getState().tokenPrice.tokenPrice;
 
