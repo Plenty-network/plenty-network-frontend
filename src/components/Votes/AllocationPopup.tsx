@@ -1,5 +1,5 @@
 import { PopUpModal } from "../Modal/popupModal";
-import { IAllocationProps, ICastVoteProps } from "./types";
+import { IAllocationProps } from "./types";
 import VotingAllocation from "./VotingAllocation";
 
 function AllocationPopup(props: IAllocationProps) {

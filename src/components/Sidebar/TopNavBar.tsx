@@ -3,14 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 import "animate.css";
-import { useState } from "react";
 import plentyIcon from "../../assets/icon/common/plentyLogo.svg";
 import myportfolionav from "../../assets/icon/myPortfolio/myportfolionav.svg";
 import { store } from "../../redux";
 import { ConnectWalletBtnDeskTop } from "../Button/ConnectWalletDesktop";
 import { Epoch } from "../Epoch";
 import { NotificationIcon } from "../NotificationIcon";
-import Banner from "./Banner";
 export interface ITopNavBarProps {
   setShowNotification: Function;
   isBanner: boolean;

@@ -44,7 +44,6 @@ export default function Vote() {
   const epochData = useAppSelector((state) => state.epoch.epochData);
   const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const userAddress = useAppSelector((state) => state.wallet.address);
-  //const userAddress = "tz1VKAzp3FoerqzvKZTv8aRrg2AD16NjNx9S";
   const token = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const [veNFTlist, setVeNFTlist] = useState<{ data: IVeNFTData[]; isfetching: boolean }>({

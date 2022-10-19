@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import HeadInfo from "../../src/components/HeadInfo";
 import { CardHeader, PoolsCardHeader } from "../../src/components/Pools/Cardheader";
-import { ShortCard as PoolsTable } from "../../src/components/Pools/ShortCard";
+import { ShortCard as PoolsTable } from "../../src/components/Pools/poolsTable";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { useInterval } from "../../src/hooks/useInterval";
 import { AppDispatch, useAppSelector } from "../../src/redux";
@@ -72,7 +72,6 @@ export default function Pools(props: IIndexProps) {
   return (
     <>
       <SideBarHOC>
-        {/* className='' */}
         <div>
           <HeadInfo
             className="px-2 md:px-3"

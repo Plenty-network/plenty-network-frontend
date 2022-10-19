@@ -1,18 +1,16 @@
 import * as React from "react";
 import Image from "next/image";
-import { BigNumber } from "bignumber.js";
 import epoachIcon from "../../assets/icon/common/epochTimeIcon.svg";
 import { Column } from "react-table";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
-import { IVotePageData, IVotesData } from "../../api/votes/types";
+import { IVotePageData } from "../../api/votes/types";
 import { IVotesTableRewards } from "./types";
 import { RewardsData } from "./Rewards";
 import { VotingPower } from "./VotingPower";
 import { ILockRewardsEpochData } from "../../api/portfolio/types";
 import { NoPoolsPosition } from "../Rewards/NoContent";
-import { NoNFTAvailable } from "../Rewards/NoNFT";
 import ClaimAllEpoch from "./ClaimAllEpoch";
 
 export function LocksTableRewards(props: IVotesTableRewards) {

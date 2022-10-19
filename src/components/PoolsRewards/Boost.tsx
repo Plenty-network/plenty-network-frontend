@@ -1,7 +1,6 @@
 import * as React from "react";
-import { BigNumber } from "bignumber.js";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { IBoostProps, IPLYEmissionProps } from "./types";
+import { IBoostProps } from "./types";
 
 export function Boost(props: IBoostProps) {
   return (

@@ -148,8 +148,8 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                       position={Position.top}
                       toolTipChild={
                         <div className="w-[200px]">
-                          Your transaction will revert if there is a large, unfavorable price
-                          movement before it is confirmed.
+                          The minimum amount you are guaranteed to receive. If the price slips any
+                          further, your transaction will revert.
                         </div>
                       }
                     >
@@ -177,7 +177,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
 
               <div className="flex mt-2">
                 <div className="font-mobile-400 md:font-body3 ">
-                  <span className="mr-[5px]">Price Impact</span>
+                  <span className="mr-[5px]">Price impact</span>
                   <span className="relative top-0.5">
                     <ToolTip
                       id="tooltipN"
@@ -217,7 +217,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                       position={isMobile ? Position.right : Position.top}
                       toolTipChild={
                         <div className="w-[200px]">
-                          Fees are 0.35% for each volatile swap and 0.10% for each stable swap.
+                          Fees is 0.05% for both volatile and stable swap
                         </div>
                       }
                     >
@@ -256,7 +256,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   </span>
                 </div>
                 <div className="swap overflow-x-auto min-w-[318px]">
-                  <div className="border-dashed relative top-[24px]   border-t-2 border-muted-50 mx-2"></div>
+                  <div className="border-dashed relative top-[22px]   border-t-2 border-muted-50 mx-2"></div>
                   <div className="mt-2 flex justify-between ">
                     {swapRoute?.map((token, idx) => {
                       const index = idx + 1;
@@ -265,7 +265,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                           {(idx === 0 || idx === swapRoute.length - 1) && (
                             <div className="flex items-center " key={token?.name}>
                               {idx === swapRoute?.length - 1 && (
-                                <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                                <div className="w-0.5 h-2 bg-card-500 z-50"></div>
                               )}
                               <div
                                 className={clsx(
@@ -290,13 +290,13 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                                   />
                                 </span>
                               </div>
-                              {idx === 0 && <div className="w-1.5 h-2 bg-card-500 z-50"></div>}
+                              {idx === 0 && <div className="w-0.5 h-2 bg-card-500 z-50"></div>}
                             </div>
                           )}
 
                           {idx !== swapRoute.length - 1 && (
                             <div className="flex items-center">
-                              <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                              <div className="w-0.5 h-2 bg-card-500 z-50"></div>
                               <div
                                 className={clsx(
                                   "relative  rounded-2xl  bg-card-600 p-px flex",
@@ -390,7 +390,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                                   </div>
                                 </span>
                               </div>
-                              <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                              <div className="w-0.5 h-2 bg-card-500 z-50"></div>
                             </div>
                           )}
                         </>

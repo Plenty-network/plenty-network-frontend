@@ -1,9 +1,4 @@
-import Image from "next/image";
 import * as React from "react";
-import subtractSvg from "../../../assets/icon/pools/subtract.svg";
-
-import { Position, ToolTip } from "../../Tooltip/TooltipAdvanced";
-import boostIcon from "../../../assets/icon/myPortfolio/boostBlue.svg";
 import { BigNumber } from "bignumber.js";
 export interface IAprInfoProps {
   futureApr: BigNumber;

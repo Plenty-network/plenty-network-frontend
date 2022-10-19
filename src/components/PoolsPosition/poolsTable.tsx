@@ -4,7 +4,6 @@ import { Column } from "react-table";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
-import { IVotePageData, IVotesData } from "../../api/votes/types";
 import { IManageBtnProps, IPoolsTablePosition } from "./types";
 import { ManageLiquidity } from "../Pools/ManageLiquidity";
 import { tokenParameterLiquidity } from "../Liquidity/types";

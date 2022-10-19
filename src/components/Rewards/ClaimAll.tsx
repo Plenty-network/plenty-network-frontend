@@ -4,7 +4,6 @@ import Image from "next/image";
 import { BigNumber } from "bignumber.js";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import timer from "../../../src/assets/icon/myPortfolio/timer.svg";
-import ply from "../../assets/Tokens/ply.png";
 import Button from "../Button/Button";
 import { IPoolsRewardsData } from "../../api/portfolio/types";
 import { ITokenPriceList } from "../../api/util/types";

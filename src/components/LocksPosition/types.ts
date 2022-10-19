@@ -1,4 +1,4 @@
-import { ELocksState, IVotePageData } from "../../api/votes/types";
+import { ELocksState } from "../../api/votes/types";
 import { BigNumber } from "bignumber.js";
 import { IAllLocksPositionData } from "../../api/portfolio/types";
 

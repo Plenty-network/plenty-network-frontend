@@ -1,7 +1,4 @@
 import * as React from "react";
-import tradingFee from "../../assets/icon/vote/tradingfees.svg";
-import dollar from "../../assets/icon/vote/dollar.svg";
-import Image from "next/image";
 import { BigNumber } from "bignumber.js";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IBribeColProps } from "./types";

@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import Image from "next/image";
@@ -10,7 +10,6 @@ import { PopUpModal } from "../Modal/popupModal";
 import { RPC_NODE } from "../../constants/localStorage";
 import { connect } from "react-redux";
 import { setRpcNode } from "../../redux/userSettings/rpcData";
-import { store } from "../../redux";
 
 async function isValidURL(userInput: string) {
   try {

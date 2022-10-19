@@ -4,7 +4,6 @@ import {
   IPoolsForBribesResponse,
   IUserBribeData,
 } from "../../api/bribes/types";
-import { IAllLocksPositionData } from "../../api/portfolio/types";
 import { IEpochListObject } from "../../api/util/types";
 import { tokenParameter } from "../../constants/swap";
 

@@ -1,7 +1,5 @@
-import clsx from "clsx";
 import Image from "next/image";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 

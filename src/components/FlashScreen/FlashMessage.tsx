@@ -1,5 +1,3 @@
-import type { NextPage } from "next";
-import info from "../../assets/icon/common/info.svg";
 import epclose from "../../assets/icon/common/epclose.svg";
 import openInNewTab from "../../assets/icon/common/openInNewTab.svg";
 import Image from "next/image";
