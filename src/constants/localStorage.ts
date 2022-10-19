@@ -7,3 +7,4 @@ export const EXPERT_MODE = "expertMode";
 export const MULTIHOP = "multiHop";
 export const TOKEN_ID = "tokenId";
 export const CLAIM = "claim";
+export const USERADDRESS = "useraddress";
