@@ -278,13 +278,11 @@ export const getPoolsDataForBribes = async (
   tokenPrices: ITokenPriceList
 ): Promise<IPoolsForBribesResponse> => {
   try {
-    // TODO : UnComment when launching
-    // const state = store.getState();
-    // const AMMS = state.config.AMMs;
+    const state = store.getState();
+    const AMMS = state.config.AMMs;
     // console.log(`epoch:${epoch}, tokenId:${tokenId}`);
     // TODO: Remove this get call
-    const AMMResponse = await axios.get("https://config.plenty.network/v1/config/amm");
-    const AMMS: IAmmContracts = AMMResponse.data;
+   
 
     const [poolsData, votesDataCurrent, votesDataPrevious] = await Promise.all([
       getPoolsBribeLiquidityData(epoch, tokenPrices),
@@ -300,15 +298,8 @@ export const getPoolsDataForBribes = async (
     for (const poolData of Object.keys(poolsData)) {
       const AMM = AMMS[poolData];
 
-      //TODO: Remove next two lines during mainnet launch
-      const testnetDex = getDexAddress(AMM.token1.symbol, AMM.token2.symbol);
-      const dexForVotes = testnetDex !== "false" ? testnetDex : poolData;
-
       allDataForPools.push({
-        //TODO: Remove next line
-        amm: testnetDex,
-        // TODO: Uncomment next line
-        // amm: AMM.address,
+        amm: AMM.address,
         tokenA: AMM.token1.symbol,
         tokenB: AMM.token2.symbol,
         poolType: AMM.type,
@@ -321,8 +312,8 @@ export const getPoolsDataForBribes = async (
         liquidityTokenB: poolsData[poolData]
           ? poolsData[poolData].liquidityTokenB
           : new BigNumber(0),
-        //TODO: Uncomment for mainnet
-        /* totalVotesCurrent:
+      
+         totalVotesCurrent:
           Object.keys(votesDataCurrent.totalVotesData).length === 0
             ? new BigNumber(0)
             : votesDataCurrent.totalVotesData[poolData]
@@ -346,32 +337,7 @@ export const getPoolsDataForBribes = async (
             : votesDataPrevious.totalVotesData[poolData]
             ? votesDataPrevious.totalVotesData[poolData].votePercentage
             : new BigNumber(0),
-         */
-        //TODO: Remove for mainnet
-        totalVotesCurrent:
-          Object.keys(votesDataCurrent.totalVotesData).length === 0
-            ? new BigNumber(0)
-            : votesDataCurrent.totalVotesData[dexForVotes]
-            ? votesDataCurrent.totalVotesData[dexForVotes].votes
-            : new BigNumber(0),
-        totalVotesPercentageCurrent:
-          Object.keys(votesDataCurrent.totalVotesData).length === 0
-            ? new BigNumber(0)
-            : votesDataCurrent.totalVotesData[dexForVotes]
-            ? votesDataCurrent.totalVotesData[dexForVotes].votePercentage
-            : new BigNumber(0),
-        totalVotesPrevious:
-          Object.keys(votesDataPrevious.totalVotesData).length === 0
-            ? new BigNumber(0)
-            : votesDataPrevious.totalVotesData[dexForVotes]
-            ? votesDataPrevious.totalVotesData[dexForVotes].votes
-            : new BigNumber(0),
-        totalVotesPercentagePrevious:
-          Object.keys(votesDataPrevious.totalVotesData).length === 0
-            ? new BigNumber(0)
-            : votesDataPrevious.totalVotesData[dexForVotes]
-            ? votesDataPrevious.totalVotesData[dexForVotes].votePercentage
-            : new BigNumber(0),
+         
       });
     }
 
