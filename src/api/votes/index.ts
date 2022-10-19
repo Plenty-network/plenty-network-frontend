@@ -224,14 +224,9 @@ export const votesPageDataWrapper = async (
   tokenId: number | undefined
 ): Promise<IVotePageDataResponse> => {
   try {
-    // TODO : UnComment when launching
-    // const state = store.getState();
-    // const AMMS = state.config.AMMs;
-    console.log(`epoch:${epoch}, tokenId:${tokenId}`);
-    // TODO: Remove this get call
-    const AMMResponse = await axios.get("https://config.plenty.network/v1/config/amm");
-    const AMMS: IAmmContracts = AMMResponse.data;
-
+    const state = store.getState();
+    const AMMS = state.config.AMMs;
+ 
     const [rewardData, votesData] = await Promise.all([
       mainPageRewardData(epoch),
       getAllVotesData(epoch, tokenId),
@@ -251,14 +246,7 @@ export const votesPageDataWrapper = async (
     for (let poolData of Object.keys(rewardData.allData)) {
       const AMM = AMMS[poolData];
 
-      //TODO: Remove next two lines during mainnet launch
-      const testnetDex = getDexAddress(AMM.token1.symbol, AMM.token2.symbol);
-      const dexForVotes = testnetDex !== "false" ? testnetDex : poolData;
-
-      //TODO: Remove next line
-      allData[testnetDex] = {
-        // TODO: Uncomment next line
-        // allData[poolData.pool] = {
+        allData[poolData] = {
         tokenA: AMM.token1.symbol,
         tokenB: AMM.token2.symbol,
         poolType: AMM.type,
@@ -277,8 +265,7 @@ export const votesPageDataWrapper = async (
 
         feesTokenB: rewardData.allData[poolData] ? rewardData.allData[poolData].feesTokenB : new BigNumber(0),
 
-        //TODO: Uncomment for mainnet
-        /* totalVotes:
+        totalVotes:
           Object.keys(votesData.totalVotesData).length === 0
             ? new BigNumber(0)
             : votesData.totalVotesData[poolData]
@@ -302,39 +289,10 @@ export const votesPageDataWrapper = async (
             ? new BigNumber(0)
             : votesData.myVotesData[poolData]
             ? votesData.myVotesData[poolData].votePercentage
-            : new BigNumber(0), */
+            : new BigNumber(0), 
 
-        //TODO: Remove for mainnet
-        totalVotes:
-          Object.keys(votesData.totalVotesData).length === 0
-            ? new BigNumber(0)
-            : votesData.totalVotesData[dexForVotes]
-            ? votesData.totalVotesData[dexForVotes].votes
-            : new BigNumber(0),
-        totalVotesPercentage:
-          Object.keys(votesData.totalVotesData).length === 0
-            ? new BigNumber(0)
-            : votesData.totalVotesData[dexForVotes]
-            ? votesData.totalVotesData[dexForVotes].votePercentage
-            : new BigNumber(0),
-
-        myVotes:
-          Object.keys(votesData.myVotesData).length === 0
-            ? new BigNumber(0)
-            : votesData.myVotesData[dexForVotes]
-            ? votesData.myVotesData[dexForVotes].votes
-            : new BigNumber(0),
-        myVotesPercentage:
-          Object.keys(votesData.myVotesData).length === 0
-            ? new BigNumber(0)
-            : votesData.myVotesData[dexForVotes]
-            ? votesData.myVotesData[dexForVotes].votePercentage
-            : new BigNumber(0),
       };
     }
-
-    //TODO: Remove next line in mainnet
-    delete allData["false"];
 
     return {
       success: true,

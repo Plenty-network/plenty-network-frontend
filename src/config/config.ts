@@ -38,7 +38,7 @@ const Config: IConfig = {
   },
 
   VE_INDEXER : 'https://ply-indexer.ghostnet.plenty.network/v1/',
-  PLY_INDEXER : 'https://analytics-indexer.plenty.network/',
+  PLY_INDEXER : 'https://analytics-indexer.ghostnet.plenty.network/',
 
   FAUCET : 'KT1EsCTuMzG5oh7C2R6h3STuEJ3SAfjiVVpb',
 
