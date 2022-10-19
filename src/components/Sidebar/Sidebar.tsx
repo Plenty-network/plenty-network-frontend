@@ -8,11 +8,11 @@ export interface ISideBarProps {
   isBanner: boolean;
 }
 export const FooterMenu: Array<IHrefIconProps> = [
-  {
-    name: "Analytics",
-    iconName: "VectorfooterMenu",
-    href: "",
-  },
+  // {
+  //   name: "Analytics",
+  //   iconName: "VectorfooterMenu",
+  //   href: "",
+  // },
   {
     name: "Docs",
     iconName: "VectorfooterMenu-1",

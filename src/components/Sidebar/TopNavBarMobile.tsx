@@ -36,10 +36,12 @@ export function TopNavBarMobile(props: ITopNavBarMobileProps) {
               <Image src={portfolio} />
             </Link>
           )}
-          <NotificationIcon
-            className="cursor-pointer hover:opacity-90"
-            onClick={props.setShowNotification}
-          />
+          {userAddress && (
+            <NotificationIcon
+              className="cursor-pointer hover:opacity-90"
+              onClick={props.setShowNotification}
+            />
+          )}
           <ConnectWalletBtnMobile
             setNodeSelector={props.setNodeSelector}
             isBanner={props.isBanner}
