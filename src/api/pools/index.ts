@@ -28,7 +28,7 @@ export const poolsDataWrapper = async (
 
     // TODO: Remove this get call
     const AMMResponse = await axios.get(
-      'https://config.plentydefi.com/v1/config/amm'
+      'https://config.plenty.network/v1/config/amm'
     );
     const AMMS: IAmmContracts = AMMResponse.data;
 
@@ -40,6 +40,8 @@ export const poolsDataWrapper = async (
     const poolsData: VolumeV1Data[] = poolsResponse.data;
 
     const analyticsData: VolumeVeData[] = analyticsResponse.data;
+
+    console.log(poolsData , analyticsData);
     
     const analyticsDataObject: IAnalyticsDataObject = analyticsData.reduce(
       (finalAnalyticsObject: IAnalyticsDataObject, data) => (
