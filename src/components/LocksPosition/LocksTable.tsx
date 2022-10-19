@@ -15,7 +15,7 @@ import { LockExpiry } from "./LockExpiry";
 import PieChartButton from "./PieChart";
 import { useDispatch } from "react-redux";
 import { AppDispatch, store } from "../../redux";
-import { setSelectedDropDown } from "../../redux/veNFT";
+import { setSelectedDropDown, setSelectedDropDownLocal } from "../../redux/veNFT";
 import { useRouter } from "next/router";
 import { IAllLocksPositionData } from "../../api/portfolio/types";
 import { useEffect, useState } from "react";
@@ -323,9 +323,21 @@ export function LocksTablePosition(props: ILocksTablePosition) {
                         tokenId: list.tokenId.toString(),
                       })
                     );
+                    dispatch(
+                      setSelectedDropDownLocal({
+                        votingPower: list.consumedVotingPower.toString(),
+                        tokenId: list.tokenId.toString(),
+                      })
+                    );
                   } else {
                     dispatch(
                       setSelectedDropDown({
+                        votingPower: list.votingPower.toString(),
+                        tokenId: list.tokenId.toString(),
+                      })
+                    );
+                    dispatch(
+                      setSelectedDropDownLocal({
                         votingPower: list.votingPower.toString(),
                         tokenId: list.tokenId.toString(),
                       })
@@ -409,9 +421,21 @@ export function LocksTablePosition(props: ILocksTablePosition) {
                         tokenId: list.tokenId.toString(),
                       })
                     );
+                    dispatch(
+                      setSelectedDropDownLocal({
+                        votingPower: list.consumedVotingPower.toString(),
+                        tokenId: list.tokenId.toString(),
+                      })
+                    );
                   } else {
                     dispatch(
                       setSelectedDropDown({
+                        votingPower: list.votingPower.toString(),
+                        tokenId: list.tokenId.toString(),
+                      })
+                    );
+                    dispatch(
+                      setSelectedDropDownLocal({
                         votingPower: list.votingPower.toString(),
                         tokenId: list.tokenId.toString(),
                       })
