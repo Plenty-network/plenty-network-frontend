@@ -21,16 +21,9 @@ export const poolsDataWrapper = async (
   allData: { [id: string]: IPoolsDataWrapperResponse };
 }> => {
   try {
-    // TODO : UnComment when launching
     const state = store.getState();
-    // const AMMS = state.config.AMMs;
+    const AMMS = state.config.AMMs;
     const TOKENS = state.config.tokens;
-
-    // TODO: Remove this get call
-    const AMMResponse = await axios.get(
-      'https://config.plenty.network/v1/config/amm'
-    );
-    const AMMS: IAmmContracts = AMMResponse.data;
 
     const [poolsResponse, analyticsResponse] = await Promise.all([
       axios.get(`${Config.VE_INDEXER}pools`),
@@ -40,8 +33,6 @@ export const poolsDataWrapper = async (
     const poolsData: VolumeV1Data[] = poolsResponse.data;
 
     const analyticsData: VolumeVeData[] = analyticsResponse.data;
-
-    console.log(poolsData , analyticsData);
     
     const analyticsDataObject: IAnalyticsDataObject = analyticsData.reduce(
       (finalAnalyticsObject: IAnalyticsDataObject, data) => (
@@ -55,7 +46,6 @@ export const poolsDataWrapper = async (
     for (var poolData of poolsData) {
       const AMM = AMMS[poolData.pool];
       // TODO: Optimise this O(2n) loop
-      // const analyticsObject = getAnalyticsObject(poolData.pool, analyticsData);
       const analyticsObject = analyticsDataObject[poolData.pool] || {...EMPTY_POOLS_OBJECT};
       let bribe: BigNumber = new BigNumber(0);
       let bribes: Bribes[] = [];
