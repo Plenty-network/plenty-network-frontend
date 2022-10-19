@@ -28,11 +28,13 @@ export const claimFaucet = async (
 
     const allBatch: any = [];
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 11; i++) {
+      if(i!=8){
       allBatch.push({
         kind: OpKind.TRANSACTION,
         ...faucetInstance.methods.claim_token(i).toTransferParams(),
       });
+    }
     }
 
     const batch = Tezos.wallet.batch(allBatch);
