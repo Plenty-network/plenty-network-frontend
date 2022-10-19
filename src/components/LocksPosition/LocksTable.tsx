@@ -96,7 +96,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           ),
       },
       {
-        Header: "Voting Power",
+        Header: "Voting power",
         id: "Voting Power",
         columnWidth: "w-[70px]",
         tooltipMessage:
@@ -193,7 +193,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           ),
       },
       {
-        Header: "Voting Power",
+        Header: "Voting power",
         id: "Voting Power",
         columnWidth: "w-[124px]",
         isToolTipEnabled: true,

@@ -84,7 +84,7 @@ function WithdrawPly(props: IWithdrawPlyProps) {
                   : props.handleWithdraw
               }
             >
-              {props.unclaimedDataTokenId.unclaimedRewardsExist ? "claim and withdraw" : "Withdraw"}
+              {props.unclaimedDataTokenId.unclaimedRewardsExist ? "Claim and withdraw" : "Withdraw"}
             </Button>
           </div>
           {props.unclaimedDataTokenId.unclaimedRewardsExist && (

@@ -27,6 +27,7 @@ function StatsRewards(props: IStatsRewardsProps) {
         title={"PLY emisisons"}
         value={props.plyEmission}
         subValue={"PLY"}
+        isLoading={!props.fetchingPly}
         disable={props.plyEmission?.isEqualTo(0)}
         setShowClaimAllPly={props.setShowClaimPly}
         setClaimValueDollar={props.setClaimValueDollar}
@@ -37,6 +38,7 @@ function StatsRewards(props: IStatsRewardsProps) {
         title={"Trading fees"}
         toolTipMessage={"Trading fees from the AMMs you voted for."}
         value={props.tradingfeeStats}
+        isLoading={props.fetchingTradingfee}
         setShowClaimAllPly={props.setShowClaimPly}
         disable={props.feeClaimData.length === 0}
         isDollar={true}
@@ -48,6 +50,7 @@ function StatsRewards(props: IStatsRewardsProps) {
         title={"Bribes"}
         toolTipMessage={"Bribes through AMMs you have voted for."}
         value={props.bribesStats}
+        isLoading={props.fetchingTradingfee}
         setShowClaimAllPly={props.setShowClaimPly}
         disable={props.bribesClaimData.length === 0}
         isDollar={true}
@@ -63,6 +66,10 @@ function StatsRewards(props: IStatsRewardsProps) {
         tooltipWidth={"w-[300px]"}
         value={props.unclaimInflation.unclaimedInflationAmount}
         subValue={"PLY"}
+        isLoading={
+          props.fetchingUnclaimedInflationData &&
+          Number(props.unclaimInflation.unclaimedInflationAmount) === 0
+        }
         setShowClaimAllPly={props.setShowClaimPly}
         disable={claimAllInflationData.length === 0}
         setClaimValueDollar={props.setClaimValueDollar}
