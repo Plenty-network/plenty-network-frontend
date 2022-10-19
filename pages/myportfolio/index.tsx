@@ -554,7 +554,7 @@ function MyPortfolio(props: any) {
         >
           <Image
             src={playIcon}
-            onClick={() => setShowVideoModal(true)}
+            // onClick={() => setShowVideoModal(true)}
             height={"28px"}
             width={"28px"}
             className="cursor-pointer hover:opacity-90"
@@ -563,8 +563,21 @@ function MyPortfolio(props: any) {
       </p>
     );
   }, []);
+  function nFormatter(num: BigNumber) {
+    if (num.isGreaterThanOrEqualTo(1000000000)) {
+      return num.dividedBy(1000000000).toFixed(2) + "B";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000)) {
+      return num.dividedBy(1000000).toFixed(2) + "M";
+    }
+    if (num.isGreaterThanOrEqualTo(1000)) {
+      return num.dividedBy(1000).toFixed(2) + "K";
+    }
+
+    return num.toFixed(2);
+  }
   const handleWithdrawOperation = () => {
-    setContentTransaction(`Withdraw ${manageData.baseValue.toFixed(2)} PLY`);
+    setContentTransaction(`Withdraw ${nFormatter(manageData.baseValue)} PLY`);
     setShowWithdraw(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -596,9 +609,12 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
@@ -636,7 +652,7 @@ function MyPortfolio(props: any) {
     });
   };
   const handleWithdrawClaimOperation = () => {
-    setContentTransaction(`Claim and withdraw ${manageData.baseValue.toFixed(2)} PLY`);
+    setContentTransaction(`Claim and withdraw ${nFormatter(manageData.baseValue)} PLY`);
     setShowWithdraw(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -679,9 +695,12 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
@@ -759,9 +778,12 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
@@ -830,9 +852,12 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
@@ -898,9 +923,12 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
@@ -967,9 +995,12 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
@@ -1002,10 +1033,10 @@ function MyPortfolio(props: any) {
   };
   const handleClaimAllPly = () => {
     setShowClaimPly(false);
-    setContentTransaction(`Claim ${poolsRewards.data.gaugeEmissionsTotal.toFixed(2)} PLY`);
+    setContentTransaction(`Claim ${nFormatter(poolsRewards.data.gaugeEmissionsTotal)} PLY`);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    localStorage.setItem(CLAIM, poolsRewards.data.gaugeEmissionsTotal.toFixed(6));
+    localStorage.setItem(CLAIM, nFormatter(poolsRewards.data.gaugeEmissionsTotal));
     harvestAllRewards(
       poolsRewards.data.gaugeAddresses,
       transactionSubmitModal,
@@ -1034,9 +1065,12 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
@@ -1070,11 +1104,11 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimBribes = () => {
-    setContentTransaction(` Claim bribes $${bribesStats.toFixed(2)}`);
+    setContentTransaction(` Claim bribes $${nFormatter(bribesStats)}`);
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    localStorage.setItem(CLAIM, bribesStats.toFixed(6));
+    localStorage.setItem(CLAIM, nFormatter(bribesStats));
     claimAllBribeForAllLocks(
       bribesClaimData,
       transactionSubmitModal,
@@ -1103,9 +1137,12 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
@@ -1139,11 +1176,11 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimFees = () => {
-    setContentTransaction(`Claim trading fees $${tradingfeeStats.toFixed(2)}`);
+    setContentTransaction(`Claim trading fees $${nFormatter(tradingfeeStats)}`);
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    localStorage.setItem(CLAIM, tradingfeeStats.toFixed(6));
+    localStorage.setItem(CLAIM, nFormatter(tradingfeeStats));
     claimAllFeeForAllLocks(
       feeClaimData,
       transactionSubmitModal,
@@ -1172,9 +1209,12 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
@@ -1243,9 +1283,12 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
@@ -1314,15 +1357,24 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
         setTimeout(() => {
           setClaimOperation(false);
-        }, 20000);
+        }, 8000);
+        setTimeout(() => {
+          setClaimOperation(true);
+        }, 10000);
+        setTimeout(() => {
+          setClaimOperation(false);
+        }, 30000);
 
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -1352,12 +1404,12 @@ function MyPortfolio(props: any) {
   };
   const handleClaimALLUnClaimed = () => {
     setContentTransaction(
-      `Claim inflation ${unclaimInflation.unclaimedInflationAmount.toFixed(2)} PLY`
+      `Claim inflation ${nFormatter(unclaimInflation.unclaimedInflationAmount)} PLY`
     );
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    localStorage.setItem(CLAIM, unclaimInflation.unclaimedInflationAmount.toFixed(6));
+    localStorage.setItem(CLAIM, nFormatter(unclaimInflation.unclaimedInflationAmount));
     claimAllInflation(
       inflationData,
       transactionSubmitModal,
@@ -1386,15 +1438,24 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
         setTimeout(() => {
           setClaimOperation(false);
-        }, 20000);
+        }, 8000);
+        setTimeout(() => {
+          setClaimOperation(true);
+        }, 10000);
+        setTimeout(() => {
+          setClaimOperation(false);
+        }, 30000);
 
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -1459,15 +1520,18 @@ function MyPortfolio(props: any) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 6000);
         setTimeout(() => {
           setClaimOperation(false);
-        }, 9000);
+        }, 8000);
         setTimeout(() => {
           setClaimOperation(true);
         }, 10000);

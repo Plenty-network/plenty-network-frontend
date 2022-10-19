@@ -333,9 +333,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 2000);
@@ -443,9 +446,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 2000);
@@ -540,9 +546,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 2000);
@@ -607,9 +616,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 2000);
@@ -699,9 +711,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
-                window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
               },
-              transactionId: transactionId,
+              transactionId: response.operationId ? response.operationId : "",
             })
           );
         }, 2000);
@@ -752,7 +767,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             </p>
             <Image
               className="cursor-pointer hover:opacity-90"
-              onClick={() => setShowVideoModal(true)}
+              //onClick={() => setShowVideoModal(true)}
               src={playBtn}
             />
           </div>

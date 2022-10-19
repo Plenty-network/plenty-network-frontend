@@ -17,7 +17,6 @@ const flashMessages = createSlice({
   initialState,
   reducers: {
     setFlashMessage: (state, action: { type: any; payload: IFlashMessageProps }) => {
-      console.log(action.payload.transactionId);
       state.isLoading = action.payload.isLoading;
       state.flashType = action.payload.flashType;
       state.transactionId = action.payload.transactionId;

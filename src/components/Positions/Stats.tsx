@@ -48,8 +48,8 @@ function Stats(props: IStatsProps) {
         isLast={true}
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"PLY balance"}
-        value={props.plyBalance.toFixed(1)}
-        subValue={`$${(1 * Number(props.plyBalance)).toFixed(1)}`}
+        value={nFormatter(new BigNumber(props.plyBalance))}
+        subValue={`$${nFormatter(new BigNumber(1 * Number(props.plyBalance)))}`}
       />
     </div>
   );

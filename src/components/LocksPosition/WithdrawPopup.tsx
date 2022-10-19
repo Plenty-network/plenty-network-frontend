@@ -22,6 +22,19 @@ function WithdrawPly(props: IWithdrawPlyProps) {
   const closeModal = () => {
     props.setShow(false);
   };
+  function nFormatter(num: BigNumber) {
+    if (num.isGreaterThanOrEqualTo(1000000000)) {
+      return num.dividedBy(1000000000).toFixed(2) + "B";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000)) {
+      return num.dividedBy(1000000).toFixed(2) + "M";
+    }
+    if (num.isGreaterThanOrEqualTo(1000)) {
+      return num.dividedBy(1000).toFixed(2) + "K";
+    }
+
+    return num.toFixed(2);
+  }
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
@@ -51,9 +64,21 @@ function WithdrawPly(props: IWithdrawPlyProps) {
               <span className="flex items-center">
                 <span className="text-white font-body2 ml-1">
                   $
-                  {props.unclaimedDataTokenId.lockRewardsData.unclaimedBribesValue
-                    .plus(props.unclaimedDataTokenId.lockRewardsData.unclaimedFeesValue)
-                    .toFixed(2)}{" "}
+                  {Number(
+                    props.unclaimedDataTokenId.lockRewardsData.unclaimedBribesValue.plus(
+                      props.unclaimedDataTokenId.lockRewardsData.unclaimedFeesValue
+                    )
+                  ) > 0
+                    ? props.unclaimedDataTokenId.lockRewardsData.unclaimedBribesValue
+                        .plus(props.unclaimedDataTokenId.lockRewardsData.unclaimedFeesValue)
+                        .isLessThan(0.01)
+                      ? "<0.01"
+                      : nFormatter(
+                          props.unclaimedDataTokenId.lockRewardsData.unclaimedBribesValue.plus(
+                            props.unclaimedDataTokenId.lockRewardsData.unclaimedFeesValue
+                          )
+                        )
+                    : "0"}{" "}
                   +
                 </span>
                 <span className="flex items-center font-body2">
@@ -68,7 +93,15 @@ function WithdrawPly(props: IWithdrawPlyProps) {
                     </ToolTip>
                   </span>
                   <span className="text-white ml-0.5">
-                    {props.unclaimedDataTokenId.lockRewardsData.unclaimedInflationInPLY.toFixed(2)}{" "}
+                    {Number(props.unclaimedDataTokenId.lockRewardsData.unclaimedInflationInPLY) > 0
+                      ? props.unclaimedDataTokenId.lockRewardsData.unclaimedInflationInPLY.isLessThan(
+                          0.01
+                        )
+                        ? "<0.01"
+                        : nFormatter(
+                            props.unclaimedDataTokenId.lockRewardsData.unclaimedInflationInPLY
+                          )
+                      : "0"}{" "}
                     PLY
                   </span>
                 </span>
