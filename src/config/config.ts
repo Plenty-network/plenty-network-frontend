@@ -22,19 +22,19 @@ const Config: IConfig = {
   },
   VE_SWAP : {
     mainnet: '',
-    testnet: 'KT1TfpTQsyEEwDJUKSsBwR9GKrLXxZjz7uxB',
+    testnet: 'KT1Ba3Sb4KrZrJgXdEN1TLKvzPZ4nsAtZz67',
   },
   VOTER: {
     mainnet: '',
-    testnet: 'KT1V2dQjTgmtaxm7H2JFqEYwcERd5ULQhyHn',
+    testnet: 'KT1RER85G1S1QJyjViSuTJMizNbtzG9z7Jes',
   },
   VOTE_ESCROW : {
     mainnet : '',
-    testnet : 'KT1LuyczajtnU8PMsyqsWNYtZLRG7kbiseKs',
+    testnet : 'KT1SJubny9Y6xsgDakqYSEofqodgbnxHCSMu',
   },
   PLY_TOKEN : {
     mainnet : '',
-    testnet : 'KT1ArfQ6At3NhzMbiGwLzGtvekytjXq6Gy2G',
+    testnet : 'KT1BxKvsSCKTJ9XrmkjQRDQfh5mZBb14ue8D',
   },
 
   VE_INDEXER : 'https://ply-indexer.ghostnet.plenty.network/v1/',
