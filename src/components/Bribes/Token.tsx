@@ -1,7 +1,6 @@
 import * as React from "react";
-import { BigNumber } from "bignumber.js";
-import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { IToken, IVoteShare } from "./types";
+
+import { IToken } from "./types";
 import Image from "next/image";
 
 export function Token(props: IToken) {

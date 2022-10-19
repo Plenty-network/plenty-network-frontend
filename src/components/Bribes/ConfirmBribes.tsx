@@ -2,14 +2,9 @@ import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import epoachIcon from "../../assets/icon/common/epochTimeIcon.svg";
-import drop from "../../../src/assets/icon/bribes/addBribes.svg";
-import checkViolet from "../../../src/assets/icon/bribes/checkViolet.svg";
-import checkDisable from "../../../src/assets/icon/bribes/checkDisable.svg";
-import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
-import React, { useState, useMemo, useEffect } from "react";
-import { store } from "../../redux";
-import { IAddBribes, IConfirmAddBribes } from "./types";
+import React from "react";
+import { IConfirmAddBribes } from "./types";
 
 function ConfirmAddBribes(props: IConfirmAddBribes) {
   const closeModal = () => {

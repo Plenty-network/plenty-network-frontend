@@ -629,7 +629,7 @@ function SwapTab(props: ISwapTabProps) {
 
                             <div className="flex mt-3">
                               <div className="font-body1 md:font-body3 ">
-                                <span className="mr-[5px]">Price Impact</span>
+                                <span className="mr-[5px]">Price impact</span>
                               </div>
 
                               <div
@@ -871,8 +871,8 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip2"
                     toolTipChild={
                       <div className="w-[200px] md:w-[323px]">
-                        Your transaction will revert if there is a large, unfavorable price movement
-                        before it is confirmed.
+                        The minimum amount you are guaranteed to receive. If the price slips any
+                        further, your transaction will revert.
                       </div>
                     }
                   >
@@ -914,7 +914,7 @@ function SwapTab(props: ISwapTabProps) {
 
             <div className="flex mt-2">
               <div className="font-mobile-400 md:font-body3 ">
-                <span className="mr-[5px]">Price Impact</span>
+                <span className="mr-[5px]">Price impact</span>
                 <span className="relative top-1 lg:top-0.5">
                   <ToolTip
                     id="tooltip4"
@@ -1004,7 +1004,7 @@ function SwapTab(props: ISwapTabProps) {
                 </div>
               ) : (
                 <div className="">
-                  <div className="swap overflow-x-auto min-w-[338px]">
+                  <div className="swap overflow-x-auto min-w-[305px] md:min-w-[338px]">
                     <div className="border-dashed relative top-[24px]   border-t-2 border-muted-50 mx-2"></div>
                     <div className="mt-2 flex justify-between ">
                       {swapRoute?.map((token, idx) => {

@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
-import { isMobile, isTablet } from "react-device-detect";
+import { isMobile } from "react-device-detect";
 import { Column, useFilters, usePagination, useSortBy, useTable } from "react-table";
 import { useRouter } from "next/router";
 import { useAppSelector } from "../../redux";
 import { getHeightOfElement } from "../../utils/getHeight";
-import { NoContentAvailable, WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
+import { WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
 import { Tabs } from "../Pools/ShortCardHeader";
 import { NoSearchResult } from "../Votes/NoSearchResult";
 

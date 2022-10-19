@@ -1,7 +1,5 @@
-import clsx from "clsx";
 import Image from "next/image";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import { tokenParameterLiquidity } from "./types";
 
@@ -16,6 +14,7 @@ interface IConfirmAddLiquidityProps {
   };
   pnlpEstimates: string;
   sharePool: string;
+  slippage: string;
   handleAddLiquidityOperation: () => void;
 }
 function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
@@ -31,10 +30,11 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
         </div> */}
       </div>
       <div className="mt-5 text-text-500 font-body4">
-        Output is estimated. If the price changes by more than 0.5% your transaction will revert
+        Output is estimated. If the price changes by more than{" "}
+        {props.slippage ? props.slippage : 0.5}% your transaction will revert
       </div>
       <div className="mt-[17px] border border-text-800 bg-card-200 rounded-2xl py-5">
-        <p className="text-text-250 font-body4 px-5">Your depositing</p>
+        <p className="text-text-250 font-body4 px-5">You are depositing</p>
         <div className="flex mt-3 h-[50px] items-center border-t border-b border-text-800/[0.5] bg-card-500 px-5">
           <div className="flex items-center">
             <span className="relative top-[3px]">

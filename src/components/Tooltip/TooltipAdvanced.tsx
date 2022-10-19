@@ -1,9 +1,7 @@
 import clsx from "clsx";
 import Image from "next/image";
 import * as React from "react";
-
 import { isMobile } from "react-device-detect";
-// import ReactTooltip from 'react-tooltip';
 import closeIcon from "../../assets/icon/common/closeCross.svg";
 import { generateRandomString } from "../../utils/commonUtils";
 import ReactTooltip from "./ReactTooltipExtends";

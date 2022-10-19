@@ -1,11 +1,5 @@
 import * as React from "react";
-import { BigNumber } from "bignumber.js";
-import { useState, useMemo, useEffect } from "react";
-import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import ReactTimeAgo from "react-time-ago";
 import { IEpochCol } from "./types";
-import { IEpochData } from "../../api/util/types";
-import { fetchEpochData } from "../../api/util/epoch";
 
 export function EpochCol(props: IEpochCol) {
   const dateFormat = (dates: number) => {

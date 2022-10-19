@@ -2,9 +2,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import { IStatsCardProps } from "./types";
 import info from "../../assets/icon/common/infoIcon.svg";
-
 import claim from "../../assets/icon/myPortfolio/claim.svg";
-import Button from "../Button/Button";
 
 function StatsCardFirst(props: IStatsCardProps) {
   return (

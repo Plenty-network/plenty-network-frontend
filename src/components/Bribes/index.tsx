@@ -2,23 +2,16 @@ import HeadInfo from "../HeadInfo";
 import { BribesMainProps } from "./types";
 
 import { BigNumber } from "bignumber.js";
-import { useEffect, useState, useRef } from "react";
-import { CardHeader } from "../Pools/Cardheader";
+import { useEffect, useState } from "react";
 import { BribesCardHeader, BribesHeader } from "./BribesHeader";
-import { IAllLocksPositionData } from "../../api/portfolio/types";
-import { getAllLocksPositionData } from "../../api/portfolio/locks";
 import { AppDispatch, store } from "../../redux";
 import { PoolsTableBribes } from "./PoolsTableBribes";
 import AddBribes from "./AddBribes";
 import { tokenParameter } from "../../constants/swap";
 import { MyBribesTableBribes } from "./MyBribes";
 import { SideBarHOC } from "../Sidebar/SideBarHOC";
-import { getPoolsDataForBribes, getUserBribeData } from "../../api/bribes";
-import {
-  IPoolsForBribesData,
-  IPoolsForBribesResponse,
-  IUserBribeData,
-} from "../../api/bribes/types";
+
+import { IPoolsForBribesData } from "../../api/bribes/types";
 import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
 import { useDispatch } from "react-redux";

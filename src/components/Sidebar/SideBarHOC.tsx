@@ -65,7 +65,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
           <div
             className={`mt-0 ${
               !isMobile && !props.isBribes ? "md:ml-[240px] md:w-[calc(100%_-_240px)]" : ""
-            } w-full mb-12 md:static absolute h-[calc(100%_-_121px)] md:mb-0`}
+            } w-full  md:static overflow-y-auto absolute h-[calc(100%_-_61px)] md:mb-0`}
           >
             <div
               onScroll={onScroll}

@@ -7,7 +7,6 @@ import { ERRORMESSAGES } from "../../constants/swap";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "../../redux";
-import { setUserSettingsSlippage } from "../../redux/userSettings/userSettings";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 interface ITransactionSettingsProps {

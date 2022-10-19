@@ -1,14 +1,12 @@
 import Image from "next/image";
 import * as React from "react";
 import clsx from "clsx";
-
 import lighting from "../../assets/icon/vote/lighting.svg";
 import arrow from "../../assets/icon/vote/arrowNFT.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { ELocksState, IVeNFTData } from "../../api/votes/types";
 import { useDispatch } from "react-redux";
 import { AppDispatch, store } from "../../redux";
-import { setisMyportfolio, setSelectedDropDown } from "../../redux/veNFT";
 import PieChartButton from "../LocksPosition/PieChart";
 
 export interface IDropdownProps {

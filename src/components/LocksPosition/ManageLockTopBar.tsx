@@ -1,9 +1,8 @@
 import * as React from "react";
 import { BigNumber } from "bignumber.js";
-
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { ILockExpiryProps, IPlyLockedProps, ITopBar } from "./types";
+import { ITopBar } from "./types";
 import Image from "next/image";
 import veNFT from "../../assets/icon/myPortfolio/veNFT.svg";
 import info from "../../assets/icon/common/infoIcon.svg";

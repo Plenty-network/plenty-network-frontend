@@ -1,11 +1,8 @@
 import Image from "next/image";
 import * as React from "react";
-import walletNotConnected from "../../../assets/icon/pools/walletNotConnected.svg";
 import noContentAvailble from "../../../assets/icon/pools/noContentAvailable.svg";
-
 import { useAppDispatch } from "../../../redux";
 import { walletConnection } from "../../../redux/wallet/wallet";
-import { OutlineBtn } from "../../Button/OutlineButtonCommon";
 import Link from "next/link";
 import { PoolsCardHeader } from "../Cardheader";
 export interface IWalletNotConnectedProps {

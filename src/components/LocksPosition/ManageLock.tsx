@@ -11,7 +11,7 @@ import { connectedNetwork } from "../../common/walletconnect";
 import { estimateVotingPower } from "../../api/votes";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
-import { MAX_TIME, WEEK, YEAR } from "../../constants/global";
+import { MAX_TIME } from "../../constants/global";
 import { Datepicker } from "../DatePicker";
 import { getCalendarRangeToEnable } from "../../api/util/epoch";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";

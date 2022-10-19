@@ -1,14 +1,10 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
-
-import { useEffect, useMemo, useRef, useState } from "react";
-import { BigNumber } from "bignumber.js";
+import { useEffect, useState } from "react";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import timer from "../../../src/assets/icon/myPortfolio/timer.svg";
-import ply from "../../assets/Tokens/ply.png";
 import Button from "../Button/Button";
-import { ILockRewardsEpochData, IPoolsRewardsData } from "../../api/portfolio/types";
-import { ITokenPriceList } from "../../api/util/types";
+import { ILockRewardsEpochData } from "../../api/portfolio/types";
 
 interface IClaimProps {
   show: boolean;

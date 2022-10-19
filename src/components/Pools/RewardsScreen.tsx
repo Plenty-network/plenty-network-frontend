@@ -1,9 +1,7 @@
 import React from "react";
 import clsx from "clsx";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { ImageCircle } from "./Component/CircularImageInfo";
-import token from "../../assets/Tokens/plenty.png";
-import token2 from "../../assets/Tokens/ctez.png";
 import Button from "../Button/Button";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { AppDispatch, store } from "../../redux";

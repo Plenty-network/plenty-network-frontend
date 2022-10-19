@@ -6,7 +6,6 @@ import { BigNumber } from "bignumber.js";
 import { IStatsCardProps } from "./types";
 import info from "../../assets/icon/common/infoIcon.svg";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { store } from "../../redux";
 
 function StatsCard(props: IStatsCardProps) {
   function nFormatter(num: BigNumber) {
