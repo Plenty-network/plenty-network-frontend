@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   selectedDropDown: { votingPower: "", tokenId: "" },
+  selectedDropDownLocal: { votingPower: "", tokenId: "" },
   isMyPortfolio: false,
 };
 
@@ -16,10 +17,18 @@ const veNFTSlice = createSlice({
       };
       state.isMyPortfolio = true;
     },
+    setSelectedDropDownLocal: (state, action) => {
+      state.selectedDropDownLocal = {
+        votingPower: action.payload.votingPower,
+        tokenId: action.payload.tokenId,
+      };
+      state.isMyPortfolio = true;
+    },
     setisMyportfolio: (state, action) => {
       state.isMyPortfolio = false;
     },
   },
 });
-export const { setSelectedDropDown, setisMyportfolio } = veNFTSlice.actions;
+export const { setSelectedDropDown, setisMyportfolio, setSelectedDropDownLocal } =
+  veNFTSlice.actions;
 export const veNFT = veNFTSlice.reducer;

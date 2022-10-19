@@ -34,7 +34,7 @@ import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getEpochData, setSelectedEpoch } from "../../src/redux/epoch/epoch";
 import { setFlashMessage } from "../../src/redux/flashMessage";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
-import { setSelectedDropDown } from "../../src/redux/veNFT";
+import { setSelectedDropDown, setSelectedDropDownLocal } from "../../src/redux/veNFT";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { setIsLoadingWallet } from "../../src/redux/walletLoading";
 
@@ -210,12 +210,24 @@ export default function Vote() {
   useInterval(() => {
     dispatch(getEpochData());
   }, 60000);
+  const selectDropdownLocal = useAppSelector((state) => state.veNFT.selectedDropDownLocal);
 
   useEffect(() => {
     var flag = false;
 
-    if (selectedDropDown.votingPower !== "" && isMyPortfolio) {
-    } else if (veNFTlist.data.length > 0 && selectedDropDown.votingPower !== "" && !isMyPortfolio) {
+    if (selectedDropDown.votingPower === "" && isMyPortfolio) {
+      dispatch(
+        setSelectedDropDown({
+          votingPower: selectDropdownLocal.votingPower.toString(),
+          tokenId: selectDropdownLocal.tokenId.toString(),
+        })
+      );
+    } else if (
+      !veNFTlist.isfetching &&
+      veNFTlist.data.length > 0 &&
+      selectedDropDown.votingPower !== "" &&
+      !isMyPortfolio
+    ) {
       veNFTlist.data.map((list) => {
         if (Number(list.tokenId) === Number(selectedDropDown.tokenId)) {
           flag = true;
@@ -246,21 +258,20 @@ export default function Vote() {
         );
       }
     } else {
-      if (!flag && veNFTlist.data.length > 0) {
-        dispatch(
-          setSelectedDropDown({
-            votingPower: veNFTlist.data[0].votingPower.toString(),
-            tokenId: veNFTlist.data[0].tokenId.toString(),
-          })
-        );
-      } else {
-        dispatch(
-          setSelectedDropDown({
-            votingPower: "",
-            tokenId: "",
-          })
-        );
-      }
+      dispatch(
+        setSelectedDropDown({
+          votingPower: "",
+          tokenId: "",
+        })
+      );
+    }
+    if (selectedDropDown.votingPower === "" && isMyPortfolio) {
+      dispatch(
+        setSelectedDropDown({
+          votingPower: selectDropdownLocal.votingPower.toString(),
+          tokenId: selectDropdownLocal.tokenId.toString(),
+        })
+      );
     }
   }, [veNFTlist.data, userAddress]);
 
@@ -516,7 +527,7 @@ export default function Vote() {
                         "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                       )}
                     >
-                      Cast Vote
+                      Cast vote
                     </div>
                   ) : (sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
                     (selectedEpoch?.epochNumber
@@ -557,7 +568,7 @@ export default function Vote() {
                             : () => {}
                         }
                       >
-                        Cast Vote
+                        Cast vote
                       </div>
                     </ToolTip>
                   ) : sumOfVotes === 100 ? (
@@ -568,7 +579,7 @@ export default function Vote() {
                         "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                       )}
                     >
-                      Already Voted
+                      Already voted
                     </div>
                   ) : (
                     <div
@@ -598,7 +609,7 @@ export default function Vote() {
                           : () => {}
                       }
                     >
-                      Cast Vote
+                      Cast vote
                     </div>
                   )}
                 </div>
@@ -670,7 +681,7 @@ export default function Vote() {
                       "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                     )}
                   >
-                    Cast Vote
+                    Cast vote
                   </div>
                 ) : (sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
                   (selectedEpoch?.epochNumber
@@ -709,7 +720,7 @@ export default function Vote() {
                           : () => {}
                       }
                     >
-                      Cast Vote
+                      Cast vote
                     </div>
                   </ToolTip>
                 ) : sumOfVotes === 100 ? (
@@ -720,7 +731,7 @@ export default function Vote() {
                       "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                     )}
                   >
-                    Already Voted
+                    Already voted
                   </div>
                 ) : (
                   <div
@@ -749,7 +760,7 @@ export default function Vote() {
                         : () => {}
                     }
                   >
-                    Cast Vote
+                    Cast vote
                   </div>
                 )}
               </div>

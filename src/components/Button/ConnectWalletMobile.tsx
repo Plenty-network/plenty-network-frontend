@@ -61,7 +61,7 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
               props.isBanner ? "top-[52px]" : ""
             )}
           >
-            <p className="bg-primary-755 text-f14 p-4 flex gap-2">
+            {/* <p className="bg-primary-755 text-f14 p-4 flex gap-2">
               <span className="text-text-400">Temple wallet</span>(
               <span
                 className="text-text-50"
@@ -75,7 +75,7 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
                 {truncateMiddle(userAddress, 4, 4, "...")}
               </span>
               )
-            </p>
+            </p> */}
             <p
               className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
               onClick={() => copy(userAddress)}
