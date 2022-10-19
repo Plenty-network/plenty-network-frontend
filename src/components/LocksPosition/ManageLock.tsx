@@ -11,7 +11,7 @@ import { connectedNetwork } from "../../common/walletconnect";
 import { estimateVotingPower } from "../../api/votes";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
-import { MAX_TIME } from "../../constants/global";
+import { MAX_TIME, WEEK } from "../../constants/global";
 import { Datepicker } from "../DatePicker";
 import { getCalendarRangeToEnable } from "../../api/util/epoch";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
@@ -91,9 +91,6 @@ function ManageLock(props: IManageLockProps) {
     return `${date.getDate()}/${("0" + (date.getMonth() + 1)).slice(-2)}/${date.getFullYear()}`;
   };
   const handleDateSelection = (days: number | undefined, userSelectedDate: string | undefined) => {
-    const DAY = connectedNetwork === "testnet" ? 480 : 86400;
-    const WEEK = 7 * DAY;
-
     const now = Math.floor(new Date().getTime() / 1000);
 
     const timeSpan = days
