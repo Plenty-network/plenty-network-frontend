@@ -38,7 +38,7 @@ export function EpochDropdown(props: IDropdownProps) {
       "Sep",
       "Oct",
       "Nov",
-      "Decr",
+      "Dec",
     ];
 
     var year = date.getFullYear();
@@ -126,7 +126,7 @@ export function EpochDropdown(props: IDropdownProps) {
         "Sep",
         "Oct",
         "Nov",
-        "Decr",
+        "Dec",
       ];
 
       var year = date.getFullYear();

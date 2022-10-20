@@ -29,7 +29,7 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
       "Sep",
       "Oct",
       "Nov",
-      "Decr",
+      "Dec",
     ];
     var date = new Date(dates);
     var month = date.getMonth();

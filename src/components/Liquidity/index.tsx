@@ -223,7 +223,7 @@ function Liquidity(props: ILiquidityProps) {
               </div>
             </>
           ) : (
-            <div className="font-body2 text-white">No Liquidity positions</div>
+            <div className="font-body2 text-white">No liquidity positions</div>
           )}
         </div>
       )}
