@@ -219,8 +219,7 @@ export const getAllLocksRewardsData = async (
       }
       allLocksRewardsData[lockData.lockId] = locksRewardsTokenData;
     }
-    console.log(allLocksRewardsData);
-    console.log(totalTradingFeesAmount.toString(), totalBribesAmount.toString());
+    
     // console.log(locksIndexerData);
     return {
       allLocksRewardsData,
@@ -389,11 +388,7 @@ export const getAllRewardsOperationsData = async (
     const claimableEpochData = filterEmptyEpochClaimData(allEpochClaimOperationData);
     //Format the data structure as well as filter out empty data
     const claimableFeesData = createClaimAllFeeData(allFeesClaimData);
-    console.log(allEpochClaimOperationData);
-    console.log(claimableEpochData);
-    console.log(allBribesClaimData);
-    console.log(allFeesClaimData);
-    console.log(claimableFeesData);
+    
 
     return {
       epochClaimData: claimableEpochData,

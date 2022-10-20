@@ -571,7 +571,6 @@ export const addRemainingVotesDust = (
     if (remainingVotesDust.isGreaterThan(0) && new BigNumber(totalVotesPercentage).isEqualTo(100)) {
       finalVotesData[finalVotesData.length - 1].votes =
         finalVotesData[finalVotesData.length - 1].votes.plus(remainingVotesDust);
-        console.log('Dust added');
     }
     return finalVotesData;
   } catch (error: any) {

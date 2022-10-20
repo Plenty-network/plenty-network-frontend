@@ -34,7 +34,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
   const remainingTime = epochData ? epochData.endTimestamp - new Date().getTime() : 0;
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   const remainingPercentage =
-    totalTime === 0 || remainingTime === 0 ? (remainingTime * 100) / totalTime : 0;
+    totalTime === 0 || remainingTime === 0 ? 0 : (remainingTime * 100) / totalTime;
   const { valueFormat } = useTableNumberUtils();
   useEffect(() => {
     getVeNFTsList(userAddress, epochData?.epochNumber).then((res) => {

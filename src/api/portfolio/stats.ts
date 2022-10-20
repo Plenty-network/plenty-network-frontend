@@ -136,7 +136,7 @@ export const getVotesStatsData = async (
     let [totalEpochVotingPower, totalPlyLocked]: [BigNumber, BigNumber] = locksData.reduce(
       ([epochVotingPowerSum, plyLockedSum]: [BigNumber, BigNumber], lock: any) =>
         ([epochVotingPowerSum, plyLockedSum] = [
-          epochVotingPowerSum.plus(new BigNumber(lock.epochtVotingPower)),
+          epochVotingPowerSum.plus(new BigNumber(lock.currentVotingPower)), //Considering current voting power
           plyLockedSum.plus(new BigNumber(lock.baseValue)),
         ]),
       [new BigNumber(0), new BigNumber(0)]
@@ -200,7 +200,6 @@ export const getUnclaimedInflationData = async (
               new BigNumber(tokenPrices["PLY"] || 0)
             ),
           });
-          // inflationOpertionData.push({ tokenId: Number(lockData.id), epochs: [Number(inflationData.epoch)] });
         }
         // Create chunks of epoch data for a token
         if (epochsList.length === 5) {
@@ -214,9 +213,9 @@ export const getUnclaimedInflationData = async (
       }
       allLocksInflationData[lockData.id] = lockInflationData;
       // console.log(lockData);
-      console.log(inflationOpertionData);
+      
     }
-    console.log(allLocksInflationData);
+    
     totalUnclaimedPLYValue = totalUnclaimedPLYValue.dividedBy(PLY_DECIMAL_MULTIPLIER);
     const unclaimedInflationData: IUnclaimedInflationData = {
       unclaimedInflationValue: totalUnclaimedPLYValue.multipliedBy(

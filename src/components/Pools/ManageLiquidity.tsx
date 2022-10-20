@@ -341,7 +341,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               transactionId: response.operationId ? response.operationId : "",
             })
           );
-        }, 2000);
+        }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       } else {
@@ -454,7 +454,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               transactionId: response.operationId ? response.operationId : "",
             })
           );
-        }, 2000);
+        }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       } else {
@@ -554,7 +554,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               transactionId: response.operationId ? response.operationId : "",
             })
           );
-        }, 2000);
+        }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       } else {
@@ -624,7 +624,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               transactionId: response.operationId ? response.operationId : "",
             })
           );
-        }, 2000);
+        }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       } else {
@@ -719,7 +719,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               transactionId: response.operationId ? response.operationId : "",
             })
           );
-        }, 2000);
+        }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
       } else {
