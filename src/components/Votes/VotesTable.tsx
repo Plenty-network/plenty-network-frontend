@@ -289,7 +289,7 @@ export function VotesTable(props: IVotesTableProps) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
           noSearchResult={noSearchResult}
-          shortby="pools"
+          shortby="Rewards"
           isFetched={!noSearchResult && votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
           isVotesTable={true}
