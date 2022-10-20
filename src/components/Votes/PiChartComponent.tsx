@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PieChart, Pie, Cell, Sector } from "recharts";
-import { IVotesResponse } from '../../api/votes/types';
+import { IVotesData } from '../../api/votes/types';
 import { tEZorCTEZTtoUpperCase } from '../../utils/commonUtils';
 
 
@@ -47,16 +47,25 @@ const RenderActiveShape = (props: any) => {
 };
 
 export interface IPiChartProps {
-  piChartData: IVotesResponse;
+  piChartData: IVotesData[];
   selectedColorIndex: number;
   setSelectedColorIndex: Function;
 }
  export const COLORSdataChart = ["#4E4955", "#6B6670", "#88848C","#A4A2A8","#403A47","#5C5863","#79757E","#96939A","#B3B0B5"];
   
 export default function PiChart (props: IPiChartProps) {
-   const dataChart = props.piChartData.allData.map((e)=> {
-     return {name: `${tEZorCTEZTtoUpperCase(e.tokenOneSymbol??'')} / ${tEZorCTEZTtoUpperCase(e.tokenTwoSymbol??'')}`, value: e.votePercentage.toNumber(),ply:e.votes}
-    });
+   const dataChart = props.piChartData.map((e) => {
+     return {
+       name:
+         e.tokenOneSymbol && e.tokenTwoSymbol
+           ? `${tEZorCTEZTtoUpperCase(e.tokenOneSymbol ?? "")} / ${tEZorCTEZTtoUpperCase(
+               e.tokenTwoSymbol ?? ""
+             )}`
+           : "Others",
+       value: e.votePercentage.toNumber(),
+       ply: e.votes,
+     };
+   });
   const onPieEnter = React.useCallback(
     (_:any, index:number) => {
       props.setSelectedColorIndex(index);
