@@ -17,7 +17,7 @@ function SelectNFT(props: ISelectNFT) {
               ? "loading..."
               : props.veNFTlist.length === 0
               ? "No veNFT available"
-              : "No NFTs selected"
+              : "No veNFTs selected"
           }
           Options={props.veNFTlist}
           selectedText={props.selectedText}
