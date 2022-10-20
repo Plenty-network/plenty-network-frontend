@@ -6,7 +6,7 @@ import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import Image from "next/image";
 import Button from "../Button/Button";
 import clsx from "clsx";
-import { AppDispatch, store } from "../../redux";
+import { AppDispatch, store, useAppSelector } from "../../redux";
 import { connectedNetwork } from "../../common/walletconnect";
 import { estimateVotingPower } from "../../api/votes";
 import { useDispatch } from "react-redux";
@@ -20,7 +20,8 @@ import { IManageLockProps } from "./types";
 import ConfirmLocking from "../Votes/ConfirmLocking";
 
 function ManageLock(props: IManageLockProps) {
-  const walletAddress = store.getState().wallet.address;
+  // const walletAddress = store.getState().wallet.address;
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const [screen, setScreen] = useState("1");
   const [votingPower, setVotingPower] = useState(0);

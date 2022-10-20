@@ -7,7 +7,7 @@ import { IPoolsDataWrapperResponse } from "../../api/pools/types";
 import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
 import { usePoolsTableSearch } from "../../hooks/usePoolsTableSearch";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
-import { AppDispatch, store } from "../../redux";
+import { AppDispatch, store, useAppSelector } from "../../redux";
 import { getTotalVotingPower } from "../../redux/pools";
 import { compareNumericString } from "../../utils/commonUtils";
 import { BribesPool } from "../Bribes/BribesPools";
@@ -39,7 +39,8 @@ export interface IManageBtnProps {
   tokenB: string;
 }
 export function ShortCard(props: IShortCardProps) {
-  const userAddress = store.getState().wallet.address;
+  // const userAddress = store.getState().wallet.address;
+  const userAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(

@@ -63,7 +63,8 @@ export default function Vote() {
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const [selectedPools, setSelectedPools] = useState<ISelectedPool[]>([] as ISelectedPool[]);
-  const selectedDropDown = store.getState().veNFT.selectedDropDown;
+  // const selectedDropDown = store.getState().veNFT.selectedDropDown;
+  const selectedDropDown = useAppSelector((state) => state.veNFT.selectedDropDown);
 
   const isMyPortfolio = useAppSelector((state) => state.veNFT.isMyPortfolio);
   const [selectednft, setSelectednft] = useState(selectedDropDown);

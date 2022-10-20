@@ -5,7 +5,7 @@ import * as React from "react";
 import "animate.css";
 import plentyIcon from "../../assets/icon/common/plentyLogo.svg";
 import myportfolionav from "../../assets/icon/myPortfolio/myportfolionav.svg";
-import { store } from "../../redux";
+import { store, useAppSelector } from "../../redux";
 import { ConnectWalletBtnDeskTop } from "../Button/ConnectWalletDesktop";
 import { Epoch } from "../Epoch";
 import { NotificationIcon } from "../NotificationIcon";
@@ -36,7 +36,8 @@ export function IconBTN(props: IIconBTNProps) {
 }
 
 export function TopNavBar(props: ITopNavBarProps) {
-  const userAddress = store.getState().wallet.address;
+  // const userAddress = store.getState().wallet.address;
+  const userAddress = useAppSelector((state) => state.wallet.address);
   //const isBanner = store.getState().walletLoading.isBanner;
   return (
     <>

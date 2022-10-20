@@ -9,7 +9,7 @@ import Button from "../Button/Button";
 import ConfirmLocking from "./ConfirmLocking";
 import { ICreateLockProps } from "./types";
 import clsx from "clsx";
-import { AppDispatch, store } from "../../redux";
+import { AppDispatch, store, useAppSelector } from "../../redux";
 import { estimateVotingPower } from "../../api/votes";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
@@ -19,7 +19,8 @@ import { getCalendarRangeToEnable } from "../../api/util/epoch";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 function CreateLock(props: ICreateLockProps) {
-  const walletAddress = store.getState().wallet.address;
+  // const walletAddress = store.getState().wallet.address;
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const [screen, setScreen] = useState("1");
   const [votingPower, setVotingPower] = useState(0);

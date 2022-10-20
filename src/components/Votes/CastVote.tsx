@@ -7,11 +7,12 @@ import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import { ICastVoteProps } from "./types";
 import React, { useMemo } from "react";
-import { store } from "../../redux";
+import { store, useAppSelector } from "../../redux";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 function CastVote(props: ICastVoteProps) {
-  const currentEpoch = store.getState().epoch.currentEpoch;
+  // const currentEpoch = store.getState().epoch.currentEpoch;
+  const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
   const closeModal = () => {
     props.setShow(false);
   };
