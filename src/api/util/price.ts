@@ -92,6 +92,8 @@ export const getXtzDollarPrice = async (): Promise<number> => {
 /**
  * Gets price of tokens to show during trade
  */
+// TODO :  get angle protocol to add plenty.network in whitelist
+// TODO : Mainnet launch take a look at Pricing function
 export const getTokenPrices = async (): Promise<{
   success: boolean;
   tokenPrice: { [id: string]: number };
@@ -110,6 +112,19 @@ export const getTokenPrices = async (): Promise<{
 
     const tokenPrice: { [id: string]: number } = {};
     const tokens = Object.keys(TOKEN);
+
+    const indexerPriceResponse = await axios.get(`${Config.PLY_INDEXER}analytics/tokens`);
+    const indexerPricesData = indexerPriceResponse.data;
+
+    for(const i in tokenPriceResponse.contracts){
+      for(const j in indexerPricesData){
+        if(tokenPriceResponse.contracts[i].symbol === indexerPricesData[j].token){
+          if(tokenPriceResponse.contracts[i].symbol === 'WETH.e' || tokenPriceResponse.contracts[i].symbol === 'MATIC.e')
+          continue;
+          tokenPriceResponse.contracts[i].usdValue = indexerPricesData[j].price.value;
+        }
+      }
+    }
     
     const tokenSymbols: { [id: string]: { symbol?: string } } = {};
     Object.keys(TOKEN).forEach(function (key) {
@@ -126,18 +141,18 @@ export const getTokenPrices = async (): Promise<{
         }
       }
     }
-    // TODO : Remove this for removing wAssets
+     // TODO : Remove this for removing wAssets
     for (const i in tokenPriceResponse.contracts) {
       const x = tokenPriceResponse.contracts[i].symbol;
       if (
-        x === 'wDAI' ||
-        x === 'wUSDC' ||
-        x === 'wUSDT' ||
-        x === 'wLINK' ||
+        // x === 'wDAI' ||
+        // x === 'wUSDC' ||
+        // x === 'wUSDT' ||
+        // x === 'wLINK' ||
         x === 'wMATIC' ||
-        x === 'wBUSD' ||
-        x === 'wWETH' ||
-        x === 'wWBTC'
+        // x === 'wBUSD' ||
+        x === 'wWETH'
+        // x === 'wWBTC'
       ) {
         tokenPrice[tokenPriceResponse.contracts[i].symbol] =
           tokenPriceResponse.contracts[i].usdValue;
@@ -146,14 +161,14 @@ export const getTokenPrices = async (): Promise<{
     // TODO: Find solution with Anshu for .e token prices
     for (const x in Config.WRAPPED_ASSETS[connectedNetwork]) {
       if (
-        x === 'DAI.e' ||
-        x === 'USDC.e' ||
-        x === 'USDT.e' ||
-        x === 'LINK.e' ||
+        // x === 'DAI.e' ||
+        // x === 'USDC.e' ||
+        // x === 'USDT.e' ||
+        // x === 'LINK.e' ||
         x === 'MATIC.e' ||
-        x === 'BUSD.e' ||
-        x === 'WETH.e' ||
-        x === 'WBTC.e'
+        // x === 'BUSD.e' ||
+        x === 'WETH.e' 
+        // x === 'WBTC.e'
       ) {
         tokenPrice[x] =
           tokenPrice[Config.WRAPPED_ASSETS[connectedNetwork][x].REF_TOKEN];
