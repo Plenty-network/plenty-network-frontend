@@ -8,7 +8,7 @@ import { useCountdown } from "../../hooks/useCountDown";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { IEpochListObject } from "../../api/util/types";
 import { useDispatch } from "react-redux";
-import { AppDispatch, store } from "../../redux";
+import { AppDispatch, store, useAppSelector } from "../../redux";
 import { getEpochData, setSelectedEpoch } from "../../redux/epoch/epoch";
 import { useInterval } from "../../hooks/useInterval";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
@@ -22,9 +22,12 @@ export interface IEpochProps {
 export function Epoch(props: IEpochProps) {
   const router = useRouter();
   const [isDropDownActive, setIsDropDownActive] = React.useState(false);
-  const epochData = store.getState().epoch.epochData;
-  const currentEpoch = store.getState().epoch.currentEpoch;
-  const selectedEpoch = store.getState().epoch.selectedEpoch;
+  // const epochData = store.getState().epoch.epochData;
+  const epochData = useAppSelector((state) => state.epoch.epochData);
+  // const currentEpoch = store.getState().epoch.currentEpoch;
+  const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
+  // const selectedEpoch = store.getState().epoch.selectedEpoch;
+  const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const reff = React.useRef(null);
   const dispatch = useDispatch<AppDispatch>();
   useOutsideClick(reff, () => {

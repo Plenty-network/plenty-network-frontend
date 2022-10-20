@@ -121,7 +121,12 @@ export const getTokenPrices = async (): Promise<{
         if(tokenPriceResponse.contracts[i].symbol === indexerPricesData[j].token){
           if(tokenPriceResponse.contracts[i].symbol === 'WETH.e' || tokenPriceResponse.contracts[i].symbol === 'MATIC.e')
           continue;
-          tokenPriceResponse.contracts[i].usdValue = indexerPricesData[j].price.value;
+          tokenPriceResponse.contracts[i].usdValue = Number(indexerPricesData[j].price.value);
+        } else {
+          if(indexerPricesData[j].token === 'WETH.e' || indexerPricesData[j].token === 'MATIC.e') {
+            continue;
+          }
+          tokenPrice[indexerPricesData[j].token] = Number(indexerPricesData[j].price.value);
         }
       }
     }

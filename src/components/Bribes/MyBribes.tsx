@@ -5,7 +5,7 @@ import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
 import { IBribesTableBribes } from "./types";
-import { store } from "../../redux";
+import { store, useAppSelector } from "../../redux";
 import { useEffect } from "react";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
@@ -19,7 +19,8 @@ import { WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
 TimeAgo.addDefaultLocale(en);
 
 export function MyBribesTableBribes(props: IBribesTableBribes) {
-  const userAddress = store.getState().wallet.address;
+  // const userAddress = store.getState().wallet.address;
+  const userAddress = useAppSelector((state) => state.wallet.address);
 
   const { valueFormat } = useTableNumberUtils();
 

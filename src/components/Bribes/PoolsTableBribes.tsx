@@ -7,7 +7,7 @@ import { isMobile } from "react-device-detect";
 import { IVeNFTData } from "../../api/votes/types";
 import { IBribesBtn, IPoolsTableBribes } from "./types";
 
-import { store } from "../../redux";
+import { store, useAppSelector } from "../../redux";
 import { useEffect, useState } from "react";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
@@ -22,7 +22,8 @@ import { BribesPool } from "./BribesPools";
 TimeAgo.addDefaultLocale(en);
 
 export function PoolsTableBribes(props: IPoolsTableBribes) {
-  const userAddress = store.getState().wallet.address;
+  // const userAddress = store.getState().wallet.address;
+  const userAddress = useAppSelector((state) => state.wallet.address);
 
   const { valueFormat } = useTableNumberUtils();
 
