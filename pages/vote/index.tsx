@@ -439,7 +439,7 @@ export default function Vote() {
               transactionId: response.operationId ? response.operationId : "",
             })
           );
-        }, 2000);
+        }, 6000);
         setTimeout(() => {
           setCastVoteOperation(true);
         }, 6000);
