@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import * as React from "react";
 import "animate.css";
@@ -37,7 +38,7 @@ export function IconBTN(props: IIconBTNProps) {
 
 export function TopNavBar(props: ITopNavBarProps) {
   const userAddress = store.getState().wallet.address;
-  //const isBanner = store.getState().walletLoading.isBanner;
+  const router = useRouter();
   return (
     <>
       <nav
@@ -57,8 +58,8 @@ export function TopNavBar(props: ITopNavBarProps) {
         </div>
         {!props.isLanding && (
           <div className="flex justify-between flex-1 h-full">
-            <Epoch />
-            <div className="flex flex-row gap-7 ">
+            {!router.pathname.includes("swap") && <Epoch />}
+            <div className="ml-auto flex flex-row gap-7 ">
               <div className="flex flex-row gap-3.5 ">
                 {userAddress && !props.isBribes && (
                   <Link className={`cursor-pointer hover:opacity-90 `} href={"/myportfolio"}>
