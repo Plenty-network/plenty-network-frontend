@@ -126,7 +126,7 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "futureApr"),
         accessor: (x: any) => <AprInfoFuture futureApr={x.futureApr} />,
       },
       {
@@ -191,7 +191,7 @@ export function ShortCard(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "futureApr"),
         accessor: (x: any) => <AprInfoFuture futureApr={x.futureApr} />,
       },
       {
