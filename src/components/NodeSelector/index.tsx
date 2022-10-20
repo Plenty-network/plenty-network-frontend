@@ -120,7 +120,6 @@ function NodeSelector(props: any) {
         _customRPC += "/";
       }
       const response = await isValidURL(_customRPC);
-      console.log(response);
       if (!response) {
         handleInput("");
         setErrorMessage("Please enter valid rpc");

@@ -33,8 +33,8 @@ function TokenModal(props: ISwapModalProps) {
     (token: tokensModal) => {
       return (
         searchQuery.length === 0 ||
-        token.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        token.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        token.name.trim().toLowerCase().includes(searchQuery.trim().toLowerCase()) ||
+        token.address?.toLowerCase().includes(searchQuery.trim().toLowerCase()) ||
         (searchQuery.toLowerCase() === "xtz" && token.name.toLowerCase().search(/\btez\b/) >= 0)
       );
     },

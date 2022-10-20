@@ -41,8 +41,8 @@ export function VotesTable(props: IVotesTableProps) {
     if (props.searchValue && props.searchValue.length) {
       const _votesTableData = votedataArray.filter((e: any) => {
         return (
-          e.votes.tokenA.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-          e.votes.tokenB.toLowerCase().includes(props.searchValue.toLowerCase()) ||
+          e.votes.tokenA.toLowerCase().includes(props.searchValue.trim().toLowerCase()) ||
+          e.votes.tokenB.toLowerCase().includes(props.searchValue.trim().toLowerCase()) ||
           (props.searchValue.toLowerCase() === "xtz" &&
             e.votes.tokenA.toLowerCase().search(/\btez\b/) >= 0) ||
           (props.searchValue.toLowerCase() === "xtz" &&

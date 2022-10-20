@@ -11,8 +11,8 @@ export const usePoolsTableSearch = (
     if (searchText && searchText.length) {
       const _poolsTableData = poolsTable.filter((e: any) => {
         return (
-          e.tokenA.toLowerCase().includes(searchText) ||
-          e.tokenB.toLowerCase().includes(searchText) ||
+          e.tokenA.toLowerCase().includes(searchText.trim().toLowerCase()) ||
+          e.tokenB.toLowerCase().includes(searchText.trim().toLowerCase()) ||
           (searchText.toLowerCase() === "xtz" && e.tokenA.toLowerCase().search(/\btez\b/) >= 0) ||
           (searchText.toLowerCase() === "xtz" && e.tokenB.toLowerCase().search(/\btez\b/) >= 0)
         );
