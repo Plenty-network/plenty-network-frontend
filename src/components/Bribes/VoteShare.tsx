@@ -24,7 +24,7 @@ export function VoteShare(props: IVoteShare) {
         disable={Number(props.value) === 0 ? true : false}
         toolTipChild={
           <div className="flex gap-1">
-            <div className="text-text-50 font-body1">My Votes:</div>
+            <div className="text-text-50 font-body1">Votes:</div>
             <div className="text-white font-caption2 ">{props.value.toString()}</div>
           </div>
         }

@@ -15,7 +15,7 @@ export function EpochCol(props: IEpochCol) {
       "Sep",
       "Oct",
       "Nov",
-      "Decr",
+      "Dec",
     ];
     var date = new Date(dates);
     var month = date.getMonth();
