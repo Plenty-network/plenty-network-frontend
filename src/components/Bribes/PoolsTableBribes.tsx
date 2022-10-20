@@ -35,8 +35,8 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
     if (props.searchValue && props.searchValue.length) {
       const filter = props.locksPosition.filter((e: any) => {
         return (
-          e.tokenA.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-          e.tokenB.toLowerCase().includes(props.searchValue.toLowerCase()) ||
+          e.tokenA.toLowerCase().includes(props.searchValue.trim().toLowerCase()) ||
+          e.tokenB.toLowerCase().includes(props.searchValue.trim().toLowerCase()) ||
           (props.searchValue.toLowerCase() === "xtz" &&
             e.tokenA.toLowerCase().search(/\btez\b/) >= 0) ||
           (props.searchValue.toLowerCase() === "xtz" &&

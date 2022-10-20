@@ -51,8 +51,8 @@ function SwapModal(props: ISwapModalProps) {
     (token: tokensModal) => {
       return (
         props.searchQuery.length === 0 ||
-        token.name.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
-        token.address?.toLowerCase().includes(props.searchQuery.toLowerCase()) ||
+        token.name.toLowerCase().includes(props.searchQuery.trim().toLowerCase()) ||
+        token.address?.toLowerCase().includes(props.searchQuery.trim().toLowerCase()) ||
         (props.searchQuery.toLowerCase() === "xtz" &&
           token.name.toLowerCase().search(/\btez\b/) >= 0)
       );
