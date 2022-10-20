@@ -7,9 +7,9 @@ function Protocol(props: {
   setSelectedDropDown: Function;
   selectedDropDown: any;
 }) {
-  if (!props.isSelected) {
-    props.Options = [];
-  }
+  // if (!props.isSelected) {
+  //   props.Options = [];
+  // }
   return (
     <div>
       <Dropdown
