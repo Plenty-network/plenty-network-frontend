@@ -10,6 +10,7 @@ import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import { AppDispatch, store } from "../../redux";
 import { getTotalVotingPower } from "../../redux/pools";
 import { compareNumericString } from "../../utils/commonUtils";
+import { BribesPool } from "../Bribes/BribesPools";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import Table from "../Table/Table";
 import { AprInfoFuture } from "./Component/AprFuture";
@@ -254,7 +255,7 @@ export function ShortCard(props: IShortCardProps) {
         tooltipMessage:
           "Incentives provided by the protocols to boost the liquidity of their tokens.",
         isToolTipEnabled: true,
-        accessor: (x) => <PoolsText text={valueFormat(x.bribeUSD.toNumber())} />,
+        accessor: (x) => <BribesPool value={x.bribeUSD} bribesData={x.bribes} />,
       },
       {
         Header: "",
