@@ -29,7 +29,7 @@ export function VeNFT(props: IDropdownProps) {
   const totalTime = epochData ? epochData.endTimestamp - epochData.startTimestamp : 0;
   const remainingTime = epochData ? epochData.endTimestamp - new Date().getTime() : 0;
   const remainingPercentage =
-    totalTime === 0 || remainingTime === 0 ? (remainingTime * 100) / totalTime : 0;
+    totalTime === 0 || remainingTime === 0 ? 0 : (remainingTime * 100) / totalTime;
 
   // currentTS = new Date().getTime() if epoch start and end TS are in milliseconds or Math.floor(new Date().getTime() /1000)
   //const props.selectedText = store.getState().veNFT.props.selectedText;
