@@ -2,7 +2,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import * as React from "react";
 import playIcon from "../../assets/icon/pools/playIcon.svg";
-import { store } from "../../redux";
+import { store, useAppSelector } from "../../redux";
 import { VideoModal } from "../Modal/videoModal";
 import { InputSearchBox } from "../Pools/Component/SearchInputBox";
 import { ToolTip } from "../Tooltip/TooltipAdvanced";
@@ -17,7 +17,8 @@ export interface IHeadInfoProps {
 }
 
 export default function HeadInfo(props: IHeadInfoProps) {
-  const userAddress = store.getState().wallet.address;
+  // const userAddress = store.getState().wallet.address;
+  const userAddress = useAppSelector((state) => state.wallet.address);
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   return (
     <div

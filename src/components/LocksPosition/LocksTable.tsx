@@ -14,7 +14,7 @@ import { PlyLocked } from "./PlyLocked";
 import { LockExpiry } from "./LockExpiry";
 import PieChartButton from "./PieChart";
 import { useDispatch } from "react-redux";
-import { AppDispatch, store } from "../../redux";
+import { AppDispatch, store, useAppSelector } from "../../redux";
 import { setSelectedDropDown, setSelectedDropDownLocal } from "../../redux/veNFT";
 import { useRouter } from "next/router";
 import { IAllLocksPositionData } from "../../api/portfolio/types";
@@ -28,8 +28,10 @@ import { NoLocks } from "../Rewards/NoLocks";
 TimeAgo.addDefaultLocale(en);
 
 export function LocksTablePosition(props: ILocksTablePosition) {
-  const epochData = store.getState().epoch.currentEpoch;
-  const userAddress = store.getState().wallet.address;
+  // const epochData = store.getState().epoch.currentEpoch;
+  const epochData = useAppSelector((state) => state.epoch.currentEpoch);
+  // const userAddress = store.getState().wallet.address;
+  const userAddress = useAppSelector((state) => state.wallet.address);
   const totalTime = epochData ? epochData.endTimestamp - epochData.startTimestamp : 0;
   const remainingTime = epochData ? epochData.endTimestamp - new Date().getTime() : 0;
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);

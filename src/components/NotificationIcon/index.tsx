@@ -18,7 +18,8 @@ export function NotificationIcon(props: INotificationIconProps) {
   const { isLoading } = useAppSelector((state) => state.flashMessage);
   const [ringAnimate, setRingAnimate] = React.useState(false);
   const [type, setType] = React.useState(NotiFicationType.noNotification);
-  const hasNotification = store.getState().wallet.hasNotification;
+  // const hasNotification = store.getState().wallet.hasNotification;
+  const hasNotification = useAppSelector((state) => state.wallet.hasNotification);
   const length = getAllNotification(walletAddress).length;
 
   React.useEffect(() => {

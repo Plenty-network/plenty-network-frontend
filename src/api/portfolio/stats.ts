@@ -223,10 +223,7 @@ export const getUnclaimedInflationData = async (
       ),
       unclaimedInflationAmount: totalUnclaimedPLYValue,
     };
-    console.log(
-      unclaimedInflationData.unclaimedInflationAmount.toString(),
-      unclaimedInflationData.unclaimedInflationValue.toString()
-    );
+
     inflationOpertionData.sort((a, b) => a.tokenId - b.tokenId);
     return {
       unclaimedInflationData,

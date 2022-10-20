@@ -2,10 +2,11 @@ import { EClaimAllState, IStatsRewardsProps } from "./types";
 
 import { BigNumber } from "bignumber.js";
 import StatsCard from "./StatsCard";
-import { store } from "../../redux";
+import { store, useAppSelector } from "../../redux";
 
 function StatsRewards(props: IStatsRewardsProps) {
-  const claimAllInflationData = store.getState().portfolioRewards.claimAllInflationData;
+  // const claimAllInflationData = store.getState().portfolioRewards.claimAllInflationData;
+  const claimAllInflationData = useAppSelector((state) => state.portfolioRewards.claimAllInflationData);
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
       return num.dividedBy(1000000000).toFixed(2) + "B";

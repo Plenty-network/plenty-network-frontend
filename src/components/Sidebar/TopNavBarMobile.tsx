@@ -3,7 +3,7 @@ import Link from "next/link";
 import * as React from "react";
 import plentyIcon from "../../assets/icon/common/plentyIcon.svg";
 import portfolio from "../../assets/icon/common/portfolio-mobile.svg";
-import { store } from "../../redux";
+import { store, useAppSelector } from "../../redux";
 import { ConnectWalletBtnMobile } from "../Button/ConnectWalletMobile";
 import { NotificationIcon } from "../NotificationIcon";
 import "animate.css";
@@ -17,7 +17,8 @@ export interface ITopNavBarMobileProps {
 }
 
 export function TopNavBarMobile(props: ITopNavBarMobileProps) {
-  const userAddress = store.getState().wallet.address;
+  // const userAddress = store.getState().wallet.address;
+  const userAddress = useAppSelector((state) => state.wallet.address);
   //const isBanner = store.getState().walletLoading.isBanner;
   return (
     <div

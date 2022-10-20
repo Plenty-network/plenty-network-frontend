@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { ImageCircle } from "./Component/CircularImageInfo";
 import Button from "../Button/Button";
 import { tokenParameterLiquidity } from "../Liquidity/types";
-import { AppDispatch, store } from "../../redux";
+import { AppDispatch, store, useAppSelector } from "../../redux";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 
@@ -22,7 +22,8 @@ export function RewardsScreen(props: IRewardsProps) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const walletAddress = store.getState().wallet.address;
+  // const walletAddress = store.getState().wallet.address;
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());

@@ -8,7 +8,7 @@ export interface ILanding {
   setBribesMain: React.Dispatch<React.SetStateAction<boolean>>;
 }
 function Landing(props: ILanding) {
-  const userAddress = store.getState().wallet.address;
+  // const userAddress = store.getState().wallet.address;
 
   return (
     <SideBarHOC isBribesLanding={true} isBribes={true} makeTopBarScroll>

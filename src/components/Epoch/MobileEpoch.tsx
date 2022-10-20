@@ -2,16 +2,19 @@ import Image from "next/image";
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import vectorDown from "../../assets/icon/common/vector.svg";
-import { AppDispatch, store } from "../../redux";
+import { AppDispatch, store, useAppSelector } from "../../redux";
 import { setSelectedEpoch } from "../../redux/epoch/epoch";
 
 export interface IMobileEpochProps {}
 
 export function MobileEpoch(props: IMobileEpochProps) {
   const [isDropDownActive, setIsDropDownActive] = React.useState(false);
-  const epochData = store.getState().epoch.epochData;
-  const currentEpoch = store.getState().epoch.currentEpoch;
-  const selectedEpoch = store.getState().epoch.selectedEpoch;
+  // const epochData = store.getState().epoch.epochData;
+  const epochData = useAppSelector((state) => state.epoch.epochData);
+  // const currentEpoch = store.getState().epoch.currentEpoch;
+  const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
+  // const selectedEpoch = store.getState().epoch.selectedEpoch;
+  const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const dispatch = useDispatch<AppDispatch>();
 
   return (
