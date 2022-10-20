@@ -132,7 +132,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Votes",
         id: "Myvotess",
-
+        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.totalVotes"),
         columnWidth: "w-[100px] ml-auto mr-2",
         canShort: true,
         accessor: (x: any) => (

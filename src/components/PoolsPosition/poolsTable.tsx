@@ -59,7 +59,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
-            <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
+            <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center ">
               <Image alt={"alt"} src={getImagesPath(x.tokenA)} width={"20px"} height={"20px"} />
             </div>
             <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
@@ -248,7 +248,18 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       <div className={` overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={props.poolsPosition}
+          data={[
+            ...props.poolsPosition,
+            ...props.poolsPosition,
+            ...props.poolsPosition,
+            ...props.poolsPosition,
+            ...props.poolsPosition,
+            ...props.poolsPosition,
+            ...props.poolsPosition,
+            ...props.poolsPosition,
+            ...props.poolsPosition,
+            ...props.poolsPosition,
+          ]}
           noSearchResult={noSearchResult}
           shortby="pools"
           isFetched={props.isfetched}
