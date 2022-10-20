@@ -26,9 +26,14 @@ export function TopNavBarMobile(props: ITopNavBarMobileProps) {
         props.isBanner ? "top-[38px]" : "animate__animated animate__fadeInUp animate__faster"
       )}
     >
-      <Link href={"/"}>
-        <Image src={plentyIcon} height={"22.47px"} width="100%" />
-      </Link>
+      {!props.isBribes ? (
+        <Link href={"/"}>
+          <Image src={plentyIcon} height={"22.47px"} width="100%" />
+        </Link>
+      ) : (
+        <Image src={plentyIcon} height={"60px"} width="100%" />
+      )}
+
       {!props.isBribes && (
         <div className="flex gap-3">
           {userAddress && (
