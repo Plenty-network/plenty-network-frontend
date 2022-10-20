@@ -36,7 +36,7 @@ function Banner(props: IBanner) {
               transactionId: "",
             })
           );
-        }, 2000);
+        }, 6000);
       } else {
         dispatch(
           setFlashMessage({
