@@ -110,15 +110,16 @@ export const getTokenPrices = async (): Promise<{
 
     const tokenPrice: { [id: string]: number } = {};
     const tokens = Object.keys(TOKEN);
-    const tokenAddress: { [id: string]: { contractAddress?: string } } = {};
+    
+    const tokenSymbols: { [id: string]: { symbol?: string } } = {};
     Object.keys(TOKEN).forEach(function (key) {
-      tokenAddress[key] = { contractAddress: TOKEN[key].address };
+      tokenSymbols[key] = { symbol: TOKEN[key].symbol };
     });
     for (const i in tokenPriceResponse.contracts) {
       if (tokens.includes(tokenPriceResponse.contracts[i].symbol)) {
         if (
-          tokenAddress[tokenPriceResponse.contracts[i].symbol]
-            .contractAddress === tokenPriceResponse.contracts[i].tokenAddress
+          tokenSymbols[tokenPriceResponse.contracts[i].symbol]
+            .symbol === tokenPriceResponse.contracts[i].symbol
         ) {
           tokenPrice[tokenPriceResponse.contracts[i].symbol] =
             tokenPriceResponse.contracts[i].usdValue;
