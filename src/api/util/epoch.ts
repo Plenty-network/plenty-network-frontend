@@ -41,6 +41,9 @@ export const getListOfEpochs = async (
 
     let previousEpochEnd = currentEpochStart;
     for (let i: number = 1; i <= previousEpochsRequired; i++) {
+      if((currentEpochNumber - i) <= 0) {
+        break;
+      }
       const epochEnd = previousEpochEnd;
       const epochStart = epochEnd - epochDuration;
       listOfEpochs.push({
@@ -91,6 +94,9 @@ export const getListOfEpochsViaRpc = async (
 
     let previousEpochEnd = currentEpochStart;
     for (let i: number = 1; i <= previousEpochsRequired; i++) {
+      if((currentEpochNumber - i) <= 0) {
+        break;
+      }
       const epochEnd = previousEpochEnd;
       const epochStart = epochEnd - epochDuration;
       listOfEpochs.push({
