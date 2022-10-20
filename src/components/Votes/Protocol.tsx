@@ -2,20 +2,20 @@ import { Dropdown } from "../DropDown/Dropdown";
 import * as React from "react";
 
 function Protocol(props: {
+  Options: string[];
   isSelected: boolean;
   setSelectedDropDown: Function;
   selectedDropDown: any;
 }) {
-  let Options = ["My votes", "Protocol"];
   if (!props.isSelected) {
-    Options = [];
+    props.Options = [];
   }
   return (
     <div>
       <Dropdown
         isDisabled={!props.isSelected}
         title="Protocol"
-        Options={Options}
+        Options={props.Options}
         selectedText={props.selectedDropDown}
         onClick={props.setSelectedDropDown}
         className=""
