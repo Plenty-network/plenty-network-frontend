@@ -15,7 +15,7 @@ export function MobileEpoch(props: IMobileEpochProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   return (
-    <div className=" ">
+    <div className="z-50 ">
       <div
         className={`flex justify-between cursor-pointer py-2 px-5 ${
           currentEpoch.isCurrent ? "bg-primary-700" : ""

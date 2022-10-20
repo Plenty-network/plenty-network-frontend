@@ -105,7 +105,7 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
 
             <p
               onClick={disconnectUserWallet}
-              className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+              className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14 z-50"
             >
               <Image alt={"alt"} src={disconnectLogo} />
               <span>Disconnect</span>
