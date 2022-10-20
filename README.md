@@ -1,34 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Plenty network
 
-## Getting Started
+An open source interface for Plenty network -- a protocol for decentralized exchange of Tezos tokens.
 
-First, run the development server:
+- Website: [Plenty network](https://ghostnet.plenty.network/)
+- Twitter: [@PlentyDeFi](https://twitter.com/PlentyDeFi)
+- Discord: [Plenty](https://discord.gg/9wZ4CuvkuJ)
+- Telegram: [Plenty](https://t.me/PlentyDeFi)
 
-```bash
-npm run dev
-# or
-yarn dev
+## Accessing the Plenty network Interface
+
+To access the Plenty network Interface, use link from the
+[latest release](https://github.com/Plenty-DeFi/plenty-network-frontend/),
+or visit [Plenty network](https://ghostnet.plenty.network/).
+
+# Project setup
+
+To install the dependencies:
+
+```
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Running the interface locally
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```
+npm run dev
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+The interface should automatically open. If it does not, navigate to [http://localhost:3000].
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Creating a production build
 
-## Learn More
+```
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Contributions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+For steps on local deployment, development, and code contribution, please see [CONTRIBUTING](./CONTRIBUTING.md).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Accessing Plenty network
 
-## Deploy on Vercel
+- Swap on Plenty network: https://ghostnet.plenty.network/swap
+- View and manage pools : https://ghostnet.plenty.network/pools
+- Vote on favourite pools with VeNFT: https://ghostnet.plenty.network/vote
+- Bribe users to vote on my pool: https://ghostnet.plenty.network/bribes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
