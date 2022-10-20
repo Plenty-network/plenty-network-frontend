@@ -200,7 +200,6 @@ export const getUnclaimedInflationData = async (
               new BigNumber(tokenPrices["PLY"] || 0)
             ),
           });
-          // inflationOpertionData.push({ tokenId: Number(lockData.id), epochs: [Number(inflationData.epoch)] });
         }
         // Create chunks of epoch data for a token
         if (epochsList.length === 5) {
@@ -214,9 +213,9 @@ export const getUnclaimedInflationData = async (
       }
       allLocksInflationData[lockData.id] = lockInflationData;
       // console.log(lockData);
-      console.log(inflationOpertionData);
+      
     }
-    console.log(allLocksInflationData);
+    
     totalUnclaimedPLYValue = totalUnclaimedPLYValue.dividedBy(PLY_DECIMAL_MULTIPLIER);
     const unclaimedInflationData: IUnclaimedInflationData = {
       unclaimedInflationValue: totalUnclaimedPLYValue.multipliedBy(
