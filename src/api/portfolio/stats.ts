@@ -136,7 +136,7 @@ export const getVotesStatsData = async (
     let [totalEpochVotingPower, totalPlyLocked]: [BigNumber, BigNumber] = locksData.reduce(
       ([epochVotingPowerSum, plyLockedSum]: [BigNumber, BigNumber], lock: any) =>
         ([epochVotingPowerSum, plyLockedSum] = [
-          epochVotingPowerSum.plus(new BigNumber(lock.epochtVotingPower)),
+          epochVotingPowerSum.plus(new BigNumber(lock.currentVotingPower)), //Considering current voting power
           plyLockedSum.plus(new BigNumber(lock.baseValue)),
         ]),
       [new BigNumber(0), new BigNumber(0)]
