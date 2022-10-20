@@ -24,7 +24,7 @@ export function MyVotesValue(props: IMyVotesValueProps) {
         disable={Number(props.myVotes) === 0 ? true : false}
         toolTipChild={
           <div className="flex gap-1">
-            <div className="text-text-50 font-body1">My Votes:</div>
+            <div className="text-text-50 font-body1">My votes:</div>
             <div className="text-white font-caption2 ">{props.myVotes.toString()}</div>
           </div>
         }

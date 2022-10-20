@@ -63,7 +63,7 @@ export function ShortCard(props: IShortCardProps) {
   const NoData = React.useMemo(() => {
     if (userAddress && props.activeStateTab === PoolsCardHeader.Mypools) {
       return <NoContentAvailable setActiveStateTab={props.setActiveStateTab} />;
-    } else if (poolsTableData.length === 0) {
+    } else if (poolsTableData.length === 0 && props.searchValue !== "") {
       return <NoSearchResult />;
     }
   }, [userAddress, poolsTableData]);
