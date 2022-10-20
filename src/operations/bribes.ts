@@ -53,7 +53,7 @@ export const addBribe = async (
       throw new Error("Bribe does not exist for the selected pair.");
     }
     const bribeToken = TOKENS[bribeTokenSymbol];
-    console.log(bribeToken);
+    
     const { CheckIfWalletConnected } = dappClient();
     const walletResponse = await CheckIfWalletConnected();
     if (!walletResponse.success) {
@@ -79,7 +79,6 @@ export const addBribe = async (
     const allBatchOperations: WalletParamsWithKind[] = [];
 
     if (bribeToken.variant === TokenVariant.TEZ) {
-      console.log("TEZ");
       epochNumbers.forEach((epoch) => {
         allBatchOperations.push({
           kind: OpKind.TRANSACTION,
@@ -92,7 +91,7 @@ export const addBribe = async (
       if (bribeTokenContractInstance === undefined) {
         throw new Error("Failed to create token instance.");
       }
-      console.log("FA12");
+      
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         ...bribeTokenContractInstance.methods
@@ -111,7 +110,7 @@ export const addBribe = async (
       if (bribeTokenContractInstance === undefined) {
         throw new Error("Failed to create token instance.");
       }
-      console.log("FA2");
+      
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         ...bribeTokenContractInstance.methods
