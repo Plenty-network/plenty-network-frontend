@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { IVotesResponse } from "../../api/votes/types";
+import { IVotesData } from "../../api/votes/types";
 import { getMyAmmVotes, getTotalAmmVotes } from "../../api/votes";
 import { COLORSdataChart } from "./PiChartComponent";
 import Protocol from "./Protocol";
@@ -14,8 +14,8 @@ const PiChart = dynamic(() => import("./PiChartComponent"), {
 export interface IVotingAllocationProps extends IAllocationProps {}
 
 function VotingAllocation(props: IVotingAllocationProps) {
-  const [selectedDropDown, setSelectedDropDown] = useState("");
-  const [piChartData, setPiChartData] = useState<IVotesResponse>();
+  const [selectedDropDown, setSelectedDropDown] = useState("Protocol");
+  const [piChartData, setPiChartData] = useState<IVotesData[]>();
   const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0);
   useEffect(() => {
     if (props.epochNumber) {
@@ -26,11 +26,29 @@ function VotingAllocation(props: IVotingAllocationProps) {
         selectedDropDown === "My votes"
       ) {
         getMyAmmVotes(props.epochNumber, parseInt(props.selectedDropDown.tokenId)).then((e) => {
-          setPiChartData(e);
+          if (e.success) {
+            if (e.isOtherDataAvailable) {
+              setPiChartData(e.topAmmData.concat(e.otherData as IVotesData));
+            } else {
+              setPiChartData(e.allData);
+            }
+          } else {
+            setPiChartData(e.allData);
+          }
+          // setPiChartData(e);
         });
       } else {
         getTotalAmmVotes(props.epochNumber).then((e) => {
-          setPiChartData(e);
+          if (e.success) {
+            if (e.isOtherDataAvailable) {
+              setPiChartData(e.topAmmData.concat(e.otherData as IVotesData));
+            } else {
+              setPiChartData(e.allData);
+            }
+          } else {
+            setPiChartData(e.allData);
+          }
+          // setPiChartData(e);
         });
       }
     }
@@ -41,6 +59,11 @@ function VotingAllocation(props: IVotingAllocationProps) {
     selectedDropDown,
     props.castVoteOperation,
   ]);
+  useEffect(() => {
+    setSelectedDropDown("Protocol");
+  }, [props.epochNumber]);
+  let Options = ["My votes", "Protocol"];
+
   return (
     <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px] md:h-[calc(100vh_-_236px)] lg:h-[calc(100vh_-_236px)] lg:min-h-[500px]">
       <div className="font-body3 text-white pr-2">Voting allocation</div>
@@ -49,12 +72,13 @@ function VotingAllocation(props: IVotingAllocationProps) {
           isSelected={props.selectedDropDown.tokenId.length ? true : false}
           selectedDropDown={selectedDropDown}
           setSelectedDropDown={setSelectedDropDown}
+          Options={Options}
         />
       </div>
       <div className="flex flex-col items-center  mt-5  gap-2 justify-center  ">
-        {piChartData?.allData ? (
+        {piChartData ? (
           <>
-            {piChartData.allData.length > 0 ? (
+            {piChartData.length > 0 ? (
               <PiChart
                 piChartData={piChartData}
                 selectedColorIndex={selectedColorIndex}
@@ -80,14 +104,18 @@ function VotingAllocation(props: IVotingAllocationProps) {
           </div>
         )}
         <div className="grid grid-cols-2 justify-between   gap-[11px] gap-x-10 w-[300px]">
-          {piChartData?.allData ? (
-            piChartData.allData.map((e, i) => (
+          {piChartData ? (
+            piChartData.map((e, i) => (
               <ColorText
                 onClick={() => setSelectedColorIndex(i)}
                 key={`e.votes` + i}
-                text={`${tEZorCTEZTtoUpperCase(e.tokenOneSymbol ?? "")} ${tEZorCTEZTtoUpperCase(
-                  e.tokenTwoSymbol ?? ""
-                )}`}
+                text={
+                  e.tokenOneSymbol && e.tokenTwoSymbol
+                    ? `${tEZorCTEZTtoUpperCase(e.tokenOneSymbol ?? "")} / ${tEZorCTEZTtoUpperCase(
+                        e.tokenTwoSymbol ?? ""
+                      )}`
+                    : "Others"
+                }
                 color={selectedColorIndex === i ? "#78F33F" : COLORSdataChart[i]}
               />
             ))
