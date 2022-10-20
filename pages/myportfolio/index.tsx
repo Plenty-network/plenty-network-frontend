@@ -1654,7 +1654,7 @@ function MyPortfolio(props: any) {
           </div>
           <div className="border-t border-text-800/[0.5] mt-5"></div>
           <div>
-            <div className="bg-card-50 sticky -top-[3px] md:top-0 z-10">
+            <div className="bg-card-50 md:sticky -top-[3px] md:top-0 z-10">
               <MyPortfolioCardHeader
                 activeStateTab={activeStateTab}
                 setActiveStateTab={setActiveStateTab}
@@ -1670,7 +1670,7 @@ function MyPortfolio(props: any) {
                 />
               ) : (
                 <>
-                  <div className="flex z-10 md:px-[25px] px-4 bg-sideBar sticky top-[58px] pt-5">
+                  <div className="flex z-10 md:px-[25px] px-4 bg-sideBar md:sticky top-[58px] pt-5">
                     <p>
                       <div className="text-white font-title3">List of my PLY emissions</div>
                       <div className="text-text-250 font-body1">
@@ -1711,7 +1711,7 @@ function MyPortfolio(props: any) {
             {activeStateTab === MyPortfolioHeader.Locks &&
               (activeSection === MyPortfolioSection.Positions ? (
                 <>
-                  <div className="flex items-center pb-2 md:px-[25px] bg-sideBar sticky top-[58px] px-4 z-10 pt-5">
+                  <div className="flex items-center pb-2 md:px-[25px] bg-sideBar md:sticky top-[58px] px-4 z-10 pt-5">
                     <p>
                       <div className="text-white font-title3">List of my locks</div>
                       <div className="text-text-250 font-body1">
@@ -1741,7 +1741,7 @@ function MyPortfolio(props: any) {
                 </>
               ) : (
                 <>
-                  <div className="flex md:px-[25px] bg-sideBar sticky top-[58px]  z-10  px-4 pt-5">
+                  <div className="flex md:px-[25px] bg-sideBar md:sticky top-[58px]  z-10  px-4 pt-5">
                     <p>
                       <div className="text-white font-title3">List of my locks</div>
                       <div className="text-text-250 font-body1">
