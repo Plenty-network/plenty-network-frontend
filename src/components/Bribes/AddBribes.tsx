@@ -7,7 +7,7 @@ import checkDisable from "../../../src/assets/icon/bribes/checkDisable.svg";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import React, { useState, useMemo, useEffect } from "react";
-import { AppDispatch, store } from "../../redux";
+import { AppDispatch, store, useAppSelector } from "../../redux";
 import { IAddBribes } from "./types";
 import { EpochDropdown } from "./EpochDropdown";
 import clsx from "clsx";
@@ -25,9 +25,12 @@ import { walletConnection } from "../../redux/wallet/wallet";
 
 function AddBribes(props: IAddBribes) {
   const [swapModalShow, setSwapModalShow] = useState(false);
-  const tokens = store.getState().config.standard;
-  const tokenPrice = store.getState().tokenPrice.tokenPrice;
-  const userAddress = store.getState().wallet.address;
+  // const tokens = store.getState().config.standard;
+  const tokens = useAppSelector((state) => state.config.standard);
+  // const tokenPrice = store.getState().tokenPrice.tokenPrice;
+  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  // const userAddress = store.getState().wallet.address;
+  const userAddress = useAppSelector((state) => state.wallet.address);
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
 
   const [listofEpoch, setListofEpoch] = useState<IEpochDataResponse>({} as IEpochDataResponse);
@@ -60,7 +63,7 @@ function AddBribes(props: IAddBribes) {
   const tEZorCTEZtoUppercase = (a: string) =>
     a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
-  const currentEpoch = store.getState().epoch.currentEpoch;
+  // const currentEpoch = store.getState().epoch.currentEpoch;
   const closeModal = () => {
     props.setShow(false);
   };

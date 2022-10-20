@@ -4,7 +4,7 @@ import { BribesMainProps } from "./types";
 import { BigNumber } from "bignumber.js";
 import { useEffect, useState } from "react";
 import { BribesCardHeader, BribesHeader } from "./BribesHeader";
-import { AppDispatch, store } from "../../redux";
+import { AppDispatch, store, useAppSelector } from "../../redux";
 import { PoolsTableBribes } from "./PoolsTableBribes";
 import AddBribes from "./AddBribes";
 import { tokenParameter } from "../../constants/swap";
@@ -33,11 +33,13 @@ function BribesMain(props: BribesMainProps) {
   const [bribeInputValue, setBribeInputValue] = useState("");
   const [showAddBribes, setShowAddBribes] = useState(false);
   const [selectedPool, setSelectedPool] = useState<IPoolsForBribesData>({} as IPoolsForBribesData);
-  const userAddress = store.getState().wallet.address;
+  // const userAddress = store.getState().wallet.address;
+  const userAddress = useAppSelector((state) => state.wallet.address);
   const [activeStateTab, setActiveStateTab] = useState<BribesCardHeader | string>(
     BribesCardHeader.Pools
   );
-  const tokens = store.getState().config.standard;
+  // const tokens = store.getState().config.standard;
+  const tokens = useAppSelector((state) => state.config.standard);
   const [epochArray, setEpochArray] = useState<number[]>([] as number[]);
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
