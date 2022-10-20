@@ -477,7 +477,7 @@ function MyPortfolio(props: any) {
       "Sep",
       "Oct",
       "Nov",
-      "Decr",
+      "Dec",
     ];
     var date = new Date(dates);
     var month = date.getMonth();
@@ -563,7 +563,7 @@ function MyPortfolio(props: any) {
         >
           <Image
             src={playIcon}
-            // onClick={() => setShowVideoModal(true)}
+            //onClick={() => setShowVideoModal(true)}
             height={"28px"}
             width={"28px"}
             className="cursor-pointer hover:opacity-90"

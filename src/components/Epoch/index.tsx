@@ -54,7 +54,7 @@ export function Epoch(props: IEpochProps) {
       "Sep",
       "Oct",
       "Nov",
-      "Decr",
+      "Dec",
     ];
 
     var year = date.getFullYear();
@@ -83,7 +83,7 @@ export function Epoch(props: IEpochProps) {
       "Sep",
       "Oct",
       "Nov",
-      "Decr",
+      "Dec",
     ];
 
     var year = date.getFullYear();
