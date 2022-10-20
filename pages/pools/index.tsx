@@ -111,6 +111,7 @@ export default function Pools(props: IIndexProps) {
             <PoolsTable
               className="md:px-5 md:py-4  px-2 py-4"
               searchValue={searchValue}
+              activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
             />
           )}
@@ -119,6 +120,7 @@ export default function Pools(props: IIndexProps) {
               className="md:px-5 md:py-4  px-2 py-4"
               poolsFilter={AMM_TYPE.STABLE}
               searchValue={searchValue}
+              activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
             />
           )}
@@ -127,6 +129,7 @@ export default function Pools(props: IIndexProps) {
               className="md:px-5 md:py-4  px-2 py-4"
               poolsFilter={AMM_TYPE.VOLATILE}
               searchValue={searchValue}
+              activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
             />
           )}
@@ -136,6 +139,7 @@ export default function Pools(props: IIndexProps) {
               poolsFilter={AMM_TYPE.MYPOOS}
               isConnectWalletRequired={true}
               searchValue={searchValue}
+              activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
             />
           )}

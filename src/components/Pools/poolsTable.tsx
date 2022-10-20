@@ -13,6 +13,8 @@ import { compareNumericString } from "../../utils/commonUtils";
 import { BribesPool } from "../Bribes/BribesPools";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import Table from "../Table/Table";
+import { NoSearchResult } from "../Votes/NoSearchResult";
+import { PoolsCardHeader } from "./Cardheader";
 import { AprInfoFuture } from "./Component/AprFuture";
 import { AprInfo } from "./Component/AprInfo";
 import { CircularOverLappingImage } from "./Component/CircularImageInfo";
@@ -27,6 +29,7 @@ export interface IShortCardProps {
   isConnectWalletRequired?: boolean;
   searchValue: string;
   setSearchValue?: Function;
+  activeStateTab: PoolsCardHeader;
   setActiveStateTab: React.Dispatch<React.SetStateAction<string>>;
 }
 export interface IManageBtnProps {
@@ -58,12 +61,12 @@ export function ShortCard(props: IShortCardProps) {
     else return "";
   };
   const NoData = React.useMemo(() => {
-    if (userAddress) {
+    if (userAddress && props.activeStateTab === PoolsCardHeader.Mypools) {
       return <NoContentAvailable setActiveStateTab={props.setActiveStateTab} />;
-    } else {
-      <></>;
+    } else if (poolsTableData.length === 0) {
+      return <NoSearchResult />;
     }
-  }, [userAddress]);
+  }, [userAddress, poolsTableData]);
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "USDC.e",
     image: `/assets/tokens/USDC.e.png`,
