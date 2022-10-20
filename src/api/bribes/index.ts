@@ -141,7 +141,7 @@ export const getUserBribeData = async (
  
   }
 
-  console.log(allData);
+  // console.log(allData);
 
     return {
       success: true,

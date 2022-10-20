@@ -217,7 +217,7 @@ function SwapTab(props: ISwapTabProps) {
               transactionId: response.operationId ? response.operationId : "",
             })
           );
-        }, 2000);
+        }, 6000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       } else {

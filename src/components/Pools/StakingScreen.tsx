@@ -204,7 +204,7 @@ export function Staking(props: IStakingProps) {
               transactionId: "",
             })
           );
-        }, 2000);
+        }, 6000);
       } else {
         dispatch(
           setFlashMessage({
