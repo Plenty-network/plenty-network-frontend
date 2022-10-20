@@ -38,10 +38,12 @@ export function IconBTN(props: IIconBTNProps) {
 
 export function TopNavBar(props: ITopNavBarProps) {
 
+
   // const userAddress = store.getState().wallet.address;
   const userAddress = useAppSelector((state) => state.wallet.address);
   //const isBanner = store.getState().walletLoading.isBanner;
   const router = useRouter();
+
 
   return (
     <>
