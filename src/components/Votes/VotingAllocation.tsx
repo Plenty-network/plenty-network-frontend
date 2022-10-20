@@ -14,7 +14,7 @@ const PiChart = dynamic(() => import("./PiChartComponent"), {
 export interface IVotingAllocationProps extends IAllocationProps {}
 
 function VotingAllocation(props: IVotingAllocationProps) {
-  const [selectedDropDown, setSelectedDropDown] = useState("");
+  const [selectedDropDown, setSelectedDropDown] = useState("Protocol");
   const [piChartData, setPiChartData] = useState<IVotesData[]>();
   const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0);
   useEffect(() => {
@@ -26,9 +26,9 @@ function VotingAllocation(props: IVotingAllocationProps) {
         selectedDropDown === "My votes"
       ) {
         getMyAmmVotes(props.epochNumber, parseInt(props.selectedDropDown.tokenId)).then((e) => {
-          if(e.success) {
-            if(e.isOtherDataAvailable) {
-              setPiChartData(e.topAmmData.concat(e.otherData as IVotesData))
+          if (e.success) {
+            if (e.isOtherDataAvailable) {
+              setPiChartData(e.topAmmData.concat(e.otherData as IVotesData));
             } else {
               setPiChartData(e.allData);
             }
@@ -39,9 +39,9 @@ function VotingAllocation(props: IVotingAllocationProps) {
         });
       } else {
         getTotalAmmVotes(props.epochNumber).then((e) => {
-          if(e.success) {
-            if(e.isOtherDataAvailable) {
-              setPiChartData(e.topAmmData.concat(e.otherData as IVotesData))
+          if (e.success) {
+            if (e.isOtherDataAvailable) {
+              setPiChartData(e.topAmmData.concat(e.otherData as IVotesData));
             } else {
               setPiChartData(e.allData);
             }
@@ -59,6 +59,11 @@ function VotingAllocation(props: IVotingAllocationProps) {
     selectedDropDown,
     props.castVoteOperation,
   ]);
+  useEffect(() => {
+    setSelectedDropDown("Protocol");
+  }, [props.epochNumber]);
+  let Options = ["My votes", "Protocol"];
+
   return (
     <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px] md:h-[calc(100vh_-_236px)] lg:h-[calc(100vh_-_236px)] lg:min-h-[500px]">
       <div className="font-body3 text-white pr-2">Voting allocation</div>
@@ -67,6 +72,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
           isSelected={props.selectedDropDown.tokenId.length ? true : false}
           selectedDropDown={selectedDropDown}
           setSelectedDropDown={setSelectedDropDown}
+          Options={Options}
         />
       </div>
       <div className="flex flex-col items-center  mt-5  gap-2 justify-center  ">
@@ -103,9 +109,13 @@ function VotingAllocation(props: IVotingAllocationProps) {
               <ColorText
                 onClick={() => setSelectedColorIndex(i)}
                 key={`e.votes` + i}
-                text={e.tokenOneSymbol && e.tokenTwoSymbol ? (`${tEZorCTEZTtoUpperCase(e.tokenOneSymbol ?? "")} / ${tEZorCTEZTtoUpperCase(
-                  e.tokenTwoSymbol ?? ""
-                )}`) : "Others"}
+                text={
+                  e.tokenOneSymbol && e.tokenTwoSymbol
+                    ? `${tEZorCTEZTtoUpperCase(e.tokenOneSymbol ?? "")} / ${tEZorCTEZTtoUpperCase(
+                        e.tokenTwoSymbol ?? ""
+                      )}`
+                    : "Others"
+                }
                 color={selectedColorIndex === i ? "#78F33F" : COLORSdataChart[i]}
               />
             ))

@@ -104,9 +104,6 @@ function MyPortfolio(props: any) {
 
   const [epochClaim, setEpochClaim] = React.useState("");
   const userAddress = store.getState().wallet.address;
-  //const userAddress = "tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv"; //kiran
-  //const userAddress = "tz1NaGu7EisUCyfJpB16ktNxgSqpuMo8aSEk"; //udit
-  //tz1QNjbsi2TZEusWyvdH3nmsCVE3T1YqD9sv kiran
 
   const dispatch = useDispatch<AppDispatch>();
 
