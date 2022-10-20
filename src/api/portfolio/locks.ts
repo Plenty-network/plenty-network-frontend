@@ -215,7 +215,6 @@ export const getAllLocksRewardsData = async (
           };
           locksRewardsTokenData[voteData.epoch].push(locksRewardsEpochData);
         }
-        console.log(voteData);
       }
       allLocksRewardsData[lockData.lockId] = locksRewardsTokenData;
     }

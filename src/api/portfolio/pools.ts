@@ -40,7 +40,7 @@ export const getPositionsData = async (
     const positionsData: IPositionsData[] = positionsResponseData.map(
       (pool: IPositionsIndexerData): IPositionsData => {
         const lpTokenDecimalMultplier = new BigNumber(10).pow(AMM[pool.amm].lpToken.decimals);
-        const lpTokenPrice = lPTokenPrices[AMM[pool.amm].lpToken.symbol] ?? new BigNumber(0);
+        const lpTokenPrice = new BigNumber(lPTokenPrices[AMM[pool.amm].lpToken.symbol]) ?? new BigNumber(0);
         const lpBalance = new BigNumber(pool.lqtBalance);
         const staked = new BigNumber(pool.stakedBalance);
         const baseBalance = staked.multipliedBy(40).dividedBy(100);
@@ -52,7 +52,7 @@ export const getPositionsData = async (
         const userAPR = poolApr.multipliedBy(boostValue.isFinite() ? boostValue : 0);
         const totalLiquidityAmount = totalLiquidity
           .dividedBy(lpTokenDecimalMultplier)
-          .multipliedBy(lpTokenPrice);
+          .multipliedBy(lpTokenPrice.isFinite() ? lpTokenPrice : 0);
         liquidityAmountSum = liquidityAmountSum.plus(totalLiquidityAmount);
 
         return {
