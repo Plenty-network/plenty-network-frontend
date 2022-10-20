@@ -8,12 +8,13 @@ import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import Button from "../Button/Button";
 import { IConfirmLockingProps } from "./types";
-import { store } from "../../redux";
+import { store, useAppSelector } from "../../redux";
 import clsx from "clsx";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 function ConfirmLocking(props: IConfirmLockingProps) {
-  const epochData = store.getState().epoch.currentEpoch;
+  // const epochData = store.getState().epoch.currentEpoch;
+  const epochData = useAppSelector((state) => state.epoch.currentEpoch);
   const closeModal = () => {
     props.setShow(false);
   };

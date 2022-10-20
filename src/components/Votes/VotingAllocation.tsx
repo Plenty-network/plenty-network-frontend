@@ -8,6 +8,7 @@ import { IAllocationProps } from "./types";
 import { tEZorCTEZTtoUpperCase } from "../../utils/commonUtils";
 import Image from "next/image";
 import loadingLogo from "../../assets/icon/common/loadingLogo.svg";
+import { useAppSelector } from "../../redux";
 const PiChart = dynamic(() => import("./PiChartComponent"), {
   loading: () => <></>,
 });
@@ -17,6 +18,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
   const [selectedDropDown, setSelectedDropDown] = useState("Protocol");
   const [piChartData, setPiChartData] = useState<IVotesData[]>();
   const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0);
+  const userAddress = useAppSelector((state) => state.wallet.address);
   useEffect(() => {
     if (props.epochNumber) {
       if (
@@ -61,7 +63,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
   ]);
   useEffect(() => {
     setSelectedDropDown("Protocol");
-  }, [props.epochNumber]);
+  }, [props.epochNumber, userAddress]);
   let Options = ["My votes", "Protocol"];
 
   return (

@@ -17,7 +17,7 @@ import { BigNumber } from "bignumber.js";
 import Button from "../Button/Button";
 import { CircularImageInfo } from "./Component/CircularImageInfo";
 import { tokenParameterLiquidity } from "../Liquidity/types";
-import { AppDispatch, store } from "../../redux";
+import { AppDispatch, store, useAppSelector } from "../../redux";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
@@ -124,7 +124,8 @@ export function StakingScreen(props: IStakingScreenProps) {
 }
 
 export function Staking(props: IStakingProps) {
-  const walletAddress = store.getState().wallet.address;
+  // const walletAddress = store.getState().wallet.address;
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const handleInputPercentage = (value: number) => {
     props.setStakeInput(value * Number(props.pnlpBalance));
   };
@@ -411,7 +412,8 @@ export function Staking(props: IStakingProps) {
   );
 }
 export function Unstaking(props: IUnstakingProps) {
-  const walletAddress = store.getState().wallet.address;
+  // const walletAddress = store.getState().wallet.address;
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const handleInputPercentage = (value: number) => {
     props.setUnStakeInput(value * Number(props.stakedToken));
   };

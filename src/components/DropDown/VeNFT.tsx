@@ -8,7 +8,7 @@ import arrow from "../../assets/icon/common/vector.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { ELocksState, IVeNFTData } from "../../api/votes/types";
 import { useDispatch } from "react-redux";
-import { AppDispatch, store } from "../../redux";
+import { AppDispatch, store, useAppSelector } from "../../redux";
 import { setisMyportfolio, setSelectedDropDown } from "../../redux/veNFT";
 import PieChartButton from "../LocksPosition/PieChart";
 
@@ -25,7 +25,8 @@ export interface IDropdownProps {
 }
 
 export function VeNFT(props: IDropdownProps) {
-  const epochData = store.getState().epoch.currentEpoch;
+  // const epochData = store.getState().epoch.currentEpoch;
+  const epochData = useAppSelector((state) => state.epoch.currentEpoch);
   const totalTime = epochData ? epochData.endTimestamp - epochData.startTimestamp : 0;
   const remainingTime = epochData ? epochData.endTimestamp - new Date().getTime() : 0;
   const remainingPercentage =
