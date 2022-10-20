@@ -250,7 +250,7 @@ const getBribesData = (
       const value = new BigNumber(bribeData.value).dividedBy(
         new BigNumber(10).pow(TOKENS[bribeData.name].decimals)
       );
-      const amount = value.multipliedBy(tokenPrices[bribeData.name]);
+      const amount = value.multipliedBy(tokenPrices[bribeData.name] || 0);
       bribesValue = bribesValue.plus(amount);
       bribesData.push({
         bribeId: new BigNumber(bribeData.bribeId),
