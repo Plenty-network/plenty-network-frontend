@@ -34,12 +34,12 @@ export const type1MapIds = [3956, 4353];
   */
  export const type5MapIds = [12043];
 
-export const EPOCH_DURATION_TESTNET: number = 3360000; // milliseconds
+export const EPOCH_DURATION_TESTNET: number = 604800000; // milliseconds
 export const EPOCH_DURATION_MAINNET: number = 604800000; // milliseconds
 export const VOTES_CHART_LIMIT: number = 9;
 export const PLY_DECIMAL_MULTIPLIER : BigNumber = new BigNumber(10).pow(18);   // 10 ** 18
 
-const DAY_TESTNET = 480;
+const DAY_TESTNET = 86400;
 const DAY_MAINNET = 86400;
 export const DAY = connectedNetwork === 'testnet' ? DAY_TESTNET : DAY_MAINNET;
 export const WEEK = 7 * DAY;
