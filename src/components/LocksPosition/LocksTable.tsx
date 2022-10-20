@@ -103,6 +103,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         tooltipMessage:
           " Your current voting power. This is different from your epoch voting power which is recorded at the beginning of each epoch.",
         isToolTipEnabled: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "currentVotingPower"),
         canShort: true,
         showOnMobile: true,
         accessor: (x: any) => <VotingPower value={x.currentVotingPower} />,

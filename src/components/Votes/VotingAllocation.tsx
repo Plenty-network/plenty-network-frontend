@@ -60,7 +60,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
     props.castVoteOperation,
   ]);
   return (
-    <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px] md:h-[calc(100vh_-_236px)] lg:h-[calc(100vh_-_236px)] lg:min-h-[434px]">
+    <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px] md:h-[calc(100vh_-_236px)] lg:h-[calc(100vh_-_236px)] lg:min-h-[500px]">
       <div className="font-body3 text-white pr-2">Voting allocation</div>
       <div className="font-body3 text-white mt-[18px]">
         <Protocol
