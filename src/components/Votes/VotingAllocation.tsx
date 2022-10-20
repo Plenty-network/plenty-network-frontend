@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { IVotesResponse } from "../../api/votes/types";
+import { IVotesData } from "../../api/votes/types";
 import { getMyAmmVotes, getTotalAmmVotes } from "../../api/votes";
 import { COLORSdataChart } from "./PiChartComponent";
 import Protocol from "./Protocol";
@@ -15,7 +15,7 @@ export interface IVotingAllocationProps extends IAllocationProps {}
 
 function VotingAllocation(props: IVotingAllocationProps) {
   const [selectedDropDown, setSelectedDropDown] = useState("Protocol");
-  const [piChartData, setPiChartData] = useState<IVotesResponse>();
+  const [piChartData, setPiChartData] = useState<IVotesData[]>();
   const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0);
   useEffect(() => {
     if (props.epochNumber) {
@@ -26,11 +26,29 @@ function VotingAllocation(props: IVotingAllocationProps) {
         selectedDropDown === "My votes"
       ) {
         getMyAmmVotes(props.epochNumber, parseInt(props.selectedDropDown.tokenId)).then((e) => {
-          setPiChartData(e);
+          if (e.success) {
+            if (e.isOtherDataAvailable) {
+              setPiChartData(e.topAmmData.concat(e.otherData as IVotesData));
+            } else {
+              setPiChartData(e.allData);
+            }
+          } else {
+            setPiChartData(e.allData);
+          }
+          // setPiChartData(e);
         });
       } else {
         getTotalAmmVotes(props.epochNumber).then((e) => {
-          setPiChartData(e);
+          if (e.success) {
+            if (e.isOtherDataAvailable) {
+              setPiChartData(e.topAmmData.concat(e.otherData as IVotesData));
+            } else {
+              setPiChartData(e.allData);
+            }
+          } else {
+            setPiChartData(e.allData);
+          }
+          // setPiChartData(e);
         });
       }
     }
@@ -58,9 +76,9 @@ function VotingAllocation(props: IVotingAllocationProps) {
         />
       </div>
       <div className="flex flex-col items-center  mt-5  gap-2 justify-center  ">
-        {piChartData?.allData ? (
+        {piChartData ? (
           <>
-            {piChartData.allData.length > 0 ? (
+            {piChartData.length > 0 ? (
               <PiChart
                 piChartData={piChartData}
                 selectedColorIndex={selectedColorIndex}
@@ -86,14 +104,18 @@ function VotingAllocation(props: IVotingAllocationProps) {
           </div>
         )}
         <div className="grid grid-cols-2 justify-between   gap-[11px] gap-x-10 w-[300px]">
-          {piChartData?.allData ? (
-            piChartData.allData.map((e, i) => (
+          {piChartData ? (
+            piChartData.map((e, i) => (
               <ColorText
                 onClick={() => setSelectedColorIndex(i)}
                 key={`e.votes` + i}
-                text={`${tEZorCTEZTtoUpperCase(e.tokenOneSymbol ?? "")} ${tEZorCTEZTtoUpperCase(
-                  e.tokenTwoSymbol ?? ""
-                )}`}
+                text={
+                  e.tokenOneSymbol && e.tokenTwoSymbol
+                    ? `${tEZorCTEZTtoUpperCase(e.tokenOneSymbol ?? "")} / ${tEZorCTEZTtoUpperCase(
+                        e.tokenTwoSymbol ?? ""
+                      )}`
+                    : "Others"
+                }
                 color={selectedColorIndex === i ? "#78F33F" : COLORSdataChart[i]}
               />
             ))
