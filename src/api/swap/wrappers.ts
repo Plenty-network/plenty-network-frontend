@@ -240,11 +240,13 @@ export const computeAllPathsWrapper = (
       else isStable.push(false);
     }
 
-    const exchangeRate = new BigNumber(
-      new BigNumber(tokenPrice[bestPath.path[0]]).dividedBy(
-        tokenPrice[bestPath.path[bestPath.path.length - 1]]
-      )
-    ).decimalPlaces(TOKEN[bestPath.path[bestPath.path.length - 1]].decimals);
+    // const exchangeRate = new BigNumber(
+    //   new BigNumber(tokenPrice[bestPath.path[0]]).dividedBy(
+    //     tokenPrice[bestPath.path[bestPath.path.length - 1]]
+    //   )
+    // ).decimalPlaces(TOKEN[bestPath.path[bestPath.path.length - 1]].decimals);
+
+    const exchangeRate = bestPath.tokenOutAmount.dividedBy(tokenInAmount);
 
     return {
       path: bestPath.path,
@@ -339,11 +341,13 @@ export const computeReverseCalculationWrapper = (
       else isStable.push(false);
     }
 
-    const exchangeRate = new BigNumber(
-      new BigNumber(tokenPrice[forwardPass.path[0]]).dividedBy(
-        tokenPrice[forwardPass.path[forwardPass.path.length - 1]]
-      )
-    ).decimalPlaces(TOKEN[forwardPass.path[forwardPass.path.length - 1]].decimals);
+    // const exchangeRate = new BigNumber(
+    //   new BigNumber(tokenPrice[forwardPass.path[0]]).dividedBy(
+    //     tokenPrice[forwardPass.path[forwardPass.path.length - 1]]
+    //   )
+    // ).decimalPlaces(TOKEN[forwardPass.path[forwardPass.path.length - 1]].decimals);
+
+    const exchangeRate = tokenInAmount.dividedBy(mid);
 
     return {
       path: forwardPass.path,
