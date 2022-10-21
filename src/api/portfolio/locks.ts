@@ -58,9 +58,15 @@ export const getAllLocksPositionData = async (
     const locksData = locksResponse.data.result;
     const attachedLocksBigMapId: string = Number(veStorageResponse.data.attached).toString();
 
+    let lockIdsString: string = "";
+    if(locksData.length > 0) {
+      const lockIds: string[] = locksData.map((lock: any) => lock.id);
+      lockIdsString = lockIds.join(",");
+    }
+    
     const attachedLocksResponse = await getTzktBigMapData(
       attachedLocksBigMapId,
-      `active=true&select=key,value`
+      `active=true${lockIdsString.length > 0 ? `&key.in=${lockIdsString}` : ""}&select=key,value`
     );
     const attachedLocksData: IAttachedTzktResponse[] = attachedLocksResponse.data;
 
