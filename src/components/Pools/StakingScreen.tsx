@@ -130,7 +130,6 @@ export function StakingScreen(props: IStakingScreenProps) {
 }
 
 export function Staking(props: IStakingProps) {
-  // const walletAddress = store.getState().wallet.address;
   const walletAddress = useAppSelector((state) => state.wallet.address);
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
