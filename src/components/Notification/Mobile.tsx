@@ -42,7 +42,7 @@ export default function NotificationBar(props: INotificationBarProps) {
           className="broder   relative border-popUpNotification
        w-[calc(100vw_-_38px)] 
        h-[576px] 
-       bg-sideBar
+       bg-primary-900
        bord
        rounded-md
        border

@@ -518,6 +518,7 @@ export const claimAllAndWithdrawLock = async (
       operationId: operation.opHash,
     };
   } catch (error: any) {
+    console.log(error);
     return {
       success: false,
       operationId: undefined,

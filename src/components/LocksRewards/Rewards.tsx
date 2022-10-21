@@ -10,13 +10,13 @@ import { EFeesStatus } from "../../api/portfolio/types";
 export function RewardsData(props: IRewardsDataProps) {
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(0) + "B";
+      return num.dividedBy(1000000000).toFixed(2) + "B";
     }
     if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(0) + "M";
+      return num.dividedBy(1000000).toFixed(2) + "M";
     }
     if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(0) + "K";
+      return num.dividedBy(1000).toFixed(2) + "K";
     }
 
     return num.toFixed(2);
@@ -37,7 +37,7 @@ export function RewardsData(props: IRewardsDataProps) {
                     key={index}
                   >
                     <div className={`text-white font-medium pr-1 `}>
-                      {data?.bribeValue.toString()}
+                      {data?.bribeValue.toFixed(6)}
                     </div>
                     <div className="">{data?.tokenSymbol}</div>
                   </div>
