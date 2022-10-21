@@ -5,6 +5,8 @@ import vectorIcon from "../../assets//icon/common/vector.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { IVePLYData } from "../../api/stake/types";
 import { ELocksState } from "../../api/votes/types";
+import loader from "../../assets/animations/shimmer-swap.json";
+import Lottie from "lottie-react";
 
 export interface IDropdownProps {
   Options: IVePLYData[];
@@ -22,10 +24,10 @@ export function VePLY(props: IDropdownProps) {
     setIsDropDownActive(false);
   });
   return (
-    <div className={`relative min-w-[76px] md:min-w-[150px] ${props.className}`} ref={reff}>
+    <div className={`relative min-w-[100px] md:min-w-[150px] ${props.className}`} ref={reff}>
       <div
         className={clsx(
-          "  flex gap-2 md:gap-4 py-2.5 px-2 md:px-3 md:justify-between border border-text-700 rounded-lg",
+          "  flex gap-2 md:gap-4 py-2.5 px-2 md:px-3 justify-between border border-text-700 rounded-lg",
           isDropDownActive ? "hover:bg-text-800/[0.25]" : "hover:bg-text-800/[0.5]",
           props.Options.length === 0
             ? "border-border-200 bg-card-200 hover:bg-card-200 hover:border-border-200"
@@ -72,16 +74,20 @@ export function VePLY(props: IDropdownProps) {
             </>
           )}
         </p>
-        <Image
-          src={vectorIcon}
-          alt={"vectorIcon"}
-          className={!isDropDownActive ? "rotate-180" : "rotate-0"}
-        />
+        {props.isListLoading ? (
+          <Lottie animationData={loader} loop={true} style={{ height: "20px", width: "20px" }} />
+        ) : (
+          <Image
+            src={vectorIcon}
+            alt={"vectorIcon"}
+            className={!isDropDownActive ? "rotate-180" : "rotate-0"}
+          />
+        )}
       </div>
       {isDropDownActive && props.Options.length > 0 && (
         <div
           className={clsx(
-            "absolute max-h-[210px] overflow-y-auto w-[124px] md:w-[163px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1",
+            "absolute z-1 max-h-[210px] overflow-y-auto w-[124px] md:w-[163px] mt-2 py-2 w-full bg-card-500 border-border-500 border rounded-lg flex flex-col gap-1",
             props.isConfirmStake && props.selectedText.boostValue !== "" && "hidden"
           )}
         >

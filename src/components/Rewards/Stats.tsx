@@ -6,7 +6,9 @@ import { store, useAppSelector } from "../../redux";
 
 function StatsRewards(props: IStatsRewardsProps) {
   // const claimAllInflationData = store.getState().portfolioRewards.claimAllInflationData;
-  const claimAllInflationData = useAppSelector((state) => state.portfolioRewards.claimAllInflationData);
+  const claimAllInflationData = useAppSelector(
+    (state) => state.portfolioRewards.claimAllInflationData
+  );
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
       return num.dividedBy(1000000000).toFixed(2) + "B";
@@ -22,7 +24,7 @@ function StatsRewards(props: IStatsRewardsProps) {
   }
 
   return (
-    <div className="flex gap-2.5 min-w-[1130px] w-full justify-between ">
+    <div className="flex gap-2.5 min-w-[1130px] w-full ">
       <StatsCard
         toolTipMessage={"PLY rewards through gauges."}
         title={"PLY emisisons"}

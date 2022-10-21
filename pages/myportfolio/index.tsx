@@ -153,7 +153,9 @@ function MyPortfolio(props: any) {
   // const tradingfeeStats = store.getState().portfolioRewards.totalTradingFeesAmount;
   const tradingfeeStats = useAppSelector((state) => state.portfolioRewards.totalTradingFeesAmount);
   // const fetchingTradingfee = store.getState().portfolioRewards.fetchingLocksRewardsData;
-  const fetchingTradingfee = useAppSelector((state) => state.portfolioRewards.fetchingLocksRewardsData);
+  const fetchingTradingfee = useAppSelector(
+    (state) => state.portfolioRewards.fetchingLocksRewardsData
+  );
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   const [contentTransaction, setContentTransaction] = useState("");
   const [plyBalance, setPlyBalance] = useState(new BigNumber(0));
@@ -563,7 +565,7 @@ function MyPortfolio(props: any) {
         >
           <Image
             src={playIcon}
-            onClick={() => setShowVideoModal(true)}
+            //onClick={() => setShowVideoModal(true)}
             height={"28px"}
             width={"28px"}
             className="cursor-pointer hover:opacity-90"

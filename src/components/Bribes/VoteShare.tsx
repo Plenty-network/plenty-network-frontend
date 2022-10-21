@@ -6,13 +6,13 @@ import { IVoteShare } from "./types";
 export function VoteShare(props: IVoteShare) {
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(0) + "B";
+      return num.dividedBy(1000000000).toFixed(2) + "B";
     }
     if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(0) + "M";
+      return num.dividedBy(1000000).toFixed(2) + "M";
     }
     if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(0) + "K";
+      return num.dividedBy(1000).toFixed(2) + "K";
     }
 
     return num.toFixed(2);
@@ -25,7 +25,7 @@ export function VoteShare(props: IVoteShare) {
         toolTipChild={
           <div className="flex gap-1">
             <div className="text-text-50 font-body1">Votes:</div>
-            <div className="text-white font-caption2 ">{props.value.toString()}</div>
+            <div className="text-white font-caption2 ">{props.value.toFixed(6)}</div>
           </div>
         }
       >

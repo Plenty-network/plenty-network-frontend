@@ -20,6 +20,7 @@ export interface IStakedData {
   boostValue: string;
   stakedBalance: BigNumber;
   gaugeAddress: string;
+  dexContractAddress: string;
 }
 
 export interface IStakedDataResponse {

@@ -212,6 +212,7 @@ export const getStakedData = async (
       boostValue: boostValue.isFinite() ? boostValue.toFixed(1) : "0.0", // checking if boost value is a finite number which it is not in case of 0 stake
       stakedBalance: stakedBalance.dividedBy(new BigNumber(10).pow(pnlpTokenDecimals)),
       gaugeAddress,
+      dexContractAddress,
     };
 
     return {
@@ -226,6 +227,7 @@ export const getStakedData = async (
       boostValue: "0.0",
       stakedBalance: new BigNumber(0),
       gaugeAddress: "",
+      dexContractAddress: "",
     };
     return {
       success: false,

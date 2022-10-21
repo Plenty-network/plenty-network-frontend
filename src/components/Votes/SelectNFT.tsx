@@ -20,6 +20,7 @@ function SelectNFT(props: ISelectNFT) {
               : "No veNFTs selected"
           }
           Options={props.veNFTlist}
+          isFetching={props.isfetching}
           selectedText={props.selectedText}
           onClick={props.setSelectedDropDown}
         />

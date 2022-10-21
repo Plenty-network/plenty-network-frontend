@@ -49,6 +49,8 @@ export interface IBribesBtn {
   setShowAddBribes: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IAddBribes {
+  setBalanceUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  balanceUpdate: boolean;
   allBalance: {
     [id: string]: BigNumber;
   };
