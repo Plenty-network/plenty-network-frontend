@@ -22,6 +22,7 @@ export interface IDropdownProps {
   title: string;
   className?: string;
   isConfirmStake?: boolean;
+  isFetching: boolean;
 }
 
 export function VeNFT(props: IDropdownProps) {
@@ -97,6 +98,7 @@ export function VeNFT(props: IDropdownProps) {
             </>
           )}
         </p>
+
         <Image
           src={arrow}
           width={"12px"}

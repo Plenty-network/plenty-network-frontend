@@ -207,7 +207,15 @@ function Swap(props: ISwapProps) {
         }
       });
     }
-  }, [tokenIn, tokenOut, tokenType, enableMultiHop, tokenPrice, isSwitchClicked.current]);
+  }, [
+    tokenIn,
+    tokenOut,
+    tokenType,
+    enableMultiHop,
+    tokenPrice,
+    isSwitchClicked.current,
+    balanceUpdate,
+  ]);
 
   const handleSwapTokenInput = (input: string | number, tokenType: "tokenIn" | "tokenOut") => {
     var flag = 1;

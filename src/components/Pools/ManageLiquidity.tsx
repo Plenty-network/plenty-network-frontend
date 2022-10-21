@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { getPnlpOutputEstimate, getPoolShareForPnlp } from "../../api/liquidity";
 import { ELiquidityProcess } from "../../api/liquidity/types";
 import { getDepositedAmounts, getRewards } from "../../api/rewards";
-import { getVePLYListForUser } from "../../api/stake";
-import { IVePLYData } from "../../api/stake/types";
+import { getStakedData, getVePLYListForUser } from "../../api/stake";
+import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 import { loadSwapDataWrapper } from "../../api/swap/wrappers";
 import { getPnlpBalance, getStakedBalance, getUserBalanceByRpc } from "../../api/util/balance";
 import { getLPTokenPrice } from "../../api/util/price";
@@ -19,6 +19,7 @@ import {
   TOKEN_B,
 } from "../../constants/localStorage";
 import { addLiquidity } from "../../operations/addLiquidity";
+import { detachLockFromGauge } from "../../operations/locks";
 import { removeLiquidity } from "../../operations/removeLiquidity";
 import { harvestRewards } from "../../operations/rewards";
 import { stakePnlpTokens } from "../../operations/stake";
@@ -57,11 +58,14 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
+
   const [screen, setScreen] = React.useState("1");
   const [firstTokenAmountLiq, setFirstTokenAmountLiq] = React.useState<string | number>("");
   const [secondTokenAmountLiq, setSecondTokenAmountLiq] = React.useState<number | string>("");
 
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
+  const [boost, setBoost] = useState<IStakedDataResponse>();
+
   const [selectedDropDown, setSelectedDropDown] = useState<IVePLYData>({
     tokenId: "",
     boostValue: "",
@@ -106,7 +110,24 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [contentTransaction, setContentTransaction] = useState("");
   const [vePLYOptions, setVePLYOptions] = useState<IVePLYData[]>([]);
   const [isListLoading, setIsListLoading] = useState(false);
-
+  useEffect(() => {
+    if (walletAddress) {
+      getStakedData(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
+        if (res.success) {
+          console.log(res);
+          setBoost(res);
+          if (res.stakedData.isBoosted) {
+            setSelectedDropDown({
+              tokenId: res?.stakedData ? res.stakedData.boostedLockId.toString() : "",
+              boostValue: res?.stakedData ? res.stakedData.boostValue.toString() : "",
+              votingPower: "",
+              lockState: 0 as ELocksState,
+            });
+          }
+        }
+      });
+    }
+  }, [balanceUpdate, props.tokenIn.name, props.tokenOut.name, walletAddress]);
   useEffect(() => {
     if (walletAddress || (screen === "2" && props.activeState === ActiveLiquidity.Staking)) {
       setIsListLoading(true);
@@ -119,9 +140,27 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         setIsListLoading(false);
         const veplyData = res.vePLYData;
         setVePLYOptions(veplyData);
+        if (boost?.stakedData.isBoosted) {
+          setVePLYOptions((prevArray: IVePLYData[]) => [
+            ...prevArray,
+            {
+              tokenId: boost ? boost?.stakedData?.boostedLockId.toString() : "",
+              boostValue: boost ? boost?.stakedData?.boostValue.toString() : "",
+              votingPower: "",
+              lockState: 0 as ELocksState,
+            },
+          ]);
+        }
       });
     }
-  }, [stakeInput, walletAddress, screen, props.activeState]);
+  }, [
+    stakeInput,
+    walletAddress,
+    screen,
+    props.activeState,
+    boost?.stakedData.isBoosted,
+    balanceUpdate,
+  ]);
 
   useEffect(() => {
     if (vePLYOptions.length > 0) {
@@ -248,7 +287,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       );
       setSharePool(sharePool.pnlpPoolShare);
     }
-  }, [firstTokenAmountLiq, secondTokenAmountLiq, screen, burnAmount]);
+  }, [firstTokenAmountLiq, secondTokenAmountLiq, screen, burnAmount, balanceUpdate]);
   const resetAllValues = () => {
     setFirstTokenAmountLiq("");
     setSecondTokenAmountLiq("");
@@ -366,6 +405,73 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         setContentTransaction("");
+      }
+    });
+  };
+  const tEZorCTEZtoUppercase = (a: string) =>
+    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
+  const handleDetach = () => {
+    localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.symbol));
+    localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.symbol));
+    if (boost?.stakedData.boostedLockId) {
+      localStorage.setItem(
+        FIRST_TOKEN_AMOUNT,
+        boost ? boost?.stakedData?.boostedLockId.toString() : ""
+      );
+    }
+    detachLockFromGauge(
+      props.tokenIn.name,
+      props.tokenOut.name,
+      undefined,
+      undefined,
+      undefined,
+      boost ? boost?.stakedData?.dexContractAddress : undefined,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: ` Detach # ${localStorage.getItem(
+          FIRST_TOKEN_AMOUNT
+        )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool
+        `,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: ` Detach # ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool
+              `,
+              linkText: "View in Explorer",
+              isLoading: true,
+              transactionId: "",
+            })
+          );
+        }, 6000);
+      } else {
+        setBalanceUpdate(true);
+        dispatch(
+          setFlashMessage({
+            flashType: Flashtype.Rejected,
+            transactionId: "",
+            headerText: "Rejected",
+            trailingText: `Detach # ${localStorage.getItem(
+              FIRST_TOKEN_AMOUNT
+            )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool`,
+            linkText: "",
+            isLoading: true,
+          })
+        );
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
       }
     });
   };
@@ -767,7 +873,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             </p>
             <Image
               className="cursor-pointer hover:opacity-90"
-              onClick={() => setShowVideoModal(true)}
+              //onClick={() => setShowVideoModal(true)}
               src={playBtn}
             />
           </div>
@@ -828,6 +934,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             {props.activeState === ActiveLiquidity.Staking && (
               <StakingScreen
                 tokenIn={props.tokenIn}
+                boost={boost}
                 tokenOut={props.tokenOut}
                 lpTokenPrice={lpTokenPrice}
                 pnlpBalance={pnlpBalance}
@@ -843,6 +950,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 selectedDropDown={selectedDropDown}
                 vePLYOptions={vePLYOptions}
                 isListLoading={isListLoading}
+                handleDetach={handleDetach}
               />
             )}
             {props.activeState === ActiveLiquidity.Rewards && (

@@ -11,13 +11,13 @@ import link from "../../assets/icon/myPortfolio/link.svg";
 export function TopBar(props: ITopBar) {
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(0) + "B";
+      return num.dividedBy(1000000000).toFixed(2) + "B";
     }
     if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(0) + "M";
+      return num.dividedBy(1000000).toFixed(2) + "M";
     }
     if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(0) + "K";
+      return num.dividedBy(1000).toFixed(2) + "K";
     }
 
     return num.toFixed(2);
