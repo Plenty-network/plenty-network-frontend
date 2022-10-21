@@ -25,6 +25,8 @@ import { TOKEN_A, TOKEN_B } from "../../constants/localStorage";
 
 function BribesMain(props: BribesMainProps) {
   const [contentTransaction, setContentTransaction] = useState("");
+
+  const [balanceUpdate, setBalanceUpdate] = useState(false);
   const [transactionId, setTransactionId] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
@@ -57,7 +59,7 @@ function BribesMain(props: BribesMainProps) {
     } else {
       setAllBalance({ success: false, userBalance: {} });
     }
-  }, [userAddress, tokens]);
+  }, [userAddress, tokens, balanceUpdate]);
   const resetAllValues = () => {
     setBribeInputValue("");
     setBribeToken({} as tokenParameter);
@@ -101,6 +103,7 @@ function BribesMain(props: BribesMainProps) {
     ).then((response) => {
       if (response.success) {
         props.setIsOperationComplete(true);
+        setBalanceUpdate(true);
         setTimeout(() => {
           props.setIsOperationComplete(false);
           dispatch(
@@ -131,6 +134,7 @@ function BribesMain(props: BribesMainProps) {
       } else {
         resetAllValues();
         setShowConfirmTransaction(false);
+        setBalanceUpdate(true);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
           dispatch(
@@ -203,6 +207,8 @@ function BribesMain(props: BribesMainProps) {
             epochArray={epochArray}
             handleOperation={handleOperation}
             allBalance={allBalance.userBalance}
+            balanceUpdate={balanceUpdate}
+            setBalanceUpdate={setBalanceUpdate}
           />
         )}
         {showConfirmTransaction && (

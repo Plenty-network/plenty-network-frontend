@@ -19,7 +19,7 @@ function Stats(props: IStatsProps) {
   }
 
   return (
-    <div className="flex min-w-[1053px] w-full justify-between gap-5">
+    <div className="flex min-w-[1053px] w-full  gap-5">
       <StatsCard
         toolTipMessage={"Total value locked across your positions on the platform."}
         setShowCreateLockModal={props.setShowCreateLockModal}
