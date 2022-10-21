@@ -199,7 +199,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
               <div className="relative top-0.5 md:top-0">
                 <Image alt={"alt"} src={wallet} className="walletIcon" />
               </div>
-              <div className="ml-1 flex text-primary-500 font-caption1-small md:font-body2">
+              <div className="ml-1 flex text-text-250 font-caption1-small md:font-body2">
                 {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (
                   <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (

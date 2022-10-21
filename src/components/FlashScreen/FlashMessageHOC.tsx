@@ -43,7 +43,7 @@ export function FlashMessageHOC(props: IFlashMessageHOCProps) {
   }, [isLoading]);
   if (isFlashVisiable) {
     return (
-      <div className="absolute md:right-10 md:bottom-10 bottom-[77px]  z-index-max-pro">
+      <div className="absolute mx-3 md:mx-0 md:right-10 md:bottom-10 bottom-[77px]  z-index-max-pro">
         <FlashMessage
           headerText={headerText}
           duration={FLASH_MESSAGE_SHOW_TIME}

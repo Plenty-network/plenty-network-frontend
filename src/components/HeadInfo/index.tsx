@@ -44,7 +44,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
         >
           <Image
             src={playIcon}
-            onClick={() => setShowVideoModal(true)}
+            //onClick={() => setShowVideoModal(true)}
             height={"28px"}
             width={"28px"}
             className="cursor-pointer hover:opacity-90"

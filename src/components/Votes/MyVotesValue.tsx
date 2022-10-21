@@ -6,13 +6,13 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 export function MyVotesValue(props: IMyVotesValueProps) {
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(0) + "B";
+      return num.dividedBy(1000000000).toFixed(2) + "B";
     }
     if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(0) + "M";
+      return num.dividedBy(1000000).toFixed(2) + "M";
     }
     if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(0) + "K";
+      return num.dividedBy(1000).toFixed(2) + "K";
     }
 
     return num.toFixed(2);
@@ -25,7 +25,7 @@ export function MyVotesValue(props: IMyVotesValueProps) {
         toolTipChild={
           <div className="flex gap-1">
             <div className="text-text-50 font-body1">My votes:</div>
-            <div className="text-white font-caption2 ">{props.myVotes.toString()}</div>
+            <div className="text-white font-caption2 ">{props.myVotes.toFixed(6)}</div>
           </div>
         }
       >

@@ -16,7 +16,7 @@ import Button from "../Button/Button";
 import TokenDropdown from "../TokenDropdown/TokenDropdown";
 import TransactionSettings from "../TransactionSettings/TransactionSettings";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { tokensModal, tokenType } from "../../../src/constants/swap";
+import { ERRORMESSAGES, tokensModal, tokenType } from "../../../src/constants/swap";
 import { useStateAnimate } from "../../hooks/useAnimateUseState";
 import loader from "../../assets/animations/shimmer-swap.json";
 import { BigNumber } from "bignumber.js";
@@ -403,6 +403,7 @@ function SwapTab(props: ISwapTabProps) {
                     )}
                     placeholder="0.0"
                     lang="en"
+                    disabled={props.errorMessage === ERRORMESSAGES.SWAPROUTER}
                     onChange={(e) => props.handleSwapTokenInput(e.target.value, "tokenIn")}
                     value={props.firstTokenAmount}
                     onFocus={() => setIsFirstInputFocus(true)}
@@ -515,6 +516,7 @@ function SwapTab(props: ISwapTabProps) {
                         "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 "
                       )}
                       placeholder="0.0"
+                      disabled={props.errorMessage === ERRORMESSAGES.SWAPROUTER}
                       onChange={(e) => props.handleSwapTokenInput(e.target.value, "tokenOut")}
                       value={props.secondTokenAmount}
                       onFocus={() => setIsSecondInputFocus(true)}

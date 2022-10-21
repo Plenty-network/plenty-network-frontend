@@ -126,6 +126,20 @@ export function StakingScreen(props: IStakingScreenProps) {
 export function Staking(props: IStakingProps) {
   // const walletAddress = store.getState().wallet.address;
   const walletAddress = useAppSelector((state) => state.wallet.address);
+  function nFormatter(num: BigNumber) {
+    if (num.isGreaterThanOrEqualTo(1000000000)) {
+      return num.dividedBy(1000000000).toFixed(2) + "B";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000)) {
+      return num.dividedBy(1000000).toFixed(2) + "M";
+    }
+    if (num.isGreaterThanOrEqualTo(1000)) {
+      return num.dividedBy(1000).toFixed(2) + "K";
+    }
+
+    return num.toFixed(2);
+  }
+
   const handleInputPercentage = (value: number) => {
     props.setStakeInput(value * Number(props.pnlpBalance));
   };
@@ -374,7 +388,7 @@ export function Staking(props: IStakingProps) {
                   {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
                 </span>
               </div>
-              <div className="ml-5 flex gap-1 md:gap-2">
+              <div className="flex gap-1 md:gap-2">
                 <div className="md:block hidden">
                   {boost?.stakedData.isBoosted && (
                     <BtnwithBoost
@@ -386,10 +400,10 @@ export function Staking(props: IStakingProps) {
                 </div>
                 <BtnWithWalletIconEnd
                   text={`${
-                    Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(2) : 0
+                    Number(props.pnlpBalance) > 0 ? nFormatter(new BigNumber(props.pnlpBalance)) : 0
                   } PNLP`}
                 />
-                <BtnWithStakeIcon text={`${Number(props.stakedToken).toFixed(4)} PNLP`} />
+                <BtnWithStakeIcon text={`${nFormatter(new BigNumber(props.stakedToken))} PNLP`} />
               </div>
             </div>
             <div className="ml-auto block md:hidden">

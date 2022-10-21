@@ -143,6 +143,7 @@ function AddBribes(props: IAddBribes) {
     else return "";
   };
   const handleTokenType = () => {
+    props.setBalanceUpdate(false);
     setSwapModalShow(true);
   };
   const selectToken = (token: tokensModal) => {
