@@ -7,4 +7,5 @@ export interface IFlashMessageProps {
   linkText: string;
   isLoading: boolean;
   transactionId: string;
+  key?:string;
 }

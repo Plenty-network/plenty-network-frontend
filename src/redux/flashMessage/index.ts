@@ -1,15 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Flashtype } from "../../components/FlashScreen";
 import { IFlashMessageProps } from "./type";
 
-export const initialState: IFlashMessageProps = {
-  flashType: Flashtype.Info,
-  headerText: "",
-  trailingText: "",
-  linkText: "",
-  isLoading: false,
-  onClick: () => {},
-  transactionId: "",
+export const initialState: {[key:string]:IFlashMessageProps} = {
+  
 };
 
 const flashMessages = createSlice({
@@ -17,16 +10,13 @@ const flashMessages = createSlice({
   initialState,
   reducers: {
     setFlashMessage: (state, action: { type: any; payload: IFlashMessageProps }) => {
-      state.isLoading = action.payload.isLoading;
-      state.flashType = action.payload.flashType;
-      state.transactionId = action.payload.transactionId;
-      state.headerText = action.payload.headerText;
-      state.trailingText = action.payload.trailingText;
-      state.linkText = action.payload.linkText;
-      state.onClick = action.payload.onClick;
+      if(action.payload.key){
+        state[action.payload.key]=action.payload}
     },
-    unsetFlashMessage: (state) => {
-      state.isLoading = false;
+    unsetFlashMessage: (state,action:{type:any,payload:{key:string}}) => {
+      const next = {...state}
+      delete next[action.payload.key]
+      return next
     },
   },
 });
