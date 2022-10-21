@@ -23,7 +23,7 @@ export function TopNavBarMobile(props: ITopNavBarMobileProps) {
   return (
     <div
       className={clsx(
-        "flex fixed  w-screen bottomNavBarMobile px-5 h-[61px] justify-between border-b border-b-borderColor z-50",
+        "flex fixed  w-screen bottomNavBarMobile px-5 h-[61px] justify-between border-b border-b-borderColor z-40",
         props.isBanner ? "top-[38px]" : "animate__animated animate__fadeInUp animate__faster"
       )}
     >

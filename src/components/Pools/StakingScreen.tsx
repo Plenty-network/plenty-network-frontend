@@ -38,7 +38,9 @@ export enum StakingScreenType {
   ConfirmUnStake = "ConfirmUnStake",
 }
 export interface IStakingScreenProps {
+  boost: IStakedDataResponse | undefined;
   tokenIn: tokenParameterLiquidity;
+  handleDetach: () => void;
   tokenOut: tokenParameterLiquidity;
   stakingScreen: StakingScreenType;
   lpTokenPrice: BigNumber;
@@ -56,6 +58,7 @@ export interface IStakingScreenProps {
   isListLoading: boolean;
 }
 export interface IStakingProps {
+  boost: IStakedDataResponse | undefined;
   setStakingScreen: Function;
   stakingScreen: StakingScreenType;
   tokenIn: tokenParameterLiquidity;
@@ -70,6 +73,7 @@ export interface IStakingProps {
   selectedDropDown: IVePLYData;
   vePLYOptions: IVePLYData[];
   isListLoading: boolean;
+  handleDetach: () => void;
 }
 
 export interface IUnstakingProps {
@@ -103,6 +107,8 @@ export function StakingScreen(props: IStakingScreenProps) {
           selectedDropDown={props.selectedDropDown}
           vePLYOptions={props.vePLYOptions}
           isListLoading={props.isListLoading}
+          handleDetach={props.handleDetach}
+          boost={props.boost}
         />
       )}
       {props.stakingScreen === StakingScreenType.Unstaking && (
@@ -143,14 +149,6 @@ export function Staking(props: IStakingProps) {
   const handleInputPercentage = (value: number) => {
     props.setStakeInput(value * Number(props.pnlpBalance));
   };
-  const [boost, setBoost] = useState<IStakedDataResponse>();
-  useEffect(() => {
-    if (walletAddress) {
-      getStakedData(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
-        setBoost(res);
-      });
-    }
-  }, []);
 
   const handleStakeInput = async (input: string | number) => {
     if (input == ".") {
@@ -175,68 +173,7 @@ export function Staking(props: IStakingProps) {
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
-  const handleDetach = () => {
-    localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.symbol));
-    localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.symbol));
-    if (boost?.stakedData.boostedLockId) {
-      localStorage.setItem(
-        FIRST_TOKEN_AMOUNT,
-        boost ? boost?.stakedData?.boostedLockId.toString() : ""
-      );
-    }
-    detachLockFromGauge(
-      props.tokenIn.name,
-      props.tokenOut.name,
-      undefined,
-      undefined,
-      undefined,
-      boost ? boost?.stakedData?.dexContractAddress : undefined,
-      {
-        flashType: Flashtype.Info,
-        headerText: "Transaction submitted",
-        trailingText: ` Detach # ${localStorage.getItem(
-          FIRST_TOKEN_AMOUNT
-        )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool
-        `,
-        linkText: "View in Explorer",
-        isLoading: true,
-        transactionId: "",
-      }
-    ).then((response) => {
-      if (response.success) {
-        setTimeout(() => {
-          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-          dispatch(
-            setFlashMessage({
-              flashType: Flashtype.Success,
-              headerText: "Success",
-              trailingText: ` Detach # ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool
-              `,
-              linkText: "View in Explorer",
-              isLoading: true,
-              transactionId: "",
-            })
-          );
-        }, 6000);
-      } else {
-        dispatch(
-          setFlashMessage({
-            flashType: Flashtype.Rejected,
-            transactionId: "",
-            headerText: "Rejected",
-            trailingText: `Detach # ${localStorage.getItem(
-              FIRST_TOKEN_AMOUNT
-            )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool`,
-            linkText: "",
-            isLoading: true,
-          })
-        );
-        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-      }
-    });
-  };
+
   const stakeButton = useMemo(() => {
     if (!walletAddress) {
       return (
@@ -364,7 +301,7 @@ export function Staking(props: IStakingProps) {
             isListLoading={props.isListLoading}
           />
 
-          <div className="font-mobile-f9 md:text-f12 text-text-400 ml-2 max-w-[321px] text-center">
+          <div className="font-mobile-f9 md:text-f12 text-text-400 ml-2 max-w-[280px] md:max-w-[321px] text-center">
             Based on how much voting power the veNFT has, you may be able to boost your PLY rewards
             up to 2.5x
           </div>
@@ -390,11 +327,11 @@ export function Staking(props: IStakingProps) {
               </div>
               <div className="flex gap-1 md:gap-2">
                 <div className="md:block hidden">
-                  {boost?.stakedData.isBoosted && (
+                  {props.boost?.stakedData.isBoosted && (
                     <BtnwithBoost
-                      text={`${boost.stakedData.boostValue} x`}
-                      onClick={handleDetach}
-                      tokenid={boost.stakedData.boostedLockId.toString()}
+                      text={`${props.boost.stakedData.boostValue} x`}
+                      onClick={props.handleDetach}
+                      tokenid={props.boost.stakedData.boostedLockId.toString()}
                     />
                   )}
                 </div>
@@ -407,11 +344,11 @@ export function Staking(props: IStakingProps) {
               </div>
             </div>
             <div className="ml-auto block md:hidden">
-              {boost?.stakedData.isBoosted && (
+              {props.boost?.stakedData.isBoosted && (
                 <BtnwithBoost
-                  text={`${boost.stakedData.boostValue} x`}
-                  onClick={handleDetach}
-                  tokenid={boost.stakedData.boostedLockId.toString()}
+                  text={`${props.boost.stakedData.boostValue} x`}
+                  onClick={props.handleDetach}
+                  tokenid={props.boost.stakedData.boostedLockId.toString()}
                 />
               )}
             </div>
