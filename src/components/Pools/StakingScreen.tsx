@@ -190,7 +190,7 @@ export function Staking(props: IStakingProps) {
       undefined,
       undefined,
       undefined,
-      boost ? boost?.stakedData?.gaugeAddress : undefined,
+      boost ? boost?.stakedData?.dexContractAddress : undefined,
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
