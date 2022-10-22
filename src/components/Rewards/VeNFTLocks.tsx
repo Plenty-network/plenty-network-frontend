@@ -113,7 +113,11 @@ export function VeNFTLocks(props: IDropdownProps) {
                 <Options
                   onClick={props.onClick}
                   key={`${text.tokenId}_${i}`}
-                  votingPower={text.votingPower.toString()}
+                  votingPower={
+                    text.locksState === ELocksState.AVAILABLE
+                      ? text.votingPower.toString()
+                      : text.nextEpochVotingPower.toString()
+                  }
                   tokenId={text.tokenId.toString()}
                   veNFT={
                     text.locksState === ELocksState.AVAILABLE ||
