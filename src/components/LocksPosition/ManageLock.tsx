@@ -41,12 +41,23 @@ function ManageLock(props: IManageLockProps) {
     }
   );
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [maxLockButtonEnabled, setMaxLockButtonEnabled] = useState(true);
   const closeModal = () => {
     props.setShow(false);
   };
   const handleInputPercentage = (value: number) => {
     props.setUpdatedPlyVoteValue((value * Number(props.plyBalance)).toString());
   };
+  useEffect(() => {
+    const now = Math.floor(new Date().getTime() / 1000);
+    const newLockEnd = Math.floor((now + MAX_TIME) / WEEK) * WEEK;
+    const currentLockEnd = Math.floor(props.manageData.endTimeStamp / 1000)
+    if(newLockEnd <= currentLockEnd) {
+      setMaxLockButtonEnabled(false);
+    } else {
+      setMaxLockButtonEnabled(true);
+    }
+  }, [props.manageData.endTimeStamp]);
   useEffect(() => {
     const res = getCalendarRangeToEnable();
 
@@ -283,27 +294,50 @@ function ManageLock(props: IManageLockProps) {
             </div>
             <div className="mt-3 px-3 md:px-5 flex gap-2">
               <p>
-                <ToolTip
-                  toolTipChild={
-                    <div className="w-[210px] text-center">
-                      Lock for 4 years for maximum voting power
-                    </div>
-                  }
-                  id="tooltip8"
-                  position={Position.top}
-                >
-                  <p
-                    className={clsx(
-                      "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[13px] md:px-[25px] flex items-center h-[44px] text-text-500 font-subtitle1  md:font-subtitle3 cursor-pointer",
-                      props.lockingEndData.selected === MAX_TIME
-                        ? "bg-card-500 border-primary-500"
-                        : "bg-muted-200/[0.1] border-border-200"
-                    )}
-                    onClick={() => handleDateSelection(MAX_TIME, undefined)}
+                {maxLockButtonEnabled ? (
+                  <ToolTip
+                    toolTipChild={
+                      <div className="w-[210px] text-center">
+                        Lock for 4 years for maximum voting power
+                      </div>
+                    }
+                    id="tooltip8"
+                    position={Position.top}
                   >
-                    Max lock
-                  </p>
-                </ToolTip>
+                    <p
+                      className={clsx(
+                        "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[13px] md:px-[25px] flex items-center h-[44px] text-text-500 font-subtitle1  md:font-subtitle3 cursor-pointer",
+                        props.lockingEndData.selected === MAX_TIME
+                          ? "bg-card-500 border-primary-500"
+                          : "bg-muted-200/[0.1] border-border-200"
+                      )}
+                      onClick={() => handleDateSelection(MAX_TIME, undefined)}
+                    >
+                      Max lock
+                    </p>
+                  </ToolTip>
+                ) : (
+                  <ToolTip
+                    toolTipChild={
+                      <div className="w-[210px] text-center">
+                        Already locked for max period
+                      </div>
+                    }
+                    id="tooltip8"
+                    position={Position.top}
+                  >
+                    <p
+                      className={clsx(
+                        "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[13px] md:px-[25px] flex items-center h-[44px] text-text-500 font-subtitle1  md:font-subtitle3 cursor-not-allowed",
+                        props.lockingEndData.selected === MAX_TIME
+                          ? "bg-card-500 border-primary-500"
+                          : "bg-muted-200/[0.1] border-border-200"
+                      )}
+                    >
+                      Max lock
+                    </p>
+                  </ToolTip>
+                )}
               </p>
             </div>
             <div className={clsx("mt-3 border-t border-text-800/[0.5]")}></div>
