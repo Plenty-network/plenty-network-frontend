@@ -23,6 +23,7 @@ interface IAddLiquidityProps {
 }
 function AddLiquidity(props: IAddLiquidityProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
+  const tokens = useAppSelector((state) => state.config.standard);
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
@@ -37,7 +38,16 @@ function AddLiquidity(props: IAddLiquidityProps) {
       props.setFirstTokenAmount("");
       return;
     } else if (tokenType === "tokenIn") {
-      props.setFirstTokenAmount(input);
+      const decimal = new BigNumber(input).decimalPlaces();
+
+      if (
+        input !== null &&
+        decimal !== null &&
+        new BigNumber(decimal).isGreaterThan(tokens[props.tokenIn.name].decimals)
+      ) {
+      } else {
+        props.setFirstTokenAmount(input);
+      }
       const res = estimateOtherTokenAmount(
         input.toString(),
         props.swapData.tokenInSupply as BigNumber,
@@ -46,7 +56,16 @@ function AddLiquidity(props: IAddLiquidityProps) {
       );
       props.setSecondTokenAmount(res.otherTokenAmount);
     } else if (tokenType === "tokenOut") {
-      props.setSecondTokenAmount(input);
+      const decimal = new BigNumber(input).decimalPlaces();
+
+      if (
+        input !== null &&
+        decimal !== null &&
+        new BigNumber(decimal).isGreaterThan(tokens[props.tokenOut.name].decimals)
+      ) {
+      } else {
+        props.setSecondTokenAmount(input);
+      }
 
       const res = estimateOtherTokenAmount(
         input.toString(),
@@ -64,6 +83,13 @@ function AddLiquidity(props: IAddLiquidityProps) {
     props.tokenIn.name === "tez"
       ? handleLiquidityInput(Number(props.userBalances[props.tokenIn.name]) - 0.02, "tokenIn")
       : handleLiquidityInput(props.userBalances[props.tokenIn.name], "tokenIn");
+  };
+  const onClickSecondAmount = () => {
+    props.setFirstTokenAmount("");
+
+    props.tokenOut.name === "tez"
+      ? handleLiquidityInput(Number(props.userBalances[props.tokenOut.name]) - 0.02, "tokenOut")
+      : handleLiquidityInput(props.userBalances[props.tokenOut.name], "tokenOut");
   };
   return (
     <>
@@ -199,7 +225,10 @@ function AddLiquidity(props: IAddLiquidityProps) {
               <div className="relative top-0.5 md:top-0">
                 <Image alt={"alt"} src={wallet} className="walletIcon" />
               </div>
-              <div className="ml-1 flex text-text-250 font-caption1-small md:font-body2">
+              <div
+                className="ml-1 cursor-pointer flex text-primary-500  font-caption1-small md:font-body2"
+                onClick={onClickSecondAmount}
+              >
                 {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (
                   <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (

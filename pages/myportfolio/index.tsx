@@ -565,7 +565,7 @@ function MyPortfolio(props: any) {
         >
           <Image
             src={playIcon}
-            //onClick={() => setShowVideoModal(true)}
+            onClick={() => setShowVideoModal(true)}
             height={"28px"}
             width={"28px"}
             className="cursor-pointer hover:opacity-90"
@@ -1937,7 +1937,7 @@ function MyPortfolio(props: any) {
           }
         />
       )}
-      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"Bh5zuEI4M9o"} />}
+      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"UXBs3vi26_A"} />}
     </>
   );
 }

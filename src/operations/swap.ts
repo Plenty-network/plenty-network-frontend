@@ -1,5 +1,5 @@
 import { getDexAddress } from "../api/util/fetchConfig";
-import { store, useAppDispatch } from "../redux";
+import { store} from "../redux";
 import { BigNumber } from "bignumber.js";
 import { TokenVariant } from "../config/types";
 import { OpKind } from "@taquito/taquito";
@@ -12,8 +12,8 @@ import {
   TSetShowConfirmTransaction,
 } from "./types";
 import { setFlashMessage } from "../redux/flashMessage";
-import { Flashtype } from "../components/FlashScreen";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
+import { checkOperationConfirmation } from "../api/util/operations";
 
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,
@@ -180,14 +180,14 @@ const swapTokens = async (
     if (TOKEN_IN.variant === TokenVariant.FA12) {
       batch = Tezos.wallet
         .batch()
-        .withContractCall(tokenInInstance.methods.approve(dexContractAddress, tokenInAmount))
+        .withContractCall(tokenInInstance.methods.approve(dexContractAddress, tokenInAmount.decimalPlaces(0,1)))
         .withContractCall(
           dexContractInstance.methods.Swap(
-            minimumTokenOut.toString(),
+            minimumTokenOut.decimalPlaces(0,1).toString(),
             recipent,
             tokenOutAddress,
             tokenOutId,
-            tokenInAmount
+            tokenInAmount.decimalPlaces(0,1)
           )
         );
     }
@@ -208,11 +208,11 @@ const swapTokens = async (
         )
         .withContractCall(
           dexContractInstance.methods.Swap(
-            minimumTokenOut.toString(),
+            minimumTokenOut.decimalPlaces(0,1).toString(),
             recipent,
             tokenOutAddress,
             tokenOutId,
-            tokenInAmount
+            tokenInAmount.decimalPlaces(0,1)
           )
         )
         .withContractCall(
@@ -239,10 +239,15 @@ const swapTokens = async (
     }
     const opHash = await batchOperation.confirmation();
 
-    return {
-      success: true,
-      operationId: batchOperation.opHash,
-    };
+    const res =  await checkOperationConfirmation(batchOperation.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOperation.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.log(error);
     return {
@@ -285,13 +290,13 @@ async function ctez_to_tez(
       .withContractCall(
         ctez_contract.methods.approve(
           contractAddress,
-          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString()
+          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).decimalPlaces(0,1).toString()
         )
       )
       .withContractCall(
         contract.methods.ctez_to_tez(
-          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString(),
-          minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString(),
+          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).decimalPlaces(0,1).toString(),
+          minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).decimalPlaces(0,1).toString(),
           recipent
         )
       )
@@ -312,10 +317,16 @@ async function ctez_to_tez(
     resetAllValues();
     await batchOp.confirmation();
 
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+    const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+
   } catch (error: any) {
     console.log(error);
     return {
@@ -354,12 +365,12 @@ async function tez_to_ctez(
         kind: OpKind.TRANSACTION,
         ...contract.methods
           .tez_to_ctez(
-            minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenOutDecimals)).toString(),
+            minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenOutDecimals)).decimalPlaces(0,1).toString(),
             recipent
           )
           .toTransferParams({
             amount: Number(
-              tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString()
+              tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).decimalPlaces(0,1).toString()
             ),
             mutez: true,
           }),
@@ -387,10 +398,15 @@ async function tez_to_ctez(
     // );
     await batchOp.confirmation();
 
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+    const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     return {
       success: false,

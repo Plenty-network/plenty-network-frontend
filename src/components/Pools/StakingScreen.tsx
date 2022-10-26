@@ -30,6 +30,7 @@ import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
 import { getStakedData } from "../../api/stake";
 import { FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_B } from "../../constants/localStorage";
+import { ITokenInterface } from "../../config/types";
 
 export enum StakingScreenType {
   Staking = "Staking",
@@ -56,6 +57,7 @@ export interface IStakingScreenProps {
   selectedDropDown: IVePLYData;
   vePLYOptions: IVePLYData[];
   isListLoading: boolean;
+  lpToken: ITokenInterface | undefined;
 }
 export interface IStakingProps {
   boost: IStakedDataResponse | undefined;
@@ -74,6 +76,7 @@ export interface IStakingProps {
   vePLYOptions: IVePLYData[];
   isListLoading: boolean;
   handleDetach: () => void;
+  lpToken: ITokenInterface | undefined;
 }
 
 export interface IUnstakingProps {
@@ -87,6 +90,7 @@ export interface IUnstakingProps {
   setUnStakeInput: React.Dispatch<React.SetStateAction<string | number>>;
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   stakedToken: string;
+  lpToken: ITokenInterface | undefined;
 }
 export function StakingScreen(props: IStakingScreenProps) {
   return (
@@ -109,6 +113,7 @@ export function StakingScreen(props: IStakingScreenProps) {
           isListLoading={props.isListLoading}
           handleDetach={props.handleDetach}
           boost={props.boost}
+          lpToken={props.lpToken}
         />
       )}
       {props.stakingScreen === StakingScreenType.Unstaking && (
@@ -123,6 +128,7 @@ export function StakingScreen(props: IStakingScreenProps) {
           setScreen={props.setScreen}
           stakedToken={props.stakedToken}
           stakingScreen={props.stakingScreen}
+          lpToken={props.lpToken}
         />
       )}
     </>
@@ -146,9 +152,23 @@ export function Staking(props: IStakingProps) {
   }
 
   const handleInputPercentage = (value: number) => {
-    props.setStakeInput(value * Number(props.pnlpBalance));
-  };
+    const decimal = new BigNumber(value * Number(props.pnlpBalance)).decimalPlaces();
 
+    if (
+      decimal !== null &&
+      props.lpToken &&
+      new BigNumber(decimal).isGreaterThan(props.lpToken?.decimals)
+    ) {
+      props.setStakeInput(
+        new BigNumber(value * Number(props.pnlpBalance))
+          .decimalPlaces(props.lpToken.decimals, 1)
+          .toString()
+      );
+    } else {
+      props.setStakeInput((value * Number(props.pnlpBalance)).toString());
+    }
+  };
+  const [errorMessage, setErrorMessage] = useState("");
   const handleStakeInput = async (input: string | number) => {
     if (input == ".") {
       props.setStakeInput("0.");
@@ -160,7 +180,20 @@ export function Staking(props: IStakingProps) {
 
       return;
     } else {
-      props.setStakeInput(input);
+      const decimal = new BigNumber(input).decimalPlaces();
+      if (
+        decimal !== null &&
+        props.lpToken &&
+        new BigNumber(decimal).isGreaterThan(props.lpToken?.decimals)
+      ) {
+        setErrorMessage(
+          `The Precision of ${tEZorCTEZtoUppercase(
+            props.tokenIn.symbol
+          )} token cant be greater than ${props.lpToken?.decimals} decimals`
+        );
+      } else {
+        props.setStakeInput(input);
+      }
     }
   };
   const tEZorCTEZtoUppercase = (a: string) =>
@@ -365,7 +398,21 @@ export function Unstaking(props: IUnstakingProps) {
   // const walletAddress = store.getState().wallet.address;
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const handleInputPercentage = (value: number) => {
-    props.setUnStakeInput(value * Number(props.stakedToken));
+    const decimal = new BigNumber(value * Number(props.stakedToken)).decimalPlaces();
+
+    if (
+      decimal !== null &&
+      props.lpToken &&
+      new BigNumber(decimal).isGreaterThan(props.lpToken?.decimals)
+    ) {
+      props.setUnStakeInput(
+        new BigNumber(value * Number(props.stakedToken))
+          .decimalPlaces(props.lpToken.decimals, 1)
+          .toString()
+      );
+    } else {
+      props.setUnStakeInput(value * Number(props.stakedToken));
+    }
   };
   const handleUnStakeInput = async (input: string | number) => {
     if (input == ".") {
@@ -378,7 +425,15 @@ export function Unstaking(props: IUnstakingProps) {
 
       return;
     } else {
-      props.setUnStakeInput(input);
+      const decimal = new BigNumber(input).decimalPlaces();
+      if (
+        decimal !== null &&
+        props.lpToken &&
+        new BigNumber(decimal).isGreaterThan(props.lpToken?.decimals)
+      ) {
+      } else {
+        props.setUnStakeInput(input);
+      }
     }
   };
   const onClickAmount = () => {

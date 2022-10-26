@@ -4,6 +4,7 @@ import { BigNumber } from 'bignumber.js';
 import { store } from '../redux';
 import { setFlashMessage } from '../redux/flashMessage';
 import { IFlashMessageProps } from '../redux/flashMessage/type';
+import { checkOperationConfirmation } from '../api/util/operations';
 
 
 // TODO : VERIFY OPERATIONS
@@ -42,10 +43,17 @@ export const claim = async (
         }
   
         await batchOp.confirmation();
-        return {
-          success: true,
-          operationId: batchOp.opHash,
-        };
+
+        const res =  await checkOperationConfirmation(batchOp.opHash);
+        if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+        
       
     } catch (error : any) {
       console.error(error);
@@ -100,10 +108,16 @@ export const claim = async (
         }
   
         await batchOp.confirmation();
-        return {
-          success: true,
-          operationId: batchOp.opHash,
-        };
+
+        const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
       
     } catch (error : any) {
       console.error(error);

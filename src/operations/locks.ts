@@ -5,13 +5,12 @@ import {
   TResetAllValues,
   TTransactionSubmitModal,
   TSetShowConfirmTransaction,
-  IAttachmentLiteral,
 } from "./types";
 import Config from "../config/config";
 import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { IAllBribesOperationData, IAllClaimableFeesData, IClaimInflationOperationData } from "../api/portfolio/types";
-import { getMaxPossibleBatchArray, getMaxPossibleBatchArrayV2 } from "../api/util/operations";
+import { getMaxPossibleBatchArrayV2, checkOperationConfirmation } from "../api/util/operations";
 import { store } from "../redux";
 import { getDexAddress } from "../api/util/fetchConfig";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
@@ -44,8 +43,10 @@ export const createLock = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value))
-      .withContractCall(veInstance.methods.create_lock(address, value, endtime));
+      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value.decimalPlaces(0, 1)))
+      .withContractCall(
+        veInstance.methods.create_lock(address, value.decimalPlaces(0, 1), endtime)
+      );
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
@@ -57,10 +58,17 @@ export const createLock = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+   
   } catch (error: any) {
     console.error(error);
     return {
@@ -103,10 +111,17 @@ export const increaseLockEnd = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+  
   } catch (error: any) {
     console.error(error);
     return {
@@ -142,8 +157,12 @@ export const increaseLockValue = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded))
-      .withContractCall(veInstance.methods.increase_lock_value(id, plyToBeAdded));
+      .withContractCall(
+        plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded.decimalPlaces(0, 1))
+      )
+      .withContractCall(
+        veInstance.methods.increase_lock_value(id, plyToBeAdded.decimalPlaces(0, 1))
+      );
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
@@ -155,10 +174,17 @@ export const increaseLockValue = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+  
   } catch (error: any) {
     console.error(error);
     return {
@@ -195,8 +221,12 @@ export const increaseLockAndValue = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded))
-      .withContractCall(veInstance.methods.increase_lock_value(id, plyToBeAdded))
+      .withContractCall(
+        plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded.decimalPlaces(0, 1))
+      )
+      .withContractCall(
+        veInstance.methods.increase_lock_value(id, plyToBeAdded.decimalPlaces(0, 1))
+      )
       .withContractCall(veInstance.methods.increase_lock_end(id, newEnd));
 
     const batchOp = await batch.send();
@@ -209,10 +239,16 @@ export const increaseLockAndValue = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.error(error);
     return {
@@ -254,57 +290,16 @@ export const withdrawLock = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
-  } catch (error: any) {
-    console.error(error);
-    return {
-      success: false,
-      operationId: undefined,
-      error: error.message,
-    };
-  }
-};
 
-// CHECK FLOW ONCE
-// Depricate
-export const withdrawLockWithInflation = async (
-  id: number,
-  epochs: number[],
-  transactionSubmitModal: TTransactionSubmitModal,
-  resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
-): Promise<IOperationsResponse> => {
-  try {
-    const { CheckIfWalletConnected } = dappClient();
-    const WALLET_RESP = await CheckIfWalletConnected();
-    if (!WALLET_RESP.success) {
-      throw new Error("Wallet connection failed");
+    const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
     }
-
-    const Tezos = await dappClient().tezos();
-    const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
-
-    let batch = null;
-
-    batch = Tezos.wallet
-      .batch()
-      .withContractCall(veInstance.methods.claim_inflation(id, epochs))
-      .withContractCall(veInstance.methods.withdraw(id));
-
-    const batchOp = await batch.send();
-    setShowConfirmTransaction(false);
-    resetAllValues();
-
-    transactionSubmitModal(batchOp.opHash);
-
-    await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
   } catch (error: any) {
     console.error(error);
     return {
@@ -360,10 +355,17 @@ export const claimAllInflation = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+    
   } catch (error: any) {
     console.error(error);
     return {
@@ -446,10 +448,16 @@ export const claimAllAndWithdrawLock = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.error(error);
     return {
@@ -513,10 +521,17 @@ export const claimAllAndWithdrawLock = async (
     }
 
     await operation.confirmation();
-    return {
-      success: true,
-      operationId: operation.opHash,
-    };
+
+    const res =  await checkOperationConfirmation(operation.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: operation.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+   
   } catch (error: any) {
     console.log(error);
     return {
@@ -618,10 +633,16 @@ export const claimAllDetachAndWithdrawLock = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.error(error);
     return {
