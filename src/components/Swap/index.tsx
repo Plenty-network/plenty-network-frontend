@@ -100,6 +100,7 @@ function Swap(props: ISwapProps) {
   const isSwitchClicked = React.useRef<boolean>(false);
 
   useEffect(() => {
+    setAllBalance({ success: false, userBalance: {} });
     if (props.otherProps.walletAddress) {
       getCompleteUserBalace(props.otherProps.walletAddress).then(
         (response: IAllBalanceResponse) => {
@@ -107,7 +108,7 @@ function Swap(props: ISwapProps) {
         }
       );
     } else {
-      setAllBalance({ success: false, userBalance: {} });
+      setAllBalance({ success: true, userBalance: {} });
       setUserBalances({});
     }
   }, [props.otherProps.walletAddress, TOKEN, balanceUpdate]);
@@ -632,7 +633,6 @@ function Swap(props: ISwapProps) {
           setShowTransactionSubmitModal={setShowTransactionSubmitModal}
           showTransactionSubmitModal={showTransactionSubmitModal}
           loading={loading.current}
-          setAllBalance={setAllBalance}
           resetAllValues={resetAllValues}
           routeDetails={routeDetails.current}
           allPath={allPathState}
@@ -647,6 +647,7 @@ function Swap(props: ISwapProps) {
       <SwapModal
         tokens={tokensListConfig}
         show={swapModalShow}
+        isLoading={allBalance.success}
         allBalance={allBalance.userBalance}
         selectToken={selectToken}
         onhide={handleClose}

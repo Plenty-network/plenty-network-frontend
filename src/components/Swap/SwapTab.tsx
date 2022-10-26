@@ -83,7 +83,6 @@ interface ISwapTabProps {
   };
   refreshAllData?: (value: boolean) => void;
   isRefresh?: boolean;
-  setAllBalance: any;
   resetAllValues: () => void;
   routeDetails: {
     path: string[];
