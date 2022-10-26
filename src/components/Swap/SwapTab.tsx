@@ -165,6 +165,7 @@ function SwapTab(props: ISwapTabProps) {
         : props.tokenOut.name
     );
     localStorage.setItem(FIRST_TOKEN_AMOUNT, props.firstTokenAmount.toString());
+    props.setBalanceUpdate(false);
     localStorage.setItem(SECOND_TOKEN_AMOUNT, props.secondTokenAmount.toString());
     !expertMode && props.setShowConfirmSwap(false);
     const recepientAddress = props.recepient ? props.recepient : props.walletAddress;
