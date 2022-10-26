@@ -110,7 +110,7 @@ function Swap(props: ISwapProps) {
       setAllBalance({ success: false, userBalance: {} });
       setUserBalances({});
     }
-  }, [props.otherProps.walletAddress, TOKEN]);
+  }, [props.otherProps.walletAddress, TOKEN, balanceUpdate]);
 
   useEffect(() => {
     setSlippage(userSettings.slippage);
@@ -130,7 +130,6 @@ function Swap(props: ISwapProps) {
     }
   }, [tokenPrice]);
 
-  const [isLiqError, setIsLiqError] = useState(false);
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(tokenIn, "name") &&
@@ -141,7 +140,8 @@ function Swap(props: ISwapProps) {
             isLoadingfirst: true,
             isLoadingSecond: true,
           })
-        : (routeDetails.current = {
+        : firstTokenAmount !== "0" &&
+          (routeDetails.current = {
             minimumOut: new BigNumber(0),
             minimumTokenOut: [],
             feePerc: [],
@@ -218,6 +218,7 @@ function Swap(props: ISwapProps) {
   ]);
 
   const handleSwapTokenInput = (input: string | number, tokenType: "tokenIn" | "tokenOut") => {
+    isSwitchClicked.current = false;
     var flag = 1;
     if (input == ".") {
       if (tokenType === "tokenIn") {
@@ -339,9 +340,7 @@ function Swap(props: ISwapProps) {
             flag = 0;
             setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY);
           }
-          // res.tokenOutAmount.isLessThan(0)
-          //   ? setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY)
-          //   : setErrorMessage("");
+
           setSecondTokenAmount(
             res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString()
           );
@@ -362,9 +361,7 @@ function Swap(props: ISwapProps) {
             } decimals`
           );
         }
-        // if (flag === 1) {
-        //   setErrorMessage("");
-        // }
+
         if (Object.keys(tokenIn).length !== 0) {
           loading.current = {
             isLoadingfirst: true,
@@ -398,9 +395,6 @@ function Swap(props: ISwapProps) {
             flag = 0;
             setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY);
           }
-          // res.tokenOutAmount.isLessThan(0)
-          //   ? setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY)
-          //   : setErrorMessage("");
           setFirstTokenAmount(res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString());
         }
       }
@@ -468,11 +462,12 @@ function Swap(props: ISwapProps) {
 
     isSwitchClicked.current = true;
     //setSecondTokenAmount(firstTokenAmount);
+    setSecondTokenAmount("");
     loading.current = {
       isLoadingfirst: false,
       isLoadingSecond: true,
     };
-    setSecondTokenAmount("");
+
     if (tokenOut.name && tokenIn.name) {
       setTokenIn({
         name: tokenOut.name,
@@ -483,7 +478,7 @@ function Swap(props: ISwapProps) {
         name: tokenIn.name,
         image: tokenIn.image,
       });
-      inputValue > 0 &&
+      if (inputValue > 0) {
         setTimeout(() => {
           routeDetails.current = {
             minimumOut: new BigNumber(0),
@@ -527,7 +522,17 @@ function Swap(props: ISwapProps) {
             isLoadingSecond: false,
             isLoadingfirst: false,
           };
+          setSecondTokenAmount(
+            res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString()
+          );
         }, 2000);
+      } else {
+        setSecondTokenAmount(0);
+        loading.current = {
+          isLoadingSecond: false,
+          isLoadingfirst: false,
+        };
+      }
     } else if (Object.keys(tokenOut).length === 0) {
       loading.current = {
         isLoadingfirst: false,
@@ -636,7 +641,7 @@ function Swap(props: ISwapProps) {
           setEnableMultiHop={setEnableMultiHop}
           enableMultiHop={enableMultiHop}
           setBalanceUpdate={setBalanceUpdate}
-          isLiqError={isLiqError}
+          isSwitchClicked={isSwitchClicked.current}
         />
       </div>
       <SwapModal

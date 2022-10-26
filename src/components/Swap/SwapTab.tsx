@@ -101,7 +101,8 @@ interface ISwapTabProps {
   setEnableMultiHop: React.Dispatch<React.SetStateAction<boolean>>;
   enableMultiHop: boolean;
   setBalanceUpdate: React.Dispatch<React.SetStateAction<boolean>>;
-  isLiqError: boolean;
+
+  isSwitchClicked: boolean;
 }
 
 function SwapTab(props: ISwapTabProps) {
@@ -284,15 +285,7 @@ function SwapTab(props: ISwapTabProps) {
             Insufficient balance
           </Button>
         );
-      }
-      //  else if (props.isLiqError) {
-      //   return (
-      //     <Button color="disabled" width="w-full">
-      //       Insufficient Liquidity for this trade
-      //     </Button>
-      //   );
-      // }
-      else if (expertMode && Number(props.routeDetails.priceImpact) > 3) {
+      } else if (expertMode && Number(props.routeDetails.priceImpact) > 3) {
         return (
           <Button color="error" width="w-full" onClick={handleSwap}>
             Swap Anyway
@@ -507,7 +500,9 @@ function SwapTab(props: ISwapTabProps) {
               <div className="text-right font-body1 text-text-400">YOU RECEIVE</div>
               <div>
                 {Object.keys(props.tokenOut).length !== 0 ? (
-                  isRefresh || props.loading.isLoadingSecond ? (
+                  isRefresh ||
+                  props.loading.isLoadingSecond ||
+                  (props.isSwitchClicked && props.secondTokenAmount === "") ? (
                     <p className="ml-auto my-[4px] w-[100px]  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input
@@ -592,7 +587,9 @@ function SwapTab(props: ISwapTabProps) {
             className="h-12 mt-3 cursor-pointer px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] items-center flex "
             onClick={() => setOpenSwapDetails(!openSwapDetails)}
           >
-            {isRefresh || props.loading.isLoadingSecond ? (
+            {isRefresh ||
+            props.loading.isLoadingSecond ||
+            (props.isSwitchClicked && props.secondTokenAmount === "") ? (
               <div className="flex relative top-[8px]">
                 <span className="ml-[6px] font-text-bold mr-[7px]"> Fetching best price</span>
                 <span className="relative -top-[5px]">
@@ -885,7 +882,9 @@ function SwapTab(props: ISwapTabProps) {
                   </ToolTip>
                 </span>
               </div>
-              {isRefresh || props.loading.isLoadingSecond ? (
+              {isRefresh ||
+              props.loading.isLoadingSecond ||
+              (props.isSwitchClicked && props.secondTokenAmount === "") ? (
                 <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
                   999999999999
                 </div>
@@ -935,7 +934,9 @@ function SwapTab(props: ISwapTabProps) {
                   </ToolTip>
                 </span>
               </div>
-              {isRefresh || props.loading.isLoadingSecond ? (
+              {isRefresh ||
+              props.loading.isLoadingSecond ||
+              (props.isSwitchClicked && props.secondTokenAmount === "") ? (
                 <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
                   99999999
                 </div>
@@ -973,7 +974,9 @@ function SwapTab(props: ISwapTabProps) {
                   </ToolTip>
                 </span>
               </div>
-              {isRefresh || props.loading.isLoadingSecond ? (
+              {isRefresh ||
+              props.loading.isLoadingSecond ||
+              (props.isSwitchClicked && props.secondTokenAmount === "") ? (
                 <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
                   999999999999
                 </div>
@@ -1003,7 +1006,9 @@ function SwapTab(props: ISwapTabProps) {
                   </ToolTip>
                 </span>
               </div>
-              {isRefresh || props.loading.isLoadingSecond ? (
+              {isRefresh ||
+              props.loading.isLoadingSecond ||
+              (props.isSwitchClicked && props.secondTokenAmount === "") ? (
                 <div className=" w-[110px] mt-2 h-[35px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
                   99999999
                 </div>
