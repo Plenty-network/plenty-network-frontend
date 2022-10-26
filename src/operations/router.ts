@@ -46,7 +46,7 @@ export const routerSwap = async (
       DataLiteral[i] = {
         exchangeAddress: dexAddress,
         minimumOutput: minOut,
-        requiredTokenAddress: tokenAddress ?? "KT1Uw1oio434UoWFuZTNKFgt5wTM9tfuf7m7",
+        requiredTokenAddress: tokenAddress ?? routerAddress,
         requiredTokenId: tokenId,
       };
     }
