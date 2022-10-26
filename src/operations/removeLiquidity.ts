@@ -6,6 +6,7 @@ import { IOperationsResponse, TResetAllValues, TSetActiveState, TSetShowConfirmT
 import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 import { IFlashMessageProps } from '../redux/flashMessage/type';
 import { setFlashMessage } from '../redux/flashMessage';
+import { checkOperationConfirmation } from '../api/util/operations';
 
 /**
  * Remove liquidity operation for given pair of tokens.
@@ -155,18 +156,18 @@ const removeAllPairsLiquidity = async (
     const operation = isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
       ? await dexContractInstance.methods
           .remove_liquidity(
-            finalPnlpAmount.toString(),
+            finalPnlpAmount.decimalPlaces(0,1).toString(),
             userTezosAddress,
-            firstTokenMinimumAmount.toString(),
-            secondTokenMinimumAmount.toString()
+            firstTokenMinimumAmount.decimalPlaces(0,1).toString(),
+            secondTokenMinimumAmount.decimalPlaces(0,1).toString()
           )
           .send()
       : await dexContractInstance.methods
           .RemoveLiquidity(
-            finalPnlpAmount.toString(),
+            finalPnlpAmount.decimalPlaces(0,1).toString(),
             userTezosAddress,
-            firstTokenMinimumAmount.toString(),
-            secondTokenMinimumAmount.toString()
+            firstTokenMinimumAmount.decimalPlaces(0,1).toString(),
+            secondTokenMinimumAmount.decimalPlaces(0,1).toString()
           )
           .send();
 
@@ -179,10 +180,16 @@ const removeAllPairsLiquidity = async (
     }
     await operation.confirmation();
 
-    return {
-      success: true,
-      operationId: operation.opHash,
-    };
+    const res =  await checkOperationConfirmation(operation.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: operation.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -260,7 +267,11 @@ const removeAllPairsLiquidity = async (
      );
 
      const operation = await dexContractInstance.methods
-       .remove_liquidity(finalPnlpAmount.toString(), secondTokenMinimumAmount, tezMinimumAmount)
+       .remove_liquidity(
+         finalPnlpAmount.decimalPlaces(0, 1).toString(),
+         secondTokenMinimumAmount.decimalPlaces(0, 1),
+         tezMinimumAmount.decimalPlaces(0, 1)
+       )
        .send();
 
      setShowConfirmTransaction && setShowConfirmTransaction(false);
@@ -272,10 +283,16 @@ const removeAllPairsLiquidity = async (
      }
      await operation.confirmation();
 
-     return {
-       success: true,
-       operationId: operation.opHash,
-     };
+     const res =  await checkOperationConfirmation(operation.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: operation.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+
    } catch (error: any) {
      throw new Error(error.message);
    }

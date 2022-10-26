@@ -35,12 +35,10 @@ function BribesMain(props: BribesMainProps) {
   const [bribeInputValue, setBribeInputValue] = useState("");
   const [showAddBribes, setShowAddBribes] = useState(false);
   const [selectedPool, setSelectedPool] = useState<IPoolsForBribesData>({} as IPoolsForBribesData);
-  // const userAddress = store.getState().wallet.address;
   const userAddress = useAppSelector((state) => state.wallet.address);
   const [activeStateTab, setActiveStateTab] = useState<BribesCardHeader | string>(
     BribesCardHeader.Pools
   );
-  // const tokens = store.getState().config.standard;
   const tokens = useAppSelector((state) => state.config.standard);
   const [epochArray, setEpochArray] = useState<number[]>([] as number[]);
   const transactionSubmitModal = (id: string) => {

@@ -1,6 +1,7 @@
 import { OpKind, WalletParamsWithKind } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 import { getDexAddress } from '../api/util/fetchConfig';
+import { checkOperationConfirmation } from '../api/util/operations';
 import { dappClient, voteEscrowAddress } from '../common/walletconnect';
 import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 import { TokenVariant } from '../config/types';
@@ -206,10 +207,16 @@ export const stakePnlpTokensV1 = async (
     setActiveState && setActiveState(ActiveLiquidity.Rewards);
     resetAllValues && resetAllValues();
     await batchOperation.confirmation();
-    return {
-      success: true,
-      operationId: batchOperation.opHash,
-    };
+
+    const res =  await checkOperationConfirmation(batchOperation.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOperation.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     return {
       success: false,
@@ -286,7 +293,7 @@ export const stakePnlpTokensV1 = async (
         allBatchOperations.push({
           kind: OpKind.TRANSACTION,
           ...pnlpTokenContractInstance.methods
-            .approve(gaugeAddress, pnlpAmountToStake.toString())
+            .approve(gaugeAddress, pnlpAmountToStake.decimalPlaces(0, 1).toString())
             .toTransferParams(),
         });
       }
@@ -309,7 +316,7 @@ export const stakePnlpTokensV1 = async (
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         ...gaugeContractInstance.methods
-          .stake(pnlpAmountToStake.toString(), tokenId || 0)
+          .stake(pnlpAmountToStake.decimalPlaces(0, 1).toString(), tokenId || 0)
           .toTransferParams(),
       });
     } else if (PNLP_TOKEN.variant === TokenVariant.FA2) {
@@ -348,7 +355,7 @@ export const stakePnlpTokensV1 = async (
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         ...gaugeContractInstance.methods
-          .stake(pnlpAmountToStake.toString(), tokenId || 0)
+          .stake(pnlpAmountToStake.decimalPlaces(0, 1).toString(), tokenId || 0)
           .toTransferParams(),
       });
       if(pnlpAmountToStake.isGreaterThan(0)) {
@@ -385,10 +392,16 @@ export const stakePnlpTokensV1 = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
     await batchOperation.confirmation();
-    return {
-      success: true,
-      operationId: batchOperation.opHash,
-    };
+
+    const res =  await checkOperationConfirmation(batchOperation.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOperation.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     return {
       success: false,

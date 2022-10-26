@@ -25,11 +25,8 @@ import { walletConnection } from "../../redux/wallet/wallet";
 
 function AddBribes(props: IAddBribes) {
   const [swapModalShow, setSwapModalShow] = useState(false);
-  // const tokens = store.getState().config.standard;
   const tokens = useAppSelector((state) => state.config.standard);
-  // const tokenPrice = store.getState().tokenPrice.tokenPrice;
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  // const userAddress = store.getState().wallet.address;
   const userAddress = useAppSelector((state) => state.wallet.address);
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
 
@@ -63,7 +60,6 @@ function AddBribes(props: IAddBribes) {
   const tEZorCTEZtoUppercase = (a: string) =>
     a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
-  // const currentEpoch = store.getState().epoch.currentEpoch;
   const closeModal = () => {
     props.setShow(false);
   };

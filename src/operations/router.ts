@@ -8,6 +8,7 @@ import { dappClient } from '../common/walletconnect';
 import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShowConfirmTransaction } from './types';
 import { IFlashMessageProps } from '../redux/flashMessage/type';
 import { setFlashMessage } from '../redux/flashMessage';
+import { checkOperationConfirmation } from '../api/util/operations';
 
 export const routerSwap = async (
   path: string[],
@@ -40,13 +41,15 @@ export const routerSwap = async (
     for (let i = 0; i < path.length - 1; i++) {
       const dexAddress = getDexAddress(path[i], path[i + 1]);
       const minOut = minimumOut_All[i]
-        .multipliedBy(new BigNumber(10).pow(TOKEN[path[i + 1]].decimals)).toString();
+        .multipliedBy(new BigNumber(10).pow(TOKEN[path[i + 1]].decimals))
+        .decimalPlaces(0, 1)
+        .toString();
       const tokenAddress = TOKEN[path[i + 1]].address;
       const tokenId = TOKEN[path[i + 1]].tokenId ?? 0;
       DataLiteral[i] = {
         exchangeAddress: dexAddress,
         minimumOutput: minOut,
-        requiredTokenAddress: tokenAddress ?? "KT1Uw1oio434UoWFuZTNKFgt5wTM9tfuf7m7",
+        requiredTokenAddress: tokenAddress ?? routerAddress,
         requiredTokenId: tokenId,
       };
     }
@@ -54,6 +57,7 @@ export const routerSwap = async (
     const DataMap = MichelsonMap.fromLiteral(DataLiteral);
     let swapAmount = amount
       .multipliedBy(new BigNumber(10).pow(TOKEN_IN.decimals))
+      .decimalPlaces(0,1)
       .toString();
     const tokenInCallType = TOKEN_IN.variant;
 
@@ -78,10 +82,15 @@ export const routerSwap = async (
         store.dispatch(setFlashMessage(flashMessageContent));
       }
       await batchOp.confirmation();
+      const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
+    }else{
+      throw new Error(res.error);
+    }
     } else {
       const tokenInInstance: any = await Tezos.contract.at(TOKEN_IN.address as string);
       if (tokenInCallType === TokenVariant.FA12) {
@@ -126,10 +135,16 @@ export const routerSwap = async (
       transactionSubmitModal(batchOp.opHash);
 
       await batchOp.confirmation();
+
+      const res =  await checkOperationConfirmation(batchOp.opHash);
+    if(res.success){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
+    }else{
+      throw new Error(res.error);
+    }
     }
   } catch (error : any) {
     console.error(error);
