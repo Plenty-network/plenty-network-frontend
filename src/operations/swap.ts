@@ -1,5 +1,5 @@
 import { getDexAddress } from "../api/util/fetchConfig";
-import { store, useAppDispatch } from "../redux";
+import { store} from "../redux";
 import { BigNumber } from "bignumber.js";
 import { TokenVariant } from "../config/types";
 import { OpKind } from "@taquito/taquito";
@@ -12,7 +12,6 @@ import {
   TSetShowConfirmTransaction,
 } from "./types";
 import { setFlashMessage } from "../redux/flashMessage";
-import { Flashtype } from "../components/FlashScreen";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
 import { operationConfirmer } from "../api/util/operations";
 
@@ -240,10 +239,15 @@ const swapTokens = async (
     }
     const opHash = await batchOperation.confirmation();
 
-    return {
-      success: true,
-      operationId: batchOperation.opHash,
-    };
+    const res =  await operationConfirmer(batchOperation.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOperation.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.log(error);
     return {
@@ -394,10 +398,15 @@ async function tez_to_ctez(
     // );
     await batchOp.confirmation();
 
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     return {
       success: false,

@@ -5,13 +5,12 @@ import {
   TResetAllValues,
   TTransactionSubmitModal,
   TSetShowConfirmTransaction,
-  IAttachmentLiteral,
 } from "./types";
 import Config from "../config/config";
 import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { IAllBribesOperationData, IAllClaimableFeesData, IClaimInflationOperationData } from "../api/portfolio/types";
-import { getMaxPossibleBatchArray, getMaxPossibleBatchArrayV2 } from "../api/util/operations";
+import { getMaxPossibleBatchArrayV2, operationConfirmer } from "../api/util/operations";
 import { store } from "../redux";
 import { getDexAddress } from "../api/util/fetchConfig";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
@@ -59,10 +58,17 @@ export const createLock = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+   
   } catch (error: any) {
     console.error(error);
     return {
@@ -105,10 +111,17 @@ export const increaseLockEnd = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+  
   } catch (error: any) {
     console.error(error);
     return {
@@ -161,10 +174,17 @@ export const increaseLockValue = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+  
   } catch (error: any) {
     console.error(error);
     return {
@@ -219,10 +239,16 @@ export const increaseLockAndValue = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.error(error);
     return {
@@ -264,57 +290,16 @@ export const withdrawLock = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
-  } catch (error: any) {
-    console.error(error);
-    return {
-      success: false,
-      operationId: undefined,
-      error: error.message,
-    };
-  }
-};
 
-// CHECK FLOW ONCE
-// Depricate
-export const withdrawLockWithInflation = async (
-  id: number,
-  epochs: number[],
-  transactionSubmitModal: TTransactionSubmitModal,
-  resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction
-): Promise<IOperationsResponse> => {
-  try {
-    const { CheckIfWalletConnected } = dappClient();
-    const WALLET_RESP = await CheckIfWalletConnected();
-    if (!WALLET_RESP.success) {
-      throw new Error("Wallet connection failed");
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
     }
-
-    const Tezos = await dappClient().tezos();
-    const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
-
-    let batch = null;
-
-    batch = Tezos.wallet
-      .batch()
-      .withContractCall(veInstance.methods.claim_inflation(id, epochs))
-      .withContractCall(veInstance.methods.withdraw(id));
-
-    const batchOp = await batch.send();
-    setShowConfirmTransaction(false);
-    resetAllValues();
-
-    transactionSubmitModal(batchOp.opHash);
-
-    await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
   } catch (error: any) {
     console.error(error);
     return {
@@ -370,10 +355,17 @@ export const claimAllInflation = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+    
   } catch (error: any) {
     console.error(error);
     return {
@@ -456,10 +448,16 @@ export const claimAllAndWithdrawLock = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.error(error);
     return {
@@ -523,10 +521,17 @@ export const claimAllAndWithdrawLock = async (
     }
 
     await operation.confirmation();
-    return {
-      success: true,
-      operationId: operation.opHash,
-    };
+
+    const res =  await operationConfirmer(operation.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: operation.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+   
   } catch (error: any) {
     console.log(error);
     return {
@@ -628,10 +633,16 @@ export const claimAllDetachAndWithdrawLock = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.error(error);
     return {

@@ -15,6 +15,7 @@ import { OpKind } from "@taquito/taquito";
 import { ActiveLiquidity } from "../components/Pools/ManageLiquidityHeader";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
 import { setFlashMessage } from "../redux/flashMessage";
+import { operationConfirmer } from "../api/util/operations";
 
 /**
  * Add liquidity operation for given pair of tokens.
@@ -357,10 +358,16 @@ const addAllPairsLiquidity = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
     await batchOperation?.confirmation();
-    return {
-      success: true,
-      operationId: batchOperation?.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOperation.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOperation?.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -502,10 +509,16 @@ const addTezPairsLiquidity = async (
     }
 
     await batchOperation?.confirmation();
-    return {
-      success: true,
-      operationId: batchOperation?.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOperation.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOperation?.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     throw new Error(error.message);
   }

@@ -8,6 +8,7 @@ import { dappClient } from '../common/walletconnect';
 import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShowConfirmTransaction } from './types';
 import { IFlashMessageProps } from '../redux/flashMessage/type';
 import { setFlashMessage } from '../redux/flashMessage';
+import { operationConfirmer } from '../api/util/operations';
 
 export const routerSwap = async (
   path: string[],
@@ -81,10 +82,15 @@ export const routerSwap = async (
         store.dispatch(setFlashMessage(flashMessageContent));
       }
       await batchOp.confirmation();
+      const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
+    }else{
+      throw new Error(res.error);
+    }
     } else {
       const tokenInInstance: any = await Tezos.contract.at(TOKEN_IN.address as string);
       if (tokenInCallType === TokenVariant.FA12) {
@@ -129,10 +135,16 @@ export const routerSwap = async (
       transactionSubmitModal(batchOp.opHash);
 
       await batchOp.confirmation();
+
+      const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
+    }else{
+      throw new Error(res.error);
+    }
     }
   } catch (error : any) {
     console.error(error);

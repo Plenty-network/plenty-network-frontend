@@ -7,14 +7,13 @@ import {
   TSetShowConfirmTransaction,
   IVotes,
 } from "./types";
-import { BigNumber } from "bignumber.js";
 import {
   IAllBribesOperationData,
   IAllClaimableFeesData,
   IAllEpochClaimData,
   IClaimInflationOperationData,
 } from "../api/portfolio/types";
-import { getMaxPossibleBatchArray, getMaxPossibleBatchArrayV2 } from "../api/util/operations";
+import { getMaxPossibleBatchArrayV2, operationConfirmer } from "../api/util/operations";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
@@ -39,10 +38,6 @@ export const vote = async (
 
     let batch = null;
 
-    //  TODO :  Confirm how to send votes
-
-    // TODO : Check Calling
-
     batch = Tezos.wallet.batch().withContractCall(voterInstance.methods.vote(id, votes));
 
     const batchOp = await batch.send();
@@ -55,10 +50,16 @@ export const vote = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.error(error);
     return {
@@ -112,10 +113,15 @@ export const claimAllBribeForAllLocks = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.error(error);
     return {
@@ -168,10 +174,16 @@ export const claimAllFeeForAllLocks = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.error(error);
     return {
@@ -234,10 +246,15 @@ export const claimAllRewardsForAllLocks = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.error(error);
     return {
@@ -296,10 +313,16 @@ export const claimAllForEpoch = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.error(error);
     return {
@@ -382,10 +405,16 @@ export const claimSupernova = async (
     }
 
     await batchOp.confirmation();
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     console.error(error);
     return {
