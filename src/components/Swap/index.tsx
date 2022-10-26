@@ -141,7 +141,7 @@ function Swap(props: ISwapProps) {
             isLoadingfirst: true,
             isLoadingSecond: true,
           })
-        : firstTokenAmount !== "0" &&
+        : Number(firstTokenAmount) !== 0 &&
           (routeDetails.current = {
             minimumOut: new BigNumber(0),
             minimumTokenOut: [],
