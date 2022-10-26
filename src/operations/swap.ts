@@ -180,14 +180,14 @@ const swapTokens = async (
     if (TOKEN_IN.variant === TokenVariant.FA12) {
       batch = Tezos.wallet
         .batch()
-        .withContractCall(tokenInInstance.methods.approve(dexContractAddress, tokenInAmount))
+        .withContractCall(tokenInInstance.methods.approve(dexContractAddress, tokenInAmount.decimalPlaces(0,1)))
         .withContractCall(
           dexContractInstance.methods.Swap(
-            minimumTokenOut.toString(),
+            minimumTokenOut.decimalPlaces(0,1).toString(),
             recipent,
             tokenOutAddress,
             tokenOutId,
-            tokenInAmount
+            tokenInAmount.decimalPlaces(0,1)
           )
         );
     }
@@ -208,11 +208,11 @@ const swapTokens = async (
         )
         .withContractCall(
           dexContractInstance.methods.Swap(
-            minimumTokenOut.toString(),
+            minimumTokenOut.decimalPlaces(0,1).toString(),
             recipent,
             tokenOutAddress,
             tokenOutId,
-            tokenInAmount
+            tokenInAmount.decimalPlaces(0,1)
           )
         )
         .withContractCall(
@@ -285,13 +285,13 @@ async function ctez_to_tez(
       .withContractCall(
         ctez_contract.methods.approve(
           contractAddress,
-          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString()
+          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).decimalPlaces(0,1).toString()
         )
       )
       .withContractCall(
         contract.methods.ctez_to_tez(
-          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString(),
-          minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString(),
+          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).decimalPlaces(0,1).toString(),
+          minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).decimalPlaces(0,1).toString(),
           recipent
         )
       )
@@ -354,12 +354,12 @@ async function tez_to_ctez(
         kind: OpKind.TRANSACTION,
         ...contract.methods
           .tez_to_ctez(
-            minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenOutDecimals)).toString(),
+            minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenOutDecimals)).decimalPlaces(0,1).toString(),
             recipent
           )
           .toTransferParams({
             amount: Number(
-              tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).toString()
+              tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).decimalPlaces(0,1).toString()
             ),
             mutez: true,
           }),
