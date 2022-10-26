@@ -160,7 +160,10 @@ const addAllPairsLiquidity = async (
       batch = Tezos.wallet
         .batch()
         .withContractCall(
-          firstTokenInstance.methods.approve(dexContractAddress, firstTokenAmount.toString())
+          firstTokenInstance.methods.approve(
+            dexContractAddress,
+            firstTokenAmount.decimalPlaces(0, 1).toString()
+          )
         )
         .withContractCall(
           secondTokenInstance.methods.update_operators([
@@ -177,13 +180,13 @@ const addAllPairsLiquidity = async (
           isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
             ? dexContractInstance.methods.add_liquidity(
                 userTezosAddress,
-                firstTokenAmount.toString(),
-                secondTokenAmount.toString()
+                firstTokenAmount.decimalPlaces(0, 1).toString(),
+                secondTokenAmount.decimalPlaces(0, 1).toString()
               )
             : dexContractInstance.methods.AddLiquidity(
                 userTezosAddress,
-                firstTokenAmount.toString(),
-                secondTokenAmount.toString()
+                firstTokenAmount.decimalPlaces(0, 1).toString(),
+                secondTokenAmount.decimalPlaces(0, 1).toString()
               )
         )
         .withContractCall(firstTokenInstance.methods.approve(dexContractAddress, 0))
@@ -216,19 +219,22 @@ const addAllPairsLiquidity = async (
           ])
         )
         .withContractCall(
-          secondTokenInstance.methods.approve(dexContractAddress, secondTokenAmount.toString())
+          secondTokenInstance.methods.approve(
+            dexContractAddress,
+            secondTokenAmount.decimalPlaces(0, 1).toString()
+          )
         )
         .withContractCall(
           isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
             ? dexContractInstance.methods.add_liquidity(
                 userTezosAddress,
-                firstTokenAmount.toString(),
-                secondTokenAmount.toString()
+                firstTokenAmount.decimalPlaces(0, 1).toString(),
+                secondTokenAmount.decimalPlaces(0, 1).toString()
               )
             : dexContractInstance.methods.AddLiquidity(
                 userTezosAddress,
-                firstTokenAmount.toString(),
-                secondTokenAmount.toString()
+                firstTokenAmount.decimalPlaces(0, 1).toString(),
+                secondTokenAmount.decimalPlaces(0, 1).toString()
               )
         )
         .withContractCall(
@@ -275,13 +281,13 @@ const addAllPairsLiquidity = async (
           isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
             ? dexContractInstance.methods.add_liquidity(
                 userTezosAddress,
-                firstTokenAmount.toString(),
-                secondTokenAmount.toString()
+                firstTokenAmount.decimalPlaces(0,1).toString(),
+                secondTokenAmount.decimalPlaces(0,1).toString()
               )
             : dexContractInstance.methods.AddLiquidity(
                 userTezosAddress,
-                firstTokenAmount.toString(),
-                secondTokenAmount.toString()
+                firstTokenAmount.decimalPlaces(0,1).toString(),
+                secondTokenAmount.decimalPlaces(0,1).toString()
               )
         )
         .withContractCall(
@@ -313,22 +319,28 @@ const addAllPairsLiquidity = async (
       batch = Tezos.wallet
         .batch()
         .withContractCall(
-          firstTokenInstance.methods.approve(dexContractAddress, firstTokenAmount.toString())
+          firstTokenInstance.methods.approve(
+            dexContractAddress,
+            firstTokenAmount.decimalPlaces(0, 1).toString()
+          )
         )
         .withContractCall(
-          secondTokenInstance.methods.approve(dexContractAddress, secondTokenAmount.toString())
+          secondTokenInstance.methods.approve(
+            dexContractAddress,
+            secondTokenAmount.decimalPlaces(0, 1).toString()
+          )
         )
         .withContractCall(
           isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
             ? dexContractInstance.methods.add_liquidity(
                 userTezosAddress,
-                firstTokenAmount.toString(),
-                secondTokenAmount.toString()
+                firstTokenAmount.decimalPlaces(0, 1).toString(),
+                secondTokenAmount.decimalPlaces(0, 1).toString()
               )
             : dexContractInstance.methods.AddLiquidity(
                 userTezosAddress,
-                firstTokenAmount.toString(),
-                secondTokenAmount.toString()
+                firstTokenAmount.decimalPlaces(0, 1).toString(),
+                secondTokenAmount.decimalPlaces(0, 1).toString()
               )
         )
         .withContractCall(firstTokenInstance.methods.approve(dexContractAddress, 0))
@@ -425,14 +437,14 @@ const addTezPairsLiquidity = async (
         {
           kind: OpKind.TRANSACTION,
           ...secondTokenInstance.methods
-            .approve(dexContractAddress, secondTokenAmount.toString())
+            .approve(dexContractAddress, secondTokenAmount.decimalPlaces(0, 1).toString())
             .toTransferParams(),
         },
         {
           kind: OpKind.TRANSACTION,
           ...dexContractInstance.methods
-            .add_liquidity(secondTokenAmount.toString(), 0, userTezosAddress)
-            .toTransferParams({ amount: tezAmount.toNumber(), mutez: true }),
+            .add_liquidity(secondTokenAmount.decimalPlaces(0, 1).toString(), 0, userTezosAddress)
+            .toTransferParams({ amount: tezAmount.decimalPlaces(0, 1).toNumber(), mutez: true }),
         },
         {
           kind: OpKind.TRANSACTION,
@@ -458,8 +470,8 @@ const addTezPairsLiquidity = async (
         {
           kind: OpKind.TRANSACTION,
           ...dexContractInstance.methods
-            .add_liquidity(secondTokenAmount.toString(), 0, userTezosAddress)
-            .toTransferParams({ amount: tezAmount.toNumber(), mutez: true }),
+            .add_liquidity(secondTokenAmount.decimalPlaces(0, 1).toString(), 0, userTezosAddress)
+            .toTransferParams({ amount: tezAmount.decimalPlaces(0, 1).toNumber(), mutez: true }),
         },
         {
           kind: OpKind.TRANSACTION,

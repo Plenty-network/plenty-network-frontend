@@ -44,8 +44,10 @@ export const createLock = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value))
-      .withContractCall(veInstance.methods.create_lock(address, value, endtime));
+      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value.decimalPlaces(0, 1)))
+      .withContractCall(
+        veInstance.methods.create_lock(address, value.decimalPlaces(0, 1), endtime)
+      );
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
@@ -142,8 +144,12 @@ export const increaseLockValue = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded))
-      .withContractCall(veInstance.methods.increase_lock_value(id, plyToBeAdded));
+      .withContractCall(
+        plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded.decimalPlaces(0, 1))
+      )
+      .withContractCall(
+        veInstance.methods.increase_lock_value(id, plyToBeAdded.decimalPlaces(0, 1))
+      );
 
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
@@ -195,8 +201,12 @@ export const increaseLockAndValue = async (
 
     batch = Tezos.wallet
       .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded))
-      .withContractCall(veInstance.methods.increase_lock_value(id, plyToBeAdded))
+      .withContractCall(
+        plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded.decimalPlaces(0, 1))
+      )
+      .withContractCall(
+        veInstance.methods.increase_lock_value(id, plyToBeAdded.decimalPlaces(0, 1))
+      )
       .withContractCall(veInstance.methods.increase_lock_end(id, newEnd));
 
     const batchOp = await batch.send();

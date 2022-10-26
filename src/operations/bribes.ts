@@ -83,8 +83,11 @@ export const addBribe = async (
         allBatchOperations.push({
           kind: OpKind.TRANSACTION,
           ...bribeContractInstance.methods
-            .add_bribe(epoch, "tez", "unit", epochBribeValue.toString())
-            .toTransferParams({ amount: epochBribeValue.toNumber(), mutez: true }),
+            .add_bribe(epoch, "tez", "unit", epochBribeValue.decimalPlaces(0, 1).toString())
+            .toTransferParams({
+              amount: epochBribeValue.decimalPlaces(0, 1).toNumber(),
+              mutez: true,
+            }),
         });
       });
     } else if (bribeToken.variant === TokenVariant.FA12) {
@@ -95,14 +98,19 @@ export const addBribe = async (
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         ...bribeTokenContractInstance.methods
-          .approve(bribeAddress, totalBribeValue.toString())
+          .approve(bribeAddress, totalBribeValue.decimalPlaces(0,1).toString())
           .toTransferParams(),
       });
       epochNumbers.forEach((epoch) => {
         allBatchOperations.push({
           kind: OpKind.TRANSACTION,
           ...bribeContractInstance.methods
-            .add_bribe(epoch, "fa12", bribeToken.address as string, epochBribeValue.toString())
+            .add_bribe(
+              epoch,
+              "fa12",
+              bribeToken.address as string,
+              epochBribeValue.decimalPlaces(0, 1).toString()
+            )
             .toTransferParams(),
         });
       });
@@ -134,7 +142,7 @@ export const addBribe = async (
               "fa2",
               bribeToken.address as string,
               bribeToken.tokenId as number,
-              epochBribeValue.toString()
+              epochBribeValue.decimalPlaces(0,1).toString()
             )
             .toTransferParams(),
         });
