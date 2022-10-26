@@ -62,7 +62,7 @@ export const unstakePnlpTokens = async (
     );
     
     const operation = await gaugeContractInstance.methods
-      .withdraw(pnlpAmountToUnstake.toString())
+      .withdraw(pnlpAmountToUnstake.decimalPlaces(0, 1).toString())
       .send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);

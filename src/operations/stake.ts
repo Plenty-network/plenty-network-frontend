@@ -286,7 +286,7 @@ export const stakePnlpTokensV1 = async (
         allBatchOperations.push({
           kind: OpKind.TRANSACTION,
           ...pnlpTokenContractInstance.methods
-            .approve(gaugeAddress, pnlpAmountToStake.toString())
+            .approve(gaugeAddress, pnlpAmountToStake.decimalPlaces(0, 1).toString())
             .toTransferParams(),
         });
       }
@@ -309,7 +309,7 @@ export const stakePnlpTokensV1 = async (
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         ...gaugeContractInstance.methods
-          .stake(pnlpAmountToStake.toString(), tokenId || 0)
+          .stake(pnlpAmountToStake.decimalPlaces(0, 1).toString(), tokenId || 0)
           .toTransferParams(),
       });
     } else if (PNLP_TOKEN.variant === TokenVariant.FA2) {
@@ -348,7 +348,7 @@ export const stakePnlpTokensV1 = async (
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         ...gaugeContractInstance.methods
-          .stake(pnlpAmountToStake.toString(), tokenId || 0)
+          .stake(pnlpAmountToStake.decimalPlaces(0, 1).toString(), tokenId || 0)
           .toTransferParams(),
       });
       if(pnlpAmountToStake.isGreaterThan(0)) {

@@ -40,7 +40,9 @@ export const routerSwap = async (
     for (let i = 0; i < path.length - 1; i++) {
       const dexAddress = getDexAddress(path[i], path[i + 1]);
       const minOut = minimumOut_All[i]
-        .multipliedBy(new BigNumber(10).pow(TOKEN[path[i + 1]].decimals)).toString();
+        .multipliedBy(new BigNumber(10).pow(TOKEN[path[i + 1]].decimals))
+        .decimalPlaces(0, 1)
+        .toString();
       const tokenAddress = TOKEN[path[i + 1]].address;
       const tokenId = TOKEN[path[i + 1]].tokenId ?? 0;
       DataLiteral[i] = {
@@ -54,6 +56,7 @@ export const routerSwap = async (
     const DataMap = MichelsonMap.fromLiteral(DataLiteral);
     let swapAmount = amount
       .multipliedBy(new BigNumber(10).pow(TOKEN_IN.decimals))
+      .decimalPlaces(0,1)
       .toString();
     const tokenInCallType = TOKEN_IN.variant;
 

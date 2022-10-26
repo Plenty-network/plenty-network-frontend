@@ -155,18 +155,18 @@ const removeAllPairsLiquidity = async (
     const operation = isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
       ? await dexContractInstance.methods
           .remove_liquidity(
-            finalPnlpAmount.toString(),
+            finalPnlpAmount.decimalPlaces(0,1).toString(),
             userTezosAddress,
-            firstTokenMinimumAmount.toString(),
-            secondTokenMinimumAmount.toString()
+            firstTokenMinimumAmount.decimalPlaces(0,1).toString(),
+            secondTokenMinimumAmount.decimalPlaces(0,1).toString()
           )
           .send()
       : await dexContractInstance.methods
           .RemoveLiquidity(
-            finalPnlpAmount.toString(),
+            finalPnlpAmount.decimalPlaces(0,1).toString(),
             userTezosAddress,
-            firstTokenMinimumAmount.toString(),
-            secondTokenMinimumAmount.toString()
+            firstTokenMinimumAmount.decimalPlaces(0,1).toString(),
+            secondTokenMinimumAmount.decimalPlaces(0,1).toString()
           )
           .send();
 
@@ -260,7 +260,11 @@ const removeAllPairsLiquidity = async (
      );
 
      const operation = await dexContractInstance.methods
-       .remove_liquidity(finalPnlpAmount.toString(), secondTokenMinimumAmount, tezMinimumAmount)
+       .remove_liquidity(
+         finalPnlpAmount.decimalPlaces(0, 1).toString(),
+         secondTokenMinimumAmount.decimalPlaces(0, 1),
+         tezMinimumAmount.decimalPlaces(0, 1)
+       )
        .send();
 
      setShowConfirmTransaction && setShowConfirmTransaction(false);
