@@ -14,6 +14,7 @@ import {
 import { setFlashMessage } from "../redux/flashMessage";
 import { Flashtype } from "../components/FlashScreen";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
+import { operationConfirmer } from "../api/util/operations";
 
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,
@@ -312,10 +313,16 @@ async function ctez_to_tez(
     resetAllValues();
     await batchOp.confirmation();
 
-    return {
-      success: true,
-      operationId: batchOp.opHash,
-    };
+    const res =  await operationConfirmer(batchOp.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
+
   } catch (error: any) {
     console.log(error);
     return {
