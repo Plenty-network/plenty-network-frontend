@@ -884,7 +884,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             </p>
             <Image
               className="cursor-pointer hover:opacity-90"
-              //onClick={() => setShowVideoModal(true)}
+              onClick={() => setShowVideoModal(true)}
               src={playBtn}
             />
           </div>
