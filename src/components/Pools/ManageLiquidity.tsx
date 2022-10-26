@@ -884,7 +884,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             </p>
             <Image
               className="cursor-pointer hover:opacity-90"
-              //onClick={() => setShowVideoModal(true)}
+              onClick={() => setShowVideoModal(true)}
               src={playBtn}
             />
           </div>
@@ -1034,7 +1034,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           </>
         )}
       </PopUpModal>
-      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"Bh5zuEI4M9o"} />}
+      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"UXBs3vi26_A"} />}
       {showConfirmTransaction && (
         <ConfirmTransaction
           show={showConfirmTransaction}
