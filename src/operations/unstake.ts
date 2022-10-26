@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import { getDexAddress } from '../api/util/fetchConfig';
+import { checkOperationConfirmation } from '../api/util/operations';
 import { dappClient } from '../common/walletconnect';
 import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 import { store } from '../redux';
@@ -62,7 +63,7 @@ export const unstakePnlpTokens = async (
     );
     
     const operation = await gaugeContractInstance.methods
-      .withdraw(pnlpAmountToUnstake.toString())
+      .withdraw(pnlpAmountToUnstake.decimalPlaces(0, 1).toString())
       .send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
@@ -74,10 +75,16 @@ export const unstakePnlpTokens = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
     await operation.confirmation();
-    return {
-      success: true,
-      operationId: operation.opHash,
-    };
+
+    const res =  await checkOperationConfirmation(operation.opHash);
+    if(res.success){
+      return {
+        success: true,
+        operationId: operation.opHash,
+      };
+    }else{
+      throw new Error(res.error);
+    }
   } catch (error: any) {
     return {
       success: false,

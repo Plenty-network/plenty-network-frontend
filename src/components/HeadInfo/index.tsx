@@ -44,7 +44,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
         >
           <Image
             src={playIcon}
-            //onClick={() => setShowVideoModal(true)}
+            onClick={() => setShowVideoModal(true)}
             height={"28px"}
             width={"28px"}
             className="cursor-pointer hover:opacity-90"
@@ -57,7 +57,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
         value={props.searchValue}
         onChange={props.setSearchValue}
       />
-      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"Bh5zuEI4M9o"} />}
+      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"UXBs3vi26_A"} />}
       {props.title === "Vote" ? (
         <div
           className={clsx(

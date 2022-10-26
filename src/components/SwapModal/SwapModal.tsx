@@ -22,6 +22,7 @@ interface ISwapModalProps {
   allBalance: {
     [id: string]: BigNumber;
   };
+  isLoading: boolean;
 }
 function SwapModal(props: ISwapModalProps) {
   const searchTokenEl = useRef(null);
@@ -178,11 +179,17 @@ function SwapModal(props: ISwapModalProps) {
                         <span>New!</span>
                       </div>
                     )}
-                    <div className="font-subtitle4 ml-auto mt-[7px]">
-                      {props.allBalance[token.name]
-                        ? Number(props.allBalance[token.name]).toFixed(2)
-                        : 0.0}
-                    </div>
+                    {props.allBalance[token.name] && props.isLoading ? (
+                      <div className="font-subtitle4 ml-auto mt-[7px]">
+                        {props.allBalance[token.name]
+                          ? Number(props.allBalance[token.name]).toFixed(2)
+                          : 0.0}
+                      </div>
+                    ) : (
+                      <div className=" ml-auto h-[19px] rounded  animate-pulse bg-shimmer-100 text-shimmer-100 mt-[7px]">
+                        9999
+                      </div>
+                    )}
                   </div>
                 );
               })}
