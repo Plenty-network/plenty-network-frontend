@@ -1,6 +1,6 @@
 import { OpKind } from '@taquito/taquito';
 import { getDexAddress } from '../api/util/fetchConfig';
-import { operationConfirmer } from '../api/util/operations';
+import { checkOperationConfirmation } from '../api/util/operations';
 import { dappClient } from '../common/walletconnect';
 import { store } from '../redux';
 import { setFlashMessage } from '../redux/flashMessage';
@@ -55,7 +55,7 @@ export const harvestRewards = async (
     }
     await operation.confirmation();
 
-    const res =  await operationConfirmer(operation.opHash);
+    const res =  await checkOperationConfirmation(operation.opHash);
     if(res.success){
       return {
         success: true,
@@ -114,7 +114,7 @@ export const harvestAllRewards = async (
     }
     await operation.confirmation();
 
-    const res =  await operationConfirmer(operation.opHash);
+    const res =  await checkOperationConfirmation(operation.opHash);
     if(res.success){
       return {
         success: true,

@@ -13,7 +13,7 @@ import {
   IAllEpochClaimData,
   IClaimInflationOperationData,
 } from "../api/portfolio/types";
-import { getMaxPossibleBatchArrayV2, operationConfirmer } from "../api/util/operations";
+import { getMaxPossibleBatchArrayV2, checkOperationConfirmation } from "../api/util/operations";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
@@ -51,7 +51,7 @@ export const vote = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -113,7 +113,7 @@ export const claimAllBribeForAllLocks = async (
     }
 
     await batchOp.confirmation();
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -175,7 +175,7 @@ export const claimAllFeeForAllLocks = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -246,7 +246,7 @@ export const claimAllRewardsForAllLocks = async (
     }
 
     await batchOp.confirmation();
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -314,7 +314,7 @@ export const claimAllForEpoch = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -406,7 +406,7 @@ export const claimSupernova = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,

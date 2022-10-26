@@ -13,7 +13,7 @@ import {
 } from "./types";
 import { setFlashMessage } from "../redux/flashMessage";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
-import { operationConfirmer } from "../api/util/operations";
+import { checkOperationConfirmation } from "../api/util/operations";
 
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,
@@ -239,7 +239,7 @@ const swapTokens = async (
     }
     const opHash = await batchOperation.confirmation();
 
-    const res =  await operationConfirmer(batchOperation.opHash);
+    const res =  await checkOperationConfirmation(batchOperation.opHash);
     if(res.success){
       return {
         success: true,
@@ -317,7 +317,7 @@ async function ctez_to_tez(
     resetAllValues();
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -398,7 +398,7 @@ async function tez_to_ctez(
     // );
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,

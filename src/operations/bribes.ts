@@ -1,7 +1,7 @@
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { BigNumber } from "bignumber.js";
 import { getDexAddress } from "../api/util/fetchConfig";
-import { operationConfirmer } from "../api/util/operations";
+import { checkOperationConfirmation } from "../api/util/operations";
 import { dappClient } from "../common/walletconnect";
 import { TokenVariant } from "../config/types";
 import { store } from "../redux";
@@ -180,7 +180,7 @@ export const addBribe = async (
 
     await batchOperation.confirmation();
 
-    const res =  await operationConfirmer(batchOperation.opHash);
+    const res =  await checkOperationConfirmation(batchOperation.opHash);
     if(res.success){
       return {
         success: true,

@@ -129,7 +129,7 @@ export const getMaxPossibleBatchArrayV2 = async (
   }
 };
 
-export const operationConfirmer =async (operationHash : string) : Promise<{success : boolean , error?:any}> => {
+export const checkOperationConfirmation =async (operationHash : string) : Promise<{success : boolean , error?:any}> => {
   try {
 
     const tzktResponse = await axios.get(`${tzktNode}v1/operations/${operationHash}`);

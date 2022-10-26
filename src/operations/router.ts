@@ -8,7 +8,7 @@ import { dappClient } from '../common/walletconnect';
 import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShowConfirmTransaction } from './types';
 import { IFlashMessageProps } from '../redux/flashMessage/type';
 import { setFlashMessage } from '../redux/flashMessage';
-import { operationConfirmer } from '../api/util/operations';
+import { checkOperationConfirmation } from '../api/util/operations';
 
 export const routerSwap = async (
   path: string[],
@@ -82,7 +82,7 @@ export const routerSwap = async (
         store.dispatch(setFlashMessage(flashMessageContent));
       }
       await batchOp.confirmation();
-      const res =  await operationConfirmer(batchOp.opHash);
+      const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -136,7 +136,7 @@ export const routerSwap = async (
 
       await batchOp.confirmation();
 
-      const res =  await operationConfirmer(batchOp.opHash);
+      const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,

@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import { getDexAddress } from '../api/util/fetchConfig';
-import { operationConfirmer } from '../api/util/operations';
+import { checkOperationConfirmation } from '../api/util/operations';
 import { dappClient } from '../common/walletconnect';
 import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 import { store } from '../redux';
@@ -76,7 +76,7 @@ export const unstakePnlpTokens = async (
     }
     await operation.confirmation();
 
-    const res =  await operationConfirmer(operation.opHash);
+    const res =  await checkOperationConfirmation(operation.opHash);
     if(res.success){
       return {
         success: true,

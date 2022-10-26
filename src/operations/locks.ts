@@ -10,7 +10,7 @@ import Config from "../config/config";
 import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { IAllBribesOperationData, IAllClaimableFeesData, IClaimInflationOperationData } from "../api/portfolio/types";
-import { getMaxPossibleBatchArrayV2, operationConfirmer } from "../api/util/operations";
+import { getMaxPossibleBatchArrayV2, checkOperationConfirmation } from "../api/util/operations";
 import { store } from "../redux";
 import { getDexAddress } from "../api/util/fetchConfig";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
@@ -59,7 +59,7 @@ export const createLock = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -112,7 +112,7 @@ export const increaseLockEnd = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -175,7 +175,7 @@ export const increaseLockValue = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -240,7 +240,7 @@ export const increaseLockAndValue = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -291,7 +291,7 @@ export const withdrawLock = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -356,7 +356,7 @@ export const claimAllInflation = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -449,7 +449,7 @@ export const claimAllAndWithdrawLock = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
@@ -522,7 +522,7 @@ export const claimAllAndWithdrawLock = async (
 
     await operation.confirmation();
 
-    const res =  await operationConfirmer(operation.opHash);
+    const res =  await checkOperationConfirmation(operation.opHash);
     if(res.success){
       return {
         success: true,
@@ -634,7 +634,7 @@ export const claimAllDetachAndWithdrawLock = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,

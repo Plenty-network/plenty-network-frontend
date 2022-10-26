@@ -1,5 +1,5 @@
 import { OpKind } from "@taquito/taquito";
-import { operationConfirmer } from "../api/util/operations";
+import { checkOperationConfirmation } from "../api/util/operations";
 import { dappClient, faucetAddress } from "../common/walletconnect";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
@@ -51,7 +51,7 @@ export const claimFaucet = async (
 
     await batchOp.confirmation();
 
-    const res =  await operationConfirmer(batchOp.opHash);
+    const res =  await checkOperationConfirmation(batchOp.opHash);
     if(res.success){
       return {
         success: true,
