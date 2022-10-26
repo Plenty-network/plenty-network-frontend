@@ -34,7 +34,7 @@ export function VideoModal(props: IVideoModalProps) {
           ) : (
             <iframe
               width={width < 560 ? width : 560}
-              height={height < 315 ? height : 315}
+              height={height < 200 ? 315 : height}
               src={`/assets/promotional.mp4`}
               title="YouTube video player"
               frameBorder="0"

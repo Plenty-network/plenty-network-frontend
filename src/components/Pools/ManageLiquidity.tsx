@@ -12,6 +12,7 @@ import { getPnlpBalance, getStakedBalance, getUserBalanceByRpc } from "../../api
 import { getLPTokenPrice } from "../../api/util/price";
 import { ELocksState } from "../../api/votes/types";
 import playBtn from "../../assets/icon/common/playBtn.svg";
+import { ITokenInterface } from "../../config/types";
 import {
   FIRST_TOKEN_AMOUNT,
   SECOND_TOKEN_AMOUNT,
@@ -114,7 +115,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     if (walletAddress) {
       getStakedData(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
         if (res.success) {
-          console.log(res);
           setBoost(res);
           if (res.stakedData.isBoosted) {
             setSelectedDropDown({
@@ -241,6 +241,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     balanceUpdate,
     swapData.current,
   ]);
+  const [lpToken, setLpToken] = useState<ITokenInterface | undefined>({} as ITokenInterface);
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(props.tokenIn, "name") &&
@@ -248,14 +249,18 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     ) {
       setIsLoading(true);
       loadSwapDataWrapper(props.tokenIn.name, props.tokenOut.name).then((response) => {
-        swapData.current = {
-          tokenInSupply: response.tokenInSupply as BigNumber,
-          tokenOutSupply: response.tokenOutSupply as BigNumber,
-          lpToken: response.lpToken?.symbol,
-          lpTokenSupply: response.lpTokenSupply,
-          isloading: false,
-        };
-        setIsLoading(false);
+        if (response.success) {
+          console.log(response);
+          setLpToken(response?.lpToken);
+          swapData.current = {
+            tokenInSupply: response.tokenInSupply as BigNumber,
+            tokenOutSupply: response.tokenOutSupply as BigNumber,
+            lpToken: response.lpToken?.symbol,
+            lpTokenSupply: response.lpTokenSupply,
+            isloading: false,
+          };
+          setIsLoading(false);
+        }
       });
     }
   }, []);
@@ -504,7 +509,13 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
-
+    console.log(
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
+      stakeInput !== "" ? stakeInput.toString() : "0",
+      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
+      walletAddress
+    );
     stakePnlpTokens(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
@@ -951,6 +962,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 vePLYOptions={vePLYOptions}
                 isListLoading={isListLoading}
                 handleDetach={handleDetach}
+                lpToken={lpToken}
               />
             )}
             {props.activeState === ActiveLiquidity.Rewards && (
