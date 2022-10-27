@@ -10,7 +10,7 @@ import Config from "../config/config";
 import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { IAllBribesOperationData, IAllClaimableFeesData, IClaimInflationOperationData } from "../api/portfolio/types";
-import { getMaxPossibleBatchArrayV2, checkOperationConfirmation } from "../api/util/operations";
+import { getMaxPossibleBatchArrayV2 } from "../api/util/operations";
 import { store } from "../redux";
 import { getDexAddress } from "../api/util/fetchConfig";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
@@ -59,14 +59,14 @@ export const createLock = async (
 
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
    
   } catch (error: any) {
@@ -112,14 +112,14 @@ export const increaseLockEnd = async (
 
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   
   } catch (error: any) {
@@ -175,14 +175,14 @@ export const increaseLockValue = async (
 
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   
   } catch (error: any) {
@@ -240,14 +240,14 @@ export const increaseLockAndValue = async (
 
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     console.error(error);
@@ -291,14 +291,14 @@ export const withdrawLock = async (
 
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     console.error(error);
@@ -356,14 +356,14 @@ export const claimAllInflation = async (
 
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
     
   } catch (error: any) {
@@ -449,14 +449,14 @@ export const claimAllAndWithdrawLock = async (
 
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     console.error(error);
@@ -522,14 +522,14 @@ export const claimAllAndWithdrawLock = async (
 
     await operation.confirmation();
 
-    const res =  await checkOperationConfirmation(operation.opHash);
-    if(res.success){
+    const status = await operation.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: operation.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
    
   } catch (error: any) {
@@ -634,14 +634,14 @@ export const claimAllDetachAndWithdrawLock = async (
 
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     console.error(error);
