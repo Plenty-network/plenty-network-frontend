@@ -542,7 +542,7 @@ export default function Vote() {
                     >
                       <div
                         className={clsx(
-                          " px-4  h-[38px] ] flex items-center justify-center rounded-xl ",
+                          " px-3  h-[38px] ] flex items-center justify-center rounded-xl ",
                           votes.length !== 0 &&
                             (selectedEpoch?.epochNumber
                               ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
@@ -584,7 +584,7 @@ export default function Vote() {
                   ) : (
                     <div
                       className={clsx(
-                        "px-4    h-[38px]  flex items-center justify-center rounded-xl ",
+                        "px-3    h-[38px]  flex items-center justify-center rounded-xl ",
 
                         votes.length !== 0 &&
                           (selectedEpoch?.epochNumber

@@ -534,7 +534,7 @@ input[type='number'] {
   right: 0px;
   top: 0px;
   background-color: rgba(13, 7, 20, 0.9);
- 
+  backdrop-filter: blur(2px);
   align-self: stretch
   
 }
@@ -543,6 +543,7 @@ input[type='number'] {
   position: sticky;
   right: 0px;
   top: 0px;
+  backdrop-filter: blur(2px);
   background-color: rgba(13, 7, 20, 0.9);
  
   align-self: stretch
@@ -553,7 +554,7 @@ tfoot .thSticky:last-child,
 .colSticky:last-child {
   background-color: rgba(13, 7, 20, 0.9);
   
- 
+  backdrop-filter: blur(2px);
   
  
   padding-right: 10px;
