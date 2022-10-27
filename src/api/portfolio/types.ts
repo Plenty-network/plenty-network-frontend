@@ -9,15 +9,6 @@ export interface IVotesStatsDataResponse {
   error?: string;
 }
 
-export interface IPositionsIndexerData {
-  amm: string;
-  lqtBalance: string;
-  stakedBalance: string;
-  derivedBalance: string;
-  boostTokenId: string;
-  poolAPR: string;
-}
-
 export interface IPositionsData {
   ammAddress: string;
   tokenA: string;
@@ -246,6 +237,20 @@ export interface IClaimInflationOperationData {
 
 
 // Indexer Responses Types
+export interface IPositionsAprIndexerData {
+  current: string;
+  future: string;
+}
+
+export interface IPositionsIndexerData {
+  amm: string;
+  lqtBalance: string;
+  stakedBalance: string;
+  derivedBalance: string;
+  boostTokenId: string;
+  poolAPR: IPositionsAprIndexerData;
+}
+
 export interface IAllLocksRewardsIndexerData {
   votesUnclaimed: IVotesUnclaimedIndexer[];
   lockId: string;
