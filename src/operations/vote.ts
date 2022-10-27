@@ -13,7 +13,7 @@ import {
   IAllEpochClaimData,
   IClaimInflationOperationData,
 } from "../api/portfolio/types";
-import { getMaxPossibleBatchArrayV2, checkOperationConfirmation } from "../api/util/operations";
+import { getMaxPossibleBatchArrayV2} from "../api/util/operations";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
@@ -51,14 +51,14 @@ export const vote = async (
 
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if( status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     console.error(error);
@@ -113,14 +113,14 @@ export const claimAllBribeForAllLocks = async (
     }
 
     await batchOp.confirmation();
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     console.error(error);
@@ -175,14 +175,14 @@ export const claimAllFeeForAllLocks = async (
 
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     console.error(error);
@@ -246,14 +246,14 @@ export const claimAllRewardsForAllLocks = async (
     }
 
     await batchOp.confirmation();
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     console.error(error);
@@ -314,14 +314,14 @@ export const claimAllForEpoch = async (
 
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     console.error(error);
@@ -406,14 +406,14 @@ export const claimSupernova = async (
 
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     console.error(error);
