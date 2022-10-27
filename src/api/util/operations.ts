@@ -128,36 +128,3 @@ export const getMaxPossibleBatchArrayV2 = async (
     throw new Error(error.message);
   }
 };
-
-export const checkOperationConfirmation =async (operationHash : string) : Promise<{success : boolean , error?:any}> => {
-  try {
-
-    const tzktResponse = await axios.get(`${tzktNode}v1/operations/${operationHash}`);
-    if(tzktResponse.status === 400){
-      throw new Error("Bad Request. Invalid Operation Hash");
-    }
-    const hashData = tzktResponse.data;
-    if(hashData.length === 0 ){
-      throw new Error("Empty Response");
-    }
-    let flag : boolean = true;
-
-    for(let operation of hashData){
-      if(operation.status !== "applied"){
-        flag=false;
-        break;
-      }
-    }
-
-    if(flag){
-      return {success : true};
-    }else{
-      throw new Error("Operaion batch Failed. Backtracked/Skipped");
-    }
-
-  } catch (error) {
-    console.log(error);
-    return {success : false , error : error};
-  }
-  
-}
