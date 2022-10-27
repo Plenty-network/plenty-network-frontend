@@ -13,7 +13,6 @@ import {
 } from "./types";
 import { setFlashMessage } from "../redux/flashMessage";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
-import { checkOperationConfirmation } from "../api/util/operations";
 
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,
@@ -239,14 +238,14 @@ const swapTokens = async (
     }
     const opHash = await batchOperation.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOperation.opHash);
-    if(res.success){
+    const status = await batchOperation.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOperation.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     console.log(error);
@@ -317,14 +316,14 @@ async function ctez_to_tez(
     resetAllValues();
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
 
   } catch (error: any) {
@@ -398,14 +397,14 @@ async function tez_to_ctez(
     // );
     await batchOp.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOp.opHash);
-    if(res.success){
+    const status = await batchOp.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOp.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     return {

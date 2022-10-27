@@ -6,7 +6,6 @@ import { IOperationsResponse, TResetAllValues, TSetActiveState, TSetShowConfirmT
 import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 import { IFlashMessageProps } from '../redux/flashMessage/type';
 import { setFlashMessage } from '../redux/flashMessage';
-import { checkOperationConfirmation } from '../api/util/operations';
 
 /**
  * Remove liquidity operation for given pair of tokens.
@@ -180,14 +179,14 @@ const removeAllPairsLiquidity = async (
     }
     await operation.confirmation();
 
-    const res =  await checkOperationConfirmation(operation.opHash);
-    if(res.success){
+    const status = await operation.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: operation.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
 
   } catch (error: any) {
@@ -283,14 +282,14 @@ const removeAllPairsLiquidity = async (
      }
      await operation.confirmation();
 
-     const res =  await checkOperationConfirmation(operation.opHash);
-    if(res.success){
+     const status = await operation.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: operation.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
 
    } catch (error: any) {
