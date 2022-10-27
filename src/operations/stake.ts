@@ -1,7 +1,6 @@
 import { OpKind, WalletParamsWithKind } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 import { getDexAddress } from '../api/util/fetchConfig';
-import { checkOperationConfirmation } from '../api/util/operations';
 import { dappClient, voteEscrowAddress } from '../common/walletconnect';
 import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 import { TokenVariant } from '../config/types';
@@ -208,14 +207,14 @@ export const stakePnlpTokensV1 = async (
     resetAllValues && resetAllValues();
     await batchOperation.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOperation.opHash);
-    if(res.success){
+    const status = await batchOperation.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOperation.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     return {
@@ -393,14 +392,14 @@ export const stakePnlpTokensV1 = async (
     }
     await batchOperation.confirmation();
 
-    const res =  await checkOperationConfirmation(batchOperation.opHash);
-    if(res.success){
+    const status = await batchOperation.status();
+    if(status === "applied"){
       return {
         success: true,
         operationId: batchOperation.opHash,
       };
     }else{
-      throw new Error(res.error);
+      throw new Error(status);
     }
   } catch (error: any) {
     return {
