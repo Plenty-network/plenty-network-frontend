@@ -166,7 +166,7 @@ export function SubMenuList(props: ISubMenuListProps) {
 }
 export function MoreSubMenuList(props: ISubMenuListProps) {
   return (
-    <div className="w-screen flex flex-col text-f12 bg-topBar " ref={props.refWrapper}>
+    <div className="w-screen flex flex-col text-f12 bg-topBar z-10" ref={props.refWrapper}>
       {/*  */}
       <div className="px-9 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
         <SingleSideBar

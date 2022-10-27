@@ -133,7 +133,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "",
         id: "manage",
-        columnWidth: "w-[150px] ml-auto",
+        columnWidth: "w-[115px] ml-auto",
         accessor: (x) => (
           <ManageBtn
             isLiquidityAvailable={x.isLiquidityAvailable}
@@ -264,6 +264,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "",
         id: "manage",
+        sticky: "right",
         columnWidth: "w-[180px] ml-auto",
         minWidth: 151,
         accessor: (x) => (
@@ -325,7 +326,7 @@ export function ShortCard(props: IShortCardProps) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={poolsTableData}
           shortby="fees"
-          tableType="pool"
+          tableType={true}
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableWidth="min-w-[535px] lg:min-w-[1140px]"

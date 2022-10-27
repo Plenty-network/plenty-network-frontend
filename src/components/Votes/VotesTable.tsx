@@ -1,6 +1,6 @@
 import Image from "next/image";
 import * as React from "react";
-import { isMobile } from "react-device-detect";
+import { isMobile, isTablet } from "react-device-detect";
 import { Column } from "react-table";
 import { IVotePageData } from "../../api/votes/types";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
@@ -281,20 +281,20 @@ export function VotesTable(props: IVotesTableProps) {
     ],
     [valueFormat]
   );
-
   return (
     <>
-      <div className={`overflow-x-auto md:pr-4 ${props.className}`}>
+      <div className={`overflow-x-auto inner ${props.className}`}>
         <Table<any>
-          columns={isMobile ? mobilecolumns : desktopcolumns}
+          columns={isTablet ? desktopcolumns : isMobile ? mobilecolumns : desktopcolumns}
           data={votedata}
           noSearchResult={noSearchResult}
           shortby="Rewards"
+          tableType={true}
           isFetched={!noSearchResult && votedata.length === 0 ? false : true}
           isConnectWalletRequired={props.isConnectWalletRequired}
           isVotesTable={true}
           TableName="votesTable"
-          TableWidth="lg:min-w-[805px]"
+          TableWidth="md:min-w-[805px]"
         />
       </div>
     </>

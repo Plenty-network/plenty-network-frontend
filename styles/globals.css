@@ -527,34 +527,38 @@ input[type='number'] {
   width: calc(100% - 17px);
   height: 31px;
 }
-/* td {
-  z-index: 1;
-}
-td:last-child {
+/* @media (min-width: 768px) { */
+.colSticky:last-child {
   position: -webkit-sticky;
   position: sticky;
-  right: 4px;
+  right: 0px;
   top: 0px;
-  padding-right: 10px;
-  background-color: #0D0714;
-  z-index: 100000;
-  align-self: stretch
-  
-} */
-/* th:last-child {
-  position: -webkit-sticky;
-  position: sticky;
-  right: 4px;
-  top: 0px;
-  padding-right: 10px;
-  background-color: #0D0714;
-  z-index: 1000000;
+  background-color: rgba(13, 7, 20, 0.9);
+ 
   align-self: stretch
   
 }
-thead th:last-child,
-tfoot th:last-child {
-  background-color: #0D0714;
-  z-index: 1000000;
-  height: 60px;
-} */
+.thSticky:last-child {
+  position: -webkit-sticky;
+  position: sticky;
+  right: 0px;
+  top: 0px;
+  background-color: rgba(13, 7, 20, 0.9);
+ 
+  align-self: stretch
+  
+}
+thead .thSticky:last-child,
+tfoot .thSticky:last-child,
+.colSticky:last-child {
+  background-color: rgba(13, 7, 20, 0.9);
+  
+ 
+  
+ 
+  padding-right: 10px;
+}
+/* } */
+
+
+ 

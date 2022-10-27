@@ -49,7 +49,7 @@ const Table = <D extends object>({
   isVotesTable?: boolean;
   TableName?: string;
   TableWidth?: string;
-  tableType?: string;
+  tableType?: boolean;
   NoData?: JSX.Element;
   tooltipMessage?: string;
 }) => {
@@ -139,6 +139,7 @@ const Table = <D extends object>({
                   text={column.render("Header")?.toString()}
                   className="justify-start"
                   TableName={TableName}
+                  tableType={tableType}
                   columnWidth={
                     column.hasOwnProperty("columnWidth")
                       ? column.render("columnWidth")?.toString()
@@ -172,11 +173,7 @@ const Table = <D extends object>({
           ))}
         </thead>
         <tbody
-          className={clsx(
-            " flex-col flex ",
-            isVotesTable ? "gap-1" : "gap-1",
-            isFetched ? "overflow-y-auto" : ""
-          )}
+          className={clsx(" flex-col flex ", isVotesTable ? "gap-1" : "gap-1", isFetched ? "" : "")}
           {...(!router.pathname.includes("myportfolio") &&
             !router.pathname.includes("pools") && {
               style: { height: `${heightBody}px` },
@@ -220,7 +217,7 @@ const Table = <D extends object>({
                         <td
                           className={` flex items-center ${cell.column.columnWidth} ${
                             i == 0 ? "justify-start" : "justify-end "
-                          }   `}
+                          }  ${tableType === true ? "colSticky" : ""} `}
                         >
                           {cell.render("Cell")}
                         </td>

@@ -619,7 +619,7 @@ export default function Vote() {
                 </div>
               </div>
               <VotesTable
-                className="md:px-5  "
+                className="md:pl-5  "
                 searchValue={searchValue}
                 sumOfVotes={sumOfVotes}
                 setSearchValue={setSearchValue}
