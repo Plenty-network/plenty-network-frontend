@@ -57,7 +57,7 @@ export const createLock = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
@@ -110,7 +110,7 @@ export const increaseLockEnd = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
@@ -173,7 +173,7 @@ export const increaseLockValue = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
@@ -238,7 +238,7 @@ export const increaseLockAndValue = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
@@ -289,7 +289,7 @@ export const withdrawLock = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
@@ -354,7 +354,7 @@ export const claimAllInflation = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
@@ -447,7 +447,7 @@ export const claimAllAndWithdrawLock = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
@@ -520,7 +520,7 @@ export const claimAllAndWithdrawLock = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await operation.confirmation();
+    await operation.confirmation(1);
 
     const status = await operation.status();
     if(status === "applied"){
@@ -632,7 +632,7 @@ export const claimAllDetachAndWithdrawLock = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
