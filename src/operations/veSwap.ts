@@ -4,9 +4,9 @@ import { BigNumber } from 'bignumber.js';
 import { store } from '../redux';
 import { setFlashMessage } from '../redux/flashMessage';
 import { IFlashMessageProps } from '../redux/flashMessage/type';
+import { MigrateToken } from '../api/migrate/types';
+import { PLY_DECIMAL_MULTIPLIER } from '../constants/global';
 
-
-// TODO : VERIFY OPERATIONS
 
 export const claim = async (
     transactionSubmitModal: TTransactionSubmitModal,
@@ -29,7 +29,7 @@ export const claim = async (
       batch = Tezos.wallet
         .batch()
         .withContractCall(
-          veSwapInstance.methods.claim()
+          veSwapInstance.methods.claim([["unit"]])
         );
 
         const batchOp = await batch.send();
@@ -65,11 +65,8 @@ export const claim = async (
   };
 
 
-  // PLENTY = sp.nat(0)
-  // WRAP = sp.nat(1) 
-  
   export const exchange = async (
-    token : number,
+    token : MigrateToken,
     value : BigNumber,
     transactionSubmitModal: TTransactionSubmitModal,
     resetAllValues: TResetAllValues,
@@ -93,7 +90,7 @@ export const claim = async (
         .withContractCall(
           veSwapInstance.methods.exchange(
               token,
-              value
+              value.multipliedBy(PLY_DECIMAL_MULTIPLIER)
           )
         );
 
