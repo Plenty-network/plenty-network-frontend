@@ -356,7 +356,7 @@ const addAllPairsLiquidity = async (
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    await batchOperation?.confirmation();
+    await batchOperation?.confirmation(1);
 
     const status = await batchOperation.status();
     if(status === "applied"){
@@ -507,7 +507,7 @@ const addTezPairsLiquidity = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOperation?.confirmation();
+    await batchOperation?.confirmation(1);
 
     const status = await batchOperation.status();
     if(status === "applied"){

@@ -80,7 +80,7 @@ export const routerSwap = async (
       if (flashMessageContent) {
         store.dispatch(setFlashMessage(flashMessageContent));
       }
-      await batchOp.confirmation();
+      await batchOp.confirmation(1);
       const status = await batchOp.status();
     if(status === "applied"){
       return {
@@ -133,7 +133,7 @@ export const routerSwap = async (
 
       transactionSubmitModal(batchOp.opHash);
 
-      await batchOp.confirmation();
+      await batchOp.confirmation(1);
 
       const status = await batchOp.status();
     if(status === "applied"){

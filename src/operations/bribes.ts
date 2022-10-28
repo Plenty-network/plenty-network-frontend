@@ -177,7 +177,7 @@ export const addBribe = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOperation.confirmation();
+    await batchOperation.confirmation(1);
 
     console.log(batchOperation.status())
 
