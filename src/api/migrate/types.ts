@@ -17,4 +17,6 @@ export interface IVestAndClaim {
     isClaimable : boolean;
     claimableAmount : BigNumber;
     vestedAmount : BigNumber;
+    lastClaim : BigNumber;
+    nextClaim : BigNumber;
 }

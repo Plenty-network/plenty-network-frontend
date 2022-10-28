@@ -1,5 +1,3 @@
-import { store } from "../../redux";
-import axios from "axios";
 import { BigNumber } from "bignumber.js";
 import { IMigrateExchange, IVestAndClaim, MigrateToken } from "./types";
 import { veSwapAddress } from "../../common/walletconnect";
@@ -61,12 +59,16 @@ export const getUserClaimAndVestAmount =async (userAddress : string) : Promise<I
         const vestedAmount = new BigNumber(ledgerData.balance.minus(vested__)).dividedBy(PLY_DECIMAL_MULTIPLIER);
 
         const isClaimable = (Math.floor(Date.now()/1000) - ledgerData.last_claim) > DAY ? true : false;
+        const lastClaim = ledgerData.last_claim;
+        const nextClaim = lastClaim.plus(DAY);
 
         return{
             success : true , 
             isClaimable,
             claimableAmount,
-            vestedAmount
+            vestedAmount,
+            lastClaim : lastClaim.multipliedBy(1000),
+            nextClaim : nextClaim.multipliedBy(1000)
         };
 
         
@@ -76,7 +78,10 @@ export const getUserClaimAndVestAmount =async (userAddress : string) : Promise<I
             success : false,
             isClaimable : false ,
             claimableAmount : new BigNumber(0),
-            vestedAmount : new BigNumber(0)
+            vestedAmount : new BigNumber(0),
+            lastClaim : new BigNumber(0),
+            nextClaim : new BigNumber(0)
+
         };
     }
     
