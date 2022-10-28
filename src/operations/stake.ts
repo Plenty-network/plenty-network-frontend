@@ -205,7 +205,7 @@ export const stakePnlpTokensV1 = async (
       transactionSubmitModal(batchOperation.opHash as string);
     setActiveState && setActiveState(ActiveLiquidity.Rewards);
     resetAllValues && resetAllValues();
-    await batchOperation.confirmation();
+    await batchOperation.confirmation(1);
 
     const status = await batchOperation.status();
     if(status === "applied"){
@@ -390,7 +390,7 @@ export const stakePnlpTokensV1 = async (
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    await batchOperation.confirmation();
+    await batchOperation.confirmation(1);
 
     const status = await batchOperation.status();
     if(status === "applied"){

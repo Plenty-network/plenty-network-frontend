@@ -236,7 +236,7 @@ const swapTokens = async (
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    const opHash = await batchOperation.confirmation();
+    const opHash = await batchOperation.confirmation(1);
 
     const status = await batchOperation.status();
     if(status === "applied"){
@@ -314,7 +314,7 @@ async function ctez_to_tez(
       store.dispatch(setFlashMessage(flashMessageContent));
     }
     resetAllValues();
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
@@ -395,7 +395,7 @@ async function tez_to_ctez(
     //     transactionId: "",
     //   })
     // );
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
