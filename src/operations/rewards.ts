@@ -52,7 +52,7 @@ export const harvestRewards = async (
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    await operation.confirmation();
+    await operation.confirmation(1);
 
     const status = await operation.status();
     if(status === "applied"){
@@ -111,7 +111,7 @@ export const harvestAllRewards = async (
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    await operation.confirmation();
+    await operation.confirmation(1);
 
     const status = await operation.status();
     if(status === "applied"){

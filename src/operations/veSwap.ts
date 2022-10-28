@@ -41,7 +41,7 @@ export const claim = async (
           store.dispatch(setFlashMessage(flashMessageContent));
         }
   
-        await batchOp.confirmation();
+        await batchOp.confirmation(1);
 
         const status = await batchOp.status();
         if(status === "applied"){
@@ -106,7 +106,7 @@ export const claim = async (
           store.dispatch(setFlashMessage(flashMessageContent));
         }
   
-        await batchOp.confirmation();
+        await batchOp.confirmation(1);
 
         const status = await batchOp.status();
     if(status === "applied"){
