@@ -4,6 +4,11 @@ import { veSwapAddress } from "../../common/walletconnect";
 import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
 import { DAY, PLY_DECIMAL_MULTIPLIER } from "../../constants/global";
 
+/**
+ * Calculates the exchange amount and splits into claimable and vested
+ * @param inputValue - User input value for Plenty / Wrap
+ * @param token - PLENTY / WRAP
+ */
 export const getMigrateExchangeAmount = (inputValue : BigNumber , token : MigrateToken ) : IMigrateExchange => {
     try {
 
@@ -42,6 +47,10 @@ export const getMigrateExchangeAmount = (inputValue : BigNumber , token : Migrat
     
 }
 
+/**
+ * Calculates Claimable , Vested Amount and Time Left to next claim
+ * @param userAddress - User Address
+ */
 export const getUserClaimAndVestAmount =async (userAddress : string) : Promise<IVestAndClaim> => {
 
     try {
