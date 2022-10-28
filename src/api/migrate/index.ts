@@ -4,7 +4,7 @@ import { BigNumber } from "bignumber.js";
 import { IMigrateExchange, IVestAndClaim, MigrateToken } from "./types";
 import { veSwapAddress } from "../../common/walletconnect";
 import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
-import { DAY } from "../../constants/global";
+import { DAY, PLY_DECIMAL_MULTIPLIER } from "../../constants/global";
 
 export const getMigrateExchangeAmount = (inputValue : BigNumber , token : MigrateToken ) : IMigrateExchange => {
     try {
@@ -55,13 +55,12 @@ export const getUserClaimAndVestAmount =async (userAddress : string) : Promise<I
         const ledgerResponse = await getTzktBigMapData(ledgerBigMap , `key=${userAddress}&select=key,value`);
         const ledgerData = ledgerResponse.data.value;
 
-        // Check division reqd or not
-        const vested__ = BigNumber.min(ledgerData.balance , ledgerData.release_rate.multipliedBy(Date.now()/1000 - ledgerData.last_claim));
+        const vested__ = BigNumber.min(ledgerData.balance , ledgerData.release_rate.multipliedBy(Math.floor(Date.now()/1000) - ledgerData.last_claim));
 
-        const claimableAmount = vested__.plus(ledgerData.vested);
-        const vestedAmount = new BigNumber(ledgerData.balance.minus(vested__));
+        const claimableAmount = (vested__.plus(ledgerData.vested)).dividedBy(PLY_DECIMAL_MULTIPLIER);
+        const vestedAmount = new BigNumber(ledgerData.balance.minus(vested__)).dividedBy(PLY_DECIMAL_MULTIPLIER);
 
-        const isClaimable = (Date.now()/1000 - ledgerData.last_claim) > DAY ? true : false;
+        const isClaimable = (Math.floor(Date.now()/1000) - ledgerData.last_claim) > DAY ? true : false;
 
         return{
             success : true , 
