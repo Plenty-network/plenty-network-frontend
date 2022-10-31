@@ -35,6 +35,7 @@ export interface IConfig {
   VE_INDEXER: string;
   PLY_INDEXER: string;
   PLY_TOKEN: { mainnet: string; testnet: string };
+  EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData }
 }
 
 interface IApi {
@@ -137,4 +138,16 @@ export interface IGaugeConfigData {
 
 export interface IGaugeConfig {
   [key: string]: IGaugeConfigData;
+}
+
+export enum MigrateToken {
+  PLENTY = "PLENTY",
+  WRAP = "WRAP",
+}
+
+export interface IExchangeTokenData {
+  exchangeRate: number;
+  tokenDecimals: number;
+  contractEnumValue: number;
+  tokenMapid: number | undefined;
 }
