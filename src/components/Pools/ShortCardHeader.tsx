@@ -23,6 +23,7 @@ export interface ITabsProps {
   TableName: string | undefined;
   index: number;
   columnWidth?: string | undefined;
+  tableType?: boolean;
 }
 
 export function Tabs(props: ITabsProps) {
@@ -30,7 +31,7 @@ export function Tabs(props: ITabsProps) {
     <th
       className={`flex cursor-pointer font-subtitle1 text-text-50 text-left ${props.columnWidth} ${
         props.index === 0 ? "justify-start" : "justify-end "
-      }  `}
+      } ${props.tableType ? "thSticky" : ""} `}
     >
       <div className="flex gap-0 flex-col">
         <div className={`flex  ${props.isFirstRow ? "justify-start" : "justify-end"} `}>
