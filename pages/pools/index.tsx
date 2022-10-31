@@ -96,7 +96,7 @@ export default function Pools(props: IIndexProps) {
               <p className="relative top-0.5">
                 <Image src={info} />
               </p>
-              <p className="font-body2 text-info-500 px-3">
+              <p className="font-body2 text-info-500 px-3 md:w-auto w-[249px]">
                 APR for the first week will be 0%. Emissions begin in the second week.
               </p>
               <p

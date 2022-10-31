@@ -174,7 +174,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "APR",
         id: "apr",
-        columnWidth: "w-[177px]",
+        columnWidth: "w-[210px]",
         subText: "current epoch",
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         isToolTipEnabled: true,
@@ -265,7 +265,7 @@ export function ShortCard(props: IShortCardProps) {
         Header: "",
         id: "manage",
         sticky: "right",
-        columnWidth: "w-[180px] ml-auto",
+        columnWidth: "w-[160px] ml-auto",
         minWidth: 151,
         accessor: (x) => (
           <ManageBtn
