@@ -380,6 +380,10 @@ input[type='number'] {
     @apply font-medium;
     @apply text-f18;
   }
+  .font-title2-normal {
+    @apply font-normal;
+    @apply text-f18;
+  }
   .font-title3 {
     @apply font-medium;
     @apply text-f16;

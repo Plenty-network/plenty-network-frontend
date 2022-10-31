@@ -88,6 +88,7 @@ import { VideoModal } from "../../src/components/Modal/videoModal";
 import { isMobile } from "react-device-detect";
 import { PortfolioDropdown } from "../../src/components/PortfolioSection";
 import Migrate from "../../src/components/Migrate";
+import { VestedPlyTopbar } from "../../src/components/Migrate/VestedPlyTopBar";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -557,6 +558,7 @@ function MyPortfolio(props: any) {
       </div>
     );
   }, [activeSection]);
+
   const Tooltip = useMemo(() => {
     return (
       <p className="ml-2">
@@ -1595,8 +1597,8 @@ function MyPortfolio(props: any) {
     <>
       <SideBarHOC>
         <div>
-          <div className="pt-5 md:px-[24px] px-2">
-            <div className="flex items-center">
+          <div className=" md:px-[24px] px-2   ">
+            <div className="flex items-center bg-background-200 h-[97px] border-b border-text-800/[0.5]">
               {isMobile ? (
                 <PortfolioDropdown
                   Options={["Positions", "Rewards", "Migrate"]}
@@ -1604,10 +1606,16 @@ function MyPortfolio(props: any) {
                   selectedText={activeSection}
                 />
               ) : (
-                Title
+                <div className=""> {Title}</div>
               )}
               {Tooltip}
-
+              <VestedPlyTopbar
+                value={new BigNumber(12)}
+                isLoading={false}
+                onClick={function (): {} {
+                  throw new Error("Function not implemented.");
+                }}
+              />
               {activeSection === MyPortfolioSection.Rewards && (
                 <div className="ml-auto ">
                   <ToolTip
