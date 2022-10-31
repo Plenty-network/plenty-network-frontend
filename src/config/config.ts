@@ -42,6 +42,21 @@ const Config: IConfig = {
 
   FAUCET : 'KT1EsCTuMzG5oh7C2R6h3STuEJ3SAfjiVVpb',
 
+  EXCHANGE_TOKENS: {
+    PLENTY: {
+      exchangeRate: 3,
+      tokenDecimals: 18,
+      contractEnumValue: 0,
+      tokenMapid: undefined,
+    },
+    WRAP: {
+      exchangeRate: 2,
+      tokenDecimals: 18,
+      contractEnumValue: 1,
+      tokenMapid: undefined,
+    }
+  },
+
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',
     testnet: 'KT1P7eP7gGuHgPVNWRLs1p4uRhc9Wbyku8B2',
