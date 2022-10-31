@@ -133,7 +133,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "",
         id: "manage",
-        columnWidth: "w-[150px] ml-auto",
+        columnWidth: "w-[115px] ml-auto",
         accessor: (x) => (
           <ManageBtn
             isLiquidityAvailable={x.isLiquidityAvailable}
@@ -174,7 +174,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "APR",
         id: "apr",
-        columnWidth: "w-[177px]",
+        columnWidth: "w-[210px]",
         subText: "current epoch",
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         isToolTipEnabled: true,
@@ -264,7 +264,8 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "",
         id: "manage",
-        columnWidth: "w-[180px] ml-auto",
+        sticky: "right",
+        columnWidth: "w-[160px] ml-auto",
         minWidth: 151,
         accessor: (x) => (
           <ManageBtn
@@ -325,7 +326,7 @@ export function ShortCard(props: IShortCardProps) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={poolsTableData}
           shortby="fees"
-          tableType="pool"
+          tableType={true}
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableWidth="min-w-[535px] lg:min-w-[1140px]"

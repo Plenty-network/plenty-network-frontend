@@ -96,7 +96,7 @@ export default function Pools(props: IIndexProps) {
               <p className="relative top-0.5">
                 <Image src={info} />
               </p>
-              <p className="font-body2 text-info-500 px-3">
+              <p className="font-body2 text-info-500 px-3 md:w-auto w-[249px]">
                 APR for the first week will be 0%. Emissions begin in the second week.
               </p>
               <p
@@ -109,7 +109,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.All && (
             <PoolsTable
-              className="md:px-5 md:py-4  px-2 py-4"
+              className="md:pl-5 md:py-4  pl-2 py-4"
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
@@ -117,7 +117,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
             <PoolsTable
-              className="md:px-5 md:py-4  px-2 py-4"
+              className="md:pl-5 md:py-4  pl-2 py-4"
               poolsFilter={AMM_TYPE.STABLE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
@@ -126,7 +126,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
             <PoolsTable
-              className="md:px-5 md:py-4  px-2 py-4"
+              className="md:pl-5 md:py-4  pl-2 py-4"
               poolsFilter={AMM_TYPE.VOLATILE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
@@ -135,7 +135,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
             <PoolsTable
-              className="md:px-5 md:py-4  px-2 py-4"
+              className="md:pl-5 md:py-4  pl-2 py-4"
               poolsFilter={AMM_TYPE.MYPOOS}
               isConnectWalletRequired={true}
               searchValue={searchValue}

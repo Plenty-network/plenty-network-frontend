@@ -204,25 +204,26 @@ function CreateLock(props: ICreateLockProps) {
                 </span>
               </p>
             </div>
-
-            <div
-              className=" cursor-pointer  ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3"
-              onClick={onClickAmount}
-            >
-              <div>
-                <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
-              </div>
-              <ToolTip
-                id="tooltipM"
-                disable={Number(props.plyBalance) > 0 ? false : true}
-                position={Position.top}
-                message={fromExponential(props.plyBalance?.toString())}
+            {walletAddress && (
+              <div
+                className=" cursor-pointer  ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[48px] items-center flex px-3"
+                onClick={onClickAmount}
               >
-                <div className=" ml-1 text-primary-500 font-body2">
-                  {Number(props.plyBalance) > 0 ? props.plyBalance.toFixed(2) : "0"} PLY
+                <div>
+                  <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
                 </div>
-              </ToolTip>
-            </div>
+                <ToolTip
+                  id="tooltipM"
+                  disable={Number(props.plyBalance) > 0 ? false : true}
+                  position={Position.top}
+                  message={fromExponential(props.plyBalance?.toString())}
+                >
+                  <div className=" ml-1 text-primary-500 font-body2">
+                    {Number(props.plyBalance) > 0 ? props.plyBalance.toFixed(2) : "0"} PLY
+                  </div>
+                </ToolTip>
+              </div>
+            )}
           </div>
           <div className="ml-auto mt-3 pr-5 flex font-body4">
             <p
