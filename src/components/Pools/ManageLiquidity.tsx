@@ -250,7 +250,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       setIsLoading(true);
       loadSwapDataWrapper(props.tokenIn.name, props.tokenOut.name).then((response) => {
         if (response.success) {
-          console.log(response);
           setLpToken(response?.lpToken);
           swapData.current = {
             tokenInSupply: response.tokenInSupply as BigNumber,
@@ -509,13 +508,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
-    console.log(
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
-      stakeInput !== "" ? stakeInput.toString() : "0",
-      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
-      walletAddress
-    );
     stakePnlpTokens(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
