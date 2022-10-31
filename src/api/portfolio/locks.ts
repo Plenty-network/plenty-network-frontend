@@ -137,7 +137,7 @@ export const getAllLocksPositionData = async (
         finalLock.attached = false;
       }
       // TODO: Remove above if on redeployment
-      
+
       if (
         attached &&
         attachedLocks[tokenId.toString()] &&
@@ -323,7 +323,8 @@ const getFeesData = (
       : token1Symbol === "" && token2Symbol === ""
       ? EFeesStatus.NOT_PULLED
       : EFeesStatus.GENERATED;
-    const feesAmount = feesOneAmount.plus(feesTwoAmount);
+    const feesAmount =
+      feesStatus === EFeesStatus.CLAIMED ? new BigNumber(0) : feesOneAmount.plus(feesTwoAmount);
     const feesData: ILockRewardsFeeData = { tokenAFees, tokenBFees };
     return {
       feesStatus,

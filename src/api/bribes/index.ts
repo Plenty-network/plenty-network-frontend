@@ -17,9 +17,7 @@ import { IEpochData, IEpochResponse, ITokenPriceList } from "../util/types";
 import { IBribesResponse } from "../votes/types";
 import { Bribes, VolumeVeData } from "../pools/types";
 import { fetchEpochData, getNextListOfEpochsMODIFY } from "../util/epoch";
-import { IAmmContracts } from "../../config/types";
 import { getAllVotesData } from "../votes";
-import { getDexAddress } from "../util/fetchConfig";
 import { connectedNetwork } from "../../common/walletconnect";
 import { EPOCH_DURATION_MAINNET, EPOCH_DURATION_TESTNET } from "../../constants/global";
 
@@ -140,8 +138,6 @@ export const getUserBribeData = async (
       });
  
   }
-
-  // console.log(allData);
 
     return {
       success: true,

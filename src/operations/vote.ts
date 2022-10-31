@@ -49,7 +49,7 @@ export const vote = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if( status === "applied"){
@@ -112,7 +112,7 @@ export const claimAllBribeForAllLocks = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
     const status = await batchOp.status();
     if(status === "applied"){
       return {
@@ -173,7 +173,7 @@ export const claimAllFeeForAllLocks = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
@@ -245,7 +245,7 @@ export const claimAllRewardsForAllLocks = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
     const status = await batchOp.status();
     if(status === "applied"){
       return {
@@ -312,7 +312,7 @@ export const claimAllForEpoch = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
@@ -404,7 +404,7 @@ export const claimSupernova = async (
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation();
+    await batchOp.confirmation(1);
 
     const status = await batchOp.status();
     if(status === "applied"){
