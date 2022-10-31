@@ -276,6 +276,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
           data={tabledata ? tabledata : []}
           noSearchResult={noSearchResult}
           shortby="pool"
+          tableType={true}
           isFetched={props.isfetched}
           TableName={""}
           TableWidth="min-w-[800px] lg:min-w-[1200px]"
