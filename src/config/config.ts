@@ -51,7 +51,7 @@ const Config: IConfig = {
     },
     WRAP: {
       exchangeRate: 2,
-      tokenDecimals: 18,
+      tokenDecimals: 8,
       contractEnumValue: 1,
       tokenMapid: undefined,
     }
