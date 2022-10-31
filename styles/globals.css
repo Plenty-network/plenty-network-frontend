@@ -533,7 +533,7 @@ input[type='number'] {
   position: sticky;
   right: 0px;
   top: 0px;
-  background-color: rgba(13, 7, 20, 0.9);
+  background:  linear-gradient(270deg, #0D0714 77.7%, rgba(13, 7, 20, 0) 91.55%);
   backdrop-filter: blur(2px);
   align-self: stretch
   
@@ -544,7 +544,7 @@ input[type='number'] {
   right: 0px;
   top: 0px;
   backdrop-filter: blur(2px);
-  background-color: rgba(13, 7, 20, 0.9);
+  background:  linear-gradient(270deg, #0D0714 77.7%, rgba(13, 7, 20, 0) 91.55%);
  
   align-self: stretch
   
@@ -552,7 +552,7 @@ input[type='number'] {
 thead .thSticky:last-child,
 tfoot .thSticky:last-child,
 .colSticky:last-child {
-  background-color: rgba(13, 7, 20, 0.9);
+  background:  linear-gradient(270deg, #0D0714 77.7%, rgba(13, 7, 20, 0) 91.55%);
   
   backdrop-filter: blur(2px);
   

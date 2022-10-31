@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../redux";
 import { setisMyportfolio, setSelectedDropDown } from "../../redux/veNFT";
 import PieChartButton from "../LocksPosition/PieChart";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 export interface IDropdownProps {
   Options: IVeNFTData[];
@@ -219,10 +220,20 @@ export function VeNFT(props: IDropdownProps) {
           {(props.lockState === ELocksState.CONSUMED ||
             props.lockState === ELocksState.DISABLED) && (
             <span className="ml-[6px]">
-              <PieChartButton
-                violet={100 - remainingPercentage}
-                transparent={remainingPercentage}
-              />
+              <ToolTip
+                id="tooltipM"
+                position={Position.top}
+                toolTipChild={
+                  <div className="w-[100px] md:w-[180px]">
+                    New locks are required to wait until the end of the present epoch to vote.
+                  </div>
+                }
+              >
+                <PieChartButton
+                  violet={100 - remainingPercentage}
+                  transparent={remainingPercentage}
+                />
+              </ToolTip>
             </span>
           )}
         </span>
