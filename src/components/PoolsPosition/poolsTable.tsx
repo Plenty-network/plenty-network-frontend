@@ -251,6 +251,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           data={props.poolsPosition}
           noSearchResult={noSearchResult}
           shortby="pools"
+          tableType={true}
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsPosition"

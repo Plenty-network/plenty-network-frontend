@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../redux";
 import { setisMyportfolio, setSelectedDropDown } from "../../redux/veNFT";
 import PieChartButton from "../LocksPosition/PieChart";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 export interface IDropdownProps {
   Options: IVeNFTData[];
@@ -169,69 +170,80 @@ export function VeNFT(props: IDropdownProps) {
   }) {
     const dispatch = useDispatch<AppDispatch>();
     return (
-      <div
-        onClick={
-          props.veNFT
-            ? () => {
-                dispatch(
-                  setSelectedDropDown({
+      <ToolTip
+        id="tooltipM"
+        disable={props.lockState !== ELocksState.DISABLED}
+        position={Position.top}
+        toolTipChild={
+          <div className="w-[100px] md:w-[250px]">
+            New locks are required to wait until the end of the present epoch to vote.
+          </div>
+        }
+      >
+        <div
+          onClick={
+            props.veNFT
+              ? () => {
+                  dispatch(
+                    setSelectedDropDown({
+                      votingPower:
+                        props.lockState === ELocksState.CONSUMED
+                          ? Number(props.veNFTObj.nextEpochVotingPower).toFixed(3)
+                          : props.votingPower,
+                      tokenId: props.tokenId,
+                    })
+                  );
+                  dispatch(setisMyportfolio(false));
+                  props.onClick({
                     votingPower:
                       props.lockState === ELocksState.CONSUMED
                         ? Number(props.veNFTObj.nextEpochVotingPower).toFixed(3)
                         : props.votingPower,
                     tokenId: props.tokenId,
-                  })
-                );
-                dispatch(setisMyportfolio(false));
-                props.onClick({
-                  votingPower:
-                    props.lockState === ELocksState.CONSUMED
-                      ? Number(props.veNFTObj.nextEpochVotingPower).toFixed(3)
-                      : props.votingPower,
-                  tokenId: props.tokenId,
-                });
-                setIsDropDownActive(false);
-              }
-            : () => {}
-        }
-        className={clsx(
-          "  hover:bg-muted-500 px-4 flex items-center h-[36px]  flex py-2.5",
-          props.veNFT ? "cursor-pointer" : "cursor-not-allowed"
-        )}
-      >
-        <Image alt={"alt"} src={lighting} />
-        <span
+                  });
+                  setIsDropDownActive(false);
+                }
+              : () => {}
+          }
           className={clsx(
-            "ml-1 font-body4 ",
-            props.lockState === ELocksState.AVAILABLE ? "text-white" : "text-text-800",
-            props.lockState === ELocksState.CONSUMED || props.lockState === ELocksState.DISABLED
-              ? "flex"
-              : ""
+            "  hover:bg-muted-500 px-4 flex items-center h-[36px]  flex py-2.5",
+            props.veNFT ? "cursor-pointer" : "cursor-not-allowed"
           )}
         >
-          {props.lockState === ELocksState.CONSUMED
-            ? Number(props.veNFTObj.nextEpochVotingPower).toFixed(3)
-            : Number(props.votingPower) > 0
-            ? Number(props.votingPower) < 0.001
-              ? `< ${Number(props.votingPower).toFixed(3)}`
-              : Number(props.votingPower).toFixed(3)
-            : "0"}
-          {(props.lockState === ELocksState.CONSUMED ||
-            props.lockState === ELocksState.DISABLED) && (
-            <span className="ml-[6px]">
-              <PieChartButton
-                violet={100 - remainingPercentage}
-                transparent={remainingPercentage}
-              />
-            </span>
-          )}
-        </span>
-        <span
-          className={clsx("ml-auto font-body3", props.veNFT ? "text-text-500" : "text-text-800")}
-        >
-          #{props.tokenId}
-        </span>
-      </div>
+          <Image alt={"alt"} src={lighting} />
+          <span
+            className={clsx(
+              "ml-1 font-body4 ",
+              props.lockState === ELocksState.AVAILABLE ? "text-white" : "text-text-800",
+              props.lockState === ELocksState.CONSUMED || props.lockState === ELocksState.DISABLED
+                ? "flex"
+                : ""
+            )}
+          >
+            {props.lockState === ELocksState.CONSUMED
+              ? Number(props.veNFTObj.nextEpochVotingPower).toFixed(3)
+              : Number(props.votingPower) > 0
+              ? Number(props.votingPower) < 0.001
+                ? `< ${Number(props.votingPower).toFixed(3)}`
+                : Number(props.votingPower).toFixed(3)
+              : "0"}
+            {(props.lockState === ELocksState.CONSUMED ||
+              props.lockState === ELocksState.DISABLED) && (
+              <span className="ml-[6px]">
+                <PieChartButton
+                  violet={100 - remainingPercentage}
+                  transparent={remainingPercentage}
+                />
+              </span>
+            )}
+          </span>
+          <span
+            className={clsx("ml-auto font-body3", props.veNFT ? "text-text-500" : "text-text-800")}
+          >
+            #{props.tokenId}
+          </span>
+        </div>
+      </ToolTip>
     );
   }
 }
