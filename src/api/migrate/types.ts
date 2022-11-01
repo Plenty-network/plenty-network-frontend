@@ -1,22 +1,22 @@
 import { BigNumber } from "bignumber.js";
 
-export enum MigrateToken {
-    PLENTY = 0 ,
-    WRAP = 1
-}
+// export enum MigrateToken {
+//   PLENTY,
+//   WRAP,
+// }
 
 export interface IMigrateExchange {
-    success : boolean;
-     claimableAmount : BigNumber;
-      vestedAmount : BigNumber;
-       exchangeRate : BigNumber;
+  success: boolean;
+  claimableAmount: BigNumber;
+  vestedAmount: BigNumber;
+  exchangeRate: BigNumber;
 }
 
 export interface IVestAndClaim {
-    success : boolean;
-    isClaimable : boolean;
-    claimableAmount : BigNumber;
-    vestedAmount : BigNumber;
-    lastClaim : BigNumber;
-    nextClaim : BigNumber;
+  success: boolean;
+  isClaimable: boolean;
+  claimableAmount: BigNumber;
+  vestedAmount: BigNumber;
+  lastClaim: BigNumber;
+  nextClaim: BigNumber;
 }
