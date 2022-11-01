@@ -187,8 +187,6 @@ export const getTokenPrices = async (): Promise<{
 
     // Hardcoding PLY Price for development
     tokenPrice['PLY'] = 1;
-    
-    console.log(tokenPrice);
 
     return {
       success: true,
