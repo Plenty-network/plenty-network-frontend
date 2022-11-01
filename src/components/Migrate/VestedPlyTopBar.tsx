@@ -1,10 +1,6 @@
 import * as React from "react";
-import tradingFee from "../../assets/icon/vote/tradingfees.svg";
-import dollar from "../../assets/icon/vote/dollar.svg";
 import Image from "next/image";
 import { BigNumber } from "bignumber.js";
-import light from "../../assets/icon/vote/lighting.svg";
-import Button from "../Button/Button";
 import clsx from "clsx";
 
 import info from "../../assets/icon/common/infoIcon.svg";
@@ -13,8 +9,14 @@ import ply from "../../assets/icon/myPortfolio/plyIcon.svg";
 import lock from "../../assets/icon/migrate/lock-violet.svg";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IVestedPlyTopbarProps } from "./types";
+import PieChartButton from "../LocksPosition/PieChart";
 
 export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
+  const remainingTime = new BigNumber(props.vestedData.nextClaim).minus(Date.now());
+  const totalWaitingTime = new BigNumber(props.vestedData.nextClaim).minus(
+    props.vestedData.lastClaim
+  );
+  const remainingPercentage = remainingTime.multipliedBy(100).dividedBy(totalWaitingTime);
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
       return num.dividedBy(1000000000).toFixed(2) + "B";
@@ -53,29 +55,41 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
             </p>
           </div>
           <div className="font-title1-bold text-white mt-2 flex items-end">
-            {props.value === undefined || props.isLoading ? (
+            {props.vestedData.claimableAmount === undefined ? (
               <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
             ) : (
-              props.value?.toString()
+              props.vestedData?.claimableAmount?.toFixed(2)
             )}
 
             <p className="font-title2-normal text-border-400 ml-1 mb-px">PLY</p>
             <p className="relative top-1 ml-1">
               <Image alt={"alt"} src={lock} />
             </p>
-            <p className="font-body3  text-text-250 ml-1 mb-px">15.4 PLY</p>
+            <p className="font-body3  text-text-250 ml-1 mb-px">
+              {props.vestedData?.vestedAmount?.toFixed(2)} PLY
+            </p>
           </div>
         </p>
         <p className="ml-auto">
-          <Button
-            color={"primary"}
-            height={"h-[50px]"}
-            width={" w-[148px] "}
-            borderRadius={"rounded-xl"}
+          <div
+            className={clsx(
+              "h-[50px] flex items-center justify-center w-[148px] rounded-xl  font-title3-bold ",
+              props.vestedData.isClaimable
+                ? "bg-primary-500 text-black"
+                : "bg-blue-200 text-blue-300"
+            )}
             onClick={() => props.onClick(true)}
           >
             Claim
-          </Button>
+            {!props.vestedData.isClaimable && (
+              <span className="ml-[6px]">
+                <PieChartButton
+                  violet={100 - Number(remainingPercentage)}
+                  transparent={Number(remainingPercentage)}
+                />
+              </span>
+            )}
+          </div>
         </p>
       </div>
     </>

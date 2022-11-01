@@ -6,8 +6,10 @@ import Button from "../Button/Button";
 import TokenDropdown from "../TokenDropdown/TokenDropdown";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ERRORMESSAGES, tokenParameter, tokensModal, tokenType } from "../../../src/constants/swap";
+
+import info from "../../assets/icon/swap/info.svg";
 import { BigNumber } from "bignumber.js";
-import ctez from "../../assets/Tokens/ctez.png";
+import ply from "../../assets/Tokens/ply.png";
 
 import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
@@ -20,9 +22,17 @@ import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { MigrateTokens } from "../../constants/MigrateToken";
 import TokenModalMigrate from "./TokensSelect";
-import exchange from "../../assets/icon/migrate/exchange.svg";
+import exchange1 from "../../assets/icon/migrate/exchange.svg";
 import Image from "next/image";
 import ConfirmMigrate from "./ConfirmMigrate";
+import { getMigrateExchangeAmount } from "../../api/migrate";
+import { MigrateToken } from "../../config/types";
+import { IMigrateExchange } from "../../api/migrate/types";
+import { setIsLoadingWallet } from "../../redux/walletLoading";
+import { exchange } from "../../operations/veSwap";
+import { Flashtype } from "../FlashScreen";
+import { setFlashMessage } from "../../redux/flashMessage";
+import Config from "../../config/config";
 
 interface IMigrateProps {}
 
@@ -61,12 +71,17 @@ function Migrate(props: IMigrateProps) {
 
   const [tokenOut, setTokenOut] = useState<tokenParameter>({
     name: "PLY",
-    image: ctez,
+    image: ply,
   });
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
+  useEffect(() => {
+    if (firstTokenAmount !== "") {
+      handleTokenInput(firstTokenAmount);
+    }
+  }, [tokenIn.name]);
   const [tokenModal, setTokenModal] = useState(false);
   const [confirmMigratePopup, setConfirmMigratePopup] = useState(false);
   const selectToken = (token: tokensModal) => {
@@ -108,15 +123,24 @@ function Migrate(props: IMigrateProps) {
         </Button>
       );
     }
-  }, [props]);
+  }, [firstTokenAmount, allBalance.userBalance, tokenIn]);
+  const [exchangeRes, setExchangeRes] = useState<IMigrateExchange>({} as IMigrateExchange);
   const handleTokenInput = (input: string | number) => {
     if (input == ".") {
       setFirstTokenAmount("0.");
       return;
     } else if (input === "" || isNaN(Number(input))) {
       setFirstTokenAmount("");
+      setSecondTokenAmount("");
+      setExchangeRes({} as IMigrateExchange);
     } else {
       setFirstTokenAmount(input.toString());
+      const res = getMigrateExchangeAmount(
+        new BigNumber(input),
+        tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP
+      );
+      setExchangeRes(res);
+      setSecondTokenAmount(res.claimableAmount.toString());
     }
   };
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
@@ -133,15 +157,90 @@ function Migrate(props: IMigrateProps) {
     setBalanceUpdate(false);
     setTokenModal(true);
   };
+  const resetAllValues = () => {
+    setFirstTokenAmount("");
+    setSecondTokenAmount("");
+  };
+  const handleExchangeOperation = () => {
+    setConfirmMigratePopup(false);
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+
+    exchange(
+      tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP,
+      new BigNumber(firstTokenAmount),
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `exchange`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `exchange`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
+              },
+              transactionId: response.operationId ? response.operationId : "",
+            })
+          );
+        }, 6000);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+
+        dispatch(
+          setFlashMessage({
+            flashType: Flashtype.Rejected,
+            headerText: "Rejected",
+            trailingText: `exchange`,
+            linkText: "",
+            isLoading: true,
+            transactionId: "",
+          })
+        );
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
   return (
     <>
       <div className="lg:w-640  md:mx-auto mt-[36px]">
-        <div className="flex  border border-text-800 bg-card-500 h-[48px] items-center  px-5 md:rounded-2xl gap-1.5 md:gap-2.5 md:w-[400px]">
-          <Image src={exchange} />
+        <div className="flex  border border-text-800 bg-card-500 h-[48px] items-center  px-5 md:rounded-2xl gap-1.5 md:gap-2.5 md:w-[410px]">
+          <Image src={exchange1} />
           <span className="font-body1">Exchange rate:</span>
-          <span className="font-body4">1 WRAP=2 PLY</span>
+          <span className="font-body4">
+            1 WRAP = {Config.EXCHANGE_TOKENS.WRAP.exchangeRate} PLY
+          </span>
           <span className="border-r border-text-250 h-[18px] w-px"></span>
-          <span className="font-body4">1 PLENTY=2 PLY</span>
+          <span className="font-body4">
+            1 PLENTY = {Config.EXCHANGE_TOKENS.PLENTY.exchangeRate} PLY
+          </span>
         </div>
       </div>
       <div
@@ -237,46 +336,42 @@ function Migrate(props: IMigrateProps) {
               <div className=" my-3 flex-auto">
                 <div className="text-right font-body1 text-text-400">YOU RECEIVE</div>
                 <div>
-                  {secondTokenAmount === "" ? (
-                    <p className="ml-auto my-[4px] w-[100px]  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
-                  ) : (
-                    <input
-                      type="text"
-                      className={clsx(
-                        "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 "
-                      )}
-                      placeholder="0.0"
-                      value={secondTokenAmount}
-                    />
-                  )}
+                  <input
+                    type="text"
+                    className={clsx(
+                      "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 cursor-not-allowed"
+                    )}
+                    disabled
+                    placeholder="0.0"
+                    value={secondTokenAmount}
+                  />
                 </div>
               </div>
             </div>
             <div className="flex -mt-[12px]">
-              <div className="text-left">
-                <span className="text-text-600 font-body3">Balance:</span>{" "}
-                <span className="font-body4 text-text-500 ">
-                  {Number(allBalance.userBalance[tokenOut.name]) >= 0 ? (
-                    <ToolTip
-                      message={fromExponential(allBalance.userBalance[tokenOut.name].toString())}
-                      disable={Number(allBalance.userBalance[tokenOut.name]) > 0 ? false : true}
-                      id="tooltip9"
-                      position={Position.right}
-                    >
-                      {Number(allBalance.userBalance[tokenOut.name]) > 0
-                        ? Number(allBalance.userBalance[tokenOut.name]).toFixed(4)
-                        : 0}
-                    </ToolTip>
-                  ) : (
-                    "--"
-                  )}
+              <div className="text-left flex">
+                <span className="font-body3 text-text-500">1 {tokenIn.name} =</span>
+                <span className="font-body4 text-text-250 ml-1">
+                  {tokenIn.name === "PLENTY"
+                    ? Config.EXCHANGE_TOKENS.PLENTY.exchangeRate
+                    : Config.EXCHANGE_TOKENS.WRAP.exchangeRate}{" "}
+                  PLY
                 </span>
               </div>
-              <div className="text-right ml-auto font-body2 text-text-400">
-                ~$
-                {secondTokenAmount && tokenPrice[tokenOut.name]
-                  ? Number(Number(secondTokenAmount) * Number(tokenPrice[tokenOut.name])).toFixed(2)
-                  : "0.00"}
+              <div className="text-right ml-auto font-body2 text-text-400 flex">
+                {exchangeRes.vestedAmount ? (
+                  <>
+                    <span className="text-white mr-1">
+                      + {exchangeRes?.vestedAmount?.toFixed(2)} PLY
+                    </span>{" "}
+                    vested <span className="md:block hidden ml-1">for upto 25-Aug-2024</span>
+                    <span className="md:hidden relative top-1">
+                      <Image src={info} />
+                    </span>
+                  </>
+                ) : (
+                  "--"
+                )}
               </div>
             </div>
           </div>
@@ -322,7 +417,9 @@ function Migrate(props: IMigrateProps) {
       <ConfirmMigrate
         show={confirmMigratePopup}
         setShow={setConfirmMigratePopup}
-        handleClick={() => {}}
+        handleClick={handleExchangeOperation}
+        exchangeRes={exchangeRes}
+        tokenIn={tokenIn.name}
       />
     </>
   );

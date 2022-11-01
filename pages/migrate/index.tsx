@@ -44,6 +44,10 @@ import { VestedPlyTopbar } from "../../src/components/Migrate/VestedPlyTopBar";
 import ClaimVested from "../../src/components/Migrate/ClaimVested";
 
 import { useRouter } from "next/router";
+import { getUserClaimAndVestAmount } from "../../src/api/migrate";
+import { IVestAndClaim } from "../../src/api/migrate/types";
+import { getCompleteUserBalace } from "../../src/api/util/balance";
+import { IAllBalanceResponse } from "../../src/api/util/types";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -79,6 +83,20 @@ function MyPortfolio(props: any) {
     (state) => state.portfolioRewards.unclaimedInflationDataError
   );
   const statsTvlError: boolean = useAppSelector((state) => state.portfolioStatsTvl.userTvlError);
+  const [allBalance, setAllBalance] = useState<{
+    success: boolean;
+    userBalance: { [id: string]: BigNumber };
+  }>({ success: false, userBalance: {} });
+  useEffect(() => {
+    setAllBalance({ success: false, userBalance: {} });
+    if (userAddress) {
+      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
+        setAllBalance(response);
+      });
+    } else {
+      setAllBalance({ success: true, userBalance: {} });
+    }
+  }, [userAddress, token]);
 
   useEffect(() => {
     dispatch(fetchWallet());
@@ -147,9 +165,12 @@ function MyPortfolio(props: any) {
       }, API_RE_ATTAMPT_DELAY);
     }
   }, [unclaimedInflationDataError]);
-
+  const [vestedData, setVestedData] = useState<IVestAndClaim>({} as IVestAndClaim);
   useEffect(() => {
     if (userAddress) {
+      getUserClaimAndVestAmount(userAddress).then((res) => {
+        setVestedData(res);
+      });
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         dispatch(
           fetchTvlStatsData({
@@ -340,6 +361,7 @@ function MyPortfolio(props: any) {
                 <VestedPlyTopbar
                   value={new BigNumber(12)}
                   isLoading={false}
+                  vestedData={vestedData}
                   onClick={setIsClaimVested}
                 />
               )}
@@ -349,6 +371,7 @@ function MyPortfolio(props: any) {
             <VestedPlyTopbar
               value={new BigNumber(12)}
               isLoading={false}
+              vestedData={vestedData}
               onClick={setIsClaimVested}
             />
           )}
@@ -356,7 +379,9 @@ function MyPortfolio(props: any) {
           {activeSection !== MyPortfolioSection.Migrate && (
             <div className="border-t border-text-800/[0.5] mt-5"></div>
           )}
-          {activeSection === MyPortfolioSection.Migrate && isClaimVested && <ClaimVested />}
+          {activeSection === MyPortfolioSection.Migrate && isClaimVested && (
+            <ClaimVested vestedData={vestedData} />
+          )}
           {activeSection === MyPortfolioSection.Migrate && !isClaimVested && <Migrate />}
         </div>
       </SideBarHOC>

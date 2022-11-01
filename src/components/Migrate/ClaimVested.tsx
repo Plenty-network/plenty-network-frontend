@@ -10,7 +10,7 @@ import { ERRORMESSAGES, tokenParameter, tokensModal, tokenType } from "../../../
 import info from "../../assets/icon/swap/info.svg";
 
 import { BigNumber } from "bignumber.js";
-import ctez from "../../assets/Tokens/ctez.png";
+import ply from "../../assets/Tokens/ply.png";
 
 import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
@@ -23,8 +23,16 @@ import { walletConnection } from "../../redux/wallet/wallet";
 import Image from "next/image";
 import ConfirmMigrate from "./ConfirmMigrate";
 import ConfirmPLYVested from "./ClaimPLYVested";
+import { setIsLoadingWallet } from "../../redux/walletLoading";
+import { claim } from "../../operations/veSwap";
+import { Flashtype } from "../FlashScreen";
+import { setFlashMessage } from "../../redux/flashMessage";
+import { getUserClaimAndVestAmount } from "../../api/migrate";
+import { IVestAndClaim } from "../../api/migrate/types";
 
-interface IMigrateProps {}
+interface IMigrateProps {
+  vestedData: IVestAndClaim;
+}
 
 function ClaimVested(props: IMigrateProps) {
   const [firstTokenAmount, setFirstTokenAmount] = useState("");
@@ -56,14 +64,74 @@ function ClaimVested(props: IMigrateProps) {
 
   const [tokenOut, setTokenOut] = useState<tokenParameter>({
     name: "PLY",
-    image: ctez,
+    image: ply,
   });
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
+  const resetAllValues = () => {};
   const [confirmPLYPopup, setConfirmPLYPopup] = useState(false);
+  const handleClaimOperation = () => {
+    setConfirmPLYPopup(false);
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
 
+    claim(transactionSubmitModal, resetAllValues, setShowConfirmTransaction, {
+      flashType: Flashtype.Info,
+      headerText: "Transaction submitted",
+      trailingText: `claim`,
+      linkText: "View in Explorer",
+      isLoading: true,
+      transactionId: "",
+    }).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `claim`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
+              },
+              transactionId: response.operationId ? response.operationId : "",
+            })
+          );
+        }, 6000);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+
+        dispatch(
+          setFlashMessage({
+            flashType: Flashtype.Rejected,
+            headerText: "Rejected",
+            trailingText: `claim`,
+            linkText: "",
+            isLoading: true,
+            transactionId: "",
+          })
+        );
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
   const ClaimButton = useMemo(() => {
     if (userAddress) {
       return (
@@ -109,18 +177,14 @@ function ClaimVested(props: IMigrateProps) {
               <div className=" my-3 flex-auto">
                 <div className="text-right font-body1 text-text-400">YOUR CLAIMABLE BALANCE</div>
                 <div>
-                  {firstTokenAmount === "" ? (
-                    <p className="ml-auto my-[4px] w-[100px]  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
-                  ) : (
-                    <input
-                      type="text"
-                      className={clsx(
-                        "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 "
-                      )}
-                      placeholder="0.0"
-                      value={firstTokenAmount}
-                    />
-                  )}
+                  <input
+                    type="text"
+                    className={clsx(
+                      "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 "
+                    )}
+                    placeholder="0.0"
+                    value={props.vestedData.claimableAmount.toString()}
+                  />
                 </div>
               </div>
             </div>
@@ -144,10 +208,12 @@ function ClaimVested(props: IMigrateProps) {
                   )}
                 </span>
               </div>
-              <div className="text-right ml-auto font-body2 text-text-400">
-                <span className="text-white">+ 32.29 PLY</span> vested{" "}
-                <span className="md:block hidden">for upto 25-Aug-2024</span>
-                <span className="relative top-1">
+              <div className="text-right ml-auto font-body2 text-text-400 flex">
+                <span className="text-white mr-1">
+                  + {props.vestedData.vestedAmount.toFixed(2)} PLY
+                </span>{" "}
+                vested <span className="md:block hidden ml-1">for upto 25-Aug-2024</span>
+                <span className="relative top-1 md:hidden">
                   <Image src={info} />
                 </span>
               </div>
@@ -166,7 +232,7 @@ function ClaimVested(props: IMigrateProps) {
         <ConfirmTransaction
           show={showConfirmTransaction}
           setShow={setShowConfirmTransaction}
-          content={`Migrate`}
+          content={`claim`}
         />
       )}
       {showTransactionSubmitModal && (
@@ -178,14 +244,15 @@ function ClaimVested(props: IMigrateProps) {
               ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
               : null
           }
-          content={`Migrate`}
+          content={`claim`}
         />
       )}
 
       <ConfirmPLYVested
         show={confirmPLYPopup}
         setShow={setConfirmPLYPopup}
-        handleClick={() => {}}
+        handleClick={handleClaimOperation}
+        vestedData={props.vestedData}
       />
     </>
   );
