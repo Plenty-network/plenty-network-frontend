@@ -52,13 +52,20 @@ const MainMenu: Array<ISingleSideBarProps> = [
     isHrefIcon: true,
     openNewPage: true,
   },
+  {
+    name: "Migrate",
+    iconName: "migrate",
+    pathName: "/migrate",
+    activePathName: "/migrate",
+  },
 ];
 
 export function SideBar(props: ISideBarProps) {
   const [activeMenu, setActiveMenu] = React.useState<string>("");
   const { pathname } = useRouter();
   try {
-    if (pathname == "/swap") document.getElementsByTagName("body")[0].className = "swap";
+    if (pathname == "/swap" || pathname == "/migrate")
+      document.getElementsByTagName("body")[0].className = "swap";
     else document.getElementsByTagName("body")[0].className = "";
   } catch {}
   return (

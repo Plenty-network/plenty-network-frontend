@@ -31,7 +31,10 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
   return (
     <>
       <div
-        className={clsx("h-[96px] py-4 px-5  flex items-center bg-background-300 ", "w-[400px] ")}
+        className={clsx(
+          "ml-auto h-[94px] py-4 px-5  flex items-center bg-background-300 ",
+          "w-[400px] border-b border-background-200 "
+        )}
       >
         <p>
           <div className="flex gap-1 items-center">
@@ -69,7 +72,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
             height={"h-[50px]"}
             width={" w-[148px] "}
             borderRadius={"rounded-xl"}
-            onClick={() => props.onClick()}
+            onClick={() => props.onClick(true)}
           >
             Claim
           </Button>

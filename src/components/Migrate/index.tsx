@@ -135,8 +135,8 @@ function Migrate(props: IMigrateProps) {
   };
   return (
     <>
-      <div className="lg:w-640 mx-auto ">
-        <div className="flex  border border-text-800 bg-card-500 h-[48px] items-center px-5 rounded-2xl gap-2.5 w-[400px]">
+      <div className="lg:w-640  md:mx-auto mt-[36px]">
+        <div className="flex  border border-text-800 bg-card-500 h-[48px] items-center  px-5 md:rounded-2xl gap-1.5 md:gap-2.5 md:w-[400px]">
           <Image src={exchange} />
           <span className="font-body1">Exchange rate:</span>
           <span className="font-body4">1 WRAP=2 PLY</span>
@@ -284,7 +284,7 @@ function Migrate(props: IMigrateProps) {
           <div className="mt-5">{MigrateButton}</div>
         </div>
       </div>
-      <div className="font-body2 text-text-250 mt-4 mx-auto w-[568px] text-center">
+      <div className="font-body2 text-text-250 mt-4 mx-2 md:mx-auto md:w-[568px] text-center">
         Tip: Convert PLENTY/WRAP to PLY. By staking PLY, you’re earning the usual rewards from
         vePLY, plus a share of 10% of the LPs’ boosted PLY earnings, and bribe tokens on top of
         that.

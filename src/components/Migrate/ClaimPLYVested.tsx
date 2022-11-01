@@ -6,14 +6,14 @@ import timer from "../../../src/assets/icon/myPortfolio/timer.svg";
 import Button from "../Button/Button";
 import { ILockRewardsEpochData } from "../../api/portfolio/types";
 
-interface IConfirmMigrateProps {
+interface IConfirmProps {
   show: boolean;
 
   setShow: any;
 
   handleClick: () => void;
 }
-function ConfirmMigrate(props: IConfirmMigrateProps) {
+function ConfirmPLYVested(props: IConfirmProps) {
   const closeModal = () => {
     props.setShow(false);
   };
@@ -26,7 +26,7 @@ function ConfirmMigrate(props: IConfirmMigrateProps) {
             <div className="cursor-pointer" onClick={closeModal}>
               <Image alt={"alt"} src={arrowLeft} />
             </div>
-            <div className="mx-2 text-white font-title3">Migrate WRAP</div>
+            <div className="mx-2 text-white font-title3">Claim PLY</div>
           </div>
           <div className="border border-text-800 bg-card-200 py-4 mt-3 rounded-2xl">
             <div className="flex mt-[2px] items-center px-4 ">
@@ -52,4 +52,4 @@ function ConfirmMigrate(props: IConfirmMigrateProps) {
   ) : null;
 }
 
-export default ConfirmMigrate;
+export default ConfirmPLYVested;

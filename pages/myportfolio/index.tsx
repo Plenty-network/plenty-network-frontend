@@ -15,6 +15,9 @@ import { getTotalVotingPower } from "../../src/redux/pools";
 import { getEpochData } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
 
+import migrateViolet from "../../src/assets/icon/migrate/migrateViolet.svg";
+
+import migrateGrey from "../../src/assets/icon/migrate/migrateGrey.svg";
 import rewardsViolet from "../../src/assets/icon/myPortfolio/rewardsViolet.svg";
 import positionsViolet from "../../src/assets/icon/myPortfolio/positionsViolet.svg";
 import rewards from "../../src/assets/icon/myPortfolio/rewards.svg";
@@ -50,7 +53,7 @@ import {
   IUnclaimedRewardsForLockData,
 } from "../../src/api/portfolio/types";
 import WithdrawPly from "../../src/components/LocksPosition/WithdrawPopup";
-import { setIsLoadingWallet } from "../../src/redux/walletLoading";
+import { setIsLoadingWallet, setMyPortfolioSection } from "../../src/redux/walletLoading";
 
 import { LocksTableRewards } from "../../src/components/LocksRewards/LocksRewardsTable";
 import { harvestAllRewards } from "../../src/operations/rewards";
@@ -89,6 +92,9 @@ import { isMobile } from "react-device-detect";
 import { PortfolioDropdown } from "../../src/components/PortfolioSection";
 import Migrate from "../../src/components/Migrate";
 import { VestedPlyTopbar } from "../../src/components/Migrate/VestedPlyTopBar";
+import ClaimVested from "../../src/components/Migrate/ClaimVested";
+
+import { useRouter } from "next/router";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -99,9 +105,8 @@ function MyPortfolio(props: any) {
   const [activeStateTab, setActiveStateTab] = React.useState<MyPortfolioHeader>(
     MyPortfolioHeader.Pools
   );
-  const [activeSection, setActiveSection] = React.useState<MyPortfolioSection>(
-    MyPortfolioSection.Positions
-  );
+  const section = useAppSelector((state) => state.walletLoading.activePortfolio);
+  const [activeSection, setActiveSection] = React.useState<MyPortfolioSection>(section);
 
   const [showClaimPly, setShowClaimPly] = React.useState(false);
 
@@ -514,7 +519,10 @@ function MyPortfolio(props: any) {
               ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6] rounded-l-lg"
               : "text-text-250 bg-muted-700 rounded-l-lg"
           )}
-          onClick={() => setActiveSection(MyPortfolioSection.Positions)}
+          onClick={() => {
+            setActiveSection(MyPortfolioSection.Positions);
+            dispatch(setMyPortfolioSection(MyPortfolioSection.Positions));
+          }}
         >
           Positions{" "}
           {activeSection === MyPortfolioSection.Positions ? (
@@ -527,10 +535,13 @@ function MyPortfolio(props: any) {
           className={clsx(
             " cursor-pointer font-title3 py-3 box-border  w-[147px] flex items-center justify-center  gap-1",
             activeSection === MyPortfolioSection.Rewards
-              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6] rounded-r-lg"
-              : "text-text-250 bg-muted-700 rounded-r-lg"
+              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
+              : "text-text-250 bg-muted-700 "
           )}
-          onClick={() => setActiveSection(MyPortfolioSection.Rewards)}
+          onClick={() => {
+            setActiveSection(MyPortfolioSection.Rewards);
+            dispatch(setMyPortfolioSection(MyPortfolioSection.Rewards));
+          }}
         >
           Rewards
           {activeSection === MyPortfolioSection.Rewards ? (
@@ -543,16 +554,19 @@ function MyPortfolio(props: any) {
           className={clsx(
             " font-title3 cursor-pointer box-border py-3 w-[147px] flex items-center justify-center  gap-1",
             activeSection === MyPortfolioSection.Migrate
-              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6] rounded-l-lg"
-              : "text-text-250 bg-muted-700 rounded-l-lg"
+              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6] rounded-r-lg"
+              : "text-text-250 bg-muted-700 rounded-r-lg"
           )}
-          onClick={() => setActiveSection(MyPortfolioSection.Migrate)}
+          onClick={() => {
+            setActiveSection(MyPortfolioSection.Migrate);
+            dispatch(setMyPortfolioSection(MyPortfolioSection.Migrate));
+          }}
         >
           Migrate{" "}
           {activeSection === MyPortfolioSection.Migrate ? (
-            <Image alt={"alt"} src={positionsViolet} />
+            <Image alt={"alt"} src={migrateViolet} />
           ) : (
-            <Image alt={"alt"} src={position} />
+            <Image alt={"alt"} src={migrateGrey} />
           )}
         </p>
       </div>
@@ -1592,13 +1606,34 @@ function MyPortfolio(props: any) {
       }
     });
   };
+  const router = useRouter();
+  useEffect(() => {
+    if (activeSection === MyPortfolioSection.Migrate) {
+      void router.replace(
+        {
+          pathname: "/migrate",
+        },
+        undefined,
+        { shallow: true }
+      );
+    } else {
+      void router.replace(
+        {
+          pathname: "/myportfolio",
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [activeSection]);
 
+  const [isClaimVested, setIsClaimVested] = useState(false);
   return (
     <>
       <SideBarHOC>
         <div>
-          <div className=" md:px-[24px] px-2   ">
-            <div className="flex items-center bg-background-200 h-[97px] border-b border-text-800/[0.5]">
+          <div className="   ">
+            <div className="flex items-center bg-background-200 h-[97px] border-b border-text-800/[0.5] md:pl-[23px] px-2">
               {isMobile ? (
                 <PortfolioDropdown
                   Options={["Positions", "Rewards", "Migrate"]}
@@ -1609,13 +1644,7 @@ function MyPortfolio(props: any) {
                 <div className=""> {Title}</div>
               )}
               {Tooltip}
-              <VestedPlyTopbar
-                value={new BigNumber(12)}
-                isLoading={false}
-                onClick={function (): {} {
-                  throw new Error("Function not implemented.");
-                }}
-              />
+
               {activeSection === MyPortfolioSection.Rewards && (
                 <div className="ml-auto ">
                   <ToolTip
@@ -1663,7 +1692,7 @@ function MyPortfolio(props: any) {
                 </div>
               )}
             </div>
-            <div className="mt-5 pl-0  md:pl-0 overflow-x-auto inner">
+            <div className="mt-5 overflow-x-auto inner md:pl-[23px] pl-2">
               {activeSection === MyPortfolioSection.Positions ? (
                 <Stats
                   setShowCreateLockModal={setShowCreateLockModal}
@@ -1696,7 +1725,8 @@ function MyPortfolio(props: any) {
           {activeSection !== MyPortfolioSection.Migrate && (
             <div className="border-t border-text-800/[0.5] mt-5"></div>
           )}
-          {activeSection === MyPortfolioSection.Migrate && <Migrate />}
+
+          {activeSection === MyPortfolioSection.Migrate && !isClaimVested && <Migrate />}
           {activeSection !== MyPortfolioSection.Migrate && (
             <div>
               <div className="bg-card-50 md:sticky -top-[3px] md:top-0 z-10">
