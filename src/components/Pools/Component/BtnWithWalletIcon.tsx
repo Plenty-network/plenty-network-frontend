@@ -34,11 +34,11 @@ export function BtnWithWalletIcon(props: IWalletBtnWithIconProps) {
 }
 export function BtnWithWalletIconEnd(props: IWalletBtnWithIconProps) {
   return (
-    <div
-      className={`ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround  items-center flex px-1 md:px-3 h-[36px]`}
-    >
-      {" "}
-      <ToolTip message={`LP tokens in wallet`} id="tooltip9" position={Position.top}>
+    <ToolTip message={`LP tokens in wallet`} id="tooltip9" position={Position.top}>
+      <div
+        className={`cursor-pointer  ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround  items-center flex px-1 md:px-3 h-[36px]`}
+      >
+        {" "}
         <div>
           <Image
             alt={"alt"}
@@ -47,18 +47,18 @@ export function BtnWithWalletIconEnd(props: IWalletBtnWithIconProps) {
             height={isMobile ? "20px" : "22px"}
           />
         </div>
-      </ToolTip>
-      <div
-        className="ml-1 flex text-primary-500 font-caption1-small md:font-body2 cursor-pointer"
-        onClick={props.onClick}
-      >
-        {!props.text ? (
-          <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
-        ) : (
-          <span className="mr-1">{props.text}</span>
-        )}
+        <div
+          className="ml-1 flex text-primary-500 font-caption1-small md:font-body2 cursor-pointer"
+          onClick={props.onClick}
+        >
+          {!props.text ? (
+            <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
+          ) : (
+            <span className="mr-1">{props.text}</span>
+          )}
+        </div>
       </div>
-    </div>
+    </ToolTip>
   );
 }
 
@@ -97,10 +97,10 @@ export function BtnwithBoost(props: IWalletBtnWithIconProps) {
 
 export function BtnWithStakeIcon(props: IWalletBtnWithIconProps) {
   return (
-    <div
-      className={` border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] items-center flex px-3 ${props.className}`}
-    >
-      <ToolTip message={`LP tokens staked in gauge`} id="tooltip9" position={Position.top}>
+    <ToolTip message={`LP tokens staked in gauge`} id="tooltip9" position={Position.top}>
+      <div
+        className={`cursor-pointer border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] items-center flex px-3 ${props.className}`}
+      >
         <div className="relative top-1">
           <Image
             alt={"alt"}
@@ -109,15 +109,16 @@ export function BtnWithStakeIcon(props: IWalletBtnWithIconProps) {
             height={isMobile ? "20px" : "22px"}
           />
         </div>
-      </ToolTip>
-      <div className="ml-1 flex text-primary-500 font-caption1-small md:font-body2">
-        {!props.text ? (
-          <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
-        ) : (
-          <span className="mr-1">{props.text}</span>
-        )}
+
+        <div className="ml-1 flex text-primary-500 font-caption1-small md:font-body2">
+          {!props.text ? (
+            <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
+          ) : (
+            <span className="mr-1">{props.text}</span>
+          )}
+        </div>
       </div>
-    </div>
+    </ToolTip>
   );
 }
 
