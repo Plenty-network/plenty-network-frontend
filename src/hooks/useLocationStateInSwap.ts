@@ -44,7 +44,7 @@ export const useLocationStateInSwap = () => {
       });
     }
     console.log("ishu234", tokenIn);
-  }, [router.query.from]);
+  }, [router.query.from, tokensListConfig]);
   useEffect(() => {
     console.log("ishu1", tokenIn, tokenOut);
     if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
