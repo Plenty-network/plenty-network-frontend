@@ -34,15 +34,18 @@ import { Flashtype } from "../FlashScreen";
 import { setFlashMessage } from "../../redux/flashMessage";
 import Config from "../../config/config";
 
-interface IMigrateProps {}
+interface IMigrateProps {
+  allBalance: {
+    success: boolean;
+    userBalance: {
+      [id: string]: BigNumber;
+    };
+  };
+}
 
 function Migrate(props: IMigrateProps) {
   const [firstTokenAmount, setFirstTokenAmount] = useState("");
   const [secondTokenAmount, setSecondTokenAmount] = useState("");
-  const [allBalance, setAllBalance] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
 
   const tokens = useAppSelector((state) => state.config.standard);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
@@ -53,16 +56,7 @@ function Migrate(props: IMigrateProps) {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
-  useEffect(() => {
-    setAllBalance({ success: false, userBalance: {} });
-    if (userAddress) {
-      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-        setAllBalance(response);
-      });
-    } else {
-      setAllBalance({ success: true, userBalance: {} });
-    }
-  }, [userAddress, tokens, balanceUpdate]);
+
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [tokenIn, setTokenIn] = useState<tokenParameter>({
     name: MigrateTokens[0].name,
@@ -102,7 +96,7 @@ function Migrate(props: IMigrateProps) {
           </Button>
         );
       } else if (
-        new BigNumber(firstTokenAmount).isGreaterThan(allBalance.userBalance[tokenIn.name])
+        new BigNumber(firstTokenAmount).isGreaterThan(props.allBalance.userBalance[tokenIn.name])
       ) {
         return (
           <Button color="disabled" width="w-full">
@@ -123,7 +117,7 @@ function Migrate(props: IMigrateProps) {
         </Button>
       );
     }
-  }, [firstTokenAmount, allBalance.userBalance, tokenIn]);
+  }, [firstTokenAmount, props.allBalance.userBalance, tokenIn]);
   const [exchangeRes, setExchangeRes] = useState<IMigrateExchange>({} as IMigrateExchange);
   const handleTokenInput = (input: string | number) => {
     if (input == ".") {
@@ -150,7 +144,7 @@ function Migrate(props: IMigrateProps) {
   const onClickAmount = () => {
     setSecondTokenAmount("");
 
-    handleTokenInput(allBalance.userBalance[tokenIn.name].toNumber());
+    handleTokenInput(props.allBalance.userBalance[tokenIn.name].toNumber());
   };
 
   const handleTokenType = () => {
@@ -165,7 +159,11 @@ function Migrate(props: IMigrateProps) {
     setConfirmMigratePopup(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-
+    console.log(
+      "ishu",
+      tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP,
+      firstTokenAmount
+    );
     exchange(
       tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP,
       new BigNumber(firstTokenAmount),
@@ -254,7 +252,9 @@ function Migrate(props: IMigrateProps) {
         <div
           className={clsx(
             "lg:w-580 mt-4 h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700",
-            (new BigNumber(firstTokenAmount).isGreaterThan(allBalance.userBalance[tokenIn.name]) ||
+            (new BigNumber(firstTokenAmount).isGreaterThan(
+              props.allBalance.userBalance[tokenIn.name]
+            ) ||
               errorMessage !== "") &&
               "border-errorBorder hover:border-errorBorder bg-errorBg",
             isFirstInputFocus ? "border-text-700" : "border-text-800 "
@@ -289,15 +289,15 @@ function Migrate(props: IMigrateProps) {
             <div className="text-left cursor-pointer" onClick={onClickAmount}>
               <span className="text-text-600 font-body3">Balance:</span>{" "}
               <span className="font-body4 text-primary-500 ">
-                {Number(allBalance.userBalance[tokenIn.name]) >= 0 ? (
+                {Number(props.allBalance.userBalance[tokenIn.name]) >= 0 ? (
                   <ToolTip
-                    message={fromExponential(allBalance.userBalance[tokenIn.name].toString())}
-                    disable={Number(allBalance.userBalance[tokenIn.name]) > 0 ? false : true}
+                    message={fromExponential(props.allBalance.userBalance[tokenIn.name].toString())}
+                    disable={Number(props.allBalance.userBalance[tokenIn.name]) > 0 ? false : true}
                     id="tooltip8"
                     position={Position.right}
                   >
-                    {Number(allBalance.userBalance[tokenIn.name]) > 0
-                      ? Number(allBalance.userBalance[tokenIn.name]).toFixed(4)
+                    {Number(props.allBalance.userBalance[tokenIn.name]) > 0
+                      ? Number(props.allBalance.userBalance[tokenIn.name]).toFixed(4)
                       : 0}
                   </ToolTip>
                 ) : (
@@ -379,7 +379,7 @@ function Migrate(props: IMigrateProps) {
           <div className="mt-5">{MigrateButton}</div>
         </div>
       </div>
-      <div className="font-body2 text-text-250 mt-4 mx-2 md:mx-auto md:w-[568px] text-center">
+      <div className="font-body2 text-text-250 mt-4 mx-2 md:mx-auto md:w-[568px] text-center mb-5">
         Tip: Convert PLENTY/WRAP to PLY. By staking PLY, you’re earning the usual rewards from
         vePLY, plus a share of 10% of the LPs’ boosted PLY earnings, and bribe tokens on top of
         that.
@@ -406,10 +406,12 @@ function Migrate(props: IMigrateProps) {
       )}
       <TokenModalMigrate
         tokens={MigrateTokens.sort(
-          (a, b) => Number(allBalance.userBalance[b.name]) - Number(allBalance.userBalance[a.name])
+          (a, b) =>
+            Number(props.allBalance.userBalance[b.name]) -
+            Number(props.allBalance.userBalance[a.name])
         )}
         show={tokenModal}
-        allBalance={allBalance.userBalance}
+        allBalance={props.allBalance.userBalance}
         selectToken={selectToken}
         onhide={setTokenModal}
         tokenIn={tokenIn}

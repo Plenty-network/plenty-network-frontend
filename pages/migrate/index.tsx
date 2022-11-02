@@ -424,7 +424,9 @@ function MyPortfolio(props: any) {
           {activeSection === MyPortfolioSection.Migrate && isClaimVested && (
             <ClaimVested vestedData={vestedData} />
           )}
-          {activeSection === MyPortfolioSection.Migrate && showMigrateSwap && <Migrate />}
+          {activeSection === MyPortfolioSection.Migrate && showMigrateSwap && (
+            <Migrate allBalance={allBalance} />
+          )}
         </div>
       </SideBarHOC>
 
