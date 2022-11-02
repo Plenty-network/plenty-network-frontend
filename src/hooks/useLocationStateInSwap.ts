@@ -24,32 +24,32 @@ export const useLocationStateInSwap = () => {
   const [tokenOut, setTokenOut] = useState({} as tokenParameter);
 
   useEffect(() => {
-    // if (Object.keys(router.query).length !== 0) {
-    console.log("ishu30", router);
-    console.log("ishu", tokenIn, tokenOut, router);
-    if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
-      console.log("ishu2");
-      return;
-    } else {
-      console.log("ishu22");
-      void router.replace(
-        {
-          pathname: router.pathname,
-          query: {
-            ...router.query,
-            from: tokenIn && tokenIn.name ? tokenIn.name : null,
-            ...(tokenOut.name
-              ? {
-                  to: tokenOut.name,
-                }
-              : {}),
-          },
-        },
-        undefined,
-        { shallow: true }
-      );
-      console.log("ishu23", router);
+    if (Object.keys(router.query).length !== 0) {
+      console.log("ishu30", router);
+      console.log("ishu", tokenIn, tokenOut, router);
+      if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
+        console.log("ishu2");
+        return;
+      }
     }
+    console.log("ishu22");
+    void router.replace(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          from: tokenIn && tokenIn.name ? tokenIn.name : null,
+          ...(tokenOut.name
+            ? {
+                to: tokenOut.name,
+              }
+            : {}),
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+    console.log("ishu23", router);
   }, [tokenIn.name, tokenOut.name]);
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
