@@ -28,25 +28,25 @@ export const useLocationStateInSwap = () => {
     if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
       console.log("ishu2");
       return;
-    } else {
-      console.log("ishu22");
-      void router.replace(
-        {
-          pathname: router.pathname,
-          query: {
-            ...router.query,
-            from: tokenIn && tokenIn.name ? tokenIn.name : null,
-            ...(tokenOut.name
-              ? {
-                  to: tokenOut.name,
-                }
-              : {}),
-          },
-        },
-        undefined,
-        { shallow: true }
-      );
     }
+    console.log("ishu22");
+    void router.replace(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          from: tokenIn && tokenIn.name ? tokenIn.name : null,
+          ...(tokenOut.name
+            ? {
+                to: tokenOut.name,
+              }
+            : {}),
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+    console.log("ishu23", router);
   }, [tokenIn.name, tokenOut.name]);
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
@@ -86,6 +86,7 @@ export const useLocationStateInSwap = () => {
         });
       }
     }
+    console.log("ishu6", tokenIn, tokenOut);
   }, [router]);
 
   return {
