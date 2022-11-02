@@ -16,71 +16,64 @@ export const useLocationStateInSwap = () => {
 
   const [tokenOut, setTokenOut] = useState({} as tokenParameter);
 
-  // useEffect(() => {
-  //   if (
-  //     tokenIn.name === router.query.from &&
-  //     tokenOut.name === router.query.to
-  //   ) {
-  //     return;
-  //   }
+  useEffect(() => {
+    if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
+      return;
+    }
 
-  //   void router.replace(
-  //     {
-  //       pathname: router.pathname,
-  //       query: {
-  //         ...router.query,
-  //         from: tokenIn && tokenIn.name ? tokenIn.name : null,
-  //         ...(tokenOut.name
-  //           ? {
-  //               to: tokenOut.name,
-  //             }
-  //           : {}),
-  //       },
-  //     },
-  //     undefined,
-  //     { shallow: true }
-  //   );
-  // }, [tokenIn, tokenOut]);
-  // const tokensListConfig = useMemo(() => {
-  //   return tokensArray.map((token) => ({
-  //     name: token[0],
-  //     image: `/assets/Tokens/${token[1].symbol}.png`,
-  //     new: token[1].extras?.isNew as boolean,
-  //     chainType: token[1].extras?.chain as Chain,
-  //     address: token[1].address,
-  //   }));
-  // }, [tokens]);
+    void router.replace(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          from: tokenIn && tokenIn.name ? tokenIn.name : null,
+          ...(tokenOut.name
+            ? {
+                to: tokenOut.name,
+              }
+            : {}),
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+  }, [tokenIn, tokenOut]);
+  const tokensListConfig = useMemo(() => {
+    return tokensArray.map((token) => ({
+      name: token[0],
+      image: `/assets/Tokens/${token[1].symbol}.png`,
+      new: token[1].extras?.isNew as boolean,
+      chainType: token[1].extras?.chain as Chain,
+      address: token[1].address,
+    }));
+  }, [tokens]);
 
-  // useEffect(() => {
-  //   const tokenInFromParam = router.query.from;
-  //   const tokenOutFromParam = router.query.to;
+  useEffect(() => {
+    const tokenInFromParam = router.query.from;
+    const tokenOutFromParam = router.query.to;
 
-  //   if (tokenInFromParam) {
-  //     const tokenInDatum = tokensListConfig.find(
-  //       (token) => token.name === tokenInFromParam
-  //     );
+    if (tokenInFromParam) {
+      const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
 
-  //     if (tokenInDatum) {
-  //       setTokenIn({
-  //         name: tokenInDatum.name,
-  //         image: tokenInDatum.image,
-  //       });
-  //     }
-  //   }
+      if (tokenInDatum) {
+        setTokenIn({
+          name: tokenInDatum.name,
+          image: tokenInDatum.image,
+        });
+      }
+    }
 
-  //   if (tokenOutFromParam) {
-  //     const tokenOutDatum = tokensListConfig.find(
-  //       (token) => token.name === tokenOutFromParam
-  //     );
+    if (tokenOutFromParam) {
+      const tokenOutDatum = tokensListConfig.find((token) => token.name === tokenOutFromParam);
 
-  //     if (tokenOutDatum) {
-  //       setTokenOut({
-  //         name: tokenOutDatum.name,
-  //         image: tokenOutDatum.image,
-  //       });
-  //     }
-  //   }
-  // }, [router]);
+      if (tokenOutDatum) {
+        setTokenOut({
+          name: tokenOutDatum.name,
+          image: tokenOutDatum.image,
+        });
+      }
+    }
+  }, [router]);
 
   return {
     tokenIn,
