@@ -35,6 +35,14 @@ export const useLocationStateInSwap = () => {
           name: tokenInDatum.name,
           image: tokenInDatum.image,
         });
+        setTokenIn({
+          name: tokenInDatum.name,
+          image: tokenInDatum.image,
+        });
+        setTokenIn({
+          name: tokenInDatum.name,
+          image: tokenInDatum.image,
+        });
       }
     } else {
       console.log("ishu23", "cttez");
