@@ -639,7 +639,7 @@ export default function Vote() {
               />
             </div>
           </div>
-          <div className="hidden md:block md:basis-1/3 md:pr-[25px] w-[350px]">
+          <div className="hidden md:block md:basis-1/3 md:pr-[25px] md:ml-3 w-[350px]">
             <VotingAllocation
               show={showCastVotingAllocation}
               castVoteOperation={castVoteOperation}

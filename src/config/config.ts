@@ -44,16 +44,16 @@ const Config: IConfig = {
 
   EXCHANGE_TOKENS: {
     PLENTY: {
-      exchangeRate: 3,
+      exchangeRate: 6,
       tokenDecimals: 18,
       contractEnumValue: 0,
-      tokenMapid: undefined,
+      tokenMapid: 195403,
     },
     WRAP: {
-      exchangeRate: 2,
+      exchangeRate: 3,
       tokenDecimals: 8,
       contractEnumValue: 1,
-      tokenMapid: undefined,
+      tokenMapid: 195389,
     }
   },
 
