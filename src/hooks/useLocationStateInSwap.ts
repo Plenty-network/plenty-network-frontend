@@ -77,6 +77,33 @@ export const useLocationStateInSwap = () => {
       console.log("ishu4", tokenOut);
     }
   }, [router]);
+  useEffect(() => {
+    const tokenInFromParam = router.query.from;
+    const tokenOutFromParam = router.query.to;
+    console.log("ishu2", tokenInFromParam, tokenOutFromParam);
+    if (tokenInFromParam) {
+      const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
+
+      if (tokenInDatum) {
+        setTokenIn({
+          name: tokenInDatum.name,
+          image: tokenInDatum.image,
+        });
+      }
+    }
+    console.log("ishu3", tokenIn);
+    if (tokenOutFromParam) {
+      const tokenOutDatum = tokensListConfig.find((token) => token.name === tokenOutFromParam);
+
+      if (tokenOutDatum) {
+        setTokenOut({
+          name: tokenOutDatum.name,
+          image: tokenOutDatum.image,
+        });
+      }
+      console.log("ishu4", tokenOut);
+    }
+  }, []);
 
   return {
     tokenIn,
