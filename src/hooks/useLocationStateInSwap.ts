@@ -24,7 +24,9 @@ export const useLocationStateInSwap = () => {
   const [tokenOut, setTokenOut] = useState({} as tokenParameter);
 
   useEffect(() => {
+    console.log("ishu", tokenIn, tokenOut, router);
     if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
+      console.log("ishu2");
       return;
     }
 
@@ -44,7 +46,7 @@ export const useLocationStateInSwap = () => {
       undefined,
       { shallow: true }
     );
-  }, [tokenIn, tokenOut]);
+  }, [tokenIn.name, tokenOut.name]);
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
       name: token[0],
@@ -56,6 +58,7 @@ export const useLocationStateInSwap = () => {
   }, [tokens]);
 
   useEffect(() => {
+    console.log("ishu3", router);
     const tokenInFromParam = router.query.from;
     const tokenOutFromParam = router.query.to;
 
@@ -63,6 +66,7 @@ export const useLocationStateInSwap = () => {
       const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
 
       if (tokenInDatum) {
+        console.log("ishu4", tokenInDatum);
         setTokenIn({
           name: tokenInDatum.name,
           image: tokenInDatum.image,
@@ -74,6 +78,7 @@ export const useLocationStateInSwap = () => {
       const tokenOutDatum = tokensListConfig.find((token) => token.name === tokenOutFromParam);
 
       if (tokenOutDatum) {
+        console.log("ishu5", tokenOutDatum);
         setTokenOut({
           name: tokenOutDatum.name,
           image: tokenOutDatum.image,
