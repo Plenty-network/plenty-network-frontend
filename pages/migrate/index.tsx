@@ -48,6 +48,7 @@ import { getUserClaimAndVestAmount } from "../../src/api/migrate";
 import { IVestAndClaim } from "../../src/api/migrate/types";
 import { getCompleteUserBalace } from "../../src/api/util/balance";
 import { IAllBalanceResponse } from "../../src/api/util/types";
+import { MigrateToken } from "../../src/config/types";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -339,6 +340,47 @@ function MyPortfolio(props: any) {
       );
     }
   }, [activeSection]);
+  const [showMigrateSwap, setShowMigrateSwap] = useState(true);
+
+  const [showTopBar, setShowTopBar] = useState(false);
+  useEffect(() => {
+    if (
+      (allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() !== 0 ||
+        allBalance.userBalance[MigrateToken.WRAP]?.toNumber() !== 0) &&
+      vestedData.claimableAmount?.toNumber() === 0
+    ) {
+      setShowMigrateSwap(true);
+      setIsClaimVested(false);
+      setShowTopBar(false);
+    } else if (
+      (allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() !== 0 ||
+        allBalance.userBalance[MigrateToken.WRAP]?.toNumber() !== 0) &&
+      vestedData.claimableAmount?.toNumber() !== 0
+    ) {
+      setShowTopBar(true);
+      setShowMigrateSwap(true);
+    } else if (
+      allBalance.userBalance[MigrateToken.PLENTY].toNumber() === 0 &&
+      allBalance.userBalance[MigrateToken.WRAP].toNumber() === 0 &&
+      vestedData.claimableAmount?.toNumber() !== 0
+    ) {
+      setIsClaimVested(true);
+      setShowTopBar(false);
+      setShowMigrateSwap(false);
+    } else if (
+      allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() === 0 &&
+      allBalance.userBalance[MigrateToken.WRAP]?.toNumber() === 0 &&
+      vestedData.claimableAmount?.toNumber() === 0
+    ) {
+      setIsClaimVested(false);
+      setShowTopBar(false);
+      setShowMigrateSwap(true);
+    }
+  }, [
+    allBalance.userBalance[MigrateToken.PLENTY],
+    allBalance.userBalance[MigrateToken.WRAP],
+    vestedData.claimableAmount,
+  ]);
 
   const [isClaimVested, setIsClaimVested] = useState(false);
   return (
@@ -357,7 +399,7 @@ function MyPortfolio(props: any) {
                 <div className=""> {Title}</div>
               )}
               {Tooltip}
-              {!isMobile && (
+              {!isMobile && showTopBar && (
                 <VestedPlyTopbar
                   value={new BigNumber(12)}
                   isLoading={false}
@@ -367,7 +409,7 @@ function MyPortfolio(props: any) {
               )}
             </div>
           </div>
-          {isMobile && (
+          {isMobile && showTopBar && (
             <VestedPlyTopbar
               value={new BigNumber(12)}
               isLoading={false}
@@ -382,7 +424,7 @@ function MyPortfolio(props: any) {
           {activeSection === MyPortfolioSection.Migrate && isClaimVested && (
             <ClaimVested vestedData={vestedData} />
           )}
-          {activeSection === MyPortfolioSection.Migrate && !isClaimVested && <Migrate />}
+          {activeSection === MyPortfolioSection.Migrate && showMigrateSwap && <Migrate />}
         </div>
       </SideBarHOC>
 
