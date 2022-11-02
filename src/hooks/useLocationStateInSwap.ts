@@ -9,16 +9,12 @@ export const useLocationStateInSwap = () => {
   const tokens = useAppSelector((state) => state.config.standard);
   const tokensArray = Object.entries(tokens);
   const router = useRouter();
+  const { query } = useRouter();
+  console.log("ishu100", query);
   const [tokenIn, setTokenIn] = useState<tokenParameter>(
-    router.query.from
-      ? {
-          name: router.query.from.toString(),
-          image: `/assets/Tokens/${router.query.from.toString()}.png`,
-        }
-      : {
-          name: "ctez",
-          image: ctez,
-        }
+    query.from
+      ? { name: query.from.toString(), image: `/assets/Tokens/${query.from.toString()}.png` }
+      : { name: "ctez", image: ctez }
   );
 
   const [tokenOut, setTokenOut] = useState({} as tokenParameter);
