@@ -13,7 +13,10 @@ export const useLocationStateInSwap = () => {
   console.log("ishu100", query);
   const [tokenIn, setTokenIn] = useState<tokenParameter>(
     query.from
-      ? { name: query.from.toString(), image: `/assets/Tokens/${query.from.toString()}.png` }
+      ? {
+          name: query.from.toString(),
+          image: `/assets/Tokens/${query.from.toString()}.png`,
+        }
       : { name: "ctez", image: ctez }
   );
 
@@ -28,9 +31,8 @@ export const useLocationStateInSwap = () => {
         return;
       }
     }
-
     {
-      console.log("ishu22", tokenIn, tokenOut, router);
+      console.log("ishu22", tokenIn, tokenOut, router, query);
       void router.replace(
         {
           pathname: router.pathname,
