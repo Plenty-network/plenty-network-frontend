@@ -22,7 +22,7 @@ export const useLocationStateInSwap = () => {
   const [tokenOut, setTokenOut] = useState({} as tokenParameter);
   useEffect(() => {
     const tokenInFromParam = router.query.from;
-
+    console.log(router.query);
     if (tokenInFromParam) {
       console.log("ishu9", tokenInFromParam);
       const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
