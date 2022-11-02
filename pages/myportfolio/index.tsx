@@ -27,7 +27,7 @@ import { MyPortfolioCardHeader, MyPortfolioHeader } from "../../src/components/P
 import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTable";
 import { getVeNFTsList } from "../../src/api/votes";
 import { IVeNFTData } from "../../src/api/votes/types";
-import { getUserBalanceByRpc } from "../../src/api/util/balance";
+import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 
 import CreateLock from "../../src/components/Votes/CreateLock";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
@@ -95,6 +95,7 @@ import { VestedPlyTopbar } from "../../src/components/Migrate/VestedPlyTopBar";
 import ClaimVested from "../../src/components/Migrate/ClaimVested";
 
 import { useRouter } from "next/router";
+import { IAllBalanceResponse } from "../../src/api/util/types";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -209,6 +210,20 @@ function MyPortfolio(props: any) {
   const statsVotesFetching: boolean = useAppSelector(
     (state) => state.portfolioStatsVotes.votesStatsFetching
   );
+  const [allBalance, setAllBalance] = useState<{
+    success: boolean;
+    userBalance: { [id: string]: BigNumber };
+  }>({ success: false, userBalance: {} });
+  useEffect(() => {
+    setAllBalance({ success: false, userBalance: {} });
+    if (userAddress) {
+      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
+        setAllBalance(response);
+      });
+    } else {
+      setAllBalance({ success: true, userBalance: {} });
+    }
+  }, [userAddress, token]);
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -1726,7 +1741,9 @@ function MyPortfolio(props: any) {
             <div className="border-t border-text-800/[0.5] mt-5"></div>
           )}
 
-          {activeSection === MyPortfolioSection.Migrate && !isClaimVested && <Migrate />}
+          {activeSection === MyPortfolioSection.Migrate && !isClaimVested && (
+            <Migrate allBalance={allBalance} />
+          )}
           {activeSection !== MyPortfolioSection.Migrate && (
             <div>
               <div className="bg-card-50 md:sticky -top-[3px] md:top-0 z-10">
