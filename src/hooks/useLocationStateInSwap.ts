@@ -22,7 +22,7 @@ export const useLocationStateInSwap = () => {
   const [tokenOut, setTokenOut] = useState({} as tokenParameter);
   useEffect(() => {
     const tokenInFromParam = router.query.from;
-    console.log(router.query);
+    console.log("ishu99", router.query);
     if (tokenInFromParam) {
       console.log("ishu9", tokenInFromParam);
       const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
@@ -41,6 +41,27 @@ export const useLocationStateInSwap = () => {
       });
     }
   }, []);
+  useEffect(() => {
+    const tokenInFromParam = router.query.from;
+    console.log("ishu99", router.query);
+    if (tokenInFromParam) {
+      console.log("ishu9", tokenInFromParam);
+      const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
+      console.log("ishu10", tokenInDatum, tokensListConfig);
+
+      if (tokenInDatum) {
+        setTokenIn({
+          name: tokenInDatum.name,
+          image: tokenInDatum.image,
+        });
+      }
+    } else {
+      setTokenIn({
+        name: "ctez",
+        image: ctez,
+      });
+    }
+  }, [router.query.from]);
   useEffect(() => {
     console.log("ishu1", tokenIn, tokenOut);
     if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
