@@ -24,8 +24,8 @@ export const useLocationStateInSwap = () => {
   const [tokenOut, setTokenOut] = useState({} as tokenParameter);
 
   useEffect(() => {
-    if (router.query) {
-      console.log("ishu3", router);
+    if (Object.keys(router.query).length !== 0) {
+      console.log("ishu30", router);
       console.log("ishu", tokenIn, tokenOut, router);
       if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
         console.log("ishu2");
@@ -62,7 +62,7 @@ export const useLocationStateInSwap = () => {
   }, [tokens]);
 
   useEffect(() => {
-    if (router.query) {
+    if (Object.keys(router.query).length !== 0) {
       console.log("ishu3", router);
       const tokenInFromParam = router.query.from;
       const tokenOutFromParam = router.query.to;
