@@ -21,23 +21,24 @@ export const useLocationStateInSwap = () => {
     if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
       return;
     }
-
-    void router.replace(
-      {
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          from: tokenIn && tokenIn.name ? tokenIn.name : null,
-          ...(tokenOut.name
-            ? {
-                to: tokenOut.name,
-              }
-            : {}),
+    setTimeout(() => {
+      void router.replace(
+        {
+          pathname: router.pathname,
+          query: {
+            ...router.query,
+            from: tokenIn && tokenIn.name ? tokenIn.name : null,
+            ...(tokenOut.name
+              ? {
+                  to: tokenOut.name,
+                }
+              : {}),
+          },
         },
-      },
-      undefined,
-      { shallow: true }
-    );
+        undefined,
+        { shallow: true }
+      );
+    }, 500);
   }, [tokenIn, tokenOut]);
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
