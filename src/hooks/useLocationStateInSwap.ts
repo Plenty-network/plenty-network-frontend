@@ -10,13 +10,23 @@ export const useLocationStateInSwap = () => {
   const tokensArray = Object.entries(tokens);
   const router = useRouter();
   const [tokenIn, setTokenIn] = useState<tokenParameter>({} as tokenParameter);
-
+  const tokensListConfig = useMemo(() => {
+    return tokensArray.map((token) => ({
+      name: token[0],
+      image: `/assets/Tokens/${token[1].symbol}.png`,
+      new: token[1].extras?.isNew as boolean,
+      chainType: token[1].extras?.chain as Chain,
+      address: token[1].address,
+    }));
+  }, [tokens]);
   const [tokenOut, setTokenOut] = useState({} as tokenParameter);
   useEffect(() => {
     const tokenInFromParam = router.query.from;
 
     if (tokenInFromParam) {
+      console.log("ishu9", tokenInFromParam);
       const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
+      console.log("ishu10", tokenInDatum, tokensListConfig);
 
       if (tokenInDatum) {
         setTokenIn({
@@ -54,16 +64,6 @@ export const useLocationStateInSwap = () => {
       { shallow: true }
     );
   }, [tokenIn, tokenOut]);
-
-  const tokensListConfig = useMemo(() => {
-    return tokensArray.map((token) => ({
-      name: token[0],
-      image: `/assets/Tokens/${token[1].symbol}.png`,
-      new: token[1].extras?.isNew as boolean,
-      chainType: token[1].extras?.chain as Chain,
-      address: token[1].address,
-    }));
-  }, [tokens]);
 
   useEffect(() => {
     const tokenInFromParam = router.query.from;
