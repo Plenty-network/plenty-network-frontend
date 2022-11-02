@@ -32,24 +32,27 @@ export const useLocationStateInSwap = () => {
         return;
       }
     }
-    console.log("ishu22");
-    void router.replace(
-      {
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          from: tokenIn && tokenIn.name ? tokenIn.name : null,
-          ...(tokenOut.name
-            ? {
-                to: tokenOut.name,
-              }
-            : {}),
+
+    {
+      console.log("ishu22", tokenIn, tokenOut, router);
+      void router.replace(
+        {
+          pathname: router.pathname,
+          query: {
+            ...router.query,
+            from: tokenIn && tokenIn.name ? tokenIn.name : null,
+            ...(tokenOut.name
+              ? {
+                  to: tokenOut.name,
+                }
+              : {}),
+          },
         },
-      },
-      undefined,
-      { shallow: true }
-    );
-    console.log("ishu23", router);
+        undefined,
+        { shallow: true }
+      );
+      console.log("ishu23", router);
+    }
   }, [tokenIn.name, tokenOut.name]);
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
