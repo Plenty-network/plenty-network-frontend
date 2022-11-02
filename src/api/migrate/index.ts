@@ -16,21 +16,11 @@ export const getMigrateExchangeAmount = (
   token: MigrateToken
 ): IMigrateExchange => {
   try {
-    // let tokenOutAmount = new BigNumber(0);
+
     const exchangeRate = Config.EXCHANGE_TOKENS[token]
       ? new BigNumber(Config.EXCHANGE_TOKENS[token].exchangeRate)
       : new BigNumber(0);
     const tokenOutAmount = inputValue.multipliedBy(exchangeRate);
-    /* let exchangeRate = new BigNumber(0);
-    if (token === MigrateToken.PLENTY) {
-      // Update Plenty exchange Rate
-      exchangeRate = new BigNumber(3);
-      tokenOutAmount = inputValue.multipliedBy(exchangeRate);
-    } else {
-      // Update Wrap exchange Rate
-      exchangeRate = new BigNumber(2);
-      tokenOutAmount = inputValue.multipliedBy(exchangeRate);
-    } */
 
     // 50% claimable and 50% vested
     const claimableAmount = tokenOutAmount.dividedBy(2);

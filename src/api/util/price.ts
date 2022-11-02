@@ -179,14 +179,15 @@ export const getTokenPrices = async (): Promise<{
           tokenPrice[Config.WRAPPED_ASSETS[connectedNetwork][x].REF_TOKEN];
       }
     }
-    tokenPrice['ctez'] = ctezPrice.ctezPriceInUSD;
+    // External Price Feeds
+    // tokenPrice['ctez'] = ctezPrice.ctezPriceInUSD;
     tokenPrice['uDEFI'] = uDEFIPrice.uDEFIinUSD;
     // tokenPrice['agEUR.e'] = agEurePrice.agEUReInUSD;
-    tokenPrice['tez'] = xtzPrice;
+    // tokenPrice['tez'] = xtzPrice;
 
     // Hardcoding PLY Price for development
     tokenPrice['PLY'] = 1;
-    
+
     return {
       success: true,
       tokenPrice,

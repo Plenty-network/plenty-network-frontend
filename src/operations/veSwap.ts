@@ -10,7 +10,6 @@ import { BigNumber } from "bignumber.js";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
-import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
 import { MigrateToken } from "../config/types";
 import Config from "../config/config";
 
