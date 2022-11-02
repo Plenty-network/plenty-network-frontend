@@ -9,13 +9,28 @@ export const useLocationStateInSwap = () => {
   const tokens = useAppSelector((state) => state.config.standard);
   const tokensArray = Object.entries(tokens);
   const router = useRouter();
-  const [tokenIn, setTokenIn] = useState<tokenParameter>({
-    name: "ctez",
-    image: ctez,
-  });
+  const [tokenIn, setTokenIn] = useState<tokenParameter>({} as tokenParameter);
 
   const [tokenOut, setTokenOut] = useState({} as tokenParameter);
+  useEffect(() => {
+    const tokenInFromParam = router.query.from;
 
+    if (tokenInFromParam) {
+      const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
+
+      if (tokenInDatum) {
+        setTokenIn({
+          name: tokenInDatum.name,
+          image: tokenInDatum.image,
+        });
+      }
+    } else {
+      setTokenIn({
+        name: "ctez",
+        image: ctez,
+      });
+    }
+  }, []);
   useEffect(() => {
     console.log("ishu1", tokenIn, tokenOut);
     if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
@@ -77,33 +92,6 @@ export const useLocationStateInSwap = () => {
       console.log("ishu4", tokenOut);
     }
   }, [router]);
-  useEffect(() => {
-    const tokenInFromParam = router.query.from;
-    const tokenOutFromParam = router.query.to;
-    console.log("ishu2", tokenInFromParam, tokenOutFromParam);
-    if (tokenInFromParam) {
-      const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
-
-      if (tokenInDatum) {
-        setTokenIn({
-          name: tokenInDatum.name,
-          image: tokenInDatum.image,
-        });
-      }
-    }
-    console.log("ishu3", tokenIn);
-    if (tokenOutFromParam) {
-      const tokenOutDatum = tokensListConfig.find((token) => token.name === tokenOutFromParam);
-
-      if (tokenOutDatum) {
-        setTokenOut({
-          name: tokenOutDatum.name,
-          image: tokenOutDatum.image,
-        });
-      }
-      console.log("ishu4", tokenOut);
-    }
-  }, []);
 
   return {
     tokenIn,
