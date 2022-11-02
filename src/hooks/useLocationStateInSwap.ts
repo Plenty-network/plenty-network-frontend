@@ -24,29 +24,32 @@ export const useLocationStateInSwap = () => {
   const [tokenOut, setTokenOut] = useState({} as tokenParameter);
 
   useEffect(() => {
-    console.log("ishu", tokenIn, tokenOut, router);
-    if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
-      console.log("ishu2");
-      return;
-    }
-    console.log("ishu22");
-    void router.replace(
-      {
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          from: tokenIn && tokenIn.name ? tokenIn.name : null,
-          ...(tokenOut.name
-            ? {
-                to: tokenOut.name,
-              }
-            : {}),
+    if (router.query) {
+      console.log("ishu3", router);
+      console.log("ishu", tokenIn, tokenOut, router);
+      if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
+        console.log("ishu2");
+        return;
+      }
+      console.log("ishu22");
+      void router.replace(
+        {
+          pathname: router.pathname,
+          query: {
+            ...router.query,
+            from: tokenIn && tokenIn.name ? tokenIn.name : null,
+            ...(tokenOut.name
+              ? {
+                  to: tokenOut.name,
+                }
+              : {}),
+          },
         },
-      },
-      undefined,
-      { shallow: true }
-    );
-    console.log("ishu23", router);
+        undefined,
+        { shallow: true }
+      );
+      console.log("ishu23", router);
+    }
   }, [tokenIn.name, tokenOut.name]);
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
@@ -59,34 +62,36 @@ export const useLocationStateInSwap = () => {
   }, [tokens]);
 
   useEffect(() => {
-    console.log("ishu3", router);
-    const tokenInFromParam = router.query.from;
-    const tokenOutFromParam = router.query.to;
+    if (router.query) {
+      console.log("ishu3", router);
+      const tokenInFromParam = router.query.from;
+      const tokenOutFromParam = router.query.to;
 
-    if (tokenInFromParam) {
-      const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
+      if (tokenInFromParam) {
+        const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
 
-      if (tokenInDatum) {
-        console.log("ishu4", tokenInDatum);
-        setTokenIn({
-          name: tokenInDatum.name,
-          image: tokenInDatum.image,
-        });
+        if (tokenInDatum) {
+          console.log("ishu4", tokenInDatum);
+          setTokenIn({
+            name: tokenInDatum.name,
+            image: tokenInDatum.image,
+          });
+        }
       }
-    }
 
-    if (tokenOutFromParam) {
-      const tokenOutDatum = tokensListConfig.find((token) => token.name === tokenOutFromParam);
+      if (tokenOutFromParam) {
+        const tokenOutDatum = tokensListConfig.find((token) => token.name === tokenOutFromParam);
 
-      if (tokenOutDatum) {
-        console.log("ishu5", tokenOutDatum);
-        setTokenOut({
-          name: tokenOutDatum.name,
-          image: tokenOutDatum.image,
-        });
+        if (tokenOutDatum) {
+          console.log("ishu5", tokenOutDatum);
+          setTokenOut({
+            name: tokenOutDatum.name,
+            image: tokenOutDatum.image,
+          });
+        }
       }
+      console.log("ishu6", tokenIn, tokenOut);
     }
-    console.log("ishu6", tokenIn, tokenOut);
   }, [router]);
 
   return {
