@@ -22,7 +22,7 @@ const Config: IConfig = {
   },
   VE_SWAP : {
     mainnet: '',
-    testnet: 'KT1Ba3Sb4KrZrJgXdEN1TLKvzPZ4nsAtZz67',
+    testnet: 'KT1AmKUCCB9VBtx56emgQfx5GA9RR2nGBANK',
   },
   VOTER: {
     mainnet: '',
