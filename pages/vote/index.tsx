@@ -170,7 +170,6 @@ export default function Vote() {
         });
         setSumofVotes(sum);
       });
-      //setVeNFTlist([]);
       if (userAddress) {
         getVeNFTsList(
           userAddress,
@@ -196,7 +195,6 @@ export default function Vote() {
     }
   }, [userAddress, selectedEpoch?.epochNumber, lockOperation]);
   useEffect(() => {
-    //setVeNFTlist([]);
     if (userAddress && lockOperation) {
       getVeNFTsList(
         userAddress,
