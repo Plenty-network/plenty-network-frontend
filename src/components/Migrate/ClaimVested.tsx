@@ -29,6 +29,9 @@ import { Flashtype } from "../FlashScreen";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { getUserClaimAndVestAmount } from "../../api/migrate";
 import { IVestAndClaim } from "../../api/migrate/types";
+import { useCountdown } from "../../hooks/useCountDown";
+import PieChartButton from "../LocksPosition/PieChart";
+import { FIRST_TOKEN_AMOUNT } from "../../constants/localStorage";
 
 interface IMigrateProps {
   vestedData: IVestAndClaim;
@@ -76,11 +79,11 @@ function ClaimVested(props: IMigrateProps) {
     setConfirmPLYPopup(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, props.vestedData.claimableAmount.toFixed(2));
     claim(transactionSubmitModal, resetAllValues, setShowConfirmTransaction, {
       flashType: Flashtype.Info,
       headerText: "Transaction submitted",
-      trailingText: `claim`,
+      trailingText: `Claim of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `,
       linkText: "View in Explorer",
       isLoading: true,
       transactionId: "",
@@ -93,7 +96,7 @@ function ClaimVested(props: IMigrateProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `claim`,
+              trailingText: `Claim of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -122,7 +125,7 @@ function ClaimVested(props: IMigrateProps) {
           setFlashMessage({
             flashType: Flashtype.Rejected,
             headerText: "Rejected",
-            trailingText: `claim`,
+            trailingText: `Claim of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `,
             linkText: "",
             isLoading: true,
             transactionId: "",
@@ -132,12 +135,49 @@ function ClaimVested(props: IMigrateProps) {
       }
     });
   };
+  const [days, hours, minutes, seconds] = useCountdown(
+    props.vestedData?.nextClaim?.isGreaterThan(0)
+      ? props.vestedData?.nextClaim?.toNumber()
+      : Date.now()
+  );
+  const remainingTime = new BigNumber(props.vestedData.nextClaim).minus(Date.now());
+  const totalWaitingTime = new BigNumber(props.vestedData.nextClaim).minus(
+    props.vestedData.lastClaim
+  );
+  const remainingPercentage = remainingTime.multipliedBy(100).dividedBy(totalWaitingTime);
   const ClaimButton = useMemo(() => {
     if (userAddress) {
       return (
-        <Button color="primary" width="w-full" onClick={() => setConfirmPLYPopup(true)}>
-          Confirm
-        </Button>
+        <ToolTip
+          position={Position.bottom}
+          disable={props.vestedData.isClaimable}
+          toolTipChild={
+            <div>
+              <span>{hours} h </span>:<span> {minutes} m </span>:<span> {seconds} s </span>
+            </div>
+          }
+          id="tooltip9"
+        >
+          <div
+            className={clsx(
+              "h-[50px] flex items-center justify-center w-full rounded-xl  font-title3-bold ",
+              props.vestedData.isClaimable
+                ? "bg-primary-500 text-black"
+                : "bg-blue-200 text-blue-300"
+            )}
+            onClick={props.vestedData.isClaimable ? () => setConfirmPLYPopup(true) : () => {}}
+          >
+            Claim
+            {!props.vestedData.isClaimable && (
+              <span className="ml-[6px]">
+                <PieChartButton
+                  violet={100 - Math.floor(Number(remainingPercentage))}
+                  transparent={Math.floor(Number(remainingPercentage))}
+                />
+              </span>
+            )}
+          </div>
+        </ToolTip>
       );
     } else {
       return (
@@ -183,7 +223,7 @@ function ClaimVested(props: IMigrateProps) {
                       "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 "
                     )}
                     placeholder="0.0"
-                    value={props.vestedData.claimableAmount.toString()}
+                    value={props.vestedData.claimableAmount.toFixed(6)}
                   />
                 </div>
               </div>
@@ -232,7 +272,7 @@ function ClaimVested(props: IMigrateProps) {
         <ConfirmTransaction
           show={showConfirmTransaction}
           setShow={setShowConfirmTransaction}
-          content={`claim`}
+          content={`Claim of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `}
         />
       )}
       {showTransactionSubmitModal && (
@@ -244,7 +284,7 @@ function ClaimVested(props: IMigrateProps) {
               ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
               : null
           }
-          content={`claim`}
+          content={`Claim of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `}
         />
       )}
 

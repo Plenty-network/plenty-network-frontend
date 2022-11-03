@@ -32,8 +32,8 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
     return num.toFixed(2);
   }
   const [days, hours, minutes, seconds] = useCountdown(
-    props.vestedData?.nextClaim.isGreaterThan(0)
-      ? props.vestedData.nextClaim.minus(new BigNumber(Date.now())).toNumber()
+    props.vestedData?.nextClaim?.isGreaterThan(0)
+      ? props.vestedData?.nextClaim?.toNumber()
       : Date.now()
   );
 
@@ -100,7 +100,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
                   ? "bg-primary-500 text-black"
                   : "bg-blue-200 text-blue-300"
               )}
-              onClick={() => props.onClick(true)}
+              onClick={props.vestedData.isClaimable ? () => props.onClick(true) : () => {}}
             >
               Claim
               {!props.vestedData.isClaimable && (

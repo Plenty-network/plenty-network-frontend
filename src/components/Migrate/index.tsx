@@ -33,6 +33,7 @@ import { exchange } from "../../operations/veSwap";
 import { Flashtype } from "../FlashScreen";
 import { setFlashMessage } from "../../redux/flashMessage";
 import Config from "../../config/config";
+import { FIRST_TOKEN_AMOUNT, TOKEN_A } from "../../constants/localStorage";
 
 interface IMigrateProps {
   allBalance: {
@@ -159,11 +160,9 @@ function Migrate(props: IMigrateProps) {
     setConfirmMigratePopup(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    console.log(
-      "ishu",
-      tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP,
-      firstTokenAmount
-    );
+
+    localStorage.setItem(TOKEN_A, tokenIn.name);
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, firstTokenAmount);
     exchange(
       tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP,
       new BigNumber(firstTokenAmount),
@@ -174,7 +173,9 @@ function Migrate(props: IMigrateProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `exchange`,
+        trailingText: `Migration of ${localStorage.getItem(
+          FIRST_TOKEN_AMOUNT
+        )} ${localStorage.getItem(TOKEN_A)} confirmed`,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -188,7 +189,9 @@ function Migrate(props: IMigrateProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `exchange`,
+              trailingText: `Migration of ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)}`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -217,7 +220,9 @@ function Migrate(props: IMigrateProps) {
           setFlashMessage({
             flashType: Flashtype.Rejected,
             headerText: "Rejected",
-            trailingText: `exchange`,
+            trailingText: `Migration of ${localStorage.getItem(
+              FIRST_TOKEN_AMOUNT
+            )} ${localStorage.getItem(TOKEN_A)} confirmed`,
             linkText: "",
             isLoading: true,
             transactionId: "",
@@ -390,7 +395,9 @@ function Migrate(props: IMigrateProps) {
         <ConfirmTransaction
           show={showConfirmTransaction}
           setShow={setShowConfirmTransaction}
-          content={`Migrate`}
+          content={`Migration of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+            TOKEN_A
+          )} `}
         />
       )}
       {showTransactionSubmitModal && (
@@ -402,7 +409,9 @@ function Migrate(props: IMigrateProps) {
               ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
               : null
           }
-          content={`Migrate`}
+          content={`Migration of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+            TOKEN_A
+          )} confirmed`}
         />
       )}
       <TokenModalMigrate

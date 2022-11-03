@@ -49,6 +49,7 @@ import { IVestAndClaim } from "../../src/api/migrate/types";
 import { getCompleteUserBalace } from "../../src/api/util/balance";
 import { IAllBalanceResponse } from "../../src/api/util/types";
 import { MigrateToken } from "../../src/config/types";
+import { useCountdown } from "../../src/hooks/useCountDown";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -97,7 +98,7 @@ function MyPortfolio(props: any) {
     } else {
       setAllBalance({ success: true, userBalance: {} });
     }
-  }, [userAddress, token]);
+  }, [userAddress, token, props.operationSuccesful]);
 
   useEffect(() => {
     dispatch(fetchWallet());
@@ -184,6 +185,21 @@ function MyPortfolio(props: any) {
       }
     }
   }, [userAddress, lpTokenPrice, props.operationSuccesful]);
+  const [days, hours, minutes, seconds] = useCountdown(
+    props.vestedData?.nextClaim?.isGreaterThan(0)
+      ? props.vestedData?.nextClaim?.toNumber()
+      : Date.now()
+  );
+  useInterval(() => {
+    if (minutes < 0 || seconds < 0) {
+      if (userAddress) {
+        getUserClaimAndVestAmount(userAddress).then((res) => {
+          console.log(res);
+          setVestedData(res);
+        });
+      }
+    }
+  }, 5000);
   useEffect(() => {
     if (
       userAddress &&
@@ -345,12 +361,6 @@ function MyPortfolio(props: any) {
 
   const [showTopBar, setShowTopBar] = useState(false);
   useEffect(() => {
-    console.log(
-      "ishu",
-      allBalance?.userBalance[MigrateToken.PLENTY]?.toNumber(),
-      allBalance?.userBalance[MigrateToken.WRAP]?.toNumber(),
-      vestedData?.claimableAmount?.toNumber()
-    );
     if (
       (allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() !== 0 ||
         allBalance.userBalance[MigrateToken.WRAP]?.toNumber() !== 0) &&
@@ -366,6 +376,7 @@ function MyPortfolio(props: any) {
     ) {
       setShowTopBar(true);
       setShowMigrateSwap(true);
+      setIsClaimVested(false);
     } else if (
       allBalance.userBalance[MigrateToken.PLENTY].toNumber() === 0 &&
       allBalance.userBalance[MigrateToken.WRAP].toNumber() === 0 &&
@@ -388,6 +399,7 @@ function MyPortfolio(props: any) {
     allBalance.userBalance[MigrateToken.WRAP],
     vestedData.claimableAmount,
     props.operationSuccesful,
+    userAddress,
   ]);
 
   const [isClaimVested, setIsClaimVested] = useState(false);
