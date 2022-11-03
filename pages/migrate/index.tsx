@@ -361,36 +361,41 @@ function MyPortfolio(props: any) {
 
   const [showTopBar, setShowTopBar] = useState(false);
   useEffect(() => {
-    if (
-      (allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() !== 0 ||
-        allBalance.userBalance[MigrateToken.WRAP]?.toNumber() !== 0) &&
-      vestedData.claimableAmount?.toNumber() === 0
-    ) {
-      setShowMigrateSwap(true);
-      setIsClaimVested(false);
-      setShowTopBar(false);
-    } else if (
-      (allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() !== 0 ||
-        allBalance.userBalance[MigrateToken.WRAP]?.toNumber() !== 0) &&
-      vestedData.claimableAmount?.toNumber() !== 0
-    ) {
-      setShowTopBar(true);
-      setShowMigrateSwap(true);
-      setIsClaimVested(false);
-    } else if (
-      allBalance.userBalance[MigrateToken.PLENTY].toNumber() === 0 &&
-      allBalance.userBalance[MigrateToken.WRAP].toNumber() === 0 &&
-      vestedData.claimableAmount?.toNumber() !== 0
-    ) {
-      setIsClaimVested(true);
-      setShowTopBar(false);
-      setShowMigrateSwap(false);
-    } else if (
-      allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() === 0 &&
-      allBalance.userBalance[MigrateToken.WRAP]?.toNumber() === 0 &&
-      vestedData.claimableAmount?.toNumber() === 0
-    ) {
-      setIsClaimVested(false);
+    if (userAddress) {
+      if (
+        (allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() !== 0 ||
+          allBalance.userBalance[MigrateToken.WRAP]?.toNumber() !== 0) &&
+        vestedData.claimableAmount?.toNumber() === 0
+      ) {
+        setShowMigrateSwap(true);
+        setIsClaimVested(false);
+        setShowTopBar(false);
+      } else if (
+        (allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() !== 0 ||
+          allBalance.userBalance[MigrateToken.WRAP]?.toNumber() !== 0) &&
+        vestedData.claimableAmount?.toNumber() !== 0
+      ) {
+        setShowTopBar(true);
+        setShowMigrateSwap(true);
+        setIsClaimVested(false);
+      } else if (
+        allBalance.userBalance[MigrateToken.PLENTY].toNumber() === 0 &&
+        allBalance.userBalance[MigrateToken.WRAP].toNumber() === 0 &&
+        vestedData.claimableAmount?.toNumber() !== 0
+      ) {
+        setIsClaimVested(true);
+        setShowTopBar(false);
+        setShowMigrateSwap(false);
+      } else if (
+        allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() === 0 &&
+        allBalance.userBalance[MigrateToken.WRAP]?.toNumber() === 0 &&
+        vestedData.claimableAmount?.toNumber() === 0
+      ) {
+        setIsClaimVested(false);
+        setShowTopBar(false);
+        setShowMigrateSwap(true);
+      }
+    } else {
       setShowTopBar(false);
       setShowMigrateSwap(true);
     }
