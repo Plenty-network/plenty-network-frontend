@@ -12,7 +12,6 @@ import { fetchWallet } from "../src/redux/wallet/wallet";
 
 const Home: NextPage = () => {
   const token = useAppSelector((state) => state.config.tokens);
-  //const state = useAppSelector((state) => state.epoch);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
