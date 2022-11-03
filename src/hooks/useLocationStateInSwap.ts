@@ -84,36 +84,36 @@ export const useLocationStateInSwap = () => {
     }
   }, [tokenIn.name, tokenOut.name]);
   useEffect(() => {
-    if (Object.keys(router.query).length !== 0) {
-      console.log("ishu3", router);
-      const tokenInFromParam = router.query.from;
-      const tokenOutFromParam = router.query.to;
+    //if (Object.keys(router.query).length !== 0) {
+    console.log("ishu3", router);
+    const tokenInFromParam = router.query.from;
+    const tokenOutFromParam = router.query.to;
 
-      if (tokenInFromParam) {
-        const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
+    if (tokenInFromParam) {
+      const tokenInDatum = tokensListConfig.find((token) => token.name === tokenInFromParam);
 
-        if (tokenInDatum) {
-          console.log("ishu4", tokenInDatum);
-          setTokenIn({
-            name: tokenInDatum.name,
-            image: tokenInDatum.image,
-          });
-        }
+      if (tokenInDatum) {
+        console.log("ishu4", tokenInDatum);
+        setTokenIn({
+          name: tokenInDatum.name,
+          image: tokenInDatum.image,
+        });
       }
-
-      if (tokenOutFromParam) {
-        const tokenOutDatum = tokensListConfig.find((token) => token.name === tokenOutFromParam);
-
-        if (tokenOutDatum) {
-          console.log("ishu5", tokenOutDatum);
-          setTokenOut({
-            name: tokenOutDatum.name,
-            image: tokenOutDatum.image,
-          });
-        }
-      }
-      console.log("ishu6", tokenIn, tokenOut);
     }
+
+    if (tokenOutFromParam) {
+      const tokenOutDatum = tokensListConfig.find((token) => token.name === tokenOutFromParam);
+
+      if (tokenOutDatum) {
+        console.log("ishu5", tokenOutDatum);
+        setTokenOut({
+          name: tokenOutDatum.name,
+          image: tokenOutDatum.image,
+        });
+      }
+    }
+    console.log("ishu6", tokenIn, tokenOut);
+    // }
   }, [router]);
 
   return {
