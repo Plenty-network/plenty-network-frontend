@@ -203,6 +203,15 @@ input[type='number'] {
 .z-index-max-pro {
   z-index: 99999999999;
 }
+.tooltipCustomWithoutBorder{
+  opacity: 0.98 !important;
+  background-color:transparent !important;
+  color: white !important;
+  text-align: left !important;
+  border-radius: 12px !important;
+  box-shadow:  0px 4px 24px rgb(0 0 0 / 40%) !important;
+  padding: 0px 0px !important;
+}
 .tooltipCustom {
   opacity: 0.98 !important;
   background-color: #160d24 !important;

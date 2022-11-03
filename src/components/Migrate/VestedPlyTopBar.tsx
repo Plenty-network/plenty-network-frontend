@@ -10,6 +10,7 @@ import lock from "../../assets/icon/migrate/lock-violet.svg";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IVestedPlyTopbarProps } from "./types";
 import PieChartButton from "../LocksPosition/PieChart";
+import { useCountdown } from "../../hooks/useCountDown";
 
 export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
   const remainingTime = new BigNumber(props.vestedData.nextClaim).minus(Date.now());
@@ -30,6 +31,12 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
 
     return num.toFixed(2);
   }
+  const [days, hours, minutes, seconds] = useCountdown(
+    props.vestedData?.nextClaim.isGreaterThan(0)
+      ? props.vestedData.nextClaim.minus(new BigNumber(Date.now())).toNumber()
+      : Date.now()
+  );
+
   return (
     <>
       <div
@@ -44,12 +51,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
 
             <p className="text-white font-body3 ">Vested PLY</p>
             <p className="relative top-px">
-              <ToolTip
-                toolTipChild={
-                  <div className="w-[200px] md:w-[280px]">{props.value.toNumber()}</div>
-                }
-                id="tooltip8"
-              >
+              <ToolTip disable={true} id="tooltip8">
                 <Image alt={"alt"} src={info} />
               </ToolTip>
             </p>
@@ -58,7 +60,17 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
             {props.vestedData.claimableAmount === undefined ? (
               <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
             ) : (
-              props.vestedData?.claimableAmount?.toFixed(2)
+              <ToolTip
+                position={Position.top}
+                message={props.vestedData?.claimableAmount?.toFixed(6)}
+                id="tooltip9"
+              >
+                {Number(props.vestedData?.claimableAmount) > 0
+                  ? props.vestedData?.claimableAmount.isLessThan(0.01)
+                    ? "<0.01"
+                    : nFormatter(props.vestedData?.claimableAmount)
+                  : "0"}
+              </ToolTip>
             )}
 
             <p className="font-title2-normal text-border-400 ml-1 mb-px">PLY</p>
@@ -71,25 +83,36 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
           </div>
         </p>
         <p className="ml-auto">
-          <div
-            className={clsx(
-              "h-[50px] flex items-center justify-center w-[148px] rounded-xl  font-title3-bold ",
-              props.vestedData.isClaimable
-                ? "bg-primary-500 text-black"
-                : "bg-blue-200 text-blue-300"
-            )}
-            onClick={() => props.onClick(true)}
+          <ToolTip
+            position={Position.bottom}
+            disable={props.vestedData.isClaimable}
+            toolTipChild={
+              <div>
+                <span>{hours} h </span>:<span> {minutes} m </span>:<span> {seconds} s </span>
+              </div>
+            }
+            id="tooltip9"
           >
-            Claim
-            {!props.vestedData.isClaimable && (
-              <span className="ml-[6px]">
-                <PieChartButton
-                  violet={100 - Number(remainingPercentage)}
-                  transparent={Number(remainingPercentage)}
-                />
-              </span>
-            )}
-          </div>
+            <div
+              className={clsx(
+                "h-[50px] flex items-center justify-center w-[148px] rounded-xl  font-title3-bold ",
+                props.vestedData.isClaimable
+                  ? "bg-primary-500 text-black"
+                  : "bg-blue-200 text-blue-300"
+              )}
+              onClick={() => props.onClick(true)}
+            >
+              Claim
+              {!props.vestedData.isClaimable && (
+                <span className="ml-[6px]">
+                  <PieChartButton
+                    violet={100 - Math.floor(Number(remainingPercentage))}
+                    transparent={Math.floor(Number(remainingPercentage))}
+                  />
+                </span>
+              )}
+            </div>
+          </ToolTip>
         </p>
       </div>
     </>
