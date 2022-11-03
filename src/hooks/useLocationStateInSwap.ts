@@ -22,7 +22,12 @@ export const useLocationStateInSwap = () => {
   // );
   // const d = router.asPath.slice(router.asPath.lastIndexOf("=") + 1, router.asPath.length);
   // console.log("ishu11", r, d);
-  console.log("ishu100", router.asPath.indexOf("="));
+  console.log(
+    "ishu100",
+    router.asPath.indexOf("=") !== router.asPath.lastIndexOf("=")
+      ? router.asPath.slice(router.asPath.lastIndexOf("=") + 1, router.asPath.length)
+      : "haha"
+  );
   const [tokenIn, setTokenIn] = useState<tokenParameter>(
     router.asPath.indexOf("=") >= 0
       ? {
@@ -42,7 +47,18 @@ export const useLocationStateInSwap = () => {
       : { name: "ctez", image: ctez }
   );
 
-  const [tokenOut, setTokenOut] = useState({} as tokenParameter);
+  const [tokenOut, setTokenOut] = useState(
+    router.asPath.indexOf("=") !== router.asPath.lastIndexOf("=")
+      ? {
+          name: router.asPath
+            .slice(router.asPath.lastIndexOf("=") + 1, router.asPath.length)
+            .toString(),
+          image: `/assets/Tokens/${router.asPath
+            .slice(router.asPath.lastIndexOf("=") + 1, router.asPath.length)
+            .toString()}.png`,
+        }
+      : ({} as tokenParameter)
+  );
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
       name: token[0],
