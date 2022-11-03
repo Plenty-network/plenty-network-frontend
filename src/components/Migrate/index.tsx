@@ -269,7 +269,7 @@ function Migrate(props: IMigrateProps) {
               />
             </div>
             <div className="flex-auto my-3 ">
-              <div className="text-right font-body1 text-text-400">YOU PAY</div>
+              <div className="text-right font-body1 text-text-400 pt-2">YOU PAY</div>
               <div>
                 <input
                   type="text"
@@ -285,7 +285,7 @@ function Migrate(props: IMigrateProps) {
               </div>
             </div>
           </div>
-          <div className="flex -mt-[12px]">
+          <div className="flex -mt-[20px]">
             <div className="text-left cursor-pointer" onClick={onClickAmount}>
               <span className="text-text-600 font-body3">Balance:</span>{" "}
               <span className="font-body4 text-primary-500 ">
@@ -305,12 +305,12 @@ function Migrate(props: IMigrateProps) {
                 )}
               </span>
             </div>
-            <div className="text-right ml-auto font-body2 text-text-400">
+            {/* <div className="text-right ml-auto font-body2 text-text-400">
               ~$
               {firstTokenAmount && tokenPrice[tokenIn.name]
                 ? Number(Number(firstTokenAmount) * Number(tokenPrice[tokenIn.name])).toFixed(2)
                 : "0.00"}
-            </div>
+            </div> */}
           </div>
         </div>
         {errorMessage !== "" && (
@@ -333,8 +333,8 @@ function Migrate(props: IMigrateProps) {
                   isArrow={true}
                 />
               </div>
-              <div className=" my-3 flex-auto">
-                <div className="text-right font-body1 text-text-400">YOU RECEIVE</div>
+              <div className=" my-3 flex-auto ">
+                <div className="text-right font-body1 text-text-400 pt-2">YOU RECEIVE</div>
                 <div>
                   <input
                     type="text"
@@ -348,7 +348,7 @@ function Migrate(props: IMigrateProps) {
                 </div>
               </div>
             </div>
-            <div className="flex -mt-[12px]">
+            <div className="flex -mt-[17px]">
               <div className="text-left flex">
                 <span className="font-body3 text-text-500">1 {tokenIn.name} =</span>
                 <span className="font-body4 text-text-250 ml-1">
@@ -358,7 +358,7 @@ function Migrate(props: IMigrateProps) {
                   PLY
                 </span>
               </div>
-              <div className="text-right ml-auto font-body2 text-text-400 flex">
+              {/* <div className="text-right ml-auto font-body2 text-text-400 flex">
                 {exchangeRes.vestedAmount ? (
                   <>
                     <span className="text-white mr-1">
@@ -372,7 +372,7 @@ function Migrate(props: IMigrateProps) {
                 ) : (
                   "--"
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
 
