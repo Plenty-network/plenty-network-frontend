@@ -54,34 +54,34 @@ export const useLocationStateInSwap = () => {
   }, [tokens]);
 
   useEffect(() => {
-    if (Object.keys(router.query).length !== 0) {
-      console.log("ishu30", router);
-      console.log("ishu", tokenIn, tokenOut, router);
-      if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
-        console.log("ishu2");
-        return;
-      }
+    // if (Object.keys(router.query).length !== 0) {
+    console.log("ishu30", router);
+    console.log("ishu", tokenIn, tokenOut, router);
+    if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
+      console.log("ishu2");
+      return;
     }
-    {
-      console.log("ishu22", tokenIn, tokenOut, router, query);
-      void router.replace(
-        {
-          pathname: router.pathname,
-          query: {
-            ...router.query,
-            from: tokenIn && tokenIn.name ? tokenIn.name : null,
-            ...(tokenOut.name
-              ? {
-                  to: tokenOut.name,
-                }
-              : {}),
-          },
+    // }
+    // {
+    console.log("ishu22", tokenIn, tokenOut, router, query);
+    void router.replace(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          from: tokenIn && tokenIn.name ? tokenIn.name : null,
+          ...(tokenOut.name
+            ? {
+                to: tokenOut.name,
+              }
+            : {}),
         },
-        undefined,
-        { shallow: true }
-      );
-      console.log("ishu23", router);
-    }
+      },
+      undefined,
+      { shallow: true }
+    );
+    console.log("ishu23", router);
+    // }
   }, [tokenIn.name, tokenOut.name]);
   useEffect(() => {
     //if (Object.keys(router.query).length !== 0) {
