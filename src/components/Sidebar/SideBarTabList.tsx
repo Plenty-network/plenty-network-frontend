@@ -24,18 +24,18 @@ export function SingleSideBar(props: ISingleSideBarProps) {
   if (props.pathName) {
     return (
       <Link className={`md:flex w-full flex-col ${props?.className}`} href={props.pathName}>
-        <ToolTip
-          position={Position.bottom}
-          disable={props.isToolTip ? false : true}
-          toolTipChild={
-            <TooltipViolet
-              rate1={`1 WRAP = ${Config.EXCHANGE_TOKENS.WRAP.exchangeRate} PLY`}
-              rate2={`1 PLENTY = ${Config.EXCHANGE_TOKENS.PLENTY.exchangeRate} PLY`}
-            />
-          }
-          type={TooltipType.withoutBorder}
-        >
-          <a target={props.openNewPage ? "_blank" : ""} rel="noopener noreferrer">
+        <a target={props.openNewPage ? "_blank" : ""} rel="noopener noreferrer">
+          <ToolTip
+            position={Position.bottom}
+            disable={props.isToolTip ? false : true}
+            toolTipChild={
+              <TooltipViolet
+                rate1={`1 WRAP = ${Config.EXCHANGE_TOKENS.WRAP.exchangeRate} PLY`}
+                rate2={`1 PLENTY = ${Config.EXCHANGE_TOKENS.PLENTY.exchangeRate} PLY`}
+              />
+            }
+            type={TooltipType.withoutBorder}
+          >
             <div
               className={`flex w-full items-center justify-between h-[50px] ${
                 props.isActive ? "sideNavactive text-white" : "text-text-250"
@@ -75,9 +75,9 @@ export function SingleSideBar(props: ISingleSideBarProps) {
                   width={"11px"}
                 />
               )}
-            </div>
-          </a>
-        </ToolTip>
+            </div>{" "}
+          </ToolTip>
+        </a>
       </Link>
     );
   }

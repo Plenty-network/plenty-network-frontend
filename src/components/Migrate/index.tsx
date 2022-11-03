@@ -238,11 +238,11 @@ function Migrate(props: IMigrateProps) {
         <div className="flex  border border-text-800 bg-card-500 h-[48px] items-center  px-5 md:rounded-2xl gap-1.5 md:gap-2.5 md:w-[410px]">
           <Image src={exchange1} />
           <span className="font-body1">Exchange rate:</span>
-          <span className="font-body4">
+          <span className="md:font-body4 font-body2">
             1 WRAP = {Config.EXCHANGE_TOKENS.WRAP.exchangeRate} PLY
           </span>
           <span className="border-r border-text-250 h-[18px] w-px"></span>
-          <span className="font-body4">
+          <span className="md:font-body4 font-body2">
             1 PLENTY = {Config.EXCHANGE_TOKENS.PLENTY.exchangeRate} PLY
           </span>
         </div>
@@ -364,7 +364,7 @@ function Migrate(props: IMigrateProps) {
                   PLY
                 </span>
               </div>
-              {/* <div className="text-right ml-auto font-body2 text-text-400 flex">
+              <div className="text-right ml-auto font-body2 text-text-400 flex">
                 {exchangeRes.vestedAmount ? (
                   <>
                     <span className="text-white mr-1">
@@ -378,7 +378,7 @@ function Migrate(props: IMigrateProps) {
                 ) : (
                   "--"
                 )}
-              </div> */}
+              </div>
             </div>
           </div>
 
