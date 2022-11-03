@@ -28,22 +28,41 @@ export const useLocationStateInSwap = () => {
       ? router.asPath.slice(router.asPath.lastIndexOf("=") + 1, router.asPath.length)
       : "haha"
   );
+  console.log(
+    "ishu101",
+    router.asPath.indexOf("="),
+    router.asPath.slice(
+      router.asPath.indexOf("=") + 1,
+      router.asPath.indexOf("&") === -1 ? router.asPath.length : router.asPath.indexOf("&")
+    )
+  );
   const [tokenIn, setTokenIn] = useState<tokenParameter>(
     router.asPath.indexOf("=") >= 0
-      ? {
-          name: router.asPath
-            .slice(
-              router.asPath.indexOf("=") + 1,
-              router.asPath.indexOf("&") === -1 ? router.asPath.length : router.asPath.indexOf("&")
-            )
-            .toString(),
-          image: `/assets/Tokens/${router.asPath
-            .slice(
-              router.asPath.indexOf("=") + 1,
-              router.asPath.indexOf("&") === -1 ? router.asPath.length : router.asPath.indexOf("&")
-            )
-            .toString()}.png`,
-        }
+      ? router.asPath
+          .slice(
+            router.asPath.indexOf("=") + 1,
+            router.asPath.indexOf("&") === -1 ? router.asPath.length : router.asPath.indexOf("&")
+          )
+          .toString() === ""
+        ? ({} as tokenParameter)
+        : {
+            name: router.asPath
+              .slice(
+                router.asPath.indexOf("=") + 1,
+                router.asPath.indexOf("&") === -1
+                  ? router.asPath.length
+                  : router.asPath.indexOf("&")
+              )
+              .toString(),
+            image: `/assets/Tokens/${router.asPath
+              .slice(
+                router.asPath.indexOf("=") + 1,
+                router.asPath.indexOf("&") === -1
+                  ? router.asPath.length
+                  : router.asPath.indexOf("&")
+              )
+              .toString()}.png`,
+          }
       : { name: "ctez", image: ctez }
   );
 
