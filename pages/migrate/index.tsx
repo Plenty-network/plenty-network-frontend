@@ -170,6 +170,7 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (userAddress) {
       getUserClaimAndVestAmount(userAddress).then((res) => {
+        console.log(res);
         setVestedData(res);
       });
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
@@ -182,7 +183,7 @@ function MyPortfolio(props: any) {
         );
       }
     }
-  }, [userAddress, lpTokenPrice]);
+  }, [userAddress, lpTokenPrice, props.operationSuccesful]);
   useEffect(() => {
     if (
       userAddress &&
@@ -344,6 +345,12 @@ function MyPortfolio(props: any) {
 
   const [showTopBar, setShowTopBar] = useState(false);
   useEffect(() => {
+    console.log(
+      "ishu",
+      allBalance?.userBalance[MigrateToken.PLENTY]?.toNumber(),
+      allBalance?.userBalance[MigrateToken.WRAP]?.toNumber(),
+      vestedData?.claimableAmount?.toNumber()
+    );
     if (
       (allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() !== 0 ||
         allBalance.userBalance[MigrateToken.WRAP]?.toNumber() !== 0) &&
@@ -380,6 +387,7 @@ function MyPortfolio(props: any) {
     allBalance.userBalance[MigrateToken.PLENTY],
     allBalance.userBalance[MigrateToken.WRAP],
     vestedData.claimableAmount,
+    props.operationSuccesful,
   ]);
 
   const [isClaimVested, setIsClaimVested] = useState(false);

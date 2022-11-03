@@ -167,6 +167,7 @@ function Migrate(props: IMigrateProps) {
     exchange(
       tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP,
       new BigNumber(firstTokenAmount),
+      userAddress,
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
