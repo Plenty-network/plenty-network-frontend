@@ -22,12 +22,9 @@ export const useLocationStateInSwap = () => {
   // );
   // const d = router.asPath.slice(router.asPath.lastIndexOf("=") + 1, router.asPath.length);
   // console.log("ishu11", r, d);
-  // console.log("ishu100", query);
+  console.log("ishu100", router.asPath.indexOf("="));
   const [tokenIn, setTokenIn] = useState<tokenParameter>(
-    router.asPath.slice(
-      router.asPath.indexOf("=") + 1,
-      router.asPath.indexOf("&") === -1 ? router.asPath.length : router.asPath.indexOf("&")
-    )
+    router.asPath.indexOf("=") >= 0
       ? {
           name: router.asPath
             .slice(
