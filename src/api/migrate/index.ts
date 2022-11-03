@@ -64,13 +64,10 @@ export const getUserClaimAndVestAmount = async (userAddress: string): Promise<IV
     const date = new Date(ledgerData.last_claim);
     ledgerData.last_claim = Math.floor(date.getTime()/1000);
 
-
     const vested__ = BigNumber.min(
       new BigNumber(ledgerData.balance),
-      (new BigNumber(ledgerData.release_rate).multipliedBy(Math.floor(Date.now() / 1000)).minus(new BigNumber(ledgerData.last_claim)))
+      (new BigNumber(ledgerData.release_rate).multipliedBy(new BigNumber((Math.floor(Date.now() / 1000))).minus(new BigNumber(ledgerData.last_claim))))
     );
-
-    console.log(vested__.toString());
 
     const claimableAmount = vested__.plus(new BigNumber(ledgerData.vested)).dividedBy(PLY_DECIMAL_MULTIPLIER);
     const vestedAmount = new BigNumber(new BigNumber(ledgerData.balance).minus(vested__)).dividedBy(
