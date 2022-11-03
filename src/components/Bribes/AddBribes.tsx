@@ -12,7 +12,7 @@ import { IAddBribes } from "./types";
 import { EpochDropdown } from "./EpochDropdown";
 import clsx from "clsx";
 import TokenDropdown from "../TokenDropdown/TokenDropdown";
-import { Chain } from "../../config/types";
+import { Chain, MigrateToken } from "../../config/types";
 import TokenModal from "./TokenModal";
 import { BigNumber } from "bignumber.js";
 import { IEpochDataResponse, IEpochListObject } from "../../api/util/types";
@@ -469,9 +469,12 @@ function AddBribes(props: IAddBribes) {
         </PopUpModal>
       ) : null}
       <TokenModal
-        tokens={tokensListConfig.sort(
-          (a, b) => Number(props.allBalance[b.name]) - Number(props.allBalance[a.name])
-        )}
+        tokens={tokensListConfig.filter((e: any) => {
+          return (
+            e.name.toLowerCase() !== MigrateToken.PLENTY.toLowerCase() &&
+            e.name.toLowerCase() !== MigrateToken.WRAP.toLowerCase()
+          );
+        })}
         show={swapModalShow}
         allBalance={props.allBalance}
         selectToken={selectToken}

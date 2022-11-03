@@ -454,7 +454,9 @@ function SwapTab(props: ISwapTabProps) {
       )}
       <div
         className=" -mt-[25px] cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-2xl "
-        onClick={() => props.changeTokenLocation()}
+        onClick={
+          Object.keys(props.tokenOut).length !== 0 ? () => props.changeTokenLocation() : () => {}
+        }
       >
         <div className="p-[11.5px] bg-card-500 rounded-2xl  w-[68px] h-[68px]">
           <div className="bg-primary-500 p-2  w-[46px] h-[46px] rounded-lg ">
