@@ -5,7 +5,6 @@ import clsx from "clsx";
 import arrow from "../../assets/icon/common/vector.svg";
 import Rewards from "../../assets/icon/myPortfolio/rewards.svg";
 
-import migrateViolet from "../../assets/icon/migrate/migrateGrey.svg";
 import Positions from "../../assets/icon/myPortfolio/positions.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { MyPortfolioSection } from "../../../pages/myportfolio";
@@ -51,10 +50,8 @@ export function PortfolioDropdown(props: IDropdownProps) {
               <span className="relative top-1">
                 {props.selectedText === MyPortfolioSection.Positions ? (
                   <Image alt={"alt"} src={Positions} />
-                ) : props.selectedText === MyPortfolioSection.Rewards ? (
-                  <Image alt={"alt"} src={Rewards} />
                 ) : (
-                  <Image alt={"alt"} src={migrateViolet} />
+                  <Image alt={"alt"} src={Rewards} />
                 )}
               </span>
             </span>
@@ -88,9 +85,7 @@ export function PortfolioDropdown(props: IDropdownProps) {
           props.onClick(
             props.text === MyPortfolioSection.Positions
               ? MyPortfolioSection.Positions
-              : props.text === MyPortfolioSection.Rewards
-              ? MyPortfolioSection.Rewards
-              : MyPortfolioSection.Migrate
+              : MyPortfolioSection.Rewards
           );
           setIsDropDownActive(false);
         }}
@@ -98,10 +93,8 @@ export function PortfolioDropdown(props: IDropdownProps) {
         {props.text}
         {props.text === MyPortfolioSection.Positions ? (
           <Image alt={"alt"} src={Positions} />
-        ) : props.text === MyPortfolioSection.Rewards ? (
-          <Image alt={"alt"} src={Rewards} />
         ) : (
-          <Image alt={"alt"} src={migrateViolet} />
+          <Image alt={"alt"} src={Rewards} />
         )}
       </p>
     );

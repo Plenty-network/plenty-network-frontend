@@ -77,7 +77,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
             <p className="relative top-1 ml-1">
               <Image alt={"alt"} src={lock} />
             </p>
-            <p className="font-body3  text-text-250 ml-1 mb-px">
+            <p className="font-body3  text-text-250 ml-1 mb-0.5">
               {props.vestedData?.vestedAmount?.toFixed(2)} PLY
             </p>
           </div>

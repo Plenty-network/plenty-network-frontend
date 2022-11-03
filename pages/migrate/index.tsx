@@ -15,30 +15,15 @@ import { getTotalVotingPower } from "../../src/redux/pools";
 import { getEpochData } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
 
-import rewardsViolet from "../../src/assets/icon/myPortfolio/rewardsViolet.svg";
-import positionsViolet from "../../src/assets/icon/myPortfolio/positionsViolet.svg";
-import migrateViolet from "../../src/assets/icon/migrate/migrateViolet.svg";
-
-import migrateGrey from "../../src/assets/icon/migrate/migrateGrey.svg";
-import rewards from "../../src/assets/icon/myPortfolio/rewards.svg";
-import position from "../../src/assets/icon/myPortfolio/positions.svg";
-
-import clsx from "clsx";
-import { setMyPortfolioSection } from "../../src/redux/walletLoading";
-
 import {
   fetchAllLocksRewardsData,
   fetchAllRewardsOperationsData,
   fetchUnclaimedInflationData,
 } from "../../src/redux/myPortfolio/rewards";
 import { API_RE_ATTAMPT_DELAY } from "../../src/constants/global";
-import { USERADDRESS } from "../../src/constants/localStorage";
-import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
 import { fetchTvlStatsData } from "../../src/redux/myPortfolio/tvl";
 import { fetchVotesStatsData } from "../../src/redux/myPortfolio/votesStats";
-import { VideoModal } from "../../src/components/Modal/videoModal";
 import { isMobile } from "react-device-detect";
-import { PortfolioDropdown } from "../../src/components/PortfolioSection";
 import Migrate from "../../src/components/Migrate";
 import { VestedPlyTopbar } from "../../src/components/Migrate/VestedPlyTopBar";
 import ClaimVested from "../../src/components/Migrate/ClaimVested";
@@ -51,17 +36,7 @@ import { IAllBalanceResponse } from "../../src/api/util/types";
 import { MigrateToken } from "../../src/config/types";
 import { useCountdown } from "../../src/hooks/useCountDown";
 
-export enum MyPortfolioSection {
-  Positions = "Positions",
-  Rewards = "Rewards",
-  Migrate = "Migrate",
-}
-function MyPortfolio(props: any) {
-  const section = useAppSelector((state) => state.walletLoading.activePortfolio);
-  const [activeSection, setActiveSection] = React.useState<MyPortfolioSection>(
-    MyPortfolioSection.Migrate
-  );
-
+function MigrateMain(props: any) {
   const userAddress = useAppSelector((state) => state.wallet.address);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -96,7 +71,7 @@ function MyPortfolio(props: any) {
         setAllBalance(response);
       });
     } else {
-      setAllBalance({ success: true, userBalance: {} });
+      setAllBalance({ success: false, userBalance: {} });
     }
   }, [userAddress, token, props.operationSuccesful]);
 
@@ -171,7 +146,6 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (userAddress) {
       getUserClaimAndVestAmount(userAddress).then((res) => {
-        console.log(res);
         setVestedData(res);
       });
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
@@ -194,7 +168,6 @@ function MyPortfolio(props: any) {
     if (minutes < 0 || seconds < 0) {
       if (userAddress) {
         getUserClaimAndVestAmount(userAddress).then((res) => {
-          console.log(res);
           setVestedData(res);
         });
       }
@@ -232,131 +205,6 @@ function MyPortfolio(props: any) {
     }
   }, [statsVotesError]);
 
-  useEffect(() => {
-    if (userAddress) {
-      console.log(`User Add Changed - ${userAddress}`);
-      if (!(localStorage.getItem(USERADDRESS) === userAddress)) {
-        localStorage.setItem(USERADDRESS, userAddress);
-      }
-    }
-  }, [userAddress]);
-  const [showVideoModal, setShowVideoModal] = React.useState(false);
-  const Title = useMemo(() => {
-    return (
-      <div className="flex gap-1 items-center">
-        <p
-          className={clsx(
-            " font-title3 cursor-pointer box-border py-3 w-[147px] flex items-center justify-center  gap-1",
-            activeSection === MyPortfolioSection.Positions
-              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6] rounded-l-lg"
-              : "text-text-250 bg-muted-700 rounded-l-lg"
-          )}
-          onClick={() => {
-            setActiveSection(MyPortfolioSection.Positions);
-            dispatch(setMyPortfolioSection(MyPortfolioSection.Positions));
-          }}
-        >
-          Positions{" "}
-          {activeSection === MyPortfolioSection.Positions ? (
-            <Image alt={"alt"} src={positionsViolet} />
-          ) : (
-            <Image alt={"alt"} src={position} />
-          )}
-        </p>
-        <p
-          className={clsx(
-            " cursor-pointer font-title3 py-3 box-border  w-[147px] flex items-center justify-center  gap-1",
-            activeSection === MyPortfolioSection.Rewards
-              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6]"
-              : "text-text-250 bg-muted-700 "
-          )}
-          onClick={() => {
-            setActiveSection(MyPortfolioSection.Rewards);
-            dispatch(setMyPortfolioSection(MyPortfolioSection.Rewards));
-          }}
-        >
-          Rewards
-          {activeSection === MyPortfolioSection.Rewards ? (
-            <Image alt={"alt"} src={rewardsViolet} />
-          ) : (
-            <Image alt={"alt"} src={rewards} />
-          )}
-        </p>
-        <p
-          className={clsx(
-            " font-title3 cursor-pointer box-border py-3 w-[147px] flex items-center justify-center  gap-1",
-            activeSection === MyPortfolioSection.Migrate
-              ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6] rounded-r-lg"
-              : "text-text-250 bg-muted-700 rounded-r-lg"
-          )}
-          onClick={() => {
-            setActiveSection(MyPortfolioSection.Migrate);
-            dispatch(setMyPortfolioSection(MyPortfolioSection.Migrate));
-          }}
-        >
-          Migrate{" "}
-          {activeSection === MyPortfolioSection.Migrate ? (
-            <Image alt={"alt"} src={migrateViolet} />
-          ) : (
-            <Image alt={"alt"} src={migrateGrey} />
-          )}
-        </p>
-      </div>
-    );
-  }, [activeSection]);
-
-  const Tooltip = useMemo(() => {
-    return (
-      <p className="ml-2">
-        <ToolTip
-          classNameToolTipContainer={isMobile ? `playIconTooltip-left` : `playIconTooltip-right`}
-          position={isMobile ? Position.bottom : Position.right}
-          toolTipChild={
-            props.toolTipContent ? (
-              <p className="">{props.toolTipContent}</p>
-            ) : (
-              <p className="w-[200px] md:min-w-[320px]">
-                Watch how to add liquidity, stake, and earn PLY
-              </p>
-            )
-          }
-          classNameAncorToolTip="pushtoCenter"
-          isShowInnitially={
-            userAddress !== null && localStorage.getItem(USERADDRESS) !== userAddress
-          }
-        >
-          <Image
-            src={playIcon}
-            onClick={() => setShowVideoModal(true)}
-            height={"28px"}
-            width={"28px"}
-            className="cursor-pointer hover:opacity-90"
-          />
-        </ToolTip>
-      </p>
-    );
-  }, []);
-
-  const router = useRouter();
-  useEffect(() => {
-    if (activeSection === MyPortfolioSection.Migrate) {
-      void router.replace(
-        {
-          pathname: "/migrate",
-        },
-        undefined,
-        { shallow: true }
-      );
-    } else {
-      void router.replace(
-        {
-          pathname: "/myportfolio",
-        },
-        undefined,
-        { shallow: true }
-      );
-    }
-  }, [activeSection]);
   const [showMigrateSwap, setShowMigrateSwap] = useState(true);
 
   const [showTopBar, setShowTopBar] = useState(false);
@@ -413,17 +261,7 @@ function MyPortfolio(props: any) {
       <SideBarHOC>
         <div>
           <div className="   ">
-            <div className="flex items-center bg-background-200 h-[97px] border-b border-text-800/[0.5] md:pl-[23px] md:pr-0 px-2">
-              {isMobile ? (
-                <PortfolioDropdown
-                  Options={["Positions", "Rewards", "Migrate"]}
-                  onClick={setActiveSection}
-                  selectedText={activeSection}
-                />
-              ) : (
-                <div className=""> {Title}</div>
-              )}
-              {Tooltip}
+            <div className="flex items-center h-[97px]  md:pl-[23px] md:pr-0 px-2">
               {!isMobile && showTopBar && (
                 <VestedPlyTopbar
                   value={new BigNumber(12)}
@@ -443,24 +281,15 @@ function MyPortfolio(props: any) {
             />
           )}
 
-          {activeSection !== MyPortfolioSection.Migrate && (
-            <div className="border-t border-text-800/[0.5] mt-5"></div>
-          )}
-          {activeSection === MyPortfolioSection.Migrate && isClaimVested && (
-            <ClaimVested vestedData={vestedData} />
-          )}
-          {activeSection === MyPortfolioSection.Migrate && showMigrateSwap && (
-            <Migrate allBalance={allBalance} />
-          )}
+          {isClaimVested && <ClaimVested vestedData={vestedData} />}
+          {showMigrateSwap && <Migrate allBalance={allBalance} />}
         </div>
       </SideBarHOC>
-
-      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"UXBs3vi26_A"} />}
     </>
   );
 }
 
-MyPortfolio.propTypes = {
+MigrateMain.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   operationSuccesful: PropTypes.bool.isRequired,
 };
@@ -474,4 +303,4 @@ function mapStateToProps(
   };
 }
 
-export default connect(mapStateToProps)(MyPortfolio);
+export default connect(mapStateToProps)(MigrateMain);

@@ -14,10 +14,7 @@ import ply from "../../assets/Tokens/ply.png";
 import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
 import { AppDispatch, store, useAppDispatch, useAppSelector } from "../../redux";
-import { setLoading } from "../../redux/isLoading/action";
 import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
-import { getCompleteUserBalace } from "../../api/util/balance";
-import { IAllBalanceResponse } from "../../api/util/types";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { MigrateTokens } from "../../constants/MigrateToken";
@@ -340,7 +337,7 @@ function Migrate(props: IMigrateProps) {
                 />
               </div>
               <div className=" my-3 flex-auto ">
-                <div className="text-right font-body1 text-text-400 pt-2">YOU RECEIVE</div>
+                <div className="text-right font-body1 text-text-400 ">YOU RECEIVE</div>
                 <div>
                   <input
                     type="text"
@@ -354,7 +351,7 @@ function Migrate(props: IMigrateProps) {
                 </div>
               </div>
             </div>
-            <div className="flex -mt-[17px]">
+            <div className="flex -mt-[12px]">
               <div className="text-left flex">
                 <span className="font-body3 text-text-500">1 {tokenIn.name} =</span>
                 <span className="font-body4 text-text-250 ml-1">
@@ -386,9 +383,8 @@ function Migrate(props: IMigrateProps) {
         </div>
       </div>
       <div className="font-body2 text-text-250 mt-4 mx-2 md:mx-auto md:w-[568px] text-center mb-5">
-        Tip: Convert PLENTY/WRAP to PLY. By staking PLY, you’re earning the usual rewards from
-        vePLY, plus a share of 10% of the LPs’ boosted PLY earnings, and bribe tokens on top of
-        that.
+        Tip: Convert PLENTY/WRAP to PLY. By locking PLY, you&apos;re earning fees and bribe rewards
+        from your veNFT, plus you may boost your gauge rewards.
       </div>
 
       {showConfirmTransaction && (
@@ -422,6 +418,7 @@ function Migrate(props: IMigrateProps) {
         )}
         show={tokenModal}
         allBalance={props.allBalance.userBalance}
+        isSuccess={props.allBalance.success}
         selectToken={selectToken}
         onhide={setTokenModal}
         tokenIn={tokenIn}
