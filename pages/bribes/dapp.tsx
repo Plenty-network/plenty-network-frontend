@@ -22,7 +22,6 @@ const Dapp: NextPage = () => {
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
   const dispatch = useDispatch<AppDispatch>();
-  // const epoch = store.getState().epoch.currentEpoch;
   const epoch = useAppSelector((state) => state.epoch.currentEpoch);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
 
@@ -59,8 +58,6 @@ const Dapp: NextPage = () => {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
-
-  // const tokenPrice = store.getState().tokenPrice.tokenPrice;
 
   const [poolsArr, setPoolsArr] = useState<{
     data: IPoolsForBribesResponse;
