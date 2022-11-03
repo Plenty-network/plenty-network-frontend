@@ -12,7 +12,7 @@ import { BigNumber } from "bignumber.js";
 import { allPaths } from "../../api/swap/router";
 import { computeAllPathsWrapper, computeReverseCalculationWrapper } from "../../api/swap/wrappers";
 import { IAllBalanceResponse } from "../../api/util/types";
-import { Chain } from "../../config/types";
+import { Chain, MigrateToken } from "../../config/types";
 
 interface ISwapProps {
   className?: string;
@@ -645,7 +645,12 @@ function Swap(props: ISwapProps) {
         />
       </div>
       <SwapModal
-        tokens={tokensListConfig}
+        tokens={tokensListConfig.filter((e: any) => {
+          return (
+            e.name.toLowerCase() !== MigrateToken.PLENTY.toLowerCase() &&
+            e.name.toLowerCase() !== MigrateToken.WRAP.toLowerCase()
+          );
+        })}
         show={swapModalShow}
         isLoading={allBalance.success}
         allBalance={allBalance.userBalance}

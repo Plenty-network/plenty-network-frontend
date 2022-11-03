@@ -103,33 +103,30 @@ function MyPortfolio(props: any) {
   const [showClaimPly, setShowClaimPly] = React.useState(false);
 
   const [epochClaim, setEpochClaim] = React.useState("");
-  // const userAddress = store.getState().wallet.address;
   const userAddress = useAppSelector((state) => state.wallet.address);
 
   const dispatch = useDispatch<AppDispatch>();
 
   const token = useAppSelector((state) => state.config.tokens);
   const scrollY = useAppSelector((state) => state.walletLoading.scrollY);
-  // const inflationData = store.getState().portfolioRewards.claimAllInflationData;
   const inflationData = useAppSelector((state) => state.portfolioRewards.claimAllInflationData);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const amm = useAppSelector((state) => state.config.AMMs);
-  // const unclaimInflation = store.getState().portfolioRewards.unclaimedInflationData;
+
   const unclaimInflation = useAppSelector((state) => state.portfolioRewards.unclaimedInflationData);
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
   const [isManageLock, setIsManageLock] = useState(false);
   const [plyInput, setPlyInput] = useState("");
-  // const selectedDropDown = store.getState().veNFT.selectedDropDown;
+
   const selectedDropDown = useAppSelector((state) => state.veNFT.selectedDropDown);
   const [updatedPlyVoteValue, setUpdatedPlyVoteValue] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [showWithdraw, setShowWithdraw] = useState(false);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [lockingDate, setLockingDate] = useState("");
-  // const tokenPrice = store.getState().tokenPrice.tokenPrice;
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  // const lpTokenPrice = store.getState().tokenPrice.lpTokenPrices;
+
   const lpTokenPrice = useAppSelector((state) => state.tokenPrice.lpTokenPrices);
   const [transactionId, setTransactionId] = useState("");
   const [balanceUpdate, setBalanceUpdate] = useState(false);
@@ -139,14 +136,10 @@ function MyPortfolio(props: any) {
     lockingDate: 0,
   });
   const [claimState, setClaimState] = useState<EClaimAllState>(-1 as EClaimAllState);
-  // const allLocksRewardsData = store.getState().portfolioRewards.allLocksRewardsData;
   const allLocksRewardsData = useAppSelector((state) => state.portfolioRewards.allLocksRewardsData);
   const [selectednft, setSelectednft] = useState(selectedDropDown);
-  // const bribesClaimData = store.getState().portfolioRewards.bribesClaimData;
   const bribesClaimData = useAppSelector((state) => state.portfolioRewards.bribesClaimData);
-  // const epochClaimData = store.getState().portfolioRewards.epochClaimData;
   const epochClaimData = useAppSelector((state) => state.portfolioRewards.epochClaimData);
-  // const feeClaimData = store.getState().portfolioRewards.feesClaimData;
   const feeClaimData = useAppSelector((state) => state.portfolioRewards.feesClaimData);
   // const bribesStats = store.getState().portfolioRewards.totalBribesAmount;
   const bribesStats = useAppSelector((state) => state.portfolioRewards.totalBribesAmount);
@@ -1264,7 +1257,6 @@ function MyPortfolio(props: any) {
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    //localStorage.setItem(CLAIM, poolsRewards.data.gaugeEmissionsTotal.toString());
     claimAllRewardsForAllLocks(
       bribesClaimData,
       feeClaimData,
@@ -1500,7 +1492,6 @@ function MyPortfolio(props: any) {
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    //localStorage.setItem(CLAIM, poolsRewards.data.gaugeEmissionsTotal.toString());
     claimSupernova(
       poolsRewards.data.gaugeAddresses,
       feeClaimData,
