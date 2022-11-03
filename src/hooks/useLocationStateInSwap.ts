@@ -10,17 +10,51 @@ export const useLocationStateInSwap = () => {
   const tokensArray = Object.entries(tokens);
   const router = useRouter();
   const { query } = useRouter();
-  console.log("ishu100", query);
+  // console.log(
+  //   "ishu0",
+  //   router.asPath.indexOf("="),
+  //   router.asPath.indexOf("&"),
+  //   router.asPath.lastIndexOf("=")
+  // );
+  // const r = router.asPath.slice(
+  //   router.asPath.indexOf("=") + 1,
+  //   router.asPath.indexOf("&") === -1 ? router.asPath.length : router.asPath.indexOf("&")
+  // );
+  // const d = router.asPath.slice(router.asPath.lastIndexOf("=") + 1, router.asPath.length);
+  // console.log("ishu11", r, d);
+  // console.log("ishu100", query);
   const [tokenIn, setTokenIn] = useState<tokenParameter>(
-    query.from
+    router.asPath.slice(
+      router.asPath.indexOf("=") + 1,
+      router.asPath.indexOf("&") === -1 ? router.asPath.length : router.asPath.indexOf("&")
+    )
       ? {
-          name: query.from.toString(),
-          image: `/assets/Tokens/${query.from.toString()}.png`,
+          name: router.asPath
+            .slice(
+              router.asPath.indexOf("=") + 1,
+              router.asPath.indexOf("&") === -1 ? router.asPath.length : router.asPath.indexOf("&")
+            )
+            .toString(),
+          image: `/assets/Tokens/${router.asPath
+            .slice(
+              router.asPath.indexOf("=") + 1,
+              router.asPath.indexOf("&") === -1 ? router.asPath.length : router.asPath.indexOf("&")
+            )
+            .toString()}.png`,
         }
       : { name: "ctez", image: ctez }
   );
 
   const [tokenOut, setTokenOut] = useState({} as tokenParameter);
+  const tokensListConfig = useMemo(() => {
+    return tokensArray.map((token) => ({
+      name: token[0],
+      image: `/assets/Tokens/${token[1].symbol}.png`,
+      new: token[1].extras?.isNew as boolean,
+      chainType: token[1].extras?.chain as Chain,
+      address: token[1].address,
+    }));
+  }, [tokens]);
 
   useEffect(() => {
     if (Object.keys(router.query).length !== 0) {
@@ -52,16 +86,6 @@ export const useLocationStateInSwap = () => {
       console.log("ishu23", router);
     }
   }, [tokenIn.name, tokenOut.name]);
-  const tokensListConfig = useMemo(() => {
-    return tokensArray.map((token) => ({
-      name: token[0],
-      image: `/assets/Tokens/${token[1].symbol}.png`,
-      new: token[1].extras?.isNew as boolean,
-      chainType: token[1].extras?.chain as Chain,
-      address: token[1].address,
-    }));
-  }, [tokens]);
-
   useEffect(() => {
     if (Object.keys(router.query).length !== 0) {
       console.log("ishu3", router);
