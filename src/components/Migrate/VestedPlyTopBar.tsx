@@ -40,16 +40,18 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
   return (
     <>
       <div className={clsx("ml-auto h-[72px] py-4 px-5  flex items-center bg-background-200 ", "")}>
+        <span className="border-r border-text-700 h-[30px] w-px mr-6"></span>
         <p>
           <div className="flex gap-1 items-center">
-            <Image alt={"alt"} src={ply} />
-
-            <p className="text-white font-body3 ">Vested PLY</p>
             <p className="relative top-px">
               <ToolTip disable={true} id="tooltip8">
                 <Image alt={"alt"} src={info} />
               </ToolTip>
             </p>
+            <Image alt={"alt"} src={ply} />
+
+            <p className="text-white font-body3 ">Vested PLY</p>
+
             <div className="font-title1-bold text-white ml-2 flex items-end">
               {props.vestedData.claimableAmount === undefined ? (
                 <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
@@ -88,7 +90,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
             </div>
           </div>
         </p>
-        <p className="ml-5">
+        <p className="ml-6">
           <ToolTip
             position={Position.bottom}
             disable={props.vestedData.isClaimable}
@@ -101,7 +103,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
           >
             <div
               className={clsx(
-                "h-[50px] flex items-center justify-center w-[148px] rounded-xl  font-title3-bold ",
+                "cursor-pointer h-[50px] flex items-center justify-center w-[148px] rounded-xl  font-title3-bold ",
                 props.vestedData.isClaimable
                   ? "bg-primary-500 text-black"
                   : "bg-blue-200 text-blue-300"

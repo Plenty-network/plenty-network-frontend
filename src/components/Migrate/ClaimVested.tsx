@@ -194,7 +194,7 @@ function ClaimVested(props: IMigrateProps) {
     <>
       <div
         className={clsx(
-          "bg-card-500 md:border border-y border-text-800 mt-[16px]  md:rounded-3xl  text-white lg:w-640 pt-5 pb-2 mx-auto fade-in"
+          "bg-card-500 md:border border-y border-text-800 mt-[36px]  md:rounded-3xl  text-white lg:w-640 pt-5 pb-2 mx-auto fade-in"
         )}
       >
         <div className="flex items-center flex-row px-5 lg:px-9 relative">
