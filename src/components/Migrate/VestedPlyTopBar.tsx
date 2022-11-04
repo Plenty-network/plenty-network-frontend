@@ -39,12 +39,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
 
   return (
     <>
-      <div
-        className={clsx(
-          "ml-auto h-[94px] py-4 px-5  flex items-center bg-background-300 ",
-          "w-[400px] border-b border-background-200 "
-        )}
-      >
+      <div className={clsx("ml-auto h-[72px] py-4 px-5  flex items-center bg-background-200 ", "")}>
         <p>
           <div className="flex gap-1 items-center">
             <Image alt={"alt"} src={ply} />
@@ -55,34 +50,45 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
                 <Image alt={"alt"} src={info} />
               </ToolTip>
             </p>
-          </div>
-          <div className="font-title1-bold text-white mt-2 flex items-end">
-            {props.vestedData.claimableAmount === undefined ? (
-              <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
-            ) : (
-              <ToolTip
-                position={Position.top}
-                message={props.vestedData?.claimableAmount?.toFixed(6)}
-                id="tooltip9"
-              >
-                {Number(props.vestedData?.claimableAmount) > 0
-                  ? props.vestedData?.claimableAmount.isLessThan(0.01)
-                    ? "<0.01"
-                    : nFormatter(props.vestedData?.claimableAmount)
-                  : "0"}
-              </ToolTip>
-            )}
+            <div className="font-title1-bold text-white ml-2 flex items-end">
+              {props.vestedData.claimableAmount === undefined ? (
+                <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+              ) : (
+                <ToolTip
+                  position={Position.top}
+                  message={props.vestedData?.claimableAmount?.toFixed(6)}
+                  id="tooltip9"
+                >
+                  {Number(props.vestedData?.claimableAmount) > 0
+                    ? props.vestedData?.claimableAmount.isLessThan(0.01)
+                      ? "<0.01"
+                      : nFormatter(props.vestedData?.claimableAmount)
+                    : "0"}
+                </ToolTip>
+              )}
 
-            <p className="font-title2-normal text-border-400 ml-1 mb-px">PLY</p>
-            <p className="relative top-1 ml-1">
-              <Image alt={"alt"} src={lock} />
-            </p>
-            <p className="font-body3  text-text-250 ml-1 mb-0.5">
-              {props.vestedData?.vestedAmount?.toFixed(2)} PLY
-            </p>
+              <p className="font-title2-normal text-border-400 ml-1 mb-px">PLY</p>
+              <p className="relative top-1 ml-1">
+                <Image alt={"alt"} src={lock} />
+              </p>
+              <p className="font-body3  text-text-250 ml-1 mb-0.5">
+                <ToolTip
+                  position={Position.top}
+                  message={props.vestedData?.vestedAmount?.toFixed(6)}
+                  id="tooltip9"
+                >
+                  {Number(props.vestedData?.vestedAmount) > 0
+                    ? props.vestedData?.vestedAmount.isLessThan(0.01)
+                      ? "<0.01"
+                      : nFormatter(props.vestedData?.vestedAmount)
+                    : "0"}
+                  PLY{" "}
+                </ToolTip>
+              </p>
+            </div>
           </div>
         </p>
-        <p className="ml-auto">
+        <p className="ml-5">
           <ToolTip
             position={Position.bottom}
             disable={props.vestedData.isClaimable}

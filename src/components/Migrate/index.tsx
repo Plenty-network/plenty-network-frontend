@@ -152,6 +152,7 @@ function Migrate(props: IMigrateProps) {
   const resetAllValues = () => {
     setFirstTokenAmount("");
     setSecondTokenAmount("");
+    setExchangeRes({} as IMigrateExchange);
   };
   const handleExchangeOperation = () => {
     setConfirmMigratePopup(false);
@@ -246,15 +247,15 @@ function Migrate(props: IMigrateProps) {
       </div>
       <div
         className={clsx(
-          "bg-card-500 md:border border-y border-text-800 mt-[16px]  md:rounded-3xl  text-white lg:w-640 pt-5 pb-2 mx-auto fade-in"
+          "bg-card-500 md:border border-y border-text-800 mt-[16px]  md:rounded-3xl  text-white lg:w-640 pt-[24px] pb-2 mx-auto fade-in"
         )}
       >
-        <div className="flex items-center flex-row px-5 lg:px-9 relative">
+        {/* <div className="flex items-center flex-row px-5 lg:px-9 relative">
           <div className="font-title2">Migrate</div>
-        </div>
+        </div> */}
         <div
           className={clsx(
-            "lg:w-580 mt-4 h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700",
+            "lg:w-580  h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700",
             (new BigNumber(firstTokenAmount).isGreaterThan(
               props.allBalance.userBalance[tokenIn.name]
             ) ||
