@@ -16,6 +16,7 @@ import info from "../../src/assets/icon/pools/InfoBlue.svg";
 import close from "../../src/assets/icon/pools/closeBlue.svg";
 import Image from "next/image";
 import { USERADDRESS } from "../../src/constants/localStorage";
+import { NewPool } from "../../src/components/Pools/NewPool";
 export interface IIndexProps {}
 export enum AMM_TYPE {
   VOLATILE = "VOLATILE",
@@ -70,6 +71,10 @@ export default function Pools(props: IIndexProps) {
   }, [amm]);
   const [searchValue, setSearchValue] = React.useState("");
   const [isbanner, setisBanner] = React.useState(true);
+  const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
+  const handleNewPool = () => {
+    setShowNewPoolPopup(true);
+  };
   return (
     <>
       <SideBarHOC>
@@ -81,6 +86,7 @@ export default function Pools(props: IIndexProps) {
             searchValue={searchValue}
             setSearchValue={setSearchValue}
             isFirst={walletAddress !== null && localStorage.getItem(USERADDRESS) !== walletAddress}
+            onClick={handleNewPool}
           />
           <div className="sticky top-0 z-10">
             <CardHeader
@@ -143,7 +149,7 @@ export default function Pools(props: IIndexProps) {
               setActiveStateTab={setActiveStateTab}
             />
           )}
-
+          <NewPool show={showNewPoolPopup} setShow={setShowNewPoolPopup} />
           {/* poolsTable */}
         </div>
       </SideBarHOC>

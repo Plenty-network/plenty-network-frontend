@@ -8,6 +8,7 @@ import clsx from "clsx";
 
 interface ISwapModalProps {
   tokens: tokensModal[];
+  isLoading?: boolean;
   show: boolean;
   selectToken: Function;
   onhide: Function;
