@@ -59,3 +59,13 @@ export interface ILpTokenPriceList {
 export interface ITokenPriceList {
   [id: string]: number;
 }
+
+export interface IAllTokensBalance {
+  [key: string]: IBalanceResponse;
+}
+
+export interface IAllTokensBalanceResponse {
+  success: boolean;
+  allTokensBalances: IAllTokensBalance;
+  error?: string;
+}

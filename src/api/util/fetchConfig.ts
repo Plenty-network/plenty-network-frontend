@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { connectedNetwork } from '../../common/walletconnect';
 import Config from '../../config/config';
-import { AMM_TYPE, IAmmContracts, IContractsConfig, ITokens } from '../../config/types';
+import { AMM_TYPE, IAmmContracts, IContractsConfig, ITokenInterface, ITokens } from '../../config/types';
 import { store } from '../../redux';
 
 export const fetchConfig = async (): Promise<IContractsConfig> => {
@@ -151,4 +151,22 @@ export const isVolatilePair = (
     (tokenOneSymbol === "ctez" && tokenTwoSymbol === "tez")
     ? true
     : false;
+  };
+
+  /**
+   * Search the config for the the token by token contract address and return the token data if found.
+   * @param tokenContract - Contract address of the token to be searched in the config
+   */
+  export const getTokenDataByAddress = (tokenContract: string): ITokenInterface | undefined => {
+    try {
+      const state = store.getState();
+      const TOKENS = state.config.tokens;
+      const tokenSymbol = Object.keys(TOKENS).find(
+        (tokenSymbol) => TOKENS[tokenSymbol].address === tokenContract
+      );
+      const tokenData = tokenSymbol ? TOKENS[tokenSymbol as string] : undefined;
+      return tokenData;
+    } catch (error: any) {
+      return undefined;
+    }
   };
