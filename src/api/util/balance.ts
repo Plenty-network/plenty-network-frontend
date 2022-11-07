@@ -8,13 +8,19 @@ import {
   type5MapIds,
 } from "../../constants/global";
 import BigNumber from "bignumber.js";
-import { TokenVariant } from "../../config/types";
+import { ITokenInterface, TokenVariant } from "../../config/types";
 import { packDataBytes, unpackDataBytes } from "@taquito/michel-codec";
 import { store } from "../../redux";
 import { dappClient, getRpcNode } from "../../common/walletconnect";
-import { IBalanceResponse, IAllBalanceResponse, IPnlpBalanceResponse } from "./types";
-import { getDexAddress, getLpTokenSymbol } from "./fetchConfig";
-import { getBigMapData, getStorage } from "./storageProvider";
+import {
+  IBalanceResponse,
+  IAllBalanceResponse,
+  IPnlpBalanceResponse,
+  IAllTokensBalance,
+  IAllTokensBalanceResponse,
+} from "./types";
+import { getDexAddress, getLpTokenSymbol, getTokenDataByAddress } from "./fetchConfig";
+import { getBigMapData, getStorage, getTzktTokenData } from "./storageProvider";
 import { gaugeStorageType } from "../rewards/data";
 
 /**
@@ -225,7 +231,17 @@ export const getPnlpBalance = async (
   try {
     const lpTokenSymbol = lpToken ? lpToken : getLpTokenSymbol(tokenOneSymbol, tokenTwoSymbol);
     if (lpTokenSymbol) {
+      // TODO: Uncomment the commented lines and comment the uncommented one to get balance via tzkt and vice versa.
+      // const TOKENS = store.getState().config.tokens;
+      // const LP_TOKEN = TOKENS[lpTokenSymbol];
       const lpTokenBalance = await getUserBalanceByRpc(lpTokenSymbol, userTezosAddress);
+      // const lpTokenBalance = await getBalanceFromTzkt(
+      //   LP_TOKEN.address as string,
+      //   LP_TOKEN.tokenId,
+      //   LP_TOKEN.variant,
+      //   userTezosAddress,
+      //   LP_TOKEN.symbol
+      // );
       if (lpTokenBalance.success) {
         return {
           success: true,
@@ -290,6 +306,130 @@ export const getStakedBalance = async (
       success: false,
       balance: "0",
       lpToken: "",
+      error: error.message,
+    };
+  }
+};
+
+/**
+ * Returns the balance of the token held by the user in their wallet using tzkt api.
+ * This function can be used for tokens that are present in config (mapId known),
+ * as well as those not present and searched from chain.
+ * @param tokenContract - Contract address of the token
+ * @param tokenId - Token id of the token (undefined for FA1.2 tokens)
+ * @param tokenStandard - Standard of token whether FA1.2 or FA2
+ * @param userTezosAddress - Tezos wallet address of the user
+ * @param tokenSymbol - Symbol of the token (optional)
+ */
+export const getBalanceFromTzkt = async (
+  tokenContract: string,
+  tokenId: number | undefined,
+  tokenStandard: TokenVariant,
+  userTezosAddress: string,
+  tokenSymbol?: string
+): Promise<IBalanceResponse> => {
+  try {
+    if (
+      !tokenContract ||
+      tokenContract === "" ||
+      !tokenStandard ||
+      !userTezosAddress ||
+      userTezosAddress === ""
+    ) {
+      throw new Error("Invalid or empty parameters");
+    }
+    let symbol: string = "";
+    let userBalance = new BigNumber(0);
+
+    const balanceResponse = await getTzktTokenData(
+      `balances?account=${userTezosAddress}&token.contract=${tokenContract}${
+        tokenStandard === TokenVariant.FA2 ? `&token.tokenId=${tokenId || 0}` : ""
+      }`
+    );
+    const balanceData = balanceResponse.data;
+    if (balanceData.length <= 0) {
+      return {
+        success: true,
+        identifier: symbol,
+        balance: userBalance,
+      };
+    }
+
+    const tokenDataFromConfig = getTokenDataByAddress(tokenContract);
+
+    if (balanceData[0].token.metadata && balanceData[0].token.metadata.decimals) {
+      symbol = tokenSymbol || balanceData[0].token.metadata.symbol;
+      const tokenDecimals = new BigNumber(balanceData[0].token.metadata.decimals);
+      const decimalMultiplier = new BigNumber(10).pow(tokenDecimals);
+      userBalance = new BigNumber(balanceData[0].balance || 0).dividedBy(decimalMultiplier);
+    } else {
+      if (tokenDataFromConfig) {
+        symbol = tokenSymbol || tokenDataFromConfig.symbol;
+        const tokenDecimals = new BigNumber(tokenDataFromConfig.decimals);
+        const decimalMultiplier = new BigNumber(10).pow(tokenDecimals);
+        userBalance = new BigNumber(balanceData[0].balance || 0).dividedBy(decimalMultiplier);
+      } else {
+        throw new Error("Decimals not found for the selected token.");
+      }
+    }
+
+    return {
+      success: true,
+      identifier: symbol,
+      balance: userBalance,
+    };
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      identifier: tokenSymbol || "",
+      balance: new BigNumber(0),
+      error: error.message,
+    };
+  }
+};
+
+/**
+ * Returns the individual token balance of the requested list of tokens for a user using tzkt api.
+ * @param tokens - Array of all tokens
+ * @param userTezosAddress - Tezos wallet address of the user
+ */
+export const getAllTokensBalanceFromTzkt = async (
+  tokens: ITokenInterface[],
+  userTezosAddress: string
+): Promise<IAllTokensBalanceResponse> => {
+  try {
+    const allTokensBalances: IAllTokensBalance = {};
+    const allTokensBalanceResponse = await Promise.all(
+      tokens.map((token) => {
+        if (!token.address && token.variant === TokenVariant.TEZ) {
+          // Get the XTZ balance from wallet as it's a native token to TEZOS
+          return getTezBalance(userTezosAddress);
+        } else {
+          return getBalanceFromTzkt(
+            token.address as string,
+            token.tokenId,
+            token.variant,
+            userTezosAddress,
+            token.symbol
+          );
+        }
+      })
+    );
+    allTokensBalanceResponse.forEach((tokenBalance) => {
+      if (tokenBalance.identifier !== "") {
+        allTokensBalances[tokenBalance.identifier] = tokenBalance;
+      }
+    });
+    return {
+      success: true,
+      allTokensBalances,
+    };
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      allTokensBalances: {},
       error: error.message,
     };
   }
