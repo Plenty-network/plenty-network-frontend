@@ -342,7 +342,7 @@ export const getBalanceFromTzkt = async (
     let userBalance = new BigNumber(0);
 
     const balanceResponse = await getTzktTokenData(
-      `balances?account=${userTezosAddress}&token.contract=${tokenContract}${
+      `/balances?account=${userTezosAddress}&token.contract=${tokenContract}${
         tokenStandard === TokenVariant.FA2 ? `&token.tokenId=${tokenId || 0}` : ""
       }`
     );
