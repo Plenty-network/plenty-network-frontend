@@ -80,7 +80,7 @@ export interface IPoolsDataWrapperResponse {
   bribes : Bribes[];
   isLiquidityAvailable : boolean;
   isStakeAvailable: boolean;
-
+  isGaugeAvailable: boolean;
 }
 
 export interface IAnalyticsDataObject {
