@@ -49,7 +49,7 @@ export const getTzktStorageData = async (contractAddress: string): Promise<any> 
 
 export const getTzktTokenData = async (filters: string | undefined): Promise<any> => {
   try {
-    const tokenResponse = await axios.get(`${tzktNode}v1/tokens/${filters ? filters : ""}`);
+    const tokenResponse = await axios.get(`${tzktNode}v1/tokens${filters ? filters : ""}`);
     return tokenResponse;
   } catch (error: any) {
     throw error;

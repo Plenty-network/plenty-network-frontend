@@ -109,6 +109,7 @@ export const poolsDataWrapper = async (
 
         isLiquidityAvailable,
         isStakeAvailable,
+        isGaugeAvailable: AMM.gaugeAddress ? true : false,
       };
     }
     

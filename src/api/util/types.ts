@@ -1,4 +1,5 @@
 import { BigNumber } from "bignumber.js";
+import { ITokenInterface } from "../../config/types";
 
 export interface IBalanceResponse {
   success: boolean;
@@ -67,5 +68,11 @@ export interface IAllTokensBalance {
 export interface IAllTokensBalanceResponse {
   success: boolean;
   allTokensBalances: IAllTokensBalance;
+  error?: string;
+}
+
+export interface ITzktTokensListResponse {
+  success: boolean;
+  allTokensList: ITokenInterface[];
   error?: string;
 }
