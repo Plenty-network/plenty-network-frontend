@@ -357,12 +357,14 @@ export const getBalanceFromTzkt = async (
 
     const tokenDataFromConfig = getTokenDataByAddress(tokenContract);
 
+    // First check if token metadata exists for the token in the response.
     if (balanceData[0].token.metadata && balanceData[0].token.metadata.decimals) {
       symbol = tokenSymbol || balanceData[0].token.metadata.symbol;
       const tokenDecimals = new BigNumber(balanceData[0].token.metadata.decimals);
       const decimalMultiplier = new BigNumber(10).pow(tokenDecimals);
       userBalance = new BigNumber(balanceData[0].balance || 0).dividedBy(decimalMultiplier);
     } else {
+      // Check if token data exists in local config if not found in tzkt response.
       if (tokenDataFromConfig) {
         symbol = tokenSymbol || tokenDataFromConfig.symbol;
         const tokenDecimals = new BigNumber(tokenDataFromConfig.decimals);
