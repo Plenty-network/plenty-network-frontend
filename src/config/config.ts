@@ -57,6 +57,11 @@ const Config: IConfig = {
     }
   },
 
+  IPFS_LINKS: {
+    primary: "https://cloudflare-ipfs.com/ipfs/",
+    fallback: "https://ipfs.io/ipfs/",
+  },
+
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',
     testnet: 'KT1P7eP7gGuHgPVNWRLs1p4uRhc9Wbyku8B2',
