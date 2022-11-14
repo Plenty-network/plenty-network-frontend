@@ -99,9 +99,11 @@ export const deployVolatile = async (
       ...factoryInstance.methods
         .deployVolatilePair(
           token1.address,
+          token1Amount.toString(),
           token1.tokenId ?? 0,
           token1.variant === TokenVariant.FA2 ? true : false,
           token2.address,
+          token2Amount.toString(),
           token2.tokenId ?? 0,
           token2.variant === TokenVariant.FA2 ? true : false,
           char2Bytes(lpTokenDecimals.toString()),
@@ -141,6 +143,8 @@ export const deployVolatile = async (
     };
   }
 };
+
+// TODO : Add amounts
 
 export const deployStable = async (
   token1: ITokenInterface,
