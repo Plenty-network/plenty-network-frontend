@@ -32,10 +32,14 @@ import TransactionSubmitted from "../TransactionSubmitted";
 import ConfirmAddPool from "./ConfirmAddPool";
 import NewPoolMain from "./NewPoolMain";
 import { TextNewPool } from "./TextNewPool";
+import TokenModalPool from "./tokenModalPool";
+import tokenModal from "./tokenModalPool";
 
 export interface IManageLiquidityProps {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showLiquidityModal: boolean;
 }
 
 export function NewPool(props: IManageLiquidityProps) {
@@ -379,6 +383,8 @@ export function NewPool(props: IManageLiquidityProps) {
                 handleTokenType={handleTokenType}
                 setPair={setPair}
                 pair={pair}
+                setShowLiquidityModal={props.setShowLiquidityModal}
+                showLiquidityModal={props.showLiquidityModal}
               />
             </div>
           </>
@@ -409,7 +415,7 @@ export function NewPool(props: IManageLiquidityProps) {
           }
         />
       )}
-      <SwapModal
+      <TokenModalPool
         tokens={tokensListConfig.filter((e: any) => {
           return (
             e.name.toLowerCase() !== MigrateToken.PLENTY.toLowerCase() &&

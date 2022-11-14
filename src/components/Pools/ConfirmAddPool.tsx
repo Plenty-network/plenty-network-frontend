@@ -117,7 +117,9 @@ function ConfirmAddPool(props: IConfirmSwapProps) {
                       : props.tokenOut.name}{" "}
                     =
                     {!isConvert
-                      ? ` ${props.routeDetails.exchangeRate?.toFixed(3)} 
+                      ? ` ${new BigNumber(props.secondTokenAmount)
+                          .dividedBy(new BigNumber(props.firstTokenAmount))
+                          .toFixed(3)} 
                             ${
                               props.tokenOut.name === "tez"
                                 ? "TEZ"
@@ -125,7 +127,9 @@ function ConfirmAddPool(props: IConfirmSwapProps) {
                                 ? "CTEZ"
                                 : props.tokenOut.name
                             }`
-                      : `${Number(1 / Number(props.routeDetails.exchangeRate)).toFixed(3)} ${
+                      : `${new BigNumber(props.firstTokenAmount)
+                          .dividedBy(new BigNumber(props.secondTokenAmount))
+                          .toFixed(3)} ${
                           props.tokenIn.name === "tez"
                             ? "TEZ"
                             : props.tokenIn.name === "ctez"

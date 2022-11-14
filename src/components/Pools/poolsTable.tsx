@@ -31,9 +31,12 @@ export interface IShortCardProps {
   setSearchValue?: Function;
   activeStateTab: PoolsCardHeader;
   setActiveStateTab: React.Dispatch<React.SetStateAction<string>>;
+  setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showLiquidityModal: boolean;
 }
 export interface IManageBtnProps {
   isLiquidityAvailable: boolean;
+  setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
   isStakeAvailable: boolean;
   tokenA: string;
   tokenB: string;
@@ -55,7 +58,7 @@ export function ShortCard(props: IShortCardProps) {
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
-  const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
+
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
@@ -140,6 +143,7 @@ export function ShortCard(props: IShortCardProps) {
             isStakeAvailable={x.isStakeAvailable}
             tokenA={x.tokenA.toString()}
             tokenB={x.tokenB.toString()}
+            setShowLiquidityModal={props.setShowLiquidityModal}
           />
         ),
       },
@@ -273,6 +277,7 @@ export function ShortCard(props: IShortCardProps) {
             isStakeAvailable={x.isStakeAvailable}
             tokenA={x.tokenA.toString()}
             tokenB={x.tokenB.toString()}
+            setShowLiquidityModal={props.setShowLiquidityModal}
           />
         ),
       },
@@ -292,7 +297,7 @@ export function ShortCard(props: IShortCardProps) {
                 ? setActiveState(ActiveLiquidity.Rewards)
                 : setActiveState(ActiveLiquidity.Staking)
               : setActiveState(ActiveLiquidity.Liquidity);
-            setShowLiquidityModal(true);
+            props.setShowLiquidityModal(true);
             setTokenIn({
               name: props.tokenA,
               image: getImagesPath(props.tokenA.toString()),
@@ -312,11 +317,11 @@ export function ShortCard(props: IShortCardProps) {
   }
   return (
     <>
-      {showLiquidityModal && (
+      {props.showLiquidityModal && (
         <ManageLiquidity
           tokenIn={tokenIn}
           tokenOut={tokenOut}
-          closeFn={setShowLiquidityModal}
+          closeFn={props.setShowLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}
         />

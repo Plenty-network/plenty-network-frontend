@@ -34,7 +34,7 @@ export default function Pools(props: IIndexProps) {
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
-
+  const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   useEffect(() => {
     if (epochError) {
       dispatch(getEpochData());
@@ -119,6 +119,8 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
+              setShowLiquidityModal={setShowLiquidityModal}
+              showLiquidityModal={showLiquidityModal}
             />
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
@@ -128,6 +130,8 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
+              setShowLiquidityModal={setShowLiquidityModal}
+              showLiquidityModal={showLiquidityModal}
             />
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
@@ -137,6 +141,8 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
+              setShowLiquidityModal={setShowLiquidityModal}
+              showLiquidityModal={showLiquidityModal}
             />
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
@@ -147,9 +153,16 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
+              setShowLiquidityModal={setShowLiquidityModal}
+              showLiquidityModal={showLiquidityModal}
             />
           )}
-          <NewPool show={showNewPoolPopup} setShow={setShowNewPoolPopup} />
+          <NewPool
+            show={showNewPoolPopup}
+            setShow={setShowNewPoolPopup}
+            setShowLiquidityModal={setShowLiquidityModal}
+            showLiquidityModal={showLiquidityModal}
+          />
           {/* poolsTable */}
         </div>
       </SideBarHOC>

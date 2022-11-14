@@ -1,13 +1,15 @@
 import Image from "next/image";
 import * as React from "react";
 import settings from "../../../src/assets/icon/swap/settings.svg";
+
+import infoBlue from "../../../src/assets/icon/pools/InfoBlue.svg";
 import violetNode from "../../../src/assets/icon/common/violetNode.svg";
 import empty from "../../../src/assets/icon/pools/emptyIcon.svg";
 import greyNode from "../../../src/assets/icon/common/greyNode.svg";
 import vectorDown from "../../assets/icon/common/vector.svg";
 
 import add from "../../../src/assets/icon/pools/addIcon.svg";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 
 import info from "../../../src/assets/icon/swap/info.svg";
 import { BigNumber } from "bignumber.js";
@@ -22,6 +24,10 @@ import { ITokenInterface } from "../../config/types";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
 import { tokenType } from "../../constants/swap";
+
+import { getDexAddress } from "../../api/util/fetchConfig";
+import { ManageLiquidity } from "./ManageLiquidity";
+import { ActiveLiquidity } from "./ManageLiquidityHeader";
 
 interface ILiquidityProps {
   firstTokenAmount: string | number;
@@ -60,6 +66,8 @@ interface ILiquidityProps {
   handleTokenType: (type: tokenType) => void;
   isLoading: boolean;
   setPair: React.Dispatch<React.SetStateAction<string>>;
+  setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showLiquidityModal: boolean;
 }
 export const Pair = {
   VOLATILE: "Volatile pair",
@@ -72,6 +80,24 @@ function NewPoolMain(props: ILiquidityProps) {
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
+  const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
+    ActiveLiquidity.Liquidity
+  );
+  const [isExist, setIsExist] = useState(false);
+  useEffect(() => {
+    if (
+      Object.prototype.hasOwnProperty.call(props.tokenIn, "symbol") &&
+      Object.prototype.hasOwnProperty.call(props.tokenOut, "symbol")
+    ) {
+      const res = getDexAddress(props.tokenIn.symbol, props.tokenOut.symbol);
+
+      if (res !== "false") {
+        setIsExist(true);
+      } else {
+        setIsExist(false);
+      }
+    }
+  }, [props.tokenIn, props.tokenOut]);
 
   const AddButton = useMemo(() => {
     if (!walletAddress) {
@@ -85,7 +111,8 @@ function NewPoolMain(props: ILiquidityProps) {
       !props.tokenOut.name ||
       Number(props.firstTokenAmount) <= 0 ||
       Number(props.secondTokenAmount) <= 0 ||
-      props.pair === ""
+      props.pair === "" ||
+      isExist
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
@@ -118,6 +145,7 @@ function NewPoolMain(props: ILiquidityProps) {
     props.firstTokenAmount,
     props.secondTokenAmount,
     props.userBalances,
+    isExist,
   ]);
 
   const handleLiquidityInput = async (
@@ -200,7 +228,7 @@ function NewPoolMain(props: ILiquidityProps) {
               </div>
             </div>
             <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
-              <div className="">
+              <div className="w-0 flex-auto">
                 <p>
                   {props.swapData.isloading && props.tokenIn.name ? (
                     <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
@@ -227,7 +255,7 @@ function NewPoolMain(props: ILiquidityProps) {
                 </p>
               </div>
               {walletAddress && props.tokenIn.name && (
-                <div className="flex-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-2 md:px-3">
+                <div className=" border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-2 md:px-3 ml-auto">
                   <div className="relative top-0.5 md:top-0">
                     <Image alt={"alt"} src={wallet} className="walletIcon" />
                   </div>
@@ -287,7 +315,7 @@ function NewPoolMain(props: ILiquidityProps) {
               </div>
             </div>
             <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
-              <div className="">
+              <div className="w-0 flex-auto">
                 <p>
                   {props.swapData.isloading && props.tokenOut.name ? (
                     <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
@@ -376,7 +404,32 @@ function NewPoolMain(props: ILiquidityProps) {
           <span className="ml-4">Volatile pair</span>
         </div>
       </div>
+      {isExist && (
+        <div className="h-[46px]  px-2 rounded-lg my-3 flex items-center bg-info-500/[0.1]">
+          <p className="relative top-0.5">
+            <Image src={infoBlue} />
+          </p>
+          <p className="font-body2 text-info-500 px-3 md:w-auto w-[249px]">
+            There is already a pool and gauge for the tokens selected.
+          </p>
+          <p
+            className="ml-auto relative top-[0px] bg-info-500/[0.1] text-info-500 cursor-pointer font-body2 rounded-[6px] px-3 py-2 h-[34px]"
+            onClick={() => props.setShowLiquidityModal(true)}
+          >
+            Manage
+          </p>
+        </div>
+      )}
       <div className="">{AddButton}</div>
+      {props.showLiquidityModal && (
+        <ManageLiquidity
+          tokenIn={props.tokenIn}
+          tokenOut={props.tokenOut}
+          closeFn={props.setShowLiquidityModal}
+          setActiveState={setActiveState}
+          activeState={activeState}
+        />
+      )}
     </>
   );
 }
