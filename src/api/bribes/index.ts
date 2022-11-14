@@ -338,11 +338,12 @@ export const getPoolsDataForBribes = async (
     }
 
     //TODO: Remove next line in mainnet
-    const finalData = allDataForPools.filter((data) => data.amm !== "false");
+    // const finalData = allDataForPools.filter((data) => data.amm !== "false");
 
     return {
       success: true,
-      poolsData: finalData,
+      // poolsData: finalData,
+      poolsData: allDataForPools,
     };
   } catch (error: any) {
     console.log(error);
