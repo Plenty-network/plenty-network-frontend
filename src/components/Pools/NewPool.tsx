@@ -17,7 +17,8 @@ import {
   TOKEN_A,
   TOKEN_B,
 } from "../../constants/localStorage";
-import { tokensModal, tokenType } from "../../constants/swap";
+import { tokensModalNewPool, tokenType } from "../../constants/swap";
+import { deployStable, deployVolatile } from "../../operations/factory";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
@@ -30,7 +31,7 @@ import SwapModal from "../SwapModal/SwapModal";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import TransactionSubmitted from "../TransactionSubmitted";
 import ConfirmAddPool from "./ConfirmAddPool";
-import NewPoolMain from "./NewPoolMain";
+import NewPoolMain, { Pair } from "./NewPoolMain";
 import { TextNewPool } from "./TextNewPool";
 import TokenModalPool from "./tokenModalPool";
 import tokenModal from "./tokenModalPool";
@@ -95,6 +96,8 @@ export function NewPool(props: IManageLiquidityProps) {
   const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>(
     {} as tokenParameterLiquidity
   );
+  const [tokenInOp, setTokenInOp] = React.useState<ITokenInterface>({} as ITokenInterface);
+  const [tokenOutOp, setTokenOutOp] = React.useState<ITokenInterface>({} as ITokenInterface);
 
   useEffect(() => {
     getLPTokenPrice(tokenIn.name, tokenOut.name, {
@@ -171,17 +174,19 @@ export function NewPool(props: IManageLiquidityProps) {
     }
   }, [tokenIn.name, tokenOut.name]);
   const [tokenType, setTokenType] = useState<tokenType>("tokenIn");
-  const selectToken = (token: tokensModal) => {
+  const selectToken = (token: tokensModalNewPool) => {
     if ((tokenType === "tokenOut" || tokenType === "tokenIn") && firstTokenAmountLiq !== "") {
       setSecondTokenAmountLiq("");
     }
     if (tokenType === "tokenIn") {
+      setTokenInOp(token.interface);
       setTokenIn({
         name: token.name,
         symbol: token.name,
         image: token.image,
       });
     } else {
+      setTokenOutOp(token.interface);
       setTokenOut({
         name: token.name,
         symbol: token.name,
@@ -234,6 +239,7 @@ export function NewPool(props: IManageLiquidityProps) {
       new: token[1].extras?.isNew as boolean,
       chainType: token[1].extras?.chain as Chain,
       address: token[1].address,
+      interface: token[1],
     }));
   }, [tokens]);
   tokensListConfig.sort(
@@ -256,73 +262,153 @@ export function NewPool(props: IManageLiquidityProps) {
     setContentTransaction(`new pool`);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
-    /*uncomment and replace the operation name and rearrange the parameters */
-    // Operationname(
-    //   tokenIn.symbol,
-    //   tokenOut.symbol,
-    //   firstTokenAmountLiq,
-    //   secondTokenAmountLiq,
-    //   pair,
-    //   transactionSubmitModal,
-    //   resetAllValues,
-    //   setShowConfirmTransaction,
+    if (pair === Pair.VOLATILE) {
+      console.log(
+        "ishu2",
+        tokenInOp,
+        tokenOutOp,
+        userAddress,
+        firstTokenAmountLiq,
+        secondTokenAmountLiq
+      );
+      deployVolatile(
+        tokenInOp,
+        tokenOutOp,
+        userAddress,
+        new BigNumber(firstTokenAmountLiq),
+        new BigNumber(secondTokenAmountLiq),
+        transactionSubmitModal,
+        resetAllValues,
+        setShowConfirmTransaction,
+        {
+          flashType: Flashtype.Info,
+          headerText: "Transaction submitted",
+          trailingText: `Add new pool`,
+          linkText: "View in Explorer",
+          isLoading: true,
+          transactionId: "",
+        }
+      ).then((response) => {
+        if (response.success) {
+          setBalanceUpdate(true);
+          resetAllValues();
+          setTimeout(() => {
+            setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Success,
+                headerText: "Success",
+                trailingText: `New pool`,
+                linkText: "View in Explorer",
+                isLoading: true,
+                onClick: () => {
+                  window.open(
+                    `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                    "_blank"
+                  );
+                },
+                transactionId: response.operationId ? response.operationId : "",
+              })
+            );
+          }, 6000);
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          setContentTransaction("");
+        } else {
+          setBalanceUpdate(true);
+          //resetAllValues();
+          setShowConfirmTransaction(false);
+          setTimeout(() => {
+            setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Rejected,
+                transactionId: "",
+                headerText: "Rejected",
+                trailingText: `New pool`,
+                linkText: "",
+                isLoading: true,
+              })
+            );
+          }, 2000);
 
-    //   {
-    //     flashType: Flashtype.Info,
-    //     headerText: "Transaction submitted",
-    //     trailingText: `Add new pool`,
-    //     linkText: "View in Explorer",
-    //     isLoading: true,
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          setContentTransaction("");
+        }
+      });
+    } else if (pair === Pair.STABLE) {
+      console.log(
+        "ishu2",
+        tokenInOp,
+        tokenOutOp,
+        userAddress,
+        firstTokenAmountLiq,
+        secondTokenAmountLiq
+      );
+      deployStable(
+        tokenInOp,
+        tokenOutOp,
+        userAddress,
+        new BigNumber(firstTokenAmountLiq),
+        new BigNumber(secondTokenAmountLiq),
+        transactionSubmitModal,
+        resetAllValues,
+        setShowConfirmTransaction,
+        {
+          flashType: Flashtype.Info,
+          headerText: "Transaction submitted",
+          trailingText: `Add new pool`,
+          linkText: "View in Explorer",
+          isLoading: true,
+          transactionId: "",
+        }
+      ).then((response) => {
+        if (response.success) {
+          setBalanceUpdate(true);
+          resetAllValues();
+          setTimeout(() => {
+            setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Success,
+                headerText: "Success",
+                trailingText: `New pool`,
+                linkText: "View in Explorer",
+                isLoading: true,
+                onClick: () => {
+                  window.open(
+                    `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                    "_blank"
+                  );
+                },
+                transactionId: response.operationId ? response.operationId : "",
+              })
+            );
+          }, 6000);
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          setContentTransaction("");
+        } else {
+          setBalanceUpdate(true);
+          resetAllValues();
+          setShowConfirmTransaction(false);
+          setTimeout(() => {
+            setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Rejected,
+                transactionId: "",
+                headerText: "Rejected",
+                trailingText: `New pool`,
+                linkText: "",
+                isLoading: true,
+              })
+            );
+          }, 2000);
 
-    //     transactionId: "",
-    //   }
-    // ).then((response) => {
-    //   if (response.success) {
-    //     setBalanceUpdate(true);
-    //     //resetAllValues();
-    //     setTimeout(() => {
-    //       setShowTransactionSubmitModal(false);
-    //       dispatch(
-    //         setFlashMessage({
-    //           flashType: Flashtype.Success,
-    //           headerText: "Success",
-    //           trailingText: `New pool`,
-    //           linkText: "View in Explorer",
-    //           isLoading: true,
-    //           onClick: () => {
-    //             window.open(
-    //               `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
-    //               "_blank"
-    //             );
-    //           },
-    //           transactionId: response.operationId ? response.operationId : "",
-    //         })
-    //       );
-    //     }, 6000);
-    //     dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-    //     setContentTransaction("");
-    //   } else {
-    //     setBalanceUpdate(true);
-    //     //resetAllValues();
-    //     setShowConfirmTransaction(false);
-    //     setTimeout(() => {
-    //       setShowTransactionSubmitModal(false);
-    //       dispatch(
-    //         setFlashMessage({
-    //           flashType: Flashtype.Rejected,
-    //           transactionId: "",
-    //           headerText: "Rejected",
-    //           trailingText: `New pool`,
-    //           linkText: "",
-    //           isLoading: true,
-    //         })
-    //       );
-    //     }, 2000);
-
-    //     dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-    //     setContentTransaction("");
-    //   }
-    // });
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          setContentTransaction("");
+        }
+      });
+    }
   };
   return (
     <>

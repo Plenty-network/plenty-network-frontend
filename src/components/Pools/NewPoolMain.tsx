@@ -388,7 +388,7 @@ function NewPoolMain(props: ILiquidityProps) {
           <span className="ml-4">Stable pair</span>
         </div>
         <div
-          onClick={() => props.setPair(Pair.STABLE)}
+          onClick={() => props.setPair(Pair.VOLATILE)}
           className={clsx(
             "  px-4 border w-full flex items-center h-[54px] z-10 cursor-pointer font-body4 rounded-2xl ",
             props.pair === Pair.VOLATILE

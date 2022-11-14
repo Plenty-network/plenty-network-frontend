@@ -24,6 +24,18 @@ export const deployVolatile = async (
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
+  console.log(
+    "ishu2",
+    token1,
+    token2,
+    caller,
+    token1Amount.toString(),
+    token2Amount.toString(),
+    transactionSubmitModal,
+    resetAllValues,
+    setShowConfirmTransaction,
+    flashMessageContent
+  );
   try {
     const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();

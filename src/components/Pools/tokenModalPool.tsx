@@ -32,6 +32,7 @@ interface ISwapModalProps {
 function TokenModalPool(props: ISwapModalProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const searchTokenEl = useRef(null);
+  const tokenFromConfig = useAppSelector((state) => state.config.standard);
   const [tokensToShow, setTokensToShow] = useState<tokensModal[] | []>([]);
   const [topTokens, setTopTokens] = useState<{
     [id: string]: number;
@@ -40,7 +41,7 @@ function TokenModalPool(props: ISwapModalProps) {
       [id: string]: number;
     }
   );
-  const tokenFromContract = useRef<ITokenInterface[]>([] as ITokenInterface[]);
+
   useEffect(() => {
     topTokenListGhostnet().then((res) => {
       setTopTokens(res.topTokens);
@@ -49,9 +50,11 @@ function TokenModalPool(props: ISwapModalProps) {
 
   const topTokensListArray = useMemo(() => {
     const tokensArray = Object.entries(topTokens);
+
     return tokensArray.map((token) => ({
       name: token[0],
       image: `/assets/Tokens/${token[0]}.png`,
+      interface: tokenFromConfig[token[0]],
     }));
   }, [topTokens]);
 
@@ -85,17 +88,16 @@ function TokenModalPool(props: ISwapModalProps) {
             getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
               setContractTokenBalance(res.allTokensBalances);
             });
-            //tokenFromContract.current = res.allTokensList;
             const res1 = res.allTokensList.map((token) => ({
               name: token.symbol,
               image: token.iconUrl ? token.iconUrl : `/assets/Tokens/ctez.png`,
               new: false,
               chainType: Chain.TEZOS,
+              interface: token,
             }));
 
             setTokensToShow(res1);
           } else {
-            tokenFromContract.current = [];
             setTokensToShow([]);
           }
         });
