@@ -78,39 +78,41 @@ export const poolsDataWrapper = async (
         isStakeAvailable = stakeResponse;
       }
 
-      allData[poolData.pool] = {
-        tokenA: AMM.token1.symbol,
-        tokenB: AMM.token2.symbol,
-        poolType: AMM.type,
-        apr:
-          poolData.apr != 'NaN'
-            ? new BigNumber(poolData.apr)
-            : new BigNumber(0),
-        futureApr: new BigNumber(poolData.futureApr) ?? new BigNumber(0),
-        boostedApr:
-          poolData.apr != 'NaN'
-            ? new BigNumber(poolData.apr).multipliedBy(2.5)
-            : new BigNumber(0), //Check formula
-
-        volume: new BigNumber(analyticsObject.volume24H.value),
-        volumeTokenA: new BigNumber(analyticsObject.volume24H.token1),
-        volumeTokenB: new BigNumber(analyticsObject.volume24H.token2),
-
-        tvl: new BigNumber(analyticsObject.tvl.value),
-        tvlTokenA: new BigNumber(analyticsObject.tvl.token1),
-        tvlTokenB: new BigNumber(analyticsObject.tvl.token2),
-
-        fees: new BigNumber(analyticsObject.fees7D.value),
-        feesTokenA: new BigNumber(analyticsObject.fees7D.token1),
-        feesTokenB: new BigNumber(analyticsObject.fees7D.token2),
-
-        bribeUSD: bribe,
-        bribes: bribes,
-
-        isLiquidityAvailable,
-        isStakeAvailable,
-        isGaugeAvailable: AMM.gaugeAddress ? true : false,
-      };
+      if(AMM) {
+        allData[poolData.pool] = {
+          tokenA: AMM.token1.symbol,
+          tokenB: AMM.token2.symbol,
+          poolType: AMM.type,
+          apr:
+            poolData.apr != 'NaN'
+              ? new BigNumber(poolData.apr)
+              : new BigNumber(0),
+          futureApr: new BigNumber(poolData.futureApr) ?? new BigNumber(0),
+          boostedApr:
+            poolData.apr != 'NaN'
+              ? new BigNumber(poolData.apr).multipliedBy(2.5)
+              : new BigNumber(0), //Check formula
+  
+          volume: new BigNumber(analyticsObject.volume24H.value),
+          volumeTokenA: new BigNumber(analyticsObject.volume24H.token1),
+          volumeTokenB: new BigNumber(analyticsObject.volume24H.token2),
+  
+          tvl: new BigNumber(analyticsObject.tvl.value),
+          tvlTokenA: new BigNumber(analyticsObject.tvl.token1),
+          tvlTokenB: new BigNumber(analyticsObject.tvl.token2),
+  
+          fees: new BigNumber(analyticsObject.fees7D.value),
+          feesTokenA: new BigNumber(analyticsObject.fees7D.token1),
+          feesTokenB: new BigNumber(analyticsObject.fees7D.token2),
+  
+          bribeUSD: bribe,
+          bribes: bribes,
+  
+          isLiquidityAvailable,
+          isStakeAvailable,
+          isGaugeAvailable: AMM.gaugeAddress ? true : false,
+        };
+      }
     }
     
     return {

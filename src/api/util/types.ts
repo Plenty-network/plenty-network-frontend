@@ -76,3 +76,9 @@ export interface ITzktTokensListResponse {
   allTokensList: ITokenInterface[];
   error?: string;
 }
+
+export interface IGaugeExistsResponse {
+  gaugeExists: boolean;
+  gaugeAddress: string | undefined;
+  error?: string;
+}
