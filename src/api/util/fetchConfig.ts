@@ -1,8 +1,10 @@
 import axios from 'axios';
-import { connectedNetwork } from '../../common/walletconnect';
+import { connectedNetwork, voterAddress as voterContractAddress } from '../../common/walletconnect';
 import Config from '../../config/config';
 import { AMM_TYPE, IAmmContracts, IContractsConfig, ITokenInterface, ITokens } from '../../config/types';
 import { store } from '../../redux';
+import { getTzktBigMapData, getTzktStorageData } from './storageProvider';
+import { IGaugeExistsResponse } from './types';
 
 export const fetchConfig = async (): Promise<IContractsConfig> => {
   try {
@@ -168,5 +170,45 @@ export const isVolatilePair = (
       return tokenData;
     } catch (error: any) {
       return undefined;
+    }
+  };
+
+  
+  /**
+   * Check if gauge exists for given pool via tzkt.
+   * @param ammAddress - Contract address of the pool
+   */
+  export const gaugeExistsForAPool = async (ammAddress: string): Promise<IGaugeExistsResponse> => {
+    try {
+      const voterStorageResponse = await getTzktStorageData(voterContractAddress);
+      const ammToGaugeBribeMapId = Number(voterStorageResponse.data.amm_to_gauge_bribe).toString();
+      const ammToGaugeBribeResponse = await getTzktBigMapData(
+        ammToGaugeBribeMapId,
+        `active=true&key=${ammAddress}`
+      );
+      const ammToGaugeBribeData = ammToGaugeBribeResponse.data;
+
+      if (ammToGaugeBribeData.length <= 0) {
+        return {
+          gaugeExists: false,
+          gaugeAddress: undefined,
+        };
+      } else {
+        const gaugeAddress =
+          ammToGaugeBribeData[0].value && ammToGaugeBribeData[0].value.gauge
+            ? String(ammToGaugeBribeData[0].value.gauge)
+            : undefined;
+        return {
+          gaugeExists: gaugeAddress ? true : false,
+          gaugeAddress: gaugeAddress,
+        };
+      }
+    } catch (error: any) {
+      console.log(error);
+      return {
+        gaugeExists: false,
+        gaugeAddress: undefined,
+        error: error.message,
+      };
     }
   };
