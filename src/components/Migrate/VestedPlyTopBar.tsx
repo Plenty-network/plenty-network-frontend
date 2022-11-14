@@ -108,7 +108,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
                   ? "bg-primary-500 text-black"
                   : "bg-blue-200 text-blue-300"
               )}
-              onClick={props.vestedData.isClaimable ? () => props.onClick(true) : () => {}}
+              onClick={props.vestedData.isClaimable ? () => props.onClick() : () => {}}
             >
               Claim
               {!props.vestedData.isClaimable && (

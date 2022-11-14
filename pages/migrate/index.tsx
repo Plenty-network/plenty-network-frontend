@@ -4,7 +4,7 @@ import * as React from "react";
 import { BigNumber } from "bignumber.js";
 import "animate.css";
 import playIcon from "../../src/assets/icon/pools/playIcon.svg";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { connect, useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../src/redux";
@@ -159,13 +159,13 @@ function MigrateMain(props: any) {
       }
     }
   }, [userAddress, lpTokenPrice, props.operationSuccesful]);
-  const [days, hours, minutes, seconds] = useCountdown(
-    props.vestedData?.nextClaim?.isGreaterThan(0)
-      ? props.vestedData?.nextClaim?.toNumber()
-      : Date.now()
+
+  var [days, hours, minutes, seconds] = useCountdown(
+    vestedData?.nextClaim?.isGreaterThan(0) ? vestedData?.nextClaim?.toNumber() : Date.now()
   );
+
   useInterval(() => {
-    if (minutes < 0 || seconds < 0) {
+    if ((minutes < 0 || seconds < 0) && !vestedData.isClaimable) {
       if (userAddress) {
         getUserClaimAndVestAmount(userAddress).then((res) => {
           setVestedData(res);
@@ -256,6 +256,10 @@ function MigrateMain(props: any) {
   ]);
 
   const [isClaimVested, setIsClaimVested] = useState(false);
+  const handleClaimClick = () => {
+    setIsClaimVested(true);
+    setShowMigrateSwap(false);
+  };
   return (
     <>
       <SideBarHOC>
@@ -268,7 +272,7 @@ function MigrateMain(props: any) {
                   value={new BigNumber(12)}
                   isLoading={false}
                   vestedData={vestedData}
-                  onClick={setIsClaimVested}
+                  onClick={handleClaimClick}
                 />
               )}
             </div>
@@ -278,7 +282,7 @@ function MigrateMain(props: any) {
               value={new BigNumber(12)}
               isLoading={false}
               vestedData={vestedData}
-              onClick={setIsClaimVested}
+              onClick={handleClaimClick}
             />
           )}
 
