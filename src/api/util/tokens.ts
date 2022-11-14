@@ -1,4 +1,3 @@
-import { BigNumber } from "bignumber.js";
 import axios from "axios";
 import * as isIPFS from "is-ipfs";
 import { validateContractAddress, ValidationResult } from "@taquito/utils";

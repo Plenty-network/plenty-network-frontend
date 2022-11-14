@@ -35,6 +35,7 @@ export interface IConfig {
   VE_INDEXER: string;
   PLY_INDEXER: string;
   PLY_TOKEN: { mainnet: string; testnet: string };
+  FACTORY : { mainnet: string; testnet: string };
   EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData }
   IPFS_LINKS: { primary: string; fallback: string }
 }
