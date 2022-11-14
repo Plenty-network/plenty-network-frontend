@@ -28,9 +28,7 @@ import { NoLocks } from "../Rewards/NoLocks";
 TimeAgo.addDefaultLocale(en);
 
 export function LocksTablePosition(props: ILocksTablePosition) {
-  // const epochData = store.getState().epoch.currentEpoch;
   const epochData = useAppSelector((state) => state.epoch.currentEpoch);
-  // const userAddress = store.getState().wallet.address;
   const userAddress = useAppSelector((state) => state.wallet.address);
   const totalTime = epochData ? epochData.endTimestamp - epochData.startTimestamp : 0;
   const remainingTime = epochData ? epochData.endTimestamp - new Date().getTime() : 0;

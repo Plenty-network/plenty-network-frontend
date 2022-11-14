@@ -50,6 +50,7 @@ export interface IManageLiquidityProps {
   tokenOut: tokenParameterLiquidity;
   setActiveState: React.Dispatch<React.SetStateAction<string>>;
   activeState: string;
+  isGaugeAvailable: boolean;
 }
 
 export function ManageLiquidity(props: IManageLiquidityProps) {
@@ -905,6 +906,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             <ManageLiquidityHeader
               className="mt-5 mb-6"
               activeStateTab={props.activeState}
+              isGaugeAvailable={props.isGaugeAvailable}
               setActiveStateTab={props.setActiveState}
             />
 

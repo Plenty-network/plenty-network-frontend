@@ -204,6 +204,11 @@ export function NewPool(props: IManageLiquidityProps) {
 
   const closeModal = () => {
     props.setShow(false);
+    setTokenIn({} as tokenParameterLiquidity);
+    setTokenOut({} as tokenParameterLiquidity);
+    setFirstTokenAmountLiq("");
+    setSecondTokenAmountLiq("");
+    setPair("");
   };
 
   const [searchQuery, setSearchQuery] = useState("");

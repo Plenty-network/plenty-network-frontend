@@ -428,6 +428,7 @@ function NewPoolMain(props: ILiquidityProps) {
           closeFn={props.setShowLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}
+          isGaugeAvailable={true}
         />
       )}
     </>

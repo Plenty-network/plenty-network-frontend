@@ -35,14 +35,15 @@ export interface IShortCardProps {
   showLiquidityModal: boolean;
 }
 export interface IManageBtnProps {
+  setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
   isLiquidityAvailable: boolean;
   setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
   isStakeAvailable: boolean;
   tokenA: string;
   tokenB: string;
+  isGauge: boolean;
 }
 export function ShortCard(props: IShortCardProps) {
-  // const userAddress = store.getState().wallet.address;
   const userAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
@@ -58,6 +59,7 @@ export function ShortCard(props: IShortCardProps) {
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
+  const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
@@ -119,7 +121,14 @@ export function ShortCard(props: IShortCardProps) {
         showOnMobile: true,
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x) => <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} isMobile={true} />,
+        accessor: (x) =>
+          x.isGaugeAvailable ? (
+            <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} isMobile={true} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              --
+            </div>
+          ),
       },
       {
         Header: "APR",
@@ -131,7 +140,14 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "futureApr"),
-        accessor: (x: any) => <AprInfoFuture futureApr={x.futureApr} />,
+        accessor: (x: any) =>
+          x.isGaugeAvailable ? (
+            <AprInfoFuture futureApr={x.futureApr} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              --
+            </div>
+          ),
       },
       {
         Header: "",
@@ -144,6 +160,8 @@ export function ShortCard(props: IShortCardProps) {
             tokenA={x.tokenA.toString()}
             tokenB={x.tokenB.toString()}
             setShowLiquidityModal={props.setShowLiquidityModal}
+            isGauge={x.isGaugeAvailable}
+            setIsGaugeAvailable={setIsGaugeAvailable}
           />
         ),
       },
@@ -185,7 +203,14 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x: any) => <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} />,
+        accessor: (x: any) =>
+          x.isGaugeAvailable ? (
+            <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              --
+            </div>
+          ),
       },
       {
         Header: "APR",
@@ -197,7 +222,14 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "futureApr"),
-        accessor: (x: any) => <AprInfoFuture futureApr={x.futureApr} />,
+        accessor: (x: any) =>
+          x.isGaugeAvailable ? (
+            <AprInfoFuture futureApr={x.futureApr} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              --
+            </div>
+          ),
       },
       {
         Header: "Volume",
@@ -263,7 +295,14 @@ export function ShortCard(props: IShortCardProps) {
         tooltipMessage:
           "Incentives provided by the protocols to boost the liquidity of their tokens.",
         isToolTipEnabled: true,
-        accessor: (x) => <BribesPool value={x.bribeUSD} bribesData={x.bribes} />,
+        accessor: (x) =>
+          x.isGaugeAvailable ? (
+            <BribesPool value={x.bribeUSD} bribesData={x.bribes} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              --
+            </div>
+          ),
       },
       {
         Header: "",
@@ -278,6 +317,8 @@ export function ShortCard(props: IShortCardProps) {
             tokenA={x.tokenA.toString()}
             tokenB={x.tokenB.toString()}
             setShowLiquidityModal={props.setShowLiquidityModal}
+            isGauge={x.isGaugeAvailable}
+            setIsGaugeAvailable={setIsGaugeAvailable}
           />
         ),
       },
@@ -292,6 +333,7 @@ export function ShortCard(props: IShortCardProps) {
           className="bg-primary-500/10 text-f12 md:text-f14 hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-5 md:px-7 py-2 rounded-lg"
           onClick={() => {
             dispatch(getTotalVotingPower());
+            props.setIsGaugeAvailable(props.isGauge);
             props.isLiquidityAvailable
               ? props.isStakeAvailable
                 ? setActiveState(ActiveLiquidity.Rewards)
@@ -324,6 +366,7 @@ export function ShortCard(props: IShortCardProps) {
           closeFn={props.setShowLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}
+          isGaugeAvailable={isGaugeAvailable}
         />
       )}
       <div className={` overflow-x-auto inner  ${props.className}`}>
