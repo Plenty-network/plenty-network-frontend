@@ -282,7 +282,8 @@ export const deployStable = async (
           token2Precision,
           token2.variant === TokenVariant.FA2 ? true : false,
           char2Bytes(lpTokenDecimals.toString()),
-          char2Bytes(`${token1.symbol}-${token2.symbol} PNLP`)
+          char2Bytes(`${token1.symbol}-${token2.symbol} PNLP`),
+          caller
         )
         .toTransferParams(),
     });
