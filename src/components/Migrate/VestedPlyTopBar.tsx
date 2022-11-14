@@ -17,6 +17,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
   const totalWaitingTime = new BigNumber(props.vestedData.nextClaim).minus(
     props.vestedData.lastClaim
   );
+
   const remainingPercentage = remainingTime.multipliedBy(100).dividedBy(totalWaitingTime);
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
@@ -108,7 +109,13 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
                   ? "bg-primary-500 text-black"
                   : "bg-blue-200 text-blue-300"
               )}
-              onClick={props.vestedData.isClaimable ? () => props.onClick() : () => {}}
+              onClick={
+                props.plentyBal?.toNumber() >= 0 &&
+                props.wrapBal?.toNumber() >= 0 &&
+                props.vestedData?.isClaimable
+                  ? () => props.onClick()
+                  : () => {}
+              }
             >
               Claim
               {!props.vestedData.isClaimable && (

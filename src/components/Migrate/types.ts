@@ -5,4 +5,6 @@ export interface IVestedPlyTopbarProps {
   onClick: () => void;
   value: BigNumber;
   vestedData: IVestAndClaim;
+  plentyBal: BigNumber;
+  wrapBal: BigNumber;
 }

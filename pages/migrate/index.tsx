@@ -259,6 +259,7 @@ function MigrateMain(props: any) {
   const handleClaimClick = () => {
     setIsClaimVested(true);
     setShowMigrateSwap(false);
+    setShowTopBar(false);
   };
   return (
     <>
@@ -273,6 +274,8 @@ function MigrateMain(props: any) {
                   isLoading={false}
                   vestedData={vestedData}
                   onClick={handleClaimClick}
+                  plentyBal={allBalance.userBalance[MigrateToken.PLENTY]}
+                  wrapBal={allBalance.userBalance[MigrateToken.WRAP]}
                 />
               )}
             </div>
@@ -283,6 +286,8 @@ function MigrateMain(props: any) {
               isLoading={false}
               vestedData={vestedData}
               onClick={handleClaimClick}
+              plentyBal={allBalance.userBalance[MigrateToken.PLENTY]}
+              wrapBal={allBalance.userBalance[MigrateToken.WRAP]}
             />
           )}
 
