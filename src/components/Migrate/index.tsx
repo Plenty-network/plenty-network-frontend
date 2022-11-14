@@ -45,7 +45,6 @@ function Migrate(props: IMigrateProps) {
   const [firstTokenAmount, setFirstTokenAmount] = useState("");
   const [secondTokenAmount, setSecondTokenAmount] = useState("");
 
-  const tokens = useAppSelector((state) => state.config.standard);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const userAddress = useAppSelector((state) => state.wallet.address);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);

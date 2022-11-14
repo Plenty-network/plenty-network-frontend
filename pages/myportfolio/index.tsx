@@ -1785,12 +1785,12 @@ function MyPortfolio(props: any) {
                       <p
                         className={clsx(
                           " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center animate__animated animate__zoomIn animate__faster",
-                          bribesClaimData.length === 0 || feeClaimData.length === 0
+                          bribesClaimData.length === 0 && feeClaimData.length === 0
                             ? "cursor-not-allowed"
                             : "cursor-pointer"
                         )}
                         onClick={
-                          bribesClaimData.length === 0 || feeClaimData.length === 0
+                          bribesClaimData.length === 0 && feeClaimData.length === 0
                             ? () => {}
                             : () => {
                                 setShowClaimPly(true);
