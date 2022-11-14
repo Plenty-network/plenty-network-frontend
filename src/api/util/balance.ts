@@ -338,7 +338,7 @@ export const getBalanceFromTzkt = async (
     ) {
       throw new Error("Invalid or empty parameters");
     }
-    let symbol: string = "";
+    let symbol: string = tokenSymbol || "";
     let userBalance = new BigNumber(0);
 
     const balanceResponse = await getTzktTokenData(
