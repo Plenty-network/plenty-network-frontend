@@ -108,7 +108,7 @@ function Swap(props: ISwapProps) {
         }
       );
     } else {
-      setAllBalance({ success: true, userBalance: {} });
+      setAllBalance({ success: false, userBalance: {} });
       setUserBalances({});
     }
   }, [props.otherProps.walletAddress, TOKEN, balanceUpdate]);
@@ -652,6 +652,7 @@ function Swap(props: ISwapProps) {
           );
         })}
         show={swapModalShow}
+        isSuccess={allBalance.success}
         isLoading={allBalance.success}
         allBalance={allBalance.userBalance}
         selectToken={selectToken}

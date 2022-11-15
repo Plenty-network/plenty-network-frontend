@@ -1,5 +1,5 @@
 import { BigNumber } from "bignumber.js";
-import { IMigrateExchange, IVestAndClaim } from "./types";
+import { IMigrateExchange, IveResponse, IVestAndClaim } from "./types";
 import { veSwapAddress } from "../../common/walletconnect";
 import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
 import { DAY, PLY_DECIMAL_MULTIPLIER } from "../../constants/global";
@@ -49,6 +49,7 @@ export const getMigrateExchangeAmount = (
  */
 export const getUserClaimAndVestAmount = async (userAddress: string): Promise<IVestAndClaim> => {
   try {
+
     const swapStorageResponse = await getTzktStorageData(veSwapAddress);
     const swapStorage = swapStorageResponse.data;
     const ledgerBigMap = swapStorage.ledger;
@@ -57,21 +58,25 @@ export const getUserClaimAndVestAmount = async (userAddress: string): Promise<IV
       ledgerBigMap,
       `key=${userAddress}&select=key,value`
     );
-    const ledgerData = ledgerResponse.data.value;
+
+    const ledgerData = ledgerResponse.data[0].value;
+
+    const date = new Date(ledgerData.last_claim);
+    ledgerData.last_claim = Math.floor(date.getTime()/1000);
 
     const vested__ = BigNumber.min(
-      ledgerData.balance,
-      ledgerData.release_rate.multipliedBy(Math.floor(Date.now() / 1000) - ledgerData.last_claim)
+      new BigNumber(ledgerData.balance),
+      (new BigNumber(ledgerData.release_rate).multipliedBy(new BigNumber((Math.floor(Date.now() / 1000))).minus(new BigNumber(ledgerData.last_claim))))
     );
 
-    const claimableAmount = vested__.plus(ledgerData.vested).dividedBy(PLY_DECIMAL_MULTIPLIER);
-    const vestedAmount = new BigNumber(ledgerData.balance.minus(vested__)).dividedBy(
+    const claimableAmount = vested__.plus(new BigNumber(ledgerData.vested)).dividedBy(PLY_DECIMAL_MULTIPLIER);
+    const vestedAmount = new BigNumber(new BigNumber(ledgerData.balance).minus(vested__)).dividedBy(
       PLY_DECIMAL_MULTIPLIER
     );
 
     const isClaimable = Math.floor(Date.now() / 1000) - ledgerData.last_claim > DAY ? true : false;
-    const lastClaim = ledgerData.last_claim;
-    const nextClaim = lastClaim.plus(DAY);
+    const lastClaim = new BigNumber(ledgerData.last_claim);
+    const nextClaim = new BigNumber(lastClaim).plus(DAY);
 
     return {
       success: true,
