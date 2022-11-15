@@ -9,6 +9,7 @@ interface ITokenDropdownProps {
   onClick?: () => void | Promise<void>;
   tokenName: string;
   className?: string;
+  isArrow?: boolean;
 }
 function TokenDropdown(props: ITokenDropdownProps) {
   const [isTokenSelect, setIsTokenSelect] = useState(false);
@@ -23,8 +24,9 @@ function TokenDropdown(props: ITokenDropdownProps) {
     return (
       <button
         className={clsx(
-          " px-2 py-2.5 md:p-3 rounded-xl border border-text-800 hover:border-text-700 font-mobile-text md:font-title3 text-white  content-center justify-center h-[50px] ",
-          isTokenSelect && "border-primary-500/[0.7]"
+          " px-2 py-2.5 md:p-3 rounded-xl border border-text-800  font-mobile-text md:font-title3 text-white  content-center justify-center h-[50px] ",
+          !props.isArrow && "hover:border-text-700",
+          !props.isArrow && isTokenSelect && "border-primary-500/[0.7]"
         )}
         onClick={onClickToken}
         {...props}
@@ -35,9 +37,11 @@ function TokenDropdown(props: ITokenDropdownProps) {
         <span className="mx-2 md:mx-2 relative -top-[6px]">
           <span>{props.tokenName}</span>
         </span>
-        <span className="md:ml-px relative -top-[1px] ">
-          <Image alt={"alt"} src={arrowDown} height={"20px"} width={"20px"} />
-        </span>
+        {props.isArrow ? null : (
+          <span className="md:ml-px relative -top-[1px] ">
+            <Image alt={"alt"} src={arrowDown} height={"20px"} width={"20px"} />
+          </span>
+        )}
       </button>
     );
   } else {

@@ -22,7 +22,7 @@ const Config: IConfig = {
   },
   VE_SWAP : {
     mainnet: '',
-    testnet: 'KT1AmKUCCB9VBtx56emgQfx5GA9RR2nGBANK',
+    testnet: 'KT1FaUxWi4Ah1oATPwM5Go1vqsk5uyPefwrZ',
   },
   VOTER: {
     mainnet: '',
@@ -35,6 +35,10 @@ const Config: IConfig = {
   PLY_TOKEN : {
     mainnet : '',
     testnet : 'KT1BxKvsSCKTJ9XrmkjQRDQfh5mZBb14ue8D',
+  },
+  FACTORY : {
+    mainnet : '',
+    testnet : 'KT1HtkELyuAd2tCxcvQ9DtGPRQ7cm26wE6su',
   },
 
   VE_INDEXER : 'https://ply-indexer.ghostnet.plenty.network/v1/',
