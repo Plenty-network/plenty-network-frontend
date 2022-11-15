@@ -17,6 +17,7 @@ export enum TooltipType {
   withTitle,
   swapRoute,
   swap,
+  withoutBorder,
 }
 export interface IToolTipProps {
   position?: Position;
@@ -48,6 +49,28 @@ export function ToolTip(props: IToolTipProps) {
             props.position ? props.position : "right"
           }`}
           arrowColor={isMobile ? "rgba(60, 60, 60,0)" : "#341E54"}
+          place={props.position ? props.position : "right"}
+          id={`tooltip_${randomId}`}
+          effect="solid"
+        >
+          {props.message && <span className="font-normal">{props.message}</span>}
+          {props.toolTipChild}
+        </ReactTooltip>
+      </>
+    );
+  } else if (props.type === TooltipType.withoutBorder) {
+    return (
+      <>
+        <a className={props.classNameAncorToolTip} data-tip data-for={`tooltip_${randomId}`}>
+          {props.children}
+        </a>
+        <ReactTooltip
+          disable={props.disable}
+          showInitial={props.isShowInnitially}
+          className={` tooltipCustomWithoutBorder ${props.classNameToolTipContainer}-${
+            props.position ? props.position : "right"
+          }`}
+          arrowColor="rgba(60, 60, 60,0)"
           place={props.position ? props.position : "right"}
           id={`tooltip_${randomId}`}
           effect="solid"

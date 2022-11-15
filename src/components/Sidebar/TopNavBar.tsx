@@ -37,13 +37,10 @@ export function IconBTN(props: IIconBTNProps) {
 }
 
 export function TopNavBar(props: ITopNavBarProps) {
-
-
   // const userAddress = store.getState().wallet.address;
   const userAddress = useAppSelector((state) => state.wallet.address);
   //const isBanner = store.getState().walletLoading.isBanner;
   const router = useRouter();
-
 
   return (
     <>
@@ -64,7 +61,7 @@ export function TopNavBar(props: ITopNavBarProps) {
         </div>
         {!props.isLanding && (
           <div className="flex justify-between flex-1 h-full">
-            {!router.pathname.includes("swap") && <Epoch />}
+            {!router.pathname.includes("swap") && !router.pathname.includes("migrate") && <Epoch />}
             <div className="ml-auto flex flex-row gap-7 ">
               <div className="flex flex-row gap-3.5 ">
                 {userAddress && !props.isBribes && (

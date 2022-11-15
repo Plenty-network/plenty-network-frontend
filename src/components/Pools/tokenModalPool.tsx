@@ -2,6 +2,8 @@ import { PopUpModal } from "../Modal/popupModal";
 import SearchBar from "../SearchBar/SearchBar";
 import Image from "next/image";
 import infogrey from "../../assets/icon/swap/info-grey.svg";
+
+import fallback from "../../assets/icon/pools/fallback.png";
 import { tokenParameter, tokensModal, tokenType } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
@@ -73,6 +75,10 @@ function TokenModalPool(props: ISwapModalProps) {
   const [contractTokenBalance, setContractTokenBalance] = useState<IAllTokensBalance>(
     {} as IAllTokensBalance
   );
+  const changeSource = (e: any) => {
+    e.target.src = { fallback };
+    e.onerror = null;
+  };
   useEffect(() => {
     const filterTokens = () => {
       const filterTokenslist = props.tokens
@@ -90,7 +96,7 @@ function TokenModalPool(props: ISwapModalProps) {
             });
             const res1 = res.allTokensList.map((token) => ({
               name: token.symbol,
-              image: token.iconUrl ? token.iconUrl : `/assets/Tokens/ctez.png`,
+              image: token.iconUrl ? token.iconUrl : fallback,
               new: false,
               chainType: Chain.TEZOS,
               interface: token,
@@ -192,7 +198,13 @@ function TokenModalPool(props: ISwapModalProps) {
                   >
                     <div>
                       <span className="w-[30px] h-[30px] relative top-1">
-                        <Image alt={"alt"} src={token.image} width={"30px"} height={"30px"} />{" "}
+                        <Image
+                          alt={"alt"}
+                          src={token.image}
+                          width={"30px"}
+                          height={"30px"}
+                          onError={changeSource}
+                        />{" "}
                       </span>
                     </div>
                     <div className="ml-2">

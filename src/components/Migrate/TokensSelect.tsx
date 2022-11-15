@@ -8,28 +8,19 @@ import clsx from "clsx";
 
 interface ISwapModalProps {
   tokens: tokensModal[];
-  isLoading?: boolean;
   show: boolean;
   selectToken: Function;
   onhide: Function;
   tokenIn: tokenParameter;
-
+  isSuccess: boolean;
   allBalance: {
     [id: string]: BigNumber;
   };
-  isSucess: boolean;
 }
-function TokenModal(props: ISwapModalProps) {
+function TokenModalMigrate(props: ISwapModalProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const searchTokenEl = useRef(null);
   const [tokensToShow, setTokensToShow] = useState<tokensModal[] | []>([]);
-  const [topTokens, setTopTokens] = useState<{
-    [id: string]: number;
-  }>(
-    {} as {
-      [id: string]: number;
-    }
-  );
 
   const searchHits = useCallback(
     (token: tokensModal) => {
@@ -61,7 +52,7 @@ function TokenModal(props: ISwapModalProps) {
   const tEZorCTEZtoUppercase = (a: string) =>
     a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
   return props.show ? (
-    <PopUpModal title="Select Token" onhide={() => props.onhide(false)}>
+    <PopUpModal title="Select token" onhide={() => props.onhide(false)}>
       {
         <>
           <div className="mt-5">
@@ -72,13 +63,13 @@ function TokenModal(props: ISwapModalProps) {
             />
           </div>
           {Object.keys(tokensToShow).length === 0 ? (
-            <div className="border  h-[419px]  border-text-800 bg-muted-200 rounded-xl flex justify-center items-center px-[18px] w-full pb-5 mt-5 font-body4 text-white">
+            <div className="border  h-[117px]  border-text-800 bg-muted-200 rounded-xl flex justify-center items-center px-[18px] w-full pb-5 mt-5 font-body4 text-white">
               No Tokens found
             </div>
           ) : (
             <div
               id="tokensList"
-              className="border relative max-h-[419px] h-[419px] modal overflow-y-auto border-text-800 bg-muted-200 rounded-xl  w-full pb-5 mt-5"
+              className="border relative max-h-[117px] h-[117px] modal  border-text-800 bg-muted-200 rounded-xl  w-full pb-5 mt-5"
             >
               {tokensToShow.map((token, index) => {
                 return (
@@ -113,14 +104,14 @@ function TokenModal(props: ISwapModalProps) {
                         <span>New!</span>
                       </div>
                     )}
-                    {props.isSucess && props.allBalance[token.name] ? (
+                    {props.isSuccess && props.allBalance[token.name] ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">
                         {props.allBalance[token.name]
                           ? Number(props.allBalance[token.name]).toFixed(2)
                           : 0.0}
                       </div>
-                    ) : props.isSucess === false ? (
-                      <div className="font-subtitle4 ml-auto mt-[7px]">0</div>
+                    ) : props.isSuccess === false ? (
+                      <div className="font-subtitle4 ml-auto mt-[7px]"> 0</div>
                     ) : (
                       <div className=" ml-auto h-[19px] rounded  animate-pulse bg-shimmer-100 text-shimmer-100 mt-[7px]">
                         9999
@@ -137,4 +128,4 @@ function TokenModal(props: ISwapModalProps) {
   ) : null;
 }
 
-export default TokenModal;
+export default TokenModalMigrate;

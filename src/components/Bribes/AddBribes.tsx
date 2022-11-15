@@ -477,6 +477,7 @@ function AddBribes(props: IAddBribes) {
         })}
         show={swapModalShow}
         allBalance={props.allBalance}
+        isSucess={props.isSucess}
         selectToken={selectToken}
         onhide={setSwapModalShow}
         tokenIn={props.bribeToken}

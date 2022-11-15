@@ -180,6 +180,15 @@ export function MoreSubMenuList(props: ISubMenuListProps) {
         />
       </div>
       {/*  */}
+      <div className="px-9 hover:bg-sideBarHover ">
+        <SingleSideBar
+          name="Migrate"
+          className="px-9 justify-between"
+          iconName="migrate"
+          pathName={"/migrate"}
+          isBottomMenu
+        />
+      </div>
 
       {/*  */}
       {/* <div className=" border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">

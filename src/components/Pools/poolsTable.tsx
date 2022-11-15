@@ -22,6 +22,10 @@ import { NoContentAvailable } from "./Component/ConnectWalletOrNoToken";
 import { PoolsText, PoolsTextWithTooltip } from "./Component/PoolsText";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
+import stake from "../../assets/icon/pools/stakePool.svg";
+import newPool from "../../assets/icon/pools/newPool.svg";
+import Image from "next/image";
+import clsx from "clsx";
 
 export interface IShortCardProps {
   className?: string;
@@ -173,24 +177,36 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "Pools",
         id: "pools",
-        columnWidth: "w-[160px]",
+        columnWidth: "w-[220px]",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x) => (
-          <div className="flex gap-2 items-center max-w-[153px]">
-            <CircularOverLappingImage
-              src1={getImagesPath(x.tokenA.toString())}
-              src2={getImagesPath(x.tokenB.toString())}
-            />
-            <div className="flex flex-col gap-[2px]">
-              <span className="md:text-f14 text-f12 text-white ">
-                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenB.toString())}
-              </span>
-              <span className="text-f12 text-text-500 progTitle">{x.poolType} Pool</span>
+          <>
+            {x.isStakeAvailable ? (
+              <Image src={stake} width={"20px"} height={"20px"} />
+            ) : !x.isGaugeAvailable ? (
+              <Image src={newPool} width={"20px"} height={"20px"} />
+            ) : null}
+            <div
+              className={clsx(
+                "flex gap-2 items-center max-w-[153px]",
+                x.isStakeAvailable ? "ml-3" : "ml-[34px]"
+              )}
+            >
+              <CircularOverLappingImage
+                src1={getImagesPath(x.tokenA.toString())}
+                src2={getImagesPath(x.tokenB.toString())}
+              />
+              <div className="flex flex-col gap-[2px]">
+                <span className="md:text-f14 text-f12 text-white ">
+                  {tEZorCTEZtoUppercase(x.tokenA.toString())}/
+                  {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                </span>
+                <span className="text-f12 text-text-500 progTitle">{x.poolType} Pool</span>
+              </div>
             </div>
-          </div>
+          </>
         ),
       },
       {
@@ -374,6 +390,7 @@ export function ShortCard(props: IShortCardProps) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={poolsTableData}
           shortby="fees"
+          TableName="newPools"
           tableType={true}
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}

@@ -49,6 +49,7 @@ export interface IBribesBtn {
   setShowAddBribes: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IAddBribes {
+  isSucess: boolean;
   setBalanceUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   balanceUpdate: boolean;
   allBalance: {
