@@ -263,14 +263,6 @@ export function NewPool(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     if (pair === Pair.VOLATILE) {
-      console.log(
-        "ishu2",
-        tokenInOp,
-        tokenOutOp,
-        userAddress,
-        firstTokenAmountLiq,
-        secondTokenAmountLiq
-      );
       deployVolatile(
         tokenInOp,
         tokenOutOp,
@@ -336,14 +328,6 @@ export function NewPool(props: IManageLiquidityProps) {
         }
       });
     } else if (pair === Pair.STABLE) {
-      console.log(
-        "ishu2",
-        tokenInOp,
-        tokenOutOp,
-        userAddress,
-        firstTokenAmountLiq,
-        secondTokenAmountLiq
-      );
       deployStable(
         tokenInOp,
         tokenOutOp,

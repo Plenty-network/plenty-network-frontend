@@ -24,14 +24,6 @@ export const deployVolatile = async (
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
-  console.log(
-    "ishu2",
-    token1,
-    token2,
-    caller,
-    token1Amount.toString(),
-    token2Amount.toString(),
-  );
   try {
     const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
@@ -61,20 +53,19 @@ export const deployVolatile = async (
       allBatch.push({
         kind: OpKind.TRANSACTION,
         ...token1Instance.methods
-            .transfer(
-                [
-                    {
-                        from_ : caller,
-                        txs : [
-                            {
-                                to_ : routerAddress,
-                                token_id : token1.tokenId ?? 0,
-                                amount : token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
-                            }
-                        ]
-                    }
-                ]
-            ).toTransferParams(),
+          .transfer([
+            {
+              from_: caller,
+              txs: [
+                {
+                  to_: routerAddress,
+                  token_id: token1.tokenId ?? 0,
+                  amount: token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
+                },
+              ],
+            },
+          ])
+          .toTransferParams(),
       });
     }
     if (token2.variant === TokenVariant.FA12) {
@@ -89,25 +80,24 @@ export const deployVolatile = async (
           .toTransferParams(),
       });
     } else if (token2.variant === TokenVariant.FA2) {
-        allBatch.push({
-            kind: OpKind.TRANSACTION,
-            ...token2Instance.methods
-                .transfer(
-                    [
-                        {
-                            from_ : caller,
-                            txs : [
-                                {
-                                    to_ : routerAddress,
-                                    token_id : token2.tokenId ?? 0,
-                                    amount : token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
-                                }
-                            ]
-                        }
-                    ]
-                ).toTransferParams(),
-          });
-        }
+      allBatch.push({
+        kind: OpKind.TRANSACTION,
+        ...token2Instance.methods
+          .transfer([
+            {
+              from_: caller,
+              txs: [
+                {
+                  to_: routerAddress,
+                  token_id: token2.tokenId ?? 0,
+                  amount: token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
+                },
+              ],
+            },
+          ])
+          .toTransferParams(),
+      });
+    }
 
     const lpTokenDecimals = Math.floor((token1.decimals + token2.decimals) / 2);
 
@@ -132,7 +122,7 @@ export const deployVolatile = async (
         .toTransferParams(),
     });
 
-    console.log("api:" , allBatch);
+    console.log("api:", allBatch);
 
     const batch = Tezos.wallet.batch(allBatch);
 
@@ -205,24 +195,23 @@ export const deployStable = async (
           .toTransferParams(),
       });
     } else if (token1.variant === TokenVariant.FA2) {
-        allBatch.push({
-            kind: OpKind.TRANSACTION,
-            ...token1Instance.methods
-                .transfer(
-                    [
-                        {
-                            from_ : caller,
-                            txs : [
-                                {
-                                    to_ : routerAddress,
-                                    token_id : token1.tokenId ?? 0,
-                                    amount : token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
-                                }
-                            ]
-                        }
-                    ]
-                ).toTransferParams(),
-          });
+      allBatch.push({
+        kind: OpKind.TRANSACTION,
+        ...token1Instance.methods
+          .transfer([
+            {
+              from_: caller,
+              txs: [
+                {
+                  to_: routerAddress,
+                  token_id: token1.tokenId ?? 0,
+                  amount: token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
+                },
+              ],
+            },
+          ])
+          .toTransferParams(),
+      });
     }
 
     if (token2.variant === TokenVariant.FA12) {
@@ -237,24 +226,23 @@ export const deployStable = async (
           .toTransferParams(),
       });
     } else if (token2.variant === TokenVariant.FA2) {
-        allBatch.push({
-            kind: OpKind.TRANSACTION,
-            ...token2Instance.methods
-                .transfer(
-                    [
-                        {
-                            from_ : caller,
-                            txs : [
-                                {
-                                    to_ : routerAddress,
-                                    token_id : token2.tokenId ?? 0,
-                                    amount : token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
-                                }
-                            ]
-                        }
-                    ]
-                ).toTransferParams(),
-          });
+      allBatch.push({
+        kind: OpKind.TRANSACTION,
+        ...token2Instance.methods
+          .transfer([
+            {
+              from_: caller,
+              txs: [
+                {
+                  to_: routerAddress,
+                  token_id: token2.tokenId ?? 0,
+                  amount: token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
+                },
+              ],
+            },
+          ])
+          .toTransferParams(),
+      });
     }
 
     const lpTokenDecimals = Math.floor((token1.decimals + token2.decimals) / 2);
