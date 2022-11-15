@@ -31,10 +31,6 @@ export const deployVolatile = async (
     caller,
     token1Amount.toString(),
     token2Amount.toString(),
-    transactionSubmitModal,
-    resetAllValues,
-    setShowConfirmTransaction,
-    flashMessageContent
   );
   try {
     const { CheckIfWalletConnected } = dappClient();
@@ -65,18 +61,22 @@ export const deployVolatile = async (
       allBatch.push({
         kind: OpKind.TRANSACTION,
         ...token1Instance.methods
-          .transfer([
-            caller,
-            [
-              routerAddress,
-              token1.tokenId ?? 0,
-              token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
-            ],
-          ])
-          .toTransferParams(),
+            .transfer(
+                [
+                    {
+                        from_ : caller,
+                        txs : [
+                            {
+                                to_ : routerAddress,
+                                token_id : token1.tokenId ?? 0,
+                                amount : token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
+                            }
+                        ]
+                    }
+                ]
+            ).toTransferParams(),
       });
     }
-
     if (token2.variant === TokenVariant.FA12) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
@@ -89,40 +89,50 @@ export const deployVolatile = async (
           .toTransferParams(),
       });
     } else if (token2.variant === TokenVariant.FA2) {
-      allBatch.push({
-        kind: OpKind.TRANSACTION,
-        ...token2Instance.methods
-          .transfer([
-            caller,
-            [
-              routerAddress,
-              token2.tokenId ?? 0,
-              token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
-            ],
-          ])
-          .toTransferParams(),
-      });
-    }
+        allBatch.push({
+            kind: OpKind.TRANSACTION,
+            ...token2Instance.methods
+                .transfer(
+                    [
+                        {
+                            from_ : caller,
+                            txs : [
+                                {
+                                    to_ : routerAddress,
+                                    token_id : token2.tokenId ?? 0,
+                                    amount : token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
+                                }
+                            ]
+                        }
+                    ]
+                ).toTransferParams(),
+          });
+        }
 
     const lpTokenDecimals = Math.floor((token1.decimals + token2.decimals) / 2);
+
+    console.log(lpTokenDecimals);
 
     allBatch.push({
       kind: OpKind.TRANSACTION,
       ...factoryInstance.methods
         .deployVolatilePair(
-          token1.address,
-          token1Amount.toString(),
+          token1.address as string,
+          token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
           token1.tokenId ?? 0,
-          token1.variant === TokenVariant.FA2 ? true : false,
-          token2.address,
-          token2Amount.toString(),
+          token1.variant === TokenVariant.FA2,
+          token2.address as string,
+          token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
           token2.tokenId ?? 0,
-          token2.variant === TokenVariant.FA2 ? true : false,
+          token2.variant === TokenVariant.FA2,
           char2Bytes(lpTokenDecimals.toString()),
-          char2Bytes(`${token1.symbol}-${token2.symbol} PNLP`)
+          char2Bytes(`${token1.symbol}-${token2.symbol} PNLP`),
+          caller
         )
         .toTransferParams(),
     });
+
+    console.log("api:" , allBatch);
 
     const batch = Tezos.wallet.batch(allBatch);
 
@@ -195,19 +205,24 @@ export const deployStable = async (
           .toTransferParams(),
       });
     } else if (token1.variant === TokenVariant.FA2) {
-      allBatch.push({
-        kind: OpKind.TRANSACTION,
-        ...token1Instance.methods
-          .transfer([
-            caller,
-            [
-              routerAddress,
-              token1.tokenId ?? 0,
-              token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
-            ],
-          ])
-          .toTransferParams(),
-      });
+        allBatch.push({
+            kind: OpKind.TRANSACTION,
+            ...token1Instance.methods
+                .transfer(
+                    [
+                        {
+                            from_ : caller,
+                            txs : [
+                                {
+                                    to_ : routerAddress,
+                                    token_id : token1.tokenId ?? 0,
+                                    amount : token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
+                                }
+                            ]
+                        }
+                    ]
+                ).toTransferParams(),
+          });
     }
 
     if (token2.variant === TokenVariant.FA12) {
@@ -222,19 +237,24 @@ export const deployStable = async (
           .toTransferParams(),
       });
     } else if (token2.variant === TokenVariant.FA2) {
-      allBatch.push({
-        kind: OpKind.TRANSACTION,
-        ...token2Instance.methods
-          .transfer([
-            caller,
-            [
-              routerAddress,
-              token2.tokenId ?? 0,
-              token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
-            ],
-          ])
-          .toTransferParams(),
-      });
+        allBatch.push({
+            kind: OpKind.TRANSACTION,
+            ...token2Instance.methods
+                .transfer(
+                    [
+                        {
+                            from_ : caller,
+                            txs : [
+                                {
+                                    to_ : routerAddress,
+                                    token_id : token2.tokenId ?? 0,
+                                    amount : token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
+                                }
+                            ]
+                        }
+                    ]
+                ).toTransferParams(),
+          });
     }
 
     const lpTokenDecimals = Math.floor((token1.decimals + token2.decimals) / 2);
@@ -262,7 +282,8 @@ export const deployStable = async (
           token2Precision,
           token2.variant === TokenVariant.FA2 ? true : false,
           char2Bytes(lpTokenDecimals.toString()),
-          char2Bytes(`${token1.symbol}-${token2.symbol} PNLP`)
+          char2Bytes(`${token1.symbol}-${token2.symbol} PNLP`),
+          caller
         )
         .toTransferParams(),
     });
