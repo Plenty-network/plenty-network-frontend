@@ -205,6 +205,7 @@ function BribesMain(props: BribesMainProps) {
             epochArray={epochArray}
             handleOperation={handleOperation}
             allBalance={allBalance.userBalance}
+            isSucess={allBalance.success}
             balanceUpdate={balanceUpdate}
             setBalanceUpdate={setBalanceUpdate}
           />

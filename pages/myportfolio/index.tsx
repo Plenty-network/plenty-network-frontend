@@ -24,7 +24,7 @@ import { MyPortfolioCardHeader, MyPortfolioHeader } from "../../src/components/P
 import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTable";
 import { getVeNFTsList } from "../../src/api/votes";
 import { IVeNFTData } from "../../src/api/votes/types";
-import { getUserBalanceByRpc } from "../../src/api/util/balance";
+import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
 
 import CreateLock from "../../src/components/Votes/CreateLock";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
@@ -50,7 +50,7 @@ import {
   IUnclaimedRewardsForLockData,
 } from "../../src/api/portfolio/types";
 import WithdrawPly from "../../src/components/LocksPosition/WithdrawPopup";
-import { setIsLoadingWallet } from "../../src/redux/walletLoading";
+import { setIsLoadingWallet, setMyPortfolioSection } from "../../src/redux/walletLoading";
 
 import { LocksTableRewards } from "../../src/components/LocksRewards/LocksRewardsTable";
 import { harvestAllRewards } from "../../src/operations/rewards";
@@ -88,6 +88,8 @@ import { VideoModal } from "../../src/components/Modal/videoModal";
 import { isMobile } from "react-device-detect";
 import { PortfolioDropdown } from "../../src/components/PortfolioSection";
 
+import { IAllBalanceResponse } from "../../src/api/util/types";
+
 export enum MyPortfolioSection {
   Positions = "Positions",
   Rewards = "Rewards",
@@ -96,6 +98,7 @@ function MyPortfolio(props: any) {
   const [activeStateTab, setActiveStateTab] = React.useState<MyPortfolioHeader>(
     MyPortfolioHeader.Pools
   );
+
   const [activeSection, setActiveSection] = React.useState<MyPortfolioSection>(
     MyPortfolioSection.Positions
   );
@@ -113,12 +116,10 @@ function MyPortfolio(props: any) {
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const amm = useAppSelector((state) => state.config.AMMs);
-
   const unclaimInflation = useAppSelector((state) => state.portfolioRewards.unclaimedInflationData);
   const [showCreateLockModal, setShowCreateLockModal] = useState(false);
   const [isManageLock, setIsManageLock] = useState(false);
   const [plyInput, setPlyInput] = useState("");
-
   const selectedDropDown = useAppSelector((state) => state.veNFT.selectedDropDown);
   const [updatedPlyVoteValue, setUpdatedPlyVoteValue] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
@@ -198,6 +199,20 @@ function MyPortfolio(props: any) {
   const statsVotesFetching: boolean = useAppSelector(
     (state) => state.portfolioStatsVotes.votesStatsFetching
   );
+  const [allBalance, setAllBalance] = useState<{
+    success: boolean;
+    userBalance: { [id: string]: BigNumber };
+  }>({ success: false, userBalance: {} });
+  useEffect(() => {
+    setAllBalance({ success: false, userBalance: {} });
+    if (userAddress) {
+      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
+        setAllBalance(response);
+      });
+    } else {
+      setAllBalance({ success: true, userBalance: {} });
+    }
+  }, [userAddress, token]);
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -508,7 +523,10 @@ function MyPortfolio(props: any) {
               ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6] rounded-l-lg"
               : "text-text-250 bg-muted-700 rounded-l-lg"
           )}
-          onClick={() => setActiveSection(MyPortfolioSection.Positions)}
+          onClick={() => {
+            setActiveSection(MyPortfolioSection.Positions);
+            dispatch(setMyPortfolioSection(MyPortfolioSection.Positions));
+          }}
         >
           Positions{" "}
           {activeSection === MyPortfolioSection.Positions ? (
@@ -524,7 +542,10 @@ function MyPortfolio(props: any) {
               ? "text-primary-500 bg-primary-500/[0.1] border border-primary-500/[0.6] rounded-r-lg"
               : "text-text-250 bg-muted-700 rounded-r-lg"
           )}
-          onClick={() => setActiveSection(MyPortfolioSection.Rewards)}
+          onClick={() => {
+            setActiveSection(MyPortfolioSection.Rewards);
+            dispatch(setMyPortfolioSection(MyPortfolioSection.Rewards));
+          }}
         >
           Rewards
           {activeSection === MyPortfolioSection.Rewards ? (
@@ -536,6 +557,7 @@ function MyPortfolio(props: any) {
       </div>
     );
   }, [activeSection]);
+
   const Tooltip = useMemo(() => {
     return (
       <p className="ml-2">
@@ -1572,8 +1594,8 @@ function MyPortfolio(props: any) {
     <>
       <SideBarHOC>
         <div>
-          <div className="pt-5 md:px-[24px] px-2">
-            <div className="flex items-center">
+          <div className="   ">
+            <div className="flex items-center bg-background-200 h-[97px] border-b border-text-800/[0.5] md:pl-[23px] px-2">
               {isMobile ? (
                 <PortfolioDropdown
                   Options={["Positions", "Rewards"]}
@@ -1581,9 +1603,10 @@ function MyPortfolio(props: any) {
                   selectedText={activeSection}
                 />
               ) : (
-                Title
+                <div className=""> {Title}</div>
               )}
               {Tooltip}
+
               {activeSection === MyPortfolioSection.Rewards && (
                 <div className="ml-auto ">
                   <ToolTip
@@ -1631,7 +1654,7 @@ function MyPortfolio(props: any) {
                 </div>
               )}
             </div>
-            <div className="mt-5 pl-0  md:pl-0 overflow-x-auto inner">
+            <div className="mt-5 overflow-x-auto inner md:pl-[23px] pl-2">
               {activeSection === MyPortfolioSection.Positions ? (
                 <Stats
                   setShowCreateLockModal={setShowCreateLockModal}
@@ -1641,24 +1664,28 @@ function MyPortfolio(props: any) {
                   stats1={stats1}
                 />
               ) : (
-                <StatsRewards
-                  plyEmission={poolsRewards.data.gaugeEmissionsTotal}
-                  fetchingPly={poolsRewards.isfetched}
-                  tradingfeeStats={tradingfeeStats}
-                  fetchingTradingfee={fetchingTradingfee}
-                  bribesStats={bribesStats}
-                  setClaimValueDollar={setClaimValueDollar}
-                  setShowClaimPly={setShowClaimPly}
-                  setClaimState={setClaimState}
-                  bribesClaimData={bribesClaimData}
-                  feeClaimData={feeClaimData}
-                  unclaimInflation={unclaimInflation}
-                  fetchingUnclaimedInflationData={fetchingUnclaimedInflationData}
-                />
+                activeSection === MyPortfolioSection.Rewards && (
+                  <StatsRewards
+                    plyEmission={poolsRewards.data.gaugeEmissionsTotal}
+                    fetchingPly={poolsRewards.isfetched}
+                    tradingfeeStats={tradingfeeStats}
+                    fetchingTradingfee={fetchingTradingfee}
+                    bribesStats={bribesStats}
+                    setClaimValueDollar={setClaimValueDollar}
+                    setShowClaimPly={setShowClaimPly}
+                    setClaimState={setClaimState}
+                    bribesClaimData={bribesClaimData}
+                    feeClaimData={feeClaimData}
+                    unclaimInflation={unclaimInflation}
+                    fetchingUnclaimedInflationData={fetchingUnclaimedInflationData}
+                  />
+                )
               )}
             </div>
           </div>
+
           <div className="border-t border-text-800/[0.5] mt-5"></div>
+
           <div>
             <div className="bg-card-50 md:sticky -top-[3px] md:top-0 z-10">
               <MyPortfolioCardHeader
@@ -1758,12 +1785,12 @@ function MyPortfolio(props: any) {
                       <p
                         className={clsx(
                           " flex items-center md:font-title3-bold font-subtitle4 text-black ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500 rounded-xl w-[155px]  justify-center animate__animated animate__zoomIn animate__faster",
-                          bribesClaimData.length === 0 || feeClaimData.length === 0
+                          bribesClaimData.length === 0 && feeClaimData.length === 0
                             ? "cursor-not-allowed"
                             : "cursor-pointer"
                         )}
                         onClick={
-                          bribesClaimData.length === 0 || feeClaimData.length === 0
+                          bribesClaimData.length === 0 && feeClaimData.length === 0
                             ? () => {}
                             : () => {
                                 setShowClaimPly(true);

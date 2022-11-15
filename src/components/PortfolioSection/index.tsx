@@ -4,6 +4,7 @@ import clsx from "clsx";
 
 import arrow from "../../assets/icon/common/vector.svg";
 import Rewards from "../../assets/icon/myPortfolio/rewards.svg";
+
 import Positions from "../../assets/icon/myPortfolio/positions.svg";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { MyPortfolioSection } from "../../../pages/myportfolio";

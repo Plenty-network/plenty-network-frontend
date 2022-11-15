@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
 import * as React from "react";
+import TooltipViolet from "../Migrate/TooltipViolet";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { FooterInfoIcon } from "./FooterIconList";
 import { HrefIcon, IHrefIconProps } from "./LinkIconList";
 import { ISingleSideBarProps, SingleSideBar } from "./SideBarTabList";
@@ -52,13 +54,21 @@ const MainMenu: Array<ISingleSideBarProps> = [
     isHrefIcon: true,
     openNewPage: true,
   },
+  {
+    name: "Migrate",
+    iconName: "migrate",
+    pathName: "/migrate",
+    activePathName: "/migrate",
+    isToolTip: true,
+  },
 ];
 
 export function SideBar(props: ISideBarProps) {
   const [activeMenu, setActiveMenu] = React.useState<string>("");
   const { pathname } = useRouter();
   try {
-    if (pathname == "/swap") document.getElementsByTagName("body")[0].className = "swap";
+    if (pathname == "/swap" || pathname == "/migrate")
+      document.getElementsByTagName("body")[0].className = "swap";
     else document.getElementsByTagName("body")[0].className = "";
   } catch {}
   return (
@@ -85,6 +95,7 @@ export function SideBar(props: ISideBarProps) {
               isActive={pathname === menuItem.activePathName}
               isMenuOpen={activeMenu === `menuItem${index}`}
               subMenu={menuItem.subMenu ? menuItem.subMenu : false}
+              isToolTip={menuItem.isToolTip}
               pathName={menuItem.pathName}
               isHrefIcon={menuItem.isHrefIcon}
               openNewPage={menuItem.openNewPage}
