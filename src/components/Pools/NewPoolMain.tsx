@@ -186,6 +186,19 @@ function NewPoolMain(props: ILiquidityProps) {
       ? handleLiquidityInput(Number(props.userBalances[props.tokenIn.name]) - 0.02, "tokenIn")
       : handleLiquidityInput(props.userBalances[props.tokenIn.name], "tokenIn");
   };
+  function nFormatter(num: BigNumber) {
+    if (num.isGreaterThanOrEqualTo(1000000000)) {
+      return num.dividedBy(1000000000).toFixed(2) + "B";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000)) {
+      return num.dividedBy(1000000).toFixed(2) + "M";
+    }
+    if (num.isGreaterThanOrEqualTo(1000)) {
+      return num.dividedBy(1000).toFixed(2) + "K";
+    }
+
+    return num.toFixed(2);
+  }
 
   const onClickSecondAmount = () => {
     props.setFirstTokenAmount("");
@@ -268,8 +281,10 @@ function NewPoolMain(props: ILiquidityProps) {
                     ) : (
                       <span className="mr-1">
                         {Number(props.userBalances[props.tokenIn.name]) > 0
-                          ? Number(props.userBalances[props.tokenIn.name]).toFixed(4)
-                          : 0}{" "}
+                          ? new BigNumber(props.userBalances[props.tokenIn.name]).isLessThan(0.01)
+                            ? "<0.01"
+                            : nFormatter(new BigNumber(props.userBalances[props.tokenIn.name]))
+                          : "0"}{" "}
                       </span>
                     )}
                     {props.tokenIn.name === "tez"
@@ -354,8 +369,10 @@ function NewPoolMain(props: ILiquidityProps) {
                     ) : (
                       <span className="mr-1">
                         {Number(props.userBalances[props.tokenOut.name]) > 0
-                          ? Number(props.userBalances[props.tokenOut.name]).toFixed(4)
-                          : 0}{" "}
+                          ? new BigNumber(props.userBalances[props.tokenOut.name]).isLessThan(0.01)
+                            ? "<0.01"
+                            : nFormatter(new BigNumber(props.userBalances[props.tokenOut.name]))
+                          : "0"}{" "}
                       </span>
                     )}
                     {props.tokenOut.name === "tez"
