@@ -38,7 +38,7 @@ const Config: IConfig = {
   },
   FACTORY : {
     mainnet : '',
-    testnet : 'KT1NZh5rRAEutAqUfAxAZurUgS5dLyAvpBRw',
+    testnet : 'KT1WkCjyTMKvYHn7r78u6JKrYq773yRwd8ad',
   },
 
   VE_INDEXER : 'https://ply-indexer.ghostnet.plenty.network/v1/',

@@ -274,10 +274,12 @@ export const deployStable = async (
       ...factoryInstance.methods
         .deployVolatilePair(
           token1.address,
+          token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
           token1.tokenId ?? 0,
           token1Precision,
           token1.variant === TokenVariant.FA2 ? true : false,
           token2.address,
+          token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
           token2.tokenId ?? 0,
           token2Precision,
           token2.variant === TokenVariant.FA2 ? true : false,
