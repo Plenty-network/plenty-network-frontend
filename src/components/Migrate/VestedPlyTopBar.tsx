@@ -40,7 +40,12 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
 
   return (
     <>
-      <div className={clsx("ml-auto h-[72px] py-4 px-5  flex items-center bg-background-200 ", "")}>
+      <div
+        className={clsx(
+          "ml-auto h-[68px] py-4 px-5  flex items-center bg-background-200 ",
+          "border-b border-b-borderCommon"
+        )}
+      >
         <span className="border-r border-text-700 h-[30px] w-px mr-6"></span>
         <p>
           <div className="flex gap-1 items-center">
