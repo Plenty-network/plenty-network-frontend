@@ -257,8 +257,8 @@ export function NewPool(props: IManageLiquidityProps) {
     setShowConfirmPool(false);
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(tokenOut.name));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(firstTokenAmountLiq).toFixed(2));
-    localStorage.setItem(SECOND_TOKEN_AMOUNT, Number(secondTokenAmountLiq).toFixed(2));
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, pair === Pair.VOLATILE ? "volatile" : "stable");
+
     setContentTransaction(`new pool`);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
@@ -275,7 +275,10 @@ export function NewPool(props: IManageLiquidityProps) {
         {
           flashType: Flashtype.Info,
           headerText: "Transaction submitted",
-          trailingText: `Add new pool`,
+          trailingText: `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+            TOKEN_B
+          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool confirmed
+          `,
           linkText: "View in Explorer",
           isLoading: true,
           transactionId: "",
@@ -290,7 +293,11 @@ export function NewPool(props: IManageLiquidityProps) {
               setFlashMessage({
                 flashType: Flashtype.Success,
                 headerText: "Success",
-                trailingText: `New pool`,
+                trailingText: `Addition of new ${localStorage.getItem(
+                  TOKEN_A
+                )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
+                  FIRST_TOKEN_AMOUNT
+                )} pool confirmed`,
                 linkText: "View in Explorer",
                 isLoading: true,
                 onClick: () => {
@@ -316,7 +323,11 @@ export function NewPool(props: IManageLiquidityProps) {
                 flashType: Flashtype.Rejected,
                 transactionId: "",
                 headerText: "Rejected",
-                trailingText: `New pool`,
+                trailingText: `Addition of new ${localStorage.getItem(
+                  TOKEN_A
+                )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
+                  FIRST_TOKEN_AMOUNT
+                )} pool rejected`,
                 linkText: "",
                 isLoading: true,
               })
@@ -340,7 +351,9 @@ export function NewPool(props: IManageLiquidityProps) {
         {
           flashType: Flashtype.Info,
           headerText: "Transaction submitted",
-          trailingText: `Add new pool`,
+          trailingText: `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+            TOKEN_B
+          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool confirmed`,
           linkText: "View in Explorer",
           isLoading: true,
           transactionId: "",
@@ -355,7 +368,11 @@ export function NewPool(props: IManageLiquidityProps) {
               setFlashMessage({
                 flashType: Flashtype.Success,
                 headerText: "Success",
-                trailingText: `New pool`,
+                trailingText: `Addition of new ${localStorage.getItem(
+                  TOKEN_A
+                )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
+                  FIRST_TOKEN_AMOUNT
+                )} pool confirmed`,
                 linkText: "View in Explorer",
                 isLoading: true,
                 onClick: () => {
@@ -381,7 +398,11 @@ export function NewPool(props: IManageLiquidityProps) {
                 flashType: Flashtype.Rejected,
                 transactionId: "",
                 headerText: "Rejected",
-                trailingText: `New pool`,
+                trailingText: `Addition of new ${localStorage.getItem(
+                  TOKEN_A
+                )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
+                  FIRST_TOKEN_AMOUNT
+                )} pool rejected`,
                 linkText: "",
                 isLoading: true,
               })
@@ -512,7 +533,9 @@ export function NewPool(props: IManageLiquidityProps) {
         <ConfirmTransaction
           show={showConfirmTransaction}
           setShow={setShowConfirmTransaction}
-          content={contentTransaction}
+          content={`Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+            TOKEN_B
+          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool confirmed`}
         />
       )}
       {showTransactionSubmitModal && (
@@ -524,7 +547,9 @@ export function NewPool(props: IManageLiquidityProps) {
               ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
               : null
           }
-          content={contentTransaction}
+          content={`Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+            TOKEN_B
+          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool confirmed`}
         />
       )}
     </>
