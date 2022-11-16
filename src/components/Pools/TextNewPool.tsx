@@ -34,7 +34,7 @@ export function TextNewPool() {
         </span>
         <span className="ml-1">
           Please raise an attachment request in <i>#pool-requests</i> channel on{" "}
-          <span className="text-primary-500 ml-0.5">Plenty's Discord.</span>
+          <span className="text-primary-500 ml-0.5">Plenty&apos;s Discord.</span>
         </span>
       </div>
     </div>
