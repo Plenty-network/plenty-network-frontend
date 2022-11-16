@@ -1,5 +1,5 @@
 import { OpKind } from "@taquito/taquito";
-import { dappClient, factoryAddress, routerAddress } from "../common/walletconnect";
+import { dappClient, factoryAddress, routerAddress} from "../common/walletconnect";
 import { ITokenInterface, TokenVariant } from "../config/types";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
@@ -101,8 +101,6 @@ export const deployVolatile = async (
 
     const lpTokenDecimals = Math.floor((token1.decimals + token2.decimals) / 2);
 
-    console.log(lpTokenDecimals);
-
     allBatch.push({
       kind: OpKind.TRANSACTION,
       ...factoryInstance.methods
@@ -121,8 +119,6 @@ export const deployVolatile = async (
         )
         .toTransferParams(),
     });
-
-    console.log("api:", allBatch);
 
     const batch = Tezos.wallet.batch(allBatch);
 
@@ -213,7 +209,6 @@ export const deployStable = async (
           .toTransferParams(),
       });
     }
-
     if (token2.variant === TokenVariant.FA12) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
@@ -246,6 +241,7 @@ export const deployStable = async (
     }
 
     const lpTokenDecimals = Math.floor((token1.decimals + token2.decimals) / 2);
+    
     let token1Precision;
     let token2Precision;
 
@@ -260,12 +256,14 @@ export const deployStable = async (
     allBatch.push({
       kind: OpKind.TRANSACTION,
       ...factoryInstance.methods
-        .deployVolatilePair(
+        .deployStablePair(
           token1.address,
+          token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
           token1.tokenId ?? 0,
           token1Precision,
           token1.variant === TokenVariant.FA2 ? true : false,
           token2.address,
+          token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
           token2.tokenId ?? 0,
           token2Precision,
           token2.variant === TokenVariant.FA2 ? true : false,
