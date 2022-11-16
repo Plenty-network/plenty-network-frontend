@@ -45,7 +45,19 @@ function ConfirmAddPool(props: IConfirmSwapProps) {
   const closeModal = () => {
     props.setShow(false);
   };
+  function nFormatter(num: BigNumber) {
+    if (num.isGreaterThanOrEqualTo(1000000000)) {
+      return num.dividedBy(1000000000).toFixed(2) + "B";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000)) {
+      return num.dividedBy(1000000).toFixed(2) + "M";
+    }
+    if (num.isGreaterThanOrEqualTo(1000)) {
+      return num.dividedBy(1000).toFixed(2) + "K";
+    }
 
+    return num.toFixed(2);
+  }
   return props.show ? (
     <PopUpModal onhide={closeModal}>
       {
@@ -75,7 +87,13 @@ function ConfirmAddPool(props: IConfirmSwapProps) {
                   </span>
                 </span>
               </div>
-              <div className="ml-auto items-center flex font-medium2">{props.firstTokenAmount}</div>
+              <div className="ml-auto items-center flex font-medium2">
+                {Number(props.firstTokenAmount) > 0
+                  ? new BigNumber(props.firstTokenAmount).isLessThan(0.01)
+                    ? "<0.01"
+                    : nFormatter(new BigNumber(props.firstTokenAmount))
+                  : "0"}
+              </div>
             </div>
             <div className="flex justify-center -mt-[8px]">
               <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
@@ -96,7 +114,11 @@ function ConfirmAddPool(props: IConfirmSwapProps) {
                 </span>
               </div>
               <div className="ml-auto items-center flex font-medium2">
-                {Number(props.secondTokenAmount).toFixed(6)}
+                {Number(props.secondTokenAmount) > 0
+                  ? new BigNumber(props.secondTokenAmount).isLessThan(0.01)
+                    ? "<0.01"
+                    : nFormatter(new BigNumber(props.secondTokenAmount))
+                  : "0"}
               </div>
             </div>
             <div className="h-12 mt-3 px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2]  items-center flex  ">

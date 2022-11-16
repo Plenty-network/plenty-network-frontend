@@ -158,30 +158,32 @@ function NewPoolMain(props: ILiquidityProps) {
       return;
     }
     if (input === "" || isNaN(Number(input))) {
-      props.setSecondTokenAmount("");
-      props.setFirstTokenAmount("");
+      if (tokenType === "tokenIn") {
+        props.setFirstTokenAmount("");
+      } else if (tokenType === "tokenOut") {
+        props.setSecondTokenAmount("");
+      }
+
       return;
     } else if (tokenType === "tokenIn") {
       const decimal = new BigNumber(input).decimalPlaces();
 
-      if (input !== null && decimal !== null) {
-        props.setFirstTokenAmount(input);
-      } else {
-        props.setFirstTokenAmount(input);
-      }
+      // if (input !== null && decimal !== null) {
+      //   props.setFirstTokenAmount(input);
+      // } else {
+      props.setFirstTokenAmount(input);
+      //}
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
 
-      if (input !== null && decimal !== null) {
-        props.setSecondTokenAmount(input);
-      } else {
-        props.setSecondTokenAmount(input);
-      }
+      // if (input !== null && decimal !== null) {
+      //   props.setSecondTokenAmount(input);
+      // } else {
+      props.setSecondTokenAmount(input);
+      //}
     }
   };
   const onClickAmount = () => {
-    props.setSecondTokenAmount("");
-
     props.tokenIn.name === "tez"
       ? handleLiquidityInput(Number(props.userBalances[props.tokenIn.name]) - 0.02, "tokenIn")
       : handleLiquidityInput(props.userBalances[props.tokenIn.name], "tokenIn");
@@ -201,8 +203,6 @@ function NewPoolMain(props: ILiquidityProps) {
   }
 
   const onClickSecondAmount = () => {
-    props.setFirstTokenAmount("");
-
     props.tokenOut.name === "tez"
       ? handleLiquidityInput(Number(props.userBalances[props.tokenOut.name]) - 0.02, "tokenOut")
       : handleLiquidityInput(props.userBalances[props.tokenOut.name], "tokenOut");
