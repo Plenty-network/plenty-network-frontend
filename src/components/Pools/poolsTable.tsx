@@ -190,7 +190,7 @@ export function ShortCard(props: IShortCardProps) {
             ) : null}
             <div
               className={clsx(
-                "flex gap-2 items-center max-w-[153px]",
+                "flex gap-1 items-center max-w-[153px]",
                 x.isStakeAvailable ? "ml-3" : "ml-[34px]"
               )}
             >

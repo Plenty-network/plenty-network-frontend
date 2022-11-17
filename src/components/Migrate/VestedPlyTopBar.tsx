@@ -50,7 +50,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
         <p>
           <div className="flex gap-1 items-center">
             <p className="relative top-px">
-              <ToolTip disable={true} id="tooltip8">
+              <ToolTip id="tooltip8" message="Claimable and locked PLY">
                 <Image alt={"alt"} src={info} />
               </ToolTip>
             </p>

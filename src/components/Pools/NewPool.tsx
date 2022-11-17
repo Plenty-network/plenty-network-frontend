@@ -439,10 +439,9 @@ export function NewPool(props: IManageLiquidityProps) {
                 <ToolTip
                   id="tooltip2"
                   position={Position.top}
-                  disable={true}
                   toolTipChild={
                     <div className="w-[100px] md:w-[250px]">
-                      Bribe voters to direct emissions towards your pool.
+                      Create a new liquidity pool for a token pair.
                     </div>
                   }
                 >
