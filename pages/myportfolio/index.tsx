@@ -122,6 +122,7 @@ function MyPortfolio(props: any) {
   const [plyInput, setPlyInput] = useState("");
   const selectedDropDown = useAppSelector((state) => state.veNFT.selectedDropDown);
   const [updatedPlyVoteValue, setUpdatedPlyVoteValue] = useState("");
+  const [showClaimPlyInd, setShowClaimPlyInd] = React.useState(false);
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [showWithdraw, setShowWithdraw] = useState(false);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
@@ -1350,7 +1351,7 @@ function MyPortfolio(props: any) {
   const handleClaimALLEpoch = () => {
     setContentTransaction(`Claim lock rewards for <Epoch ${epochClaim}`);
     setShowClaimPly(false);
-
+    setShowClaimPlyInd(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     localStorage.setItem(CLAIM, epochClaim.toString());
@@ -1823,6 +1824,8 @@ function MyPortfolio(props: any) {
                     setShowCreateLockModal={setShowCreateLockModal}
                     setEpochClaim={setEpochClaim}
                     epochClaim={epochClaim}
+                    setShowClaimPlyInd={setShowClaimPlyInd}
+                    showClaimPlyInd={showClaimPlyInd}
                   />
                 </>
               ))}
