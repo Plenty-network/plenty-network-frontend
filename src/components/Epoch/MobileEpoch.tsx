@@ -18,16 +18,11 @@ export function MobileEpoch(props: IMobileEpochProps) {
   const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const dispatch = useDispatch<AppDispatch>();
   const indexOfCurrent = epochData.findIndex((data: IEpochListObject) => data.isCurrent === true);
-  // React.useEffect(() => {
-  //   console.log("currentEpoch", currentEpoch);
-  //   dispatch(setSelectedEpoch(currentEpoch));
-  // }, [epochData[indexOfCurrent]?.epochNumber, currentEpoch?.endTimestamp]);
   const [days, hours, minutes, seconds] = useCountdown(
     currentEpoch?.endTimestamp ? currentEpoch.endTimestamp : Date.now()
   );
   useInterval(() => {
     if (minutes < 0 || seconds < 0) {
-      console.log("currentEpoch", currentEpoch);
       dispatch(getEpochData());
       dispatch(setSelectedEpoch(epochData[indexOfCurrent]));
     }

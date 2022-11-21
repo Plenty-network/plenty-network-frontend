@@ -22,6 +22,10 @@ import { NoContentAvailable } from "./Component/ConnectWalletOrNoToken";
 import { PoolsText, PoolsTextWithTooltip } from "./Component/PoolsText";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
+import stake from "../../assets/icon/pools/stakePool.svg";
+import newPool from "../../assets/icon/pools/newPool.svg";
+import Image from "next/image";
+import clsx from "clsx";
 
 export interface IShortCardProps {
   className?: string;
@@ -31,15 +35,19 @@ export interface IShortCardProps {
   setSearchValue?: Function;
   activeStateTab: PoolsCardHeader;
   setActiveStateTab: React.Dispatch<React.SetStateAction<string>>;
+  setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showLiquidityModal: boolean;
 }
 export interface IManageBtnProps {
+  setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
   isLiquidityAvailable: boolean;
+  setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
   isStakeAvailable: boolean;
   tokenA: string;
   tokenB: string;
+  isGauge: boolean;
 }
 export function ShortCard(props: IShortCardProps) {
-  // const userAddress = store.getState().wallet.address;
   const userAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
@@ -55,7 +63,8 @@ export function ShortCard(props: IShortCardProps) {
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
-  const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
+  const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
+
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
@@ -116,7 +125,14 @@ export function ShortCard(props: IShortCardProps) {
         showOnMobile: true,
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x) => <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} isMobile={true} />,
+        accessor: (x) =>
+          x.isGaugeAvailable ? (
+            <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} isMobile={true} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              --
+            </div>
+          ),
       },
       {
         Header: "APR",
@@ -128,7 +144,14 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "futureApr"),
-        accessor: (x: any) => <AprInfoFuture futureApr={x.futureApr} />,
+        accessor: (x: any) =>
+          x.isGaugeAvailable ? (
+            <AprInfoFuture futureApr={x.futureApr} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              --
+            </div>
+          ),
       },
       {
         Header: "",
@@ -140,6 +163,9 @@ export function ShortCard(props: IShortCardProps) {
             isStakeAvailable={x.isStakeAvailable}
             tokenA={x.tokenA.toString()}
             tokenB={x.tokenB.toString()}
+            setShowLiquidityModal={props.setShowLiquidityModal}
+            isGauge={x.isGaugeAvailable}
+            setIsGaugeAvailable={setIsGaugeAvailable}
           />
         ),
       },
@@ -151,24 +177,36 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "Pools",
         id: "pools",
-        columnWidth: "w-[160px]",
+        columnWidth: "w-[220px]",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x) => (
-          <div className="flex gap-2 items-center max-w-[153px]">
-            <CircularOverLappingImage
-              src1={getImagesPath(x.tokenA.toString())}
-              src2={getImagesPath(x.tokenB.toString())}
-            />
-            <div className="flex flex-col gap-[2px]">
-              <span className="md:text-f14 text-f12 text-white ">
-                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenB.toString())}
-              </span>
-              <span className="text-f12 text-text-500 progTitle">{x.poolType} Pool</span>
+          <>
+            {x.isStakeAvailable ? (
+              <Image src={stake} width={"20px"} height={"20px"} />
+            ) : !x.isGaugeAvailable ? (
+              <Image src={newPool} width={"20px"} height={"20px"} />
+            ) : null}
+            <div
+              className={clsx(
+                "flex gap-1 items-center max-w-[153px]",
+                x.isStakeAvailable ? "ml-3" : "ml-[34px]"
+              )}
+            >
+              <CircularOverLappingImage
+                src1={getImagesPath(x.tokenA.toString())}
+                src2={getImagesPath(x.tokenB.toString())}
+              />
+              <div className="flex flex-col gap-[2px]">
+                <span className="md:text-f14 text-f12 text-white ">
+                  {tEZorCTEZtoUppercase(x.tokenA.toString())}/
+                  {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                </span>
+                <span className="text-f12 text-text-500 progTitle">{x.poolType} Pool</span>
+              </div>
             </div>
-          </div>
+          </>
         ),
       },
       {
@@ -181,7 +219,14 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x: any) => <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} />,
+        accessor: (x: any) =>
+          x.isGaugeAvailable ? (
+            <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              --
+            </div>
+          ),
       },
       {
         Header: "APR",
@@ -193,7 +238,14 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "futureApr"),
-        accessor: (x: any) => <AprInfoFuture futureApr={x.futureApr} />,
+        accessor: (x: any) =>
+          x.isGaugeAvailable ? (
+            <AprInfoFuture futureApr={x.futureApr} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              --
+            </div>
+          ),
       },
       {
         Header: "Volume",
@@ -259,7 +311,14 @@ export function ShortCard(props: IShortCardProps) {
         tooltipMessage:
           "Incentives provided by the protocols to boost the liquidity of their tokens.",
         isToolTipEnabled: true,
-        accessor: (x) => <BribesPool value={x.bribeUSD} bribesData={x.bribes} />,
+        accessor: (x) =>
+          x.isGaugeAvailable ? (
+            <BribesPool value={x.bribeUSD} bribesData={x.bribes} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              --
+            </div>
+          ),
       },
       {
         Header: "",
@@ -273,6 +332,9 @@ export function ShortCard(props: IShortCardProps) {
             isStakeAvailable={x.isStakeAvailable}
             tokenA={x.tokenA.toString()}
             tokenB={x.tokenB.toString()}
+            setShowLiquidityModal={props.setShowLiquidityModal}
+            isGauge={x.isGaugeAvailable}
+            setIsGaugeAvailable={setIsGaugeAvailable}
           />
         ),
       },
@@ -287,12 +349,13 @@ export function ShortCard(props: IShortCardProps) {
           className="bg-primary-500/10 text-f12 md:text-f14 hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-5 md:px-7 py-2 rounded-lg"
           onClick={() => {
             dispatch(getTotalVotingPower());
+            props.setIsGaugeAvailable(props.isGauge);
             props.isLiquidityAvailable
               ? props.isStakeAvailable
                 ? setActiveState(ActiveLiquidity.Rewards)
                 : setActiveState(ActiveLiquidity.Staking)
               : setActiveState(ActiveLiquidity.Liquidity);
-            setShowLiquidityModal(true);
+            props.setShowLiquidityModal(true);
             setTokenIn({
               name: props.tokenA,
               image: getImagesPath(props.tokenA.toString()),
@@ -312,13 +375,14 @@ export function ShortCard(props: IShortCardProps) {
   }
   return (
     <>
-      {showLiquidityModal && (
+      {props.showLiquidityModal && (
         <ManageLiquidity
           tokenIn={tokenIn}
           tokenOut={tokenOut}
-          closeFn={setShowLiquidityModal}
+          closeFn={props.setShowLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}
+          isGaugeAvailable={isGaugeAvailable}
         />
       )}
       <div className={` overflow-x-auto inner  ${props.className}`}>
@@ -326,6 +390,7 @@ export function ShortCard(props: IShortCardProps) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={poolsTableData}
           shortby="fees"
+          TableName="newPools"
           tableType={true}
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}

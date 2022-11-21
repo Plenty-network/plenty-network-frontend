@@ -266,7 +266,7 @@ function MigrateMain(props: any) {
       <SideBarHOC>
         <div>
           <div className="   ">
-            <div className="bg-background-200 flex items-center h-[72px]  md:pl-[23px] md:pr-0 px-2">
+            <div className="bg-background-200 flex items-center h-[68px]  md:pl-[23px] md:pr-0 px-2 border-b border-b-borderCommon">
               <div className="font-title2 relative ">Migrate</div>
               {!isMobile && showTopBar && (
                 <VestedPlyTopbar

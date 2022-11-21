@@ -38,7 +38,7 @@ const Config: IConfig = {
   },
   FACTORY : {
     mainnet : '',
-    testnet : 'KT1HtkELyuAd2tCxcvQ9DtGPRQ7cm26wE6su',
+    testnet : 'KT1VH2UKEeDkND2MHTHmGZDY5vRUshLo7NAT',
   },
 
   VE_INDEXER : 'https://ply-indexer.ghostnet.plenty.network/v1/',
@@ -84,7 +84,7 @@ const Config: IConfig = {
   },
   ROUTER: {
     mainnet: 'KT1MEVCrGRCsoERXf6ahNLC4ik6J2vRH7Mm6',
-    testnet: 'KT1VFVoR11dNoFwSnxLgFRknsTexEZsfiP8T',
+    testnet: 'KT1NXCRRV9JL2L7j58r8kzRT91SLFqJ4vAa4',
   },
 
   NETWORK: 'testnet',

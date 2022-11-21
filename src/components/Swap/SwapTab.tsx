@@ -37,6 +37,7 @@ import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
+import { percentageChange } from "../../api/util/helpers";
 
 interface ISwapTabProps {
   className?: string;
@@ -130,6 +131,14 @@ function SwapTab(props: ISwapTabProps) {
       setRefresh(false);
     }, 500);
   };
+  const [priceDiff, setpriceDiff] = useState("");
+  useEffect(() => {
+    const res = percentageChange(
+      new BigNumber(Number(props.firstTokenAmount) * Number(props.tokenPrice[props.tokenIn.name])),
+      new BigNumber(Number(props.secondTokenAmount) * Number(props.tokenPrice[props.tokenOut.name]))
+    );
+    setpriceDiff(res.toFixed(2));
+  }, [props.firstTokenAmount, props.secondTokenAmount]);
   useEffect(() => {
     setExpertMode(userSettings.expertMode);
   }, [props.walletAddress, userSettings]);
@@ -556,6 +565,16 @@ function SwapTab(props: ISwapTabProps) {
               </span>
             </div>
             <div className="text-right ml-auto font-body2 text-text-400">
+              {Number(priceDiff) !== 0 && (
+                <span
+                  className={clsx(
+                    "mr-1",
+                    Number(priceDiff) < 0 ? "text-error-500" : "text-success-500"
+                  )}
+                >
+                  ({priceDiff}%)
+                </span>
+              )}
               ~$
               {Object.keys(props.tokenOut).length !== 0 &&
               props.secondTokenAmount &&
