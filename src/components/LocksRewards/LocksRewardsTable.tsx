@@ -16,7 +16,7 @@ import ClaimAllEpoch from "./ClaimAllEpoch";
 export function LocksTableRewards(props: IVotesTableRewards) {
   const { valueFormat } = useTableNumberUtils();
 
-  const [showClaimPly, setShowClaimPly] = React.useState(false);
+  //const [showClaimPly, setShowClaimPly] = React.useState(false);
   const [epochNo, setEpochNo] = React.useState("");
   const [claimAllData, setClaimAllData] = React.useState<ILockRewardsEpochData[]>(
     [] as ILockRewardsEpochData[]
@@ -169,7 +169,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
               onClick={() => {
                 setEpochNo(x.epoch);
                 setClaimAllData(props.allLocksRewardsData[props.selectedDropDown.tokenId][x.epoch]);
-                setShowClaimPly(true);
+                props.setShowClaimPlyInd(true);
                 props.setEpochClaim(x.epoch);
               }}
             >
@@ -266,7 +266,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
                 setEpochNo(x.epoch);
                 props.setEpochClaim(x.epoch);
                 setClaimAllData(props.allLocksRewardsData[props.selectedDropDown.tokenId][x.epoch]);
-                setShowClaimPly(true);
+                props.setShowClaimPlyInd(true);
               }}
             >
               Claim
@@ -292,10 +292,10 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           NoData={NoData}
         />
       </div>
-      {showClaimPly && (
+      {props.showClaimPlyInd && (
         <ClaimAllEpoch
-          show={showClaimPly}
-          setShow={setShowClaimPly}
+          show={props.showClaimPlyInd}
+          setShow={props.setShowClaimPlyInd}
           handleClick={props.handleClick}
           data={claimAllData}
           epochClaim={epochNo}
