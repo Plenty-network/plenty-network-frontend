@@ -1,10 +1,10 @@
 import { NetworkType } from "@airgap/beacon-types";
 
 export interface IConfig {
-  STANDARD_CONFIG: string;
-  LP_CONFIG: string;
-  TOKENS_CONFIG: string;
-  AMM_CONFIG: string;
+  // STANDARD_CONFIG: string;
+  // LP_CONFIG: string;
+  // TOKENS_CONFIG: string;
+  // AMM_CONFIG: string;
   NAME: string;
   API: IApi;
   RPC_NODES: INodes;
@@ -24,6 +24,11 @@ export interface IConfig {
     testnet: Record<string, IWrappedToken>;
     mainnet: Record<string, IWrappedToken>;
   };
+
+  CONFIG_LINKS: {
+    testnet: IConfigData;
+    mainnet: IConfigData;
+  }
 
   NETWORK: "mainnet" | "testnet";
   WALLET_NETWORK: NetworkType;
@@ -64,73 +69,75 @@ interface IWrappedToken {
   TOKEN_ID: number;
   TOKEN_DECIMAL: number;
   REF_TOKEN: string;
-  READ_TYPE: TokenVariant;
+  READ_TYPE: TokenStandard;
 }
 
-export interface IAmmContracts {
-  [key: string]: IAMM;
-}
+// export interface IAmmContracts {
+//   [key: string]: IAMM;
+// }
 
-export interface ITokens {
-  [key: string]: ITokenInterface;
-}
+// export interface ITokens {
+//   [key: string]: ITokenInterface;
+// }
 
-export enum Chain {
-  TEZOS = "TEZOS",
-  ETHEREUM = "ETHEREUM",
-}
+// // export enum Chain {
+// //   TEZOS = "TEZOS",
+// //   ETHEREUM = "ETHEREUM",
+// // }
 
-export interface Extras {
-  chain: Chain;
-  isNew?: boolean;
-}
+// export interface Extras {
+//   chain: Chain;
+//   isNew?: boolean;
+// }
 
-export interface ITokenInterface {
-  address?: string;
-  symbol: string;
-  variant: TokenVariant;
-  type: TokenType;
-  tokenId?: number;
-  decimals: number;
-  mapId?: number;
-  pairs: string[];
-  extras?: Extras;
-  iconUrl?: string;
-}
+// export interface ITokenInterface {
+//   address?: string;
+//   symbol: string;
+//   variant: TokenVariant;
+//   type: TokenType;
+//   tokenId?: number;
+//   decimals: number;
+//   mapId?: number;
+//   pairs: string[];
+//   extras?: Extras;
+//   iconUrl?: string;
+// }
 
-export interface IAMM {
-  address: string;
-  token1: ITokenInterface;
-  token2: ITokenInterface;
-  type: AMM_TYPE;
-  gaugeAddress?: string;
-  bribeAddress?: string;
-  token1Precision?: string;
-  token2Precision?: string;
-  lpToken: ITokenInterface;
-}
+// export interface IAMM {
+//   address: string;
+//   token1: ITokenInterface;
+//   token2: ITokenInterface;
+//   type: AMM_TYPE;
+//   gaugeAddress?: string;
+//   bribeAddress?: string;
+//   token1Precision?: string;
+//   token2Precision?: string;
+//   lpToken: ITokenInterface;
+// }
 
-export enum AMM_TYPE {
-  VOLATILE = "VOLATILE",
-  STABLE = "STABLE",
-}
+// export enum AMM_TYPE {
+//   VOLATILE = "VOLATILE",
+//   STABLE = "STABLE",
+// }
 
-export enum TokenType {
-  STANDARD = "STANDARD",
-  LP = "LP",
-}
+// export enum TokenType {
+//   STANDARD = "STANDARD",
+//   LP = "LP",
+// }
 
-export enum TokenVariant {
-  TEZ = "TEZ",
-  FA12 = "FA1.2",
-  FA2 = "FA2",
-}
+// export enum TokenVariant {
+//   TEZ = "TEZ",
+//   FA12 = "FA1.2",
+//   FA2 = "FA2",
+// }
 
 export interface IContractsConfig {
-  TOKEN: ITokens;
-  LP: ITokens;
-  STANDARD: ITokens;
-  AMM: IAmmContracts;
+  // TOKEN: ITokens;
+  // LP: ITokens;
+  // STANDARD: ITokens;
+  // AMM: IAmmContracts;
+  TOKEN: IConfigTokens;
+  AMM: IConfigPools;
 }
 
 export interface IGaugeConfigData {
@@ -153,4 +160,65 @@ export interface IExchangeTokenData {
   tokenDecimals: number;
   contractEnumValue: number;
   tokenMapid: number | undefined;
+}
+
+export enum PoolType {
+  VOLATILE = "VOLATILE",
+  STABLE = "STABLE",
+}
+
+export enum Chain {
+  ETHEREUM = "ETHEREUM",
+  BSC = "BSC",
+  POLYGON = "POLYGON",
+  TEZOS = "TEZOS",
+}
+
+export enum TokenStandard {
+  FA12 = "FA1.2",
+  FA2 = "FA2",
+  TEZ = "TEZ"
+}
+
+export interface IConfigToken {
+  name: string,
+  symbol: string,
+  decimals: number,
+  standard: TokenStandard,
+  address?: string,
+  tokenId?: number,
+  thumbnailUri?: string,
+  originChain: Chain,
+  pairs: string[],
+  iconUrl?: string;
+}
+
+export interface IConfigTokens {
+  [tokenSymbol: string]: IConfigToken;
+}
+
+export interface IConfigLPToken {
+  address: string;
+  decimals: number;
+}
+
+export interface IConfigPool {
+  address: string;
+  token1: IConfigToken;
+  token2: IConfigToken;
+  lpToken: IConfigLPToken;
+  type: PoolType;
+  token1Precision?: string;
+  token2Precision?: string;
+  gauge?: string;
+  bribe?: string;
+}
+
+export interface IConfigPools {
+  [poolAddress: string]: IConfigPool;
+}
+
+export interface IConfigData {
+  POOL: string;
+  TOKEN: string;
 }
