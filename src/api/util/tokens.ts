@@ -2,7 +2,7 @@ import axios from "axios";
 import * as isIPFS from "is-ipfs";
 import { validateContractAddress, ValidationResult } from "@taquito/utils";
 import { getTzktTokenData } from "./storageProvider";
-import { ITokenInterface, TokenType, TokenVariant } from "../../config/types";
+import { Chain, IConfigToken, TokenStandard } from "../../config/types";
 import Config from "../../config/config";
 import { ITzktTokensListResponse } from "./types";
 
@@ -35,7 +35,7 @@ export const getTokenDataFromTzkt = async (
     if (isNFTContract(tzktTokensData)) {
       throw new Error("NFT contact found. Not allowed for pool creation");
     }
-    const finalTokensDataList: ITokenInterface[] = [];
+    const finalTokensDataList: IConfigToken[] = [];
     for (const tokenData of tzktTokensData) {
       console.log(tokenData);
       if (
@@ -115,7 +115,7 @@ const isNFTContract = (tzktTokensData: any): boolean => {
 };
 
 /**
- * Checks if a token is valid, i.e. it has a symbol, standard, token_id and decimals,
+ * Checks if a token is valid, i.e. it has a symbol, name, standard, token_id and decimals,
  * which are mandatory for further processing.
  * @param tokenData - Individual token data object from the list of tokens data received from tzkt as response
  */
@@ -123,6 +123,7 @@ const isValidToken = (tokenData: any): boolean => {
   try {
     if (
       tokenData.metadata.symbol &&
+      tokenData.metadata.name &&
       (tokenData.standard === "fa2" || tokenData.standard === "fa1.2") &&
       tokenData.tokenId &&
       tokenData.metadata.decimals
@@ -141,15 +142,16 @@ const isValidToken = (tokenData: any): boolean => {
  * Create the token data structure required for further processing from raw tzkt data.
  * @param tokenData - Individual token data object from the list of tokens data received from tzkt as response
  */
-const createTokenData = async (tokenData: any): Promise<ITokenInterface | undefined> => {
+const createTokenData = async (tokenData: any): Promise<IConfigToken | undefined> => {
   try {
-    const finalTokenObject: ITokenInterface = {
+    const finalTokenObject: IConfigToken = {
       address: tokenData.contract.address,
       symbol: tokenData.metadata.symbol,
-      variant: tokenData.standard === "fa2" ? TokenVariant.FA2 : TokenVariant.FA12,
-      type: TokenType.STANDARD,
+      name: tokenData.metadata.name,
+      standard: tokenData.standard === "fa2" ? TokenStandard.FA2 : TokenStandard.FA12,
       tokenId: Number(tokenData.tokenId),
       decimals: Number(tokenData.metadata.decimals),
+      originChain: Chain.TEZOS,
       pairs: [],
       iconUrl: await getIconUrl(tokenData.metadata),
     };
