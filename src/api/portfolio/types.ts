@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js';
-import { AMM_TYPE } from '../../config/types';
+import { PoolType } from '../../config/types';
 import { IVeNFTData } from '../votes/types';
 
 export interface IVotesStatsDataResponse {
@@ -13,7 +13,7 @@ export interface IPositionsData {
   ammAddress: string;
   tokenA: string;
   tokenB: string;
-  ammType: AMM_TYPE
+  ammType: PoolType
   totalLiquidityAmount: BigNumber;
   stakedPercentage: BigNumber;
   userAPR: BigNumber;
@@ -66,7 +66,7 @@ export interface IPoolsRewardsData {
   tokenOneSymbol: string;
   tokenTwoSymbol: string;
   ammAddress: string;
-  ammType: AMM_TYPE;
+  ammType: PoolType;
   gaugeAddress: string | undefined;
   gaugeEmission: BigNumber;
   gaugeEmissionValue: BigNumber;
@@ -104,7 +104,7 @@ export interface ILockRewardsEpochData {
   ammAddress: string;
   tokenASymbol: string;
   tokenBSymbol: string;
-  ammType: AMM_TYPE;
+  ammType: PoolType;
   votes: BigNumber;
   votesPercentage: BigNumber;
   bribesAmount: BigNumber;

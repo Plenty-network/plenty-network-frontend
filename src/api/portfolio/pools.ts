@@ -40,7 +40,7 @@ export const getPositionsData = async (
     const positionsData: IPositionsData[] = positionsResponseData.map(
       (pool: IPositionsIndexerData): IPositionsData => {
         const lpTokenDecimalMultplier = new BigNumber(10).pow(AMM[pool.amm].lpToken.decimals);
-        const lpTokenPrice = new BigNumber(lPTokenPrices[AMM[pool.amm].lpToken.symbol]) ?? new BigNumber(0);
+        const lpTokenPrice = new BigNumber(lPTokenPrices[AMM[pool.amm].lpToken.address]) ?? new BigNumber(0);
         const lpBalance = new BigNumber(pool.lqtBalance);
         const staked = new BigNumber(pool.stakedBalance);
         const baseBalance = staked.multipliedBy(40).dividedBy(100);
@@ -121,7 +121,7 @@ export const getPoolsRewardsData = async (
         ammAddress
       );
       const plyEmissions = new BigNumber(rewardsResponse.rewards);
-      const gaugeAddress = AMM[ammAddress].gaugeAddress;
+      const gaugeAddress = AMM[ammAddress].gauge;
       if (plyEmissions.isGreaterThan(0)) {
         const staked = new BigNumber(pool.stakedBalance);
         const baseBalance = staked.multipliedBy(40).dividedBy(100);

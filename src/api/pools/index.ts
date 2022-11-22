@@ -7,7 +7,7 @@ import {
   VolumeV1Data,
   VolumeVeData,
 } from './types';
-import { IAMM, IAmmContracts } from '../../config/types';
+import { IConfigPool } from '../../config/types';
 import { getPnlpBalance, getStakedBalance } from '../util/balance';
 import Config from '../../config/config';
 import { EMPTY_POOLS_OBJECT } from '../../constants/global';
@@ -110,7 +110,7 @@ export const poolsDataWrapper = async (
   
           isLiquidityAvailable,
           isStakeAvailable,
-          isGaugeAvailable: AMM.gaugeAddress ? true : false,
+          isGaugeAvailable: AMM.gauge ? true : false,
         };
       }
     }
@@ -130,17 +130,17 @@ export const poolsDataWrapper = async (
 
 const doesLiquidityExistForUser = async (
   userTezosAddress: string,
-  amm: IAMM
+  amm: IConfigPool
 ): Promise<boolean> => {
   try {
-    const lpTokenSymbol: string = amm.lpToken.symbol;
+    // const lpTokenSymbol: string = amm.lpToken.symbol;
     const tokenOneSymbol: string = amm.token1.symbol;
     const tokenTwoSymbol: string = amm.token2.symbol;
     const lpTokenBalanceResponse = await getPnlpBalance(
       tokenOneSymbol,
       tokenTwoSymbol,
       userTezosAddress
-      // lpTokenSymbol  //TODO: Uncomment when moving to mainnet
+      // lpTokenSymbol
     );
     if (new BigNumber(lpTokenBalanceResponse.balance).isGreaterThan(0)) {
       return true;
@@ -155,7 +155,7 @@ const doesLiquidityExistForUser = async (
 
 const doesStakeExistForUser = async (
   userTezosAddress: string,
-  amm: IAMM
+  amm: IConfigPool
 ): Promise<boolean> => {
   try {
     const tokenOneSymbol: string = amm.token1.symbol;

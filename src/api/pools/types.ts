@@ -1,4 +1,4 @@
-import { AMM_TYPE, IAMM } from "../../config/types";
+import { PoolType } from "../../config/types";
 import { BigNumber } from 'bignumber.js'
 
 export interface VolumeV1Data {
@@ -63,7 +63,7 @@ export interface Bribes{
 export interface IPoolsDataWrapperResponse {
   tokenA : String;
   tokenB : String;
-  poolType : AMM_TYPE;
+  poolType : PoolType;
   apr : BigNumber;
   futureApr : BigNumber;
   boostedApr : BigNumber;
