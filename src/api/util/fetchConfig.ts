@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { connectedNetwork, voterAddress as voterContractAddress } from '../../common/walletconnect';
 import Config from '../../config/config';
-import { IConfigPools, IConfigToken, IConfigTokens, IContractsConfig, PoolType } from '../../config/types';
+import { IConfigLPToken, IConfigPools, IConfigToken, IConfigTokens, IContractsConfig, PoolType } from '../../config/types';
 import { store } from '../../redux';
 import { getTzktBigMapData, getTzktStorageData } from './storageProvider';
 import { IGaugeExistsResponse } from './types';
@@ -84,26 +84,25 @@ export const getDexType = (tokenIn: string, tokenOut: string): string => {
 };
 
 /**
- * Returns the LP token symbol for given pair of tokens.
+ * Returns the LP token details for given pair of tokens.
  * @param tokenOneSymbol - Symbol of token one of the pair.
  * @param tokenTwoSymbol - Symbol of token two of the pair.
- * @returns Symbol of the LP token.
  */
-// export const getLpTokenSymbol = (tokenOneSymbol: string, tokenTwoSymbol: string): string | undefined => {
-//   const state = store.getState();
-//   const AMMs = state.config.AMMs;
+export const getLpToken = (tokenOneSymbol: string, tokenTwoSymbol: string): IConfigLPToken | undefined => {
+  const state = store.getState();
+  const AMMs = state.config.AMMs;
 
-//   const tokensAmm = Object.keys(AMMs).find(
-//     (ammAddress) =>
-//       (AMMs[ammAddress].token1.symbol === tokenOneSymbol &&
-//         AMMs[ammAddress].token2.symbol === tokenTwoSymbol) ||
-//       (AMMs[ammAddress].token2.symbol === tokenOneSymbol &&
-//         AMMs[ammAddress].token1.symbol === tokenTwoSymbol)
-//   );
+  const tokensAmm = Object.keys(AMMs).find(
+    (ammAddress) =>
+      (AMMs[ammAddress].token1.symbol === tokenOneSymbol &&
+        AMMs[ammAddress].token2.symbol === tokenTwoSymbol) ||
+      (AMMs[ammAddress].token2.symbol === tokenOneSymbol &&
+        AMMs[ammAddress].token1.symbol === tokenTwoSymbol)
+  );
   
-//   return tokensAmm ? AMMs[tokensAmm].lpToken.symbol : undefined;
+  return tokensAmm ? AMMs[tokensAmm].lpToken : undefined;
 
-// };
+};
 
 /**
  * Check whether a given pair of tokens is volatile pair or not.

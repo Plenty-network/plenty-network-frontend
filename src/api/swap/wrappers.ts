@@ -1,4 +1,4 @@
-import { AMM_TYPE } from "../../config/types";
+import { PoolType } from "../../config/types";
 import { getDexType } from "../util/fetchConfig";
 import {
   calculateTokensInGeneralStable,
@@ -24,12 +24,12 @@ export const loadSwapDataWrapper = async (
     const type = getDexType(tokenIn, tokenOut);
     let swapData: ISwapDataResponse;
 
-    if (type === AMM_TYPE.VOLATILE) {
+    if (type === PoolType.VOLATILE) {
       swapData = await loadSwapDataVolatile(tokenIn, tokenOut);
     } else {
       if (
-        (tokenIn === "tez" && tokenOut === "ctez") ||
-        (tokenIn === "ctez" && tokenOut === "tez")
+        (tokenIn === "XTZ" && tokenOut === "CTez") ||
+        (tokenIn === "CTez" && tokenOut === "XTZ")
       ) {
         swapData = await loadSwapDataTezCtez(tokenIn, tokenOut);
       } else {
@@ -68,7 +68,7 @@ export const calculateTokensOutWrapper = (
     const type = getDexType(tokenIn, tokenOut);
     let outputData: ICalculateTokenResponse;
 
-    if (type === AMM_TYPE.VOLATILE && tokenInSupply && tokenOutSupply) {
+    if (type === PoolType.VOLATILE && tokenInSupply && tokenOutSupply) {
       outputData = calculateTokenOutputVolatile(
         tokenInAmount,
         tokenInSupply,
@@ -78,7 +78,7 @@ export const calculateTokensOutWrapper = (
         tokenOut
       );
     } else {
-      if (tokenIn === "tez" && tokenOut === "ctez" && target) {
+      if (tokenIn === "XTZ" && tokenOut === "CTez" && target) {
         outputData = calculateTokensOutTezCtez(
           tokenInSupply,
           tokenOutSupply,
@@ -88,7 +88,7 @@ export const calculateTokensOutWrapper = (
           target,
           tokenIn
         );
-      } else if (tokenIn === "ctez" && tokenOut === "tez" && target) {
+      } else if (tokenIn === "CTez" && tokenOut === "XTZ" && target) {
         outputData = calculateTokensOutTezCtez(
           tokenOutSupply,
           tokenInSupply,
@@ -146,7 +146,7 @@ export const calculateTokensInWrapper = (
     const type = getDexType(tokenIn, tokenOut);
     let outputData: ICalculateTokenResponse;
 
-    if (type === AMM_TYPE.VOLATILE && tokenInSupply && tokenOutSupply) {
+    if (type === PoolType.VOLATILE && tokenInSupply && tokenOutSupply) {
       outputData = calculateTokenInputVolatile(
         tokenInAmount,
         tokenInSupply,
@@ -157,7 +157,7 @@ export const calculateTokensInWrapper = (
         tokenOut
       );
     } else {
-      if (tokenIn === "tez" && tokenOut === "ctez" && target) {
+      if (tokenIn === "XTZ" && tokenOut === "CTez" && target) {
         outputData = calculateTokensInTezCtez(
           tokenInSupply,
           tokenOutSupply,
@@ -167,7 +167,7 @@ export const calculateTokensInWrapper = (
           target,
           tokenIn
         );
-      } else if (tokenIn === "ctez" && tokenOut === "tez" && target) {
+      } else if (tokenIn === "CTez" && tokenOut === "XTZ" && target) {
         outputData = calculateTokensInTezCtez(
           tokenOutSupply,
           tokenInSupply,
@@ -218,7 +218,7 @@ export const computeAllPathsWrapper = (
 ): IRouterResponse => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const bestPath = computeAllPaths(paths, tokenInAmount, slippage, swapData);
 
@@ -236,7 +236,7 @@ export const computeAllPathsWrapper = (
 
     for( var z = 0 ; z < bestPath.path.length-1 ; z++){
       const dexType = getDexType(bestPath.path[z] , bestPath.path[z+1]);
-      if(dexType === AMM_TYPE.STABLE) isStable.push(true);
+      if(dexType === PoolType.STABLE) isStable.push(true);
       else isStable.push(false);
     }
 
@@ -286,7 +286,7 @@ export const computeReverseCalculationWrapper = (
 ): IRouterResponse => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const bestPath = computeAllPathsReverse(paths, tokenInAmount, slippage, swapData);
     let temp = computeAllPaths(paths2 , bestPath.tokenOutAmount , slippage , swapData2);
@@ -337,7 +337,7 @@ export const computeReverseCalculationWrapper = (
 
     for( var z = 0 ; z < forwardPass.path.length-1 ; z++){
       const dexType = getDexType(forwardPass.path[z] , forwardPass.path[z+1]);
-      if(dexType === AMM_TYPE.STABLE) isStable.push(true);
+      if(dexType === PoolType.STABLE) isStable.push(true);
       else isStable.push(false);
     }
 
@@ -415,8 +415,8 @@ export const topTokenListGhostnet = async (): Promise<{
   try {
     const topTokens: { [id: string]: number } = {};
 
-    topTokens['tez']=0;
-    topTokens['ctez']=1;
+    topTokens['XTZ']=0;
+    topTokens['CTez']=1;
     topTokens['USDC.e']=2;
     topTokens['USDT.e']=3;
     topTokens['USDtz']=4;

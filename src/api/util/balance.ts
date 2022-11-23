@@ -249,7 +249,7 @@ export const getPnlpBalance = async (
     if (lpTokenBalance.success) {
       return {
         success: true,
-        lpToken: lpTokenBalance.identifier,
+        lpToken: LP_TOKEN.address,
         balance: lpTokenBalance.balance.toString(),
       };
     } else {
@@ -303,7 +303,7 @@ export const getStakedBalance = async (
     return {
       success: true,
       balance: finalStakedBalance.toString(),
-      lpToken: "PNLP",
+      lpToken: AMM[dexContractAddress].lpToken.address,
     };
   } catch (error: any) {
     return {

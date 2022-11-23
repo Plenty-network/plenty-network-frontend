@@ -2,13 +2,13 @@ import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';
 import { calculateTokensInWrapper, calculateTokensOutWrapper, loadSwapDataWrapper } from './wrappers';
 import { IBestPathResponse, ISwapDataResponse} from './types'
-import { ITokens } from '../../config/types';
+import { IConfigTokens } from '../../config/types';
 
 
 export const allPaths = async (tokenIn: string, tokenOut: string , multihop : boolean): Promise<{ paths: string[], swapData: ISwapDataResponse[][] }> => {
     try {
         const state = store.getState();
-        const TOKEN = state.config.standard;
+        const TOKEN = state.config.tokens;
         // Making Empty Visited Array
         const visited: { [x: string]: boolean } = {};
 
@@ -65,7 +65,7 @@ const allPathHelper = (
     dest: string,
     visited: { [x: string]: boolean },
     psf: string,
-    TOKEN: ITokens,
+    TOKEN: IConfigTokens,
     paths : string[],
 ) => {
     if (src === dest) {
