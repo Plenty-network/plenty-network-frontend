@@ -28,6 +28,7 @@ import { tokenType } from "../../constants/swap";
 import { getDexAddress } from "../../api/util/fetchConfig";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface ILiquidityProps {
   firstTokenAmount: string | number;
@@ -226,13 +227,7 @@ function NewPoolMain(props: ILiquidityProps) {
               <div className="ml-1 md:ml-2">
                 <p className="text-text-900 font-body2">Input</p>
                 <p className="font-caption1 md:font-title2 text-white">
-                  {props.tokenIn.name
-                    ? props.tokenIn.name === "tez"
-                      ? "TEZ"
-                      : props.tokenIn.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenIn.name
-                    : "Select"}
+                  {props.tokenIn.name ? tEZorCTEZtoUppercase(props.tokenIn.name) : "Select"}
                   <span className="relative ml-2 -top-[1.5px]">
                     <Image alt={"alt"} className="rotate-180" src={vectorDown} />
                   </span>
@@ -286,11 +281,7 @@ function NewPoolMain(props: ILiquidityProps) {
                           : "0"}{" "}
                       </span>
                     )}
-                    {props.tokenIn.name === "tez"
-                      ? "TEZ"
-                      : props.tokenIn.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenIn.name}
+                    {tEZorCTEZtoUppercase(props.tokenIn.name)}
                   </div>
                 </div>
               )}
@@ -315,13 +306,7 @@ function NewPoolMain(props: ILiquidityProps) {
               <div className="ml-1 md:ml-2">
                 <p className="text-text-900 font-body2">Input</p>
                 <p className="font-caption1 md:font-title2 text-white">
-                  {props.tokenOut.name
-                    ? props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name
-                    : "Select"}
+                  {props.tokenOut.name ? tEZorCTEZtoUppercase(props.tokenOut.name) : "Select"}
                   <span className="relative ml-2 -top-[1.5px]">
                     <Image alt={"alt"} className="rotate-180" src={vectorDown} />
                   </span>
@@ -374,11 +359,7 @@ function NewPoolMain(props: ILiquidityProps) {
                           : "0"}{" "}
                       </span>
                     )}
-                    {props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name}
+                    {tEZorCTEZtoUppercase(props.tokenOut.name)}
                   </div>
                 </div>
               )}

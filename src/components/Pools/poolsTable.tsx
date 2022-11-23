@@ -61,6 +61,7 @@ export function ShortCard(props: IShortCardProps) {
     props.searchValue,
     isFetch
   );
+
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );

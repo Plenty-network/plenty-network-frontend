@@ -107,33 +107,15 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
                     1{" "}
                     {!isConvert
-                      ? props.tokenIn.name === "tez"
-                        ? "TEZ"
-                        : props.tokenIn.name === "ctez"
-                        ? "CTEZ"
-                        : props.tokenIn.name
-                      : props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name}{" "}
+                      ? tEZorCTEZtoUppercase(props.tokenIn.name)
+                      : tEZorCTEZtoUppercase(props.tokenOut.name)}{" "}
                     =
                     {!isConvert
                       ? ` ${props.routeDetails.exchangeRate.toFixed(3)} 
-                            ${
-                              props.tokenOut.name === "tez"
-                                ? "TEZ"
-                                : props.tokenOut.name === "ctez"
-                                ? "CTEZ"
-                                : props.tokenOut.name
-                            }`
-                      : `${Number(1 / Number(props.routeDetails.exchangeRate)).toFixed(3)} ${
-                          props.tokenIn.name === "tez"
-                            ? "TEZ"
-                            : props.tokenIn.name === "ctez"
-                            ? "CTEZ"
-                            : props.tokenIn.name
-                        }`}
+                            ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
+                      : `${Number(1 / Number(props.routeDetails.exchangeRate)).toFixed(
+                          3
+                        )} ${tEZorCTEZtoUppercase(props.tokenIn.name)}`}
                   </span>
                   <span className="relative top-px cursor-pointer ">
                     <Image alt={"alt"} src={ratesrefresh} onClick={(e) => convertRates(e)} />
@@ -171,13 +153,9 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${
-                    props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name
-                  }`}
+                  {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${tEZorCTEZtoUppercase(
+                    props.tokenOut.name
+                  )}`}
                 </div>
               </div>
 
