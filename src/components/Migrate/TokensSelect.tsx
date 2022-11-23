@@ -5,6 +5,7 @@ import { tokenParameter, tokensModal } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
+import { IAllTokensBalance } from "../../api/util/types";
 
 interface ISwapModalProps {
   tokens: tokensModal[];
@@ -13,9 +14,7 @@ interface ISwapModalProps {
   onhide: Function;
   tokenIn: tokenParameter;
   isSuccess: boolean;
-  allBalance: {
-    [id: string]: BigNumber;
-  };
+  allBalance: IAllTokensBalance;
 }
 function TokenModalMigrate(props: ISwapModalProps) {
   const [searchQuery, setSearchQuery] = useState("");

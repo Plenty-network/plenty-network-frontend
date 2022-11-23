@@ -38,6 +38,7 @@ import { setIsLoadingWallet } from "../../redux/walletLoading";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
 import { percentageChange } from "../../api/util/helpers";
+import { IAllTokensBalanceResponse } from "../../api/util/types";
 
 interface ISwapTabProps {
   className?: string;
@@ -52,9 +53,7 @@ interface ISwapTabProps {
   };
   tokens: tokensModal[];
   handleTokenType: (type: tokenType) => void;
-  userBalances: {
-    [key: string]: string;
-  };
+
   setSlippage: any;
   tokenPrice: {
     [id: string]: number;
@@ -101,7 +100,7 @@ interface ISwapTabProps {
   setEnableMultiHop: React.Dispatch<React.SetStateAction<boolean>>;
   enableMultiHop: boolean;
   setBalanceUpdate: React.Dispatch<React.SetStateAction<boolean>>;
-
+  allBalance: IAllTokensBalanceResponse;
   isSwitchClicked: boolean;
 }
 
@@ -288,7 +287,10 @@ function SwapTab(props: ISwapTabProps) {
             Enter an amount
           </Button>
         );
-      } else if (props.firstTokenAmount > props.userBalances[props.tokenIn.name]) {
+      } else if (
+        props.firstTokenAmount >
+        Number(props.allBalance.allTokensBalances[props.tokenIn.name].balance)
+      ) {
         return (
           <Button color="disabled" width="w-full">
             Insufficient balance
@@ -320,8 +322,14 @@ function SwapTab(props: ISwapTabProps) {
     props.setSecondTokenAmount("");
 
     props.tokenIn.name === "tez"
-      ? props.handleSwapTokenInput(Number(props.userBalances[props.tokenIn.name]) - 0.02, "tokenIn")
-      : props.handleSwapTokenInput(props.userBalances[props.tokenIn.name], "tokenIn");
+      ? props.handleSwapTokenInput(
+          Number(props.allBalance.allTokensBalances[props.tokenIn.name].balance) - 0.02,
+          "tokenIn"
+        )
+      : props.handleSwapTokenInput(
+          Number(props.allBalance.allTokensBalances[props.tokenIn.name].balance),
+          "tokenIn"
+        );
   };
   return (
     <>
@@ -359,7 +367,9 @@ function SwapTab(props: ISwapTabProps) {
       <div
         className={clsx(
           "lg:w-580 mt-4 h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700",
-          (props.firstTokenAmount > props.userBalances[props.tokenIn.name] || props.errorMessage) &&
+          (props.firstTokenAmount >
+            Number(props.allBalance.allTokensBalances[props.tokenIn.name].balance) ||
+            props.errorMessage) &&
             "border-errorBorder hover:border-errorBorder bg-errorBg",
           isFirstInputFocus ? "border-text-700" : "border-text-800 "
         )}
@@ -430,15 +440,21 @@ function SwapTab(props: ISwapTabProps) {
           <div className="text-left cursor-pointer" onClick={onClickAmount}>
             <span className="text-text-600 font-body3">Balance:</span>{" "}
             <span className="font-body4 text-primary-500 ">
-              {Number(props.userBalances[props.tokenIn.name]) >= 0 ? (
+              {Number(props.allBalance.allTokensBalances[props.tokenIn.name].balance) >= 0 ? (
                 <ToolTip
-                  message={fromExponential(props.userBalances[props.tokenIn.name].toString())}
-                  disable={Number(props.userBalances[props.tokenIn.name]) > 0 ? false : true}
+                  message={fromExponential(
+                    props.allBalance.allTokensBalances[props.tokenIn.name].balance.toString()
+                  )}
+                  disable={
+                    Number(props.allBalance.allTokensBalances[props.tokenIn.name].balance) > 0
+                      ? false
+                      : true
+                  }
                   id="tooltip8"
                   position={Position.right}
                 >
-                  {Number(props.userBalances[props.tokenIn.name]) > 0
-                    ? Number(props.userBalances[props.tokenIn.name]).toFixed(4)
+                  {Number(props.allBalance.allTokensBalances[props.tokenIn.name].balance) > 0
+                    ? props.allBalance.allTokensBalances[props.tokenIn.name].balance.toFixed(4)
                     : 0}
                 </ToolTip>
               ) : (
@@ -548,15 +564,23 @@ function SwapTab(props: ISwapTabProps) {
               <span className="text-text-600 font-body3">Balance:</span>{" "}
               <span className="font-body4 text-text-500 ">
                 {Object.keys(props.tokenOut).length !== 0 &&
-                Number(props.userBalances[props.tokenOut.name]) >= 0 ? (
+                Number(props.allBalance.allTokensBalances[props.tokenOut.name].balance) >= 0 ? (
                   <ToolTip
-                    message={fromExponential(props.userBalances[props.tokenOut.name].toString())}
-                    disable={Number(props.userBalances[props.tokenOut.name]) > 0 ? false : true}
+                    message={fromExponential(
+                      props.allBalance.allTokensBalances[props.tokenOut.name].balance.toString()
+                    )}
+                    disable={
+                      Number(props.allBalance.allTokensBalances[props.tokenOut.name].balance) > 0
+                        ? false
+                        : true
+                    }
                     id="tooltip9"
                     position={Position.right}
                   >
-                    {Number(props.userBalances[props.tokenOut.name]) > 0
-                      ? Number(props.userBalances[props.tokenOut.name]).toFixed(4)
+                    {Number(props.allBalance.allTokensBalances[props.tokenOut.name].balance) > 0
+                      ? Number(
+                          props.allBalance.allTokensBalances[props.tokenOut.name].balance
+                        ).toFixed(4)
                       : 0}
                   </ToolTip>
                 ) : (

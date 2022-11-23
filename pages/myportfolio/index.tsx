@@ -24,7 +24,7 @@ import { MyPortfolioCardHeader, MyPortfolioHeader } from "../../src/components/P
 import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTable";
 import { getVeNFTsList } from "../../src/api/votes";
 import { IVeNFTData } from "../../src/api/votes/types";
-import { getCompleteUserBalace, getUserBalanceByRpc } from "../../src/api/util/balance";
+import { getAllTokensBalanceFromTzkt } from "../../src/api/util/balance";
 
 import CreateLock from "../../src/components/Votes/CreateLock";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
@@ -88,7 +88,7 @@ import { VideoModal } from "../../src/components/Modal/videoModal";
 import { isMobile } from "react-device-detect";
 import { PortfolioDropdown } from "../../src/components/PortfolioSection";
 
-import { IAllBalanceResponse } from "../../src/api/util/types";
+import { IAllBalanceResponse, IAllTokensBalanceResponse } from "../../src/api/util/types";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -200,18 +200,19 @@ function MyPortfolio(props: any) {
   const statsVotesFetching: boolean = useAppSelector(
     (state) => state.portfolioStatsVotes.votesStatsFetching
   );
-  const [allBalance, setAllBalance] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>(
+    {} as IAllTokensBalanceResponse
+  );
   useEffect(() => {
-    setAllBalance({ success: false, userBalance: {} });
+    setAllBalance({} as IAllTokensBalanceResponse);
     if (userAddress) {
-      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-        setAllBalance(response);
-      });
+      getAllTokensBalanceFromTzkt(Object.values(token), userAddress).then(
+        (response: IAllTokensBalanceResponse) => {
+          setAllBalance(response);
+        }
+      );
     } else {
-      setAllBalance({ success: true, userBalance: {} });
+      setAllBalance({} as IAllTokensBalanceResponse);
     }
   }, [userAddress, token]);
   useEffect(() => {
@@ -309,13 +310,13 @@ function MyPortfolio(props: any) {
     });
   }, [statsVotesFetching]);
 
-  useEffect(() => {
-    if (userAddress) {
-      getUserBalanceByRpc("PLY", userAddress).then((res) => {
-        setPlyBalance(res.balance);
-      });
-    }
-  }, [userAddress, tokenPrice, balanceUpdate, token, props.operationSuccesful, props.isLoading]);
+  // useEffect(() => {
+  //   if (userAddress) {
+  //     getUserBalanceByRpc("PLY", userAddress).then((res) => {
+  //       setPlyBalance(res.balance);
+  //     });
+  //   }
+  // }, [userAddress, tokenPrice, balanceUpdate, token, props.operationSuccesful, props.isLoading]);
 
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);

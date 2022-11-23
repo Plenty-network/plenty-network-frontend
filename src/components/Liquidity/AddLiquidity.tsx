@@ -23,7 +23,7 @@ interface IAddLiquidityProps {
 }
 function AddLiquidity(props: IAddLiquidityProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
-  const tokens = useAppSelector((state) => state.config.standard);
+  const tokens = useAppSelector((state) => state.config.tokens);
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"

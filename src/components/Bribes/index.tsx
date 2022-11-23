@@ -19,8 +19,8 @@ import { setIsLoadingWallet } from "../../redux/walletLoading";
 import { addBribe } from "../../operations/bribes";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
-import { getCompleteUserBalace } from "../../api/util/balance";
-import { IAllBalanceResponse } from "../../api/util/types";
+import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
+import { IAllBalanceResponse, IAllTokensBalanceResponse } from "../../api/util/types";
 import { TOKEN_A, TOKEN_B } from "../../constants/localStorage";
 
 function BribesMain(props: BribesMainProps) {
@@ -39,23 +39,25 @@ function BribesMain(props: BribesMainProps) {
   const [activeStateTab, setActiveStateTab] = useState<BribesCardHeader | string>(
     BribesCardHeader.Pools
   );
-  const tokens = useAppSelector((state) => state.config.standard);
+  const tokens = useAppSelector((state) => state.config.tokens);
   const [epochArray, setEpochArray] = useState<number[]>([] as number[]);
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
-  const [allBalance, setAllBalance] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>(
+    {} as IAllTokensBalanceResponse
+  );
   useEffect(() => {
+    setAllBalance({} as IAllTokensBalanceResponse);
     if (userAddress) {
-      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-        setAllBalance(response);
-      });
+      getAllTokensBalanceFromTzkt(Object.values(tokens), userAddress).then(
+        (response: IAllTokensBalanceResponse) => {
+          setAllBalance(response);
+        }
+      );
     } else {
-      setAllBalance({ success: false, userBalance: {} });
+      setAllBalance({} as IAllTokensBalanceResponse);
     }
   }, [userAddress, tokens, balanceUpdate]);
   const resetAllValues = () => {
@@ -204,7 +206,7 @@ function BribesMain(props: BribesMainProps) {
             selectedPool={selectedPool}
             epochArray={epochArray}
             handleOperation={handleOperation}
-            allBalance={allBalance.userBalance}
+            allBalance={allBalance.allTokensBalances}
             isSucess={allBalance.success}
             balanceUpdate={balanceUpdate}
             setBalanceUpdate={setBalanceUpdate}

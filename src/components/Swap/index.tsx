@@ -5,13 +5,13 @@ import { tokensList } from "../../constants/tokensList";
 import { useLocationStateInSwap } from "../../hooks/useLocationStateInSwap";
 import SwapModal from "../../components/SwapModal/SwapModal";
 import SwapTab from "../../components/Swap/SwapTab";
-import { getCompleteUserBalace, getUserBalanceByRpc } from "../../api/util/balance";
+import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 import { ERRORMESSAGES, tokenParameter, tokensModal, tokenType } from "../../constants/swap";
 import { useAppSelector } from "../../redux";
 import { BigNumber } from "bignumber.js";
 import { allPaths } from "../../api/swap/router";
 import { computeAllPathsWrapper, computeReverseCalculationWrapper } from "../../api/swap/wrappers";
-import { IAllBalanceResponse } from "../../api/util/types";
+import { IAllBalanceResponse, IAllTokensBalanceResponse } from "../../api/util/types";
 import { Chain, MigrateToken } from "../../config/types";
 
 interface ISwapProps {
@@ -36,7 +36,8 @@ function Swap(props: ISwapProps) {
       : state.userSettings.settings[""]
   );
 
-  const tokens = useAppSelector((state) => state.config.standard);
+  const tokens = useAppSelector((state) => state.config.tokens);
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const tokensArray = Object.entries(tokens);
   const { tokenIn, setTokenIn, tokenOut, setTokenOut } = useLocationStateInSwap();
 
@@ -45,7 +46,7 @@ function Swap(props: ISwapProps) {
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [showConfirmSwap, setShowConfirmSwap] = useState(false);
   const [recepient, setRecepient] = useState("");
-  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
+
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [tokenType, setTokenType] = useState<tokenType>("tokenIn");
   const [searchQuery, setSearchQuery] = useState("");
@@ -87,11 +88,6 @@ function Swap(props: ISwapProps) {
     exchangeRate: new BigNumber(0),
   });
 
-  const [allBalance, setAllBalance] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
-
   const allPath = React.useRef<string[]>([]);
   const allPath1 = React.useRef<string[]>([]);
   const [allPathState, setAllPathState] = useState<string[]>([]);
@@ -99,19 +95,23 @@ function Swap(props: ISwapProps) {
   const allPathSwapData1 = React.useRef<any[][]>([]);
   const isSwitchClicked = React.useRef<boolean>(false);
 
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>(
+    {} as IAllTokensBalanceResponse
+  );
+
   useEffect(() => {
-    setAllBalance({ success: false, userBalance: {} });
-    if (props.otherProps.walletAddress) {
-      getCompleteUserBalace(props.otherProps.walletAddress).then(
-        (response: IAllBalanceResponse) => {
+    setAllBalance({} as IAllTokensBalanceResponse);
+
+    if (walletAddress) {
+      getAllTokensBalanceFromTzkt(Object.values(tokens), walletAddress).then(
+        (response: IAllTokensBalanceResponse) => {
           setAllBalance(response);
         }
       );
     } else {
-      setAllBalance({ success: false, userBalance: {} });
-      setUserBalances({});
+      setAllBalance({} as IAllTokensBalanceResponse);
     }
-  }, [props.otherProps.walletAddress, TOKEN, balanceUpdate]);
+  }, [walletAddress, tokens, balanceUpdate]);
 
   useEffect(() => {
     setSlippage(userSettings.slippage);
@@ -556,44 +556,46 @@ function Swap(props: ISwapProps) {
       setTokenOut({} as tokenParameter);
     }
   };
-  useEffect(() => {
-    if (props.otherProps.walletAddress) {
-      const updateBalance = async () => {
-        const balancePromises = [];
+  // useEffect(() => {
+  //   if (props.otherProps.walletAddress) {
+  //     const updateBalance = async () => {
+  //       const balancePromises = [];
 
-        Object.keys(tokenIn).length !== 0 &&
-          balancePromises.push(getUserBalanceByRpc(tokenIn.name, props.otherProps.walletAddress));
-        Object.keys(tokenOut).length !== 0 &&
-          balancePromises.push(getUserBalanceByRpc(tokenOut.name, props.otherProps.walletAddress));
+  //       Object.keys(tokenIn).length !== 0 &&
+  //         balancePromises.push(getUserBalanceByRpc(tokenIn.name, props.otherProps.walletAddress));
+  //       Object.keys(tokenOut).length !== 0 &&
+  //         balancePromises.push(getUserBalanceByRpc(tokenOut.name, props.otherProps.walletAddress));
 
-        const balanceResponse = await Promise.all(balancePromises);
+  //       const balanceResponse = await Promise.all(balancePromises);
 
-        setUserBalances((prev) => ({
-          ...prev,
-          ...balanceResponse.reduce(
-            (acc, cur) => ({
-              ...acc,
-              [cur.identifier]: cur.balance.toNumber(),
-            }),
-            {}
-          ),
-        }));
-      };
-      updateBalance();
-    }
-  }, [tokenIn, tokenOut, props.otherProps.walletAddress, TOKEN, balanceUpdate]);
+  //       setUserBalances((prev) => ({
+  //         ...prev,
+  //         ...balanceResponse.reduce(
+  //           (acc, cur) => ({
+  //             ...acc,
+  //             [cur.identifier]: cur.balance.toNumber(),
+  //           }),
+  //           {}
+  //         ),
+  //       }));
+  //     };
+  //     updateBalance();
+  //   }
+  // }, [tokenIn, tokenOut, props.otherProps.walletAddress, TOKEN, balanceUpdate]);
 
   const tokensListConfig = useMemo(() => {
+    console.log("ishu", tokens, allBalance);
     return tokensArray.map((token) => ({
       name: token[0],
       image: `/assets/Tokens/${token[1].symbol}.png`,
-      new: token[1].extras?.isNew as boolean,
-      chainType: token[1].extras?.chain as Chain,
+      chainType: token[1]?.originChain as Chain,
       address: token[1].address,
     }));
   }, [tokens]);
   tokensListConfig.sort(
-    (a, b) => Number(allBalance.userBalance[b.name]) - Number(allBalance.userBalance[a.name])
+    (a, b) =>
+      Number(allBalance.allTokensBalances[b.name].balance) -
+      Number(allBalance.allTokensBalances[a.name].balance)
   );
 
   return (
@@ -612,7 +614,6 @@ function Swap(props: ISwapProps) {
           tokenOut={tokenOut}
           tokens={tokensList}
           handleTokenType={handleTokenType}
-          userBalances={userBalances}
           setSlippage={setSlippage}
           slippage={slippage}
           handleClose={handleClose}
@@ -642,6 +643,7 @@ function Swap(props: ISwapProps) {
           enableMultiHop={enableMultiHop}
           setBalanceUpdate={setBalanceUpdate}
           isSwitchClicked={isSwitchClicked.current}
+          allBalance={allBalance}
         />
       </div>
       <SwapModal
@@ -654,7 +656,7 @@ function Swap(props: ISwapProps) {
         show={swapModalShow}
         isSuccess={allBalance.success}
         isLoading={allBalance.success}
-        allBalance={allBalance.userBalance}
+        allBalance={allBalance.allTokensBalances}
         selectToken={selectToken}
         onhide={handleClose}
         tokenIn={tokenIn}

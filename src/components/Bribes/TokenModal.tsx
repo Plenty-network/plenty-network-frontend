@@ -5,24 +5,37 @@ import { tokenParameter, tokensModal } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
+import { Chain } from "../../config/types";
+import { IAllTokensBalance } from "../../api/util/types";
 
 interface ISwapModalProps {
-  tokens: tokensModal[];
+  tokens: {
+    name: string;
+    image: string;
+    chainType: Chain;
+    address: string | undefined;
+  }[];
   isLoading?: boolean;
   show: boolean;
   selectToken: Function;
   onhide: Function;
   tokenIn: tokenParameter;
 
-  allBalance: {
-    [id: string]: BigNumber;
-  };
+  allBalance: IAllTokensBalance;
   isSucess: boolean;
 }
 function TokenModal(props: ISwapModalProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const searchTokenEl = useRef(null);
-  const [tokensToShow, setTokensToShow] = useState<tokensModal[] | []>([]);
+  const [tokensToShow, setTokensToShow] = useState<
+    | {
+        name: string;
+        image: string;
+        chainType: Chain;
+        address: string | undefined;
+      }[]
+    | []
+  >([]);
   const [topTokens, setTopTokens] = useState<{
     [id: string]: number;
   }>(
@@ -32,7 +45,7 @@ function TokenModal(props: ISwapModalProps) {
   );
 
   const searchHits = useCallback(
-    (token: tokensModal) => {
+    (token: { name: string; image: string; chainType: Chain; address: string | undefined }) => {
       return (
         searchQuery.length === 0 ||
         token.name.trim().toLowerCase().includes(searchQuery.trim().toLowerCase()) ||
@@ -44,7 +57,7 @@ function TokenModal(props: ISwapModalProps) {
   );
   useEffect(() => {
     props.tokens.sort(
-      (a, b) => Number(props.allBalance[b.name]) - Number(props.allBalance[a.name])
+      (a, b) => Number(props.allBalance[b.name].balance) - Number(props.allBalance[a.name].balance)
     );
     const filterTokens = () => {
       const filterTokenslist = props.tokens
@@ -108,12 +121,12 @@ function TokenModal(props: ISwapModalProps) {
                         {token.name === "tez" ? "TEZ" : token.name === "ctez" ? "CTEZ" : token.name}
                       </div>
                     </div>
-                    {token.new && (
+                    {/* {token.new && (
                       <div className="ml-auto mt-[6px] bg-primary-500/[0.2] py-1 px-1.5 h-[26px] text-center text-primary-500 font-body2 rounded-xl">
                         <span>New!</span>
                       </div>
-                    )}
-                    {props.isSucess && props.allBalance[token.name] ? (
+                    )} */}
+                    {props.isSucess && props.allBalance[token.name].balance ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">
                         {props.allBalance[token.name]
                           ? Number(props.allBalance[token.name]).toFixed(2)

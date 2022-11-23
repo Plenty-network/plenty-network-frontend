@@ -4,8 +4,8 @@ import Image from "next/image";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { getCompleteUserBalace } from "../../src/api/util/balance";
-import { IAllBalanceResponse } from "../../src/api/util/types";
+import { getAllTokensBalanceFromTzkt } from "../../src/api/util/balance";
+import { IAllBalanceResponse, IAllTokensBalanceResponse } from "../../src/api/util/types";
 import { addRemainingVotesDust, getVeNFTsList, votesPageDataWrapper } from "../../src/api/votes";
 import { ELocksState, ISelectedPool, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import info from "../../src/assets/icon/swap/info.svg";
@@ -80,10 +80,7 @@ export default function Vote() {
   const handleCreateLock = () => {
     setShowCreateLockModal(true);
   };
-  const [allBalance, setAllBalance] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
+
   const [alreadyVoted, setAlreadyVoted] = useState(false);
   const [castVoteOperation, setCastVoteOperation] = useState(false);
   const [lockOperation, setLockOperation] = useState(false);
@@ -282,13 +279,19 @@ export default function Vote() {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>(
+    {} as IAllTokensBalanceResponse
+  );
   useEffect(() => {
+    setAllBalance({} as IAllTokensBalanceResponse);
     if (userAddress) {
-      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-        setAllBalance(response);
-      });
+      getAllTokensBalanceFromTzkt(Object.values(token), userAddress).then(
+        (response: IAllTokensBalanceResponse) => {
+          setAllBalance(response);
+        }
+      );
     } else {
-      setAllBalance({ success: false, userBalance: {} });
+      setAllBalance({} as IAllTokensBalanceResponse);
     }
   }, [userAddress, TOKEN, balanceUpdate]);
 
@@ -804,7 +807,7 @@ export default function Vote() {
           setLockingEndData={setLockingEndData}
           lockingEndData={lockingEndData}
           tokenPrice={tokenPrice}
-          plyBalance={allBalance.userBalance["PLY"]}
+          plyBalance={allBalance.allTokensBalances["PLY"].balance}
         />
       )}
 

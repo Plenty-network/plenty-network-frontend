@@ -1,6 +1,6 @@
 import { PopUpModal } from "../Modal/popupModal";
 import SearchBar from "../SearchBar/SearchBar";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import infogrey from "../../assets/icon/swap/info-grey.svg";
 
 import fallback from "../../assets/icon/pools/fallback.png";
@@ -11,13 +11,19 @@ import clsx from "clsx";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { topTokenListGhostnet } from "../../api/swap/wrappers";
 import { getTokenDataFromTzkt } from "../../api/util/tokens";
-import { Chain, ITokenInterface } from "../../config/types";
+import { Chain, IConfigToken } from "../../config/types";
 import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 import { useAppSelector } from "../../redux";
 import { IAllTokensBalance } from "../../api/util/types";
 
 interface ISwapModalProps {
-  tokens: tokensModal[];
+  tokens: {
+    name: string;
+    image: string | StaticImageData;
+    chainType: Chain;
+    address: string | undefined;
+    interface: IConfigToken;
+  }[];
   show: boolean;
   selectToken: Function;
   onhide?: Function;
@@ -26,16 +32,23 @@ interface ISwapModalProps {
   searchQuery: string;
   tokenType: tokenType;
   setSearchQuery: Function;
-  allBalance: {
-    [id: string]: BigNumber;
-  };
+  allBalance: IAllTokensBalance;
   isLoading: boolean;
 }
 function TokenModalPool(props: ISwapModalProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const searchTokenEl = useRef(null);
-  const tokenFromConfig = useAppSelector((state) => state.config.standard);
-  const [tokensToShow, setTokensToShow] = useState<tokensModal[] | []>([]);
+  const tokenFromConfig = useAppSelector((state) => state.config.tokens);
+  const [tokensToShow, setTokensToShow] = useState<
+    | {
+        name: string;
+        image: string | StaticImageData;
+        chainType: Chain;
+        address: string | undefined;
+        interface: IConfigToken;
+      }[]
+    | []
+  >([]);
   const [topTokens, setTopTokens] = useState<{
     [id: string]: number;
   }>(
@@ -61,7 +74,13 @@ function TokenModalPool(props: ISwapModalProps) {
   }, [topTokens]);
 
   const searchHits = useCallback(
-    (token: tokensModal) => {
+    (token: {
+      name: string;
+      image: string | StaticImageData;
+      chainType: Chain;
+      address: string | undefined;
+      interface: IConfigToken;
+    }) => {
       return (
         props.searchQuery.length === 0 ||
         token.name.toLowerCase().includes(props.searchQuery.trim().toLowerCase()) ||
@@ -97,7 +116,7 @@ function TokenModalPool(props: ISwapModalProps) {
             const res1 = res.allTokensList.map((token) => ({
               name: token.symbol,
               image: token.iconUrl ? token.iconUrl : fallback,
-              new: false,
+              address: "",
               chainType: Chain.TEZOS,
               interface: token,
             }));
@@ -220,16 +239,16 @@ function TokenModalPool(props: ISwapModalProps) {
                         {token.name === "tez" ? "TEZ" : token.name === "ctez" ? "CTEZ" : token.name}
                       </div>
                     </div>
-                    {token.new && (
+                    {/* {token.new && (
                       <div className="ml-auto mt-[6px] bg-primary-500/[0.2] py-1 px-1.5 h-[26px] text-center text-primary-500 font-body2 rounded-xl">
                         <span>New!</span>
                       </div>
-                    )}
+                    )} */}
                     {(contractTokenBalance[token.name] || props.allBalance[token.name]) &&
                     props.isLoading ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">
-                        {props.allBalance[token.name]
-                          ? props.allBalance[token.name].toFixed(2)
+                        {props.allBalance[token.name].balance
+                          ? props.allBalance[token.name].balance.toFixed(2)
                           : contractTokenBalance[token.name]
                           ? contractTokenBalance[token.name].balance.toFixed(2)
                           : 0.0}
