@@ -68,8 +68,8 @@ const Config: IConfig = {
 
   CONFIG_LINKS: {
     testnet: {
-      POOL: "http://52.71.43.116/pools",
-      TOKEN: "http://52.71.43.116/tokens",
+      POOL: "https://config.ghostnet.plenty.network/pools",
+      TOKEN: "https://config.ghostnet.plenty.network/tokens",
     },
     mainnet: {
       POOL: "",
