@@ -111,58 +111,19 @@ export const getTokenPrices = async (): Promise<{
     const xtzPrice = await getXtzDollarPrice();
 
     const tokenPrice: { [id: string]: number } = {};
-    const tokens = Object.keys(TOKEN);
 
     const indexerPriceResponse = await axios.get(`${Config.PLY_INDEXER}analytics/tokens`);
     const indexerPricesData = indexerPriceResponse.data;
 
-    for(const i in tokenPriceResponse.contracts){
-      for(const j in indexerPricesData){
-        if(tokenPriceResponse.contracts[i].symbol === indexerPricesData[j].token){
-          if(tokenPriceResponse.contracts[i].symbol === 'WETH.e' || tokenPriceResponse.contracts[i].symbol === 'MATIC.e')
-          continue;
-          tokenPriceResponse.contracts[i].usdValue = Number(indexerPricesData[j].price.value);
-        } else {
-          if(indexerPricesData[j].token === 'WETH.e' || indexerPricesData[j].token === 'MATIC.e') {
-            continue;
-          }
-          tokenPrice[indexerPricesData[j].token] = Number(indexerPricesData[j].price.value);
-        }
-      }
+    for( const x of tokenPriceResponse.contracts){
+      tokenPrice[x.symbol] = Number(x.usdValue);
     }
-    
-    const tokenSymbols: { [id: string]: { symbol?: string } } = {};
-    Object.keys(TOKEN).forEach(function (key) {
-      tokenSymbols[key] = { symbol: TOKEN[key].symbol };
-    });
-    for (const i in tokenPriceResponse.contracts) {
-      if (tokens.includes(tokenPriceResponse.contracts[i].symbol)) {
-        if (
-          tokenSymbols[tokenPriceResponse.contracts[i].symbol]
-            .symbol === tokenPriceResponse.contracts[i].symbol
-        ) {
-          tokenPrice[tokenPriceResponse.contracts[i].symbol] =
-            tokenPriceResponse.contracts[i].usdValue;
-        }
-      }
+
+    for( const x of indexerPricesData){
+      if(Number(x.price.value) !== 0)
+      tokenPrice[x.token] = Number(x.price.value);
     }
-     // TODO : Remove this for removing wAssets
-    for (const i in tokenPriceResponse.contracts) {
-      const x = tokenPriceResponse.contracts[i].symbol;
-      if (
-        // x === 'wDAI' ||
-        // x === 'wUSDC' ||
-        // x === 'wUSDT' ||
-        // x === 'wLINK' ||
-        x === 'wMATIC' ||
-        // x === 'wBUSD' ||
-        x === 'wWETH'
-        // x === 'wWBTC'
-      ) {
-        tokenPrice[tokenPriceResponse.contracts[i].symbol] =
-          tokenPriceResponse.contracts[i].usdValue;
-      }
-    }
+
     // TODO: Find solution with Anshu for .e token prices
     for (const x in Config.WRAPPED_ASSETS[connectedNetwork]) {
       if (
