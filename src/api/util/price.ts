@@ -100,7 +100,7 @@ export const getTokenPrices = async (): Promise<{
 }> => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
     const pricesResponse = await axios.get(
       'https://api.teztools.io/token/prices'
     );
@@ -207,7 +207,7 @@ export const getLPTokenPrice = async (tokenA : string , tokenB : string , tokenP
 }> => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const swapData = await loadSwapDataWrapper(tokenA , tokenB);
 
@@ -246,7 +246,7 @@ export const getLPTokenPrices =async (tokenPrice: { [id: string]: number }) : Pr
     let lpPrices: { [id: string]: BigNumber } = {};
     for(const key in AMM) {
       const price = await getLPTokenPrice(AMM[key].token1.symbol , AMM[key].token2.symbol , tokenPrice);
-      lpPrices = {...lpPrices, [AMM[key].lpToken.symbol]: price.lpTokenPrice};
+      lpPrices = {...lpPrices, [AMM[key].lpToken.address]: price.lpTokenPrice};
     }
     return {
       success : true , 
