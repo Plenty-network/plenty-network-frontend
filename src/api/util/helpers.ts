@@ -10,3 +10,10 @@ export const percentageChange = (oldNumber: BigNumber, newNumber: BigNumber): Bi
     ? new BigNumber(0)
     : newNumber.minus(oldNumber).dividedBy(oldNumber).multipliedBy(100);
 };
+
+export const tEZorCTEZtoUppercase = (a: string) =>
+  a.trim().toLowerCase() === "xtz"
+    ? "TEZ"
+    : a.trim().toLowerCase() === "ctez"
+    ? a.toUpperCase()
+    : a;

@@ -38,7 +38,7 @@ export const useLocationStateInSwap = () => {
               )
               .toString()}.png`,
           }
-      : { name: "WETH.e", image: ctez }
+      : { name: "ctez", image: ctez }
   );
 
   const [tokenOut, setTokenOut] = useState(

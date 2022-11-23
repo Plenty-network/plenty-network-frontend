@@ -15,6 +15,7 @@ import { Chain, IConfigToken } from "../../config/types";
 import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 import { useAppSelector } from "../../redux";
 import { IAllTokensBalance } from "../../api/util/types";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface ISwapModalProps {
   tokens: {
@@ -140,8 +141,7 @@ function TokenModalPool(props: ISwapModalProps) {
     props.tokenOut.name,
     searchHits,
   ]);
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   return props.show ? (
     <PopUpModal title="Select Token" onhide={props.onhide}>
       {
@@ -236,7 +236,7 @@ function TokenModalPool(props: ISwapModalProps) {
                             : "text-white"
                         )}
                       >
-                        {token.name === "tez" ? "TEZ" : token.name === "ctez" ? "CTEZ" : token.name}
+                        {tEZorCTEZtoUppercase(token.name)}
                       </div>
                     </div>
                     {/* {token.new && (

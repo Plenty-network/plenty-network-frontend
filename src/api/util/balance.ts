@@ -404,7 +404,6 @@ export const getAllTokensBalanceFromTzkt = async (
   tokens: IConfigToken[],
   userTezosAddress: string
 ): Promise<IAllTokensBalanceResponse> => {
-  console.log("ishu", tokens);
   try {
     const allTokensBalances: IAllTokensBalance = {};
     const allTokensBalanceResponse = await Promise.all(

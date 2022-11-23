@@ -8,19 +8,7 @@ import { tokenParameterLiquidity } from "../components/Liquidity/types";
 
 export const useLocationStateInLiquidity = () => {
   const tokens = useAppSelector((state) => state.config.tokens);
-  const tokensArray = Object.entries(tokens);
-  const router = useRouter();
-  // const [tokenIn, setTokenIn] = useState<tokenParameterLiquidity>({
-  //   name: 'ctez',
-  //   image: ctez,
-  //   symbol: 'ctez',
-  // });
 
-  // const [tokenOut, setTokenOut] = useState<tokenParameterLiquidity>({
-  //   name: 'tez',
-  //   image: ctez,
-  //   symbol: 'tez',
-  // });
   const [tokenIn, setTokenIn] = useState<tokenParameterLiquidity>({
     name: "tez",
     image: ctez,

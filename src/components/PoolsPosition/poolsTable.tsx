@@ -17,6 +17,7 @@ import { AppDispatch } from "../../redux";
 import { getTotalVotingPower } from "../../redux/pools";
 import { NoPoolsPosition } from "../Rewards/NoContent";
 import { compareNumericString } from "../../utils/commonUtils";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 export function PoolsTablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
@@ -46,8 +47,6 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const mobilecolumns = React.useMemo<Column<IPositionsData>[]>(
     () => [

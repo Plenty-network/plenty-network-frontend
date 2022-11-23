@@ -22,6 +22,7 @@ import { getNextListOfEpochs } from "../../api/util/epoch";
 import ConfirmAddBribes from "./ConfirmBribes";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 function AddBribes(props: IAddBribes) {
   const [swapModalShow, setSwapModalShow] = useState(false);
@@ -56,9 +57,6 @@ function AddBribes(props: IAddBribes) {
       (a, b) => Number(props.allBalance[b.name]) - Number(props.allBalance[a.name])
     );
   }, [tokensListConfig, props.allBalance]);
-
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const closeModal = () => {
     props.setShow(false);

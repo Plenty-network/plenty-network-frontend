@@ -22,6 +22,7 @@ import { Flashtype } from "../FlashScreen";
 import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 import { IAllBalanceResponse, IAllTokensBalanceResponse } from "../../api/util/types";
 import { TOKEN_A, TOKEN_B } from "../../constants/localStorage";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 function BribesMain(props: BribesMainProps) {
   const [contentTransaction, setContentTransaction] = useState("");
@@ -65,8 +66,7 @@ function BribesMain(props: BribesMainProps) {
     setBribeToken({} as tokenParameter);
   };
   const dispatch = useDispatch<AppDispatch>();
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   const handleOperation = () => {
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(selectedPool.tokenA));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(selectedPool.tokenB));

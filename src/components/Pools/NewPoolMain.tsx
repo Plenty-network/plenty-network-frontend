@@ -20,8 +20,8 @@ import { AppDispatch, useAppSelector } from "../../redux";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { ITokenInterface } from "../../config/types";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+
+import { tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
 import { tokenType } from "../../constants/swap";
 
@@ -45,7 +45,6 @@ interface ILiquidityProps {
   setShowConfirmPool: React.Dispatch<React.SetStateAction<boolean>>;
   setIsAddLiquidity: React.Dispatch<React.SetStateAction<boolean>>;
   isAddLiquidity: boolean;
-  swapData: ISwapData;
   pnlpBalance: string;
   setBurnAmount: React.Dispatch<React.SetStateAction<string | number>>;
   burnAmount: string | number;
@@ -243,7 +242,7 @@ function NewPoolMain(props: ILiquidityProps) {
             <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
               <div className="w-0 flex-auto">
                 <p>
-                  {props.swapData.isloading && props.tokenIn.name ? (
+                  {props.tokenIn.name ? (
                     <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input
@@ -332,7 +331,7 @@ function NewPoolMain(props: ILiquidityProps) {
             <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
               <div className="w-0 flex-auto">
                 <p>
-                  {props.swapData.isloading && props.tokenOut.name ? (
+                  {props.tokenOut.name ? (
                     <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input

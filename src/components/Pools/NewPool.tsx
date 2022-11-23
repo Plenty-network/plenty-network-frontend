@@ -7,8 +7,13 @@ import info from "../../../src/assets/icon/common/infoIcon.svg";
 
 import { loadSwapDataWrapper } from "../../api/swap/wrappers";
 import { getAllTokensBalanceFromTzkt, getPnlpBalance } from "../../api/util/balance";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { getLPTokenPrice } from "../../api/util/price";
-import { IAllBalanceResponse, IAllTokensBalanceResponse } from "../../api/util/types";
+import {
+  IAllBalanceResponse,
+  IAllTokensBalance,
+  IAllTokensBalanceResponse,
+} from "../../api/util/types";
 import playBtn from "../../assets/icon/common/playBtn.svg";
 import { Chain, IConfigToken, MigrateToken } from "../../config/types";
 import {
@@ -62,7 +67,7 @@ export function NewPool(props: IManageLiquidityProps) {
   const swapData = React.useRef<ISwapData>({
     tokenInSupply: new BigNumber(0),
     tokenOutSupply: new BigNumber(0),
-    lpToken: "",
+    lpToken: undefined,
     lpTokenSupply: new BigNumber(0),
     isloading: true,
   });
@@ -217,20 +222,26 @@ export function NewPool(props: IManageLiquidityProps) {
   };
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>(
-    {} as IAllTokensBalanceResponse
-  );
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
+    success: false,
+    allTokensBalances: {} as IAllTokensBalance,
+  });
   useEffect(() => {
-    setAllBalance({} as IAllTokensBalanceResponse);
+    setAllBalance({
+      success: false,
+      allTokensBalances: {} as IAllTokensBalance,
+    });
     if (userAddress) {
       getAllTokensBalanceFromTzkt(Object.values(tokens), userAddress).then(
         (response: IAllTokensBalanceResponse) => {
-          console.log("ishu", response);
           setAllBalance(response);
         }
       );
     } else {
-      setAllBalance({} as IAllTokensBalanceResponse);
+      setAllBalance({
+        success: true,
+        allTokensBalances: {} as IAllTokensBalance,
+      });
     }
   }, [userAddress, TOKEN, balanceUpdate]);
   const tokensListConfig = useMemo(() => {
@@ -243,18 +254,32 @@ export function NewPool(props: IManageLiquidityProps) {
       interface: token[1],
     }));
   }, [tokens]);
-  tokensListConfig.sort(
-    (a, b) =>
-      Number(allBalance.allTokensBalances[b.name].balance) -
-      Number(allBalance.allTokensBalances[a.name].balance)
-  );
+  useEffect(() => {
+    if (
+      (Object.keys(allBalance),
+      length !== 0 && allBalance.success && Object.keys(allBalance.allTokensBalances).length !== 0)
+    ) {
+      tokensListConfig.sort(
+        (a, b) =>
+          Number(
+            allBalance.allTokensBalances[b.name]?.balance
+              ? allBalance.allTokensBalances[b.name]?.balance
+              : 0
+          ) -
+          Number(
+            allBalance.allTokensBalances[a.name]?.balance
+              ? allBalance.allTokensBalances[a.name]?.balance
+              : 0
+          )
+      );
+    }
+  }, [tokensListConfig, allBalance.allTokensBalances]);
+
   const handleTokenType = (type: tokenType) => {
     setBalanceUpdate(false);
     setSwapModalShow(true);
     setTokenType(type);
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const handleAddNewPoolOperation = () => {
     setShowConfirmPool(false);
@@ -468,7 +493,6 @@ export function NewPool(props: IManageLiquidityProps) {
                 tokenOut={tokenOut}
                 setIsAddLiquidity={setIsAddLiquidity}
                 isAddLiquidity={isAddLiquidity}
-                swapData={swapData.current}
                 pnlpBalance={pnlpBalance}
                 setBurnAmount={setBurnAmount}
                 burnAmount={burnAmount}

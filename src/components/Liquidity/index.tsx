@@ -17,7 +17,6 @@ import { ISwapData, tokenParameterLiquidity } from "./types";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { ITokenInterface } from "../../config/types";
 
 interface ILiquidityProps {
   firstTokenAmount: string | number;

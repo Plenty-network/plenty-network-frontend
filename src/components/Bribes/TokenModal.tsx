@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { Chain } from "../../config/types";
 import { IAllTokensBalance } from "../../api/util/types";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface ISwapModalProps {
   tokens: {
@@ -71,8 +72,7 @@ function TokenModal(props: ISwapModalProps) {
     };
     filterTokens();
   }, [props.tokens, searchQuery, props.tokenIn.name, searchHits]);
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   return props.show ? (
     <PopUpModal title="Select Token" onhide={() => props.onhide(false)}>
       {
@@ -118,7 +118,7 @@ function TokenModal(props: ISwapModalProps) {
                           props.tokenIn.name === token.name ? "text-white/[0.1]" : "text-white"
                         )}
                       >
-                        {token.name === "tez" ? "TEZ" : token.name === "ctez" ? "CTEZ" : token.name}
+                        {tEZorCTEZtoUppercase(token.name)}
                       </div>
                     </div>
                     {/* {token.new && (
@@ -128,8 +128,8 @@ function TokenModal(props: ISwapModalProps) {
                     )} */}
                     {props.isSucess && props.allBalance[token.name].balance ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">
-                        {props.allBalance[token.name]
-                          ? Number(props.allBalance[token.name]).toFixed(2)
+                        {props.allBalance[token.name].balance
+                          ? Number(props.allBalance[token.name].balance).toFixed(2)
                           : 0.0}
                       </div>
                     ) : props.isSucess === false ? (

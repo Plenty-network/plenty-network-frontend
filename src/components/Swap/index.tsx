@@ -11,8 +11,13 @@ import { useAppSelector } from "../../redux";
 import { BigNumber } from "bignumber.js";
 import { allPaths } from "../../api/swap/router";
 import { computeAllPathsWrapper, computeReverseCalculationWrapper } from "../../api/swap/wrappers";
-import { IAllBalanceResponse, IAllTokensBalanceResponse } from "../../api/util/types";
+import {
+  IAllBalanceResponse,
+  IAllTokensBalance,
+  IAllTokensBalanceResponse,
+} from "../../api/util/types";
 import { Chain, MigrateToken } from "../../config/types";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface ISwapProps {
   className?: string;
@@ -63,8 +68,6 @@ function Swap(props: ISwapProps) {
     isLoadingfirst: false,
     isLoadingSecond: false,
   });
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const routeDetails = React.useRef<{
     path: string[];
@@ -95,12 +98,16 @@ function Swap(props: ISwapProps) {
   const allPathSwapData1 = React.useRef<any[][]>([]);
   const isSwitchClicked = React.useRef<boolean>(false);
 
-  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>(
-    {} as IAllTokensBalanceResponse
-  );
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
+    success: false,
+    allTokensBalances: {} as IAllTokensBalance,
+  });
 
   useEffect(() => {
-    setAllBalance({} as IAllTokensBalanceResponse);
+    setAllBalance({
+      success: false,
+      allTokensBalances: {} as IAllTokensBalance,
+    });
 
     if (walletAddress) {
       getAllTokensBalanceFromTzkt(Object.values(tokens), walletAddress).then(
@@ -109,7 +116,10 @@ function Swap(props: ISwapProps) {
         }
       );
     } else {
-      setAllBalance({} as IAllTokensBalanceResponse);
+      setAllBalance({
+        success: false,
+        allTokensBalances: {} as IAllTokensBalance,
+      });
     }
   }, [walletAddress, tokens, balanceUpdate]);
 
@@ -584,7 +594,6 @@ function Swap(props: ISwapProps) {
   // }, [tokenIn, tokenOut, props.otherProps.walletAddress, TOKEN, balanceUpdate]);
 
   const tokensListConfig = useMemo(() => {
-    console.log("ishu", tokens, allBalance);
     return tokensArray.map((token) => ({
       name: token[0],
       image: `/assets/Tokens/${token[1].symbol}.png`,
@@ -592,11 +601,26 @@ function Swap(props: ISwapProps) {
       address: token[1].address,
     }));
   }, [tokens]);
-  tokensListConfig.sort(
-    (a, b) =>
-      Number(allBalance.allTokensBalances[b.name].balance) -
-      Number(allBalance.allTokensBalances[a.name].balance)
-  );
+  useEffect(() => {
+    if (
+      (Object.keys(allBalance),
+      length !== 0 && allBalance.success && Object.keys(allBalance.allTokensBalances).length !== 0)
+    ) {
+      tokensListConfig.sort(
+        (a, b) =>
+          Number(
+            allBalance.allTokensBalances[b.name]?.balance
+              ? allBalance.allTokensBalances[b.name]?.balance
+              : 0
+          ) -
+          Number(
+            allBalance.allTokensBalances[a.name]?.balance
+              ? allBalance.allTokensBalances[a.name]?.balance
+              : 0
+          )
+      );
+    }
+  }, [tokensListConfig, allBalance.allTokensBalances]);
 
   return (
     <>

@@ -16,6 +16,7 @@ import { Token } from "./Token";
 import { IUserBribeData } from "../../api/bribes/types";
 import { BribeValue } from "./Bribe";
 import { WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 TimeAgo.addDefaultLocale(en);
 
 export function MyBribesTableBribes(props: IBribesTableBribes) {
@@ -32,8 +33,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
 
   const [noSearchResult, setNoSearchResult] = React.useState(false);
   const [tabledata, setTabledata] = React.useState(props.locksPosition);
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   useEffect(() => {
     setTabledata(props.locksPosition);
   }, [props.locksPosition]);
