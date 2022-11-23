@@ -5,7 +5,11 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getAllTokensBalanceFromTzkt } from "../../src/api/util/balance";
-import { IAllBalanceResponse, IAllTokensBalanceResponse } from "../../src/api/util/types";
+import {
+  IAllBalanceResponse,
+  IAllTokensBalance,
+  IAllTokensBalanceResponse,
+} from "../../src/api/util/types";
 import { addRemainingVotesDust, getVeNFTsList, votesPageDataWrapper } from "../../src/api/votes";
 import { ELocksState, ISelectedPool, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import info from "../../src/assets/icon/swap/info.svg";
@@ -279,11 +283,15 @@ export default function Vote() {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
-  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>(
-    {} as IAllTokensBalanceResponse
-  );
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
+    success: false,
+    allTokensBalances: {} as IAllTokensBalance,
+  });
   useEffect(() => {
-    setAllBalance({} as IAllTokensBalanceResponse);
+    setAllBalance({
+      success: false,
+      allTokensBalances: {} as IAllTokensBalance,
+    });
     if (userAddress) {
       getAllTokensBalanceFromTzkt(Object.values(token), userAddress).then(
         (response: IAllTokensBalanceResponse) => {
@@ -291,7 +299,10 @@ export default function Vote() {
         }
       );
     } else {
-      setAllBalance({} as IAllTokensBalanceResponse);
+      setAllBalance({
+        success: false,
+        allTokensBalances: {} as IAllTokensBalance,
+      });
     }
   }, [userAddress, TOKEN, balanceUpdate]);
 

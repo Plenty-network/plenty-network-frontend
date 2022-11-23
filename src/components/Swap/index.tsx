@@ -636,7 +636,7 @@ function Swap(props: ISwapProps) {
           connectWallet={props.otherProps.connectWallet}
           tokenIn={tokenIn}
           tokenOut={tokenOut}
-          tokens={tokensList}
+          tokens={tokensListConfig}
           handleTokenType={handleTokenType}
           setSlippage={setSlippage}
           slippage={slippage}

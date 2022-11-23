@@ -239,7 +239,7 @@ export function NewPool(props: IManageLiquidityProps) {
       );
     } else {
       setAllBalance({
-        success: true,
+        success: false,
         allTokensBalances: {} as IAllTokensBalance,
       });
     }

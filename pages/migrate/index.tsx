@@ -32,7 +32,11 @@ import { useRouter } from "next/router";
 import { getUserClaimAndVestAmount } from "../../src/api/migrate";
 import { IVestAndClaim } from "../../src/api/migrate/types";
 import { getAllTokensBalanceFromTzkt } from "../../src/api/util/balance";
-import { IAllBalanceResponse, IAllTokensBalanceResponse } from "../../src/api/util/types";
+import {
+  IAllBalanceResponse,
+  IAllTokensBalance,
+  IAllTokensBalanceResponse,
+} from "../../src/api/util/types";
 import { MigrateToken } from "../../src/config/types";
 import { useCountdown } from "../../src/hooks/useCountDown";
 
@@ -60,11 +64,15 @@ function MigrateMain(props: any) {
     (state) => state.portfolioRewards.unclaimedInflationDataError
   );
   const statsTvlError: boolean = useAppSelector((state) => state.portfolioStatsTvl.userTvlError);
-  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>(
-    {} as IAllTokensBalanceResponse
-  );
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
+    success: false,
+    allTokensBalances: {} as IAllTokensBalance,
+  });
   useEffect(() => {
-    setAllBalance({} as IAllTokensBalanceResponse);
+    setAllBalance({
+      success: false,
+      allTokensBalances: {} as IAllTokensBalance,
+    });
     if (userAddress) {
       getAllTokensBalanceFromTzkt(Object.values(token), userAddress).then(
         (response: IAllTokensBalanceResponse) => {
@@ -72,7 +80,10 @@ function MigrateMain(props: any) {
         }
       );
     } else {
-      setAllBalance({} as IAllTokensBalanceResponse);
+      setAllBalance({
+        success: false,
+        allTokensBalances: {} as IAllTokensBalance,
+      });
     }
   }, [userAddress, token, props.operationSuccesful]);
 

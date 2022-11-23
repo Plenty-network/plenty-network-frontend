@@ -20,7 +20,11 @@ import { addBribe } from "../../operations/bribes";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
 import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
-import { IAllBalanceResponse, IAllTokensBalanceResponse } from "../../api/util/types";
+import {
+  IAllBalanceResponse,
+  IAllTokensBalance,
+  IAllTokensBalanceResponse,
+} from "../../api/util/types";
 import { TOKEN_A, TOKEN_B } from "../../constants/localStorage";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
@@ -46,11 +50,15 @@ function BribesMain(props: BribesMainProps) {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
-  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>(
-    {} as IAllTokensBalanceResponse
-  );
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
+    success: false,
+    allTokensBalances: {} as IAllTokensBalance,
+  });
   useEffect(() => {
-    setAllBalance({} as IAllTokensBalanceResponse);
+    setAllBalance({
+      success: false,
+      allTokensBalances: {} as IAllTokensBalance,
+    });
     if (userAddress) {
       getAllTokensBalanceFromTzkt(Object.values(tokens), userAddress).then(
         (response: IAllTokensBalanceResponse) => {
@@ -58,7 +66,10 @@ function BribesMain(props: BribesMainProps) {
         }
       );
     } else {
-      setAllBalance({} as IAllTokensBalanceResponse);
+      setAllBalance({
+        success: false,
+        allTokensBalances: {} as IAllTokensBalance,
+      });
     }
   }, [userAddress, tokens, balanceUpdate]);
   const resetAllValues = () => {

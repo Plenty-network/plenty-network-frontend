@@ -253,6 +253,8 @@ function TokenModalPool(props: ISwapModalProps) {
                           ? contractTokenBalance[token.name].balance.toFixed(2)
                           : 0.0}
                       </div>
+                    ) : props.isLoading === false ? (
+                      <div className="font-subtitle4 ml-auto mt-[7px]">0</div>
                     ) : (
                       <div className=" ml-auto h-[19px] rounded  animate-pulse bg-shimmer-100 text-shimmer-100 mt-[7px]">
                         9999

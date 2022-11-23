@@ -39,6 +39,7 @@ import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
 import { percentageChange, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { IAllTokensBalanceResponse } from "../../api/util/types";
+import { Chain } from "../../config/types";
 
 interface ISwapTabProps {
   className?: string;
@@ -51,7 +52,12 @@ interface ISwapTabProps {
     name: string;
     image: any;
   };
-  tokens: tokensModal[];
+  tokens: {
+    name: string;
+    image: string;
+    chainType: Chain;
+    address: string | undefined;
+  }[];
   handleTokenType: (type: tokenType) => void;
 
   setSlippage: any;
@@ -243,7 +249,9 @@ function SwapTab(props: ISwapTabProps) {
   const swapRoute = useMemo(() => {
     if (props.routeDetails.path?.length >= 2) {
       return props.routeDetails.path.map((tokenName) =>
-        props.tokens.find((token) => token.name === tokenName)
+        props.tokens.find((token) => {
+          return token.name === tokenName;
+        })
       );
     }
 
@@ -741,7 +749,7 @@ function SwapTab(props: ISwapTabProps) {
                                         <div className="relative  z-100 w-[24px]  h-[24px] md:w-[32px] md:h-[32px]  p-0.5 bg-card-600 rounded-full">
                                           <span className="w-[24px] md:w-[28px] h-[28px] md:h-[28px]">
                                             <Image
-                                              src={token?.image}
+                                              src={`/assets/tokens/${token?.name}.png`}
                                               width={isMobile ? "21px" : "28px"}
                                               height={isMobile ? "21px" : "28px"}
                                             />
@@ -784,7 +792,7 @@ function SwapTab(props: ISwapTabProps) {
                                             >
                                               <span className="w-[24px] md:w-[28px] h-[28px] md:h-[28px]">
                                                 <Image
-                                                  src={token?.image}
+                                                  src={`/assets/tokens/${token?.name}.png`}
                                                   width={isMobile ? "21px" : "28px"}
                                                   height={isMobile ? "21px" : "28px"}
                                                 />
@@ -800,7 +808,7 @@ function SwapTab(props: ISwapTabProps) {
                                             >
                                               <span className="w-[24px] md:w-[28px] h-[28px] md:h-[28px]">
                                                 <Image
-                                                  src={swapRoute[index]?.image}
+                                                  src={`/assets/tokens/${swapRoute[index]?.name}.png`}
                                                   width={isMobile ? "21px" : "28px"}
                                                   height={isMobile ? "21px" : "28px"}
                                                 />
@@ -1017,7 +1025,7 @@ function SwapTab(props: ISwapTabProps) {
                                   <span className="w-[28px] h-[28px]">
                                     <Image
                                       alt={"alt"}
-                                      src={token?.image}
+                                      src={`/assets/tokens/${token?.name}.png`}
                                       width={"28px"}
                                       height={"28px"}
                                     />
@@ -1058,7 +1066,7 @@ function SwapTab(props: ISwapTabProps) {
                                       <span className="w-[28px] h-[28px]">
                                         <Image
                                           alt={"alt"}
-                                          src={token?.image}
+                                          src={`/assets/tokens/${token?.name}.png`}
                                           width={"28px"}
                                           height={"28px"}
                                         />
@@ -1074,7 +1082,7 @@ function SwapTab(props: ISwapTabProps) {
                                     >
                                       <span className="w-[28px] h-[28px]">
                                         <Image
-                                          src={swapRoute[index]?.image}
+                                          src={`/assets/tokens/${swapRoute[index]?.name}.png`}
                                           width={"28px"}
                                           height={"28px"}
                                         />
@@ -1117,6 +1125,7 @@ function SwapTab(props: ISwapTabProps) {
       {props.showConfirmSwap && (
         <ConfirmSwap
           show={props.showConfirmSwap}
+          tokens={props.tokens}
           setShow={props.setShowConfirmSwap}
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}

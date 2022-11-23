@@ -88,7 +88,11 @@ import { VideoModal } from "../../src/components/Modal/videoModal";
 import { isMobile } from "react-device-detect";
 import { PortfolioDropdown } from "../../src/components/PortfolioSection";
 
-import { IAllBalanceResponse, IAllTokensBalanceResponse } from "../../src/api/util/types";
+import {
+  IAllBalanceResponse,
+  IAllTokensBalance,
+  IAllTokensBalanceResponse,
+} from "../../src/api/util/types";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -200,11 +204,15 @@ function MyPortfolio(props: any) {
   const statsVotesFetching: boolean = useAppSelector(
     (state) => state.portfolioStatsVotes.votesStatsFetching
   );
-  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>(
-    {} as IAllTokensBalanceResponse
-  );
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
+    success: false,
+    allTokensBalances: {} as IAllTokensBalance,
+  });
   useEffect(() => {
-    setAllBalance({} as IAllTokensBalanceResponse);
+    setAllBalance({
+      success: false,
+      allTokensBalances: {} as IAllTokensBalance,
+    });
     if (userAddress) {
       getAllTokensBalanceFromTzkt(Object.values(token), userAddress).then(
         (response: IAllTokensBalanceResponse) => {
@@ -212,7 +220,10 @@ function MyPortfolio(props: any) {
         }
       );
     } else {
-      setAllBalance({} as IAllTokensBalanceResponse);
+      setAllBalance({
+        success: false,
+        allTokensBalances: {} as IAllTokensBalance,
+      });
     }
   }, [userAddress, token]);
   useEffect(() => {

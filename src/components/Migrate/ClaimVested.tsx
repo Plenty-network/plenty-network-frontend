@@ -17,7 +17,11 @@ import TransactionSubmitted from "../TransactionSubmitted";
 import { AppDispatch, store, useAppDispatch, useAppSelector } from "../../redux";
 import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
 import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
-import { IAllBalanceResponse, IAllTokensBalanceResponse } from "../../api/util/types";
+import {
+  IAllBalanceResponse,
+  IAllTokensBalance,
+  IAllTokensBalanceResponse,
+} from "../../api/util/types";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import Image from "next/image";
@@ -49,11 +53,15 @@ function ClaimVested(props: IMigrateProps) {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
-  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>(
-    {} as IAllTokensBalanceResponse
-  );
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
+    success: false,
+    allTokensBalances: {} as IAllTokensBalance,
+  });
   useEffect(() => {
-    setAllBalance({} as IAllTokensBalanceResponse);
+    setAllBalance({
+      success: false,
+      allTokensBalances: {} as IAllTokensBalance,
+    });
     if (userAddress) {
       getAllTokensBalanceFromTzkt(Object.values(tokens), userAddress).then(
         (response: IAllTokensBalanceResponse) => {
@@ -61,7 +69,10 @@ function ClaimVested(props: IMigrateProps) {
         }
       );
     } else {
-      setAllBalance({} as IAllTokensBalanceResponse);
+      setAllBalance({
+        success: false,
+        allTokensBalances: {} as IAllTokensBalance,
+      });
     }
   }, [userAddress, tokens, balanceUpdate]);
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
