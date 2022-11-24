@@ -1,5 +1,5 @@
 import { BigNumber } from "bignumber.js";
-import { VolumeVeData } from "../api/pools/types";
+import { VolumeV1Data, VolumeVeData } from "../api/pools/types";
 import { connectedNetwork } from "../common/walletconnect";
 
 export const RPC_NODE = "rpcNode";
@@ -55,6 +55,13 @@ export const EMPTY_POOLS_OBJECT: VolumeVeData = {
   feesEpoch: { value: "0", token1: "0", token2: "0" },
   tvl: { value: "0", token1: "0", token2: "0" },
 };
+
+export const EMPTY_VE_INDEXER_POOLS_OBJECT: VolumeV1Data = {
+  pool: "",
+  bribes: [],
+  apr: "0",
+  futureApr: "0",
+}
 
 export const API_RE_ATTEMPTS: number = 3;
 export const API_RE_ATTAMPT_DELAY: number = 5000;

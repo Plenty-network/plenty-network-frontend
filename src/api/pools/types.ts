@@ -5,7 +5,7 @@ export interface VolumeV1Data {
   pool: string;
   bribes: Bribes[];
   apr: string;
-  futureApr : number
+  futureApr : string
 }
 
 export interface Volume24H {
@@ -85,4 +85,9 @@ export interface IPoolsDataWrapperResponse {
 
 export interface IAnalyticsDataObject {
   [key: string]: VolumeVeData;
+}
+
+
+export interface IIndexerPoolsDataObject {
+  [key: string]: VolumeV1Data;
 }
