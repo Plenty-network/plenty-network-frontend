@@ -25,6 +25,7 @@ import { VotingPower } from "./VotingPower";
 import { getVeNFTsList } from "../../api/votes";
 import { compareNumericString } from "../../utils/commonUtils";
 import { NoLocks } from "../Rewards/NoLocks";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 TimeAgo.addDefaultLocale(en);
 
 export function LocksTablePosition(props: ILocksTablePosition) {
@@ -49,8 +50,6 @@ export function LocksTablePosition(props: ILocksTablePosition) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const mobilecolumns = React.useMemo<Column<IAllLocksPositionData>[]>(
     () => [

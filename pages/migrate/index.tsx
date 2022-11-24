@@ -31,8 +31,12 @@ import ClaimVested from "../../src/components/Migrate/ClaimVested";
 import { useRouter } from "next/router";
 import { getUserClaimAndVestAmount } from "../../src/api/migrate";
 import { IVestAndClaim } from "../../src/api/migrate/types";
-import { getCompleteUserBalace } from "../../src/api/util/balance";
-import { IAllBalanceResponse } from "../../src/api/util/types";
+import { getAllTokensBalanceFromTzkt } from "../../src/api/util/balance";
+import {
+  IAllBalanceResponse,
+  IAllTokensBalance,
+  IAllTokensBalanceResponse,
+} from "../../src/api/util/types";
 import { MigrateToken } from "../../src/config/types";
 import { useCountdown } from "../../src/hooks/useCountDown";
 
@@ -60,18 +64,26 @@ function MigrateMain(props: any) {
     (state) => state.portfolioRewards.unclaimedInflationDataError
   );
   const statsTvlError: boolean = useAppSelector((state) => state.portfolioStatsTvl.userTvlError);
-  const [allBalance, setAllBalance] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
+    success: false,
+    allTokensBalances: {} as IAllTokensBalance,
+  });
   useEffect(() => {
-    setAllBalance({ success: false, userBalance: {} });
+    setAllBalance({
+      success: false,
+      allTokensBalances: {} as IAllTokensBalance,
+    });
     if (userAddress) {
-      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-        setAllBalance(response);
-      });
+      getAllTokensBalanceFromTzkt(Object.values(token), userAddress).then(
+        (response: IAllTokensBalanceResponse) => {
+          setAllBalance(response);
+        }
+      );
     } else {
-      setAllBalance({ success: false, userBalance: {} });
+      setAllBalance({
+        success: false,
+        allTokensBalances: {} as IAllTokensBalance,
+      });
     }
   }, [userAddress, token, props.operationSuccesful]);
 
@@ -211,32 +223,32 @@ function MigrateMain(props: any) {
   useEffect(() => {
     if (userAddress) {
       if (
-        (allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() !== 0 ||
-          allBalance.userBalance[MigrateToken.WRAP]?.toNumber() !== 0) &&
+        (allBalance.allTokensBalances[MigrateToken.PLENTY].balance?.toNumber() !== 0 ||
+          allBalance.allTokensBalances[MigrateToken.WRAP].balance?.toNumber() !== 0) &&
         vestedData.claimableAmount?.toNumber() === 0
       ) {
         setShowMigrateSwap(true);
         setIsClaimVested(false);
         setShowTopBar(false);
       } else if (
-        (allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() !== 0 ||
-          allBalance.userBalance[MigrateToken.WRAP]?.toNumber() !== 0) &&
+        (allBalance.allTokensBalances[MigrateToken.PLENTY].balance?.toNumber() !== 0 ||
+          allBalance.allTokensBalances[MigrateToken.WRAP].balance?.toNumber() !== 0) &&
         vestedData.claimableAmount?.toNumber() !== 0
       ) {
         setShowTopBar(true);
         setShowMigrateSwap(true);
         setIsClaimVested(false);
       } else if (
-        allBalance.userBalance[MigrateToken.PLENTY].toNumber() === 0 &&
-        allBalance.userBalance[MigrateToken.WRAP].toNumber() === 0 &&
+        allBalance.allTokensBalances[MigrateToken.PLENTY].balance.toNumber() === 0 &&
+        allBalance.allTokensBalances[MigrateToken.WRAP].balance.toNumber() === 0 &&
         vestedData.claimableAmount?.toNumber() !== 0
       ) {
         setIsClaimVested(true);
         setShowTopBar(false);
         setShowMigrateSwap(false);
       } else if (
-        allBalance.userBalance[MigrateToken.PLENTY]?.toNumber() === 0 &&
-        allBalance.userBalance[MigrateToken.WRAP]?.toNumber() === 0 &&
+        allBalance.allTokensBalances[MigrateToken.PLENTY].balance?.toNumber() === 0 &&
+        allBalance.allTokensBalances[MigrateToken.WRAP].balance?.toNumber() === 0 &&
         vestedData.claimableAmount?.toNumber() === 0
       ) {
         setIsClaimVested(false);
@@ -248,8 +260,8 @@ function MigrateMain(props: any) {
       setShowMigrateSwap(true);
     }
   }, [
-    allBalance.userBalance[MigrateToken.PLENTY],
-    allBalance.userBalance[MigrateToken.WRAP],
+    allBalance.allTokensBalances[MigrateToken.PLENTY],
+    allBalance.allTokensBalances[MigrateToken.WRAP],
     vestedData.claimableAmount,
     props.operationSuccesful,
     userAddress,
@@ -274,8 +286,8 @@ function MigrateMain(props: any) {
                   isLoading={false}
                   vestedData={vestedData}
                   onClick={handleClaimClick}
-                  plentyBal={allBalance.userBalance[MigrateToken.PLENTY]}
-                  wrapBal={allBalance.userBalance[MigrateToken.WRAP]}
+                  plentyBal={allBalance.allTokensBalances[MigrateToken.PLENTY].balance}
+                  wrapBal={allBalance.allTokensBalances[MigrateToken.WRAP].balance}
                 />
               )}
             </div>
@@ -286,8 +298,8 @@ function MigrateMain(props: any) {
               isLoading={false}
               vestedData={vestedData}
               onClick={handleClaimClick}
-              plentyBal={allBalance.userBalance[MigrateToken.PLENTY]}
-              wrapBal={allBalance.userBalance[MigrateToken.WRAP]}
+              plentyBal={allBalance.allTokensBalances[MigrateToken.PLENTY].balance}
+              wrapBal={allBalance.allTokensBalances[MigrateToken.WRAP].balance}
             />
           )}
 

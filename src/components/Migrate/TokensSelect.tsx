@@ -5,6 +5,8 @@ import { tokenParameter, tokensModal } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
+import { IAllTokensBalance } from "../../api/util/types";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface ISwapModalProps {
   tokens: tokensModal[];
@@ -13,9 +15,7 @@ interface ISwapModalProps {
   onhide: Function;
   tokenIn: tokenParameter;
   isSuccess: boolean;
-  allBalance: {
-    [id: string]: BigNumber;
-  };
+  allBalance: IAllTokensBalance;
 }
 function TokenModalMigrate(props: ISwapModalProps) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,8 +49,7 @@ function TokenModalMigrate(props: ISwapModalProps) {
     };
     filterTokens();
   }, [props.tokens, searchQuery, props.tokenIn.name, searchHits]);
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   return props.show ? (
     <PopUpModal title="Select token" onhide={() => props.onhide(false)}>
       {
@@ -96,7 +95,7 @@ function TokenModalMigrate(props: ISwapModalProps) {
                           props.tokenIn.name === token.name ? "text-white/[0.1]" : "text-white"
                         )}
                       >
-                        {token.name === "tez" ? "TEZ" : token.name === "ctez" ? "CTEZ" : token.name}
+                        {tEZorCTEZtoUppercase(token.name)}
                       </div>
                     </div>
                     {token.new && (
@@ -104,10 +103,10 @@ function TokenModalMigrate(props: ISwapModalProps) {
                         <span>New!</span>
                       </div>
                     )}
-                    {props.isSuccess && props.allBalance[token.name] ? (
+                    {props.isSuccess && props.allBalance[token.name].balance ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">
-                        {props.allBalance[token.name]
-                          ? Number(props.allBalance[token.name]).toFixed(2)
+                        {props.allBalance[token.name].balance
+                          ? Number(props.allBalance[token.name].balance).toFixed(2)
                           : 0.0}
                       </div>
                     ) : props.isSuccess === false ? (

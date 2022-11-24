@@ -17,7 +17,7 @@ import { ISwapData, tokenParameterLiquidity } from "./types";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { ITokenInterface } from "../../config/types";
+import { IAllTokensBalanceResponse } from "../../api/util/types";
 
 interface ILiquidityProps {
   firstTokenAmount: string | number;
@@ -29,9 +29,7 @@ interface ILiquidityProps {
   onChange?: any;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  userBalances: {
-    [key: string]: string;
-  };
+  userBalances: IAllTokensBalanceResponse;
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   setIsAddLiquidity: React.Dispatch<React.SetStateAction<boolean>>;
   isAddLiquidity: boolean;
@@ -87,9 +85,10 @@ function Liquidity(props: ILiquidityProps) {
     } else if (
       walletAddress &&
       ((props.firstTokenAmount &&
-        props.firstTokenAmount > props.userBalances[props.tokenIn.name]) ||
+        props.firstTokenAmount >
+          Number(props.userBalances.allTokensBalances[props.tokenIn.name].balance)) ||
         (props.secondTokenAmount && props.secondTokenAmount) >
-          props.userBalances[props.tokenOut.name])
+          Number(props.userBalances.allTokensBalances[props.tokenOut.name].balance))
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>

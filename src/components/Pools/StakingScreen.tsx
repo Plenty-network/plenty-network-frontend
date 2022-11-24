@@ -24,13 +24,8 @@ import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 
 import { VePLY } from "../DropDown/VePLY";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { detachLockFromGauge } from "../../operations/locks";
-import { setIsLoadingWallet } from "../../redux/walletLoading";
-import { setFlashMessage } from "../../redux/flashMessage";
-import { Flashtype } from "../FlashScreen";
-import { getStakedData } from "../../api/stake";
-import { FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_B } from "../../constants/localStorage";
-import { ITokenInterface } from "../../config/types";
+import { IConfigLPToken } from "../../config/types";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 export enum StakingScreenType {
   Staking = "Staking",
@@ -57,7 +52,7 @@ export interface IStakingScreenProps {
   selectedDropDown: IVePLYData;
   vePLYOptions: IVePLYData[];
   isListLoading: boolean;
-  lpToken: ITokenInterface | undefined;
+  lpToken: IConfigLPToken | undefined;
 }
 export interface IStakingProps {
   boost: IStakedDataResponse | undefined;
@@ -76,7 +71,7 @@ export interface IStakingProps {
   vePLYOptions: IVePLYData[];
   isListLoading: boolean;
   handleDetach: () => void;
-  lpToken: ITokenInterface | undefined;
+  lpToken: IConfigLPToken | undefined;
 }
 
 export interface IUnstakingProps {
@@ -90,7 +85,7 @@ export interface IUnstakingProps {
   setUnStakeInput: React.Dispatch<React.SetStateAction<string | number>>;
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   stakedToken: string;
-  lpToken: ITokenInterface | undefined;
+  lpToken: IConfigLPToken | undefined;
 }
 export function StakingScreen(props: IStakingScreenProps) {
   return (
@@ -196,8 +191,7 @@ export function Staking(props: IStakingProps) {
       }
     }
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   const onClickAmount = () => {
     handleStakeInput(props.pnlpBalance);
   };

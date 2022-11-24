@@ -20,14 +20,15 @@ import { AppDispatch, useAppSelector } from "../../redux";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { ITokenInterface } from "../../config/types";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+
+import { tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
 import { tokenType } from "../../constants/swap";
 
 import { getDexAddress } from "../../api/util/fetchConfig";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface ILiquidityProps {
   firstTokenAmount: string | number;
@@ -45,7 +46,6 @@ interface ILiquidityProps {
   setShowConfirmPool: React.Dispatch<React.SetStateAction<boolean>>;
   setIsAddLiquidity: React.Dispatch<React.SetStateAction<boolean>>;
   isAddLiquidity: boolean;
-  swapData: ISwapData;
   pnlpBalance: string;
   setBurnAmount: React.Dispatch<React.SetStateAction<string | number>>;
   burnAmount: string | number;
@@ -227,13 +227,7 @@ function NewPoolMain(props: ILiquidityProps) {
               <div className="ml-1 md:ml-2">
                 <p className="text-text-900 font-body2">Input</p>
                 <p className="font-caption1 md:font-title2 text-white">
-                  {props.tokenIn.name
-                    ? props.tokenIn.name === "tez"
-                      ? "TEZ"
-                      : props.tokenIn.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenIn.name
-                    : "Select"}
+                  {props.tokenIn.name ? tEZorCTEZtoUppercase(props.tokenIn.name) : "Select"}
                   <span className="relative ml-2 -top-[1.5px]">
                     <Image alt={"alt"} className="rotate-180" src={vectorDown} />
                   </span>
@@ -243,7 +237,7 @@ function NewPoolMain(props: ILiquidityProps) {
             <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
               <div className="w-0 flex-auto">
                 <p>
-                  {props.swapData.isloading && props.tokenIn.name ? (
+                  {props.tokenIn.name ? (
                     <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input
@@ -287,11 +281,7 @@ function NewPoolMain(props: ILiquidityProps) {
                           : "0"}{" "}
                       </span>
                     )}
-                    {props.tokenIn.name === "tez"
-                      ? "TEZ"
-                      : props.tokenIn.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenIn.name}
+                    {tEZorCTEZtoUppercase(props.tokenIn.name)}
                   </div>
                 </div>
               )}
@@ -316,13 +306,7 @@ function NewPoolMain(props: ILiquidityProps) {
               <div className="ml-1 md:ml-2">
                 <p className="text-text-900 font-body2">Input</p>
                 <p className="font-caption1 md:font-title2 text-white">
-                  {props.tokenOut.name
-                    ? props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name
-                    : "Select"}
+                  {props.tokenOut.name ? tEZorCTEZtoUppercase(props.tokenOut.name) : "Select"}
                   <span className="relative ml-2 -top-[1.5px]">
                     <Image alt={"alt"} className="rotate-180" src={vectorDown} />
                   </span>
@@ -332,7 +316,7 @@ function NewPoolMain(props: ILiquidityProps) {
             <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
               <div className="w-0 flex-auto">
                 <p>
-                  {props.swapData.isloading && props.tokenOut.name ? (
+                  {props.tokenOut.name ? (
                     <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input
@@ -375,11 +359,7 @@ function NewPoolMain(props: ILiquidityProps) {
                           : "0"}{" "}
                       </span>
                     )}
-                    {props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name}
+                    {tEZorCTEZtoUppercase(props.tokenOut.name)}
                   </div>
                 </div>
               )}

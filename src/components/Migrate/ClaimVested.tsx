@@ -16,8 +16,12 @@ import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
 import { AppDispatch, store, useAppDispatch, useAppSelector } from "../../redux";
 import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
-import { getCompleteUserBalace } from "../../api/util/balance";
-import { IAllBalanceResponse } from "../../api/util/types";
+import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
+import {
+  IAllBalanceResponse,
+  IAllTokensBalance,
+  IAllTokensBalanceResponse,
+} from "../../api/util/types";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import Image from "next/image";
@@ -39,12 +43,8 @@ interface IMigrateProps {
 
 function ClaimVested(props: IMigrateProps) {
   const [firstTokenAmount, setFirstTokenAmount] = useState("");
-  const [allBalance, setAllBalance] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
 
-  const tokens = useAppSelector((state) => state.config.standard);
+  const tokens = useAppSelector((state) => state.config.tokens);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const userAddress = useAppSelector((state) => state.wallet.address);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
@@ -53,14 +53,26 @@ function ClaimVested(props: IMigrateProps) {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
+    success: false,
+    allTokensBalances: {} as IAllTokensBalance,
+  });
   useEffect(() => {
-    setAllBalance({ success: false, userBalance: {} });
+    setAllBalance({
+      success: false,
+      allTokensBalances: {} as IAllTokensBalance,
+    });
     if (userAddress) {
-      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-        setAllBalance(response);
-      });
+      getAllTokensBalanceFromTzkt(Object.values(tokens), userAddress).then(
+        (response: IAllTokensBalanceResponse) => {
+          setAllBalance(response);
+        }
+      );
     } else {
-      setAllBalance({ success: true, userBalance: {} });
+      setAllBalance({
+        success: false,
+        allTokensBalances: {} as IAllTokensBalance,
+      });
     }
   }, [userAddress, tokens, balanceUpdate]);
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
@@ -232,15 +244,21 @@ function ClaimVested(props: IMigrateProps) {
               <div className="text-left">
                 <span className="text-text-600 font-body3">Balance:</span>{" "}
                 <span className="font-body4 text-text-500 ">
-                  {Number(allBalance.userBalance[tokenOut.name]) >= 0 ? (
+                  {Number(allBalance.allTokensBalances[tokenOut.name].balance) >= 0 ? (
                     <ToolTip
-                      message={fromExponential(allBalance.userBalance[tokenOut.name].toString())}
-                      disable={Number(allBalance.userBalance[tokenOut.name]) > 0 ? false : true}
+                      message={fromExponential(
+                        allBalance.allTokensBalances[tokenOut.name].balance.toString()
+                      )}
+                      disable={
+                        Number(allBalance.allTokensBalances[tokenOut.name].balance) > 0
+                          ? false
+                          : true
+                      }
                       id="tooltip9"
                       position={Position.right}
                     >
-                      {Number(allBalance.userBalance[tokenOut.name]) > 0
-                        ? Number(allBalance.userBalance[tokenOut.name]).toFixed(4)
+                      {Number(allBalance.allTokensBalances[tokenOut.name].balance) > 0
+                        ? Number(allBalance.allTokensBalances[tokenOut.name].balance).toFixed(4)
                         : 0}
                     </ToolTip>
                   ) : (

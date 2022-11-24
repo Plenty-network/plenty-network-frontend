@@ -6,7 +6,7 @@ import { useAppSelector } from "../redux";
 import { Chain } from "../config/types";
 
 export const useLocationStateInSwap = () => {
-  const tokens = useAppSelector((state) => state.config.standard);
+  const tokens = useAppSelector((state) => state.config.tokens);
   const tokensArray = Object.entries(tokens);
   const router = useRouter();
   const { query } = useRouter();
@@ -56,9 +56,9 @@ export const useLocationStateInSwap = () => {
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
       name: token[0],
-      image: `/assets/Tokens/${token[1].symbol}.png`,
-      new: token[1].extras?.isNew as boolean,
-      chainType: token[1].extras?.chain as Chain,
+      image: `/assets/Tokens/${token[1].name}.png`,
+
+      chainType: token[1].originChain as Chain,
       address: token[1].address,
     }));
   }, [tokens]);

@@ -26,6 +26,7 @@ import stake from "../../assets/icon/pools/stakePool.svg";
 import newPool from "../../assets/icon/pools/newPool.svg";
 import Image from "next/image";
 import clsx from "clsx";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 export interface IShortCardProps {
   className?: string;
@@ -60,6 +61,7 @@ export function ShortCard(props: IShortCardProps) {
     props.searchValue,
     isFetch
   );
+
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
@@ -87,8 +89,6 @@ export function ShortCard(props: IShortCardProps) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: "USDT.e",
   });
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const mobilecolumns = React.useMemo<Column<IPoolsDataWrapperResponse>[]>(
     () => [

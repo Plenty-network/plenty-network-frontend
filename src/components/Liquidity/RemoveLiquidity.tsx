@@ -5,6 +5,7 @@ import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import { ISwapData, tokenParameterLiquidity } from "./types";
 import { getOutputTokensAmount } from "../../api/liquidity";
 import { useAppSelector } from "../../redux";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface IRemoveLiquidityProps {
   swapData: ISwapData;
@@ -170,11 +171,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
               </p>
               <p>
                 <span className="mt-2  font-mobile-400 md:font-body4 text-text-400">
-                  {props.tokenIn.name === "tez"
-                    ? "TEZ"
-                    : props.tokenIn.name === "ctez"
-                    ? "CTEZ"
-                    : props.tokenIn.name}
+                  {tEZorCTEZtoUppercase(props.tokenIn.name)}
                 </span>
               </p>
             </div>
@@ -196,11 +193,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
               </p>
               <p>
                 <span className="mt-2 font-mobile-400 md:font-body4 text-text-400">
-                  {props.tokenOut.name === "tez"
-                    ? "TEZ"
-                    : props.tokenOut.name === "ctez"
-                    ? "CTEZ"
-                    : props.tokenOut.name}
+                  {tEZorCTEZtoUppercase(props.tokenOut.name)}
                 </span>
               </p>
             </div>

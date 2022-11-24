@@ -3,6 +3,8 @@ import Image from "next/image";
 import add from "../../../src/assets/icon/pools/addIcon.svg";
 import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import { estimateOtherTokenAmount } from "../../api/liquidity";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { IAllTokensBalanceResponse } from "../../api/util/types";
 import { useAppSelector } from "../../redux";
 import { ISwapData, tokenParameterLiquidity } from "./types";
 
@@ -11,9 +13,7 @@ interface IAddLiquidityProps {
   secondTokenAmount: string | number;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  userBalances: {
-    [key: string]: string;
-  };
+  userBalances: IAllTokensBalanceResponse;
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   swapData: ISwapData;
@@ -23,7 +23,7 @@ interface IAddLiquidityProps {
 }
 function AddLiquidity(props: IAddLiquidityProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
-  const tokens = useAppSelector((state) => state.config.standard);
+  const tokens = useAppSelector((state) => state.config.tokens);
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
@@ -81,15 +81,27 @@ function AddLiquidity(props: IAddLiquidityProps) {
     props.setSecondTokenAmount("");
 
     props.tokenIn.name === "tez"
-      ? handleLiquidityInput(Number(props.userBalances[props.tokenIn.name]) - 0.02, "tokenIn")
-      : handleLiquidityInput(props.userBalances[props.tokenIn.name], "tokenIn");
+      ? handleLiquidityInput(
+          Number(props.userBalances.allTokensBalances[props.tokenIn.name].balance) - 0.02,
+          "tokenIn"
+        )
+      : handleLiquidityInput(
+          Number(props.userBalances.allTokensBalances[props.tokenIn.name].balance),
+          "tokenIn"
+        );
   };
   const onClickSecondAmount = () => {
     props.setFirstTokenAmount("");
 
     props.tokenOut.name === "tez"
-      ? handleLiquidityInput(Number(props.userBalances[props.tokenOut.name]) - 0.02, "tokenOut")
-      : handleLiquidityInput(props.userBalances[props.tokenOut.name], "tokenOut");
+      ? handleLiquidityInput(
+          Number(props.userBalances.allTokensBalances[props.tokenOut.name].balance) - 0.02,
+          "tokenOut"
+        )
+      : handleLiquidityInput(
+          Number(props.userBalances.allTokensBalances[props.tokenOut.name].balance),
+          "tokenOut"
+        );
   };
   return (
     <>
@@ -106,11 +118,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
           <div className="ml-1 md:ml-2">
             <p className="text-text-900 font-body2">Input</p>
             <p className="font-caption1 md:font-title2 text-white">
-              {props.tokenIn.name === "tez"
-                ? "TEZ"
-                : props.tokenIn.name === "ctez"
-                ? "CTEZ"
-                : props.tokenIn.name}
+              {tEZorCTEZtoUppercase(props.tokenIn.name)}
             </p>
           </div>
         </div>
@@ -150,20 +158,20 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
                 onClick={onClickAmount}
               >
-                {!(Number(props.userBalances[props.tokenIn.name]) >= 0) ? (
+                {!(
+                  Number(props.userBalances.allTokensBalances[props.tokenIn.name].balance) >= 0
+                ) ? (
                   <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances[props.tokenIn.name]) > 0
-                      ? Number(props.userBalances[props.tokenIn.name]).toFixed(4)
+                    {Number(props.userBalances.allTokensBalances[props.tokenIn.name].balance) > 0
+                      ? Number(
+                          props.userBalances.allTokensBalances[props.tokenIn.name].balance
+                        ).toFixed(4)
                       : 0}{" "}
                   </span>
                 )}
-                {props.tokenIn.name === "tez"
-                  ? "TEZ"
-                  : props.tokenIn.name === "ctez"
-                  ? "CTEZ"
-                  : props.tokenIn.name}
+                {tEZorCTEZtoUppercase(props.tokenIn.name)}
               </div>
             </div>
           )}
@@ -185,11 +193,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
           <div className="ml-1 md:ml-2">
             <p className="text-text-900 font-body2">Input</p>
             <p className="font-caption1 md:font-title2 text-white">
-              {props.tokenOut.name === "tez"
-                ? "TEZ"
-                : props.tokenOut.name === "ctez"
-                ? "CTEZ"
-                : props.tokenOut.name}
+              {tEZorCTEZtoUppercase(props.tokenOut.name)}
             </p>
           </div>
         </div>
@@ -229,20 +233,20 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 className="ml-1 cursor-pointer flex text-primary-500  font-caption1-small md:font-body2"
                 onClick={onClickSecondAmount}
               >
-                {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (
+                {!(
+                  Number(props.userBalances.allTokensBalances[props.tokenOut.name].balance) >= 0
+                ) ? (
                   <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances[props.tokenOut.name]) > 0
-                      ? Number(props.userBalances[props.tokenOut.name]).toFixed(4)
+                    {Number(props.userBalances.allTokensBalances[props.tokenOut.name].balance) > 0
+                      ? Number(
+                          props.userBalances.allTokensBalances[props.tokenOut.name].balance
+                        ).toFixed(4)
                       : 0}{" "}
                   </span>
                 )}
-                {props.tokenOut.name === "tez"
-                  ? "TEZ"
-                  : props.tokenOut.name === "ctez"
-                  ? "CTEZ"
-                  : props.tokenOut.name}
+                {tEZorCTEZtoUppercase(props.tokenOut.name)}
               </div>
             </div>
           )}

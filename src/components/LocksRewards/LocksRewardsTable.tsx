@@ -12,6 +12,7 @@ import { VotingPower } from "./VotingPower";
 import { ILockRewardsEpochData } from "../../api/portfolio/types";
 import { NoPoolsPosition } from "../Rewards/NoContent";
 import ClaimAllEpoch from "./ClaimAllEpoch";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 export function LocksTableRewards(props: IVotesTableRewards) {
   const { valueFormat } = useTableNumberUtils();
@@ -84,8 +85,6 @@ export function LocksTableRewards(props: IVotesTableRewards) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const mobilecolumns = React.useMemo<Column<IVotePageData>[]>(
     () => [
