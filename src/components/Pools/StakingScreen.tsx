@@ -237,7 +237,9 @@ export function Staking(props: IStakingProps) {
             props.setScreen("2");
           }}
         >
-          {props.stakeInput <= 0 && props.selectedDropDown.tokenId !== "" ? "Boost" : "Stake"}
+          {props.stakeInput <= 0 && props.selectedDropDown.tokenId !== ""
+            ? "Update Boost veNFT"
+            : "Stake"}
         </Button>
       );
     }

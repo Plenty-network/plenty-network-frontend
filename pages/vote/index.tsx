@@ -514,7 +514,7 @@ export default function Vote() {
                 </div>
 
                 <div className="border border-muted-50 px-5 bg-muted-300 h-[38px]  flex items-center justify-center rounded-xl">
-                  {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
+                  {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "0"}%
                 </div>
                 <div className="">
                   {alreadyVoted ? (
@@ -667,7 +667,7 @@ export default function Vote() {
                   </ToolTip>
                 </span>
                 <span className="ml-1">
-                  {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
+                  {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "0"}%
                 </span>
               </div>
               <div className="basis-3/4">

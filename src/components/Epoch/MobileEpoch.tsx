@@ -34,7 +34,9 @@ export function MobileEpoch(props: IMobileEpochProps) {
         className={`flex justify-between cursor-pointer py-2 px-5 ${
           currentEpoch.isCurrent ? "bg-primary-700" : ""
         }`}
-        onClick={() => setIsDropDownActive(!isDropDownActive)}
+        onClick={
+          router.pathname.includes("vote") ? () => setIsDropDownActive(!isDropDownActive) : () => {}
+        }
       >
         <p className="text-white font-body4">
           Epoch
@@ -59,7 +61,7 @@ export function MobileEpoch(props: IMobileEpochProps) {
           src={vectorDown}
         />
       </div>
-      {isDropDownActive && (
+      {isDropDownActive && router.pathname.includes("vote") && (
         <>
           {epochData.map((epoch, i) => (
             <EpochOptions

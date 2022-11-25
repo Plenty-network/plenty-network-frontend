@@ -17,6 +17,8 @@ import close from "../../src/assets/icon/pools/closeBlue.svg";
 import Image from "next/image";
 import { USERADDRESS } from "../../src/constants/localStorage";
 import { NewPool } from "../../src/components/Pools/NewPool";
+import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
+import clsx from "clsx";
 export interface IIndexProps {}
 export enum AMM_TYPE {
   VOLATILE = "VOLATILE",
@@ -88,6 +90,13 @@ export default function Pools(props: IIndexProps) {
             isFirst={walletAddress !== null && localStorage.getItem(USERADDRESS) !== walletAddress}
             onClick={handleNewPool}
           />
+          <div className="my-2 mx-3">
+            <InputSearchBox
+              className={clsx("md:hidden")}
+              value={searchValue}
+              onChange={setSearchValue}
+            />
+          </div>
           <div className="sticky top-0 z-10">
             <CardHeader
               activeStateTab={activeStateTab}
