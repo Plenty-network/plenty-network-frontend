@@ -37,10 +37,11 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
         }
         paths = tempPaths;
     
-        let swapData: ISwapDataResponse[][] = [[], []];
+        let swapData: ISwapDataResponse[][] = [];
 
         for (const i in paths) {
             const path = paths[i].split(' ');
+            swapData[i] = [];
             for (let j = 0; j < path.length - 1; j++) {
                 // Getting Swap Details
                 swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
@@ -55,7 +56,7 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
         console.log(error);
         return {
             paths: [],
-            swapData: [[], []]
+            swapData: []
         };
     }
 };
