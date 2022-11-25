@@ -522,7 +522,7 @@ function SwapTab(props: ISwapTabProps) {
                       placeholder="0.0"
                       disabled={props.errorMessage === ERRORMESSAGES.SWAPROUTER}
                       onChange={(e) => props.handleSwapTokenInput(e.target.value, "tokenOut")}
-                      value={props.secondTokenAmount}
+                      value={fromExponential(props.secondTokenAmount)}
                       onFocus={() => setIsSecondInputFocus(true)}
                       onBlur={() => setIsSecondInputFocus(false)}
                     />

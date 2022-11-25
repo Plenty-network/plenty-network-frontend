@@ -111,8 +111,8 @@ function AddBribes(props: IAddBribes) {
     props.setBribeInputValue("");
 
     props.bribeToken.name === "tez"
-      ? handleTokenInput(Number(props.allBalance[props.bribeToken.name].balance) - 0.02)
-      : handleTokenInput(props.allBalance[props.bribeToken.name].balance.toNumber());
+      ? handleTokenInput(Number(props.allBalance[props.bribeToken.name]?.balance) - 0.02)
+      : handleTokenInput(props.allBalance[props.bribeToken.name]?.balance.toNumber());
   };
   const [selectedDropDown, setSelectedDropDown] = useState<IEpochListObject>(
     {} as IEpochListObject
@@ -185,9 +185,9 @@ function AddBribes(props: IAddBribes) {
       if (
         (Number(props.bribeInputValue) > 0 &&
           new BigNumber(props.bribeInputValue).isGreaterThan(
-            props.allBalance[props.bribeToken.name].balance
+            props.allBalance[props.bribeToken.name]?.balance
           )) ||
-        new BigNumber(bottomValue).isGreaterThan(props.allBalance[props.bribeToken.name].balance)
+        new BigNumber(bottomValue).isGreaterThan(props.allBalance[props.bribeToken.name]?.balance)
       ) {
         return (
           <Button color="disabled" width="w-full">
@@ -366,17 +366,19 @@ function AddBribes(props: IAddBribes) {
                     <div className="text-left cursor-pointer" onClick={onClickAmount}>
                       <span className="text-text-600 font-body3">Balance:</span>{" "}
                       <span className="font-body4 text-primary-500 ">
-                        {Number(props.allBalance[props.bribeToken.name]) >= 0 ? (
+                        {Number(props.allBalance[props.bribeToken.name]?.balance) >= 0 ? (
                           <ToolTip
-                            message={props.allBalance[props.bribeToken.name].toString()}
+                            message={props.allBalance[props.bribeToken.name]?.balance.toString()}
                             disable={
-                              Number(props.allBalance[props.bribeToken.name]) > 0 ? false : true
+                              Number(props.allBalance[props.bribeToken.name]?.balance) > 0
+                                ? false
+                                : true
                             }
                             id="tooltip8"
                             position={Position.right}
                           >
-                            {Number(props.allBalance[props.bribeToken.name]) > 0
-                              ? Number(props.allBalance[props.bribeToken.name]).toFixed(4)
+                            {Number(props.allBalance[props.bribeToken.name]?.balance) > 0
+                              ? Number(props.allBalance[props.bribeToken.name]?.balance).toFixed(4)
                               : 0}
                           </ToolTip>
                         ) : (
@@ -436,7 +438,7 @@ function AddBribes(props: IAddBribes) {
                       className={clsx(
                         "ml-1",
                         new BigNumber(bottomValue).isGreaterThan(
-                          props.allBalance[props.bribeToken.name].balance
+                          props.allBalance[props.bribeToken.name]?.balance
                         )
                           ? "text-error-500"
                           : "text-white"

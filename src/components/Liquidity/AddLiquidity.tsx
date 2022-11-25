@@ -82,11 +82,11 @@ function AddLiquidity(props: IAddLiquidityProps) {
 
     props.tokenIn.name === "tez"
       ? handleLiquidityInput(
-          Number(props.userBalances.allTokensBalances[props.tokenIn.name].balance) - 0.02,
+          Number(props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance) - 0.02,
           "tokenIn"
         )
       : handleLiquidityInput(
-          Number(props.userBalances.allTokensBalances[props.tokenIn.name].balance),
+          Number(props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance),
           "tokenIn"
         );
   };
@@ -95,11 +95,11 @@ function AddLiquidity(props: IAddLiquidityProps) {
 
     props.tokenOut.name === "tez"
       ? handleLiquidityInput(
-          Number(props.userBalances.allTokensBalances[props.tokenOut.name].balance) - 0.02,
+          Number(props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance) - 0.02,
           "tokenOut"
         )
       : handleLiquidityInput(
-          Number(props.userBalances.allTokensBalances[props.tokenOut.name].balance),
+          Number(props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance),
           "tokenOut"
         );
   };
@@ -159,14 +159,14 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 onClick={onClickAmount}
               >
                 {!(
-                  Number(props.userBalances.allTokensBalances[props.tokenIn.name].balance) >= 0
+                  Number(props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance) >= 0
                 ) ? (
                   <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances.allTokensBalances[props.tokenIn.name].balance) > 0
+                    {Number(props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance) > 0
                       ? Number(
-                          props.userBalances.allTokensBalances[props.tokenIn.name].balance
+                          props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance
                         ).toFixed(4)
                       : 0}{" "}
                   </span>
@@ -234,14 +234,14 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 onClick={onClickSecondAmount}
               >
                 {!(
-                  Number(props.userBalances.allTokensBalances[props.tokenOut.name].balance) >= 0
+                  Number(props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance) >= 0
                 ) ? (
                   <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances.allTokensBalances[props.tokenOut.name].balance) > 0
+                    {Number(props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance) > 0
                       ? Number(
-                          props.userBalances.allTokensBalances[props.tokenOut.name].balance
+                          props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance
                         ).toFixed(4)
                       : 0}{" "}
                   </span>

@@ -1862,7 +1862,7 @@ function MyPortfolio(props: any) {
           setLockingEndData={setLockingEndData}
           lockingEndData={lockingEndData}
           tokenPrice={tokenPrice}
-          plyBalance={plyBalance}
+          allBalance={allBalance}
           IncreaseLockEndOperation={IncreaseLockEndOperation}
           IncreaseLockValueOperation={IncreaseLockValueOperation}
           handleIncreaseVoteOperation={handleIncreaseVoteOperation}

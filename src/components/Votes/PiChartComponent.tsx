@@ -1,8 +1,8 @@
 import * as React from "react";
 import { PieChart, Pie, Cell, Sector } from "recharts";
 import { IVotesData } from "../../api/votes/types";
-import { tEZorCTEZTtoUpperCase } from "../../utils/commonUtils";
 import { BigNumber } from "bignumber.js";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 const RenderActiveShape = (props: any) => {
   function toDegrees(angle: number) {
@@ -106,7 +106,7 @@ export default function PiChart(props: IPiChartProps) {
     return {
       name:
         e.tokenOneSymbol && e.tokenTwoSymbol
-          ? `${tEZorCTEZTtoUpperCase(e.tokenOneSymbol ?? "")} / ${tEZorCTEZTtoUpperCase(
+          ? `${tEZorCTEZtoUppercase(e.tokenOneSymbol ?? "")} / ${tEZorCTEZtoUppercase(
               e.tokenTwoSymbol ?? ""
             )}`
           : "Others",

@@ -86,9 +86,9 @@ function Liquidity(props: ILiquidityProps) {
       walletAddress &&
       ((props.firstTokenAmount &&
         props.firstTokenAmount >
-          Number(props.userBalances.allTokensBalances[props.tokenIn.name].balance)) ||
+          Number(props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance)) ||
         (props.secondTokenAmount && props.secondTokenAmount) >
-          Number(props.userBalances.allTokensBalances[props.tokenOut.name].balance))
+          Number(props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance))
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
