@@ -130,7 +130,7 @@ export function ShortCard(props: IShortCardProps) {
             <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} isMobile={true} />
           ) : (
             <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              --
+              -
             </div>
           ),
       },
@@ -149,7 +149,7 @@ export function ShortCard(props: IShortCardProps) {
             <AprInfoFuture futureApr={x.futureApr} />
           ) : (
             <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              --
+              -
             </div>
           ),
       },
@@ -191,7 +191,7 @@ export function ShortCard(props: IShortCardProps) {
             <div
               className={clsx(
                 "flex gap-1 items-center max-w-[153px]",
-                x.isStakeAvailable ? "ml-3" : "ml-[34px]"
+                x.isStakeAvailable || !x.isGaugeAvailable ? "ml-[14px]" : "ml-[34px]"
               )}
             >
               <CircularOverLappingImage
@@ -224,7 +224,7 @@ export function ShortCard(props: IShortCardProps) {
             <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} />
           ) : (
             <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              --
+              -
             </div>
           ),
       },
@@ -243,7 +243,7 @@ export function ShortCard(props: IShortCardProps) {
             <AprInfoFuture futureApr={x.futureApr} />
           ) : (
             <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              --
+              -
             </div>
           ),
       },
@@ -316,7 +316,7 @@ export function ShortCard(props: IShortCardProps) {
             <BribesPool value={x.bribeUSD} bribesData={x.bribes} />
           ) : (
             <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              --
+              -
             </div>
           ),
       },
