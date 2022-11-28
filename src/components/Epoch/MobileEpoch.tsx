@@ -55,11 +55,13 @@ export function MobileEpoch(props: IMobileEpochProps) {
             </span>
           </span>
         </p>
-        <Image
-          alt={"alt"}
-          className={isDropDownActive ? "rotate-0" : "rotate-180"}
-          src={vectorDown}
-        />
+        {router.pathname.includes("vote") && (
+          <Image
+            alt={"alt"}
+            className={isDropDownActive ? "rotate-0" : "rotate-180"}
+            src={vectorDown}
+          />
+        )}
       </div>
       {isDropDownActive && router.pathname.includes("vote") && (
         <>
