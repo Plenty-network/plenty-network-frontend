@@ -64,6 +64,7 @@ export const getPositionsData = async (
           stakedPercentage,
           userAPR,
           boostValue: boostValue.isFinite() ? boostValue : new BigNumber(0),
+          isGaugeAvailable: AMM[pool.amm].gauge ? true : false,
         };
       }
     );
