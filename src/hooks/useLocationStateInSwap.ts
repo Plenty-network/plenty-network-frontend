@@ -10,7 +10,6 @@ export const useLocationStateInSwap = () => {
   const tokensArray = Object.entries(tokens);
   const router = useRouter();
   const { query } = useRouter();
-
   const [tokenIn, setTokenIn] = useState<tokenParameter>(
     router.asPath.indexOf("=") >= 0
       ? router.asPath
@@ -64,20 +63,16 @@ export const useLocationStateInSwap = () => {
   }, [tokens]);
 
   useEffect(() => {
-    if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
-      return;
-    }
+    // if (tokenIn.name === router.query.from && tokenOut.name === router.query.to) {
+    //   return;
+    // }
     void router.replace(
       {
         pathname: router.pathname,
         query: {
           ...router.query,
           from: tokenIn && tokenIn.name ? tokenIn.name : null,
-          ...(tokenOut.name
-            ? {
-                to: tokenOut.name,
-              }
-            : {}),
+          to: tokenOut && tokenOut.name ? tokenOut.name : null,
         },
       },
       undefined,
