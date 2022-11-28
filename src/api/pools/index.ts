@@ -14,7 +14,7 @@ import Config from '../../config/config';
 import { EMPTY_POOLS_OBJECT, EMPTY_VE_INDEXER_POOLS_OBJECT } from '../../constants/global';
 import { store } from '../../redux';
 
-export const poolsDataWrapper = async (
+export const poolsDataWrapperV1 = async (
   address: string | undefined,
   tokenPrice: { [id: string]: number }
 ): Promise<{
@@ -178,7 +178,7 @@ const doesStakeExistForUser = async (
 };
 
 
-export const poolsDataWrapperV2 = async (
+export const poolsDataWrapper = async (
   address: string | undefined,
   tokenPrice: { [id: string]: number }
 ): Promise<{
