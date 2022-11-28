@@ -38,6 +38,7 @@ export interface IShortCardProps {
   setActiveStateTab: React.Dispatch<React.SetStateAction<string>>;
   setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
   showLiquidityModal: boolean;
+  reFetchPool: boolean;
 }
 export interface IManageBtnProps {
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -54,7 +55,8 @@ export function ShortCard(props: IShortCardProps) {
   const { valueFormat } = useTableNumberUtils();
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
     props.poolsFilter,
-    ""
+    "",
+    props.reFetchPool
   );
   const [poolsTableData, isFetched] = usePoolsTableSearch(
     poolTableData,

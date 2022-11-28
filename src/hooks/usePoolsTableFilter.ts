@@ -2,10 +2,10 @@ import { usePoolsMain } from "../api/pools/query/poolsmain.query";
 
 export const usePoolsTableFilter = (
   filterText: string | "MyPools" | undefined,
-  address: string | undefined
+  address: string | undefined,
+  reFetchPool: boolean
 ) => {
   const { data: poolTableData = [], isFetched } = usePoolsMain();
-
   if (poolTableData.length) {
     if (filterText === "MyPools") {
       const newpoolTableData = poolTableData.filter(

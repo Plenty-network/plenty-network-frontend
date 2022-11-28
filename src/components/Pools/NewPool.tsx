@@ -47,6 +47,8 @@ export interface IManageLiquidityProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
   showLiquidityModal: boolean;
+  setReFetchPool: React.Dispatch<React.SetStateAction<boolean>>;
+  reFetchPool: boolean;
 }
 
 export function NewPool(props: IManageLiquidityProps) {
@@ -206,12 +208,12 @@ export function NewPool(props: IManageLiquidityProps) {
       interface: token[1],
     }));
   }, [tokens]);
-  const [reFetch, setReFetch] = useState(false);
+  const [refetch, setRefetch] = useState(false);
   useEffect(() => {
-    if (reFetch) {
+    if (refetch) {
       dispatch(getConfig());
     }
-  }, [reFetch]);
+  }, [refetch]);
   useEffect(() => {
     if (
       (Object.keys(allBalance),
@@ -247,7 +249,8 @@ export function NewPool(props: IManageLiquidityProps) {
 
     setContentTransaction(`new pool`);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    setReFetch(false);
+    props.setReFetchPool(false);
+    setRefetch(false);
     setShowConfirmTransaction(true);
     if (pair === Pair.VOLATILE) {
       deployVolatile(
@@ -297,8 +300,12 @@ export function NewPool(props: IManageLiquidityProps) {
                 transactionId: response.operationId ? response.operationId : "",
               })
             );
-            setReFetch(true);
+            setRefetch(true);
           }, 6000);
+
+          setTimeout(() => {
+            props.setReFetchPool(true);
+          }, 7000);
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setContentTransaction("");
         } else {
