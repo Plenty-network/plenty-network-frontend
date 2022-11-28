@@ -223,32 +223,32 @@ function MigrateMain(props: any) {
   useEffect(() => {
     if (userAddress) {
       if (
-        (allBalance.allTokensBalances[MigrateToken.PLENTY].balance?.toNumber() !== 0 ||
-          allBalance.allTokensBalances[MigrateToken.WRAP].balance?.toNumber() !== 0) &&
+        (allBalance.allTokensBalances[MigrateToken.PLENTY]?.balance?.toNumber() !== 0 ||
+          allBalance.allTokensBalances[MigrateToken.WRAP]?.balance?.toNumber() !== 0) &&
         vestedData.claimableAmount?.toNumber() === 0
       ) {
         setShowMigrateSwap(true);
         setIsClaimVested(false);
         setShowTopBar(false);
       } else if (
-        (allBalance.allTokensBalances[MigrateToken.PLENTY].balance?.toNumber() !== 0 ||
-          allBalance.allTokensBalances[MigrateToken.WRAP].balance?.toNumber() !== 0) &&
+        (allBalance.allTokensBalances[MigrateToken.PLENTY]?.balance?.toNumber() !== 0 ||
+          allBalance.allTokensBalances[MigrateToken.WRAP]?.balance?.toNumber() !== 0) &&
         vestedData.claimableAmount?.toNumber() !== 0
       ) {
         setShowTopBar(true);
         setShowMigrateSwap(true);
         setIsClaimVested(false);
       } else if (
-        allBalance.allTokensBalances[MigrateToken.PLENTY].balance.toNumber() === 0 &&
-        allBalance.allTokensBalances[MigrateToken.WRAP].balance.toNumber() === 0 &&
+        allBalance.allTokensBalances[MigrateToken.PLENTY]?.balance.toNumber() === 0 &&
+        allBalance.allTokensBalances[MigrateToken.WRAP]?.balance.toNumber() === 0 &&
         vestedData.claimableAmount?.toNumber() !== 0
       ) {
         setIsClaimVested(true);
         setShowTopBar(false);
         setShowMigrateSwap(false);
       } else if (
-        allBalance.allTokensBalances[MigrateToken.PLENTY].balance?.toNumber() === 0 &&
-        allBalance.allTokensBalances[MigrateToken.WRAP].balance?.toNumber() === 0 &&
+        allBalance.allTokensBalances[MigrateToken.PLENTY]?.balance?.toNumber() === 0 &&
+        allBalance.allTokensBalances[MigrateToken.WRAP]?.balance?.toNumber() === 0 &&
         vestedData.claimableAmount?.toNumber() === 0
       ) {
         setIsClaimVested(false);
@@ -286,8 +286,8 @@ function MigrateMain(props: any) {
                   isLoading={false}
                   vestedData={vestedData}
                   onClick={handleClaimClick}
-                  plentyBal={allBalance.allTokensBalances[MigrateToken.PLENTY].balance}
-                  wrapBal={allBalance.allTokensBalances[MigrateToken.WRAP].balance}
+                  plentyBal={allBalance.allTokensBalances[MigrateToken.PLENTY]?.balance}
+                  wrapBal={allBalance.allTokensBalances[MigrateToken.WRAP]?.balance}
                 />
               )}
             </div>
@@ -298,8 +298,8 @@ function MigrateMain(props: any) {
               isLoading={false}
               vestedData={vestedData}
               onClick={handleClaimClick}
-              plentyBal={allBalance.allTokensBalances[MigrateToken.PLENTY].balance}
-              wrapBal={allBalance.allTokensBalances[MigrateToken.WRAP].balance}
+              plentyBal={allBalance.allTokensBalances[MigrateToken.PLENTY]?.balance}
+              wrapBal={allBalance.allTokensBalances[MigrateToken.WRAP]?.balance}
             />
           )}
 

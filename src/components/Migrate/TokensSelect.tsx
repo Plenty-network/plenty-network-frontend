@@ -103,10 +103,10 @@ function TokenModalMigrate(props: ISwapModalProps) {
                         <span>New!</span>
                       </div>
                     )}
-                    {props.isSuccess && props.allBalance[token.name].balance ? (
+                    {props.isSuccess && props.allBalance[token.name]?.balance ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">
-                        {props.allBalance[token.name].balance
-                          ? Number(props.allBalance[token.name].balance).toFixed(2)
+                        {props.allBalance[token.name]?.balance
+                          ? Number(props.allBalance[token.name]?.balance).toFixed(2)
                           : 0.0}
                       </div>
                     ) : props.isSuccess === false ? (

@@ -247,10 +247,10 @@ function TokenModalPool(props: ISwapModalProps) {
                     {(contractTokenBalance[token.name] || props.allBalance[token.name]) &&
                     props.isLoading ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">
-                        {props.allBalance[token.name].balance
-                          ? props.allBalance[token.name].balance.toFixed(2)
+                        {props.allBalance[token.name]?.balance
+                          ? props.allBalance[token.name]?.balance.toFixed(2)
                           : contractTokenBalance[token.name]
-                          ? contractTokenBalance[token.name].balance.toFixed(2)
+                          ? contractTokenBalance[token.name]?.balance.toFixed(2)
                           : 0.0}
                       </div>
                     ) : props.isLoading === false ? (

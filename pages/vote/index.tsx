@@ -818,7 +818,7 @@ export default function Vote() {
           setLockingEndData={setLockingEndData}
           lockingEndData={lockingEndData}
           tokenPrice={tokenPrice}
-          plyBalance={allBalance.allTokensBalances["PLY"].balance}
+          plyBalance={allBalance.allTokensBalances["PLY"]?.balance}
         />
       )}
 

@@ -486,7 +486,7 @@ export function NewPool(props: IManageLiquidityProps) {
                 setShowConfirmPool={setShowConfirmPool}
                 firstTokenAmount={firstTokenAmountLiq}
                 secondTokenAmount={secondTokenAmountLiq}
-                userBalances={userBalances}
+                userBalances={allBalance.allTokensBalances}
                 setSecondTokenAmount={setSecondTokenAmountLiq}
                 setFirstTokenAmount={setFirstTokenAmountLiq}
                 tokenIn={tokenIn}

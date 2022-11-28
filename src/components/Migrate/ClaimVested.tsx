@@ -244,21 +244,21 @@ function ClaimVested(props: IMigrateProps) {
               <div className="text-left">
                 <span className="text-text-600 font-body3">Balance:</span>{" "}
                 <span className="font-body4 text-text-500 ">
-                  {Number(allBalance.allTokensBalances[tokenOut.name].balance) >= 0 ? (
+                  {Number(allBalance.allTokensBalances[tokenOut.name]?.balance) >= 0 ? (
                     <ToolTip
                       message={fromExponential(
-                        allBalance.allTokensBalances[tokenOut.name].balance.toString()
+                        allBalance.allTokensBalances[tokenOut.name]?.balance.toString()
                       )}
                       disable={
-                        Number(allBalance.allTokensBalances[tokenOut.name].balance) > 0
+                        Number(allBalance.allTokensBalances[tokenOut.name]?.balance) > 0
                           ? false
                           : true
                       }
                       id="tooltip9"
                       position={Position.right}
                     >
-                      {Number(allBalance.allTokensBalances[tokenOut.name].balance) > 0
-                        ? Number(allBalance.allTokensBalances[tokenOut.name].balance).toFixed(4)
+                      {Number(allBalance.allTokensBalances[tokenOut.name]?.balance) > 0
+                        ? Number(allBalance.allTokensBalances[tokenOut.name]?.balance).toFixed(4)
                         : 0}
                     </ToolTip>
                   ) : (

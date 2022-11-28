@@ -90,7 +90,7 @@ function Migrate(props: IMigrateProps) {
         );
       } else if (
         new BigNumber(firstTokenAmount).isGreaterThan(
-          props.allBalance.allTokensBalances[tokenIn.name].balance
+          props.allBalance.allTokensBalances[tokenIn.name]?.balance
         )
       ) {
         return (
@@ -139,7 +139,7 @@ function Migrate(props: IMigrateProps) {
   const onClickAmount = () => {
     setSecondTokenAmount("");
 
-    handleTokenInput(props.allBalance.allTokensBalances[tokenIn.name].balance.toNumber());
+    handleTokenInput(props.allBalance.allTokensBalances[tokenIn.name]?.balance.toNumber());
   };
 
   const handleTokenType = () => {
@@ -254,7 +254,7 @@ function Migrate(props: IMigrateProps) {
           className={clsx(
             "lg:w-580  h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700",
             (new BigNumber(firstTokenAmount).isGreaterThan(
-              props.allBalance.allTokensBalances[tokenIn.name].balance
+              props.allBalance.allTokensBalances[tokenIn.name]?.balance
             ) ||
               errorMessage !== "") &&
               "border-errorBorder hover:border-errorBorder bg-errorBg",
@@ -290,19 +290,21 @@ function Migrate(props: IMigrateProps) {
             <div className="text-left cursor-pointer" onClick={onClickAmount}>
               <span className="text-text-600 font-body3">Balance:</span>{" "}
               <span className="font-body4 text-primary-500 ">
-                {Number(props.allBalance.allTokensBalances[tokenIn.name]) >= 0 ? (
+                {Number(props.allBalance.allTokensBalances[tokenIn.name]?.balance) >= 0 ? (
                   <ToolTip
                     message={fromExponential(
-                      props.allBalance.allTokensBalances[tokenIn.name].toString()
+                      props.allBalance.allTokensBalances[tokenIn.name]?.balance.toString()
                     )}
                     disable={
-                      Number(props.allBalance.allTokensBalances[tokenIn.name]) > 0 ? false : true
+                      Number(props.allBalance.allTokensBalances[tokenIn.name]?.balance) > 0
+                        ? false
+                        : true
                     }
                     id="tooltip8"
                     position={Position.right}
                   >
-                    {Number(props.allBalance.allTokensBalances[tokenIn.name]) > 0
-                      ? Number(props.allBalance.allTokensBalances[tokenIn.name]).toFixed(4)
+                    {Number(props.allBalance.allTokensBalances[tokenIn.name]?.balance) > 0
+                      ? Number(props.allBalance.allTokensBalances[tokenIn.name]?.balance).toFixed(4)
                       : 0}
                   </ToolTip>
                 ) : (
@@ -415,8 +417,8 @@ function Migrate(props: IMigrateProps) {
       <TokenModalMigrate
         tokens={MigrateTokens.sort(
           (a, b) =>
-            Number(props.allBalance.allTokensBalances[b.name].balance) -
-            Number(props.allBalance.allTokensBalances[a.name].balance)
+            Number(props.allBalance.allTokensBalances[b.name]?.balance) -
+            Number(props.allBalance.allTokensBalances[a.name]?.balance)
         )}
         show={tokenModal}
         allBalance={props.allBalance.allTokensBalances}
