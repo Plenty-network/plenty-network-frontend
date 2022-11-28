@@ -222,7 +222,6 @@ const getTezBalance = async (address: string): Promise<IBalanceResponse> => {
  * @param tokenOneSymbol - Symbol of token one of the pair.
  * @param tokenTwoSymbol - Symbol of token two of the pair.
  * @param userTezosAddress - Tezos wallet address of the user.
- * @param lpToken - (Optional) Symbol of the LP token for the given pair if known/available.
  */
 export const getPnlpBalance = async (
   tokenOneSymbol: string,
