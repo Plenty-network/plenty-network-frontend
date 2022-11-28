@@ -14,10 +14,14 @@ import { StakePercentage } from "./StakedPercentage";
 import { BoostValue } from "./BoostValue";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
+
+import stake from "../../assets/icon/pools/stakePool.svg";
+import newPool from "../../assets/icon/pools/newPool.svg";
 import { getTotalVotingPower } from "../../redux/pools";
 import { NoPoolsPosition } from "../Rewards/NoContent";
 import { compareNumericString } from "../../utils/commonUtils";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import clsx from "clsx";
 
 export function PoolsTablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
@@ -39,6 +43,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: "USDT.e",
   });
+  const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
   const NoData = React.useMemo(() => {
     return <NoPoolsPosition h1={"No active liquidity positions"} cta={"View Pools"} />;
   }, []);
@@ -96,6 +101,8 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
             isManage={Number(x.stakedPercentage) > 0}
             tokenA={x.tokenA.toString()}
             tokenB={x.tokenB.toString()}
+            isGauge={x.isGaugeAvailable}
+            setIsGaugeAvailable={setIsGaugeAvailable}
           />
         ),
       },
@@ -108,27 +115,39 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "Pool",
         id: "pool",
-        columnWidth: "w-[170px]",
+        columnWidth: "w-[220px]",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x: any) => (
-          <div className=" flex justify-center items-center">
-            <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-              <Image alt={"alt"} src={getImagesPath(x.tokenA)} width={"24px"} height={"24px"} />
-            </div>
-            <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-              <Image alt={"alt"} src={getImagesPath(x.tokenB)} width={"24px"} height={"24px"} />
-            </div>
-            <div>
-              <div className="font-body4">
-                {" "}
-                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenB.toString())}
+          <>
+            {Number(x.stakedPercentage) > 0 ? (
+              <Image src={stake} width={"20px"} height={"20px"} />
+            ) : !x.isGaugeAvailable ? (
+              <Image src={newPool} width={"20px"} height={"20px"} />
+            ) : null}
+            <div
+              className={clsx(
+                " flex justify-center items-center",
+                Number(x.stakedPercentage) > 0 || !x.isGaugeAvailable ? "ml-[14px]" : "ml-[34px]"
+              )}
+            >
+              <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
+                <Image alt={"alt"} src={getImagesPath(x.tokenA)} width={"24px"} height={"24px"} />
               </div>
-              <div className="font-subtitle1 text-text-500">{x.ammType} Pool</div>
+              <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
+                <Image alt={"alt"} src={getImagesPath(x.tokenB)} width={"24px"} height={"24px"} />
+              </div>
+              <div>
+                <div className="font-body4">
+                  {" "}
+                  {tEZorCTEZtoUppercase(x.tokenA.toString())}/
+                  {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                </div>
+                <div className="font-subtitle1 text-text-500">{x.ammType} Pool</div>
+              </div>
             </div>
-          </div>
+          </>
         ),
       },
       {
@@ -150,7 +169,14 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "stakedPercentage"),
         canShort: true,
         isToolTipEnabled: true,
-        accessor: (x: any) => <StakePercentage value={x.stakedPercentage} />,
+        accessor: (x: any) =>
+          x.isGaugeAvailable ? (
+            <StakePercentage value={x.stakedPercentage} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              -
+            </div>
+          ),
       },
       {
         Header: "Your APR",
@@ -160,7 +186,14 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "userAPR"),
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x: any) => <StakePercentage value={x.userAPR} />,
+        accessor: (x: any) =>
+          x.isGaugeAvailable ? (
+            <StakePercentage value={x.userAPR} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              -
+            </div>
+          ),
       },
       {
         Header: "Boost",
@@ -170,7 +203,14 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         tooltipMessage: "Boost received on the gauge APR by attaching a veNFT.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
-        accessor: (x: any) => <BoostValue value={x.boostValue} />,
+        accessor: (x: any) =>
+          x.isGaugeAvailable ? (
+            <BoostValue value={x.boostValue} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              -
+            </div>
+          ),
       },
       {
         Header: "",
@@ -181,6 +221,8 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
             isManage={Number(x.stakedPercentage) > 0}
             tokenA={x.tokenA.toString()}
             tokenB={x.tokenB.toString()}
+            isGauge={x.isGaugeAvailable}
+            setIsGaugeAvailable={setIsGaugeAvailable}
           />
         ),
       },
@@ -195,9 +237,14 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           onClick={() => {
             setShowLiquidityModal(true);
             dispatch(getTotalVotingPower());
-            props.isManage
-              ? setActiveState(ActiveLiquidity.Liquidity)
-              : setActiveState(ActiveLiquidity.Staking);
+            props.setIsGaugeAvailable(props.isGauge);
+            if (props.isGauge) {
+              props.isManage
+                ? setActiveState(ActiveLiquidity.Liquidity)
+                : setActiveState(ActiveLiquidity.Staking);
+            } else {
+              setActiveState(ActiveLiquidity.Liquidity);
+            }
 
             setTokenIn({
               name: props.tokenA,

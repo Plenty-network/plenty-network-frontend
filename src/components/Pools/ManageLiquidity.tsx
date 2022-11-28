@@ -217,12 +217,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     });
     if (walletAddress) {
       const updateBalance = async () => {
-        //const balancePromises = [];
-
-        // Object.keys(props.tokenIn).length !== 0 &&
-        //   balancePromises.push(getUserBalanceByRpc(props.tokenIn.name, walletAddress));
-        // Object.keys(props.tokenOut).length !== 0 &&
-        //   balancePromises.push(getUserBalanceByRpc(props.tokenOut.name, walletAddress));
         getPnlpBalance(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
           setPnlpBalance(res.balance);
         });
@@ -245,19 +239,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         getRewards(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
           setRewardToken(res.rewards);
         });
-
-        // const balanceResponse = await Promise.all(balancePromises);
-
-        // setUserBalances((prev) => ({
-        //   ...prev,
-        //   ...balanceResponse.reduce(
-        //     (acc, cur) => ({
-        //       ...acc,
-        //       [cur.identifier]: cur.balance.toNumber(),
-        //     }),
-        //     {}
-        //   ),
-        // }));
       };
       updateBalance();
     }
@@ -343,7 +324,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
-
     addLiquidity(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
@@ -353,7 +333,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      props.setActiveState,
+      props.isGaugeAvailable ? props.setActiveState : undefined,
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
@@ -368,7 +348,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
-        //resetAllValues();
+
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
           dispatch(
