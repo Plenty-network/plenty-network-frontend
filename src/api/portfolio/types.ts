@@ -18,6 +18,7 @@ export interface IPositionsData {
   stakedPercentage: BigNumber;
   userAPR: BigNumber;
   boostValue: BigNumber;
+  isGaugeAvailable: boolean;
 }
 
 export interface IPositionsResponse {
