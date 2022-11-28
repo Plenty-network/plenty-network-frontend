@@ -64,6 +64,7 @@ export default function Pools(props: IIndexProps) {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
   useEffect(() => {
+    console.log("ishu", tokenPrices);
     Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
   }, [tokenPrices]);
   useEffect(() => {

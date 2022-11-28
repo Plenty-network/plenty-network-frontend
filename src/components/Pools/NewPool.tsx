@@ -25,6 +25,7 @@ import {
 import { tokensModalNewPool, tokenType } from "../../constants/swap";
 import { deployStable, deployVolatile } from "../../operations/factory";
 import { useAppDispatch, useAppSelector } from "../../redux";
+import { getConfig } from "../../redux/config/config";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
 import ConfirmTransaction from "../ConfirmTransaction";
@@ -105,39 +106,17 @@ export function NewPool(props: IManageLiquidityProps) {
   const [tokenOutOp, setTokenOutOp] = React.useState<IConfigToken>({} as IConfigToken);
 
   useEffect(() => {
-    getLPTokenPrice(tokenIn.name, tokenOut.name, {
-      [tokenIn.name]: tokenPrice[tokenIn.name],
-      [tokenOut.name]: tokenPrice[tokenOut.name],
-    }).then((res) => {
-      setLpTokenPrice(res.lpTokenPrice);
-    });
-    // if (walletAddress) {
-    //   const updateBalance = async () => {
-    //     const balancePromises = [];
-
-    //     Object.keys(tokenIn).length !== 0 &&
-    //       balancePromises.push(getUserBalanceByRpc(tokenIn.name, walletAddress));
-    //     Object.keys(tokenOut).length !== 0 &&
-    //       balancePromises.push(getUserBalanceByRpc(tokenOut.name, walletAddress));
-    //     getPnlpBalance(tokenIn.name, tokenOut.name, walletAddress).then((res) => {
-    //       setPnlpBalance(res.balance);
-    //     });
-
-    //     const balanceResponse = await Promise.all(balancePromises);
-
-    //     setUserBalances((prev) => ({
-    //       ...prev,
-    //       ...balanceResponse.reduce(
-    //         (acc, cur) => ({
-    //           ...acc,
-    //           [cur.identifier]: cur.balance.toNumber(),
-    //         }),
-    //         {}
-    //       ),
-    //     }));
-    //   };
-    //   updateBalance();
-    // }
+    if (
+      Object.prototype.hasOwnProperty.call(tokenIn, "symbol") &&
+      Object.prototype.hasOwnProperty.call(tokenOut, "symbol")
+    ) {
+      getLPTokenPrice(tokenIn.symbol, tokenOut.symbol, {
+        [tokenIn.symbol]: tokenPrice[tokenIn.symbol],
+        [tokenOut.symbol]: tokenPrice[tokenOut.symbol],
+      }).then((res) => {
+        setLpTokenPrice(res.lpTokenPrice);
+      });
+    }
   }, [
     tokenIn,
     tokenOut,
@@ -150,34 +129,7 @@ export function NewPool(props: IManageLiquidityProps) {
   ]);
 
   const [swapModalShow, setSwapModalShow] = useState(false);
-  // useEffect(() => {
-  //   if (
-  //     Object.prototype.hasOwnProperty.call(tokenIn, "name") &&
-  //     Object.prototype.hasOwnProperty.call(tokenOut, "name")
-  //   ) {
-  //     setIsLoading(true);
-  //     loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((response) => {
-  //       if (response.success) {
-  //         swapData.current = {
-  //           tokenInSupply: response.tokenInSupply as BigNumber,
-  //           tokenOutSupply: response.tokenOutSupply as BigNumber,
-  //           lpToken: response.lpToken?.symbol,
-  //           lpTokenSupply: response.lpTokenSupply,
-  //           isloading: false,
-  //         };
-  //         setIsLoading(false);
-  //       }
-  //     });
-  //   } else {
-  //     swapData.current = {
-  //       tokenInSupply: new BigNumber(0),
-  //       tokenOutSupply: new BigNumber(0),
-  //       lpToken: "",
-  //       lpTokenSupply: new BigNumber(0),
-  //       isloading: false,
-  //     };
-  //   }
-  // }, [tokenIn.name, tokenOut.name]);
+
   const [tokenType, setTokenType] = useState<tokenType>("tokenIn");
   const selectToken = (token: tokensModalNewPool) => {
     if ((tokenType === "tokenOut" || tokenType === "tokenIn") && firstTokenAmountLiq !== "") {
@@ -254,6 +206,12 @@ export function NewPool(props: IManageLiquidityProps) {
       interface: token[1],
     }));
   }, [tokens]);
+  const [reFetch, setReFetch] = useState(false);
+  useEffect(() => {
+    if (reFetch) {
+      dispatch(getConfig());
+    }
+  }, [reFetch]);
   useEffect(() => {
     if (
       (Object.keys(allBalance),
@@ -289,6 +247,7 @@ export function NewPool(props: IManageLiquidityProps) {
 
     setContentTransaction(`new pool`);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    setReFetch(false);
     setShowConfirmTransaction(true);
     if (pair === Pair.VOLATILE) {
       deployVolatile(
@@ -313,6 +272,7 @@ export function NewPool(props: IManageLiquidityProps) {
         }
       ).then((response) => {
         if (response.success) {
+          closeModal();
           setBalanceUpdate(true);
           resetAllValues();
           setTimeout(() => {
@@ -337,11 +297,13 @@ export function NewPool(props: IManageLiquidityProps) {
                 transactionId: response.operationId ? response.operationId : "",
               })
             );
+            setReFetch(true);
           }, 6000);
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setContentTransaction("");
         } else {
           setBalanceUpdate(true);
+          closeModal();
           //resetAllValues();
           setShowConfirmTransaction(false);
           setTimeout(() => {
@@ -388,6 +350,7 @@ export function NewPool(props: IManageLiquidityProps) {
         }
       ).then((response) => {
         if (response.success) {
+          closeModal();
           setBalanceUpdate(true);
           resetAllValues();
           setTimeout(() => {
@@ -416,6 +379,7 @@ export function NewPool(props: IManageLiquidityProps) {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setContentTransaction("");
         } else {
+          closeModal();
           setBalanceUpdate(true);
           resetAllValues();
           setShowConfirmTransaction(false);

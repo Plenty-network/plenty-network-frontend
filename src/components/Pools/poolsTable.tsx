@@ -350,11 +350,16 @@ export function ShortCard(props: IShortCardProps) {
           onClick={() => {
             dispatch(getTotalVotingPower());
             props.setIsGaugeAvailable(props.isGauge);
-            props.isLiquidityAvailable
-              ? props.isStakeAvailable
-                ? setActiveState(ActiveLiquidity.Rewards)
-                : setActiveState(ActiveLiquidity.Staking)
-              : setActiveState(ActiveLiquidity.Liquidity);
+            if (props.isGauge) {
+              props.isLiquidityAvailable
+                ? props.isStakeAvailable
+                  ? setActiveState(ActiveLiquidity.Rewards)
+                  : setActiveState(ActiveLiquidity.Staking)
+                : setActiveState(ActiveLiquidity.Liquidity);
+            } else {
+              setActiveState(ActiveLiquidity.Liquidity);
+            }
+
             props.setShowLiquidityModal(true);
             setTokenIn({
               name: props.tokenA,
