@@ -127,7 +127,7 @@ function NewPoolMain(props: ILiquidityProps) {
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Enter same amount
+          Enter the same amount for both tokens
         </Button>
       );
     } else if (
