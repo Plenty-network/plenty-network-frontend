@@ -1898,7 +1898,7 @@ function MyPortfolio(props: any) {
           setShow={setShowConfirmTransaction}
           content={contentTransaction}
           clainText={
-            claimState > 0
+            claimState >= 0
               ? "Calculating maximum claimable rewards, this may take some a few seconds. Please wait patiently."
               : ""
           }
