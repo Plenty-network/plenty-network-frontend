@@ -8,7 +8,7 @@ import {
   type5MapIds,
 } from "../../constants/global";
 import BigNumber from "bignumber.js";
-import { ITokenInterface, TokenVariant } from "../../config/types";
+import { IConfigToken, TokenStandard } from "../../config/types";
 import { packDataBytes, unpackDataBytes } from "@taquito/michel-codec";
 import { store } from "../../redux";
 import { dappClient, getRpcNode } from "../../common/walletconnect";
@@ -19,7 +19,7 @@ import {
   IAllTokensBalance,
   IAllTokensBalanceResponse,
 } from "./types";
-import { getDexAddress, getLpTokenSymbol, getTokenDataByAddress } from "./fetchConfig";
+import { getDexAddress, getTokenDataByAddress } from "./fetchConfig";
 import { getBigMapData, getStorage, getTzktTokenData } from "./storageProvider";
 import { gaugeStorageType } from "../rewards/data";
 
@@ -29,10 +29,10 @@ import { gaugeStorageType } from "../rewards/data";
  * @param address - address of the user for whom you want to fetch the data
  * @param type - FA1.2 OR FA2
  */
-export const getPackedKey = (tokenId: number, address: string, type: TokenVariant): string => {
+export const getPackedKey = (tokenId: number, address: string, type: TokenStandard): string => {
   const accountHex: string = `0x${TezosMessageUtils.writeAddress(address)}`;
   let packedKey = null;
-  if (type === TokenVariant.FA2) {
+  if (type === TokenStandard.FA2) {
     packedKey = TezosMessageUtils.encodeBigMapKey(
       Buffer.from(
         TezosMessageUtils.writePackedData(
@@ -107,14 +107,14 @@ const getTezBalance = async (address: string): Promise<IBalanceResponse> => {
     return {
       success: true,
       balance,
-      identifier: "tez",
+      identifier: "XTZ",
     };
   } catch (error) {
     console.log(error);
     return {
       success: false,
       balance: new BigNumber(0),
-      identifier: "tez",
+      identifier: "XTZ",
       error: error,
     };
   }
@@ -125,7 +125,7 @@ const getTezBalance = async (address: string): Promise<IBalanceResponse> => {
  * @param identifier - Name of token, case-sensitive to CONFIG
  * @param address - tz1 address of user
  */
-export const getUserBalanceByRpc = async (
+/* export const getUserBalanceByRpc = async (
   identifier: string,
   address: string
 ): Promise<IBalanceResponse> => {
@@ -191,69 +191,72 @@ export const getUserBalanceByRpc = async (
       error: error,
     };
   }
-};
+}; */
 
-export const getCompleteUserBalace = async (address: string): Promise<IAllBalanceResponse> => {
-  try {
-    const state = store.getState();
-    const TOKEN = state.config.standard;
-    const userBalance: { [id: string]: BigNumber } = {};
-    Object.keys(TOKEN).forEach(async function (key) {
-      const bal = await getUserBalanceByRpc(key, address);
-      userBalance[key] = bal.balance;
-    });
-    return {
-      success: true,
-      userBalance,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      success: false,
-      userBalance: {},
-    };
-  }
-};
+// // TODO: Deprecate this
+// export const getCompleteUserBalace = async (address: string): Promise<IAllBalanceResponse> => {
+//   try {
+//     const state = store.getState();
+//     const TOKEN = state.config.tokens;
+//     const userBalance: { [id: string]: BigNumber } = {};
+//     Object.keys(TOKEN).forEach(async function (key) {
+//       // const bal = await getUserBalanceByRpc(key, address);
+//       const bal = await getBalanceFromTzkt(TOKEN[key].address as string,TOKEN[key].tokenId,TOKEN[key].standard,address,key);
+//       userBalance[key] = bal.balance;
+//     });
+//     return {
+//       success: true,
+//       userBalance,
+//     };
+//   } catch (error) {
+//     console.log(error);
+//     return {
+//       success: false,
+//       userBalance: {},
+//     };
+//   }
+// };
 
 /**
  * Returns the symbol and user balance of the LP token for the given pair of tokens.
  * @param tokenOneSymbol - Symbol of token one of the pair.
  * @param tokenTwoSymbol - Symbol of token two of the pair.
  * @param userTezosAddress - Tezos wallet address of the user.
- * @param lpToken - (Optional) Symbol of the LP token for the given pair if known/available.
  */
 export const getPnlpBalance = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
-  userTezosAddress: string,
-  lpToken?: string
+  userTezosAddress: string
 ): Promise<IPnlpBalanceResponse> => {
   try {
-    const lpTokenSymbol = lpToken ? lpToken : getLpTokenSymbol(tokenOneSymbol, tokenTwoSymbol);
-    if (lpTokenSymbol) {
-      // TODO: Uncomment the commented lines and comment the uncommented one to get balance via tzkt and vice versa.
-      // const TOKENS = store.getState().config.tokens;
-      // const LP_TOKEN = TOKENS[lpTokenSymbol];
-      const lpTokenBalance = await getUserBalanceByRpc(lpTokenSymbol, userTezosAddress);
-      // const lpTokenBalance = await getBalanceFromTzkt(
-      //   LP_TOKEN.address as string,
-      //   LP_TOKEN.tokenId,
-      //   LP_TOKEN.variant,
-      //   userTezosAddress,
-      //   LP_TOKEN.symbol
-      // );
-      if (lpTokenBalance.success) {
-        return {
-          success: true,
-          lpToken: lpTokenSymbol,
-          balance: lpTokenBalance.balance.toString(),
-        };
-      } else {
-        throw new Error(lpTokenBalance.error?.message);
-      }
-    } else {
-      throw new Error("LP token not found for the given pairs.");
+    const ammAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
+    if (ammAddress === "false") {
+      throw new Error("No pool found for the given pair of tokens");
     }
+    // const lpTokenSymbol = lpToken ? lpToken : getLpTokenSymbol(tokenOneSymbol, tokenTwoSymbol);
+    // if (lpTokenSymbol) {
+    //   // TODO: Uncomment the commented lines and comment the uncommented one to get balance via tzkt and vice versa.
+    // const AMM = store.getState().config.tokens;
+    const LP_TOKEN = store.getState().config.AMMs[ammAddress].lpToken;
+    // const lpTokenBalance = await getUserBalanceByRpc(lpTokenSymbol, userTezosAddress);
+    const lpTokenBalance = await getBalanceFromTzkt(
+      LP_TOKEN.address,
+      undefined,
+      TokenStandard.FA12, // Considering that all LP tokens are of type FA1.2
+      userTezosAddress
+    );
+    if (lpTokenBalance.success) {
+      return {
+        success: true,
+        lpToken: LP_TOKEN.address,
+        balance: lpTokenBalance.balance.toString(),
+      };
+    } else {
+      throw new Error(lpTokenBalance.error?.message);
+    }
+    // } else {
+    //   throw new Error("LP token not found for the given pairs.");
+    // }
   } catch (err: any) {
     return {
       success: false,
@@ -283,8 +286,8 @@ export const getStakedBalance = async (
       throw new Error("AMM does not exist for the selected pair.");
     }
     const pnlpTokenDecimals: number = AMM[dexContractAddress].lpToken.decimals;
-    const pnlpTokenSymbol: string = AMM[dexContractAddress].lpToken.symbol;
-    const gaugeAddress: string | undefined = AMM[dexContractAddress].gaugeAddress;
+    // const pnlpTokenSymbol: string = AMM[dexContractAddress].lpToken.symbol;
+    const gaugeAddress: string | undefined = AMM[dexContractAddress].gauge;
     if (gaugeAddress === undefined) {
       throw new Error("Gauge does not exist for the selected pair.");
     }
@@ -292,14 +295,14 @@ export const getStakedBalance = async (
 
     const balancesBigMapId: string = gaugeStorage.balances;
 
-    const packedAddress: string = getPackedKey(0, userTezosAddress, TokenVariant.FA12);
+    const packedAddress: string = getPackedKey(0, userTezosAddress, TokenStandard.FA12);
     const stakedBalanceResponse = await getBigMapData(balancesBigMapId, packedAddress);
     const stakedBalance = new BigNumber(stakedBalanceResponse.data.int);
     const finalStakedBalance = stakedBalance.dividedBy(new BigNumber(10).pow(pnlpTokenDecimals));
     return {
       success: true,
       balance: finalStakedBalance.toString(),
-      lpToken: pnlpTokenSymbol,
+      lpToken: AMM[dexContractAddress].lpToken.address,
     };
   } catch (error: any) {
     return {
@@ -324,7 +327,7 @@ export const getStakedBalance = async (
 export const getBalanceFromTzkt = async (
   tokenContract: string,
   tokenId: number | undefined,
-  tokenStandard: TokenVariant,
+  tokenStandard: TokenStandard,
   userTezosAddress: string,
   tokenSymbol?: string
 ): Promise<IBalanceResponse> => {
@@ -343,7 +346,7 @@ export const getBalanceFromTzkt = async (
 
     const balanceResponse = await getTzktTokenData(
       `/balances?account=${userTezosAddress}&token.contract=${tokenContract}${
-        tokenStandard === TokenVariant.FA2 ? `&token.tokenId=${tokenId || 0}` : ""
+        tokenStandard === TokenStandard.FA2 ? `&token.tokenId=${tokenId || 0}` : ""
       }`
     );
     const balanceData = balanceResponse.data;
@@ -397,21 +400,21 @@ export const getBalanceFromTzkt = async (
  * @param userTezosAddress - Tezos wallet address of the user
  */
 export const getAllTokensBalanceFromTzkt = async (
-  tokens: ITokenInterface[],
+  tokens: IConfigToken[],
   userTezosAddress: string
 ): Promise<IAllTokensBalanceResponse> => {
   try {
     const allTokensBalances: IAllTokensBalance = {};
     const allTokensBalanceResponse = await Promise.all(
       tokens.map((token) => {
-        if (!token.address && token.variant === TokenVariant.TEZ) {
+        if (!token.address && token.standard === TokenStandard.TEZ) {
           // Get the XTZ balance from wallet as it's a native token to TEZOS
           return getTezBalance(userTezosAddress);
         } else {
           return getBalanceFromTzkt(
             token.address as string,
             token.tokenId,
-            token.variant,
+            token.standard,
             userTezosAddress,
             token.symbol
           );

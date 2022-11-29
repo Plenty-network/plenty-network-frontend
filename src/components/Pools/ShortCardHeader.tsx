@@ -31,7 +31,11 @@ export function Tabs(props: ITabsProps) {
     <th
       className={`flex cursor-pointer font-subtitle1 text-text-50 text-left ${props.columnWidth} ${
         props.index === 0 ? "justify-start" : "justify-end "
-      } ${props.tableType ? "thSticky" : ""} `}
+      } ${props.tableType ? "thSticky" : ""} ${
+        (props.TableName === "newPools" || props.TableName === "poolsPosition") &&
+        props.index === 0 &&
+        "pl-[40px]"
+      }`}
     >
       <div className="flex gap-0 flex-col">
         <div className={`flex  ${props.isFirstRow ? "justify-start" : "justify-end"} `}>

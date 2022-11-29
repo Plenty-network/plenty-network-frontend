@@ -7,6 +7,7 @@ import timer from "../../../src/assets/icon/myPortfolio/timer.svg";
 import Button from "../Button/Button";
 import { IPoolsRewardsData } from "../../api/portfolio/types";
 import { ITokenPriceList } from "../../api/util/types";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface IClaimProps {
   show: boolean;
@@ -25,8 +26,6 @@ function ClaimAll(props: IClaimProps) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   return props.show ? (
     <PopUpModal onhide={closeModal}>

@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { IToken } from "./types";
 import Image from "next/image";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 export function Token(props: IToken) {
   const getImagesPath = (name: string, isSvg?: boolean) => {
@@ -9,8 +10,7 @@ export function Token(props: IToken) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   return (
     <>
       <div className="flex items-center justify-center">

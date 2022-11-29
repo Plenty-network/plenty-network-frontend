@@ -20,14 +20,16 @@ import { AppDispatch, useAppSelector } from "../../redux";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { ITokenInterface } from "../../config/types";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+
+import { tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
 import { tokenType } from "../../constants/swap";
 
 import { getDexAddress } from "../../api/util/fetchConfig";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { IAllTokensBalance } from "../../api/util/types";
 
 interface ILiquidityProps {
   firstTokenAmount: string | number;
@@ -39,13 +41,10 @@ interface ILiquidityProps {
   onChange?: any;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  userBalances: {
-    [key: string]: string;
-  };
+  userBalances: IAllTokensBalance;
   setShowConfirmPool: React.Dispatch<React.SetStateAction<boolean>>;
   setIsAddLiquidity: React.Dispatch<React.SetStateAction<boolean>>;
   isAddLiquidity: boolean;
-  swapData: ISwapData;
   pnlpBalance: string;
   setBurnAmount: React.Dispatch<React.SetStateAction<string | number>>;
   burnAmount: string | number;
@@ -62,7 +61,6 @@ interface ILiquidityProps {
   pair: string;
   setSlippage: React.Dispatch<React.SetStateAction<string>>;
   slippage: string;
-  lpTokenPrice: BigNumber;
   handleTokenType: (type: tokenType) => void;
   isLoading: boolean;
   setPair: React.Dispatch<React.SetStateAction<string>>;
@@ -75,6 +73,7 @@ export const Pair = {
 };
 function NewPoolMain(props: ILiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const amm = useAppSelector((state) => state.config.AMMs);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
@@ -84,6 +83,7 @@ function NewPoolMain(props: ILiquidityProps) {
     ActiveLiquidity.Liquidity
   );
   const [isExist, setIsExist] = useState(false);
+  const [isGauge, setIsGauge] = useState(false);
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(props.tokenIn, "symbol") &&
@@ -93,8 +93,14 @@ function NewPoolMain(props: ILiquidityProps) {
 
       if (res !== "false") {
         setIsExist(true);
+        if (amm[res]?.gauge !== undefined) {
+          setIsGauge(true);
+        } else {
+          setIsGauge(false);
+        }
       } else {
         setIsExist(false);
+        setIsGauge(false);
       }
     }
   }, [props.tokenIn, props.tokenOut]);
@@ -121,10 +127,22 @@ function NewPoolMain(props: ILiquidityProps) {
       );
     } else if (
       walletAddress &&
+      props.pair === Pair.STABLE &&
+      props.firstTokenAmount &&
+      props.secondTokenAmount &&
+      props.firstTokenAmount !== props.secondTokenAmount
+    ) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Enter the same amount for both tokens
+        </Button>
+      );
+    } else if (
+      walletAddress &&
       ((props.firstTokenAmount &&
-        props.firstTokenAmount > props.userBalances[props.tokenIn.name]) ||
+        props.firstTokenAmount > Number(props.userBalances[props.tokenIn.name]?.balance)) ||
         (props.secondTokenAmount && props.secondTokenAmount) >
-          props.userBalances[props.tokenOut.name])
+          Number(props.userBalances[props.tokenOut.name]?.balance))
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
@@ -168,25 +186,20 @@ function NewPoolMain(props: ILiquidityProps) {
     } else if (tokenType === "tokenIn") {
       const decimal = new BigNumber(input).decimalPlaces();
 
-      // if (input !== null && decimal !== null) {
-      //   props.setFirstTokenAmount(input);
-      // } else {
       props.setFirstTokenAmount(input);
-      //}
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
 
-      // if (input !== null && decimal !== null) {
-      //   props.setSecondTokenAmount(input);
-      // } else {
       props.setSecondTokenAmount(input);
-      //}
     }
   };
   const onClickAmount = () => {
     props.tokenIn.name === "tez"
-      ? handleLiquidityInput(Number(props.userBalances[props.tokenIn.name]) - 0.02, "tokenIn")
-      : handleLiquidityInput(props.userBalances[props.tokenIn.name], "tokenIn");
+      ? handleLiquidityInput(
+          Number(props.userBalances[props.tokenIn.name]?.balance) - 0.02,
+          "tokenIn"
+        )
+      : handleLiquidityInput(props.userBalances[props.tokenIn.name]?.balance.toNumber(), "tokenIn");
   };
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
@@ -204,8 +217,14 @@ function NewPoolMain(props: ILiquidityProps) {
 
   const onClickSecondAmount = () => {
     props.tokenOut.name === "tez"
-      ? handleLiquidityInput(Number(props.userBalances[props.tokenOut.name]) - 0.02, "tokenOut")
-      : handleLiquidityInput(props.userBalances[props.tokenOut.name], "tokenOut");
+      ? handleLiquidityInput(
+          Number(props.userBalances[props.tokenOut.name]?.balance) - 0.02,
+          "tokenOut"
+        )
+      : handleLiquidityInput(
+          props.userBalances[props.tokenOut.name]?.balance.toNumber(),
+          "tokenOut"
+        );
   };
   return (
     <>
@@ -227,13 +246,7 @@ function NewPoolMain(props: ILiquidityProps) {
               <div className="ml-1 md:ml-2">
                 <p className="text-text-900 font-body2">Input</p>
                 <p className="font-caption1 md:font-title2 text-white">
-                  {props.tokenIn.name
-                    ? props.tokenIn.name === "tez"
-                      ? "TEZ"
-                      : props.tokenIn.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenIn.name
-                    : "Select"}
+                  {props.tokenIn.name ? tEZorCTEZtoUppercase(props.tokenIn.name) : "Select"}
                   <span className="relative ml-2 -top-[1.5px]">
                     <Image alt={"alt"} className="rotate-180" src={vectorDown} />
                   </span>
@@ -243,7 +256,7 @@ function NewPoolMain(props: ILiquidityProps) {
             <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
               <div className="w-0 flex-auto">
                 <p>
-                  {props.swapData.isloading && props.tokenIn.name ? (
+                  {false ? (
                     <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input
@@ -276,22 +289,22 @@ function NewPoolMain(props: ILiquidityProps) {
                     className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
                     onClick={onClickAmount}
                   >
-                    {!(Number(props.userBalances[props.tokenIn.name]) >= 0) ? (
+                    {!(Number(props.userBalances[props.tokenIn.name]?.balance) >= 0) ? (
                       <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                     ) : (
                       <span className="mr-1">
-                        {Number(props.userBalances[props.tokenIn.name]) > 0
-                          ? new BigNumber(props.userBalances[props.tokenIn.name]).isLessThan(0.01)
+                        {Number(props.userBalances[props.tokenIn.name]?.balance) > 0
+                          ? new BigNumber(
+                              props.userBalances[props.tokenIn.name]?.balance
+                            ).isLessThan(0.01)
                             ? "<0.01"
-                            : nFormatter(new BigNumber(props.userBalances[props.tokenIn.name]))
+                            : nFormatter(
+                                new BigNumber(props.userBalances[props.tokenIn.name]?.balance)
+                              )
                           : "0"}{" "}
                       </span>
                     )}
-                    {props.tokenIn.name === "tez"
-                      ? "TEZ"
-                      : props.tokenIn.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenIn.name}
+                    {tEZorCTEZtoUppercase(props.tokenIn.name)}
                   </div>
                 </div>
               )}
@@ -316,13 +329,7 @@ function NewPoolMain(props: ILiquidityProps) {
               <div className="ml-1 md:ml-2">
                 <p className="text-text-900 font-body2">Input</p>
                 <p className="font-caption1 md:font-title2 text-white">
-                  {props.tokenOut.name
-                    ? props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name
-                    : "Select"}
+                  {props.tokenOut.name ? tEZorCTEZtoUppercase(props.tokenOut.name) : "Select"}
                   <span className="relative ml-2 -top-[1.5px]">
                     <Image alt={"alt"} className="rotate-180" src={vectorDown} />
                   </span>
@@ -332,7 +339,7 @@ function NewPoolMain(props: ILiquidityProps) {
             <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
               <div className="w-0 flex-auto">
                 <p>
-                  {props.swapData.isloading && props.tokenOut.name ? (
+                  {false ? (
                     <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input
@@ -364,22 +371,22 @@ function NewPoolMain(props: ILiquidityProps) {
                     className="ml-1 cursor-pointer flex text-primary-500  font-caption1-small md:font-body2"
                     onClick={onClickSecondAmount}
                   >
-                    {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (
+                    {!(Number(props.userBalances[props.tokenOut.name]?.balance) >= 0) ? (
                       <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                     ) : (
                       <span className="mr-1">
-                        {Number(props.userBalances[props.tokenOut.name]) > 0
-                          ? new BigNumber(props.userBalances[props.tokenOut.name]).isLessThan(0.01)
+                        {Number(props.userBalances[props.tokenOut.name]?.balance) > 0
+                          ? new BigNumber(
+                              props.userBalances[props.tokenOut.name]?.balance
+                            ).isLessThan(0.01)
                             ? "<0.01"
-                            : nFormatter(new BigNumber(props.userBalances[props.tokenOut.name]))
+                            : nFormatter(
+                                new BigNumber(props.userBalances[props.tokenOut.name]?.balance)
+                              )
                           : "0"}{" "}
                       </span>
                     )}
-                    {props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name}
+                    {tEZorCTEZtoUppercase(props.tokenOut.name)}
                   </div>
                 </div>
               )}
@@ -427,7 +434,9 @@ function NewPoolMain(props: ILiquidityProps) {
             <Image src={infoBlue} />
           </p>
           <p className="font-body2 text-info-500 px-3 md:w-auto w-[249px]">
-            There is already a pool and gauge for the tokens selected.
+            {isGauge
+              ? "There is already a pool and gauge for the tokens selected."
+              : " There is already a pool for the tokens selected."}
           </p>
           <p
             className="ml-auto relative top-[0px] bg-info-500/[0.1] text-info-500 cursor-pointer font-body2 rounded-[6px] px-3 py-2 h-[34px]"
@@ -445,7 +454,7 @@ function NewPoolMain(props: ILiquidityProps) {
           closeFn={props.setShowLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}
-          isGaugeAvailable={true}
+          isGaugeAvailable={isExist && isGauge}
         />
       )}
     </>

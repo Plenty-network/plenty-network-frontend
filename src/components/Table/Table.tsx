@@ -203,13 +203,7 @@ const Table = <D extends object>({
                         ? "justify-between  "
                         : ""
                     } 
-                    ${
-                      TableName === "lockPosition"
-                        ? "lg:pl-[30px]"
-                        : TableName == "newPools"
-                        ? "lg:pl-[16px] "
-                        : "lg:pl-[50px] "
-                    }
+                    ${TableName === "lockPosition" ? "lg:pl-[30px]" : "lg:pl-[50px] "}
                     ${
                       TableName === "locksRewards" && row.original?.epoch !== ""
                         ? "py-1 "

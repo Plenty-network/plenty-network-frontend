@@ -1,6 +1,6 @@
 import { OpKind } from "@taquito/taquito";
 import { dappClient, factoryAddress, routerAddress} from "../common/walletconnect";
-import { ITokenInterface, TokenVariant } from "../config/types";
+import { IConfigToken, TokenStandard } from "../config/types";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
@@ -14,8 +14,8 @@ import { char2Bytes } from "@taquito/utils";
 import { BigNumber } from "bignumber.js";
 
 export const deployVolatile = async (
-  token1: ITokenInterface,
-  token2: ITokenInterface,
+  token1: IConfigToken,
+  token2: IConfigToken,
   caller: string,
   token1Amount: BigNumber,
   token2Amount: BigNumber,
@@ -38,7 +38,7 @@ export const deployVolatile = async (
 
     const allBatch: any = [];
 
-    if (token1.variant === TokenVariant.FA12) {
+    if (token1.standard === TokenStandard.FA12) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
         ...token1Instance.methods
@@ -49,7 +49,7 @@ export const deployVolatile = async (
           )
           .toTransferParams(),
       });
-    } else if (token1.variant === TokenVariant.FA2) {
+    } else if (token1.standard === TokenStandard.FA2) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
         ...token1Instance.methods
@@ -68,7 +68,7 @@ export const deployVolatile = async (
           .toTransferParams(),
       });
     }
-    if (token2.variant === TokenVariant.FA12) {
+    if (token2.standard === TokenStandard.FA12) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
         ...token2Instance.methods
@@ -79,7 +79,7 @@ export const deployVolatile = async (
           )
           .toTransferParams(),
       });
-    } else if (token2.variant === TokenVariant.FA2) {
+    } else if (token2.standard === TokenStandard.FA2) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
         ...token2Instance.methods
@@ -108,11 +108,11 @@ export const deployVolatile = async (
           token1.address as string,
           token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
           token1.tokenId ?? 0,
-          token1.variant === TokenVariant.FA2,
+          token1.standard === TokenStandard.FA2,
           token2.address as string,
           token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
           token2.tokenId ?? 0,
-          token2.variant === TokenVariant.FA2,
+          token2.standard === TokenStandard.FA2,
           char2Bytes(lpTokenDecimals.toString()),
           char2Bytes(`${token1.symbol}-${token2.symbol} PNLP`),
           caller
@@ -155,8 +155,8 @@ export const deployVolatile = async (
 // TODO : Add amounts
 
 export const deployStable = async (
-  token1: ITokenInterface,
-  token2: ITokenInterface,
+  token1: IConfigToken,
+  token2: IConfigToken,
   caller: string,
   token1Amount: BigNumber,
   token2Amount: BigNumber,
@@ -179,7 +179,7 @@ export const deployStable = async (
 
     const allBatch: any = [];
 
-    if (token1.variant === TokenVariant.FA12) {
+    if (token1.standard === TokenStandard.FA12) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
         ...token1Instance.methods
@@ -190,7 +190,7 @@ export const deployStable = async (
           )
           .toTransferParams(),
       });
-    } else if (token1.variant === TokenVariant.FA2) {
+    } else if (token1.standard === TokenStandard.FA2) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
         ...token1Instance.methods
@@ -209,7 +209,7 @@ export const deployStable = async (
           .toTransferParams(),
       });
     }
-    if (token2.variant === TokenVariant.FA12) {
+    if (token2.standard === TokenStandard.FA12) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
         ...token2Instance.methods
@@ -220,7 +220,7 @@ export const deployStable = async (
           )
           .toTransferParams(),
       });
-    } else if (token2.variant === TokenVariant.FA2) {
+    } else if (token2.standard === TokenStandard.FA2) {
       allBatch.push({
         kind: OpKind.TRANSACTION,
         ...token2Instance.methods
@@ -261,12 +261,12 @@ export const deployStable = async (
           token1Amount.multipliedBy(new BigNumber(10).pow(token1.decimals)),
           token1.tokenId ?? 0,
           token1Precision,
-          token1.variant === TokenVariant.FA2 ? true : false,
+          token1.standard === TokenStandard.FA2 ? true : false,
           token2.address,
           token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
           token2.tokenId ?? 0,
           token2Precision,
-          token2.variant === TokenVariant.FA2 ? true : false,
+          token2.standard === TokenStandard.FA2 ? true : false,
           char2Bytes(lpTokenDecimals.toString()),
           char2Bytes(`${token1.symbol}-${token2.symbol} PNLP`),
           caller

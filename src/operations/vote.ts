@@ -301,7 +301,9 @@ export const claimAllForEpoch = async (
       });
     }
 
-    const batch = Tezos.wallet.batch(allBatch);
+    const bestPossibleBatch = await getMaxPossibleBatchArrayV2(allBatch);
+
+    const batch = Tezos.wallet.batch(bestPossibleBatch);
 
     const batchOp = await batch.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);

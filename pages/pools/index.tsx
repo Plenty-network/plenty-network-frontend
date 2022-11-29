@@ -77,6 +77,7 @@ export default function Pools(props: IIndexProps) {
   const handleNewPool = () => {
     setShowNewPoolPopup(true);
   };
+  const [reFetchPool, setReFetchPool] = React.useState(false);
   return (
     <>
       <SideBarHOC>
@@ -130,6 +131,7 @@ export default function Pools(props: IIndexProps) {
               setActiveStateTab={setActiveStateTab}
               setShowLiquidityModal={setShowLiquidityModal}
               showLiquidityModal={showLiquidityModal}
+              reFetchPool={reFetchPool}
             />
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
@@ -141,6 +143,7 @@ export default function Pools(props: IIndexProps) {
               setActiveStateTab={setActiveStateTab}
               setShowLiquidityModal={setShowLiquidityModal}
               showLiquidityModal={showLiquidityModal}
+              reFetchPool={reFetchPool}
             />
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
@@ -152,6 +155,7 @@ export default function Pools(props: IIndexProps) {
               setActiveStateTab={setActiveStateTab}
               setShowLiquidityModal={setShowLiquidityModal}
               showLiquidityModal={showLiquidityModal}
+              reFetchPool={reFetchPool}
             />
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
@@ -164,6 +168,7 @@ export default function Pools(props: IIndexProps) {
               setActiveStateTab={setActiveStateTab}
               setShowLiquidityModal={setShowLiquidityModal}
               showLiquidityModal={showLiquidityModal}
+              reFetchPool={reFetchPool}
             />
           )}
           <NewPool
@@ -171,6 +176,8 @@ export default function Pools(props: IIndexProps) {
             setShow={setShowNewPoolPopup}
             setShowLiquidityModal={setShowLiquidityModal}
             showLiquidityModal={showLiquidityModal}
+            setReFetchPool={setReFetchPool}
+            reFetchPool={reFetchPool}
           />
           {/* poolsTable */}
         </div>

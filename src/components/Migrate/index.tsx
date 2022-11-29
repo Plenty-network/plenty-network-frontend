@@ -31,14 +31,10 @@ import { Flashtype } from "../FlashScreen";
 import { setFlashMessage } from "../../redux/flashMessage";
 import Config from "../../config/config";
 import { FIRST_TOKEN_AMOUNT, TOKEN_A } from "../../constants/localStorage";
+import { IAllTokensBalanceResponse } from "../../api/util/types";
 
 interface IMigrateProps {
-  allBalance: {
-    success: boolean;
-    userBalance: {
-      [id: string]: BigNumber;
-    };
-  };
+  allBalance: IAllTokensBalanceResponse;
 }
 
 function Migrate(props: IMigrateProps) {
@@ -93,7 +89,9 @@ function Migrate(props: IMigrateProps) {
           </Button>
         );
       } else if (
-        new BigNumber(firstTokenAmount).isGreaterThan(props.allBalance.userBalance[tokenIn.name])
+        new BigNumber(firstTokenAmount).isGreaterThan(
+          props.allBalance.allTokensBalances[tokenIn.name]?.balance
+        )
       ) {
         return (
           <Button color="disabled" width="w-full">
@@ -114,7 +112,7 @@ function Migrate(props: IMigrateProps) {
         </Button>
       );
     }
-  }, [firstTokenAmount, props.allBalance.userBalance, tokenIn]);
+  }, [firstTokenAmount, props.allBalance.allTokensBalances, tokenIn]);
   const [exchangeRes, setExchangeRes] = useState<IMigrateExchange>({} as IMigrateExchange);
   const handleTokenInput = (input: string | number) => {
     if (input == ".") {
@@ -141,7 +139,7 @@ function Migrate(props: IMigrateProps) {
   const onClickAmount = () => {
     setSecondTokenAmount("");
 
-    handleTokenInput(props.allBalance.userBalance[tokenIn.name].toNumber());
+    handleTokenInput(props.allBalance.allTokensBalances[tokenIn.name]?.balance.toNumber());
   };
 
   const handleTokenType = () => {
@@ -256,7 +254,7 @@ function Migrate(props: IMigrateProps) {
           className={clsx(
             "lg:w-580  h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700",
             (new BigNumber(firstTokenAmount).isGreaterThan(
-              props.allBalance.userBalance[tokenIn.name]
+              props.allBalance.allTokensBalances[tokenIn.name]?.balance
             ) ||
               errorMessage !== "") &&
               "border-errorBorder hover:border-errorBorder bg-errorBg",
@@ -292,15 +290,21 @@ function Migrate(props: IMigrateProps) {
             <div className="text-left cursor-pointer" onClick={onClickAmount}>
               <span className="text-text-600 font-body3">Balance:</span>{" "}
               <span className="font-body4 text-primary-500 ">
-                {Number(props.allBalance.userBalance[tokenIn.name]) >= 0 ? (
+                {Number(props.allBalance.allTokensBalances[tokenIn.name]?.balance) >= 0 ? (
                   <ToolTip
-                    message={fromExponential(props.allBalance.userBalance[tokenIn.name].toString())}
-                    disable={Number(props.allBalance.userBalance[tokenIn.name]) > 0 ? false : true}
+                    message={fromExponential(
+                      props.allBalance.allTokensBalances[tokenIn.name]?.balance.toString()
+                    )}
+                    disable={
+                      Number(props.allBalance.allTokensBalances[tokenIn.name]?.balance) > 0
+                        ? false
+                        : true
+                    }
                     id="tooltip8"
                     position={Position.right}
                   >
-                    {Number(props.allBalance.userBalance[tokenIn.name]) > 0
-                      ? Number(props.allBalance.userBalance[tokenIn.name]).toFixed(4)
+                    {Number(props.allBalance.allTokensBalances[tokenIn.name]?.balance) > 0
+                      ? Number(props.allBalance.allTokensBalances[tokenIn.name]?.balance).toFixed(4)
                       : 0}
                   </ToolTip>
                 ) : (
@@ -413,11 +417,11 @@ function Migrate(props: IMigrateProps) {
       <TokenModalMigrate
         tokens={MigrateTokens.sort(
           (a, b) =>
-            Number(props.allBalance.userBalance[b.name]) -
-            Number(props.allBalance.userBalance[a.name])
+            Number(props.allBalance.allTokensBalances[b.name]?.balance) -
+            Number(props.allBalance.allTokensBalances[a.name]?.balance)
         )}
         show={tokenModal}
-        allBalance={props.allBalance.userBalance}
+        allBalance={props.allBalance.allTokensBalances}
         isSuccess={props.allBalance.success}
         selectToken={selectToken}
         onhide={setTokenModal}

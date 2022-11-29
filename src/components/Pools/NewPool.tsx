@@ -2,45 +2,37 @@ import { BigNumber } from "bignumber.js";
 import Image from "next/image";
 import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
-
 import info from "../../../src/assets/icon/common/infoIcon.svg";
-
-import { loadSwapDataWrapper } from "../../api/swap/wrappers";
-import { getCompleteUserBalace, getPnlpBalance, getUserBalanceByRpc } from "../../api/util/balance";
-import { getLPTokenPrice } from "../../api/util/price";
-import { IAllBalanceResponse } from "../../api/util/types";
+import { getAllTokensBalanceFromTzkt, getPnlpBalance } from "../../api/util/balance";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
 import playBtn from "../../assets/icon/common/playBtn.svg";
-import { Chain, ITokenInterface, MigrateToken } from "../../config/types";
-import {
-  FIRST_TOKEN_AMOUNT,
-  SECOND_TOKEN_AMOUNT,
-  TOKEN_A,
-  TOKEN_B,
-} from "../../constants/localStorage";
+import { Chain, IConfigToken, MigrateToken } from "../../config/types";
+import { FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_B } from "../../constants/localStorage";
 import { tokensModalNewPool, tokenType } from "../../constants/swap";
 import { deployStable, deployVolatile } from "../../operations/factory";
 import { useAppDispatch, useAppSelector } from "../../redux";
+import { getConfig } from "../../redux/config/config";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
 import ConfirmTransaction from "../ConfirmTransaction";
 import { Flashtype } from "../FlashScreen";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import { PopUpModal } from "../Modal/popupModal";
-import { VideoModal } from "../Modal/videoModal";
-import SwapModal from "../SwapModal/SwapModal";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import TransactionSubmitted from "../TransactionSubmitted";
 import ConfirmAddPool from "./ConfirmAddPool";
 import NewPoolMain, { Pair } from "./NewPoolMain";
 import { TextNewPool } from "./TextNewPool";
 import TokenModalPool from "./tokenModalPool";
-import tokenModal from "./tokenModalPool";
 
 export interface IManageLiquidityProps {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
   showLiquidityModal: boolean;
+  setReFetchPool: React.Dispatch<React.SetStateAction<boolean>>;
+  reFetchPool: boolean;
 }
 
 export function NewPool(props: IManageLiquidityProps) {
@@ -59,19 +51,12 @@ export function NewPool(props: IManageLiquidityProps) {
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [burnAmount, setBurnAmount] = React.useState<string | number>("");
   const [transactionId, setTransactionId] = useState("");
-  const swapData = React.useRef<ISwapData>({
-    tokenInSupply: new BigNumber(0),
-    tokenOutSupply: new BigNumber(0),
-    lpToken: "",
-    lpTokenSupply: new BigNumber(0),
-    isloading: true,
-  });
 
   const [removeTokenAmount, setRemoveTokenAmount] = useState({
     tokenOneAmount: "",
     tokenTwoAmount: "",
   });
-  const tokens = useAppSelector((state) => state.config.standard);
+  const tokens = useAppSelector((state) => state.config.tokens);
   const userAddress = useAppSelector((state) => state.wallet.address);
   const tokensArray = Object.entries(tokens);
   const dispatch = useAppDispatch();
@@ -83,7 +68,6 @@ export function NewPool(props: IManageLiquidityProps) {
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const [pnlpBalance, setPnlpBalance] = useState("");
 
-  const [lpTokenPrice, setLpTokenPrice] = useState(new BigNumber(0));
   const [isLoading, setIsLoading] = useState(false);
 
   const [showConfirmPool, setShowConfirmPool] = useState(false);
@@ -96,83 +80,11 @@ export function NewPool(props: IManageLiquidityProps) {
   const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>(
     {} as tokenParameterLiquidity
   );
-  const [tokenInOp, setTokenInOp] = React.useState<ITokenInterface>({} as ITokenInterface);
-  const [tokenOutOp, setTokenOutOp] = React.useState<ITokenInterface>({} as ITokenInterface);
-
-  useEffect(() => {
-    getLPTokenPrice(tokenIn.name, tokenOut.name, {
-      [tokenIn.name]: tokenPrice[tokenIn.name],
-      [tokenOut.name]: tokenPrice[tokenOut.name],
-    }).then((res) => {
-      setLpTokenPrice(res.lpTokenPrice);
-    });
-    if (walletAddress) {
-      const updateBalance = async () => {
-        const balancePromises = [];
-
-        Object.keys(tokenIn).length !== 0 &&
-          balancePromises.push(getUserBalanceByRpc(tokenIn.name, walletAddress));
-        Object.keys(tokenOut).length !== 0 &&
-          balancePromises.push(getUserBalanceByRpc(tokenOut.name, walletAddress));
-        getPnlpBalance(tokenIn.name, tokenOut.name, walletAddress).then((res) => {
-          setPnlpBalance(res.balance);
-        });
-
-        const balanceResponse = await Promise.all(balancePromises);
-
-        setUserBalances((prev) => ({
-          ...prev,
-          ...balanceResponse.reduce(
-            (acc, cur) => ({
-              ...acc,
-              [cur.identifier]: cur.balance.toNumber(),
-            }),
-            {}
-          ),
-        }));
-      };
-      updateBalance();
-    }
-  }, [
-    tokenIn,
-    tokenOut,
-    props,
-    tokenPrice[tokenIn.name],
-    tokenPrice[tokenOut.name],
-    TOKEN,
-    balanceUpdate,
-    swapData.current,
-  ]);
+  const [tokenInOp, setTokenInOp] = React.useState<IConfigToken>({} as IConfigToken);
+  const [tokenOutOp, setTokenOutOp] = React.useState<IConfigToken>({} as IConfigToken);
 
   const [swapModalShow, setSwapModalShow] = useState(false);
-  useEffect(() => {
-    if (
-      Object.prototype.hasOwnProperty.call(tokenIn, "name") &&
-      Object.prototype.hasOwnProperty.call(tokenOut, "name")
-    ) {
-      setIsLoading(true);
-      loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((response) => {
-        if (response.success) {
-          swapData.current = {
-            tokenInSupply: response.tokenInSupply as BigNumber,
-            tokenOutSupply: response.tokenOutSupply as BigNumber,
-            lpToken: response.lpToken?.symbol,
-            lpTokenSupply: response.lpTokenSupply,
-            isloading: false,
-          };
-          setIsLoading(false);
-        }
-      });
-    } else {
-      swapData.current = {
-        tokenInSupply: new BigNumber(0),
-        tokenOutSupply: new BigNumber(0),
-        lpToken: "",
-        lpTokenSupply: new BigNumber(0),
-        isloading: false,
-      };
-    }
-  }, [tokenIn.name, tokenOut.name]);
+
   const [tokenType, setTokenType] = useState<tokenType>("tokenIn");
   const selectToken = (token: tokensModalNewPool) => {
     if ((tokenType === "tokenOut" || tokenType === "tokenIn") && firstTokenAmountLiq !== "") {
@@ -199,14 +111,6 @@ export function NewPool(props: IManageLiquidityProps) {
     setSwapModalShow(false);
     setSearchQuery("");
   };
-
-  const resetAllValues = () => {
-    setFirstTokenAmountLiq("");
-    setSecondTokenAmountLiq("");
-
-    setBalanceUpdate(false);
-  };
-
   const closeModal = () => {
     props.setShow(false);
     setTokenIn({} as tokenParameterLiquidity);
@@ -215,43 +119,80 @@ export function NewPool(props: IManageLiquidityProps) {
     setSecondTokenAmountLiq("");
     setPair("");
   };
+  const resetAllValues = () => {
+    closeModal();
+    setPair("");
+    setFirstTokenAmountLiq("");
+    setSecondTokenAmountLiq("");
+
+    setBalanceUpdate(false);
+  };
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [allBalance, setAllBalance] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
+    success: false,
+    allTokensBalances: {} as IAllTokensBalance,
+  });
   useEffect(() => {
-    setAllBalance({ success: false, userBalance: {} });
+    setAllBalance({
+      success: false,
+      allTokensBalances: {} as IAllTokensBalance,
+    });
     if (userAddress) {
-      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-        setAllBalance(response);
-      });
+      getAllTokensBalanceFromTzkt(Object.values(tokens), userAddress).then(
+        (response: IAllTokensBalanceResponse) => {
+          setAllBalance(response);
+        }
+      );
     } else {
-      setAllBalance({ success: true, userBalance: {} });
-      setUserBalances({});
+      setAllBalance({
+        success: false,
+        allTokensBalances: {} as IAllTokensBalance,
+      });
     }
   }, [userAddress, TOKEN, balanceUpdate]);
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
       name: token[0],
       image: `/assets/Tokens/${token[1].symbol}.png`,
-      new: token[1].extras?.isNew as boolean,
-      chainType: token[1].extras?.chain as Chain,
+
+      chainType: token[1].originChain as Chain,
       address: token[1].address,
       interface: token[1],
     }));
   }, [tokens]);
-  tokensListConfig.sort(
-    (a, b) => Number(allBalance.userBalance[b.name]) - Number(allBalance.userBalance[a.name])
-  );
+  const [refetch, setRefetch] = useState(false);
+  useEffect(() => {
+    if (refetch) {
+      dispatch(getConfig());
+    }
+  }, [refetch]);
+  useEffect(() => {
+    if (
+      (Object.keys(allBalance),
+      length !== 0 && allBalance.success && Object.keys(allBalance.allTokensBalances).length !== 0)
+    ) {
+      tokensListConfig.sort(
+        (a, b) =>
+          Number(
+            allBalance.allTokensBalances[b.name]?.balance
+              ? allBalance.allTokensBalances[b.name]?.balance
+              : 0
+          ) -
+          Number(
+            allBalance.allTokensBalances[a.name]?.balance
+              ? allBalance.allTokensBalances[a.name]?.balance
+              : 0
+          )
+      );
+    }
+  }, [tokensListConfig, allBalance.allTokensBalances]);
+
   const handleTokenType = (type: tokenType) => {
     setBalanceUpdate(false);
     setSwapModalShow(true);
     setTokenType(type);
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const handleAddNewPoolOperation = () => {
     setShowConfirmPool(false);
@@ -261,6 +202,8 @@ export function NewPool(props: IManageLiquidityProps) {
 
     setContentTransaction(`new pool`);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    props.setReFetchPool(false);
+    setRefetch(false);
     setShowConfirmTransaction(true);
     if (pair === Pair.VOLATILE) {
       deployVolatile(
@@ -285,6 +228,7 @@ export function NewPool(props: IManageLiquidityProps) {
         }
       ).then((response) => {
         if (response.success) {
+          closeModal();
           setBalanceUpdate(true);
           resetAllValues();
           setTimeout(() => {
@@ -309,11 +253,17 @@ export function NewPool(props: IManageLiquidityProps) {
                 transactionId: response.operationId ? response.operationId : "",
               })
             );
+            setRefetch(true);
           }, 6000);
+
+          setTimeout(() => {
+            props.setReFetchPool(true);
+          }, 7000);
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setContentTransaction("");
         } else {
           setBalanceUpdate(true);
+          closeModal();
           //resetAllValues();
           setShowConfirmTransaction(false);
           setTimeout(() => {
@@ -360,6 +310,7 @@ export function NewPool(props: IManageLiquidityProps) {
         }
       ).then((response) => {
         if (response.success) {
+          closeModal();
           setBalanceUpdate(true);
           resetAllValues();
           setTimeout(() => {
@@ -388,6 +339,7 @@ export function NewPool(props: IManageLiquidityProps) {
           dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           setContentTransaction("");
         } else {
+          closeModal();
           setBalanceUpdate(true);
           resetAllValues();
           setShowConfirmTransaction(false);
@@ -458,14 +410,13 @@ export function NewPool(props: IManageLiquidityProps) {
                 setShowConfirmPool={setShowConfirmPool}
                 firstTokenAmount={firstTokenAmountLiq}
                 secondTokenAmount={secondTokenAmountLiq}
-                userBalances={userBalances}
+                userBalances={allBalance.allTokensBalances}
                 setSecondTokenAmount={setSecondTokenAmountLiq}
                 setFirstTokenAmount={setFirstTokenAmountLiq}
                 tokenIn={tokenIn}
                 tokenOut={tokenOut}
                 setIsAddLiquidity={setIsAddLiquidity}
                 isAddLiquidity={isAddLiquidity}
-                swapData={swapData.current}
                 pnlpBalance={pnlpBalance}
                 setBurnAmount={setBurnAmount}
                 burnAmount={burnAmount}
@@ -473,7 +424,6 @@ export function NewPool(props: IManageLiquidityProps) {
                 removeTokenAmount={removeTokenAmount}
                 setSlippage={setSlippage}
                 slippage={slippage}
-                lpTokenPrice={lpTokenPrice}
                 isLoading={isLoading}
                 handleTokenType={handleTokenType}
                 setPair={setPair}
@@ -519,7 +469,7 @@ export function NewPool(props: IManageLiquidityProps) {
         })}
         show={swapModalShow}
         isLoading={allBalance.success}
-        allBalance={allBalance.userBalance}
+        allBalance={allBalance.allTokensBalances}
         selectToken={selectToken}
         onhide={handleClose}
         tokenIn={tokenIn}

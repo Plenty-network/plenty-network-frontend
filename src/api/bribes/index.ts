@@ -294,7 +294,7 @@ export const getPoolsDataForBribes = async (
     for (const poolData of Object.keys(poolsData)) {
       const AMM = AMMS[poolData];
 
-      if(AMM && AMM.bribeAddress) {
+      if(AMM && AMM.bribe) {
         allDataForPools.push({
           amm: AMM.address,
           tokenA: AMM.token1.symbol,

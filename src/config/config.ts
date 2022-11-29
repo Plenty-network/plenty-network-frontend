@@ -1,12 +1,12 @@
-import { IConfig, TokenVariant } from './types';
+import { IConfig, TokenStandard } from './types';
 import { NetworkType } from "@airgap/beacon-types";
 
 const Config: IConfig = {
   NAME: 'Plenty Network',
-  STANDARD_CONFIG : 'https://config.plenty.network/v1/config/token?type=standard' ,
-  LP_CONFIG : "https://config.plenty.network/v1/config/token?type=lp",
-  TOKENS_CONFIG : "https://config.plenty.network/v1/config/token",
-  AMM_CONFIG : 'https://config.plenty.network/v1/config/amm' ,
+  // STANDARD_CONFIG : 'https://config.plenty.network/v1/config/token?type=standard' ,
+  // LP_CONFIG : "https://config.plenty.network/v1/config/token?type=lp",
+  // TOKENS_CONFIG : "https://config.plenty.network/v1/config/token",
+  // AMM_CONFIG : 'https://config.plenty.network/v1/config/amm' ,
   API: {
     url: 'https://api.coingecko.com/api/v3/coins/tezos?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false',
     API_KEY: '4824FE50-DB6E-4316-B099-72283C964891',
@@ -66,6 +66,17 @@ const Config: IConfig = {
     fallback: "https://ipfs.io/ipfs/",
   },
 
+  CONFIG_LINKS: {
+    testnet: {
+      POOL: "https://config.ghostnet.plenty.network/pools",
+      TOKEN: "https://config.ghostnet.plenty.network/tokens",
+    },
+    mainnet: {
+      POOL: "",
+      TOKEN: "",
+    },
+  },
+
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',
     testnet: 'KT1P7eP7gGuHgPVNWRLs1p4uRhc9Wbyku8B2',
@@ -101,7 +112,7 @@ const Config: IConfig = {
         TOKEN_ID: 19,
         TOKEN_DECIMAL: 8,
         REF_TOKEN: 'WBTC.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wWETH: {
         ICON: '',
@@ -110,7 +121,7 @@ const Config: IConfig = {
         TOKEN_ID: 20,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'WETH.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wBUSD: {
         ICON: '',
@@ -119,7 +130,7 @@ const Config: IConfig = {
         TOKEN_ID: 1,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'BUSD.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wUSDC: {
         ICON: '',
@@ -128,7 +139,7 @@ const Config: IConfig = {
         TOKEN_ID: 0,
         TOKEN_DECIMAL: 6,
         REF_TOKEN: 'USDC.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wUSDT: {
         ICON: '',
@@ -137,7 +148,7 @@ const Config: IConfig = {
         TOKEN_ID: 18,
         TOKEN_DECIMAL: 6,
         REF_TOKEN: 'USDT.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wMATIC: {
         ICON: '',
@@ -146,7 +157,7 @@ const Config: IConfig = {
         TOKEN_ID: 2,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'MATIC.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wLINK: {
         ICON: '',
@@ -155,7 +166,7 @@ const Config: IConfig = {
         TOKEN_ID: 10,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'LINK.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wDAI: {
         ICON: '',
@@ -164,7 +175,7 @@ const Config: IConfig = {
         TOKEN_ID: 5,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'DAI.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'WBTC.e': {
         ICON: '',
@@ -173,7 +184,7 @@ const Config: IConfig = {
         TOKEN_ID: 4,
         TOKEN_DECIMAL: 8,
         REF_TOKEN: 'wWBTC',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'WETH.e': {
         ICON: '',
@@ -182,7 +193,7 @@ const Config: IConfig = {
         TOKEN_ID: 5,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'wWETH',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'BUSD.e': {
         ICON: '',
@@ -191,7 +202,7 @@ const Config: IConfig = {
         TOKEN_ID: 0,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'wBUSD',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'USDC.e': {
         ICON: '',
@@ -200,7 +211,7 @@ const Config: IConfig = {
         TOKEN_ID: 1,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'wUSDC',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'USDT.e': {
         ICON: '',
@@ -209,7 +220,7 @@ const Config: IConfig = {
         TOKEN_ID: 3,
         TOKEN_DECIMAL: 6,
         REF_TOKEN: 'wUSDT',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'MATIC.e': {
         ICON: '',
@@ -218,7 +229,7 @@ const Config: IConfig = {
         TOKEN_ID: 0,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'wMATIC',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'LINK.e': {
         ICON: '',
@@ -227,7 +238,7 @@ const Config: IConfig = {
         TOKEN_ID: 6,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'wLINK',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'DAI.e': {
         ICON: '',
@@ -236,7 +247,7 @@ const Config: IConfig = {
         TOKEN_ID: 7,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'wDAI',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
     },
     mainnet: {
@@ -247,7 +258,7 @@ const Config: IConfig = {
         TOKEN_ID: 19,
         TOKEN_DECIMAL: 8,
         REF_TOKEN: 'WBTC.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wWETH: {
         ICON: '',
@@ -256,7 +267,7 @@ const Config: IConfig = {
         TOKEN_ID: 20,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'WETH.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wBUSD: {
         ICON: '',
@@ -265,7 +276,7 @@ const Config: IConfig = {
         TOKEN_ID: 1,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'BUSD.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wUSDC: {
         ICON: '',
@@ -274,7 +285,7 @@ const Config: IConfig = {
         TOKEN_ID: 17,
         TOKEN_DECIMAL: 6,
         REF_TOKEN: 'USDC.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wUSDT: {
         ICON: '',
@@ -283,7 +294,7 @@ const Config: IConfig = {
         TOKEN_ID: 18,
         TOKEN_DECIMAL: 6,
         REF_TOKEN: 'USDT.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wMATIC: {
         ICON: '',
@@ -292,7 +303,7 @@ const Config: IConfig = {
         TOKEN_ID: 11,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'MATIC.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wLINK: {
         ICON: '',
@@ -301,7 +312,7 @@ const Config: IConfig = {
         TOKEN_ID: 10,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'LINK.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       wDAI: {
         ICON: '',
@@ -310,7 +321,7 @@ const Config: IConfig = {
         TOKEN_ID: 5,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'DAI.e',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'WBTC.e': {
         ICON: '',
@@ -319,7 +330,7 @@ const Config: IConfig = {
         TOKEN_ID: 1,
         TOKEN_DECIMAL: 8,
         REF_TOKEN: 'wWBTC',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'WETH.e': {
         ICON: '',
@@ -328,7 +339,7 @@ const Config: IConfig = {
         TOKEN_ID: 0,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'wWETH',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'BUSD.e': {
         ICON: '',
@@ -337,7 +348,7 @@ const Config: IConfig = {
         TOKEN_ID: 7,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'wBUSD',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'USDC.e': {
         ICON: '',
@@ -346,7 +357,7 @@ const Config: IConfig = {
         TOKEN_ID: 2,
         TOKEN_DECIMAL: 6,
         REF_TOKEN: 'wUSDC',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'USDT.e': {
         ICON: '',
@@ -355,7 +366,7 @@ const Config: IConfig = {
         TOKEN_ID: 3,
         TOKEN_DECIMAL: 6,
         REF_TOKEN: 'wUSDT',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'MATIC.e': {
         ICON: '',
@@ -364,7 +375,7 @@ const Config: IConfig = {
         TOKEN_ID: 4,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'wMATIC',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'LINK.e': {
         ICON: '',
@@ -373,7 +384,7 @@ const Config: IConfig = {
         TOKEN_ID: 5,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'wLINK',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
       'DAI.e': {
         ICON: '',
@@ -382,7 +393,7 @@ const Config: IConfig = {
         TOKEN_ID: 6,
         TOKEN_DECIMAL: 18,
         REF_TOKEN: 'wDAI',
-        READ_TYPE: TokenVariant.FA2,
+        READ_TYPE: TokenStandard.FA2,
       },
     },
   },

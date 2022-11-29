@@ -11,7 +11,6 @@ import { setFlashMessage } from '../redux/flashMessage';
  * Remove liquidity operation for given pair of tokens.
  * @param tokenOneSymbol - Symbol of first token of the pair for the selected PNLP
  * @param tokenTwoSymbol - Symbol of second token of the pair for the selected PNLP
- * @param lpTokenSymbol - Symbol of the PNLP token selected by user
  * @param tokenOneAmount - Minimum amount of first token the user will get on removing entered PNLP
  * @param tokenTwoAmount - Minimum amount of second token the user will get on removing entered PNLP
  * @param pnlpAmount - Amount of PNLP the user wants to remove (input by user)
@@ -25,7 +24,6 @@ import { setFlashMessage } from '../redux/flashMessage';
 export const removeLiquidity = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
-  lpTokenSymbol: string,
   tokenOneAmount: string | BigNumber,
   tokenTwoAmount: string | BigNumber,
   pnlpAmount: string | BigNumber,
@@ -42,7 +40,6 @@ export const removeLiquidity = async (
       removeLiquidityResult = await removeTezPairsLiquidity(
         tokenOneSymbol,
         tokenTwoSymbol,
-        lpTokenSymbol,
         new BigNumber(tokenOneAmount),
         new BigNumber(tokenTwoAmount),
         new BigNumber(pnlpAmount),
@@ -56,7 +53,6 @@ export const removeLiquidity = async (
       removeLiquidityResult = await removeAllPairsLiquidity(
         tokenOneSymbol,
         tokenTwoSymbol,
-        lpTokenSymbol,
         new BigNumber(tokenOneAmount),
         new BigNumber(tokenTwoAmount),
         new BigNumber(pnlpAmount),
@@ -86,7 +82,6 @@ export const removeLiquidity = async (
  * Remove liquidity operation for given pair of tokens when niether of them is tez token.
  * @param tokenOneSymbol - Symbol of first token of the pair for the selected PNLP
  * @param tokenTwoSymbol - Symbol of second token of the pair for the selected PNLP
- * @param lpTokenSymbol - Symbol of the PNLP token selected by user
  * @param tokenOneAmount - Minimum amount of first token the user will get on removing entered PNLP
  * @param tokenTwoAmount - Minimum amount of second token the user will get on removing entered PNLP
  * @param pnlpAmount - Amount of PNLP the user wants to remove (input by user)
@@ -100,7 +95,6 @@ export const removeLiquidity = async (
 const removeAllPairsLiquidity = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
-  lpTokenSymbol: string,
   tokenOneAmount: BigNumber,
   tokenTwoAmount: BigNumber,
   pnlpAmount: BigNumber,
@@ -149,7 +143,7 @@ const removeAllPairsLiquidity = async (
     );
 
     const finalPnlpAmount = pnlpAmount.multipliedBy(
-      new BigNumber(10).pow(TOKENS[lpTokenSymbol].decimals)
+      new BigNumber(10).pow(AMM[dexContractAddress].lpToken.decimals)
     );
 
     const operation = isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
@@ -199,7 +193,6 @@ const removeAllPairsLiquidity = async (
  * Remove liquidity operation for given pair of tokens when either of them is a tez token.
  * @param tokenOneSymbol - Symbol of first token of the pair for the selected PNLP
  * @param tokenTwoSymbol - Symbol of second token of the pair for the selected PNLP
- * @param lpTokenSymbol - Symbol of the PNLP token selected by user
  * @param tokenOneAmount - Minimum amount of first token the user will get on removing entered PNLP
  * @param tokenTwoAmount - Minimum amount of second token the user will get on removing entered PNLP
  * @param pnlpAmount - Amount of PNLP the user wants to remove (input by user)
@@ -212,7 +205,6 @@ const removeAllPairsLiquidity = async (
  const removeTezPairsLiquidity = async (
    tokenOneSymbol: string,
    tokenTwoSymbol: string,
-   lpTokenSymbol: string,
    tokenOneAmount: BigNumber,
    tokenTwoAmount: BigNumber,
    pnlpAmount: BigNumber,
@@ -235,6 +227,7 @@ const removeAllPairsLiquidity = async (
      const Tezos = await dappClient().tezos();
      const state = store.getState();
      const TOKENS = state.config.tokens;
+     const AMM = state.config.AMMs;
      const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
      if (dexContractAddress === "false") {
        throw new Error("No dex found for the given pair of tokens.");
@@ -242,7 +235,7 @@ const removeAllPairsLiquidity = async (
      const dexContractInstance = await Tezos.wallet.at(dexContractAddress);
 
      // Make the order of tokens according to the order in contract.
-     if (tokenOneSymbol === "tez") {
+     if (tokenOneSymbol === "XTZ") {
        tezSymbol = tokenOneSymbol;
        tezMinimumAmount = tokenOneAmount;
        secondTokenSymbol = tokenTwoSymbol;
@@ -262,7 +255,7 @@ const removeAllPairsLiquidity = async (
      );
 
      const finalPnlpAmount = pnlpAmount.multipliedBy(
-       new BigNumber(10).pow(TOKENS[lpTokenSymbol].decimals)
+       new BigNumber(10).pow(AMM[dexContractAddress].lpToken.decimals)
      );
 
      const operation = await dexContractInstance.methods
