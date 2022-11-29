@@ -61,7 +61,6 @@ interface ILiquidityProps {
   pair: string;
   setSlippage: React.Dispatch<React.SetStateAction<string>>;
   slippage: string;
-  lpTokenPrice: BigNumber;
   handleTokenType: (type: tokenType) => void;
   isLoading: boolean;
   setPair: React.Dispatch<React.SetStateAction<string>>;

@@ -2,26 +2,13 @@ import { BigNumber } from "bignumber.js";
 import Image from "next/image";
 import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
-
 import info from "../../../src/assets/icon/common/infoIcon.svg";
-
-import { loadSwapDataWrapper } from "../../api/swap/wrappers";
 import { getAllTokensBalanceFromTzkt, getPnlpBalance } from "../../api/util/balance";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
-import { getLPTokenPrice } from "../../api/util/price";
-import {
-  IAllBalanceResponse,
-  IAllTokensBalance,
-  IAllTokensBalanceResponse,
-} from "../../api/util/types";
+import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
 import playBtn from "../../assets/icon/common/playBtn.svg";
 import { Chain, IConfigToken, MigrateToken } from "../../config/types";
-import {
-  FIRST_TOKEN_AMOUNT,
-  SECOND_TOKEN_AMOUNT,
-  TOKEN_A,
-  TOKEN_B,
-} from "../../constants/localStorage";
+import { FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_B } from "../../constants/localStorage";
 import { tokensModalNewPool, tokenType } from "../../constants/swap";
 import { deployStable, deployVolatile } from "../../operations/factory";
 import { useAppDispatch, useAppSelector } from "../../redux";
@@ -32,15 +19,12 @@ import ConfirmTransaction from "../ConfirmTransaction";
 import { Flashtype } from "../FlashScreen";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import { PopUpModal } from "../Modal/popupModal";
-import { VideoModal } from "../Modal/videoModal";
-import SwapModal from "../SwapModal/SwapModal";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import TransactionSubmitted from "../TransactionSubmitted";
 import ConfirmAddPool from "./ConfirmAddPool";
 import NewPoolMain, { Pair } from "./NewPoolMain";
 import { TextNewPool } from "./TextNewPool";
 import TokenModalPool from "./tokenModalPool";
-import tokenModal from "./tokenModalPool";
 
 export interface IManageLiquidityProps {
   show: boolean;
@@ -67,13 +51,6 @@ export function NewPool(props: IManageLiquidityProps) {
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [burnAmount, setBurnAmount] = React.useState<string | number>("");
   const [transactionId, setTransactionId] = useState("");
-  const swapData = React.useRef<ISwapData>({
-    tokenInSupply: new BigNumber(0),
-    tokenOutSupply: new BigNumber(0),
-    lpToken: undefined,
-    lpTokenSupply: new BigNumber(0),
-    isloading: true,
-  });
 
   const [removeTokenAmount, setRemoveTokenAmount] = useState({
     tokenOneAmount: "",
@@ -91,7 +68,6 @@ export function NewPool(props: IManageLiquidityProps) {
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const [pnlpBalance, setPnlpBalance] = useState("");
 
-  const [lpTokenPrice, setLpTokenPrice] = useState(new BigNumber(0));
   const [isLoading, setIsLoading] = useState(false);
 
   const [showConfirmPool, setShowConfirmPool] = useState(false);
@@ -106,29 +82,6 @@ export function NewPool(props: IManageLiquidityProps) {
   );
   const [tokenInOp, setTokenInOp] = React.useState<IConfigToken>({} as IConfigToken);
   const [tokenOutOp, setTokenOutOp] = React.useState<IConfigToken>({} as IConfigToken);
-
-  useEffect(() => {
-    if (
-      Object.prototype.hasOwnProperty.call(tokenIn, "symbol") &&
-      Object.prototype.hasOwnProperty.call(tokenOut, "symbol")
-    ) {
-      getLPTokenPrice(tokenIn.symbol, tokenOut.symbol, {
-        [tokenIn.symbol]: tokenPrice[tokenIn.symbol],
-        [tokenOut.symbol]: tokenPrice[tokenOut.symbol],
-      }).then((res) => {
-        setLpTokenPrice(res.lpTokenPrice);
-      });
-    }
-  }, [
-    tokenIn,
-    tokenOut,
-    props,
-    tokenPrice[tokenIn.name],
-    tokenPrice[tokenOut.name],
-    TOKEN,
-    balanceUpdate,
-    swapData.current,
-  ]);
 
   const [swapModalShow, setSwapModalShow] = useState(false);
 
@@ -471,7 +424,6 @@ export function NewPool(props: IManageLiquidityProps) {
                 removeTokenAmount={removeTokenAmount}
                 setSlippage={setSlippage}
                 slippage={slippage}
-                lpTokenPrice={lpTokenPrice}
                 isLoading={isLoading}
                 handleTokenType={handleTokenType}
                 setPair={setPair}
