@@ -158,14 +158,6 @@ export function NewPool(props: IManageLiquidityProps) {
     setSwapModalShow(false);
     setSearchQuery("");
   };
-
-  const resetAllValues = () => {
-    setFirstTokenAmountLiq("");
-    setSecondTokenAmountLiq("");
-
-    setBalanceUpdate(false);
-  };
-
   const closeModal = () => {
     props.setShow(false);
     setTokenIn({} as tokenParameterLiquidity);
@@ -173,6 +165,14 @@ export function NewPool(props: IManageLiquidityProps) {
     setFirstTokenAmountLiq("");
     setSecondTokenAmountLiq("");
     setPair("");
+  };
+  const resetAllValues = () => {
+    closeModal();
+    setPair("");
+    setFirstTokenAmountLiq("");
+    setSecondTokenAmountLiq("");
+
+    setBalanceUpdate(false);
   };
 
   const [searchQuery, setSearchQuery] = useState("");

@@ -82,7 +82,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       },
       {
         Header: "Your liquidity",
-        id: "your liquidity",
+        id: "yourliquidity",
         columnWidth: "w-[80px]",
         isToolTipEnabled: true,
         tooltipMessage: "Value of tokens supplied to the pair.",
@@ -152,7 +152,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       },
       {
         Header: "Your liquidity",
-        id: "Your liquidity",
+        id: "yourliquidity",
         columnWidth: "w-[124px]",
         tooltipMessage: "Value of tokens supplied to the pair.",
         isToolTipEnabled: true,
@@ -296,7 +296,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={props.poolsPosition}
           noSearchResult={noSearchResult}
-          shortby="pools"
+          shortby="yourliquidity"
           tableType={true}
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
