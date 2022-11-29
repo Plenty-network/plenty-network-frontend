@@ -74,6 +74,7 @@ export const Pair = {
 };
 function NewPoolMain(props: ILiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const amm = useAppSelector((state) => state.config.AMMs);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
@@ -83,6 +84,7 @@ function NewPoolMain(props: ILiquidityProps) {
     ActiveLiquidity.Liquidity
   );
   const [isExist, setIsExist] = useState(false);
+  const [isGauge, setIsGauge] = useState(false);
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(props.tokenIn, "symbol") &&
@@ -92,8 +94,14 @@ function NewPoolMain(props: ILiquidityProps) {
 
       if (res !== "false") {
         setIsExist(true);
+        if (amm[res]?.gauge !== undefined) {
+          setIsGauge(true);
+        } else {
+          setIsGauge(false);
+        }
       } else {
         setIsExist(false);
+        setIsGauge(false);
       }
     }
   }, [props.tokenIn, props.tokenOut]);
@@ -445,7 +453,7 @@ function NewPoolMain(props: ILiquidityProps) {
           closeFn={props.setShowLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}
-          isGaugeAvailable={true}
+          isGaugeAvailable={isExist && isGauge}
         />
       )}
     </>
