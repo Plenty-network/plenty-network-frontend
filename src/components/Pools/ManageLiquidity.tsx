@@ -371,7 +371,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
         }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
+        // setContentTransaction("");
       } else {
         setBalanceUpdate(true);
         //resetAllValues();
@@ -393,7 +393,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
+        // setContentTransaction("");
       }
     });
   };
@@ -534,7 +534,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
         }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
       } else {
         setBalanceUpdate(true);
         //resetAllValues();
@@ -561,7 +560,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
       }
     });
   };
@@ -620,7 +618,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
         }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
       } else {
         setBalanceUpdate(true);
         //resetAllValues();
@@ -642,7 +639,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
       }
     });
   };
@@ -690,7 +686,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
         }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
+        // setContentTransaction("");
       } else {
         setBalanceUpdate(true);
         setShowConfirmTransaction(false);
@@ -709,7 +705,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
+        // setContentTransaction("");
       }
     });
   };
@@ -770,7 +766,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
         }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
+        //setContentTransaction("");
       } else {
         setBalanceUpdate(true);
 
@@ -794,7 +790,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
+        //setContentTransaction("");
       }
     });
   };
