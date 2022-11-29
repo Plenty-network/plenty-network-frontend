@@ -496,7 +496,7 @@ export const claimAllAndWithdrawLock = async (
       throw new Error('AMM does not exist for the selected pair.');
     }
     const gaugeAddress: string | undefined =
-      AMM[dexContractAddress].gaugeAddress;
+      AMM[dexContractAddress].gauge;
     if (gaugeAddress === undefined) {
       throw new Error('Gauge does not exist for the selected pair.');
     }
@@ -604,7 +604,7 @@ export const claimAllDetachAndWithdrawLock = async (
       if (dexContractAddress === "false" || dexContractAddress === undefined) {
         throw new Error("AMM does not exist for the selected pair.");
       }
-      const gaugeAddress: string | undefined = AMM[dexContractAddress].gaugeAddress;
+      const gaugeAddress: string | undefined = AMM[dexContractAddress].gauge;
       if (gaugeAddress === undefined) {
         throw new Error("Gauge does not exist for the selected pair.");
       }

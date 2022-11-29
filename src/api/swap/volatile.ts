@@ -10,7 +10,7 @@ export const loadSwapDataVolatile = async (
 ): Promise<ISwapDataResponse> => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
     const AMM = state.config.AMMs;
 
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
@@ -76,7 +76,7 @@ export const calculateTokenOutputVolatile = (
 ): ICalculateTokenResponse => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const feePerc = new BigNumber(0.05);
     let tokenOutAmount = new BigNumber(0);
@@ -154,7 +154,7 @@ export const calculateTokenInputVolatile = (
 ): ICalculateTokenResponse => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const feePerc = new BigNumber(0.05);
     let tokenOutAmount = new BigNumber(0);

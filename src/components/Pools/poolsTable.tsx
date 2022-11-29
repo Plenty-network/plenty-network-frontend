@@ -26,6 +26,7 @@ import stake from "../../assets/icon/pools/stakePool.svg";
 import newPool from "../../assets/icon/pools/newPool.svg";
 import Image from "next/image";
 import clsx from "clsx";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 export interface IShortCardProps {
   className?: string;
@@ -37,6 +38,7 @@ export interface IShortCardProps {
   setActiveStateTab: React.Dispatch<React.SetStateAction<string>>;
   setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
   showLiquidityModal: boolean;
+  reFetchPool: boolean;
 }
 export interface IManageBtnProps {
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -53,13 +55,15 @@ export function ShortCard(props: IShortCardProps) {
   const { valueFormat } = useTableNumberUtils();
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
     props.poolsFilter,
-    ""
+    "",
+    props.reFetchPool
   );
   const [poolsTableData, isFetched] = usePoolsTableSearch(
     poolTableData,
     props.searchValue,
     isFetch
   );
+
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
@@ -87,8 +91,6 @@ export function ShortCard(props: IShortCardProps) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: "USDT.e",
   });
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const mobilecolumns = React.useMemo<Column<IPoolsDataWrapperResponse>[]>(
     () => [
@@ -130,7 +132,7 @@ export function ShortCard(props: IShortCardProps) {
             <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} isMobile={true} />
           ) : (
             <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              --
+              -
             </div>
           ),
       },
@@ -149,7 +151,7 @@ export function ShortCard(props: IShortCardProps) {
             <AprInfoFuture futureApr={x.futureApr} />
           ) : (
             <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              --
+              -
             </div>
           ),
       },
@@ -191,7 +193,7 @@ export function ShortCard(props: IShortCardProps) {
             <div
               className={clsx(
                 "flex gap-1 items-center max-w-[153px]",
-                x.isStakeAvailable ? "ml-3" : "ml-[34px]"
+                x.isStakeAvailable || !x.isGaugeAvailable ? "ml-[14px]" : "ml-[34px]"
               )}
             >
               <CircularOverLappingImage
@@ -224,7 +226,7 @@ export function ShortCard(props: IShortCardProps) {
             <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} />
           ) : (
             <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              --
+              -
             </div>
           ),
       },
@@ -243,7 +245,7 @@ export function ShortCard(props: IShortCardProps) {
             <AprInfoFuture futureApr={x.futureApr} />
           ) : (
             <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              --
+              -
             </div>
           ),
       },
@@ -316,7 +318,7 @@ export function ShortCard(props: IShortCardProps) {
             <BribesPool value={x.bribeUSD} bribesData={x.bribes} />
           ) : (
             <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              --
+              -
             </div>
           ),
       },
@@ -350,11 +352,16 @@ export function ShortCard(props: IShortCardProps) {
           onClick={() => {
             dispatch(getTotalVotingPower());
             props.setIsGaugeAvailable(props.isGauge);
-            props.isLiquidityAvailable
-              ? props.isStakeAvailable
-                ? setActiveState(ActiveLiquidity.Rewards)
-                : setActiveState(ActiveLiquidity.Staking)
-              : setActiveState(ActiveLiquidity.Liquidity);
+            if (props.isGauge) {
+              props.isLiquidityAvailable
+                ? props.isStakeAvailable
+                  ? setActiveState(ActiveLiquidity.Rewards)
+                  : setActiveState(ActiveLiquidity.Staking)
+                : setActiveState(ActiveLiquidity.Liquidity);
+            } else {
+              setActiveState(ActiveLiquidity.Liquidity);
+            }
+
             props.setShowLiquidityModal(true);
             setTokenIn({
               name: props.tokenA,

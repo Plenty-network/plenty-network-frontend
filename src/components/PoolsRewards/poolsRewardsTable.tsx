@@ -10,6 +10,7 @@ import { PLYEmission } from "./PLYEmisiion";
 import { Boost } from "./Boost";
 import { NoPoolsPosition } from "../Rewards/NoContent";
 import { compareNumericString } from "../../utils/commonUtils";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 export function PoolsTableRewards(props: IPoolsTableRewards) {
   const { valueFormat } = useTableNumberUtils();
@@ -21,8 +22,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   const NoData = React.useMemo(() => {
     return (
       <NoPoolsPosition

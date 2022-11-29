@@ -1,4 +1,4 @@
-import { getLpTokenSymbol } from '../util/fetchConfig';
+import { getDexAddress } from '../util/fetchConfig';
 import { BigNumber } from "bignumber.js";
 import {
   ELiquidityProcess,
@@ -25,7 +25,7 @@ export const estimateOtherTokenAmount = (
   otherTokenSymbol: string,
 ): IOtherTokenOutput => {
   try {
-    const TOKENS = store.getState().config.standard;
+    const TOKENS = store.getState().config.tokens;
     const otherTokenAmount = new BigNumber(inputTokenAmount)
       .multipliedBy(otherTokenSupply)
       .dividedBy(inputTokenSupply)
@@ -61,43 +61,39 @@ export const getPnlpOutputEstimate = (
   tokenTwoAmount: string | BigNumber,
   tokenOneSupply: string | BigNumber,
   tokenTwoSupply: string | BigNumber,
-  lpTokenSupply: string | BigNumber,
-  lpToken?: string
+  lpTokenSupply: string | BigNumber
 ): IPnlpEstimateResponse => {
   try {
-    const LP_TOKENS = store.getState().config.lp;
-    const lpTokenSymbol = lpToken ? lpToken : getLpTokenSymbol(tokenOneSymbol, tokenTwoSymbol);
-    if (lpTokenSymbol) {
-      let pnlpEstimatedOutput: BigNumber = new BigNumber(0);
-
-      const pnlpBasedOnTokenOne = new BigNumber(tokenOneAmount)
-        .multipliedBy(lpTokenSupply)
-        .dividedBy(tokenOneSupply);
-      const pnlpBasedOnTokenTwo = new BigNumber(tokenTwoAmount)
-        .multipliedBy(lpTokenSupply)
-        .dividedBy(tokenTwoSupply);
-
-      if (
-        (tokenOneSymbol === "tez" && tokenTwoSymbol === "ctez") ||
-        (tokenOneSymbol === "ctez" && tokenTwoSymbol === "tez")
-      ) {
-        // For tez-ctez pair estimated PNLP output will be based on tez token only
-        pnlpEstimatedOutput =
-          tokenOneSymbol === "tez" ? pnlpBasedOnTokenOne : pnlpBasedOnTokenTwo;
-      } else {
-        pnlpEstimatedOutput = pnlpBasedOnTokenOne.isLessThan(
-          pnlpBasedOnTokenTwo
-        )
-          ? pnlpBasedOnTokenOne
-          : pnlpBasedOnTokenTwo;
-      }
-      return {
-        success: true,
-        pnlpEstimate: pnlpEstimatedOutput.decimalPlaces(LP_TOKENS[lpTokenSymbol].decimals, 1).toString(),
-      };
-    } else {
-      throw new Error("LP token not found for the given pairs.");
+    const ammAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
+    if (ammAddress === "false") {
+      throw new Error("No pool found for the given pair of tokens");
     }
+    const LP_TOKEN = store.getState().config.AMMs[ammAddress].lpToken;
+
+    let pnlpEstimatedOutput: BigNumber = new BigNumber(0);
+
+    const pnlpBasedOnTokenOne = new BigNumber(tokenOneAmount)
+      .multipliedBy(lpTokenSupply)
+      .dividedBy(tokenOneSupply);
+    const pnlpBasedOnTokenTwo = new BigNumber(tokenTwoAmount)
+      .multipliedBy(lpTokenSupply)
+      .dividedBy(tokenTwoSupply);
+
+    if (
+      (tokenOneSymbol === "XTZ" && tokenTwoSymbol === "CTez") ||
+      (tokenOneSymbol === "CTez" && tokenTwoSymbol === "XTZ")
+    ) {
+      // For tez-ctez pair estimated PNLP output will be based on tez token only
+      pnlpEstimatedOutput = tokenOneSymbol === "XTZ" ? pnlpBasedOnTokenOne : pnlpBasedOnTokenTwo;
+    } else {
+      pnlpEstimatedOutput = pnlpBasedOnTokenOne.isLessThan(pnlpBasedOnTokenTwo)
+        ? pnlpBasedOnTokenOne
+        : pnlpBasedOnTokenTwo;
+    }
+    return {
+      success: true,
+      pnlpEstimate: pnlpEstimatedOutput.decimalPlaces(LP_TOKEN.decimals, 1).toString(),
+    };
   } catch (error: any) {
     return {
       success: false,
@@ -127,7 +123,7 @@ export const getOutputTokensAmount = (
   slippage: string | BigNumber = "0.5"
 ): IOutputTokensAmountResponse => {
   try {
-    const TOKENS = store.getState().config.standard;
+    const TOKENS = store.getState().config.tokens;
     let tokenOneAmount = new BigNumber(burnAmount)
       .multipliedBy(tokenOneSupply)
       .dividedBy(lpTokenSupply);
@@ -167,21 +163,18 @@ export const getOutputTokensAmount = (
  * @param tokenTwoSymbol - Symbol of the second token of the selected pair
  * @param userTezosAddress - Tezos wallet address of the user
  * @param lpTokenSupply - Total supply of the LP token of the selected pair
- * @param lpToken - (Optional) Symbol of the LP token for the given pair if known/available
  */
 export const getCurrentPoolShare = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
   userTezosAddress: string,
-  lpTokenSupply: string | BigNumber,
-  lpToken?: string
+  lpTokenSupply: string | BigNumber
 ): Promise<ICurrentPoolShareResponse> => {
   try {
     const lpBalanceResult = await getPnlpBalance(
       tokenOneSymbol,
       tokenTwoSymbol,
-      userTezosAddress,
-      lpToken
+      userTezosAddress
     );
     if (lpBalanceResult.success) {
       const currentPoolShare = new BigNumber(lpBalanceResult.balance)

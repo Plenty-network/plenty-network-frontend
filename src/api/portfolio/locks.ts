@@ -34,7 +34,7 @@ import { ITokenPriceList } from "../util/types";
 import { ELocksState } from "../votes/types";
 import { voteEscrowAddress } from "../../common/walletconnect";
 import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
-import { IAMM, ITokens } from "../../config/types";
+import { IConfigPool, IConfigTokens } from "../../config/types";
 
 
 /**
@@ -258,7 +258,7 @@ export const getAllLocksRewardsData = async (
 const getBribesData = (
   bribes: IBribeIndexer[],
   tokenPrices: ITokenPriceList,
-  TOKENS: ITokens
+  TOKENS: IConfigTokens
 ): IBribesValueAndData => {
   try {
     let bribesValue = new BigNumber(0);
@@ -298,8 +298,8 @@ const getFeesData = (
   feeData: IFeeIndexer,
   feeClaimed: boolean,
   tokenPrices: ITokenPriceList,
-  AMM: IAMM,
-  TOKENS: ITokens
+  AMM: IConfigPool,
+  TOKENS: IConfigTokens
 ): IFeesValueAndData => {
   try {
     const token1Symbol = feeData.token1Symbol;

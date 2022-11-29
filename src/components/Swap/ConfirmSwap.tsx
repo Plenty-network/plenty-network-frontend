@@ -11,6 +11,8 @@ import { BigNumber } from "bignumber.js";
 import stableSwap from "../../../src/assets/icon/swap/stableswapViolet.svg";
 import { tokensList } from "../../constants/tokensList";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { Chain } from "../../config/types";
 
 interface IConfirmSwapProps {
   show: boolean;
@@ -31,6 +33,12 @@ interface IConfirmSwapProps {
   };
   secondTokenAmount: string | number;
   onClick: () => void;
+  tokens: {
+    name: string;
+    image: string;
+    chainType: Chain;
+    address: string | undefined;
+  }[];
 }
 function ConfirmSwap(props: IConfirmSwapProps) {
   const [isConvert, setConvert] = useState(false);
@@ -44,7 +52,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
   const swapRoute = useMemo(() => {
     if (props.routeDetails.path?.length >= 2) {
       return props.routeDetails.path.map((tokenName) =>
-        tokensList.find((token) => token.name === tokenName)
+        props.tokens.find((token) => token.name === tokenName)
       );
     }
 
@@ -59,16 +67,15 @@ function ConfirmSwap(props: IConfirmSwapProps) {
             <div className="border bg-muted-100/[0.1] rounded-2xl border-text-800 p-3 flex content-center justify-center">
               <div className="border rounded-xl border-text-800/[0.5] bg-muted-400 p-3 h-[50px] justify-center flex">
                 <span className="h-[26px] w-[26px]">
-                  <Image alt={"alt"} src={props.tokenIn.image} height={"26px"} width={"26px"} />
+                  <Image
+                    alt={"alt"}
+                    src={`/assets/tokens/${props.tokenIn.name.toLowerCase()}.png`}
+                    height={"26px"}
+                    width={"26px"}
+                  />
                 </span>
                 <span className="font-title3 ml-2">
-                  <span>
-                    {props.tokenIn.name === "tez"
-                      ? "TEZ"
-                      : props.tokenIn.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenIn.name}
-                  </span>
+                  <span>{tEZorCTEZtoUppercase(props.tokenIn.name)}</span>
                 </span>
               </div>
               <div className="ml-auto items-center flex font-medium2">{props.firstTokenAmount}</div>
@@ -79,16 +86,15 @@ function ConfirmSwap(props: IConfirmSwapProps) {
             <div className="border -mt-[18px] bg-muted-100/[0.1] rounded-2xl border-text-800 p-3 flex content-center justify-center">
               <div className="border rounded-xl border-text-800/[0.5] bg-muted-400 p-3 h-[50px] justify-center flex">
                 <span className="h-[26px] w-[26px]">
-                  <Image alt={"alt"} src={props.tokenOut.image} height={"26px"} width={"26px"} />
+                  <Image
+                    alt={"alt"}
+                    src={`/assets/tokens/${props.tokenOut.name.toLowerCase()}.png`}
+                    height={"26px"}
+                    width={"26px"}
+                  />
                 </span>
                 <span className="font-title3 ml-2">
-                  <span>
-                    {props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name}
-                  </span>
+                  <span>{tEZorCTEZtoUppercase(props.tokenOut.name)}</span>
                 </span>
               </div>
               <div className="ml-auto items-center flex font-medium2">
@@ -101,33 +107,15 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
                     1{" "}
                     {!isConvert
-                      ? props.tokenIn.name === "tez"
-                        ? "TEZ"
-                        : props.tokenIn.name === "ctez"
-                        ? "CTEZ"
-                        : props.tokenIn.name
-                      : props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name}{" "}
+                      ? tEZorCTEZtoUppercase(props.tokenIn.name)
+                      : tEZorCTEZtoUppercase(props.tokenOut.name)}{" "}
                     =
                     {!isConvert
                       ? ` ${props.routeDetails.exchangeRate.toFixed(3)} 
-                            ${
-                              props.tokenOut.name === "tez"
-                                ? "TEZ"
-                                : props.tokenOut.name === "ctez"
-                                ? "CTEZ"
-                                : props.tokenOut.name
-                            }`
-                      : `${Number(1 / Number(props.routeDetails.exchangeRate)).toFixed(3)} ${
-                          props.tokenIn.name === "tez"
-                            ? "TEZ"
-                            : props.tokenIn.name === "ctez"
-                            ? "CTEZ"
-                            : props.tokenIn.name
-                        }`}
+                            ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
+                      : `${Number(1 / Number(props.routeDetails.exchangeRate)).toFixed(
+                          3
+                        )} ${tEZorCTEZtoUppercase(props.tokenIn.name)}`}
                   </span>
                   <span className="relative top-px cursor-pointer ">
                     <Image alt={"alt"} src={ratesrefresh} onClick={(e) => convertRates(e)} />
@@ -165,13 +153,9 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${
-                    props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name
-                  }`}
+                  {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${tEZorCTEZtoUppercase(
+                    props.tokenOut.name
+                  )}`}
                 </div>
               </div>
 
@@ -284,7 +268,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                                 >
                                   <Image
                                     alt={"alt"}
-                                    src={token?.image}
+                                    src={`/assets/tokens/${token?.name.toLowerCase()}.png`}
                                     width={"28px"}
                                     height={"28px"}
                                   />
@@ -349,7 +333,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                                     >
                                       <Image
                                         alt={"alt"}
-                                        src={token?.image}
+                                        src={`/assets/tokens/${token?.name.toLowerCase()}.png`}
                                         width={"28px"}
                                         height={"28px"}
                                       />
@@ -372,7 +356,9 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                                       )}
                                     >
                                       <Image
-                                        src={swapRoute[index]?.image}
+                                        src={`/assets/tokens/${swapRoute[
+                                          index
+                                        ]?.name.toLowerCase()}.png`}
                                         width={"28px"}
                                         height={"28px"}
                                       />

@@ -1,7 +1,7 @@
 import { getDexAddress } from '../api/util/fetchConfig';
 import { store } from '../redux';
 import { BigNumber } from 'bignumber.js';
-import { TokenVariant } from '../config/types';
+import { TokenStandard } from '../config/types';
 import { MichelsonMap, OpKind } from '@taquito/taquito';
 import Config from '../config/config';
 import { dappClient } from '../common/walletconnect';
@@ -28,7 +28,7 @@ export const routerSwap = async (
     }
 
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const TOKEN_IN = TOKEN[path[0]];
 
@@ -58,10 +58,10 @@ export const routerSwap = async (
       .multipliedBy(new BigNumber(10).pow(TOKEN_IN.decimals))
       .decimalPlaces(0,1)
       .toString();
-    const tokenInCallType = TOKEN_IN.variant;
+    const tokenInCallType = TOKEN_IN.standard;
 
     let batch = null;
-    if (tokenInCallType === TokenVariant.TEZ) {
+    if (tokenInCallType === TokenStandard.TEZ) {
       batch = Tezos.wallet.batch([
         {
           kind: OpKind.TRANSACTION,
@@ -92,7 +92,7 @@ export const routerSwap = async (
     }
     } else {
       const tokenInInstance: any = await Tezos.contract.at(TOKEN_IN.address as string);
-      if (tokenInCallType === TokenVariant.FA12) {
+      if (tokenInCallType === TokenStandard.FA12) {
         batch = Tezos.wallet
           .batch()
           .withContractCall(
@@ -101,7 +101,7 @@ export const routerSwap = async (
           .withContractCall(
             routerInstance.methods.routerSwap(DataMap, swapAmount, recipent)
           );
-      } else if(tokenInCallType === TokenVariant.FA2) {
+      } else if(tokenInCallType === TokenStandard.FA2) {
         // FA2 Call
         batch = Tezos.wallet
           .batch()

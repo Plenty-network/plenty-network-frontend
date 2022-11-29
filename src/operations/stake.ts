@@ -3,7 +3,6 @@ import { BigNumber } from 'bignumber.js';
 import { getDexAddress } from '../api/util/fetchConfig';
 import { dappClient, voteEscrowAddress } from '../common/walletconnect';
 import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
-import { TokenVariant } from '../config/types';
 import { store } from '../redux';
 import { setFlashMessage } from '../redux/flashMessage';
 import { IFlashMessageProps } from '../redux/flashMessage/type';
@@ -45,7 +44,7 @@ export const stakePnlpTokensV1 = async (
       throw new Error('AMM does not exist for the selected pair.');
     }
     const gaugeAddress: string | undefined =
-      AMM[dexContractAddress].gaugeAddress;
+      AMM[dexContractAddress].gauge;
     if (gaugeAddress === undefined) {
       throw new Error('Gauge does not exist for the selected pair.');
     }
@@ -57,146 +56,45 @@ export const stakePnlpTokensV1 = async (
     }
     const Tezos = await dappClient().tezos();
 
-    const PNLP_TOKEN = AMM[dexContractAddress].lpToken;
-
     const pnlpTokenContractInstance = await Tezos.wallet.at(
-      PNLP_TOKEN.address as string
+      AMM[dexContractAddress].lpToken.address as string
     );
     const gaugeContractInstance = await Tezos.wallet.at(gaugeAddress);
     const voteEscrowInstance = await Tezos.wallet.at(voteEscrowAddress);
 
     const pnlpAmountToStake = new BigNumber(pnlpAmount).multipliedBy(
-      new BigNumber(10).pow(PNLP_TOKEN.decimals)
+      new BigNumber(10).pow(AMM[dexContractAddress].lpToken.decimals)
     );
 
     let batch = null;
 
-    if(tokenId) {
-      if (PNLP_TOKEN.variant === TokenVariant.FA12) {
-        batch = Tezos.wallet
-          .batch()
-          .withContractCall(
-            pnlpTokenContractInstance.methods.approve(
-              gaugeAddress,
-              pnlpAmountToStake.toString()
-            )
-          )
-          .withContractCall(
-            voteEscrowInstance.methods.update_operators([
-              {
-                add_operator: {
-                  owner: userTezosAddress,
-                  operator: gaugeAddress,
-                  token_id: tokenId,
-                },
+    if (tokenId) {
+      batch = Tezos.wallet
+        .batch()
+        .withContractCall(
+          pnlpTokenContractInstance.methods.approve(gaugeAddress, pnlpAmountToStake.toString())
+        )
+        .withContractCall(
+          voteEscrowInstance.methods.update_operators([
+            {
+              add_operator: {
+                owner: userTezosAddress,
+                operator: gaugeAddress,
+                token_id: tokenId,
               },
-            ])
-          )
-          .withContractCall(
-            gaugeContractInstance.methods.stake(
-              pnlpAmountToStake.toString(),
-              tokenId
-            )
-          );
-      } else if (PNLP_TOKEN.variant === TokenVariant.FA2) {
-        batch = Tezos.wallet
-          .batch()
-          .withContractCall(
-            pnlpTokenContractInstance.methods.update_operators([
-              {
-                add_operator: {
-                  owner: userTezosAddress,
-                  operator: gaugeAddress,
-                  token_id: PNLP_TOKEN.tokenId as number,
-                },
-              },
-            ])
-          )
-          .withContractCall(
-            voteEscrowInstance.methods.update_operators([
-              {
-                add_operator: {
-                  owner: userTezosAddress,
-                  operator: gaugeAddress,
-                  token_id: tokenId,
-                },
-              },
-            ])
-          )
-          .withContractCall(
-            gaugeContractInstance.methods.stake(
-              pnlpAmountToStake.toString(),
-              tokenId
-            )
-          )
-          .withContractCall(
-            pnlpTokenContractInstance.methods.update_operators([
-              {
-                remove_operator: {
-                  owner: userTezosAddress,
-                  operator: gaugeAddress,
-                  token_id: PNLP_TOKEN.tokenId as number,
-                },
-              },
-            ])
-          );
-      } else {
-        throw new Error(
-          'Invalid token variant for the PNLP selected. Token variants can be FA1.2 or FA2.'
+            },
+          ])
+        )
+        .withContractCall(
+          gaugeContractInstance.methods.stake(pnlpAmountToStake.toString(), tokenId)
         );
-      }
     } else {
-      if (PNLP_TOKEN.variant === TokenVariant.FA12) {
-        batch = Tezos.wallet
-          .batch()
-          .withContractCall(
-            pnlpTokenContractInstance.methods.approve(
-              gaugeAddress,
-              pnlpAmountToStake.toString()
-            )
-          )
-          .withContractCall(
-            gaugeContractInstance.methods.stake(
-              pnlpAmountToStake.toString(),
-              0
-            )
-          );
-      } else if (PNLP_TOKEN.variant === TokenVariant.FA2) {
-        batch = Tezos.wallet
-          .batch()
-          .withContractCall(
-            pnlpTokenContractInstance.methods.update_operators([
-              {
-                add_operator: {
-                  owner: userTezosAddress,
-                  operator: gaugeAddress,
-                  token_id: PNLP_TOKEN.tokenId as number,
-                },
-              },
-            ])
-          )
-          .withContractCall(
-            gaugeContractInstance.methods.stake(
-              pnlpAmountToStake.toString(),
-              0
-            )
-          )
-          .withContractCall(
-            pnlpTokenContractInstance.methods.update_operators([
-              {
-                remove_operator: {
-                  owner: userTezosAddress,
-                  operator: gaugeAddress,
-                  token_id: PNLP_TOKEN.tokenId as number,
-                },
-              },
-            ])
-          );
-      } else {
-        throw new Error(
-          'Invalid token variant for the PNLP selected. Token variants can be FA1.2 or FA2.'
-        );
-      }
+      batch = Tezos.wallet
+        .batch()
+        .withContractCall(
+          pnlpTokenContractInstance.methods.approve(gaugeAddress, pnlpAmountToStake.toString())
+        )
+        .withContractCall(gaugeContractInstance.methods.stake(pnlpAmountToStake.toString(), 0));
     }
 
     const batchOperation = await batch.send();
@@ -242,170 +140,105 @@ export const stakePnlpTokensV1 = async (
  * @param flashMessageContent - Content for the flash message object(optional)
  */
  export const stakePnlpTokens = async (
-  tokenOneSymbol: string,
-  tokenTwoSymbol: string,
-  pnlpAmount: string | BigNumber,
-  tokenId: number | undefined,
-  userTezosAddress: string,
-  transactionSubmitModal: TTransactionSubmitModal | undefined,
-  resetAllValues: TResetAllValues | undefined,
-  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  setActiveState: TSetActiveState | undefined,
-  flashMessageContent?: IFlashMessageProps
-): Promise<IOperationsResponse> => {
-  try {
-    const state = store.getState();
-    const AMM = state.config.AMMs;
-    const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
-    if (dexContractAddress === 'false') {
-      throw new Error('AMM does not exist for the selected pair.');
-    }
-    const gaugeAddress: string | undefined =
-      AMM[dexContractAddress].gaugeAddress;
-    if (gaugeAddress === undefined) {
-      throw new Error('Gauge does not exist for the selected pair.');
-    }
+   tokenOneSymbol: string,
+   tokenTwoSymbol: string,
+   pnlpAmount: string | BigNumber,
+   tokenId: number | undefined,
+   userTezosAddress: string,
+   transactionSubmitModal: TTransactionSubmitModal | undefined,
+   resetAllValues: TResetAllValues | undefined,
+   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+   setActiveState: TSetActiveState | undefined,
+   flashMessageContent?: IFlashMessageProps
+ ): Promise<IOperationsResponse> => {
+   try {
+     const state = store.getState();
+     const AMM = state.config.AMMs;
+     const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
+     if (dexContractAddress === "false") {
+       throw new Error("AMM does not exist for the selected pair.");
+     }
+     const gaugeAddress: string | undefined = AMM[dexContractAddress].gauge;
+     if (gaugeAddress === undefined) {
+       throw new Error("Gauge does not exist for the selected pair.");
+     }
 
-    const { CheckIfWalletConnected } = dappClient();
-    const walletResponse = await CheckIfWalletConnected();
-    if (!walletResponse.success) {
-      throw new Error('Wallet connection failed.');
-    }
-    const Tezos = await dappClient().tezos();
+     const { CheckIfWalletConnected } = dappClient();
+     const walletResponse = await CheckIfWalletConnected();
+     if (!walletResponse.success) {
+       throw new Error("Wallet connection failed.");
+     }
+     const Tezos = await dappClient().tezos();
 
-    const PNLP_TOKEN = AMM[dexContractAddress].lpToken;
+     const PNLP_TOKEN = AMM[dexContractAddress].lpToken;
 
-    const pnlpTokenContractInstance = await Tezos.wallet.at(
-      PNLP_TOKEN.address as string
-    );
-    const gaugeContractInstance = await Tezos.wallet.at(gaugeAddress);
-    const voteEscrowInstance = await Tezos.wallet.at(voteEscrowAddress);
+     const pnlpTokenContractInstance = await Tezos.wallet.at(PNLP_TOKEN.address);
+     const gaugeContractInstance = await Tezos.wallet.at(gaugeAddress);
+     const voteEscrowInstance = await Tezos.wallet.at(voteEscrowAddress);
 
-    const pnlpAmountToStake = new BigNumber(pnlpAmount).multipliedBy(
-      new BigNumber(10).pow(PNLP_TOKEN.decimals)
-    );
+     const pnlpAmountToStake = new BigNumber(pnlpAmount).multipliedBy(
+       new BigNumber(10).pow(PNLP_TOKEN.decimals)
+     );
 
-    const allBatchOperations: WalletParamsWithKind[] = [];
+     const allBatchOperations: WalletParamsWithKind[] = [];
 
-    if(PNLP_TOKEN.variant === TokenVariant.FA12) {
-      if(pnlpAmountToStake.isGreaterThan(0)) {
-        allBatchOperations.push({
-          kind: OpKind.TRANSACTION,
-          ...pnlpTokenContractInstance.methods
-            .approve(gaugeAddress, pnlpAmountToStake.decimalPlaces(0, 1).toString())
-            .toTransferParams(),
-        });
-      }
-      if(tokenId) {
-        allBatchOperations.push({
-          kind: OpKind.TRANSACTION,
-          ...voteEscrowInstance.methods
-            .update_operators([
-              {
-                add_operator: {
-                  owner: userTezosAddress,
-                  operator: gaugeAddress,
-                  token_id: tokenId,
-                },
-              },
-            ])
-            .toTransferParams(),
-        });
-      }
-      allBatchOperations.push({
-        kind: OpKind.TRANSACTION,
-        ...gaugeContractInstance.methods
-          .stake(pnlpAmountToStake.decimalPlaces(0, 1).toString(), tokenId || 0)
-          .toTransferParams(),
-      });
-    } else if (PNLP_TOKEN.variant === TokenVariant.FA2) {
-      if(pnlpAmountToStake.isGreaterThan(0)) {
-        allBatchOperations.push({
-          kind: OpKind.TRANSACTION,
-          ...pnlpTokenContractInstance.methods
-            .update_operators([
-              {
-                add_operator: {
-                  owner: userTezosAddress,
-                  operator: gaugeAddress,
-                  token_id: PNLP_TOKEN.tokenId as number,
-                },
-              },
-            ])
-            .toTransferParams(),
-        });
-      }
-      if(tokenId) {
-        allBatchOperations.push({
-          kind: OpKind.TRANSACTION,
-          ...voteEscrowInstance.methods
-            .update_operators([
-              {
-                add_operator: {
-                  owner: userTezosAddress,
-                  operator: gaugeAddress,
-                  token_id: tokenId,
-                },
-              },
-            ])
-            .toTransferParams(),
-        });
-      }
-      allBatchOperations.push({
-        kind: OpKind.TRANSACTION,
-        ...gaugeContractInstance.methods
-          .stake(pnlpAmountToStake.decimalPlaces(0, 1).toString(), tokenId || 0)
-          .toTransferParams(),
-      });
-      if(pnlpAmountToStake.isGreaterThan(0)) {
-        allBatchOperations.push({
-          kind: OpKind.TRANSACTION,
-          ...pnlpTokenContractInstance.methods
-            .update_operators([
-              {
-                remove_operator: {
-                  owner: userTezosAddress,
-                  operator: gaugeAddress,
-                  token_id: PNLP_TOKEN.tokenId as number,
-                },
-              },
-            ])
-            .toTransferParams(),
-        });
-      }
-    } else {
-      throw new Error(
-        'Invalid token variant for the PNLP selected. Token variants can be FA1.2 or FA2.'
-      );
-    }
+     if (pnlpAmountToStake.isGreaterThan(0)) {
+       allBatchOperations.push({
+         kind: OpKind.TRANSACTION,
+         ...pnlpTokenContractInstance.methods
+           .approve(gaugeAddress, pnlpAmountToStake.decimalPlaces(0, 1).toString())
+           .toTransferParams(),
+       });
+     }
+     if (tokenId) {
+       allBatchOperations.push({
+         kind: OpKind.TRANSACTION,
+         ...voteEscrowInstance.methods
+           .update_operators([
+             {
+               add_operator: {
+                 owner: userTezosAddress,
+                 operator: gaugeAddress,
+                 token_id: tokenId,
+               },
+             },
+           ])
+           .toTransferParams(),
+       });
+     }
+     allBatchOperations.push({
+       kind: OpKind.TRANSACTION,
+       ...gaugeContractInstance.methods
+         .stake(pnlpAmountToStake.decimalPlaces(0, 1).toString(), tokenId || 0)
+         .toTransferParams(),
+     });
 
-    const batch = Tezos.wallet.batch(allBatchOperations);
-    const batchOperation = await batch.send();
+     const batch = Tezos.wallet.batch(allBatchOperations);
+     const batchOperation = await batch.send();
 
-    setShowConfirmTransaction && setShowConfirmTransaction(false);
-    transactionSubmitModal &&
-      transactionSubmitModal(batchOperation.opHash as string);
-    setActiveState && setActiveState(ActiveLiquidity.Rewards);
-    resetAllValues && resetAllValues();
-    if (flashMessageContent) {
-      store.dispatch(setFlashMessage(flashMessageContent));
-    }
-    await batchOperation.confirmation(1);
+     setShowConfirmTransaction && setShowConfirmTransaction(false);
+     transactionSubmitModal && transactionSubmitModal(batchOperation.opHash as string);
+     setActiveState && setActiveState(ActiveLiquidity.Rewards);
+     resetAllValues && resetAllValues();
+     if (flashMessageContent) {
+       store.dispatch(setFlashMessage(flashMessageContent));
+     }
+     await batchOperation.confirmation(1);
 
-    const status = await batchOperation.status();
-    if(status === "applied"){
-      return {
-        success: true,
-        operationId: batchOperation.opHash,
-      };
-    }else{
-      throw new Error(status);
-    }
-  } catch (error: any) {
-    return {
-      success: false,
-      operationId: undefined,
-      error: error.message,
-    };
-  }
-};
+     const status = await batchOperation.status();
+     if (status === "applied") {
+       return {
+         success: true,
+         operationId: batchOperation.opHash,
+       };
+     } else {
+       throw new Error(status);
+     }
+   } catch (error: any) {
+     return {
+       success: false,
+       operationId: undefined,
+       error: error.message,
+     };
+   }
+ };

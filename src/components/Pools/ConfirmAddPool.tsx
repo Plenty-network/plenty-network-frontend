@@ -14,6 +14,7 @@ import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import stableSwap from "../../../src/assets/icon/swap/stableswapViolet.svg";
 import { tokensList } from "../../constants/tokensList";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface IConfirmSwapProps {
   show: boolean;
@@ -78,13 +79,7 @@ function ConfirmAddPool(props: IConfirmSwapProps) {
                   <Image alt={"alt"} src={props.tokenIn.image} height={"26px"} width={"26px"} />
                 </span>
                 <span className="font-title3 ml-2">
-                  <span>
-                    {props.tokenIn.name === "tez"
-                      ? "TEZ"
-                      : props.tokenIn.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenIn.name}
-                  </span>
+                  <span>{tEZorCTEZtoUppercase(props.tokenIn.name)}</span>
                 </span>
               </div>
               <div className="ml-auto items-center flex font-medium2">
@@ -104,13 +99,7 @@ function ConfirmAddPool(props: IConfirmSwapProps) {
                   <Image alt={"alt"} src={props.tokenOut.image} height={"26px"} width={"26px"} />
                 </span>
                 <span className="font-title3 ml-2">
-                  <span>
-                    {props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name}
-                  </span>
+                  <span>{tEZorCTEZtoUppercase(props.tokenOut.name)}</span>
                 </span>
               </div>
               <div className="ml-auto items-center flex font-medium2">
@@ -127,37 +116,17 @@ function ConfirmAddPool(props: IConfirmSwapProps) {
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
                     1{" "}
                     {!isConvert
-                      ? props.tokenIn.name === "tez"
-                        ? "TEZ"
-                        : props.tokenIn.name === "ctez"
-                        ? "CTEZ"
-                        : props.tokenIn.name
-                      : props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name}{" "}
+                      ? tEZorCTEZtoUppercase(props.tokenIn.name)
+                      : tEZorCTEZtoUppercase(props.tokenOut.name)}{" "}
                     =
                     {!isConvert
                       ? ` ${new BigNumber(props.secondTokenAmount)
                           .dividedBy(new BigNumber(props.firstTokenAmount))
                           .toFixed(3)} 
-                            ${
-                              props.tokenOut.name === "tez"
-                                ? "TEZ"
-                                : props.tokenOut.name === "ctez"
-                                ? "CTEZ"
-                                : props.tokenOut.name
-                            }`
+                            ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
                       : `${new BigNumber(props.firstTokenAmount)
                           .dividedBy(new BigNumber(props.secondTokenAmount))
-                          .toFixed(3)} ${
-                          props.tokenIn.name === "tez"
-                            ? "TEZ"
-                            : props.tokenIn.name === "ctez"
-                            ? "CTEZ"
-                            : props.tokenIn.name
-                        }`}
+                          .toFixed(3)} ${tEZorCTEZtoUppercase(props.tokenIn.name)}`}
                   </span>
                   <span className="relative top-px cursor-pointer ">
                     <Image alt={"alt"} src={ratesrefresh} onClick={(e) => convertRates(e)} />

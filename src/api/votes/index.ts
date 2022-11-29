@@ -26,7 +26,6 @@ import { Bribes, VolumeV1Data, VolumeVeData } from "../pools/types";
 import { fetchEpochData } from "../util/epoch";
 import { IEpochData, IEpochResponse } from "../util/types";
 import { pools } from "../../redux/pools";
-import { IAmmContracts } from "../../config/types";
 import { getDexAddress } from "../util/fetchConfig";
 import { store } from "../../redux";
 import { IVotes } from "../../operations/types";
@@ -246,7 +245,7 @@ export const votesPageDataWrapper = async (
     for (let poolData of Object.keys(rewardData.allData)) {
       const AMM = AMMS[poolData];
 
-      if(AMM && AMM.gaugeAddress) {
+      if(AMM && AMM.gauge) {
         allData[poolData] = {
           tokenA: AMM.token1.symbol,
           tokenB: AMM.token2.symbol,
