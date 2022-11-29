@@ -435,7 +435,9 @@ function NewPoolMain(props: ILiquidityProps) {
             <Image src={infoBlue} />
           </p>
           <p className="font-body2 text-info-500 px-3 md:w-auto w-[249px]">
-            There is already a pool and gauge for the tokens selected.
+            {isGauge
+              ? "There is already a pool and gauge for the tokens selected."
+              : " There is already a pool for the tokens selected."}
           </p>
           <p
             className="ml-auto relative top-[0px] bg-info-500/[0.1] text-info-500 cursor-pointer font-body2 rounded-[6px] px-3 py-2 h-[34px]"
