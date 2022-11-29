@@ -138,11 +138,22 @@ function SwapTab(props: ISwapTabProps) {
   };
   const [priceDiff, setpriceDiff] = useState("");
   useEffect(() => {
-    const res = percentageChange(
-      new BigNumber(Number(props.firstTokenAmount) * Number(props.tokenPrice[props.tokenIn.name])),
-      new BigNumber(Number(props.secondTokenAmount) * Number(props.tokenPrice[props.tokenOut.name]))
-    );
-    setpriceDiff(res.toFixed(2));
+    if (
+      props.tokenIn.name &&
+      props.tokenOut.name &&
+      Number(props.firstTokenAmount) > 0 &&
+      Number(props.secondTokenAmount) > 0
+    ) {
+      const res = percentageChange(
+        new BigNumber(
+          Number(props.firstTokenAmount) * Number(props.tokenPrice[props.tokenIn.name])
+        ),
+        new BigNumber(
+          Number(props.secondTokenAmount) * Number(props.tokenPrice[props.tokenOut.name])
+        )
+      );
+      setpriceDiff(res.toFixed(2));
+    }
   }, [props.firstTokenAmount, props.secondTokenAmount]);
   useEffect(() => {
     setExpertMode(userSettings.expertMode);
