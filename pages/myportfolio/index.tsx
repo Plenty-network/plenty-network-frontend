@@ -617,6 +617,7 @@ function MyPortfolio(props: any) {
   }
   const handleWithdrawOperation = () => {
     setContentTransaction(`Withdraw ${nFormatter(manageData.baseValue)} PLY`);
+    setClaimState(-1 as EClaimAllState);
     setShowWithdraw(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -757,7 +758,7 @@ function MyPortfolio(props: any) {
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
-
+        setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -780,6 +781,7 @@ function MyPortfolio(props: any) {
   const handleLockOperation = () => {
     setContentTransaction(`Locking ${plyInput} PLY`);
     setShowCreateLockModal(false);
+    setClaimState(-1 as EClaimAllState);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     localStorage.setItem(FIRST_TOKEN_AMOUNT, plyInput);
@@ -859,7 +861,7 @@ function MyPortfolio(props: any) {
     setIsManageLock(false);
     setContentTransaction(`Locking ${plyInput} PLY`);
     setShowCreateLockModal(false);
-
+    setClaimState(-1 as EClaimAllState);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     localStorage.setItem(TOKEN_ID, manageData.tokenId.toString());
@@ -929,6 +931,7 @@ function MyPortfolio(props: any) {
   };
   const IncreaseLockEndOperation = () => {
     setIsManageLock(false);
+    setClaimState(-1 as EClaimAllState);
     setContentTransaction(`Increase lock`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
@@ -1001,6 +1004,7 @@ function MyPortfolio(props: any) {
   };
   const IncreaseLockValueOperation = () => {
     setIsManageLock(false);
+    setClaimState(-1 as EClaimAllState);
     setContentTransaction(`Increase lock`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
@@ -1122,7 +1126,7 @@ function MyPortfolio(props: any) {
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
-
+        setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -1194,7 +1198,7 @@ function MyPortfolio(props: any) {
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
-
+        setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -1267,7 +1271,7 @@ function MyPortfolio(props: any) {
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
-
+        setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -1340,7 +1344,7 @@ function MyPortfolio(props: any) {
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
-
+        setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -1420,7 +1424,7 @@ function MyPortfolio(props: any) {
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
-
+        setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -1501,7 +1505,7 @@ function MyPortfolio(props: any) {
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
-
+        setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -1582,7 +1586,7 @@ function MyPortfolio(props: any) {
         setContentTransaction("");
       } else {
         setBalanceUpdate(true);
-
+        setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
@@ -1602,7 +1606,6 @@ function MyPortfolio(props: any) {
       }
     });
   };
-
   return (
     <>
       <SideBarHOC>
@@ -1893,6 +1896,11 @@ function MyPortfolio(props: any) {
           show={showConfirmTransaction}
           setShow={setShowConfirmTransaction}
           content={contentTransaction}
+          clainText={
+            claimState > 0
+              ? "Calculating maximum claimable rewards, this may take some a few seconds. Please wait patiently."
+              : ""
+          }
         />
       )}
       {showWithdraw && (
