@@ -566,37 +566,11 @@ function Swap(props: ISwapProps) {
       setTokenOut({} as tokenParameter);
     }
   };
-  // useEffect(() => {
-  //   if (props.otherProps.walletAddress) {
-  //     const updateBalance = async () => {
-  //       const balancePromises = [];
-
-  //       Object.keys(tokenIn).length !== 0 &&
-  //         balancePromises.push(getUserBalanceByRpc(tokenIn.name, props.otherProps.walletAddress));
-  //       Object.keys(tokenOut).length !== 0 &&
-  //         balancePromises.push(getUserBalanceByRpc(tokenOut.name, props.otherProps.walletAddress));
-
-  //       const balanceResponse = await Promise.all(balancePromises);
-
-  //       setUserBalances((prev) => ({
-  //         ...prev,
-  //         ...balanceResponse.reduce(
-  //           (acc, cur) => ({
-  //             ...acc,
-  //             [cur.identifier]: cur.balance.toNumber(),
-  //           }),
-  //           {}
-  //         ),
-  //       }));
-  //     };
-  //     updateBalance();
-  //   }
-  // }, [tokenIn, tokenOut, props.otherProps.walletAddress, TOKEN, balanceUpdate]);
 
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
       name: token[0],
-      image: `/assets/Tokens/${token[1].symbol}.png`,
+      image: `/assets/Tokens/${token[1]?.symbol}.png`,
       chainType: token[1]?.originChain as Chain,
       address: token[1].address,
     }));
