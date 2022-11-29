@@ -230,7 +230,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
     [valueFormat]
   );
   function ManageBtn(props: IManageBtnProps): any {
-    if (props.isManage) {
+    if (props.isManage || !props.isGauge) {
       return (
         <div
           className="bg-primary-500/10 md:w-[151px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
@@ -312,7 +312,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           closeFn={setShowLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}
-          isGaugeAvailable={true}
+          isGaugeAvailable={isGaugeAvailable}
         />
       )}
     </>
