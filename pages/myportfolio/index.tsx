@@ -1366,6 +1366,7 @@ function MyPortfolio(props: any) {
   };
   const handleClaimALLEpoch = () => {
     setContentTransaction(`Claim lock rewards for <Epoch ${epochClaim}`);
+    setClaimState(EClaimAllState.EPOCH);
     setShowClaimPly(false);
     setShowClaimPlyInd(false);
     setShowConfirmTransaction(true);

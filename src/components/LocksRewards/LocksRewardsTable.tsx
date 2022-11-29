@@ -17,7 +17,6 @@ import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 export function LocksTableRewards(props: IVotesTableRewards) {
   const { valueFormat } = useTableNumberUtils();
 
-  //const [showClaimPly, setShowClaimPly] = React.useState(false);
   const [epochNo, setEpochNo] = React.useState("");
   const [claimAllData, setClaimAllData] = React.useState<ILockRewardsEpochData[]>(
     [] as ILockRewardsEpochData[]
@@ -48,7 +47,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
       setIsFetched(true);
       setvotesArray([]);
     }
-  }, [props.selectedDropDown.tokenId]);
+  }, [props.selectedDropDown.tokenId, props.allLocksRewardsData]);
   const NoData = React.useMemo(() => {
     if (isFetched && newArr.length === 0) {
       return (
@@ -71,14 +70,14 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         });
       }
     });
-  }, [votesArray]);
+  }, [votesArray, votesArray.length]);
   React.useEffect(() => {
     if (newArr.length > 0) {
       setNewdata(newArr.reverse());
     } else {
       setNewdata([]);
     }
-  }, [newArr]);
+  }, [newArr, newArr.length]);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
