@@ -17,6 +17,10 @@ body.swap {
     url('/assets/image/Noise4.png');
   color: #ffffff;
 }
+.animate__animated.animate__fadeInDown {
+  --animate-duration: 500ms;
+}
+
 
 html{
   height: -webkit-fill-available;

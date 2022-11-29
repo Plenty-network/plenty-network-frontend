@@ -884,7 +884,7 @@ function SwapTab(props: ISwapTabProps) {
         {openSwapDetails && props.routeDetails.success && (
           <div
             className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 animate__animated ${
-              animateOpenSwapDetails ? "animate__fadeInDown animate__faster" : "animate__fadeOutUp"
+              animateOpenSwapDetails ? "animate__fadeInDown animate__faster" : ""
             }`}
           >
             <div className="flex">

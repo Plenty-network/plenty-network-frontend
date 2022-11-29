@@ -1,17 +1,17 @@
 import type { NextPage } from "next";
 import PropTypes from "prop-types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import MainAirdrop from "../../src/components/Airdrop";
 import Disclaimer from "../../src/components/Airdrop/Disclaimer";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
-import Swap from "../../src/components/Swap";
 import { useInterval } from "../../src/hooks/useInterval";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getEpochData } from "../../src/redux/epoch/epoch";
-import { AppDispatch, store, useAppSelector } from "../../src/redux/index";
+import { AppDispatch, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
-import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
+import { fetchWallet } from "../../src/redux/wallet/wallet";
 
 const Airdrop: NextPage = () => {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -22,10 +22,8 @@ const Airdrop: NextPage = () => {
   const amm = useAppSelector((state) => state.config.AMMs);
 
   const dispatch = useDispatch<AppDispatch>();
+  const [isDisclaimer, setIsDisclaimer] = useState(true);
 
-  const connectTempleWallet = () => {
-    return dispatch(walletConnection());
-  };
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -58,20 +56,15 @@ const Airdrop: NextPage = () => {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
-  const disconnectUserWallet = async () => {
-    if (userAddress) {
-      return dispatch(walletDisconnection());
-    }
-  };
-  const otherPageProps = {
-    connectWallet: connectTempleWallet,
-    disconnectWallet: disconnectUserWallet,
-    walletAddress: userAddress,
-  };
+
   return (
     <>
       <SideBarHOC makeTopBarScroll>
-        <Disclaimer show={true} setShow={() => {}} />
+        {isDisclaimer ? (
+          <Disclaimer show={isDisclaimer} setShow={setIsDisclaimer} />
+        ) : (
+          <MainAirdrop />
+        )}
       </SideBarHOC>
     </>
   );

@@ -5,9 +5,12 @@ import info from "../../../src/assets/icon/common/infoIcon.svg";
 
 import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
+
+import checkGrey from "../../assets/icon/airdrop/checkGrey.svg";
 import link from "../../assets/icon/pools/external_violet.svg";
 import HeaderSelection from "./HeaderSelection";
 import List from "./DisclaimerList";
+import Button from "../Button/Button";
 interface IDisclaimerProps {
   show: boolean;
 
@@ -56,6 +59,18 @@ function Disclaimer(props: IDisclaimerProps) {
           <HeaderSelection chain={chain} setChain={setChain} />
           <div className="mt-4">
             <List />
+          </div>
+          <div className="border-t border-text-800 my-4"></div>
+          <div className="flex items-center">
+            <p>
+              <Image src={checkGrey} />
+            </p>
+            <p className="font-body4 text-text-50 ml-2  -mt-1">I agree, do not show this again</p>
+          </div>
+          <div className="mt-[18px]">
+            <Button color={"primary"} onClick={() => props.setShow(false)}>
+              Continue
+            </Button>
           </div>
         </>
       }
