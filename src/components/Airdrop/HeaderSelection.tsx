@@ -6,9 +6,11 @@ import { SideBarHOC } from "../Sidebar/SideBarHOC";
 import Link from "next/link";
 import clsx from "clsx";
 import { ChainAirdrop } from "./Disclaimer";
+import WalletAddress from "./WalletAddress";
 export interface IHeaderSelection {
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
   chain: ChainAirdrop;
+  isDisclaimer: boolean;
 }
 
 function HeaderSelection(props: IHeaderSelection) {
@@ -36,6 +38,11 @@ function HeaderSelection(props: IHeaderSelection) {
       >
         {ChainAirdrop.Other_chain}
       </div>
+      {!props.isDisclaimer && props.chain === ChainAirdrop.Other_chain ? (
+        <div className="ml-auto mt-0.5">
+          <WalletAddress />
+        </div>
+      ) : null}
     </div>
   );
 }

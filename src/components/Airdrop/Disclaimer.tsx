@@ -56,7 +56,7 @@ function Disclaimer(props: IDisclaimerProps) {
             </span>
           </div>
           <div className="border-t border-text-800 my-4"></div>
-          <HeaderSelection chain={chain} setChain={setChain} />
+          <HeaderSelection chain={chain} setChain={setChain} isDisclaimer={true} />
           <div className="mt-4">
             <List />
           </div>
