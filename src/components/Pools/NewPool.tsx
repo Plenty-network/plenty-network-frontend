@@ -220,7 +220,7 @@ export function NewPool(props: IManageLiquidityProps) {
           headerText: "Transaction submitted",
           trailingText: `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
             TOKEN_B
-          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool confirmed
+          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool 
           `,
           linkText: "View in Explorer",
           isLoading: true,
@@ -241,7 +241,7 @@ export function NewPool(props: IManageLiquidityProps) {
                   TOKEN_A
                 )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
                   FIRST_TOKEN_AMOUNT
-                )} pool confirmed`,
+                )} pool `,
                 linkText: "View in Explorer",
                 isLoading: true,
                 onClick: () => {
@@ -277,7 +277,7 @@ export function NewPool(props: IManageLiquidityProps) {
                   TOKEN_A
                 )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
                   FIRST_TOKEN_AMOUNT
-                )} pool rejected`,
+                )} pool `,
                 linkText: "",
                 isLoading: true,
               })
@@ -303,7 +303,7 @@ export function NewPool(props: IManageLiquidityProps) {
           headerText: "Transaction submitted",
           trailingText: `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
             TOKEN_B
-          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool confirmed`,
+          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool `,
           linkText: "View in Explorer",
           isLoading: true,
           transactionId: "",
@@ -323,7 +323,7 @@ export function NewPool(props: IManageLiquidityProps) {
                   TOKEN_A
                 )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
                   FIRST_TOKEN_AMOUNT
-                )} pool confirmed`,
+                )} pool `,
                 linkText: "View in Explorer",
                 isLoading: true,
                 onClick: () => {
@@ -354,7 +354,7 @@ export function NewPool(props: IManageLiquidityProps) {
                   TOKEN_A
                 )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
                   FIRST_TOKEN_AMOUNT
-                )} pool rejected`,
+                )} pool `,
                 linkText: "",
                 isLoading: true,
               })
@@ -484,7 +484,7 @@ export function NewPool(props: IManageLiquidityProps) {
           setShow={setShowConfirmTransaction}
           content={`Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
             TOKEN_B
-          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool confirmed`}
+          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool `}
         />
       )}
       {showTransactionSubmitModal && (
@@ -498,7 +498,7 @@ export function NewPool(props: IManageLiquidityProps) {
           }
           content={`Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
             TOKEN_B
-          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool confirmed`}
+          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool s`}
         />
       )}
     </>
