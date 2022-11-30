@@ -27,6 +27,7 @@ import newPool from "../../assets/icon/pools/newPool.svg";
 import Image from "next/image";
 import clsx from "clsx";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 export interface IShortCardProps {
   className?: string;
@@ -39,6 +40,10 @@ export interface IShortCardProps {
   setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
   showLiquidityModal: boolean;
   reFetchPool: boolean;
+  data: {
+    success: boolean;
+    data: IPoolsDataWrapperResponse[];
+  };
 }
 export interface IManageBtnProps {
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -53,7 +58,13 @@ export function ShortCard(props: IShortCardProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
+  // const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
+  //   props.poolsFilter,
+  //   "",
+  //   props.reFetchPool
+  // );
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
+    props.data?.data,
     props.poolsFilter,
     "",
     props.reFetchPool
@@ -75,12 +86,12 @@ export function ShortCard(props: IShortCardProps) {
     else return "";
   };
   const NoData = React.useMemo(() => {
-    if (userAddress && props.activeStateTab === PoolsCardHeader.Mypools) {
+    if (userAddress && props.activeStateTab === PoolsCardHeader.Mypools && isFetched) {
       return <NoContentAvailable setActiveStateTab={props.setActiveStateTab} />;
-    } else if (poolsTableData.length === 0 && props.searchValue !== "") {
+    } else if (poolsTableData.length === 0 && props.searchValue !== "" && isFetched) {
       return <NoSearchResult />;
     }
-  }, [userAddress, poolsTableData]);
+  }, [userAddress, poolsTableData, isFetched]);
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "USDC.e",
     image: `/assets/tokens/USDC.e.png`,
@@ -185,15 +196,19 @@ export function ShortCard(props: IShortCardProps) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x) => (
           <>
-            {x.isStakeAvailable ? (
-              <Image src={stake} width={"20px"} height={"20px"} />
-            ) : !x.isGaugeAvailable ? (
-              <Image src={newPool} width={"20px"} height={"20px"} />
+            {!x.isGaugeAvailable ? (
+              <ToolTip
+                id="tooltipM"
+                position={Position.top}
+                toolTipChild={<div className="">No gauge for the pool</div>}
+              >
+                <Image src={newPool} width={"20px"} height={"20px"} />
+              </ToolTip>
             ) : null}
             <div
               className={clsx(
                 "flex gap-1 items-center max-w-[153px]",
-                x.isStakeAvailable || !x.isGaugeAvailable ? "ml-[14px]" : "ml-[34px]"
+                !x.isGaugeAvailable ? "ml-[14px]" : "ml-[34px]"
               )}
             >
               <CircularOverLappingImage
@@ -392,7 +407,7 @@ export function ShortCard(props: IShortCardProps) {
           isGaugeAvailable={isGaugeAvailable}
         />
       )}
-      <div className={` overflow-x-auto inner pr-5  ${props.className}`}>
+      <div className={` overflow-x-auto inner  ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={poolsTableData}

@@ -171,25 +171,27 @@ function TokenModalPool(props: ISwapModalProps) {
           </div>
           <div className="flex flex-wrap mt-1">
             {topTokensListArray.map((token, index) => {
-              return (
-                <div
-                  className={clsx(
-                    "border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100",
-                    props.tokenIn.name === token.name || props.tokenOut.name === token.name
-                      ? "cursor-not-allowed"
-                      : "cursor-pointer"
-                  )}
-                  key={index}
-                  {...(props.tokenIn.name === token.name || props.tokenOut.name === token.name
-                    ? {}
-                    : { onClick: () => props.selectToken(token) })}
-                >
-                  <span className="w-[18px] h-[18px] relative top-1">
-                    <Image alt={"alt"} src={token.image} width={"18px"} height={"18px"} />{" "}
-                  </span>
-                  <span className="font-body3">{tEZorCTEZtoUppercase(token.name)}</span>
-                </div>
-              );
+              if (token.name !== "XTZ") {
+                return (
+                  <div
+                    className={clsx(
+                      "border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100",
+                      props.tokenIn.name === token.name || props.tokenOut.name === token.name
+                        ? "cursor-not-allowed"
+                        : "cursor-pointer"
+                    )}
+                    key={index}
+                    {...(props.tokenIn.name === token.name || props.tokenOut.name === token.name
+                      ? {}
+                      : { onClick: () => props.selectToken(token) })}
+                  >
+                    <span className="w-[18px] h-[18px] relative top-1">
+                      <Image alt={"alt"} src={token.image} width={"18px"} height={"18px"} />{" "}
+                    </span>
+                    <span className="font-body3">{tEZorCTEZtoUppercase(token.name)}</span>
+                  </div>
+                );
+              }
             })}
           </div>
           {Object.keys(tokensToShow).length === 0 ? (

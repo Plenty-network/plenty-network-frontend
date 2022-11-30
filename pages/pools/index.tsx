@@ -19,6 +19,8 @@ import { USERADDRESS } from "../../src/constants/localStorage";
 import { NewPool } from "../../src/components/Pools/NewPool";
 import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
 import clsx from "clsx";
+import { poolsDataWrapper } from "../../src/api/pools";
+import { IPoolsDataWrapperResponse } from "../../src/api/pools/types";
 export interface IIndexProps {}
 export enum AMM_TYPE {
   VOLATILE = "VOLATILE",
@@ -78,6 +80,18 @@ export default function Pools(props: IIndexProps) {
     setShowNewPoolPopup(true);
   };
   const [reFetchPool, setReFetchPool] = React.useState(false);
+  const [poolsData, setPoolsData] = React.useState<{
+    success: boolean;
+    data: IPoolsDataWrapperResponse[];
+  }>({} as { success: boolean; data: IPoolsDataWrapperResponse[] });
+  useEffect(() => {
+    setPoolsData({ success: false, data: [] as IPoolsDataWrapperResponse[] });
+    if (Object.keys(tokenPrices).length !== 0) {
+      poolsDataWrapper(walletAddress ? walletAddress : undefined, tokenPrices).then((res) => {
+        setPoolsData({ success: true, data: Object.values(res.allData) });
+      });
+    }
+  }, [walletAddress, tokenPrices, reFetchPool]);
   return (
     <>
       <SideBarHOC>
@@ -132,6 +146,7 @@ export default function Pools(props: IIndexProps) {
               setShowLiquidityModal={setShowLiquidityModal}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
+              data={poolsData}
             />
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
@@ -144,6 +159,7 @@ export default function Pools(props: IIndexProps) {
               setShowLiquidityModal={setShowLiquidityModal}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
+              data={poolsData}
             />
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
@@ -156,6 +172,7 @@ export default function Pools(props: IIndexProps) {
               setShowLiquidityModal={setShowLiquidityModal}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
+              data={poolsData}
             />
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
@@ -169,6 +186,7 @@ export default function Pools(props: IIndexProps) {
               setShowLiquidityModal={setShowLiquidityModal}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
+              data={poolsData}
             />
           )}
           <NewPool
