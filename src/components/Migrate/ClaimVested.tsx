@@ -91,7 +91,7 @@ function ClaimVested(props: IMigrateProps) {
     setConfirmPLYPopup(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, props.vestedData.claimableAmount.toFixed(2));
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, props.vestedData.claimableAmount?.toFixed(2));
     claim(transactionSubmitModal, resetAllValues, setShowConfirmTransaction, {
       flashType: Flashtype.Info,
       headerText: "Transaction submitted",
@@ -235,7 +235,7 @@ function ClaimVested(props: IMigrateProps) {
                       "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 "
                     )}
                     placeholder="0.0"
-                    value={props.vestedData.claimableAmount.toFixed(6)}
+                    value={props.vestedData?.claimableAmount?.toFixed(6)}
                   />
                 </div>
               </div>
@@ -258,7 +258,7 @@ function ClaimVested(props: IMigrateProps) {
                       position={Position.right}
                     >
                       {Number(allBalance.allTokensBalances[tokenOut.name]?.balance) > 0
-                        ? Number(allBalance.allTokensBalances[tokenOut.name]?.balance).toFixed(4)
+                        ? Number(allBalance.allTokensBalances[tokenOut.name]?.balance)?.toFixed(4)
                         : 0}
                     </ToolTip>
                   ) : (
@@ -268,7 +268,7 @@ function ClaimVested(props: IMigrateProps) {
               </div>
               <div className="text-right ml-auto font-body2 text-text-400 flex">
                 <span className="text-white mr-1">
-                  + {props.vestedData.vestedAmount.toFixed(2)} PLY
+                  + {props.vestedData?.vestedAmount?.toFixed(2)} PLY
                 </span>{" "}
                 vested <span className="md:block hidden ml-1">for upto 25-Aug-2024</span>
                 <span className="relative top-1 md:hidden">

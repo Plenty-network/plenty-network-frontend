@@ -304,7 +304,9 @@ function Migrate(props: IMigrateProps) {
                     position={Position.right}
                   >
                     {Number(props.allBalance.allTokensBalances[tokenIn.name]?.balance) > 0
-                      ? Number(props.allBalance.allTokensBalances[tokenIn.name]?.balance).toFixed(4)
+                      ? Number(props.allBalance.allTokensBalances[tokenIn.name]?.balance)?.toFixed(
+                          4
+                        )
                       : 0}
                   </ToolTip>
                 ) : (

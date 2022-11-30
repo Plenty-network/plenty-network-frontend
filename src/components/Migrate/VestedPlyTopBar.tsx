@@ -21,16 +21,16 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
   const remainingPercentage = remainingTime.multipliedBy(100).dividedBy(totalWaitingTime);
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
+      return num.dividedBy(1000000000)?.toFixed(2) + "B";
     }
     if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
+      return num.dividedBy(1000000)?.toFixed(2) + "M";
     }
     if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
+      return num.dividedBy(1000)?.toFixed(2) + "K";
     }
 
-    return num.toFixed(2);
+    return num?.toFixed(2);
   }
   const [days, hours, minutes, seconds] = useCountdown(
     props.vestedData?.nextClaim?.isGreaterThan(0)
