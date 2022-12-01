@@ -148,6 +148,8 @@ export const getAllLocksPositionData = async (
         finalLock.attachedAmmAddress = GAUGES[gaugeAttached].ammAddress;
         finalLock.attachedTokenASymbol = GAUGES[gaugeAttached].tokenOneSymbol;
         finalLock.attachedTokenBSymbol = GAUGES[gaugeAttached].tokenTwoSymbol;
+      } else {
+        finalLock.attached = false;
       }
       finalVeNFTData.push(finalLock);
     }
