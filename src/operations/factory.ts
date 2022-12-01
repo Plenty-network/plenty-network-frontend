@@ -99,8 +99,6 @@ export const deployVolatile = async (
       });
     }
 
-    const lpTokenDecimals = Math.floor((token1.decimals + token2.decimals) / 2);
-
     allBatch.push({
       kind: OpKind.TRANSACTION,
       ...factoryInstance.methods
@@ -113,7 +111,6 @@ export const deployVolatile = async (
           token2Amount.multipliedBy(new BigNumber(10).pow(token2.decimals)),
           token2.tokenId ?? 0,
           token2.standard === TokenStandard.FA2,
-          char2Bytes(lpTokenDecimals.toString()),
           char2Bytes(`${token1.symbol}-${token2.symbol} PNLP`),
           caller
         )
@@ -239,8 +236,6 @@ export const deployStable = async (
           .toTransferParams(),
       });
     }
-
-    const lpTokenDecimals = Math.floor((token1.decimals + token2.decimals) / 2);
     
     let token1Precision;
     let token2Precision;
@@ -267,7 +262,6 @@ export const deployStable = async (
           token2.tokenId ?? 0,
           token2Precision,
           token2.standard === TokenStandard.FA2 ? true : false,
-          char2Bytes(lpTokenDecimals.toString()),
           char2Bytes(`${token1.symbol}-${token2.symbol} PNLP`),
           caller
         )
