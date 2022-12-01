@@ -18,6 +18,7 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { TopBar } from "../LocksPosition/ManageLockTopBar";
 import { IManageLockProps } from "./types";
 import ConfirmLocking from "../Votes/ConfirmLocking";
+import { getThumbnailUriForNewVeNFT } from "../../api/util/locks";
 
 function ManageLock(props: IManageLockProps) {
   // const walletAddress = store.getState().wallet.address;
@@ -42,6 +43,7 @@ function ManageLock(props: IManageLockProps) {
   );
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [maxLockButtonEnabled, setMaxLockButtonEnabled] = useState(true);
+  const [newVeNFTThumbnailUri, setNewVeNFTThumbnailUri] = useState<string>("");
   const closeModal = () => {
     props.setShow(false);
   };
@@ -115,6 +117,8 @@ function ManageLock(props: IManageLockProps) {
       timeSpan >= MAX_TIME
         ? Math.floor((now + timeSpan) / WEEK) * WEEK
         : Math.floor((now + (timeSpan + WEEK - 1)) / WEEK) * WEEK;
+    
+    const daysTillExpiry = Math.floor((lockEnd - now) / (24 * 60 * 60));
 
     props.setLockingDate(dateFormat(lockEnd * 1000));
     if (Number(props.updatedPlyVoteValue) > 0) {
@@ -123,6 +127,9 @@ function ManageLock(props: IManageLockProps) {
         lockEnd
       );
       setVotingPower(res);
+      if(res > 0) {
+        setNewVeNFTThumbnailUri(getThumbnailUriForNewVeNFT(new BigNumber(props.updatedPlyVoteValue).plus(props.manageData.baseValue), new BigNumber(res), daysTillExpiry));
+      }
     }
     props.setLockingEndData({ selected: timeSpan ? timeSpan : 0, lockingDate: lockEnd });
   };
@@ -380,6 +387,7 @@ function ManageLock(props: IManageLockProps) {
           endDate={
             props.lockingDate === "" ? dateFormat(props.manageData.endTimeStamp) : props.lockingDate
           }
+          newVeNFTThumbnailUri={newVeNFTThumbnailUri}
         />
       )}
     </PopUpModal>

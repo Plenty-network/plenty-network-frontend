@@ -54,7 +54,7 @@ function ConfirmLocking(props: IConfirmLockingProps) {
         </div>
         <div className="border-t mt-2 mb-5 border-text-800/[0.5]"></div>
         <div className="flex justify-center">
-          <Image alt={"alt"} src={nft} />
+          <Image alt={"alt"} src={props.newVeNFTThumbnailUri.length > 0 ? props.newVeNFTThumbnailUri : nft} />
         </div>
         <div className="border-t mt-5 mb-2  border-text-800/[0.5]"></div>
         <div className={clsx("mt-3 px-3 md:px-5 flex items-center")}>

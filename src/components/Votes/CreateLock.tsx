@@ -17,6 +17,7 @@ import { MAX_TIME, WEEK, YEAR } from "../../constants/global";
 import { Datepicker } from "../DatePicker";
 import { getCalendarRangeToEnable } from "../../api/util/epoch";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { getThumbnailUriForNewVeNFT } from "../../api/util/locks";
 
 function CreateLock(props: ICreateLockProps) {
   // const walletAddress = store.getState().wallet.address;
@@ -40,6 +41,7 @@ function CreateLock(props: ICreateLockProps) {
     }
   );
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [newVeNFTThumbnailUri, setNewVeNFTThumbnailUri] = useState<string>("");
   const closeModal = () => {
     props.setShow(false);
   };
@@ -104,11 +106,16 @@ function CreateLock(props: ICreateLockProps) {
       timeSpan >= MAX_TIME
         ? Math.floor((now + timeSpan) / WEEK) * WEEK
         : Math.floor((now + (timeSpan + WEEK - 1)) / WEEK) * WEEK;
+    
+    const daysTillExpiry = Math.floor((lockEnd - now) / (24 * 60 * 60));    
 
     props.setLockingDate(dateFormat(lockEnd * 1000));
     if (Number(props.plyInput) > 0) {
       const res = estimateVotingPower(new BigNumber(props.plyInput), lockEnd);
       setVotingPower(res);
+      if(res > 0) {
+        setNewVeNFTThumbnailUri(getThumbnailUriForNewVeNFT(new BigNumber(props.plyInput), new BigNumber(res), daysTillExpiry));
+      }
     }
     props.setLockingEndData({ selected: days ? days : 0, lockingDate: lockEnd });
     // send new BigNumber(lockEnd) as argument to api
@@ -372,6 +379,7 @@ function CreateLock(props: ICreateLockProps) {
           handleLockOperation={props.handleLockOperation}
           votingPower={votingPower}
           endDate={props.lockingDate}
+          newVeNFTThumbnailUri={newVeNFTThumbnailUri}
         />
       )}
     </PopUpModal>
