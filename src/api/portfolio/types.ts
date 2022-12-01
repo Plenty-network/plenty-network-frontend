@@ -46,6 +46,7 @@ export interface IAllLocksPositionData extends IVeNFTData {
   attachedAmmAddress: string | undefined;
   attachedTokenASymbol: string | undefined;
   attachedTokenBSymbol: string | undefined;
+  thumbnailUri: string,
 }
 
 export interface IAttachedTzktResponse {
