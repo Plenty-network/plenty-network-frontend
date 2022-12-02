@@ -17,3 +17,17 @@ export const tEZorCTEZtoUppercase = (a: string) =>
     : a.trim().toLowerCase() === "ctez"
     ? a.toUpperCase()
     : a;
+
+export default function nFormatter(num: BigNumber) {
+  if (num.isGreaterThanOrEqualTo(1000000000)) {
+    return num.dividedBy(1000000000).toFixed(2) + "B";
+  }
+  if (num.isGreaterThanOrEqualTo(1000000)) {
+    return num.dividedBy(1000000).toFixed(2) + "M";
+  }
+  if (num.isGreaterThanOrEqualTo(1000)) {
+    return num.dividedBy(1000).toFixed(2) + "K";
+  }
+
+  return num.toFixed(2);
+}

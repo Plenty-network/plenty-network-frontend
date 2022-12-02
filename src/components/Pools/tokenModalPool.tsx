@@ -3,6 +3,7 @@ import SearchBar from "../SearchBar/SearchBar";
 import Image, { StaticImageData } from "next/image";
 import infogrey from "../../assets/icon/swap/info-grey.svg";
 
+import fromExponential from "from-exponential";
 import fallback from "../../assets/icon/pools/fallback.png";
 import { tokenParameter, tokensModal, tokenType } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
@@ -249,11 +250,25 @@ function TokenModalPool(props: ISwapModalProps) {
                     {(contractTokenBalance[token.name] || props.allBalance[token.name]) &&
                     props.isLoading ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">
-                        {props.allBalance[token.name]?.balance
-                          ? props.allBalance[token.name]?.balance.toFixed(2)
-                          : contractTokenBalance[token.name]
-                          ? contractTokenBalance[token.name]?.balance.toFixed(2)
-                          : 0.0}
+                        <ToolTip
+                          position={Position.top}
+                          message={
+                            props.allBalance[token.name]?.balance
+                              ? fromExponential(props.allBalance[token.name]?.balance.toString())
+                              : contractTokenBalance[token.name]
+                              ? fromExponential(
+                                  contractTokenBalance[token.name]?.balance.toString()
+                                )
+                              : "0"
+                          }
+                          disable={Number(props.allBalance[token.name]?.balance) === 0}
+                        >
+                          {props.allBalance[token.name]?.balance
+                            ? props.allBalance[token.name]?.balance.toFixed(2)
+                            : contractTokenBalance[token.name]
+                            ? contractTokenBalance[token.name]?.balance.toFixed(2)
+                            : 0.0}
+                        </ToolTip>
                       </div>
                     ) : props.isLoading === false ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">0</div>
