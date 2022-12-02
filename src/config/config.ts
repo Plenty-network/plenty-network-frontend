@@ -79,7 +79,7 @@ const Config: IConfig = {
 
   CTEZ: {
     mainnet: 'KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2',
-    testnet: 'KT1Q4qRd8mKS7eWUgTfJzCN8RC6h9CzzjVJb',
+    testnet: 'KT1P7eP7gGuHgPVNWRLs1p4uRhc9Wbyku8B2',
   },
 
   SERVERLESS_BASE_URL: {
