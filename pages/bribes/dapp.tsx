@@ -4,8 +4,7 @@ import { useDispatch } from "react-redux";
 import { getPoolsDataForBribes, getUserBribeData } from "../../src/api/bribes";
 import { IPoolsForBribesResponse, IUserBribeData } from "../../src/api/bribes/types";
 import BribesMain from "../../src/components/Bribes";
-import Landing from "../../src/components/Bribes/LandingPage";
-import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
+
 import { useInterval } from "../../src/hooks/useInterval";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getEpochData } from "../../src/redux/epoch/epoch";

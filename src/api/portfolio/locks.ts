@@ -34,7 +34,8 @@ import { ITokenPriceList } from "../util/types";
 import { ELocksState } from "../votes/types";
 import { voteEscrowAddress } from "../../common/walletconnect";
 import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
-import { IAMM, ITokens } from "../../config/types";
+import { IConfigPool, IConfigTokens } from "../../config/types";
+import { getThumbnailForVeNFT } from "../util/locks";
 
 
 /**
@@ -101,6 +102,7 @@ export const getAllLocksPositionData = async (
       );
       const lockEndTimestamp = new BigNumber(lock.endTs);
       const attached = Boolean(lock.attached);
+      const thumbnailUri = await getThumbnailForVeNFT(tokenId.toNumber());
       const finalLock: IAllLocksPositionData = {
         tokenId,
         baseValue: new BigNumber(lock.baseValue).dividedBy(PLY_DECIMAL_MULTIPLIER),
@@ -116,6 +118,7 @@ export const getAllLocksPositionData = async (
         attachedAmmAddress: undefined,
         attachedTokenASymbol: undefined,
         attachedTokenBSymbol: undefined,
+        thumbnailUri,
       };
 
       if (epochVotingPower.isFinite() && epochVotingPower.isGreaterThan(0)) {
@@ -148,6 +151,8 @@ export const getAllLocksPositionData = async (
         finalLock.attachedAmmAddress = GAUGES[gaugeAttached].ammAddress;
         finalLock.attachedTokenASymbol = GAUGES[gaugeAttached].tokenOneSymbol;
         finalLock.attachedTokenBSymbol = GAUGES[gaugeAttached].tokenTwoSymbol;
+      } else {
+        finalLock.attached = false;
       }
       finalVeNFTData.push(finalLock);
     }
@@ -258,7 +263,7 @@ export const getAllLocksRewardsData = async (
 const getBribesData = (
   bribes: IBribeIndexer[],
   tokenPrices: ITokenPriceList,
-  TOKENS: ITokens
+  TOKENS: IConfigTokens
 ): IBribesValueAndData => {
   try {
     let bribesValue = new BigNumber(0);
@@ -298,8 +303,8 @@ const getFeesData = (
   feeData: IFeeIndexer,
   feeClaimed: boolean,
   tokenPrices: ITokenPriceList,
-  AMM: IAMM,
-  TOKENS: ITokens
+  AMM: IConfigPool,
+  TOKENS: IConfigTokens
 ): IFeesValueAndData => {
   try {
     const token1Symbol = feeData.token1Symbol;

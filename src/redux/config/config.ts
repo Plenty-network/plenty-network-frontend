@@ -1,21 +1,25 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchConfig } from "../../api/util/fetchConfig";
-import { IAmmContracts, IGaugeConfig, ITokens } from "../../config/types";
+import { IConfigPools, IConfigTokens, IGaugeConfig } from "../../config/types";
 
 interface ConfigState {
-  tokens: ITokens;
-  AMMs: IAmmContracts;
-  standard: ITokens;
-  lp: ITokens;
+  // tokens: ITokens;
+  // AMMs: IAmmContracts;
+  // standard: ITokens;
+  // lp: ITokens;
   gauges: IGaugeConfig;
+  tokens: IConfigTokens;
+  AMMs: IConfigPools;
 }
 
 const initialState: ConfigState = {
+  // tokens: {},
+  // AMMs: {},
+  // standard: {},
+  // lp: {},
+  gauges: {},
   tokens: {},
   AMMs: {},
-  standard: {},
-  lp: {},
-  gauges: {},
 };
 
 export const getConfig = createAsyncThunk("config/getConfig", async (thunkAPI) => {
@@ -32,8 +36,8 @@ const ConfigSlice = createSlice({
       const gaugeConfigData: IGaugeConfig = {};
 
       Object.keys(AMMs).forEach((amm) => {
-        if (AMMs[amm].gaugeAddress) {
-          gaugeConfigData[AMMs[amm].gaugeAddress as string] = {
+        if (AMMs[amm].gauge) {
+          gaugeConfigData[AMMs[amm].gauge as string] = {
             ammAddress: amm,
             tokenOneSymbol: AMMs[amm].token1.symbol,
             tokenTwoSymbol: AMMs[amm].token2.symbol,
@@ -49,10 +53,14 @@ const ConfigSlice = createSlice({
       console.log("Fetching config");
     },
     [getConfig.fulfilled.toString()]: (state: any, action: any) => {
+      // state.tokens = action.payload.TOKEN;
+      // state.AMMs = action.payload.AMM;
+      // state.standard = action.payload.STANDARD;
+      // state.lp = action.payload.LP;
       state.tokens = action.payload.TOKEN;
       state.AMMs = action.payload.AMM;
-      state.standard = action.payload.STANDARD;
-      state.lp = action.payload.LP;
+      console.log(action.payload.TOKEN);
+      console.log(action.payload.AMM);
       console.log("config fetching completed");
     },
     [getConfig.rejected.toString()]: (state: any, action: any) => {

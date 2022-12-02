@@ -5,10 +5,10 @@ import { getMyAmmVotes, getTotalAmmVotes } from "../../api/votes";
 import { COLORSdataChart } from "./PiChartComponent";
 import Protocol from "./Protocol";
 import { IAllocationProps } from "./types";
-import { tEZorCTEZTtoUpperCase } from "../../utils/commonUtils";
 import Image from "next/image";
 import loadingLogo from "../../assets/icon/common/loadingLogo.svg";
 import { useAppSelector } from "../../redux";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 const PiChart = dynamic(() => import("./PiChartComponent"), {
   loading: () => <></>,
 });
@@ -113,7 +113,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
                 key={`e.votes` + i}
                 text={
                   e.tokenOneSymbol && e.tokenTwoSymbol
-                    ? `${tEZorCTEZTtoUpperCase(e.tokenOneSymbol ?? "")} / ${tEZorCTEZTtoUpperCase(
+                    ? `${tEZorCTEZtoUppercase(e.tokenOneSymbol ?? "")} / ${tEZorCTEZtoUppercase(
                         e.tokenTwoSymbol ?? ""
                       )}`
                     : "Others"

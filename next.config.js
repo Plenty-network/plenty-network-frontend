@@ -5,6 +5,14 @@ const nextConfig = {
 
 module.exports = {
   target: "serverless",
+  images: {
+    domains: [
+      "https://cloudflare-ipfs.com/ipfs/",
+      "https://cloudflare-ipfs.com/",
+      "https://cloudflare-ipfs.com",
+      "cloudflare-ipfs.com",
+    ],
+  },
   async rewrites() {
     return [
       // Rewrite everything to `pages/index`

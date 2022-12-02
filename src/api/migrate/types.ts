@@ -20,3 +20,10 @@ export interface IVestAndClaim {
   lastClaim: BigNumber;
   nextClaim: BigNumber;
 }
+
+export interface IveResponse{
+  balance : BigNumber;
+  last_claim : number;
+  release_rate : BigNumber;
+  vested : BigNumber;
+}

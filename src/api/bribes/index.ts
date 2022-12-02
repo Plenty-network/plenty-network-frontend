@@ -294,55 +294,58 @@ export const getPoolsDataForBribes = async (
     for (const poolData of Object.keys(poolsData)) {
       const AMM = AMMS[poolData];
 
-      allDataForPools.push({
-        amm: AMM.address,
-        tokenA: AMM.token1.symbol,
-        tokenB: AMM.token2.symbol,
-        poolType: AMM.type,
-        bribes: poolsData[poolData] ? poolsData[poolData].bribes : new BigNumber(0),
-        bribesData: poolsData[poolData] ? poolsData[poolData].bribesData : [],
-        liquidity: poolsData[poolData] ? poolsData[poolData].liquidity : new BigNumber(0),
-        liquidityTokenA: poolsData[poolData]
-          ? poolsData[poolData].liquidityTokenA
-          : new BigNumber(0),
-        liquidityTokenB: poolsData[poolData]
-          ? poolsData[poolData].liquidityTokenB
-          : new BigNumber(0),
-      
-         totalVotesCurrent:
-          Object.keys(votesDataCurrent.totalVotesData).length === 0
-            ? new BigNumber(0)
-            : votesDataCurrent.totalVotesData[poolData]
-            ? votesDataCurrent.totalVotesData[poolData].votes
+      if(AMM && AMM.bribe) {
+        allDataForPools.push({
+          amm: AMM.address,
+          tokenA: AMM.token1.symbol,
+          tokenB: AMM.token2.symbol,
+          poolType: AMM.type,
+          bribes: poolsData[poolData] ? poolsData[poolData].bribes : new BigNumber(0),
+          bribesData: poolsData[poolData] ? poolsData[poolData].bribesData : [],
+          liquidity: poolsData[poolData] ? poolsData[poolData].liquidity : new BigNumber(0),
+          liquidityTokenA: poolsData[poolData]
+            ? poolsData[poolData].liquidityTokenA
             : new BigNumber(0),
-        totalVotesPercentageCurrent:
-          Object.keys(votesDataCurrent.totalVotesData).length === 0
-            ? new BigNumber(0)
-            : votesDataCurrent.totalVotesData[poolData]
-            ? votesDataCurrent.totalVotesData[poolData].votePercentage
+          liquidityTokenB: poolsData[poolData]
+            ? poolsData[poolData].liquidityTokenB
             : new BigNumber(0),
-        totalVotesPrevious:
-          Object.keys(votesDataPrevious.totalVotesData).length === 0
-            ? new BigNumber(0)
-            : votesDataPrevious.totalVotesData[poolData]
-            ? votesDataPrevious.totalVotesData[poolData].votes
-            : new BigNumber(0),
-        totalVotesPercentagePrevious:
-          Object.keys(votesDataPrevious.totalVotesData).length === 0
-            ? new BigNumber(0)
-            : votesDataPrevious.totalVotesData[poolData]
-            ? votesDataPrevious.totalVotesData[poolData].votePercentage
-            : new BigNumber(0),
-         
-      });
+        
+           totalVotesCurrent:
+            Object.keys(votesDataCurrent.totalVotesData).length === 0
+              ? new BigNumber(0)
+              : votesDataCurrent.totalVotesData[poolData]
+              ? votesDataCurrent.totalVotesData[poolData].votes
+              : new BigNumber(0),
+          totalVotesPercentageCurrent:
+            Object.keys(votesDataCurrent.totalVotesData).length === 0
+              ? new BigNumber(0)
+              : votesDataCurrent.totalVotesData[poolData]
+              ? votesDataCurrent.totalVotesData[poolData].votePercentage
+              : new BigNumber(0),
+          totalVotesPrevious:
+            Object.keys(votesDataPrevious.totalVotesData).length === 0
+              ? new BigNumber(0)
+              : votesDataPrevious.totalVotesData[poolData]
+              ? votesDataPrevious.totalVotesData[poolData].votes
+              : new BigNumber(0),
+          totalVotesPercentagePrevious:
+            Object.keys(votesDataPrevious.totalVotesData).length === 0
+              ? new BigNumber(0)
+              : votesDataPrevious.totalVotesData[poolData]
+              ? votesDataPrevious.totalVotesData[poolData].votePercentage
+              : new BigNumber(0),
+           
+        });
+      }
     }
 
     //TODO: Remove next line in mainnet
-    const finalData = allDataForPools.filter((data) => data.amm !== "false");
+    // const finalData = allDataForPools.filter((data) => data.amm !== "false");
 
     return {
       success: true,
-      poolsData: finalData,
+      // poolsData: finalData,
+      poolsData: allDataForPools,
     };
   } catch (error: any) {
     console.log(error);

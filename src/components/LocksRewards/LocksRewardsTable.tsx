@@ -12,11 +12,11 @@ import { VotingPower } from "./VotingPower";
 import { ILockRewardsEpochData } from "../../api/portfolio/types";
 import { NoPoolsPosition } from "../Rewards/NoContent";
 import ClaimAllEpoch from "./ClaimAllEpoch";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 export function LocksTableRewards(props: IVotesTableRewards) {
   const { valueFormat } = useTableNumberUtils();
 
-  const [showClaimPly, setShowClaimPly] = React.useState(false);
   const [epochNo, setEpochNo] = React.useState("");
   const [claimAllData, setClaimAllData] = React.useState<ILockRewardsEpochData[]>(
     [] as ILockRewardsEpochData[]
@@ -47,7 +47,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
       setIsFetched(true);
       setvotesArray([]);
     }
-  }, [props.selectedDropDown.tokenId]);
+  }, [props.selectedDropDown.tokenId, props.allLocksRewardsData]);
   const NoData = React.useMemo(() => {
     if (isFetched && newArr.length === 0) {
       return (
@@ -70,22 +70,20 @@ export function LocksTableRewards(props: IVotesTableRewards) {
         });
       }
     });
-  }, [votesArray]);
+  }, [votesArray, votesArray.length]);
   React.useEffect(() => {
     if (newArr.length > 0) {
       setNewdata(newArr.reverse());
     } else {
       setNewdata([]);
     }
-  }, [newArr]);
+  }, [newArr, newArr.length]);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const mobilecolumns = React.useMemo<Column<IVotePageData>[]>(
     () => [
@@ -169,7 +167,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
               onClick={() => {
                 setEpochNo(x.epoch);
                 setClaimAllData(props.allLocksRewardsData[props.selectedDropDown.tokenId][x.epoch]);
-                setShowClaimPly(true);
+                props.setShowClaimPlyInd(true);
                 props.setEpochClaim(x.epoch);
               }}
             >
@@ -266,7 +264,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
                 setEpochNo(x.epoch);
                 props.setEpochClaim(x.epoch);
                 setClaimAllData(props.allLocksRewardsData[props.selectedDropDown.tokenId][x.epoch]);
-                setShowClaimPly(true);
+                props.setShowClaimPlyInd(true);
               }}
             >
               Claim
@@ -292,10 +290,10 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           NoData={NoData}
         />
       </div>
-      {showClaimPly && (
+      {props.showClaimPlyInd && (
         <ClaimAllEpoch
-          show={showClaimPly}
-          setShow={setShowClaimPly}
+          show={props.showClaimPlyInd}
+          setShow={props.setShowClaimPlyInd}
           handleClick={props.handleClick}
           data={claimAllData}
           epochClaim={epochNo}

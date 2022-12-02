@@ -18,6 +18,7 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { TopBar } from "../LocksPosition/ManageLockTopBar";
 import { IManageLockProps } from "./types";
 import ConfirmLocking from "../Votes/ConfirmLocking";
+import { getThumbnailUriForNewVeNFT } from "../../api/util/locks";
 
 function ManageLock(props: IManageLockProps) {
   // const walletAddress = store.getState().wallet.address;
@@ -42,17 +43,21 @@ function ManageLock(props: IManageLockProps) {
   );
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [maxLockButtonEnabled, setMaxLockButtonEnabled] = useState(true);
+  const [newVeNFTThumbnailUri, setNewVeNFTThumbnailUri] = useState<string>("");
+  const [daysTillExpiry, setDaysTillExpiry] = useState<number>(0);
   const closeModal = () => {
     props.setShow(false);
   };
   const handleInputPercentage = (value: number) => {
-    props.setUpdatedPlyVoteValue((value * Number(props.plyBalance)).toString());
+    props.setUpdatedPlyVoteValue(
+      (value * Number(props.allBalance?.allTokensBalances["PLY"]?.balance)).toString()
+    );
   };
   useEffect(() => {
     const now = Math.floor(new Date().getTime() / 1000);
     const newLockEnd = Math.floor((now + MAX_TIME) / WEEK) * WEEK;
-    const currentLockEnd = Math.floor(props.manageData.endTimeStamp / 1000)
-    if(newLockEnd <= currentLockEnd) {
+    const currentLockEnd = Math.floor(props.manageData.endTimeStamp / 1000);
+    if (newLockEnd <= currentLockEnd) {
       setMaxLockButtonEnabled(false);
     } else {
       setMaxLockButtonEnabled(true);
@@ -77,6 +82,11 @@ function ManageLock(props: IManageLockProps) {
         : props.lockingEndData.lockingDate
     );
     setVotingPower(res);
+    if(res > 0) {
+      setNewVeNFTThumbnailUri(getThumbnailUriForNewVeNFT(new BigNumber(props.updatedPlyVoteValue).plus(props.manageData.baseValue), new BigNumber(res), daysTillExpiry));
+    } else {
+      setNewVeNFTThumbnailUri("");
+    }
   }, [props.updatedPlyVoteValue, props.lockingDate, props.manageData.baseValue]);
   const handlePlyInput = async (input: string | number) => {
     if (input === "" || isNaN(Number(input))) {
@@ -113,6 +123,9 @@ function ManageLock(props: IManageLockProps) {
       timeSpan >= MAX_TIME
         ? Math.floor((now + timeSpan) / WEEK) * WEEK
         : Math.floor((now + (timeSpan + WEEK - 1)) / WEEK) * WEEK;
+    
+    const daysTillExpiry = Math.floor((lockEnd - now) / (24 * 60 * 60));
+    setDaysTillExpiry(daysTillExpiry);
 
     props.setLockingDate(dateFormat(lockEnd * 1000));
     if (Number(props.updatedPlyVoteValue) > 0) {
@@ -121,6 +134,11 @@ function ManageLock(props: IManageLockProps) {
         lockEnd
       );
       setVotingPower(res);
+      if(res > 0) {
+        setNewVeNFTThumbnailUri(getThumbnailUriForNewVeNFT(new BigNumber(props.updatedPlyVoteValue).plus(props.manageData.baseValue), new BigNumber(res), daysTillExpiry));
+      } else {
+        setNewVeNFTThumbnailUri("");
+      }
     }
     props.setLockingEndData({ selected: timeSpan ? timeSpan : 0, lockingDate: lockEnd });
   };
@@ -145,7 +163,8 @@ function ManageLock(props: IManageLockProps) {
     } else if (
       walletAddress &&
       props.updatedPlyVoteValue &&
-      Number(props.updatedPlyVoteValue) > Number(props.plyBalance)
+      Number(props.updatedPlyVoteValue) >
+        Number(props.allBalance?.allTokensBalances["PLY"]?.balance)
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
@@ -161,7 +180,7 @@ function ManageLock(props: IManageLockProps) {
     }
   }, [props]);
   const onClickAmount = () => {
-    handlePlyInput(Number(props.plyBalance));
+    handlePlyInput(Number(props.allBalance?.allTokensBalances["PLY"]?.balance));
   };
 
   return props.show ? (
@@ -211,7 +230,10 @@ function ManageLock(props: IManageLockProps) {
                 <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
               </div>
               <div className=" ml-1 text-primary-500 font-body2">
-                {Number(props.plyBalance) >= 0 ? props.plyBalance.toFixed(2) : "0"} PLY
+                {Number(props.allBalance?.allTokensBalances["PLY"]?.balance) >= 0
+                  ? props.allBalance?.allTokensBalances["PLY"]?.balance.toFixed(2)
+                  : "0"}{" "}
+                PLY
               </div>
             </div>
           </div>
@@ -220,10 +242,12 @@ function ManageLock(props: IManageLockProps) {
               className={clsx(
                 "cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
                 props.updatedPlyVoteValue !== "" &&
-                  Number(props.updatedPlyVoteValue) === 0.25 * Number(props.plyBalance) &&
+                  Number(props.updatedPlyVoteValue) ===
+                    0.25 * Number(props.allBalance?.allTokensBalances["PLY"]?.balance) &&
                   "border-primary-500 bg-primary-500/[0.20]"
               )}
-              {...(!walletAddress || Number(props.plyBalance) === 0
+              {...(!walletAddress ||
+              Number(props.allBalance?.allTokensBalances["PLY"]?.balance) === 0
                 ? {}
                 : { onClick: () => handleInputPercentage(0.25) })}
             >
@@ -233,10 +257,12 @@ function ManageLock(props: IManageLockProps) {
               className={clsx(
                 "cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
                 props.updatedPlyVoteValue !== "" &&
-                  Number(props.updatedPlyVoteValue) === 0.5 * Number(props.plyBalance) &&
+                  Number(props.updatedPlyVoteValue) ===
+                    0.5 * Number(props.allBalance?.allTokensBalances["PLY"]?.balance) &&
                   "border-primary-500 bg-primary-500/[0.20]"
               )}
-              {...(!walletAddress || Number(props.plyBalance) === 0
+              {...(!walletAddress ||
+              Number(props.allBalance?.allTokensBalances["PLY"]?.balance) === 0
                 ? {}
                 : { onClick: () => handleInputPercentage(0.5) })}
             >
@@ -246,10 +272,12 @@ function ManageLock(props: IManageLockProps) {
               className={clsx(
                 "cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
                 props.updatedPlyVoteValue !== "" &&
-                  Number(props.updatedPlyVoteValue) === 0.75 * Number(props.plyBalance) &&
+                  Number(props.updatedPlyVoteValue) ===
+                    0.75 * Number(props.allBalance?.allTokensBalances["PLY"]?.balance) &&
                   "border-primary-500 bg-primary-500/[0.20]"
               )}
-              {...(!walletAddress || Number(props.plyBalance) === 0
+              {...(!walletAddress ||
+              Number(props.allBalance?.allTokensBalances["PLY"]?.balance) === 0
                 ? {}
                 : { onClick: () => handleInputPercentage(0.75) })}
             >
@@ -319,9 +347,7 @@ function ManageLock(props: IManageLockProps) {
                 ) : (
                   <ToolTip
                     toolTipChild={
-                      <div className="w-[210px] text-center">
-                        Already locked for max period
-                      </div>
+                      <div className="w-[210px] text-center">Already locked for max period</div>
                     }
                     id="tooltip8"
                     position={Position.top}
@@ -370,6 +396,7 @@ function ManageLock(props: IManageLockProps) {
           endDate={
             props.lockingDate === "" ? dateFormat(props.manageData.endTimeStamp) : props.lockingDate
           }
+          newVeNFTThumbnailUri={newVeNFTThumbnailUri}
         />
       )}
     </PopUpModal>

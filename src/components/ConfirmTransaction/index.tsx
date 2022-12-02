@@ -6,6 +6,7 @@ interface IConfirmTransactionProps {
   show: boolean;
   content: string;
   setShow: any;
+  clainText?: string;
 }
 function ConfirmTransaction(props: IConfirmTransactionProps) {
   const closeModal = () => {
@@ -26,8 +27,8 @@ function ConfirmTransaction(props: IConfirmTransactionProps) {
           <div className="mt-11 border border-border-100/[0.4] rounded-2xl bg-secondary-100/[0.02] flex justify-center items-center h-[52px] font-subtitle4">
             {props.content}
           </div>
-          <div className="my-3 font-caption1 flex justify-center text-text-300">
-            Confirm the transaction in your wallet
+          <div className="my-3 font-caption1 flex text-center justify-center text-text-300">
+            {props.clainText !== "" ? props.clainText : "Confirm the transaction in your wallet"}
           </div>
         </>
       }

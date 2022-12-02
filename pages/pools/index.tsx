@@ -16,6 +16,11 @@ import info from "../../src/assets/icon/pools/InfoBlue.svg";
 import close from "../../src/assets/icon/pools/closeBlue.svg";
 import Image from "next/image";
 import { USERADDRESS } from "../../src/constants/localStorage";
+import { NewPool } from "../../src/components/Pools/NewPool";
+import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
+import clsx from "clsx";
+import { poolsDataWrapper } from "../../src/api/pools";
+import { IPoolsDataWrapperResponse } from "../../src/api/pools/types";
 export interface IIndexProps {}
 export enum AMM_TYPE {
   VOLATILE = "VOLATILE",
@@ -33,7 +38,7 @@ export default function Pools(props: IIndexProps) {
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
-
+  const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   useEffect(() => {
     if (epochError) {
       dispatch(getEpochData());
@@ -70,6 +75,23 @@ export default function Pools(props: IIndexProps) {
   }, [amm]);
   const [searchValue, setSearchValue] = React.useState("");
   const [isbanner, setisBanner] = React.useState(true);
+  const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
+  const handleNewPool = () => {
+    setShowNewPoolPopup(true);
+  };
+  const [reFetchPool, setReFetchPool] = React.useState(false);
+  const [poolsData, setPoolsData] = React.useState<{
+    success: boolean;
+    data: IPoolsDataWrapperResponse[];
+  }>({} as { success: boolean; data: IPoolsDataWrapperResponse[] });
+  useEffect(() => {
+    setPoolsData({ success: false, data: [] as IPoolsDataWrapperResponse[] });
+    if (Object.keys(tokenPrices).length !== 0) {
+      poolsDataWrapper(walletAddress ? walletAddress : undefined, tokenPrices).then((res) => {
+        setPoolsData({ success: true, data: Object.values(res.allData) });
+      });
+    }
+  }, [walletAddress, tokenPrices, reFetchPool]);
   return (
     <>
       <SideBarHOC>
@@ -81,7 +103,15 @@ export default function Pools(props: IIndexProps) {
             searchValue={searchValue}
             setSearchValue={setSearchValue}
             isFirst={walletAddress !== null && localStorage.getItem(USERADDRESS) !== walletAddress}
+            onClick={handleNewPool}
           />
+          <div className="my-2 mx-3">
+            <InputSearchBox
+              className={clsx("md:hidden")}
+              value={searchValue}
+              onChange={setSearchValue}
+            />
+          </div>
           <div className="sticky top-0 z-10">
             <CardHeader
               activeStateTab={activeStateTab}
@@ -113,6 +143,10 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
+              setShowLiquidityModal={setShowLiquidityModal}
+              showLiquidityModal={showLiquidityModal}
+              reFetchPool={reFetchPool}
+              data={poolsData}
             />
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
@@ -122,6 +156,10 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
+              setShowLiquidityModal={setShowLiquidityModal}
+              showLiquidityModal={showLiquidityModal}
+              reFetchPool={reFetchPool}
+              data={poolsData}
             />
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
@@ -131,6 +169,10 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
+              setShowLiquidityModal={setShowLiquidityModal}
+              showLiquidityModal={showLiquidityModal}
+              reFetchPool={reFetchPool}
+              data={poolsData}
             />
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
@@ -141,9 +183,20 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
+              setShowLiquidityModal={setShowLiquidityModal}
+              showLiquidityModal={showLiquidityModal}
+              reFetchPool={reFetchPool}
+              data={poolsData}
             />
           )}
-
+          <NewPool
+            show={showNewPoolPopup}
+            setShow={setShowNewPoolPopup}
+            setShowLiquidityModal={setShowLiquidityModal}
+            showLiquidityModal={showLiquidityModal}
+            setReFetchPool={setReFetchPool}
+            reFetchPool={reFetchPool}
+          />
           {/* poolsTable */}
         </div>
       </SideBarHOC>

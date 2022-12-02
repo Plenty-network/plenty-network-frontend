@@ -7,6 +7,7 @@ import { tokenParameterLiquidity } from "../Liquidity/types";
 import { AppDispatch, store, useAppSelector } from "../../redux";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 export interface IRewardsProps {
   tokenIn: tokenParameterLiquidity;
@@ -28,8 +29,7 @@ export function RewardsScreen(props: IRewardsProps) {
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   const harvestButton = useMemo(() => {
     if (!walletAddress) {
       return (

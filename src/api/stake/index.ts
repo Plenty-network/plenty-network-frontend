@@ -49,7 +49,7 @@ export const getVePLYListForUser = async (
     }
     const pnlpTokenDecimals = AMM[dexContractAddress].lpToken.decimals;
     const gaugeAddress: string | undefined =
-      AMM[dexContractAddress].gaugeAddress;
+      AMM[dexContractAddress].gauge;
     if (gaugeAddress === undefined) {
       throw new Error('Gauge does not exist for the selected pair.');
     }
@@ -160,7 +160,7 @@ export const getStakedData = async (
       throw new Error("AMM does not exist for the selected pair.");
     }
     const pnlpTokenDecimals = AMM[dexContractAddress].lpToken.decimals;
-    const gaugeAddress: string | undefined = AMM[dexContractAddress].gaugeAddress;
+    const gaugeAddress: string | undefined = AMM[dexContractAddress].gauge;
     if (gaugeAddress === undefined) {
       throw new Error("Gauge does not exist for the selected pair.");
     }

@@ -1,5 +1,5 @@
 import { ISimpleButtonProps, SimpleButton } from "./Component/SimpleButton";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import fromExponential from "from-exponential";
 import clsx from "clsx";
 import walletIcon from "../../assets/icon/pools/wallet.svg";
@@ -24,13 +24,8 @@ import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 
 import { VePLY } from "../DropDown/VePLY";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { detachLockFromGauge } from "../../operations/locks";
-import { setIsLoadingWallet } from "../../redux/walletLoading";
-import { setFlashMessage } from "../../redux/flashMessage";
-import { Flashtype } from "../FlashScreen";
-import { getStakedData } from "../../api/stake";
-import { FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_B } from "../../constants/localStorage";
-import { ITokenInterface } from "../../config/types";
+import { IConfigLPToken } from "../../config/types";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 export enum StakingScreenType {
   Staking = "Staking",
@@ -57,7 +52,7 @@ export interface IStakingScreenProps {
   selectedDropDown: IVePLYData;
   vePLYOptions: IVePLYData[];
   isListLoading: boolean;
-  lpToken: ITokenInterface | undefined;
+  lpToken: IConfigLPToken | undefined;
 }
 export interface IStakingProps {
   boost: IStakedDataResponse | undefined;
@@ -76,7 +71,7 @@ export interface IStakingProps {
   vePLYOptions: IVePLYData[];
   isListLoading: boolean;
   handleDetach: () => void;
-  lpToken: ITokenInterface | undefined;
+  lpToken: IConfigLPToken | undefined;
 }
 
 export interface IUnstakingProps {
@@ -90,7 +85,7 @@ export interface IUnstakingProps {
   setUnStakeInput: React.Dispatch<React.SetStateAction<string | number>>;
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   stakedToken: string;
-  lpToken: ITokenInterface | undefined;
+  lpToken: IConfigLPToken | undefined;
 }
 export function StakingScreen(props: IStakingScreenProps) {
   return (
@@ -137,6 +132,7 @@ export function StakingScreen(props: IStakingScreenProps) {
 
 export function Staking(props: IStakingProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
+
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
       return num.dividedBy(1000000000).toFixed(2) + "B";
@@ -196,8 +192,7 @@ export function Staking(props: IStakingProps) {
       }
     }
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   const onClickAmount = () => {
     handleStakeInput(props.pnlpBalance);
   };
@@ -205,6 +200,10 @@ export function Staking(props: IStakingProps) {
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
+  const previous = useRef("");
+  useEffect(() => {
+    previous.current = props.selectedDropDown.tokenId;
+  }, []);
 
   const stakeButton = useMemo(() => {
     if (!walletAddress) {
@@ -237,7 +236,9 @@ export function Staking(props: IStakingProps) {
             props.setScreen("2");
           }}
         >
-          {props.stakeInput <= 0 && props.selectedDropDown.tokenId !== "" ? "Boost" : "Stake"}
+          {props.stakeInput <= 0 && props.selectedDropDown.tokenId !== previous.current.toString()
+            ? "Update Boost veNFT"
+            : "Stake"}
         </Button>
       );
     }

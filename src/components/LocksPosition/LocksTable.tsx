@@ -25,12 +25,11 @@ import { VotingPower } from "./VotingPower";
 import { getVeNFTsList } from "../../api/votes";
 import { compareNumericString } from "../../utils/commonUtils";
 import { NoLocks } from "../Rewards/NoLocks";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 TimeAgo.addDefaultLocale(en);
 
 export function LocksTablePosition(props: ILocksTablePosition) {
-  // const epochData = store.getState().epoch.currentEpoch;
   const epochData = useAppSelector((state) => state.epoch.currentEpoch);
-  // const userAddress = store.getState().wallet.address;
   const userAddress = useAppSelector((state) => state.wallet.address);
   const totalTime = epochData ? epochData.endTimestamp - epochData.startTimestamp : 0;
   const remainingTime = epochData ? epochData.endTimestamp - new Date().getTime() : 0;
@@ -51,8 +50,6 @@ export function LocksTablePosition(props: ILocksTablePosition) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const mobilecolumns = React.useMemo<Column<IAllLocksPositionData>[]>(
     () => [
@@ -154,7 +151,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenId"),
         showOnMobile: true,
-        accessor: (x: any) => <LocksCloumn id={x.tokenId} />,
+        accessor: (x: any) => <LocksCloumn id={x.tokenId} thumbnailUri={x.thumbnailUri}/>,
       },
       {
         Header: "Pool",
