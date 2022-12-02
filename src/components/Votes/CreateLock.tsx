@@ -42,6 +42,7 @@ function CreateLock(props: ICreateLockProps) {
   );
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [newVeNFTThumbnailUri, setNewVeNFTThumbnailUri] = useState<string>("");
+  const [daysTillExpiry, setDaysTillExpiry] = useState<number>(0);
   const closeModal = () => {
     props.setShow(false);
   };
@@ -65,6 +66,11 @@ function CreateLock(props: ICreateLockProps) {
       props.lockingEndData.lockingDate
     );
     setVotingPower(res);
+    if(res > 0) {
+      setNewVeNFTThumbnailUri(getThumbnailUriForNewVeNFT(new BigNumber(props.plyInput), new BigNumber(res), daysTillExpiry));
+    } else {
+      setNewVeNFTThumbnailUri("");
+    }
   }, [props.plyInput, props.lockingDate]);
   const handlePlyInput = async (input: string | number) => {
     if (input == ".") {
@@ -107,7 +113,8 @@ function CreateLock(props: ICreateLockProps) {
         ? Math.floor((now + timeSpan) / WEEK) * WEEK
         : Math.floor((now + (timeSpan + WEEK - 1)) / WEEK) * WEEK;
     
-    const daysTillExpiry = Math.floor((lockEnd - now) / (24 * 60 * 60));    
+    const daysTillExpiry = Math.floor((lockEnd - now) / (24 * 60 * 60));
+    setDaysTillExpiry(daysTillExpiry);    
 
     props.setLockingDate(dateFormat(lockEnd * 1000));
     if (Number(props.plyInput) > 0) {
@@ -115,6 +122,8 @@ function CreateLock(props: ICreateLockProps) {
       setVotingPower(res);
       if(res > 0) {
         setNewVeNFTThumbnailUri(getThumbnailUriForNewVeNFT(new BigNumber(props.plyInput), new BigNumber(res), daysTillExpiry));
+      } else {
+        setNewVeNFTThumbnailUri("");
       }
     }
     props.setLockingEndData({ selected: days ? days : 0, lockingDate: lockEnd });
