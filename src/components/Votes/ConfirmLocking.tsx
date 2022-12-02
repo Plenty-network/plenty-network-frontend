@@ -52,11 +52,16 @@ function ConfirmLocking(props: IConfirmLockingProps) {
             {props.votingPower.toFixed(2)}
           </div>
         </div>
-        <div className="border-t mt-2 mb-5 border-text-800/[0.5]"></div>
+        <div className="border-t mt-2 mb-3 border-text-800/[0.5]"></div>
         <div className="flex justify-center">
-          <Image alt={"alt"} src={props.newVeNFTThumbnailUri.length > 0 ? props.newVeNFTThumbnailUri : nft} />
+          <Image
+            height={"250px"}
+            width={"150px"}
+            alt={"alt"}
+            src={props.newVeNFTThumbnailUri.length > 0 ? props.newVeNFTThumbnailUri : nft}
+          />
         </div>
-        <div className="border-t mt-5 mb-2  border-text-800/[0.5]"></div>
+        <div className="border-t mt-3 mb-2  border-text-800/[0.5]"></div>
         <div className={clsx("mt-3 px-3 md:px-5 flex items-center")}>
           <span className={clsx(" flex", props.ctaText ? "hidden" : "hidden md:block")}>
             <span className="text-text-250 font-body2 mr-1">You can start voting after </span>

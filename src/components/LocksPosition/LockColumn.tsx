@@ -17,7 +17,12 @@ export function LocksCloumn(props: ILocksColumnProps) {
       >
         <div className="flex  justify-center items-center">
           <p>
-            <Image alt={"alt"} src={props.thumbnailUri.length > 0 ? props.thumbnailUri : veNFT} />
+            <Image
+              height={"44px"}
+              width={"30px"}
+              alt={"alt"}
+              src={props.thumbnailUri.length > 0 ? props.thumbnailUri : veNFT}
+            />
           </p>
           <p className="ml-2">
             <div className="text-white font-subtitle3 text-left">#{Number(props.id)}</div>
