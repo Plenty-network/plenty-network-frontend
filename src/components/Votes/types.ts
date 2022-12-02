@@ -49,6 +49,7 @@ export interface IConfirmLockingProps {
   setShow?: any;
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowConfirmTransaction: React.Dispatch<React.SetStateAction<boolean>>;
+  newVeNFTThumbnailUri: string;
 }
 export interface ICastVoteProps {
   show: boolean;
