@@ -82,7 +82,7 @@ function BribesMain(props: BribesMainProps) {
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(selectedPool.tokenA));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(selectedPool.tokenB));
     setContentTransaction(
-      `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool.`
+      `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool`
     );
     setShowAddBribes(false);
     setShowConfirmTransaction(true);
@@ -106,7 +106,7 @@ function BribesMain(props: BribesMainProps) {
         headerText: "Transaction submitted",
         trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
           TOKEN_B
-        )} pool.`,
+        )} pool`,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -123,7 +123,7 @@ function BribesMain(props: BribesMainProps) {
               headerText: "Success",
               trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
                 TOKEN_B
-              )} pool.`,
+              )} pool`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -155,7 +155,7 @@ function BribesMain(props: BribesMainProps) {
               headerText: "Rejected",
               trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
                 TOKEN_B
-              )} pool.
+              )} pool
               `,
               linkText: "",
               isLoading: true,
