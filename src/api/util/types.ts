@@ -1,4 +1,5 @@
 import { BigNumber } from "bignumber.js";
+import { IConfigToken } from "../../config/types";
 
 export interface IBalanceResponse {
   success: boolean;
@@ -58,4 +59,26 @@ export interface ILpTokenPriceList {
 
 export interface ITokenPriceList {
   [id: string]: number;
+}
+
+export interface IAllTokensBalance {
+  [key: string]: IBalanceResponse;
+}
+
+export interface IAllTokensBalanceResponse {
+  success: boolean;
+  allTokensBalances: IAllTokensBalance;
+  error?: string;
+}
+
+export interface ITzktTokensListResponse {
+  success: boolean;
+  allTokensList: IConfigToken[];
+  error?: string;
+}
+
+export interface IGaugeExistsResponse {
+  gaugeExists: boolean;
+  gaugeAddress: string | undefined;
+  error?: string;
 }

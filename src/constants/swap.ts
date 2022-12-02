@@ -1,3 +1,5 @@
+import { IConfigToken } from "../config/types";
+
 export interface tokenParameter {
   name: string;
   image: any;
@@ -7,6 +9,14 @@ export type tokenType = "tokenIn" | "tokenOut";
 
 export interface tokensModal {
   name: string;
+  image: any;
+  new: boolean;
+  chainType?: string;
+  address?: string;
+}
+export interface tokensModalNewPool {
+  name: string;
+  interface: IConfigToken;
   image: any;
   new: boolean;
   chainType?: string;

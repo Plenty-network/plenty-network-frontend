@@ -5,6 +5,7 @@ import epoachIcon from "../../assets/icon/common/epochTimeIcon.svg";
 import Button from "../Button/Button";
 import React from "react";
 import { IConfirmAddBribes } from "./types";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 function ConfirmAddBribes(props: IConfirmAddBribes) {
   const closeModal = () => {
@@ -36,9 +37,6 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
 
     return `${("0" + date.getDate()).slice(-2)}-${monthNames[month]}-${date.getFullYear()}`;
   };
-
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   return (
     <>

@@ -1,6 +1,7 @@
 import { PopUpModal } from "../Modal/popupModal";
 import SearchBar from "../SearchBar/SearchBar";
 import Image from "next/image";
+import fromExponential from "from-exponential";
 import infogrey from "../../assets/icon/swap/info-grey.svg";
 import { tokenParameter, tokensModal, tokenType } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
@@ -8,9 +9,17 @@ import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import clsx from "clsx";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { topTokenListGhostnet } from "../../api/swap/wrappers";
+import { Chain } from "../../config/types";
+import { IAllTokensBalance } from "../../api/util/types";
+import nFormatter, { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface ISwapModalProps {
-  tokens: tokensModal[];
+  tokens: {
+    name: string;
+    image: string;
+    chainType: Chain;
+    address: string | undefined;
+  }[];
   show: boolean;
   selectToken: Function;
   onhide?: Function;
@@ -19,14 +28,21 @@ interface ISwapModalProps {
   searchQuery: string;
   tokenType: tokenType;
   setSearchQuery: Function;
-  allBalance: {
-    [id: string]: BigNumber;
-  };
+  allBalance: IAllTokensBalance;
   isLoading: boolean;
+  isSuccess: boolean;
 }
 function SwapModal(props: ISwapModalProps) {
   const searchTokenEl = useRef(null);
-  const [tokensToShow, setTokensToShow] = useState<tokensModal[] | []>([]);
+  const [tokensToShow, setTokensToShow] = useState<
+    | {
+        name: string;
+        image: string;
+        chainType: Chain;
+        address: string | undefined;
+      }[]
+    | []
+  >([]);
   const [topTokens, setTopTokens] = useState<{
     [id: string]: number;
   }>(
@@ -49,7 +65,7 @@ function SwapModal(props: ISwapModalProps) {
   }, [topTokens]);
 
   const searchHits = useCallback(
-    (token: tokensModal) => {
+    (token: { name: string; image: string; chainType: Chain; address: string | undefined }) => {
       return (
         props.searchQuery.length === 0 ||
         token.name.toLowerCase().includes(props.searchQuery.trim().toLowerCase()) ||
@@ -81,8 +97,7 @@ function SwapModal(props: ISwapModalProps) {
     props.tokenOut.name,
     searchHits,
   ]);
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   return props.show ? (
     <PopUpModal title="Select Token" onhide={props.onhide}>
       {
@@ -171,20 +186,36 @@ function SwapModal(props: ISwapModalProps) {
                             : "text-white"
                         )}
                       >
-                        {token.name === "tez" ? "TEZ" : token.name === "ctez" ? "CTEZ" : token.name}
+                        {tEZorCTEZtoUppercase(token.name)}
                       </div>
                     </div>
-                    {token.new && (
+                    {/* {token.new && (
                       <div className="ml-auto mt-[6px] bg-primary-500/[0.2] py-1 px-1.5 h-[26px] text-center text-primary-500 font-body2 rounded-xl">
                         <span>New!</span>
                       </div>
-                    )}
-                    {props.allBalance[token.name] && props.isLoading ? (
+                    )} */}
+                    {props.isSuccess && props.allBalance[token.name] ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">
-                        {props.allBalance[token.name]
-                          ? Number(props.allBalance[token.name]).toFixed(2)
-                          : 0.0}
+                        <ToolTip
+                          position={Position.top}
+                          message={
+                            props.allBalance[token.name]?.balance
+                              ? fromExponential(props.allBalance[token.name]?.balance.toString())
+                              : "0"
+                          }
+                          disable={Number(props.allBalance[token.name]?.balance) === 0}
+                        >
+                          {props.allBalance[token.name]?.balance
+                            ? Number(props.allBalance[token.name]?.balance) > 0
+                              ? props.allBalance[token.name]?.balance.isLessThan(0.01)
+                                ? "<0.01"
+                                : nFormatter(props.allBalance[token.name]?.balance)
+                              : "0.0"
+                            : "0.0"}
+                        </ToolTip>
                       </div>
+                    ) : props.isSuccess === false ? (
+                      <div className="font-subtitle4 ml-auto mt-[7px]">0</div>
                     ) : (
                       <div className=" ml-auto h-[19px] rounded  animate-pulse bg-shimmer-100 text-shimmer-100 mt-[7px]">
                         9999

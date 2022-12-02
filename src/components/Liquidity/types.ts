@@ -1,4 +1,5 @@
-import { BigNumber } from 'bignumber.js';
+import { BigNumber } from "bignumber.js";
+import { IConfigLPToken } from "../../config/types";
 
 export interface IBalanceResponse {
   success: boolean;
@@ -10,7 +11,7 @@ export interface IBalanceResponse {
 export interface ISwapData {
   tokenInSupply: BigNumber;
   tokenOutSupply: BigNumber;
-  lpToken: string | undefined;
+  lpToken: IConfigLPToken | undefined;
   lpTokenSupply: BigNumber;
   isloading?: boolean;
 }

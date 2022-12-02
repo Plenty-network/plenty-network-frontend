@@ -10,8 +10,8 @@ export const usePoolsMain = () =>
   useQuery<IPoolsDataWrapperResponse[], Error>(
     'pools-mains',
     async () => {
-     // const tokenprice = store.getState().tokenPrice.tokenPrice;
-    const tokenprice= await (await getTokenPrices()).tokenPrice
+     const tokenprice = store.getState().tokenPrice.tokenPrice;
+    // const tokenprice= await (await getTokenPrices()).tokenPrice
       const walletAddress = store.getState().wallet.address;
       const data1 = (
         await poolsDataWrapper(
@@ -22,7 +22,7 @@ export const usePoolsMain = () =>
       const data: IPoolsDataWrapperResponse[] = Object.values(data1);
       return data;
     },
-    { refetchInterval: 60000 }
+    { refetchInterval: 60000, cacheTime: 1000 * 30 }
   );
 
 // export const useGetValue=()=>{

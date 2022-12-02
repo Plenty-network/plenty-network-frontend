@@ -1,5 +1,6 @@
 import Image from "next/image";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import Button from "../Button/Button";
 import { tokenParameterLiquidity } from "./types";
 
@@ -41,12 +42,7 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
               <Image alt={"alt"} src={props.tokenIn.image} width={"24px"} height={"24px"} />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
-              {props.firstTokenAmount}{" "}
-              {props.tokenIn.name === "tez"
-                ? "TEZ"
-                : props.tokenIn.name === "ctez"
-                ? "CTEZ"
-                : props.tokenIn.name}
+              {props.firstTokenAmount} {tEZorCTEZtoUppercase(props.tokenIn.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
@@ -62,12 +58,7 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
               <Image alt={"alt"} src={props.tokenOut.image} width={"24px"} height={"24px"} />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
-              {props.secondTokenAmount}{" "}
-              {props.tokenOut.name === "tez"
-                ? "TEZ"
-                : props.tokenOut.name === "ctez"
-                ? "CTEZ"
-                : props.tokenOut.name}
+              {props.secondTokenAmount} {tEZorCTEZtoUppercase(props.tokenOut.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">

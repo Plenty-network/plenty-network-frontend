@@ -19,6 +19,7 @@ import { YourLiquidity } from "../PoolsPosition/YourLiquidity";
 import { VoteShare } from "./VoteShare";
 import { IPoolsForBribesData } from "../../api/bribes/types";
 import { BribesPool } from "./BribesPools";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 TimeAgo.addDefaultLocale(en);
 
 export function PoolsTableBribes(props: IPoolsTableBribes) {
@@ -60,8 +61,6 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const mobilecolumns = React.useMemo<Column<IPoolsForBribesData>[]>(
     () => [

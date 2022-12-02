@@ -51,7 +51,14 @@ export function TopBar(props: ITopBar) {
         <div className="flex gap-2 mt-2  min-w-[521px] sm:min-w-full">
           <p className="border border-text-800 bg-card-900 flex  pl-4 items-center h-16 w-[156px] rounded-lg">
             <p>
-              <Image alt={"alt"} src={veNFT} />
+              <Image
+                height={"44px"}
+                width={"30px"}
+                alt={"alt"}
+                src={
+                  props.manageData.thumbnailUri.length > 0 ? props.manageData.thumbnailUri : veNFT
+                }
+              />
             </p>
             <p className="ml-2">
               <div className="text-white font-subtitle3">#{Number(props.manageData.tokenId)}</div>

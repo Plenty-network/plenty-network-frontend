@@ -2,6 +2,7 @@ import Image from "next/image";
 import * as React from "react";
 import { isMobile, isTablet } from "react-device-detect";
 import { Column } from "react-table";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { IVotePageData } from "../../api/votes/types";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import { compareNumericString } from "../../utils/commonUtils";
@@ -66,8 +67,6 @@ export function VotesTable(props: IVotesTableProps) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const mobilecolumns = React.useMemo<Column<IVotePageData>[]>(
     () => [

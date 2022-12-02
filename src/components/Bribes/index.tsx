@@ -19,9 +19,14 @@ import { setIsLoadingWallet } from "../../redux/walletLoading";
 import { addBribe } from "../../operations/bribes";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
-import { getCompleteUserBalace } from "../../api/util/balance";
-import { IAllBalanceResponse } from "../../api/util/types";
+import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
+import {
+  IAllBalanceResponse,
+  IAllTokensBalance,
+  IAllTokensBalanceResponse,
+} from "../../api/util/types";
 import { TOKEN_A, TOKEN_B } from "../../constants/localStorage";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 function BribesMain(props: BribesMainProps) {
   const [contentTransaction, setContentTransaction] = useState("");
@@ -39,23 +44,32 @@ function BribesMain(props: BribesMainProps) {
   const [activeStateTab, setActiveStateTab] = useState<BribesCardHeader | string>(
     BribesCardHeader.Pools
   );
-  const tokens = useAppSelector((state) => state.config.standard);
+  const tokens = useAppSelector((state) => state.config.tokens);
   const [epochArray, setEpochArray] = useState<number[]>([] as number[]);
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
-  const [allBalance, setAllBalance] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
+    success: false,
+    allTokensBalances: {} as IAllTokensBalance,
+  });
   useEffect(() => {
+    setAllBalance({
+      success: false,
+      allTokensBalances: {} as IAllTokensBalance,
+    });
     if (userAddress) {
-      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-        setAllBalance(response);
-      });
+      getAllTokensBalanceFromTzkt(Object.values(tokens), userAddress).then(
+        (response: IAllTokensBalanceResponse) => {
+          setAllBalance(response);
+        }
+      );
     } else {
-      setAllBalance({ success: false, userBalance: {} });
+      setAllBalance({
+        success: false,
+        allTokensBalances: {} as IAllTokensBalance,
+      });
     }
   }, [userAddress, tokens, balanceUpdate]);
   const resetAllValues = () => {
@@ -63,13 +77,12 @@ function BribesMain(props: BribesMainProps) {
     setBribeToken({} as tokenParameter);
   };
   const dispatch = useDispatch<AppDispatch>();
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   const handleOperation = () => {
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(selectedPool.tokenA));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(selectedPool.tokenB));
     setContentTransaction(
-      `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool.`
+      `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool`
     );
     setShowAddBribes(false);
     setShowConfirmTransaction(true);
@@ -93,7 +106,7 @@ function BribesMain(props: BribesMainProps) {
         headerText: "Transaction submitted",
         trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
           TOKEN_B
-        )} pool.`,
+        )} pool`,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -110,7 +123,7 @@ function BribesMain(props: BribesMainProps) {
               headerText: "Success",
               trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
                 TOKEN_B
-              )} pool.`,
+              )} pool`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -142,7 +155,7 @@ function BribesMain(props: BribesMainProps) {
               headerText: "Rejected",
               trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
                 TOKEN_B
-              )} pool.
+              )} pool
               `,
               linkText: "",
               isLoading: true,
@@ -204,7 +217,8 @@ function BribesMain(props: BribesMainProps) {
             selectedPool={selectedPool}
             epochArray={epochArray}
             handleOperation={handleOperation}
-            allBalance={allBalance.userBalance}
+            allBalance={allBalance.allTokensBalances}
+            isSucess={allBalance.success}
             balanceUpdate={balanceUpdate}
             setBalanceUpdate={setBalanceUpdate}
           />
