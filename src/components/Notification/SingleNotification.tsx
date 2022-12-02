@@ -53,18 +53,18 @@ export function SingleNotification(props: ISingleNotificationProps) {
           <div className="font-semibold text-text-239">{props.headerText}</div>
           <div className="text-text-240 font-body1 ">
             {timeAgo.format(new Date(props.currentTimeStamp))}
+            {props.flashType === Flashtype.Success &&
+              props.transactionId &&
+              props.transactionId !== "" && (
+                <span className="ml-auto pl-1 relative top-[3px]">
+                  <Image height={14} width={14} src={openInNewTab} />
+                </span>
+              )}
           </div>
         </div>
 
-        <div className="text-text-241 flex items-center">
-          {props.trailingText}
-          {props.flashType === Flashtype.Success &&
-            props.transactionId &&
-            props.transactionId !== "" && (
-              <span className="ml-2 relative top-0.5">
-                <Image height={14} width={14} src={openInNewTab} />
-              </span>
-            )}
+        <div className="text-text-241 flex">
+          <span className="">{props.trailingText}</span>
         </div>
       </div>
     </div>

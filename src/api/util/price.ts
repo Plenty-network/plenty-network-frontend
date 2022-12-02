@@ -100,7 +100,7 @@ export const getTokenPrices = async (): Promise<{
 }> => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
     const pricesResponse = await axios.get(
       'https://api.teztools.io/token/prices'
     );
@@ -111,58 +111,19 @@ export const getTokenPrices = async (): Promise<{
     const xtzPrice = await getXtzDollarPrice();
 
     const tokenPrice: { [id: string]: number } = {};
-    const tokens = Object.keys(TOKEN);
 
     const indexerPriceResponse = await axios.get(`${Config.PLY_INDEXER}analytics/tokens`);
     const indexerPricesData = indexerPriceResponse.data;
 
-    for(const i in tokenPriceResponse.contracts){
-      for(const j in indexerPricesData){
-        if(tokenPriceResponse.contracts[i].symbol === indexerPricesData[j].token){
-          if(tokenPriceResponse.contracts[i].symbol === 'WETH.e' || tokenPriceResponse.contracts[i].symbol === 'MATIC.e')
-          continue;
-          tokenPriceResponse.contracts[i].usdValue = Number(indexerPricesData[j].price.value);
-        } else {
-          if(indexerPricesData[j].token === 'WETH.e' || indexerPricesData[j].token === 'MATIC.e') {
-            continue;
-          }
-          tokenPrice[indexerPricesData[j].token] = Number(indexerPricesData[j].price.value);
-        }
-      }
+    for( const x of tokenPriceResponse.contracts){
+      tokenPrice[x.symbol] = Number(x.usdValue);
     }
-    
-    const tokenSymbols: { [id: string]: { symbol?: string } } = {};
-    Object.keys(TOKEN).forEach(function (key) {
-      tokenSymbols[key] = { symbol: TOKEN[key].symbol };
-    });
-    for (const i in tokenPriceResponse.contracts) {
-      if (tokens.includes(tokenPriceResponse.contracts[i].symbol)) {
-        if (
-          tokenSymbols[tokenPriceResponse.contracts[i].symbol]
-            .symbol === tokenPriceResponse.contracts[i].symbol
-        ) {
-          tokenPrice[tokenPriceResponse.contracts[i].symbol] =
-            tokenPriceResponse.contracts[i].usdValue;
-        }
-      }
+
+    for( const x of indexerPricesData){
+      if(Number(x.price.value) !== 0)
+      tokenPrice[x.token] = Number(x.price.value);
     }
-     // TODO : Remove this for removing wAssets
-    for (const i in tokenPriceResponse.contracts) {
-      const x = tokenPriceResponse.contracts[i].symbol;
-      if (
-        // x === 'wDAI' ||
-        // x === 'wUSDC' ||
-        // x === 'wUSDT' ||
-        // x === 'wLINK' ||
-        x === 'wMATIC' ||
-        // x === 'wBUSD' ||
-        x === 'wWETH'
-        // x === 'wWBTC'
-      ) {
-        tokenPrice[tokenPriceResponse.contracts[i].symbol] =
-          tokenPriceResponse.contracts[i].usdValue;
-      }
-    }
+
     // TODO: Find solution with Anshu for .e token prices
     for (const x in Config.WRAPPED_ASSETS[connectedNetwork]) {
       if (
@@ -207,7 +168,7 @@ export const getLPTokenPrice = async (tokenA : string , tokenB : string , tokenP
 }> => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const swapData = await loadSwapDataWrapper(tokenA , tokenB);
 
@@ -246,7 +207,7 @@ export const getLPTokenPrices =async (tokenPrice: { [id: string]: number }) : Pr
     let lpPrices: { [id: string]: BigNumber } = {};
     for(const key in AMM) {
       const price = await getLPTokenPrice(AMM[key].token1.symbol , AMM[key].token2.symbol , tokenPrice);
-      lpPrices = {...lpPrices, [AMM[key].lpToken.symbol]: price.lpTokenPrice};
+      lpPrices = {...lpPrices, [AMM[key].lpToken.address]: price.lpTokenPrice};
     }
     return {
       success : true , 

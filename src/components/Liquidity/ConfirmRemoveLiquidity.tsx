@@ -7,6 +7,7 @@ import add from "../../../src/assets/icon/pools/addIcon.svg";
 import Button from "../Button/Button";
 import { PopUpModal } from "../Modal/popupModal";
 import { tokenParameterLiquidity } from "./types";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface IConfirmRemoveLiquidityProps {
   setScreen: React.Dispatch<React.SetStateAction<string>>;
@@ -48,12 +49,7 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
               <Image alt={"alt"} src={props.tokenIn.image} width={"24px"} height={"24px"} />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
-              {props.removeTokenAmount.tokenOneAmount}{" "}
-              {props.tokenIn.name === "tez"
-                ? "TEZ"
-                : props.tokenIn.name === "ctez"
-                ? "CTEZ"
-                : props.tokenIn.name}
+              {props.removeTokenAmount.tokenOneAmount} {tEZorCTEZtoUppercase(props.tokenIn.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
@@ -70,12 +66,7 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
               <Image alt={"alt"} src={ctez} width={"24px"} height={"24px"} />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
-              {props.removeTokenAmount.tokenTwoAmount}{" "}
-              {props.tokenOut.name === "tez"
-                ? "TEZ"
-                : props.tokenOut.name === "ctez"
-                ? "CTEZ"
-                : props.tokenOut.name}
+              {props.removeTokenAmount.tokenTwoAmount} {tEZorCTEZtoUppercase(props.tokenOut.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">

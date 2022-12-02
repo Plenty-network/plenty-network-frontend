@@ -1,7 +1,7 @@
 import { getDexAddress } from "../api/util/fetchConfig";
 import { store} from "../redux";
 import { BigNumber } from "bignumber.js";
-import { TokenVariant } from "../config/types";
+import { TokenStandard } from "../config/types";
 import { OpKind } from "@taquito/taquito";
 import { routerSwap } from "./router";
 import { dappClient } from "../common/walletconnect";
@@ -84,7 +84,7 @@ export const directSwapWrapper = async (
 ): Promise<IOperationsResponse> => {
   try {
     let res;
-    if (tokenIn === "tez" && tokenOut === "ctez") {
+    if (tokenIn === "XTZ" && tokenOut === "CTez") {
       res = await tez_to_ctez(
         tokenIn,
         tokenOut,
@@ -96,7 +96,7 @@ export const directSwapWrapper = async (
         setShowConfirmTransaction,
         flashMessageContent
       );
-    } else if (tokenIn === "ctez" && tokenOut === "tez") {
+    } else if (tokenIn === "CTez" && tokenOut === "XTZ") {
       res = await ctez_to_tez(
         tokenIn,
         tokenOut,
@@ -157,7 +157,7 @@ const swapTokens = async (
     }
 
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const TOKEN_IN = TOKEN[tokenIn];
     const TOKEN_OUT = TOKEN[tokenOut];
@@ -176,7 +176,7 @@ const swapTokens = async (
 
     let batch = null;
     // Approve call for FA1.2 type token
-    if (TOKEN_IN.variant === TokenVariant.FA12) {
+    if (TOKEN_IN.standard === TokenStandard.FA12) {
       batch = Tezos.wallet
         .batch()
         .withContractCall(tokenInInstance.methods.approve(dexContractAddress, tokenInAmount.decimalPlaces(0,1)))
@@ -274,7 +274,7 @@ async function ctez_to_tez(
       throw new Error("Wallet connection failed");
     }
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const TOKEN_IN = TOKEN[tokenIn];
 

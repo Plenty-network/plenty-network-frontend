@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { MyPortfolioSection } from "../../../pages/myportfolio";
 
 const initialState = {
   isLoading: false,
+  activePortfolio: MyPortfolioSection.Positions,
   operationSuccesful: false,
   isBanner: true,
   scrollY: 0,
@@ -21,7 +23,11 @@ const IsLoadingSlice = createSlice({
     setScrollY: (state, action) => {
       state.scrollY = action.payload;
     },
+    setMyPortfolioSection: (state, action) => {
+      state.activePortfolio = action.payload;
+    },
   },
 });
-export const { setIsLoadingWallet, setIsBanner, setScrollY } = IsLoadingSlice.actions;
+export const { setIsLoadingWallet, setIsBanner, setScrollY, setMyPortfolioSection } =
+  IsLoadingSlice.actions;
 export const walletLoading = IsLoadingSlice.reducer;

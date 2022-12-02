@@ -2,7 +2,7 @@ import { getDexAddress, isGeneralStablePair, isTezPair } from "../api/util/fetch
 import { BigNumber } from "bignumber.js";
 import { dappClient } from "../common/walletconnect";
 import { store } from "../redux";
-import { TokenVariant } from "../config/types";
+import { TokenStandard } from "../config/types";
 import {
   IOperationsResponse,
   TResetAllValues,
@@ -122,7 +122,7 @@ const addAllPairsLiquidity = async (
     const Tezos = await dappClient().tezos();
     const state = store.getState();
     const AMM = state.config.AMMs;
-    const TOKENS = state.config.standard;
+    const TOKENS = state.config.tokens;
     const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
     if (dexContractAddress === "false") {
       throw new Error("No dex found for the given pair of tokens.");
@@ -154,8 +154,8 @@ const addAllPairsLiquidity = async (
 
     let batch = null;
     if (
-      TOKENS[firstTokenSymbol].variant === TokenVariant.FA12 &&
-      TOKENS[secondTokenSymbol].variant === TokenVariant.FA2
+      TOKENS[firstTokenSymbol].standard === TokenStandard.FA12 &&
+      TOKENS[secondTokenSymbol].standard === TokenStandard.FA2
     ) {
       batch = Tezos.wallet
         .batch()
@@ -202,8 +202,8 @@ const addAllPairsLiquidity = async (
           ])
         );
     } else if (
-      TOKENS[firstTokenSymbol].variant === TokenVariant.FA2 &&
-      TOKENS[secondTokenSymbol].variant === TokenVariant.FA12
+      TOKENS[firstTokenSymbol].standard === TokenStandard.FA2 &&
+      TOKENS[secondTokenSymbol].standard === TokenStandard.FA12
     ) {
       batch = Tezos.wallet
         .batch()
@@ -250,8 +250,8 @@ const addAllPairsLiquidity = async (
         )
         .withContractCall(secondTokenInstance.methods.approve(dexContractAddress, 0));
     } else if (
-      TOKENS[firstTokenSymbol].variant === TokenVariant.FA2 &&
-      TOKENS[secondTokenSymbol].variant === TokenVariant.FA2
+      TOKENS[firstTokenSymbol].standard === TokenStandard.FA2 &&
+      TOKENS[secondTokenSymbol].standard === TokenStandard.FA2
     ) {
       batch = Tezos.wallet
         .batch()
@@ -313,8 +313,8 @@ const addAllPairsLiquidity = async (
           ])
         );
     } else if (
-      TOKENS[firstTokenSymbol].variant === TokenVariant.FA12 &&
-      TOKENS[secondTokenSymbol].variant === TokenVariant.FA12
+      TOKENS[firstTokenSymbol].standard === TokenStandard.FA12 &&
+      TOKENS[secondTokenSymbol].standard === TokenStandard.FA12
     ) {
       batch = Tezos.wallet
         .batch()
@@ -409,13 +409,13 @@ const addTezPairsLiquidity = async (
     }
     const Tezos = await dappClient().tezos();
     const state = store.getState();
-    const TOKENS = state.config.standard;
+    const TOKENS = state.config.tokens;
     const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
     if (dexContractAddress === "false") {
       throw new Error("No dex found for the given pair of tokens.");
     }
     // Make the order of tokens according to the order in contract.
-    if (tokenOneSymbol === "tez") {
+    if (tokenOneSymbol === "XTZ") {
       tezSymbol = tokenOneSymbol;
       tezAmount = tokenOneAmount;
       secondTokenSymbol = tokenTwoSymbol;
@@ -438,7 +438,7 @@ const addTezPairsLiquidity = async (
     );
 
     let batch = null;
-    if (TOKENS[secondTokenSymbol].variant === TokenVariant.FA12) {
+    if (TOKENS[secondTokenSymbol].standard === TokenStandard.FA12) {
       batch = Tezos.wallet.batch([
         {
           kind: OpKind.TRANSACTION,
@@ -457,7 +457,7 @@ const addTezPairsLiquidity = async (
           ...secondTokenInstance.methods.approve(dexContractAddress, 0).toTransferParams(),
         },
       ]);
-    } else if (TOKENS[secondTokenSymbol].variant === TokenVariant.FA2) {
+    } else if (TOKENS[secondTokenSymbol].standard === TokenStandard.FA2) {
       batch = Tezos.wallet.batch([
         {
           kind: OpKind.TRANSACTION,

@@ -14,6 +14,7 @@ export interface IHeadInfoProps {
   toolTipContent: string;
   handleCreateLock?: () => void;
   isFirst?: boolean;
+  onClick?: () => void;
 }
 
 export default function HeadInfo(props: IHeadInfoProps) {
@@ -52,11 +53,11 @@ export default function HeadInfo(props: IHeadInfoProps) {
         </ToolTip>
       </div>
 
-      <InputSearchBox
+      {/* <InputSearchBox
         className={clsx("md:hidden", props.title === "Vote" && "hidden")}
         value={props.searchValue}
         onChange={props.setSearchValue}
-      />
+      /> */}
       {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"UXBs3vi26_A"} />}
       {props.title === "Vote" ? (
         <div
@@ -67,6 +68,19 @@ export default function HeadInfo(props: IHeadInfoProps) {
           onClick={props.handleCreateLock}
         >
           Create Lock
+        </div>
+      ) : (
+        <></>
+      )}
+      {props.title === "Pools" ? (
+        <div
+          className={clsx(
+            "ml-auto h-[50px] font-subtitle2 md:font-subtitle3 flex items-center px-3 md:px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1] hover:bg-primary-500/[0.2] mr-0",
+            "cursor-pointer"
+          )}
+          onClick={props.onClick}
+        >
+          New pool
         </div>
       ) : (
         <></>

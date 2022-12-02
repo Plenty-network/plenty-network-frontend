@@ -2,13 +2,13 @@ import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';
 import { calculateTokensInWrapper, calculateTokensOutWrapper, loadSwapDataWrapper } from './wrappers';
 import { IBestPathResponse, ISwapDataResponse} from './types'
-import { ITokens } from '../../config/types';
+import { IConfigTokens } from '../../config/types';
 
 
 export const allPaths = async (tokenIn: string, tokenOut: string , multihop : boolean): Promise<{ paths: string[], swapData: ISwapDataResponse[][] }> => {
     try {
         const state = store.getState();
-        const TOKEN = state.config.standard;
+        const TOKEN = state.config.tokens;
         // Making Empty Visited Array
         const visited: { [x: string]: boolean } = {};
 
@@ -37,10 +37,11 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
         }
         paths = tempPaths;
     
-        let swapData: ISwapDataResponse[][] = [[], []];
+        let swapData: ISwapDataResponse[][] = [];
 
         for (const i in paths) {
             const path = paths[i].split(' ');
+            swapData[i] = [];
             for (let j = 0; j < path.length - 1; j++) {
                 // Getting Swap Details
                 swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
@@ -55,7 +56,7 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
         console.log(error);
         return {
             paths: [],
-            swapData: [[], []]
+            swapData: []
         };
     }
 };
@@ -65,7 +66,7 @@ const allPathHelper = (
     dest: string,
     visited: { [x: string]: boolean },
     psf: string,
-    TOKEN: ITokens,
+    TOKEN: IConfigTokens,
     paths : string[],
 ) => {
     if (src === dest) {

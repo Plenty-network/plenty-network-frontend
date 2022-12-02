@@ -26,7 +26,6 @@ import { Bribes, VolumeV1Data, VolumeVeData } from "../pools/types";
 import { fetchEpochData } from "../util/epoch";
 import { IEpochData, IEpochResponse } from "../util/types";
 import { pools } from "../../redux/pools";
-import { IAmmContracts } from "../../config/types";
 import { getDexAddress } from "../util/fetchConfig";
 import { store } from "../../redux";
 import { IVotes } from "../../operations/types";
@@ -246,52 +245,54 @@ export const votesPageDataWrapper = async (
     for (let poolData of Object.keys(rewardData.allData)) {
       const AMM = AMMS[poolData];
 
+      if(AMM && AMM.gauge) {
         allData[poolData] = {
-        tokenA: AMM.token1.symbol,
-        tokenB: AMM.token2.symbol,
-        poolType: AMM.type,
-
-        bribes: rewardData.allData[poolData]
-          ? rewardData.allData[poolData].bribes
-          : new BigNumber(0),
-
-        bribesData : rewardData.allData[poolData]
-        ? rewardData.allData[poolData].bribesData
-        : [],
-          
-        fees: rewardData.allData[poolData] ? rewardData.allData[poolData].fees : new BigNumber(0),
-
-        feesTokenA: rewardData.allData[poolData] ? rewardData.allData[poolData].feesTokenA : new BigNumber(0),
-
-        feesTokenB: rewardData.allData[poolData] ? rewardData.allData[poolData].feesTokenB : new BigNumber(0),
-
-        totalVotes:
-          Object.keys(votesData.totalVotesData).length === 0
-            ? new BigNumber(0)
-            : votesData.totalVotesData[poolData]
-            ? votesData.totalVotesData[poolData].votes
+          tokenA: AMM.token1.symbol,
+          tokenB: AMM.token2.symbol,
+          poolType: AMM.type,
+  
+          bribes: rewardData.allData[poolData]
+            ? rewardData.allData[poolData].bribes
             : new BigNumber(0),
-        totalVotesPercentage:
-          Object.keys(votesData.totalVotesData).length === 0
-            ? new BigNumber(0)
-            : votesData.totalVotesData[poolData]
-            ? votesData.totalVotesData[poolData].votePercentage
-            : new BigNumber(0),
-
-        myVotes:
-          Object.keys(votesData.myVotesData).length === 0
-            ? new BigNumber(0)
-            : votesData.myVotesData[poolData]
-            ? votesData.myVotesData[poolData].votes
-            : new BigNumber(0),
-        myVotesPercentage:
-          Object.keys(votesData.myVotesData).length === 0
-            ? new BigNumber(0)
-            : votesData.myVotesData[poolData]
-            ? votesData.myVotesData[poolData].votePercentage
-            : new BigNumber(0), 
-
-      };
+  
+          bribesData : rewardData.allData[poolData]
+          ? rewardData.allData[poolData].bribesData
+          : [],
+            
+          fees: rewardData.allData[poolData] ? rewardData.allData[poolData].fees : new BigNumber(0),
+  
+          feesTokenA: rewardData.allData[poolData] ? rewardData.allData[poolData].feesTokenA : new BigNumber(0),
+  
+          feesTokenB: rewardData.allData[poolData] ? rewardData.allData[poolData].feesTokenB : new BigNumber(0),
+  
+          totalVotes:
+            Object.keys(votesData.totalVotesData).length === 0
+              ? new BigNumber(0)
+              : votesData.totalVotesData[poolData]
+              ? votesData.totalVotesData[poolData].votes
+              : new BigNumber(0),
+          totalVotesPercentage:
+            Object.keys(votesData.totalVotesData).length === 0
+              ? new BigNumber(0)
+              : votesData.totalVotesData[poolData]
+              ? votesData.totalVotesData[poolData].votePercentage
+              : new BigNumber(0),
+  
+          myVotes:
+            Object.keys(votesData.myVotesData).length === 0
+              ? new BigNumber(0)
+              : votesData.myVotesData[poolData]
+              ? votesData.myVotesData[poolData].votes
+              : new BigNumber(0),
+          myVotesPercentage:
+            Object.keys(votesData.myVotesData).length === 0
+              ? new BigNumber(0)
+              : votesData.myVotesData[poolData]
+              ? votesData.myVotesData[poolData].votePercentage
+              : new BigNumber(0), 
+  
+        };
+      }
     }
 
     return {

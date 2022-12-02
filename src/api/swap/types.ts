@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js'
-import { ITokenInterface } from '../../config/types';
+import { IConfigLPToken } from '../../config/types';
 
 export interface ISwapDataResponse {
   success: boolean;
@@ -7,7 +7,7 @@ export interface ISwapDataResponse {
   tokenOut: string;
   exchangeFee: BigNumber;
   lpTokenSupply: BigNumber;
-  lpToken: ITokenInterface | undefined;
+  lpToken: IConfigLPToken | undefined;
   tokenInPrecision?: BigNumber;
   tokenOutPrecision?: BigNumber;
   tokenInSupply: BigNumber;
