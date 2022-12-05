@@ -1677,7 +1677,7 @@ function MyPortfolio(props: any) {
                 <Stats
                   setShowCreateLockModal={setShowCreateLockModal}
                   plyBalance={plyBalance}
-                  tokenPricePly={tokenPrice["PLY"]}
+                  tokenPricePly={tokenPrice["PLY"] ?? 0}
                   statsPositions={statsPositions}
                   stats1={stats1}
                 />

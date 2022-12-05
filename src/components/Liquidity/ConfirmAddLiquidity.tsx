@@ -48,7 +48,7 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
           <div className="ml-auto font-body4 text-text-400">
             $
             {Number(
-              Number(props.firstTokenAmount) * Number(props.tokenPrice[props.tokenIn.name])
+              Number(props.firstTokenAmount) * Number(props.tokenPrice[props.tokenIn.name] ?? 0)
             ).toFixed(2)}
           </div>
         </div>
@@ -64,7 +64,7 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
           <div className="ml-auto font-body4 text-text-400">
             $
             {Number(
-              Number(props.secondTokenAmount) * Number(props.tokenPrice[props.tokenOut.name])
+              Number(props.secondTokenAmount) * Number(props.tokenPrice[props.tokenOut.name] ?? 0)
             ).toFixed(2)}
           </div>
         </div>
