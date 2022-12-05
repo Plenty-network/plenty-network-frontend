@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 
+import { isMobile } from "react-device-detect";
 import ply from "../../assets/Tokens/ply.png";
 import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
@@ -21,10 +22,12 @@ import { AppDispatch, useAppSelector } from "../../redux";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import OtherChain from "./Otherchain";
-interface IMainAirdropProps {}
+interface IMainAirdropProps {
+  setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
+  chain: ChainAirdrop;
+}
 
 function MainAirdrop(props: IMainAirdropProps) {
-  const [chain, setChain] = useState<ChainAirdrop>(ChainAirdrop.Tezos);
   const tokenOut = {
     name: "PLY",
     image: ply,
@@ -64,14 +67,16 @@ function MainAirdrop(props: IMainAirdropProps) {
           "bg-card-500 md:border border-y border-text-800 mt-[70px] lg:mt-[75px] md:rounded-3xl  text-white lg:w-640 p-5 mx-auto fade-in"
         )}
       >
-        <HeaderSelection chain={chain} setChain={setChain} isDisclaimer={false} />
+        <HeaderSelection chain={props.chain} setChain={props.setChain} isDisclaimer={false} />
         <div className="mt-4 rounded-xl bg-muted-600 pl-4 pr-5 flex items-center h-[40px]">
           <p className="text-text-500 font-body2">
-            An overview of what went behind the scenes for airdrop eligibility criteria
+            {isMobile
+              ? "Plenty airdrops eligibility criteria"
+              : "An overview of what went behind the scenes for airdrop eligibility criteria"}
           </p>
           <p className="ml-auto text-primary-500 font-caption2">Learn more</p>
         </div>
-        {chain === ChainAirdrop.Tezos ? (
+        {props.chain === ChainAirdrop.Tezos ? (
           <div
             className={clsx(
               "lg:w-[600px] secondtoken h-[82px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2]  bg-card-500 mt-4"
@@ -104,14 +109,14 @@ function MainAirdrop(props: IMainAirdropProps) {
         ) : (
           <OtherChain />
         )}
-        {chain === ChainAirdrop.Tezos && (
+        {props.chain === ChainAirdrop.Tezos && (
           <div className="mt-3 border border-muted-300 bg-muted-400 rounded-xl py-5">
             <Progress />
             <div className="border-t border-text-800 my-3"></div>
             <Steps />
           </div>
         )}
-        {chain === ChainAirdrop.Tezos && <div className="mt-[18px]">{ClaimButton}</div>}
+        {props.chain === ChainAirdrop.Tezos && <div className="mt-[18px]">{ClaimButton}</div>}
       </div>
       <div className="font-body2 text-text-250 mt-[10px] mx-2 md:mx-auto md:w-[568px] text-center mb-5">
         Know more about Airdrop and its eligibility{" "}

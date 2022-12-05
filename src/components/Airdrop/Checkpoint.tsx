@@ -16,6 +16,7 @@ export interface ICheckPoint {
   text: string;
   completed: boolean;
   className?: string;
+  href: string;
 }
 
 function CheckPoint(props: ICheckPoint) {
@@ -31,6 +32,7 @@ function CheckPoint(props: ICheckPoint) {
           <Image src={props.completed ? doneCheck : check} />
         </p>
         <p className="font-subtitle1 ml-2">{props.text}</p>
+
         <p
           className={clsx(
             "ml-auto px-2 h-[26px] flex items-center font-subtitle1 rounded-lg ",
@@ -39,7 +41,7 @@ function CheckPoint(props: ICheckPoint) {
               : "text-primary-500 bg-primary-500/[0.1] "
           )}
         >
-          {props.completed ? "Completed" : "Take action"}
+          <Link href={props.href}>{props.completed ? "Completed" : "Take action"}</Link>
         </p>
       </div>
     </>

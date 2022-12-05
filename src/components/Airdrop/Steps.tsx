@@ -2,6 +2,7 @@ import { store } from "../../redux";
 import bribes from "../../assets/icon/bribes/bribesLanding.svg";
 import Image from "next/image";
 
+import { isMobile } from "react-device-detect";
 import "animate.css";
 import { useEffect, useState, useMemo } from "react";
 import vectorDown from "../../assets/icon/common/vector.svg";
@@ -26,7 +27,9 @@ function Steps(props: ISteps) {
           </p>
         ) : (
           <p className="">
-            <span className="font-subtitle4 mr-1">Tweet about the new plenty.network</span>
+            <span className="md:font-subtitle4 font-subtitle2  mr-1">
+              {isMobile ? "Tweet about the new..." : "Tweet about the new plenty.network"}{" "}
+            </span>
             <span className="font-subtitle1 text-primary-500">+4 steps to complete</span>
           </p>
         )}
@@ -41,17 +44,33 @@ function Steps(props: ISteps) {
       {isDropDownActive && (
         <div
           className={clsx(
-            "px-5 animate__animated ",
+            "mt-5 px-5 animate__animated ",
             isDropDownActive ? "animate__fadeInDown animate__faster" : ""
           )}
         >
-          <CheckPoint completed={true} text={"Tweet about the new plenty.network"} />
-          <CheckPoint className={"mt-2"} completed={false} text={"Swap  TEZ-CTEZ "} />
-          <CheckPoint className={"mt-2"} completed={false} text={"Add liquidity and stake"} />
-          <CheckPoint className={"mt-2"} completed={false} text={"Lock PLY and get veNFT"} />
+          <CheckPoint completed={true} text={"Tweet about the new plenty.network"} href={"/swap"} />
           <CheckPoint
             className={"mt-2"}
             completed={false}
+            text={"Swap  TEZ-CTEZ "}
+            href={"/swap"}
+          />
+          <CheckPoint
+            className={"mt-2"}
+            completed={false}
+            text={"Add liquidity and stake"}
+            href={"/pools"}
+          />
+          <CheckPoint
+            className={"mt-2"}
+            completed={false}
+            text={"Lock PLY and get veNFT"}
+            href={"/vote"}
+          />
+          <CheckPoint
+            className={"mt-2"}
+            completed={false}
+            href={"/vote"}
             text={"Vote for any pair in the guages"}
           />
         </div>

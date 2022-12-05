@@ -2,9 +2,9 @@ import Image from "next/image";
 import { PopUpModal } from "../Modal/popupModal";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
-
+import doneCheck from "../../assets/icon/airdrop/doneCheck.svg";
 import * as React from "react";
-import { useEffect, useState, useMemo } from "react";
+import { useState } from "react";
 
 import checkGrey from "../../assets/icon/airdrop/checkGrey.svg";
 import link from "../../assets/icon/pools/external_violet.svg";
@@ -13,7 +13,8 @@ import List from "./DisclaimerList";
 import Button from "../Button/Button";
 interface IDisclaimerProps {
   show: boolean;
-
+  setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
+  chain: ChainAirdrop;
   setShow: any;
 }
 export enum ChainAirdrop {
@@ -24,7 +25,8 @@ function Disclaimer(props: IDisclaimerProps) {
   const closeModal = () => {
     props.setShow(false);
   };
-  const [chain, setChain] = useState<ChainAirdrop>(ChainAirdrop.Other_chain);
+  const [isCheck, setIsCheck] = useState(false);
+
   return props.show ? (
     <PopUpModal onhide={closeModal} className="  md:w-[602px] md:max-w-[602px]">
       {
@@ -56,19 +58,22 @@ function Disclaimer(props: IDisclaimerProps) {
             </span>
           </div>
           <div className="border-t border-text-800 my-4"></div>
-          <HeaderSelection chain={chain} setChain={setChain} isDisclaimer={true} />
+          <HeaderSelection chain={props.chain} setChain={props.setChain} isDisclaimer={true} />
           <div className="mt-4">
             <List />
           </div>
           <div className="border-t border-text-800 my-4"></div>
-          <div className="flex items-center">
+          <div className="flex items-center" onClick={() => setIsCheck(!isCheck)}>
             <p>
-              <Image src={checkGrey} />
+              <Image src={isCheck ? doneCheck : checkGrey} />
             </p>
             <p className="font-body4 text-text-50 ml-2  -mt-1">I agree, do not show this again</p>
           </div>
           <div className="mt-[18px]">
-            <Button color={"primary"} onClick={() => props.setShow(false)}>
+            <Button
+              color={isCheck ? "primary" : "disabled"}
+              onClick={isCheck ? () => props.setShow(false) : () => {}}
+            >
               Continue
             </Button>
           </div>

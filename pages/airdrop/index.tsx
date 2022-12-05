@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import MainAirdrop from "../../src/components/Airdrop";
-import Disclaimer from "../../src/components/Airdrop/Disclaimer";
+import Disclaimer, { ChainAirdrop } from "../../src/components/Airdrop/Disclaimer";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { useInterval } from "../../src/hooks/useInterval";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
@@ -56,14 +56,19 @@ const Airdrop: NextPage = () => {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
-
+  const [chain, setChain] = useState<ChainAirdrop>(ChainAirdrop.Tezos);
   return (
     <>
       <SideBarHOC makeTopBarScroll>
         {isDisclaimer ? (
-          <Disclaimer show={isDisclaimer} setShow={setIsDisclaimer} />
+          <Disclaimer
+            show={isDisclaimer}
+            setShow={setIsDisclaimer}
+            chain={chain}
+            setChain={setChain}
+          />
         ) : (
-          <MainAirdrop />
+          <MainAirdrop chain={chain} setChain={setChain} />
         )}
       </SideBarHOC>
     </>
