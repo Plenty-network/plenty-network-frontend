@@ -153,6 +153,8 @@ function SwapTab(props: ISwapTabProps) {
         )
       );
       setpriceDiff(res.toFixed(2));
+    } else {
+      setpriceDiff("");
     }
   }, [props.firstTokenAmount, props.secondTokenAmount]);
   useEffect(() => {

@@ -30,7 +30,11 @@ export function Tabs(props: ITabsProps) {
   return (
     <th
       className={`flex cursor-pointer font-subtitle1 text-text-50 text-left ${props.columnWidth} ${
-        props.index === 0 ? "justify-start" : "justify-end "
+        props.index === 0
+          ? "justify-start"
+          : props.TableName === "mybribes" && props.index !== 3
+          ? "justify-start"
+          : "justify-end "
       } ${props.tableType ? "thSticky" : ""} ${
         (props.TableName === "newPools" || props.TableName === "poolsPosition") &&
         props.index === 0 &&

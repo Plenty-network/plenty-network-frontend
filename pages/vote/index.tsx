@@ -523,43 +523,88 @@ export default function Vote() {
                 </div>
               </div>
               <div className="md:hidden block flex flex-row justify-between items-center px-3 md:px-0 py-2 md:py-0 border-b border-text-800/[0.5]">
-                <div className="font-mobile-400 w-[134px] text-text-50">
-                  Verify your vote percentage and cast vote
-                </div>
+                <div className="flex gap-2">
+                  <div className="font-mobile-400 w-[134px] text-text-50">
+                    Verify your vote percentage and cast vote
+                  </div>
 
-                <div className="border border-muted-50 px-5 bg-muted-300 h-[38px]  flex items-center justify-center rounded-xl">
-                  {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "0"}%
+                  <div className="font-subtitle1 border border-muted-50 px-5 bg-muted-300 h-[38px]  flex items-center justify-center rounded-xl">
+                    {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "0"}%
+                  </div>
                 </div>
-                <div className="">
-                  {alreadyVoted ? (
-                    <div
-                      className={clsx(
-                        "px-4   h-[38px] flex items-center justify-center rounded-xl ",
-
-                        "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
-                      )}
-                    >
-                      Cast vote
-                    </div>
-                  ) : (sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
-                    (selectedEpoch?.epochNumber
-                      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                      : true) ? (
-                    <ToolTip
-                      message={
-                        "Percentage allocation of the veNFT’s voting power. A 100% allocation is required to cast a vote."
-                      }
-                      id="tooltip8"
-                      position={Position.top}
-                    >
+                <div className="flex gap-2 items-center">
+                  <div className="">
+                    {alreadyVoted ? (
                       <div
                         className={clsx(
-                          " px-3  h-[38px] ] flex items-center justify-center rounded-xl ",
-                          votes.length !== 0 &&
+                          "px-4   h-[38px] flex items-center justify-center rounded-xl ",
+
+                          "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                        )}
+                      >
+                        Cast vote
+                      </div>
+                    ) : (sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
+                      (selectedEpoch?.epochNumber
+                        ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                        : true) ? (
+                      <ToolTip
+                        message={
+                          "Percentage allocation of the veNFT’s voting power. A 100% allocation is required to cast a vote."
+                        }
+                        id="tooltip8"
+                        position={Position.top}
+                      >
+                        <div
+                          className={clsx(
+                            " px-3  h-[38px] ] flex items-center justify-center rounded-xl ",
+                            votes.length !== 0 &&
+                              (selectedEpoch?.epochNumber
+                                ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                                : false) &&
+                              totalVotingPower !== 0 &&
+                              totalVotingPower === 100 &&
+                              Number(selectedDropDown.votingPower) > 0
+                              ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                              : "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                          )}
+                          onClick={() =>
+                            votes.length !== 0 &&
                             (selectedEpoch?.epochNumber
                               ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                               : false) &&
                             totalVotingPower !== 0 &&
+                            totalVotingPower === 100 &&
+                            sumOfVotes !== 100 &&
+                            Number(selectedDropDown.votingPower) > 0
+                              ? setShowCastVoteModal(true)
+                              : currentEpoch?.epochNumber !== selectedEpoch?.epochNumber
+                              ? setShowEpochPopUp(true)
+                              : () => {}
+                          }
+                        >
+                          Cast vote
+                        </div>
+                      </ToolTip>
+                    ) : sumOfVotes === 100 ? (
+                      <div
+                        className={clsx(
+                          "px-4    h-[38px]  flex items-center justify-center rounded-xl ",
+
+                          "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                        )}
+                      >
+                        Already voted
+                      </div>
+                    ) : (
+                      <div
+                        className={clsx(
+                          "px-3    h-[38px]  flex items-center justify-center rounded-xl ",
+
+                          votes.length !== 0 &&
+                            (selectedEpoch?.epochNumber
+                              ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                              : false) &&
                             totalVotingPower === 100 &&
                             Number(selectedDropDown.votingPower) > 0
                             ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
@@ -570,7 +615,6 @@ export default function Vote() {
                           (selectedEpoch?.epochNumber
                             ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                             : false) &&
-                          totalVotingPower !== 0 &&
                           totalVotingPower === 100 &&
                           sumOfVotes !== 100 &&
                           Number(selectedDropDown.votingPower) > 0
@@ -582,52 +626,12 @@ export default function Vote() {
                       >
                         Cast vote
                       </div>
-                    </ToolTip>
-                  ) : sumOfVotes === 100 ? (
-                    <div
-                      className={clsx(
-                        "px-4    h-[38px]  flex items-center justify-center rounded-xl ",
+                    )}
+                  </div>
 
-                        "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
-                      )}
-                    >
-                      Already voted
-                    </div>
-                  ) : (
-                    <div
-                      className={clsx(
-                        "px-3    h-[38px]  flex items-center justify-center rounded-xl ",
-
-                        votes.length !== 0 &&
-                          (selectedEpoch?.epochNumber
-                            ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                            : false) &&
-                          totalVotingPower === 100 &&
-                          Number(selectedDropDown.votingPower) > 0
-                          ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
-                          : "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
-                      )}
-                      onClick={() =>
-                        votes.length !== 0 &&
-                        (selectedEpoch?.epochNumber
-                          ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                          : false) &&
-                        totalVotingPower === 100 &&
-                        sumOfVotes !== 100 &&
-                        Number(selectedDropDown.votingPower) > 0
-                          ? setShowCastVoteModal(true)
-                          : currentEpoch?.epochNumber !== selectedEpoch?.epochNumber
-                          ? setShowEpochPopUp(true)
-                          : () => {}
-                      }
-                    >
-                      Cast vote
-                    </div>
-                  )}
-                </div>
-
-                <div onClick={() => setShowCastVotingAllocation(true)}>
-                  <Image alt={"alt"} src={chartMobile} width={"24px"} height={"24px"} />
+                  <div onClick={() => setShowCastVotingAllocation(true)}>
+                    <Image alt={"alt"} src={chartMobile} width={"24px"} height={"24px"} />
+                  </div>
                 </div>
               </div>
               <VotesTable
