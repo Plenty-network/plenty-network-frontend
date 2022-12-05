@@ -77,7 +77,7 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
             ).toFixed(2)}
           </div>
         </div>
-        <div className="mt-4 px-5 text-text-250 font-body4 ">You will receive (atleast)</div>
+        <div className="mt-4 px-5 text-text-250 font-body4 ">PNLP being burnt (atleast)</div>
         <div className="mt-1 px-5 text-white font-title2 ">{props.burnAmount} PNLP</div>
         <div className="mt-5 border-t border-text-800/[0.5]"></div>
         <div className="px-5 mt-[18px] flex justify-between">

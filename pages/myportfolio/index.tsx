@@ -217,6 +217,7 @@ function MyPortfolio(props: any) {
       getAllTokensBalanceFromTzkt(Object.values(token), userAddress).then(
         (response: IAllTokensBalanceResponse) => {
           setAllBalance(response);
+          setPlyBalance(response.allTokensBalances["PLY"].balance);
         }
       );
     } else {

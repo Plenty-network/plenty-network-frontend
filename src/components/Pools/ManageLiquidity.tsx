@@ -339,7 +339,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         headerText: "Transaction submitted",
         trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
           TOKEN_A
-        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}.`,
+        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
         linkText: "View in Explorer",
         isLoading: true,
 
