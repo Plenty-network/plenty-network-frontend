@@ -83,7 +83,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "Your liquidity",
         id: "yourliquidity",
-        columnWidth: "w-[80px]",
+        columnWidth: "w-[80px] pr-2.5",
         isToolTipEnabled: true,
         tooltipMessage: "Value of tokens supplied to the pair.",
         canShort: true,
@@ -194,7 +194,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: "Boost",
         id: "Boost",
-        columnWidth: "w-[124px]",
+        columnWidth: "w-[124px] pr-2.5",
         isToolTipEnabled: true,
         tooltipMessage: "Boost received on the gauge APR by attaching a veNFT.",
         canShort: true,
