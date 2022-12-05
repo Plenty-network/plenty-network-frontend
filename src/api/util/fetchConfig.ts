@@ -4,6 +4,7 @@ import Config from '../../config/config';
 import { IConfigLPToken, IConfigPools, IConfigToken, IConfigTokens, IContractsConfig, PoolType } from '../../config/types';
 import { store } from '../../redux';
 import { getTzktBigMapData, getTzktStorageData } from './storageProvider';
+import { getIconUrl } from './tokens';
 import { IGaugeExistsResponse } from './types';
 
 export const fetchConfig = async (): Promise<IContractsConfig> => {
@@ -37,7 +38,15 @@ export const fetchConfig = async (): Promise<IContractsConfig> => {
       // const LP: ITokens = configResult[1].data;
       // const STANDARD: ITokens = configResult[2].data;
       // const AMM: IAmmContracts = configResult[3].data;
-      const TOKEN: IConfigTokens = configResult[0].data;
+      // Create a valid https url for each token if thumbnail uri available.
+      const tokenData: IConfigTokens = configResult[0].data;
+      for(const token of Object.keys(tokenData)) {
+        if(tokenData[token].thumbnailUri) {
+          const iconUrl = await getIconUrl({thumbnailUri: tokenData[token].thumbnailUri});
+          tokenData[token].iconUrl = iconUrl;
+        }
+      }
+      const TOKEN: IConfigTokens = tokenData;
       const AMM: IConfigPools = configResult[1].data;
       return {
         // TOKEN,

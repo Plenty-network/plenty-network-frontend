@@ -52,7 +52,7 @@ export function PopUpModal(props: IPopUpModalProps) {
             : props.isFullSizeOnMobile
             ? "w-full md:w-[calc(100vw_-_38px)]"
             : "w-[calc(100vw_-_38px)]",
-          props.Name === "addBribes" ? "md:rounded-3xl" : "rounded-3xl",
+          props.Name === "addBribes" ? "rounded-3xl" : "rounded-3xl",
           props.className
         )}
       >

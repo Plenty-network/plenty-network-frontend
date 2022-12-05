@@ -150,7 +150,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "APR",
         id: "apr1",
-        columnWidth: "w-[90px]",
+        columnWidth: "w-[90px] pr-2.5",
         subText: "next epoch",
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         isToolTipEnabled: true,
@@ -324,7 +324,7 @@ export function ShortCard(props: IShortCardProps) {
         Header: "Bribes",
         id: "Bribes",
         subText: "current epoch",
-        columnWidth: "w-[123px]",
+        columnWidth: "w-[123px] pr-2.5",
         tooltipMessage:
           "Incentives provided by the protocols to boost the liquidity of their tokens.",
         isToolTipEnabled: true,

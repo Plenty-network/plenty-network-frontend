@@ -177,11 +177,11 @@ export const getLPTokenPrice = async (tokenA : string , tokenB : string , tokenP
     const lpTokenSupply = swapData.lpTokenSupply.multipliedBy(new BigNumber(10).pow(swapData.lpToken?.decimals as number));
 
     let tokenAAmount = ((tokenInSupply).multipliedBy(new BigNumber(10).pow(swapData.lpToken?.decimals as number))).dividedBy(lpTokenSupply);
-    tokenAAmount = (tokenAAmount.multipliedBy(tokenPrice[swapData.tokenIn])).dividedBy(new BigNumber(10).pow(TOKEN[swapData.tokenIn].decimals));
+    tokenAAmount = (tokenAAmount.multipliedBy(tokenPrice[swapData.tokenIn] ?? 0)).dividedBy(new BigNumber(10).pow(TOKEN[swapData.tokenIn].decimals));
 
 
     let tokenBAmount = new BigNumber((tokenOutSupply).multipliedBy(new BigNumber(10).pow(swapData.lpToken?.decimals as number))).dividedBy(lpTokenSupply);
-    tokenBAmount = (tokenBAmount.multipliedBy(tokenPrice[swapData.tokenOut])).dividedBy(new BigNumber(10).pow(TOKEN[swapData.tokenOut].decimals));
+    tokenBAmount = (tokenBAmount.multipliedBy(tokenPrice[swapData.tokenOut] ?? 0)).dividedBy(new BigNumber(10).pow(TOKEN[swapData.tokenOut].decimals));
 
     const lpTokenPrice = tokenAAmount.plus(tokenBAmount);
 
