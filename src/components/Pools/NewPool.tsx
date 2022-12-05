@@ -371,7 +371,7 @@ export function NewPool(props: IManageLiquidityProps) {
       {props.show && (
         <PopUpModal
           onhide={closeModal}
-          className="w-[390px] max-w-[390px] md:w-[620px] md:max-w-[620px] rounded-none md:rounded-3xl "
+          className="w-[390px] max-w-[390px] sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
           footerChild={
             <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
               <p className="font-subtitle1 md:text-f16 text-text-150"></p>

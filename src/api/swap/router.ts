@@ -35,18 +35,28 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
                 tempPaths.push(paths[i]);
             }
         }
+        tempPaths.sort((a, b) => a.length - b.length);
         paths = tempPaths;
     
         let swapData: ISwapDataResponse[][] = [];
+        const allSwapDataPromises: Promise<ISwapDataResponse>[][] = [];
 
         for (const i in paths) {
             const path = paths[i].split(' ');
+            const swapDataPromises: Promise<ISwapDataResponse>[] = [];
             swapData[i] = [];
             for (let j = 0; j < path.length - 1; j++) {
                 // Getting Swap Details
-                swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
+                // swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
+                swapDataPromises.push(loadSwapDataWrapper(path[j], path[j + 1]));  // Creating array of promises for all pairs in path
             }
+            allSwapDataPromises.push(swapDataPromises); // Creating array of promises for all paths.
         }
+        // Executing array of array of promises
+        swapData = await Promise.all(
+          allSwapDataPromises.map((swapDataPromises) => Promise.all(swapDataPromises))
+        ); 
+
         return {
             paths,
             swapData
@@ -69,6 +79,7 @@ const allPathHelper = (
     TOKEN: IConfigTokens,
     paths : string[],
 ) => {
+    // console.log(src, dest, TOKEN[src]);
     if (src === dest) {
         paths.push(psf);
     }
