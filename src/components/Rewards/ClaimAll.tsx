@@ -45,7 +45,7 @@ function ClaimAll(props: IClaimProps) {
               <div>
                 <div className="text-text-400 font-body1">Your Rewards</div>
                 <span className="font-title2 text-white">
-                  ${(Number(props.totalValue) * props.tokenPrice["PLY"]).toFixed(2)}
+                  ${(Number(props.totalValue) * (props.tokenPrice["PLY"] ?? 0)).toFixed(2)}
                 </span>
                 <span className="font-body1 text-text-250 ml-1">distributed between</span>
               </div>

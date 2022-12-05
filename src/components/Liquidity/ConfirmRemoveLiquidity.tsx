@@ -56,7 +56,7 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
             $
             {Number(
               Number(props.removeTokenAmount.tokenOneAmount) *
-                Number(props.tokenPrice[props.tokenIn.name])
+                Number(props.tokenPrice[props.tokenIn.name] ?? 0)
             ).toFixed(2)}
           </div>
         </div>
@@ -73,7 +73,7 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
             $
             {Number(
               Number(props.removeTokenAmount.tokenTwoAmount) *
-                Number(props.tokenPrice[props.tokenIn.name])
+                Number(props.tokenPrice[props.tokenIn.name] ?? 0)
             ).toFixed(2)}
           </div>
         </div>
