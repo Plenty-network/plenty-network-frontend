@@ -121,15 +121,11 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x: any) => (
           <>
-            {Number(x.stakedPercentage) > 0 ? (
-              <Image src={stake} width={"20px"} height={"20px"} />
-            ) : !x.isGaugeAvailable ? (
-              <Image src={newPool} width={"20px"} height={"20px"} />
-            ) : null}
+            {!x.isGaugeAvailable ? <Image src={newPool} width={"20px"} height={"20px"} /> : null}
             <div
               className={clsx(
                 " flex justify-center items-center",
-                Number(x.stakedPercentage) > 0 || !x.isGaugeAvailable ? "ml-[14px]" : "ml-[34px]"
+                !x.isGaugeAvailable ? "ml-[14px]" : "ml-[34px]"
               )}
             >
               <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">

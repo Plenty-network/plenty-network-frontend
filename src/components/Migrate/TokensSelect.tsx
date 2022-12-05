@@ -1,12 +1,15 @@
 import { PopUpModal } from "../Modal/popupModal";
 import SearchBar from "../SearchBar/SearchBar";
 import Image from "next/image";
+
+import fromExponential from "from-exponential";
 import { tokenParameter, tokensModal } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { IAllTokensBalance } from "../../api/util/types";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import nFormatter, { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 interface ISwapModalProps {
   tokens: tokensModal[];
@@ -105,9 +108,23 @@ function TokenModalMigrate(props: ISwapModalProps) {
                     )}
                     {props.isSuccess && props.allBalance[token.name]?.balance ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">
-                        {props.allBalance[token.name]?.balance
-                          ? Number(props.allBalance[token.name]?.balance).toFixed(2)
-                          : 0.0}
+                        <ToolTip
+                          position={Position.top}
+                          message={
+                            props.allBalance[token.name]?.balance
+                              ? fromExponential(props.allBalance[token.name]?.balance.toString())
+                              : "0"
+                          }
+                          disable={Number(props.allBalance[token.name]?.balance) === 0}
+                        >
+                          {props.allBalance[token.name]?.balance
+                            ? Number(props.allBalance[token.name]?.balance) > 0
+                              ? props.allBalance[token.name]?.balance.isLessThan(0.01)
+                                ? "<0.01"
+                                : nFormatter(props.allBalance[token.name]?.balance)
+                              : "0.0"
+                            : "0.0"}
+                        </ToolTip>
                       </div>
                     ) : props.isSuccess === false ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]"> 0</div>

@@ -217,6 +217,7 @@ function MyPortfolio(props: any) {
       getAllTokensBalanceFromTzkt(Object.values(token), userAddress).then(
         (response: IAllTokensBalanceResponse) => {
           setAllBalance(response);
+          setPlyBalance(response.allTokensBalances["PLY"].balance);
         }
       );
     } else {
@@ -1899,7 +1900,7 @@ function MyPortfolio(props: any) {
           content={contentTransaction}
           clainText={
             claimState >= 0
-              ? "Calculating maximum claimable rewards, this may take some a few seconds. Please wait patiently."
+              ? "Calculating maximum claimable rewards, this may take some a few minutes. Please wait patiently."
               : ""
           }
         />

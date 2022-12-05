@@ -33,6 +33,7 @@ export interface IVoteBtnProps {
 }
 export interface ILocksColumnProps {
   id: BigNumber;
+  thumbnailUri: string;
 }
 export interface ILockExpiryProps {
   endTime: number;

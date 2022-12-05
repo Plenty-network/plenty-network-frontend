@@ -151,7 +151,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenId"),
         showOnMobile: true,
-        accessor: (x: any) => <LocksCloumn id={x.tokenId} />,
+        accessor: (x: any) => <LocksCloumn id={x.tokenId} thumbnailUri={x.thumbnailUri}/>,
       },
       {
         Header: "Pool",

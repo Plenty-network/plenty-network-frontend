@@ -22,29 +22,29 @@ const Config: IConfig = {
   },
   VE_SWAP : {
     mainnet: '',
-    testnet: 'KT1FaUxWi4Ah1oATPwM5Go1vqsk5uyPefwrZ',
+    testnet: 'KT1Fo6JuwYce2JgdnuGd7GhLC2aBkkaXKmRS',
   },
   VOTER: {
     mainnet: '',
-    testnet: 'KT1RER85G1S1QJyjViSuTJMizNbtzG9z7Jes',
+    testnet: 'KT1M7Qq8bLzKDB7Ax1Az86pBouQe3pFhf5pm',
   },
   VOTE_ESCROW : {
     mainnet : '',
-    testnet : 'KT1SJubny9Y6xsgDakqYSEofqodgbnxHCSMu',
+    testnet : 'KT1Lxzr5KiLsnKS9APYcWjREEy27AS6zD8wm',
   },
   PLY_TOKEN : {
     mainnet : '',
-    testnet : 'KT1BxKvsSCKTJ9XrmkjQRDQfh5mZBb14ue8D',
+    testnet : 'KT1RxghJRnQ3UKbqZ9Mbg4Vjs29Yi1YsGFKW',
   },
   FACTORY : {
     mainnet : '',
-    testnet : 'KT1VH2UKEeDkND2MHTHmGZDY5vRUshLo7NAT',
+    testnet : 'KT1UmJmgNvy7sGztaFkr598Lj7JxiWbTFbQp',
   },
 
   VE_INDEXER : 'https://ply-indexer.ghostnet.plenty.network/v1/',
   PLY_INDEXER : 'https://analytics-indexer.ghostnet.plenty.network/',
 
-  FAUCET : 'KT1EsCTuMzG5oh7C2R6h3STuEJ3SAfjiVVpb',
+  FAUCET : 'KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH',
 
   EXCHANGE_TOKENS: {
     PLENTY: {
@@ -95,7 +95,7 @@ const Config: IConfig = {
   },
   ROUTER: {
     mainnet: 'KT1MEVCrGRCsoERXf6ahNLC4ik6J2vRH7Mm6',
-    testnet: 'KT1NXCRRV9JL2L7j58r8kzRT91SLFqJ4vAa4',
+    testnet: 'KT1MsMSjppFUxHHhzY8XKqdwBKS8HV1roaWf',
   },
 
   NETWORK: 'testnet',

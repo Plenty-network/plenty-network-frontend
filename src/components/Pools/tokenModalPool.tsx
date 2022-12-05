@@ -3,6 +3,7 @@ import SearchBar from "../SearchBar/SearchBar";
 import Image, { StaticImageData } from "next/image";
 import infogrey from "../../assets/icon/swap/info-grey.svg";
 
+import fromExponential from "from-exponential";
 import fallback from "../../assets/icon/pools/fallback.png";
 import { tokenParameter, tokensModal, tokenType } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
@@ -171,25 +172,27 @@ function TokenModalPool(props: ISwapModalProps) {
           </div>
           <div className="flex flex-wrap mt-1">
             {topTokensListArray.map((token, index) => {
-              return (
-                <div
-                  className={clsx(
-                    "border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100",
-                    props.tokenIn.name === token.name || props.tokenOut.name === token.name
-                      ? "cursor-not-allowed"
-                      : "cursor-pointer"
-                  )}
-                  key={index}
-                  {...(props.tokenIn.name === token.name || props.tokenOut.name === token.name
-                    ? {}
-                    : { onClick: () => props.selectToken(token) })}
-                >
-                  <span className="w-[18px] h-[18px] relative top-1">
-                    <Image alt={"alt"} src={token.image} width={"18px"} height={"18px"} />{" "}
-                  </span>
-                  <span className="font-body3">{tEZorCTEZtoUppercase(token.name)}</span>
-                </div>
-              );
+              if (token.name !== "XTZ") {
+                return (
+                  <div
+                    className={clsx(
+                      "border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100",
+                      props.tokenIn.name === token.name || props.tokenOut.name === token.name
+                        ? "cursor-not-allowed"
+                        : "cursor-pointer"
+                    )}
+                    key={index}
+                    {...(props.tokenIn.name === token.name || props.tokenOut.name === token.name
+                      ? {}
+                      : { onClick: () => props.selectToken(token) })}
+                  >
+                    <span className="w-[18px] h-[18px] relative top-1">
+                      <Image alt={"alt"} src={token.image} width={"18px"} height={"18px"} />{" "}
+                    </span>
+                    <span className="font-body3">{tEZorCTEZtoUppercase(token.name)}</span>
+                  </div>
+                );
+              }
             })}
           </div>
           {Object.keys(tokensToShow).length === 0 ? (
@@ -247,11 +250,25 @@ function TokenModalPool(props: ISwapModalProps) {
                     {(contractTokenBalance[token.name] || props.allBalance[token.name]) &&
                     props.isLoading ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">
-                        {props.allBalance[token.name]?.balance
-                          ? props.allBalance[token.name]?.balance.toFixed(2)
-                          : contractTokenBalance[token.name]
-                          ? contractTokenBalance[token.name]?.balance.toFixed(2)
-                          : 0.0}
+                        <ToolTip
+                          position={Position.top}
+                          message={
+                            props.allBalance[token.name]?.balance
+                              ? fromExponential(props.allBalance[token.name]?.balance.toString())
+                              : contractTokenBalance[token.name]
+                              ? fromExponential(
+                                  contractTokenBalance[token.name]?.balance.toString()
+                                )
+                              : "0"
+                          }
+                          disable={Number(props.allBalance[token.name]?.balance) === 0}
+                        >
+                          {props.allBalance[token.name]?.balance
+                            ? props.allBalance[token.name]?.balance.toFixed(2)
+                            : contractTokenBalance[token.name]
+                            ? contractTokenBalance[token.name]?.balance.toFixed(2)
+                            : 0.0}
+                        </ToolTip>
                       </div>
                     ) : props.isLoading === false ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">0</div>

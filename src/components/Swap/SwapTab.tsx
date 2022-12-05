@@ -508,7 +508,7 @@ function SwapTab(props: ISwapTabProps) {
               {Object.keys(props.tokenOut).length !== 0 ? (
                 <TokenDropdown
                   onClick={() => props.handleTokenType("tokenOut")}
-                  tokenIcon={`/assets/tokens/${props.tokenOut.name.toLowerCase()}.png`}
+                  tokenIcon={`/assets/tokens/${props.tokenOut?.name?.toLowerCase()}.png`}
                   tokenName={tEZorCTEZtoUppercase(props.tokenOut.name)}
                 />
               ) : (

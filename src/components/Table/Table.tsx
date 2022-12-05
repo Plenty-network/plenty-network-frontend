@@ -130,7 +130,11 @@ const Table = <D extends object>({
                 TableName === "poolsRewards" || TableName === "locksRewards"
                   ? "justify-between "
                   : "",
-                TableName === "lockPosition" ? "lg:pl-[30px]" : "lg:pl-[50px] "
+                TableName === "lockPosition"
+                  ? "lg:pl-[30px]"
+                  : TableName === "newPools"
+                  ? "lg:pl-[20px]"
+                  : "lg:pl-[50px] "
               )}
             >
               {headerGroup.headers.map((column, i) => (
@@ -203,7 +207,13 @@ const Table = <D extends object>({
                         ? "justify-between  "
                         : ""
                     } 
-                    ${TableName === "lockPosition" ? "lg:pl-[30px]" : "lg:pl-[50px] "}
+                    ${
+                      TableName === "lockPosition"
+                        ? "lg:pl-[30px]"
+                        : TableName === "newPools"
+                        ? "lg:pl-[20px]"
+                        : "lg:pl-[50px] "
+                    }
                     ${
                       TableName === "locksRewards" && row.original?.epoch !== ""
                         ? "py-1 "
