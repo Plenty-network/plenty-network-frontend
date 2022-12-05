@@ -168,7 +168,7 @@ const createTokenData = async (tokenData: any): Promise<IConfigToken | undefined
  * Returns undefined if no valid icon data exists.
  * @param tokenMetadata - Metadata object of the individual token data object from the list oftokens data received from tzkt as response
  */
-const getIconUrl = async (tokenMetadata: any): Promise<string | undefined> => {
+export const getIconUrl = async (tokenMetadata: any): Promise<string | undefined> => {
   try {
     let iconUri: string | undefined = undefined;
     // Check under which key an icon uri exists in the metadata. It can possibly be under these three keys.
@@ -184,12 +184,12 @@ const getIconUrl = async (tokenMetadata: any): Promise<string | undefined> => {
     }
 
     if (isValidIPFSPath(iconUri as string)) {
-      const cid = getCIDFromIPFS(iconUri as string);
-      // Check if the cid of ipfs url is valid or not
-      if (isIPFS.cid(cid as string)) {
-        const ipfsUri = `${Config.IPFS_LINKS.primary}${cid as string}`;
+      const path = getPathFromIPFS(iconUri as string);
+      // Check if the path of ipfs url is valid or not
+      if (isIPFS.ipfsPath(`/ipfs/${path as string}`)) {
+        const ipfsUri = `${Config.IPFS_LINKS.primary}${path as string}`;
         // Fallback ipfs viewing service if first one fails.
-        const fallBackIpfsUri = `${Config.IPFS_LINKS.fallback}${cid as string}`;
+        const fallBackIpfsUri = `${Config.IPFS_LINKS.fallback}${path as string}`;
         // Check if the final ipfs url is a valid one.
         return isIPFS.ipfsUrl(ipfsUri)
           ? ipfsUri
@@ -230,17 +230,18 @@ const isValidIPFSPath = (path: string): boolean => {
  * Currently works for any ipfs of format - ipfs://{cid}
  * @param ipfsUri - ipfs path string from token metadata
  */
-const getCIDFromIPFS = (ipfsUri: string): string | undefined => {
+const getPathFromIPFS = (ipfsUri: string): string | undefined => {
   try {
-    let indexToSliceFrom = ipfsUri.lastIndexOf("/");
-    if (indexToSliceFrom < 0) {
-      return undefined;
-    }
+    // let indexToSliceFrom = ipfsUri.lastIndexOf("/");
+    const indexToSliceFrom = String("ipfs://").length;
+    // if (indexToSliceFrom < 0) {
+    //   return undefined;
+    // }
     // Increment the index by one to exclude / from return CID value
-    indexToSliceFrom += 1;
+    // indexToSliceFrom += 1;
 
-    const cid = ipfsUri.slice(indexToSliceFrom);
-    return cid.length > 0 ? cid : undefined;
+    const path = ipfsUri.slice(indexToSliceFrom);
+    return path.length > 0 ? path : undefined;
   } catch (error: any) {
     console.log(error);
     return undefined;

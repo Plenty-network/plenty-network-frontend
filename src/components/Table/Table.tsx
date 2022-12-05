@@ -226,7 +226,11 @@ const Table = <D extends object>({
                         // eslint-disable-next-line react/jsx-key
                         <td
                           className={` flex items-center ${cell.column.columnWidth} ${
-                            i == 0 ? "justify-start" : "justify-end "
+                            i == 0
+                              ? "justify-start"
+                              : TableName === "mybribes" && i !== 3
+                              ? "justify-start"
+                              : "justify-end "
                           }  ${tableType === true ? "colSticky" : ""} `}
                         >
                           {cell.render("Cell")}

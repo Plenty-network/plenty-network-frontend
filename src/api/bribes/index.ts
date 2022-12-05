@@ -98,7 +98,7 @@ export const getUserBribeData = async (
       //0 : value , 1 : name , 2 : amm  , 3 : price
 
       const AMM = AMMS[splitKey[2]];
-      let bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]]);
+      let bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]] ?? 0);
 
       const epochs = entry.value;
 
@@ -111,7 +111,7 @@ export const getUserBribeData = async (
       let startDate;
       if(epochData[epochStart]){
         startDate = epochData[epochStart].epochStartTimestamp / 1000;
-        bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]]);
+        bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]] ?? 0);
       }
       else {
         startDate =  pastEpochData.epochStartTimestamp;

@@ -109,7 +109,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Rewards",
         id: "Rewards",
-        columnWidth: "w-[130px] flex-1",
+        columnWidth: "w-[130px] flex-1 pr-2.5",
         isToolTipEnabled: true,
         tooltipMessage:
           "Trading fees and bribes to be distributed across the voters of this pool. The reward may increase as the epoch progresses.",
@@ -238,7 +238,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "My votes",
         id: "Myvotes",
-        columnWidth: "w-[112px]",
+        columnWidth: "w-[112px] pr-2.5",
         tooltipMessage: "Number of votes given through the selected veNFT to this pool.",
         isToolTipEnabled: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.myVotesPercentage"),
