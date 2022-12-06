@@ -115,8 +115,8 @@ export function ShortCard(props: IShortCardProps) {
         accessor: (x) => (
           <div className="flex gap-1 items-center max-w-[153px]">
             <CircularOverLappingImage
-              tokenA={x.tokenA}
-              tokenB={x.tokenB}
+              tokenA={x.tokenA.toString()}
+              tokenB={x.tokenB.toString()}
               src1={getImagesPath(x.tokenA.toString())}
               src2={getImagesPath(x.tokenB.toString())}
             />
@@ -214,8 +214,8 @@ export function ShortCard(props: IShortCardProps) {
               )}
             >
               <CircularOverLappingImage
-                tokenA={x.tokenA}
-                tokenB={x.tokenB}
+                tokenA={x.tokenA.toString()}
+                tokenB={x.tokenB.toString()}
                 src1={getImagesPath(x.tokenA.toString())}
                 src2={getImagesPath(x.tokenB.toString())}
               />

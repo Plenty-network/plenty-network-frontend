@@ -28,7 +28,7 @@ import { tokenType } from "../../constants/swap";
 import { getDexAddress } from "../../api/util/fetchConfig";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { IAllTokensBalance } from "../../api/util/types";
 
 interface ILiquidityProps {
@@ -66,6 +66,7 @@ interface ILiquidityProps {
   setPair: React.Dispatch<React.SetStateAction<string>>;
   setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
   showLiquidityModal: boolean;
+  contractTokenBalance: IAllTokensBalance;
 }
 export const Pair = {
   VOLATILE: "Volatile pair",
@@ -74,6 +75,7 @@ export const Pair = {
 function NewPoolMain(props: ILiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
+  const TOKEN = useAppSelector((state) => state.config.tokens);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
@@ -226,6 +228,7 @@ function NewPoolMain(props: ILiquidityProps) {
           "tokenOut"
         );
   };
+
   return (
     <>
       <div className="border rounded-2xl border-text-800 bg-card-200 px-[10px] md:px-3.5 pt-4 pb-4  mb-3">
@@ -236,8 +239,16 @@ function NewPoolMain(props: ILiquidityProps) {
               onClick={() => props.handleTokenType("tokenIn")}
             >
               <div className="ml-2 md:ml-5 -mb-1">
-                <Image
-                  src={props.tokenIn.name ? props.tokenIn.image : empty}
+                <img
+                  src={
+                    props.tokenIn.image
+                      ? imageExists(props.tokenIn.image)
+                        ? props.tokenIn.image
+                        : TOKEN[props.tokenIn.name.toString()]
+                        ? TOKEN[props.tokenIn.name.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : `/assets/icon/emptyIcon.svg`
+                  }
                   className="tokenIconLiq"
                   width={"42px"}
                   height={"42px"}
@@ -289,7 +300,10 @@ function NewPoolMain(props: ILiquidityProps) {
                     className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
                     onClick={onClickAmount}
                   >
-                    {!(Number(props.userBalances[props.tokenIn.name]?.balance) >= 0) ? (
+                    {!(
+                      Number(props.userBalances[props.tokenIn.name]?.balance) >= 0 ||
+                      Number(props.contractTokenBalance[props.tokenIn.name]?.balance) >= 0
+                    ) ? (
                       <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                     ) : (
                       <span className="mr-1">
@@ -301,7 +315,19 @@ function NewPoolMain(props: ILiquidityProps) {
                             : nFormatter(
                                 new BigNumber(props.userBalances[props.tokenIn.name]?.balance)
                               )
-                          : "0"}{" "}
+                          : props.contractTokenBalance[props.tokenIn.name]
+                          ? Number(props.contractTokenBalance[props.tokenIn.name]?.balance) > 0
+                            ? new BigNumber(
+                                props.contractTokenBalance[props.tokenIn.name]?.balance
+                              ).isLessThan(0.01)
+                              ? "<0.01"
+                              : nFormatter(
+                                  new BigNumber(
+                                    props.contractTokenBalance[props.tokenIn.name]?.balance
+                                  )
+                                )
+                            : "0.0"
+                          : "0.0"}{" "}
                       </span>
                     )}
                     {tEZorCTEZtoUppercase(props.tokenIn.name)}
@@ -319,8 +345,16 @@ function NewPoolMain(props: ILiquidityProps) {
               onClick={() => props.handleTokenType("tokenOut")}
             >
               <div className="ml-2 md:ml-5 -mb-1">
-                <Image
-                  src={props.tokenOut.name ? props.tokenOut.image : empty}
+                <img
+                  src={
+                    props.tokenOut.image
+                      ? imageExists(props.tokenOut.image)
+                        ? props.tokenOut.image
+                        : TOKEN[props.tokenOut.name.toString()]
+                        ? TOKEN[props.tokenOut.name.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : `/assets/icon/emptyIcon.svg`
+                  }
                   className="tokenIconLiq"
                   width={"42px"}
                   height={"42px"}
@@ -371,7 +405,10 @@ function NewPoolMain(props: ILiquidityProps) {
                     className="ml-1 cursor-pointer flex text-primary-500  font-caption1-small md:font-body2"
                     onClick={onClickSecondAmount}
                   >
-                    {!(Number(props.userBalances[props.tokenOut.name]?.balance) >= 0) ? (
+                    {!(
+                      Number(props.userBalances[props.tokenOut.name]?.balance) >= 0 ||
+                      Number(props.contractTokenBalance[props.tokenOut.name]?.balance) >= 0
+                    ) ? (
                       <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                     ) : (
                       <span className="mr-1">
@@ -383,7 +420,19 @@ function NewPoolMain(props: ILiquidityProps) {
                             : nFormatter(
                                 new BigNumber(props.userBalances[props.tokenOut.name]?.balance)
                               )
-                          : "0"}{" "}
+                          : props.contractTokenBalance[props.tokenOut.name]
+                          ? Number(props.contractTokenBalance[props.tokenOut.name]?.balance) > 0
+                            ? new BigNumber(
+                                props.contractTokenBalance[props.tokenOut.name]?.balance
+                              ).isLessThan(0.01)
+                              ? "<0.01"
+                              : nFormatter(
+                                  new BigNumber(
+                                    props.contractTokenBalance[props.tokenOut.name]?.balance
+                                  )
+                                )
+                            : "0.0"
+                          : "0.0"}{" "}
                       </span>
                     )}
                     {tEZorCTEZtoUppercase(props.tokenOut.name)}

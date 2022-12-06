@@ -1,7 +1,7 @@
 import Image from "next/image";
 import * as React from "react";
 import { isMobile } from "react-device-detect";
-import { changeSource } from "../../../api/util/helpers";
+import { changeSource, imageExists } from "../../../api/util/helpers";
 import { useAppSelector } from "../../../redux";
 import fallback from "../../../assets/icon/pools/fallback.png";
 
@@ -10,14 +10,7 @@ export interface ICircularImageInfoProps {
   className?: string;
   isSecoundIconBorder?: boolean;
 }
-export function imageExists(image_url: string) {
-  var http = new XMLHttpRequest();
 
-  http.open("HEAD", image_url, false);
-  http.send();
-
-  return http.status != 404;
-}
 export function CircularImageInfo(props: ICircularImageInfoProps) {
   const { className = "" } = props;
 
@@ -45,7 +38,7 @@ export const CircularOverLappingImage = (props: {
   src2: string;
 }) => {
   const TOKEN = useAppSelector((state) => state.config.tokens);
-  console.log("ishu", props.src2.includes("unknown"), props.src1, props.src2);
+
   return (
     <div className=" flex justify-center items-center">
       <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
@@ -54,9 +47,9 @@ export const CircularOverLappingImage = (props: {
           src={
             imageExists(props.src1)
               ? props.src1
-              : Object.prototype.hasOwnProperty.call(TOKEN[props.tokenA.toString()], "iconUrl")
-              ? TOKEN[props.tokenA.toString()].iconUrl
-              : fallback.toString()
+              : TOKEN[props.tokenA?.toString()]
+              ? TOKEN[props.tokenA?.toString()].iconUrl
+              : `/assets/Tokens/fallback.png`
           }
           width={isMobile ? "19px" : "24px"}
           height={isMobile ? "19px" : "24px"}
@@ -69,9 +62,9 @@ export const CircularOverLappingImage = (props: {
           src={
             imageExists(props.src2)
               ? props.src2
-              : Object.prototype.hasOwnProperty.call(TOKEN[props.tokenB.toString()], "iconUrl")
-              ? TOKEN[props.tokenB.toString()].iconUrl
-              : fallback.toString()
+              : TOKEN[props.tokenB?.toString()]
+              ? TOKEN[props.tokenB?.toString()].iconUrl
+              : `/assets/Tokens/fallback.png`
           }
           width={isMobile ? "19px" : "24px"}
           height={isMobile ? "19px" : "24px"}

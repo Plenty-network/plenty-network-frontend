@@ -5,6 +5,8 @@ import infogrey from "../../assets/icon/swap/info-grey.svg";
 
 import fromExponential from "from-exponential";
 import fallback from "../../assets/icon/pools/fallback.png";
+
+import fallbacksvg from "../../assets/icon/pools/fallbacksvg.svg";
 import { tokenParameter, tokensModal, tokenType } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
@@ -16,7 +18,7 @@ import { Chain, IConfigToken } from "../../config/types";
 import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 import { useAppSelector } from "../../redux";
 import { IAllTokensBalance } from "../../api/util/types";
-import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface ISwapModalProps {
   tokens: {
@@ -41,7 +43,7 @@ function TokenModalPool(props: ISwapModalProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const searchTokenEl = useRef(null);
   const tokenFromConfig = useAppSelector((state) => state.config.tokens);
-  console.log("ishu", tokenFromConfig);
+
   const [tokensToShow, setTokensToShow] = useState<
     | {
         name: string;
@@ -122,33 +124,30 @@ function TokenModalPool(props: ISwapModalProps) {
       interface: IConfigToken;
     }[] = [];
     if (array1.length >= array2.length) {
-      array1.filter((p) => {
-        var d = 0;
-        //console.log("ishu1", p);
+      array1.filter((token) => {
+        var flag = 0;
+
         array2.filter((k) => {
-          if (k.name.includes(p.name)) {
-            d = 1;
+          if (k.name.includes(token.name)) {
+            flag = 1;
           } else {
           }
         });
-        if (d == 0) {
-          //console.log("ishu2", p);
-          res.push(p);
+        if (flag == 0) {
+          res.push(token);
         }
       });
     } else {
-      array2.filter((p) => {
-        //console.log("ishu1", p);
-        var d = 0;
+      array2.filter((token) => {
+        var flag = 0;
         array1.filter((k) => {
-          if (k.name.includes(p.name)) {
-            d = 1;
+          if (k.name.includes(token.name)) {
+            flag = 1;
           } else {
           }
         });
-        if (d == 0) {
-          //console.log("ishu2", p);
-          res.push(p);
+        if (flag == 0) {
+          res.push(token);
         }
       });
     }
@@ -165,14 +164,19 @@ function TokenModalPool(props: ISwapModalProps) {
 
       if (filterTokenslist.length === 0) {
         getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
-          console.log("ishu", res);
           if (res.allTokensList.length !== 0) {
             getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
               setContractTokenBalance(res.allTokensBalances);
             });
             const res1 = res.allTokensList.map((token) => ({
               name: token.symbol,
-              image: token.iconUrl ? token.iconUrl : fallback,
+              image: token.iconUrl
+                ? imageExists(token.iconUrl?.toString())
+                  ? token.iconUrl?.toString()
+                  : fallbacksvg
+                : tokenFromConfig[token.symbol?.toString()]
+                ? tokenFromConfig[token.symbol.toString()]?.iconUrl
+                : fallbacksvg,
               address: "",
               chainType: Chain.TEZOS,
               interface: token,
@@ -185,26 +189,28 @@ function TokenModalPool(props: ISwapModalProps) {
         });
       } else {
         getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
-          console.log("ishu", res);
           if (res.allTokensList.length !== 0) {
             getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
               setContractTokenBalance(res.allTokensBalances);
             });
             const res1 = res.allTokensList.map((token) => ({
               name: token.symbol,
-              image: token.iconUrl ? token.iconUrl : fallback,
+              image: token.iconUrl
+                ? imageExists(token.iconUrl?.toString())
+                  ? token.iconUrl?.toString()
+                  : fallbacksvg
+                : tokenFromConfig[token.symbol?.toString()]
+                ? tokenFromConfig[token.symbol.toString()]?.iconUrl
+                : fallbacksvg,
               address: "",
               chainType: Chain.TEZOS,
               interface: token,
             }));
-            console.log(
-              "ishu",
-              Array.from(new Set([...filterTokenslist, ...getUnion(res1, filterTokenslist)]))
-            );
-            const f = Array.from(
+
+            const result = Array.from(
               new Set([...filterTokenslist, ...getUnion(res1, filterTokenslist)])
             );
-            setTokensToShow(f);
+            setTokensToShow(result);
           } else {
             setTokensToShow(filterTokenslist);
           }
@@ -302,7 +308,13 @@ function TokenModalPool(props: ISwapModalProps) {
                       <span className="w-[30px] h-[30px] relative top-1">
                         <img
                           alt={"alt"}
-                          src={token.image ? token.image.toString() : fallback.toString()}
+                          src={
+                            imageExists(token.image?.toString())
+                              ? token.image?.toString()
+                              : tokenFromConfig[token.name?.toString()]
+                              ? tokenFromConfig[token.name.toString()]?.iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
                           width={"30px"}
                           height={"30px"}
                           onError={changeSource}

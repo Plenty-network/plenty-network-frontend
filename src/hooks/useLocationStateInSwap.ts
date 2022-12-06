@@ -40,7 +40,8 @@ export const useLocationStateInSwap = () => {
   );
 
   const [tokenOut, setTokenOut] = useState(
-    router.asPath.indexOf("=") !== router.asPath.lastIndexOf("=")
+    router.asPath.indexOf("=") !== router.asPath.lastIndexOf("=") &&
+      router.asPath.lastIndexOf("=") !== router.asPath.length - 1
       ? {
           name: router.asPath
             .slice(router.asPath.lastIndexOf("=") + 1, router.asPath.length)

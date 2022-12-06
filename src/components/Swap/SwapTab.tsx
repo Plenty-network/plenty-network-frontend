@@ -338,6 +338,7 @@ function SwapTab(props: ISwapTabProps) {
           "tokenIn"
         );
   };
+
   return (
     <>
       <div className="flex items-center flex-row px-5 lg:px-9 relative">
