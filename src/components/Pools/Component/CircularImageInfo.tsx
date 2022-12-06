@@ -1,13 +1,23 @@
 import Image from "next/image";
 import * as React from "react";
 import { isMobile } from "react-device-detect";
+import { changeSource } from "../../../api/util/helpers";
+import { useAppSelector } from "../../../redux";
+import fallback from "../../../assets/icon/pools/fallback.png";
 
 export interface ICircularImageInfoProps {
   imageArray?: Array<any>;
   className?: string;
   isSecoundIconBorder?: boolean;
 }
+export function imageExists(image_url: string) {
+  var http = new XMLHttpRequest();
 
+  http.open("HEAD", image_url, false);
+  http.send();
+
+  return http.status != 404;
+}
 export function CircularImageInfo(props: ICircularImageInfoProps) {
   const { className = "" } = props;
 
@@ -28,23 +38,44 @@ export function CircularImageInfo(props: ICircularImageInfoProps) {
     </div>
   );
 }
-export const CircularOverLappingImage = (props: { src1: string; src2: string }) => {
+export const CircularOverLappingImage = (props: {
+  tokenA: String;
+  tokenB: String;
+  src1: string;
+  src2: string;
+}) => {
+  const TOKEN = useAppSelector((state) => state.config.tokens);
+  console.log("ishu", props.src2.includes("unknown"), props.src1, props.src2);
   return (
     <div className=" flex justify-center items-center">
       <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-        <Image
+        <img
           alt={"alt"}
-          src={props.src1}
+          src={
+            imageExists(props.src1)
+              ? props.src1
+              : Object.prototype.hasOwnProperty.call(TOKEN[props.tokenA.toString()], "iconUrl")
+              ? TOKEN[props.tokenA.toString()].iconUrl
+              : fallback.toString()
+          }
           width={isMobile ? "19px" : "24px"}
           height={isMobile ? "19px" : "24px"}
+          onError={changeSource}
         />
       </div>
       <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-        <Image
+        <img
           alt={"alt"}
-          src={props.src2}
+          src={
+            imageExists(props.src2)
+              ? props.src2
+              : Object.prototype.hasOwnProperty.call(TOKEN[props.tokenB.toString()], "iconUrl")
+              ? TOKEN[props.tokenB.toString()].iconUrl
+              : fallback.toString()
+          }
           width={isMobile ? "19px" : "24px"}
           height={isMobile ? "19px" : "24px"}
+          onError={changeSource}
         />
       </div>
     </div>

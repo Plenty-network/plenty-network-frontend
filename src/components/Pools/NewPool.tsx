@@ -138,9 +138,11 @@ export function NewPool(props: IManageLiquidityProps) {
       success: false,
       allTokensBalances: {} as IAllTokensBalance,
     });
+    console.log("ishu", tokens);
     if (userAddress) {
       getAllTokensBalanceFromTzkt(Object.values(tokens), userAddress).then(
         (response: IAllTokensBalanceResponse) => {
+          console.log("ishu", response);
           setAllBalance(response);
         }
       );
@@ -150,7 +152,7 @@ export function NewPool(props: IManageLiquidityProps) {
         allTokensBalances: {} as IAllTokensBalance,
       });
     }
-  }, [userAddress, TOKEN, balanceUpdate]);
+  }, [userAddress, TOKEN, balanceUpdate, tokenIn.name, tokenOut.name]);
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
       name: token[0],

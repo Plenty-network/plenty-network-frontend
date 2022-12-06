@@ -16,7 +16,7 @@ import { Chain, IConfigToken } from "../../config/types";
 import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 import { useAppSelector } from "../../redux";
 import { IAllTokensBalance } from "../../api/util/types";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 interface ISwapModalProps {
   tokens: {
@@ -41,6 +41,7 @@ function TokenModalPool(props: ISwapModalProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const searchTokenEl = useRef(null);
   const tokenFromConfig = useAppSelector((state) => state.config.tokens);
+  console.log("ishu", tokenFromConfig);
   const [tokensToShow, setTokensToShow] = useState<
     | {
         name: string;
@@ -96,10 +97,63 @@ function TokenModalPool(props: ISwapModalProps) {
   const [contractTokenBalance, setContractTokenBalance] = useState<IAllTokensBalance>(
     {} as IAllTokensBalance
   );
-  const changeSource = (e: any) => {
-    e.target.src = { fallback };
-    e.onerror = null;
-  };
+
+  function getUnion(
+    array1: {
+      name: string;
+      image: string | StaticImageData;
+      address: string;
+      chainType: Chain;
+      interface: IConfigToken;
+    }[],
+    array2: {
+      name: string;
+      image: string | StaticImageData;
+      chainType: Chain;
+      address: string | undefined;
+      interface: IConfigToken;
+    }[]
+  ) {
+    const res: {
+      name: string;
+      image: string | StaticImageData;
+      address: string | undefined;
+      chainType: Chain;
+      interface: IConfigToken;
+    }[] = [];
+    if (array1.length >= array2.length) {
+      array1.filter((p) => {
+        var d = 0;
+        //console.log("ishu1", p);
+        array2.filter((k) => {
+          if (k.name.includes(p.name)) {
+            d = 1;
+          } else {
+          }
+        });
+        if (d == 0) {
+          //console.log("ishu2", p);
+          res.push(p);
+        }
+      });
+    } else {
+      array2.filter((p) => {
+        //console.log("ishu1", p);
+        var d = 0;
+        array1.filter((k) => {
+          if (k.name.includes(p.name)) {
+            d = 1;
+          } else {
+          }
+        });
+        if (d == 0) {
+          //console.log("ishu2", p);
+          res.push(p);
+        }
+      });
+    }
+    return res;
+  }
   useEffect(() => {
     const filterTokens = () => {
       const filterTokenslist = props.tokens
@@ -111,6 +165,7 @@ function TokenModalPool(props: ISwapModalProps) {
 
       if (filterTokenslist.length === 0) {
         getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
+          console.log("ishu", res);
           if (res.allTokensList.length !== 0) {
             getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
               setContractTokenBalance(res.allTokensBalances);
@@ -129,7 +184,32 @@ function TokenModalPool(props: ISwapModalProps) {
           }
         });
       } else {
-        setTokensToShow(filterTokenslist);
+        getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
+          console.log("ishu", res);
+          if (res.allTokensList.length !== 0) {
+            getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
+              setContractTokenBalance(res.allTokensBalances);
+            });
+            const res1 = res.allTokensList.map((token) => ({
+              name: token.symbol,
+              image: token.iconUrl ? token.iconUrl : fallback,
+              address: "",
+              chainType: Chain.TEZOS,
+              interface: token,
+            }));
+            console.log(
+              "ishu",
+              Array.from(new Set([...filterTokenslist, ...getUnion(res1, filterTokenslist)]))
+            );
+            const f = Array.from(
+              new Set([...filterTokenslist, ...getUnion(res1, filterTokenslist)])
+            );
+            setTokensToShow(f);
+          } else {
+            setTokensToShow(filterTokenslist);
+          }
+        });
+        //setTokensToShow(filterTokenslist);
       }
     };
     filterTokens();
@@ -220,9 +300,9 @@ function TokenModalPool(props: ISwapModalProps) {
                   >
                     <div>
                       <span className="w-[30px] h-[30px] relative top-1">
-                        <Image
+                        <img
                           alt={"alt"}
-                          src={token.image}
+                          src={token.image ? token.image.toString() : fallback.toString()}
                           width={"30px"}
                           height={"30px"}
                           onError={changeSource}
