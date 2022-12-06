@@ -68,8 +68,8 @@ function ClaimPly(props: IClaimProps) {
                   <ToolTip
                     message={
                       props.state === EClaimAllState.UNCLAIMED
-                        ? `$${(tokenPrice["PLY"] * Number(props.plyValue)).toFixed(6)}`
-                        : `$${(tokenPrice["PLY"] * Number(props.value)).toFixed(6)}`
+                        ? `$${((tokenPrice["PLY"] ?? 0) * Number(props.plyValue)).toFixed(6)}`
+                        : `$${((tokenPrice["PLY"] ?? 0) * Number(props.value)).toFixed(6)}`
                     }
                     id="tooltip8"
                     type={TooltipType.withoutArrowsAndTitle}

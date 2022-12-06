@@ -146,13 +146,15 @@ function SwapTab(props: ISwapTabProps) {
     ) {
       const res = percentageChange(
         new BigNumber(
-          Number(props.firstTokenAmount) * Number(props.tokenPrice[props.tokenIn.name])
+          Number(props.firstTokenAmount) * Number(props.tokenPrice[props.tokenIn.name] ?? 0)
         ),
         new BigNumber(
-          Number(props.secondTokenAmount) * Number(props.tokenPrice[props.tokenOut.name])
+          Number(props.secondTokenAmount) * Number(props.tokenPrice[props.tokenOut.name] ?? 0)
         )
       );
       setpriceDiff(res.toFixed(2));
+    } else {
+      setpriceDiff("");
     }
   }, [props.firstTokenAmount, props.secondTokenAmount]);
   useEffect(() => {

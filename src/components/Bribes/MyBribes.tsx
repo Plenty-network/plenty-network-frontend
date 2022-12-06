@@ -155,7 +155,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         id: "pool",
         showOnMobile: true,
 
-        columnWidth: "w-[153px]",
+        columnWidth: "w-[180px]",
 
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
@@ -229,7 +229,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
           noSearchResult={noSearchResult}
           shortby="Epochs"
           isFetched={props.isfetched}
-          TableName={""}
+          TableName={"mybribes"}
           NoData={NoData}
           TableWidth="min-w-[700px] lg:min-w-[1100px]"
         />
