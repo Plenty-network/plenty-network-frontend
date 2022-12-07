@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@airgap/beacon-sdk": "^3.0.0",
+    "@rainbow-me/rainbowkit": "^0.8.0",
     "@reduxjs/toolkit": "^1.8.2",
     "@taquito/beacon-wallet": "^13.0.0",
     "@taquito/michel-codec": "^10.1.1",
@@ -19,6 +20,7 @@
     "clsx": "^1.1.1",
     "conseiljs": "^5.1.0",
     "copy-to-clipboard": "^3.3.2",
+    "ethers": "^5.7.2",
     "from-exponential": "^1.1.1",
     "is-ipfs": "^7.0.3",
     "javascript-time-ago": "^2.5.7",
@@ -37,7 +39,8 @@
     "react-tooltip": "^4.2.21",
     "recharts": "2.1.12",
     "redux-persist": "^6.0.0",
-    "truncate-middle": "^1.0.6"
+    "truncate-middle": "^1.0.6",
+    "wagmi": "^0.8.10"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",
