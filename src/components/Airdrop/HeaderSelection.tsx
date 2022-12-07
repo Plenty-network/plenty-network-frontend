@@ -15,6 +15,7 @@ export interface IHeaderSelection {
 }
 
 function HeaderSelection(props: IHeaderSelection) {
+  /* Hooks provided by wagami for getting account, connection, network and chain related info */
   const { isConnected, address: ethAddress } = useAccount();
   const { chain: ethChain } = useNetwork();
 

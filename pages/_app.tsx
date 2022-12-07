@@ -1,5 +1,6 @@
 import type { AppProps } from "next/app";
 import { useState } from "react";
+import { chains, wagmiClient } from "../src/config/rainbowWalletConfig";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
@@ -9,24 +10,11 @@ import { store } from "../src/redux/index";
 import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import Script from "next/script";
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
-import { publicProvider } from 'wagmi/providers/public';
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { WagmiConfig } from "wagmi";
+import { customTheme } from "../src/config/rainbowWalletTheme";
 
 let persistor = persistStore(store);
-
-const { chains, provider } = configureChains([chain.mainnet, chain.polygon], [publicProvider()]);
-
-const { connectors } = getDefaultWallets({
-  appName: 'plenty.network',
-  chains
-});
-
-const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider
-})
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(new QueryClient());
@@ -50,8 +38,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
+            {/* Wrapping all the pages and components with Wagami Config and RainbowKit provider for using wallets across the app.
+                Configured wagami client, chains and theme are passed here.
+             */}
             <WagmiConfig client={wagmiClient}>
-              <RainbowKitProvider chains={chains} modalSize="compact">
+              <RainbowKitProvider chains={chains} modalSize="compact" theme={customTheme}>
                 <Component {...pageProps} />
               </RainbowKitProvider>
             </WagmiConfig>

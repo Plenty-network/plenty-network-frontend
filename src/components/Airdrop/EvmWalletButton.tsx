@@ -1,11 +1,14 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Button from "../Button/Button";
-
+/**
+ *  Create a custom wallet connect button by extending the ConnectButton component provided by RainbowKit.
+ */
 const EvmWalletButton = (): JSX.Element => {
   return (
     <ConnectButton.Custom>
-      {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
+      {/* Options provided by RainbowKit for customising [Refer RainbowKit docs for more options if needed] */}
+      {({ account, chain, openChainModal, openConnectModal, mounted }) => {
         return (
           <div
             {...(!mounted && {
@@ -43,41 +46,6 @@ const EvmWalletButton = (): JSX.Element => {
                   Your wallet is not eligible
                 </Button>
               );
-              // <div style={{ display: "flex", gap: 12 }}>
-              //   <button
-              //     onClick={openChainModal}
-              //     style={{ display: "flex", alignItems: "center" }}
-              //     type="button"
-              //   >
-              //     {chain.hasIcon && (
-              //       <div
-              //         style={{
-              //           background: chain.iconBackground,
-              //           width: 12,
-              //           height: 12,
-              //           borderRadius: 999,
-              //           overflow: "hidden",
-              //           marginRight: 4,
-              //         }}
-              //       >
-              //         {chain.iconUrl && (
-              //           <Image
-              //             alt={chain.name ?? "Chain icon"}
-              //             src={chain.iconUrl}
-              //             width={12}
-              //             height={12}
-              //           />
-              //         )}
-              //       </div>
-              //     )}
-              //     {chain.name}
-              //   </button>
-
-              //   <button onClick={openAccountModal} type="button">
-              //     {account.displayName}
-              //     {account.displayBalance ? ` (${account.displayBalance})` : ""}
-              //   </button>
-              // </div>
             })()}
           </div>
         );
