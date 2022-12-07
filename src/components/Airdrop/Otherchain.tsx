@@ -15,6 +15,7 @@ import TokenDropdown from "../TokenDropdown/TokenDropdown";
 import { tokenParameter } from "../../constants/swap";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
+import EvmWalletButton from "./EvmWalletButton";
 export interface IOtherChain {}
 
 function OtherChain(props: IOtherChain) {
@@ -77,8 +78,12 @@ function OtherChain(props: IOtherChain) {
           </div>
         </div>
       </div>
-      <div className="mt-[18px]">{ClaimButton}</div>
-      {false && (
+      {/* <div className="mt-[18px]">{ClaimButton}</div> */}
+      <div className="mt-[18px]">
+        <EvmWalletButton />
+      </div>
+      {/* //TODO: Add the condition when wallet is not eligible */}
+      {true && (
         <div className="h-[46px]  px-2 rounded-xl my-3 flex items-center bg-info-500/[0.1]">
           <p className="relative top-0.5">
             <Image src={infoBlue} />

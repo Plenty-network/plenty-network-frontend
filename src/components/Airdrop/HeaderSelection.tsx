@@ -4,6 +4,7 @@ import Image from "next/image";
 import Button from "../Button/Button";
 import { SideBarHOC } from "../Sidebar/SideBarHOC";
 import Link from "next/link";
+import { useAccount, useNetwork } from "wagmi";
 import clsx from "clsx";
 import { ChainAirdrop } from "./Disclaimer";
 import WalletAddress from "./WalletAddress";
@@ -14,6 +15,9 @@ export interface IHeaderSelection {
 }
 
 function HeaderSelection(props: IHeaderSelection) {
+  const { isConnected, address: ethAddress } = useAccount();
+  const { chain: ethChain } = useNetwork();
+
   return (
     <div className="flex font-title2-bold">
       <div
@@ -40,7 +44,7 @@ function HeaderSelection(props: IHeaderSelection) {
       </div>
       {!props.isDisclaimer && props.chain === ChainAirdrop.Other_chain ? (
         <div className="ml-auto mt-0.5">
-          <WalletAddress />
+          {isConnected && ethAddress && ethChain && (<WalletAddress />)}
         </div>
       ) : null}
     </div>

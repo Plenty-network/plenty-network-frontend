@@ -1,8 +1,8 @@
 import { store, useAppSelector } from "../../redux";
-import bribes from "../../assets/icon/bribes/bribesLanding.svg";
+import { useChainModal, useAccountModal } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import eth from "../../../src/assets/icon/airdrop/eth.svg";
-
+import { useAccount, useNetwork } from "wagmi";
 import truncateMiddle from "truncate-middle";
 import Button from "../Button/Button";
 import { SideBarHOC } from "../Sidebar/SideBarHOC";
@@ -15,13 +15,20 @@ export interface IWalletAddress {}
 
 function WalletAddress(props: IWalletAddress) {
   const userAddress = useAppSelector((state) => state.wallet.address);
+  const { address: ethAddress } = useAccount();
+  const { chain: ethChain } = useNetwork();
+  const { openAccountModal } = useAccountModal();
+  const { openChainModal } = useChainModal();
   return (
     <>
       <div className="flex ">
-        <p className="font-title3 mr-1.5"> ({truncateMiddle(userAddress, 4, 4, "...")})</p>
+        <p className="font-title3 mr-1.5 cursor-pointer" onClick={openAccountModal}>
+          {" "}
+          ({ethAddress ? truncateMiddle(ethAddress as string, 5, 4, "...") : ""})
+        </p>
 
-        <p className="mr-1">
-          <Image alt={"alt"} src={eth} />
+        <p className="mr-1 cursor-pointer">
+          <Image alt={ethChain?.name} src={eth} onClick={openChainModal} />
         </p>
       </div>
     </>
