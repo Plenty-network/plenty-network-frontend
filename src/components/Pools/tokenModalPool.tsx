@@ -165,7 +165,6 @@ function TokenModalPool(props: ISwapModalProps) {
       if (filterTokenslist.length === 0) {
         if (props.searchQuery !== "" && props.searchQuery.length > 8) {
           getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
-            console.log("ishu");
             if (res.allTokensList.length !== 0) {
               getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
                 setContractTokenBalance(res.allTokensBalances);
@@ -190,13 +189,8 @@ function TokenModalPool(props: ISwapModalProps) {
             }
           });
         }
-      } else if (
-        filterTokenslist.length !== 0 &&
-        props.searchQuery !== "" &&
-        props.searchQuery.length > 8
-      ) {
+      } else if (props.searchQuery !== "" && props.searchQuery.length > 8) {
         getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
-          console.log("ishu");
           if (res.allTokensList.length !== 0) {
             getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
               setContractTokenBalance(res.allTokensBalances);
@@ -232,10 +226,9 @@ function TokenModalPool(props: ISwapModalProps) {
   }, [
     props.tokens,
     props.searchQuery,
-
-    props.tokenType,
-    props.tokenIn.name,
-    props.tokenOut.name,
+    // props.tokenType,
+    // props.tokenIn.name,
+    // props.tokenOut.name,
     searchHits,
   ]);
 
