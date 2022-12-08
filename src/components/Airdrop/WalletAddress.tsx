@@ -33,10 +33,10 @@ function WalletAddress(props: IWalletAddress) {
     const currentChain = defaultChains.find((chain) => chain.id === ethChain?.id);
     if (currentChain) {
       setChainIconUrl(
-        currentChain.iconUrl ? (currentChain.iconUrl as string) : "/assets/chains/fallback.svg"
+        currentChain.iconUrl ? (currentChain.iconUrl as string) : "/assets/chains/unsupported.svg"
       );
     } else {
-      setChainIconUrl("/assets/chains/fallback.svg");
+      setChainIconUrl("/assets/chains/unsupported.svg");
     }
   }, [ethChain]);
 
