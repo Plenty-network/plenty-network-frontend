@@ -153,7 +153,7 @@ function TokenModalPool(props: ISwapModalProps) {
     }
     return res;
   }
-  useEffect(() => {
+  useMemo(() => {
     const filterTokens = () => {
       const filterTokenslist = props.tokens
         .filter(searchHits)
@@ -163,32 +163,40 @@ function TokenModalPool(props: ISwapModalProps) {
         });
 
       if (filterTokenslist.length === 0) {
-        getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
-          if (res.allTokensList.length !== 0) {
-            getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
-              setContractTokenBalance(res.allTokensBalances);
-            });
-            const res1 = res.allTokensList.map((token) => ({
-              name: token.symbol,
-              image: token.iconUrl
-                ? imageExists(token.iconUrl?.toString())
-                  ? token.iconUrl?.toString()
-                  : fallbacksvg
-                : tokenFromConfig[token.symbol?.toString()]
-                ? tokenFromConfig[token.symbol.toString()]?.iconUrl
-                : fallbacksvg,
-              address: "",
-              chainType: Chain.TEZOS,
-              interface: token,
-            }));
+        if (props.searchQuery !== "" && props.searchQuery.length > 8) {
+          getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
+            console.log("ishu");
+            if (res.allTokensList.length !== 0) {
+              getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
+                setContractTokenBalance(res.allTokensBalances);
+              });
+              const res1 = res.allTokensList.map((token) => ({
+                name: token.symbol,
+                image: token.iconUrl
+                  ? imageExists(token.iconUrl?.toString())
+                    ? token.iconUrl?.toString()
+                    : fallbacksvg
+                  : tokenFromConfig[token.symbol?.toString()]
+                  ? tokenFromConfig[token.symbol.toString()]?.iconUrl
+                  : fallbacksvg,
+                address: "",
+                chainType: Chain.TEZOS,
+                interface: token,
+              }));
 
-            setTokensToShow(res1);
-          } else {
-            setTokensToShow([]);
-          }
-        });
-      } else {
+              setTokensToShow(res1);
+            } else {
+              setTokensToShow([]);
+            }
+          });
+        }
+      } else if (
+        filterTokenslist.length !== 0 &&
+        props.searchQuery !== "" &&
+        props.searchQuery.length > 8
+      ) {
         getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
+          console.log("ishu");
           if (res.allTokensList.length !== 0) {
             getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
               setContractTokenBalance(res.allTokensBalances);
@@ -216,6 +224,8 @@ function TokenModalPool(props: ISwapModalProps) {
           }
         });
         //setTokensToShow(filterTokenslist);
+      } else {
+        setTokensToShow(filterTokenslist);
       }
     };
     filterTokens();

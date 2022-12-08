@@ -157,14 +157,17 @@ export function NewPool(props: IManageLiquidityProps) {
   );
 
   useEffect(() => {
-    getTokenDataFromTzkt(searchQuery.trim()).then((res) => {
-      if (res.allTokensList.length !== 0) {
-        getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
-          // contractTokenBalance.push(res.allTokensBalances);
-          setContractTokenBalance(res.allTokensBalances);
-        });
-      }
-    });
+    if (searchQuery !== "" && searchQuery.length > 8) {
+      getTokenDataFromTzkt(searchQuery.trim()).then((res) => {
+        console.log("ishu");
+        if (res.allTokensList.length !== 0) {
+          getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
+            // contractTokenBalance.push(res.allTokensBalances);
+            setContractTokenBalance(res.allTokensBalances);
+          });
+        }
+      });
+    }
   }, [searchQuery]);
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
