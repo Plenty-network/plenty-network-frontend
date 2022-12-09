@@ -12,9 +12,9 @@ import info from "../../../src/assets/icon/swap/info.svg";
 import { BigNumber } from "bignumber.js";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import stableSwap from "../../../src/assets/icon/swap/stableswapViolet.svg";
-import { tokensList } from "../../constants/tokensList";
+import { tokenIcons, tokensList } from "../../constants/tokensList";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { useAppSelector } from "../../redux";
 
 interface IConfirmSwapProps {
@@ -82,15 +82,16 @@ function ConfirmAddPool(props: IConfirmSwapProps) {
                     alt={"alt"}
                     src={
                       props.tokenIn.image
-                        ? imageExists(props.tokenIn.image)
-                          ? props.tokenIn.image
-                          : TOKEN[props.tokenIn.name.toString()]
+                        ? tokenIcons[props.tokenIn.name]
+                          ? tokenIcons[props.tokenIn.name].src
+                          : TOKEN[props.tokenIn.name.toString()]?.iconUrl
                           ? TOKEN[props.tokenIn.name.toString()].iconUrl
                           : `/assets/Tokens/fallback.png`
                         : `/assets/icon/emptyIcon.svg`
                     }
                     height={"26px"}
                     width={"26px"}
+                    onError={changeSource}
                   />
                 </span>
                 <span className="font-title3 ml-2">
@@ -115,15 +116,16 @@ function ConfirmAddPool(props: IConfirmSwapProps) {
                     alt={"alt"}
                     src={
                       props.tokenOut.image
-                        ? imageExists(props.tokenOut.image)
-                          ? props.tokenOut.image
-                          : TOKEN[props.tokenOut.name.toString()]
+                        ? tokenIcons[props.tokenOut.name]
+                          ? tokenIcons[props.tokenOut.name].src
+                          : TOKEN[props.tokenOut.name.toString()]?.iconUrl
                           ? TOKEN[props.tokenOut.name.toString()].iconUrl
                           : `/assets/Tokens/fallback.png`
                         : `/assets/icon/emptyIcon.svg`
                     }
                     height={"26px"}
                     width={"26px"}
+                    onError={changeSource}
                   />
                 </span>
                 <span className="font-title3 ml-2">

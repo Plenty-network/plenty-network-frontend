@@ -4,6 +4,7 @@ import { isMobile } from "react-device-detect";
 import { changeSource, imageExists } from "../../../api/util/helpers";
 import { useAppSelector } from "../../../redux";
 import fallback from "../../../assets/icon/pools/fallback.png";
+import { tokenIcons } from "../../../constants/tokensList";
 
 export interface ICircularImageInfoProps {
   imageArray?: Array<any>;
@@ -45,9 +46,9 @@ export const CircularOverLappingImage = (props: {
         <img
           alt={"alt"}
           src={
-            imageExists(props.src1)
-              ? props.src1
-              : TOKEN[props.tokenA?.toString()]
+            tokenIcons[props.tokenA.toString()]
+              ? tokenIcons[props.tokenA.toString()].src
+              : TOKEN[props.tokenA?.toString()]?.iconUrl
               ? TOKEN[props.tokenA?.toString()].iconUrl
               : `/assets/Tokens/fallback.png`
           }
@@ -60,9 +61,9 @@ export const CircularOverLappingImage = (props: {
         <img
           alt={"alt"}
           src={
-            imageExists(props.src2)
-              ? props.src2
-              : TOKEN[props.tokenB?.toString()]
+            tokenIcons[props.tokenB.toString()]
+              ? tokenIcons[props.tokenB?.toString()].src
+              : TOKEN[props.tokenB?.toString()]?.iconUrl
               ? TOKEN[props.tokenB?.toString()].iconUrl
               : `/assets/Tokens/fallback.png`
           }

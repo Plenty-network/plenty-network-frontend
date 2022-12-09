@@ -11,7 +11,9 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { topTokenListGhostnet } from "../../api/swap/wrappers";
 import { Chain } from "../../config/types";
 import { IAllTokensBalance } from "../../api/util/types";
-import nFormatter, { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import nFormatter, { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
+import { useAppSelector } from "../../redux";
 
 interface ISwapModalProps {
   tokens: {
@@ -33,6 +35,7 @@ interface ISwapModalProps {
   isSuccess: boolean;
 }
 function SwapModal(props: ISwapModalProps) {
+  const tokens = useAppSelector((state) => state.config.tokens);
   const searchTokenEl = useRef(null);
   const [tokensToShow, setTokensToShow] = useState<
     | {
@@ -141,7 +144,19 @@ function SwapModal(props: ISwapModalProps) {
                     : { onClick: () => props.selectToken(token) })}
                 >
                   <span className="w-[18px] h-[18px] relative top-1">
-                    <Image alt={"alt"} src={token.image} width={"18px"} height={"18px"} />{" "}
+                    <img
+                      alt={"alt"}
+                      src={
+                        tokenIcons[token.name]
+                          ? tokenIcons[token.name].src
+                          : tokens[token.name.toString()]?.iconUrl
+                          ? tokens[token.name.toString()].iconUrl
+                          : `/assets/Tokens/fallback.png`
+                      }
+                      width={"18px"}
+                      height={"18px"}
+                      onError={changeSource}
+                    />
                   </span>
                   <span className="font-body3">{tEZorCTEZtoUppercase(token.name)}</span>
                 </div>
@@ -173,7 +188,19 @@ function SwapModal(props: ISwapModalProps) {
                   >
                     <div>
                       <span className="w-[30px] h-[30px] relative top-1">
-                        <Image alt={"alt"} src={token.image} width={"30px"} height={"30px"} />{" "}
+                        <img
+                          alt={"alt"}
+                          src={
+                            tokenIcons[token.name]
+                              ? tokenIcons[token.name].src
+                              : tokens[token.name.toString()]?.iconUrl
+                              ? tokens[token.name.toString()].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
+                          width={"30px"}
+                          height={"30px"}
+                          onError={changeSource}
+                        />{" "}
                       </span>
                     </div>
                     <div className="ml-2">

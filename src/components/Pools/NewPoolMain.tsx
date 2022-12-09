@@ -28,8 +28,9 @@ import { tokenType } from "../../constants/swap";
 import { getDexAddress } from "../../api/util/fetchConfig";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
-import { imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { IAllTokensBalance } from "../../api/util/types";
+import { tokenIcons } from "../../constants/tokensList";
 
 interface ILiquidityProps {
   firstTokenAmount: string | number;
@@ -242,9 +243,9 @@ function NewPoolMain(props: ILiquidityProps) {
                 <img
                   src={
                     props.tokenIn.image
-                      ? imageExists(props.tokenIn.image)
-                        ? props.tokenIn.image
-                        : TOKEN[props.tokenIn.name.toString()]
+                      ? tokenIcons[props.tokenIn.name]
+                        ? tokenIcons[props.tokenIn.name].src
+                        : TOKEN[props.tokenIn.name.toString()]?.iconUrl
                         ? TOKEN[props.tokenIn.name.toString()].iconUrl
                         : `/assets/Tokens/fallback.png`
                       : `/assets/icon/emptyIcon.svg`
@@ -252,6 +253,7 @@ function NewPoolMain(props: ILiquidityProps) {
                   className="tokenIconLiq"
                   width={"42px"}
                   height={"42px"}
+                  onError={changeSource}
                 />
               </div>
               <div className="ml-1 md:ml-2">
@@ -348,9 +350,9 @@ function NewPoolMain(props: ILiquidityProps) {
                 <img
                   src={
                     props.tokenOut.image
-                      ? imageExists(props.tokenOut.image)
-                        ? props.tokenOut.image
-                        : TOKEN[props.tokenOut.name.toString()]
+                      ? tokenIcons[props.tokenOut.name]
+                        ? tokenIcons[props.tokenOut.name].src
+                        : TOKEN[props.tokenOut.name.toString()]?.iconUrl
                         ? TOKEN[props.tokenOut.name.toString()].iconUrl
                         : `/assets/Tokens/fallback.png`
                       : `/assets/icon/emptyIcon.svg`
@@ -358,6 +360,7 @@ function NewPoolMain(props: ILiquidityProps) {
                   className="tokenIconLiq"
                   width={"42px"}
                   height={"42px"}
+                  onError={changeSource}
                 />
               </div>
               <div className="ml-1 md:ml-2">

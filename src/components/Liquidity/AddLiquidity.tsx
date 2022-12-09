@@ -3,11 +3,12 @@ import Image from "next/image";
 import add from "../../../src/assets/icon/pools/addIcon.svg";
 import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import { estimateOtherTokenAmount } from "../../api/liquidity";
-import { imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { IAllTokensBalanceResponse } from "../../api/util/types";
 import { useAppSelector } from "../../redux";
 import { ISwapData, tokenParameterLiquidity } from "./types";
 import fallback from "../../../src/assets/icon/pools/fallback.png";
+import { tokenIcons } from "../../constants/tokensList";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -111,18 +112,16 @@ function AddLiquidity(props: IAddLiquidityProps) {
           <div className="ml-2 md:ml-5">
             <img
               src={
-                imageExists(props.tokenIn.image)
-                  ? props.tokenIn.image
-                  : Object.prototype.hasOwnProperty.call(
-                      tokens[props.tokenIn.symbol.toString()],
-                      "iconUrl"
-                    )
+                tokenIcons[props.tokenIn.symbol]
+                  ? tokenIcons[props.tokenIn.symbol].src
+                  : tokens[props.tokenIn.symbol.toString()]?.iconUrl
                   ? tokens[props.tokenIn.symbol.toString()].iconUrl
                   : `/assets/Tokens/fallback.png`
               }
               className="tokenIconLiq"
               width={"42px"}
               height={"42px"}
+              onError={changeSource}
             />
           </div>
           <div className="ml-1 md:ml-2">
@@ -195,18 +194,16 @@ function AddLiquidity(props: IAddLiquidityProps) {
           <div className="ml-2 md:ml-5">
             <img
               src={
-                imageExists(props.tokenOut.image)
-                  ? props.tokenOut.image
-                  : Object.prototype.hasOwnProperty.call(
-                      tokens[props.tokenOut.image.toString()],
-                      "iconUrl"
-                    )
-                  ? tokens[props.tokenOut.image.toString()].iconUrl
+                tokenIcons[props.tokenOut.symbol]
+                  ? tokenIcons[props.tokenOut.symbol].src
+                  : tokens[props.tokenOut.symbol.toString()]?.iconUrl
+                  ? tokens[props.tokenOut.symbol.toString()].iconUrl
                   : `/assets/Tokens/fallback.png`
               }
               className="tokenIconLiq"
               width={"42px"}
               height={"42px"}
+              onError={changeSource}
             />
           </div>
           <div className="ml-1 md:ml-2">

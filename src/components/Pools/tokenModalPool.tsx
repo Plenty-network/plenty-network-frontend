@@ -19,6 +19,7 @@ import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 import { useAppSelector } from "../../redux";
 import { IAllTokensBalance } from "../../api/util/types";
 import { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
 
 interface ISwapModalProps {
   tokens: {
@@ -172,11 +173,7 @@ function TokenModalPool(props: ISwapModalProps) {
               const res1 = res.allTokensList.map((token) => ({
                 name: token.symbol,
                 image: token.iconUrl
-                  ? imageExists(token.iconUrl?.toString())
-                    ? token.iconUrl?.toString()
-                    : fallbacksvg
-                  : tokenFromConfig[token.symbol?.toString()]
-                  ? tokenFromConfig[token.symbol.toString()]?.iconUrl
+                  ? token.iconUrl.toString()
                   : fallbacksvg,
                 address: "",
                 chainType: Chain.TEZOS,
@@ -198,11 +195,7 @@ function TokenModalPool(props: ISwapModalProps) {
             const res1 = res.allTokensList.map((token) => ({
               name: token.symbol,
               image: token.iconUrl
-                ? imageExists(token.iconUrl?.toString())
-                  ? token.iconUrl?.toString()
-                  : fallbacksvg
-                : tokenFromConfig[token.symbol?.toString()]
-                ? tokenFromConfig[token.symbol.toString()]?.iconUrl
+                ? token.iconUrl.toString()
                 : fallbacksvg,
               address: "",
               chainType: Chain.TEZOS,
@@ -276,7 +269,19 @@ function TokenModalPool(props: ISwapModalProps) {
                       : { onClick: () => props.selectToken(token) })}
                   >
                     <span className="w-[18px] h-[18px] relative top-1">
-                      <Image alt={"alt"} src={token.image} width={"18px"} height={"18px"} />{" "}
+                      <img
+                        alt={"alt"}
+                        src={
+                          tokenIcons[token.name]
+                            ? tokenIcons[token.name].src
+                            : tokenFromConfig[token.name.toString()]?.iconUrl
+                            ? tokenFromConfig[token.name.toString()].iconUrl
+                            : `/assets/Tokens/fallback.png`
+                        }
+                        width={"18px"}
+                        height={"18px"}
+                        onError={changeSource}
+                      />{" "}
                     </span>
                     <span className="font-body3">{tEZorCTEZtoUppercase(token.name)}</span>
                   </div>
@@ -312,10 +317,10 @@ function TokenModalPool(props: ISwapModalProps) {
                         <img
                           alt={"alt"}
                           src={
-                            imageExists(token.image?.toString())
-                              ? token.image?.toString()
-                              : tokenFromConfig[token.name?.toString()]
-                              ? tokenFromConfig[token.name.toString()]?.iconUrl
+                            tokenIcons[token.name.toString()]
+                              ? tokenIcons[token.name.toString()].src
+                              : tokenFromConfig[token.name?.toString()]?.iconUrl
+                              ? tokenFromConfig[token.name.toString()].iconUrl
                               : `/assets/Tokens/fallback.png`
                           }
                           width={"30px"}

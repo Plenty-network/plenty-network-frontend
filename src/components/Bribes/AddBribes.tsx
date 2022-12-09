@@ -324,11 +324,13 @@ function AddBribes(props: IAddBribes) {
                           onClick={() => handleTokenType()}
                           tokenIcon={props.bribeToken.image}
                           tokenName={tEZorCTEZtoUppercase(props.bribeToken.name)}
+                          tokenSymbol={props.bribeToken.name}
                         />
                       ) : (
                         <TokenDropdown
                           tokenName="Select a token"
                           onClick={() => handleTokenType()}
+                          tokenSymbol=""
                         />
                       )}
                     </div>

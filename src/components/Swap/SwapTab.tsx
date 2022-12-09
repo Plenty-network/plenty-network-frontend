@@ -395,11 +395,13 @@ function SwapTab(props: ISwapTabProps) {
                 onClick={() => props.handleTokenType("tokenIn")}
                 tokenIcon={`/assets/tokens/${props.tokenIn.name.toLowerCase()}.png`}
                 tokenName={tEZorCTEZtoUppercase(props.tokenIn.name)}
+                tokenSymbol={props.tokenIn.name}
               />
             ) : (
               <TokenDropdown
                 tokenName="Select a token"
                 onClick={() => props.handleTokenType("tokenIn")}
+                tokenSymbol=""
               />
             )}
           </div>
@@ -513,11 +515,13 @@ function SwapTab(props: ISwapTabProps) {
                   onClick={() => props.handleTokenType("tokenOut")}
                   tokenIcon={`/assets/tokens/${props.tokenOut?.name?.toLowerCase()}.png`}
                   tokenName={tEZorCTEZtoUppercase(props.tokenOut.name)}
+                  tokenSymbol={props.tokenOut.name}
                 />
               ) : (
                 <TokenDropdown
                   tokenName="Select a token"
                   onClick={() => props.handleTokenType("tokenOut")}
+                  tokenSymbol=""
                 />
               )}
             </div>

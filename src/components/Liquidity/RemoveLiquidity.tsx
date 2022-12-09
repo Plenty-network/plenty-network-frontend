@@ -5,8 +5,9 @@ import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import { ISwapData, tokenParameterLiquidity } from "./types";
 import { getOutputTokensAmount } from "../../api/liquidity";
 import { useAppSelector } from "../../redux";
-import nFormatter, { imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import nFormatter, { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import fallback from "../../../src/assets/icon/pools/fallback.png";
+import { tokenIcons } from "../../constants/tokensList";
 interface IRemoveLiquidityProps {
   swapData: ISwapData;
   pnlpBalance: string;
@@ -159,18 +160,16 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
             <div>
               <img
                 src={
-                  imageExists(props.tokenIn.image)
-                    ? props.tokenIn.image
-                    : Object.prototype.hasOwnProperty.call(
-                        tokens[props.tokenIn.symbol.toString()],
-                        "iconUrl"
-                      )
+                  tokenIcons[props.tokenIn.symbol]
+                    ? tokenIcons[props.tokenIn.symbol].src
+                    : tokens[props.tokenIn.symbol.toString()]?.iconUrl
                     ? tokens[props.tokenIn.symbol.toString()].iconUrl
                     : `/assets/Tokens/fallback.png`
                 }
                 className="tokenIconLiqRemove"
                 width={"34px"}
                 height={"34px"}
+                onError={changeSource}
               />
             </div>
             <div className="md:ml-2.5 ">
@@ -194,18 +193,16 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
             <div>
               <img
                 src={
-                  imageExists(props.tokenOut.image)
-                    ? props.tokenOut.image
-                    : Object.prototype.hasOwnProperty.call(
-                        tokens[props.tokenOut.symbol.toString()],
-                        "iconUrl"
-                      )
+                  tokenIcons[props.tokenOut.symbol]
+                    ? tokenIcons[props.tokenOut.symbol].src
+                    : tokens[props.tokenOut.symbol.toString()]?.iconUrl
                     ? tokens[props.tokenOut.symbol.toString()].iconUrl
                     : `/assets/Tokens/fallback.png`
                 }
                 className="tokenIconLiqRemove"
                 width={"34px"}
                 height={"34px"}
+                onError={changeSource}
               />
             </div>
             <div className="md:ml-2.5 ">

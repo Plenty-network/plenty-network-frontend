@@ -5,8 +5,9 @@ import arrowDown from "../../assets/icon/swap/arrowDown.svg";
 import arrowDownViolet from "../../assets/icon/swap/arrowDownViolet.svg";
 
 import fallback from "../../assets/icon/pools/fallback.png";
-import { imageExists } from "../../api/util/helpers";
+import { changeSource, imageExists } from "../../api/util/helpers";
 import { useAppSelector } from "../../redux";
+import { tokenIcons } from "../../constants/tokensList";
 
 interface ITokenDropdownProps {
   tokenIcon?: any;
@@ -14,6 +15,7 @@ interface ITokenDropdownProps {
   tokenName: string;
   className?: string;
   isArrow?: boolean;
+  tokenSymbol: string;
 }
 function TokenDropdown(props: ITokenDropdownProps) {
   const TOKEN = useAppSelector((state) => state.config.tokens);
@@ -40,14 +42,15 @@ function TokenDropdown(props: ITokenDropdownProps) {
           <img
             alt={"alt"}
             src={
-              imageExists(props.tokenIcon)
-                ? props.tokenIcon
-                : TOKEN[props.tokenIcon.toString()]
-                ? TOKEN[props.tokenIcon.toString()].iconUrl
+              tokenIcons[props.tokenSymbol]
+                ? tokenIcons[props.tokenSymbol].src
+                : TOKEN[props.tokenSymbol.toString()]?.iconUrl
+                ? TOKEN[props.tokenSymbol.toString()].iconUrl
                 : `/assets/Tokens/fallback.png`
             }
             height={"24px"}
             width={"24px"}
+            onError={changeSource}
           />
         </span>
         <span className="mx-2 md:mx-2 relative top-[0px]">
