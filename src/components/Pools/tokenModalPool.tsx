@@ -321,6 +321,8 @@ function TokenModalPool(props: ISwapModalProps) {
                               ? tokenIcons[token.name.toString()].src
                               : tokenFromConfig[token.name?.toString()]?.iconUrl
                               ? tokenFromConfig[token.name.toString()].iconUrl
+                              : token.image
+                              ? (token.image as string)
                               : `/assets/Tokens/fallback.png`
                           }
                           width={"30px"}
