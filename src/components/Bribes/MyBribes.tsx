@@ -16,11 +16,13 @@ import { Token } from "./Token";
 import { IUserBribeData } from "../../api/bribes/types";
 import { BribeValue } from "./Bribe";
 import { WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
 TimeAgo.addDefaultLocale(en);
 
 export function MyBribesTableBribes(props: IBribesTableBribes) {
   // const userAddress = store.getState().wallet.address;
+  const tokens = useAppSelector((state) => state.config.tokens);
   const userAddress = useAppSelector((state) => state.wallet.address);
 
   const { valueFormat } = useTableNumberUtils();
@@ -91,10 +93,34 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-              <Image alt={"alt"} src={getImagesPath(x.tokenA)} width={"20px"} height={"20px"} />
+              <img
+                alt={"alt"}
+                src={
+                  tokenIcons[x.tokenA]
+                    ? tokenIcons[x.tokenA].src
+                    : tokens[x.tokenA.toString()]?.iconUrl
+                    ? tokens[x.tokenA.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
+                width={"20px"}
+                height={"20px"}
+                onError={changeSource}
+              />
             </div>
             <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image alt={"alt"} src={getImagesPath(x.tokenB)} width={"20px"} height={"20px"} />
+              <img
+                alt={"alt"}
+                src={
+                  tokenIcons[x.tokenB]
+                    ? tokenIcons[x.tokenB].src
+                    : tokens[x.tokenB.toString()]?.iconUrl
+                    ? tokens[x.tokenB.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
+                width={"20px"}
+                height={"20px"}
+                onError={changeSource}
+              />
             </div>
             <div className="flex flex-col gap-[2px]">
               <span className="font-body4">
@@ -162,10 +188,34 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-              <Image alt={"alt"} src={getImagesPath(x.tokenA)} width={"24px"} height={"24px"} />
+              <img
+                alt={"alt"}
+                src={
+                  tokenIcons[x.tokenA]
+                    ? tokenIcons[x.tokenA].src
+                    : tokens[x.tokenA.toString()]?.iconUrl
+                    ? tokens[x.tokenA.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
+                width={"24px"}
+                height={"24px"}
+                onError={changeSource}
+              />
             </div>
             <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-              <Image alt={"alt"} src={getImagesPath(x.tokenB)} width={"24px"} height={"24px"} />
+              <img
+                alt={"alt"}
+                src={
+                  tokenIcons[x.tokenB]
+                    ? tokenIcons[x.tokenB].src
+                    : tokens[x.tokenB.toString()]?.iconUrl
+                    ? tokens[x.tokenB.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
+                width={"24px"}
+                height={"24px"}
+                onError={changeSource}
+              />
             </div>
             <div className="flex flex-col gap-[2px]">
               <span className="font-body4">

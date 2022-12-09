@@ -22,7 +22,8 @@ import { getNextListOfEpochs } from "../../api/util/epoch";
 import ConfirmAddBribes from "./ConfirmBribes";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
 
 function AddBribes(props: IAddBribes) {
   const [swapModalShow, setSwapModalShow] = useState(false);
@@ -403,19 +404,33 @@ function AddBribes(props: IAddBribes) {
                   <div className="flex items-center ">
                     <span className="flex">
                       <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                        <Image
+                        <img
                           alt={"alt"}
-                          src={getImagesPath(props.selectedPool.tokenA)}
+                          src={
+                            tokenIcons[props.selectedPool.tokenA]
+                              ? tokenIcons[props.selectedPool.tokenA].src
+                              : tokens[props.selectedPool.tokenA.toString()]?.iconUrl
+                              ? tokens[props.selectedPool.tokenA.toString()].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
                           width={"24px"}
                           height={"24px"}
+                          onError={changeSource}
                         />
                       </div>
                       <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                        <Image
+                        <img
                           alt={"alt"}
-                          src={getImagesPath(props.selectedPool.tokenB)}
+                          src={
+                            tokenIcons[props.selectedPool.tokenB]
+                              ? tokenIcons[props.selectedPool.tokenB].src
+                              : tokens[props.selectedPool.tokenB.toString()]?.iconUrl
+                              ? tokens[props.selectedPool.tokenB.toString()].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
                           width={"24px"}
                           height={"24px"}
+                          onError={changeSource}
                         />
                       </div>
                     </span>
