@@ -2,9 +2,11 @@ import Image from "next/image";
 import * as React from "react";
 import { isMobile, isTablet } from "react-device-detect";
 import { Column } from "react-table";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { IVotePageData } from "../../api/votes/types";
+import { tokenIcons } from "../../constants/tokensList";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
+import { useAppSelector } from "../../redux";
 import { compareNumericString } from "../../utils/commonUtils";
 import Table from "../Table/Table";
 import { MyVotes } from "./MyVotes";
@@ -15,7 +17,7 @@ import { IVotesTableProps } from "./types";
 
 export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
-
+  const tokens = useAppSelector((state) => state.config.tokens);
   const votesArray = Object.entries(props.voteData);
   const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
     new Array(votesArray.length).fill(0)
@@ -80,19 +82,33 @@ export function VotesTable(props: IVotesTableProps) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-              <Image
+              <img
                 alt={"alt"}
-                src={getImagesPath(x.votes.tokenA)}
+                src={
+                  tokenIcons[x.votes.tokenA]
+                    ? tokenIcons[x.votes.tokenA].src
+                    : tokens[x.votes.tokenA]?.iconUrl
+                    ? tokens[x.votes.tokenA].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 width={"20px"}
                 height={"20px"}
+                onError={changeSource}
               />
             </div>
             <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image
+              <img
                 alt={"alt"}
-                src={getImagesPath(x.votes.tokenB)}
+                src={
+                  tokenIcons[x.votes.tokenB]
+                    ? tokenIcons[x.votes.tokenB].src
+                    : tokens[x.votes.tokenB]?.iconUrl
+                    ? tokens[x.votes.tokenB].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 width={"20px"}
                 height={"20px"}
+                onError={changeSource}
               />
             </div>
             <div>
@@ -172,19 +188,33 @@ export function VotesTable(props: IVotesTableProps) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-              <Image
+              <img
                 alt={"alt"}
-                src={getImagesPath(x.votes.tokenA)}
+                src={
+                  tokenIcons[x.votes.tokenA]
+                    ? tokenIcons[x.votes.tokenA].src
+                    : tokens[x.votes.tokenA]?.iconUrl
+                    ? tokens[x.votes.tokenA].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 width={"24px"}
                 height={"24px"}
+                onError={changeSource}
               />
             </div>
             <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-              <Image
+              <img
                 alt={"alt"}
-                src={getImagesPath(x.votes.tokenB)}
+                src={
+                  tokenIcons[x.votes.tokenB]
+                    ? tokenIcons[x.votes.tokenB].src
+                    : tokens[x.votes.tokenB]?.iconUrl
+                    ? tokens[x.votes.tokenB].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 width={"24px"}
                 height={"24px"}
+                onError={changeSource}
               />
             </div>
             <div>

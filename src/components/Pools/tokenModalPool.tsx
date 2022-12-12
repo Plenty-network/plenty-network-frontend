@@ -5,6 +5,8 @@ import infogrey from "../../assets/icon/swap/info-grey.svg";
 
 import fromExponential from "from-exponential";
 import fallback from "../../assets/icon/pools/fallback.png";
+
+import fallbacksvg from "../../assets/icon/pools/fallbacksvg.svg";
 import { tokenParameter, tokensModal, tokenType } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
@@ -16,7 +18,8 @@ import { Chain, IConfigToken } from "../../config/types";
 import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 import { useAppSelector } from "../../redux";
 import { IAllTokensBalance } from "../../api/util/types";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
 
 interface ISwapModalProps {
   tokens: {
@@ -41,6 +44,7 @@ function TokenModalPool(props: ISwapModalProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const searchTokenEl = useRef(null);
   const tokenFromConfig = useAppSelector((state) => state.config.tokens);
+
   const [tokensToShow, setTokensToShow] = useState<
     | {
         name: string;
@@ -96,11 +100,61 @@ function TokenModalPool(props: ISwapModalProps) {
   const [contractTokenBalance, setContractTokenBalance] = useState<IAllTokensBalance>(
     {} as IAllTokensBalance
   );
-  const changeSource = (e: any) => {
-    e.target.src = { fallback };
-    e.onerror = null;
-  };
-  useEffect(() => {
+
+  function getUnion(
+    array1: {
+      name: string;
+      image: string | StaticImageData;
+      address: string;
+      chainType: Chain;
+      interface: IConfigToken;
+    }[],
+    array2: {
+      name: string;
+      image: string | StaticImageData;
+      chainType: Chain;
+      address: string | undefined;
+      interface: IConfigToken;
+    }[]
+  ) {
+    const res: {
+      name: string;
+      image: string | StaticImageData;
+      address: string | undefined;
+      chainType: Chain;
+      interface: IConfigToken;
+    }[] = [];
+    if (array1.length >= array2.length) {
+      array1.filter((token) => {
+        var flag = 0;
+
+        array2.filter((k) => {
+          if (k.name.includes(token.name)) {
+            flag = 1;
+          } else {
+          }
+        });
+        if (flag == 0) {
+          res.push(token);
+        }
+      });
+    } else {
+      array2.filter((token) => {
+        var flag = 0;
+        array1.filter((k) => {
+          if (k.name.includes(token.name)) {
+            flag = 1;
+          } else {
+          }
+        });
+        if (flag == 0) {
+          res.push(token);
+        }
+      });
+    }
+    return res;
+  }
+  useMemo(() => {
     const filterTokens = () => {
       const filterTokenslist = props.tokens
         .filter(searchHits)
@@ -110,6 +164,27 @@ function TokenModalPool(props: ISwapModalProps) {
         });
 
       if (filterTokenslist.length === 0) {
+        if (props.searchQuery !== "" && props.searchQuery.length > 8) {
+          getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
+            if (res.allTokensList.length !== 0) {
+              getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
+                setContractTokenBalance(res.allTokensBalances);
+              });
+              const res1 = res.allTokensList.map((token) => ({
+                name: token.symbol,
+                image: token.iconUrl ? token.iconUrl.toString() : fallbacksvg,
+                address: "",
+                chainType: Chain.TEZOS,
+                interface: token,
+              }));
+
+              setTokensToShow(res1);
+            } else {
+              setTokensToShow([]);
+            }
+          });
+        }
+      } else if (props.searchQuery !== "" && props.searchQuery.length > 8) {
         getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
           if (res.allTokensList.length !== 0) {
             getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
@@ -117,17 +192,21 @@ function TokenModalPool(props: ISwapModalProps) {
             });
             const res1 = res.allTokensList.map((token) => ({
               name: token.symbol,
-              image: token.iconUrl ? token.iconUrl : fallback,
+              image: token.iconUrl ? token.iconUrl.toString() : fallbacksvg,
               address: "",
               chainType: Chain.TEZOS,
               interface: token,
             }));
 
-            setTokensToShow(res1);
+            const result = Array.from(
+              new Set([...filterTokenslist, ...getUnion(res1, filterTokenslist)])
+            );
+            setTokensToShow(result);
           } else {
-            setTokensToShow([]);
+            setTokensToShow(filterTokenslist);
           }
         });
+        //setTokensToShow(filterTokenslist);
       } else {
         setTokensToShow(filterTokenslist);
       }
@@ -136,10 +215,9 @@ function TokenModalPool(props: ISwapModalProps) {
   }, [
     props.tokens,
     props.searchQuery,
-
-    props.tokenType,
-    props.tokenIn.name,
-    props.tokenOut.name,
+    // props.tokenType,
+    // props.tokenIn.name,
+    // props.tokenOut.name,
     searchHits,
   ]);
 
@@ -176,7 +254,7 @@ function TokenModalPool(props: ISwapModalProps) {
                 return (
                   <div
                     className={clsx(
-                      "border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100",
+                      "border mr-2 mt-2 flex items-center border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100",
                       props.tokenIn.name === token.name || props.tokenOut.name === token.name
                         ? "cursor-not-allowed"
                         : "cursor-pointer"
@@ -186,10 +264,22 @@ function TokenModalPool(props: ISwapModalProps) {
                       ? {}
                       : { onClick: () => props.selectToken(token) })}
                   >
-                    <span className="w-[18px] h-[18px] relative top-1">
-                      <Image alt={"alt"} src={token.image} width={"18px"} height={"18px"} />{" "}
+                    <span className="w-[18px] h-[18px] relative top-0">
+                      <img
+                        alt={"alt"}
+                        src={
+                          tokenIcons[token.name]
+                            ? tokenIcons[token.name].src
+                            : tokenFromConfig[token.name.toString()]?.iconUrl
+                            ? tokenFromConfig[token.name.toString()].iconUrl
+                            : `/assets/Tokens/fallback.png`
+                        }
+                        width={"18px"}
+                        height={"18px"}
+                        onError={changeSource}
+                      />{" "}
                     </span>
-                    <span className="font-body3">{tEZorCTEZtoUppercase(token.name)}</span>
+                    <span className="font-body3 ml-1">{tEZorCTEZtoUppercase(token.name)}</span>
                   </div>
                 );
               }
@@ -220,9 +310,17 @@ function TokenModalPool(props: ISwapModalProps) {
                   >
                     <div>
                       <span className="w-[30px] h-[30px] relative top-1">
-                        <Image
+                        <img
                           alt={"alt"}
-                          src={token.image}
+                          src={
+                            tokenIcons[token.name.toString()]
+                              ? tokenIcons[token.name.toString()].src
+                              : tokenFromConfig[token.name?.toString()]?.iconUrl
+                              ? tokenFromConfig[token.name.toString()].iconUrl
+                              : token.image
+                              ? (token.image as string)
+                              : `/assets/Tokens/fallback.png`
+                          }
                           width={"30px"}
                           height={"30px"}
                           onError={changeSource}

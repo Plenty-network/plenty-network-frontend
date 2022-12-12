@@ -13,21 +13,22 @@ import { YourLiquidity } from "./YourLiquidity";
 import { StakePercentage } from "./StakedPercentage";
 import { BoostValue } from "./BoostValue";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux";
+import { AppDispatch, useAppSelector } from "../../redux";
 
 import stake from "../../assets/icon/pools/stakePool.svg";
 import newPool from "../../assets/icon/pools/newPool.svg";
 import { getTotalVotingPower } from "../../redux/pools";
 import { NoPoolsPosition } from "../Rewards/NoContent";
 import { compareNumericString } from "../../utils/commonUtils";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import clsx from "clsx";
+import { tokenIcons } from "../../constants/tokensList";
 
 export function PoolsTablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
-
+  const tokens = useAppSelector((state) => state.config.tokens);
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
@@ -64,10 +65,34 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center ">
-              <Image alt={"alt"} src={getImagesPath(x.tokenA)} width={"20px"} height={"20px"} />
+              <img
+                alt={"alt"}
+                src={
+                  tokenIcons[x.tokenA]
+                    ? tokenIcons[x.tokenA].src
+                    : tokens[x.tokenA.toString()]?.iconUrl
+                    ? tokens[x.tokenA.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
+                width={"20px"}
+                height={"20px"}
+                onError={changeSource}
+              />
             </div>
             <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image alt={"alt"} src={getImagesPath(x.tokenB)} width={"20px"} height={"20px"} />
+              <img
+                alt={"alt"}
+                src={
+                  tokenIcons[x.tokenB]
+                    ? tokenIcons[x.tokenB].src
+                    : tokens[x.tokenB.toString()]?.iconUrl
+                    ? tokens[x.tokenB.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
+                width={"20px"}
+                height={"20px"}
+                onError={changeSource}
+              />
             </div>
             <div>
               <div className="font-body2 md:font-body4">
@@ -129,10 +154,34 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
               )}
             >
               <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                <Image alt={"alt"} src={getImagesPath(x.tokenA)} width={"24px"} height={"24px"} />
+                <img
+                  alt={"alt"}
+                  src={
+                    tokenIcons[x.tokenA]
+                      ? tokenIcons[x.tokenA].src
+                      : tokens[x.tokenA.toString()]?.iconUrl
+                      ? tokens[x.tokenA.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
+                  width={"24px"}
+                  height={"24px"}
+                  onError={changeSource}
+                />
               </div>
               <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                <Image alt={"alt"} src={getImagesPath(x.tokenB)} width={"24px"} height={"24px"} />
+                <img
+                  alt={"alt"}
+                  src={
+                    tokenIcons[x.tokenB]
+                      ? tokenIcons[x.tokenB].src
+                      : tokens[x.tokenB.toString()]?.iconUrl
+                      ? tokens[x.tokenB.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
+                  width={"24px"}
+                  height={"24px"}
+                  onError={changeSource}
+                />
               </div>
               <div>
                 <div className="font-body4">

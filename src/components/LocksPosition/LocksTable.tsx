@@ -25,10 +25,12 @@ import { VotingPower } from "./VotingPower";
 import { getVeNFTsList } from "../../api/votes";
 import { compareNumericString } from "../../utils/commonUtils";
 import { NoLocks } from "../Rewards/NoLocks";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
 TimeAgo.addDefaultLocale(en);
 
 export function LocksTablePosition(props: ILocksTablePosition) {
+  const tokens = useAppSelector((state) => state.config.tokens);
   const epochData = useAppSelector((state) => state.epoch.currentEpoch);
   const userAddress = useAppSelector((state) => state.wallet.address);
   const totalTime = epochData ? epochData.endTimestamp - epochData.startTimestamp : 0;
@@ -65,19 +67,33 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           x.attached ? (
             <div className=" flex justify-center items-center">
               <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-                <Image
+                <img
                   alt={"alt"}
-                  src={getImagesPath(x.attachedTokenASymbol)}
+                  src={
+                    tokenIcons[x.attachedTokenASymbol]
+                      ? tokenIcons[x.attachedTokenASymbol].src
+                      : tokens[x.attachedTokenASymbol.toString()]?.iconUrl
+                      ? tokens[x.attachedTokenASymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
                   width={"20px"}
                   height={"20px"}
+                  onError={changeSource}
                 />
               </div>
               <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-                <Image
+                <img
                   alt={"alt"}
-                  src={getImagesPath(x.attachedTokenBSymbol)}
+                  src={
+                    tokenIcons[x.attachedTokenBSymbol]
+                      ? tokenIcons[x.attachedTokenBSymbol].src
+                      : tokens[x.attachedTokenBSymbol.toString()]?.iconUrl
+                      ? tokens[x.attachedTokenBSymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
                   width={"20px"}
                   height={"20px"}
+                  onError={changeSource}
                 />
               </div>
               <div>
@@ -151,7 +167,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenId"),
         showOnMobile: true,
-        accessor: (x: any) => <LocksCloumn id={x.tokenId} thumbnailUri={x.thumbnailUri}/>,
+        accessor: (x: any) => <LocksCloumn id={x.tokenId} thumbnailUri={x.thumbnailUri} />,
       },
       {
         Header: "Pool",
@@ -166,19 +182,33 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           x.attached ? (
             <div className=" flex justify-center items-center">
               <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                <Image
+                <img
                   alt={"alt"}
-                  src={getImagesPath(x.attachedTokenASymbol)}
+                  src={
+                    tokenIcons[x.attachedTokenASymbol]
+                      ? tokenIcons[x.attachedTokenASymbol].src
+                      : tokens[x.attachedTokenASymbol.toString()]?.iconUrl
+                      ? tokens[x.attachedTokenASymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
                   width={"24px"}
                   height={"24px"}
+                  onError={changeSource}
                 />
               </div>
               <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                <Image
+                <img
                   alt={"alt"}
-                  src={getImagesPath(x.attachedTokenBSymbol)}
+                  src={
+                    tokenIcons[x.attachedTokenBSymbol]
+                      ? tokenIcons[x.attachedTokenBSymbol].src
+                      : tokens[x.attachedTokenBSymbol.toString()]?.iconUrl
+                      ? tokens[x.attachedTokenBSymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
                   width={"24px"}
                   height={"24px"}
+                  onError={changeSource}
                 />
               </div>
               <div>
