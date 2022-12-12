@@ -10,12 +10,14 @@ import { PLYEmission } from "./PLYEmisiion";
 import { Boost } from "./Boost";
 import { NoPoolsPosition } from "../Rewards/NoContent";
 import { compareNumericString } from "../../utils/commonUtils";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
+import { useAppSelector } from "../../redux";
 
 export function PoolsTableRewards(props: IPoolsTableRewards) {
   const { valueFormat } = useTableNumberUtils();
   const [showClaimPly, setShowClaimPly] = React.useState(false);
-
+  const tokens = useAppSelector((state) => state.config.tokens);
   const [noSearchResult, setNoSearchResult] = React.useState(false);
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
@@ -44,19 +46,33 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-              <Image
+              <img
                 alt={"alt"}
-                src={getImagesPath(x.tokenOneSymbol)}
+                src={
+                  tokenIcons[x.tokenOneSymbol]
+                    ? tokenIcons[x.tokenOneSymbol].src
+                    : tokens[x.tokenOneSymbol.toString()]?.iconUrl
+                    ? tokens[x.tokenOneSymbol.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 width={"20px"}
                 height={"20px"}
+                onError={changeSource}
               />
             </div>
             <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image
+              <img
                 alt={"alt"}
-                src={getImagesPath(x.tokenTwoSymbol)}
+                src={
+                  tokenIcons[x.tokenTwoSymbol]
+                    ? tokenIcons[x.tokenTwoSymbol].src
+                    : tokens[x.tokenTwoSymbol.toString()]?.iconUrl
+                    ? tokens[x.tokenTwoSymbol.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 width={"20px"}
                 height={"20px"}
+                onError={changeSource}
               />
             </div>
             <div>
@@ -110,19 +126,33 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-              <Image
+              <img
                 alt={"alt"}
-                src={getImagesPath(x.tokenOneSymbol)}
+                src={
+                  tokenIcons[x.tokenOneSymbol]
+                    ? tokenIcons[x.tokenOneSymbol].src
+                    : tokens[x.tokenOneSymbol.toString()]?.iconUrl
+                    ? tokens[x.tokenOneSymbol.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 width={"24px"}
                 height={"24px"}
+                onError={changeSource}
               />
             </div>
             <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-              <Image
+              <img
                 alt={"alt"}
-                src={getImagesPath(x.tokenTwoSymbol)}
+                src={
+                  tokenIcons[x.tokenTwoSymbol]
+                    ? tokenIcons[x.tokenTwoSymbol].src
+                    : tokens[x.tokenTwoSymbol.toString()]?.iconUrl
+                    ? tokens[x.tokenTwoSymbol.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 width={"24px"}
                 height={"24px"}
+                onError={changeSource}
               />
             </div>
             <div>

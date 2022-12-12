@@ -5,9 +5,12 @@ import epoachIcon from "../../assets/icon/common/epochTimeIcon.svg";
 import Button from "../Button/Button";
 import React from "react";
 import { IConfirmAddBribes } from "./types";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
+import { useAppSelector } from "../../redux";
 
 function ConfirmAddBribes(props: IConfirmAddBribes) {
+  const tokens = useAppSelector((state) => state.config.tokens);
   const closeModal = () => {
     props.setShow(false);
   };
@@ -65,19 +68,33 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
                   </p>
                   <p className="ml-auto pr-3 md:pr-5 flex justify-center items-center">
                     <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                      <Image
+                      <img
                         alt={"alt"}
-                        src={getImagesPath(props.selectedPool.tokenA)}
+                        src={
+                          tokenIcons[props.selectedPool.tokenA]
+                            ? tokenIcons[props.selectedPool.tokenA].src
+                            : tokens[props.selectedPool.tokenA.toString()]?.iconUrl
+                            ? tokens[props.selectedPool.tokenA.toString()].iconUrl
+                            : `/assets/Tokens/fallback.png`
+                        }
                         width={"24px"}
                         height={"24px"}
+                        onError={changeSource}
                       />
                     </div>
                     <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                      <Image
+                      <img
                         alt={"alt"}
-                        src={getImagesPath(props.selectedPool.tokenB)}
+                        src={
+                          tokenIcons[props.selectedPool.tokenB]
+                            ? tokenIcons[props.selectedPool.tokenB].src
+                            : tokens[props.selectedPool.tokenB.toString()]?.iconUrl
+                            ? tokens[props.selectedPool.tokenB.toString()].iconUrl
+                            : `/assets/Tokens/fallback.png`
+                        }
                         width={"24px"}
                         height={"24px"}
+                        onError={changeSource}
                       />
                     </div>
                     <div>
@@ -92,7 +109,18 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
 
                 <div className="text-text-500 mt-[14px] font-body3 mx-3 md:mx-5">Bribe:</div>
                 <div className="mx-3 md:mx-5 flex items-center mt-1.5">
-                  <Image src={getImagesPath(props.token.name)} width={"25px"} height={"25px"} />
+                  <img
+                    src={
+                      tokenIcons[props.token.name]
+                        ? tokenIcons[props.token.name].src
+                        : tokens[props.token.name.toString()]?.iconUrl
+                        ? tokens[props.token.name.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                    }
+                    width={"25px"}
+                    height={"25px"}
+                    onError={changeSource}
+                  />
                   <span className="font-body4 ml-2">
                     {props.value} {tEZorCTEZtoUppercase(props.token.name)}
                   </span>

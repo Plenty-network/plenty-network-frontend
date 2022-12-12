@@ -1,5 +1,6 @@
 import { BigNumber } from "bignumber.js";
 
+import fallback from "../../assets/icon/pools/fallback.png";
 /**
  * Returns the percentage change from old number to new number
  * @param oldNumber - The previous number from which change happened
@@ -30,4 +31,16 @@ export default function nFormatter(num: BigNumber) {
   }
 
   return num.toFixed(2);
+}
+export const changeSource = (e: any) => {
+  e.target.src = { fallback };
+  e.onerror = null;
+};
+export function imageExists(image_url: string) {
+  var http = new XMLHttpRequest();
+
+  http.open("HEAD", image_url, false);
+  http.send();
+
+  return http.status != 404;
 }

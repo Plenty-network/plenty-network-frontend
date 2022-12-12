@@ -7,7 +7,9 @@ import timer from "../../../src/assets/icon/myPortfolio/timer.svg";
 import Button from "../Button/Button";
 import { IPoolsRewardsData } from "../../api/portfolio/types";
 import { ITokenPriceList } from "../../api/util/types";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
+import { useAppSelector } from "../../redux";
 
 interface IClaimProps {
   show: boolean;
@@ -18,6 +20,7 @@ interface IClaimProps {
   handleClaimAll: () => void;
 }
 function ClaimAll(props: IClaimProps) {
+  const tokens = useAppSelector((state) => state.config.tokens);
   const closeModal = () => {
     props.setShow(false);
   };
@@ -64,17 +67,31 @@ function ClaimAll(props: IClaimProps) {
                   <div className="flex items-center">
                     <span className="flex">
                       <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                        <Image
-                          src={getImagesPath(pool.tokenOneSymbol)}
+                        <img
+                          src={
+                            tokenIcons[pool.tokenOneSymbol]
+                              ? tokenIcons[pool.tokenOneSymbol].src
+                              : tokens[pool.tokenOneSymbol.toString()]?.iconUrl
+                              ? tokens[pool.tokenOneSymbol.toString()].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
                           width={"24px"}
                           height={"24px"}
+                          onError={changeSource}
                         />
                       </div>
                       <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                        <Image
-                          src={getImagesPath(pool.tokenTwoSymbol)}
+                        <img
+                          src={
+                            tokenIcons[pool.tokenTwoSymbol]
+                              ? tokenIcons[pool.tokenTwoSymbol].src
+                              : tokens[pool.tokenTwoSymbol.toString()]?.iconUrl
+                              ? tokens[pool.tokenTwoSymbol.toString()].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
                           width={"24px"}
                           height={"24px"}
+                          onError={changeSource}
                         />
                       </div>
                     </span>
