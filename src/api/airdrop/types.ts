@@ -40,3 +40,9 @@ export interface IClaimDataResponse {
   claimData: IClaimAPIData[];
   error?: string;
 }
+
+export interface IEvmEligibleCheckResponse {
+  eligible: boolean;
+  value: BigNumber;
+  error?: string;
+}

@@ -1,6 +1,12 @@
 import { BigNumber } from "bignumber.js";
 import axios from "axios";
-import { IClaimAPIData, IClaimDataResponse, Mission, TClaimAPIResponseData } from "./types";
+import {
+  IClaimAPIData,
+  IClaimDataResponse,
+  IEvmEligibleCheckResponse,
+  Mission,
+  TClaimAPIResponseData,
+} from "./types";
 import Config from "../../config/config";
 import { connectedNetwork } from "../../common/walletconnect";
 import { PLY_DECIMAL_MULTIPLIER } from "../../constants/global";
@@ -52,7 +58,10 @@ export const getTezosClaimData = async (userTezosAddress: string): Promise<IClai
  * @param ethMessage - Pre-set ETH message
  * @param ethSignature - Signed ETH message
  */
- export const getEvmClaimData = async (ethMessage: string, ethSignature: string): Promise<IClaimDataResponse> => {
+export const getEvmClaimData = async (
+  ethMessage: string,
+  ethSignature: string
+): Promise<IClaimDataResponse> => {
   try {
     if (ethMessage === "" || ethMessage.length <= 0 || !ethMessage) {
       return {
@@ -130,10 +139,43 @@ export const tezosWalletHasAirdrop = async (userTezosAddress: string): Promise<b
 };
 
 /**
+ * Returns if the selected user evm wallet is eligible for airdrop along with the total claimable value if yes.
+ * @param evmWalletAddress - Wallet address of user for EVM chains
+ */
+export const isEvmWalletEligible = async (
+  evmWalletAddress: string
+): Promise<IEvmEligibleCheckResponse> => {
+  try {
+    if (evmWalletAddress === "" || evmWalletAddress.length <= 0 || !evmWalletAddress) {
+      throw new Error("Invalid or missing evm wallet address");
+    }
+    // Forcing lower casing as required by server api
+    const eligibilityAPIResponse = await axios.get(
+      `${Config.AIRDROP_SERVER[connectedNetwork]}ethereum/${evmWalletAddress.toLocaleLowerCase()}`
+    );
+    const eligibilityData = eligibilityAPIResponse.data;
+
+    return {
+      eligible: Boolean(eligibilityData.eligible),
+      value: new BigNumber(eligibilityData.value).isFinite()
+        ? new BigNumber(eligibilityData.value).dividedBy(PLY_DECIMAL_MULTIPLIER)
+        : new BigNumber(0),
+    };
+  } catch (error: any) {
+    console.log(error);
+    return {
+      eligible: false,
+      value: new BigNumber(0),
+      error: error.message,
+    };
+  }
+};
+
+/**
  * Returns the claim data created from server api response.
  * @param apiResponseData - Tezos and Eth receipts response data
  */
-const getClaimData = (apiResponseData: TClaimAPIResponseData):IClaimDataResponse => {
+const getClaimData = (apiResponseData: TClaimAPIResponseData): IClaimDataResponse => {
   try {
     // Check if api response is a JSON data or string. It's string only in case of error or not eligible.
     if (Array.isArray(apiResponseData)) {
@@ -144,7 +186,7 @@ const getClaimData = (apiResponseData: TClaimAPIResponseData):IClaimDataResponse
         ? new BigNumber(apiResponseData[0].message.value).dividedBy(PLY_DECIMAL_MULTIPLIER)
         : new BigNumber(0);
 
-        apiResponseData.forEach((missionData) => {
+      apiResponseData.forEach((missionData) => {
         totalClaimableAmount = totalClaimableAmount.plus(missionData.message.value);
         if (!missionData.claimed) {
           pendingClaimableAmount = pendingClaimableAmount.plus(missionData.message.value);
@@ -185,4 +227,4 @@ const getClaimData = (apiResponseData: TClaimAPIResponseData):IClaimDataResponse
   } catch (error: any) {
     throw new Error(error.message);
   }
-}
+};
