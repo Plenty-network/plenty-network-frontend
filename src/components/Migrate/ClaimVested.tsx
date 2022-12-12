@@ -224,6 +224,7 @@ function ClaimVested(props: IMigrateProps) {
                   tokenIcon={tokenOut.image}
                   tokenName={tokenOut.name}
                   isArrow={true}
+                  tokenSymbol={tokenOut.name}
                 />
               </div>
               <div className=" my-3 flex-auto">

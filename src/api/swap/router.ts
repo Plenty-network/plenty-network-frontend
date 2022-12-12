@@ -39,23 +39,32 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
         paths = tempPaths;
     
         let swapData: ISwapDataResponse[][] = [];
-        const allSwapDataPromises: Promise<ISwapDataResponse>[][] = [];
+        // const allSwapDataPromises: Promise<ISwapDataResponse>[][] = [];
+        const preLoadedSwapData: { [tokenPair:string] : ISwapDataResponse } = {};
 
         for (const i in paths) {
             const path = paths[i].split(' ');
-            const swapDataPromises: Promise<ISwapDataResponse>[] = [];
+            // const swapDataPromises: Promise<ISwapDataResponse>[] = [];
             swapData[i] = [];
             for (let j = 0; j < path.length - 1; j++) {
                 // Getting Swap Details
                 // swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
-                swapDataPromises.push(loadSwapDataWrapper(path[j], path[j + 1]));  // Creating array of promises for all pairs in path
+                // swapDataPromises.push(loadSwapDataWrapper(path[j], path[j + 1]));  // Creating array of promises for all pairs in path
+                // Check if swap data exists for the pair and use it if found
+                if(preLoadedSwapData[`${path[j]}_${path[j + 1]}`]) {
+                    swapData[i][j] = preLoadedSwapData[`${path[j]}_${path[j + 1]}`]
+                } else {
+                    swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
+                    // Store the swap data for later use if the same pair occurs again
+                    preLoadedSwapData[`${path[j]}_${path[j + 1]}`] = swapData[i][j];
+                }
             }
-            allSwapDataPromises.push(swapDataPromises); // Creating array of promises for all paths.
+            // allSwapDataPromises.push(swapDataPromises); // Creating array of promises for all paths.
         }
         // Executing array of array of promises
-        swapData = await Promise.all(
-          allSwapDataPromises.map((swapDataPromises) => Promise.all(swapDataPromises))
-        ); 
+        // swapData = await Promise.all(
+        //   allSwapDataPromises.map((swapDataPromises) => Promise.all(swapDataPromises))
+        // ); 
 
         return {
             paths,

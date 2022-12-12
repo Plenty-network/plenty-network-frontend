@@ -267,6 +267,7 @@ function Migrate(props: IMigrateProps) {
                 onClick={() => handleTokenType()}
                 tokenIcon={tokenIn.image}
                 tokenName={tokenIn.name}
+                tokenSymbol={tokenIn.name}
               />
             </div>
             <div className="flex-auto my-3 ">
@@ -340,6 +341,7 @@ function Migrate(props: IMigrateProps) {
                   tokenIcon={tokenOut.image}
                   tokenName={tokenOut.name}
                   isArrow={true}
+                  tokenSymbol={tokenOut.name}
                 />
               </div>
               <div className=" my-3 flex-auto ">
