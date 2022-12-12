@@ -172,9 +172,7 @@ function TokenModalPool(props: ISwapModalProps) {
               });
               const res1 = res.allTokensList.map((token) => ({
                 name: token.symbol,
-                image: token.iconUrl
-                  ? token.iconUrl.toString()
-                  : fallbacksvg,
+                image: token.iconUrl ? token.iconUrl.toString() : fallbacksvg,
                 address: "",
                 chainType: Chain.TEZOS,
                 interface: token,
@@ -194,9 +192,7 @@ function TokenModalPool(props: ISwapModalProps) {
             });
             const res1 = res.allTokensList.map((token) => ({
               name: token.symbol,
-              image: token.iconUrl
-                ? token.iconUrl.toString()
-                : fallbacksvg,
+              image: token.iconUrl ? token.iconUrl.toString() : fallbacksvg,
               address: "",
               chainType: Chain.TEZOS,
               interface: token,
@@ -258,7 +254,7 @@ function TokenModalPool(props: ISwapModalProps) {
                 return (
                   <div
                     className={clsx(
-                      "border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100",
+                      "border mr-2 mt-2 flex items-center border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100",
                       props.tokenIn.name === token.name || props.tokenOut.name === token.name
                         ? "cursor-not-allowed"
                         : "cursor-pointer"
@@ -268,7 +264,7 @@ function TokenModalPool(props: ISwapModalProps) {
                       ? {}
                       : { onClick: () => props.selectToken(token) })}
                   >
-                    <span className="w-[18px] h-[18px] relative top-1">
+                    <span className="w-[18px] h-[18px] relative top-0">
                       <img
                         alt={"alt"}
                         src={
@@ -283,7 +279,7 @@ function TokenModalPool(props: ISwapModalProps) {
                         onError={changeSource}
                       />{" "}
                     </span>
-                    <span className="font-body3">{tEZorCTEZtoUppercase(token.name)}</span>
+                    <span className="font-body3 ml-1">{tEZorCTEZtoUppercase(token.name)}</span>
                   </div>
                 );
               }
