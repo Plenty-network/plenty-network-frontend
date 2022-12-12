@@ -46,6 +46,11 @@ const Config: IConfig = {
 
   FAUCET : 'KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH',
 
+  AIRDROP_SERVER: {
+    mainnet: "",
+    testnet: "http://localhost:3002/",
+  },
+
   EXCHANGE_TOKENS: {
     PLENTY: {
       exchangeRate: 6,

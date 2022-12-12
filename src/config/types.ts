@@ -41,8 +41,9 @@ export interface IConfig {
   PLY_INDEXER: string;
   PLY_TOKEN: { mainnet: string; testnet: string };
   FACTORY : { mainnet: string; testnet: string };
-  EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData }
-  IPFS_LINKS: { primary: string; fallback: string }
+  EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData };
+  IPFS_LINKS: { primary: string; fallback: string };
+  AIRDROP_SERVER: { mainnet: string; testnet: string; };
 }
 
 interface IApi {
