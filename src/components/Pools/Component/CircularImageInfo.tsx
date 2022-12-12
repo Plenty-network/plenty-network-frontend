@@ -1,6 +1,10 @@
 import Image from "next/image";
 import * as React from "react";
 import { isMobile } from "react-device-detect";
+import { changeSource, imageExists } from "../../../api/util/helpers";
+import { useAppSelector } from "../../../redux";
+import fallback from "../../../assets/icon/pools/fallback.png";
+import { tokenIcons } from "../../../constants/tokensList";
 
 export interface ICircularImageInfoProps {
   imageArray?: Array<any>;
@@ -28,23 +32,44 @@ export function CircularImageInfo(props: ICircularImageInfoProps) {
     </div>
   );
 }
-export const CircularOverLappingImage = (props: { src1: string; src2: string }) => {
+export const CircularOverLappingImage = (props: {
+  tokenA: String;
+  tokenB: String;
+  src1: string;
+  src2: string;
+}) => {
+  const TOKEN = useAppSelector((state) => state.config.tokens);
+
   return (
     <div className=" flex justify-center items-center">
       <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-        <Image
+        <img
           alt={"alt"}
-          src={props.src1}
+          src={
+            tokenIcons[props.tokenA.toString()]
+              ? tokenIcons[props.tokenA.toString()].src
+              : TOKEN[props.tokenA?.toString()]?.iconUrl
+              ? TOKEN[props.tokenA?.toString()].iconUrl
+              : `/assets/Tokens/fallback.png`
+          }
           width={isMobile ? "19px" : "24px"}
           height={isMobile ? "19px" : "24px"}
+          onError={changeSource}
         />
       </div>
       <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-        <Image
+        <img
           alt={"alt"}
-          src={props.src2}
+          src={
+            tokenIcons[props.tokenB.toString()]
+              ? tokenIcons[props.tokenB?.toString()].src
+              : TOKEN[props.tokenB?.toString()]?.iconUrl
+              ? TOKEN[props.tokenB?.toString()].iconUrl
+              : `/assets/Tokens/fallback.png`
+          }
           width={isMobile ? "19px" : "24px"}
           height={isMobile ? "19px" : "24px"}
+          onError={changeSource}
         />
       </div>
     </div>
