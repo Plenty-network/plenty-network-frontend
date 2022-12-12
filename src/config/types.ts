@@ -44,6 +44,7 @@ export interface IConfig {
   EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData };
   IPFS_LINKS: { primary: string; fallback: string };
   AIRDROP_SERVER: { mainnet: string; testnet: string; };
+  AIRDROP: { mainnet: string; testnet: string; };
 }
 
 interface IApi {

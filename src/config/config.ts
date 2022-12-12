@@ -40,6 +40,10 @@ const Config: IConfig = {
     mainnet : '',
     testnet : 'KT1UmJmgNvy7sGztaFkr598Lj7JxiWbTFbQp',
   },
+  AIRDROP: {
+    mainnet: "",
+    testnet: "KT1J3EQDZbLUR1Hp8TZKFwY5FLoekiPSgsmL",
+  },
 
   VE_INDEXER : 'https://ply-indexer.ghostnet.plenty.network/v1/',
   PLY_INDEXER : 'https://analytics-indexer.ghostnet.plenty.network/',
