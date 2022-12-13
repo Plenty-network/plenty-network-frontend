@@ -10,6 +10,7 @@ import {
 import Config from "../../config/config";
 import { connectedNetwork } from "../../common/walletconnect";
 import { PLY_DECIMAL_MULTIPLIER } from "../../constants/global";
+import { getTzktAccountData } from "../util/storageProvider";
 
 /**
  * Returns whether the selected tezos wallet is eligible for airdrop or not,
@@ -168,6 +169,24 @@ export const isEvmWalletEligible = async (
       value: new BigNumber(0),
       error: error.message,
     };
+  }
+};
+
+/**
+ * Returns whether the selected tezos wallet address is revealed or not.
+ * @param userTezosAddress - Tezos user wallet address
+ */
+export const isTezosAddressRevealed = async (userTezosAddress: string): Promise<boolean> => {
+  try {
+    if (userTezosAddress === "" || userTezosAddress.length <= 0 || !userTezosAddress) {
+      throw new Error("Invalid user address");
+    }
+    const accountResponse = await getTzktAccountData(userTezosAddress);
+    const accountData = accountResponse.data;
+    return Boolean(accountData.revealed);
+  } catch (error: any) {
+    console.log(error);
+    return false;
   }
 };
 
