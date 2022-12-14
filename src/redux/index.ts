@@ -18,6 +18,8 @@ import { portfolioRewards } from "./myPortfolio/rewards";
 import { portfolioStatsTvl } from "./myPortfolio/tvl";
 import { portfolioStatsVotes } from "./myPortfolio/votesStats";
 import { rpcData } from "./userSettings/rpcData";
+import { airdropTransactions } from "./airdrop/transactions";
+import { airdropState } from "./airdrop/state";
 
 const reducers = combineReducers({
   wallet: wallet,
@@ -34,6 +36,8 @@ const reducers = combineReducers({
   portfolioStatsTvl: portfolioStatsTvl,
   portfolioStatsVotes: portfolioStatsVotes,
   rpcData: rpcData,
+  airdropTransactions: airdropTransactions,
+  airdropState: airdropState,
 });
 
 const persistConfig = {
@@ -48,6 +52,7 @@ const persistConfig = {
     "portfolioStatsTvl",
     "portfolioStatsVotes",
     "rpcData",
+    "airdropTransactions",
   ],
 };
 
