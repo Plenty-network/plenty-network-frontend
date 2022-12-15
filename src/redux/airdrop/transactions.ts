@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IAirdropTransactionsData, ISignaturePayload, ReceiptsCallFrom } from "./types";
+import { IAirdropTransactionsData, IReceiptsCallPayload, ISignaturePayload, ReceiptsCallFrom } from "./types";
 
 const initialState: IAirdropTransactionsData = {
   signaturesData: {},
-  receiptsCallFrom: ReceiptsCallFrom.TEZOS,
+  receiptsCallFrom: {},
+  tweetedAccounts: [],
 };
 
 const AirdropTransactionsSlice = createSlice({
@@ -16,11 +17,17 @@ const AirdropTransactionsSlice = createSlice({
         [action.payload.evmAddress]: { ...action.payload.signatureData },
       };
     },
-    setReceiptsCallFrom: (state, action: PayloadAction<ReceiptsCallFrom>) => {
-      state.receiptsCallFrom = action.payload;
+    setReceiptsCallFrom: (state, action: PayloadAction<IReceiptsCallPayload>) => {
+      state.receiptsCallFrom = {
+        ...state.receiptsCallFrom,
+        [action.payload.tezosAddress]: action.payload.receiptsCallFrom ,
+      };
     },
+    addTweetedAccount: (state, action: PayloadAction<string>) => {
+      state.tweetedAccounts = state.tweetedAccounts.concat(action.payload);
+    }, 
   },
 });
 
-export const { addSignature, setReceiptsCallFrom} = AirdropTransactionsSlice.actions;
+export const { addSignature, setReceiptsCallFrom, addTweetedAccount } = AirdropTransactionsSlice.actions;
 export const airdropTransactions = AirdropTransactionsSlice.reducer;

@@ -19,7 +19,12 @@ const useSetEvmCTAState = () => {
   useEffect(() => {
     const setCTAStatus = async () => {
       try {
-        dispatch(setReceiptsCallFrom(ReceiptsCallFrom.TEZOS));
+        dispatch(
+          setReceiptsCallFrom({
+            tezosAddress: userTezosAddress,
+            receiptsCallFrom: ReceiptsCallFrom.TEZOS,
+          })
+        );
         dispatch(
           setTextDisplayState({
             isVisible: false,
@@ -93,7 +98,12 @@ const useSetEvmCTAState = () => {
                         textData: `You have chosen to receive your airdrop at ${userTezosAddress}`,
                       })
                     );
-                    dispatch(setReceiptsCallFrom(ReceiptsCallFrom.EVM));
+                    dispatch(
+                      setReceiptsCallFrom({
+                        tezosAddress: userTezosAddress,
+                        receiptsCallFrom: ReceiptsCallFrom.EVM,
+                      })
+                    );
                   }
                 }
               }

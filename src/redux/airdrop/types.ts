@@ -17,9 +17,14 @@ export enum ReceiptsCallFrom {
   "EVM",
 }
 
+export interface IReceiptsCallList {
+  [tezosAddress: string]: ReceiptsCallFrom;
+}
+
 export interface IAirdropTransactionsData {
   signaturesData: IEvmSignatures;
-  receiptsCallFrom: ReceiptsCallFrom;
+  receiptsCallFrom: IReceiptsCallList;
+  tweetedAccounts: string[];
 }
 
 export enum EvmCTAState {
@@ -59,4 +64,9 @@ export interface IAirdropStatesData {
 export interface IRevealedPayload {
   tezosAddress: string;
   revealed: boolean;
+}
+
+export interface IReceiptsCallPayload {
+  tezosAddress: string;
+  receiptsCallFrom: ReceiptsCallFrom;
 }
