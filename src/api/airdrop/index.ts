@@ -198,6 +198,17 @@ const getClaimData = (apiResponseData: TClaimAPIResponseData): IClaimDataRespons
   try {
     // Check if api response is a JSON data or string. It's string only in case of error or not eligible.
     if (Array.isArray(apiResponseData)) {
+      if(apiResponseData.length <= 0) {
+        return {
+          success: false,
+          eligible: false,
+          message: "NOT_ELIGIBLE",
+          perMissionAmount: new BigNumber(0),
+          totalClaimableAmount: new BigNumber(0),
+          pendingClaimableAmount: new BigNumber(0),
+          claimData: [],
+        };
+      }
       const finalClaimData: IClaimAPIData[] = [];
       let totalClaimableAmount = new BigNumber(0);
       let pendingClaimableAmount = new BigNumber(0);
