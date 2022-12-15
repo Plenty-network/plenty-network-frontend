@@ -107,7 +107,7 @@ function MainAirdrop(props: IMainAirdropProps) {
             </div>
           </div>
         ) : (
-          <OtherChain />
+          <OtherChain setChain={props.setChain} />
         )}
         {props.chain === ChainAirdrop.Tezos && (
           <div className="mt-3 border border-muted-300 bg-muted-400 rounded-xl py-5">

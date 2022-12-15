@@ -11,8 +11,6 @@ const AirdropTransactionsSlice = createSlice({
   initialState,
   reducers: {
     addSignature: (state, action: PayloadAction<ISignaturePayload>) => {
-      // const prevState = {...state.signatureData};
-      // prevState[action.payload.evmAddress] = {...action.payload.signatureData};
       state.signaturesData = {
         ...state.signaturesData,
         [action.payload.evmAddress]: { ...action.payload.signatureData },

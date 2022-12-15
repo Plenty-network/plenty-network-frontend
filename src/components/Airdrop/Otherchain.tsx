@@ -1,56 +1,25 @@
-import { AppDispatch, store, useAppSelector } from "../../redux";
-import bribes from "../../assets/icon/bribes/bribesLanding.svg";
+import { useAppSelector } from "../../redux";
 import Image from "next/image";
-import Button from "../Button/Button";
-import { SideBarHOC } from "../Sidebar/SideBarHOC";
-import Link from "next/link";
 import clsx from "clsx";
 import infoBlue from "../../../src/assets/icon/pools/InfoBlue.svg";
-import { useEffect, useState, useMemo } from "react";
 import { ChainAirdrop } from "./Disclaimer";
 
 import ply from "../../assets/Tokens/ply.png";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import TokenDropdown from "../TokenDropdown/TokenDropdown";
-import { tokenParameter } from "../../constants/swap";
-import { useDispatch } from "react-redux";
-import { walletConnection } from "../../redux/wallet/wallet";
 import EvmWalletButton from "./EvmWalletButton";
-export interface IOtherChain {}
+import { TextType } from "../../redux/airdrop/types";
+export interface IOtherChain {
+  setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
+}
 
 function OtherChain(props: IOtherChain) {
   const tokenOut = {
     name: "PLY",
     image: ply,
   };
-  const dispatch = useDispatch<AppDispatch>();
-  const connectTempleWallet = () => {
-    return dispatch(walletConnection());
-  };
-  const userAddress = useAppSelector((state) => state.wallet.address);
-  const ClaimButton = useMemo(() => {
-    if (userAddress) {
-      if (false) {
-        return (
-          <Button color="primary" width="w-full" onClick={() => {}}>
-            Claim from tezos wallet
-          </Button>
-        );
-      } else {
-        return (
-          <Button color="disabled" width="w-full">
-            Your wallet is not eligible
-          </Button>
-        );
-      }
-    } else {
-      return (
-        <Button color="primary" onClick={connectTempleWallet} width="w-full">
-          Connect to wallet
-        </Button>
-      );
-    }
-  }, [props]);
+  const textToDisplay = useAppSelector((state) => state.airdropState.textDisplayState);
+
   return (
     <>
       <div
@@ -79,20 +48,20 @@ function OtherChain(props: IOtherChain) {
         </div>
       </div>
       {/* <div className="mt-[18px]">{ClaimButton}</div> */}
-      <div className="mt-[18px]">
-        <EvmWalletButton />
-      </div>
-      {/* //TODO: Add the condition when wallet is not eligible */}
-      {true && (
+      {/* //TODO: Image will change based on CTA state. Fetch image type from state variable {textToDisplay} */}
+      {textToDisplay.isVisible && textToDisplay.textType !== TextType.NONE && (
         <div className="h-[46px]  px-2 rounded-xl my-3 flex items-center bg-info-500/[0.1]">
           <p className="relative top-0.5">
             <Image src={infoBlue} />
           </p>
           <p className="font-body2 text-info-500 px-3 md:w-auto w-[249px]">
-            In order to claim you should approve it on your tezos wallet
+            {textToDisplay.textData}
           </p>
         </div>
       )}
+      <div className="mt-[18px]">
+        <EvmWalletButton setChain={props.setChain} />
+      </div>
     </>
   );
 }

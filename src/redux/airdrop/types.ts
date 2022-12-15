@@ -46,7 +46,17 @@ export interface ITextDisplayState {
   textData: string | undefined;
 }
 
+export interface IRevealedData {
+  [address: string]: boolean;
+}
+
 export interface IAirdropStatesData {
   evmCTAState: EvmCTAState;
   textDisplayState: ITextDisplayState;
+  revealedData: IRevealedData;
+}
+
+export interface IRevealedPayload {
+  tezosAddress: string;
+  revealed: boolean;
 }
