@@ -128,7 +128,12 @@ function Swap(props: ISwapProps) {
     setEnableMultiHop(userSettings.multiHop);
   }, [props.otherProps.walletAddress, userSettings]);
   useEffect(() => {
-    if (Object.keys(tokenOut).length !== 0) {
+    if (
+      Object.keys(tokenOut).length !== 0 &&
+      tokenOut.name !== "" &&
+      Object.keys(tokenIn).length !== 0 &&
+      tokenIn.name !== ""
+    ) {
       tokenPrice[tokenIn.name] || tokenPrice[tokenOut.name]
         ? (loading.current = {
             isLoadingfirst: true,
@@ -144,7 +149,9 @@ function Swap(props: ISwapProps) {
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(tokenIn, "name") &&
-      Object.prototype.hasOwnProperty.call(tokenOut, "name")
+      Object.prototype.hasOwnProperty.call(tokenOut, "name") &&
+      tokenIn.name !== "" &&
+      tokenOut.name !== ""
     ) {
       !isSwitchClicked.current && firstTokenAmount === ""
         ? (loading.current = {
@@ -474,10 +481,17 @@ function Swap(props: ISwapProps) {
     isSwitchClicked.current = true;
     //setSecondTokenAmount(firstTokenAmount);
     setSecondTokenAmount("");
-    loading.current = {
-      isLoadingfirst: false,
-      isLoadingSecond: true,
-    };
+    if (
+      Object.prototype.hasOwnProperty.call(tokenIn, "name") &&
+      Object.prototype.hasOwnProperty.call(tokenOut, "name") &&
+      tokenIn.name !== "" &&
+      tokenOut.name !== ""
+    ) {
+      loading.current = {
+        isLoadingfirst: false,
+        isLoadingSecond: true,
+      };
+    }
 
     if (tokenOut.name && tokenIn.name) {
       setTokenIn({

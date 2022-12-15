@@ -12,11 +12,13 @@ import { VotingPower } from "./VotingPower";
 import { ILockRewardsEpochData } from "../../api/portfolio/types";
 import { NoPoolsPosition } from "../Rewards/NoContent";
 import ClaimAllEpoch from "./ClaimAllEpoch";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
+import { useAppSelector } from "../../redux";
 
 export function LocksTableRewards(props: IVotesTableRewards) {
   const { valueFormat } = useTableNumberUtils();
-
+  const tokens = useAppSelector((state) => state.config.tokens);
   const [epochNo, setEpochNo] = React.useState("");
   const [claimAllData, setClaimAllData] = React.useState<ILockRewardsEpochData[]>(
     [] as ILockRewardsEpochData[]
@@ -96,19 +98,33 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           x.epoch === "" ? (
             <div className=" flex justify-center items-center">
               <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-                <Image
+                <img
                   alt={"alt"}
-                  src={getImagesPath(x.votes.tokenASymbol)}
+                  src={
+                    tokenIcons[x.votes.tokenASymbol]
+                      ? tokenIcons[x.votes.tokenASymbol].src
+                      : tokens[x.votes.tokenASymbol.toString()]?.iconUrl
+                      ? tokens[x.votes.tokenASymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
                   width={"20px"}
                   height={"20px"}
+                  onError={changeSource}
                 />
               </div>
               <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-                <Image
+                <img
                   alt={"alt"}
-                  src={getImagesPath(x.votes.tokenBSymbol)}
+                  src={
+                    tokenIcons[x.votes.tokenBSymbol]
+                      ? tokenIcons[x.votes.tokenBSymbol].src
+                      : tokens[x.votes.tokenBSymbol.toString()]?.iconUrl
+                      ? tokens[x.votes.tokenBSymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
                   width={"20px"}
                   height={"20px"}
+                  onError={changeSource}
                 />
               </div>
               <div>
@@ -190,19 +206,33 @@ export function LocksTableRewards(props: IVotesTableRewards) {
           x.epoch === "" ? (
             <div className=" flex justify-center items-center">
               <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                <Image
+                <img
                   alt={"alt"}
-                  src={getImagesPath(x.votes.tokenASymbol)}
+                  src={
+                    tokenIcons[x.votes.tokenASymbol]
+                      ? tokenIcons[x.votes.tokenASymbol].src
+                      : tokens[x.votes.tokenASymbol.toString()]?.iconUrl
+                      ? tokens[x.votes.tokenASymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
                   width={"24px"}
                   height={"24px"}
+                  onError={changeSource}
                 />
               </div>
               <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                <Image
+                <img
                   alt={"alt"}
-                  src={getImagesPath(x.votes.tokenBSymbol)}
+                  src={
+                    tokenIcons[x.votes.tokenBSymbol]
+                      ? tokenIcons[x.votes.tokenBSymbol].src
+                      : tokens[x.votes.tokenBSymbol.toString()]?.iconUrl
+                      ? tokens[x.votes.tokenBSymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
                   width={"24px"}
                   height={"24px"}
+                  onError={changeSource}
                 />
               </div>
               <div>

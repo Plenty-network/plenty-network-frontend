@@ -42,6 +42,9 @@ import usdt_normal from '../assets/Tokens/usdt_icon.svg';
 import ageure from '../assets/Tokens/ageure.png';
 import eurl from '../assets/Tokens/eurl.png';
 import usdt from '../assets/Tokens/usdt.png';
+import xtz from '../assets/Tokens/XTZ.png';
+import ply from '../assets/Tokens/ply.png';
+import { StaticImageData } from 'next/image';
 export const tokensList = [
   {
     name: 'WBTC.e',
@@ -303,3 +306,24 @@ export const tokensList = [
   // chainType : 'ETHEREUM'
   // },
 ];
+
+
+export const tokenIcons: { [token: string]: StaticImageData} = {
+  'WBTC.e': wbtce,
+  'USDC.e': usdce,
+  'DAI.e': dai_normal,
+  'WETH.e': weth_normal,
+  'LINK.e': link_normal,
+  'MATIC.e': matic_normal,
+  'BUSD.e': busd_normal,
+  'USDT.e': usdt_normal,
+  'DOGA': doga,
+  XTZ: xtz,
+  CTez: ctez,
+  ETHtz: ETHtz,
+  PLENTY: plenty,
+  USDtz: usdtz,
+  tzBTC: tzBTC,
+  WRAP: WRAP,
+  PLY: ply,
+}

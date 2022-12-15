@@ -37,9 +37,10 @@ import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
-import { percentageChange, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, percentageChange, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { IAllTokensBalanceResponse } from "../../api/util/types";
 import { Chain } from "../../config/types";
+import { tokenIcons } from "../../constants/tokensList";
 
 interface ISwapTabProps {
   className?: string;
@@ -116,7 +117,7 @@ function SwapTab(props: ISwapTabProps) {
       ? state.userSettings.settings[props.walletAddress ? props.walletAddress : ""]
       : state.userSettings.settings[""]
   );
-
+  const tokens = useAppSelector((state) => state.config.tokens);
   const [settingsShow, setSettingsShow] = useState(false);
   const refSettingTab = useRef(null);
   const [transactionId, setTransactionId] = useState("");
@@ -338,6 +339,7 @@ function SwapTab(props: ISwapTabProps) {
           "tokenIn"
         );
   };
+
   return (
     <>
       <div className="flex items-center flex-row px-5 lg:px-9 relative">
@@ -394,11 +396,13 @@ function SwapTab(props: ISwapTabProps) {
                 onClick={() => props.handleTokenType("tokenIn")}
                 tokenIcon={`/assets/tokens/${props.tokenIn.name.toLowerCase()}.png`}
                 tokenName={tEZorCTEZtoUppercase(props.tokenIn.name)}
+                tokenSymbol={props.tokenIn.name}
               />
             ) : (
               <TokenDropdown
                 tokenName="Select a token"
                 onClick={() => props.handleTokenType("tokenIn")}
+                tokenSymbol=""
               />
             )}
           </div>
@@ -512,11 +516,13 @@ function SwapTab(props: ISwapTabProps) {
                   onClick={() => props.handleTokenType("tokenOut")}
                   tokenIcon={`/assets/tokens/${props.tokenOut?.name?.toLowerCase()}.png`}
                   tokenName={tEZorCTEZtoUppercase(props.tokenOut.name)}
+                  tokenSymbol={props.tokenOut.name}
                 />
               ) : (
                 <TokenDropdown
                   tokenName="Select a token"
                   onClick={() => props.handleTokenType("tokenOut")}
+                  tokenSymbol=""
                 />
               )}
             </div>
@@ -763,10 +769,17 @@ function SwapTab(props: ISwapTabProps) {
                                         )}
                                         <div className="relative  z-100 w-[24px]  h-[24px] md:w-[32px] md:h-[32px]  p-0.5 bg-card-600 rounded-full">
                                           <span className="w-[24px] md:w-[28px] h-[28px] md:h-[28px]">
-                                            <Image
-                                              src={`/assets/tokens/${token?.name}.png`}
+                                            <img
+                                              src={
+                                                tokenIcons[token?.name as string]
+                                                  ? tokenIcons[token?.name as string].src
+                                                  : tokens[token?.name as string]?.iconUrl
+                                                  ? tokens[token?.name as string].iconUrl
+                                                  : `/assets/Tokens/fallback.png`
+                                              }
                                               width={isMobile ? "21px" : "28px"}
                                               height={isMobile ? "21px" : "28px"}
+                                              onError={changeSource}
                                             />
                                           </span>
                                         </div>
@@ -806,10 +819,17 @@ function SwapTab(props: ISwapTabProps) {
                                               )}
                                             >
                                               <span className="w-[24px] md:w-[28px] h-[28px] md:h-[28px]">
-                                                <Image
-                                                  src={`/assets/tokens/${token?.name}.png`}
+                                                <img
+                                                  src={
+                                                    tokenIcons[token?.name as string]
+                                                      ? tokenIcons[token?.name as string].src
+                                                      : tokens[token?.name as string]?.iconUrl
+                                                      ? tokens[token?.name as string].iconUrl
+                                                      : `/assets/Tokens/fallback.png`
+                                                  }
                                                   width={isMobile ? "21px" : "28px"}
                                                   height={isMobile ? "21px" : "28px"}
+                                                  onError={changeSource}
                                                 />
                                               </span>
                                             </div>
@@ -1038,11 +1058,18 @@ function SwapTab(props: ISwapTabProps) {
                                 )}
                                 <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
                                   <span className="w-[28px] h-[28px]">
-                                    <Image
+                                    <img
                                       alt={"alt"}
-                                      src={`/assets/tokens/${token?.name}.png`}
+                                      src={
+                                        tokenIcons[token?.name as string]
+                                          ? tokenIcons[token?.name as string].src
+                                          : tokens[token?.name as string]?.iconUrl
+                                          ? tokens[token?.name as string].iconUrl
+                                          : `/assets/Tokens/fallback.png`
+                                      }
                                       width={"28px"}
                                       height={"28px"}
+                                      onError={changeSource}
                                     />
                                   </span>
                                 </div>
@@ -1079,11 +1106,18 @@ function SwapTab(props: ISwapTabProps) {
                                       )}
                                     >
                                       <span className="w-[28px] h-[28px]">
-                                        <Image
+                                        <img
                                           alt={"alt"}
-                                          src={`/assets/tokens/${token?.name}.png`}
+                                          src={
+                                            tokenIcons[token?.name as string]
+                                              ? tokenIcons[token?.name as string].src
+                                              : tokens[token?.name as string]?.iconUrl
+                                              ? tokens[token?.name as string].iconUrl
+                                              : `/assets/Tokens/fallback.png`
+                                          }
                                           width={"28px"}
                                           height={"28px"}
+                                          onError={changeSource}
                                         />
                                       </span>
                                     </div>
@@ -1096,10 +1130,17 @@ function SwapTab(props: ISwapTabProps) {
                                       )}
                                     >
                                       <span className="w-[28px] h-[28px]">
-                                        <Image
-                                          src={`/assets/tokens/${swapRoute[index]?.name}.png`}
+                                        <img
+                                          src={
+                                            tokenIcons[swapRoute[index]?.name as string]
+                                              ? tokenIcons[swapRoute[index]?.name as string].src
+                                              : tokens[swapRoute[index]?.name as string]?.iconUrl
+                                              ? tokens[swapRoute[index]?.name as string].iconUrl
+                                              : `/assets/Tokens/fallback.png`
+                                          }
                                           width={"28px"}
                                           height={"28px"}
+                                          onError={changeSource}
                                         />
                                       </span>
                                     </div>

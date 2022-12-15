@@ -1,10 +1,13 @@
 import { BigNumber } from "bignumber.js";
 import Image from "next/image";
 import * as React from "react";
+
+import fallback from "../../assets/icon/pools/fallback.png";
 import { useEffect, useState, useMemo } from "react";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import { getAllTokensBalanceFromTzkt, getPnlpBalance } from "../../api/util/balance";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { getTokenDataFromTzkt } from "../../api/util/tokens";
 import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
 import playBtn from "../../assets/icon/common/playBtn.svg";
 import { Chain, IConfigToken, MigrateToken } from "../../config/types";
@@ -44,8 +47,6 @@ export function NewPool(props: IManageLiquidityProps) {
   const [pair, setPair] = useState("");
   const [firstTokenAmountLiq, setFirstTokenAmountLiq] = React.useState<string | number>("");
   const [secondTokenAmountLiq, setSecondTokenAmountLiq] = React.useState<number | string>("");
-
-  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
 
   const [isAddLiquidity, setIsAddLiquidity] = useState(true);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
@@ -150,7 +151,24 @@ export function NewPool(props: IManageLiquidityProps) {
         allTokensBalances: {} as IAllTokensBalance,
       });
     }
-  }, [userAddress, TOKEN, balanceUpdate]);
+  }, [userAddress, TOKEN, balanceUpdate, tokenIn.name, tokenOut.name]);
+  const [contractTokenBalance, setContractTokenBalance] = useState<IAllTokensBalance>(
+    {} as IAllTokensBalance
+  );
+
+  useEffect(() => {
+    if (searchQuery !== "" && searchQuery.length > 8) {
+      getTokenDataFromTzkt(searchQuery.trim()).then((res) => {
+        console.log("ishu");
+        if (res.allTokensList.length !== 0) {
+          getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
+            // contractTokenBalance.push(res.allTokensBalances);
+            setContractTokenBalance(res.allTokensBalances);
+          });
+        }
+      });
+    }
+  }, [searchQuery]);
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
       name: token[0],
@@ -429,6 +447,7 @@ export function NewPool(props: IManageLiquidityProps) {
                 pair={pair}
                 setShowLiquidityModal={props.setShowLiquidityModal}
                 showLiquidityModal={props.showLiquidityModal}
+                contractTokenBalance={contractTokenBalance}
               />
             </div>
           </>

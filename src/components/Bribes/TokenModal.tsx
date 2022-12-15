@@ -8,8 +8,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { Chain } from "../../config/types";
 import { IAllTokensBalance } from "../../api/util/types";
-import nFormatter, { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import nFormatter, { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { useAppSelector } from "../../redux";
+import { tokenIcons } from "../../constants/tokensList";
 
 interface ISwapModalProps {
   tokens: {
@@ -28,6 +30,7 @@ interface ISwapModalProps {
   isSucess: boolean;
 }
 function TokenModal(props: ISwapModalProps) {
+  const tokens = useAppSelector((state) => state.config.tokens);
   const [searchQuery, setSearchQuery] = useState("");
   const searchTokenEl = useRef(null);
   const [tokensToShow, setTokensToShow] = useState<
@@ -110,7 +113,19 @@ function TokenModal(props: ISwapModalProps) {
                   >
                     <div>
                       <span className="w-[30px] h-[30px] relative top-1">
-                        <Image alt={"alt"} src={token.image} width={"30px"} height={"30px"} />{" "}
+                        <img
+                          alt={"alt"}
+                          src={
+                            tokenIcons[token.name]
+                              ? tokenIcons[token.name].src
+                              : tokens[token.name.toString()]?.iconUrl
+                              ? tokens[token.name.toString()].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
+                          width={"30px"}
+                          height={"30px"}
+                          onError={changeSource}
+                        />{" "}
                       </span>
                     </div>
                     <div className="ml-2">

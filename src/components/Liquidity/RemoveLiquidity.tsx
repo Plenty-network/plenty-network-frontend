@@ -5,8 +5,9 @@ import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import { ISwapData, tokenParameterLiquidity } from "./types";
 import { getOutputTokensAmount } from "../../api/liquidity";
 import { useAppSelector } from "../../redux";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
-
+import nFormatter, { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import fallback from "../../../src/assets/icon/pools/fallback.png";
+import { tokenIcons } from "../../constants/tokensList";
 interface IRemoveLiquidityProps {
   swapData: ISwapData;
   pnlpBalance: string;
@@ -30,6 +31,7 @@ interface IRemoveLiquidityProps {
 }
 function RemoveLiquidity(props: IRemoveLiquidityProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
+  const tokens = useAppSelector((state) => state.config.tokens);
   const handleInputPercentage = (value: number) => {
     props.setBurnAmount(value * Number(props.pnlpBalance));
     handleRemoveLiquidityInput(value * Number(props.pnlpBalance));
@@ -156,17 +158,28 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
         <div className="px-2 md:px-5 w-[100%]  items-center  flex ">
           <div className="border border-text-800/[0.5] flex  items-center rounded-2xl w-[120px] md:w-[166px] pl-[10px] py-2 h-[66px] bg-cardBackGround">
             <div>
-              <Image
-                src={props.tokenIn.image}
+              <img
+                src={
+                  tokenIcons[props.tokenIn.symbol]
+                    ? tokenIcons[props.tokenIn.symbol].src
+                    : tokens[props.tokenIn.symbol.toString()]?.iconUrl
+                    ? tokens[props.tokenIn.symbol.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 className="tokenIconLiqRemove"
                 width={"34px"}
                 height={"34px"}
+                onError={changeSource}
               />
             </div>
             <div className="md:ml-2.5 ">
               <p className=" md:font-title1 font-title3 text-white">
                 {props.removeTokenAmount.tokenOneAmount
-                  ? Number(props.removeTokenAmount.tokenOneAmount).toFixed(4)
+                  ? Number(props.removeTokenAmount.tokenOneAmount) > 0
+                    ? new BigNumber(props.removeTokenAmount.tokenOneAmount).isLessThan(0.01)
+                      ? "<0.01"
+                      : nFormatter(new BigNumber(props.removeTokenAmount.tokenOneAmount))
+                    : "0"
                   : "--"}
               </p>
               <p>
@@ -178,17 +191,28 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
           </div>
           <div className="border border-text-800/[0.5] ml-3 flex  items-center rounded-2xl w-[120px] md:w-[166px] pl-[10px] py-2 h-[66px] bg-cardBackGround">
             <div>
-              <Image
-                src={props.tokenOut.image}
+              <img
+                src={
+                  tokenIcons[props.tokenOut.symbol]
+                    ? tokenIcons[props.tokenOut.symbol].src
+                    : tokens[props.tokenOut.symbol.toString()]?.iconUrl
+                    ? tokens[props.tokenOut.symbol.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 className="tokenIconLiqRemove"
                 width={"34px"}
                 height={"34px"}
+                onError={changeSource}
               />
             </div>
             <div className="md:ml-2.5 ">
               <p className=" md:font-title1 font-title3 text-white">
                 {props.removeTokenAmount.tokenTwoAmount
-                  ? Number(props.removeTokenAmount.tokenTwoAmount).toFixed(4)
+                  ? Number(props.removeTokenAmount.tokenTwoAmount) > 0
+                    ? new BigNumber(props.removeTokenAmount.tokenTwoAmount).isLessThan(0.01)
+                      ? "<0.01"
+                      : nFormatter(new BigNumber(props.removeTokenAmount.tokenTwoAmount))
+                    : "0"
                   : "--"}
               </p>
               <p>
