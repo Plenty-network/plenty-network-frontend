@@ -22,6 +22,7 @@ import { AppDispatch, useAppSelector } from "../../redux";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import OtherChain from "./Otherchain";
+import { useAirdropClaimData } from "../../hooks/temp";
 interface IMainAirdropProps {
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
   chain: ChainAirdrop;
@@ -37,18 +38,28 @@ function MainAirdrop(props: IMainAirdropProps) {
     return dispatch(walletConnection());
   };
   const userAddress = useAppSelector((state) => state.wallet.address);
+  const res = useAirdropClaimData();
+
   const ClaimButton = useMemo(() => {
     if (userAddress) {
-      if (false) {
+      if (
+        res.airdropClaimData.eligible &&
+        res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0)
+      ) {
         return (
-          <Button color="primary" width="w-full" onClick={() => {}}>
-            Claim
-          </Button>
+          <button
+            className={clsx("bg-primary-500 h-13 text-black w-full rounded-2xl font-title3-bold")}
+          >
+            Claim {res.airdropClaimData.pendingClaimableAmount.toFixed(2)}
+          </button>
         );
-      } else {
+      } else if (
+        res.airdropClaimData.eligible === false ||
+        res.airdropClaimData.success === false
+      ) {
         return (
           <Button color="disabled" width="w-full">
-            Claim
+            Not eligible
           </Button>
         );
       }
@@ -59,7 +70,7 @@ function MainAirdrop(props: IMainAirdropProps) {
         </Button>
       );
     }
-  }, [props]);
+  }, [props, userAddress, res]);
   return (
     <>
       <div
@@ -76,44 +87,12 @@ function MainAirdrop(props: IMainAirdropProps) {
           </p>
           <p className="ml-auto text-primary-500 font-caption2">Learn more</p>
         </div>
-        {props.chain === ChainAirdrop.Tezos ? (
-          <div
-            className={clsx(
-              "lg:w-[600px] secondtoken h-[82px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2]  bg-card-500 mt-4"
-            )}
-          >
-            <div className=" flex ">
-              <div className={clsx(" mt-4", "flex-none")}>
-                <TokenDropdown
-                  tokenIcon={tokenOut.image}
-                  tokenName={tokenOut.name}
-                  isArrow={true}
-                />
-              </div>
-              <div className=" my-3 flex-auto">
-                <div className="text-right font-body1 text-text-400">YOUR CLAIMABLE BALANCE</div>
-                <div>
-                  <input
-                    type="text"
-                    disabled
-                    className={clsx(
-                      "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 "
-                    )}
-                    placeholder="0.0"
-                    value={0.0}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <OtherChain setChain={props.setChain} />
-        )}
+        {props.chain === ChainAirdrop.Other_chain && <OtherChain setChain={props.setChain} />}
         {props.chain === ChainAirdrop.Tezos && (
           <div className="mt-3 border border-muted-300 bg-muted-400 rounded-xl py-5">
-            <Progress />
+            <Progress claimData={res.airdropClaimData} />
             <div className="border-t border-text-800 my-3"></div>
-            <Steps />
+            <Steps claimData={res.airdropClaimData} />
           </div>
         )}
         {props.chain === ChainAirdrop.Tezos && <div className="mt-[18px]">{ClaimButton}</div>}

@@ -22,8 +22,16 @@ const Airdrop: NextPage = () => {
   const amm = useAppSelector((state) => state.config.AMMs);
 
   const dispatch = useDispatch<AppDispatch>();
-  const [isDisclaimer, setIsDisclaimer] = useState(true);
-
+  const [isDisclaimer, setIsDisclaimer] = useState(
+    !(localStorage.getItem(`Airdrop${userAddress}`) === "true")
+  );
+  console.log(
+    localStorage.getItem(`Airdrop${userAddress}`) === "true",
+    localStorage.getItem(`Airdrop${userAddress}`)
+  );
+  const handleClick = () => {
+    localStorage.setItem(`Airdrop${userAddress}`, "true");
+  };
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -41,6 +49,7 @@ const Airdrop: NextPage = () => {
     if (userAddress) {
       dispatch(getTotalVotingPower());
     }
+    setIsDisclaimer(!(localStorage.getItem(`Airdrop${userAddress}`) === "true"));
   }, [userAddress]);
   useEffect(() => {
     if (userAddress && totalVotingPowerError) {
@@ -60,12 +69,13 @@ const Airdrop: NextPage = () => {
   return (
     <>
       <SideBarHOC makeTopBarScroll>
-        {isDisclaimer ? (
+        {isDisclaimer && !(localStorage.getItem(`Airdrop${userAddress}`) === "true") ? (
           <Disclaimer
             show={isDisclaimer}
             setShow={setIsDisclaimer}
             chain={chain}
             setChain={setChain}
+            handleClick={handleClick}
           />
         ) : (
           <MainAirdrop chain={chain} setChain={setChain} />

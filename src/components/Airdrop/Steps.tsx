@@ -14,7 +14,11 @@ import { ChainAirdrop } from "./Disclaimer";
 
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import CheckPoint from "./Checkpoint";
-export interface ISteps {}
+import { AIRDROP_MISSIONS_FOR_DISPLAY } from "../../constants/airdrop";
+import { IClaimDataResponse } from "../../api/airdrop/types";
+export interface ISteps {
+  claimData: IClaimDataResponse;
+}
 
 function Steps(props: ISteps) {
   const [isDropDownActive, setIsDropDownActive] = useState(false);
@@ -48,31 +52,20 @@ function Steps(props: ISteps) {
             isDropDownActive ? "animate__fadeInDown animate__faster" : ""
           )}
         >
-          <CheckPoint completed={true} text={"Tweet about the new plenty.network"} href={"/swap"} />
-          <CheckPoint
-            className={"mt-2"}
-            completed={false}
-            text={"Swap  TEZ-CTEZ "}
-            href={"/swap"}
-          />
-          <CheckPoint
-            className={"mt-2"}
-            completed={false}
-            text={"Add liquidity and stake"}
-            href={"/pools"}
-          />
-          <CheckPoint
-            className={"mt-2"}
-            completed={false}
-            text={"Lock PLY and get veNFT"}
-            href={"/vote"}
-          />
-          <CheckPoint
-            className={"mt-2"}
-            completed={false}
-            href={"/vote"}
-            text={"Vote for any pair in the guages"}
-          />
+          {AIRDROP_MISSIONS_FOR_DISPLAY.map((item) => {
+            return (
+              <>
+                <CheckPoint
+                  claimData={props.claimData}
+                  completed={true}
+                  text={item.displayText}
+                  href={item.href}
+                  mission={item.mission}
+                  disable={props.claimData.success === false || props.claimData.eligible === false}
+                />
+              </>
+            );
+          })}
         </div>
       )}
     </>

@@ -11,24 +11,27 @@ import link from "../../assets/icon/pools/external_violet.svg";
 import HeaderSelection from "./HeaderSelection";
 import List from "./DisclaimerList";
 import Button from "../Button/Button";
+import { useAppSelector } from "../../redux";
 interface IDisclaimerProps {
   show: boolean;
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
   chain: ChainAirdrop;
   setShow: any;
+  handleClick: () => void;
 }
 export enum ChainAirdrop {
   Tezos = "Tezos",
   Other_chain = "Other chain",
 }
 function Disclaimer(props: IDisclaimerProps) {
+  const userAddress = useAppSelector((state) => state.wallet.address);
   const closeModal = () => {
     props.setShow(false);
   };
   const [isCheck, setIsCheck] = useState(false);
 
   return props.show ? (
-    <PopUpModal onhide={closeModal} className="  md:w-[602px] md:max-w-[602px]">
+    <PopUpModal onhide={closeModal} className="  md:w-[602px] md:max-w-[602px]" Name="disclaimer">
       {
         <>
           <div className="flex ">
@@ -72,7 +75,14 @@ function Disclaimer(props: IDisclaimerProps) {
           <div className="mt-[18px]">
             <Button
               color={isCheck ? "primary" : "disabled"}
-              onClick={isCheck ? () => props.setShow(false) : () => {}}
+              onClick={
+                isCheck
+                  ? () => {
+                      props.handleClick();
+                      props.setShow(false);
+                    }
+                  : () => {}
+              }
             >
               Continue
             </Button>
