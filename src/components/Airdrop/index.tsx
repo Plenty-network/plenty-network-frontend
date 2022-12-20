@@ -6,7 +6,7 @@ import { isMobile } from "react-device-detect";
 import ply from "../../assets/Tokens/ply.png";
 import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
-
+import { claimAirdrop } from "../../operations/airdrop";
 import checkGrey from "../../assets/icon/airdrop/checkGrey.svg";
 import link from "../../assets/icon/pools/external_violet.svg";
 import HeaderSelection from "./HeaderSelection";
@@ -22,23 +22,38 @@ import { AppDispatch, useAppSelector } from "../../redux";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import OtherChain from "./Otherchain";
-import { useAirdropClaimData } from "../../hooks/temp";
+import { useAirdropClaimData } from "../../hooks/useAirdropClaimData";
+import { TOKEN_A } from "../../constants/localStorage";
+import { setIsLoadingWallet } from "../../redux/walletLoading";
+import { Flashtype } from "../FlashScreen";
+import { setFlashMessage } from "../../redux/flashMessage";
+import ConfirmTransaction from "../ConfirmTransaction";
+import TransactionSubmitted from "../TransactionSubmitted";
+import { IClaimDataResponse } from "../../api/airdrop/types";
 interface IMainAirdropProps {
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
   chain: ChainAirdrop;
 }
 
 function MainAirdrop(props: IMainAirdropProps) {
-  const tokenOut = {
-    name: "PLY",
-    image: ply,
+  const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
+  const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
+  const [transactionId, setTransactionId] = useState("");
+  const transactionSubmitModal = (id: string) => {
+    setTransactionId(id);
+    setShowTransactionSubmitModal(true);
   };
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
   const userAddress = useAppSelector((state) => state.wallet.address);
-  const res = useAirdropClaimData();
+  const [res, setRes] = useState<{
+    airdropClaimData: IClaimDataResponse;
+    setClaimed: React.Dispatch<React.SetStateAction<boolean>>;
+  }>(useAirdropClaimData());
+  console.log("hello", res);
+  //const res = useAirdropClaimData();
 
   const ClaimButton = useMemo(() => {
     if (userAddress) {
@@ -49,6 +64,7 @@ function MainAirdrop(props: IMainAirdropProps) {
         return (
           <button
             className={clsx("bg-primary-500 h-13 text-black w-full rounded-2xl font-title3-bold")}
+            onClick={handleAirdropOperation}
           >
             Claim {res.airdropClaimData.pendingClaimableAmount.toFixed(2)}
           </button>
@@ -71,6 +87,73 @@ function MainAirdrop(props: IMainAirdropProps) {
       );
     }
   }, [props, userAddress, res]);
+  const handleAirdropOperation = () => {
+    localStorage.setItem(TOKEN_A, "0");
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+
+    claimAirdrop(
+      res.airdropClaimData.claimData,
+
+      transactionSubmitModal,
+      undefined,
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Claim airdrop`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
+    ).then((response) => {
+      if (response.success) {
+        setTimeout(() => {
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Claim airdrop`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
+              },
+              transactionId: response.operationId ? response.operationId : "",
+            })
+          );
+        }, 6000);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      } else {
+        setShowConfirmTransaction(false);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              transactionId: "",
+              headerText: "Rejected",
+              trailingText: `Claim airdrop
+              `,
+              linkText: "",
+              isLoading: true,
+            })
+          );
+        }, 2000);
+
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
   return (
     <>
       <div
@@ -101,6 +184,25 @@ function MainAirdrop(props: IMainAirdropProps) {
         Know more about Airdrop and its eligibility{" "}
         <span className="text-primary-500">Learn more</span>
       </div>
+      {showConfirmTransaction && (
+        <ConfirmTransaction
+          show={showConfirmTransaction}
+          setShow={setShowConfirmTransaction}
+          content={"Claim airdrop"}
+        />
+      )}
+      {showTransactionSubmitModal && (
+        <TransactionSubmitted
+          show={showTransactionSubmitModal}
+          setShow={setShowTransactionSubmitModal}
+          onBtnClick={
+            transactionId
+              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              : null
+          }
+          content={"Claim airdrop"}
+        />
+      )}
     </>
   );
 }

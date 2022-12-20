@@ -8,6 +8,7 @@ import { getTezosClaimData, getEvmClaimData } from "../api/airdrop";
 import { setFlashMessage } from "../redux/flashMessage";
 import { useDispatch } from "react-redux";
 import { Flashtype } from "../components/FlashScreen";
+import { AIRDROP_ERROR_MESSAGES } from "../constants/airdrop";
 
 export const useAirdropClaimData = () => {
   const { address: ethAddress } = useAccount();
@@ -47,6 +48,28 @@ export const useAirdropClaimData = () => {
           } else {
             console.log("ishu", "false");
           }
+        } else if (airdropClaimData.success === false) {
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Info,
+              headerText: "Info",
+              trailingText: `${airdropClaimData.message}`,
+              linkText: "",
+              isLoading: true,
+              transactionId: "",
+            })
+          );
+        } else {
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Info,
+              headerText: "Info",
+              trailingText: `${airdropClaimData.message}`,
+              linkText: "",
+              isLoading: true,
+              transactionId: "",
+            })
+          );
         }
         console.log("ishu", airdropClaimData, tweetedAccounts);
         // Call getTezosClaimData and set it as airdropClaimData
