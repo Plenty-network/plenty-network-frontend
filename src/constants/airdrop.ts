@@ -22,29 +22,39 @@ export const AIRDROP_EVM_CTA_TEXTS: { [key in EvmCTAState]: string } = {
   [EvmCTAState.LOADING]: "Loading...",
 };
 
-export const AIRDROP_MISSIONS_FOR_DISPLAY: { mission: Mission; displayText: string }[] = [
+export const AIRDROP_MISSIONS_FOR_DISPLAY: {
+  mission: Mission;
+  displayText: string;
+  href: string;
+}[] = [
   {
     mission: Mission.ELIGIBLE,
     displayText: "Tweet",
+    href: "",
   },
   {
     mission: Mission.TRADE,
     displayText: "Make a trade on Plenty",
+    href: "/swap",
   },
   {
     mission: Mission.LP,
     displayText: "Add Liquidity for any pair",
+    href: "/pools",
   },
   {
     mission: Mission.STAKE,
     displayText: "Stake the liquidity position in a gauge",
+    href: "/pools",
   },
   {
     mission: Mission.LOCK,
     displayText: "Lock PLY as veNFT",
+    href: "/vote",
   },
   {
     mission: Mission.VOTE,
     displayText: "Vote for any pair in the guages",
+    href: "/vote",
   },
 ];

@@ -34,6 +34,7 @@
     "react-query": "^3.34.5",
     "react-range": "^1.8.14",
     "react-redux": "^8.0.2",
+    "react-share": "^4.4.1",
     "react-table": "^7.7.0",
     "react-time-ago": "^7.2.1",
     "react-tooltip": "^4.2.21",

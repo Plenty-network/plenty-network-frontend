@@ -6,7 +6,7 @@ import { isMobile } from "react-device-detect";
 import ply from "../../assets/Tokens/ply.png";
 import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
-
+import { claimAirdrop } from "../../operations/airdrop";
 import checkGrey from "../../assets/icon/airdrop/checkGrey.svg";
 import link from "../../assets/icon/pools/external_violet.svg";
 import HeaderSelection from "./HeaderSelection";
@@ -22,33 +22,60 @@ import { AppDispatch, useAppSelector } from "../../redux";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import OtherChain from "./Otherchain";
+import { useAirdropClaimData } from "../../hooks/useAirdropClaimData";
+import { TOKEN_A } from "../../constants/localStorage";
+import { setIsLoadingWallet } from "../../redux/walletLoading";
+import { Flashtype } from "../FlashScreen";
+import { setFlashMessage } from "../../redux/flashMessage";
+import ConfirmTransaction from "../ConfirmTransaction";
+import TransactionSubmitted from "../TransactionSubmitted";
+import { IClaimDataResponse } from "../../api/airdrop/types";
 interface IMainAirdropProps {
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
   chain: ChainAirdrop;
 }
 
 function MainAirdrop(props: IMainAirdropProps) {
-  const tokenOut = {
-    name: "PLY",
-    image: ply,
+  const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
+  const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
+  const [transactionId, setTransactionId] = useState("");
+  const transactionSubmitModal = (id: string) => {
+    setTransactionId(id);
+    setShowTransactionSubmitModal(true);
   };
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
   const userAddress = useAppSelector((state) => state.wallet.address);
+  const [res, setRes] = useState<{
+    airdropClaimData: IClaimDataResponse;
+    setClaimed: React.Dispatch<React.SetStateAction<boolean>>;
+  }>(useAirdropClaimData());
+  console.log("hello", res);
+  //const res = useAirdropClaimData();
+
   const ClaimButton = useMemo(() => {
     if (userAddress) {
-      if (false) {
+      if (
+        res.airdropClaimData.eligible &&
+        res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0)
+      ) {
         return (
-          <Button color="primary" width="w-full" onClick={() => {}}>
-            Claim
-          </Button>
+          <button
+            className={clsx("bg-primary-500 h-13 text-black w-full rounded-2xl font-title3-bold")}
+            onClick={handleAirdropOperation}
+          >
+            Claim {res.airdropClaimData.pendingClaimableAmount.toFixed(2)}
+          </button>
         );
-      } else {
+      } else if (
+        res.airdropClaimData.eligible === false ||
+        res.airdropClaimData.success === false
+      ) {
         return (
           <Button color="disabled" width="w-full">
-            Claim
+            Not eligible
           </Button>
         );
       }
@@ -59,7 +86,74 @@ function MainAirdrop(props: IMainAirdropProps) {
         </Button>
       );
     }
-  }, [props]);
+  }, [props, userAddress, res]);
+  const handleAirdropOperation = () => {
+    localStorage.setItem(TOKEN_A, "0");
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+
+    claimAirdrop(
+      res.airdropClaimData.claimData,
+
+      transactionSubmitModal,
+      undefined,
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Claim airdrop`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
+    ).then((response) => {
+      if (response.success) {
+        setTimeout(() => {
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Claim airdrop`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(
+                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
+              },
+              transactionId: response.operationId ? response.operationId : "",
+            })
+          );
+        }, 6000);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      } else {
+        setShowConfirmTransaction(false);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              transactionId: "",
+              headerText: "Rejected",
+              trailingText: `Claim airdrop
+              `,
+              linkText: "",
+              isLoading: true,
+            })
+          );
+        }, 2000);
+
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
   return (
     <>
       <div
@@ -76,44 +170,12 @@ function MainAirdrop(props: IMainAirdropProps) {
           </p>
           <p className="ml-auto text-primary-500 font-caption2">Learn more</p>
         </div>
-        {props.chain === ChainAirdrop.Tezos ? (
-          <div
-            className={clsx(
-              "lg:w-[600px] secondtoken h-[82px] border border-text-800 rounded-2xl  px-4 border-primary-500/[0.2]  bg-card-500 mt-4"
-            )}
-          >
-            <div className=" flex ">
-              <div className={clsx(" mt-4", "flex-none")}>
-                <TokenDropdown
-                  tokenIcon={tokenOut.image}
-                  tokenName={tokenOut.name}
-                  isArrow={true}
-                />
-              </div>
-              <div className=" my-3 flex-auto">
-                <div className="text-right font-body1 text-text-400">YOUR CLAIMABLE BALANCE</div>
-                <div>
-                  <input
-                    type="text"
-                    disabled
-                    className={clsx(
-                      "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 "
-                    )}
-                    placeholder="0.0"
-                    value={0.0}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <OtherChain setChain={props.setChain} />
-        )}
+        {props.chain === ChainAirdrop.Other_chain && <OtherChain setChain={props.setChain} />}
         {props.chain === ChainAirdrop.Tezos && (
           <div className="mt-3 border border-muted-300 bg-muted-400 rounded-xl py-5">
-            <Progress />
+            <Progress claimData={res.airdropClaimData} />
             <div className="border-t border-text-800 my-3"></div>
-            <Steps />
+            <Steps claimData={res.airdropClaimData} />
           </div>
         )}
         {props.chain === ChainAirdrop.Tezos && <div className="mt-[18px]">{ClaimButton}</div>}
@@ -122,6 +184,25 @@ function MainAirdrop(props: IMainAirdropProps) {
         Know more about Airdrop and its eligibility{" "}
         <span className="text-primary-500">Learn more</span>
       </div>
+      {showConfirmTransaction && (
+        <ConfirmTransaction
+          show={showConfirmTransaction}
+          setShow={setShowConfirmTransaction}
+          content={"Claim airdrop"}
+        />
+      )}
+      {showTransactionSubmitModal && (
+        <TransactionSubmitted
+          show={showTransactionSubmitModal}
+          setShow={setShowTransactionSubmitModal}
+          onBtnClick={
+            transactionId
+              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              : null
+          }
+          content={"Claim airdrop"}
+        />
+      )}
     </>
   );
 }

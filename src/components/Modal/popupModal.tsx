@@ -22,7 +22,7 @@ export function PopUpModal(props: IPopUpModalProps) {
   const currentTimeToClose = props.isAnimteToLoader ? TIME_TO_TRANSACTION_CLOSE : TIME_TO_CLOSE;
   const clickedInModal = (e: any) => {
     try {
-      if (e.target.id === "modal_outer") {
+      if (e.target.id === "modal_outer" && props.Name !== "disclaimer") {
         setIsClose(true);
         setTimeout(() => {
           props.onhide && props.onhide();
