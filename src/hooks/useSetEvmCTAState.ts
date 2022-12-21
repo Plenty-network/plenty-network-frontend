@@ -1,6 +1,10 @@
 import { useEffect } from "react";
-import { useAccount, useNetwork} from "wagmi";
-import { isEvmWalletEligible, isTezosAddressRevealed, tezosWalletHasAirdrop } from "../api/airdrop";
+import { useAccount, useNetwork } from "wagmi";
+import {
+  isEvmWalletEligible,
+  tezosAccountHasTransactions,
+  tezosWalletHasAirdrop,
+} from "../api/airdrop";
 import { useAppDispatch, useAppSelector } from "../redux";
 import { setEvmCTAState, setTextDisplayState } from "../redux/airdrop/state";
 import { setReceiptsCallFrom } from "../redux/airdrop/transactions";
@@ -13,7 +17,6 @@ const useSetEvmCTAState = () => {
   const { chain: ethChain } = useNetwork();
   const userTezosAddress = useAppSelector((state) => state.wallet.address);
   const signaturesData = useAppSelector((state) => state.airdropTransactions.signaturesData);
-  const revealedData = useAppSelector((state) => state.airdropState.revealedData);
 
   // Set the state of CTA
   useEffect(() => {
@@ -79,9 +82,11 @@ const useSetEvmCTAState = () => {
                   );
                 } else {
                   // dispatch(setEvmCTAState(EvmCTAState.LOADING));
-                  const tezosAddressRevealed = await isTezosAddressRevealed(userTezosAddress);
-                  if (!tezosAddressRevealed) {
-                    dispatch(setEvmCTAState(EvmCTAState.NOT_REVEALED));
+                  const tezosAddressHasTransactions = await tezosAccountHasTransactions(
+                    userTezosAddress
+                  );
+                  if (!tezosAddressHasTransactions) {
+                    dispatch(setEvmCTAState(EvmCTAState.NO_TRANSACTIONS));
                     dispatch(
                       setTextDisplayState({
                         isVisible: true,
@@ -115,7 +120,7 @@ const useSetEvmCTAState = () => {
       }
     };
     setCTAStatus();
-  }, [isEvmConnected, userTezosAddress, ethAddress, signaturesData, revealedData, ethChain]);
+  }, [isEvmConnected, userTezosAddress, ethAddress, signaturesData, ethChain]);
 };
 
 export { useSetEvmCTAState };
