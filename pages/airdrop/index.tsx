@@ -6,6 +6,7 @@ import MainAirdrop from "../../src/components/Airdrop";
 import Disclaimer, { ChainAirdrop } from "../../src/components/Airdrop/Disclaimer";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { useInterval } from "../../src/hooks/useInterval";
+import { setDisclaimer } from "../../src/redux/airdrop/disclaimer";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getEpochData } from "../../src/redux/epoch/epoch";
 import { AppDispatch, useAppSelector } from "../../src/redux/index";
@@ -20,16 +21,18 @@ const Airdrop: NextPage = () => {
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
-
+  const dis = useAppSelector((state) => state.Disclaimer.address);
   const dispatch = useDispatch<AppDispatch>();
   const [isDisclaimer, setIsDisclaimer] = useState(false);
-  console.log(
-    "ishu",
-    localStorage.getItem(`Airdrop${userAddress}`) === "true",
-    localStorage.getItem(`Airdrop${userAddress}`)
-  );
+
   const handleClick = () => {
     localStorage.setItem(`Airdrop${userAddress}`, "true");
+    dispatch(
+      setDisclaimer({
+        address: userAddress,
+        isChecked: true,
+      })
+    );
   };
   useEffect(() => {
     dispatch(fetchWallet());
@@ -48,8 +51,12 @@ const Airdrop: NextPage = () => {
     if (userAddress) {
       dispatch(getTotalVotingPower());
     }
-    setIsDisclaimer(!(localStorage.getItem(`Airdrop${userAddress}`) === "true"));
   }, [userAddress]);
+  useEffect(() => {
+    //setTimeout(() => {
+    setIsDisclaimer(!dis[userAddress]);
+    //}, 2000);
+  }, [dis[userAddress]]);
   useEffect(() => {
     if (userAddress && totalVotingPowerError) {
       dispatch(getTotalVotingPower());

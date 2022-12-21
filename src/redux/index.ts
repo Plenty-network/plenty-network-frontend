@@ -8,7 +8,7 @@ import { wallet } from "./wallet/wallet";
 import { config } from "./config/config";
 import { tokenPrice } from "./tokenPrice/tokenPrice";
 import isLoadingWallet from "./isLoading/reducer";
-import {flashMessage} from "./flashMessage";
+import { flashMessage } from "./flashMessage";
 import { userSettings } from "./userSettings/userSettings";
 import { veNFT } from "./veNFT";
 import { pools } from "./pools";
@@ -19,6 +19,7 @@ import { portfolioStatsTvl } from "./myPortfolio/tvl";
 import { portfolioStatsVotes } from "./myPortfolio/votesStats";
 import { rpcData } from "./userSettings/rpcData";
 import { airdropTransactions } from "./airdrop/transactions";
+import { Disclaimer } from "./airdrop/disclaimer";
 import { airdropState } from "./airdrop/state";
 
 const reducers = combineReducers({
@@ -32,12 +33,13 @@ const reducers = combineReducers({
   veNFT: veNFT,
   walletLoading: walletLoading,
   portfolioRewards: portfolioRewards,
-  flashMessage:flashMessage,
+  flashMessage: flashMessage,
   portfolioStatsTvl: portfolioStatsTvl,
   portfolioStatsVotes: portfolioStatsVotes,
   rpcData: rpcData,
   airdropTransactions: airdropTransactions,
   airdropState: airdropState,
+  Disclaimer: Disclaimer,
 });
 
 const persistConfig = {
@@ -53,6 +55,7 @@ const persistConfig = {
     "portfolioStatsVotes",
     "rpcData",
     "airdropTransactions",
+    "Disclaimer",
   ],
 };
 

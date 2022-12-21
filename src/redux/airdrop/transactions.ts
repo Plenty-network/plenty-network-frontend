@@ -29,8 +29,6 @@ const AirdropTransactionsSlice = createSlice({
       };
     },
     addTweetedAccount: (state, action: PayloadAction<string>) => {
-      console.log("ishu", action.payload);
-      //state.tweetedAccounts.push(action.payload);
       state.tweetedAccounts = state.tweetedAccounts.concat(action.payload);
     },
   },
