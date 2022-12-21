@@ -8,7 +8,7 @@ import { getTezosClaimData, getEvmClaimData } from "../api/airdrop";
 import { setFlashMessage } from "../redux/flashMessage";
 import { useDispatch } from "react-redux";
 import { Flashtype } from "../components/FlashScreen";
-import { AIRDROP_ERROR_MESSAGES } from "../constants/airdrop";
+import { AIRDROP_ERROR_MESSAGES, AIRDROP_ERROR_MESSAGESS } from "../constants/airdrop";
 
 export const useAirdropClaimData = () => {
   const { address: ethAddress } = useAccount();
@@ -39,39 +39,31 @@ export const useAirdropClaimData = () => {
         receiptsCallFrom[userTezosAddress] === ReceiptsCallFrom.TEZOS
       ) {
         getTezosClaimData(userTezosAddress).then((res) => {
-          console.log("ishu", res);
+          console.log("hello1", res);
           setAirDropClaimData(res);
         });
         if (airdropClaimData.eligible && airdropClaimData.success) {
           if (tweetedAccounts?.includes(userTezosAddress)) {
-            console.log("true");
+            // console.log("true");
           } else {
-            console.log("ishu", "false");
+            //console.log("ishu", "false");
           }
-        } else if (airdropClaimData.success === false) {
+        } else if (airdropClaimData.success === false && airdropClaimData.message) {
+          const res = AIRDROP_ERROR_MESSAGESS.filter((i) => {
+            return Object.keys(i)[0] === [airdropClaimData.message][0];
+          });
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Info,
               headerText: "Info",
-              trailingText: `${airdropClaimData.message}`,
-              linkText: "",
-              isLoading: true,
-              transactionId: "",
-            })
-          );
-        } else {
-          dispatch(
-            setFlashMessage({
-              flashType: Flashtype.Info,
-              headerText: "Info",
-              trailingText: `${airdropClaimData.message}`,
+              trailingText: `${Object.values(res[0])}`,
               linkText: "",
               isLoading: true,
               transactionId: "",
             })
           );
         }
-        console.log("ishu", airdropClaimData, tweetedAccounts);
+
         // Call getTezosClaimData and set it as airdropClaimData
         // While using this data if response is eligible and success true, then only for the first mission
         // i.e. Mission.ELIGIBLE, check tweetedAccounts.
@@ -123,15 +115,16 @@ export const useAirdropClaimData = () => {
             const signedData = signaturesData[ethAddress];
             getEvmClaimData(signedData.message, signedData.signature).then((res) => {
               setAirDropClaimData(res);
+              console.log("hello2", res);
             });
             if (airdropClaimData.eligible && airdropClaimData.success) {
               if (tweetedAccounts?.includes(userTezosAddress)) {
-                console.log("true");
+                //console.log("true");
               } else {
-                console.log("ishu", "false");
+                //console.log("ishu", "false");
               }
             }
-            console.log("ishu", airdropClaimData, tweetedAccounts);
+
             //Call getEvmClaimedData(signedData.message, signedData.signature)
             // While using this data if response is eligible and success true, then only for the first mission
             // i.e. Mission.ELIGIBLE, check tweetedAccounts.

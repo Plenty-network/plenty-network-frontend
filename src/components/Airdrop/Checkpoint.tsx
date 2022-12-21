@@ -55,7 +55,7 @@ function CheckPoint(props: ICheckPoint) {
         )}
       >
         <p className="relative top-0.5">
-          <Image src={props.completed ? doneCheck : check} />
+          <Image src={action === 1 ? doneCheck : check} />
         </p>
         <p className="font-subtitle1 ml-2">{props.text}</p>
 

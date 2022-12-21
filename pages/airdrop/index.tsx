@@ -22,10 +22,9 @@ const Airdrop: NextPage = () => {
   const amm = useAppSelector((state) => state.config.AMMs);
 
   const dispatch = useDispatch<AppDispatch>();
-  const [isDisclaimer, setIsDisclaimer] = useState(
-    !(localStorage.getItem(`Airdrop${userAddress}`) === "true")
-  );
+  const [isDisclaimer, setIsDisclaimer] = useState(false);
   console.log(
+    "ishu",
     localStorage.getItem(`Airdrop${userAddress}`) === "true",
     localStorage.getItem(`Airdrop${userAddress}`)
   );
@@ -69,7 +68,7 @@ const Airdrop: NextPage = () => {
   return (
     <>
       <SideBarHOC makeTopBarScroll>
-        {isDisclaimer && !(localStorage.getItem(`Airdrop${userAddress}`) === "true") ? (
+        {isDisclaimer ? (
           <Disclaimer
             show={isDisclaimer}
             setShow={setIsDisclaimer}

@@ -48,13 +48,13 @@ function MainAirdrop(props: IMainAirdropProps) {
     return dispatch(walletConnection());
   };
   const userAddress = useAppSelector((state) => state.wallet.address);
-  const [res, setRes] = useState<{
-    airdropClaimData: IClaimDataResponse;
-    setClaimed: React.Dispatch<React.SetStateAction<boolean>>;
-  }>(useAirdropClaimData());
-  console.log("hello", res);
-  //const res = useAirdropClaimData();
+  // const [res, setRes] = useState<{
+  //   airdropClaimData: IClaimDataResponse;
+  //   setClaimed: React.Dispatch<React.SetStateAction<boolean>>;
+  // }>(useAirdropClaimData());
 
+  const res = useAirdropClaimData();
+  console.log("hello", res);
   const ClaimButton = useMemo(() => {
     if (userAddress) {
       if (
