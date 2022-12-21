@@ -31,43 +31,35 @@ export const useAirdropClaimData = () => {
   const [claimed, setClaimed] = useState<boolean>(false);
 
   const getAirdropClaimData = async () => {
-    if (!userTezosAddress || userTezosAddress.length === 0) {
-      // Make Connect to Tezos wallet as CTA
-    } else {
-      if (
-        receiptsCallFrom[userTezosAddress] === undefined ||
-        receiptsCallFrom[userTezosAddress] === ReceiptsCallFrom.TEZOS
-      ) {
-        getTezosClaimData(userTezosAddress).then((res) => {
-          console.log("hello1", res);
-          setAirDropClaimData(res);
-        });
-        if (airdropClaimData.eligible && airdropClaimData.success) {
-          if (tweetedAccounts?.includes(userTezosAddress)) {
-            // console.log("true");
-          } else {
-            //console.log("ishu", "false");
-          }
-        } else if (airdropClaimData.success === false && airdropClaimData.message) {
-          const res = AIRDROP_ERROR_MESSAGESS.filter((i) => {
-            return Object.keys(i)[0] === [airdropClaimData.message][0];
+    if (
+      receiptsCallFrom[userTezosAddress] === undefined ||
+      receiptsCallFrom[userTezosAddress] === ReceiptsCallFrom.TEZOS
+    ) {
+      getTezosClaimData(userTezosAddress).then((res) => {
+        console.log("hello1", res);
+        setAirDropClaimData(res);
+
+        if (res.success === false && res.message) {
+          const response = AIRDROP_ERROR_MESSAGESS.filter((i) => {
+            return Object.keys(i)[0] === [res.message][0];
           });
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Info,
               headerText: "Info",
-              trailingText: `${Object.values(res[0])}`,
+              trailingText: `${Object.values(response[0])}`,
               linkText: "",
               isLoading: true,
               transactionId: "",
             })
           );
         }
+      });
 
-        // Call getTezosClaimData and set it as airdropClaimData
-        // While using this data if response is eligible and success true, then only for the first mission
-        // i.e. Mission.ELIGIBLE, check tweetedAccounts.
-        /*
+      // Call getTezosClaimData and set it as airdropClaimData
+      // While using this data if response is eligible and success true, then only for the first mission
+      // i.e. Mission.ELIGIBLE, check tweetedAccounts.
+      /*
           if(tweetedAccounts.includes(userTezosAddress)) {
             mark that mission as completed or claimed based on claim field in the api response.
           } else {
@@ -84,51 +76,44 @@ export const useAirdropClaimData = () => {
             set the setClaimed to reload this effect and check or any other way preferred.
           }
         */
-      } else if (receiptsCallFrom[userTezosAddress] === ReceiptsCallFrom.EVM) {
-        if (!ethAddress) {
+    } else if (receiptsCallFrom[userTezosAddress] === ReceiptsCallFrom.EVM) {
+      if (!ethAddress) {
+        dispatch(
+          setFlashMessage({
+            flashType: Flashtype.Info,
+            headerText: "Info",
+            trailingText: `switch to Other chain and connect to Eth wallet.`,
+            linkText: "",
+            isLoading: true,
+            transactionId: "",
+          })
+        );
+        // Display flash message to switch to Other chain and connect to Eth wallet.
+      } else {
+        const signed = signaturesData[ethAddress] ? true : false;
+        if (!signed) {
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Info,
               headerText: "Info",
-              trailingText: `switch to Other chain and connect to Eth wallet.`,
+              trailingText: `switch to Other chain and Confirm Tezos address (sign)`,
               linkText: "",
               isLoading: true,
               transactionId: "",
             })
           );
-          // Display flash message to switch to Other chain and connect to Eth wallet.
+          // Display flash message to user to switch to Other chain and Confirm Tezos address (sign).
         } else {
-          const signed = signaturesData[ethAddress] ? true : false;
-          if (!signed) {
-            dispatch(
-              setFlashMessage({
-                flashType: Flashtype.Info,
-                headerText: "Info",
-                trailingText: `switch to Other chain and Confirm Tezos address (sign)`,
-                linkText: "",
-                isLoading: true,
-                transactionId: "",
-              })
-            );
-            // Display flash message to user to switch to Other chain and Confirm Tezos address (sign).
-          } else {
-            const signedData = signaturesData[ethAddress];
-            getEvmClaimData(signedData.message, signedData.signature).then((res) => {
-              setAirDropClaimData(res);
-              console.log("hello2", res);
-            });
-            if (airdropClaimData.eligible && airdropClaimData.success) {
-              if (tweetedAccounts?.includes(userTezosAddress)) {
-                //console.log("true");
-              } else {
-                //console.log("ishu", "false");
-              }
-            }
+          const signedData = signaturesData[ethAddress];
+          getEvmClaimData(signedData.message, signedData.signature).then((res) => {
+            setAirDropClaimData(res);
+            console.log("hello2", res);
+          });
 
-            //Call getEvmClaimedData(signedData.message, signedData.signature)
-            // While using this data if response is eligible and success true, then only for the first mission
-            // i.e. Mission.ELIGIBLE, check tweetedAccounts.
-            /*
+          //Call getEvmClaimedData(signedData.message, signedData.signature)
+          // While using this data if response is eligible and success true, then only for the first mission
+          // i.e. Mission.ELIGIBLE, check tweetedAccounts.
+          /*
               if(tweetedAccounts.includes(userTezosAddress)) {
                 mark that mission as completed or claimed based on claim field in the api response.
               } else {
@@ -145,7 +130,6 @@ export const useAirdropClaimData = () => {
                 set the setClaimed to reload this effect and check or any other way preferred.
               }
             */
-          }
         }
       }
     }
