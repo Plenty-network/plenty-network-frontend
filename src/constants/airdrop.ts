@@ -1,7 +1,7 @@
 import { Mission } from "../api/airdrop/types";
 import { EvmCTAState } from "../redux/airdrop/types";
 
-export const AIRDROP_ERROR_MESSAGES = {
+export const AIRDROP_ERROR_MESSAGES: { [message: string]: string } = {
   INVALID_TEZOS_ADDRESS: "Invalid Tezos address in request",
   NOT_ELIGIBLE: "Selected Tezos user address is not eligible for claim",
   INTERNAL_SERVER_ERROR: "Internal server error",

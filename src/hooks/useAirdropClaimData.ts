@@ -8,7 +8,7 @@ import { getTezosClaimData, getEvmClaimData } from "../api/airdrop";
 import { setFlashMessage } from "../redux/flashMessage";
 import { useDispatch } from "react-redux";
 import { Flashtype } from "../components/FlashScreen";
-import { AIRDROP_ERROR_MESSAGES, AIRDROP_ERROR_MESSAGESS } from "../constants/airdrop";
+import { AIRDROP_ERROR_MESSAGES } from "../constants/airdrop";
 
 export const useAirdropClaimData = () => {
   const { address: ethAddress } = useAccount();
@@ -40,14 +40,11 @@ export const useAirdropClaimData = () => {
         setAirDropClaimData(res);
 
         if (res.success === false && res.message) {
-          const response = AIRDROP_ERROR_MESSAGESS.filter((i) => {
-            return Object.keys(i)[0] === [res.message][0];
-          });
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Info,
               headerText: "Info",
-              trailingText: `${Object.values(response[0])}`,
+              trailingText: `${AIRDROP_ERROR_MESSAGES[res.message]}`,
               linkText: "",
               isLoading: true,
               transactionId: "",

@@ -22,6 +22,7 @@ const Airdrop: NextPage = () => {
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
   const dis = useAppSelector((state) => state.Disclaimer.address);
+  console.log("k", dis, "user", userAddress, !dis[userAddress]); //for testing
   const dispatch = useDispatch<AppDispatch>();
   const [isDisclaimer, setIsDisclaimer] = useState(false);
 
@@ -53,10 +54,8 @@ const Airdrop: NextPage = () => {
     }
   }, [userAddress]);
   useEffect(() => {
-    //setTimeout(() => {
     setIsDisclaimer(!dis[userAddress]);
-    //}, 2000);
-  }, [dis[userAddress]]);
+  }, [dis, userAddress]);
   useEffect(() => {
     if (userAddress && totalVotingPowerError) {
       dispatch(getTotalVotingPower());
