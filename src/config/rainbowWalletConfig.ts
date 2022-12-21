@@ -1,7 +1,7 @@
 import { getDefaultWallets, Chain } from "@rainbow-me/rainbowkit";
 import { publicProvider } from "wagmi/providers/public";
 import { configureChains, createClient } from "wagmi";
-import { mainnet, polygon } from 'wagmi/chains';
+import { mainnet, polygon, bsc, optimism } from 'wagmi/chains';
 
 /* Add supported chains along with custon icons(should be served from public folder) */
 export const defaultChains: Chain[] = [
@@ -12,6 +12,14 @@ export const defaultChains: Chain[] = [
   {
     ...polygon,
     iconUrl: "/assets/chains/polygon.svg",
+  },
+  {
+    ...bsc,
+    iconUrl: "/assets/chains/bsc.svg",
+  },
+  {
+    ...optimism,
+    iconUrl: "/assets/chains/optimism.svg",
   },
 ];
 
