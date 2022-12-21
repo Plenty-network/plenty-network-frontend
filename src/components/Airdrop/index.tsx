@@ -19,8 +19,8 @@ function MainAirdrop(props: IMainAirdropProps) {
   //   setClaimed: React.Dispatch<React.SetStateAction<boolean>>;
   // }>(useAirdropClaimData());
 
-  const res = useAirdropClaimData();
-  console.log("hello", res);
+  // const res = useAirdropClaimData();
+  // console.log("hello", res);
 
   return (
     <>
@@ -39,7 +39,7 @@ function MainAirdrop(props: IMainAirdropProps) {
           <p className="ml-auto text-primary-500 font-caption2">Learn more</p>
         </div>
         {props.chain === ChainAirdrop.Other_chain && <OtherChain setChain={props.setChain} />}
-        {props.chain === ChainAirdrop.Tezos && <TezosChain setChain={props.setChain} res={res} />}
+        {props.chain === ChainAirdrop.Tezos && <TezosChain setChain={props.setChain} />}
       </div>
       <div className="font-body2 text-text-250 mt-[10px] mx-2 md:mx-auto md:w-[568px] text-center mb-5">
         Know more about Airdrop and its eligibility{" "}

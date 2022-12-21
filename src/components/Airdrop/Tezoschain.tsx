@@ -16,12 +16,13 @@ import { Flashtype } from "../FlashScreen";
 import { setFlashMessage } from "../../redux/flashMessage";
 import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
+import { useAirdropClaimData } from "../../hooks/useAirdropClaimData";
 export interface ITezosChain {
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
-  res: {
-    airdropClaimData: IClaimDataResponse;
-    setClaimed: React.Dispatch<React.SetStateAction<boolean>>;
-  };
+  // res: {
+  //   airdropClaimData: IClaimDataResponse;
+  //   setClaimed: React.Dispatch<React.SetStateAction<boolean>>;
+  // };
 }
 
 function TezosChain(props: ITezosChain) {
@@ -33,6 +34,8 @@ function TezosChain(props: ITezosChain) {
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [transactionId, setTransactionId] = useState("");
+  const res = useAirdropClaimData();
+  console.log("hello", res);
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
@@ -43,7 +46,7 @@ function TezosChain(props: ITezosChain) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
 
     claimAirdrop(
-      props.res.airdropClaimData.claimData,
+      res.airdropClaimData.claimData,
 
       transactionSubmitModal,
       undefined,
@@ -107,20 +110,20 @@ function TezosChain(props: ITezosChain) {
   const ClaimButton = useMemo(() => {
     if (userAddress) {
       if (
-        props.res.airdropClaimData.eligible &&
-        props.res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0)
+        res.airdropClaimData.eligible &&
+        res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0)
       ) {
         return (
           <button
             className={clsx("bg-primary-500 h-13 text-black w-full rounded-2xl font-title3-bold")}
             onClick={handleAirdropOperation}
           >
-            Claim {props.res.airdropClaimData.pendingClaimableAmount.toFixed(2)}
+            Claim {res.airdropClaimData.pendingClaimableAmount.toFixed(2)}
           </button>
         );
       } else if (
-        props.res.airdropClaimData.eligible === false ||
-        props.res.airdropClaimData.success === false
+        res.airdropClaimData.eligible === false ||
+        res.airdropClaimData.success === false
       ) {
         return (
           <Button color="disabled" width="w-full">
@@ -135,14 +138,14 @@ function TezosChain(props: ITezosChain) {
         </Button>
       );
     }
-  }, [props, userAddress, props.res]);
+  }, [props, userAddress, res]);
 
   return (
     <>
       <div className="mt-3 border border-muted-300 bg-muted-400 rounded-xl py-5">
-        <Progress claimData={props.res.airdropClaimData} />
+        <Progress claimData={res.airdropClaimData} />
         <div className="border-t border-text-800 my-3"></div>
-        <Steps claimData={props.res.airdropClaimData} />
+        <Steps claimData={res.airdropClaimData} />
       </div>
       <div className="mt-[18px]">{ClaimButton}</div>
       {showConfirmTransaction && (
