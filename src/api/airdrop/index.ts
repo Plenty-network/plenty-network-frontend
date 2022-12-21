@@ -8,7 +8,7 @@ import {
   TClaimAPIResponseData,
 } from "./types";
 import Config from "../../config/config";
-import { connectedNetwork } from "../../common/walletconnect";
+import { connectedNetwork, tzktNode } from "../../common/walletconnect";
 import { PLY_DECIMAL_MULTIPLIER } from "../../constants/global";
 import { getTzktAccountData } from "../util/storageProvider";
 
@@ -184,6 +184,26 @@ export const isTezosAddressRevealed = async (userTezosAddress: string): Promise<
     const accountResponse = await getTzktAccountData(userTezosAddress);
     const accountData = accountResponse.data;
     return Boolean(accountData.revealed);
+  } catch (error: any) {
+    console.log(error);
+    return false;
+  }
+};
+
+/**
+ * Returns whether the selected tezos user account has any transactions or not.
+ * @param userTezosAddress - Tezos user wallet address
+ */
+export const tezosAccountHasTransactions = async (userTezosAddress: string): Promise<boolean> => {
+  try {
+    if (userTezosAddress === "" || userTezosAddress.length <= 0 || !userTezosAddress) {
+      throw new Error("Invalid user address");
+    }
+    const transactionsResponse = await axios.get(
+      `${tzktNode}v1/operations/transactions?target=${userTezosAddress}&limit=1`
+    );
+
+    return !transactionsResponse.data || transactionsResponse.data.length <= 0 ? false : true;
   } catch (error: any) {
     console.log(error);
     return false;

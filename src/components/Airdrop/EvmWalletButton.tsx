@@ -94,11 +94,14 @@ const EvmWalletButton = (props: IEvmWalletButton): JSX.Element => {
             {AIRDROP_EVM_CTA_TEXTS[EvmCTAState.NOT_SIGNED]}
           </Button>
         );
-      case EvmCTAState.NOT_REVEALED:
+      case EvmCTAState.NO_TRANSACTIONS:
         return (
-          //TODO: Implement reveal func
-          <Button color="primary" onClick={undefined} width="w-full">
-            {AIRDROP_EVM_CTA_TEXTS[EvmCTAState.NOT_REVEALED]}
+          <Button
+            color="primary"
+            onClick={() => window.open("https://tezos.com/tez/#buy-tez", "_blank")}
+            width="w-full"
+          >
+            {AIRDROP_EVM_CTA_TEXTS[EvmCTAState.NO_TRANSACTIONS]}
           </Button>
         );
       case EvmCTAState.ELIGIBLE:

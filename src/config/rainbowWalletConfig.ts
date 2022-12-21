@@ -1,15 +1,16 @@
 import { getDefaultWallets, Chain } from "@rainbow-me/rainbowkit";
 import { publicProvider } from "wagmi/providers/public";
-import { chain, configureChains, createClient } from "wagmi";
+import { configureChains, createClient } from "wagmi";
+import { mainnet, polygon } from 'wagmi/chains';
 
 /* Add supported chains along with custon icons(should be served from public folder) */
 export const defaultChains: Chain[] = [
   {
-    ...chain.mainnet,
+    ...mainnet,
     iconUrl: "/assets/chains/ethereum.svg",
   },
   {
-    ...chain.polygon,
+    ...polygon,
     iconUrl: "/assets/chains/polygon.svg",
   },
 ];
