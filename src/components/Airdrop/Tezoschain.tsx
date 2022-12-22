@@ -27,6 +27,8 @@ export interface ITezosChain {
 
 function TezosChain(props: ITezosChain) {
   const userAddress = useAppSelector((state) => state.wallet.address);
+  const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
+
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
@@ -111,7 +113,9 @@ function TezosChain(props: ITezosChain) {
     if (userAddress) {
       if (
         res.airdropClaimData.eligible &&
-        res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0)
+        res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0) &&
+        res.airdropClaimData.claimData[0].claimed === false &&
+        tweetedAccounts.includes(userAddress)
       ) {
         return (
           <button
@@ -119,6 +123,19 @@ function TezosChain(props: ITezosChain) {
             onClick={handleAirdropOperation}
           >
             Claim {res.airdropClaimData.pendingClaimableAmount.toFixed(2)}
+          </button>
+        );
+      } else if (
+        res.airdropClaimData.eligible &&
+        res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0)
+      ) {
+        return (
+          <button
+            className={clsx(
+              "bg-primary-600 text-text-600 h-13  w-full rounded-2xl font-title3-bold"
+            )}
+          >
+            Claim
           </button>
         );
       } else if (

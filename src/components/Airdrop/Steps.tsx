@@ -1,4 +1,4 @@
-import { store } from "../../redux";
+import { store, useAppSelector } from "../../redux";
 import bribes from "../../assets/icon/bribes/bribesLanding.svg";
 import Image from "next/image";
 
@@ -22,12 +22,17 @@ export interface ISteps {
 
 function Steps(props: ISteps) {
   const [isDropDownActive, setIsDropDownActive] = useState(false);
+  const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
+  const userAddress = useAppSelector((state) => state.wallet.address);
   return (
     <>
       <div className="flex  px-5">
         {isDropDownActive ? (
           <p className="bg-primary-500/[0.2] rounded-lg h-[28px] px-2 text-primary-500 font-subtitle1 flex items-center">
-            4 steps to complete
+            {tweetedAccounts.includes(userAddress)
+              ? 6 - props.claimData.claimData.length
+              : 5 - props.claimData.claimData.length}{" "}
+            steps to complete
           </p>
         ) : (
           <p className="">

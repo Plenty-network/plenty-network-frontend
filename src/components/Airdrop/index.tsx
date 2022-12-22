@@ -14,14 +14,6 @@ interface IMainAirdropProps {
 }
 
 function MainAirdrop(props: IMainAirdropProps) {
-  // const [res, setRes] = useState<{
-  //   airdropClaimData: IClaimDataResponse;
-  //   setClaimed: React.Dispatch<React.SetStateAction<boolean>>;
-  // }>(useAirdropClaimData());
-
-  // const res = useAirdropClaimData();
-  // console.log("hello", res);
-
   return (
     <>
       <div
