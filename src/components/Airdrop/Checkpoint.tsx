@@ -29,6 +29,7 @@ export interface ICheckPoint {
 function CheckPoint(props: ICheckPoint) {
   const tweetRef = useRef(null);
   const userAddress = useAppSelector((state) => state.wallet.address);
+  const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
   const dispatch = useDispatch<AppDispatch>();
   const handleTwitter = () => {
     dispatch(addTweetedAccount(userAddress));
@@ -43,10 +44,17 @@ function CheckPoint(props: ICheckPoint) {
           flag = 2;
         }
         console.log(data.claimed);
+      } else if (data.mission === props.mission && data.mission === "ELIGIBLE") {
+        if (tweetedAccounts.includes(userAddress)) {
+          flag = 1;
+          if (data.claimed) {
+            flag = 2;
+          }
+        }
       }
     });
     return flag;
-  }, [props.claimData, props.mission]);
+  }, [props.claimData, props.mission, tweetedAccounts]);
   return (
     <>
       <div
@@ -77,7 +85,7 @@ function CheckPoint(props: ICheckPoint) {
           ) : props.href === "" && action === 0 ? (
             <span onClick={handleTwitter}>
               <TwitterShareButton
-                url="https://localhost:3010/airdrop"
+                url="https://ghostnet.plenty.network/"
                 style={{ height: "auto" }}
                 ref={tweetRef}
               >

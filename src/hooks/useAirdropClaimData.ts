@@ -38,7 +38,7 @@ export const useAirdropClaimData = () => {
       getTezosClaimData(userTezosAddress).then((res) => {
         console.log("hello1", res);
         setAirDropClaimData(res);
-
+        console.log("hello", tweetedAccounts);
         if (res.success === false && res.message) {
           dispatch(
             setFlashMessage({

@@ -19,10 +19,6 @@ import TransactionSubmitted from "../TransactionSubmitted";
 import { useAirdropClaimData } from "../../hooks/useAirdropClaimData";
 export interface ITezosChain {
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
-  // res: {
-  //   airdropClaimData: IClaimDataResponse;
-  //   setClaimed: React.Dispatch<React.SetStateAction<boolean>>;
-  // };
 }
 
 function TezosChain(props: ITezosChain) {

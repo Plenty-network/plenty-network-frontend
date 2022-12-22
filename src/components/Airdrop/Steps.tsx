@@ -6,12 +6,7 @@ import { isMobile } from "react-device-detect";
 import "animate.css";
 import { useEffect, useState, useMemo } from "react";
 import vectorDown from "../../assets/icon/common/vector.svg";
-import Button from "../Button/Button";
-import { SideBarHOC } from "../Sidebar/SideBarHOC";
-import Link from "next/link";
 import clsx from "clsx";
-import { ChainAirdrop } from "./Disclaimer";
-
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import CheckPoint from "./Checkpoint";
 import { AIRDROP_MISSIONS_FOR_DISPLAY } from "../../constants/airdrop";

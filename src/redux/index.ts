@@ -46,6 +46,7 @@ const persistConfig = {
   key: "root",
   storage,
   whitelist: [
+    "wallet",
     "userSettings",
     "config",
     "pools",
