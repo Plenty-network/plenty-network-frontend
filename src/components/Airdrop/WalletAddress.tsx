@@ -1,5 +1,6 @@
 import { store, useAppSelector } from "../../redux";
 import { useChainModal, useAccountModal } from "@rainbow-me/rainbowkit";
+import { isMobile } from "react-device-detect";
 import Image from "next/image";
 import eth from "../../../src/assets/icon/airdrop/eth.svg";
 import { useAccount, useNetwork } from "wagmi";
@@ -16,7 +17,6 @@ import { defaultChains } from "../../config/rainbowWalletConfig";
 export interface IWalletAddress {}
 
 function WalletAddress(props: IWalletAddress) {
-  const userAddress = useAppSelector((state) => state.wallet.address);
   const [chainIconUrl, setChainIconUrl] = useState<string>("/assets/chains/fallback.svg");
   /* Hooks provided by wagami for getting account, connection, network and chain related info */
   const { address: ethAddress } = useAccount();
@@ -45,11 +45,23 @@ function WalletAddress(props: IWalletAddress) {
       <div className="flex ">
         <p className="font-title3 mr-1.5 cursor-pointer" onClick={openAccountModal}>
           {" "}
-          ({ethAddress ? truncateMiddle(ethAddress as string, 5, 4, "...") : ""})
+          (
+          {ethAddress
+            ? isMobile
+              ? truncateMiddle(ethAddress as string, 4, 2, "...")
+              : truncateMiddle(ethAddress as string, 5, 4, "...")
+            : ""}
+          )
         </p>
 
         <p className="mr-1 cursor-pointer flex">
-          <Image alt={ethChain?.name} src={chainIconUrl} height={18} width={18} onClick={openChainModal} />
+          <Image
+            alt={ethChain?.name}
+            src={chainIconUrl}
+            height={18}
+            width={18}
+            onClick={openChainModal}
+          />
         </p>
       </div>
     </>

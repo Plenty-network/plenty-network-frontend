@@ -56,14 +56,14 @@ function OtherChain(props: IOtherChain) {
       {/* <div className="mt-[18px]">{ClaimButton}</div> */}
       {/* //TODO: Image will change based on CTA state. Fetch image type from state variable {textToDisplay} */}
       {textToDisplay.isVisible && textToDisplay.textType !== TextType.NONE && (
-        <div className="h-[46px]  px-2 rounded-xl my-3 flex items-center bg-info-500/[0.1]">
+        <div className="h-[50px] md:h-[46px]  px-2 rounded-xl my-3 flex items-center bg-info-500/[0.1]">
           <p className="relative top-0.5">
             <Image src={textToDisplay.textType === TextType.INFO ? infoBlue : infoRed} />
           </p>
           <p
             className={clsx(
               textToDisplay.textType === TextType.INFO ? "text-info-500" : "text-error-500",
-              "font-body2  px-3 md:w-auto w-[249px]"
+              "font-body2  px-3 md:w-auto w-[330px]"
             )}
           >
             {textToDisplay.textData}

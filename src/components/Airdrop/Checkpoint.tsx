@@ -43,7 +43,6 @@ function CheckPoint(props: ICheckPoint) {
         if (data.claimed) {
           flag = 2;
         }
-        console.log(data.claimed);
       } else if (data.mission === props.mission && data.mission === "ELIGIBLE") {
         if (tweetedAccounts.includes(userAddress)) {
           flag = 1;
@@ -66,7 +65,7 @@ function CheckPoint(props: ICheckPoint) {
         <p className="relative top-0.5">
           <Image src={action === 1 ? doneCheck : check} />
         </p>
-        <p className="font-subtitle1 ml-2">{props.text}</p>
+        <p className="font-subtitle1 ml-2 w-[50%] md:w-auto">{props.text}</p>
 
         <p
           className={clsx(

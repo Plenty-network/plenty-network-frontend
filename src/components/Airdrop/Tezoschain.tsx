@@ -32,7 +32,7 @@ function TezosChain(props: ITezosChain) {
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [transactionId, setTransactionId] = useState("");
   const res = useAirdropClaimData();
-  console.log("hello", res);
+
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
@@ -106,33 +106,54 @@ function TezosChain(props: ITezosChain) {
   };
   const ClaimButton = useMemo(() => {
     if (userAddress) {
-      if (
-        res.airdropClaimData.eligible &&
-        res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0) &&
-        res.airdropClaimData.claimData[0].claimed === false &&
-        tweetedAccounts.includes(userAddress)
-      ) {
-        return (
-          <button
-            className={clsx("bg-primary-500 h-13 text-black w-full rounded-2xl font-title3-bold")}
-            onClick={handleAirdropOperation}
-          >
-            Claim {res.airdropClaimData.pendingClaimableAmount.toFixed(2)}
-          </button>
-        );
-      } else if (
-        res.airdropClaimData.eligible &&
-        res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0)
-      ) {
-        return (
-          <button
-            className={clsx(
-              "bg-primary-600 text-text-600 h-13  w-full rounded-2xl font-title3-bold"
-            )}
-          >
-            Claim
-          </button>
-        );
+      if (res.airdropClaimData.eligible) {
+        if (
+          res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0) &&
+          tweetedAccounts.includes(userAddress)
+        ) {
+          return (
+            <button
+              className={clsx("bg-primary-500 h-13 text-black w-full rounded-2xl font-title3-bold")}
+              onClick={handleAirdropOperation}
+            >
+              Claim {res.airdropClaimData.pendingClaimableAmount.toFixed(2)} PLY
+            </button>
+          );
+        } else if (
+          !res.airdropClaimData.pendingClaimableAmount
+            .minus(res.airdropClaimData.perMissionAmount)
+            .isEqualTo(0) &&
+          !tweetedAccounts.includes(userAddress)
+        ) {
+          return (
+            <button
+              className={clsx(
+                "bg-primary-500 text-black  h-13  w-full rounded-2xl font-title3-bold"
+              )}
+            >
+              Claim{" "}
+              {res.airdropClaimData.pendingClaimableAmount
+                .minus(res.airdropClaimData.perMissionAmount)
+                .toFixed(2)}{" "}
+              PLY
+            </button>
+          );
+        } else if (
+          res.airdropClaimData.pendingClaimableAmount
+            .minus(res.airdropClaimData.perMissionAmount)
+            .isEqualTo(0) &&
+          !tweetedAccounts.includes(userAddress)
+        ) {
+          return (
+            <button
+              className={clsx(
+                "bg-primary-600 text-text-600 h-13  w-full rounded-2xl font-title3-bold"
+              )}
+            >
+              Claim
+            </button>
+          );
+        }
       } else if (
         res.airdropClaimData.eligible === false ||
         res.airdropClaimData.success === false
@@ -150,7 +171,7 @@ function TezosChain(props: ITezosChain) {
         </Button>
       );
     }
-  }, [props, userAddress, res]);
+  }, [props, userAddress, res, tweetedAccounts]);
 
   return (
     <>

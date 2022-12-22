@@ -20,7 +20,7 @@ function HeaderSelection(props: IHeaderSelection) {
   const { chain: ethChain } = useNetwork();
 
   return (
-    <div className="flex font-title2-bold">
+    <div className="flex font-title2-bold items-center">
       <div
         className={clsx(
           props.chain === ChainAirdrop.Tezos
@@ -44,8 +44,8 @@ function HeaderSelection(props: IHeaderSelection) {
         {ChainAirdrop.Other_chain}
       </div>
       {!props.isDisclaimer && props.chain === ChainAirdrop.Other_chain ? (
-        <div className="ml-auto mt-0.5">
-          {isConnected && ethAddress && ethChain && (<WalletAddress />)}
+        <div className="ml-auto mt-0.5 ">
+          {isConnected && ethAddress && ethChain && <WalletAddress />}
         </div>
       ) : null}
     </div>

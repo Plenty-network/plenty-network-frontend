@@ -24,9 +24,11 @@ function Steps(props: ISteps) {
       <div className="flex  px-5">
         {isDropDownActive ? (
           <p className="bg-primary-500/[0.2] rounded-lg h-[28px] px-2 text-primary-500 font-subtitle1 flex items-center">
-            {tweetedAccounts.includes(userAddress)
-              ? 6 - props.claimData.claimData.length
-              : 5 - props.claimData.claimData.length}{" "}
+            {props.claimData.success
+              ? tweetedAccounts.includes(userAddress)
+                ? 6 - props.claimData.claimData.length
+                : 7 - props.claimData.claimData.length
+              : 6}{" "}
             steps to complete
           </p>
         ) : (

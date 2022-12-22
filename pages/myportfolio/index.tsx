@@ -520,7 +520,6 @@ function MyPortfolio(props: any) {
   };
   useEffect(() => {
     if (userAddress) {
-      console.log(`User Add Changed - ${userAddress}`);
       if (!(localStorage.getItem(USERADDRESS) === userAddress)) {
         localStorage.setItem(USERADDRESS, userAddress);
       }

@@ -36,9 +36,7 @@ export const useAirdropClaimData = () => {
       receiptsCallFrom[userTezosAddress] === ReceiptsCallFrom.TEZOS
     ) {
       getTezosClaimData(userTezosAddress).then((res) => {
-        console.log("hello1", res);
         setAirDropClaimData(res);
-        console.log("hello", tweetedAccounts);
         if (res.success === false && res.message) {
           dispatch(
             setFlashMessage({
@@ -104,7 +102,6 @@ export const useAirdropClaimData = () => {
           const signedData = signaturesData[ethAddress];
           getEvmClaimData(signedData.message, signedData.signature).then((res) => {
             setAirDropClaimData(res);
-            console.log("hello2", res);
             if (res.success === false && res.message) {
               dispatch(
                 setFlashMessage({
