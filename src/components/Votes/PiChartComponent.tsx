@@ -90,15 +90,16 @@ export interface IPiChartProps {
   setSelectedColorIndex: Function;
 }
 export const COLORSdataChart = [
-  "#4E4955",
-  "#6B6670",
-  "#88848C",
-  "#A4A2A8",
   "#403A47",
+  "#4E4955",
   "#5C5863",
+  "#6B6670",
   "#79757E",
+  "#88848C",
   "#96939A",
+  "#A4A2A8",
   "#B3B0B5",
+  "#E0E0E0",
 ];
 
 export default function PiChart(props: IPiChartProps) {
