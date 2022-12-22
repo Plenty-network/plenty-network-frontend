@@ -35,8 +35,9 @@ function CheckPoint(props: ICheckPoint) {
   };
   const action = useMemo(() => {
     let flag = 0;
+
     props.claimData.claimData.map((data) => {
-      if (data.mission === props.mission) {
+      if (data.mission === props.mission && data.mission !== "ELIGIBLE") {
         flag = 1;
         if (data.claimed) {
           flag = 2;
@@ -73,13 +74,7 @@ function CheckPoint(props: ICheckPoint) {
         >
           {props.disable ? (
             "Not allowed"
-          ) : action > 0 ? (
-            action === 2 ? (
-              "Claimed"
-            ) : (
-              `Completed ${props.claimData.perMissionAmount.toFixed(2)}`
-            )
-          ) : props.href === "" ? (
+          ) : props.href === "" && action === 0 ? (
             <span onClick={handleTwitter}>
               <TwitterShareButton
                 url="https://localhost:3010/airdrop"
@@ -89,6 +84,12 @@ function CheckPoint(props: ICheckPoint) {
                 {action === 0 && `Take action ${props.claimData.perMissionAmount.toFixed(2)}`}
               </TwitterShareButton>
             </span>
+          ) : action > 0 ? (
+            action === 2 ? (
+              "Claimed"
+            ) : (
+              `Completed ${props.claimData.perMissionAmount.toFixed(2)}`
+            )
           ) : (
             <Link href={props.href}>
               {action === 0 && `Take action ${props.claimData.perMissionAmount.toFixed(2)}`}

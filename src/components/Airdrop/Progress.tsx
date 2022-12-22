@@ -3,17 +3,20 @@ import clsx from "clsx";
 
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import { IClaimDataResponse } from "../../api/airdrop/types";
+import { useAppSelector } from "../../redux";
 export interface IProgress {
   claimData: IClaimDataResponse;
 }
 
 function Progress(props: IProgress) {
+  const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
+  const userAddress = useAppSelector((state) => state.wallet.address);
   return (
     <>
       <div className="flex gap-2 px-5">
         <p
           className={clsx(
-            props.claimData.claimData.length > 0
+            props.claimData.claimData.length > 0 && tweetedAccounts.includes(userAddress)
               ? props.claimData.claimData[0]
                 ? "bg-blue-100"
                 : "bg-info-300"
@@ -80,7 +83,15 @@ function Progress(props: IProgress) {
           Your progress
         </p>
         <p className="ml-auto text-primary-500 font-subtitle4">
-          ({((props.claimData.claimData.length / 6) * 100).toFixed(2)}%)
+          (
+          {(
+            ((tweetedAccounts.includes(userAddress)
+              ? props.claimData.claimData.length
+              : props.claimData.claimData.length - 1) /
+              6) *
+            100
+          ).toFixed(2)}
+          %)
         </p>
       </div>
     </>
