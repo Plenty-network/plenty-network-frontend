@@ -1,5 +1,5 @@
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
-import { IClaimAPIData } from "../api/airdrop/types";
+import { IClaimAPIData, Mission } from "../api/airdrop/types";
 import { connectedNetwork, dappClient } from "../common/walletconnect";
 import Config from "../config/config";
 import { store } from "../redux";
@@ -41,12 +41,16 @@ export const claimAirdrop = async (
 
     airdropClaimData.forEach((claimData) => {
       if (!claimData.claimed) {
-        allBatchOperations.push({
-          kind: OpKind.TRANSACTION,
-          ...airdropInstance.methods
-            .claim(claimData.packedMessage, claimData.signature)
-            .toTransferParams(),
-        });
+        if(!hasUserTweeted && claimData.mission === Mission.ELIGIBLE) {
+          return;
+        } else {
+          allBatchOperations.push({
+            kind: OpKind.TRANSACTION,
+            ...airdropInstance.methods
+              .claim(claimData.packedMessage, claimData.signature)
+              .toTransferParams(),
+          });
+        }
       }
     });
 
