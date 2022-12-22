@@ -17,6 +17,7 @@ import { TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } 
  */
 export const claimAirdrop = async (
   airdropClaimData: IClaimAPIData[],
+  hasUserTweeted: boolean,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
