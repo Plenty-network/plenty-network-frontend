@@ -1,14 +1,12 @@
 import { AppDispatch, useAppSelector } from "../../redux";
 import Button from "../Button/Button";
 import clsx from "clsx";
-
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { ChainAirdrop } from "./Disclaimer";
 import Progress from "./Progress";
 import Steps from "./Steps";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
-import { IClaimDataResponse } from "../../api/airdrop/types";
 import { TOKEN_A } from "../../constants/localStorage";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
 import { claimAirdrop } from "../../operations/airdrop";
