@@ -13,6 +13,7 @@ import { AIRDROP_MISSIONS_FOR_DISPLAY } from "../../constants/airdrop";
 import { IClaimDataResponse } from "../../api/airdrop/types";
 export interface ISteps {
   claimData: IClaimDataResponse;
+  fetching: boolean;
 }
 
 function Steps(props: ISteps) {
@@ -61,6 +62,7 @@ function Steps(props: ISteps) {
                   claimData={props.claimData}
                   completed={true}
                   text={item.displayText}
+                  isFetching={props.fetching}
                   href={item.href}
                   mission={item.mission}
                   disable={props.claimData.success === false || props.claimData.eligible === false}

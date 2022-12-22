@@ -24,6 +24,7 @@ export interface ICheckPoint {
   claimData: IClaimDataResponse;
   mission: Mission;
   disable: boolean;
+  isFetching: boolean;
 }
 
 function CheckPoint(props: ICheckPoint) {
@@ -79,7 +80,9 @@ function CheckPoint(props: ICheckPoint) {
               : "text-primary-500 bg-primary-500/[0.1]"
           )}
         >
-          {props.disable ? (
+          {props.isFetching ? (
+            "fetching..."
+          ) : props.disable ? (
             "Not allowed"
           ) : props.href === "" && action === 0 ? (
             <span onClick={handleTwitter}>

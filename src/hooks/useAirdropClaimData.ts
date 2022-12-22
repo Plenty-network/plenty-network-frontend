@@ -29,14 +29,18 @@ export const useAirdropClaimData = () => {
     claimData: [],
   });
   const [claimed, setClaimed] = useState<boolean>(false);
+  const [fetching, setFetching] = useState<boolean>(true);
 
   const getAirdropClaimData = async () => {
     if (
       receiptsCallFrom[userTezosAddress] === undefined ||
       receiptsCallFrom[userTezosAddress] === ReceiptsCallFrom.TEZOS
     ) {
+      setFetching(true);
       getTezosClaimData(userTezosAddress).then((res) => {
         setAirDropClaimData(res);
+
+        setFetching(false);
         if (res.success === false && res.message) {
           dispatch(
             setFlashMessage({
@@ -99,9 +103,12 @@ export const useAirdropClaimData = () => {
           );
           // Display flash message to user to switch to Other chain and Confirm Tezos address (sign).
         } else {
+          setFetching(true);
           const signedData = signaturesData[ethAddress];
           getEvmClaimData(signedData.message, signedData.signature).then((res) => {
             setAirDropClaimData(res);
+
+            setFetching(false);
             if (res.success === false && res.message) {
               dispatch(
                 setFlashMessage({
@@ -153,5 +160,5 @@ export const useAirdropClaimData = () => {
     operationsuccesful,
   ]);
 
-  return { airdropClaimData: airdropClaimData, setClaimed: setClaimed };
+  return { airdropClaimData: airdropClaimData, setClaimed: setClaimed, fetching: fetching };
 };

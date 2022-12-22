@@ -5,8 +5,8 @@ import { useDispatch } from "react-redux";
 import MainAirdrop from "../../src/components/Airdrop";
 import Disclaimer, { ChainAirdrop } from "../../src/components/Airdrop/Disclaimer";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
+import { FIRST_TIME_DISCLAIMER, TOKEN_A } from "../../src/constants/localStorage";
 import { useInterval } from "../../src/hooks/useInterval";
-import { setDisclaimer } from "../../src/redux/airdrop/disclaimer";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getEpochData } from "../../src/redux/epoch/epoch";
 import { AppDispatch, useAppSelector } from "../../src/redux/index";
@@ -21,19 +21,12 @@ const Airdrop: NextPage = () => {
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
-  const dis = useAppSelector((state) => state.Disclaimer.address);
-  console.log("k", dis, "user", userAddress, !dis[userAddress]); //for testing
+
   const dispatch = useDispatch<AppDispatch>();
   const [isDisclaimer, setIsDisclaimer] = useState(false);
 
   const handleClick = () => {
-    localStorage.setItem(`Airdrop${userAddress}`, "true");
-    dispatch(
-      setDisclaimer({
-        address: userAddress,
-        isChecked: true,
-      })
-    );
+    localStorage.setItem(FIRST_TIME_DISCLAIMER, "true");
   };
   useEffect(() => {
     dispatch(fetchWallet());
@@ -53,9 +46,7 @@ const Airdrop: NextPage = () => {
       dispatch(getTotalVotingPower());
     }
   }, [userAddress]);
-  useEffect(() => {
-    setIsDisclaimer(!dis[userAddress]);
-  }, [dis, userAddress]);
+
   useEffect(() => {
     if (userAddress && totalVotingPowerError) {
       dispatch(getTotalVotingPower());
@@ -74,7 +65,7 @@ const Airdrop: NextPage = () => {
   return (
     <>
       <SideBarHOC makeTopBarScroll>
-        {isDisclaimer ? (
+        {!localStorage.getItem(FIRST_TIME_DISCLAIMER) ? (
           <Disclaimer
             show={isDisclaimer}
             setShow={setIsDisclaimer}

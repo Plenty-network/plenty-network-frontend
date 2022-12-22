@@ -19,7 +19,6 @@ import { portfolioStatsTvl } from "./myPortfolio/tvl";
 import { portfolioStatsVotes } from "./myPortfolio/votesStats";
 import { rpcData } from "./userSettings/rpcData";
 import { airdropTransactions } from "./airdrop/transactions";
-import { Disclaimer } from "./airdrop/disclaimer";
 import { airdropState } from "./airdrop/state";
 
 const reducers = combineReducers({
@@ -39,7 +38,6 @@ const reducers = combineReducers({
   rpcData: rpcData,
   airdropTransactions: airdropTransactions,
   airdropState: airdropState,
-  Disclaimer: Disclaimer,
 });
 
 const persistConfig = {
@@ -56,7 +54,6 @@ const persistConfig = {
     "portfolioStatsVotes",
     "rpcData",
     "airdropTransactions",
-    "Disclaimer",
   ],
 };
 

@@ -8,3 +8,4 @@ export const MULTIHOP = "multiHop";
 export const TOKEN_ID = "tokenId";
 export const CLAIM = "claim";
 export const USERADDRESS = "useraddress";
+export const FIRST_TIME_DISCLAIMER = "FIRST_TIME_DISCLAIMER";

@@ -104,7 +104,13 @@ function TezosChain(props: ITezosChain) {
   };
   const ClaimButton = useMemo(() => {
     if (userAddress) {
-      if (res.airdropClaimData.eligible && res.airdropClaimData.success) {
+      if (res.fetching) {
+        return (
+          <Button color="disabled" width="w-full">
+            Fetching data...
+          </Button>
+        );
+      } else if (res.airdropClaimData.eligible && res.airdropClaimData.success) {
         if (
           res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0) &&
           tweetedAccounts.includes(userAddress)
@@ -184,9 +190,13 @@ function TezosChain(props: ITezosChain) {
   return (
     <>
       <div className="mt-3 border border-muted-300 bg-muted-400 rounded-xl py-5">
-        <Progress claimData={res.airdropClaimData} />
+        <Progress
+          res={res.airdropClaimData}
+          claimData={res.airdropClaimData.claimData}
+          fetching={res.fetching}
+        />
         <div className="border-t border-text-800 my-3"></div>
-        <Steps claimData={res.airdropClaimData} />
+        <Steps claimData={res.airdropClaimData} fetching={res.fetching} />
       </div>
       <div className="mt-[18px]">{ClaimButton}</div>
       {showConfirmTransaction && (
