@@ -28,7 +28,6 @@ export interface ITezosChain {
 function TezosChain(props: ITezosChain) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
-
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
@@ -49,7 +48,7 @@ function TezosChain(props: ITezosChain) {
 
     claimAirdrop(
       res.airdropClaimData.claimData,
-
+      tweetedAccounts.includes(userAddress),
       transactionSubmitModal,
       undefined,
       setShowConfirmTransaction,
