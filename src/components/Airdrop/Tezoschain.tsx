@@ -106,7 +106,7 @@ function TezosChain(props: ITezosChain) {
   };
   const ClaimButton = useMemo(() => {
     if (userAddress) {
-      if (res.airdropClaimData.eligible) {
+      if (res.airdropClaimData.eligible && res.airdropClaimData.success) {
         if (
           res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0) &&
           tweetedAccounts.includes(userAddress)
@@ -136,6 +136,16 @@ function TezosChain(props: ITezosChain) {
                 .minus(res.airdropClaimData.perMissionAmount)
                 .toFixed(2)}{" "}
               PLY
+            </button>
+          );
+        } else if (res.airdropClaimData.pendingClaimableAmount.isEqualTo(0)) {
+          return (
+            <button
+              className={clsx(
+                "bg-primary-600 text-text-600 h-13  w-full rounded-2xl font-title3-bold"
+              )}
+            >
+              All claimed
             </button>
           );
         } else if (
