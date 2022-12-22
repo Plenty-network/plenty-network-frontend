@@ -105,6 +105,18 @@ export const useAirdropClaimData = () => {
           getEvmClaimData(signedData.message, signedData.signature).then((res) => {
             setAirDropClaimData(res);
             console.log("hello2", res);
+            if (res.success === false && res.message) {
+              dispatch(
+                setFlashMessage({
+                  flashType: Flashtype.Info,
+                  headerText: "Info",
+                  trailingText: `${AIRDROP_ERROR_MESSAGES[res.message]}`,
+                  linkText: "",
+                  isLoading: true,
+                  transactionId: "",
+                })
+              );
+            }
           });
 
           //Call getEvmClaimedData(signedData.message, signedData.signature)
