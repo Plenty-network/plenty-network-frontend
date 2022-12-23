@@ -71,7 +71,9 @@ function CheckPoint(props: ICheckPoint) {
         <p
           className={clsx(
             "ml-auto px-2 h-[26px] flex items-center font-subtitle1 rounded-lg ",
-            props.claimData.eligible === false
+            props.isFetching
+              ? "text-primary-500 bg-primary-500/[0.1]"
+              : props.claimData.eligible === false
               ? "bg-warning-500/[0.1] text-warning-500"
               : action > 0
               ? action === 2
