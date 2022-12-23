@@ -7,7 +7,7 @@ import Progress from "./Progress";
 import Steps from "./Steps";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
-import { TOKEN_A } from "../../constants/localStorage";
+import { FIRST_TOKEN_AMOUNT, TOKEN_A } from "../../constants/localStorage";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
 import { claimAirdrop } from "../../operations/airdrop";
 import { Flashtype } from "../FlashScreen";
@@ -36,7 +36,10 @@ function TezosChain(props: ITezosChain) {
     setShowTransactionSubmitModal(true);
   };
   const handleAirdropOperation = () => {
-    localStorage.setItem(TOKEN_A, "0");
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      res.airdropClaimData.pendingClaimableAmount.toFixed(2)
+    );
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
 
@@ -61,7 +64,7 @@ function TezosChain(props: ITezosChain) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Claim airdrop`,
+              trailingText: `claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -90,8 +93,7 @@ function TezosChain(props: ITezosChain) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Claim airdrop
-              `,
+              trailingText: `claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
               linkText: "",
               isLoading: true,
             })
@@ -203,7 +205,7 @@ function TezosChain(props: ITezosChain) {
         <ConfirmTransaction
           show={showConfirmTransaction}
           setShow={setShowConfirmTransaction}
-          content={"Claim airdrop"}
+          content={`claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`}
         />
       )}
       {showTransactionSubmitModal && (
@@ -215,7 +217,7 @@ function TezosChain(props: ITezosChain) {
               ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
               : null
           }
-          content={"Claim airdrop"}
+          content={`claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`}
         />
       )}
     </>

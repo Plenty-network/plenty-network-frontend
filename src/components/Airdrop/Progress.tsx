@@ -50,16 +50,14 @@ function Progress(props: IProgress) {
                 return <p className={clsx("bg-blue-100", "h-[6px]  w-[105px]")}></p>;
               }
             })}
-            {props.claimData &&
-              props.claimData[0]?.mission === "ELIGIBLE" &&
-              tweetedAccounts.includes(userAddress) && (
-                <p
-                  className={clsx(
-                    tweetedAccounts.includes(userAddress) ? "bg-blue-100" : "bg-info-300",
-                    "h-[6px]  w-[105px]"
-                  )}
-                ></p>
-              )}
+            {props.claimData && props.claimData[0]?.mission === "ELIGIBLE" && (
+              <p
+                className={clsx(
+                  tweetedAccounts.includes(userAddress) ? "bg-blue-100" : "bg-info-300",
+                  "h-[6px]  w-[105px]"
+                )}
+              ></p>
+            )}
             {[...Array(remaining)].map((e, i) => (
               <p className={clsx("bg-info-300 h-[6px]  w-[105px]")} key={i}></p>
             ))}

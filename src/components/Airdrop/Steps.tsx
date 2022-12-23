@@ -37,7 +37,15 @@ function Steps(props: ISteps) {
             <span className="md:font-subtitle4 font-subtitle2  mr-1">
               {isMobile ? "Tweet about the new..." : "Tweet about the new plenty.network"}{" "}
             </span>
-            <span className="font-subtitle1 text-primary-500">+4 steps to complete</span>
+            <span className="font-subtitle1 text-primary-500">
+              +
+              {props.claimData.success
+                ? tweetedAccounts.includes(userAddress)
+                  ? 6 - props.claimData.claimData.length
+                  : 7 - props.claimData.claimData.length
+                : 6}{" "}
+              steps to complete
+            </span>
           </p>
         )}
         <p className="ml-auto  " onClick={() => setIsDropDownActive(!isDropDownActive)}>
