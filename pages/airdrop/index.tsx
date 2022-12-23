@@ -23,7 +23,7 @@ const Airdrop: NextPage = () => {
   const amm = useAppSelector((state) => state.config.AMMs);
 
   const dispatch = useDispatch<AppDispatch>();
-  const [isDisclaimer, setIsDisclaimer] = useState(false);
+  const [isDisclaimer, setIsDisclaimer] = useState(true);
 
   const handleClick = () => {
     localStorage.setItem(FIRST_TIME_DISCLAIMER, "true");
