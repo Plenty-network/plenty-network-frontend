@@ -1,3 +1,4 @@
+import { BigNumber } from "bignumber.js";
 import { useEffect } from "react";
 import { useAccount, useNetwork } from "wagmi";
 import {
@@ -6,7 +7,7 @@ import {
   tezosWalletHasAirdrop,
 } from "../api/airdrop";
 import { useAppDispatch, useAppSelector } from "../redux";
-import { setEvmCTAState, setTextDisplayState } from "../redux/airdrop/state";
+import { setEthClaimAmount, setEvmCTAState, setTextDisplayState } from "../redux/airdrop/state";
 import { setReceiptsCallFrom } from "../redux/airdrop/transactions";
 import { EvmCTAState, ReceiptsCallFrom, TextType } from "../redux/airdrop/types";
 
@@ -36,6 +37,7 @@ const useSetEvmCTAState = () => {
           })
         );
         dispatch(setEvmCTAState(EvmCTAState.LOADING));
+        dispatch(setEthClaimAmount(new BigNumber(0)));
         if (ethChain?.unsupported) {
           dispatch(setEvmCTAState(EvmCTAState.WRONG_NETWORK));
           dispatch(
@@ -55,6 +57,7 @@ const useSetEvmCTAState = () => {
           if (!eligiblity.eligible) {
             dispatch(setEvmCTAState(EvmCTAState.NOT_ELIGIBLE));
           } else {
+            dispatch(setEthClaimAmount(eligiblity.value));
             if (!userTezosAddress || userTezosAddress.length === 0) {
               dispatch(setEvmCTAState(EvmCTAState.TEZOS_DISCONNECTED));
             } else {

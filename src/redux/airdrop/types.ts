@@ -1,3 +1,5 @@
+import { BigNumber } from "bignumber.js";
+
 export interface IEvmSignatureData {
   message: string;
   signature: string;
@@ -59,6 +61,7 @@ export interface IAirdropStatesData {
   evmCTAState: EvmCTAState;
   textDisplayState: ITextDisplayState;
   revealedData: IRevealedData;
+  ethClaimAmount: BigNumber
 }
 
 export interface IRevealedPayload {

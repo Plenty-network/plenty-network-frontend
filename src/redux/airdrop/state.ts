@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { BigNumber } from "bignumber.js";
 import { EvmCTAState, IAirdropStatesData, IRevealedPayload, ITextDisplayState, TextType } from "./types";
 
 const initialState: IAirdropStatesData = {
@@ -9,6 +10,7 @@ const initialState: IAirdropStatesData = {
     textData: undefined,
   },
   revealedData: {},
+  ethClaimAmount: new BigNumber(0),
 };
 
 const AirdropStateSlice = createSlice({
@@ -27,8 +29,11 @@ const AirdropStateSlice = createSlice({
         [action.payload.tezosAddress]: action.payload.revealed ,
       };
     },
+    setEthClaimAmount: (state, action: PayloadAction<BigNumber>) => {
+      state.ethClaimAmount = action.payload;
+    },
   },
 });
 
-export const { setEvmCTAState, setTextDisplayState, addRevealed } = AirdropStateSlice.actions;
+export const { setEvmCTAState, setTextDisplayState, addRevealed, setEthClaimAmount } = AirdropStateSlice.actions;
 export const airdropState = AirdropStateSlice.reducer;

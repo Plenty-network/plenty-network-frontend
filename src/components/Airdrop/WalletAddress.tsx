@@ -1,22 +1,13 @@
-import { store, useAppSelector } from "../../redux";
 import { useChainModal, useAccountModal } from "@rainbow-me/rainbowkit";
 import { isMobile } from "react-device-detect";
 import Image from "next/image";
-import eth from "../../../src/assets/icon/airdrop/eth.svg";
 import { useAccount, useNetwork } from "wagmi";
 import truncateMiddle from "truncate-middle";
-import Button from "../Button/Button";
-import { SideBarHOC } from "../Sidebar/SideBarHOC";
-import Link from "next/link";
-import clsx from "clsx";
-import { ChainAirdrop } from "./Disclaimer";
-
-import info from "../../../src/assets/icon/common/infoIcon.svg";
 import { useEffect, useState } from "react";
 import { defaultChains } from "../../config/rainbowWalletConfig";
-export interface IWalletAddress {}
+export interface IWalletAddress {};
 
-function WalletAddress(props: IWalletAddress) {
+function WalletAddress() {
   const [chainIconUrl, setChainIconUrl] = useState<string>("/assets/chains/fallback.svg");
   /* Hooks provided by wagami for getting account, connection, network and chain related info */
   const { address: ethAddress } = useAccount();
