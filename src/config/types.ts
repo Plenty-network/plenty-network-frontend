@@ -37,8 +37,8 @@ export interface IConfig {
   VE_SWAP: { mainnet: string; testnet: string };
   VOTER: { mainnet: string; testnet: string };
   VOTE_ESCROW: { mainnet: string; testnet: string };
-  VE_INDEXER: string;
-  PLY_INDEXER: string;
+  VE_INDEXER: { mainnet: string; testnet: string };
+  PLY_INDEXER: { mainnet: string; testnet: string };
   PLY_TOKEN: { mainnet: string; testnet: string };
   FACTORY : { mainnet: string; testnet: string };
   EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData };

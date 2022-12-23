@@ -2,8 +2,9 @@ import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/do
 
 const siteData = {
   title: "plenty network",
-  url: "https://plentydefi.com/",
-  description: "plenty defi description",
+  url: "https://ghostnet.plenty.network/",
+  description:
+    "Plenty is a decentralized exchange on the Tezos blockchain that allows users to trade and earn additional income through voting, staking, and providing liquidity. The platform offers both stable and volatile liquidity pools and a bridge from Ethereum and Polygon to Tezos.",
 };
 const SeoStructuredData = {
   "@context": "https://schema.org/",
@@ -26,7 +27,7 @@ class MyDocument extends Document {
           <meta name="description" content={siteData.description} />
           <meta
             name="keywords"
-            content="plentydefi, plenty, tezos, v3, defi, plenty network,veply, PLY, v(3,3), ecosystem"
+            content="plentydefi, plenty, tezos, v3, defi, plenty network, veply, PLY, v(3,3), ecosystem, ghostnet"
           />
           <meta property="og:title" content={siteData.title} />
           <meta property="og:type" content="website" />
