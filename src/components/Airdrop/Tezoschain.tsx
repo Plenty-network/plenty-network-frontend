@@ -136,6 +136,7 @@ function TezosChain(props: ITezosChain) {
               className={clsx(
                 "bg-primary-500 text-black  h-13  w-full rounded-2xl font-title3-bold"
               )}
+              onClick={handleAirdropOperation}
             >
               Claim{" "}
               {res.airdropClaimData.pendingClaimableAmount
