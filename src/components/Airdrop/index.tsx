@@ -28,14 +28,32 @@ function MainAirdrop(props: IMainAirdropProps) {
               ? "Plenty airdrops eligibility criteria"
               : "An overview of what went behind the scenes for airdrop eligibility criteria"}
           </p>
-          <p className="ml-auto text-primary-500 font-caption2">Learn more</p>
+          <p className="ml-auto text-primary-500 font-caption2">
+            <a
+              href="https://whitepaper.plenty.network/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary-500 font-caption2"
+            >
+              Learn more
+            </a>
+          </p>
         </div>
         {props.chain === ChainAirdrop.Other_chain && <OtherChain setChain={props.setChain} />}
         {props.chain === ChainAirdrop.Tezos && <TezosChain setChain={props.setChain} />}
       </div>
       <div className="font-body2 text-text-250 mt-[10px] mx-2 md:mx-auto md:w-[568px] text-center mb-5">
         Know more about Airdrop and its eligibility{" "}
-        <span className="text-primary-500">Learn more</span>
+        <span className="text-primary-500">
+          <a
+            href="https://whitepaper.plenty.network/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary-500 "
+          >
+            Learn more
+          </a>
+        </span>
       </div>
     </>
   );
