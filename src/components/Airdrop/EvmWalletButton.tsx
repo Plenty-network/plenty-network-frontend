@@ -35,8 +35,7 @@ const EvmWalletButton = (props: IEvmWalletButton): JSX.Element => {
   const signMessage = useCallback(async () => {
     try {
       if (isEvmConnected && ethSigner && userTezosAddress) {
-        //TODO: add message to env file
-        const messageToSign: string = `${process.env.NEXT_PUBLIC_EVM_SIGNING_MESSAGE}${userTezosAddress}`;
+        const messageToSign: string = `${process.env.NEXT_PUBLIC_EVM_SIGNING_MESSAGE} ${userTezosAddress}`;
         const evmAddress = ethAddress as string;
         const signedMessage: string = await signMessageAsync({ message: messageToSign });
 
@@ -45,7 +44,6 @@ const EvmWalletButton = (props: IEvmWalletButton): JSX.Element => {
           signature: signedMessage,
         };
         dispatch(addSignature({ evmAddress, signatureData }));
-        //TODO: handle else & catch(when not connected or signer is undefined) appropriately with some error message
       } else {
         throw new Error("Missing wallet connections");
       }
