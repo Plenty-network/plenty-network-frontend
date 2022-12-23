@@ -32,7 +32,7 @@ import {
 import { store } from "../../redux";
 import { ITokenPriceList } from "../util/types";
 import { ELocksState } from "../votes/types";
-import { voteEscrowAddress } from "../../common/walletconnect";
+import { connectedNetwork, voteEscrowAddress } from "../../common/walletconnect";
 import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
 import { IConfigPool, IConfigTokens } from "../../config/types";
 import { getThumbnailForVeNFT } from "../util/locks";
@@ -53,7 +53,7 @@ export const getAllLocksPositionData = async (
     const GAUGES = state.config.gauges;
 
     const [locksResponse, veStorageResponse] = await Promise.all([
-      axios.get(`${Config.VE_INDEXER}locks?address=${userTezosAddress}`),
+      axios.get(`${Config.VE_INDEXER[connectedNetwork]}locks?address=${userTezosAddress}`),
       getTzktStorageData(voteEscrowAddress),
     ]);
     const locksData = locksResponse.data.result;
@@ -195,7 +195,7 @@ export const getAllLocksRewardsData = async (
     let totalBribesAmount = new BigNumber(0);
 
     const locksIndexerResponse = await axios.get(
-      `${Config.VE_INDEXER}votes?address=${userTezosAddress}`
+      `${Config.VE_INDEXER[connectedNetwork]}votes?address=${userTezosAddress}`
     );
     const locksIndexerData: IAllLocksRewardsIndexerData[] = locksIndexerResponse.data;
     for (const lockData of locksIndexerData) {
@@ -359,7 +359,7 @@ export const getAllRewardsOperationsData = async (
     const allFeesClaimData: IAllFeesOperationData[] = [];
 
     const locksIndexerResponse = await axios.get(
-      `${Config.VE_INDEXER}votes?address=${userTezosAddress}`
+      `${Config.VE_INDEXER[connectedNetwork]}votes?address=${userTezosAddress}`
     );
     const locksIndexerData: IAllLocksRewardsIndexerData[] = locksIndexerResponse.data;
 

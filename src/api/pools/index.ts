@@ -13,6 +13,7 @@ import { getPnlpBalance, getStakedBalance } from '../util/balance';
 import Config from '../../config/config';
 import { EMPTY_POOLS_OBJECT, EMPTY_VE_INDEXER_POOLS_OBJECT } from '../../constants/global';
 import { store } from '../../redux';
+import { connectedNetwork } from '../../common/walletconnect';
 
 export const poolsDataWrapperV1 = async (
   address: string | undefined,
@@ -27,8 +28,8 @@ export const poolsDataWrapperV1 = async (
     const TOKENS = state.config.tokens;
 
     const [poolsResponse, analyticsResponse] = await Promise.all([
-      axios.get(`${Config.VE_INDEXER}pools`),
-      axios.get(`${Config.PLY_INDEXER}ve/pools`),
+      axios.get(`${Config.VE_INDEXER[connectedNetwork]}pools`),
+      axios.get(`${Config.PLY_INDEXER[connectedNetwork]}ve/pools`),
     ]);
 
     const poolsData: VolumeV1Data[] = poolsResponse.data;
@@ -191,8 +192,8 @@ export const poolsDataWrapper = async (
     const TOKENS = state.config.tokens;
 
     const [poolsResponse, analyticsResponse] = await Promise.all([
-      axios.get(`${Config.VE_INDEXER}pools`),
-      axios.get(`${Config.PLY_INDEXER}ve/pools`),
+      axios.get(`${Config.VE_INDEXER[connectedNetwork]}pools`),
+      axios.get(`${Config.PLY_INDEXER[connectedNetwork]}ve/pools`),
     ]);
 
     const poolsData: VolumeV1Data[] = poolsResponse.data;
