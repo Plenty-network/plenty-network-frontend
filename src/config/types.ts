@@ -45,6 +45,7 @@ export interface IConfig {
   IPFS_LINKS: { primary: string; fallback: string };
   AIRDROP_SERVER: { mainnet: string; testnet: string; };
   AIRDROP: { mainnet: string; testnet: string; };
+  AIRDROP_ETH_MESSAGE_PREFIX: string;
 }
 
 interface IApi {

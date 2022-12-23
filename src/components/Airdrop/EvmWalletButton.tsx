@@ -1,6 +1,7 @@
 import { useConnectModal, useChainModal } from "@rainbow-me/rainbowkit";
 import { useCallback, useMemo } from "react";
 import { useAccount, useSigner, useSignMessage } from "wagmi";
+import Config from "../../config/config";
 import { AIRDROP_EVM_CTA_TEXTS } from "../../constants/airdrop";
 import { useSetEvmCTAState } from "../../hooks/useSetEvmCTAState";
 import { useAppDispatch, useAppSelector } from "../../redux";
@@ -35,7 +36,7 @@ const EvmWalletButton = (props: IEvmWalletButton): JSX.Element => {
   const signMessage = useCallback(async () => {
     try {
       if (isEvmConnected && ethSigner && userTezosAddress) {
-        const messageToSign: string = `${process.env.NEXT_PUBLIC_EVM_SIGNING_MESSAGE} ${userTezosAddress}`;
+        const messageToSign: string = `${Config.AIRDROP_ETH_MESSAGE_PREFIX}${userTezosAddress}`;
         const evmAddress = ethAddress as string;
         const signedMessage: string = await signMessageAsync({ message: messageToSign });
 

@@ -55,6 +55,8 @@ const Config: IConfig = {
     testnet: "http://localhost:3002/",
   },
 
+  AIRDROP_ETH_MESSAGE_PREFIX: "Confirming Tezos address for claiming airdrop: ",
+
   EXCHANGE_TOKENS: {
     PLENTY: {
       exchangeRate: 6,
