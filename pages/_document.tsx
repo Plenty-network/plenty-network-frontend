@@ -4,7 +4,7 @@ const siteData = {
   title: "plenty network",
   url: "https://ghostnet.plenty.network/",
   description:
-    "Plenty is the leading decentralised exchange and EVM (Ethereum and Polygon) to Tezos bridge on the Tezos blockchain. Trade, earn, govern and grow your crypto on Plenty.",
+    "Plenty is a decentralized exchange on the Tezos blockchain that allows users to trade and earn additional income through voting, staking, and providing liquidity. The platform offers both stable and volatile liquidity pools and a bridge from Ethereum and Polygon to Tezos.",
 };
 const SeoStructuredData = {
   "@context": "https://schema.org/",

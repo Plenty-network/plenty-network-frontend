@@ -6,12 +6,12 @@ export function Meta() {
     <Head>
       <title>Plenty | Decentralized trading on Tezos</title>
       <meta
-        content="Plenty is the leading decentralised exchange and EVM Ethereum and Polygon to Tezos bridge on the Tezos blockchain. Trade, earn, govern and grow your crypto on Plenty."
+        content="Plenty is a decentralized exchange on the Tezos blockchain that allows users to trade and earn additional income through voting, staking, and providing liquidity. The platform offers both stable and volatile liquidity pools and a bridge from Ethereum and Polygon to Tezos."
         name="description"
       />
       <meta content="Plenty | Decentralized trading on Tezos" property="og:title" />
       <meta
-        content="Plenty is the leading decentralised exchange and EVM (Ethereum and Polygon) to Tezos bridge on the Tezos blockchain. Trade, earn, govern and grow your crypto on Plenty."
+        content="Plenty is a decentralized exchange on the Tezos blockchain that allows users to trade and earn additional income through voting, staking, and providing liquidity. The platform offers both stable and volatile liquidity pools and a bridge from Ethereum and Polygon to Tezos."
         property="og:description"
       />
       <meta
@@ -20,7 +20,7 @@ export function Meta() {
       />
       <meta content="Plenty | Decentralized trading on Tezos" property="twitter:title" />
       <meta
-        content="Plenty is the leading decentralised exchange and EVM (Ethereum and Polygon) to Tezos bridge on the Tezos blockchain. Trade, earn, govern and grow your crypto on Plenty."
+        content="Plenty is a decentralized exchange on the Tezos blockchain that allows users to trade and earn additional income through voting, staking, and providing liquidity. The platform offers both stable and volatile liquidity pools and a bridge from Ethereum and Polygon to Tezos."
         property="twitter:description"
       />
       <meta
