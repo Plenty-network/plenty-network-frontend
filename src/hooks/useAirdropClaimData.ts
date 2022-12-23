@@ -149,7 +149,9 @@ export const useAirdropClaimData = () => {
   };
 
   useEffect(() => {
-    getAirdropClaimData();
+    if(userTezosAddress) {
+      getAirdropClaimData();
+    }
   }, [
     ethAddress,
     userTezosAddress,

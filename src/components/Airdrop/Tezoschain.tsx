@@ -184,7 +184,7 @@ function TezosChain(props: ITezosChain) {
     } else {
       return (
         <Button color="primary" onClick={connectTempleWallet} width="w-full">
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     }
