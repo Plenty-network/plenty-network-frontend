@@ -45,9 +45,9 @@ function Progress(props: IProgress) {
       ) : (
         <>
           <div className="flex gap-2 px-5">
-            {props.claimData.map((data) => {
+            {props.claimData.map((data, index) => {
               if (data.mission !== "ELIGIBLE") {
-                return <p className={clsx("bg-blue-100", "h-[6px]  w-[105px]")}></p>;
+                return <p className={clsx("bg-blue-100", "h-[6px]  w-[105px]")} key={index}></p>;
               }
             })}
             {props.claimData && props.claimData[0]?.mission === "ELIGIBLE" && (

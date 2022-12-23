@@ -53,7 +53,7 @@ function Disclaimer(props: IDisclaimerProps) {
           </div>
           <div className="font-body3 mt-3">
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-            has been the industry's standard dummy text ever since the 1500s. Please connect your
+            has been the industry&apos;s standard dummy text ever since the 1500s. Please connect your
             wallet to confirm your eligibility.
             <span className="font-body4 text-primary-500 ml-0.5">Know how?</span>
             <span className="relative top-0.5 ml-1">
