@@ -66,7 +66,7 @@ function Disclaimer(props: IDisclaimerProps) {
             <List />
           </div>
           <div className="border-t border-text-800 my-4"></div>
-          <div className="flex items-center" onClick={() => setIsCheck(!isCheck)}>
+          <div className="flex items-center cursor-pointer" onClick={() => setIsCheck(!isCheck)}>
             <p>
               <Image src={isCheck ? doneCheck : checkGrey} />
             </p>
