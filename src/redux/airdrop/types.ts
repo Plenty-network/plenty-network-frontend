@@ -5,27 +5,27 @@ export interface IEvmSignatureData {
   signature: string;
 }
 
-export interface IEvmSignatures {
-  [evmAddress: string]: IEvmSignatureData;
-}
+// export interface IEvmSignatures {
+//   [evmAddress: string]: IEvmSignatureData;
+// }
 
-export interface ISignaturePayload {
-  evmAddress: string;
-  signatureData: IEvmSignatureData;
-}
+// export interface ISignaturePayload {
+//   evmAddress: string;
+//   signatureData: IEvmSignatureData;
+// }
 
-export enum ReceiptsCallFrom {
-  "TEZOS",
-  "EVM",
-}
+// export enum ReceiptsCallFrom {
+//   "TEZOS",
+//   "EVM",
+// }
 
-export interface IReceiptsCallList {
-  [tezosAddress: string]: ReceiptsCallFrom;
-}
+// export interface IReceiptsCallList {
+//   [tezosAddress: string]: ReceiptsCallFrom;
+// }
 
 export interface IAirdropTransactionsData {
-  signaturesData: IEvmSignatures;
-  receiptsCallFrom: IReceiptsCallList;
+  // signaturesData: IEvmSignatures;
+  // receiptsCallFrom: IReceiptsCallList;
   tweetedAccounts: string[];
 }
 
@@ -36,9 +36,9 @@ export enum EvmCTAState {
   TEZOS_DISCONNECTED,
   HAS_AIRDROP_SWITCH,
   NOT_SIGNED,
-  NO_TRANSACTIONS,
   WRONG_NETWORK,
   LOADING,
+  RELOAD,
 }
 
 export enum TextType {
@@ -53,23 +53,14 @@ export interface ITextDisplayState {
   textData: string | undefined;
 }
 
-export interface IRevealedData {
-  [address: string]: boolean;
-}
-
 export interface IAirdropStatesData {
   evmCTAState: EvmCTAState;
   textDisplayState: ITextDisplayState;
-  revealedData: IRevealedData;
-  ethClaimAmount: BigNumber
+  ethClaimAmount: BigNumber;
+  reloadTrigger: boolean;
 }
 
-export interface IRevealedPayload {
-  tezosAddress: string;
-  revealed: boolean;
-}
-
-export interface IReceiptsCallPayload {
-  tezosAddress: string;
-  receiptsCallFrom: ReceiptsCallFrom;
-}
+// export interface IReceiptsCallPayload {
+//   tezosAddress: string;
+//   receiptsCallFrom: ReceiptsCallFrom;
+// }

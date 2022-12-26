@@ -8,6 +8,7 @@ export const AIRDROP_ERROR_MESSAGES: { [message: string]: string } = {
   INVALID_MESSAGE: "Invalid ethereum message in request",
   MISSING_SIGNATURE: "Request has missing signature",
   GET_TEZ_FOR_FEES: "Tezos address is new. Please get some XTZ.",
+  UNABLE_TO_SUBMIT: "Unable to submit signature. Please retry.",
 };
 export const AIRDROP_ERROR_MESSAGESS = [
   { INVALID_TEZOS_ADDRESS: "Invalid Tezos address in request" },
@@ -25,9 +26,9 @@ export const AIRDROP_EVM_CTA_TEXTS: { [key in EvmCTAState]: string } = {
   [EvmCTAState.TEZOS_DISCONNECTED]: "Connect Tezos wallet",
   [EvmCTAState.HAS_AIRDROP_SWITCH]: "Switch Tezos address",
   [EvmCTAState.NOT_SIGNED]: "Confirm Tezos address",
-  [EvmCTAState.NO_TRANSACTIONS]: "Get some XTZ for fees",
   [EvmCTAState.WRONG_NETWORK]: "Switch network",
   [EvmCTAState.LOADING]: "Loading...",
+  [EvmCTAState.RELOAD]: "Reload",
 };
 
 export const AIRDROP_MISSIONS_FOR_DISPLAY: {

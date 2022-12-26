@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { BigNumber } from "bignumber.js";
-import { EvmCTAState, IAirdropStatesData, IRevealedPayload, ITextDisplayState, TextType } from "./types";
+import { EvmCTAState, IAirdropStatesData, ITextDisplayState, TextType } from "./types";
 
 const initialState: IAirdropStatesData = {
   evmCTAState: EvmCTAState.EVM_DISCONNECTED,
@@ -9,8 +9,8 @@ const initialState: IAirdropStatesData = {
     textType: TextType.NONE,
     textData: undefined,
   },
-  revealedData: {},
   ethClaimAmount: new BigNumber(0),
+  reloadTrigger: false,
 };
 
 const AirdropStateSlice = createSlice({
@@ -23,17 +23,14 @@ const AirdropStateSlice = createSlice({
     setTextDisplayState: (state, action: PayloadAction<ITextDisplayState>) => {
       state.textDisplayState = action.payload;
     },
-    addRevealed: (state, action: PayloadAction<IRevealedPayload>) => {
-      state.revealedData = {
-        ...state.revealedData,
-        [action.payload.tezosAddress]: action.payload.revealed ,
-      };
-    },
     setEthClaimAmount: (state, action: PayloadAction<BigNumber>) => {
       state.ethClaimAmount = action.payload;
+    },
+    setReloadTrigger: (state) => {
+      state.reloadTrigger  = !state.reloadTrigger;
     },
   },
 });
 
-export const { setEvmCTAState, setTextDisplayState, addRevealed, setEthClaimAmount } = AirdropStateSlice.actions;
+export const { setEvmCTAState, setTextDisplayState, setEthClaimAmount, setReloadTrigger } = AirdropStateSlice.actions;
 export const airdropState = AirdropStateSlice.reducer;
