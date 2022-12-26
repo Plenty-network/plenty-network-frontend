@@ -51,7 +51,7 @@ function Steps(props: ISteps) {
         <p className="ml-auto  " onClick={() => setIsDropDownActive(!isDropDownActive)}>
           <Image
             alt={"alt"}
-            className={isDropDownActive ? "rotate-0" : "rotate-180"}
+            className={clsx("cursor-pointer",isDropDownActive ? "rotate-0" : "rotate-180")}
             src={vectorDown}
           />
         </p>

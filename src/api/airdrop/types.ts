@@ -44,5 +44,6 @@ export interface IClaimDataResponse {
 export interface IEvmEligibleCheckResponse {
   eligible: boolean;
   value: BigNumber;
+  tzAddress: string | undefined;
   error?: string;
 }

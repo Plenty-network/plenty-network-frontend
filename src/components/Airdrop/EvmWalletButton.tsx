@@ -1,14 +1,17 @@
 import { useConnectModal, useChainModal } from "@rainbow-me/rainbowkit";
 import { useCallback, useMemo } from "react";
 import { useAccount, useSigner, useSignMessage } from "wagmi";
+import { submitSignatureData } from "../../api/airdrop";
 import Config from "../../config/config";
-import { AIRDROP_EVM_CTA_TEXTS } from "../../constants/airdrop";
+import { AIRDROP_ERROR_MESSAGES, AIRDROP_EVM_CTA_TEXTS } from "../../constants/airdrop";
 import { useSetEvmCTAState } from "../../hooks/useSetEvmCTAState";
 import { useAppDispatch, useAppSelector } from "../../redux";
-import { addSignature } from "../../redux/airdrop/transactions";
-import { EvmCTAState, IEvmSignatureData } from "../../redux/airdrop/types";
+import { setEvmCTAState, setReloadTrigger, setTextDisplayState } from "../../redux/airdrop/state";
+import { EvmCTAState, IEvmSignatureData, TextType } from "../../redux/airdrop/types";
+import { setFlashMessage } from "../../redux/flashMessage";
 import { switchWallet, walletConnection } from "../../redux/wallet/wallet";
 import Button from "../Button/Button";
+import { Flashtype } from "../FlashScreen";
 import { ChainAirdrop } from "./Disclaimer";
 
 interface IEvmWalletButton {
@@ -37,19 +40,58 @@ const EvmWalletButton = (props: IEvmWalletButton): JSX.Element => {
     try {
       if (isEvmConnected && ethSigner && userTezosAddress) {
         const messageToSign: string = `${Config.AIRDROP_ETH_MESSAGE_PREFIX}${userTezosAddress}`;
-        const evmAddress = ethAddress as string;
         const signedMessage: string = await signMessageAsync({ message: messageToSign });
 
         const signatureData: IEvmSignatureData = {
           message: messageToSign,
           signature: signedMessage,
         };
-        dispatch(addSignature({ evmAddress, signatureData }));
+        // dispatch(addSignature({ evmAddress, signatureData }));
+        const signSubmitResponse = await submitSignatureData(
+          signatureData.message,
+          signatureData.signature
+        );
+        // Success message as of now as set in api.
+        if(signSubmitResponse === "SUBMITED_TEZOS_ADDRESS") {
+          dispatch(setReloadTrigger());
+        } else {
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Warning,
+              headerText: "Info",
+              trailingText: `${AIRDROP_ERROR_MESSAGES[signSubmitResponse]}`,
+              linkText: "",
+              isLoading: true,
+              transactionId: "",
+            })
+          );
+        }
       } else {
-        throw new Error("Missing wallet connections");
+        dispatch(
+          setTextDisplayState({
+            isVisible: false,
+            textType: TextType.NONE,
+            textData: undefined,
+          })
+        );
+        if (!isEvmConnected || !ethSigner) {
+          dispatch(setEvmCTAState(EvmCTAState.EVM_DISCONNECTED));
+        } else if (!userTezosAddress || userTezosAddress.length <= 0) {
+          dispatch(setEvmCTAState(EvmCTAState.TEZOS_DISCONNECTED));
+        } else {
+          throw new Error("Internal error");
+        }
       }
     } catch (error) {
       console.log(error);
+      dispatch(setEvmCTAState(EvmCTAState.RELOAD));
+      dispatch(
+        setTextDisplayState({
+          isVisible: true,
+          textType: TextType.WARNING,
+          textData: "Internal error, please reload!",
+        })
+      );
     }
   }, [isEvmConnected, ethSigner, userTezosAddress, ethAddress]);
 
@@ -93,16 +135,6 @@ const EvmWalletButton = (props: IEvmWalletButton): JSX.Element => {
             {AIRDROP_EVM_CTA_TEXTS[EvmCTAState.NOT_SIGNED]}
           </Button>
         );
-      case EvmCTAState.NO_TRANSACTIONS:
-        return (
-          <Button
-            color="primary"
-            onClick={() => window.open("https://tezos.com/tez/#buy-tez", "_blank")}
-            width="w-full"
-          >
-            {AIRDROP_EVM_CTA_TEXTS[EvmCTAState.NO_TRANSACTIONS]}
-          </Button>
-        );
       case EvmCTAState.ELIGIBLE:
         return (
           <Button color="primary" onClick={() => setChain(ChainAirdrop.Tezos)} width="w-full">
@@ -119,6 +151,12 @@ const EvmWalletButton = (props: IEvmWalletButton): JSX.Element => {
         return (
           <Button color="disabled" width="w-full">
             {AIRDROP_EVM_CTA_TEXTS[EvmCTAState.LOADING]}
+          </Button>
+        );
+      case EvmCTAState.RELOAD:
+        return (
+          <Button color="primary" onClick={() => dispatch(setReloadTrigger())} width="w-full">
+            {AIRDROP_EVM_CTA_TEXTS[EvmCTAState.RELOAD]}
           </Button>
         );
     }

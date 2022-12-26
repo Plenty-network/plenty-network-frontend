@@ -175,16 +175,28 @@ function TezosChain(props: ITezosChain) {
         res.airdropClaimData.eligible === false ||
         res.airdropClaimData.success === false
       ) {
-        return (
-          <Button color="disabled" width="w-full">
-            Not eligible
-          </Button>
-        );
+        if (res.airdropClaimData.message === "GET_TEZ_FOR_FEES") {
+          return (
+            <Button
+              color="primary"
+              onClick={() => window.open("https://tezos.com/tez/#buy-tez", "_blank")}
+              width="w-full"
+            >
+              Get some XTZ for fees
+            </Button>
+          );
+        } else {
+          return (
+            <Button color="disabled" width="w-full">
+              Not eligible
+            </Button>
+          );
+        }
       }
     } else {
       return (
         <Button color="primary" onClick={connectTempleWallet} width="w-full">
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     }

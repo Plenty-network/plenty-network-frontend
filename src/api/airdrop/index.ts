@@ -54,7 +54,7 @@ export const getTezosClaimData = async (userTezosAddress: string): Promise<IClai
 };
 
 /**
- * Returns whether the selected evm wallet is eligible for airdrop or not,
+ * @deprecated Returns whether the selected evm wallet is eligible for airdrop or not,
  * and the claimable data if eligible.
  * @param ethMessage - Pre-set ETH message
  * @param ethSignature - Signed ETH message
@@ -161,12 +161,14 @@ export const isEvmWalletEligible = async (
       value: new BigNumber(eligibilityData.value).isFinite()
         ? new BigNumber(eligibilityData.value).dividedBy(PLY_DECIMAL_MULTIPLIER)
         : new BigNumber(0),
+      tzAddress: eligibilityData.tezosAddress,
     };
   } catch (error: any) {
     console.log(error);
     return {
       eligible: false,
       value: new BigNumber(0),
+      tzAddress: undefined,
       error: error.message,
     };
   }
@@ -209,6 +211,57 @@ export const tezosAccountHasTransactions = async (userTezosAddress: string): Pro
     return false;
   }
 };
+
+/**
+ * Returns whether the selected tezos user account was already used for confirming or not.
+ * @param userTezosAddress - Tezos user wallet address
+ */
+/* export const tzAddressAlreadyConfirmed = (userTezosAddress: string): boolean => {
+  try {
+    let addressConfirmed = false;
+    const signaturesData = store.getState().airdropTransactions.signaturesData;
+
+    for (const data of Object.values(signaturesData)) {
+      if (data.message && data.message.length !== 0) {
+        const tezosAddress = data.message.slice(Config.AIRDROP_ETH_MESSAGE_PREFIX.length);
+        if (tezosAddress === userTezosAddress) {
+          addressConfirmed = true;
+          break;
+        }
+      }
+    }
+
+    return addressConfirmed;
+  } catch (error: any) {
+    console.log(error);
+    return false;
+  }
+}; */
+
+/**
+ * Submits the signature data after signing and returns the response message string.
+ * "SUBMITED_TEZOS_ADDRESS" for success for now. Changes in api needs changes to this function
+ * @param ethMessage - Pre-set ETH message
+ * @param ethSignature - Signed ETH message
+ */
+ export const submitSignatureData = async (ethMessage: string, ethSignature: string): Promise<string> => {
+   try {
+     if (ethMessage === "" || ethMessage.length <= 0 || !ethMessage) {
+       return "INVALID_MESSAGE";
+     }
+     if (ethSignature === "" || ethSignature.length <= 0 || !ethSignature) {
+       return "MISSING_SIGNATURE";
+     }
+     const sigSubmissionResponse = await axios.get(
+       `${Config.AIRDROP_SERVER[connectedNetwork]}ethereum?ethMessage=${ethMessage}&signature=${ethSignature}`
+     );
+     return sigSubmissionResponse.data;
+   } catch (error: any) {
+     console.log(error);
+     return "INTERNAL_SERVER_ERROR";
+   }
+ };
+
 
 /**
  * Returns the claim data created from server api response.
