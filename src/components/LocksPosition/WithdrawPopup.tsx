@@ -49,7 +49,7 @@ function WithdrawPly(props: IWithdrawPlyProps) {
             <div className="mx-2 text-white font-title3">Withdraw locks</div>
           </div>
           <div className="border border-text-800 bg-card-200 p-4 mt-3 rounded-2xl">
-            <div className="text-text-400 font-body1 ">Your will receive </div>
+            <div className="text-text-400 font-body1 ">You will receive </div>
             <div className="flex mt-[11px] items-center">
               <Image alt={"alt"} src={ply} width={"28px"} height={"28px"} />
               <span className="text-white font-body4 ml-2">
