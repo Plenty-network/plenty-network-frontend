@@ -114,7 +114,7 @@ function TezosChain(props: ITezosChain) {
         );
       } else if (res.airdropClaimData.eligible && res.airdropClaimData.success) {
         if (
-          res.airdropClaimData.pendingClaimableAmount.isGreaterThanOrEqualTo(0) &&
+          res.airdropClaimData.pendingClaimableAmount.isGreaterThan(0) &&
           tweetedAccounts.includes(userAddress)
         ) {
           return (
@@ -126,9 +126,9 @@ function TezosChain(props: ITezosChain) {
             </button>
           );
         } else if (
-          !res.airdropClaimData.pendingClaimableAmount
+          res.airdropClaimData.pendingClaimableAmount
             .minus(res.airdropClaimData.perMissionAmount)
-            .isEqualTo(0) &&
+            .isGreaterThan(0) &&
           !tweetedAccounts.includes(userAddress)
         ) {
           return (
