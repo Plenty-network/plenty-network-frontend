@@ -12,6 +12,7 @@ import HeaderSelection from "./HeaderSelection";
 import List from "./DisclaimerList";
 import Button from "../Button/Button";
 import { useAppSelector } from "../../redux";
+import ListOtherChain from "./DisclaimerOtherChain";
 interface IDisclaimerProps {
   show: boolean;
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
@@ -53,8 +54,8 @@ function Disclaimer(props: IDisclaimerProps) {
           </div>
           <div className="font-body3 mt-3">
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-            has been the industry&apos;s standard dummy text ever since the 1500s. Please connect your
-            wallet to confirm your eligibility.
+            has been the industry&apos;s standard dummy text ever since the 1500s. Please connect
+            your wallet to confirm your eligibility.
             <span className="font-body4 text-primary-500 ml-0.5">Know how?</span>
             <span className="relative top-0.5 ml-1">
               <Image src={link} />
@@ -63,7 +64,7 @@ function Disclaimer(props: IDisclaimerProps) {
           <div className="border-t border-text-800 my-4"></div>
           <HeaderSelection chain={props.chain} setChain={props.setChain} isDisclaimer={true} />
           <div className="mt-4">
-            <List />
+            {props.chain === ChainAirdrop.Tezos ? <List /> : <ListOtherChain />}
           </div>
           <div className="border-t border-text-800 my-4"></div>
           <div className="flex items-center cursor-pointer" onClick={() => setIsCheck(!isCheck)}>
