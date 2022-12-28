@@ -3,11 +3,7 @@ import { isMobile } from "react-device-detect";
 import { useDispatch } from "react-redux";
 import { Column } from "react-table";
 import { POOL_TYPE } from "../../../pages/pools";
-import {
-  IAllPoolsData,
-  IAllPoolsDataResponse,
-  IPoolsDataWrapperResponse,
-} from "../../api/pools/types";
+import { IMyPoolsData } from "../../api/pools/types";
 import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
 import { usePoolsTableSearch } from "../../hooks/usePoolsTableSearch";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
@@ -44,7 +40,7 @@ export interface IShortCardProps {
   setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
   showLiquidityModal: boolean;
   reFetchPool: boolean;
-  data: IAllPoolsData[];
+  data: IMyPoolsData[];
 }
 export interface IManageBtnProps {
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -55,22 +51,18 @@ export interface IManageBtnProps {
   tokenB: string;
   isGauge: boolean;
 }
-export function ShortCard(props: IShortCardProps) {
+export function MyPoolTable(props: IShortCardProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
 
-  const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
-    props.data,
-    props.poolsFilter,
-    "",
-    props.reFetchPool
-  );
-  const [poolsTableData, isFetched] = usePoolsTableSearch(
-    poolTableData,
-    props.searchValue,
-    isFetch
-  );
+  // const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
+  //   props.data,
+  //   props.poolsFilter,
+  //   "",
+  //   props.reFetchPool
+  // );
+  const [poolsTableData, isFetched] = usePoolsTableSearch(props.data, props.searchValue, true);
 
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
@@ -100,7 +92,7 @@ export function ShortCard(props: IShortCardProps) {
     symbol: "USDT.e",
   });
 
-  const mobilecolumns = React.useMemo<Column<IAllPoolsData>[]>(
+  const mobilecolumns = React.useMemo<Column<IMyPoolsData>[]>(
     () => [
       {
         Header: "Pools",
@@ -171,8 +163,8 @@ export function ShortCard(props: IShortCardProps) {
         columnWidth: "w-[115px] ml-auto",
         accessor: (x) => (
           <ManageBtn
-            isLiquidityAvailable={false}
-            isStakeAvailable={false}
+            isLiquidityAvailable={x.isLiquidityAvailable}
+            isStakeAvailable={x.isStakeAvailable}
             tokenA={x.tokenA.toString()}
             tokenB={x.tokenB.toString()}
             setShowLiquidityModal={props.setShowLiquidityModal}
@@ -184,7 +176,7 @@ export function ShortCard(props: IShortCardProps) {
     ],
     [valueFormat]
   );
-  const desktopcolumns = React.useMemo<Column<IAllPoolsData>[]>(
+  const desktopcolumns = React.useMemo<Column<IMyPoolsData>[]>(
     () => [
       {
         Header: "Pools",
@@ -346,8 +338,8 @@ export function ShortCard(props: IShortCardProps) {
         minWidth: 151,
         accessor: (x) => (
           <ManageBtn
-            isLiquidityAvailable={false}
-            isStakeAvailable={false}
+            isLiquidityAvailable={x.isLiquidityAvailable}
+            isStakeAvailable={x.isStakeAvailable}
             tokenA={x.tokenA.toString()}
             tokenB={x.tokenB.toString()}
             setShowLiquidityModal={props.setShowLiquidityModal}
