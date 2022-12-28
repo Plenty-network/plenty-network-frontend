@@ -37,7 +37,7 @@ function Disclaimer(props: IDisclaimerProps) {
         <>
           <div className="flex ">
             <div className="mr-2 text-white font-title3">Airdrop disclaimer</div>
-            <div className="relative top-[2px]">
+            <div className="relative top-[2px] cursor-pointer">
               <ToolTip
                 id="tooltip2"
                 disable={false}
@@ -53,7 +53,7 @@ function Disclaimer(props: IDisclaimerProps) {
           <div className="font-body3 mt-3">
             Please read the instructions for Tezos and EVM-based chains below.{" "}
           </div>
-          <div>
+          <div className="cursor-pointer">
             <span
               className="font-body4 text-primary-500 ml-0.5"
               onClick={() =>

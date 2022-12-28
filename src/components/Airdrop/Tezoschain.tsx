@@ -119,7 +119,9 @@ function TezosChain(props: ITezosChain) {
         ) {
           return (
             <button
-              className={clsx("bg-primary-500 h-13 text-black w-full rounded-2xl font-title3-bold")}
+              className={clsx(
+                "bg-primary-500 h-13 text-black w-full rounded-2xl font-title3-bold cursor-pointer"
+              )}
               onClick={handleAirdropOperation}
             >
               Claim {res.airdropClaimData.pendingClaimableAmount.toFixed(2)} PLY
@@ -134,7 +136,7 @@ function TezosChain(props: ITezosChain) {
           return (
             <button
               className={clsx(
-                "bg-primary-500 text-black  h-13  w-full rounded-2xl font-title3-bold"
+                "bg-primary-500 text-black  h-13  w-full rounded-2xl font-title3-bold cursor-pointer"
               )}
               onClick={handleAirdropOperation}
             >
@@ -164,7 +166,7 @@ function TezosChain(props: ITezosChain) {
           return (
             <button
               className={clsx(
-                "bg-primary-600 text-text-600 h-13  w-full rounded-2xl font-title3-bold"
+                "bg-primary-600 text-text-600 h-13  w-full rounded-2xl font-title3-bold cursor-pointer"
               )}
             >
               Claim
