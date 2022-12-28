@@ -53,7 +53,7 @@ export const poolsDataWrapperV1 = async (
     
     for (var poolData of poolsData) {
       const AMM = AMMS[poolData.pool];
-      // TODO: Optimise this O(2n) loop
+
       const analyticsObject = analyticsDataObject[poolData.pool] || {...EMPTY_POOLS_OBJECT};
       let bribe: BigNumber = new BigNumber(0);
       let bribes: Bribes[] = [];
