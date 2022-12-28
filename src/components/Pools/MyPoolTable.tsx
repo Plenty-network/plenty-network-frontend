@@ -56,13 +56,18 @@ export function MyPoolTable(props: IShortCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
 
-  // const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
-  //   props.data,
-  //   props.poolsFilter,
-  //   "",
-  //   props.reFetchPool
-  // );
-  const [poolsTableData, isFetched] = usePoolsTableSearch(props.data, props.searchValue, true);
+  const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
+    props.data,
+    props.poolsFilter,
+    "",
+    props.reFetchPool
+  );
+  const [poolsTableData, isFetched] = usePoolsTableSearch(
+    poolTableData,
+    props.searchValue,
+    isFetch,
+    poolTableData.length
+  );
 
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity

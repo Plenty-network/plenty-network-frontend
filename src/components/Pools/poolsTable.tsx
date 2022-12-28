@@ -69,7 +69,8 @@ export function ShortCard(props: IShortCardProps) {
   const [poolsTableData, isFetched] = usePoolsTableSearch(
     poolTableData,
     props.searchValue,
-    isFetch
+    isFetch,
+    poolTableData.length
   );
 
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(

@@ -159,7 +159,6 @@ export function NewPool(props: IManageLiquidityProps) {
   useEffect(() => {
     if (searchQuery !== "" && searchQuery.length > 8) {
       getTokenDataFromTzkt(searchQuery.trim()).then((res) => {
-        console.log("ishu");
         if (res.allTokensList.length !== 0) {
           getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
             // contractTokenBalance.push(res.allTokensBalances);

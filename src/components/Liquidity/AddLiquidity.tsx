@@ -3,7 +3,11 @@ import Image from "next/image";
 import add from "../../../src/assets/icon/pools/addIcon.svg";
 import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import { estimateOtherTokenAmount } from "../../api/liquidity";
-import { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import nFormatter, {
+  changeSource,
+  imageExists,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { IAllTokensBalanceResponse } from "../../api/util/types";
 import { useAppSelector } from "../../redux";
 import { ISwapData, tokenParameterLiquidity } from "./types";
@@ -159,7 +163,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
             </p>
           </div>
           {walletAddress && (
-            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-2 md:px-3">
+            <div className="ml-auto border border-text-800/[0.5] rounded-lg  w-[245px] bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-2 md:px-3">
               <div className="relative top-0.5 md:top-0">
                 <Image alt={"alt"} src={wallet} className="walletIcon" />
               </div>
@@ -174,9 +178,11 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 ) : (
                   <span className="mr-1">
                     {Number(props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance) > 0
-                      ? Number(
-                          props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance
-                        ).toFixed(4)
+                      ? nFormatter(
+                          new BigNumber(
+                            props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance
+                          )
+                        )
                       : 0}{" "}
                   </span>
                 )}
@@ -241,7 +247,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
             </p>
           </div>
           {walletAddress && (
-            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-2 md:px-3">
+            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center w-[245px] flex px-2 md:px-3">
               <div className="relative top-0.5 md:top-0">
                 <Image alt={"alt"} src={wallet} className="walletIcon" />
               </div>
@@ -256,10 +262,12 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 ) : (
                   <span className="mr-1">
                     {Number(props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance) > 0
-                      ? Number(
-                          props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance
-                        ).toFixed(4)
-                      : 0}{" "}
+                      ? nFormatter(
+                          new BigNumber(
+                            props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance
+                          )
+                        )
+                      : 0}
                   </span>
                 )}
                 {tEZorCTEZtoUppercase(props.tokenOut.name)}

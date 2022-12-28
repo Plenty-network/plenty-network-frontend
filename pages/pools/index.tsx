@@ -47,6 +47,7 @@ export default function Pools(props: IIndexProps) {
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const [page, setPage] = useState(1);
+  const [myPoolpage, setmyPoolPage] = useState(1);
   const amm = useAppSelector((state) => state.config.AMMs);
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   useEffect(() => {
@@ -97,6 +98,7 @@ export default function Pools(props: IIndexProps) {
   useEffect(() => {
     if (Object.keys(tokenPrices).length !== 0 && isCompleted === false) {
       getAllPoolsData(tokenPrices, page).then((res) => {
+        console.log("lala", res);
         if (res.allData.length) {
           setPoolsData((poolsData) => poolsData.concat(res.allData));
         } else {
@@ -104,7 +106,7 @@ export default function Pools(props: IIndexProps) {
         }
       });
     }
-  }, [Object.keys(tokenPrices).length, page]);
+  }, [Object.keys(tokenPrices).length, page, reFetchPool]);
   useEffect(() => {
     console.log("lala", activeStateTab);
     if (Object.keys(tokenPrices).length !== 0 && activeStateTab === POOL_TYPE.MYPOOLS) {
@@ -118,7 +120,7 @@ export default function Pools(props: IIndexProps) {
         }
       });
     }
-  }, [walletAddress, activeStateTab, Object.keys(tokenPrices).length]);
+  }, [walletAddress, activeStateTab, Object.keys(tokenPrices).length, myPoolpage]);
 
   useEffect(() => {
     if (
@@ -127,6 +129,13 @@ export default function Pools(props: IIndexProps) {
       isCompleted === false
     ) {
       setPage(page + 1);
+    }
+    if (
+      (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
+      scrollY !== 0 &&
+      isCompletedMypool === false
+    ) {
+      setmyPoolPage(myPoolpage + 1);
     }
   }, [scrollY, height, isCompleted]);
   return (
