@@ -51,7 +51,9 @@ function Disclaimer(props: IDisclaimerProps) {
             </div>
           </div>
           <div className="font-body3 mt-3">
-            Please read the instructions for Tezos and EVM-based chains below.
+            Please read the instructions for Tezos and EVM-based chains below.{" "}
+          </div>
+          <div>
             <span
               className="font-body4 text-primary-500 ml-0.5"
               onClick={() =>
@@ -67,6 +69,7 @@ function Disclaimer(props: IDisclaimerProps) {
               <Image src={link} />
             </span>
           </div>
+
           <div className="border-t border-text-800 my-4"></div>
           <HeaderSelection chain={props.chain} setChain={props.setChain} isDisclaimer={true} />
           <div className="mt-4">
