@@ -20,7 +20,7 @@ import {
   IAllTokensBalanceResponse,
 } from "./types";
 import { getDexAddress, getTokenDataByAddress } from "./fetchConfig";
-import { getBigMapData, getStorage, getTzktTokenData } from "./storageProvider";
+import { getBigMapData, getStorage, getTzktBigMapData, getTzktStorageData, getTzktTokenData } from "./storageProvider";
 import { gaugeStorageType } from "../rewards/data";
 
 /**
@@ -268,12 +268,12 @@ export const getPnlpBalance = async (
 };
 
 /**
- * Returns the symbol and user staked balance of the PNLP token for the given pair of tokens.
+ * Returns the symbol and user staked balance of the PNLP token for the given pair of tokens using RPC.
  * @param tokenOneSymbol - Symbol of token one of the pair.
  * @param tokenTwoSymbol - Symbol of token two of the pair.
  * @param userTezosAddress - Tezos wallet address of the user.
  */
-export const getStakedBalance = async (
+export const getStakedBalanceViaRpc = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
   userTezosAddress: string
@@ -435,6 +435,64 @@ export const getAllTokensBalanceFromTzkt = async (
     return {
       success: false,
       allTokensBalances: {},
+      error: error.message,
+    };
+  }
+};
+
+
+/**
+ * Returns the symbol and user staked balance of the PNLP token for the given pair of tokens using Tzkt.
+ * @param tokenOneSymbol - Symbol of token one of the pair.
+ * @param tokenTwoSymbol - Symbol of token two of the pair.
+ * @param userTezosAddress - Tezos wallet address of the user.
+ */
+ export const getStakedBalance = async (
+  tokenOneSymbol: string,
+  tokenTwoSymbol: string,
+  userTezosAddress: string
+): Promise<IPnlpBalanceResponse> => {
+  try {
+    const state = store.getState();
+    const AMM = state.config.AMMs;
+    const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
+    if (dexContractAddress === "false") {
+      throw new Error("AMM does not exist for the selected pair.");
+    }
+    const pnlpTokenDecimals: number = AMM[dexContractAddress].lpToken.decimals;
+    const gaugeAddress: string | undefined = AMM[dexContractAddress].gauge;
+    if (gaugeAddress === undefined) {
+      throw new Error("Gauge does not exist for the selected pair.");
+    }
+    const gaugeStorage = await getTzktStorageData(gaugeAddress);
+
+    const balancesBigMapId: string = Number(gaugeStorage.data.balances).toString();
+
+    const stakedBalanceResponse = await getTzktBigMapData(
+      balancesBigMapId,
+      `key=${userTezosAddress}&active=true&select=key,value`
+    );
+    if(stakedBalanceResponse.data.length <= 0) {
+      return {
+        success: true,
+        balance: "0",
+        lpToken: AMM[dexContractAddress].lpToken.address,
+      };
+    }
+    const stakedBalance = new BigNumber(stakedBalanceResponse.data[0].value).isFinite()
+      ? new BigNumber(stakedBalanceResponse.data[0].value)
+      : new BigNumber(0);
+    const finalStakedBalance = stakedBalance.dividedBy(new BigNumber(10).pow(pnlpTokenDecimals));
+    return {
+      success: true,
+      balance: finalStakedBalance.toString(),
+      lpToken: AMM[dexContractAddress].lpToken.address,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      balance: "0",
+      lpToken: "",
       error: error.message,
     };
   }
