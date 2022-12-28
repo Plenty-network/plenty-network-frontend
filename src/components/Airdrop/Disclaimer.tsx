@@ -36,16 +36,14 @@ function Disclaimer(props: IDisclaimerProps) {
       {
         <>
           <div className="flex ">
-            <div className="mr-2 text-white font-title3">Know eligibility criteria</div>
+            <div className="mr-2 text-white font-title3">Airdrop disclaimer</div>
             <div className="relative top-[2px]">
               <ToolTip
                 id="tooltip2"
-                disable={true}
+                disable={false}
                 position={Position.top}
                 toolTipChild={
-                  <div className="w-[100px] md:w-[250px]">
-                    Bribe voters to direct emissions towards your pool.
-                  </div>
+                  <div className="w-[100px] md:w-[150px]">Instructions for airdrop</div>
                 }
               >
                 <Image alt={"alt"} src={info} />
@@ -53,10 +51,18 @@ function Disclaimer(props: IDisclaimerProps) {
             </div>
           </div>
           <div className="font-body3 mt-3">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-            has been the industry&apos;s standard dummy text ever since the 1500s. Please connect
-            your wallet to confirm your eligibility.
-            <span className="font-body4 text-primary-500 ml-0.5">Know how?</span>
+            Please read the instructions for Tezos and EVM-based chains below.
+            <span
+              className="font-body4 text-primary-500 ml-0.5"
+              onClick={() =>
+                window.open(
+                  "https://medium.com/plenty-defi/ply-public-airdrop-criteria-9bbf778a74ac",
+                  "_blank"
+                )
+              }
+            >
+              Know how?
+            </span>
             <span className="relative top-0.5 ml-1">
               <Image src={link} />
             </span>
