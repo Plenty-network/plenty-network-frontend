@@ -150,9 +150,9 @@ export const isEvmWalletEligible = async (
     if (evmWalletAddress === "" || evmWalletAddress.length <= 0 || !evmWalletAddress) {
       throw new Error("Invalid or missing evm wallet address");
     }
-    // Forcing lower casing as required by server api
+    
     const eligibilityAPIResponse = await axios.get(
-      `${Config.AIRDROP_SERVER[connectedNetwork]}ethereum/${evmWalletAddress.toLocaleLowerCase()}`
+      `${Config.AIRDROP_SERVER[connectedNetwork]}ethereum/${evmWalletAddress}`
     );
     const eligibilityData = eligibilityAPIResponse.data;
 
