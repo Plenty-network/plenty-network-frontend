@@ -166,7 +166,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       }
     };
     updateBalance();
-  }, [walletAddress, TOKEN, balanceUpdate]);
+  }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
   useEffect(() => {
     if (walletAddress) {
       getStakedData(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
