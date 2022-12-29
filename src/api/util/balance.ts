@@ -364,7 +364,7 @@ export const getBalanceFromTzkt = async (
       };
     }
 
-    const tokenDataFromConfig = getTokenDataByAddress(tokenContract);
+    const tokenDataFromConfig = getTokenDataByAddress(tokenContract, tokenId);
 
     // First check if token metadata exists for the token in the response.
     if (balanceData[0].token.metadata && balanceData[0].token.metadata.decimals) {
