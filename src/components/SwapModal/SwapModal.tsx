@@ -124,7 +124,7 @@ function SwapModal(props: ISwapModalProps) {
                   </div>
                 }
               >
-                <Image alt={"alt"} src={infogrey} />
+                <Image alt={"alt"} src={infogrey} className="cursor-pointer" />
               </ToolTip>
             </span>
           </div>
@@ -222,7 +222,7 @@ function SwapModal(props: ISwapModalProps) {
                       </div>
                     )} */}
                     {props.isSuccess && props.allBalance[token.name] ? (
-                      <div className="font-subtitle4 ml-auto mt-[7px]">
+                      <div className="font-subtitle4 cursor-pointer ml-auto mt-[7px]">
                         <ToolTip
                           position={Position.top}
                           message={

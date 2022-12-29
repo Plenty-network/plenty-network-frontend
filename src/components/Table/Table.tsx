@@ -32,6 +32,7 @@ const Table = <D extends object>({
   data,
   shortby,
   tableType,
+  loading,
   isConnectWalletRequired = false,
   isFetched = false,
   isVotesTable = false,
@@ -43,6 +44,7 @@ const Table = <D extends object>({
   columns: Column<D>[];
   data: D[];
   shortby?: string;
+  loading?: boolean;
   noSearchResult?: boolean;
   isConnectWalletRequired?: boolean;
   isFetched?: boolean;
@@ -241,6 +243,11 @@ const Table = <D extends object>({
                 );
               })
             : null}
+          {loading && (
+            <tr
+              className={` border border-borderCommon h-16 bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg animate-pulse-table `}
+            ></tr>
+          )}
         </tbody>
       </table>
     </div>

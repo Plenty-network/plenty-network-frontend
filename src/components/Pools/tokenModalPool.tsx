@@ -244,7 +244,7 @@ function TokenModalPool(props: ISwapModalProps) {
                   </div>
                 }
               >
-                <Image alt={"alt"} src={infogrey} />
+                <Image alt={"alt"} src={infogrey} className="cursor-pointer" />
               </ToolTip>
             </span>
           </div>
@@ -347,7 +347,7 @@ function TokenModalPool(props: ISwapModalProps) {
                     )} */}
                     {(contractTokenBalance[token.name] || props.allBalance[token.name]) &&
                     props.isLoading ? (
-                      <div className="font-subtitle4 ml-auto mt-[7px]">
+                      <div className="font-subtitle4 cursor-pointer ml-auto mt-[7px]">
                         <ToolTip
                           position={Position.top}
                           message={

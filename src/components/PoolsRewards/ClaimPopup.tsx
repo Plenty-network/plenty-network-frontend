@@ -76,7 +76,7 @@ function ClaimPly(props: IClaimProps) {
                     position={Position.top}
                   >
                     <>
-                      <span className="text-white font-body4 ml-2">
+                      <span className="text-white cursor-pointer font-body4 ml-2">
                         {props.state === EClaimAllState.UNCLAIMED
                           ? Number(props.plyValue) > 0
                             ? props.plyValue?.isLessThan(0.01)
@@ -112,7 +112,13 @@ function ClaimPly(props: IClaimProps) {
                           type={TooltipType.withoutArrowsAndTitle}
                           position={Position.top}
                         >
-                          <Image alt={"alt"} src={lock} width={"16px"} height={"16px"} />
+                          <Image
+                            alt={"alt"}
+                            src={lock}
+                            width={"16px"}
+                            height={"16px"}
+                            className="cursor-pointer"
+                          />
                         </ToolTip>
                       </span>
                       <span className="text-white ml-0.5">

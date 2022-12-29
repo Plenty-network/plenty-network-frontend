@@ -11,7 +11,7 @@ export function Boost(props: IBoostProps) {
           disable={true}
           toolTipChild={<div className="text-center"></div>}
         >
-          <div className="font-body4  text-white">
+          <div className="font-body4 cursor-pointer text-white">
             {Number(props.value) > 0 ? `${props.value.toFixed(1)}x` : "0"}
           </div>
         </ToolTip>

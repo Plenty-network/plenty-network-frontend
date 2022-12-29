@@ -552,7 +552,7 @@ export function Unstaking(props: IUnstakingProps) {
           </div>
         </div>
         {walletAddress && (
-          <div className="pr-2 md:pr-5  ">
+          <div className="pr-2 md:pr-5 cursor-pointer ">
             <ToolTip
               disable={Number(props.stakedToken) > 0 ? false : true}
               message={fromExponential(props.stakedToken)}

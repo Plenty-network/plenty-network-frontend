@@ -28,7 +28,7 @@ export function TotalVotes(props: ITotalVotesProps) {
           </div>
         }
       >
-        <div className="flex-1 text-right  justify-center items-center">
+        <div className="flex-1 cursor-pointer text-right  justify-center items-center">
           <div className="font-f13 text-text-50">
             {Number(props.totalvotes) > 0
               ? props.totalvotes.isLessThan(0.01)

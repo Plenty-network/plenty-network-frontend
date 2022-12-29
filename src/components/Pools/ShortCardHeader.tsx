@@ -68,7 +68,7 @@ export function Tabs(props: ITabsProps) {
                       <div className="text-center w-[200px] md:w-[350px]">{props.toolTipChild}</div>
                     }
                   >
-                    <Image alt={"alt"} src={info} />
+                    <Image alt={"alt"} src={info} className="cursor-pointer" />
                   </ToolTip>
                 </span>
               ) : (

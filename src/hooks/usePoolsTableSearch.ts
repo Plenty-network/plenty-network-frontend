@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 export const usePoolsTableSearch = (
   poolsTable: any = [],
   searchText: string,
-  isFetched: boolean
+  isFetched: boolean,
+  length: number
 ) => {
   const [poolsTableData, setPoolsTableData] = useState(poolsTable);
   useEffect(() => setPoolsTableData(poolsTable), [poolsTable.length]);

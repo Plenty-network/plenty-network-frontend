@@ -65,3 +65,4 @@ export const EMPTY_VE_INDEXER_POOLS_OBJECT: VolumeV1Data = {
 
 export const API_RE_ATTEMPTS: number = 3;
 export const API_RE_ATTAMPT_DELAY: number = 5000;
+export const POOLS_PAGE_LIMIT: number = 10;
