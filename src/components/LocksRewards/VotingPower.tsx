@@ -29,7 +29,7 @@ export function VotingPower(props: IVotingPowerProps) {
           disable={true}
           toolTipChild={<div className="text-center"></div>}
         >
-          <div className=" ">
+          <div className=" cursor-pointer">
             <span className="font-f13">{props.votes.toFixed(2)}</span>
             <span className="relative top-1 ml-px">
               <Image alt={"alt"} src={light} width={"16px"} height={"16px"} />
@@ -41,7 +41,7 @@ export function VotingPower(props: IVotingPowerProps) {
           disable={true}
           toolTipChild={<div className="text-center"></div>}
         >
-          <div className=" ">
+          <div className=" cursor-pointer">
             <span className="font-f13">{props.percentage.toFixed(0)}%</span>
           </div>
         </ToolTip>

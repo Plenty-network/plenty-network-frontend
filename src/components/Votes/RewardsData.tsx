@@ -56,7 +56,7 @@ export function RewardsData(props: IRewardsDataProps) {
             </>
           }
         >
-          <div className=" text-right">
+          <div className="cursor-pointer text-right">
             <span className="font-f13">
               $
               {Number(props.bribes) > 0

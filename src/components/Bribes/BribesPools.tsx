@@ -40,7 +40,7 @@ export function BribesPool(props: IBribesPoolProps) {
             </div>
           }
         >
-          <div className="font-body4  text-white">
+          <div className="font-body4 cursor-pointer text-white">
             $
             {Number(props.value) > 0
               ? props.value.isLessThan(0.01)

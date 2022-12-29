@@ -82,8 +82,14 @@ function ManageLock(props: IManageLockProps) {
         : props.lockingEndData.lockingDate
     );
     setVotingPower(res);
-    if(res > 0) {
-      setNewVeNFTThumbnailUri(getThumbnailUriForNewVeNFT(new BigNumber(props.updatedPlyVoteValue).plus(props.manageData.baseValue), new BigNumber(res), daysTillExpiry));
+    if (res > 0) {
+      setNewVeNFTThumbnailUri(
+        getThumbnailUriForNewVeNFT(
+          new BigNumber(props.updatedPlyVoteValue).plus(props.manageData.baseValue),
+          new BigNumber(res),
+          daysTillExpiry
+        )
+      );
     } else {
       setNewVeNFTThumbnailUri("");
     }
@@ -123,7 +129,7 @@ function ManageLock(props: IManageLockProps) {
       timeSpan >= MAX_TIME
         ? Math.floor((now + timeSpan) / WEEK) * WEEK
         : Math.floor((now + (timeSpan + WEEK - 1)) / WEEK) * WEEK;
-    
+
     const daysTillExpiry = Math.floor((lockEnd - now) / (24 * 60 * 60));
     setDaysTillExpiry(daysTillExpiry);
 
@@ -134,8 +140,14 @@ function ManageLock(props: IManageLockProps) {
         lockEnd
       );
       setVotingPower(res);
-      if(res > 0) {
-        setNewVeNFTThumbnailUri(getThumbnailUriForNewVeNFT(new BigNumber(props.updatedPlyVoteValue).plus(props.manageData.baseValue), new BigNumber(res), daysTillExpiry));
+      if (res > 0) {
+        setNewVeNFTThumbnailUri(
+          getThumbnailUriForNewVeNFT(
+            new BigNumber(props.updatedPlyVoteValue).plus(props.manageData.baseValue),
+            new BigNumber(res),
+            daysTillExpiry
+          )
+        );
       } else {
         setNewVeNFTThumbnailUri("");
       }
@@ -369,7 +381,7 @@ function ManageLock(props: IManageLockProps) {
             <div className={clsx("mt-3 border-t border-text-800/[0.5]")}></div>
             <div className={clsx("px-5 flex  flex items-center space-between", "mt-2")}>
               <div className="text-text-250 w-[155px] md:w-auto font-mobile-f1020 md:font-subtitle3">
-                Your will receive a veNFT with a voting power of{" "}
+                You will receive a veNFT with a voting power of{" "}
               </div>
               <div className="ml-auto px-3 h-[38px] flex items-center text-primary-500 bg-primary-500/[0.1] rounded-[30px]">
                 ~ {isNaN(votingPower) ? "0.00" : votingPower.toFixed(2)}

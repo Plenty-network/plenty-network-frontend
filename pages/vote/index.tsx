@@ -2,7 +2,7 @@ import { BigNumber } from "bignumber.js";
 import clsx from "clsx";
 import Image from "next/image";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getAllTokensBalanceFromTzkt } from "../../src/api/util/balance";
 import {
@@ -81,6 +81,8 @@ export default function Vote() {
   const [searchValue, setSearchValue] = useState("");
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const amm = useAppSelector((state) => state.config.AMMs);
+  const initialPriceCall = useRef<boolean>(true);
+  const initialLpPriceCall = useRef<boolean>(true);
   const handleCreateLock = () => {
     setShowCreateLockModal(true);
   };
@@ -275,10 +277,18 @@ export default function Vote() {
   }, [veNFTlist.data, userAddress]);
 
   useEffect(() => {
-    Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    if (!initialPriceCall.current) {
+      Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    } else {
+      initialPriceCall.current = false;
+    }
   }, [token]);
   useEffect(() => {
-    Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
+    if (!initialLpPriceCall.current) {
+      Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
+    } else {
+      initialLpPriceCall.current = false;
+    }
   }, [tokenPrice]);
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
@@ -325,7 +335,7 @@ export default function Vote() {
   };
 
   const handleLockOperation = () => {
-    setContentTransaction(`Locking ${plyInput} PLY`);
+    setContentTransaction(`Locking PLY`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -557,7 +567,7 @@ export default function Vote() {
                       >
                         <div
                           className={clsx(
-                            " px-3  h-[38px] ] flex items-center justify-center rounded-xl ",
+                            "cursor-pointer px-3  h-[38px] ] flex items-center justify-center rounded-xl ",
                             votes.length !== 0 &&
                               (selectedEpoch?.epochNumber
                                 ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
@@ -599,7 +609,7 @@ export default function Vote() {
                     ) : (
                       <div
                         className={clsx(
-                          "px-3    h-[38px]  flex items-center justify-center rounded-xl ",
+                          "px-3  cursor-pointer  h-[38px]  flex items-center justify-center rounded-xl ",
 
                           votes.length !== 0 &&
                             (selectedEpoch?.epochNumber
@@ -681,7 +691,7 @@ export default function Vote() {
                       </div>
                     }
                   >
-                    <Image alt={"alt"} src={info} className="infoIcon " />
+                    <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
                   </ToolTip>
                 </span>
                 <span className="ml-1">

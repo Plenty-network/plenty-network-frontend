@@ -139,7 +139,13 @@ export function Epoch(props: IEpochProps) {
                   </div>
                 }
               >
-                <Image alt={"alt"} src={info} width={"14px"} height={"14px"} />
+                <Image
+                  alt={"alt"}
+                  src={info}
+                  width={"14px"}
+                  height={"14px"}
+                  className="cursor-pointer"
+                />
               </ToolTip>
             </p>
 
