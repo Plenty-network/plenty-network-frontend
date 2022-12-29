@@ -142,7 +142,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               String(TOKEN[props.tokenIn.symbol]?.address),
               TOKEN[props.tokenIn.symbol].tokenId,
               TOKEN[props.tokenIn.symbol].standard,
-              walletAddress
+              walletAddress,
+              props.tokenIn.symbol
             )
           );
         props.tokenOut.symbol &&
@@ -151,7 +152,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               String(TOKEN[props.tokenOut.symbol]?.address),
               TOKEN[props.tokenOut.symbol].tokenId,
               TOKEN[props.tokenOut.symbol].standard,
-              walletAddress
+
+              walletAddress,
+              props.tokenOut.symbol
             )
           );
 
