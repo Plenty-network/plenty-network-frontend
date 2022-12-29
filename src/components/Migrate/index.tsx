@@ -415,7 +415,7 @@ function Migrate(props: IMigrateProps) {
           }
           content={`Migration of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
             TOKEN_A
-          )} confirmed`}
+          )}`}
         />
       )}
       <TokenModalMigrate
