@@ -46,7 +46,7 @@ export function RewardsData(props: IRewardsDataProps) {
             </div>
           }
         >
-          <div className=" ">
+          <div className=" cursor-pointer ">
             <span className="font-f13">
               $
               {Number(props.bribes) > 0
@@ -85,7 +85,7 @@ export function RewardsData(props: IRewardsDataProps) {
             )
           }
         >
-          <div className=" ">
+          <div className=" cursor-pointer">
             <span className="font-f13">${props.fees.toFixed(2)}</span>
             <span className="relative top-1 ml-px">
               <Image alt={"alt"} src={tradingFee} width={"16px"} height={"16px"} />

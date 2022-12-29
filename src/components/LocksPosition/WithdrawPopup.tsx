@@ -89,7 +89,13 @@ function WithdrawPly(props: IWithdrawPlyProps) {
                       type={TooltipType.withoutArrowsAndTitle}
                       position={Position.top}
                     >
-                      <Image alt={"alt"} src={lock} width={"16px"} height={"16px"} />
+                      <Image
+                        alt={"alt"}
+                        src={lock}
+                        width={"16px"}
+                        height={"16px"}
+                        className="cursor-pointer"
+                      />
                     </ToolTip>
                   </span>
                   <span className="text-white ml-0.5">

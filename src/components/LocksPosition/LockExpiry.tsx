@@ -19,7 +19,7 @@ export function LockExpiry(props: ILockExpiryProps) {
         disable={true}
         toolTipChild={<div className="flex gap-1"></div>}
       >
-        <div className="text-right text-text-50 font-subtitle4">{dateFormat}</div>
+        <div className="text-right cursor-pointer text-text-50 font-subtitle4">{dateFormat}</div>
         <div className="text-right mt-0.5 text-text-500 font-body3">
           {" "}
           {props.endTime - new Date().getTime() > 0 ? "Expires " : "Expired "}

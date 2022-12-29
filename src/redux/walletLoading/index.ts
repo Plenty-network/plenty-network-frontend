@@ -7,6 +7,8 @@ const initialState = {
   operationSuccesful: false,
   isBanner: true,
   scrollY: 0,
+  height: 0,
+  clientHeight: 0,
 };
 
 const IsLoadingSlice = createSlice({
@@ -23,11 +25,23 @@ const IsLoadingSlice = createSlice({
     setScrollY: (state, action) => {
       state.scrollY = action.payload;
     },
+    setClientHeight: (state, action) => {
+      state.clientHeight = action.payload;
+    },
+    setHeight: (state, action) => {
+      state.height = action.payload;
+    },
     setMyPortfolioSection: (state, action) => {
       state.activePortfolio = action.payload;
     },
   },
 });
-export const { setIsLoadingWallet, setIsBanner, setScrollY, setMyPortfolioSection } =
-  IsLoadingSlice.actions;
+export const {
+  setIsLoadingWallet,
+  setIsBanner,
+  setScrollY,
+  setMyPortfolioSection,
+  setHeight,
+  setClientHeight,
+} = IsLoadingSlice.actions;
 export const walletLoading = IsLoadingSlice.reducer;

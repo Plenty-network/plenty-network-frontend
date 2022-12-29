@@ -4,6 +4,8 @@ import * as React from "react";
 import { useDispatch } from "react-redux";
 import { IEpochListObject } from "../../api/util/types";
 import vectorDown from "../../assets/icon/common/vector.svg";
+
+import epoch from "../../assets/icon/navigation/epoch.svg";
 import { useCountdown } from "../../hooks/useCountDown";
 import { useInterval } from "../../hooks/useInterval";
 import { AppDispatch, store, useAppSelector } from "../../redux";

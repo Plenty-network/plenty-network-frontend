@@ -42,7 +42,7 @@ export function TopBar(props: ITopBar) {
               id="tooltip8"
               position={Position.bottom}
             >
-              <Image alt={"alt"} src={info} />
+              <Image alt={"alt"} src={info} className="cursor-pointer" />
             </ToolTip>
           </div>
           <div className="text-white font-body2 relative -top-0.5 ml-1">My Lock</div>

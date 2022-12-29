@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getPoolsDataForBribes, getUserBribeData } from "../../src/api/bribes";
 import { IPoolsForBribesResponse, IUserBribeData } from "../../src/api/bribes/types";
@@ -17,11 +17,13 @@ const Bribes: NextPage = () => {
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
-  const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  // const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
   const dispatch = useDispatch<AppDispatch>();
   const epoch = useAppSelector((state) => state.epoch.currentEpoch);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const initialPriceCall = useRef<boolean>(true);
+  const initialLpPriceCall = useRef<boolean>(true);
 
   useEffect(() => {
     dispatch(fetchWallet());
@@ -47,11 +49,19 @@ const Bribes: NextPage = () => {
     }
   }, [totalVotingPowerError]);
   useEffect(() => {
-    Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    if(!initialPriceCall.current) {
+      Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    } else {
+      initialPriceCall.current = false;
+    }
   }, [token]);
   useEffect(() => {
-    Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
-  }, [tokenPrices]);
+    if(!initialLpPriceCall.current) {
+      Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
+    } else {
+      initialLpPriceCall.current = false;
+    }
+  }, [tokenPrice]);
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);

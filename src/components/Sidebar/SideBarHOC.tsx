@@ -11,7 +11,7 @@ import { TopNavBar } from "./TopNavBar";
 import { TopNavBarMobile } from "./TopNavBarMobile";
 import "animate.css";
 import { useDispatch } from "react-redux";
-import { setScrollY } from "../../redux/walletLoading";
+import { setClientHeight, setHeight, setScrollY } from "../../redux/walletLoading";
 
 export interface ISideBarHOCProps {
   children: any;
@@ -35,6 +35,8 @@ export function SideBarHOC(props: ISideBarHOCProps) {
   const dispatch = useDispatch<AppDispatch>();
   const onScroll = (e: any) => {
     dispatch(setScrollY(e.target.scrollTop));
+    dispatch(setHeight(e.target.scrollHeight));
+    dispatch(setClientHeight(e.target.clientHeight));
   };
   const [showNodeSelector, setNodeSelector] = useState(false);
   return (

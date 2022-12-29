@@ -64,7 +64,7 @@ export const getMaxPossibleBatchArrayV2 = async (
 ): Promise<WalletParamsWithKind[]> => {
   try {
     let maxPossibleBatch: ParamsWithKind[] = cloneDeep(operationsBatch) as ParamsWithKind[];
-    // maxPossibleBatch.shift(); //TODO: remove this after tzkt issue is resolved.
+
     let leftoverBatch: ParamsWithKind[] = [];
     const listOfAllBatches: ParamsWithKind[][] = [];
     const listOfLeftoverBatches: ParamsWithKind[][] = [];

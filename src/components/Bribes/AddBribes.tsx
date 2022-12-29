@@ -255,7 +255,7 @@ function AddBribes(props: IAddBribes) {
                       </div>
                     }
                   >
-                    <Image alt={"alt"} src={info} />
+                    <Image alt={"alt"} src={info} className="cursor-pointer" />
                   </ToolTip>
                 </div>
               </div>
@@ -368,7 +368,7 @@ function AddBribes(props: IAddBribes) {
                   <div className="flex -mt-[12px]">
                     <div className="text-left cursor-pointer" onClick={onClickAmount}>
                       <span className="text-text-600 font-body3">Balance:</span>{" "}
-                      <span className="font-body4 text-primary-500 ">
+                      <span className="font-body4 text-primary-500 cursor-pointer">
                         {Number(props.allBalance[props.bribeToken.name]?.balance) >= 0 ? (
                           <ToolTip
                             message={props.allBalance[props.bribeToken.name]?.balance.toString()}

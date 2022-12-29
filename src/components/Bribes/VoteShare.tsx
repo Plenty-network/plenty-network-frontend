@@ -29,7 +29,7 @@ export function VoteShare(props: IVoteShare) {
           </div>
         }
       >
-        <div className="flex-1 text-end flex-col justify-center items-center">
+        <div className="flex-1 cursor-pointer text-end flex-col justify-center items-center">
           <div className=" ">
             <span className="font-f13">
               {props.percentage.toNumber() > 0

@@ -65,7 +65,7 @@ interface ILiquidityProps {
   handleTokenType: (type: tokenType) => void;
   isLoading: boolean;
   setPair: React.Dispatch<React.SetStateAction<string>>;
-  setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowLiquidityModal: (val: boolean) => void;
   showLiquidityModal: boolean;
   contractTokenBalance: IAllTokensBalance;
 }

@@ -24,7 +24,7 @@ export function VotingPower(props: IPlyLockedProps) {
         disable={true}
         toolTipChild={<div className="flex gap-1"></div>}
       >
-        <div className="text-text-50 font-subtitle4 text-right">
+        <div className="text-text-50 cursor-pointer font-subtitle4 text-right">
           {Number(props.value) > 0
             ? props.value.isLessThan(0.01)
               ? "<0.01"
