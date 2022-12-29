@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import HeadInfo from "../../src/components/HeadInfo";
 import { CardHeader, PoolsCardHeader } from "../../src/components/Pools/Cardheader";
@@ -19,13 +19,19 @@ import { USERADDRESS } from "../../src/constants/localStorage";
 import { NewPool } from "../../src/components/Pools/NewPool";
 import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
 import clsx from "clsx";
-import { poolsDataWrapper } from "../../src/api/pools";
-import { IPoolsDataWrapperResponse } from "../../src/api/pools/types";
+import { getAllPoolsData, getMyPoolsData } from "../../src/api/pools";
+import {
+  IAllPoolsData,
+  IAllPoolsDataResponse,
+  IMyPoolsData,
+  IMyPoolsDataResponse,
+} from "../../src/api/pools/types";
+import { MyPoolTable } from "../../src/components/Pools/MyPoolTable";
 export interface IIndexProps {}
-export enum AMM_TYPE {
+export enum POOL_TYPE {
   VOLATILE = "VOLATILE",
   STABLE = "STABLE",
-  MYPOOS = "MyPools",
+  MYPOOLS = "My pools",
 }
 export default function Pools(props: IIndexProps) {
   const [activeStateTab, setActiveStateTab] = React.useState<PoolsCardHeader | string>(
@@ -34,11 +40,21 @@ export default function Pools(props: IIndexProps) {
 
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.config.tokens);
+  const scrollY = useAppSelector((state) => state.walletLoading.scrollY);
+  const height = useAppSelector((state) => state.walletLoading.height);
+  const clientHeight = useAppSelector((state) => state.walletLoading.clientHeight);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const [page, setPage] = useState(1);
+  const [myPoolpage, setmyPoolPage] = useState(1);
   const amm = useAppSelector((state) => state.config.AMMs);
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
+  const initialPriceCall = React.useRef<boolean>(true);
+  const initialLpPriceCall = React.useRef<boolean>(true);
+  const handleCloseManagePopup = (val: boolean) => {
+    setShowLiquidityModal(val);
+  };
   useEffect(() => {
     if (epochError) {
       dispatch(getEpochData());
@@ -65,10 +81,18 @@ export default function Pools(props: IIndexProps) {
     }
   }, [totalVotingPowerError]);
   useEffect(() => {
-    Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    if (!initialPriceCall.current) {
+      Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    } else {
+      initialPriceCall.current = false;
+    }
   }, [token]);
   useEffect(() => {
-    Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+    if (!initialLpPriceCall.current) {
+      Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+    } else {
+      initialLpPriceCall.current = false;
+    }
   }, [tokenPrices]);
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
@@ -80,18 +104,72 @@ export default function Pools(props: IIndexProps) {
     setShowNewPoolPopup(true);
   };
   const [reFetchPool, setReFetchPool] = React.useState(false);
-  const [poolsData, setPoolsData] = React.useState<{
-    success: boolean;
-    data: IPoolsDataWrapperResponse[];
-  }>({} as { success: boolean; data: IPoolsDataWrapperResponse[] });
+  const [poolsData, setPoolsData] = React.useState<IAllPoolsData[]>([] as IAllPoolsData[]);
+  const [mypoolsData, setmyPoolsData] = React.useState<IMyPoolsData[]>([] as IMyPoolsData[]);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompletedMypool, setIsCompletedMypool] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
   useEffect(() => {
-    setPoolsData({ success: false, data: [] as IPoolsDataWrapperResponse[] });
-    if (Object.keys(tokenPrices).length !== 0) {
-      poolsDataWrapper(walletAddress ? walletAddress : undefined, tokenPrices).then((res) => {
-        setPoolsData({ success: true, data: Object.values(res.allData) });
+    setIsFetching(true);
+    if (
+      Object.keys(tokenPrices).length !== 0 &&
+      isCompleted === false &&
+      activeStateTab !== POOL_TYPE.MYPOOLS
+    ) {
+      getAllPoolsData(tokenPrices, page).then((res) => {
+        if (res.success) {
+          if (res.allData.length) {
+            setIsFetching(false);
+            setPoolsData((poolsData) => poolsData.concat(res.allData));
+          } else {
+            setIsFetching(false);
+            setIsCompleted(true);
+          }
+        } else {
+          setIsError(true);
+        }
       });
     }
-  }, [walletAddress, tokenPrices, reFetchPool]);
+  }, [Object.keys(tokenPrices).length, page, reFetchPool]);
+  useEffect(() => {
+    setIsFetchingMyPool(true);
+    if (
+      Object.keys(tokenPrices).length !== 0 &&
+      activeStateTab === POOL_TYPE.MYPOOLS &&
+      isCompletedMypool === false
+    ) {
+      getMyPoolsData(walletAddress, tokenPrices, myPoolpage).then((res) => {
+        if (res.allData.length) {
+          setIsFetchingMyPool(false);
+          setmyPoolsData((mypoolsData) => mypoolsData.concat(res.allData));
+        } else {
+          setIsFetchingMyPool(false);
+          setIsCompletedMypool(true);
+        }
+      });
+    }
+  }, [walletAddress, activeStateTab, Object.keys(tokenPrices).length, myPoolpage]);
+
+  useEffect(() => {
+    if (
+      (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
+      scrollY !== 0 &&
+      isCompleted === false &&
+      activeStateTab !== POOL_TYPE.MYPOOLS
+    ) {
+      setPage(page + 1);
+    }
+    if (
+      (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
+      scrollY !== 0 &&
+      isCompletedMypool === false &&
+      activeStateTab === POOL_TYPE.MYPOOLS
+    ) {
+      setmyPoolPage(myPoolpage + 1);
+    }
+  }, [scrollY, height, isCompleted]);
   return (
     <>
       <SideBarHOC>
@@ -143,56 +221,63 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
-              setShowLiquidityModal={setShowLiquidityModal}
+              setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               data={poolsData}
+              isFetching={isFetching}
+              isError={isError}
             />
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
             <PoolsTable
               className="md:pl-5 md:py-4  pl-2 py-4"
-              poolsFilter={AMM_TYPE.STABLE}
+              poolsFilter={POOL_TYPE.STABLE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
-              setShowLiquidityModal={setShowLiquidityModal}
+              setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               data={poolsData}
+              isFetching={isFetching}
+              isError={isError}
             />
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
             <PoolsTable
               className="md:pl-5 md:py-4  pl-2 py-4"
-              poolsFilter={AMM_TYPE.VOLATILE}
+              poolsFilter={POOL_TYPE.VOLATILE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
-              setShowLiquidityModal={setShowLiquidityModal}
+              setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               data={poolsData}
+              isFetching={isFetching}
+              isError={isError}
             />
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
-            <PoolsTable
+            <MyPoolTable
               className="md:pl-5 md:py-4  pl-2 py-4"
-              poolsFilter={AMM_TYPE.MYPOOS}
+              poolsFilter={POOL_TYPE.MYPOOLS}
               isConnectWalletRequired={true}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
-              setShowLiquidityModal={setShowLiquidityModal}
+              setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
-              data={poolsData}
+              data={mypoolsData}
+              isFetchingMyPool={isFetchingMyPool}
             />
           )}
           <NewPool
             show={showNewPoolPopup}
             setShow={setShowNewPoolPopup}
-            setShowLiquidityModal={setShowLiquidityModal}
+            setShowLiquidityModal={handleCloseManagePopup}
             showLiquidityModal={showLiquidityModal}
             setReFetchPool={setReFetchPool}
             reFetchPool={reFetchPool}

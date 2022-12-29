@@ -1,22 +1,14 @@
 import { usePoolsMain } from "../api/pools/query/poolsmain.query";
-import { IPoolsDataWrapperResponse } from "../api/pools/types";
+import { IAllPoolsData } from "../api/pools/types";
 
 export const usePoolsTableFilter = (
-  poolTableData: IPoolsDataWrapperResponse[],
-  filterText: string | "MyPools" | undefined,
+  poolTableData: IAllPoolsData[],
+  filterText: string | "My pools" | undefined,
   address: string | undefined,
   reFetchPool: boolean
 ) => {
-  // const { data: poolTableData = [], isFetched } = usePoolsMain();
-
   if (poolTableData?.length) {
-    if (filterText === "MyPools") {
-      const newpoolTableData = poolTableData.filter(
-        (e) => e.isLiquidityAvailable || e.isStakeAvailable
-      );
-      return { data: newpoolTableData, isFetched: true };
-    }
-    if (filterText) {
+    if (filterText && filterText !== "My pools") {
       const newpoolTableData = poolTableData.filter((e) => e.poolType === filterText);
       return { data: newpoolTableData, isFetched: true };
     }

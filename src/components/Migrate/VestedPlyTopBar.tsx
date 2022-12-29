@@ -51,16 +51,16 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
           <div className="flex gap-1 items-center">
             <p className="relative top-px">
               <ToolTip id="tooltip8" message="Claimable and locked PLY" position={Position.top}>
-                <Image alt={"alt"} src={info} />
+                <Image alt={"alt"} src={info} className="cursor-pointer" />
               </ToolTip>
             </p>
             <Image alt={"alt"} src={ply} />
 
             <p className="text-white font-body3 ">Vested PLY</p>
 
-            <div className="font-title1-bold text-white ml-2 flex items-end">
+            <div className="font-title1-bold cursor-pointer text-white ml-2 flex items-end">
               {props.vestedData.claimableAmount === undefined ? (
-                <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+                <p className=" my-[4px]  w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
               ) : (
                 <ToolTip
                   position={Position.top}
@@ -79,7 +79,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
               <p className="relative top-1 ml-1">
                 <Image alt={"alt"} src={lock} />
               </p>
-              <p className="font-body3  text-text-250 ml-1 mb-0.5">
+              <p className="font-body3 cursor-pointer text-text-250 ml-1 mb-0.5">
                 <ToolTip
                   position={Position.top}
                   message={props.vestedData?.vestedAmount?.toFixed(6)}
@@ -101,7 +101,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
             position={Position.bottom}
             disable={props.vestedData.isClaimable}
             toolTipChild={
-              <div>
+              <div className="cursor-pointer">
                 <span>{hours} h </span>:<span> {minutes} m </span>:<span> {seconds} s </span>
               </div>
             }

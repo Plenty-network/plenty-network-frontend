@@ -861,3 +861,35 @@
 	transform: scale3d(1, 1, 1);
 }
 }
+.scale-in-animation {
+	animation: scale-in 300ms ease-in-out forwards;
+    transform-origin: top center
+  /* animation: scale-in 0.5s;
+  -webkit-animation: scale-in 0.5s; */
+
+}
+
+@keyframes scale-in {
+	0% {
+		transform: scale(0.95);
+}
+80% {
+		transform: scale(0.98);
+}
+100% {
+		transform: scale(1);
+}
+ 
+}
+
+@-webkit-keyframes scale-in {
+  0% {
+		transform: scale(0.95);
+}
+80% {
+		transform: scale(0.98);
+}
+100% {
+		transform: scale(1);
+}
+}

@@ -111,7 +111,7 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
               <span>Disconnect</span>
             </p>
 
-            <MobileEpoch />
+            {/* <MobileEpoch /> */}
           </div>
         )}
       </div>

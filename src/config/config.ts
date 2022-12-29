@@ -18,7 +18,7 @@ const Config: IConfig = {
   },
   TZKT_NODES: {
     mainnet: 'https://api.tzkt.io/',
-    testnet: 'https://api.ghostnet.tzkt.io/',
+    testnet: 'https://tzkt.plenty.network/',
   },
   VE_SWAP : {
     mainnet: '',

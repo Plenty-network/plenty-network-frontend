@@ -29,7 +29,7 @@ function StatsCard(props: IStatsCardProps) {
                   id="tooltip8"
                   position={isMobile ? Position.right : Position.top}
                 >
-                  <Image alt={"alt"} src={info} />
+                  <Image alt={"alt"} src={info} className="cursor-pointer" />
                 </ToolTip>
               </p>
             )}
@@ -55,7 +55,7 @@ function StatsCard(props: IStatsCardProps) {
               borderRadius={"rounded-xl"}
               onClick={() => props.setShowCreateLockModal(true)}
             >
-              Lock PLY
+              Create lock
             </Button>
           )}
         </p>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import ctez from "../assets/Tokens/ctez.png";
+import tez from "../assets/Tokens/tez.png";
 import { tokenParameter } from "../constants/swap";
 import { useRouter } from "next/router";
 import { useAppSelector } from "../redux";
@@ -36,7 +36,7 @@ export const useLocationStateInSwap = () => {
               )
               .toString()}.png`,
           }
-      : { name: "CTez", image: ctez }
+      : { name: "XTZ", image: tez }
   );
 
   const [tokenOut, setTokenOut] = useState(

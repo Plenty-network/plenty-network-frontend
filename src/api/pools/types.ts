@@ -60,6 +60,7 @@ export interface Bribes{
   name : string;
 }
 
+/** @deprecated */
 export interface IPoolsDataWrapperResponse {
   tokenA : String;
   tokenB : String;
@@ -90,4 +91,43 @@ export interface IAnalyticsDataObject {
 
 export interface IIndexerPoolsDataObject {
   [key: string]: VolumeV1Data;
+}
+
+
+export interface IAllPoolsData {
+  tokenA : String;
+  tokenB : String;
+  poolType : PoolType;
+  apr : BigNumber;
+  futureApr : BigNumber;
+  boostedApr : BigNumber;
+  volume : BigNumber;
+  volumeTokenA : BigNumber;
+  volumeTokenB : BigNumber;
+  tvl : BigNumber;
+  tvlTokenA : BigNumber;
+  tvlTokenB : BigNumber;
+  fees : BigNumber;
+  feesTokenA : BigNumber;
+  feesTokenB : BigNumber;
+  bribeUSD : BigNumber;
+  bribes : Bribes[];
+  isGaugeAvailable: boolean;
+}
+
+export interface IAllPoolsDataResponse {
+  success: boolean;
+  allData: IAllPoolsData[];
+  error?: string;
+}
+
+export interface IMyPoolsData extends IAllPoolsData {
+  isLiquidityAvailable : boolean;
+  isStakeAvailable: boolean;
+}
+
+export interface IMyPoolsDataResponse {
+  success: boolean;
+  allData: IMyPoolsData[];
+  error?: string;
 }
