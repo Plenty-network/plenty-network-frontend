@@ -22,7 +22,10 @@ function Steps(props: ISteps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   return (
     <>
-      <div className="flex  px-5">
+      <div
+        className="flex cursor-pointer px-5"
+        onClick={() => setIsDropDownActive(!isDropDownActive)}
+      >
         {isDropDownActive ? (
           <p className="bg-primary-500/[0.2] rounded-lg h-[28px] px-2 text-primary-500 font-subtitle1 flex items-center">
             {props.claimData.success
@@ -48,10 +51,10 @@ function Steps(props: ISteps) {
             </span>
           </p>
         )}
-        <p className="ml-auto  " onClick={() => setIsDropDownActive(!isDropDownActive)}>
+        <p className="ml-auto  ">
           <Image
             alt={"alt"}
-            className={clsx("cursor-pointer",isDropDownActive ? "rotate-0" : "rotate-180")}
+            className={clsx("cursor-pointer", isDropDownActive ? "rotate-0" : "rotate-180")}
             src={vectorDown}
           />
         </p>
@@ -59,7 +62,7 @@ function Steps(props: ISteps) {
       {isDropDownActive && (
         <div
           className={clsx(
-            "mt-5 px-5 animate__animated ",
+            "mt-5 px-3 animate__animated ",
             isDropDownActive ? "animate__fadeInDown animate__faster" : ""
           )}
         >

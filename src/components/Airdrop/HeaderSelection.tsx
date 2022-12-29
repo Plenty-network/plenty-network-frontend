@@ -20,12 +20,12 @@ function HeaderSelection(props: IHeaderSelection) {
   const { chain: ethChain } = useNetwork();
 
   return (
-    <div className="flex font-title2-bold items-center">
+    <div className="flex  items-center">
       <div
         className={clsx(
           props.chain === ChainAirdrop.Tezos
-            ? "text-primary-500 bg-primary-500/[0.2]"
-            : "bg-muted-400 border border-shimmer-100 text-text-500",
+            ? "text-primary-500 bg-primary-500/[0.2] font-title2-bold"
+            : "bg-muted-400 border border-shimmer-100 font-title2-18 text-text-500",
           " px-3 h-[38px] flex items-center rounded-xl cursor-pointer"
         )}
         onClick={() => props.setChain(ChainAirdrop.Tezos)}
@@ -35,8 +35,8 @@ function HeaderSelection(props: IHeaderSelection) {
       <div
         className={clsx(
           props.chain === ChainAirdrop.Other_chain
-            ? "text-primary-500 bg-primary-500/[0.2]"
-            : "bg-muted-400 border border-shimmer-100 text-text-500",
+            ? "text-primary-500 bg-primary-500/[0.2] font-title2-bold"
+            : "bg-muted-400 border border-shimmer-100 font-title2-18 text-text-500",
           " px-3 h-[38px] flex items-center ml-4  rounded-xl cursor-pointer"
         )}
         onClick={() => props.setChain(ChainAirdrop.Other_chain)}

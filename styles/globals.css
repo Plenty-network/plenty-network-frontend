@@ -392,6 +392,10 @@ input[type='number'] {
     @apply font-medium;
     @apply text-f18;
   }
+  .font-title2-18 {
+    @apply font-medium;
+    @apply text-f1818;
+  }
   .font-title2-normal {
     @apply font-normal;
     @apply text-f18;

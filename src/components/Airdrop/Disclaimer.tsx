@@ -2,11 +2,11 @@ import Image from "next/image";
 import { PopUpModal } from "../Modal/popupModal";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
-import doneCheck from "../../assets/icon/airdrop/doneCheck.svg";
+import doneCheck from "../../assets/icon/airdrop/disclaimerChecked.svg";
 import * as React from "react";
 import { useState } from "react";
 
-import checkGrey from "../../assets/icon/airdrop/checkGrey.svg";
+import checkGrey from "../../assets/icon/airdrop/disclaimerCheck.svg";
 import link from "../../assets/icon/pools/external_violet.svg";
 import HeaderSelection from "./HeaderSelection";
 import List from "./DisclaimerList";

@@ -47,7 +47,7 @@ function Progress(props: IProgress) {
               </span>
               Your progress
             </p>
-            <p className="ml-auto text-primary-500 font-subtitle4">( 0.00 %)</p>
+            <p className="ml-auto text-primary-500 font-subtitle4">( 0 %)</p>
           </div>
         </>
       ) : (
@@ -86,7 +86,7 @@ function Progress(props: IProgress) {
                       : props.claimData.length - 1) /
                       6) *
                     100
-                  ).toFixed(2)
+                  ).toFixed(0)
                 : 0}
               %)
             </p>

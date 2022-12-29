@@ -59,14 +59,14 @@ function CheckPoint(props: ICheckPoint) {
     <>
       <div
         className={clsx(
-          "flex rounded-xl border border-muted-600  h-[42px] items-center ",
+          "flex rounded-xl border border-muted-600  h-[42px] items-center px-4 mt-2",
           props.className
         )}
       >
-        <p className="relative top-0.5">
+        <p className="relative top-[3px]">
           <Image src={action === 1 ? doneCheck : check} />
         </p>
-        <p className="font-subtitle1 ml-2 w-[50%] md:w-auto">{props.text}</p>
+        <p className="font-subtitle1 ml-[7.67px] w-[50%] md:w-auto">{props.text}</p>
 
         <p
           className={clsx(
@@ -93,7 +93,7 @@ function CheckPoint(props: ICheckPoint) {
                 style={{ height: "auto" }}
                 ref={tweetRef}
               >
-                {action === 0 && `Take action ${props.claimData.perMissionAmount.toFixed(2)}`}
+                {action === 0 && `Take action ${props.claimData.perMissionAmount.toFixed(2)} PLY`}
               </TwitterShareButton>
             </span>
           ) : action > 0 ? (
@@ -104,7 +104,7 @@ function CheckPoint(props: ICheckPoint) {
             )
           ) : (
             <Link href={props.href}>
-              {action === 0 && `Take action ${props.claimData.perMissionAmount.toFixed(2)}`}
+              {action === 0 && `Take action ${props.claimData.perMissionAmount.toFixed(2)} PLY`}
             </Link>
           )}
         </p>
