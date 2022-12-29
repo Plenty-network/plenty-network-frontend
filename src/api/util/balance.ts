@@ -20,7 +20,13 @@ import {
   IAllTokensBalanceResponse,
 } from "./types";
 import { getDexAddress, getTokenDataByAddress } from "./fetchConfig";
-import { getBigMapData, getStorage, getTzktBigMapData, getTzktStorageData, getTzktTokenData } from "./storageProvider";
+import {
+  getBigMapData,
+  getStorage,
+  getTzktBigMapData,
+  getTzktStorageData,
+  getTzktTokenData,
+} from "./storageProvider";
 import { gaugeStorageType } from "../rewards/data";
 
 /**
@@ -94,7 +100,7 @@ const getTzBtcBalance = async (address: string): Promise<IBalanceResponse> => {
   }
 };
 
-const getTezBalance = async (address: string): Promise<IBalanceResponse> => {
+export const getTezBalance = async (address: string): Promise<IBalanceResponse> => {
   try {
     const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
@@ -440,14 +446,13 @@ export const getAllTokensBalanceFromTzkt = async (
   }
 };
 
-
 /**
  * Returns the symbol and user staked balance of the PNLP token for the given pair of tokens using Tzkt.
  * @param tokenOneSymbol - Symbol of token one of the pair.
  * @param tokenTwoSymbol - Symbol of token two of the pair.
  * @param userTezosAddress - Tezos wallet address of the user.
  */
- export const getStakedBalance = async (
+export const getStakedBalance = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
   userTezosAddress: string
@@ -472,7 +477,7 @@ export const getAllTokensBalanceFromTzkt = async (
       balancesBigMapId,
       `key=${userTezosAddress}&active=true&select=key,value`
     );
-    if(stakedBalanceResponse.data.length <= 0) {
+    if (stakedBalanceResponse.data.length <= 0) {
       return {
         success: true,
         balance: "0",

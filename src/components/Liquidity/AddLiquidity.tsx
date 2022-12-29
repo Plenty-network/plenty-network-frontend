@@ -19,7 +19,9 @@ interface IAddLiquidityProps {
   secondTokenAmount: string | number;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  userBalances: IAllTokensBalanceResponse;
+  userBalances: {
+    [key: string]: string;
+  };
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   swapData: ISwapData;
@@ -87,27 +89,15 @@ function AddLiquidity(props: IAddLiquidityProps) {
     props.setSecondTokenAmount("");
 
     props.tokenIn.name === "tez"
-      ? handleLiquidityInput(
-          Number(props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance) - 0.02,
-          "tokenIn"
-        )
-      : handleLiquidityInput(
-          Number(props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance),
-          "tokenIn"
-        );
+      ? handleLiquidityInput(Number(props.userBalances[props.tokenIn.name]) - 0.02, "tokenIn")
+      : handleLiquidityInput(Number(props.userBalances[props.tokenIn.name]), "tokenIn");
   };
   const onClickSecondAmount = () => {
     props.setFirstTokenAmount("");
 
     props.tokenOut.name === "tez"
-      ? handleLiquidityInput(
-          Number(props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance) - 0.02,
-          "tokenOut"
-        )
-      : handleLiquidityInput(
-          Number(props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance),
-          "tokenOut"
-        );
+      ? handleLiquidityInput(Number(props.userBalances[props.tokenOut.name]) - 0.02, "tokenOut")
+      : handleLiquidityInput(Number(props.userBalances[props.tokenOut.name]), "tokenOut");
   };
   return (
     <>
@@ -171,18 +161,12 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
                 onClick={onClickAmount}
               >
-                {!(
-                  Number(props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance) >= 0
-                ) ? (
+                {!(Number(props.userBalances[props.tokenIn.name]) >= 0) ? (
                   <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance) > 0
-                      ? nFormatter(
-                          new BigNumber(
-                            props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance
-                          )
-                        )
+                    {Number(props.userBalances[props.tokenIn.name]) > 0
+                      ? nFormatter(new BigNumber(props.userBalances[props.tokenIn.name]))
                       : 0}{" "}
                   </span>
                 )}
@@ -255,18 +239,12 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 className="ml-1 cursor-pointer flex text-primary-500  font-caption1-small md:font-body2"
                 onClick={onClickSecondAmount}
               >
-                {!(
-                  Number(props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance) >= 0
-                ) ? (
+                {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (
                   <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance) > 0
-                      ? nFormatter(
-                          new BigNumber(
-                            props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance
-                          )
-                        )
+                    {Number(props.userBalances[props.tokenOut.name]) > 0
+                      ? nFormatter(new BigNumber(props.userBalances[props.tokenOut.name]))
                       : 0}
                   </span>
                 )}

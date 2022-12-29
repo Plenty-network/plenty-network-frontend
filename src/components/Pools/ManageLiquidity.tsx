@@ -9,9 +9,10 @@ import { getStakedData, getVePLYListForUser } from "../../api/stake";
 import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 import { loadSwapDataWrapper } from "../../api/swap/wrappers";
 import {
-  getAllTokensBalanceFromTzkt,
+  getBalanceFromTzkt,
   getPnlpBalance,
   getStakedBalance,
+  getTezBalance,
 } from "../../api/util/balance";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { getLPTokenPrice } from "../../api/util/price";
@@ -72,7 +73,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [firstTokenAmountLiq, setFirstTokenAmountLiq] = React.useState<string | number>("");
   const [secondTokenAmountLiq, setSecondTokenAmountLiq] = React.useState<number | string>("");
 
-  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   const [boost, setBoost] = useState<IStakedDataResponse>();
 
   const [selectedDropDown, setSelectedDropDown] = useState<IVePLYData>({
@@ -103,6 +103,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
+  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   const [sharePool, setSharePool] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
@@ -124,22 +125,47 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     allTokensBalances: {} as IAllTokensBalance,
   });
   useEffect(() => {
-    setAllBalance({
-      success: false,
-      allTokensBalances: {} as IAllTokensBalance,
-    });
-    if (walletAddress) {
-      getAllTokensBalanceFromTzkt(Object.values(TOKEN), walletAddress).then(
-        (response: IAllTokensBalanceResponse) => {
-          setAllBalance(response);
+    const updateBalance = async () => {
+      const balancePromises = [];
+
+      if (walletAddress) {
+        if (
+          props.tokenIn.symbol.toLowerCase() === "xtz" ||
+          props.tokenOut.symbol.toLowerCase() === "xtz"
+        ) {
+          balancePromises.push(getTezBalance(walletAddress));
+        } else {
+          balancePromises.push(
+            getBalanceFromTzkt(
+              String(TOKEN[props.tokenIn.symbol]?.address),
+              TOKEN[props.tokenIn.symbol].tokenId,
+              TOKEN[props.tokenIn.symbol].standard,
+              walletAddress
+            )
+          );
+          balancePromises.push(
+            getBalanceFromTzkt(
+              String(TOKEN[props.tokenOut.symbol]?.address),
+              TOKEN[props.tokenOut.symbol].tokenId,
+              TOKEN[props.tokenOut.symbol].standard,
+              walletAddress
+            )
+          );
         }
-      );
-    } else {
-      setAllBalance({
-        success: false,
-        allTokensBalances: {} as IAllTokensBalance,
-      });
-    }
+        const balanceResponse = await Promise.all(balancePromises);
+        setUserBalances((prev) => ({
+          ...prev,
+          ...balanceResponse.reduce(
+            (acc, cur) => ({
+              ...acc,
+              [cur.identifier]: cur.balance,
+            }),
+            {}
+          ),
+        }));
+      }
+    };
+    updateBalance();
   }, [walletAddress, TOKEN, balanceUpdate]);
   useEffect(() => {
     if (walletAddress) {
@@ -851,7 +877,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                   setScreen={setScreen}
                   firstTokenAmount={firstTokenAmountLiq}
                   secondTokenAmount={secondTokenAmountLiq}
-                  userBalances={allBalance}
+                  userBalances={userBalances}
                   setSecondTokenAmount={setSecondTokenAmountLiq}
                   setFirstTokenAmount={setFirstTokenAmountLiq}
                   tokenIn={props.tokenIn}

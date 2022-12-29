@@ -20,6 +20,9 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IAllTokensBalanceResponse } from "../../api/util/types";
 
 interface ILiquidityProps {
+  userBalances: {
+    [key: string]: string;
+  };
   firstTokenAmount: string | number;
   secondTokenAmount: string | number;
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
@@ -29,7 +32,7 @@ interface ILiquidityProps {
   onChange?: any;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  userBalances: IAllTokensBalanceResponse;
+
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   setIsAddLiquidity: React.Dispatch<React.SetStateAction<boolean>>;
   isAddLiquidity: boolean;
@@ -85,10 +88,9 @@ function Liquidity(props: ILiquidityProps) {
     } else if (
       walletAddress &&
       ((props.firstTokenAmount &&
-        props.firstTokenAmount >
-          Number(props.userBalances?.allTokensBalances[props.tokenIn.name]?.balance)) ||
+        props.firstTokenAmount > Number(props.userBalances[props.tokenIn.name])) ||
         (props.secondTokenAmount && props.secondTokenAmount) >
-          Number(props.userBalances?.allTokensBalances[props.tokenOut.name]?.balance))
+          Number(props.userBalances[props.tokenOut.name]))
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
