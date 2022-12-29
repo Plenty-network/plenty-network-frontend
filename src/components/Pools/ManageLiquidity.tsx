@@ -53,7 +53,7 @@ import { RewardsScreen } from "./RewardsScreen";
 import { StakingScreen, StakingScreenType } from "./StakingScreen";
 
 export interface IManageLiquidityProps {
-  closeFn: React.Dispatch<React.SetStateAction<boolean>>;
+  closeFn: (val: boolean) => void;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
   setActiveState: React.Dispatch<React.SetStateAction<string>>;
@@ -821,10 +821,13 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     });
   };
 
+  const closeModal = () => {
+    props.closeFn(false);
+  };
   return (
     <>
       <PopUpModal
-        onhide={props.closeFn}
+        onhide={closeModal}
         className="w-[390px] max-w-[390px] sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
         footerChild={
           <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">

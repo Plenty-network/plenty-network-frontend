@@ -37,7 +37,7 @@ export interface IShortCardProps {
   setSearchValue?: Function;
   activeStateTab: PoolsCardHeader;
   setActiveStateTab: React.Dispatch<React.SetStateAction<string>>;
-  setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowLiquidityModal: (val: boolean) => void;
   showLiquidityModal: boolean;
   reFetchPool: boolean;
   data: IMyPoolsData[];
@@ -46,7 +46,7 @@ export interface IShortCardProps {
 export interface IManageBtnProps {
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
   isLiquidityAvailable: boolean;
-  setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowLiquidityModal: (val: boolean) => void;
   isStakeAvailable: boolean;
   tokenA: string;
   tokenB: string;

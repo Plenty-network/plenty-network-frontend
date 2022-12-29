@@ -52,6 +52,9 @@ export default function Pools(props: IIndexProps) {
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   const initialPriceCall = React.useRef<boolean>(true);
   const initialLpPriceCall = React.useRef<boolean>(true);
+  const handleCloseManagePopup = (val: boolean) => {
+    setShowLiquidityModal(val);
+  };
   useEffect(() => {
     if (epochError) {
       dispatch(getEpochData());
@@ -218,7 +221,7 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
-              setShowLiquidityModal={setShowLiquidityModal}
+              setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               data={poolsData}
@@ -233,7 +236,7 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
-              setShowLiquidityModal={setShowLiquidityModal}
+              setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               data={poolsData}
@@ -248,7 +251,7 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
-              setShowLiquidityModal={setShowLiquidityModal}
+              setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               data={poolsData}
@@ -264,7 +267,7 @@ export default function Pools(props: IIndexProps) {
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
-              setShowLiquidityModal={setShowLiquidityModal}
+              setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               data={mypoolsData}
@@ -274,7 +277,7 @@ export default function Pools(props: IIndexProps) {
           <NewPool
             show={showNewPoolPopup}
             setShow={setShowNewPoolPopup}
-            setShowLiquidityModal={setShowLiquidityModal}
+            setShowLiquidityModal={handleCloseManagePopup}
             showLiquidityModal={showLiquidityModal}
             setReFetchPool={setReFetchPool}
             reFetchPool={reFetchPool}

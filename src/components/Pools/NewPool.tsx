@@ -32,7 +32,7 @@ import TokenModalPool from "./tokenModalPool";
 export interface IManageLiquidityProps {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowLiquidityModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowLiquidityModal: (val: boolean) => void;
   showLiquidityModal: boolean;
   setReFetchPool: React.Dispatch<React.SetStateAction<boolean>>;
   reFetchPool: boolean;
