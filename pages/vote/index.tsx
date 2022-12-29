@@ -277,14 +277,14 @@ export default function Vote() {
   }, [veNFTlist.data, userAddress]);
 
   useEffect(() => {
-    if(!initialPriceCall.current) {
+    if (!initialPriceCall.current) {
       Object.keys(token).length !== 0 && dispatch(getTokenPrice());
     } else {
       initialPriceCall.current = false;
     }
   }, [token]);
   useEffect(() => {
-    if(!initialLpPriceCall.current) {
+    if (!initialLpPriceCall.current) {
       Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
     } else {
       initialLpPriceCall.current = false;
@@ -567,7 +567,7 @@ export default function Vote() {
                       >
                         <div
                           className={clsx(
-                            " px-3  h-[38px] ] flex items-center justify-center rounded-xl ",
+                            "cursor-pointer px-3  h-[38px] ] flex items-center justify-center rounded-xl ",
                             votes.length !== 0 &&
                               (selectedEpoch?.epochNumber
                                 ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
@@ -609,7 +609,7 @@ export default function Vote() {
                     ) : (
                       <div
                         className={clsx(
-                          "px-3    h-[38px]  flex items-center justify-center rounded-xl ",
+                          "px-3  cursor-pointer  h-[38px]  flex items-center justify-center rounded-xl ",
 
                           votes.length !== 0 &&
                             (selectedEpoch?.epochNumber
@@ -691,7 +691,7 @@ export default function Vote() {
                       </div>
                     }
                   >
-                    <Image alt={"alt"} src={info} className="infoIcon " />
+                    <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
                   </ToolTip>
                 </span>
                 <span className="ml-1">

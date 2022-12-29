@@ -290,7 +290,7 @@ function Migrate(props: IMigrateProps) {
           <div className="flex -mt-[20px]">
             <div className="text-left cursor-pointer" onClick={onClickAmount}>
               <span className="text-text-600 font-body3">Balance:</span>{" "}
-              <span className="font-body4 text-primary-500 ">
+              <span className="font-body4 cursor-pointer text-primary-500 ">
                 {Number(props.allBalance.allTokensBalances[tokenIn.name]?.balance) >= 0 ? (
                   <ToolTip
                     message={fromExponential(

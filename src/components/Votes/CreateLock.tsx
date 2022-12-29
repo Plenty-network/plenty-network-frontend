@@ -246,7 +246,7 @@ function CreateLock(props: ICreateLockProps) {
                   position={Position.top}
                   message={fromExponential(props.plyBalance?.toString())}
                 >
-                  <div className=" ml-1 text-primary-500 font-body2">
+                  <div className="cursor-pointer ml-1 text-primary-500 font-body2">
                     {Number(props.plyBalance) > 0 ? props.plyBalance.toFixed(2) : "0"} PLY
                   </div>
                 </ToolTip>
@@ -367,7 +367,7 @@ function CreateLock(props: ICreateLockProps) {
                 >
                   <p
                     className={clsx(
-                      "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3 cursor-pointer",
+                      "rounded-[32px] cursor-pointer bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3 cursor-pointer",
                       props.lockingEndData.selected === MAX_TIME
                         ? "bg-primary-500/[0.2] border-primary-500 text-white"
                         : "bg-muted-200/[0.1] border-border-200 text-text-500"

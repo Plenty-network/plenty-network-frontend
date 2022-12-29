@@ -15,7 +15,7 @@ export function LocksCloumn(props: ILocksColumnProps) {
         disable={true}
         toolTipChild={<div className="flex gap-1"></div>}
       >
-        <div className="flex  justify-center items-center">
+        <div className="flex cursor-pointer justify-center items-center">
           <p>
             <Image
               height={"44px"}

@@ -444,7 +444,7 @@ function SwapTab(props: ISwapTabProps) {
         <div className="flex -mt-[12px]">
           <div className="text-left cursor-pointer" onClick={onClickAmount}>
             <span className="text-text-600 font-body3">Balance:</span>{" "}
-            <span className="font-body4 text-primary-500 ">
+            <span className="font-body4 cursor-pointer text-primary-500 ">
               {Number(props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance) >= 0 ? (
                 <ToolTip
                   message={fromExponential(
@@ -565,7 +565,7 @@ function SwapTab(props: ISwapTabProps) {
           <div className="flex -mt-[12px]">
             <div className="text-left">
               <span className="text-text-600 font-body3">Balance:</span>{" "}
-              <span className="font-body4 text-text-500 ">
+              <span className="font-body4 cursor-pointer text-text-500 ">
                 {Object.keys(props.tokenOut).length !== 0 &&
                 Number(props.allBalance?.allTokensBalances[props.tokenOut.name]?.balance) >= 0 ? (
                   <ToolTip
@@ -709,7 +709,7 @@ function SwapTab(props: ISwapTabProps) {
                       />
                     </ToolTip>
                   </span>
-                  <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
+                  <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px] cursor-pointer">
                     1{" "}
                     {!isConvert
                       ? tEZorCTEZtoUppercase(props.tokenIn.name)
@@ -736,7 +736,7 @@ function SwapTab(props: ISwapTabProps) {
                     <Image alt={"alt"} src={ratesrefresh} onClick={(e) => convertRates(e)} />
                   </span>
                 </div>
-                <div className="ml-auto">
+                <div className="ml-auto cursor-pointer">
                   <ToolTip
                     id="tooltip9"
                     type={isMobile ? TooltipType.swapRoute : TooltipType.swap}
@@ -928,7 +928,7 @@ function SwapTab(props: ISwapTabProps) {
                     999999999999
                   </div>
                 ) : (
-                  <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                  <div className="ml-auto font-mobile-700 md:font-subtitle4 cursor-pointer">
                     <ToolTip
                       message={fromExponential(props.routeDetails.minimumOut.toNumber())}
                       id="tooltip6"
@@ -972,7 +972,7 @@ function SwapTab(props: ISwapTabProps) {
                 ) : (
                   <div
                     className={clsx(
-                      "ml-auto font-mobile-700 md:font-subtitle4",
+                      "ml-auto cursor-pointer font-mobile-700 md:font-subtitle4",
                       Number(props.routeDetails.priceImpact) > 5 && "text-error-500"
                     )}
                   >

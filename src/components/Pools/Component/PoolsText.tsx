@@ -13,7 +13,7 @@ export interface IPoolsTextWithTooltipProps extends IPoolsTextProps {
 }
 
 export function PoolsText(props: IPoolsTextProps) {
-  return <div className="text-f14 text-white cursor-pointer">{props.text.toString()}</div>;
+  return <div className="text-f14  text-white cursor-pointer">{props.text.toString()}</div>;
 }
 export function PoolsTextWithTooltip(props: IPoolsTextWithTooltipProps) {
   const isTEZorCTEZ = (a: string) =>

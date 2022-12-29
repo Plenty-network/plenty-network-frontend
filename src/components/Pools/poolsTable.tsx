@@ -209,7 +209,7 @@ export function ShortCard(props: IShortCardProps) {
                 position={Position.top}
                 toolTipChild={<div className="">No gauge for the pool</div>}
               >
-                <Image src={newPool} width={"20px"} height={"20px"} />
+                <Image src={newPool} width={"20px"} height={"20px"} className="cursor-pointer" />
               </ToolTip>
             ) : null}
             <div

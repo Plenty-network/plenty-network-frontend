@@ -413,7 +413,7 @@ export function NewPool(props: IManageLiquidityProps) {
                     </div>
                   }
                 >
-                  <Image alt={"alt"} src={info} />
+                  <Image alt={"alt"} src={info} className="cursor-pointer" />
                 </ToolTip>
               </div>
             </div>

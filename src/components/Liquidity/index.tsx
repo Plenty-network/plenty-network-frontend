@@ -208,7 +208,7 @@ function Liquidity(props: ILiquidityProps) {
                   position={Position.top}
                   toolTipChild={<div className="">LP tokens in your wallet</div>}
                 >
-                  <span>
+                  <span className="cursor-pointer">
                     <Image alt={"alt"} src={info} width={"14px"} height={"14px"} />
                   </span>
                 </ToolTip>

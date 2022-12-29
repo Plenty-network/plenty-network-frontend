@@ -25,7 +25,7 @@ export function YourLiquidity(props: IYourLiquidityProps) {
           disable={true}
           toolTipChild={<div className="text-center"></div>}
         >
-          <div className="font-body4  text-white">
+          <div className="font-body4 cursor-pointer text-white">
             $
             {Number(props.value) > 0
               ? props.value.isLessThan(0.01)

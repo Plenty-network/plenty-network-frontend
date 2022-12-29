@@ -252,14 +252,14 @@ function MyPortfolio(props: any) {
     }
   }, [totalVotingPowerError]);
   useEffect(() => {
-    if(!initialPriceCall.current) {
+    if (!initialPriceCall.current) {
       Object.keys(token).length !== 0 && dispatch(getTokenPrice());
     } else {
       initialPriceCall.current = false;
     }
   }, [token]);
   useEffect(() => {
-    if(!initialLpPriceCall.current) {
+    if (!initialLpPriceCall.current) {
       Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
     } else {
       initialLpPriceCall.current = false;
@@ -1648,7 +1648,7 @@ function MyPortfolio(props: any) {
                   >
                     <div
                       className={clsx(
-                        " flex items-center md:font-title3-bold font-subtitle4 text-black h-[44px] md:h-[50px] px-[20px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
+                        "cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-black h-[44px] md:h-[50px] px-[20px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
                         (poolsRewards.data?.gaugeAddresses?.length === 0 &&
                           feeClaimData?.length === 0 &&
                           bribesClaimData?.length === 0 &&

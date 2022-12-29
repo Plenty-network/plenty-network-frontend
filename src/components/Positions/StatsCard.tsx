@@ -29,7 +29,7 @@ function StatsCard(props: IStatsCardProps) {
                   id="tooltip8"
                   position={isMobile ? Position.right : Position.top}
                 >
-                  <Image alt={"alt"} src={info} />
+                  <Image alt={"alt"} src={info} className="cursor-pointer" />
                 </ToolTip>
               </p>
             )}

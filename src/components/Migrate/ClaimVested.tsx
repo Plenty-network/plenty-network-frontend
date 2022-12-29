@@ -172,7 +172,7 @@ function ClaimVested(props: IMigrateProps) {
         >
           <div
             className={clsx(
-              "h-[50px] flex items-center justify-center w-full rounded-xl  font-title3-bold ",
+              "h-[50px] cursor-pointer  flex items-center justify-center w-full rounded-xl  font-title3-bold ",
               props.vestedData.isClaimable
                 ? "bg-primary-500 text-black"
                 : "bg-blue-200 text-blue-300"
@@ -244,7 +244,7 @@ function ClaimVested(props: IMigrateProps) {
             <div className="flex -mt-[12px]">
               <div className="text-left">
                 <span className="text-text-600 font-body3">Balance:</span>{" "}
-                <span className="font-body4 text-text-500 ">
+                <span className="font-body4 cursor-pointer text-text-500 ">
                   {Number(allBalance.allTokensBalances[tokenOut.name]?.balance) >= 0 ? (
                     <ToolTip
                       message={fromExponential(
