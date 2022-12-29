@@ -50,6 +50,8 @@ export default function Pools(props: IIndexProps) {
   const [myPoolpage, setmyPoolPage] = useState(1);
   const amm = useAppSelector((state) => state.config.AMMs);
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
+  const initialPriceCall = React.useRef<boolean>(true);
+  const initialLpPriceCall = React.useRef<boolean>(true);
   useEffect(() => {
     if (epochError) {
       dispatch(getEpochData());
@@ -76,10 +78,18 @@ export default function Pools(props: IIndexProps) {
     }
   }, [totalVotingPowerError]);
   useEffect(() => {
-    Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    if(!initialPriceCall.current) {
+      Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    } else {
+      initialPriceCall.current = false;
+    }
   }, [token]);
   useEffect(() => {
-    Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+    if(!initialLpPriceCall.current) {
+      Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+    } else {
+      initialLpPriceCall.current = false;
+    }
   }, [tokenPrices]);
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
