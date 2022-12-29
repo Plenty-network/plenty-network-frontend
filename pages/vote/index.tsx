@@ -2,7 +2,7 @@ import { BigNumber } from "bignumber.js";
 import clsx from "clsx";
 import Image from "next/image";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getAllTokensBalanceFromTzkt } from "../../src/api/util/balance";
 import {
@@ -81,6 +81,8 @@ export default function Vote() {
   const [searchValue, setSearchValue] = useState("");
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const amm = useAppSelector((state) => state.config.AMMs);
+  const initialPriceCall = useRef<boolean>(true);
+  const initialLpPriceCall = useRef<boolean>(true);
   const handleCreateLock = () => {
     setShowCreateLockModal(true);
   };
@@ -275,10 +277,18 @@ export default function Vote() {
   }, [veNFTlist.data, userAddress]);
 
   useEffect(() => {
-    Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    if(!initialPriceCall.current) {
+      Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    } else {
+      initialPriceCall.current = false;
+    }
   }, [token]);
   useEffect(() => {
-    Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
+    if(!initialLpPriceCall.current) {
+      Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
+    } else {
+      initialLpPriceCall.current = false;
+    }
   }, [tokenPrice]);
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());

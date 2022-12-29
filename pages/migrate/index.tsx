@@ -68,6 +68,8 @@ function MigrateMain(props: any) {
     success: false,
     allTokensBalances: {} as IAllTokensBalance,
   });
+  const initialPriceCall = useRef<boolean>(true);
+  const initialLpPriceCall = useRef<boolean>(true);
   useEffect(() => {
     setAllBalance({
       success: false,
@@ -110,10 +112,18 @@ function MigrateMain(props: any) {
     }
   }, [totalVotingPowerError]);
   useEffect(() => {
-    Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    if(!initialPriceCall.current) {
+      Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    } else {
+      initialPriceCall.current = false;
+    }
   }, [token]);
   useEffect(() => {
-    Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
+    if(!initialLpPriceCall.current) {
+      Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
+    } else {
+      initialLpPriceCall.current = false;
+    }
   }, [tokenPrice]);
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
