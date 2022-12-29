@@ -136,7 +136,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           balancePromises.push(getTezBalance(walletAddress));
         }
 
-        props.tokenIn.symbol &&
+        props.tokenIn.symbol && props.tokenIn.symbol.toLowerCase() !== "xtz" &&
           balancePromises.push(
             getBalanceFromTzkt(
               String(TOKEN[props.tokenIn.symbol]?.address),
@@ -146,7 +146,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               props.tokenIn.symbol
             )
           );
-        props.tokenOut.symbol &&
+        props.tokenOut.symbol && props.tokenOut.symbol.toLowerCase() !== "xtz" &&
           balancePromises.push(
             getBalanceFromTzkt(
               String(TOKEN[props.tokenOut.symbol]?.address),
