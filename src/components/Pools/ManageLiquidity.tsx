@@ -135,13 +135,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         ) {
           balancePromises.push(getTezBalance(walletAddress));
         }
-        console.log(
-          "lala",
-          props.tokenIn,
-          props.tokenOut,
-          TOKEN[props.tokenIn.symbol],
-          TOKEN[props.tokenOut.symbol]
-        );
+
         props.tokenIn.symbol &&
           balancePromises.push(
             getBalanceFromTzkt(
@@ -162,7 +156,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
 
         const balanceResponse = await Promise.all(balancePromises);
-        console.log("lala", props.tokenIn, props.tokenOut, balanceResponse);
+
         setUserBalances((prev) => ({
           ...prev,
           ...balanceResponse.reduce(
