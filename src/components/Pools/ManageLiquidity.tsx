@@ -135,6 +135,13 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         ) {
           balancePromises.push(getTezBalance(walletAddress));
         }
+        console.log(
+          "lala",
+          props.tokenIn,
+          props.tokenOut,
+          TOKEN[props.tokenIn.symbol],
+          TOKEN[props.tokenOut.symbol]
+        );
         props.tokenIn.symbol &&
           balancePromises.push(
             getBalanceFromTzkt(
