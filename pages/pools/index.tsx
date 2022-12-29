@@ -78,14 +78,14 @@ export default function Pools(props: IIndexProps) {
     }
   }, [totalVotingPowerError]);
   useEffect(() => {
-    if(!initialPriceCall.current) {
+    if (!initialPriceCall.current) {
       Object.keys(token).length !== 0 && dispatch(getTokenPrice());
     } else {
       initialPriceCall.current = false;
     }
   }, [token]);
   useEffect(() => {
-    if(!initialLpPriceCall.current) {
+    if (!initialLpPriceCall.current) {
       Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
     } else {
       initialLpPriceCall.current = false;
@@ -116,7 +116,6 @@ export default function Pools(props: IIndexProps) {
       activeStateTab !== POOL_TYPE.MYPOOLS
     ) {
       getAllPoolsData(tokenPrices, page).then((res) => {
-        console.log("lala", res);
         if (res.success) {
           if (res.allData.length) {
             setIsFetching(false);
@@ -132,16 +131,13 @@ export default function Pools(props: IIndexProps) {
     }
   }, [Object.keys(tokenPrices).length, page, reFetchPool]);
   useEffect(() => {
-    console.log("lala", activeStateTab);
     setIsFetchingMyPool(true);
     if (
       Object.keys(tokenPrices).length !== 0 &&
       activeStateTab === POOL_TYPE.MYPOOLS &&
       isCompletedMypool === false
     ) {
-      console.log("lala", activeStateTab);
       getMyPoolsData(walletAddress, tokenPrices, myPoolpage).then((res) => {
-        console.log("lala", res);
         if (res.allData.length) {
           setIsFetchingMyPool(false);
           setmyPoolsData((mypoolsData) => mypoolsData.concat(res.allData));

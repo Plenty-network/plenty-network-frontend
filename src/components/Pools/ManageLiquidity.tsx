@@ -134,24 +134,24 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           props.tokenOut.symbol.toLowerCase() === "xtz"
         ) {
           balancePromises.push(getTezBalance(walletAddress));
-        } else {
-          balancePromises.push(
-            getBalanceFromTzkt(
-              String(TOKEN[props.tokenIn.symbol]?.address),
-              TOKEN[props.tokenIn.symbol].tokenId,
-              TOKEN[props.tokenIn.symbol].standard,
-              walletAddress
-            )
-          );
-          balancePromises.push(
-            getBalanceFromTzkt(
-              String(TOKEN[props.tokenOut.symbol]?.address),
-              TOKEN[props.tokenOut.symbol].tokenId,
-              TOKEN[props.tokenOut.symbol].standard,
-              walletAddress
-            )
-          );
         }
+        balancePromises.push(
+          getBalanceFromTzkt(
+            String(TOKEN[props.tokenIn.symbol]?.address),
+            TOKEN[props.tokenIn.symbol].tokenId,
+            TOKEN[props.tokenIn.symbol].standard,
+            walletAddress
+          )
+        );
+        balancePromises.push(
+          getBalanceFromTzkt(
+            String(TOKEN[props.tokenOut.symbol]?.address),
+            TOKEN[props.tokenOut.symbol].tokenId,
+            TOKEN[props.tokenOut.symbol].standard,
+            walletAddress
+          )
+        );
+
         const balanceResponse = await Promise.all(balancePromises);
         setUserBalances((prev) => ({
           ...prev,

@@ -63,13 +63,13 @@ export function MyPoolTable(props: IShortCardProps) {
     "",
     props.reFetchPool
   );
+
   const [poolsTableData, isFetched] = usePoolsTableSearch(
     poolTableData,
     props.searchValue,
     isFetch,
     poolTableData.length
   );
-
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );

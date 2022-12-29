@@ -7,13 +7,8 @@ export const usePoolsTableFilter = (
   address: string | undefined,
   reFetchPool: boolean
 ) => {
-  // const { data: poolTableData = [], isFetched } = usePoolsMain();
-
   if (poolTableData?.length) {
-    if (filterText === "My pools") {
-      return { data: poolTableData, isFetched: true };
-    }
-    if (filterText !== "My pools") {
+    if (filterText && filterText !== "My pools") {
       const newpoolTableData = poolTableData.filter((e) => e.poolType === filterText);
       return { data: newpoolTableData, isFetched: true };
     }

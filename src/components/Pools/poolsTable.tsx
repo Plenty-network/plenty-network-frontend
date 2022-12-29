@@ -93,7 +93,7 @@ export function ShortCard(props: IShortCardProps) {
       return <NoDataError content={"Server down"} />;
     } else if (poolsTableData.length === 0 && props.searchValue !== "" && isFetched) {
       return <NoSearchResult />;
-    } else if (poolsTableData.length === 0 && isFetched) {
+    } else if (poolsTableData.length === 0 && !props.isFetching) {
       return <NoDataError content={"No Pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched]);
