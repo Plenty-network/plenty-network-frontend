@@ -148,7 +148,7 @@ export function ToolTip(props: IToolTipProps) {
           id={`tooltip_${randomId}`}
           effect="solid"
         >
-          {props.message && <span className="font-body1">{props.message}</span>}
+          {props.message && <span className="font-normal">{props.message}</span>}
           {props.toolTipChild}
         </ReactTooltip>
       </>
@@ -172,7 +172,7 @@ export function ToolTip(props: IToolTipProps) {
         id={`tooltip_${randomId}`}
         effect="solid"
       >
-        {props.message && <span className="font-body1">{props.message}</span>}
+        {props.message && <span className="font-normal">{props.message}</span>}
         {props.toolTipChild}
       </ReactTooltip>
     </>

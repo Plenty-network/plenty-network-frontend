@@ -22,7 +22,7 @@ export function InfoIconToolTip(props: IInfoIconToolTipProps) {
           props.toolTipChild ? (
             props.toolTipChild
           ) : (
-            <div className="max-w-[180px] md:max-w-[280px] font-body1">{props.message}</div>
+            <div className="max-w-[180px] md:max-w-[280px] ">{props.message}</div>
           )
         }
       >
