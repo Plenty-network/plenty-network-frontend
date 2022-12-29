@@ -135,24 +135,31 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         ) {
           balancePromises.push(getTezBalance(walletAddress));
         }
-        balancePromises.push(
-          getBalanceFromTzkt(
-            String(TOKEN[props.tokenIn.symbol]?.address),
-            TOKEN[props.tokenIn.symbol].tokenId,
-            TOKEN[props.tokenIn.symbol].standard,
-            walletAddress
-          )
-        );
-        balancePromises.push(
-          getBalanceFromTzkt(
-            String(TOKEN[props.tokenOut.symbol]?.address),
-            TOKEN[props.tokenOut.symbol].tokenId,
-            TOKEN[props.tokenOut.symbol].standard,
-            walletAddress
-          )
-        );
+
+        props.tokenIn.symbol &&
+          balancePromises.push(
+            getBalanceFromTzkt(
+              String(TOKEN[props.tokenIn.symbol]?.address),
+              TOKEN[props.tokenIn.symbol].tokenId,
+              TOKEN[props.tokenIn.symbol].standard,
+              walletAddress,
+              props.tokenIn.symbol
+            )
+          );
+        props.tokenOut.symbol &&
+          balancePromises.push(
+            getBalanceFromTzkt(
+              String(TOKEN[props.tokenOut.symbol]?.address),
+              TOKEN[props.tokenOut.symbol].tokenId,
+              TOKEN[props.tokenOut.symbol].standard,
+
+              walletAddress,
+              props.tokenOut.symbol
+            )
+          );
 
         const balanceResponse = await Promise.all(balancePromises);
+
         setUserBalances((prev) => ({
           ...prev,
           ...balanceResponse.reduce(
@@ -166,7 +173,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       }
     };
     updateBalance();
-  }, [walletAddress, TOKEN, balanceUpdate]);
+  }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
   useEffect(() => {
     if (walletAddress) {
       getStakedData(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {

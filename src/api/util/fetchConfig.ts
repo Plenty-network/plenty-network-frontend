@@ -174,14 +174,19 @@ export const isVolatilePair = (
   /**
    * Search the config for the the token by token contract address and return the token data if found.
    * @param tokenContract - Contract address of the token to be searched in the config
+   * @param tokenId - Id of the token if it's FA2 (optional)
    */
-  export const getTokenDataByAddress = (tokenContract: string): IConfigToken | undefined => {
+  export const getTokenDataByAddress = (tokenContract: string, tokenId: number | undefined): IConfigToken | undefined => {
     try {
       const state = store.getState();
       const TOKENS = state.config.tokens;
-      const tokenSymbol = Object.keys(TOKENS).find(
-        (tokenSymbol) => TOKENS[tokenSymbol].address === tokenContract
-      );
+      const tokenSymbol = tokenId
+        ? Object.keys(TOKENS).find(
+            (tokenSymbol) =>
+              TOKENS[tokenSymbol].address === tokenContract &&
+              TOKENS[tokenSymbol].tokenId === tokenId
+          )
+        : Object.keys(TOKENS).find((tokenSymbol) => TOKENS[tokenSymbol].address === tokenContract);
       const tokenData = tokenSymbol ? TOKENS[tokenSymbol as string] : undefined;
       return tokenData;
     } catch (error: any) {
