@@ -136,7 +136,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
           </div>
         </div>
         <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
-          <div className="">
+          <div className="w-0 flex-auto">
             <p>
               {props.swapData.isloading ? (
                 <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
@@ -163,7 +163,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
             </p>
           </div>
           {walletAddress && (
-            <div className="ml-auto border border-text-800/[0.5] rounded-lg  w-[245px] bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-2 md:px-3">
+            <div className="ml-auto border border-text-800/[0.5] rounded-lg  bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-1 md:px-3">
               <div className="relative top-0.5 md:top-0">
                 <Image alt={"alt"} src={wallet} className="walletIcon" />
               </div>
@@ -220,7 +220,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
           </div>
         </div>
         <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
-          <div className="">
+          <div className="w-0 flex-auto">
             <p>
               {props.swapData.isloading ? (
                 <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
@@ -247,7 +247,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
             </p>
           </div>
           {walletAddress && (
-            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center w-[245px] flex px-2 md:px-3">
+            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-1 md:px-3">
               <div className="relative top-0.5 md:top-0">
                 <Image alt={"alt"} src={wallet} className="walletIcon" />
               </div>

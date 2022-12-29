@@ -61,7 +61,7 @@ function StatsCard(props: IStatsCardProps) {
         <p className="ml-auto">
           <div
             className={clsx(
-              " flex items-center md:font-title3 font-subtitle3 text-primary-500  h-[50px] px-5 bg-primary-500/[0.1] rounded-xl   justify-center",
+              " flex items-center md:font-title3-bold font-subtitle4 text-primary-500  h-[50px] px-5 bg-primary-500/[0.1] rounded-xl   justify-center",
               props.disable ? "cursor-not-allowed" : "cursor-pointer"
             )}
             onClick={

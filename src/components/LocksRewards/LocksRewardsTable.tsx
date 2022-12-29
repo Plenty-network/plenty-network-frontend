@@ -81,12 +81,6 @@ export function LocksTableRewards(props: IVotesTableRewards) {
     }
   }, [newArr, newArr.length]);
 
-  const getImagesPath = (name: string, isSvg?: boolean) => {
-    if (isSvg) return `/assets/tokens/${name}.svg`;
-    if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
-    else return "";
-  };
-
   const mobilecolumns = React.useMemo<Column<IVotePageData>[]>(
     () => [
       {
@@ -179,7 +173,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
             <VotingPower votes={x.votes.votes} percentage={x.votes.votesPercentage} />
           ) : (
             <div
-              className="cursor-pointer flex items-center md:font-body4 font-subtitle3 text-primary-500 ml-auto h-[44px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[120px]  justify-center"
+              className="cursor-pointer flex items-center font-subtitle4 text-primary-500 ml-auto h-[44px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[120px]  justify-center"
               onClick={() => {
                 setEpochNo(x.epoch);
                 setClaimAllData(props.allLocksRewardsData[props.selectedDropDown.tokenId][x.epoch]);
@@ -289,7 +283,7 @@ export function LocksTableRewards(props: IVotesTableRewards) {
             <VotingPower votes={x.votes.votes} percentage={x.votes.votesPercentage} />
           ) : (
             <div
-              className="cursor-pointer flex items-center md:font-body4 font-subtitle3 text-primary-500 ml-auto h-[44px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[120px]  justify-center"
+              className="cursor-pointer flex items-center font-subtitle4 text-primary-500 ml-auto h-[44px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[120px]  justify-center"
               onClick={() => {
                 setEpochNo(x.epoch);
                 props.setEpochClaim(x.epoch);

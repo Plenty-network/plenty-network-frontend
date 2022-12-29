@@ -52,8 +52,8 @@ function Migrate(props: IMigrateProps) {
 
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [tokenIn, setTokenIn] = useState<tokenParameter>({
-    name: MigrateTokens[0].name,
-    image: MigrateTokens[0].image,
+    name: MigrateTokens[1].name,
+    image: MigrateTokens[1].image,
   });
 
   const [tokenOut, setTokenOut] = useState<tokenParameter>({
@@ -390,10 +390,10 @@ function Migrate(props: IMigrateProps) {
           <div className="mt-5">{MigrateButton}</div>
         </div>
       </div>
-      <div className="font-body2 text-text-250 mt-4 mx-2 md:mx-auto md:w-[568px] text-center mb-5">
+      {/* <div className="font-body2 text-text-250 mt-4 mx-2 md:mx-auto md:w-[568px] text-center mb-5">
         Tip: Convert PLENTY/WRAP to PLY. By locking PLY, you&apos;re earning fees and bribe rewards
         from your veNFT, plus you may boost your gauge rewards.
-      </div>
+      </div> */}
 
       {showConfirmTransaction && (
         <ConfirmTransaction

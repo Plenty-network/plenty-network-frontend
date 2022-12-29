@@ -22,7 +22,7 @@ import { PoolsCardHeader } from "./Cardheader";
 import { AprInfoFuture } from "./Component/AprFuture";
 import { AprInfo } from "./Component/AprInfo";
 import { CircularOverLappingImage } from "./Component/CircularImageInfo";
-import { NoContentAvailable } from "./Component/ConnectWalletOrNoToken";
+import { NoContentAvailable, NoDataError } from "./Component/ConnectWalletOrNoToken";
 import { PoolsText, PoolsTextWithTooltip } from "./Component/PoolsText";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
@@ -32,6 +32,7 @@ import Image from "next/image";
 import clsx from "clsx";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { isError } from "lodash";
 
 export interface IShortCardProps {
   className?: string;
@@ -45,6 +46,8 @@ export interface IShortCardProps {
   showLiquidityModal: boolean;
   reFetchPool: boolean;
   data: IAllPoolsData[];
+  isFetching: boolean;
+  isError: boolean;
 }
 export interface IManageBtnProps {
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -86,8 +89,12 @@ export function ShortCard(props: IShortCardProps) {
   const NoData = React.useMemo(() => {
     if (userAddress && props.activeStateTab === PoolsCardHeader.Mypools && isFetched) {
       return <NoContentAvailable setActiveStateTab={props.setActiveStateTab} />;
+    } else if (poolsTableData.length === 0 && props.isError) {
+      return <NoDataError content={"Server down"} />;
     } else if (poolsTableData.length === 0 && props.searchValue !== "" && isFetched) {
       return <NoSearchResult />;
+    } else if (poolsTableData.length === 0 && isFetched) {
+      return <NoDataError content={"No Pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched]);
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
@@ -365,7 +372,7 @@ export function ShortCard(props: IShortCardProps) {
     return (
       <div className="pl-0 pr-1 md:pr-0 md:pl-0">
         <div
-          className="bg-primary-500/10 text-f12 md:font-subtitle3  hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-5 md:px-7 py-2 rounded-lg"
+          className="bg-primary-500/10 font-caption2 md:font-subtitle4  hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-5 md:px-7 py-2 rounded-lg"
           onClick={() => {
             dispatch(getTotalVotingPower());
             props.setIsGaugeAvailable(props.isGauge);
@@ -378,8 +385,6 @@ export function ShortCard(props: IShortCardProps) {
             } else {
               setActiveState(ActiveLiquidity.Liquidity);
             }
-
-            props.setShowLiquidityModal(true);
             setTokenIn({
               name: props.tokenA,
               image: getImagesPath(props.tokenA.toString()),
@@ -390,6 +395,7 @@ export function ShortCard(props: IShortCardProps) {
               image: getImagesPath(props.tokenB.toString()),
               symbol: props.tokenB,
             });
+            props.setShowLiquidityModal(true);
           }}
         >
           Manage
@@ -420,6 +426,7 @@ export function ShortCard(props: IShortCardProps) {
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableWidth="min-w-[535px] lg:min-w-[1140px]"
           NoData={NoData}
+          loading={props.isFetching}
         />
       </div>
     </>

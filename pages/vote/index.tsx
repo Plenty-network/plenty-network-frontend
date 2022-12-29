@@ -325,7 +325,7 @@ export default function Vote() {
   };
 
   const handleLockOperation = () => {
-    setContentTransaction(`Locking ${plyInput} PLY`);
+    setContentTransaction(`Locking PLY`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));

@@ -10,7 +10,7 @@ export const usePoolsTableFilter = (
   // const { data: poolTableData = [], isFetched } = usePoolsMain();
 
   if (poolTableData?.length) {
-    if (filterText !== "My pools") {
+    if (filterText === "My pools") {
       return { data: poolTableData, isFetched: true };
     }
     if (filterText !== "My pools") {

@@ -55,7 +55,7 @@ function StatsCard(props: IStatsCardProps) {
               borderRadius={"rounded-xl"}
               onClick={() => props.setShowCreateLockModal(true)}
             >
-              Lock PLY
+              Create lock
             </Button>
           )}
         </p>

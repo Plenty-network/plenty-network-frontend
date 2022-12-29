@@ -780,7 +780,7 @@ function MyPortfolio(props: any) {
     });
   };
   const handleLockOperation = () => {
-    setContentTransaction(`Locking ${plyInput} PLY`);
+    setContentTransaction(`Locking PLY`);
     setShowCreateLockModal(false);
     setClaimState(-1 as EClaimAllState);
     setShowConfirmTransaction(true);
@@ -1732,7 +1732,7 @@ function MyPortfolio(props: any) {
                       <p
                         id="backToTop"
                         className={clsx(
-                          " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center animate__animated animate__zoomIn animate__faster",
+                          " flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center animate__animated animate__zoomIn animate__faster",
                           poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
                             ? "cursor-not-allowed"
                             : "cursor-pointer"
@@ -1765,9 +1765,9 @@ function MyPortfolio(props: any) {
                   <div className="flex items-center pb-2 md:px-[25px] bg-sideBar md:sticky top-[58px] px-4 z-10 pt-5">
                     <p>
                       <div className="text-white font-title3">List of my locks</div>
-                      <div className="text-text-250 font-body1">
+                      {/* <div className="text-text-250 font-body1">
                         Discover veNFTs on the largest NFT marketplace on Tezos.
-                      </div>
+                      </div> */}
                     </p>
                     <a
                       href={"https://objkt.com/"}

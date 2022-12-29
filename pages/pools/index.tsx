@@ -95,27 +95,48 @@ export default function Pools(props: IIndexProps) {
   const [mypoolsData, setmyPoolsData] = React.useState<IMyPoolsData[]>([] as IMyPoolsData[]);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isCompletedMypool, setIsCompletedMypool] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
   useEffect(() => {
-    if (Object.keys(tokenPrices).length !== 0 && isCompleted === false) {
+    setIsFetching(true);
+    if (
+      Object.keys(tokenPrices).length !== 0 &&
+      isCompleted === false &&
+      activeStateTab !== POOL_TYPE.MYPOOLS
+    ) {
       getAllPoolsData(tokenPrices, page).then((res) => {
         console.log("lala", res);
-        if (res.allData.length) {
-          setPoolsData((poolsData) => poolsData.concat(res.allData));
+        if (res.success) {
+          if (res.allData.length) {
+            setIsFetching(false);
+            setPoolsData((poolsData) => poolsData.concat(res.allData));
+          } else {
+            setIsFetching(false);
+            setIsCompleted(true);
+          }
         } else {
-          setIsCompleted(true);
+          setIsError(true);
         }
       });
     }
   }, [Object.keys(tokenPrices).length, page, reFetchPool]);
   useEffect(() => {
     console.log("lala", activeStateTab);
-    if (Object.keys(tokenPrices).length !== 0 && activeStateTab === POOL_TYPE.MYPOOLS) {
+    setIsFetchingMyPool(true);
+    if (
+      Object.keys(tokenPrices).length !== 0 &&
+      activeStateTab === POOL_TYPE.MYPOOLS &&
+      isCompletedMypool === false
+    ) {
       console.log("lala", activeStateTab);
-      getMyPoolsData(walletAddress, tokenPrices, page).then((res) => {
+      getMyPoolsData(walletAddress, tokenPrices, myPoolpage).then((res) => {
         console.log("lala", res);
         if (res.allData.length) {
+          setIsFetchingMyPool(false);
           setmyPoolsData((mypoolsData) => mypoolsData.concat(res.allData));
         } else {
+          setIsFetchingMyPool(false);
           setIsCompletedMypool(true);
         }
       });
@@ -126,14 +147,16 @@ export default function Pools(props: IIndexProps) {
     if (
       (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
       scrollY !== 0 &&
-      isCompleted === false
+      isCompleted === false &&
+      activeStateTab !== POOL_TYPE.MYPOOLS
     ) {
       setPage(page + 1);
     }
     if (
       (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
       scrollY !== 0 &&
-      isCompletedMypool === false
+      isCompletedMypool === false &&
+      activeStateTab === POOL_TYPE.MYPOOLS
     ) {
       setmyPoolPage(myPoolpage + 1);
     }
@@ -193,6 +216,8 @@ export default function Pools(props: IIndexProps) {
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               data={poolsData}
+              isFetching={isFetching}
+              isError={isError}
             />
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
@@ -206,6 +231,8 @@ export default function Pools(props: IIndexProps) {
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               data={poolsData}
+              isFetching={isFetching}
+              isError={isError}
             />
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
@@ -219,6 +246,8 @@ export default function Pools(props: IIndexProps) {
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               data={poolsData}
+              isFetching={isFetching}
+              isError={isError}
             />
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
@@ -233,6 +262,7 @@ export default function Pools(props: IIndexProps) {
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               data={mypoolsData}
+              isFetchingMyPool={isFetchingMyPool}
             />
           )}
           <NewPool

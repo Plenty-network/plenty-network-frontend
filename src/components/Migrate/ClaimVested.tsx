@@ -282,10 +282,10 @@ function ClaimVested(props: IMigrateProps) {
           <div className="mt-5">{ClaimButton}</div>
         </div>
       </div>
-      <div className="font-body2 text-text-250 mt-4 mx-2 md:mx-auto md:w-[568px] text-center">
+      {/* <div className="font-body2 text-text-250 mt-4 mx-2 md:mx-auto md:w-[568px] text-center">
         Tip: Convert PLENTY/WRAP to PLY. By locking PLY, you&apos;re earning fees and bribe rewards
         from your veNFT, plus you may boost your gauge rewards.
-      </div>
+      </div> */}
 
       {showConfirmTransaction && (
         <ConfirmTransaction
