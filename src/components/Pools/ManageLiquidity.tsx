@@ -135,24 +135,27 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         ) {
           balancePromises.push(getTezBalance(walletAddress));
         }
-        balancePromises.push(
-          getBalanceFromTzkt(
-            String(TOKEN[props.tokenIn.symbol]?.address),
-            TOKEN[props.tokenIn.symbol].tokenId,
-            TOKEN[props.tokenIn.symbol].standard,
-            walletAddress
-          )
-        );
-        balancePromises.push(
-          getBalanceFromTzkt(
-            String(TOKEN[props.tokenOut.symbol]?.address),
-            TOKEN[props.tokenOut.symbol].tokenId,
-            TOKEN[props.tokenOut.symbol].standard,
-            walletAddress
-          )
-        );
+        props.tokenIn.symbol &&
+          balancePromises.push(
+            getBalanceFromTzkt(
+              String(TOKEN[props.tokenIn.symbol]?.address),
+              TOKEN[props.tokenIn.symbol].tokenId,
+              TOKEN[props.tokenIn.symbol].standard,
+              walletAddress
+            )
+          );
+        props.tokenOut.symbol &&
+          balancePromises.push(
+            getBalanceFromTzkt(
+              String(TOKEN[props.tokenOut.symbol]?.address),
+              TOKEN[props.tokenOut.symbol].tokenId,
+              TOKEN[props.tokenOut.symbol].standard,
+              walletAddress
+            )
+          );
 
         const balanceResponse = await Promise.all(balancePromises);
+        console.log("lala", props.tokenIn, props.tokenOut, balanceResponse);
         setUserBalances((prev) => ({
           ...prev,
           ...balanceResponse.reduce(
