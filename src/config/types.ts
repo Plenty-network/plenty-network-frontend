@@ -9,6 +9,7 @@ export interface IConfig {
   API: IApi;
   RPC_NODES: INodes;
   TZKT_NODES: INodes;
+  PUBLIC_TZKT_NODES: INodes;
   FAUCET : string;
   CTEZ: INodes;
   EXPLORER_LINKS: IExplorerLinks;
@@ -18,7 +19,7 @@ export interface IConfig {
     testnet: Record<string, string>;
     mainnet: Record<string, string>;
   };
-  ROUTER: { mainnet: string; testnet: string };
+  ROUTER: INodes;
 
   WRAPPED_ASSETS: {
     testnet: Record<string, IWrappedToken>;
@@ -34,13 +35,13 @@ export interface IConfig {
   WALLET_NETWORK: NetworkType;
   ADMIN_ADDRESS: string;
   BURNER: string;
-  VE_SWAP: { mainnet: string; testnet: string };
-  VOTER: { mainnet: string; testnet: string };
-  VOTE_ESCROW: { mainnet: string; testnet: string };
+  VE_SWAP: INodes;
+  VOTER: INodes;
+  VOTE_ESCROW: INodes;
   VE_INDEXER: string;
   PLY_INDEXER: string;
-  PLY_TOKEN: { mainnet: string; testnet: string };
-  FACTORY : { mainnet: string; testnet: string };
+  PLY_TOKEN: INodes;
+  FACTORY : INodes;
   EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData }
   IPFS_LINKS: { primary: string; fallback: string }
 }
