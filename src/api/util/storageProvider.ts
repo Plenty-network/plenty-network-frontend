@@ -1,6 +1,6 @@
 import { Schema } from "@taquito/michelson-encoder";
 import axios from "axios";
-import { getRpcNode, tzktNode } from "../../common/walletconnect";
+import { getRpcNode, publicTzktNode, tzktNode } from "../../common/walletconnect";
 
 export const getStorage = async (
   contractAddress: string,
@@ -49,7 +49,7 @@ export const getTzktStorageData = async (contractAddress: string): Promise<any> 
 
 export const getTzktTokenData = async (filters: string | undefined): Promise<any> => {
   try {
-    const tokenResponse = await axios.get(`${tzktNode}v1/tokens${filters ? filters : ""}`);
+    const tokenResponse = await axios.get(`${publicTzktNode}v1/tokens${filters ? filters : ""}`);
     return tokenResponse;
   } catch (error: any) {
     throw error;
