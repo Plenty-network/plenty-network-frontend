@@ -11,7 +11,7 @@ export function PLYEmission(props: IPLYEmissionProps) {
           disable={props.dollar ? false : true}
           message={`$${props.dollar?.toFixed(2)}`}
         >
-          <div className="font-body4  text-white">
+          <div className="font-body4 cursor-pointer text-white">
             {Number(props.value) > 0 ? `${props.value.toFixed(2)} ` : "0"} PLY
           </div>
         </ToolTip>

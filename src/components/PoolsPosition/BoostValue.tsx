@@ -16,7 +16,7 @@ export function BoostValue(props: IYourLiquidityProps) {
         >
           <div
             className={clsx(
-              "font-body4  ",
+              "font-body4  cursor-pointer",
               Number(props.value) > 0 && Number(props.value) === 2.5
                 ? "text-blue-100"
                 : "text-white"
@@ -28,7 +28,7 @@ export function BoostValue(props: IYourLiquidityProps) {
                 position={Position.top}
                 toolTipChild={<div className="text-center">Max boost</div>}
               >
-                <span className="relative top-1">
+                <span className="relative cursor-pointer top-1">
                   <Image alt={"alt"} src={arrow} />
                 </span>
               </ToolTip>

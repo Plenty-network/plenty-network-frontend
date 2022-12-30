@@ -444,7 +444,7 @@ function SwapTab(props: ISwapTabProps) {
         <div className="flex -mt-[12px]">
           <div className="text-left cursor-pointer" onClick={onClickAmount}>
             <span className="text-text-600 font-body3">Balance:</span>{" "}
-            <span className="font-body4 text-primary-500 ">
+            <span className="font-body4 cursor-pointer text-primary-500 ">
               {Number(props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance) >= 0 ? (
                 <ToolTip
                   message={fromExponential(
@@ -565,7 +565,7 @@ function SwapTab(props: ISwapTabProps) {
           <div className="flex -mt-[12px]">
             <div className="text-left">
               <span className="text-text-600 font-body3">Balance:</span>{" "}
-              <span className="font-body4 text-text-500 ">
+              <span className="font-body4 cursor-pointer text-text-500 ">
                 {Object.keys(props.tokenOut).length !== 0 &&
                 Number(props.allBalance?.allTokensBalances[props.tokenOut.name]?.balance) >= 0 ? (
                   <ToolTip
@@ -709,7 +709,7 @@ function SwapTab(props: ISwapTabProps) {
                       />
                     </ToolTip>
                   </span>
-                  <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
+                  <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px] cursor-pointer">
                     1{" "}
                     {!isConvert
                       ? tEZorCTEZtoUppercase(props.tokenIn.name)
@@ -736,7 +736,7 @@ function SwapTab(props: ISwapTabProps) {
                     <Image alt={"alt"} src={ratesrefresh} onClick={(e) => convertRates(e)} />
                   </span>
                 </div>
-                <div className="ml-auto">
+                <div className="ml-auto cursor-pointer">
                   <ToolTip
                     id="tooltip9"
                     type={isMobile ? TooltipType.swapRoute : TooltipType.swap}
@@ -885,7 +885,7 @@ function SwapTab(props: ISwapTabProps) {
                     </div>
                   </ToolTip>
                 </div>
-                <div className=" relative top-[3px]">
+                <div className=" relative top-[3px] ">
                   <Image
                     src={arrowDown}
                     className={animateOpenSwapDetails ? "rotate-180" : "rotate-0"}
@@ -900,272 +900,272 @@ function SwapTab(props: ISwapTabProps) {
 
         {openSwapDetails && props.routeDetails.success && (
           <div
-            className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 animate__animated ${
-              animateOpenSwapDetails ? "animate__fadeInDown animate__faster" : ""
-            }`}
+            className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 animate__animated `}
           >
-            <div className="flex">
-              <div className="font-mobile-400 md:font-body3 ">
-                <span className="mr-[5px]">Minimum received</span>
-                <span className="relative top-1 lg:top-0.5">
-                  <ToolTip
-                    position={Position.top}
-                    id="tooltip2"
-                    toolTipChild={
-                      <div className="w-[200px] md:w-[323px]">
-                        The minimum amount you are guaranteed to receive. If the price slips any
-                        further, your transaction will revert.
-                      </div>
-                    }
-                  >
-                    <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
-                  </ToolTip>
-                </span>
+            <div className="scale-in-animation">
+              <div className="flex">
+                <div className="font-mobile-400 md:font-body3 ">
+                  <span className="mr-[5px]">Minimum received</span>
+                  <span className="relative top-1 lg:top-0.5">
+                    <ToolTip
+                      position={Position.top}
+                      id="tooltip2"
+                      toolTipChild={
+                        <div className="w-[200px] md:w-[323px]">
+                          The minimum amount you are guaranteed to receive. If the price slips any
+                          further, your transaction will revert.
+                        </div>
+                      }
+                    >
+                      <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
+                    </ToolTip>
+                  </span>
+                </div>
+                {isRefresh ||
+                props.loading.isLoadingSecond ||
+                (props.isSwitchClicked && props.secondTokenAmount === "") ? (
+                  <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
+                    999999999999
+                  </div>
+                ) : (
+                  <div className="ml-auto font-mobile-700 md:font-subtitle4 cursor-pointer">
+                    <ToolTip
+                      message={fromExponential(props.routeDetails.minimumOut.toNumber())}
+                      id="tooltip6"
+                      disable={Number(props.routeDetails.minimumOut) < 0}
+                      position={isMobile ? Position.left : Position.top}
+                    >
+                      {Number(props.routeDetails.minimumOut) < 0
+                        ? `0 ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
+                        : ` ${Number(props.routeDetails.minimumOut).toFixed(
+                            4
+                          )} ${tEZorCTEZtoUppercase(props.tokenOut.name)}`}
+                    </ToolTip>
+                  </div>
+                )}
               </div>
-              {isRefresh ||
-              props.loading.isLoadingSecond ||
-              (props.isSwitchClicked && props.secondTokenAmount === "") ? (
-                <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
-                  999999999999
-                </div>
-              ) : (
-                <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  <ToolTip
-                    message={fromExponential(props.routeDetails.minimumOut.toNumber())}
-                    id="tooltip6"
-                    disable={Number(props.routeDetails.minimumOut) < 0}
-                    position={isMobile ? Position.left : Position.top}
-                  >
-                    {Number(props.routeDetails.minimumOut) < 0
-                      ? `0 ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
-                      : ` ${Number(props.routeDetails.minimumOut).toFixed(
-                          4
-                        )} ${tEZorCTEZtoUppercase(props.tokenOut.name)}`}
-                  </ToolTip>
-                </div>
-              )}
-            </div>
 
-            <div className="flex mt-2">
-              <div className="font-mobile-400 md:font-body3 ">
-                <span className="mr-[5px]">Price impact</span>
-                <span className="relative top-1 lg:top-0.5">
-                  <ToolTip
-                    id="tooltip4"
-                    position={isMobile ? Position.right : Position.top}
-                    toolTipChild={
-                      <div className="w-[200px]  md:w-[323px]">
-                        The difference between the market price and estimated price due to trade
-                        size.
-                      </div>
-                    }
+              <div className="flex mt-2">
+                <div className="font-mobile-400 md:font-body3 ">
+                  <span className="mr-[5px]">Price impact</span>
+                  <span className="relative top-1 lg:top-0.5">
+                    <ToolTip
+                      id="tooltip4"
+                      position={isMobile ? Position.right : Position.top}
+                      toolTipChild={
+                        <div className="w-[200px]  md:w-[323px]">
+                          The difference between the market price and estimated price due to trade
+                          size.
+                        </div>
+                      }
+                    >
+                      <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
+                    </ToolTip>
+                  </span>
+                </div>
+                {isRefresh ||
+                props.loading.isLoadingSecond ||
+                (props.isSwitchClicked && props.secondTokenAmount === "") ? (
+                  <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
+                    99999999
+                  </div>
+                ) : (
+                  <div
+                    className={clsx(
+                      "ml-auto cursor-pointer font-mobile-700 md:font-subtitle4",
+                      Number(props.routeDetails.priceImpact) > 5 && "text-error-500"
+                    )}
                   >
-                    <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
-                  </ToolTip>
-                </span>
+                    <ToolTip
+                      message={fromExponential(props.routeDetails.priceImpact.toString())}
+                      id="tooltip5"
+                      position={isMobile ? Position.left : Position.top}
+                    >
+                      {`${props.routeDetails.priceImpact.toFixed(4)} %`}{" "}
+                    </ToolTip>
+                  </div>
+                )}
               </div>
-              {isRefresh ||
-              props.loading.isLoadingSecond ||
-              (props.isSwitchClicked && props.secondTokenAmount === "") ? (
-                <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
-                  99999999
+              <div className="flex mt-2">
+                <div className="font-mobile-400 md:font-body3 ">
+                  <span className="mr-[5px]">Fee</span>
+                  <span className="relative top-1 lg:top-0.5">
+                    <ToolTip
+                      id="tooltip3"
+                      position={isMobile ? Position.right : Position.top}
+                      toolTipChild={
+                        <div className="w-[200px] md:w-[323px]">
+                          Fees is 0.05% for both volatile and stable swap
+                        </div>
+                      }
+                    >
+                      <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
+                    </ToolTip>
+                  </span>
                 </div>
-              ) : (
-                <div
-                  className={clsx(
-                    "ml-auto font-mobile-700 md:font-subtitle4",
-                    Number(props.routeDetails.priceImpact) > 5 && "text-error-500"
-                  )}
-                >
-                  <ToolTip
-                    message={fromExponential(props.routeDetails.priceImpact.toString())}
-                    id="tooltip5"
-                    position={isMobile ? Position.left : Position.top}
-                  >
-                    {`${props.routeDetails.priceImpact.toFixed(4)} %`}{" "}
-                  </ToolTip>
-                </div>
-              )}
-            </div>
-            <div className="flex mt-2">
-              <div className="font-mobile-400 md:font-body3 ">
-                <span className="mr-[5px]">Fee</span>
-                <span className="relative top-1 lg:top-0.5">
-                  <ToolTip
-                    id="tooltip3"
-                    position={isMobile ? Position.right : Position.top}
-                    toolTipChild={
-                      <div className="w-[200px] md:w-[323px]">
-                        Fees is 0.05% for both volatile and stable swap
-                      </div>
-                    }
-                  >
-                    <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
-                  </ToolTip>
-                </span>
+                {isRefresh ||
+                props.loading.isLoadingSecond ||
+                (props.isSwitchClicked && props.secondTokenAmount === "") ? (
+                  <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
+                    999999999999
+                  </div>
+                ) : (
+                  <div className="ml-auto font-mobile-700 md:font-subtitle4">
+                    {`${props.routeDetails.finalFeePerc.toFixed(2)}  %`}
+                  </div>
+                )}
               </div>
-              {isRefresh ||
-              props.loading.isLoadingSecond ||
-              (props.isSwitchClicked && props.secondTokenAmount === "") ? (
-                <div className=" ml-auto h-[19px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
-                  999999999999
-                </div>
-              ) : (
-                <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {`${props.routeDetails.finalFeePerc.toFixed(2)}  %`}
-                </div>
-              )}
-            </div>
-            <div className="border-t border-text-800 mt-[18px]"></div>
+              <div className="border-t border-text-800 mt-[18px]"></div>
 
-            <div className="mt-4 ">
-              <div className="font-subtitle2 md:font-subtitle4">
-                {" "}
-                <span className="mr-[5px]">Route</span>
-                <span className="relative top-1 lg:top-0.5">
-                  <ToolTip
-                    id="tooltip4"
-                    position={isMobile ? Position.right : Position.top}
-                    toolTipChild={
-                      <div className="w-[200px] md:w-[323px]">
-                        Routing through these tokens results in the best price for your trade.
-                      </div>
-                    }
-                  >
-                    <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
-                  </ToolTip>
-                </span>
-              </div>
-              {isRefresh ||
-              props.loading.isLoadingSecond ||
-              (props.isSwitchClicked && props.secondTokenAmount === "") ? (
-                <div className=" w-[110px] mt-2 h-[35px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
-                  99999999
+              <div className="mt-4 ">
+                <div className="font-subtitle2 md:font-subtitle4">
+                  {" "}
+                  <span className="mr-[5px]">Route</span>
+                  <span className="relative top-1 lg:top-0.5">
+                    <ToolTip
+                      id="tooltip4"
+                      position={isMobile ? Position.right : Position.top}
+                      toolTipChild={
+                        <div className="w-[200px] md:w-[323px]">
+                          Routing through these tokens results in the best price for your trade.
+                        </div>
+                      }
+                    >
+                      <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
+                    </ToolTip>
+                  </span>
                 </div>
-              ) : (
-                <div className="">
-                  <div className="swap overflow-x-auto pb-2 min-w-[305px] md:min-w-[338px]">
-                    <div className="border-dashed relative top-[24px]   border-t-2 border-muted-50 mx-2"></div>
-                    <div className="mt-2 flex justify-between ">
-                      {swapRoute?.map((token, idx) => {
-                        const index = idx + 1;
-                        return (
-                          <>
-                            {(idx === 0 || idx === swapRoute.length - 1) && (
-                              <div className="flex items-center " key={token?.name}>
-                                {idx === swapRoute.length - 1 && (
-                                  <div className="w-1.5 h-2 bg-card-500 z-50"></div>
-                                )}
-                                <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
-                                  <span className="w-[28px] h-[28px]">
-                                    <img
-                                      alt={"alt"}
-                                      src={
-                                        tokenIcons[token?.name as string]
-                                          ? tokenIcons[token?.name as string].src
-                                          : tokens[token?.name as string]?.iconUrl
-                                          ? tokens[token?.name as string].iconUrl
-                                          : `/assets/Tokens/fallback.png`
-                                      }
-                                      width={"28px"}
-                                      height={"28px"}
-                                      onError={changeSource}
-                                    />
-                                  </span>
-                                </div>
-                                {idx === 0 && <div className="w-1.5 h-2 bg-card-500 z-50"></div>}
-                              </div>
-                            )}
-
-                            {idx !== swapRoute.length - 1 && (
-                              <div className="flex items-center">
-                                <div className="w-1.5 h-2 bg-card-500 z-50"></div>
-                                <div
-                                  className={clsx(
-                                    "relative  rounded-2xl h-[32px] bg-card-600 p-px flex",
-                                    props.routeDetails.isStable[idx] ? "w-[130px]" : "w-[114px]"
+                {isRefresh ||
+                props.loading.isLoadingSecond ||
+                (props.isSwitchClicked && props.secondTokenAmount === "") ? (
+                  <div className=" w-[110px] mt-2 h-[35px] rounded animate-pulse bg-shimmer-100 text-shimmer-100">
+                    99999999
+                  </div>
+                ) : (
+                  <div className="">
+                    <div className="swap overflow-x-auto pb-2 min-w-[305px] md:min-w-[338px]">
+                      <div className="border-dashed relative top-[24px]   border-t-2 border-muted-50 mx-2"></div>
+                      <div className="mt-2 flex justify-between ">
+                        {swapRoute?.map((token, idx) => {
+                          const index = idx + 1;
+                          return (
+                            <>
+                              {(idx === 0 || idx === swapRoute.length - 1) && (
+                                <div className="flex items-center " key={token?.name}>
+                                  {idx === swapRoute.length - 1 && (
+                                    <div className="w-1.5 h-2 bg-card-500 z-50"></div>
                                   )}
-                                >
-                                  <span className=" flex items-center">
-                                    {props.routeDetails.isStable[idx] && (
-                                      <div className="border-2 border-primary-500/[0.2] z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
-                                        <span className="w-[18px] h-[18px]">
-                                          <Image
+                                  <div className="relative  z-100 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full">
+                                    <span className="w-[28px] h-[28px]">
+                                      <img
+                                        alt={"alt"}
+                                        src={
+                                          tokenIcons[token?.name as string]
+                                            ? tokenIcons[token?.name as string].src
+                                            : tokens[token?.name as string]?.iconUrl
+                                            ? tokens[token?.name as string].iconUrl
+                                            : `/assets/Tokens/fallback.png`
+                                        }
+                                        width={"28px"}
+                                        height={"28px"}
+                                        onError={changeSource}
+                                      />
+                                    </span>
+                                  </div>
+                                  {idx === 0 && <div className="w-1.5 h-2 bg-card-500 z-50"></div>}
+                                </div>
+                              )}
+
+                              {idx !== swapRoute.length - 1 && (
+                                <div className="flex items-center">
+                                  <div className="w-1.5 h-2 bg-card-500 z-50"></div>
+                                  <div
+                                    className={clsx(
+                                      "relative  rounded-2xl h-[32px] bg-card-600 p-px flex",
+                                      props.routeDetails.isStable[idx] ? "w-[130px]" : "w-[114px]"
+                                    )}
+                                  >
+                                    <span className=" flex items-center">
+                                      {props.routeDetails.isStable[idx] && (
+                                        <div className="border-2 border-primary-500/[0.2] z-50 w-[28px] h-[28px]  flex justify-center items-center bg-card-600 rounded-full">
+                                          <span className="w-[18px] h-[18px]">
+                                            <Image
+                                              alt={"alt"}
+                                              src={stableSwap}
+                                              width={"18px"}
+                                              height={"18px"}
+                                            />
+                                          </span>
+                                        </div>
+                                      )}
+                                      <div
+                                        className={clsx(
+                                          "relative   z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full",
+                                          props.routeDetails.isStable[idx] && "right-[10px]"
+                                        )}
+                                      >
+                                        <span className="w-[28px] h-[28px]">
+                                          <img
                                             alt={"alt"}
-                                            src={stableSwap}
-                                            width={"18px"}
-                                            height={"18px"}
+                                            src={
+                                              tokenIcons[token?.name as string]
+                                                ? tokenIcons[token?.name as string].src
+                                                : tokens[token?.name as string]?.iconUrl
+                                                ? tokens[token?.name as string].iconUrl
+                                                : `/assets/Tokens/fallback.png`
+                                            }
+                                            width={"28px"}
+                                            height={"28px"}
+                                            onError={changeSource}
                                           />
                                         </span>
                                       </div>
-                                    )}
-                                    <div
-                                      className={clsx(
-                                        "relative   z-40 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full",
-                                        props.routeDetails.isStable[idx] && "right-[10px]"
-                                      )}
-                                    >
-                                      <span className="w-[28px] h-[28px]">
-                                        <img
-                                          alt={"alt"}
-                                          src={
-                                            tokenIcons[token?.name as string]
-                                              ? tokenIcons[token?.name as string].src
-                                              : tokens[token?.name as string]?.iconUrl
-                                              ? tokens[token?.name as string].iconUrl
-                                              : `/assets/Tokens/fallback.png`
-                                          }
-                                          width={"28px"}
-                                          height={"28px"}
-                                          onError={changeSource}
-                                        />
-                                      </span>
-                                    </div>
-                                    <div
-                                      className={clsx(
-                                        "relative  z-30 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full",
-                                        props.routeDetails.isStable[idx]
-                                          ? "right-5"
-                                          : "right-[10px]"
-                                      )}
-                                    >
-                                      <span className="w-[28px] h-[28px]">
-                                        <img
-                                          src={
-                                            tokenIcons[swapRoute[index]?.name as string]
-                                              ? tokenIcons[swapRoute[index]?.name as string].src
-                                              : tokens[swapRoute[index]?.name as string]?.iconUrl
-                                              ? tokens[swapRoute[index]?.name as string].iconUrl
-                                              : `/assets/Tokens/fallback.png`
-                                          }
-                                          width={"28px"}
-                                          height={"28px"}
-                                          onError={changeSource}
-                                        />
-                                      </span>
-                                    </div>
-                                    <div
-                                      className={clsx(
-                                        "relative right-[22px] ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4",
-                                        props.routeDetails.isStable[idx]
-                                          ? "right-[22px]"
-                                          : "right-[12px]"
-                                      )}
-                                    >
-                                      {Number(props.routeDetails.feePerc[idx]).toFixed(2)}%
-                                    </div>
-                                  </span>
+                                      <div
+                                        className={clsx(
+                                          "relative  z-30 w-[32px] h-[32px]  p-0.5 bg-card-600 rounded-full",
+                                          props.routeDetails.isStable[idx]
+                                            ? "right-5"
+                                            : "right-[10px]"
+                                        )}
+                                      >
+                                        <span className="w-[28px] h-[28px]">
+                                          <img
+                                            src={
+                                              tokenIcons[swapRoute[index]?.name as string]
+                                                ? tokenIcons[swapRoute[index]?.name as string].src
+                                                : tokens[swapRoute[index]?.name as string]?.iconUrl
+                                                ? tokens[swapRoute[index]?.name as string].iconUrl
+                                                : `/assets/Tokens/fallback.png`
+                                            }
+                                            width={"28px"}
+                                            height={"28px"}
+                                            onError={changeSource}
+                                          />
+                                        </span>
+                                      </div>
+                                      <div
+                                        className={clsx(
+                                          "relative right-[22px] ml-[5px] h-6 px-[4.5px] pt-[3px] bg-muted-100 rounded-xl font-subtitle4",
+                                          props.routeDetails.isStable[idx]
+                                            ? "right-[22px]"
+                                            : "right-[12px]"
+                                        )}
+                                      >
+                                        {Number(props.routeDetails.feePerc[idx]).toFixed(2)}%
+                                      </div>
+                                    </span>
+                                  </div>
+                                  <div className="w-1.5 h-2 bg-card-500 z-50"></div>
                                 </div>
-                                <div className="w-1.5 h-2 bg-card-500 z-50"></div>
-                              </div>
-                            )}
-                          </>
-                        );
-                      })}
+                              )}
+                            </>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         )}

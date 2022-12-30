@@ -29,7 +29,7 @@ export function MyVotesValue(props: IMyVotesValueProps) {
           </div>
         }
       >
-        <div className="flex-1 text-end flex-col justify-center items-center">
+        <div className="flex-1 text-end cursor-pointer flex-col justify-center items-center">
           <div className=" ">
             <span className="font-f13">
               {Number(props.myVotes) > 0

@@ -9,9 +9,10 @@ import { getStakedData, getVePLYListForUser } from "../../api/stake";
 import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 import { loadSwapDataWrapper } from "../../api/swap/wrappers";
 import {
-  getAllTokensBalanceFromTzkt,
+  getBalanceFromTzkt,
   getPnlpBalance,
   getStakedBalance,
+  getTezBalance,
 } from "../../api/util/balance";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { getLPTokenPrice } from "../../api/util/price";
@@ -52,7 +53,7 @@ import { RewardsScreen } from "./RewardsScreen";
 import { StakingScreen, StakingScreenType } from "./StakingScreen";
 
 export interface IManageLiquidityProps {
-  closeFn: React.Dispatch<React.SetStateAction<boolean>>;
+  closeFn: (val: boolean) => void;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
   setActiveState: React.Dispatch<React.SetStateAction<string>>;
@@ -72,7 +73,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [firstTokenAmountLiq, setFirstTokenAmountLiq] = React.useState<string | number>("");
   const [secondTokenAmountLiq, setSecondTokenAmountLiq] = React.useState<number | string>("");
 
-  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   const [boost, setBoost] = useState<IStakedDataResponse>();
 
   const [selectedDropDown, setSelectedDropDown] = useState<IVePLYData>({
@@ -103,6 +103,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
+  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   const [sharePool, setSharePool] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
@@ -124,23 +125,55 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     allTokensBalances: {} as IAllTokensBalance,
   });
   useEffect(() => {
-    setAllBalance({
-      success: false,
-      allTokensBalances: {} as IAllTokensBalance,
-    });
-    if (walletAddress) {
-      getAllTokensBalanceFromTzkt(Object.values(TOKEN), walletAddress).then(
-        (response: IAllTokensBalanceResponse) => {
-          setAllBalance(response);
+    const updateBalance = async () => {
+      const balancePromises = [];
+
+      if (walletAddress) {
+        if (
+          props.tokenIn.symbol.toLowerCase() === "xtz" ||
+          props.tokenOut.symbol.toLowerCase() === "xtz"
+        ) {
+          balancePromises.push(getTezBalance(walletAddress));
         }
-      );
-    } else {
-      setAllBalance({
-        success: false,
-        allTokensBalances: {} as IAllTokensBalance,
-      });
-    }
-  }, [walletAddress, TOKEN, balanceUpdate]);
+
+        props.tokenIn.symbol && props.tokenIn.symbol.toLowerCase() !== "xtz" &&
+          balancePromises.push(
+            getBalanceFromTzkt(
+              String(TOKEN[props.tokenIn.symbol]?.address),
+              TOKEN[props.tokenIn.symbol].tokenId,
+              TOKEN[props.tokenIn.symbol].standard,
+              walletAddress,
+              props.tokenIn.symbol
+            )
+          );
+        props.tokenOut.symbol && props.tokenOut.symbol.toLowerCase() !== "xtz" &&
+          balancePromises.push(
+            getBalanceFromTzkt(
+              String(TOKEN[props.tokenOut.symbol]?.address),
+              TOKEN[props.tokenOut.symbol].tokenId,
+              TOKEN[props.tokenOut.symbol].standard,
+
+              walletAddress,
+              props.tokenOut.symbol
+            )
+          );
+
+        const balanceResponse = await Promise.all(balancePromises);
+
+        setUserBalances((prev) => ({
+          ...prev,
+          ...balanceResponse.reduce(
+            (acc, cur) => ({
+              ...acc,
+              [cur.identifier]: cur.balance,
+            }),
+            {}
+          ),
+        }));
+      }
+    };
+    updateBalance();
+  }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
   useEffect(() => {
     if (walletAddress) {
       getStakedData(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
@@ -795,10 +828,13 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     });
   };
 
+  const closeModal = () => {
+    props.closeFn(false);
+  };
   return (
     <>
       <PopUpModal
-        onhide={props.closeFn}
+        onhide={closeModal}
         className="w-[390px] max-w-[390px] sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
         footerChild={
           <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
@@ -851,7 +887,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                   setScreen={setScreen}
                   firstTokenAmount={firstTokenAmountLiq}
                   secondTokenAmount={secondTokenAmountLiq}
-                  userBalances={allBalance}
+                  userBalances={userBalances}
                   setSecondTokenAmount={setSecondTokenAmountLiq}
                   setFirstTokenAmount={setFirstTokenAmountLiq}
                   tokenIn={props.tokenIn}

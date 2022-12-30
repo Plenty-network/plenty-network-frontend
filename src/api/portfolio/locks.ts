@@ -135,11 +135,6 @@ export const getAllLocksPositionData = async (
           finalLock.locksState = ELocksState.DISABLED;
         }
       }
-      // TODO: Remove next if on redeployment
-      if(attachedLocks[tokenId.toString()] === "KT19zYN4twVndWprTXhU8G48Sxom8JMZqc1F") {
-        finalLock.attached = false;
-      }
-      // TODO: Remove above if on redeployment
 
       if (
         attached &&

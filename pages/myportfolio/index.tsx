@@ -4,7 +4,7 @@ import * as React from "react";
 import { BigNumber } from "bignumber.js";
 import "animate.css";
 import playIcon from "../../src/assets/icon/pools/playIcon.svg";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { connect, useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../src/redux";
@@ -208,6 +208,8 @@ function MyPortfolio(props: any) {
     success: false,
     allTokensBalances: {} as IAllTokensBalance,
   });
+  const initialPriceCall = useRef<boolean>(true);
+  const initialLpPriceCall = useRef<boolean>(true);
   useEffect(() => {
     setAllBalance({
       success: false,
@@ -250,10 +252,18 @@ function MyPortfolio(props: any) {
     }
   }, [totalVotingPowerError]);
   useEffect(() => {
-    Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    if (!initialPriceCall.current) {
+      Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    } else {
+      initialPriceCall.current = false;
+    }
   }, [token]);
   useEffect(() => {
-    Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
+    if (!initialLpPriceCall.current) {
+      Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
+    } else {
+      initialLpPriceCall.current = false;
+    }
   }, [tokenPrice]);
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
@@ -779,7 +789,7 @@ function MyPortfolio(props: any) {
     });
   };
   const handleLockOperation = () => {
-    setContentTransaction(`Locking ${plyInput} PLY`);
+    setContentTransaction(`Locking PLY`);
     setShowCreateLockModal(false);
     setClaimState(-1 as EClaimAllState);
     setShowConfirmTransaction(true);
@@ -1637,7 +1647,7 @@ function MyPortfolio(props: any) {
                   >
                     <div
                       className={clsx(
-                        " flex items-center md:font-title3-bold font-subtitle4 text-black h-[44px] md:h-[50px] px-[20px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
+                        "cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-black h-[44px] md:h-[50px] px-[20px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
                         (poolsRewards.data?.gaugeAddresses?.length === 0 &&
                           feeClaimData?.length === 0 &&
                           bribesClaimData?.length === 0 &&
@@ -1731,7 +1741,7 @@ function MyPortfolio(props: any) {
                       <p
                         id="backToTop"
                         className={clsx(
-                          " flex items-center md:font-title3 font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center animate__animated animate__zoomIn animate__faster",
+                          " flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center animate__animated animate__zoomIn animate__faster",
                           poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
                             ? "cursor-not-allowed"
                             : "cursor-pointer"
@@ -1764,9 +1774,9 @@ function MyPortfolio(props: any) {
                   <div className="flex items-center pb-2 md:px-[25px] bg-sideBar md:sticky top-[58px] px-4 z-10 pt-5">
                     <p>
                       <div className="text-white font-title3">List of my locks</div>
-                      <div className="text-text-250 font-body1">
+                      {/* <div className="text-text-250 font-body1">
                         Discover veNFTs on the largest NFT marketplace on Tezos.
-                      </div>
+                      </div> */}
                     </p>
                     <a
                       href={"https://objkt.com/"}

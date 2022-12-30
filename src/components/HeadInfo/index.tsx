@@ -62,7 +62,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
       {props.title === "Vote" ? (
         <div
           className={clsx(
-            "ml-auto h-[50px] font-subtitle2 md:font-subtitle3 flex items-center px-4 md:px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1] hover:bg-primary-500/[0.2] mr-4 md:mr-0",
+            "ml-auto h-[50px] font-subtitle2 md:font-subtitle4 flex items-center px-4 md:px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1] hover:bg-primary-500/[0.2] mr-4 md:mr-0",
             "cursor-pointer"
           )}
           onClick={props.handleCreateLock}
@@ -75,7 +75,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
       {props.title === "Pools" ? (
         <div
           className={clsx(
-            "ml-auto h-[50px] font-subtitle2 md:font-subtitle3 flex items-center px-3 md:px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1] hover:bg-primary-500/[0.2] mr-0",
+            "ml-auto h-[50px] font-subtitle2 md:font-title3-bold flex items-center px-3 md:px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1] hover:bg-primary-500/[0.2] mr-0",
             "cursor-pointer"
           )}
           onClick={props.onClick}

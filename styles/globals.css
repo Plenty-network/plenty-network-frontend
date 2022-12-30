@@ -9,7 +9,7 @@
 @import './datePicker.css';
 
 
-
+/* 
 body.swap {
   background-color: #090015;
   background-size: cover;
@@ -21,6 +21,7 @@ body.swap {
   --animate-duration: 500ms;
 }
 
+} */
 
 html{
   height: -webkit-fill-available;
@@ -62,10 +63,10 @@ body {
   background: #341e54; 
 }
 .swap::-webkit-scrollbar-track-piece:end {
-  margin-right: 120px; 
+  margin-right: 200px; 
 }
 .swap::-webkit-scrollbar-track-piece:start {
-  margin-left: 120px;
+  margin-left: 200px;
 }
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
@@ -210,6 +211,7 @@ input[type='number'] {
 .tooltipCustomWithoutBorder{
   opacity: 0.98 !important;
   background-color:transparent !important;
+  font-weight: 400 !important;
   color: white !important;
   text-align: left !important;
   border-radius: 12px !important;
@@ -221,6 +223,7 @@ input[type='number'] {
   background-color: #160d24 !important;
   border-color: #341e54 !important;
   color: white !important;
+  font-weight: 400 !important;
   text-align: left !important;
   border: 1px solid #341e54 !important;
   border-radius: 12px !important;
@@ -232,6 +235,7 @@ input[type='number'] {
   background-color: #160d24 !important;
   border-color: #341e54 !important;
   color: white !important;
+  font-weight: 400 !important;
   text-align: left !important;
   border: 1px solid #341e54 !important;
   border-radius: 12px !important;
@@ -244,6 +248,7 @@ input[type='number'] {
   background-color: #160d24 !important;
   border-color: #341e54 !important;
   color: white !important;
+  font-weight: 400 !important;
   text-align: left !important;
   border: 1px solid #341e54 !important;
   border-radius: 12px !important;

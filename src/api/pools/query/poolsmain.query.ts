@@ -1,8 +1,11 @@
 import { useQuery } from 'react-query';
-import { poolsDataWrapper } from '..';
+import { getAllPoolsData, getMyPoolsData, poolsDataWrapper } from '..';
 import { store} from '../../../redux';
 import { getTokenPrices } from '../../util/price';
+import { ITokenPriceList } from '../../util/types';
 import {
+  IAllPoolsData,
+  IMyPoolsData,
   IPoolsDataWrapperResponse,
 } from '../types';
 
@@ -34,3 +37,29 @@ export const usePoolsMain = () =>
 //   }  
 //   return  { data:data , isFetched:false }
 // }
+
+export const useAllPoolsData = (tokenPrice: ITokenPriceList, page: number = 0) =>
+  useQuery<IAllPoolsData[], Error>(
+    ["all-pools", page],
+    async () => {
+      const allPoolsResponse = await getAllPoolsData(tokenPrice, page);
+      const allPoolsData = allPoolsResponse.allData;
+      return allPoolsData;
+    },
+    { refetchInterval: 30000, cacheTime: 1000 * 30, keepPreviousData: true }
+  );
+
+export const useMyPoolsData = (
+  userTezosAddress: string,
+  tokenPrice: ITokenPriceList,
+  page: number = 0
+) =>
+  useQuery<IMyPoolsData[], Error>(
+    ["my-pools", page],
+    async () => {
+      const myPoolsResponse = await getMyPoolsData(userTezosAddress, tokenPrice, page);
+      const myPoolsData = myPoolsResponse.allData;
+      return myPoolsData;
+    },
+    { refetchInterval: 30000, cacheTime: 1000 * 30, keepPreviousData: true }
+  );

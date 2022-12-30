@@ -276,9 +276,6 @@ export const getPoolsDataForBribes = async (
   try {
     const state = store.getState();
     const AMMS = state.config.AMMs;
-    // console.log(`epoch:${epoch}, tokenId:${tokenId}`);
-    // TODO: Remove this get call
-   
 
     const [poolsData, votesDataCurrent, votesDataPrevious] = await Promise.all([
       getPoolsBribeLiquidityData(epoch, tokenPrices),
@@ -338,9 +335,6 @@ export const getPoolsDataForBribes = async (
         });
       }
     }
-
-    //TODO: Remove next line in mainnet
-    // const finalData = allDataForPools.filter((data) => data.amm !== "false");
 
     return {
       success: true,

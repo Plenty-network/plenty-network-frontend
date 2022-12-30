@@ -206,7 +206,7 @@ export function VeNFT(props: IDropdownProps) {
               : () => {}
           }
           className={clsx(
-            "  hover:bg-muted-500 px-4 flex items-center h-[36px]  flex py-2.5",
+            "cursor-pointer  hover:bg-muted-500 px-4 flex items-center h-[36px]  flex py-2.5",
             props.veNFT ? "cursor-pointer" : "cursor-not-allowed"
           )}
         >

@@ -9,7 +9,8 @@ export interface IConfig {
   API: IApi;
   RPC_NODES: INodes;
   TZKT_NODES: INodes;
-  FAUCET : string;
+  PUBLIC_TZKT_NODES: INodes;
+  FAUCET: string;
   CTEZ: INodes;
   EXPLORER_LINKS: IExplorerLinks;
 
@@ -18,7 +19,7 @@ export interface IConfig {
     testnet: Record<string, string>;
     mainnet: Record<string, string>;
   };
-  ROUTER: { mainnet: string; testnet: string };
+  ROUTER: INodes;
 
   WRAPPED_ASSETS: {
     testnet: Record<string, IWrappedToken>;
@@ -28,7 +29,7 @@ export interface IConfig {
   CONFIG_LINKS: {
     testnet: IConfigData;
     mainnet: IConfigData;
-  }
+  };
 
   NETWORK: "mainnet" | "testnet";
   WALLET_NETWORK: NetworkType;
@@ -40,11 +41,11 @@ export interface IConfig {
   VE_INDEXER: { mainnet: string; testnet: string };
   PLY_INDEXER: { mainnet: string; testnet: string };
   PLY_TOKEN: { mainnet: string; testnet: string };
-  FACTORY : { mainnet: string; testnet: string };
+  FACTORY: { mainnet: string; testnet: string };
   EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData };
   IPFS_LINKS: { primary: string; fallback: string };
-  AIRDROP_SERVER: { mainnet: string; testnet: string; };
-  AIRDROP: { mainnet: string; testnet: string; };
+  AIRDROP_SERVER: { mainnet: string; testnet: string };
+  AIRDROP: { mainnet: string; testnet: string };
   AIRDROP_ETH_MESSAGE_PREFIX: string;
 }
 
@@ -180,19 +181,19 @@ export enum Chain {
 export enum TokenStandard {
   FA12 = "FA1.2",
   FA2 = "FA2",
-  TEZ = "TEZ"
+  TEZ = "TEZ",
 }
 
 export interface IConfigToken {
-  name: string,
-  symbol: string,
-  decimals: number,
-  standard: TokenStandard,
-  address?: string,
-  tokenId?: number,
-  thumbnailUri?: string,
-  originChain: Chain,
-  pairs: string[],
+  name: string;
+  symbol: string;
+  decimals: number;
+  standard: TokenStandard;
+  address?: string;
+  tokenId?: number;
+  thumbnailUri?: string;
+  originChain: Chain;
+  pairs: string[];
   iconUrl?: string;
 }
 

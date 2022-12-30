@@ -67,7 +67,7 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
             className={clsx(
               "ml-auto",
               props.selectedDropDown.tokenId !== ""
-                ? "block animate__animated animate__fadeInDown animate__faster"
+                ? "block animate__animated animate__fadeInDown animate__faster "
                 : "hidden"
             )}
           >

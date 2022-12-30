@@ -11,7 +11,7 @@ export function StakePercentage(props: IYourLiquidityProps) {
           disable={true}
           toolTipChild={<div className="text-center"></div>}
         >
-          <div className="font-body4  text-white">
+          <div className="font-body4 cursor-pointer text-white">
             {Number(props.value) > 0 ? `${props.value.toFixed(2)}%` : "0%"}
           </div>
         </ToolTip>

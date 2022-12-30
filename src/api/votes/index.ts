@@ -160,7 +160,7 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
     );
 
     const finalData: IVotePageRewardData = {};
-    // TODO: Optimise this O(2n) loop
+
     for (var x of bribesData) {
       let bribe: BigNumber = new BigNumber(0);
       let bribes: Bribes[] = [];
@@ -579,7 +579,7 @@ export const addRemainingVotesDust = (
   }
 };
 
-// TODO: Remove export during mainnet launch.
+
 /**
  * Fetch all votes data in an epoch for a particular veNFT or for all.
  * @param epochNumber - Numeric value of the epoch for which the data is to be fetched

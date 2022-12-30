@@ -145,7 +145,7 @@ function TokenModal(props: ISwapModalProps) {
                       </div>
                     )} */}
                     {props.isSucess && props.allBalance[token.name]?.balance ? (
-                      <div className="font-subtitle4 ml-auto mt-[7px]">
+                      <div className="font-subtitle4 cursor-pointer ml-auto mt-[7px]">
                         <ToolTip
                           position={Position.top}
                           message={
