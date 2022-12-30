@@ -11,7 +11,7 @@ import { SideBarHOC } from "../Sidebar/SideBarHOC";
 import Link from "next/link";
 import clsx from "clsx";
 import { ChainAirdrop } from "./Disclaimer";
-
+import Action from "./Action";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import { useDispatch } from "react-redux";
 import { addTweetedAccount } from "../../redux/airdrop/transactions";
@@ -66,7 +66,7 @@ function CheckPoint(props: ICheckPoint) {
         <p className="relative top-[3px]">
           <Image src={action === 1 ? doneCheck : check} />
         </p>
-        <p className="font-subtitle1 ml-[7.67px] w-[50%] md:w-auto">{props.text}</p>
+        <p className="font-subtitle1 ml-[7.67px] w-[40%] md:w-auto">{props.text}</p>
 
         <p
           className={clsx(
@@ -93,18 +93,22 @@ function CheckPoint(props: ICheckPoint) {
                 style={{ height: "auto" }}
                 ref={tweetRef}
               >
-                {action === 0 && `Take action ${props.claimData.perMissionAmount.toFixed(2)} PLY`}
+                {action === 0 && (
+                  <Action action="Take action" value={props.claimData.perMissionAmount} />
+                )}
               </TwitterShareButton>
             </span>
           ) : action > 0 ? (
             action === 2 ? (
-              "Claimed"
+              <Action action="claimed" />
             ) : (
-              `Completed ${props.claimData.perMissionAmount.toFixed(2)}`
+              <Action action="Completed" value={props.claimData.perMissionAmount} />
             )
           ) : (
             <Link href={props.href}>
-              {action === 0 && `Take action ${props.claimData.perMissionAmount.toFixed(2)} PLY`}
+              {action === 0 && (
+                <Action action="Take action" value={props.claimData.perMissionAmount} />
+              )}
             </Link>
           )}
         </p>
