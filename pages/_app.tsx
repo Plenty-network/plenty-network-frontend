@@ -2,7 +2,6 @@ import type { AppProps } from "next/app";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "../styles/globals.css";
-import "@rainbow-me/rainbowkit/styles.css";
 import Script from "next/script";
 
 function MyApp({ Component, pageProps }: AppProps) {
