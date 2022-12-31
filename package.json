@@ -9,49 +9,30 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "^3.0.0",
-    "@rainbow-me/rainbowkit": "^0.8.1",
-    "@reduxjs/toolkit": "^1.8.2",
-    "@taquito/beacon-wallet": "^13.0.0",
-    "@taquito/michel-codec": "^10.1.1",
-    "@taquito/taquito": "^12.0.3",
-    "@taquito/tzip16": "^14.2.0",
+    
     "animate.css": "^4.1.1",
     "clsx": "^1.1.1",
     "conseiljs": "^5.1.0",
-    "copy-to-clipboard": "^3.3.2",
-    "ethers": "^5.7.2",
-    "from-exponential": "^1.1.1",
+    
     "is-ipfs": "^7.0.3",
-    "javascript-time-ago": "^2.5.7",
+    
     "lodash-es": "^4.17.21",
     "lottie-react": "^2.3.1",
     "next": "12.1.6",
     "react": "17.0.2",
-    "react-datepicker": "^4.8.0",
-    "react-device-detect": "^2.2.2",
+    
     "react-dom": "17.0.2",
-    "react-query": "^3.34.5",
-    "react-range": "^1.8.14",
-    "react-redux": "^8.0.2",
-    "react-share": "^4.4.1",
-    "react-table": "^7.7.0",
-    "react-time-ago": "^7.2.1",
-    "react-tooltip": "^4.2.21",
-    "recharts": "2.1.12",
-    "redux-persist": "^6.0.0",
-    "truncate-middle": "^1.0.6",
-    "wagmi": "^0.9.5"
+    "react-query": "^3.34.5"
+    
   },
   "devDependencies": {
-    "@types/lodash-es": "^4.17.6",
+    
     "@types/node": "17.0.35",
     "@types/react": "18.0.9",
     "@types/react-datepicker": "^4.4.2",
     "@types/react-dom": "18.0.5",
-    "@types/react-table": "^7.7.9",
-    "@types/truncate-middle": "^1.0.1",
-    "autoprefixer": "^10.4.7",
+    
+    
     "eslint": "8.16.0",
     "eslint-config-next": "12.1.6",
     "postcss": "^8.4.14",
