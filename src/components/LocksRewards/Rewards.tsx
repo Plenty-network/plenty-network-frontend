@@ -6,21 +6,9 @@ import { BigNumber } from "bignumber.js";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IRewardsDataProps } from "./types";
 import { EFeesStatus } from "../../api/portfolio/types";
+import nFormatter from "../../api/util/helpers";
 
 export function RewardsData(props: IRewardsDataProps) {
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
   return (
     <>
       <div className="flex flex-col justify-center items-center">

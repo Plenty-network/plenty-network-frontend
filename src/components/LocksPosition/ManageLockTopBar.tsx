@@ -7,21 +7,9 @@ import Image from "next/image";
 import veNFT from "../../assets/icon/myPortfolio/veNFT.svg";
 import info from "../../assets/icon/common/infoIcon.svg";
 import link from "../../assets/icon/myPortfolio/link.svg";
+import nFormatter from "../../api/util/helpers";
 
 export function TopBar(props: ITopBar) {
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
   const dateFormat = useMemo(() => {
     var date = new Date(props.manageData.endTimeStamp);
     return `${date.getUTCFullYear()}-${("0" + (date.getUTCMonth() + 1)).slice(-2)}-${(
