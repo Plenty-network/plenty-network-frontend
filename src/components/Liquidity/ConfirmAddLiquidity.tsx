@@ -1,6 +1,11 @@
 import Image from "next/image";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { BigNumber } from "bignumber.js";
+import nFormatter, {
+  changeSource,
+  imageExists,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { useAppSelector } from "../../redux";
 import Button from "../Button/Button";
 import { tokenParameterLiquidity } from "./types";
@@ -97,7 +102,9 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
           </div>
         </div>
         <div className="mt-4 px-5 text-text-250 font-body4 ">You will receive (atleast)</div>
-        <div className="mt-1 px-5 text-white font-title2 ">{props.pnlpEstimates} PNLP</div>
+        <div className="mt-1 px-5 text-white font-title2 ">
+          {nFormatter(new BigNumber(props.pnlpEstimates))} PNLP
+        </div>
         <div className="mt-5 border-t border-text-800/[0.5]"></div>
         <div className="px-5 mt-[18px] flex justify-between">
           <p className="text-text-250 font-body2">Share of pool</p>
