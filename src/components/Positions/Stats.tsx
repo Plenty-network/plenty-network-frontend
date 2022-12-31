@@ -2,22 +2,9 @@ import { IStatsProps } from "./types";
 import StatsCard from "./StatsCard";
 
 import { BigNumber } from "bignumber.js";
+import nFormatter from "../../api/util/helpers";
 
 function Stats(props: IStatsProps) {
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
-
   return (
     <div className="flex min-w-[1053px] w-full  gap-5">
       <StatsCard

@@ -21,13 +21,13 @@ export const tEZorCTEZtoUppercase = (a: string) =>
 
 export default function nFormatter(num: BigNumber) {
   if (num.isGreaterThanOrEqualTo(1000000000)) {
-    return num.dividedBy(1000000000).toFixed(2) + "B";
+    return num.dividedBy(1000000000).toFixed(2) + "b";
   }
   if (num.isGreaterThanOrEqualTo(1000000)) {
-    return num.dividedBy(1000000).toFixed(2) + "M";
+    return num.dividedBy(1000000).toFixed(2) + "m";
   }
   if (num.isGreaterThanOrEqualTo(1000)) {
-    return num.dividedBy(1000).toFixed(2) + "K";
+    return num.dividedBy(1000).toFixed(2) + "k";
   }
 
   return num.toFixed(2);

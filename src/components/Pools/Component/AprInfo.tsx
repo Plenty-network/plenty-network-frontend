@@ -3,6 +3,7 @@ import * as React from "react";
 import { Position, ToolTip } from "../../Tooltip/TooltipAdvanced";
 import boostIcon from "../../../assets/icon/myPortfolio/boostBlue.svg";
 import { BigNumber } from "bignumber.js";
+import nFormatter from "../../../api/util/helpers";
 export interface IAprInfoProps {
   isMobile?: boolean;
 
@@ -11,19 +12,6 @@ export interface IAprInfoProps {
 }
 
 export function AprInfo(props: IAprInfoProps) {
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
   return (
     <ToolTip
       position={Position.top}
