@@ -25,7 +25,7 @@ import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 import { VePLY } from "../DropDown/VePLY";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IConfigLPToken } from "../../config/types";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import nFormatter, { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
 export enum StakingScreenType {
   Staking = "Staking",
@@ -132,20 +132,6 @@ export function StakingScreen(props: IStakingScreenProps) {
 
 export function Staking(props: IStakingProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
-
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
 
   const handleInputPercentage = (value: number) => {
     const decimal = new BigNumber(value * Number(props.pnlpBalance)).decimalPlaces();

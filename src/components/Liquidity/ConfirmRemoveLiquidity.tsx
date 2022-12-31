@@ -1,13 +1,19 @@
 import clsx from "clsx";
 import Image from "next/image";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
+
+import { BigNumber } from "bignumber.js";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import ctez from "../../../src/assets/Tokens/ctez.png";
 import add from "../../../src/assets/icon/pools/addIcon.svg";
 import Button from "../Button/Button";
 import { PopUpModal } from "../Modal/popupModal";
 import { tokenParameterLiquidity } from "./types";
-import { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import nFormatter, {
+  changeSource,
+  imageExists,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { useAppSelector } from "../../redux";
 import fallback from "../../../src/assets/icon/pools/fallback.png";
 import { tokenIcons } from "../../constants/tokensList";
@@ -106,7 +112,9 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
           </div>
         </div>
         <div className="mt-4 px-5 text-text-250 font-body4 ">PNLP being burnt (atleast)</div>
-        <div className="mt-1 px-5 text-white font-title2 ">{props.burnAmount} PNLP</div>
+        <div className="mt-1 px-5 text-white font-title2 ">
+          {nFormatter(new BigNumber(props.burnAmount))} PNLP
+        </div>
         <div className="mt-5 border-t border-text-800/[0.5]"></div>
         <div className="px-5 mt-[18px] flex justify-between">
           <p className="text-text-250 font-body2">Share of pool</p>

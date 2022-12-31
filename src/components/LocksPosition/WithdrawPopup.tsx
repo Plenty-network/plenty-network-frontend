@@ -8,6 +8,7 @@ import ply from "../../assets/Tokens/ply.png";
 import Button from "../Button/Button";
 import { IUnclaimedRewardsForLockData } from "../../api/portfolio/types";
 import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
+import nFormatter from "../../api/util/helpers";
 
 interface IWithdrawPlyProps {
   show: boolean;
@@ -22,19 +23,7 @@ function WithdrawPly(props: IWithdrawPlyProps) {
   const closeModal = () => {
     props.setShow(false);
   };
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
 
-    return num.toFixed(2);
-  }
   return props.show ? (
     <PopUpModal
       onhide={closeModal}

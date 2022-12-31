@@ -14,7 +14,11 @@ import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import stableSwap from "../../../src/assets/icon/swap/stableswapViolet.svg";
 import { tokenIcons, tokensList } from "../../constants/tokensList";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import nFormatter, {
+  changeSource,
+  imageExists,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { useAppSelector } from "../../redux";
 
 interface IConfirmSwapProps {
@@ -48,19 +52,7 @@ function ConfirmAddPool(props: IConfirmSwapProps) {
   const closeModal = () => {
     props.setShow(false);
   };
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
 
-    return num.toFixed(2);
-  }
   return props.show ? (
     <PopUpModal onhide={closeModal}>
       {
