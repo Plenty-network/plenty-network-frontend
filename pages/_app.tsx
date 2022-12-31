@@ -1,14 +1,9 @@
 import type { AppProps } from "next/app";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Provider } from "react-redux";
-import { persistStore } from "redux-persist";
-import { PersistGate } from "redux-persist/integration/react";
 import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import Script from "next/script";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { WagmiConfig } from "wagmi";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(new QueryClient());
