@@ -5,35 +5,30 @@
 @import './animateTransactionOut.css';
 @import './animateRing.css';
 @import './switch.css';
-@import './switchWithIcon.css';
 @import './datePicker.css';
 
 
-/* 
-body.swap {
-  background-color: #090015;
+
+body {
+  height: 100%;
   background-size: cover;
-  background-image: url('/assets/image/plenty.net_bg.svg'),
-    url('/assets/image/Noise4.png');
+  background-image: url('/assets/image/bg.png');
   color: #ffffff;
 }
-.animate__animated.animate__fadeInDown {
-  --animate-duration: 500ms;
+@media (min-width: 320px) and (max-width: 768px) {
+  body {
+    background-color: #5721A9;
+  }
 }
 
-} */
 
 html{
   height: -webkit-fill-available;
 } 
+.shadow{
+text-shadow: 0px 3px 39px rgba(0, 0, 0, 0.25);
+}
 
-body{
-  height: 100%;
-}
-body {
-  background-color: #090015;
-  color: #ffffff;
-}
 /* width */
 ::-webkit-scrollbar {
   width: 4px;
