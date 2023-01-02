@@ -80,6 +80,12 @@ body {
 .inner::-webkit-scrollbar-track-piece:start {
   margin-left: 350px;
 }
+.innerPool::-webkit-scrollbar-track-piece:end {
+  margin-right: 550px; 
+}
+.innerPool::-webkit-scrollbar-track-piece:start {
+  margin-left: 550px;
+}
 .manage::-webkit-scrollbar-track-piece:end {
   margin-right: 300px; 
 }
@@ -585,5 +591,21 @@ tfoot .thSticky:last-child,
 }
 /* } */
 
+.gradientBorder{
+  position: relative;
+    background: linear-gradient(to right,#7E4ACC ,#3FF3D8 );
+    padding: 0.5px;
+    height: 46px;
+    border-radius: 12px;
+    
+}
 
- 
+  .gradientBorder:hover{
+    box-shadow: 0px 4px 16px #430D95;
+  }
+
+ .innerContent{
+   z-index: 2;
+   margin:0;
+   position: relative;
+ }

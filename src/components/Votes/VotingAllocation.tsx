@@ -139,7 +139,7 @@ export function ColorText(props: IColorTextProps) {
   return (
     <div
       className="flex gap-1 items-center text-f12 w-max cursor-pointer"
-      onClick={() => props.onClick()}
+      onMouseEnter={() => props.onClick()}
     >
       <div className="w-[15px] h-[15px]" style={{ backgroundColor: props.color }}></div>
       <div>{props.text}</div>

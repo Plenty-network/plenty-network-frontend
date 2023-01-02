@@ -415,7 +415,7 @@ export function ShortCard(props: IShortCardProps) {
           isGaugeAvailable={isGaugeAvailable}
         />
       )}
-      <div className={` overflow-x-auto inner  ${props.className}`}>
+      <div className={` overflow-x-auto innerPool  ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={poolsTableData}
