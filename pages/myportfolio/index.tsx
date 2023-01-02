@@ -24,7 +24,7 @@ import { MyPortfolioCardHeader, MyPortfolioHeader } from "../../src/components/P
 import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTable";
 import { getVeNFTsList } from "../../src/api/votes";
 import { IVeNFTData } from "../../src/api/votes/types";
-import { getAllTokensBalanceFromTzkt } from "../../src/api/util/balance";
+import { getBalanceFromTzkt } from "../../src/api/util/balance";
 
 import CreateLock from "../../src/components/Votes/CreateLock";
 import ConfirmTransaction from "../../src/components/ConfirmTransaction";
@@ -87,12 +87,6 @@ import { fetchVotesStatsData } from "../../src/redux/myPortfolio/votesStats";
 import { VideoModal } from "../../src/components/Modal/videoModal";
 import { isMobile } from "react-device-detect";
 import { PortfolioDropdown } from "../../src/components/PortfolioSection";
-
-import {
-  IAllBalanceResponse,
-  IAllTokensBalance,
-  IAllTokensBalanceResponse,
-} from "../../src/api/util/types";
 import nFormatter from "../../src/api/util/helpers";
 
 export enum MyPortfolioSection {
@@ -205,31 +199,10 @@ function MyPortfolio(props: any) {
   const statsVotesFetching: boolean = useAppSelector(
     (state) => state.portfolioStatsVotes.votesStatsFetching
   );
-  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
-    success: false,
-    allTokensBalances: {} as IAllTokensBalance,
-  });
+
   const initialPriceCall = useRef<boolean>(true);
   const initialLpPriceCall = useRef<boolean>(true);
-  useEffect(() => {
-    setAllBalance({
-      success: false,
-      allTokensBalances: {} as IAllTokensBalance,
-    });
-    if (userAddress) {
-      getAllTokensBalanceFromTzkt(Object.values(token), userAddress).then(
-        (response: IAllTokensBalanceResponse) => {
-          setAllBalance(response);
-          setPlyBalance(response.allTokensBalances["PLY"].balance);
-        }
-      );
-    } else {
-      setAllBalance({
-        success: false,
-        allTokensBalances: {} as IAllTokensBalance,
-      });
-    }
-  }, [userAddress, token]);
+
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
@@ -311,6 +284,7 @@ function MyPortfolio(props: any) {
     tvl: statsTvl,
     isFetching: statsTvlFetching,
   });
+
   useEffect(() => {
     setStatsPosition({
       success: true,
@@ -332,14 +306,6 @@ function MyPortfolio(props: any) {
       isFetching: statsVotesFetching,
     });
   }, [statsVotesFetching]);
-
-  // useEffect(() => {
-  //   if (userAddress) {
-  //     getUserBalanceByRpc("PLY", userAddress).then((res) => {
-  //       setPlyBalance(res.balance);
-  //     });
-  //   }
-  // }, [userAddress, tokenPrice, balanceUpdate, token, props.operationSuccesful, props.isLoading]);
 
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
@@ -383,7 +349,37 @@ function MyPortfolio(props: any) {
       setVeNFTlist([]);
     }
   }, [userAddress, currentEpoch?.epochNumber]);
+  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
+  useEffect(() => {
+    const updateBalance = async () => {
+      const balancePromises = [];
 
+      if (userAddress) {
+        balancePromises.push(
+          getBalanceFromTzkt(
+            String(token["PLY"]?.address),
+            token["PLY"].tokenId,
+            token["PLY"].standard,
+            userAddress,
+            "PLY"
+          )
+        );
+        const balanceResponse = await Promise.all(balancePromises);
+
+        setUserBalances((prev) => ({
+          ...prev,
+          ...balanceResponse.reduce(
+            (acc, cur) => ({
+              ...acc,
+              [cur.identifier]: cur.balance,
+            }),
+            {}
+          ),
+        }));
+      }
+    };
+    updateBalance();
+  }, [userAddress, token, props.operationSuccesful]);
   useEffect(() => {
     if (veNFTlist.length > 0) {
       setSelectednft({
@@ -1865,7 +1861,7 @@ function MyPortfolio(props: any) {
           setLockingEndData={setLockingEndData}
           lockingEndData={lockingEndData}
           tokenPrice={tokenPrice}
-          allBalance={allBalance}
+          allBalance={userBalances}
           IncreaseLockEndOperation={IncreaseLockEndOperation}
           IncreaseLockValueOperation={IncreaseLockValueOperation}
           handleIncreaseVoteOperation={handleIncreaseVoteOperation}
@@ -1888,7 +1884,7 @@ function MyPortfolio(props: any) {
           setLockingEndData={setLockingEndData}
           lockingEndData={lockingEndData}
           tokenPrice={tokenPrice}
-          plyBalance={plyBalance}
+          plyBalance={new BigNumber(userBalances["PLY"])}
         />
       )}
       {showConfirmTransaction && (

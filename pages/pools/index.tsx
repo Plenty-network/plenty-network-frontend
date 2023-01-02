@@ -98,7 +98,7 @@ export default function Pools(props: IIndexProps) {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
   const [searchValue, setSearchValue] = React.useState("");
-  const [isbanner, setisBanner] = React.useState(true);
+  const [isbanner, setisBanner] = React.useState(false);
   const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
   const handleNewPool = () => {
     setShowNewPoolPopup(true);
@@ -190,7 +190,7 @@ export default function Pools(props: IIndexProps) {
               onChange={setSearchValue}
             />
           </div>
-          <div className="sticky top-0 z-10">
+          <div className="sticky top-[-1px] z-10">
             <CardHeader
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}

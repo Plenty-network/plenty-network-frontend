@@ -165,6 +165,28 @@ function TokenModalPool(props: ISwapModalProps) {
 
       if (filterTokenslist.length === 0) {
         if (props.searchQuery !== "" && props.searchQuery.length > 8) {
+          props.show &&
+            getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
+              if (res.allTokensList.length !== 0) {
+                getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
+                  setContractTokenBalance(res.allTokensBalances);
+                });
+                const res1 = res.allTokensList.map((token) => ({
+                  name: token.symbol,
+                  image: token.iconUrl ? token.iconUrl.toString() : fallbacksvg,
+                  address: "",
+                  chainType: Chain.TEZOS,
+                  interface: token,
+                }));
+
+                setTokensToShow(res1);
+              } else {
+                setTokensToShow([]);
+              }
+            });
+        }
+      } else if (props.searchQuery !== "" && props.searchQuery.length > 8) {
+        props.show &&
           getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
             if (res.allTokensList.length !== 0) {
               getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
@@ -178,34 +200,14 @@ function TokenModalPool(props: ISwapModalProps) {
                 interface: token,
               }));
 
-              setTokensToShow(res1);
+              const result = Array.from(
+                new Set([...filterTokenslist, ...getUnion(res1, filterTokenslist)])
+              );
+              setTokensToShow(result);
             } else {
-              setTokensToShow([]);
+              setTokensToShow(filterTokenslist);
             }
           });
-        }
-      } else if (props.searchQuery !== "" && props.searchQuery.length > 8) {
-        getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
-          if (res.allTokensList.length !== 0) {
-            getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
-              setContractTokenBalance(res.allTokensBalances);
-            });
-            const res1 = res.allTokensList.map((token) => ({
-              name: token.symbol,
-              image: token.iconUrl ? token.iconUrl.toString() : fallbacksvg,
-              address: "",
-              chainType: Chain.TEZOS,
-              interface: token,
-            }));
-
-            const result = Array.from(
-              new Set([...filterTokenslist, ...getUnion(res1, filterTokenslist)])
-            );
-            setTokensToShow(result);
-          } else {
-            setTokensToShow(filterTokenslist);
-          }
-        });
         //setTokensToShow(filterTokenslist);
       } else {
         setTokensToShow(filterTokenslist);

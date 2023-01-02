@@ -18,7 +18,9 @@ interface ISwapModalProps {
   onhide: Function;
   tokenIn: tokenParameter;
   isSuccess: boolean;
-  allBalance: IAllTokensBalance;
+  allBalance: {
+    [key: string]: string;
+  };
 }
 function TokenModalMigrate(props: ISwapModalProps) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -106,22 +108,22 @@ function TokenModalMigrate(props: ISwapModalProps) {
                         <span>New!</span>
                       </div>
                     )}
-                    {props.isSuccess && props.allBalance[token.name]?.balance ? (
+                    {props.isSuccess && props.allBalance[token.name] ? (
                       <div className="font-subtitle4 cursor-pointer ml-auto mt-[7px]">
                         <ToolTip
                           position={Position.top}
                           message={
-                            props.allBalance[token.name]?.balance
-                              ? fromExponential(props.allBalance[token.name]?.balance.toString())
+                            props.allBalance[token.name]
+                              ? fromExponential(props.allBalance[token.name].toString())
                               : "0"
                           }
-                          disable={Number(props.allBalance[token.name]?.balance) === 0}
+                          disable={Number(props.allBalance[token.name]) === 0}
                         >
-                          {props.allBalance[token.name]?.balance
-                            ? Number(props.allBalance[token.name]?.balance) > 0
-                              ? props.allBalance[token.name]?.balance.isLessThan(0.01)
+                          {props.allBalance[token.name]
+                            ? Number(props.allBalance[token.name]) > 0
+                              ? new BigNumber(props.allBalance[token.name]).isLessThan(0.01)
                                 ? "<0.01"
-                                : nFormatter(props.allBalance[token.name]?.balance)
+                                : nFormatter(new BigNumber(props.allBalance[token.name]))
                               : "0.0"
                             : "0.0"}
                         </ToolTip>

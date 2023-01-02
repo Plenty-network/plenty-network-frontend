@@ -2,7 +2,8 @@ import clsx from "clsx";
 import "animate.css";
 import { isMobile } from "react-device-detect";
 import fromExponential from "from-exponential";
-import refresh from "../../../src/assets/icon/swap/refresh.svg";
+import refresh from "../../../public/assets/swapRefresh.json";
+//import refresh from "../../../src/assets/icon/swap/refresh.svg";
 import settings from "../../../src/assets/icon/swap/settings.svg";
 import arrowDown from "../../../src/assets/icon/swap/arrowDown.svg";
 import ratesrefresh from "../../../src/assets/icon/swap/ratesrefresh.svg";
@@ -348,7 +349,12 @@ function SwapTab(props: ISwapTabProps) {
           className="py-1 cursor-pointer px-15 h-8 border border-text-700 rounded-[21px] ml-auto"
           onClick={() => refreshAllData(true)}
         >
-          <Image alt={"alt"} src={refresh} height={"14px"} width={"15px"} />
+          <Lottie
+            animationData={refresh}
+            loop={isRefresh ? true : false}
+            style={{ height: "20px", width: "20px" }}
+          />
+          {/* <Image alt={"alt"} src={refresh} height={"14px"} width={"15px"} /> */}
         </div>
         <div
           ref={refSettingTab}

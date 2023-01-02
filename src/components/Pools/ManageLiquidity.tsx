@@ -103,7 +103,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
-  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
+
   const [sharePool, setSharePool] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
@@ -120,10 +120,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [contentTransaction, setContentTransaction] = useState("");
   const [vePLYOptions, setVePLYOptions] = useState<IVePLYData[]>([]);
   const [isListLoading, setIsListLoading] = useState(false);
-  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
-    success: false,
-    allTokensBalances: {} as IAllTokensBalance,
-  });
+  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   useEffect(() => {
     const updateBalance = async () => {
       const balancePromises = [];
@@ -136,7 +133,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           balancePromises.push(getTezBalance(walletAddress));
         }
 
-        props.tokenIn.symbol && props.tokenIn.symbol.toLowerCase() !== "xtz" &&
+        props.tokenIn.symbol &&
+          props.tokenIn.symbol.toLowerCase() !== "xtz" &&
           balancePromises.push(
             getBalanceFromTzkt(
               String(TOKEN[props.tokenIn.symbol]?.address),
@@ -146,7 +144,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               props.tokenIn.symbol
             )
           );
-        props.tokenOut.symbol && props.tokenOut.symbol.toLowerCase() !== "xtz" &&
+        props.tokenOut.symbol &&
+          props.tokenOut.symbol.toLowerCase() !== "xtz" &&
           balancePromises.push(
             getBalanceFromTzkt(
               String(TOKEN[props.tokenOut.symbol]?.address),

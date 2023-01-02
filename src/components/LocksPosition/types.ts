@@ -58,7 +58,9 @@ export interface IManageLockProps {
   handleIncreaseVoteOperation: () => void;
   setUpdatedPlyVoteValue: React.Dispatch<React.SetStateAction<string>>;
 
-  allBalance: IAllTokensBalanceResponse;
+  allBalance: {
+    [key: string]: string;
+  };
   show: boolean;
 
   setLockingEndData: React.Dispatch<

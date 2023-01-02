@@ -24,27 +24,18 @@ async function isValidURL(userInput: string) {
   }
 }
 function NodeSelector(props: any) {
-  // const LOCAL_RPC_NODES: {
-  //   [id: string]: string;
-  // } = {
-  //   PLENTY: "https://mifx20dfsr.windmill.tools/",
-  //   GIGANODE: "https://mainnet-tezos.giganode.io/",
-  //   CRYPTONOMIC: "https://tezos-prod.cryptonomic-infra.tech/",
-  // };
   const LOCAL_RPC_NODES: {
     [id: string]: string;
   } = {
     TZKT: "https://rpc.tzkt.io/ghostnet/",
     SmartPY: "https://ghostnet.smartpy.io/",
+    PLENTY: "https://mifx20dfsr.windmill.tools/",
   };
-  // const nodeNames = {
-  //   PLENTY: 'Plenty node',
-  //   GIGANODE: 'Giganode',
-  //   CRYPTONOMIC: 'Cryptonomic',
-  // };
+
   const nodeNames = {
     TZKT: "TZKT",
     SmartPY: "SmartPY",
+    PLENTY: "Plenty Node",
   };
 
   const [rpcNodeDetecting, setRpcNodeDetecting] = useState(false);
@@ -229,6 +220,7 @@ const mapStateToProps = (state: { rpcData: { rpcNode: any } }) => ({
 });
 
 const mapDispatchToProps = (dispatch: (arg0: any) => any) => ({
+  //@ts-ignore
   setRpcNode: (rpcNode: string) => dispatch(setRpcNode(rpcNode)),
 });
 
