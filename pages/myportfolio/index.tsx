@@ -93,6 +93,7 @@ import {
   IAllTokensBalance,
   IAllTokensBalanceResponse,
 } from "../../src/api/util/types";
+import nFormatter from "../../src/api/util/helpers";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -612,19 +613,7 @@ function MyPortfolio(props: any) {
       </p>
     );
   }, []);
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
 
-    return num.toFixed(2);
-  }
   const handleWithdrawOperation = () => {
     setContentTransaction(`Withdraw ${nFormatter(manageData.baseValue)} PLY`);
     setClaimState(-1 as EClaimAllState);

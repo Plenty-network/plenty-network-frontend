@@ -2,21 +2,9 @@ import * as React from "react";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { BigNumber } from "bignumber.js";
 import { ITotalVotesProps } from "./types";
+import nFormatter from "../../api/util/helpers";
 
 export function TotalVotes(props: ITotalVotesProps) {
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
   return (
     <>
       <ToolTip

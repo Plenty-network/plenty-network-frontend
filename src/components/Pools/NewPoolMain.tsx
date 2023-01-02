@@ -28,7 +28,11 @@ import { tokenType } from "../../constants/swap";
 import { getDexAddress } from "../../api/util/fetchConfig";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
-import { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import nFormatter, {
+  changeSource,
+  imageExists,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { IAllTokensBalance } from "../../api/util/types";
 import { tokenIcons } from "../../constants/tokensList";
 
@@ -204,19 +208,6 @@ function NewPoolMain(props: ILiquidityProps) {
         )
       : handleLiquidityInput(props.userBalances[props.tokenIn.name]?.balance.toNumber(), "tokenIn");
   };
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
 
   const onClickSecondAmount = () => {
     props.tokenOut.name === "tez"

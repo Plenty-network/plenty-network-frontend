@@ -51,7 +51,7 @@ const getuDEFIPrice = async (): Promise<{ uDEFIinUSD: number }> => {
  * Gets price of agEUR.e from Ethereum chain
  * Deprecate when token is listed on Tezos exchanges
  */
-
+// TODO: Remove for mainnet, get from analytics
 export const getagEURePrice = async (): Promise<{ agEUReInUSD: number }> => {
   try {
     const url = 'https://api.angle.money/v1/prices';
@@ -83,7 +83,7 @@ export const getagEURePrice = async (): Promise<{ agEUReInUSD: number }> => {
   }
 };
 
-export const getXtzDollarPrice = async (): Promise<number> => {
+const getXtzDollarPrice = async (): Promise<number> => {
   const xtzDollarValueUrl = Config.API.url;
   const xtzDollarValue = await axios.get(xtzDollarValueUrl);
   const xtzPrice = xtzDollarValue.data.market_data.current_price.usd;
@@ -92,23 +92,22 @@ export const getXtzDollarPrice = async (): Promise<number> => {
 /**
  * Gets price of tokens to show during trade
  */
-// TODO :  get angle protocol to add plenty.network in whitelist
-// TODO : Mainnet launch take a look at Pricing function
+
 export const getTokenPrices = async (): Promise<{
   success: boolean;
   tokenPrice: { [id: string]: number };
 }> => {
   try {
-    const state = store.getState();
-    const TOKEN = state.config.tokens;
+    // const state = store.getState();
+    // const TOKEN = state.config.tokens;
     const pricesResponse = await axios.get(
       'https://api.teztools.io/token/prices'
     );
     const tokenPriceResponse = pricesResponse.data;
-    const ctezPrice = await getCtezPrice();
-    const uDEFIPrice = await getuDEFIPrice();
+    // const ctezPrice = await getCtezPrice();
+    // const uDEFIPrice = await getuDEFIPrice();
     // const agEurePrice = await getagEURePrice();
-    const xtzPrice = await getXtzDollarPrice();
+    // const xtzPrice = await getXtzDollarPrice();
 
     const tokenPrice: { [id: string]: number } = {};
 
@@ -124,7 +123,7 @@ export const getTokenPrices = async (): Promise<{
       tokenPrice[x.token] = Number(x.price.value);
     }
 
-    // TODO: Find solution with Anshu for .e token prices
+    // TODO: Find solution with Anshu for .e token prices //Solution - Remove in mainnet, ctez pairs will be added.
     for (const x in Config.WRAPPED_ASSETS[connectedNetwork]) {
       if (
         // x === 'DAI.e' ||
@@ -142,12 +141,12 @@ export const getTokenPrices = async (): Promise<{
     }
     // External Price Feeds
     // tokenPrice['ctez'] = ctezPrice.ctezPriceInUSD;
-    tokenPrice['uDEFI'] = uDEFIPrice.uDEFIinUSD;
+    // tokenPrice['uDEFI'] = uDEFIPrice.uDEFIinUSD;
     // tokenPrice['agEUR.e'] = agEurePrice.agEUReInUSD;
     // tokenPrice['tez'] = xtzPrice;
 
     // Hardcoding PLY Price for development
-    tokenPrice['PLY'] = 1;
+    // tokenPrice['PLY'] = 1;
 
     return {
       success: true,

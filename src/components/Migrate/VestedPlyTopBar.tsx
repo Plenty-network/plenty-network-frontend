@@ -11,6 +11,7 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IVestedPlyTopbarProps } from "./types";
 import PieChartButton from "../LocksPosition/PieChart";
 import { useCountdown } from "../../hooks/useCountDown";
+import nFormatter from "../../api/util/helpers";
 
 export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
   const remainingTime = new BigNumber(props.vestedData.nextClaim).minus(Date.now());
@@ -19,19 +20,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
   );
 
   const remainingPercentage = remainingTime.multipliedBy(100).dividedBy(totalWaitingTime);
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000)?.toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000)?.toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000)?.toFixed(2) + "K";
-    }
 
-    return num?.toFixed(2);
-  }
   const [days, hours, minutes, seconds] = useCountdown(
     props.vestedData?.nextClaim?.isGreaterThan(0)
       ? props.vestedData?.nextClaim?.toNumber()
