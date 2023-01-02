@@ -335,8 +335,8 @@ export const getAllPoolsData = async (
     const TOKENS = state.config.tokens;
 
     const [poolsResponse, analyticsResponse] = await Promise.all([
-      axios.get(`${Config.VE_INDEXER}pools`),
-      axios.get(`${Config.PLY_INDEXER}ve/pools`),
+      axios.get(`${Config.VE_INDEXER[connectedNetwork]}pools`),
+      axios.get(`${Config.PLY_INDEXER[connectedNetwork]}ve/pools`),
     ]);
 
     const poolsData: VolumeV1Data[] = poolsResponse.data;
