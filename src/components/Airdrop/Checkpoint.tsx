@@ -78,8 +78,8 @@ function CheckPoint(props: ICheckPoint) {
               : action > 0
               ? action === 2
                 ? "bg-success-500/[0.1] text-success-500"
-                : "bg-info-400/[0.1] text-info-400 cursor-pointer "
-              : "text-primary-500 bg-primary-500/[0.1]"
+                : "bg-info-400/[0.1] text-info-400 r "
+              : "text-primary-500 bg-primary-500/[0.1] cursor-pointer"
           )}
         >
           {props.isFetching ? (
@@ -94,22 +94,32 @@ function CheckPoint(props: ICheckPoint) {
                 ref={tweetRef}
               >
                 {action === 0 && (
-                  <Action action="Take action" value={props.claimData.perMissionAmount} />
+                  <Action
+                    action="Take action"
+                    value={props.claimData.perMissionAmount}
+                    href={props.href}
+                  />
                 )}
               </TwitterShareButton>
             </span>
           ) : action > 0 ? (
             action === 2 ? (
-              <Action action="claimed" />
+              <Action action="Claimed" href={props.href} />
             ) : (
-              <Action action="Completed" value={props.claimData.perMissionAmount} />
+              <Action
+                action="Completed"
+                value={props.claimData.perMissionAmount}
+                href={props.href}
+              />
             )
           ) : (
-            <Link href={props.href}>
-              {action === 0 && (
-                <Action action="Take action" value={props.claimData.perMissionAmount} />
-              )}
-            </Link>
+            action === 0 && (
+              <Action
+                action="Take action"
+                value={props.claimData.perMissionAmount}
+                href={props.href}
+              />
+            )
           )}
         </p>
       </div>
