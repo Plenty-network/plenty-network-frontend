@@ -401,6 +401,7 @@ export function MyPoolTable(props: IShortCardProps) {
           tokenIn={tokenIn}
           tokenOut={tokenOut}
           closeFn={props.setShowLiquidityModal}
+          showLiquidityModal={props.showLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}
           isGaugeAvailable={isGaugeAvailable}

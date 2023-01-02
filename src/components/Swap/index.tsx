@@ -112,7 +112,6 @@ function Swap(props: ISwapProps) {
     if (walletAddress) {
       getAllTokensBalanceFromTzkt(Object.values(tokens), walletAddress).then(
         (response: IAllTokensBalanceResponse) => {
-          console.log("ishu", response);
           setAllBalance(response);
         }
       );

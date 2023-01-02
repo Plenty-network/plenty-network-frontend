@@ -124,7 +124,7 @@ function NodeSelector(props: any) {
 
     //}
   };
-  function Options(props: { currentRPC: string; identifier: string }) {
+  function Options(props: { currentRPC: string; identifier: string; name: string }) {
     return (
       <div
         onClick={() => setCurrentRPC(props.identifier)}
@@ -140,7 +140,7 @@ function NodeSelector(props: any) {
         ) : (
           <Image src={greyNode} height={"20px"} width={"20px"} />
         )}
-        <span className="ml-4">{props.identifier}</span>
+        <span className="ml-4">{props.name}</span>
       </div>
     );
   }
@@ -160,7 +160,12 @@ function NodeSelector(props: any) {
           </div>
           <div className="px-2">
             {Object.entries(nodeNames).map(([identifier, name]) => (
-              <Options key={identifier} currentRPC={currentRPC} identifier={identifier} />
+              <Options
+                key={identifier}
+                name={name}
+                currentRPC={currentRPC}
+                identifier={identifier}
+              />
             ))}
             <div className="flex gap-[15px]">
               <div

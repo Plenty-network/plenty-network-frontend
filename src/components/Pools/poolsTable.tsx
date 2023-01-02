@@ -413,6 +413,7 @@ export function ShortCard(props: IShortCardProps) {
           setActiveState={setActiveState}
           activeState={activeState}
           isGaugeAvailable={isGaugeAvailable}
+          showLiquidityModal={props.showLiquidityModal}
         />
       )}
       <div className={` overflow-x-auto innerPool  ${props.className}`}>

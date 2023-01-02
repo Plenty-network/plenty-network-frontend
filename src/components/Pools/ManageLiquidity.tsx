@@ -59,6 +59,7 @@ export interface IManageLiquidityProps {
   setActiveState: React.Dispatch<React.SetStateAction<string>>;
   activeState: string;
   isGaugeAvailable: boolean;
+  showLiquidityModal?: boolean;
 }
 
 export function ManageLiquidity(props: IManageLiquidityProps) {
@@ -830,7 +831,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const closeModal = () => {
     props.closeFn(false);
   };
-  return (
+  return props.showLiquidityModal ? (
     <>
       <PopUpModal
         onhide={closeModal}
@@ -1019,5 +1020,5 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         />
       )}
     </>
-  );
+  ) : null;
 }

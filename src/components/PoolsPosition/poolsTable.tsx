@@ -355,6 +355,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           tokenIn={tokenIn}
           tokenOut={tokenOut}
           closeFn={setShowLiquidityModal}
+          showLiquidityModal={showLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}
           isGaugeAvailable={isGaugeAvailable}
