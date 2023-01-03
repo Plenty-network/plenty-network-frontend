@@ -115,6 +115,7 @@ export default function Pools(props: IIndexProps) {
     setIsFetching(true);
     if (Object.keys(tokenPrices).length !== 0 && activeStateTab !== POOL_TYPE.MYPOOLS) {
       getAllPoolsData(tokenPrices, 0).then((res) => {
+        console.log("poolsdata", res);
         if (res.success) {
           if (res.allData.length) {
             setIsFetching(false);
@@ -134,6 +135,7 @@ export default function Pools(props: IIndexProps) {
     setmyPoolsData([]);
     if (Object.keys(tokenPrices).length !== 0 && activeStateTab === POOL_TYPE.MYPOOLS) {
       getMyPoolsData(walletAddress, tokenPrices, 0).then((res) => {
+        console.log("mypoolsdata", res);
         if (res.allData.length) {
           setIsFetchingMyPool(false);
           setmyPoolsData(res.allData);

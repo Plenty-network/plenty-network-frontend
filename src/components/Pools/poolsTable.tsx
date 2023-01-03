@@ -62,9 +62,6 @@ export function ShortCard(props: IShortCardProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
-  const TOKEN = useAppSelector((state) => state.config.tokens);
-
-  const walletAddress = useAppSelector((state) => state.wallet.address);
 
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
     props.data,
@@ -82,18 +79,7 @@ export function ShortCard(props: IShortCardProps) {
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
-  const [allBalance, setAllBalance] = useState<IAllTokensBalance>({} as IAllTokensBalance);
-  useEffect(() => {
-    if (walletAddress) {
-      getAllTokensBalanceFromTzkt(Object.values(TOKEN), walletAddress).then(
-        (response: IAllTokensBalanceResponse) => {
-          setAllBalance(response.allTokensBalances);
-        }
-      );
-    } else {
-      setAllBalance({} as IAllTokensBalance);
-    }
-  }, [walletAddress, TOKEN]);
+
   const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
@@ -442,7 +428,6 @@ export function ShortCard(props: IShortCardProps) {
           showLiquidityModal={props.showLiquidityModal}
           setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
           filter={props.poolsFilter}
-          allBalance={allBalance}
         />
       )}
       <div className={` overflow-x-auto innerPool  ${props.className}`}>
