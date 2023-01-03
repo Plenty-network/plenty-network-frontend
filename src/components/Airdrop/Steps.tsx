@@ -23,7 +23,7 @@ function Steps(props: ISteps) {
   return (
     <>
       <div
-        className="flex cursor-pointer px-5"
+        className="flex items-center cursor-pointer px-5"
         onClick={() => setIsDropDownActive(!isDropDownActive)}
       >
         {isDropDownActive ? (
@@ -51,7 +51,7 @@ function Steps(props: ISteps) {
             </span>
           </p>
         )}
-        <p className="ml-auto  ">
+        <p className="ml-auto  relative top-[-3px]">
           <Image
             alt={"alt"}
             className={clsx("cursor-pointer", isDropDownActive ? "rotate-0" : "rotate-180")}
@@ -60,12 +60,7 @@ function Steps(props: ISteps) {
         </p>
       </div>
       {isDropDownActive && (
-        <div
-          className={clsx(
-            "mt-5 px-3 animate__animated ",
-            isDropDownActive ? "animate__fadeInDown animate__faster" : ""
-          )}
-        >
+        <div className={clsx("mt-5 px-3 ", isDropDownActive ? "scale-in-animation" : "")}>
           {AIRDROP_MISSIONS_FOR_DISPLAY.map((item) => {
             return (
               <>
