@@ -60,6 +60,7 @@ export interface IManageLiquidityProps {
   activeState: string;
   isGaugeAvailable: boolean;
   showLiquidityModal?: boolean;
+  setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function ManageLiquidity(props: IManageLiquidityProps) {
@@ -122,6 +123,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [vePLYOptions, setVePLYOptions] = useState<IVePLYData[]>([]);
   const [isListLoading, setIsListLoading] = useState(false);
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
+  console.log("ishu", props, userBalances);
+  console.log("ishu1uuu");
   useEffect(() => {
     const updateBalance = async () => {
       const balancePromises = [];
@@ -829,9 +832,11 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   };
 
   const closeModal = () => {
+    props.setShowLiquidityModalPopup(false);
     props.closeFn(false);
   };
-  return props.showLiquidityModal ? (
+
+  return (
     <>
       <PopUpModal
         onhide={closeModal}
@@ -1020,5 +1025,5 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         />
       )}
     </>
-  ) : null;
+  );
 }

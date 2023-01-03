@@ -36,6 +36,7 @@ export interface IManageLiquidityProps {
   showLiquidityModal: boolean;
   setReFetchPool: React.Dispatch<React.SetStateAction<boolean>>;
   reFetchPool: boolean;
+  setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function NewPool(props: IManageLiquidityProps) {
@@ -427,6 +428,7 @@ export function NewPool(props: IManageLiquidityProps) {
                 firstTokenAmount={firstTokenAmountLiq}
                 secondTokenAmount={secondTokenAmountLiq}
                 userBalances={allBalance.allTokensBalances}
+                setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
                 setSecondTokenAmount={setSecondTokenAmountLiq}
                 setFirstTokenAmount={setFirstTokenAmountLiq}
                 tokenIn={tokenIn}

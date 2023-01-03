@@ -48,6 +48,7 @@ export interface IShortCardProps {
   data: IAllPoolsData[];
   isFetching: boolean;
   isError: boolean;
+  setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IManageBtnProps {
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -395,6 +396,7 @@ export function ShortCard(props: IShortCardProps) {
               image: getImagesPath(props.tokenB.toString()),
               symbol: props.tokenB,
             });
+            console.log("lala");
             props.setShowLiquidityModal(true);
           }}
         >
@@ -414,6 +416,7 @@ export function ShortCard(props: IShortCardProps) {
           activeState={activeState}
           isGaugeAvailable={isGaugeAvailable}
           showLiquidityModal={props.showLiquidityModal}
+          setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
         />
       )}
       <div className={` overflow-x-auto innerPool  ${props.className}`}>

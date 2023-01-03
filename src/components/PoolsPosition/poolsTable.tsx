@@ -359,6 +359,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           setActiveState={setActiveState}
           activeState={activeState}
           isGaugeAvailable={isGaugeAvailable}
+          setShowLiquidityModalPopup={setShowLiquidityModal}
         />
       )}
     </>

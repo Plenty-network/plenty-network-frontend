@@ -383,7 +383,7 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (veNFTlist.length > 0) {
       setSelectednft({
-        votingPower: veNFTlist[0].votingPower.toString(),
+        votingPower: veNFTlist[0].currentVotingPower.toString(),
         tokenId: veNFTlist[0].tokenId.toString(),
       });
     } else {

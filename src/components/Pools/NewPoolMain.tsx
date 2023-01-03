@@ -72,6 +72,7 @@ interface ILiquidityProps {
   setShowLiquidityModal: (val: boolean) => void;
   showLiquidityModal: boolean;
   contractTokenBalance: IAllTokensBalance;
+  setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export const Pair = {
   VOLATILE: "Volatile pair",
@@ -499,6 +500,7 @@ function NewPoolMain(props: ILiquidityProps) {
           setActiveState={setActiveState}
           activeState={activeState}
           isGaugeAvailable={isExist && isGauge}
+          setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
         />
       )}
     </>

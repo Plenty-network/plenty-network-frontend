@@ -42,6 +42,7 @@ export interface IShortCardProps {
   reFetchPool: boolean;
   data: IMyPoolsData[];
   isFetchingMyPool: boolean;
+  setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IManageBtnProps {
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -405,6 +406,7 @@ export function MyPoolTable(props: IShortCardProps) {
           setActiveState={setActiveState}
           activeState={activeState}
           isGaugeAvailable={isGaugeAvailable}
+          setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
         />
       )}
       <div className={` overflow-x-auto inner  ${props.className}`}>
