@@ -23,15 +23,11 @@ import { NoContentAvailable, NoDataError } from "./Component/ConnectWalletOrNoTo
 import { PoolsText, PoolsTextWithTooltip } from "./Component/PoolsText";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
-import stake from "../../assets/icon/pools/stakePool.svg";
 import newPool from "../../assets/icon/pools/newPool.svg";
 import Image from "next/image";
 import clsx from "clsx";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { isError } from "lodash";
-import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
-import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 
 export interface IShortCardProps {
   className?: string;
@@ -44,7 +40,7 @@ export interface IShortCardProps {
   setShowLiquidityModal: (val: boolean) => void;
   showLiquidityModal: boolean;
   reFetchPool: boolean;
-  data: IAllPoolsData[];
+  //data: IAllPoolsData[];
   isFetching: boolean;
   isError: boolean;
   setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
@@ -62,11 +58,11 @@ export function ShortCard(props: IShortCardProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
-
+  const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
-    props.data,
+    tokenPrices,
     props.poolsFilter,
-    "",
+
     props.reFetchPool
   );
   const [poolsTableData, isFetched] = usePoolsTableSearch(

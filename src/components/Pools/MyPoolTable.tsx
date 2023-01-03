@@ -5,7 +5,7 @@ import { Column } from "react-table";
 import { useEffect, useState } from "react";
 import { POOL_TYPE } from "../../../pages/pools";
 import { IMyPoolsData } from "../../api/pools/types";
-import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
+import { useMyPoolsTableFilter, usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
 import { usePoolsTableSearch } from "../../hooks/usePoolsTableSearch";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import { AppDispatch, store, useAppSelector } from "../../redux";
@@ -43,7 +43,7 @@ export interface IShortCardProps {
   setShowLiquidityModal: (val: boolean) => void;
   showLiquidityModal: boolean;
   reFetchPool: boolean;
-  data: IMyPoolsData[];
+  //data: IMyPoolsData[];
   isFetchingMyPool: boolean;
   setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -58,13 +58,16 @@ export interface IManageBtnProps {
 }
 export function MyPoolTable(props: IShortCardProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
+  const tokens = useAppSelector((state) => state.config.tokens);
+  const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
 
-  const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
-    props.data,
+  const { data: poolTableData = [], isFetched: isFetch = false } = useMyPoolsTableFilter(
+    userAddress,
+    tokenPrices,
     props.poolsFilter,
-    "",
+
     props.reFetchPool
   );
 

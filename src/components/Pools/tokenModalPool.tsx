@@ -168,9 +168,10 @@ function TokenModalPool(props: ISwapModalProps) {
           props.show &&
             getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
               if (res.allTokensList.length !== 0) {
-                getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
-                  setContractTokenBalance(res.allTokensBalances);
-                });
+                props.show &&
+                  getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
+                    setContractTokenBalance(res.allTokensBalances);
+                  });
                 const res1 = res.allTokensList.map((token) => ({
                   name: token.symbol,
                   image: token.iconUrl ? token.iconUrl.toString() : fallbacksvg,
@@ -189,9 +190,10 @@ function TokenModalPool(props: ISwapModalProps) {
         props.show &&
           getTokenDataFromTzkt(props.searchQuery.trim()).then((res) => {
             if (res.allTokensList.length !== 0) {
-              getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
-                setContractTokenBalance(res.allTokensBalances);
-              });
+              props.show &&
+                getAllTokensBalanceFromTzkt(res.allTokensList, userAddress).then((res) => {
+                  setContractTokenBalance(res.allTokensBalances);
+                });
               const res1 = res.allTokensList.map((token) => ({
                 name: token.symbol,
                 image: token.iconUrl ? token.iconUrl.toString() : fallbacksvg,
