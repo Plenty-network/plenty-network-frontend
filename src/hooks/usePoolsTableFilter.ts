@@ -14,5 +14,5 @@ export const usePoolsTableFilter = (
     }
     return { data: poolTableData, isFetched: true };
   }
-  return { data: poolTableData, isFetched: false };
+  return { data: poolTableData, isFetched: true };
 };

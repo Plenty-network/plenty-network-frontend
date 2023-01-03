@@ -31,15 +31,10 @@ yarn-lock.json
 
 # local env files
 .env*.local
+.env
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
-package-lock.json
-package-lock.json
-package-lock.json
-package-lock.json
-package-lock.json
-package-lock.json

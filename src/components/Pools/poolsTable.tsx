@@ -1,13 +1,10 @@
 import * as React from "react";
 import { isMobile } from "react-device-detect";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Column } from "react-table";
 import { POOL_TYPE } from "../../../pages/pools";
-import {
-  IAllPoolsData,
-  IAllPoolsDataResponse,
-  IPoolsDataWrapperResponse,
-} from "../../api/pools/types";
+import { IAllPoolsData, IAllPoolsDataResponse } from "../../api/pools/types";
 import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
 import { usePoolsTableSearch } from "../../hooks/usePoolsTableSearch";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
@@ -33,6 +30,8 @@ import clsx from "clsx";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { isError } from "lodash";
+import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
+import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 
 export interface IShortCardProps {
   className?: string;
@@ -48,6 +47,7 @@ export interface IShortCardProps {
   data: IAllPoolsData[];
   isFetching: boolean;
   isError: boolean;
+  setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IManageBtnProps {
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -62,6 +62,9 @@ export function ShortCard(props: IShortCardProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
+  const TOKEN = useAppSelector((state) => state.config.tokens);
+
+  const walletAddress = useAppSelector((state) => state.wallet.address);
 
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
     props.data,
@@ -79,6 +82,18 @@ export function ShortCard(props: IShortCardProps) {
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
+  const [allBalance, setAllBalance] = useState<IAllTokensBalance>({} as IAllTokensBalance);
+  useEffect(() => {
+    if (walletAddress) {
+      getAllTokensBalanceFromTzkt(Object.values(TOKEN), walletAddress).then(
+        (response: IAllTokensBalanceResponse) => {
+          setAllBalance(response.allTokensBalances);
+        }
+      );
+    } else {
+      setAllBalance({} as IAllTokensBalance);
+    }
+  }, [walletAddress, TOKEN]);
   const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
@@ -87,16 +102,26 @@ export function ShortCard(props: IShortCardProps) {
     else return "";
   };
   const NoData = React.useMemo(() => {
-    if (userAddress && props.activeStateTab === PoolsCardHeader.Mypools && isFetched) {
+    if (
+      userAddress &&
+      props.activeStateTab === PoolsCardHeader.Mypools &&
+      isFetched &&
+      !props.isFetching
+    ) {
       return <NoContentAvailable setActiveStateTab={props.setActiveStateTab} />;
-    } else if (poolsTableData.length === 0 && props.isError) {
+    } else if (poolsTableData.length === 0 && props.isError && !props.isFetching) {
       return <NoDataError content={"Server down"} />;
-    } else if (poolsTableData.length === 0 && props.searchValue !== "" && isFetched) {
+    } else if (
+      poolsTableData.length === 0 &&
+      props.searchValue !== "" &&
+      isFetched &&
+      !props.isFetching
+    ) {
       return <NoSearchResult />;
     } else if (poolsTableData.length === 0 && !props.isFetching) {
       return <NoDataError content={"No Pools data"} />;
     }
-  }, [userAddress, poolsTableData, isFetched]);
+  }, [userAddress, poolsTableData, isFetched, props.isFetching]);
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "USDC.e",
     image: `/assets/tokens/USDC.e.png`,
@@ -395,6 +420,7 @@ export function ShortCard(props: IShortCardProps) {
               image: getImagesPath(props.tokenB.toString()),
               symbol: props.tokenB,
             });
+
             props.setShowLiquidityModal(true);
           }}
         >
@@ -413,9 +439,13 @@ export function ShortCard(props: IShortCardProps) {
           setActiveState={setActiveState}
           activeState={activeState}
           isGaugeAvailable={isGaugeAvailable}
+          showLiquidityModal={props.showLiquidityModal}
+          setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
+          filter={props.poolsFilter}
+          allBalance={allBalance}
         />
       )}
-      <div className={` overflow-x-auto inner  ${props.className}`}>
+      <div className={` overflow-x-auto innerPool  ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={poolsTableData}

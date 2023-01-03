@@ -28,7 +28,7 @@ export function LocksCloumn(props: ILocksColumnProps) {
             <div className="text-white font-subtitle3 text-left">#{Number(props.id)}</div>
             <a href={"https://objkt.com/"} target="_blank" rel="noreferrer" className="">
               <div className="flex mt-0.5">
-                <p className="font-subtitle1 text-text-500 mr-1">vePLY</p>
+                <p className="font-subtitle1 text-text-500 mr-1">veNFT</p>
                 <Image alt={"alt"} src={link} />
               </div>
             </a>

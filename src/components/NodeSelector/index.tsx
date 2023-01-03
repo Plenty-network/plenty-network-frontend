@@ -24,27 +24,18 @@ async function isValidURL(userInput: string) {
   }
 }
 function NodeSelector(props: any) {
-  // const LOCAL_RPC_NODES: {
-  //   [id: string]: string;
-  // } = {
-  //   PLENTY: "https://mifx20dfsr.windmill.tools/",
-  //   GIGANODE: "https://mainnet-tezos.giganode.io/",
-  //   CRYPTONOMIC: "https://tezos-prod.cryptonomic-infra.tech/",
-  // };
   const LOCAL_RPC_NODES: {
     [id: string]: string;
   } = {
     TZKT: "https://rpc.tzkt.io/ghostnet/",
     SmartPY: "https://ghostnet.smartpy.io/",
+    PLENTY: "https://mifx20dfsr.windmill.tools/",
   };
-  // const nodeNames = {
-  //   PLENTY: 'Plenty node',
-  //   GIGANODE: 'Giganode',
-  //   CRYPTONOMIC: 'Cryptonomic',
-  // };
+
   const nodeNames = {
     TZKT: "TZKT",
     SmartPY: "SmartPY",
+    PLENTY: "Plenty Node",
   };
 
   const [rpcNodeDetecting, setRpcNodeDetecting] = useState(false);
@@ -133,7 +124,7 @@ function NodeSelector(props: any) {
 
     //}
   };
-  function Options(props: { currentRPC: string; identifier: string }) {
+  function Options(props: { currentRPC: string; identifier: string; name: string }) {
     return (
       <div
         onClick={() => setCurrentRPC(props.identifier)}
@@ -149,7 +140,7 @@ function NodeSelector(props: any) {
         ) : (
           <Image src={greyNode} height={"20px"} width={"20px"} />
         )}
-        <span className="ml-4">{props.identifier}</span>
+        <span className="ml-4">{props.name}</span>
       </div>
     );
   }
@@ -169,7 +160,12 @@ function NodeSelector(props: any) {
           </div>
           <div className="px-2">
             {Object.entries(nodeNames).map(([identifier, name]) => (
-              <Options key={identifier} currentRPC={currentRPC} identifier={identifier} />
+              <Options
+                key={identifier}
+                name={name}
+                currentRPC={currentRPC}
+                identifier={identifier}
+              />
             ))}
             <div className="flex gap-[15px]">
               <div
@@ -229,6 +225,7 @@ const mapStateToProps = (state: { rpcData: { rpcNode: any } }) => ({
 });
 
 const mapDispatchToProps = (dispatch: (arg0: any) => any) => ({
+  //@ts-ignore
   setRpcNode: (rpcNode: string) => dispatch(setRpcNode(rpcNode)),
 });
 

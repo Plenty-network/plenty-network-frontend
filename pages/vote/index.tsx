@@ -4,12 +4,7 @@ import Image from "next/image";
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { getAllTokensBalanceFromTzkt } from "../../src/api/util/balance";
-import {
-  IAllBalanceResponse,
-  IAllTokensBalance,
-  IAllTokensBalanceResponse,
-} from "../../src/api/util/types";
+import { getBalanceFromTzkt } from "../../src/api/util/balance";
 import { addRemainingVotesDust, getVeNFTsList, votesPageDataWrapper } from "../../src/api/votes";
 import { ELocksState, ISelectedPool, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import info from "../../src/assets/icon/swap/info.svg";
@@ -97,6 +92,37 @@ export default function Vote() {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
+  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
+  useEffect(() => {
+    const updateBalance = async () => {
+      const balancePromises = [];
+
+      if (userAddress) {
+        balancePromises.push(
+          getBalanceFromTzkt(
+            String(token["PLY"]?.address),
+            token["PLY"].tokenId,
+            token["PLY"].standard,
+            userAddress,
+            "PLY"
+          )
+        );
+        const balanceResponse = await Promise.all(balancePromises);
+
+        setUserBalances((prev) => ({
+          ...prev,
+          ...balanceResponse.reduce(
+            (acc, cur) => ({
+              ...acc,
+              [cur.identifier]: cur.balance,
+            }),
+            {}
+          ),
+        }));
+      }
+    };
+    updateBalance();
+  }, [userAddress, token, balanceUpdate]);
   const dateFormat = (dates: number) => {
     const monthNames = [
       "Jan",
@@ -293,28 +319,6 @@ export default function Vote() {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
-  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
-    success: false,
-    allTokensBalances: {} as IAllTokensBalance,
-  });
-  useEffect(() => {
-    setAllBalance({
-      success: false,
-      allTokensBalances: {} as IAllTokensBalance,
-    });
-    if (userAddress) {
-      getAllTokensBalanceFromTzkt(Object.values(token), userAddress).then(
-        (response: IAllTokensBalanceResponse) => {
-          setAllBalance(response);
-        }
-      );
-    } else {
-      setAllBalance({
-        success: false,
-        allTokensBalances: {} as IAllTokensBalance,
-      });
-    }
-  }, [userAddress, TOKEN, balanceUpdate]);
 
   const resetAllValues = () => {
     setPlyInput("");
@@ -494,6 +498,7 @@ export default function Vote() {
     });
   };
   const handleEpochChange = () => {
+    //@ts-ignore
     dispatch(setSelectedEpoch(currentEpoch));
     setShowEpochPopUp(false);
   };
@@ -832,7 +837,7 @@ export default function Vote() {
           setLockingEndData={setLockingEndData}
           lockingEndData={lockingEndData}
           tokenPrice={tokenPrice}
-          plyBalance={allBalance.allTokensBalances["PLY"]?.balance}
+          plyBalance={new BigNumber(userBalances["PLY"])}
         />
       )}
 
