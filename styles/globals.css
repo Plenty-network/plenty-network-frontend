@@ -593,19 +593,25 @@ tfoot .thSticky:last-child,
 
 .gradientBorder{
   position: relative;
-    background: linear-gradient(to right,#7E4ACC ,#3FF3D8 );
+    background: linear-gradient(to right,rgba(126, 74, 204, 0.5) ,rgba(63, 243, 216, 0.5)
+    );
     padding: 0.5px;
-    height: 46px;
+   
+    height: 45px;
     border-radius: 12px;
     
 }
 
   .gradientBorder:hover{
     box-shadow: 0px 4px 16px #430D95;
+   
+    background: linear-gradient(to right,rgba(126, 74, 204, 1) ,rgba(63, 243, 216, 1)
+    );
   }
 
  .innerContent{
    z-index: 2;
    margin:0;
    position: relative;
+  
  }
