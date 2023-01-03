@@ -62,6 +62,7 @@ const Config: IConfig = {
 
   AIRDROP_SERVER: {
     mainnet: "",
+    // testnet: "http://localhost:3000/",
     testnet: "https://airdrop.plenty.network/",
   },
 
