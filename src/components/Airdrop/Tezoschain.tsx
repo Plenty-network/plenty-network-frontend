@@ -38,7 +38,12 @@ function TezosChain(props: ITezosChain) {
   const handleAirdropOperation = () => {
     localStorage.setItem(
       FIRST_TOKEN_AMOUNT,
-      res.airdropClaimData.pendingClaimableAmount.toFixed(2)
+
+      tweetedAccounts.includes(userAddress)
+        ? res.airdropClaimData.pendingClaimableAmount.toFixed(2)
+        : res.airdropClaimData.pendingClaimableAmount
+            .minus(res.airdropClaimData.perMissionAmount)
+            .toFixed(2)
     );
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -52,7 +57,7 @@ function TezosChain(props: ITezosChain) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Claim airdrop`,
+        trailingText: `Claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -64,7 +69,7 @@ function TezosChain(props: ITezosChain) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
+              trailingText: `Claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
