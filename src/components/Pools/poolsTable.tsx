@@ -102,16 +102,26 @@ export function ShortCard(props: IShortCardProps) {
     else return "";
   };
   const NoData = React.useMemo(() => {
-    if (userAddress && props.activeStateTab === PoolsCardHeader.Mypools && isFetched) {
+    if (
+      userAddress &&
+      props.activeStateTab === PoolsCardHeader.Mypools &&
+      isFetched &&
+      !props.isFetching
+    ) {
       return <NoContentAvailable setActiveStateTab={props.setActiveStateTab} />;
-    } else if (poolsTableData.length === 0 && props.isError) {
+    } else if (poolsTableData.length === 0 && props.isError && !props.isFetching) {
       return <NoDataError content={"Server down"} />;
-    } else if (poolsTableData.length === 0 && props.searchValue !== "" && isFetched) {
+    } else if (
+      poolsTableData.length === 0 &&
+      props.searchValue !== "" &&
+      isFetched &&
+      !props.isFetching
+    ) {
       return <NoSearchResult />;
     } else if (poolsTableData.length === 0 && !props.isFetching) {
       return <NoDataError content={"No Pools data"} />;
     }
-  }, [userAddress, poolsTableData, isFetched]);
+  }, [userAddress, poolsTableData, isFetched, props.isFetching]);
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "USDC.e",
     image: `/assets/tokens/USDC.e.png`,
@@ -410,7 +420,7 @@ export function ShortCard(props: IShortCardProps) {
               image: getImagesPath(props.tokenB.toString()),
               symbol: props.tokenB,
             });
-            console.log("lala");
+
             props.setShowLiquidityModal(true);
           }}
         >
