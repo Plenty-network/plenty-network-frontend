@@ -1,6 +1,7 @@
 import * as React from "react";
 import Image from "next/image";
 import { Column } from "react-table";
+import { useEffect, useState } from "react";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
@@ -23,6 +24,8 @@ import { compareNumericString } from "../../utils/commonUtils";
 import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import clsx from "clsx";
 import { tokenIcons } from "../../constants/tokensList";
+import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
+import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 
 export function PoolsTablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,7 +35,22 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
+  const TOKEN = useAppSelector((state) => state.config.tokens);
+
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const [noSearchResult, setNoSearchResult] = React.useState(false);
+  const [allBalance, setAllBalance] = useState<IAllTokensBalance>({} as IAllTokensBalance);
+  useEffect(() => {
+    if (walletAddress) {
+      getAllTokensBalanceFromTzkt(Object.values(TOKEN), walletAddress).then(
+        (response: IAllTokensBalanceResponse) => {
+          setAllBalance(response.allTokensBalances);
+        }
+      );
+    } else {
+      setAllBalance({} as IAllTokensBalance);
+    }
+  }, [walletAddress, TOKEN]);
 
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "USDC.e",
@@ -360,6 +378,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           activeState={activeState}
           isGaugeAvailable={isGaugeAvailable}
           setShowLiquidityModalPopup={setShowLiquidityModal}
+          allBalance={allBalance}
         />
       )}
     </>

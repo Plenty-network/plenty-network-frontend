@@ -61,9 +61,9 @@ export function PopUpModal(props: IPopUpModalProps) {
             className="absolute right-0 top-[23px] px-6 cursor-pointer hover:opacity-90 hover:scale-90"
             onClick={() => {
               setIsClose(true);
-              setTimeout(() => {
-                props.onhide && props.onhide();
-              }, currentTimeToClose);
+              //setTimeout(() => {
+              props.onhide && props.onhide();
+              // }, currentTimeToClose);
             }}
           >
             {/* close btn */}

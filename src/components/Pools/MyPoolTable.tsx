@@ -2,6 +2,7 @@ import * as React from "react";
 import { isMobile } from "react-device-detect";
 import { useDispatch } from "react-redux";
 import { Column } from "react-table";
+import { useEffect, useState } from "react";
 import { POOL_TYPE } from "../../../pages/pools";
 import { IMyPoolsData } from "../../api/pools/types";
 import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
@@ -28,6 +29,8 @@ import Image from "next/image";
 import clsx from "clsx";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
+import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 
 export interface IShortCardProps {
   className?: string;
@@ -57,6 +60,9 @@ export function MyPoolTable(props: IShortCardProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
+  const TOKEN = useAppSelector((state) => state.config.tokens);
+
+  const walletAddress = useAppSelector((state) => state.wallet.address);
 
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
     props.data,
@@ -64,7 +70,18 @@ export function MyPoolTable(props: IShortCardProps) {
     "",
     props.reFetchPool
   );
-
+  const [allBalance, setAllBalance] = useState<IAllTokensBalance>({} as IAllTokensBalance);
+  useEffect(() => {
+    if (walletAddress) {
+      getAllTokensBalanceFromTzkt(Object.values(TOKEN), walletAddress).then(
+        (response: IAllTokensBalanceResponse) => {
+          setAllBalance(response.allTokensBalances);
+        }
+      );
+    } else {
+      setAllBalance({} as IAllTokensBalance);
+    }
+  }, [walletAddress, TOKEN]);
   const [poolsTableData, isFetched] = usePoolsTableSearch(
     poolTableData,
     props.searchValue,
@@ -365,6 +382,7 @@ export function MyPoolTable(props: IShortCardProps) {
         <div
           className="bg-primary-500/10 font-caption2 md:font-subtitle4 hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-5 md:px-7 py-2 rounded-lg"
           onClick={() => {
+            console.log("lala1");
             dispatch(getTotalVotingPower());
             props.setIsGaugeAvailable(props.isGauge);
             if (props.isGauge) {
@@ -407,6 +425,7 @@ export function MyPoolTable(props: IShortCardProps) {
           activeState={activeState}
           isGaugeAvailable={isGaugeAvailable}
           setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
+          allBalance={allBalance}
         />
       )}
       <div className={` overflow-x-auto inner  ${props.className}`}>
