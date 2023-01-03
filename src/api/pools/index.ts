@@ -460,9 +460,9 @@ export const getMyPoolsData = async (
 
     const [poolsResponse, analyticsResponse, positionsResponse, nonVePositionsResponse] =
       await Promise.all([
-        axios.get(`${Config.VE_INDEXER}pools`),
-        axios.get(`${Config.PLY_INDEXER}ve/pools`),
-        axios.get(`${Config.VE_INDEXER}positions?address=${userTezosAddress}`),
+        axios.get(`${Config.VE_INDEXER[connectedNetwork]}pools`),
+        axios.get(`${Config.PLY_INDEXER[connectedNetwork]}ve/pools`),
+        axios.get(`${Config.VE_INDEXER[connectedNetwork]}positions?address=${userTezosAddress}`),
         getMyNonVEPoolsData(userTezosAddress),
       ]);
 
