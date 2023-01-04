@@ -130,7 +130,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       const balancePromises = [];
 
       if (walletAddress) {
-        console.log("j", props.tokenIn, props.tokenOut, walletAddress, TOKEN);
         if (
           props.tokenIn.symbol.toLowerCase() === "xtz" ||
           props.tokenOut.symbol.toLowerCase() === "xtz"
@@ -175,7 +174,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           ),
         }));
       }
-      console.log("j", userBalances);
     };
     updateBalance();
   }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);

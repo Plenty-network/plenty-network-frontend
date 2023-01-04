@@ -247,6 +247,15 @@ const Table = <D extends object>({
                 );
               })
             : null}
+          <tr className="mx-5 h-16 bg-cardBackGround px-5 py-3 rounded-lg  items-center ">
+            <TablePagination
+              count={pageCount}
+              rowsPerPage={10}
+              page={pageIndex}
+              setPageSize={setPageSize}
+              onChangePage={(number) => gotoPage(number)}
+            />
+          </tr>
           {loading && (
             <tr
               className={` border border-borderCommon h-16 bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg animate-pulse-table `}
@@ -254,15 +263,6 @@ const Table = <D extends object>({
           )}
         </tbody>
       </table>
-      <div className="paginationcontainer">
-        <TablePagination
-          count={pageCount}
-          rowsPerPage={10}
-          page={pageIndex}
-          setPageSize={setPageSize}
-          onChangePage={(number) => gotoPage(number)}
-        />
-      </div>
     </div>
   );
 };

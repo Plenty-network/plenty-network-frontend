@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import left from "../../assets/icon/common/page-left.svg";
 
+import right from "../../assets/icon/common/page-right.svg";
 import { isMobile } from "react-device-detect";
+import Image from "next/image";
+import clsx from "clsx";
 
 type TOnClickHandler = React.MouseEventHandler<HTMLButtonElement>;
 
@@ -38,68 +42,36 @@ const TablePagination: React.FC<ITablePaginationProps> = (props) => {
     <div
       style={{
         display: "flex",
-        marginLeft: "auto",
+
         gap: "30px",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      {!isMobile && (
-        <>
-          <div>
-            <span style={{ color: "#6F6E84" }}>Rows per page:</span>
-            <select
-              value={pageNumber}
-              className="rowperpage"
-              onChange={(e) => handleOnChangePageSize(e.target.value)}
-            >
-              <option value="10">10</option>
-              <option value="20">20</option>
-            </select>
-          </div>
-          <span>
-            {page + 1} of {Math.ceil(count)}
+      <>
+        <div className="flex items-center justify-center">
+          <span
+            onClick={page === 0 ? () => {} : handleBackButtonClick}
+            aria-label="previous page"
+            className={clsx("relative top-[3px] cursor-pointer", page === 0 && "opacity-[0.5]")}
+          >
+            <Image src={left} />
           </span>
-          <div>
-            <span
-              onClick={page === 0 ? () => {} : handleBackButtonClick}
-              aria-label="previous page"
-            >
-              right
-            </span>
-            <span
-              onClick={page >= Math.ceil(count) - 1 ? () => {} : handleNextButtonClick}
-              className="ml-3"
-              aria-label="next page"
-            >
-              left
-            </span>
-          </div>{" "}
-        </>
-      )}
-      {/* {isMobile && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <span onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
-            {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-          </span>
-          <span component="span">
+          <span className="mx-2">
             {page + 1} of {Math.ceil(count)}
           </span>
           <span
-            onClick={handleNextButtonClick}
-            disabled={page >= Math.ceil(count) - 1}
+            onClick={page >= Math.ceil(count) - 1 ? () => {} : handleNextButtonClick}
             aria-label="next page"
+            className={clsx(
+              "relative top-[3px]  cursor-pointer",
+              page >= Math.ceil(count) - 1 && "opacity-[0.5]"
+            )}
           >
-            {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+            <Image src={right} />
           </span>
-        </div>
-      )} */}
+        </div>{" "}
+      </>
     </div>
   );
 };

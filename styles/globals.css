@@ -616,13 +616,12 @@ tfoot .thSticky:last-child,
   
  }
  .paginationcontainer {
-  display: flex;
-  justify-content: right;
-  margin-top: 20px;
+  position: sticky;
+  right: 0px;
+  top: 0px;
+  
 }
-.paginationcontainer {
-  justify-content: center;
-}
+
 .paginationcontainer > div {
   flex-direction: column;
   gap: 10px;
