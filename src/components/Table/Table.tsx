@@ -8,6 +8,7 @@ import { getHeightOfElement } from "../../utils/getHeight";
 import { WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
 import { Tabs } from "../Pools/ShortCardHeader";
 import { NoSearchResult } from "../Votes/NoSearchResult";
+import TablePagination from "./pagination-action";
 
 export interface ISimmerEffectProps {
   lines: number;
@@ -83,7 +84,7 @@ const Table = <D extends object>({
       data,
       initialState: {
         pageIndex: 0,
-        pageSize: 100,
+        pageSize: 10,
         sortBy: [shortByGroup],
       },
       autoResetPage: false,
@@ -121,7 +122,10 @@ const Table = <D extends object>({
   const router = useRouter();
   return (
     <div>
-      <table className={clsx(" flex flex-col ", isVotesTable ? "gap-1.5" : "gap-1.5", TableWidth)}>
+      <table
+        {...getTableProps()}
+        className={clsx(" flex flex-col ", isVotesTable ? "gap-1.5" : "gap-1.5", TableWidth)}
+      >
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr
@@ -250,6 +254,15 @@ const Table = <D extends object>({
           )}
         </tbody>
       </table>
+      <div className="paginationcontainer">
+        <TablePagination
+          count={pageCount}
+          rowsPerPage={10}
+          page={pageIndex}
+          setPageSize={setPageSize}
+          onChangePage={(number) => gotoPage(number)}
+        />
+      </div>
     </div>
   );
 };

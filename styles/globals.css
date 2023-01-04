@@ -615,3 +615,15 @@ tfoot .thSticky:last-child,
    position: relative;
   
  }
+ .paginationcontainer {
+  display: flex;
+  justify-content: right;
+  margin-top: 20px;
+}
+.paginationcontainer {
+  justify-content: center;
+}
+.paginationcontainer > div {
+  flex-direction: column;
+  gap: 10px;
+}

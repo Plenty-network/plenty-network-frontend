@@ -74,26 +74,26 @@ export function ShortCard(props: IShortCardProps) {
     props.poolsFilter,
 
     props.reFetchPool,
-    page
+    0
   );
-  useEffect(() => {
-    if (
-      (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
-      scrollY !== 0 &&
-      poolTableData.length
-    ) {
-      setPage(page + 1);
-    }
-  }, [scrollY, height, isCompleted]);
-  const [poolData, setPoolData] = useState<IAllPoolsData[]>([]);
-  useEffect(() => {
-    console.log("ishu1", poolTableData, page);
-    if (poolTableData.length) {
-      setPoolData((poolsData) => poolsData.concat(poolTableData));
-    }
-  }, [JSON.stringify(poolTableData)]);
+  // useEffect(() => {
+  //   if (
+  //     (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
+  //     scrollY !== 0 &&
+  //     poolTableData.length
+  //   ) {
+  //     setPage(page + 1);
+  //   }
+  // }, [scrollY, height, isCompleted]);
+  // const [poolData, setPoolData] = useState<IAllPoolsData[]>([]);
+  // useEffect(() => {
+  //   console.log("ishu1", poolTableData, page);
+  //   if (poolTableData.length) {
+  //     setPoolData((poolsData) => poolsData.concat(poolTableData));
+  //   }
+  // }, [JSON.stringify(poolTableData)]);
   const [poolsTableData, isFetched] = usePoolsTableSearch(
-    poolData,
+    poolTableData,
     props.searchValue,
     isFetch,
     poolTableData.length
