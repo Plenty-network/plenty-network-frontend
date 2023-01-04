@@ -10,7 +10,6 @@ import { getStakedData, getVePLYListForUser } from "../../api/stake";
 import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 import { loadSwapDataWrapper } from "../../api/swap/wrappers";
 import {
-  getAllTokensBalanceFromTzkt,
   getBalanceFromTzkt,
   getPnlpBalance,
   getStakedBalance,
@@ -18,7 +17,6 @@ import {
 } from "../../api/util/balance";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { getLPTokenPrice } from "../../api/util/price";
-import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
 import { ELocksState } from "../../api/votes/types";
 import playBtn from "../../assets/icon/common/playBtn.svg";
 import { IConfigLPToken } from "../../config/types";
@@ -201,7 +199,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     }
   }, [balanceUpdate, props.tokenIn.name, props.tokenOut.name, walletAddress]);
   useEffect(() => {
-    if (walletAddress || (screen === "2" && props.activeState === ActiveLiquidity.Staking)) {
+    if (walletAddress && props.activeState === ActiveLiquidity.Staking) {
       setIsListLoading(true);
       getVePLYListForUser(
         props.tokenIn.symbol,

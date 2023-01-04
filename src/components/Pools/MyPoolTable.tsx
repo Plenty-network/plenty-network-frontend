@@ -29,8 +29,6 @@ import Image from "next/image";
 import clsx from "clsx";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
-import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 
 export interface IShortCardProps {
   className?: string;

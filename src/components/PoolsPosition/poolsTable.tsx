@@ -24,8 +24,6 @@ import { compareNumericString } from "../../utils/commonUtils";
 import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import clsx from "clsx";
 import { tokenIcons } from "../../constants/tokensList";
-import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
-import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 
 export function PoolsTablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
