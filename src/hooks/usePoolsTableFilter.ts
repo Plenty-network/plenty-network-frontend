@@ -22,9 +22,11 @@ export const usePoolsTableFilter = (
   tokenPrices: ITokenPriceList,
   filterText: string | "MyPools" | undefined,
 
-  reFetchPool: boolean
+  reFetchPool: boolean,
+  page: number
 ) => {
-  const { data: poolTableData = [], isFetched } = useAllPoolsData(tokenPrices, 0);
+  const { data: poolTableData = [], isFetched } = useAllPoolsData(tokenPrices, page);
+
   if (poolTableData.length) {
     if (filterText) {
       const newpoolTableData = poolTableData.filter((e) => e.poolType === filterText);

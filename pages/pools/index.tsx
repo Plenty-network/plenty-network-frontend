@@ -147,24 +147,6 @@ export default function Pools(props: IIndexProps) {
   //   }
   // }, [walletAddress, activeStateTab, Object.keys(tokenPrices).length, myPoolpage]);
 
-  // useEffect(() => {
-  //   if (
-  //     (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
-  //     scrollY !== 0 &&
-  //     isCompleted === false &&
-  //     activeStateTab !== POOL_TYPE.MYPOOLS
-  //   ) {
-  //     setPage(page + 1);
-  //   }
-  //   if (
-  //     (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
-  //     scrollY !== 0 &&
-  //     isCompletedMypool === false &&
-  //     activeStateTab === POOL_TYPE.MYPOOLS
-  //   ) {
-  //     setmyPoolPage(myPoolpage + 1);
-  //   }
-  // }, [scrollY, height, isCompleted]);
   return (
     <>
       <SideBarHOC>

@@ -59,14 +59,41 @@ export function ShortCard(props: IShortCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const scrollY = useAppSelector((state) => state.walletLoading.scrollY);
+  const height = useAppSelector((state) => state.walletLoading.height);
+  const clientHeight = useAppSelector((state) => state.walletLoading.clientHeight);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompletedMypool, setIsCompletedMypool] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
+  const [page, setPage] = useState(1);
+
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
     tokenPrices,
     props.poolsFilter,
 
-    props.reFetchPool
+    props.reFetchPool,
+    page
   );
+  useEffect(() => {
+    if (
+      (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
+      scrollY !== 0 &&
+      poolTableData.length
+    ) {
+      setPage(page + 1);
+    }
+  }, [scrollY, height, isCompleted]);
+  const [poolData, setPoolData] = useState<IAllPoolsData[]>([]);
+  useEffect(() => {
+    console.log("ishu1", poolTableData, page);
+    if (poolTableData.length) {
+      setPoolData((poolsData) => poolsData.concat(poolTableData));
+    }
+  }, [JSON.stringify(poolTableData)]);
   const [poolsTableData, isFetched] = usePoolsTableSearch(
-    poolTableData,
+    poolData,
     props.searchValue,
     isFetch,
     poolTableData.length

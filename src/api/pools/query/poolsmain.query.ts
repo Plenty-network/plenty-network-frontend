@@ -1,27 +1,19 @@
-import { useQuery } from 'react-query';
-import { getAllPoolsData, getMyPoolsData, poolsDataWrapper } from '..';
-import { store} from '../../../redux';
-import { getTokenPrices } from '../../util/price';
-import { ITokenPriceList } from '../../util/types';
-import {
-  IAllPoolsData,
-  IMyPoolsData,
-  IPoolsDataWrapperResponse,
-} from '../types';
+import { useQuery } from "react-query";
+import { getAllPoolsData, getMyPoolsData, poolsDataWrapper } from "..";
+import { store } from "../../../redux";
+import { getTokenPrices } from "../../util/price";
+import { ITokenPriceList } from "../../util/types";
+import { IAllPoolsData, IMyPoolsData, IPoolsDataWrapperResponse } from "../types";
 
 export const usePoolsMain = () =>
   useQuery<IPoolsDataWrapperResponse[], Error>(
-    'pools-mains',
+    "pools-mains",
     async () => {
-     const tokenprice = store.getState().tokenPrice.tokenPrice;
-    // const tokenprice= await (await getTokenPrices()).tokenPrice
+      const tokenprice = store.getState().tokenPrice.tokenPrice;
+      // const tokenprice= await (await getTokenPrices()).tokenPrice
       const walletAddress = store.getState().wallet.address;
-      const data1 = (
-        await poolsDataWrapper(
-          walletAddress ? walletAddress : undefined,
-          tokenprice,
-        )
-      ).allData;
+      const data1 = (await poolsDataWrapper(walletAddress ? walletAddress : undefined, tokenprice))
+        .allData;
       const data: IPoolsDataWrapperResponse[] = Object.values(data1);
       return data;
     },
@@ -34,7 +26,7 @@ export const usePoolsMain = () =>
 //   if(Object.keys(tokenprice).length>0){
 //     const { data , isFetched } = usePoolsMain(tokenprice);
 //     return { data , isFetched }
-//   }  
+//   }
 //   return  { data:data , isFetched:false }
 // }
 
