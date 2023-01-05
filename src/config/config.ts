@@ -67,19 +67,19 @@ const Config: IConfig = {
   },
 
   AIRDROP_ETH_MESSAGE_PREFIX: "Confirming Tezos address for claiming airdrop: ",
-  
+
   EXCHANGE_TOKENS: {
     PLENTY: {
       exchangeRate: 5.714,
       tokenDecimals: 18,
       contractEnumValue: 0,
-      tokenMapid: 195403,
+      tokenMapid: 3943,
     },
     WRAP: {
       exchangeRate: 3.092,
       tokenDecimals: 8,
       contractEnumValue: 1,
-      tokenMapid: 195389,
+      tokenMapid: 1777,
     }
   },
 
