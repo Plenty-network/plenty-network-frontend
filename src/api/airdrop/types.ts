@@ -47,3 +47,7 @@ export interface IEvmEligibleCheckResponse {
   tzAddress: string | undefined;
   error?: string;
 }
+
+export interface TweetData {
+  text: string;
+}

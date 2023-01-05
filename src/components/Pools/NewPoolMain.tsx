@@ -497,7 +497,6 @@ function NewPoolMain(props: ILiquidityProps) {
           tokenOut={props.tokenOut}
           closeFn={props.setShowLiquidityModal}
           showLiquidityModal={props.showLiquidityModal}
-          allBalance={props.userBalances}
           setActiveState={setActiveState}
           activeState={activeState}
           isGaugeAvailable={isExist && isGauge}

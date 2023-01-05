@@ -20,7 +20,9 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
 
 interface ILiquidityProps {
-  userBalances: IAllTokensBalance;
+  userBalances: {
+    [key: string]: string;
+  };
   firstTokenAmount: string | number;
   secondTokenAmount: string | number;
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;

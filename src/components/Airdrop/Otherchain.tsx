@@ -52,8 +52,8 @@ function OtherChain(props: IOtherChain) {
                   placeholder="0.0"
                   value={
                     ethClaimAmount.isGreaterThan(0)
-                      ? ethClaimAmount.decimalPlaces(6,1).toString()
-                      : ethClaimAmount.decimalPlaces(0,1).toString()
+                      ? ethClaimAmount.decimalPlaces(6, 1).toString()
+                      : ethClaimAmount.decimalPlaces(0, 1).toString()
                   }
                 />
               )}
@@ -62,9 +62,18 @@ function OtherChain(props: IOtherChain) {
         </div>
       </div>
       {textToDisplay.isVisible && textToDisplay.textType !== TextType.NONE && (
-        <div className="h-[50px] md:h-[46px]  px-2 rounded-xl my-3 flex items-center bg-info-500/[0.1]">
+        <div
+          className={clsx(
+            textToDisplay.textType === TextType.INFO ? "bg-info-500/[0.1]" : "bg-error-500/[0.1]",
+            "h-[50px] md:h-[46px]  px-2 rounded-xl my-3 flex items-center "
+          )}
+        >
           <p className="relative top-0.5">
-            <Image src={textToDisplay.textType === TextType.INFO ? infoBlue : infoRed} />
+            <Image
+              src={textToDisplay.textType === TextType.INFO ? infoBlue : infoRed}
+              width={"22px"}
+              height={"22px"}
+            />
           </p>
           <p
             className={clsx(

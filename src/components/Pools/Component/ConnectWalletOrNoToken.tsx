@@ -53,9 +53,5 @@ export function WalletNotConnected(props: IWallet) {
   );
 }
 export function NoDataError(props: INoDataProps) {
-  return (
-    <div className="flex justify-start md:justify-center items-center  mt-2 md:mt-12  w-[100vw]">
-      {props.content}
-    </div>
-  );
+  return <div className="flex justify-start  items-center  mt-2 md:mt-12  ">{props.content}</div>;
 }
