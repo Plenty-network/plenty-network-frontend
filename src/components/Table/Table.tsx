@@ -247,15 +247,17 @@ const Table = <D extends object>({
                 );
               })
             : null}
-          <tr className=" h-16 bg-cardBackGround px-5 py-3 rounded-lg  items-center border border-borderCommon">
-            <TablePagination
-              count={pageCount}
-              rowsPerPage={10}
-              page={pageIndex}
-              setPageSize={setPageSize}
-              onChangePage={(number) => gotoPage(number)}
-            />
-          </tr>
+          {isFetched && data.length > 0 && (
+            <tr className="mx-5 h-16 border border-borderCommon bg-cardBackGround px-5 py-3 rounded-lg  items-center ">
+              <TablePagination
+                count={pageCount}
+                rowsPerPage={10}
+                page={pageIndex}
+                setPageSize={setPageSize}
+                onChangePage={(number) => gotoPage(number)}
+              />
+            </tr>
+          )}
           {loading && (
             <tr
               className={` border border-borderCommon h-16 bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg animate-pulse-table `}
