@@ -22,13 +22,13 @@ import {
   isUserAuthenticated,
   tweetForUser,
 } from "../../api/airdrop/twitter";
+import { AIRDROP_TWEET_TEXT } from "../../constants/airdrop";
 export interface ITezosChain {
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
 }
 
 function TezosChain(props: ITezosChain) {
   const userAddress = useAppSelector((state) => state.wallet.address);
-  const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
@@ -37,7 +37,7 @@ function TezosChain(props: ITezosChain) {
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [transactionId, setTransactionId] = useState("");
-  const [hasTweeted, sethasTweeted] = useState(false);
+  const [hasTweeted, setHasTweeted] = useState(false);
   const res = useAirdropClaimData();
 
   const router = useRouter();
@@ -58,32 +58,50 @@ function TezosChain(props: ITezosChain) {
       console.log(claimdata);
       if (claimdata.claimData.length && claimdata.claimData[0].claimed) {
         setTwitterAction("Claimed");
-        console.log("claimed");
       } else {
-        hasUserTweeted("tweettest").then((res) => {
-          sethasTweeted(res.tweeted);
+        hasUserTweeted(userAddress).then((res) => {
+          setHasTweeted(res.tweeted);
           if (res.tweeted) {
             setTwitterAction(`Completed`);
-
-            console.log("completed");
           } else {
             setTwitterAction("fetching...");
             console.log("fetching");
             if (authRef.current === "accepted") {
-              isUserAuthenticated("tweettest").then((res) => {
+              isUserAuthenticated(userAddress).then((res) => {
                 if (res.authenticated) {
-                  tweetForUser("tweettest", tweetText).then((ress) => {
+                  tweetForUser(userAddress, AIRDROP_TWEET_TEXT).then((ress) => {
                     if (ress.status) {
                       setTwitterAction("Completed");
+                      setHasTweeted(ress.status);
+                      dispatch(
+                        setFlashMessage({
+                          flashType: Flashtype.Success,
+                          transactionId: "",
+                          headerText: "",
+                          trailingText: `Tweeted succesfully`,
+                          linkText: "",
+                          isLoading: true,
+                        })
+                      );
                     } else {
                       setTwitterAction(`Take action`);
-                      console.log("take action");
+                      dispatch(
+                        setFlashMessage({
+                          flashType: Flashtype.Info,
+                          transactionId: "",
+                          headerText: "",
+                          trailingText: `Failed to tweet`,
+                          linkText: "",
+                          isLoading: true,
+                        })
+                      );
                     }
                   });
                 }
               });
+              authRef.current = undefined;
             } else if (authRef.current === "denied") {
-              setTwitterAction(`Take action `);
+              setTwitterAction(`Take action`);
               dispatch(
                 setFlashMessage({
                   flashType: Flashtype.Info,
@@ -94,10 +112,10 @@ function TezosChain(props: ITezosChain) {
                   isLoading: true,
                 })
               );
-              console.log("take action");
+              authRef.current = undefined;
             } else {
               setTwitterAction(`Take action`);
-              console.log("take action");
+              authRef.current = undefined;
             }
           }
         });
@@ -277,13 +295,14 @@ function TezosChain(props: ITezosChain) {
         </Button>
       );
     }
-  }, [props, userAddress, res, tweetedAccounts]);
+  }, [props, userAddress, res, hasTweeted]);
   const handleTwitter = () => {
-    isUserAuthenticated("tweettest").then((res) => {
+    isUserAuthenticated(userAddress).then((res) => {
       if (res.authenticated) {
-        tweetForUser("tweettest", tweetText).then((res) => {
+        tweetForUser(userAddress, AIRDROP_TWEET_TEXT).then((res) => {
           if (res.status) {
             setTwitterAction("Completed");
+            setHasTweeted(res.status);
             dispatch(
               setFlashMessage({
                 flashType: Flashtype.Success,
@@ -295,12 +314,23 @@ function TezosChain(props: ITezosChain) {
               })
             );
           } else {
+            console.log(res.message);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Info,
+                transactionId: "",
+                headerText: "",
+                trailingText: `Failed to tweet`,
+                linkText: "",
+                isLoading: true,
+              })
+            );
           }
         });
       } else {
-        authenticateUser("tweettest").then((res) => {
+        authenticateUser(userAddress).then((res) => {
           if (res.success) {
-            window.open(res.redirectUrl, "_self");
+            window.location.replace(res.redirectUrl);
           } else {
             console.log("server error");
             dispatch(
