@@ -11,7 +11,7 @@ import { getEpochData } from "../../src/redux/epoch/epoch";
 import { AppDispatch, store, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
-import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
+import { fetchWallet } from "../../src/redux/wallet/wallet";
 
 const Dapp: NextPage = () => {
   const userAddress = useAppSelector((state) => state.wallet.address);

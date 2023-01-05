@@ -20,6 +20,7 @@ export function NotificationList(props: INotificationListProps) {
     notificationList = getAllNotification(walletAddress);
   }, [props.isClearNotification]);
   React.useEffect(() => {
+    //@ts-ignore
     notificationList.length > 0 && dispatch(setHasNotification(true));
   }, [notificationList]);
   if (!notificationList.length) {

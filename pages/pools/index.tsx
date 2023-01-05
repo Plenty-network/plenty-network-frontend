@@ -40,14 +40,10 @@ export default function Pools(props: IIndexProps) {
 
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.config.tokens);
-  const scrollY = useAppSelector((state) => state.walletLoading.scrollY);
-  const height = useAppSelector((state) => state.walletLoading.height);
-  const clientHeight = useAppSelector((state) => state.walletLoading.clientHeight);
+
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  const [page, setPage] = useState(1);
-  const [myPoolpage, setmyPoolPage] = useState(1);
   const amm = useAppSelector((state) => state.config.AMMs);
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   const initialPriceCall = React.useRef<boolean>(true);
@@ -98,78 +94,17 @@ export default function Pools(props: IIndexProps) {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
   const [searchValue, setSearchValue] = React.useState("");
-  const [isbanner, setisBanner] = React.useState(true);
+  const [isbanner, setisBanner] = React.useState(false);
   const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
   const handleNewPool = () => {
     setShowNewPoolPopup(true);
   };
   const [reFetchPool, setReFetchPool] = React.useState(false);
-  const [poolsData, setPoolsData] = React.useState<IAllPoolsData[]>([] as IAllPoolsData[]);
-  const [mypoolsData, setmyPoolsData] = React.useState<IMyPoolsData[]>([] as IMyPoolsData[]);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [isCompletedMypool, setIsCompletedMypool] = useState(false);
+
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
-  useEffect(() => {
-    setIsFetching(true);
-    if (
-      Object.keys(tokenPrices).length !== 0 &&
-      isCompleted === false &&
-      activeStateTab !== POOL_TYPE.MYPOOLS
-    ) {
-      getAllPoolsData(tokenPrices, page).then((res) => {
-        if (res.success) {
-          if (res.allData.length) {
-            setIsFetching(false);
-            setPoolsData((poolsData) => poolsData.concat(res.allData));
-          } else {
-            setIsFetching(false);
-            setIsCompleted(true);
-          }
-        } else {
-          setIsError(true);
-        }
-      });
-    }
-  }, [Object.keys(tokenPrices).length, page, reFetchPool]);
-  useEffect(() => {
-    setIsFetchingMyPool(true);
-    if (
-      Object.keys(tokenPrices).length !== 0 &&
-      activeStateTab === POOL_TYPE.MYPOOLS &&
-      isCompletedMypool === false
-    ) {
-      getMyPoolsData(walletAddress, tokenPrices, myPoolpage).then((res) => {
-        if (res.allData.length) {
-          setIsFetchingMyPool(false);
-          setmyPoolsData((mypoolsData) => mypoolsData.concat(res.allData));
-        } else {
-          setIsFetchingMyPool(false);
-          setIsCompletedMypool(true);
-        }
-      });
-    }
-  }, [walletAddress, activeStateTab, Object.keys(tokenPrices).length, myPoolpage]);
 
-  useEffect(() => {
-    if (
-      (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
-      scrollY !== 0 &&
-      isCompleted === false &&
-      activeStateTab !== POOL_TYPE.MYPOOLS
-    ) {
-      setPage(page + 1);
-    }
-    if (
-      (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
-      scrollY !== 0 &&
-      isCompletedMypool === false &&
-      activeStateTab === POOL_TYPE.MYPOOLS
-    ) {
-      setmyPoolPage(myPoolpage + 1);
-    }
-  }, [scrollY, height, isCompleted]);
   return (
     <>
       <SideBarHOC>
@@ -190,7 +125,7 @@ export default function Pools(props: IIndexProps) {
               onChange={setSearchValue}
             />
           </div>
-          <div className="sticky top-0 z-10">
+          <div className="sticky top-[-1px] z-10">
             <CardHeader
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
@@ -220,11 +155,11 @@ export default function Pools(props: IIndexProps) {
               className="md:pl-5 md:py-4  pl-2 py-4"
               searchValue={searchValue}
               activeStateTab={activeStateTab}
+              setShowLiquidityModalPopup={setShowLiquidityModal}
               setActiveStateTab={setActiveStateTab}
               setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
-              data={poolsData}
               isFetching={isFetching}
               isError={isError}
             />
@@ -235,11 +170,11 @@ export default function Pools(props: IIndexProps) {
               poolsFilter={POOL_TYPE.STABLE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
+              setShowLiquidityModalPopup={setShowLiquidityModal}
               setActiveStateTab={setActiveStateTab}
               setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
-              data={poolsData}
               isFetching={isFetching}
               isError={isError}
             />
@@ -250,11 +185,11 @@ export default function Pools(props: IIndexProps) {
               poolsFilter={POOL_TYPE.VOLATILE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
+              setShowLiquidityModalPopup={setShowLiquidityModal}
               setActiveStateTab={setActiveStateTab}
               setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
-              data={poolsData}
               isFetching={isFetching}
               isError={isError}
             />
@@ -266,11 +201,11 @@ export default function Pools(props: IIndexProps) {
               isConnectWalletRequired={true}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
+              setShowLiquidityModalPopup={setShowLiquidityModal}
               setActiveStateTab={setActiveStateTab}
               setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
-              data={mypoolsData}
               isFetchingMyPool={isFetchingMyPool}
             />
           )}
@@ -281,6 +216,7 @@ export default function Pools(props: IIndexProps) {
             showLiquidityModal={showLiquidityModal}
             setReFetchPool={setReFetchPool}
             reFetchPool={reFetchPool}
+            setShowLiquidityModalPopup={setShowLiquidityModal}
           />
           {/* poolsTable */}
         </div>

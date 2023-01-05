@@ -17,7 +17,7 @@ import { ISwapData, tokenParameterLiquidity } from "./types";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { IAllTokensBalanceResponse } from "../../api/util/types";
+import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
 
 interface ILiquidityProps {
   userBalances: {

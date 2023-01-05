@@ -21,7 +21,7 @@ export interface ISideBarHOCProps {
 }
 
 export function SideBarHOC(props: ISideBarHOCProps) {
-  const [isBanner, setIsBanner] = React.useState(true);
+  const [isBanner, setIsBanner] = React.useState(false);
 
   const [showNotification, setShowNotification] = useState(false);
   const showNotificationClick = () => {
@@ -83,7 +83,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
         {isMobile && !props.isBribes && <BottomNavigationBar />}
         {isMobile && (
           <>
-            <Banner isBanner={isBanner} setIsBanner={setIsBanner} />
+            {/* <Banner isBanner={isBanner} setIsBanner={setIsBanner} /> */}
             <TopNavBarMobile
               setShowNotification={showNotificationClick}
               isBribes={props.isBribes ? props.isBribes : false}

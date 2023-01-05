@@ -44,11 +44,29 @@ const Config: IConfig = {
     mainnet : '',
     testnet : 'KT1UmJmgNvy7sGztaFkr598Lj7JxiWbTFbQp',
   },
+  AIRDROP: {
+    mainnet: "",
+    testnet: "KT1J3EQDZbLUR1Hp8TZKFwY5FLoekiPSgsmL",
+  },
 
-  VE_INDEXER : 'https://ply-indexer.ghostnet.plenty.network/v1/',
-  PLY_INDEXER : 'https://analytics-indexer.ghostnet.plenty.network/',
+  VE_INDEXER : {
+    mainnet: "",
+    testnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
+  },
+  PLY_INDEXER : {
+    mainnet: "",
+    testnet: "https://analytics-indexer.ghostnet.plenty.network/",
+  },
 
   FAUCET : 'KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH',
+
+  AIRDROP_SERVER: {
+    mainnet: "",
+    // testnet: "http://localhost:3000/",
+    testnet: "https://airdrop.plenty.network/",
+  },
+
+  AIRDROP_ETH_MESSAGE_PREFIX: "Confirming Tezos address for claiming airdrop: ",
 
   EXCHANGE_TOKENS: {
     PLENTY: {

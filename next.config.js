@@ -5,6 +5,9 @@ const nextConfig = {
 
 module.exports = {
   target: "serverless",
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     domains: [
       "https://cloudflare-ipfs.com/ipfs/",

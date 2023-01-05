@@ -2,6 +2,7 @@ import { BigNumber } from "bignumber.js";
 import Image from "next/image";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { POOL_TYPE } from "../../../pages/pools";
 import { getPnlpOutputEstimate, getPoolShareForPnlp } from "../../api/liquidity";
 import { ELiquidityProcess } from "../../api/liquidity/types";
 import { getDepositedAmounts, getRewards } from "../../api/rewards";
@@ -16,7 +17,6 @@ import {
 } from "../../api/util/balance";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { getLPTokenPrice } from "../../api/util/price";
-import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
 import { ELocksState } from "../../api/votes/types";
 import playBtn from "../../assets/icon/common/playBtn.svg";
 import { IConfigLPToken } from "../../config/types";
@@ -59,6 +59,9 @@ export interface IManageLiquidityProps {
   setActiveState: React.Dispatch<React.SetStateAction<string>>;
   activeState: string;
   isGaugeAvailable: boolean;
+  showLiquidityModal?: boolean;
+  setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  filter?: POOL_TYPE | undefined;
 }
 
 export function ManageLiquidity(props: IManageLiquidityProps) {
@@ -103,7 +106,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
-  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
+
   const [sharePool, setSharePool] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
@@ -120,10 +123,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [contentTransaction, setContentTransaction] = useState("");
   const [vePLYOptions, setVePLYOptions] = useState<IVePLYData[]>([]);
   const [isListLoading, setIsListLoading] = useState(false);
-  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
-    success: false,
-    allTokensBalances: {} as IAllTokensBalance,
-  });
+  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
+
   useEffect(() => {
     const updateBalance = async () => {
       const balancePromises = [];
@@ -136,7 +137,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           balancePromises.push(getTezBalance(walletAddress));
         }
 
-        props.tokenIn.symbol && props.tokenIn.symbol.toLowerCase() !== "xtz" &&
+        props.tokenIn.symbol &&
+          props.tokenIn.symbol.toLowerCase() !== "xtz" &&
           balancePromises.push(
             getBalanceFromTzkt(
               String(TOKEN[props.tokenIn.symbol]?.address),
@@ -146,7 +148,8 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               props.tokenIn.symbol
             )
           );
-        props.tokenOut.symbol && props.tokenOut.symbol.toLowerCase() !== "xtz" &&
+        props.tokenOut.symbol &&
+          props.tokenOut.symbol.toLowerCase() !== "xtz" &&
           balancePromises.push(
             getBalanceFromTzkt(
               String(TOKEN[props.tokenOut.symbol]?.address),
@@ -159,7 +162,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
 
         const balanceResponse = await Promise.all(balancePromises);
-
+        console.log("j", balanceResponse);
         setUserBalances((prev) => ({
           ...prev,
           ...balanceResponse.reduce(
@@ -174,25 +177,27 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     };
     updateBalance();
   }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
+
   useEffect(() => {
     if (walletAddress) {
-      getStakedData(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
-        if (res.success) {
-          setBoost(res);
-          if (res.stakedData.isBoosted) {
-            setSelectedDropDown({
-              tokenId: res?.stakedData ? res.stakedData.boostedLockId.toString() : "",
-              boostValue: res?.stakedData ? res.stakedData.boostValue.toString() : "",
-              votingPower: "",
-              lockState: 0 as ELocksState,
-            });
+      props.activeState === ActiveLiquidity.Staking &&
+        getStakedData(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
+          if (res.success) {
+            setBoost(res);
+            if (res.stakedData.isBoosted) {
+              setSelectedDropDown({
+                tokenId: res?.stakedData ? res.stakedData.boostedLockId.toString() : "",
+                boostValue: res?.stakedData ? res.stakedData.boostValue.toString() : "",
+                votingPower: "",
+                lockState: 0 as ELocksState,
+              });
+            }
           }
-        }
-      });
+        });
     }
   }, [balanceUpdate, props.tokenIn.name, props.tokenOut.name, walletAddress]);
   useEffect(() => {
-    if (walletAddress || (screen === "2" && props.activeState === ActiveLiquidity.Staking)) {
+    if (walletAddress && props.activeState === ActiveLiquidity.Staking) {
       setIsListLoading(true);
       getVePLYListForUser(
         props.tokenIn.symbol,
@@ -829,9 +834,11 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   };
 
   const closeModal = () => {
+    // props.setShowLiquidityModalPopup(false);
     props.closeFn(false);
   };
-  return (
+
+  return props.showLiquidityModal ? (
     <>
       <PopUpModal
         onhide={closeModal}
@@ -1020,5 +1027,5 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         />
       )}
     </>
-  );
+  ) : null;
 }

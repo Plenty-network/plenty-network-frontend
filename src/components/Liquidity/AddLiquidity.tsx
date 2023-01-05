@@ -8,7 +8,7 @@ import nFormatter, {
   imageExists,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
-import { IAllTokensBalanceResponse } from "../../api/util/types";
+import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
 import { useAppSelector } from "../../redux";
 import { ISwapData, tokenParameterLiquidity } from "./types";
 import fallback from "../../../src/assets/icon/pools/fallback.png";
@@ -32,6 +32,7 @@ interface IAddLiquidityProps {
 function AddLiquidity(props: IAddLiquidityProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const tokens = useAppSelector((state) => state.config.tokens);
+
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"

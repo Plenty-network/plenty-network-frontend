@@ -1,13 +1,10 @@
 import * as React from "react";
 import { isMobile } from "react-device-detect";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Column } from "react-table";
 import { POOL_TYPE } from "../../../pages/pools";
-import {
-  IAllPoolsData,
-  IAllPoolsDataResponse,
-  IPoolsDataWrapperResponse,
-} from "../../api/pools/types";
+import { IAllPoolsData, IAllPoolsDataResponse } from "../../api/pools/types";
 import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
 import { usePoolsTableSearch } from "../../hooks/usePoolsTableSearch";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
@@ -26,13 +23,11 @@ import { NoContentAvailable, NoDataError } from "./Component/ConnectWalletOrNoTo
 import { PoolsText, PoolsTextWithTooltip } from "./Component/PoolsText";
 import { ManageLiquidity } from "./ManageLiquidity";
 import { ActiveLiquidity } from "./ManageLiquidityHeader";
-import stake from "../../assets/icon/pools/stakePool.svg";
 import newPool from "../../assets/icon/pools/newPool.svg";
 import Image from "next/image";
 import clsx from "clsx";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { isError } from "lodash";
 
 export interface IShortCardProps {
   className?: string;
@@ -45,9 +40,10 @@ export interface IShortCardProps {
   setShowLiquidityModal: (val: boolean) => void;
   showLiquidityModal: boolean;
   reFetchPool: boolean;
-  data: IAllPoolsData[];
+  //data: IAllPoolsData[];
   isFetching: boolean;
   isError: boolean;
+  setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IManageBtnProps {
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -62,13 +58,40 @@ export function ShortCard(props: IShortCardProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
+  const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const scrollY = useAppSelector((state) => state.walletLoading.scrollY);
+  const height = useAppSelector((state) => state.walletLoading.height);
+  const clientHeight = useAppSelector((state) => state.walletLoading.clientHeight);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompletedMypool, setIsCompletedMypool] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
+  const [page, setPage] = useState(1);
 
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
-    props.data,
+    tokenPrices,
     props.poolsFilter,
-    "",
-    props.reFetchPool
+
+    props.reFetchPool,
+    0
   );
+  // useEffect(() => {
+  //   if (
+  //     (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
+  //     scrollY !== 0 &&
+  //     poolTableData.length
+  //   ) {
+  //     setPage(page + 1);
+  //   }
+  // }, [scrollY, height, isCompleted]);
+  // const [poolData, setPoolData] = useState<IAllPoolsData[]>([]);
+  // useEffect(() => {
+  //   console.log("ishu1", poolTableData, page);
+  //   if (poolTableData.length) {
+  //     setPoolData((poolsData) => poolsData.concat(poolTableData));
+  //   }
+  // }, [JSON.stringify(poolTableData)]);
   const [poolsTableData, isFetched] = usePoolsTableSearch(
     poolTableData,
     props.searchValue,
@@ -79,6 +102,7 @@ export function ShortCard(props: IShortCardProps) {
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
+
   const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
@@ -87,16 +111,26 @@ export function ShortCard(props: IShortCardProps) {
     else return "";
   };
   const NoData = React.useMemo(() => {
-    if (userAddress && props.activeStateTab === PoolsCardHeader.Mypools && isFetched) {
+    if (
+      userAddress &&
+      props.activeStateTab === PoolsCardHeader.Mypools &&
+      isFetched &&
+      !props.isFetching
+    ) {
       return <NoContentAvailable setActiveStateTab={props.setActiveStateTab} />;
-    } else if (poolsTableData.length === 0 && props.isError) {
+    } else if (poolsTableData.length === 0 && props.isError && !props.isFetching) {
       return <NoDataError content={"Server down"} />;
-    } else if (poolsTableData.length === 0 && props.searchValue !== "" && isFetched) {
+    } else if (
+      poolsTableData.length === 0 &&
+      props.searchValue !== "" &&
+      isFetched &&
+      !props.isFetching
+    ) {
       return <NoSearchResult />;
     } else if (poolsTableData.length === 0 && !props.isFetching) {
       return <NoDataError content={"No Pools data"} />;
     }
-  }, [userAddress, poolsTableData, isFetched]);
+  }, [userAddress, poolsTableData, isFetched, props.isFetching]);
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "USDC.e",
     image: `/assets/tokens/USDC.e.png`,
@@ -374,7 +408,7 @@ export function ShortCard(props: IShortCardProps) {
         <div
           className="bg-primary-500/10 font-caption2 md:font-subtitle4  hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-5 md:px-7 py-2 rounded-lg"
           onClick={() => {
-            dispatch(getTotalVotingPower());
+            userAddress && dispatch(getTotalVotingPower());
             props.setIsGaugeAvailable(props.isGauge);
             if (props.isGauge) {
               props.isLiquidityAvailable
@@ -395,6 +429,7 @@ export function ShortCard(props: IShortCardProps) {
               image: getImagesPath(props.tokenB.toString()),
               symbol: props.tokenB,
             });
+
             props.setShowLiquidityModal(true);
           }}
         >
@@ -413,9 +448,12 @@ export function ShortCard(props: IShortCardProps) {
           setActiveState={setActiveState}
           activeState={activeState}
           isGaugeAvailable={isGaugeAvailable}
+          showLiquidityModal={props.showLiquidityModal}
+          setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
+          filter={props.poolsFilter}
         />
       )}
-      <div className={` overflow-x-auto inner  ${props.className}`}>
+      <div className={` overflow-x-auto innerPool  ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={poolsTableData}

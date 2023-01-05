@@ -16,6 +16,11 @@ body.swap {
   background-image: url('/assets/image/plenty.net_bg.svg'),
     url('/assets/image/Noise4.png');
   color: #ffffff;
+}
+.animate__animated.animate__fadeInDown {
+  --animate-duration: 500ms;
+}
+
 } */
 
 html{
@@ -74,6 +79,12 @@ body {
 }
 .inner::-webkit-scrollbar-track-piece:start {
   margin-left: 350px;
+}
+.innerPool::-webkit-scrollbar-track-piece:end {
+  margin-right: 550px; 
+}
+.innerPool::-webkit-scrollbar-track-piece:start {
+  margin-left: 550px;
 }
 .manage::-webkit-scrollbar-track-piece:end {
   margin-right: 300px; 
@@ -392,6 +403,10 @@ input[type='number'] {
     @apply font-medium;
     @apply text-f18;
   }
+  .font-title2-18 {
+    @apply font-medium;
+    @apply text-f1818;
+  }
   .font-title2-normal {
     @apply font-normal;
     @apply text-f18;
@@ -576,5 +591,38 @@ tfoot .thSticky:last-child,
 }
 /* } */
 
+.gradientBorder{
+  position: relative;
+    background: linear-gradient(to right,rgba(126, 74, 204, 0.5) ,rgba(63, 243, 216, 0.5)
+    );
+    padding: 0.5px;
+   
+    height: 45px;
+    border-radius: 12px;
+    
+}
 
- 
+  .gradientBorder:hover{
+    box-shadow: 0px 4px 16px #430D95;
+   
+    background: linear-gradient(to right,rgba(126, 74, 204, 1) ,rgba(63, 243, 216, 1)
+    );
+  }
+
+ .innerContent{
+   z-index: 2;
+   margin:0;
+   position: relative;
+  
+ }
+ .paginationcontainer {
+  position: sticky;
+  right: 0px;
+  top: 0px;
+  
+}
+
+.paginationcontainer > div {
+  flex-direction: column;
+  gap: 10px;
+}
