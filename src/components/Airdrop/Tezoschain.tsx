@@ -57,6 +57,7 @@ function TezosChain(props: ITezosChain) {
     if (claimdata.eligible) {
       if (claimdata.claimData.length && claimdata.claimData[0].claimed) {
         setTwitterAction("Claimed");
+        setHasTweeted(true);
       } else {
         hasUserTweeted(userAddress).then((res) => {
           setHasTweeted(res.tweeted);
