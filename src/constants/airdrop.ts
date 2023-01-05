@@ -67,3 +67,5 @@ export const AIRDROP_MISSIONS_FOR_DISPLAY: {
     href: "/vote",
   },
 ];
+
+export const AIRDROP_TWEET_TEXT: string = "Tweeting from plenty.network";

@@ -21,7 +21,6 @@ export interface ISteps {
 
 function Steps(props: ISteps) {
   const [isDropDownActive, setIsDropDownActive] = useState(false);
-  const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
   const userAddress = useAppSelector((state) => state.wallet.address);
   return (
     <>
