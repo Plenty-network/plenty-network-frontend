@@ -19,7 +19,9 @@ interface IAddLiquidityProps {
   secondTokenAmount: string | number;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  userBalances: IAllTokensBalance;
+  userBalances: {
+    [key: string]: string;
+  };
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   swapData: ISwapData;
@@ -30,7 +32,7 @@ interface IAddLiquidityProps {
 function AddLiquidity(props: IAddLiquidityProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const tokens = useAppSelector((state) => state.config.tokens);
-  console.log("lala4", props.userBalances);
+
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
@@ -88,21 +90,15 @@ function AddLiquidity(props: IAddLiquidityProps) {
     props.setSecondTokenAmount("");
 
     props.tokenIn.name === "tez"
-      ? handleLiquidityInput(
-          Number(props.userBalances[props.tokenIn.name]?.balance) - 0.02,
-          "tokenIn"
-        )
-      : handleLiquidityInput(Number(props.userBalances[props.tokenIn.name]?.balance), "tokenIn");
+      ? handleLiquidityInput(Number(props.userBalances[props.tokenIn.name]) - 0.02, "tokenIn")
+      : handleLiquidityInput(Number(props.userBalances[props.tokenIn.name]), "tokenIn");
   };
   const onClickSecondAmount = () => {
     props.setFirstTokenAmount("");
 
     props.tokenOut.name === "tez"
-      ? handleLiquidityInput(
-          Number(props.userBalances[props.tokenOut.name]?.balance) - 0.02,
-          "tokenOut"
-        )
-      : handleLiquidityInput(Number(props.userBalances[props.tokenOut.name]?.balance), "tokenOut");
+      ? handleLiquidityInput(Number(props.userBalances[props.tokenOut.name]) - 0.02, "tokenOut")
+      : handleLiquidityInput(Number(props.userBalances[props.tokenOut.name]), "tokenOut");
   };
   return (
     <>
@@ -166,12 +162,12 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
                 onClick={onClickAmount}
               >
-                {!(Number(props.userBalances[props.tokenIn.name]?.balance) >= 0) ? (
+                {!(Number(props.userBalances[props.tokenIn.name]) >= 0) ? (
                   <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances[props.tokenIn.name]?.balance) > 0
-                      ? nFormatter(new BigNumber(props.userBalances[props.tokenIn.name].balance))
+                    {Number(props.userBalances[props.tokenIn.name]) > 0
+                      ? nFormatter(new BigNumber(props.userBalances[props.tokenIn.name]))
                       : 0}{" "}
                   </span>
                 )}
@@ -244,12 +240,12 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 className="ml-1 cursor-pointer flex text-primary-500  font-caption1-small md:font-body2"
                 onClick={onClickSecondAmount}
               >
-                {!(Number(props.userBalances[props.tokenOut.name]?.balance) >= 0) ? (
+                {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (
                   <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances[props.tokenOut.name]?.balance) > 0
-                      ? nFormatter(new BigNumber(props.userBalances[props.tokenOut.name]?.balance))
+                    {Number(props.userBalances[props.tokenOut.name]) > 0
+                      ? nFormatter(new BigNumber(props.userBalances[props.tokenOut.name]))
                       : 0}
                   </span>
                 )}

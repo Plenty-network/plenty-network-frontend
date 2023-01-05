@@ -5,7 +5,7 @@ import { Column } from "react-table";
 import { useEffect, useState } from "react";
 import { POOL_TYPE } from "../../../pages/pools";
 import { IMyPoolsData } from "../../api/pools/types";
-import { usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
+import { useMyPoolsTableFilter, usePoolsTableFilter } from "../../hooks/usePoolsTableFilter";
 import { usePoolsTableSearch } from "../../hooks/usePoolsTableSearch";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import { AppDispatch, store, useAppSelector } from "../../redux";
@@ -29,8 +29,6 @@ import Image from "next/image";
 import clsx from "clsx";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
-import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 
 export interface IShortCardProps {
   className?: string;
@@ -43,7 +41,7 @@ export interface IShortCardProps {
   setShowLiquidityModal: (val: boolean) => void;
   showLiquidityModal: boolean;
   reFetchPool: boolean;
-  data: IMyPoolsData[];
+  //data: IMyPoolsData[];
   isFetchingMyPool: boolean;
   setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -58,30 +56,19 @@ export interface IManageBtnProps {
 }
 export function MyPoolTable(props: IShortCardProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
+  const tokens = useAppSelector((state) => state.config.tokens);
+  const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
-  const TOKEN = useAppSelector((state) => state.config.tokens);
 
-  const walletAddress = useAppSelector((state) => state.wallet.address);
-
-  const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
-    props.data,
+  const { data: poolTableData = [], isFetched: isFetch = false } = useMyPoolsTableFilter(
+    userAddress,
+    tokenPrices,
     props.poolsFilter,
-    "",
+
     props.reFetchPool
   );
-  const [allBalance, setAllBalance] = useState<IAllTokensBalance>({} as IAllTokensBalance);
-  useEffect(() => {
-    if (walletAddress) {
-      getAllTokensBalanceFromTzkt(Object.values(TOKEN), walletAddress).then(
-        (response: IAllTokensBalanceResponse) => {
-          setAllBalance(response.allTokensBalances);
-        }
-      );
-    } else {
-      setAllBalance({} as IAllTokensBalance);
-    }
-  }, [walletAddress, TOKEN]);
+
   const [poolsTableData, isFetched] = usePoolsTableSearch(
     poolTableData,
     props.searchValue,
@@ -434,7 +421,6 @@ export function MyPoolTable(props: IShortCardProps) {
           activeState={activeState}
           isGaugeAvailable={isGaugeAvailable}
           setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
-          allBalance={allBalance}
         />
       )}
       <div className={` overflow-x-auto inner  ${props.className}`}>

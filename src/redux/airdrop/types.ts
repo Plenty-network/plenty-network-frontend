@@ -27,6 +27,7 @@ export interface IAirdropTransactionsData {
   // signaturesData: IEvmSignatures;
   // receiptsCallFrom: IReceiptsCallList;
   tweetedAccounts: string[];
+  hasTweeted: boolean;
 }
 
 export enum EvmCTAState {

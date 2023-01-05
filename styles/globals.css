@@ -615,3 +615,14 @@ tfoot .thSticky:last-child,
    position: relative;
   
  }
+ .paginationcontainer {
+  position: sticky;
+  right: 0px;
+  top: 0px;
+  
+}
+
+.paginationcontainer > div {
+  flex-direction: column;
+  gap: 10px;
+}

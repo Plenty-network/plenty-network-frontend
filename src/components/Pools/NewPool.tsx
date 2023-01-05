@@ -136,13 +136,10 @@ export function NewPool(props: IManageLiquidityProps) {
     allTokensBalances: {} as IAllTokensBalance,
   });
   useEffect(() => {
-    setAllBalance({
-      success: false,
-      allTokensBalances: {} as IAllTokensBalance,
-    });
     if (userAddress) {
       getAllTokensBalanceFromTzkt(Object.values(tokens), userAddress).then(
         (response: IAllTokensBalanceResponse) => {
+          console.log("newpool", response);
           setAllBalance(response);
         }
       );

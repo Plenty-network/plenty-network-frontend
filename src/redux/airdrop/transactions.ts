@@ -10,6 +10,7 @@ const initialState: IAirdropTransactionsData = {
   // signaturesData: {},
   // receiptsCallFrom: {},
   tweetedAccounts: [],
+  hasTweeted: false,
 };
 
 const AirdropTransactionsSlice = createSlice({
@@ -31,10 +32,13 @@ const AirdropTransactionsSlice = createSlice({
     addTweetedAccount: (state, action: PayloadAction<string>) => {
       state.tweetedAccounts = state.tweetedAccounts.concat(action.payload);
     },
+    setHasTweeted: (state, action: PayloadAction<boolean>) => {
+      state.hasTweeted = action.payload;
+    }
   },
 });
 
 // export const { addSignature, setReceiptsCallFrom, addTweetedAccount } =
 //   AirdropTransactionsSlice.actions;
-export const { addTweetedAccount } = AirdropTransactionsSlice.actions;
+export const { addTweetedAccount, setHasTweeted } = AirdropTransactionsSlice.actions;
 export const airdropTransactions = AirdropTransactionsSlice.reducer;
