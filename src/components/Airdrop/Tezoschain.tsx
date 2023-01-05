@@ -55,20 +55,16 @@ function TezosChain(props: ITezosChain) {
   useEffect(() => {
     const claimdata = res.airdropClaimData;
     if (claimdata.eligible) {
-      console.log(claimdata);
       if (claimdata.claimData.length && claimdata.claimData[0].claimed) {
         setTwitterAction("Claimed");
-        console.log("claimed");
       } else {
         hasUserTweeted("tweettest").then((res) => {
           sethasTweeted(res.tweeted);
           if (res.tweeted) {
             setTwitterAction(`Completed`);
-
-            console.log("completed");
           } else {
             setTwitterAction("fetching...");
-            console.log("fetching");
+
             if (authRef.current === "accepted") {
               isUserAuthenticated("tweettest").then((res) => {
                 if (res.authenticated) {
@@ -77,7 +73,6 @@ function TezosChain(props: ITezosChain) {
                       setTwitterAction("Completed");
                     } else {
                       setTwitterAction(`Take action`);
-                      console.log("take action");
                     }
                   });
                 }
@@ -94,14 +89,14 @@ function TezosChain(props: ITezosChain) {
                   isLoading: true,
                 })
               );
-              console.log("take action");
             } else {
               setTwitterAction(`Take action`);
-              console.log("take action");
             }
           }
         });
       }
+    } else {
+      setTwitterAction("Not allowed");
     }
   }, [res.airdropClaimData]);
   const transactionSubmitModal = (id: string) => {

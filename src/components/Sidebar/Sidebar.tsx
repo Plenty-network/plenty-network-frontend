@@ -8,11 +8,11 @@ export interface ISideBarProps {
   isBanner: boolean;
 }
 export const FooterMenu: Array<IHrefIconProps> = [
-  // {
-  //   name: "Analytics",
-  //   iconName: "VectorfooterMenu",
-  //   href: "",
-  // },
+  {
+    name: "Analytics",
+    iconName: "VectorfooterMenu",
+    href: "https://analytics.plenty.network/",
+  },
   {
     name: "Docs",
     iconName: "VectorfooterMenu-1",
@@ -64,6 +64,14 @@ const MainMenu: Array<ISingleSideBarProps> = [
     iconName: "airdrop",
     pathName: "/airdrop",
     activePathName: "/airdrop",
+  },
+  {
+    name: "Bridge",
+    iconName: "bridge",
+    pathName: "/bridge",
+    activePathName: "/bridge",
+    isHrefIcon: true,
+    openNewPage: true,
   },
 ];
 
