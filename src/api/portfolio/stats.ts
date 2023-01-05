@@ -15,6 +15,7 @@ import {
 } from "./types";
 import { ILpTokenPriceList, ITokenPriceList } from "../util/types";
 import { getPositionsData } from "./pools";
+import { connectedNetwork } from "../../common/walletconnect";
 
 /**
  * Returns the statistical data of TVL for positions of my porfolio.
@@ -131,7 +132,7 @@ export const getVotesStatsData = async (
     if (!userTezosAddress) {
       throw new Error("Invalid or empty arguments.");
     }
-    const locksResponse = await axios.get(`${Config.VE_INDEXER}locks?address=${userTezosAddress}`);
+    const locksResponse = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}locks?address=${userTezosAddress}`);
     const locksData = locksResponse.data.result;
     let [totalEpochVotingPower, totalPlyLocked]: [BigNumber, BigNumber] = locksData.reduce(
       ([epochVotingPowerSum, plyLockedSum]: [BigNumber, BigNumber], lock: any) =>
@@ -180,7 +181,7 @@ export const getUnclaimedInflationData = async (
     const allLocksInflationData: IAllLocksInflationData = {};
 
     const inflationIndexerResponse = await axios.get(
-      `${Config.VE_INDEXER}inflation?address=${userTezosAddress}`
+      `${Config.VE_INDEXER[connectedNetwork]}inflation?address=${userTezosAddress}`
     );
     const inflationIndexerData: IUnclaimedInflationIndexer[] = inflationIndexerResponse.data;
 

@@ -26,6 +26,7 @@ export function MobileEpoch(props: IMobileEpochProps) {
   useInterval(() => {
     if (minutes < 0 || seconds < 0) {
       dispatch(getEpochData());
+      //@ts-ignore
       dispatch(setSelectedEpoch(epochData[indexOfCurrent]));
     }
   }, 5000);
@@ -73,6 +74,7 @@ export function MobileEpoch(props: IMobileEpochProps) {
               text={epoch.epochNumber}
               isCurrent={epoch.isCurrent}
               onClick={() => {
+                //@ts-ignore
                 dispatch(setSelectedEpoch(epoch));
                 setIsDropDownActive(false);
               }}

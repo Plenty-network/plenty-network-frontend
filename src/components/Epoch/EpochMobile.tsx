@@ -50,11 +50,13 @@ function EpochMobile(props: IEpochMobileProps) {
     return `(${day}-${monthNames[month]}-${year.toString().substr(-2)})`;
   };
   React.useEffect(() => {
+    //@ts-ignore
     dispatch(setSelectedEpoch(currentEpoch));
   }, [epochData[indexOfCurrent]?.epochNumber, currentEpoch?.endTimestamp]);
   useInterval(() => {
     if (minutes < 0 || seconds < 0) {
       dispatch(getEpochData());
+      //@ts-ignore
       dispatch(setSelectedEpoch(epochData[indexOfCurrent]));
     }
   }, 5000);
@@ -93,6 +95,7 @@ function EpochMobile(props: IEpochMobileProps) {
     return (
       <div
         onClick={() => {
+          //@ts-ignore
           dispatch(setSelectedEpoch(props.epoch));
           setIsDropDownActive(false);
         }}

@@ -312,7 +312,7 @@ export function Staking(props: IStakingProps) {
         </div>
         {/* end of Waller app section */}
         {/* dropDown And InfoTab */}
-        <div className="flex py-2 px-2 rounded-2xl md:px-2.5 justify-between bg-primary-850 border border-secondary-300">
+        <div className="flex py-2 px-2 mt-2 rounded-2xl md:px-2.5 justify-between bg-primary-850 border border-secondary-300">
           <VePLY
             Options={props.vePLYOptions}
             selectedText={props.selectedDropDown}
@@ -373,7 +373,7 @@ export function Staking(props: IStakingProps) {
             </div>
           </>
         ) : (
-          <div className="font-body2 text-white pl-4">No staked positions</div>
+          <div className="font-body2 text-white py-2 pl-4">No staked positions</div>
         )}
       </div>
 

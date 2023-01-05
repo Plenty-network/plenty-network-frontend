@@ -1,0 +1,26 @@
+import BigNumber from "bignumber.js";
+import Link from "next/link";
+
+export interface IAction {
+  action: string;
+  value?: BigNumber;
+  href: string;
+}
+
+function Action(props: IAction) {
+  return props.href ? (
+    <Link href={props.href}>
+      <div className="flex gap-1 font-body1">
+        {props.action}
+        {props.value && <span className="font-subtitle2">{props.value.toFixed(2)} PLY</span>}
+      </div>
+    </Link>
+  ) : (
+    <div className="flex gap-1 font-body1">
+      {props.action}
+      {props.value && <span className="font-subtitle2">{props.value.toFixed(2)} PLY</span>}
+    </div>
+  );
+}
+
+export default Action;

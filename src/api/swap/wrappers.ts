@@ -15,6 +15,7 @@ import { computeAllPaths, computeAllPathsReverse } from "./router";
 import { store } from "../../redux";
 import axios from "axios";
 import Config from "../../config/config";
+import { connectedNetwork } from "../../common/walletconnect";
 
 export const loadSwapDataWrapper = async (
   tokenIn: string,
@@ -382,7 +383,7 @@ export const topTokensList = async (): Promise<{
   topTokens: { [id: string]: number };
 }> => {
   try {
-    const tokenTvlResponse = await axios.get(`${Config.PLY_INDEXER}analytics/tokens`);
+    const tokenTvlResponse = await axios.get(`${Config.PLY_INDEXER[connectedNetwork]}analytics/tokens`);
     const tokenTvl = tokenTvlResponse.data;
     const topTokens: { [id: string]: number } = {};
 

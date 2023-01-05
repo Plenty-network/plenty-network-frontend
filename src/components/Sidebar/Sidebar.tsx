@@ -1,7 +1,5 @@
 import { useRouter } from "next/router";
 import * as React from "react";
-import TooltipViolet from "../Migrate/TooltipViolet";
-import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { FooterInfoIcon } from "./FooterIconList";
 import { HrefIcon, IHrefIconProps } from "./LinkIconList";
 import { ISingleSideBarProps, SingleSideBar } from "./SideBarTabList";
@@ -60,6 +58,12 @@ const MainMenu: Array<ISingleSideBarProps> = [
     pathName: "/migrate",
     activePathName: "/migrate",
     isToolTip: true,
+  },
+  {
+    name: "Airdrop",
+    iconName: "airdrop",
+    pathName: "/airdrop",
+    activePathName: "/airdrop",
   },
 ];
 

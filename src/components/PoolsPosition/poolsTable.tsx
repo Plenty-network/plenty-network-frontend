@@ -1,6 +1,7 @@
 import * as React from "react";
 import Image from "next/image";
 import { Column } from "react-table";
+import { useEffect, useState } from "react";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import Table from "../Table/Table";
 import { isMobile } from "react-device-detect";
@@ -32,6 +33,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
+
   const [noSearchResult, setNoSearchResult] = React.useState(false);
 
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
@@ -355,9 +357,11 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           tokenIn={tokenIn}
           tokenOut={tokenOut}
           closeFn={setShowLiquidityModal}
+          showLiquidityModal={showLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}
           isGaugeAvailable={isGaugeAvailable}
+          setShowLiquidityModalPopup={setShowLiquidityModal}
         />
       )}
     </>

@@ -10,6 +10,7 @@ import { PopUpModal } from "../Modal/popupModal";
 import { RPC_NODE } from "../../constants/localStorage";
 import { connect } from "react-redux";
 import { setRpcNode } from "../../redux/userSettings/rpcData";
+import { connectedNetwork } from "../../common/walletconnect";
 
 async function isValidURL(userInput: string) {
   try {
@@ -24,27 +25,27 @@ async function isValidURL(userInput: string) {
   }
 }
 function NodeSelector(props: any) {
-  // const LOCAL_RPC_NODES: {
-  //   [id: string]: string;
-  // } = {
-  //   PLENTY: "https://mifx20dfsr.windmill.tools/",
-  //   GIGANODE: "https://mainnet-tezos.giganode.io/",
-  //   CRYPTONOMIC: "https://tezos-prod.cryptonomic-infra.tech/",
-  // };
   const LOCAL_RPC_NODES: {
     [id: string]: string;
   } = {
-    TZKT: "https://rpc.tzkt.io/ghostnet/",
-    SmartPY: "https://ghostnet.smartpy.io/",
+    TZKT:
+      connectedNetwork === "testnet"
+        ? "https://rpc.tzkt.io/ghostnet/"
+        : "https://rpc.tzkt.io/mainnet/",
+    SmartPY:
+      connectedNetwork === "testnet"
+        ? "https://ghostnet.smartpy.io/"
+        : "https://mainnet.smartpy.io/",
+    PLENTY:
+      connectedNetwork === "testnet"
+        ? "https://ghostnet.tezosrpc.midl.dev/ak-xaqvt0f64dajnu/"
+        : "https://tezosrpc.midl.dev/ak-xaqvt0f64dajnu/",
   };
-  // const nodeNames = {
-  //   PLENTY: 'Plenty node',
-  //   GIGANODE: 'Giganode',
-  //   CRYPTONOMIC: 'Cryptonomic',
-  // };
+
   const nodeNames = {
     TZKT: "TZKT",
     SmartPY: "SmartPY",
+    PLENTY: "Plenty Node",
   };
 
   const [rpcNodeDetecting, setRpcNodeDetecting] = useState(false);
@@ -73,17 +74,17 @@ function NodeSelector(props: any) {
     if (!RPCNodeInLS) {
       handleInput("");
 
-      props.setRpcNode(LOCAL_RPC_NODES["TZKT"]);
-      setCurrentRPC(LOCAL_RPC_NODES["TZKT"]);
-      RPCNodeInLS = LOCAL_RPC_NODES["TZKT"];
+      props.setRpcNode(LOCAL_RPC_NODES["PLENTY"]);
+      setCurrentRPC("PLENTY");
+      RPCNodeInLS = LOCAL_RPC_NODES["PLENTY"];
     }
 
     const valid = await isValidURL(RPCNodeInLS);
     if (!valid) {
       handleInput("");
-      localStorage.setItem(RPC_NODE, LOCAL_RPC_NODES["SmartPY"]);
-      props.setRpcNode(LOCAL_RPC_NODES["SmartPY"]);
-      setCurrentRPC("SmartPY");
+      localStorage.setItem(RPC_NODE, LOCAL_RPC_NODES["TZKT"]);
+      props.setRpcNode(LOCAL_RPC_NODES["TZKT"]);
+      setCurrentRPC("TZKT");
       setRpcNodeDetecting(false);
       return;
     }
@@ -133,7 +134,7 @@ function NodeSelector(props: any) {
 
     //}
   };
-  function Options(props: { currentRPC: string; identifier: string }) {
+  function Options(props: { currentRPC: string; identifier: string; name: string }) {
     return (
       <div
         onClick={() => setCurrentRPC(props.identifier)}
@@ -149,7 +150,7 @@ function NodeSelector(props: any) {
         ) : (
           <Image src={greyNode} height={"20px"} width={"20px"} />
         )}
-        <span className="ml-4">{props.identifier}</span>
+        <span className="ml-4">{props.name}</span>
       </div>
     );
   }
@@ -169,7 +170,12 @@ function NodeSelector(props: any) {
           </div>
           <div className="px-2">
             {Object.entries(nodeNames).map(([identifier, name]) => (
-              <Options key={identifier} currentRPC={currentRPC} identifier={identifier} />
+              <Options
+                key={identifier}
+                name={name}
+                currentRPC={currentRPC}
+                identifier={identifier}
+              />
             ))}
             <div className="flex gap-[15px]">
               <div
@@ -229,6 +235,7 @@ const mapStateToProps = (state: { rpcData: { rpcNode: any } }) => ({
 });
 
 const mapDispatchToProps = (dispatch: (arg0: any) => any) => ({
+  //@ts-ignore
   setRpcNode: (rpcNode: string) => dispatch(setRpcNode(rpcNode)),
 });
 
