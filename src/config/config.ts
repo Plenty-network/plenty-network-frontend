@@ -13,12 +13,12 @@ const Config: IConfig = {
     tezToolTokenPrice: 'https://api.teztools.io/token/prices',
   },
   RPC_NODES: {
-    testnet: 'https://rpc.tzkt.io/ghostnet/',
-    mainnet: 'https://mifx20dfsr.windmill.tools/',
+    testnet: process.env.NEXT_PUBLIC_RPC_TESTNET || 'https://rpc.tzkt.io/ghostnet/',
+    mainnet: process.env.NEXT_PUBLIC_RPC_MAINNET || 'https://rpc.tzkt.io/mainnet/',
   },
   TZKT_NODES: {
-    mainnet: 'https://api.tzkt.io/',
-    testnet: 'https://tzkt.plenty.network/',
+    mainnet: process.env.NEXT_PUBLIC_TZKT_MAINNET || 'https://api.tzkt.io/',
+    testnet: process.env.NEXT_PUBLIC_TZKT_GHOSTNET || 'https://api.ghostnet.tzkt.io/',
   },
   PUBLIC_TZKT_NODES: {
     mainnet: 'https://api.tzkt.io/',
@@ -70,16 +70,16 @@ const Config: IConfig = {
 
   EXCHANGE_TOKENS: {
     PLENTY: {
-      exchangeRate: 6,
+      exchangeRate: 5.714,
       tokenDecimals: 18,
       contractEnumValue: 0,
-      tokenMapid: 195403,
+      tokenMapid: 3943,
     },
     WRAP: {
-      exchangeRate: 3,
+      exchangeRate: 3.092,
       tokenDecimals: 8,
       contractEnumValue: 1,
-      tokenMapid: 195389,
+      tokenMapid: 1777,
     }
   },
 

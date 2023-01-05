@@ -38,8 +38,8 @@ function NodeSelector(props: any) {
         : "https://mainnet.smartpy.io/",
     PLENTY:
       connectedNetwork === "testnet"
-        ? "https://ghostnet.tezosrpc.midl.dev/ak-xaqvt0f64dajnu/"
-        : "https://tezosrpc.midl.dev/ak-xaqvt0f64dajnu/",
+        ? process.env.NEXT_PUBLIC_RPC_TESTNET as string
+        : process.env.NEXT_PUBLIC_RPC_MAINNET as string,
   };
 
   const nodeNames = {

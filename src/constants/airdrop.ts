@@ -63,7 +63,9 @@ export const AIRDROP_MISSIONS_FOR_DISPLAY: {
   },
   {
     mission: Mission.VOTE,
-    displayText: "Vote for any pair in the guages",
+    displayText: "Vote for any pair in the gauges",
     href: "/vote",
   },
 ];
+
+export const AIRDROP_TWEET_TEXT: string = "Tweeting from plenty.network";

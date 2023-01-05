@@ -94,7 +94,7 @@ export default function Pools(props: IIndexProps) {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
   const [searchValue, setSearchValue] = React.useState("");
-  const [isbanner, setisBanner] = React.useState(false);
+  const [isbanner, setisBanner] = React.useState(true);
   const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
   const handleNewPool = () => {
     setShowNewPoolPopup(true);

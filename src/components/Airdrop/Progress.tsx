@@ -9,11 +9,12 @@ export interface IProgress {
   claimData: IClaimAPIData[];
   res: IClaimDataResponse;
   fetching: boolean;
+  twitterAction: string;
+  hasTweeted: boolean;
 }
 
 function Progress(props: IProgress) {
-  const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
-  const userAddress = useAppSelector((state) => state.wallet.address);
+  console.log(props);
   const length = props.claimData.length;
 
   const remaining = 6 - length;
@@ -61,7 +62,7 @@ function Progress(props: IProgress) {
             {props.claimData && props.claimData[0]?.mission === "ELIGIBLE" && (
               <p
                 className={clsx(
-                  tweetedAccounts.includes(userAddress) ? "bg-blue-100" : "bg-info-300",
+                  props.hasTweeted ? "bg-blue-100" : "bg-info-300",
                   "h-[6px]  w-[105px]"
                 )}
               ></p>
@@ -81,10 +82,7 @@ function Progress(props: IProgress) {
               (
               {props.res.success && !props.fetching
                 ? (
-                    ((tweetedAccounts.includes(userAddress)
-                      ? props.claimData.length
-                      : props.claimData.length - 1) /
-                      6) *
+                    ((props.hasTweeted ? props.claimData.length : props.claimData.length - 1) / 6) *
                     100
                   ).toFixed(0)
                 : 0}

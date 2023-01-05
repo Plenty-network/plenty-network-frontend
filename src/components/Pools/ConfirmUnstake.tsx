@@ -1,5 +1,8 @@
 import Image from "next/image";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
+
+import { BigNumber } from "bignumber.js";
+import nFormatter from "../../api/util/helpers";
 import Button from "../Button/Button";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 
@@ -24,7 +27,9 @@ export function ConfirmUnStakeLiquidity(props: IConfirmUnStakeLiquidity) {
       </div>
       <div className="border rounded-2xl mt-[24px] border-text-800 bg-card-200 pt-[20px] px-4 pb-5">
         <div className=" font-body4 text-text-250">Your unstaking</div>
-        <div className="mt-1 text-white font-title2">{props.unStakeInput} PNLP</div>
+        <div className="mt-1 text-white font-title2">
+          {nFormatter(new BigNumber(props.unStakeInput))} PNLP
+        </div>
       </div>
 
       <div className="mt-5">

@@ -14,11 +14,13 @@ import { IClaimDataResponse } from "../../api/airdrop/types";
 export interface ISteps {
   claimData: IClaimDataResponse;
   fetching: boolean;
+  twitterAction: string;
+  handleTwitter: () => void;
+  hasTweeted: boolean;
 }
 
 function Steps(props: ISteps) {
   const [isDropDownActive, setIsDropDownActive] = useState(false);
-  const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
   const userAddress = useAppSelector((state) => state.wallet.address);
   return (
     <>
@@ -29,7 +31,7 @@ function Steps(props: ISteps) {
         {isDropDownActive ? (
           <p className="bg-primary-500/[0.2] rounded-lg h-[28px] px-2 text-primary-500 font-subtitle1 flex items-center">
             {props.claimData.success
-              ? tweetedAccounts.includes(userAddress)
+              ? props.hasTweeted
                 ? 6 - props.claimData.claimData.length
                 : 7 - props.claimData.claimData.length
               : 6}{" "}
@@ -43,7 +45,7 @@ function Steps(props: ISteps) {
             <span className="font-subtitle1 text-primary-500">
               +
               {props.claimData.success
-                ? tweetedAccounts.includes(userAddress)
+                ? props.hasTweeted
                   ? 6 - props.claimData.claimData.length
                   : 7 - props.claimData.claimData.length
                 : 6}{" "}
@@ -72,6 +74,9 @@ function Steps(props: ISteps) {
                   href={item.href}
                   mission={item.mission}
                   disable={props.claimData.success === false || props.claimData.eligible === false}
+                  twitterAction={props.twitterAction}
+                  handleTwitter={props.handleTwitter}
+                  hasTweeted={props.hasTweeted}
                 />
               </>
             );
