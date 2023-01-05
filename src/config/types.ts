@@ -10,7 +10,7 @@ export interface IConfig {
   RPC_NODES: INodes;
   TZKT_NODES: INodes;
   PUBLIC_TZKT_NODES: INodes;
-  FAUCET : string;
+  FAUCET: string;
   CTEZ: INodes;
   EXPLORER_LINKS: IExplorerLinks;
 
@@ -29,21 +29,24 @@ export interface IConfig {
   CONFIG_LINKS: {
     testnet: IConfigData;
     mainnet: IConfigData;
-  }
+  };
 
   NETWORK: "mainnet" | "testnet";
   WALLET_NETWORK: NetworkType;
   ADMIN_ADDRESS: string;
   BURNER: string;
-  VE_SWAP: INodes;
-  VOTER: INodes;
-  VOTE_ESCROW: INodes;
-  VE_INDEXER: string;
-  PLY_INDEXER: string;
-  PLY_TOKEN: INodes;
-  FACTORY : INodes;
-  EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData }
-  IPFS_LINKS: { primary: string; fallback: string }
+  VE_SWAP: { mainnet: string; testnet: string };
+  VOTER: { mainnet: string; testnet: string };
+  VOTE_ESCROW: { mainnet: string; testnet: string };
+  VE_INDEXER: { mainnet: string; testnet: string };
+  PLY_INDEXER: { mainnet: string; testnet: string };
+  PLY_TOKEN: { mainnet: string; testnet: string };
+  FACTORY: { mainnet: string; testnet: string };
+  EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData };
+  IPFS_LINKS: { primary: string; fallback: string };
+  AIRDROP_SERVER: { mainnet: string; testnet: string };
+  AIRDROP: { mainnet: string; testnet: string };
+  AIRDROP_ETH_MESSAGE_PREFIX: string;
 }
 
 interface IApi {
@@ -178,19 +181,19 @@ export enum Chain {
 export enum TokenStandard {
   FA12 = "FA1.2",
   FA2 = "FA2",
-  TEZ = "TEZ"
+  TEZ = "TEZ",
 }
 
 export interface IConfigToken {
-  name: string,
-  symbol: string,
-  decimals: number,
-  standard: TokenStandard,
-  address?: string,
-  tokenId?: number,
-  thumbnailUri?: string,
-  originChain: Chain,
-  pairs: string[],
+  name: string;
+  symbol: string;
+  decimals: number;
+  standard: TokenStandard;
+  address?: string;
+  tokenId?: number;
+  thumbnailUri?: string;
+  originChain: Chain;
+  pairs: string[];
   iconUrl?: string;
 }
 

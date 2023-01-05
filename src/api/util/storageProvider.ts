@@ -56,6 +56,15 @@ export const getTzktTokenData = async (filters: string | undefined): Promise<any
   }
 };
 
+export const getTzktAccountData = async (account: string): Promise<any> => {
+  try {
+    const tokenResponse = await axios.get(`${tzktNode}v1/accounts/${account}`);
+    return tokenResponse;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
 const getReadableStorage = (
   storageData: any,
   storageType: any

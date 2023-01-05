@@ -49,9 +49,7 @@ function ManageLock(props: IManageLockProps) {
     props.setShow(false);
   };
   const handleInputPercentage = (value: number) => {
-    props.setUpdatedPlyVoteValue(
-      (value * Number(props.allBalance?.allTokensBalances["PLY"]?.balance)).toString()
-    );
+    props.setUpdatedPlyVoteValue((value * Number(props.allBalance["PLY"])).toString());
   };
   useEffect(() => {
     const now = Math.floor(new Date().getTime() / 1000);
@@ -175,8 +173,7 @@ function ManageLock(props: IManageLockProps) {
     } else if (
       walletAddress &&
       props.updatedPlyVoteValue &&
-      Number(props.updatedPlyVoteValue) >
-        Number(props.allBalance?.allTokensBalances["PLY"]?.balance)
+      Number(props.updatedPlyVoteValue) > Number(props.allBalance["PLY"])
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
@@ -192,7 +189,7 @@ function ManageLock(props: IManageLockProps) {
     }
   }, [props]);
   const onClickAmount = () => {
-    handlePlyInput(Number(props.allBalance?.allTokensBalances["PLY"]?.balance));
+    handlePlyInput(Number(props.allBalance["PLY"]));
   };
 
   return props.show ? (
@@ -242,8 +239,8 @@ function ManageLock(props: IManageLockProps) {
                 <Image alt={"alt"} src={wallet} width={"32px"} height={"32px"} />
               </div>
               <div className=" ml-1 text-primary-500 font-body2">
-                {Number(props.allBalance?.allTokensBalances["PLY"]?.balance) >= 0
-                  ? props.allBalance?.allTokensBalances["PLY"]?.balance.toFixed(2)
+                {Number(props.allBalance["PLY"]) >= 0
+                  ? new BigNumber(props.allBalance["PLY"]).toFixed(2)
                   : "0"}{" "}
                 PLY
               </div>
@@ -254,12 +251,10 @@ function ManageLock(props: IManageLockProps) {
               className={clsx(
                 "cursor-pointer rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
                 props.updatedPlyVoteValue !== "" &&
-                  Number(props.updatedPlyVoteValue) ===
-                    0.25 * Number(props.allBalance?.allTokensBalances["PLY"]?.balance) &&
+                  Number(props.updatedPlyVoteValue) === 0.25 * Number(props.allBalance["PLY"]) &&
                   "border-primary-500 bg-primary-500/[0.20]"
               )}
-              {...(!walletAddress ||
-              Number(props.allBalance?.allTokensBalances["PLY"]?.balance) === 0
+              {...(!walletAddress || Number(props.allBalance["PLY"]) === 0
                 ? {}
                 : { onClick: () => handleInputPercentage(0.25) })}
             >
@@ -269,12 +264,10 @@ function ManageLock(props: IManageLockProps) {
               className={clsx(
                 "cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
                 props.updatedPlyVoteValue !== "" &&
-                  Number(props.updatedPlyVoteValue) ===
-                    0.5 * Number(props.allBalance?.allTokensBalances["PLY"]?.balance) &&
+                  Number(props.updatedPlyVoteValue) === 0.5 * Number(props.allBalance["PLY"]) &&
                   "border-primary-500 bg-primary-500/[0.20]"
               )}
-              {...(!walletAddress ||
-              Number(props.allBalance?.allTokensBalances["PLY"]?.balance) === 0
+              {...(!walletAddress || Number(props.allBalance["PLY"]) === 0
                 ? {}
                 : { onClick: () => handleInputPercentage(0.5) })}
             >
@@ -284,12 +277,10 @@ function ManageLock(props: IManageLockProps) {
               className={clsx(
                 "cursor-pointer ml-2 rounded-lg border border-text-800/[0.5] bg-cardBackGround h-[32px] px-[13px] items-center flex",
                 props.updatedPlyVoteValue !== "" &&
-                  Number(props.updatedPlyVoteValue) ===
-                    0.75 * Number(props.allBalance?.allTokensBalances["PLY"]?.balance) &&
+                  Number(props.updatedPlyVoteValue) === 0.75 * Number(props.allBalance["PLY"]) &&
                   "border-primary-500 bg-primary-500/[0.20]"
               )}
-              {...(!walletAddress ||
-              Number(props.allBalance?.allTokensBalances["PLY"]?.balance) === 0
+              {...(!walletAddress || Number(props.allBalance["PLY"]) === 0
                 ? {}
                 : { onClick: () => handleInputPercentage(0.75) })}
             >

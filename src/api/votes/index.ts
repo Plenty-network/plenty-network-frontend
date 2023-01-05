@@ -135,7 +135,7 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
   try {
     const state = store.getState();
     const TOKENS = state.config.tokens;
-    const bribes = await axios.get(`${Config.VE_INDEXER}bribes?epoch=${epoch}`);
+    const bribes = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}bribes?epoch=${epoch}`);
     const bribesData: IBribesResponse[] = bribes.data;
 
     const res: IEpochResponse = await fetchEpochData(epoch);
@@ -145,7 +145,7 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
       const epochData = res.epochData as IEpochData;
 
       const feesResponse = await axios.get(
-        `${Config.PLY_INDEXER}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
+        `${Config.PLY_INDEXER[connectedNetwork]}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
       );
       feesData = feesResponse.data;
     } else {
@@ -330,7 +330,7 @@ export const votesPageDataWrapper = async (
     const epochTimestamp = epochData.epochEndTimestamp - 10; // Timestamp within the epoch.
 
     const locksResponse = await axios.get(
-      `${Config.VE_INDEXER}locks?address=${userTezosAddress}&epoch=${epochNumber}&timestamp=${epochTimestamp}`
+      `${Config.VE_INDEXER[connectedNetwork]}locks?address=${userTezosAddress}&epoch=${epochNumber}&timestamp=${epochTimestamp}`
     );
     const locksData = locksResponse.data.result;
 

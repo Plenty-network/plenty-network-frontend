@@ -59,8 +59,6 @@ const ConfigSlice = createSlice({
       // state.lp = action.payload.LP;
       state.tokens = action.payload.TOKEN;
       state.AMMs = action.payload.AMM;
-      console.log(action.payload.TOKEN);
-      console.log(action.payload.AMM);
       console.log("config fetching completed");
     },
     [getConfig.rejected.toString()]: (state: any, action: any) => {
