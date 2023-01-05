@@ -363,7 +363,7 @@ function Migrate(props: IMigrateProps) {
                     <span className="text-white mr-1">
                       + {exchangeRes?.vestedAmount?.toFixed(2)} PLY
                     </span>{" "}
-                    vested <span className="md:block hidden ml-1">for upto 25-Aug-2024</span>
+                    vested <span className="md:block hidden ml-1">for upto 05-Jan-2025</span>
                     {/* <span className="md:hidden relative top-1">
                       <Image src={info} />
                     </span> */}
