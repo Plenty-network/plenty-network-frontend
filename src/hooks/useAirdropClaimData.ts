@@ -49,6 +49,8 @@ export const useAirdropClaimData = () => {
   useEffect(() => {
     if(userTezosAddress) {
       getAirdropClaimData();
+    } else {
+      setFetching(false);
     }
   }, [
     userTezosAddress,
