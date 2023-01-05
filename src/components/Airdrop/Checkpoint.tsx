@@ -56,7 +56,7 @@ function CheckPoint(props: ICheckPoint) {
       }
     });
     return flag;
-  }, [props.claimData, props.mission, props.hasTweeted]);
+  }, [props.claimData, props.mission, props.hasTweeted, userAddress]);
   return (
     <>
       <div
@@ -113,7 +113,9 @@ function CheckPoint(props: ICheckPoint) {
                     : undefined
                   : undefined
               }
-              onclick={props.handleTwitter}
+              onclick={
+                props.twitterAction.toLowerCase() === "take action" ? props.handleTwitter : () => {}
+              }
             />
           ) : props.isFetching ? (
             "fetching..."

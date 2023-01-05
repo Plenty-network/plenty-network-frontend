@@ -9,7 +9,7 @@ export interface IAction {
 }
 
 function Action(props: IAction) {
-  return props.href ? (
+  return props.href && props.action.toLowerCase() === "take action" ? (
     <Link href={props.href}>
       <div className="flex gap-1 font-body1">
         {props.action}

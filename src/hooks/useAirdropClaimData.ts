@@ -47,16 +47,21 @@ export const useAirdropClaimData = () => {
   };
 
   useEffect(() => {
-    if(userTezosAddress) {
+    if (userTezosAddress) {
       getAirdropClaimData();
     } else {
       setFetching(false);
+      setAirDropClaimData({
+        success: false,
+        eligible: false,
+        message: "",
+        perMissionAmount: new BigNumber(0),
+        totalClaimableAmount: new BigNumber(0),
+        pendingClaimableAmount: new BigNumber(0),
+        claimData: [],
+      });
     }
-  }, [
-    userTezosAddress,
-    claimed,
-    operationsuccesful,
-  ]);
+  }, [userTezosAddress, claimed, operationsuccesful]);
 
   return { airdropClaimData: airdropClaimData, setClaimed: setClaimed, fetching: fetching };
 };
