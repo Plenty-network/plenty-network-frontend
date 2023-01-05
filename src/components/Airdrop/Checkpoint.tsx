@@ -69,7 +69,8 @@ function CheckPoint(props: ICheckPoint) {
           <Image
             src={
               !props.isFetching && props.href === ""
-                ? props.twitterAction.toLowerCase() === "take action"
+                ? props.twitterAction.toLowerCase() === "take action" ||
+                  props.twitterAction === "Not allowed"
                   ? check
                   : doneCheck
                 : action !== 0
@@ -88,7 +89,8 @@ function CheckPoint(props: ICheckPoint) {
               : props.claimData.eligible === false
               ? "bg-warning-500/[0.1] text-warning-500"
               : props.href === ""
-              ? props.twitterAction.toLowerCase() === "claimed"
+              ? props.twitterAction.toLowerCase() === "claimed" &&
+                props.twitterAction !== "Not allowed"
                 ? "bg-success-500/[0.1] text-success-500"
                 : props.twitterAction.toLowerCase() === "completed"
                 ? "bg-info-400/[0.1] text-info-400 r "
@@ -106,7 +108,7 @@ function CheckPoint(props: ICheckPoint) {
               href={props.href}
               value={
                 !props.isFetching
-                  ? props.twitterAction !== "Claimed"
+                  ? props.twitterAction !== "Claimed" && props.twitterAction !== "Not allowed"
                     ? props.claimData.perMissionAmount
                     : undefined
                   : undefined
