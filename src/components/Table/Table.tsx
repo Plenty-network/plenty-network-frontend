@@ -247,7 +247,7 @@ const Table = <D extends object>({
                 );
               })
             : null}
-          <tr className="mx-5 h-16 bg-cardBackGround px-5 py-3 rounded-lg  items-center ">
+          <tr className=" h-16 bg-cardBackGround px-5 py-3 rounded-lg  items-center border border-borderCommon">
             <TablePagination
               count={pageCount}
               rowsPerPage={10}
