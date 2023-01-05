@@ -248,7 +248,7 @@ const Table = <D extends object>({
               })
             : null}
           {isFetched && data.length > 0 && (
-            <tr className="mx-5 h-16 bg-cardBackGround px-5 py-3 rounded-lg  items-center ">
+            <tr className="h-[60px] mt-2 border border-borderCommon bg-cardBackGround px-5 py-4 rounded-lg  items-center ">
               <TablePagination
                 count={pageCount}
                 rowsPerPage={10}
