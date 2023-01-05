@@ -10,7 +10,6 @@ import { AIRDROP_ERROR_MESSAGES } from "../constants/airdrop";
 
 export const useAirdropClaimData = () => {
   const userTezosAddress = useAppSelector((state) => state.wallet.address);
-  const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
   const operationsuccesful = useAppSelector((state) => state.walletLoading.operationSuccesful);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -53,7 +52,6 @@ export const useAirdropClaimData = () => {
     }
   }, [
     userTezosAddress,
-    tweetedAccounts,
     claimed,
     operationsuccesful,
   ]);

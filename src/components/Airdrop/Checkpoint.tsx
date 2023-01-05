@@ -14,7 +14,7 @@ import { ChainAirdrop } from "./Disclaimer";
 import Action from "./Action";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import { useDispatch } from "react-redux";
-import { addTweetedAccount } from "../../redux/airdrop/transactions";
+// import { addTweetedAccount } from "../../redux/airdrop/transactions";
 import { IClaimDataResponse, Mission } from "../../api/airdrop/types";
 export interface ICheckPoint {
   text: string;
@@ -33,11 +33,10 @@ export interface ICheckPoint {
 function CheckPoint(props: ICheckPoint) {
   const tweetRef = useRef(null);
   const userAddress = useAppSelector((state) => state.wallet.address);
-  const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
   const dispatch = useDispatch<AppDispatch>();
-  const handleTwitter = () => {
-    dispatch(addTweetedAccount(userAddress));
-  };
+  // const handleTwitter = () => {
+  //   dispatch(addTweetedAccount(userAddress));
+  // };
   const action = useMemo(() => {
     let flag = 0;
 
