@@ -189,7 +189,7 @@ function ManageLock(props: IManageLockProps) {
     }
   }, [props]);
   const onClickAmount = () => {
-    handlePlyInput(Number(props.allBalance["PLY"]));
+    handlePlyInput(props.allBalance["PLY"]);
   };
 
   return props.show ? (

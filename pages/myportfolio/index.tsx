@@ -372,7 +372,7 @@ function MyPortfolio(props: any) {
           ...balanceResponse.reduce(
             (acc, cur) => ({
               ...acc,
-              [cur.identifier]: cur.balance,
+              [cur.identifier]: cur.balance.toString(),
             }),
             {}
           ),

@@ -183,7 +183,7 @@ function CreateLock(props: ICreateLockProps) {
     }
   }, [props]);
   const onClickAmount = () => {
-    handlePlyInput(Number(props.plyBalance));
+    handlePlyInput(props.plyBalance.toString());
   };
   const [showTooltip, setShowTooltip] = useState(false);
   // useEffect(() => {
