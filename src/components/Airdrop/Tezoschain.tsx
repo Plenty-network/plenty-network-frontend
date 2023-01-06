@@ -23,6 +23,7 @@ import {
   tweetForUser,
 } from "../../api/airdrop/twitter";
 import { AIRDROP_TWEET_TEXT } from "../../constants/airdrop";
+import { tzktExplorer } from "../../common/walletconnect";
 export interface ITezosChain {
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
 }
@@ -167,7 +168,7 @@ function TezosChain(props: ITezosChain) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -384,7 +385,7 @@ function TezosChain(props: ITezosChain) {
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
             transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
               : null
           }
           content={`claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`}

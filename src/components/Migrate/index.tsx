@@ -32,6 +32,7 @@ import { setFlashMessage } from "../../redux/flashMessage";
 import Config from "../../config/config";
 import { FIRST_TOKEN_AMOUNT, TOKEN_A } from "../../constants/localStorage";
 import { IAllTokensBalanceResponse } from "../../api/util/types";
+import { tzktExplorer } from "../../common/walletconnect";
 
 interface IMigrateProps {
   allBalance: {
@@ -189,7 +190,7 @@ function Migrate(props: IMigrateProps) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -398,7 +399,7 @@ function Migrate(props: IMigrateProps) {
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
             transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
               : null
           }
           content={`Migration of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
