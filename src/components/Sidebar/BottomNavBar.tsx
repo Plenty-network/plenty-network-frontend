@@ -190,13 +190,24 @@ export function MoreSubMenuList(props: ISubMenuListProps) {
         />
       </div>
 
-      <div className="px-9 hover:bg-sideBarHover ">
+      {/* <div className="px-9 hover:bg-sideBarHover ">
         <SingleSideBar
           name="Airdrop"
           className="px-9 justify-between"
           iconName="airdrop"
           pathName={"/airdrop"}
           isBottomMenu
+        />
+      </div> */}
+      <div className="px-9 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
+        <SingleSideBar
+          name="Bridge"
+          className="px-9 justify-between"
+          iconName="bridge"
+          pathName={"https://bridge.plenty.network/"}
+          isBottomMenu
+          isHrefIcon={true}
+          openNewPage={true}
         />
       </div>
 

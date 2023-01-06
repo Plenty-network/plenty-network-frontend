@@ -32,6 +32,7 @@ import { setFlashMessage } from "../../redux/flashMessage";
 import Config from "../../config/config";
 import { FIRST_TOKEN_AMOUNT, TOKEN_A } from "../../constants/localStorage";
 import { IAllTokensBalanceResponse } from "../../api/util/types";
+import { tzktExplorer } from "../../common/walletconnect";
 
 interface IMigrateProps {
   allBalance: {
@@ -189,7 +190,7 @@ function Migrate(props: IMigrateProps) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -228,7 +229,7 @@ function Migrate(props: IMigrateProps) {
   return (
     <>
       <div className="lg:w-640  md:mx-auto mt-[36px]">
-        <div className="flex  border border-text-800 bg-card-500 h-[48px] items-center  px-5 md:rounded-2xl gap-1.5 md:gap-2.5 md:w-[410px]">
+        <div className="flex  border border-text-800 bg-card-500 h-[48px] items-center  px-5 md:rounded-2xl gap-1.5 md:gap-2.5 md:w-[460px]">
           <Image src={exchange1} />
           <span className="font-body1">Exchange rate:</span>
           <span className="md:font-body4 font-body2">
@@ -363,7 +364,7 @@ function Migrate(props: IMigrateProps) {
                     <span className="text-white mr-1">
                       + {exchangeRes?.vestedAmount?.toFixed(2)} PLY
                     </span>{" "}
-                    vested <span className="md:block hidden ml-1">for upto 25-Aug-2024</span>
+                    vested <span className="md:block hidden ml-1">for upto 05-Jan-2025</span>
                     {/* <span className="md:hidden relative top-1">
                       <Image src={info} />
                     </span> */}
@@ -397,9 +398,7 @@ function Migrate(props: IMigrateProps) {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
-              : null
+            transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }
           content={`Migration of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
             TOKEN_A

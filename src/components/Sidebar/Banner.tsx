@@ -60,14 +60,14 @@ function Banner(props: IBanner) {
         !props.isBanner && "hidden"
       )}
     >
-      <p className="w-full text-center cursor-pointer" onClick={handleFaucet}>
-        YOU ARE LIVE ON GHOSTNET, CLAIM YOUR TEST TOKENS HERE{" "}
+      <p className="w-full text-center cursor-pointer">
+        Voting starts from 12th Jan. Rewards starts from 19th Jan{" "}
+        {/* <span className="font-[600]">LEARN MORE</span>{" "} */}
       </p>
       <p
         className="text-right mr-2 md:mr-[10px] cursor-pointer"
         onClick={() => {
           props.setIsBanner(false);
-          dispatch(setIsBanner(false));
         }}
       >
         <div

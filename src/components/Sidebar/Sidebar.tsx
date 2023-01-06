@@ -8,11 +8,11 @@ export interface ISideBarProps {
   isBanner: boolean;
 }
 export const FooterMenu: Array<IHrefIconProps> = [
-  // {
-  //   name: "Analytics",
-  //   iconName: "VectorfooterMenu",
-  //   href: "",
-  // },
+  {
+    name: "Analytics",
+    iconName: "VectorfooterMenu",
+    href: "https://analytics.plenty.network/",
+  },
   {
     name: "Docs",
     iconName: "VectorfooterMenu-1",
@@ -59,11 +59,19 @@ const MainMenu: Array<ISingleSideBarProps> = [
     activePathName: "/migrate",
     isToolTip: true,
   },
+  // {
+  //   name: "Airdrop",
+  //   iconName: "airdrop",
+  //   pathName: "/airdrop",
+  //   activePathName: "/airdrop",
+  // },
   {
-    name: "Airdrop",
-    iconName: "airdrop",
-    pathName: "/airdrop",
-    activePathName: "/airdrop",
+    name: "Bridge",
+    iconName: "bridge",
+    pathName: "https://bridge.plenty.network/",
+    activePathName: "/bridge",
+    isHrefIcon: true,
+    openNewPage: true,
   },
 ];
 

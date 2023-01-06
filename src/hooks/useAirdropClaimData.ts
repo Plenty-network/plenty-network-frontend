@@ -10,7 +10,6 @@ import { AIRDROP_ERROR_MESSAGES } from "../constants/airdrop";
 
 export const useAirdropClaimData = () => {
   const userTezosAddress = useAppSelector((state) => state.wallet.address);
-  const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
   const operationsuccesful = useAppSelector((state) => state.walletLoading.operationSuccesful);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -48,15 +47,21 @@ export const useAirdropClaimData = () => {
   };
 
   useEffect(() => {
-    if(userTezosAddress) {
+    if (userTezosAddress) {
       getAirdropClaimData();
+    } else {
+      setFetching(false);
+      setAirDropClaimData({
+        success: false,
+        eligible: false,
+        message: "",
+        perMissionAmount: new BigNumber(0),
+        totalClaimableAmount: new BigNumber(0),
+        pendingClaimableAmount: new BigNumber(0),
+        claimData: [],
+      });
     }
-  }, [
-    userTezosAddress,
-    tweetedAccounts,
-    claimed,
-    operationsuccesful,
-  ]);
+  }, [userTezosAddress, claimed, operationsuccesful]);
 
   return { airdropClaimData: airdropClaimData, setClaimed: setClaimed, fetching: fetching };
 };

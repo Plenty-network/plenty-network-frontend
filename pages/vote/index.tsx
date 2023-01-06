@@ -2,6 +2,9 @@ import { BigNumber } from "bignumber.js";
 import clsx from "clsx";
 import Image from "next/image";
 import * as React from "react";
+import close from "../../src/assets/icon/pools/closeBlue.svg";
+
+import infoBlue from "../../src/assets/icon/pools/InfoBlue.svg";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getBalanceFromTzkt } from "../../src/api/util/balance";
@@ -36,6 +39,7 @@ import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/token
 import { setSelectedDropDown, setSelectedDropDownLocal } from "../../src/redux/veNFT";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { setIsLoadingWallet } from "../../src/redux/walletLoading";
+import { tzktExplorer } from "../../src/common/walletconnect";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -378,7 +382,7 @@ export default function Vote() {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -458,7 +462,7 @@ export default function Vote() {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -497,6 +501,7 @@ export default function Vote() {
       }
     });
   };
+  const [isbanner, setisBanner] = React.useState(true);
   const handleEpochChange = () => {
     //@ts-ignore
     dispatch(setSelectedEpoch(currentEpoch));
@@ -649,6 +654,22 @@ export default function Vote() {
                   </div>
                 </div>
               </div>
+              {isbanner && (
+                <div className="mb-2 h-[42px] ml-4 mr-2 px-2 rounded-lg  flex items-center bg-info-500/[0.1]">
+                  <p className="relative top-0.5">
+                    <Image src={infoBlue} />
+                  </p>
+                  <p className="font-body2 text-info-500 px-3 sm:w-auto w-[249px]">
+                    VeNFTs created in this epoch can only be used for voting from the next epoch
+                  </p>
+                  <p
+                    className="ml-auto relative top-[7px] cursor-pointer"
+                    onClick={() => setisBanner(false)}
+                  >
+                    <Image src={close} />
+                  </p>
+                </div>
+              )}
               <VotesTable
                 className="md:pl-5  "
                 searchValue={searchValue}
@@ -854,7 +875,7 @@ export default function Vote() {
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
             transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
               : null
           }
           content={contentTransaction}

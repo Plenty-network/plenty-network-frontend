@@ -38,7 +38,7 @@ export const AIRDROP_MISSIONS_FOR_DISPLAY: {
 }[] = [
   {
     mission: Mission.ELIGIBLE,
-    displayText: "Tweet",
+    displayText: "Allow Plenty to tweet about the airdrop on your behalf",
     href: "",
   },
   {
@@ -63,7 +63,9 @@ export const AIRDROP_MISSIONS_FOR_DISPLAY: {
   },
   {
     mission: Mission.VOTE,
-    displayText: "Vote for any pair in the guages",
+    displayText: "Vote for any pair in the gauges",
     href: "/vote",
   },
 ];
+
+export const AIRDROP_TWEET_TEXT: string = "Tweeting from plenty.network";

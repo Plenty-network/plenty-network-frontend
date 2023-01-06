@@ -28,6 +28,7 @@ import ConfirmAddPool from "./ConfirmAddPool";
 import NewPoolMain, { Pair } from "./NewPoolMain";
 import { TextNewPool } from "./TextNewPool";
 import TokenModalPool from "./tokenModalPool";
+import { tzktExplorer } from "../../common/walletconnect";
 
 export interface IManageLiquidityProps {
   show: boolean;
@@ -260,7 +261,7 @@ export function NewPool(props: IManageLiquidityProps) {
                 isLoading: true,
                 onClick: () => {
                   window.open(
-                    `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                    `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                     "_blank"
                   );
                 },
@@ -342,7 +343,7 @@ export function NewPool(props: IManageLiquidityProps) {
                 isLoading: true,
                 onClick: () => {
                   window.open(
-                    `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                    `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                     "_blank"
                   );
                 },
@@ -510,7 +511,7 @@ export function NewPool(props: IManageLiquidityProps) {
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
             transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
               : null
           }
           content={`Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(

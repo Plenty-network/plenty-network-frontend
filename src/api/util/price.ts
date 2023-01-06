@@ -5,6 +5,9 @@ import { connectedNetwork } from '../../common/walletconnect';
 import { loadSwapDataWrapper } from '../swap/wrappers';
 import { BigNumber } from 'bignumber.js'
 
+/**
+ * @deprecated
+ */
 const getCtezPrice = async (): Promise<{ ctezPriceInUSD: number }> => {
   try {
     const promises = [];
@@ -29,6 +32,9 @@ const getCtezPrice = async (): Promise<{ ctezPriceInUSD: number }> => {
   }
 };
 
+/**
+ * @deprecated
+ */
 const getuDEFIPrice = async (): Promise<{ uDEFIinUSD: number }> => {
   try {
     const uDEFIOracleUrl = `${Config.RPC_NODES.mainnet}chains/main/blocks/head/context/contracts/KT1UuqJiGQgfNrTK5tuR1wdYi5jJ3hnxSA55/storage`;
@@ -49,10 +55,9 @@ const getuDEFIPrice = async (): Promise<{ uDEFIinUSD: number }> => {
 
 /**
  * Gets price of agEUR.e from Ethereum chain
- * Deprecate when token is listed on Tezos exchanges
+ * @deprecated
  */
-// TODO: Remove for mainnet, get from analytics
-export const getagEURePrice = async (): Promise<{ agEUReInUSD: number }> => {
+const getagEURePrice = async (): Promise<{ agEUReInUSD: number }> => {
   try {
     const url = 'https://api.angle.money/v1/prices';
     const APIpriceResponse = await axios.get(url);
@@ -123,22 +128,22 @@ export const getTokenPrices = async (): Promise<{
       tokenPrice[x.token] = Number(x.price.value);
     }
 
-    // TODO: Find solution with Anshu for .e token prices //Solution - Remove in mainnet, ctez pairs will be added.
-    for (const x in Config.WRAPPED_ASSETS[connectedNetwork]) {
-      if (
-        // x === 'DAI.e' ||
-        // x === 'USDC.e' ||
-        // x === 'USDT.e' ||
-        // x === 'LINK.e' ||
-        x === 'MATIC.e' ||
-        // x === 'BUSD.e' ||
-        x === 'WETH.e' 
-        // x === 'WBTC.e'
-      ) {
-        tokenPrice[x] =
-          tokenPrice[Config.WRAPPED_ASSETS[connectedNetwork][x].REF_TOKEN];
-      }
-    }
+    
+    // for (const x in Config.WRAPPED_ASSETS[connectedNetwork]) {
+    //   if (
+    //     // x === 'DAI.e' ||
+    //     // x === 'USDC.e' ||
+    //     // x === 'USDT.e' ||
+    //     // x === 'LINK.e' ||
+    //     x === 'MATIC.e' ||
+    //     // x === 'BUSD.e' ||
+    //     x === 'WETH.e' 
+    //     // x === 'WBTC.e'
+    //   ) {
+    //     tokenPrice[x] =
+    //       tokenPrice[Config.WRAPPED_ASSETS[connectedNetwork][x].REF_TOKEN];
+    //   }
+    // }
     // External Price Feeds
     // tokenPrice['ctez'] = ctezPrice.ctezPriceInUSD;
     // tokenPrice['uDEFI'] = uDEFIPrice.uDEFIinUSD;

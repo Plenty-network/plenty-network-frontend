@@ -150,6 +150,8 @@ export const tweetForUser = async (
     const tweetResponseData: string = tweetResponse.data;
 
     if (tweetResponseData === "TWEETED") {
+      // Set tweeted for that user irrespective of address if tweeted
+      store.dispatch(setHasTweeted(true));
       return {
         status: true,
         message: tweetResponseData,
