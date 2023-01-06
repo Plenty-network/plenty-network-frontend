@@ -62,9 +62,14 @@ function Banner(props: IBanner) {
     >
       <p className="w-full text-center cursor-pointer" onClick={handleFaucet}>
         Voting starts from 12th jan. Rewards starts from 19th Jan{" "}
-        <span className="font-[600]">LEARN MORE</span>{" "}
+        {/* <span className="font-[600]">LEARN MORE</span>{" "} */}
       </p>
-      <p className="text-right mr-2 md:mr-[10px] cursor-pointer" onClick={() => {}}>
+      <p
+        className="text-right mr-2 md:mr-[10px] cursor-pointer"
+        onClick={() => {
+          props.setIsBanner(false);
+        }}
+      >
         <div
           className={clsx(
             "w-[18px] h-[18px] rounded-full flex items-center justify-center ",
