@@ -229,7 +229,7 @@ function Migrate(props: IMigrateProps) {
   return (
     <>
       <div className="lg:w-640  md:mx-auto mt-[36px]">
-        <div className="flex  border border-text-800 bg-card-500 h-[48px] items-center  px-5 md:rounded-2xl gap-1.5 md:gap-2.5 md:w-[460px]">
+        <div className="flex  border border-text-800 bg-card-500 h-[48px] items-center  px-3 md:rounded-2xl gap-1 md:gap-2.5 md:w-[460px]">
           <Image src={exchange1} />
           <span className="font-body1">Exchange rate:</span>
           <span className="md:font-body4 font-body2">
