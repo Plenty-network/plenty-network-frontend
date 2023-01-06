@@ -199,7 +199,7 @@ export const getTezBalance = async (address: string): Promise<IBalanceResponse> 
   }
 }; */
 
-// // TODO: Deprecate this
+
 // export const getCompleteUserBalace = async (address: string): Promise<IAllBalanceResponse> => {
 //   try {
 //     const state = store.getState();
@@ -241,7 +241,7 @@ export const getPnlpBalance = async (
     }
     // const lpTokenSymbol = lpToken ? lpToken : getLpTokenSymbol(tokenOneSymbol, tokenTwoSymbol);
     // if (lpTokenSymbol) {
-    //   // TODO: Uncomment the commented lines and comment the uncommented one to get balance via tzkt and vice versa.
+    //   // Uncomment the commented lines and comment the uncommented one to get balance via tzkt and vice versa.
     // const AMM = store.getState().config.tokens;
     const LP_TOKEN = store.getState().config.AMMs[ammAddress].lpToken;
     // const lpTokenBalance = await getUserBalanceByRpc(lpTokenSymbol, userTezosAddress);

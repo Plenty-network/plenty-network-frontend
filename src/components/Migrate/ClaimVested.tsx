@@ -36,6 +36,7 @@ import { IVestAndClaim } from "../../api/migrate/types";
 import { useCountdown } from "../../hooks/useCountDown";
 import PieChartButton from "../LocksPosition/PieChart";
 import { FIRST_TOKEN_AMOUNT } from "../../constants/localStorage";
+import { tzktExplorer } from "../../common/walletconnect";
 
 interface IMigrateProps {
   vestedData: IVestAndClaim;
@@ -113,7 +114,7 @@ function ClaimVested(props: IMigrateProps) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -300,7 +301,7 @@ function ClaimVested(props: IMigrateProps) {
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
             transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
               : null
           }
           content={`Claim of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `}

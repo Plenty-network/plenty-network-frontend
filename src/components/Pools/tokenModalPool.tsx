@@ -12,7 +12,7 @@ import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import clsx from "clsx";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { topTokenListGhostnet } from "../../api/swap/wrappers";
+import { topTokensList } from "../../api/swap/wrappers";
 import { getTokenDataFromTzkt } from "../../api/util/tokens";
 import { Chain, IConfigToken } from "../../config/types";
 import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
@@ -64,7 +64,7 @@ function TokenModalPool(props: ISwapModalProps) {
   );
 
   useEffect(() => {
-    topTokenListGhostnet().then((res) => {
+    topTokensList().then((res) => {
       setTopTokens(res.topTokens);
     });
   }, []);

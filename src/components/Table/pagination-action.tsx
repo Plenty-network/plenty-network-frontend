@@ -58,7 +58,7 @@ const TablePagination: React.FC<ITablePaginationProps> = (props) => {
             <Image src={left} />
           </span>
           <span className="mx-2 font-body4">
-            {page + 1} <span className="text-text-400">of {Math.ceil(count)}</span>
+            {page + 1} <span className="">of {Math.ceil(count)}</span>
           </span>
           <span
             onClick={page >= Math.ceil(count) - 1 ? () => {} : handleNextButtonClick}

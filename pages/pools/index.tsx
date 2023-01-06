@@ -94,7 +94,7 @@ export default function Pools(props: IIndexProps) {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
   const [searchValue, setSearchValue] = React.useState("");
-  const [isbanner, setisBanner] = React.useState(false);
+  const [isbanner, setisBanner] = React.useState(true);
   const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
   const handleNewPool = () => {
     setShowNewPoolPopup(true);
@@ -140,7 +140,7 @@ export default function Pools(props: IIndexProps) {
                 <Image src={info} />
               </p>
               <p className="font-body2 text-info-500 px-3 sm:w-auto w-[249px]">
-                APR for the first week will be 0%. Emissions begin in the second week.
+                APR for the for the first two epochs will be 0%. Emissions begin on 19th Jan.
               </p>
               <p
                 className="ml-auto relative top-[7px] cursor-pointer"
