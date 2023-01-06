@@ -21,10 +21,10 @@ export interface IConfig {
   };
   ROUTER: INodes;
 
-  WRAPPED_ASSETS: {
-    testnet: Record<string, IWrappedToken>;
-    mainnet: Record<string, IWrappedToken>;
-  };
+  // WRAPPED_ASSETS: {
+  //   testnet: Record<string, IWrappedToken>;
+  //   mainnet: Record<string, IWrappedToken>;
+  // };
 
   CONFIG_LINKS: {
     testnet: IConfigData;
@@ -62,7 +62,7 @@ interface INodes {
 
 interface IExplorerLinks {
   ETHEREUM: string;
-  TEZOS: string;
+  TEZOS: INodes;
   RINKEBY: string;
 }
 

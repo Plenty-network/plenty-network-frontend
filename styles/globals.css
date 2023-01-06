@@ -616,6 +616,7 @@ tfoot .thSticky:last-child,
   
  }
  .paginationcontainer {
+  position: -webkit-sticky;
   position: sticky;
   right: 0px;
   top: 0px;

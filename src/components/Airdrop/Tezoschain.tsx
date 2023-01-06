@@ -1,7 +1,7 @@
 import { AppDispatch, useAppSelector } from "../../redux";
 import Button from "../Button/Button";
 import clsx from "clsx";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { ChainAirdrop } from "./Disclaimer";
 import Progress from "./Progress";
 import Steps from "./Steps";
@@ -15,22 +15,116 @@ import { setFlashMessage } from "../../redux/flashMessage";
 import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
 import { useAirdropClaimData } from "../../hooks/useAirdropClaimData";
+import { useRouter } from "next/router";
+import {
+  authenticateUser,
+  hasUserTweeted,
+  isUserAuthenticated,
+  tweetForUser,
+} from "../../api/airdrop/twitter";
+import { AIRDROP_TWEET_TEXT } from "../../constants/airdrop";
+import { tzktExplorer } from "../../common/walletconnect";
 export interface ITezosChain {
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
 }
 
 function TezosChain(props: ITezosChain) {
   const userAddress = useAppSelector((state) => state.wallet.address);
-  const tweetedAccounts = useAppSelector((state) => state.airdropTransactions.tweetedAccounts);
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
+  const tweetText = "checking tweet";
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [transactionId, setTransactionId] = useState("");
+  const [hasTweeted, setHasTweeted] = useState(false);
   const res = useAirdropClaimData();
 
+  const router = useRouter();
+  const authRef = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    const query =
+      router.asPath.indexOf("?") >= 0
+        ? router.asPath.slice(router.asPath.indexOf("?") + 1, router.asPath.length).toString()
+        : undefined;
+    authRef.current = query ? query.slice(query.indexOf("=") + 1, query.length) : undefined;
+
+    router.replace("/airdrop", undefined, { shallow: true });
+  }, []);
+  const [twitterAction, setTwitterAction] = useState("");
+  useEffect(() => {
+    const claimdata = res.airdropClaimData;
+    if (claimdata.eligible) {
+      if (claimdata.claimData.length && claimdata.claimData[0].claimed) {
+        setTwitterAction("Claimed");
+        setHasTweeted(true);
+      } else {
+        hasUserTweeted(userAddress).then((res) => {
+          setHasTweeted(res.tweeted);
+          if (res.tweeted) {
+            setTwitterAction(`Completed`);
+          } else {
+            setTwitterAction("fetching...");
+
+            if (authRef.current === "accepted") {
+              isUserAuthenticated(userAddress).then((res) => {
+                if (res.authenticated) {
+                  tweetForUser(userAddress, AIRDROP_TWEET_TEXT).then((ress) => {
+                    if (ress.status) {
+                      setTwitterAction("Completed");
+                      setHasTweeted(ress.status);
+                      dispatch(
+                        setFlashMessage({
+                          flashType: Flashtype.Success,
+                          transactionId: "",
+                          headerText: "",
+                          trailingText: `Tweeted succesfully`,
+                          linkText: "",
+                          isLoading: true,
+                        })
+                      );
+                    } else {
+                      setTwitterAction(`Take action`);
+                      dispatch(
+                        setFlashMessage({
+                          flashType: Flashtype.Info,
+                          transactionId: "",
+                          headerText: "",
+                          trailingText: `Failed to tweet`,
+                          linkText: "",
+                          isLoading: true,
+                        })
+                      );
+                    }
+                  });
+                }
+              });
+              authRef.current = undefined;
+            } else if (authRef.current === "denied") {
+              setTwitterAction(`Take action`);
+              dispatch(
+                setFlashMessage({
+                  flashType: Flashtype.Info,
+                  transactionId: "",
+                  headerText: "",
+                  trailingText: `Authentication denied`,
+                  linkText: "",
+                  isLoading: true,
+                })
+              );
+              authRef.current = undefined;
+            } else {
+              setTwitterAction(`Take action`);
+              authRef.current = undefined;
+            }
+          }
+        });
+      }
+    } else {
+      setTwitterAction("Not allowed");
+    }
+  }, [res.airdropClaimData]);
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
@@ -39,7 +133,7 @@ function TezosChain(props: ITezosChain) {
     localStorage.setItem(
       FIRST_TOKEN_AMOUNT,
 
-      tweetedAccounts.includes(userAddress)
+      hasTweeted
         ? res.airdropClaimData.pendingClaimableAmount.toFixed(2)
         : res.airdropClaimData.pendingClaimableAmount
             .minus(res.airdropClaimData.perMissionAmount)
@@ -50,7 +144,7 @@ function TezosChain(props: ITezosChain) {
 
     claimAirdrop(
       res.airdropClaimData.claimData,
-      tweetedAccounts.includes(userAddress),
+      hasTweeted,
       transactionSubmitModal,
       undefined,
       setShowConfirmTransaction,
@@ -74,7 +168,7 @@ function TezosChain(props: ITezosChain) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -118,10 +212,7 @@ function TezosChain(props: ITezosChain) {
           </Button>
         );
       } else if (res.airdropClaimData.eligible && res.airdropClaimData.success) {
-        if (
-          res.airdropClaimData.pendingClaimableAmount.isGreaterThan(0) &&
-          tweetedAccounts.includes(userAddress)
-        ) {
+        if (res.airdropClaimData.pendingClaimableAmount.isGreaterThan(0) && hasTweeted) {
           return (
             <button
               className={clsx(
@@ -136,7 +227,7 @@ function TezosChain(props: ITezosChain) {
           res.airdropClaimData.pendingClaimableAmount
             .minus(res.airdropClaimData.perMissionAmount)
             .isGreaterThan(0) &&
-          !tweetedAccounts.includes(userAddress)
+          !hasTweeted
         ) {
           return (
             <button
@@ -166,7 +257,7 @@ function TezosChain(props: ITezosChain) {
           res.airdropClaimData.pendingClaimableAmount
             .minus(res.airdropClaimData.perMissionAmount)
             .isEqualTo(0) &&
-          !tweetedAccounts.includes(userAddress)
+          !hasTweeted
         ) {
           return (
             <button
@@ -207,7 +298,59 @@ function TezosChain(props: ITezosChain) {
         </Button>
       );
     }
-  }, [props, userAddress, res, tweetedAccounts]);
+  }, [props, userAddress, res, hasTweeted]);
+  const handleTwitter = () => {
+    isUserAuthenticated(userAddress).then((res) => {
+      if (res.authenticated) {
+        tweetForUser(userAddress, AIRDROP_TWEET_TEXT).then((res) => {
+          if (res.status) {
+            setTwitterAction("Completed");
+            setHasTweeted(res.status);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Success,
+                transactionId: "",
+                headerText: "",
+                trailingText: `Tweeted succesfully`,
+                linkText: "",
+                isLoading: true,
+              })
+            );
+          } else {
+            console.log(res.message);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Info,
+                transactionId: "",
+                headerText: "",
+                trailingText: `Failed to tweet`,
+                linkText: "",
+                isLoading: true,
+              })
+            );
+          }
+        });
+      } else {
+        authenticateUser(userAddress).then((res) => {
+          if (res.success) {
+            window.location.replace(res.redirectUrl);
+          } else {
+            console.log("server error");
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Info,
+                transactionId: "",
+                headerText: "",
+                trailingText: `Server error`,
+                linkText: "",
+                isLoading: true,
+              })
+            );
+          }
+        });
+      }
+    });
+  };
 
   return (
     <>
@@ -216,9 +359,17 @@ function TezosChain(props: ITezosChain) {
           res={res.airdropClaimData}
           claimData={res.airdropClaimData.claimData}
           fetching={res.fetching}
+          twitterAction={twitterAction}
+          hasTweeted={hasTweeted}
         />
         <div className="border-t border-text-800 my-3"></div>
-        <Steps claimData={res.airdropClaimData} fetching={res.fetching} />
+        <Steps
+          claimData={res.airdropClaimData}
+          fetching={res.fetching}
+          twitterAction={twitterAction}
+          handleTwitter={handleTwitter}
+          hasTweeted={hasTweeted}
+        />
       </div>
       <div className="mt-[18px]">{ClaimButton}</div>
       {showConfirmTransaction && (
@@ -234,7 +385,7 @@ function TezosChain(props: ITezosChain) {
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
             transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
               : null
           }
           content={`claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`}

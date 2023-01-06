@@ -9,7 +9,7 @@ import {
 const initialState: IAirdropTransactionsData = {
   // signaturesData: {},
   // receiptsCallFrom: {},
-  tweetedAccounts: [],
+  // tweetedAccounts: [],
   hasTweeted: false,
 };
 
@@ -29,9 +29,9 @@ const AirdropTransactionsSlice = createSlice({
     //     [action.payload.tezosAddress]: action.payload.receiptsCallFrom,
     //   };
     // },
-    addTweetedAccount: (state, action: PayloadAction<string>) => {
-      state.tweetedAccounts = state.tweetedAccounts.concat(action.payload);
-    },
+    // addTweetedAccount: (state, action: PayloadAction<string>) => {
+    //   state.tweetedAccounts = state.tweetedAccounts.concat(action.payload);
+    // },
     setHasTweeted: (state, action: PayloadAction<boolean>) => {
       state.hasTweeted = action.payload;
     }
@@ -40,5 +40,5 @@ const AirdropTransactionsSlice = createSlice({
 
 // export const { addSignature, setReceiptsCallFrom, addTweetedAccount } =
 //   AirdropTransactionsSlice.actions;
-export const { addTweetedAccount, setHasTweeted } = AirdropTransactionsSlice.actions;
+export const { setHasTweeted } = AirdropTransactionsSlice.actions;
 export const airdropTransactions = AirdropTransactionsSlice.reducer;

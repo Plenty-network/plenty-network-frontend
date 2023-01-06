@@ -42,6 +42,7 @@ import { changeSource, percentageChange, tEZorCTEZtoUppercase } from "../../api/
 import { IAllTokensBalanceResponse } from "../../api/util/types";
 import { Chain } from "../../config/types";
 import { tokenIcons } from "../../constants/tokensList";
+import { tzktExplorer } from "../../common/walletconnect";
 
 interface ISwapTabProps {
   className?: string;
@@ -203,7 +204,7 @@ function SwapTab(props: ISwapTabProps) {
         linkText: "View in Explorer",
         isLoading: true,
         onClick: () => {
-          window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank");
+          window.open(`${tzktExplorer}${transactionId}`, "_blank");
         },
         transactionId: "",
       }
@@ -226,7 +227,7 @@ function SwapTab(props: ISwapTabProps) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -1214,7 +1215,7 @@ function SwapTab(props: ISwapTabProps) {
           setShow={props.setShowTransactionSubmitModal}
           onBtnClick={
             transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
               : null
           }
           content={`Swap ${Number(localStorage.getItem(FIRST_TOKEN_AMOUNT)).toFixed(
