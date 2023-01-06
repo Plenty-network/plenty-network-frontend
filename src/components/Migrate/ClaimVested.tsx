@@ -272,7 +272,7 @@ function ClaimVested(props: IMigrateProps) {
                 <span className="text-white mr-1">
                   + {props.vestedData?.vestedAmount?.toFixed(2)} PLY
                 </span>{" "}
-                vested <span className="md:block hidden ml-1">for upto 25-Aug-2024</span>
+                vested <span className="md:block hidden ml-1">for upto 05-Jan-2025</span>
                 <span className="relative top-1 md:hidden">
                   <Image src={info} />
                 </span>
