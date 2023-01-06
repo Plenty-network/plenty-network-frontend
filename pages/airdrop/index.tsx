@@ -64,7 +64,7 @@ const Airdrop: NextPage = () => {
   const [chain, setChain] = useState<ChainAirdrop>(ChainAirdrop.Tezos);
   return (
     <>
-      <SideBarHOC makeTopBarScroll>
+      {/* <SideBarHOC makeTopBarScroll>
         {!localStorage.getItem(FIRST_TIME_DISCLAIMER) ? (
           <Disclaimer
             show={isDisclaimer}
@@ -76,7 +76,8 @@ const Airdrop: NextPage = () => {
         ) : (
           <MainAirdrop chain={chain} setChain={setChain} />
         )}
-      </SideBarHOC>
+      </SideBarHOC> */}
+      <div></div>
     </>
   );
 };
