@@ -409,6 +409,9 @@ export const topTokensList = async (): Promise<{
   }
 };
 
+/**
+ * @deprecated
+ */
 export const topTokenListGhostnet = async (): Promise<{
   success: boolean;
   topTokens: { [id: string]: number };

@@ -60,8 +60,8 @@ function Banner(props: IBanner) {
         !props.isBanner && "hidden"
       )}
     >
-      <p className="w-full text-center cursor-pointer" onClick={handleFaucet}>
-        Voting starts from 12th jan. Rewards starts from 19th Jan{" "}
+      <p className="w-full text-center cursor-pointer">
+        Voting starts from 12th Jan. Rewards starts from 19th Jan{" "}
         {/* <span className="font-[600]">LEARN MORE</span>{" "} */}
       </p>
       <p

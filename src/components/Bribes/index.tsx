@@ -27,6 +27,7 @@ import {
 } from "../../api/util/types";
 import { TOKEN_A, TOKEN_B } from "../../constants/localStorage";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tzktExplorer } from "../../common/walletconnect";
 
 function BribesMain(props: BribesMainProps) {
   const [contentTransaction, setContentTransaction] = useState("");
@@ -128,7 +129,7 @@ function BribesMain(props: BribesMainProps) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -236,7 +237,7 @@ function BribesMain(props: BribesMainProps) {
             setShow={setShowTransactionSubmitModal}
             onBtnClick={
               transactionId
-                ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+                ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
                 : null
             }
             content={contentTransaction}

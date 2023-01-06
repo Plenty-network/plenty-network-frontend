@@ -8,6 +8,7 @@ import openInNewTab from "../../assets/icon/common/openInNewTab.svg";
 import infQuestion from "../../assets/icon/common/questionIcon.svg";
 import rejected from "../../assets/icon/common/rejected.svg";
 import success from "../../assets/icon/common/successFrame.svg";
+import { tzktExplorer } from "../../common/walletconnect";
 import { Flashtype } from "../FlashScreen";
 import { ImessageProps } from "./notificationMessageSave";
 TimeAgo.addDefaultLocale(en);
@@ -40,7 +41,7 @@ export function SingleNotification(props: ISingleNotificationProps) {
       onClick={
         props.transactionId && props.transactionId !== ""
           ? () => {
-              window.open(`https://ghostnet.tzkt.io/${props.transactionId}`, "_blank");
+              window.open(`${tzktExplorer}${props.transactionId}`, "_blank");
             }
           : () => {}
       }

@@ -39,6 +39,7 @@ import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/token
 import { setSelectedDropDown, setSelectedDropDownLocal } from "../../src/redux/veNFT";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { setIsLoadingWallet } from "../../src/redux/walletLoading";
+import { tzktExplorer } from "../../src/common/walletconnect";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -381,7 +382,7 @@ export default function Vote() {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -461,7 +462,7 @@ export default function Vote() {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -874,7 +875,7 @@ export default function Vote() {
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
             transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
+              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
               : null
           }
           content={contentTransaction}
