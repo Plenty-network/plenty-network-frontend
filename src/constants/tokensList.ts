@@ -3,7 +3,7 @@ import ETHtz from "../assets/Tokens/ethtz.png";
 import gif from "../assets/Tokens/gif-dao-token.png";
 import hDAO from "../assets/Tokens/hdao.png";
 import KALAM from "../assets/Tokens/kalam.png";
-import kusd from "../assets/Tokens/kUSD.png";
+import kusd from "../assets/Tokens/kusd.png";
 import plenty from "../assets/Tokens/plenty.png";
 import QUIPU from "../assets/Tokens/quipu.png";
 import SMAK from "../assets/Tokens/smak-swap.png";
