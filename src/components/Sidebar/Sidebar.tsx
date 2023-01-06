@@ -59,16 +59,16 @@ const MainMenu: Array<ISingleSideBarProps> = [
     activePathName: "/migrate",
     isToolTip: true,
   },
-  {
-    name: "Airdrop",
-    iconName: "airdrop",
-    pathName: "/airdrop",
-    activePathName: "/airdrop",
-  },
+  // {
+  //   name: "Airdrop",
+  //   iconName: "airdrop",
+  //   pathName: "/airdrop",
+  //   activePathName: "/airdrop",
+  // },
   {
     name: "Bridge",
     iconName: "bridge",
-    pathName: "/bridge",
+    pathName: "https://bridge.plenty.network/",
     activePathName: "/bridge",
     isHrefIcon: true,
     openNewPage: true,
