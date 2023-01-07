@@ -138,7 +138,7 @@ function Migrate(props: IMigrateProps) {
   const onClickAmount = () => {
     setSecondTokenAmount("");
 
-    handleTokenInput(Number(props.allBalance[tokenIn.name]));
+    handleTokenInput(props.allBalance[tokenIn.name]);
   };
 
   const handleTokenType = () => {
