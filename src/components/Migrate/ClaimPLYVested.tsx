@@ -42,7 +42,7 @@ function ConfirmPLYVested(props: IConfirmProps) {
               <span className="md:font-subtitle4 font-caption2 mr-1">
                 {props.vestedData?.vestedAmount?.toFixed(2)} PLY
               </span>{" "}
-              will be vested for upto 25-Aug-2024{" "}
+              will be vested for upto 05-Jan-2025{" "}
             </div>
           </div>
 
