@@ -1671,7 +1671,7 @@ function MyPortfolio(props: any) {
               {activeSection === MyPortfolioSection.Positions ? (
                 <Stats
                   setShowCreateLockModal={setShowCreateLockModal}
-                  plyBalance={plyBalance}
+                  plyBalance={new BigNumber(userBalances["PLY"] || 0)}
                   tokenPricePly={tokenPrice["PLY"] ?? 0}
                   statsPositions={statsPositions}
                   stats1={stats1}
