@@ -91,14 +91,14 @@ function AddLiquidity(props: IAddLiquidityProps) {
 
     props.tokenIn.name === "tez"
       ? handleLiquidityInput(Number(props.userBalances[props.tokenIn.name]) - 0.02, "tokenIn")
-      : handleLiquidityInput(Number(props.userBalances[props.tokenIn.name]), "tokenIn");
+      : handleLiquidityInput(props.userBalances[props.tokenIn.name], "tokenIn");
   };
   const onClickSecondAmount = () => {
     props.setFirstTokenAmount("");
 
     props.tokenOut.name === "tez"
       ? handleLiquidityInput(Number(props.userBalances[props.tokenOut.name]) - 0.02, "tokenOut")
-      : handleLiquidityInput(Number(props.userBalances[props.tokenOut.name]), "tokenOut");
+      : handleLiquidityInput(props.userBalances[props.tokenOut.name], "tokenOut");
   };
   return (
     <>
