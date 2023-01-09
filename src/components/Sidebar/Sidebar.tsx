@@ -21,7 +21,7 @@ export const FooterMenu: Array<IHrefIconProps> = [
   {
     name: "Feedback",
     iconName: "VectorfooterMenu-2",
-    href: "https://tally.so/r/wLD1rj",
+    href: "https://tally.so/r/mOQg0M ",
   },
 ];
 

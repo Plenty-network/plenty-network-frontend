@@ -175,9 +175,10 @@ function BribesMain(props: BribesMainProps) {
         <HeadInfo
           className="px-2 md:px-5"
           title="Bribes"
-          toolTipContent=""
+          toolTipContent="Watch how to add a bribe to a liquidity pool."
           searchValue={searchValue}
           setSearchValue={setSearchValue}
+          videoLink="BdaH7vO0KLU"
         />
         <BribesHeader
           activeStateTab={activeStateTab}
@@ -236,9 +237,7 @@ function BribesMain(props: BribesMainProps) {
             show={showTransactionSubmitModal}
             setShow={setShowTransactionSubmitModal}
             onBtnClick={
-              transactionId
-                ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
-                : null
+              transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
             }
             content={contentTransaction}
           />

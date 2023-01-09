@@ -153,7 +153,7 @@ function MyPortfolio(props: any) {
   );
   const [veNFTlist, setVeNFTlist] = useState<IVeNFTData[]>([]);
   const [contentTransaction, setContentTransaction] = useState("");
-  const [plyBalance, setPlyBalance] = useState(new BigNumber(0));
+
   const [claimValueDollar, setClaimValueDollar] = useState(new BigNumber(0));
   const [poolsPosition, setPoolsPosition] = useState<{
     data: IPositionsData[];
@@ -1618,7 +1618,7 @@ function MyPortfolio(props: any) {
               ) : (
                 <div className=""> {Title}</div>
               )}
-              {Tooltip}
+              {/* {Tooltip} */}
 
               {activeSection === MyPortfolioSection.Rewards && (
                 <div className="ml-auto ">
@@ -1915,9 +1915,7 @@ function MyPortfolio(props: any) {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId
-              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
-              : null
+            transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }
           content={contentTransaction}
         />
@@ -1975,7 +1973,7 @@ function MyPortfolio(props: any) {
           }
         />
       )}
-      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"UXBs3vi26_A"} />}
+      {/* {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"UXBs3vi26_A"} />} */}
     </>
   );
 }

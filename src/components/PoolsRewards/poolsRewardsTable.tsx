@@ -78,8 +78,13 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
             <div>
               <div className="font-body2 md:font-body4">
                 {" "}
-                {tEZorCTEZtoUppercase(x.tokenOneSymbol.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenTwoSymbol.toString())}
+                {tEZorCTEZtoUppercase(x.tokenOneSymbol.toString()) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.tokenTwoSymbol.toString())} / ${tEZorCTEZtoUppercase(
+                      x.tokenOneSymbol.toString()
+                    )}`
+                  : ` ${tEZorCTEZtoUppercase(x.tokenOneSymbol.toString())} / ${tEZorCTEZtoUppercase(
+                      x.tokenTwoSymbol.toString()
+                    )}`}
               </div>
               <div className="font-subtitle1 text-text-500">{x.ammType} Pool</div>
             </div>
@@ -158,8 +163,13 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
             <div>
               <div className="font-body4">
                 {" "}
-                {tEZorCTEZtoUppercase(x.tokenOneSymbol.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenTwoSymbol.toString())}
+                {tEZorCTEZtoUppercase(x.tokenOneSymbol.toString()) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.tokenTwoSymbol.toString())} / ${tEZorCTEZtoUppercase(
+                      x.tokenOneSymbol.toString()
+                    )}`
+                  : ` ${tEZorCTEZtoUppercase(x.tokenOneSymbol.toString())} / ${tEZorCTEZtoUppercase(
+                      x.tokenTwoSymbol.toString()
+                    )}`}
               </div>
               <div className="font-subtitle1 text-text-500">{x.ammType} Pool</div>
             </div>
