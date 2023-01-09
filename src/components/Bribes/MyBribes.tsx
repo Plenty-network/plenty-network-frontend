@@ -96,7 +96,13 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[x.tokenA]
+                  tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
+                    ? tokenIcons[x.tokenB]
+                      ? tokenIcons[x.tokenB].src
+                      : tokens[x.tokenB.toString()]?.iconUrl
+                      ? tokens[x.tokenB.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.tokenA]
                     ? tokenIcons[x.tokenA].src
                     : tokens[x.tokenA.toString()]?.iconUrl
                     ? tokens[x.tokenA.toString()].iconUrl
@@ -111,7 +117,13 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[x.tokenB]
+                  tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
+                    ? tokenIcons[x.tokenA]
+                      ? tokenIcons[x.tokenA].src
+                      : tokens[x.tokenA.toString()]?.iconUrl
+                      ? tokens[x.tokenA.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.tokenB]
                     ? tokenIcons[x.tokenB].src
                     : tokens[x.tokenB.toString()]?.iconUrl
                     ? tokens[x.tokenB.toString()].iconUrl
@@ -192,7 +204,13 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[x.tokenA]
+                  tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
+                    ? tokenIcons[x.tokenB]
+                      ? tokenIcons[x.tokenB].src
+                      : tokens[x.tokenB.toString()]?.iconUrl
+                      ? tokens[x.tokenB.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.tokenA]
                     ? tokenIcons[x.tokenA].src
                     : tokens[x.tokenA.toString()]?.iconUrl
                     ? tokens[x.tokenA.toString()].iconUrl
@@ -207,7 +225,13 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[x.tokenB]
+                  tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
+                    ? tokenIcons[x.tokenA]
+                      ? tokenIcons[x.tokenA].src
+                      : tokens[x.tokenA.toString()]?.iconUrl
+                      ? tokens[x.tokenA.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.tokenB]
                     ? tokenIcons[x.tokenB].src
                     : tokens[x.tokenB.toString()]?.iconUrl
                     ? tokens[x.tokenB.toString()].iconUrl

@@ -12,6 +12,7 @@ import { tokenParameterLiquidity } from "./types";
 import nFormatter, {
   changeSource,
   imageExists,
+  nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
 import { useAppSelector } from "../../redux";
@@ -100,7 +101,8 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
               />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
-              {props.removeTokenAmount.tokenTwoAmount} {tEZorCTEZtoUppercase(props.tokenOut.name)}
+              {nFormatterWithLesserNumber(new BigNumber(props.removeTokenAmount.tokenTwoAmount))}{" "}
+              {tEZorCTEZtoUppercase(props.tokenOut.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
@@ -113,12 +115,14 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
         </div>
         <div className="mt-4 px-5 text-text-250 font-body4 ">PNLP being burnt (atleast)</div>
         <div className="mt-1 px-5 text-white font-title2 ">
-          {nFormatter(new BigNumber(props.burnAmount))} PNLP
+          {nFormatterWithLesserNumber(new BigNumber(props.burnAmount))} PNLP
         </div>
         <div className="mt-5 border-t border-text-800/[0.5]"></div>
         <div className="px-5 mt-[18px] flex justify-between">
           <p className="text-text-250 font-body2">Share of pool</p>
-          <p className="font-body4 text-white">{Number(props.sharePool).toFixed(6)}% </p>
+          <p className="font-body4 text-white">
+            {nFormatterWithLesserNumber(new BigNumber(props.sharePool))}%{" "}
+          </p>
         </div>
       </div>
       <div className="mt-5">

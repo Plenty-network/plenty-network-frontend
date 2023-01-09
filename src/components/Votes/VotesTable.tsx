@@ -85,7 +85,13 @@ export function VotesTable(props: IVotesTableProps) {
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[x.votes.tokenA]
+                  tEZorCTEZtoUppercase(x.votes.tokenA) === "CTEZ"
+                    ? tokenIcons[x.votes.tokenB]
+                      ? tokenIcons[x.votes.tokenB].src
+                      : tokens[x.votes.tokenB]?.iconUrl
+                      ? tokens[x.votes.tokenB].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.votes.tokenA]
                     ? tokenIcons[x.votes.tokenA].src
                     : tokens[x.votes.tokenA]?.iconUrl
                     ? tokens[x.votes.tokenA].iconUrl
@@ -100,7 +106,13 @@ export function VotesTable(props: IVotesTableProps) {
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[x.votes.tokenB]
+                  tEZorCTEZtoUppercase(x.votes.tokenA) === "CTEZ"
+                    ? tokenIcons[x.votes.tokenA]
+                      ? tokenIcons[x.votes.tokenA].src
+                      : tokens[x.votes.tokenA]?.iconUrl
+                      ? tokens[x.votes.tokenA].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.votes.tokenB]
                     ? tokenIcons[x.votes.tokenB].src
                     : tokens[x.votes.tokenB]?.iconUrl
                     ? tokens[x.votes.tokenB].iconUrl
@@ -196,7 +208,13 @@ export function VotesTable(props: IVotesTableProps) {
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[x.votes.tokenA]
+                  tEZorCTEZtoUppercase(x.votes.tokenA) === "CTEZ"
+                    ? tokenIcons[x.votes.tokenB]
+                      ? tokenIcons[x.votes.tokenB].src
+                      : tokens[x.votes.tokenB]?.iconUrl
+                      ? tokens[x.votes.tokenB].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.votes.tokenA]
                     ? tokenIcons[x.votes.tokenA].src
                     : tokens[x.votes.tokenA]?.iconUrl
                     ? tokens[x.votes.tokenA].iconUrl
@@ -211,7 +229,13 @@ export function VotesTable(props: IVotesTableProps) {
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[x.votes.tokenB]
+                  tEZorCTEZtoUppercase(x.votes.tokenA) === "CTEZ"
+                    ? tokenIcons[x.votes.tokenA]
+                      ? tokenIcons[x.votes.tokenA].src
+                      : tokens[x.votes.tokenA]?.iconUrl
+                      ? tokens[x.votes.tokenA].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.votes.tokenB]
                     ? tokenIcons[x.votes.tokenB].src
                     : tokens[x.votes.tokenB]?.iconUrl
                     ? tokens[x.votes.tokenB].iconUrl

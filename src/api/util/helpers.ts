@@ -32,6 +32,26 @@ export default function nFormatter(num: BigNumber) {
 
   return num.toFixed(2);
 }
+
+export function nFormatterWithLesserNumber(num: BigNumber) {
+  if (num.isGreaterThan(0)) {
+    if (num.isLessThan(0.01)) {
+      return "<0.01";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000000)) {
+      return num.dividedBy(1000000000).toFixed(2) + "b";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000)) {
+      return num.dividedBy(1000000).toFixed(2) + "m";
+    }
+    if (num.isGreaterThanOrEqualTo(1000)) {
+      return num.dividedBy(1000).toFixed(2) + "k";
+    }
+    return num.toFixed(2);
+  } else {
+    return 0;
+  }
+}
 export const changeSource = (e: any) => {
   e.target.src = { fallback };
   e.onerror = null;

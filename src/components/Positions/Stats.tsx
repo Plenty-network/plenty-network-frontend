@@ -36,7 +36,9 @@ function Stats(props: IStatsProps) {
         setShowCreateLockModal={props.setShowCreateLockModal}
         title={"PLY balance"}
         value={nFormatter(new BigNumber(props.plyBalance))}
-        subValue={`$${nFormatter(new BigNumber(1 * Number(props.plyBalance)))}`}
+        subValue={`$${nFormatter(
+          new BigNumber(props.tokenPricePly).multipliedBy(props.plyBalance)
+        )}`}
       />
     </div>
   );
