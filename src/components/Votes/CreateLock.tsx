@@ -100,6 +100,7 @@ function CreateLock(props: ICreateLockProps) {
       }
     }
   };
+
   const dateFormat = (dates: number) => {
     var date = new Date(dates);
 

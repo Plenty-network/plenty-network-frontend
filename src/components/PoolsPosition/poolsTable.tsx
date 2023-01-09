@@ -349,6 +349,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
           onClick={() => {
             setShowLiquidityModal(true);
             dispatch(getTotalVotingPower());
+            props.setIsGaugeAvailable(props.isGauge);
             props.isManage
               ? setActiveState(ActiveLiquidity.Liquidity)
               : setActiveState(ActiveLiquidity.Staking);

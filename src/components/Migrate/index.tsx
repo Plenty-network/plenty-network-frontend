@@ -128,7 +128,7 @@ function Migrate(props: IMigrateProps) {
         tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP
       );
       setExchangeRes(res);
-      setSecondTokenAmount(res.claimableAmount.toString());
+      setSecondTokenAmount(res.claimableAmount.decimalPlaces(6, 1).toString());
     }
   };
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
@@ -156,7 +156,10 @@ function Migrate(props: IMigrateProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
 
     localStorage.setItem(TOKEN_A, tokenIn.name);
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, firstTokenAmount);
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      new BigNumber(firstTokenAmount).decimalPlaces(4, 1).toString()
+    );
     exchange(
       tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP,
       new BigNumber(firstTokenAmount),
@@ -267,8 +270,8 @@ function Migrate(props: IMigrateProps) {
                 tokenSymbol={tokenIn.name}
               />
             </div>
-            <div className="flex-auto my-3 ">
-              <div className="text-right font-body1 text-text-400 pt-2">YOU PAY</div>
+            <div className="flex-auto my-3 ml-2 ">
+              <div className="text-right font-body1 text-text-400 ">YOU PAY</div>
               <div>
                 <input
                   type="text"
@@ -333,7 +336,7 @@ function Migrate(props: IMigrateProps) {
                   tokenSymbol={tokenOut.name}
                 />
               </div>
-              <div className=" my-3 flex-auto ">
+              <div className=" my-3 flex-auto ml-2">
                 <div className="text-right font-body1 text-text-400 ">YOU RECEIVE</div>
                 <div>
                   <input

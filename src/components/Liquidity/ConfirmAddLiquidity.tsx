@@ -4,6 +4,7 @@ import { BigNumber } from "bignumber.js";
 import nFormatter, {
   changeSource,
   imageExists,
+  nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
 import { useAppSelector } from "../../redux";
@@ -15,7 +16,7 @@ import { tokenIcons } from "../../constants/tokensList";
 interface IConfirmAddLiquidityProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  firstTokenAmount: string | number;
+  firstTokenAmount: string | number | BigNumber;
   secondTokenAmount: string | number;
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   tokenPrice: {
@@ -63,7 +64,8 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
               />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
-              {props.firstTokenAmount} {tEZorCTEZtoUppercase(props.tokenIn.name)}
+              {nFormatterWithLesserNumber(new BigNumber(props.firstTokenAmount))}{" "}
+              {tEZorCTEZtoUppercase(props.tokenIn.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
@@ -91,7 +93,8 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
               />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
-              {props.secondTokenAmount} {tEZorCTEZtoUppercase(props.tokenOut.name)}
+              {nFormatterWithLesserNumber(new BigNumber(props.secondTokenAmount))}{" "}
+              {tEZorCTEZtoUppercase(props.tokenOut.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
@@ -103,12 +106,14 @@ function ConfirmAddLiquidity(props: IConfirmAddLiquidityProps) {
         </div>
         <div className="mt-4 px-5 text-text-250 font-body4 ">You will receive (atleast)</div>
         <div className="mt-1 px-5 text-white font-title2 ">
-          {nFormatter(new BigNumber(props.pnlpEstimates))} PNLP
+          {nFormatterWithLesserNumber(new BigNumber(props.pnlpEstimates))} PNLP
         </div>
         <div className="mt-5 border-t border-text-800/[0.5]"></div>
         <div className="px-5 mt-[18px] flex justify-between">
           <p className="text-text-250 font-body2">Share of pool</p>
-          <p className="font-body4 text-white">{Number(props.sharePool).toFixed(6)} % </p>
+          <p className="font-body4 text-white">
+            {nFormatterWithLesserNumber(new BigNumber(props.sharePool))} %{" "}
+          </p>
         </div>
       </div>
       <div className="mt-5">

@@ -45,26 +45,21 @@ const MainMenu: Array<ISingleSideBarProps> = [
     activePathName: "/vote",
   },
   {
-    name: "Bribes",
-    iconName: "bribes",
-    pathName: "/bribes",
-    activePathName: "/bribes",
-    isHrefIcon: true,
-    openNewPage: true,
-  },
-  {
     name: "Migrate",
     iconName: "migrate",
     pathName: "/migrate",
     activePathName: "/migrate",
     isToolTip: true,
   },
-  // {
-  //   name: "Airdrop",
-  //   iconName: "airdrop",
-  //   pathName: "/airdrop",
-  //   activePathName: "/airdrop",
-  // },
+  {
+    name: "Bribe",
+    iconName: "bribes",
+    pathName: "/bribes",
+    activePathName: "/bribes",
+    isHrefIcon: true,
+    openNewPage: true,
+  },
+
   {
     name: "Bridge",
     iconName: "bridge",

@@ -852,7 +852,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               {props.activeState === ActiveLiquidity.Staking &&
                 "Add liquidity, stake, and earn PLY"}
               {props.activeState === ActiveLiquidity.Rewards &&
-                "Lock PLY, and vote to earn trading fees & bribes"}
+                "Add liquidity, stake, and earn PLY"}
             </p>
             <Image
               className="cursor-pointer hover:opacity-90"

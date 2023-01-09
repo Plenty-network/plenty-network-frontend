@@ -167,7 +167,7 @@ function ManageLock(props: IManageLockProps) {
     } else if (Number(props.updatedPlyVoteValue) <= 0 && Number(props.lockingDate) <= 0) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Increase Lock
+          Increase lock
         </Button>
       );
     } else if (
@@ -183,7 +183,7 @@ function ManageLock(props: IManageLockProps) {
     } else {
       return (
         <Button color={"primary"} onClick={() => setScreen("2")}>
-          Increase Lock
+          Increase lock
         </Button>
       );
     }
@@ -395,7 +395,7 @@ function ManageLock(props: IManageLockProps) {
               : props.IncreaseLockEndOperation
           }
           votingPower={votingPower}
-          ctaText={"Increase Lock"}
+          ctaText={"Increase lock"}
           endDate={
             props.lockingDate === "" ? dateFormat(props.manageData.endTimeStamp) : props.lockingDate
           }
