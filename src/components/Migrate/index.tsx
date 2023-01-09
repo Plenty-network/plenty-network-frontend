@@ -169,7 +169,7 @@ function Migrate(props: IMigrateProps) {
         headerText: "Transaction submitted",
         trailingText: `Migration of ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
-        )} ${localStorage.getItem(TOKEN_A)} confirmed`,
+        )} ${localStorage.getItem(TOKEN_A)} `,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -216,7 +216,7 @@ function Migrate(props: IMigrateProps) {
             headerText: "Rejected",
             trailingText: `Migration of ${localStorage.getItem(
               FIRST_TOKEN_AMOUNT
-            )} ${localStorage.getItem(TOKEN_A)} confirmed`,
+            )} ${localStorage.getItem(TOKEN_A)} `,
             linkText: "",
             isLoading: true,
             transactionId: "",

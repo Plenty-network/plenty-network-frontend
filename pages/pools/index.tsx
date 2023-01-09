@@ -117,6 +117,7 @@ export default function Pools(props: IIndexProps) {
             setSearchValue={setSearchValue}
             isFirst={walletAddress !== null && localStorage.getItem(USERADDRESS) !== walletAddress}
             onClick={handleNewPool}
+            videoLink="HtDOhje7Y5A"
           />
           <div className="my-2 mx-3">
             <InputSearchBox

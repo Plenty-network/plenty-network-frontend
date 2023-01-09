@@ -123,7 +123,7 @@ export function MyPoolTable(props: IShortCardProps) {
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x) => (
-          <div className="flex gap-1 items-center max-w-[153px]">
+          <div className="flex gap-1 items-center max-w-[183px]">
             <CircularOverLappingImage
               tokenA={x.tokenA.toString()}
               tokenB={x.tokenB.toString()}
@@ -132,8 +132,13 @@ export function MyPoolTable(props: IShortCardProps) {
             />
             <div className="flex flex-col gap-[2px]">
               <span className="md:text-f14 text-f12 text-white ">
-                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
+                      x.tokenA.toString()
+                    )}`
+                  : ` ${tEZorCTEZtoUppercase(x.tokenA.toString())} / ${tEZorCTEZtoUppercase(
+                      x.tokenB.toString()
+                    )}`}
               </span>
               <span className="text-f12 text-text-500">{x.poolType} Pool</span>
             </div>
@@ -219,7 +224,7 @@ export function MyPoolTable(props: IShortCardProps) {
             ) : null}
             <div
               className={clsx(
-                "flex gap-1 items-center max-w-[153px]",
+                "flex gap-1 items-center max-w-[200px]",
                 !x.isGaugeAvailable ? "ml-[14px]" : "ml-[34px]"
               )}
             >
@@ -231,8 +236,13 @@ export function MyPoolTable(props: IShortCardProps) {
               />
               <div className="flex flex-col gap-[2px]">
                 <span className="md:text-f14 text-f12 text-white ">
-                  {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                  {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                  {tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                    ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
+                        x.tokenA.toString()
+                      )}`
+                    : ` ${tEZorCTEZtoUppercase(x.tokenA.toString())} / ${tEZorCTEZtoUppercase(
+                        x.tokenB.toString()
+                      )}`}
                 </span>
                 <span className="text-f12 text-text-500 progTitle">{x.poolType} Pool</span>
               </div>

@@ -1007,7 +1007,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           </>
         )}
       </PopUpModal>
-      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"UXBs3vi26_A"} />}
+      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"HtDOhje7Y5A"} />}
       {showConfirmTransaction && (
         <ConfirmTransaction
           show={showConfirmTransaction}
@@ -1020,9 +1020,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId
-              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
-              : null
+            transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }
           content={contentTransaction}
         />
