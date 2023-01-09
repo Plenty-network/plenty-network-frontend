@@ -95,7 +95,13 @@ export function LocksTableRewards(props: IVotesTableRewards) {
                 <img
                   alt={"alt"}
                   src={
-                    tokenIcons[x.votes.tokenASymbol]
+                    tEZorCTEZtoUppercase(x.votes.tokenASymbol) === "CTEZ"
+                      ? tokenIcons[x.votes.tokenBSymbol]
+                        ? tokenIcons[x.votes.tokenBSymbol].src
+                        : tokens[x.votes.tokenBSymbol.toString()]?.iconUrl
+                        ? tokens[x.votes.tokenBSymbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : tokenIcons[x.votes.tokenASymbol]
                       ? tokenIcons[x.votes.tokenASymbol].src
                       : tokens[x.votes.tokenASymbol.toString()]?.iconUrl
                       ? tokens[x.votes.tokenASymbol.toString()].iconUrl
@@ -110,7 +116,13 @@ export function LocksTableRewards(props: IVotesTableRewards) {
                 <img
                   alt={"alt"}
                   src={
-                    tokenIcons[x.votes.tokenBSymbol]
+                    tEZorCTEZtoUppercase(x.votes.tokenASymbol) === "CTEZ"
+                      ? tokenIcons[x.votes.tokenASymbol]
+                        ? tokenIcons[x.votes.tokenASymbol].src
+                        : tokens[x.votes.tokenASymbol.toString()]?.iconUrl
+                        ? tokens[x.votes.tokenASymbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : tokenIcons[x.votes.tokenBSymbol]
                       ? tokenIcons[x.votes.tokenBSymbol].src
                       : tokens[x.votes.tokenBSymbol.toString()]?.iconUrl
                       ? tokens[x.votes.tokenBSymbol.toString()].iconUrl
@@ -208,7 +220,13 @@ export function LocksTableRewards(props: IVotesTableRewards) {
                 <img
                   alt={"alt"}
                   src={
-                    tokenIcons[x.votes.tokenASymbol]
+                    tEZorCTEZtoUppercase(x.votes.tokenASymbol) === "CTEZ"
+                      ? tokenIcons[x.votes.tokenBSymbol]
+                        ? tokenIcons[x.votes.tokenBSymbol].src
+                        : tokens[x.votes.tokenBSymbol.toString()]?.iconUrl
+                        ? tokens[x.votes.tokenBSymbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : tokenIcons[x.votes.tokenASymbol]
                       ? tokenIcons[x.votes.tokenASymbol].src
                       : tokens[x.votes.tokenASymbol.toString()]?.iconUrl
                       ? tokens[x.votes.tokenASymbol.toString()].iconUrl
@@ -223,7 +241,13 @@ export function LocksTableRewards(props: IVotesTableRewards) {
                 <img
                   alt={"alt"}
                   src={
-                    tokenIcons[x.votes.tokenBSymbol]
+                    tEZorCTEZtoUppercase(x.votes.tokenASymbol) === "CTEZ"
+                      ? tokenIcons[x.votes.tokenASymbol]
+                        ? tokenIcons[x.votes.tokenASymbol].src
+                        : tokens[x.votes.tokenASymbol.toString()]?.iconUrl
+                        ? tokens[x.votes.tokenASymbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : tokenIcons[x.votes.tokenBSymbol]
                       ? tokenIcons[x.votes.tokenBSymbol].src
                       : tokens[x.votes.tokenBSymbol.toString()]?.iconUrl
                       ? tokens[x.votes.tokenBSymbol.toString()].iconUrl
