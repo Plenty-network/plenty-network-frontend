@@ -117,7 +117,7 @@ function NewPoolMain(props: ILiquidityProps) {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (
@@ -154,7 +154,7 @@ function NewPoolMain(props: ILiquidityProps) {
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else {

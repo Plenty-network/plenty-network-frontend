@@ -76,22 +76,7 @@ export function ShortCard(props: IShortCardProps) {
     props.reFetchPool,
     0
   );
-  // useEffect(() => {
-  //   if (
-  //     (height - scrollY).toFixed(0) == clientHeight.toFixed(0) &&
-  //     scrollY !== 0 &&
-  //     poolTableData.length
-  //   ) {
-  //     setPage(page + 1);
-  //   }
-  // }, [scrollY, height, isCompleted]);
-  // const [poolData, setPoolData] = useState<IAllPoolsData[]>([]);
-  // useEffect(() => {
-  //   console.log("ishu1", poolTableData, page);
-  //   if (poolTableData.length) {
-  //     setPoolData((poolsData) => poolsData.concat(poolTableData));
-  //   }
-  // }, [JSON.stringify(poolTableData)]);
+
   const [poolsTableData, isFetched] = usePoolsTableSearch(
     poolTableData,
     props.searchValue,
@@ -154,10 +139,26 @@ export function ShortCard(props: IShortCardProps) {
         accessor: (x) => (
           <div className="flex gap-1 items-center max-w-[180px]">
             <CircularOverLappingImage
-              tokenA={x.tokenA.toString()}
-              tokenB={x.tokenB.toString()}
-              src1={getImagesPath(x.tokenA.toString())}
-              src2={getImagesPath(x.tokenB.toString())}
+              tokenA={
+                tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  ? x.tokenB.toString()
+                  : x.tokenA.toString()
+              }
+              tokenB={
+                tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  ? x.tokenA.toString()
+                  : x.tokenB.toString()
+              }
+              src1={
+                tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  ? getImagesPath(x.tokenB.toString())
+                  : getImagesPath(x.tokenA.toString())
+              }
+              src2={
+                tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  ? getImagesPath(x.tokenA.toString())
+                  : getImagesPath(x.tokenB.toString())
+              }
             />
             <div className="flex flex-col gap-[2px]">
               <span className="md:text-f14 text-f12 text-white ">
@@ -258,10 +259,26 @@ export function ShortCard(props: IShortCardProps) {
               )}
             >
               <CircularOverLappingImage
-                tokenA={x.tokenA.toString()}
-                tokenB={x.tokenB.toString()}
-                src1={getImagesPath(x.tokenA.toString())}
-                src2={getImagesPath(x.tokenB.toString())}
+                tokenA={
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                    ? x.tokenB.toString()
+                    : x.tokenA.toString()
+                }
+                tokenB={
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                    ? x.tokenA.toString()
+                    : x.tokenB.toString()
+                }
+                src1={
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                    ? getImagesPath(x.tokenB.toString())
+                    : getImagesPath(x.tokenA.toString())
+                }
+                src2={
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                    ? getImagesPath(x.tokenA.toString())
+                    : getImagesPath(x.tokenB.toString())
+                }
               />
               <div className="flex flex-col gap-[2px]">
                 <span className="md:text-f14 text-f12 text-white ">

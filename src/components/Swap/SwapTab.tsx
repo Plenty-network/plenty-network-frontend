@@ -322,7 +322,7 @@ function SwapTab(props: ISwapTabProps) {
     } else {
       return (
         <Button color="primary" onClick={props.connectWallet} width="w-full">
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     }

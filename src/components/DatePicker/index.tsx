@@ -46,8 +46,11 @@ export function Datepicker(props: IDatePickerProps) {
   const [selectedDate, setSelectedDate] = React.useState(props.selectedDate);
   const handleClick = (isSetDate: boolean) => {
     // e.preventDefault();
+
     if (isSetDate) {
-      selectedDate ? props.setStartDate(undefined, new Date(selectedDate).toISOString()) : "";
+      const dateSelected = new Date(selectedDate);
+      dateSelected.setUTCHours(0, 0, 0, 0);
+      selectedDate ? props.setStartDate(undefined, dateSelected.toISOString()) : "";
     }
     props.setIsOpen(false);
   };

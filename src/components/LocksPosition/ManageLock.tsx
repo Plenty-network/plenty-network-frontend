@@ -161,13 +161,13 @@ function ManageLock(props: IManageLockProps) {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (Number(props.updatedPlyVoteValue) <= 0 && Number(props.lockingDate) <= 0) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Increase Lock
+          Increase lock
         </Button>
       );
     } else if (
@@ -177,13 +177,13 @@ function ManageLock(props: IManageLockProps) {
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else {
       return (
         <Button color={"primary"} onClick={() => setScreen("2")}>
-          Increase Lock
+          Increase lock
         </Button>
       );
     }
@@ -395,7 +395,7 @@ function ManageLock(props: IManageLockProps) {
               : props.IncreaseLockEndOperation
           }
           votingPower={votingPower}
-          ctaText={"Increase Lock"}
+          ctaText={"Increase lock"}
           endDate={
             props.lockingDate === "" ? dateFormat(props.manageData.endTimeStamp) : props.lockingDate
           }

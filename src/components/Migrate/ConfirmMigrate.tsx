@@ -34,7 +34,7 @@ function ConfirmMigrate(props: IConfirmMigrateProps) {
               <div>
                 <div className="text-text-400 font-body1">You will receive </div>
                 <span className="font-title2 text-white mt-1">
-                  {props.exchangeRes.claimableAmount?.toFixed(2)} PLY
+                  {props.exchangeRes.claimableAmount?.decimalPlaces(6, 1).toString()} PLY
                 </span>
               </div>
             </div>

@@ -49,7 +49,13 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[x.tokenOneSymbol]
+                  tEZorCTEZtoUppercase(x.tokenOneSymbol.toString()) === "CTEZ"
+                    ? tokenIcons[x.tokenTwoSymbol]
+                      ? tokenIcons[x.tokenTwoSymbol].src
+                      : tokens[x.tokenTwoSymbol.toString()]?.iconUrl
+                      ? tokens[x.tokenTwoSymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.tokenOneSymbol]
                     ? tokenIcons[x.tokenOneSymbol].src
                     : tokens[x.tokenOneSymbol.toString()]?.iconUrl
                     ? tokens[x.tokenOneSymbol.toString()].iconUrl
@@ -64,7 +70,13 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[x.tokenTwoSymbol]
+                  tEZorCTEZtoUppercase(x.tokenOneSymbol.toString()) === "CTEZ"
+                    ? tokenIcons[x.tokenOneSymbol]
+                      ? tokenIcons[x.tokenOneSymbol].src
+                      : tokens[x.tokenOneSymbol.toString()]?.iconUrl
+                      ? tokens[x.tokenOneSymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.tokenTwoSymbol]
                     ? tokenIcons[x.tokenTwoSymbol].src
                     : tokens[x.tokenTwoSymbol.toString()]?.iconUrl
                     ? tokens[x.tokenTwoSymbol.toString()].iconUrl
@@ -134,7 +146,13 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[x.tokenOneSymbol]
+                  tEZorCTEZtoUppercase(x.tokenOneSymbol.toString()) === "CTEZ"
+                    ? tokenIcons[x.tokenTwoSymbol]
+                      ? tokenIcons[x.tokenTwoSymbol].src
+                      : tokens[x.tokenTwoSymbol.toString()]?.iconUrl
+                      ? tokens[x.tokenTwoSymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.tokenOneSymbol]
                     ? tokenIcons[x.tokenOneSymbol].src
                     : tokens[x.tokenOneSymbol.toString()]?.iconUrl
                     ? tokens[x.tokenOneSymbol.toString()].iconUrl
@@ -149,7 +167,13 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[x.tokenTwoSymbol]
+                  tEZorCTEZtoUppercase(x.tokenOneSymbol.toString()) === "CTEZ"
+                    ? tokenIcons[x.tokenOneSymbol]
+                      ? tokenIcons[x.tokenOneSymbol].src
+                      : tokens[x.tokenOneSymbol.toString()]?.iconUrl
+                      ? tokens[x.tokenOneSymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.tokenTwoSymbol]
                     ? tokenIcons[x.tokenTwoSymbol].src
                     : tokens[x.tokenTwoSymbol.toString()]?.iconUrl
                     ? tokens[x.tokenTwoSymbol.toString()].iconUrl

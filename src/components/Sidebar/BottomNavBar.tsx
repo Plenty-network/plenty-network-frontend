@@ -168,17 +168,7 @@ export function MoreSubMenuList(props: ISubMenuListProps) {
   return (
     <div className="w-screen flex flex-col text-f12 bg-topBar z-10" ref={props.refWrapper}>
       {/*  */}
-      <div className="px-9 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
-        <SingleSideBar
-          name="Bribes"
-          className="px-9 justify-between"
-          iconName="bribes"
-          pathName={"/bribes"}
-          isBottomMenu
-          isHrefIcon={true}
-          openNewPage={true}
-        />
-      </div>
+
       {/*  */}
       <div className="px-9 hover:bg-sideBarHover ">
         <SingleSideBar
@@ -189,16 +179,18 @@ export function MoreSubMenuList(props: ISubMenuListProps) {
           isBottomMenu
         />
       </div>
-
-      {/* <div className="px-9 hover:bg-sideBarHover ">
+      <div className="px-9 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
         <SingleSideBar
-          name="Airdrop"
+          name="Bribe"
           className="px-9 justify-between"
-          iconName="airdrop"
-          pathName={"/airdrop"}
+          iconName="bribes"
+          pathName={"/bribes"}
           isBottomMenu
+          isHrefIcon={true}
+          openNewPage={true}
         />
-      </div> */}
+      </div>
+
       <div className="px-9 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
         <SingleSideBar
           name="Bridge"
