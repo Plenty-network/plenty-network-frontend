@@ -107,7 +107,7 @@ function Migrate(props: IMigrateProps) {
     } else {
       return (
         <Button color="primary" onClick={connectTempleWallet} width="w-full">
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     }

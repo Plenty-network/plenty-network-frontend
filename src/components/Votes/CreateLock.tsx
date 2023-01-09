@@ -150,7 +150,7 @@ function CreateLock(props: ICreateLockProps) {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (Number(props.plyInput) <= 0) {
@@ -172,7 +172,7 @@ function CreateLock(props: ICreateLockProps) {
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else {

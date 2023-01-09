@@ -76,7 +76,7 @@ function Liquidity(props: ILiquidityProps) {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (Number(props.firstTokenAmount) <= 0 || Number(props.secondTokenAmount) <= 0) {
@@ -94,7 +94,7 @@ function Liquidity(props: ILiquidityProps) {
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else {
@@ -109,7 +109,7 @@ function Liquidity(props: ILiquidityProps) {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (Number(props.burnAmount) <= 0) {
@@ -121,7 +121,7 @@ function Liquidity(props: ILiquidityProps) {
     } else if (walletAddress && props.burnAmount && props.burnAmount > props.pnlpBalance) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else {
