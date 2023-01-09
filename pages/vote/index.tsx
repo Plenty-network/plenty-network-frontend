@@ -516,11 +516,12 @@ export default function Vote() {
             <HeadInfo
               className="px-2 md:px-3"
               title="Vote"
-              toolTipContent=""
+              toolTipContent="Watch How to lock and vote to earn fees and bribes."
               handleCreateLock={handleCreateLock}
               searchValue={searchValue}
               setSearchValue={setSearchValue}
               isFirst={userAddress !== null && localStorage.getItem(USERADDRESS) !== userAddress}
+              videoLink="jjsL5qce3ks"
             />
 
             <div className="">
@@ -874,9 +875,7 @@ export default function Vote() {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId
-              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
-              : null
+            transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }
           content={contentTransaction}
         />

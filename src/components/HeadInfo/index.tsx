@@ -15,6 +15,7 @@ export interface IHeadInfoProps {
   handleCreateLock?: () => void;
   isFirst?: boolean;
   onClick?: () => void;
+  videoLink?: string;
 }
 
 export default function HeadInfo(props: IHeadInfoProps) {
@@ -58,7 +59,12 @@ export default function HeadInfo(props: IHeadInfoProps) {
         value={props.searchValue}
         onChange={props.setSearchValue}
       /> */}
-      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"UXBs3vi26_A"} />}
+      {showVideoModal && (
+        <VideoModal
+          closefn={setShowVideoModal}
+          linkString={props.videoLink ? props.videoLink : "HtDOhje7Y5A"}
+        />
+      )}
       {props.title === "Vote" ? (
         <div
           className={clsx(

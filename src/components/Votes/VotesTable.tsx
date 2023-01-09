@@ -114,8 +114,13 @@ export function VotesTable(props: IVotesTableProps) {
             <div>
               <div className="font-body2 md:font-body4">
                 {" "}
-                {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.votes.tokenA) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.votes.tokenB?.toString())} / ${tEZorCTEZtoUppercase(
+                      x.votes.tokenA?.toString()
+                    )}`
+                  : ` ${tEZorCTEZtoUppercase(x.votes.tokenA?.toString())} / ${tEZorCTEZtoUppercase(
+                      x.votes.tokenB?.toString()
+                    )}`}
               </div>
               <div className="font-subtitle1 text-text-500">{x.votes.poolType} Pool</div>
             </div>
@@ -182,7 +187,7 @@ export function VotesTable(props: IVotesTableProps) {
         Header: "Pools",
         id: "pools",
         showOnMobile: true,
-        columnWidth: "w-[160px]",
+        columnWidth: "w-[190px]",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.tokenA", true),
         accessor: (x: any) => (
@@ -220,8 +225,13 @@ export function VotesTable(props: IVotesTableProps) {
             <div>
               <div className="font-body4">
                 {" "}
-                {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.votes.tokenA) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.votes.tokenB?.toString())} / ${tEZorCTEZtoUppercase(
+                      x.votes.tokenA?.toString()
+                    )}`
+                  : ` ${tEZorCTEZtoUppercase(x.votes.tokenA?.toString())} / ${tEZorCTEZtoUppercase(
+                      x.votes.tokenB?.toString()
+                    )}`}
               </div>
               <div className="font-subtitle1 text-text-500">{x.votes.poolType} Pool</div>
             </div>

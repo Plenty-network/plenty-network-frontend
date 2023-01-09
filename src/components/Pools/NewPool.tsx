@@ -388,16 +388,6 @@ export function NewPool(props: IManageLiquidityProps) {
         <PopUpModal
           onhide={closeModal}
           className="w-[390px] max-w-[390px] sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
-          footerChild={
-            <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
-              <p className="font-subtitle1 md:text-f16 text-text-150"></p>
-              <Image
-                className="cursor-pointer hover:opacity-90"
-                onClick={() => setShowVideoModal(true)}
-                src={playBtn}
-              />
-            </div>
-          }
         >
           <>
             <div className="flex ">
@@ -510,9 +500,7 @@ export function NewPool(props: IManageLiquidityProps) {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId
-              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
-              : null
+            transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }
           content={`Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
             TOKEN_B

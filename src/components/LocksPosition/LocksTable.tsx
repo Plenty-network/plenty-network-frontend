@@ -99,8 +99,13 @@ export function LocksTablePosition(props: ILocksTablePosition) {
               <div>
                 <div className="font-body2 md:font-body4">
                   {" "}
-                  {tEZorCTEZtoUppercase(x.attachedTokenASymbol.toString())}/
-                  {tEZorCTEZtoUppercase(x.attachedTokenBSymbol.toString())}
+                  {tEZorCTEZtoUppercase(x.attachedTokenASymbol) === "CTEZ"
+                    ? ` ${tEZorCTEZtoUppercase(x.attachedTokenBSymbol)} / ${tEZorCTEZtoUppercase(
+                        x.attachedTokenASymbol
+                      )}`
+                    : ` ${tEZorCTEZtoUppercase(x.attachedTokenASymbol)} / ${tEZorCTEZtoUppercase(
+                        x.attachedTokenBSymbol
+                      )}`}
                 </div>
                 <div className="font-subtitle1 text-text-500">{} Pool</div>
               </div>
@@ -214,8 +219,13 @@ export function LocksTablePosition(props: ILocksTablePosition) {
               <div>
                 <div className="font-body4">
                   {" "}
-                  {tEZorCTEZtoUppercase(x.attachedTokenASymbol.toString())}/
-                  {tEZorCTEZtoUppercase(x.attachedTokenBSymbol.toString())}
+                  {tEZorCTEZtoUppercase(x.attachedTokenASymbol) === "CTEZ"
+                    ? ` ${tEZorCTEZtoUppercase(x.attachedTokenBSymbol)} / ${tEZorCTEZtoUppercase(
+                        x.attachedTokenASymbol
+                      )}`
+                    : ` ${tEZorCTEZtoUppercase(x.attachedTokenASymbol)} / ${tEZorCTEZtoUppercase(
+                        x.attachedTokenBSymbol
+                      )}`}
                 </div>
               </div>
             </div>

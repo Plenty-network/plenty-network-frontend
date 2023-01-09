@@ -99,8 +99,13 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
             <div>
               <div className="font-body2 md:font-body4">
                 {" "}
-                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
+                      x.tokenA.toString()
+                    )}`
+                  : ` ${tEZorCTEZtoUppercase(x.tokenA.toString())} / ${tEZorCTEZtoUppercase(
+                      x.tokenB.toString()
+                    )}`}
               </div>
               <div className="font-subtitle1 text-text-500">{x.ammType} Pool</div>
             </div>
@@ -188,8 +193,13 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
               <div>
                 <div className="font-body4">
                   {" "}
-                  {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                  {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                  {tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                    ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
+                        x.tokenA.toString()
+                      )}`
+                    : ` ${tEZorCTEZtoUppercase(x.tokenA.toString())} / ${tEZorCTEZtoUppercase(
+                        x.tokenB.toString()
+                      )}`}
                 </div>
                 <div className="font-subtitle1 text-text-500">{x.ammType} Pool</div>
               </div>

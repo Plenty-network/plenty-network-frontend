@@ -27,7 +27,7 @@ class MyDocument extends Document {
           <meta name="description" content={siteData.description} />
           <meta
             name="keywords"
-            content="plentydefi, plenty, tezos, v3, defi, plenty network, veply, PLY, v(3,3), ecosystem, ghostnet"
+            content="plentydefi, plenty, tezos, v3, defi, plenty network, veply, PLY, v(3,3), ecosystem, mainnet, blockchain"
           />
           <meta property="og:title" content={siteData.title} />
           <meta property="og:type" content="website" />

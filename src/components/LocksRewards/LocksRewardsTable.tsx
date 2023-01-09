@@ -124,8 +124,13 @@ export function LocksTableRewards(props: IVotesTableRewards) {
               <div>
                 <div className="font-body2 md:font-body4">
                   {" "}
-                  {tEZorCTEZtoUppercase(x.votes.tokenASymbol?.toString())}/
-                  {tEZorCTEZtoUppercase(x.votes.tokenBSymbol?.toString())}
+                  {tEZorCTEZtoUppercase(x.votes.tokenASymbol) === "CTEZ"
+                    ? ` ${tEZorCTEZtoUppercase(
+                        x.votes.tokenBSymbol?.toString()
+                      )} / ${tEZorCTEZtoUppercase(x.votes.tokenASymbol?.toString())}`
+                    : ` ${tEZorCTEZtoUppercase(
+                        x.votes.tokenASymbol?.toString()
+                      )} / ${tEZorCTEZtoUppercase(x.votes.tokenBSymbol?.toString())}`}
                 </div>
                 <div className="font-subtitle1 text-text-500">{x.votes.ammType} Pool</div>
               </div>
@@ -232,8 +237,13 @@ export function LocksTableRewards(props: IVotesTableRewards) {
               <div>
                 <div className="font-body2 md:font-body4">
                   {" "}
-                  {tEZorCTEZtoUppercase(x.votes.tokenASymbol?.toString())}/
-                  {tEZorCTEZtoUppercase(x.votes.tokenBSymbol?.toString())}
+                  {tEZorCTEZtoUppercase(x.votes.tokenASymbol) === "CTEZ"
+                    ? ` ${tEZorCTEZtoUppercase(
+                        x.votes.tokenBSymbol?.toString()
+                      )} / ${tEZorCTEZtoUppercase(x.votes.tokenASymbol?.toString())}`
+                    : ` ${tEZorCTEZtoUppercase(
+                        x.votes.tokenASymbol?.toString()
+                      )} / ${tEZorCTEZtoUppercase(x.votes.tokenBSymbol?.toString())}`}
                 </div>
                 <div className="font-subtitle1 text-text-500">{x.votes.ammType} Pool</div>
               </div>
