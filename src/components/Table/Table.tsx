@@ -66,7 +66,7 @@ const Table = <D extends object>({
 
   useEffect(() => {
     const heightOfbody = getHeightOfElement(headerRef.current);
-    isMobile ? setheightBody(heightOfbody - 64) : setheightBody(heightOfbody);
+    isMobile ? setheightBody(heightOfbody) : setheightBody(heightOfbody);
   }, [headerRef, isMobile]);
   const {
     getTableProps,
@@ -186,7 +186,7 @@ const Table = <D extends object>({
           className={clsx(" flex-col flex ", isVotesTable ? "gap-1" : "gap-1", isFetched ? "" : "")}
           {...(!router.pathname.includes("myportfolio") &&
             !router.pathname.includes("pools") && {
-              style: { height: `${heightBody}px` },
+              style: { height: "auto" },
             })}
         >
           {/* {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
