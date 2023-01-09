@@ -5,6 +5,7 @@ import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
 import { DAY, PLY_DECIMAL_MULTIPLIER } from "../../constants/global";
 import { MigrateToken } from "../../config/types";
 import Config from "../../config/config";
+import { store } from "../../redux";
 
 /**
  * Calculates the exchange amount and splits into claimable and vested
@@ -16,21 +17,21 @@ export const getMigrateExchangeAmount = (
   token: MigrateToken
 ): IMigrateExchange => {
   try {
-
+    const TOKENS = store.getState().config.tokens;
     const exchangeRate = Config.EXCHANGE_TOKENS[token]
       ? new BigNumber(Config.EXCHANGE_TOKENS[token].exchangeRate)
       : new BigNumber(0);
     const tokenOutAmount = inputValue
       .multipliedBy(exchangeRate)
-      .decimalPlaces(Config.EXCHANGE_TOKENS[token].tokenDecimals, 1);
+      .decimalPlaces(TOKENS["PLY"].decimals, 1);
 
     // 50% claimable and 50% vested
     const claimableAmount = tokenOutAmount
       .dividedBy(2)
-      .decimalPlaces(Config.EXCHANGE_TOKENS[token].tokenDecimals, 1);
+      .decimalPlaces(TOKENS["PLY"].decimals, 1);
     const vestedAmount = tokenOutAmount
       .dividedBy(2)
-      .decimalPlaces(Config.EXCHANGE_TOKENS[token].tokenDecimals, 1);
+      .decimalPlaces(TOKENS["PLY"].decimals, 1);
 
     return {
       success: true,
