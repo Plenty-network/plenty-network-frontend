@@ -22,6 +22,7 @@ import { getThumbnailUriForNewVeNFT } from "../../api/util/locks";
 function CreateLock(props: ICreateLockProps) {
   // const walletAddress = store.getState().wallet.address;
   const walletAddress = useAppSelector((state) => state.wallet.address);
+  const TOKENS = useAppSelector((state) => state.config.tokens);
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const [screen, setScreen] = useState("1");
   const [votingPower, setVotingPower] = useState(0);
@@ -47,7 +48,13 @@ function CreateLock(props: ICreateLockProps) {
     props.setShow(false);
   };
   const handleInputPercentage = (value: number) => {
-    props.setPlyInput((value * Number(props.plyBalance)).toString());
+    props.setPlyInput(
+      new BigNumber(props.plyBalance)
+        .multipliedBy(value)
+        .dividedBy(100)
+        .decimalPlaces(TOKENS["PLY"].decimals, 1)
+        .toString()
+    );
   };
   useEffect(() => {
     const res = getCalendarRangeToEnable();
@@ -264,7 +271,7 @@ function CreateLock(props: ICreateLockProps) {
               )}
               {...(!walletAddress || Number(props.plyBalance) === 0
                 ? {}
-                : { onClick: () => handleInputPercentage(0.25) })}
+                : { onClick: () => handleInputPercentage(25) })}
             >
               25%
             </p>
@@ -277,7 +284,7 @@ function CreateLock(props: ICreateLockProps) {
               )}
               {...(!walletAddress || Number(props.plyBalance) === 0
                 ? {}
-                : { onClick: () => handleInputPercentage(0.5) })}
+                : { onClick: () => handleInputPercentage(50) })}
             >
               50%
             </p>
@@ -290,7 +297,7 @@ function CreateLock(props: ICreateLockProps) {
               )}
               {...(!walletAddress || Number(props.plyBalance) === 0
                 ? {}
-                : { onClick: () => handleInputPercentage(0.75) })}
+                : { onClick: () => handleInputPercentage(75) })}
             >
               75%
             </p>
