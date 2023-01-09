@@ -1765,7 +1765,7 @@ function MyPortfolio(props: any) {
                       </div> */}
                     </p>
                     <a
-                      href={"https://objkt.com/"}
+                      href={"https://objkt.com/collection/plenty-venfts"}
                       target="_blank"
                       rel="noreferrer"
                       className="ml-auto"
