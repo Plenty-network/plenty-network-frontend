@@ -20,11 +20,17 @@ export const getMigrateExchangeAmount = (
     const exchangeRate = Config.EXCHANGE_TOKENS[token]
       ? new BigNumber(Config.EXCHANGE_TOKENS[token].exchangeRate)
       : new BigNumber(0);
-    const tokenOutAmount = inputValue.multipliedBy(exchangeRate);
+    const tokenOutAmount = inputValue
+      .multipliedBy(exchangeRate)
+      .decimalPlaces(Config.EXCHANGE_TOKENS[token].tokenDecimals, 1);
 
     // 50% claimable and 50% vested
-    const claimableAmount = tokenOutAmount.dividedBy(2);
-    const vestedAmount = tokenOutAmount.dividedBy(2);
+    const claimableAmount = tokenOutAmount
+      .dividedBy(2)
+      .decimalPlaces(Config.EXCHANGE_TOKENS[token].tokenDecimals, 1);
+    const vestedAmount = tokenOutAmount
+      .dividedBy(2)
+      .decimalPlaces(Config.EXCHANGE_TOKENS[token].tokenDecimals, 1);
 
     return {
       success: true,
