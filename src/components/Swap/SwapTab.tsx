@@ -337,7 +337,7 @@ function SwapTab(props: ISwapTabProps) {
           "tokenIn"
         )
       : props.handleSwapTokenInput(
-          Number(props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance),
+          props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance.toString(),
           "tokenIn"
         );
   };

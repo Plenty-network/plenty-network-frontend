@@ -87,7 +87,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
       {
         Header: "Pool",
         id: "pools",
-        columnWidth: "w-[153px]",
+        columnWidth: "w-[183px]",
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         showOnMobile: true,
         accessor: (x: any) => (
@@ -124,8 +124,9 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
             </div>
             <div className="flex flex-col gap-[2px]">
               <span className="font-body4">
-                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.tokenB)} / ${tEZorCTEZtoUppercase(x.tokenA)}`
+                  : ` ${tEZorCTEZtoUppercase(x.tokenA)} / ${tEZorCTEZtoUppercase(x.tokenB)}`}
               </span>
               <span className="text-f12 text-text-500">{x.poolType} Pool</span>
             </div>
@@ -219,8 +220,9 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
             </div>
             <div className="flex flex-col gap-[2px]">
               <span className="font-body4">
-                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.tokenB)} / ${tEZorCTEZtoUppercase(x.tokenA)}`
+                  : ` ${tEZorCTEZtoUppercase(x.tokenA)} / ${tEZorCTEZtoUppercase(x.tokenB)}`}
               </span>
               <span className="text-f12 text-text-500">{x.poolType} Pool</span>
             </div>
