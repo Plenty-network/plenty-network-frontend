@@ -70,7 +70,13 @@ export function LocksTablePosition(props: ILocksTablePosition) {
                 <img
                   alt={"alt"}
                   src={
-                    tokenIcons[x.attachedTokenASymbol]
+                    tEZorCTEZtoUppercase(x.attachedTokenASymbol) === "CTEZ"
+                      ? tokenIcons[x.attachedTokenBSymbol]
+                        ? tokenIcons[x.attachedTokenBSymbol].src
+                        : tokens[x.attachedTokenBSymbol.toString()]?.iconUrl
+                        ? tokens[x.attachedTokenBSymbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : tokenIcons[x.attachedTokenASymbol]
                       ? tokenIcons[x.attachedTokenASymbol].src
                       : tokens[x.attachedTokenASymbol.toString()]?.iconUrl
                       ? tokens[x.attachedTokenASymbol.toString()].iconUrl
@@ -85,7 +91,13 @@ export function LocksTablePosition(props: ILocksTablePosition) {
                 <img
                   alt={"alt"}
                   src={
-                    tokenIcons[x.attachedTokenBSymbol]
+                    tEZorCTEZtoUppercase(x.attachedTokenASymbol) === "CTEZ"
+                      ? tokenIcons[x.attachedTokenASymbol]
+                        ? tokenIcons[x.attachedTokenASymbol].src
+                        : tokens[x.attachedTokenASymbol.toString()]?.iconUrl
+                        ? tokens[x.attachedTokenASymbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : tokenIcons[x.attachedTokenBSymbol]
                       ? tokenIcons[x.attachedTokenBSymbol].src
                       : tokens[x.attachedTokenBSymbol.toString()]?.iconUrl
                       ? tokens[x.attachedTokenBSymbol.toString()].iconUrl
@@ -190,7 +202,13 @@ export function LocksTablePosition(props: ILocksTablePosition) {
                 <img
                   alt={"alt"}
                   src={
-                    tokenIcons[x.attachedTokenASymbol]
+                    tEZorCTEZtoUppercase(x.attachedTokenASymbol) === "CTEZ"
+                      ? tokenIcons[x.attachedTokenBSymbol]
+                        ? tokenIcons[x.attachedTokenBSymbol].src
+                        : tokens[x.attachedTokenBSymbol.toString()]?.iconUrl
+                        ? tokens[x.attachedTokenBSymbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : tokenIcons[x.attachedTokenASymbol]
                       ? tokenIcons[x.attachedTokenASymbol].src
                       : tokens[x.attachedTokenASymbol.toString()]?.iconUrl
                       ? tokens[x.attachedTokenASymbol.toString()].iconUrl
@@ -205,7 +223,13 @@ export function LocksTablePosition(props: ILocksTablePosition) {
                 <img
                   alt={"alt"}
                   src={
-                    tokenIcons[x.attachedTokenBSymbol]
+                    tEZorCTEZtoUppercase(x.attachedTokenASymbol) === "CTEZ"
+                      ? tokenIcons[x.attachedTokenASymbol]
+                        ? tokenIcons[x.attachedTokenASymbol].src
+                        : tokens[x.attachedTokenASymbol.toString()]?.iconUrl
+                        ? tokens[x.attachedTokenASymbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : tokenIcons[x.attachedTokenBSymbol]
                       ? tokenIcons[x.attachedTokenBSymbol].src
                       : tokens[x.attachedTokenBSymbol.toString()]?.iconUrl
                       ? tokens[x.attachedTokenBSymbol.toString()].iconUrl

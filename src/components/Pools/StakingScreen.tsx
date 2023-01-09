@@ -195,7 +195,7 @@ export function Staking(props: IStakingProps) {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (Number(props.stakeInput) <= 0 && props.selectedDropDown.boostValue === "") {
@@ -211,7 +211,7 @@ export function Staking(props: IStakingProps) {
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else {
@@ -434,7 +434,7 @@ export function Unstaking(props: IUnstakingProps) {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (Number(props.unStakeInput) <= 0) {
@@ -450,7 +450,7 @@ export function Unstaking(props: IUnstakingProps) {
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else {

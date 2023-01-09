@@ -137,7 +137,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
         onClick={connectTempleWallet}
         className="bg-primary-500/5 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/100  text-f14 "
       >
-        Connect Wallet
+        Connect wallet
       </button>
     </div>
   );

@@ -34,7 +34,7 @@ export function RewardsScreen(props: IRewardsProps) {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (
@@ -46,7 +46,7 @@ export function RewardsScreen(props: IRewardsProps) {
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else if (Number(props.rewardToken) === 0) {

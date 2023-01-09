@@ -195,7 +195,7 @@ function ClaimVested(props: IMigrateProps) {
     } else {
       return (
         <Button color="primary" onClick={connectTempleWallet} width="w-full">
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     }
@@ -300,9 +300,7 @@ function ClaimVested(props: IMigrateProps) {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId
-              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
-              : null
+            transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }
           content={`Claim of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `}
         />

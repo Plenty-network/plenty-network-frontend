@@ -6,6 +6,7 @@ import { estimateOtherTokenAmount } from "../../api/liquidity";
 import nFormatter, {
   changeSource,
   imageExists,
+  nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
 import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
@@ -166,9 +167,9 @@ function AddLiquidity(props: IAddLiquidityProps) {
                   <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances[props.tokenIn.name]) > 0
-                      ? nFormatter(new BigNumber(props.userBalances[props.tokenIn.name]))
-                      : 0}{" "}
+                    {nFormatterWithLesserNumber(
+                      new BigNumber(props.userBalances[props.tokenIn.name])
+                    )}{" "}
                   </span>
                 )}
                 {tEZorCTEZtoUppercase(props.tokenIn.name)}
@@ -244,9 +245,9 @@ function AddLiquidity(props: IAddLiquidityProps) {
                   <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances[props.tokenOut.name]) > 0
-                      ? nFormatter(new BigNumber(props.userBalances[props.tokenOut.name]))
-                      : 0}
+                    {nFormatterWithLesserNumber(
+                      new BigNumber(props.userBalances[props.tokenOut.name])
+                    )}
                   </span>
                 )}
                 {tEZorCTEZtoUppercase(props.tokenOut.name)}
