@@ -80,11 +80,25 @@ body {
 .inner::-webkit-scrollbar-track-piece:start {
   margin-left: 350px;
 }
+.innerPool::-webkit-scrollbar-thumb {
+  height: 0px;
+  width: 0px;
+  border-radius: 8px;
+  background: #341e54; 
+}
+.innerPool::-webkit-scrollbar-thumb:hover {
+  height: 0px;
+  border-radius: 8px;
+  background: #3b2f4f; 
+}
 .innerPool::-webkit-scrollbar-track-piece:end {
-  margin-right: 550px; 
+  margin-right: 700px !important;
+  margin-bottom: 700px !important;
+  
 }
 .innerPool::-webkit-scrollbar-track-piece:start {
-  margin-left: 550px;
+  margin-left: 700px !important;
+  margin-top: 700px !important;
 }
 .manage::-webkit-scrollbar-track-piece:end {
   margin-right: 300px; 

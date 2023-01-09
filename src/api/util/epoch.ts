@@ -211,6 +211,7 @@ export const fetchEpochData = async (epochNumber: number): Promise<IEpochRespons
  * along with number of days, list of years and list of thursdays allowed to select.
  */
 export const getCalendarRangeToEnable = (): IDatesEnabledRangeData => {
+  let skipFirstThursday = true;
   const dayInMilliSeconds: number = 86400000;
   const yearsToEnable: number[] = [];
   const thursdaysToEnable: number[] = [];
@@ -228,6 +229,11 @@ export const getCalendarRangeToEnable = (): IDatesEnabledRangeData => {
   // Create the list of thursdays to enable on calendar
   for (let i = startTimestamp; i < endTimestamp; i += dayInMilliSeconds) {
     if (new Date(i).getDay() === 4) {
+      // Skip the first(nearest) thursday as new lock end should be atleast a week or more
+      if(skipFirstThursday) {
+        skipFirstThursday = false;
+        continue;
+      }
       thursdaysToEnable.push(i);
     }
   }
