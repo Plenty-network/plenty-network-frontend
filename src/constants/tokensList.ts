@@ -45,6 +45,7 @@ import usdt from "../assets/Tokens/usdt.png";
 import xtz from "../assets/Tokens/XTZ.png";
 import ply from "../assets/Tokens/ply.png";
 import sirs from "../assets/Tokens/SIRS.png";
+import up from "../assets/Tokens/UP.png";
 import { StaticImageData } from "next/image";
 export const tokensList = [
   {
@@ -330,4 +331,5 @@ export const tokenIcons: { [token: string]: StaticImageData } = {
   PLY: ply,
   kUSD: kusd,
   SIRS: sirs,
+  UP: up,
 };
