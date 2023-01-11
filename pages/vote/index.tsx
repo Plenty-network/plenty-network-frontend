@@ -155,7 +155,8 @@ export default function Vote() {
     !showTransactionSubmitModal && setVotes([] as IVotes[]);
     votesPageDataWrapper(
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
-      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
+      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
+      tokenPrice
     ).then((res) => {
       setVoteData(res.allData);
     });
@@ -174,7 +175,8 @@ export default function Vote() {
       sum = 0;
       votesPageDataWrapper(
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
-        selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
+        selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
+        tokenPrice
       ).then((res) => {
         setVoteData(res.allData);
 
@@ -194,7 +196,8 @@ export default function Vote() {
       sum = 0;
       votesPageDataWrapper(
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
-        selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
+        selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
+        tokenPrice
       ).then((res) => {
         setVoteData(res.allData);
 
