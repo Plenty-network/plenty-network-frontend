@@ -28,6 +28,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
         selectedDropDown === "My votes"
       ) {
         getMyAmmVotes(props.epochNumber, parseInt(props.selectedDropDown.tokenId)).then((e) => {
+          console.log("ishu1", e, props.epochNumber);
           if (e.success) {
             if (e.isOtherDataAvailable) {
               setPiChartData(e.topAmmData.concat(e.otherData as IVotesData));
@@ -41,6 +42,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
         });
       } else {
         getTotalAmmVotes(props.epochNumber).then((e) => {
+          console.log("ishu", e, props.epochNumber);
           if (e.success) {
             if (e.isOtherDataAvailable) {
               setPiChartData(e.topAmmData.concat(e.otherData as IVotesData));
