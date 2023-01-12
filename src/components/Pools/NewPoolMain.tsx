@@ -35,6 +35,7 @@ import nFormatter, {
 } from "../../api/util/helpers";
 import { IAllTokensBalance } from "../../api/util/types";
 import { tokenIcons } from "../../constants/tokensList";
+import fromExponential from "from-exponential";
 
 interface ILiquidityProps {
   firstTokenAmount: string | number;
@@ -267,7 +268,7 @@ function NewPoolMain(props: ILiquidityProps) {
                     <input
                       type="text"
                       className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%] placeholder:text-text-400"
-                      value={props.firstTokenAmount}
+                      value={fromExponential(props.firstTokenAmount)}
                       placeholder="0.0"
                       onChange={(e) => handleLiquidityInput(e.target.value, "tokenIn")}
                     />
@@ -373,7 +374,7 @@ function NewPoolMain(props: ILiquidityProps) {
                   ) : (
                     <input
                       type="text"
-                      value={props.secondTokenAmount}
+                      value={fromExponential(props.secondTokenAmount)}
                       className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%] placeholder:text-text-400"
                       placeholder="0.0"
                       onChange={(e) => handleLiquidityInput(e.target.value, "tokenOut")}

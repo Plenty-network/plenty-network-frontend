@@ -14,6 +14,7 @@ import { useAppSelector } from "../../redux";
 import { ISwapData, tokenParameterLiquidity } from "./types";
 import fallback from "../../../src/assets/icon/pools/fallback.png";
 import { tokenIcons } from "../../constants/tokensList";
+import fromExponential from "from-exponential";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -136,7 +137,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 <input
                   type="text"
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%] placeholder:text-text-400"
-                  value={props.firstTokenAmount}
+                  value={fromExponential(props.firstTokenAmount)}
                   placeholder="0.0"
                   onChange={(e) => handleLiquidityInput(e.target.value, "tokenIn")}
                 />
@@ -213,7 +214,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
               ) : (
                 <input
                   type="text"
-                  value={props.secondTokenAmount}
+                  value={fromExponential(props.secondTokenAmount)}
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%] placeholder:text-text-400"
                   placeholder="0.0"
                   onChange={(e) => handleLiquidityInput(e.target.value, "tokenOut")}

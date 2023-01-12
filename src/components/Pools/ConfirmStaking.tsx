@@ -7,7 +7,7 @@ import Button from "../Button/Button";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { IVePLYData } from "../../api/stake/types";
 import { VePLY } from "../DropDown/VePLY";
-import nFormatter from "../../api/util/helpers";
+import nFormatter, { nFormatterWithLesserNumber } from "../../api/util/helpers";
 
 interface IConfirmStakeLiquidity {
   tokenIn: tokenParameterLiquidity;
@@ -62,7 +62,8 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
           <p>
             <div className="mt-4 font-body4 text-text-250">You’re staking</div>
             <div className="mt-1 text-white font-title2">
-              {props.stakeInput ? nFormatter(new BigNumber(props.stakeInput)) : 0} PNLP
+              {props.stakeInput ? nFormatterWithLesserNumber(new BigNumber(props.stakeInput)) : 0}{" "}
+              PNLP
             </div>
           </p>
           <p
