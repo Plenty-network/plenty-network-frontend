@@ -38,7 +38,12 @@ import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { Flashtype } from "../FlashScreen";
-import { changeSource, percentageChange, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import {
+  changeSource,
+  nFormatterWithLesserNumber,
+  percentageChange,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { IAllTokensBalanceResponse } from "../../api/util/types";
 import { Chain } from "../../config/types";
 import { tokenIcons } from "../../constants/tokensList";
@@ -160,6 +165,7 @@ function SwapTab(props: ISwapTabProps) {
       setpriceDiff("");
     }
   }, [props.firstTokenAmount, props.secondTokenAmount]);
+  console.log(props);
   useEffect(() => {
     setExpertMode(userSettings.expertMode);
   }, [props.walletAddress, userSettings]);
@@ -465,9 +471,9 @@ function SwapTab(props: ISwapTabProps) {
                   id="tooltip8"
                   position={Position.right}
                 >
-                  {Number(props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance) > 0
-                    ? props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance.toFixed(4)
-                    : 0}
+                  {nFormatterWithLesserNumber(
+                    new BigNumber(props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance)
+                  )}
                 </ToolTip>
               ) : (
                 "--"
@@ -587,11 +593,11 @@ function SwapTab(props: ISwapTabProps) {
                     id="tooltip9"
                     position={Position.right}
                   >
-                    {Number(props.allBalance?.allTokensBalances[props.tokenOut.name]?.balance) > 0
-                      ? Number(
-                          props.allBalance?.allTokensBalances[props.tokenOut.name]?.balance
-                        ).toFixed(4)
-                      : 0}
+                    {nFormatterWithLesserNumber(
+                      new BigNumber(
+                        props.allBalance?.allTokensBalances[props.tokenOut.name]?.balance
+                      )
+                    )}
                   </ToolTip>
                 ) : (
                   "--"
@@ -725,17 +731,21 @@ function SwapTab(props: ISwapTabProps) {
                     <ToolTip
                       message={
                         !isConvert
-                          ? props.routeDetails.exchangeRate.toString()
-                          : (1 / Number(props.routeDetails.exchangeRate)).toString()
+                          ? fromExponential(props.routeDetails.exchangeRate.toString())
+                          : fromExponential(1 / Number(props.routeDetails.exchangeRate)).toString()
                       }
                       id="tooltip7"
                       position={Position.top}
                     >
                       {!isConvert
-                        ? ` ${props.routeDetails.exchangeRate.toFixed(3)} 
+                        ? ` ${nFormatterWithLesserNumber(
+                            new BigNumber(props.routeDetails.exchangeRate)
+                          )} 
                             ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
-                        : `${Number(1 / Number(props.routeDetails.exchangeRate)).toFixed(
-                            3
+                        : `${nFormatterWithLesserNumber(
+                            new BigNumber(
+                              new BigNumber(1).dividedBy(props.routeDetails.exchangeRate)
+                            )
                           )} ${tEZorCTEZtoUppercase(props.tokenIn.name)}`}
                     </ToolTip>
                   </span>

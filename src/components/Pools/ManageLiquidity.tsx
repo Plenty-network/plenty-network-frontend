@@ -163,7 +163,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
 
         const balanceResponse = await Promise.all(balancePromises);
-        console.log("j", balanceResponse);
+
         setUserBalances((prev) => ({
           ...prev,
           ...balanceResponse.reduce(
