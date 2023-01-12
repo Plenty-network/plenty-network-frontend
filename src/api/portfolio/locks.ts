@@ -272,8 +272,12 @@ const getBribesData = (
       bribesData.push({
         bribeId: new BigNumber(bribeData.bribeId),
         bribeValue: value,
+        bribePrice: amount,
         tokenSymbol: bribeData.name,
       });
+    }
+    if(bribesData.length > 0) {
+      bribesData.sort((a, b) => b.bribePrice.minus(a.bribePrice).toNumber());
     }
     return {
       bribesValue,

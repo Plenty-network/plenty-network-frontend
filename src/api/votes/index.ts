@@ -181,7 +181,9 @@ const mainPageRewardData = async (
           bribes.push({
             name: y.name,
             value: new BigNumber(y.value).dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals)),
-            price: new BigNumber(isCurrentEpoch ? tokenPrices[y.name] || 0 : y.price),
+            price: new BigNumber(y.value)
+              .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+              .multipliedBy(isCurrentEpoch ? tokenPrices[y.name] || 0 : y.price),
           });
         }
       }
@@ -205,6 +207,9 @@ const mainPageRewardData = async (
           break;
         }
       } */
+      if(bribes.length > 0) {
+        bribes.sort((a,b) => b.price.minus(a.price).toNumber());
+      }
 
       finalData[x.pool] = {
         fees: fee,
