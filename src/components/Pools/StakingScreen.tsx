@@ -25,7 +25,10 @@ import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 import { VePLY } from "../DropDown/VePLY";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IConfigLPToken } from "../../config/types";
-import nFormatter, { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import nFormatter, {
+  nFormatterWithLesserNumber,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 
 export enum StakingScreenType {
   Staking = "Staking",
@@ -302,9 +305,7 @@ export function Staking(props: IStakingProps) {
           {walletAddress && (
             <div className="pr-2 md:pr-5 ">
               <BtnWithWalletIcon
-                text={`${
-                  Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(2) : 0
-                } PNLP`}
+                text={`${nFormatterWithLesserNumber(new BigNumber(props.pnlpBalance))} PNLP`}
                 onClick={onClickAmount}
               />
             </div>
@@ -355,11 +356,12 @@ export function Staking(props: IStakingProps) {
                   )}
                 </div>
                 <BtnWithWalletIconEnd
-                  text={`${
-                    Number(props.pnlpBalance) > 0 ? nFormatter(new BigNumber(props.pnlpBalance)) : 0
-                  } PNLP`}
+                  text={`${nFormatterWithLesserNumber(new BigNumber(props.pnlpBalance))}
+                    PNLP`}
                 />
-                <BtnWithStakeIcon text={`${nFormatter(new BigNumber(props.stakedToken))} PNLP`} />
+                <BtnWithStakeIcon
+                  text={`${nFormatterWithLesserNumber(new BigNumber(props.stakedToken))} PNLP`}
+                />
               </div>
             </div>
             <div className="ml-auto block md:hidden">
@@ -546,9 +548,7 @@ export function Unstaking(props: IUnstakingProps) {
               position={Position.top}
             >
               <BtnWithUnStakeIcon
-                text={`${
-                  Number(props.stakedToken) > 0 ? Number(props.stakedToken).toFixed(2) : 0
-                } PNLP`}
+                text={`${nFormatterWithLesserNumber(new BigNumber(props.stakedToken))} PNLP`}
                 onClick={onClickAmount}
               />
             </ToolTip>

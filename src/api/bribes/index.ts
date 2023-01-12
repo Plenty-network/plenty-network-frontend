@@ -201,14 +201,16 @@ export const getUserBribeData = async (
            bribe = bribe.plus(
              new BigNumber(y.value)
                .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
-               .multipliedBy(tokenPrices[y.name])
+               .multipliedBy(tokenPrices[y.name] || 0)
            );
            bribes.push({
              name: y.name,
              value: new BigNumber(y.value).dividedBy(
                new BigNumber(10).pow(TOKENS[y.name].decimals)
              ),
-             price: new BigNumber(tokenPrices[y.name]),
+             price: new BigNumber(y.value)
+               .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+               .multipliedBy(tokenPrices[y.name] || 0),
            });
          }
        }
@@ -221,6 +223,10 @@ export const getUserBribeData = async (
        const liquidityTokenB = poolsDataObject[x.pool]
          ? new BigNumber(poolsDataObject[x.pool].tvl.token2)
          : new BigNumber(0);
+
+        if(bribes.length > 0) {
+          bribes.sort((a,b) => b.price.minus(a.price).toNumber());
+        }
 
        finalData[x.pool] = {
          liquidity,

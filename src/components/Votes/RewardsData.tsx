@@ -29,6 +29,11 @@ export function RewardsData(props: IRewardsDataProps) {
                   </div>
                   <div className="">{props.bribesData[1]?.name}</div>
                 </div>
+                {props.bribesData.length - 2 > 0 && (
+                  <div className={`text-white font-medium text-right pr-1`}>
+                    {`+${props.bribesData.length - 2} more`}
+                  </div>
+                )}
               </div>
               <div className="text-center">
                 <div className="text-text-200 font-body3 text-right">Breakdown of fees</div>

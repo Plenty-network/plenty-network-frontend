@@ -61,7 +61,7 @@ export function TopNavBarMobile(props: ITopNavBarMobileProps) {
           </div>
         )}
       </div>
-      {showEpoch && <EpochMobile show={showEpoch} setShow={setShowEpoch} />}
+      {<EpochMobile show={showEpoch} setShow={setShowEpoch} />}
     </>
   );
 }

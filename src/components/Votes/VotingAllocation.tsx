@@ -23,7 +23,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
     if (props.epochNumber) {
       if (
         props.selectedDropDown &&
-        props.selectedDropDown.tokenId &&
+        props.selectedDropDown.tokenId !== "" &&
         props.selectedDropDown.tokenId.length > 0 &&
         selectedDropDown === "My votes"
       ) {
@@ -57,10 +57,11 @@ function VotingAllocation(props: IVotingAllocationProps) {
   }, [
     props.epochNumber,
     props.selectedDropDown,
-    props.show,
     selectedDropDown,
     props.castVoteOperation,
+    props.show,
   ]);
+
   useEffect(() => {
     setSelectedDropDown("Protocol");
   }, [props.epochNumber, userAddress]);
