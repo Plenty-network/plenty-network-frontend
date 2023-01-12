@@ -5,7 +5,12 @@ import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import { ISwapData, tokenParameterLiquidity } from "./types";
 import { getOutputTokensAmount } from "../../api/liquidity";
 import { useAppSelector } from "../../redux";
-import nFormatter, { changeSource, imageExists, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import nFormatter, {
+  changeSource,
+  imageExists,
+  nFormatterWithLesserNumber,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import fallback from "../../../src/assets/icon/pools/fallback.png";
 import { tokenIcons } from "../../constants/tokensList";
 interface IRemoveLiquidityProps {
@@ -145,7 +150,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
               className="ml-1 text-primary-500 font-body2 cursor-pointer"
               onClick={onClickAmount}
             >
-              {Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(4) : 0} PNLP
+              {nFormatterWithLesserNumber(new BigNumber(props.pnlpBalance))} PNLP
             </div>
           </div>
         )}

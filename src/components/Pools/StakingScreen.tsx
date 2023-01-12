@@ -294,7 +294,7 @@ export function Staking(props: IStakingProps) {
         {/* Start of Wallet app section */}
         <div className="border flex  items-center bg-muted-200/10 border-border-500/50 rounded-2xl">
           <div className=" flex flex-col py-3.5 px-4 flex-auto w-0">
-            <InputText value={props.stakeInput} onChange={handleStakeInput} />
+            <InputText value={fromExponential(props.stakeInput)} onChange={handleStakeInput} />
             <div className="font-body2 md:font-body4 text-text-400">
               ~$
               {!isNaN(Number(props.lpTokenPrice))
@@ -531,7 +531,7 @@ export function Unstaking(props: IUnstakingProps) {
       {/* Start of Wallet app section */}
       <div className="border flex  items-center bg-muted-200/10 border-border-500/50 mb-5 rounded-2xl">
         <div className=" flex flex-col py-3.5 px-4 flex-auto w-0">
-          <InputText value={props.unStakeInput} onChange={handleUnStakeInput} />
+          <InputText value={fromExponential(props.unStakeInput)} onChange={handleUnStakeInput} />
           <div className="font-body2 md:font-body4 text-text-400">
             ~$
             {!isNaN(Number(props.lpTokenPrice))

@@ -1,11 +1,17 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
+
+import { BigNumber } from "bignumber.js";
 import epoachIcon from "../../assets/icon/common/epochTimeIcon.svg";
 import Button from "../Button/Button";
 import React from "react";
 import { IConfirmAddBribes } from "./types";
-import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import {
+  changeSource,
+  nFormatterWithLesserNumber,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { tokenIcons } from "../../constants/tokensList";
 import { useAppSelector } from "../../redux";
 
@@ -122,9 +128,12 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
                     onError={changeSource}
                   />
                   <span className="font-body4 ml-2">
-                    {props.value} {tEZorCTEZtoUppercase(props.token.name)}
+                    {nFormatterWithLesserNumber(new BigNumber(props.value))}{" "}
+                    {tEZorCTEZtoUppercase(props.token.name)}
                   </span>
-                  <span className="text-text-500 font-body4 ml-1">{`(${props.perEpoch}/epoch)`}</span>
+                  <span className="text-text-500 font-body4 ml-1">{`(${nFormatterWithLesserNumber(
+                    new BigNumber(props.perEpoch)
+                  )}/epoch)`}</span>
                 </div>
                 <div className="mt-5 mx-3 md:mx-5 font-body3 text-text-500">For a period of:</div>
                 <div className="mx-3 md:mx-5 flex items-center mt-1.5">
