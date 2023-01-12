@@ -542,7 +542,7 @@ export default function Vote() {
                     className=""
                     value={searchValue}
                     onChange={setSearchValue}
-                    width={"md:w-245px xl:w-[260px]"}
+                    width={"w-[180px] md:w-245px xl:w-[260px]"}
                   />
                 </div>
               </div>

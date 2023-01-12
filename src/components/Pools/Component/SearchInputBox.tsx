@@ -27,7 +27,7 @@ export function InputSearchBox(props: IInputSearchBoxProps) {
       <input
         value={props.value}
         placeholder="Search"
-        className="text-white  text-left border-0 bg-primary-850 placeholder-text-600 font-medium2 text-f14 outline-none "
+        className="text-white  text-left border-0 bg-primary-850 placeholder-text-600 font-medium2 text-f14 outline-none w-[160px] md:w-auto"
         onChange={(e) => props.onChange(e.target.value)}
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(false)}

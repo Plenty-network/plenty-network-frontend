@@ -24,6 +24,7 @@ import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { tokenIcons } from "../../constants/tokensList";
+import fromExponential from "from-exponential";
 
 function AddBribes(props: IAddBribes) {
   const [swapModalShow, setSwapModalShow] = useState(false);
@@ -347,7 +348,7 @@ function AddBribes(props: IAddBribes) {
                             placeholder="0.0"
                             lang="en"
                             onChange={(e) => props.setBribeInputValue(e.target.value)}
-                            value={props.bribeInputValue}
+                            value={fromExponential(props.bribeInputValue)}
                             onFocus={() => setIsFirstInputFocus(true)}
                             onBlur={() => setIsFirstInputFocus(false)}
                           />

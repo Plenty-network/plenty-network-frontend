@@ -17,6 +17,7 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import nFormatter, {
   changeSource,
   imageExists,
+  nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
 import { useAppSelector } from "../../redux";
@@ -142,13 +143,17 @@ function ConfirmAddPool(props: IConfirmSwapProps) {
                       : tEZorCTEZtoUppercase(props.tokenOut.name)}{" "}
                     =
                     {!isConvert
-                      ? ` ${new BigNumber(props.secondTokenAmount)
-                          .dividedBy(new BigNumber(props.firstTokenAmount))
-                          .toFixed(3)} 
+                      ? ` ${nFormatterWithLesserNumber(
+                          new BigNumber(props.secondTokenAmount).dividedBy(
+                            new BigNumber(props.firstTokenAmount)
+                          )
+                        )} 
                             ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
-                      : `${new BigNumber(props.firstTokenAmount)
-                          .dividedBy(new BigNumber(props.secondTokenAmount))
-                          .toFixed(3)} ${tEZorCTEZtoUppercase(props.tokenIn.name)}`}
+                      : `${nFormatterWithLesserNumber(
+                          new BigNumber(props.firstTokenAmount).dividedBy(
+                            new BigNumber(props.secondTokenAmount)
+                          )
+                        )} ${tEZorCTEZtoUppercase(props.tokenIn.name)}`}
                   </span>
                   <span className="relative top-px cursor-pointer ">
                     <Image alt={"alt"} src={ratesrefresh} onClick={(e) => convertRates(e)} />
