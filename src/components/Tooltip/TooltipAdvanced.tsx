@@ -45,6 +45,7 @@ export function ToolTip(props: IToolTipProps) {
         <ReactTooltip
           disable={props.disable}
           data-iscapture="true"
+          eventOff="scroll"
           showInitial={props.isShowInnitially}
           className={` tooltipCustomSwap ${props.classNameToolTipContainer}-${
             props.position ? props.position : "right"
@@ -68,6 +69,7 @@ export function ToolTip(props: IToolTipProps) {
         <ReactTooltip
           disable={props.disable}
           data-iscapture="true"
+          eventOff="scroll"
           showInitial={props.isShowInnitially}
           className={` tooltipCustomWithoutBorder ${props.classNameToolTipContainer}-${
             props.position ? props.position : "right"
@@ -91,6 +93,7 @@ export function ToolTip(props: IToolTipProps) {
         <ReactTooltip
           disable={props.disable}
           data-iscapture="true"
+          eventOff="scroll"
           showInitial={props.isShowInnitially}
           className={` tooltipCustomWithoutArrow ${props.classNameToolTipContainer}-${
             props.position ? props.position : "right"
@@ -114,6 +117,7 @@ export function ToolTip(props: IToolTipProps) {
         <ReactTooltip
           disable={props.disable}
           data-iscapture="true"
+          eventOff="scroll"
           showInitial={props.isShowInnitially}
           className={` tooltipCustom ${props.classNameToolTipContainer}`}
           arrowColor={isMobile ? "rgba(60, 60, 60,0)" : "#341E54"}
@@ -143,6 +147,7 @@ export function ToolTip(props: IToolTipProps) {
         <ReactTooltip
           disable={props.disable}
           data-iscapture="true"
+          eventOff="scroll"
           showInitial={props.isShowInnitially}
           className={clsx(
             " tooltipCustom",
@@ -168,6 +173,7 @@ export function ToolTip(props: IToolTipProps) {
       <ReactTooltip
         disable={props.disable}
         data-iscapture="true"
+        eventOff="scroll"
         showInitial={props.isShowInnitially}
         className={clsx(
           " tooltipCustom",
