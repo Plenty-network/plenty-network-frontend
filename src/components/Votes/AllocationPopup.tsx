@@ -5,6 +5,8 @@ import VotingAllocation from "./VotingAllocation";
 
 function AllocationPopup(props: IAllocationProps) {
   const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
+  const selectedDropDown = useAppSelector((state) => state.veNFT.selectedDropDown);
+  const epochData = useAppSelector((state) => state.epoch.epochData);
   const closeModal = () => {
     props.setShow(false);
   };
@@ -15,8 +17,8 @@ function AllocationPopup(props: IAllocationProps) {
         show={props.show}
         setShow={props.setShow}
         castVoteOperation={props.castVoteOperation}
-        selectedDropDown={props.selectedDropDown} // veNFT selected
-        epochData={props.epochData} // epoch data
+        selectedDropDown={selectedDropDown} // veNFT selected
+        epochData={epochData} // epoch data
         alreadyVoted={props.alreadyVoted}
         epochNumber={selectedEpoch ? selectedEpoch.epochNumber : 0}
       />
