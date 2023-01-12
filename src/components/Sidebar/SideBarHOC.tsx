@@ -12,6 +12,7 @@ import { TopNavBarMobile } from "./TopNavBarMobile";
 import "animate.css";
 import { useDispatch } from "react-redux";
 import { setClientHeight, setHeight, setScrollY } from "../../redux/walletLoading";
+import ReactTooltip from "react-tooltip";
 
 export interface ISideBarHOCProps {
   children: any;
@@ -34,6 +35,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
 
   const dispatch = useDispatch<AppDispatch>();
   const onScroll = (e: any) => {
+    ReactTooltip.hide();
     dispatch(setScrollY(e.target.scrollTop));
     dispatch(setHeight(e.target.scrollHeight));
     dispatch(setClientHeight(e.target.clientHeight));
@@ -64,11 +66,13 @@ export function SideBarHOC(props: ISideBarHOCProps) {
         <div className="flex flex-no-wrap">
           {!isMobile && !props.isBribes && <SideBar isBanner={isBanner} />}
           <div
+            data-iscapture="true"
             className={`mt-0 ${
               !isMobile && !props.isBribes ? "md:ml-[240px] md:w-[calc(100%_-_240px)]" : ""
             } w-full  md:static overflow-y-auto absolute h-[calc(100%_-_61px)] md:mb-0`}
           >
             <div
+              data-iscapture="true"
               onScroll={onScroll}
               className={`overflow-x-hidden h-screen   z-0  ${
                 props.makeTopBarScroll || true
