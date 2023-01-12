@@ -10,7 +10,6 @@ function AllocationPopup(props: IAllocationProps) {
   const closeModal = () => {
     props.setShow(false);
   };
-  console.log(selectedEpoch, selectedDropDown, epochData);
 
   return props.show ? (
     <PopUpModal onhide={closeModal} className="rounded-3xl  w-[400px] max-w-[400px]">

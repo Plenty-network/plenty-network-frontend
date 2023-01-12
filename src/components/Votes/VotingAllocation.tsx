@@ -20,7 +20,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
   const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0);
   const userAddress = useAppSelector((state) => state.wallet.address);
   useEffect(() => {
-    if (true) {
+    if (props.epochNumber) {
       if (
         props.selectedDropDown &&
         props.selectedDropDown.tokenId !== "" &&
@@ -40,7 +40,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
           // setPiChartData(e);
         });
       } else {
-        getTotalAmmVotes(2).then((e) => {
+        getTotalAmmVotes(props.epochNumber).then((e) => {
           console.log(e);
           if (e.success) {
             if (e.isOtherDataAvailable) {
@@ -58,7 +58,6 @@ function VotingAllocation(props: IVotingAllocationProps) {
   }, [
     props.epochNumber,
     props.selectedDropDown,
-    props.show,
     selectedDropDown,
     props.castVoteOperation,
     props.show,

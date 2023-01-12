@@ -18,7 +18,24 @@ export function RewardsData(props: IRewardsDataProps) {
           toolTipChild={
             <div className="text-center">
               <div className="text-text-200 font-body3">Breakdown of bribes</div>
-              {props.bribesData.map((data, index) => {
+              <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
+                <div className={`text-white font-medium pr-1 `}>
+                  {props.bribesData[0] ? props.bribesData[0].bribeValue.toFixed(2) : "--"}
+                </div>
+                <div className="">{props.bribesData[0]?.tokenSymbol}</div>
+              </div>
+              <div className="text-text-500 text-f14 font-normal flex gap-1 justify-end">
+                <div className={`text-white font-medium pr-1`}>
+                  {props.bribesData[1]?.bribeValue.toFixed(2)}
+                </div>
+                <div className="">{props.bribesData[1]?.tokenSymbol}</div>
+              </div>
+              {props.bribesData.length - 2 > 0 && (
+                <div className={`text-white font-medium text-right pr-1`}>
+                  {`+${props.bribesData.length - 2} more`}
+                </div>
+              )}
+              {/* {props.bribesData.map((data, index) => {
                 return (
                   <div
                     className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end "
@@ -30,7 +47,7 @@ export function RewardsData(props: IRewardsDataProps) {
                     <div className="">{data?.tokenSymbol}</div>
                   </div>
                 );
-              })}
+              })} */}
             </div>
           }
         >
