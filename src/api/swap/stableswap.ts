@@ -83,7 +83,7 @@ export const calculateTokensOutTezCtez = (
   tokenIn: string
 ): ICalculateTokenResponse => {
 
-  const feePerc = new BigNumber(0.05);
+  const feePerc = new BigNumber(0.1); //TODO: Update after any changes in contract
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(6));
   tezSupply = tezSupply.multipliedBy(new BigNumber(10).pow(6));
   ctezSupply = ctezSupply.multipliedBy(new BigNumber(10).pow(6));
