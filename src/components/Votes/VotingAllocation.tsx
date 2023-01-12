@@ -2,16 +2,16 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { IVotesData } from "../../api/votes/types";
 import { getMyAmmVotes, getTotalAmmVotes } from "../../api/votes";
-import { COLORSdataChart } from "./PiChartComponent";
+import PiChart, { COLORSdataChart } from "./PiChartComponent";
 import Protocol from "./Protocol";
 import { IAllocationProps } from "./types";
 import Image from "next/image";
 import loadingLogo from "../../assets/icon/common/loadingLogo.svg";
 import { useAppSelector } from "../../redux";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
-const PiChart = dynamic(() => import("./PiChartComponent"), {
-  loading: () => <></>,
-});
+// const PiChart = dynamic(() => import("./PiChartComponent"), {
+//   loading: () => <></>,
+// });
 export interface IVotingAllocationProps extends IAllocationProps {}
 
 function VotingAllocation(props: IVotingAllocationProps) {
