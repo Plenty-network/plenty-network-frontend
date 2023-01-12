@@ -71,26 +71,6 @@ function EpochMobile(props: IEpochMobileProps) {
     isCurrent?: boolean;
     epoch: IEpochListObject;
   }) {
-    var date = new Date(props.startDate);
-
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    var year = date.getFullYear();
-    var month = date.getMonth();
-    var day = date.getDate();
     const dispatch = useDispatch<AppDispatch>();
     return (
       <div
