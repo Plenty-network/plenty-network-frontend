@@ -18,11 +18,13 @@ interface IEpochMobileProps {
   setShow: any;
 }
 function EpochMobile(props: IEpochMobileProps) {
+  const router = useRouter();
   const epochData = useAppSelector((state) => state.epoch.epochData);
   const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
   const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const dispatch = useDispatch<AppDispatch>();
   const indexOfCurrent = epochData.findIndex((data: IEpochListObject) => data.isCurrent === true);
+
   const [days, hours, minutes, seconds] = useCountdown(
     currentEpoch?.endTimestamp ? currentEpoch.endTimestamp : Date.now()
   );
@@ -60,7 +62,7 @@ function EpochMobile(props: IEpochMobileProps) {
       dispatch(setSelectedEpoch(epochData[indexOfCurrent]));
     }
   }, 5000);
-  const router = useRouter();
+
   const closeModal = () => {
     props.setShow(false);
   };
@@ -71,26 +73,6 @@ function EpochMobile(props: IEpochMobileProps) {
     isCurrent?: boolean;
     epoch: IEpochListObject;
   }) {
-    var date = new Date(props.startDate);
-
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    var year = date.getFullYear();
-    var month = date.getMonth();
-    var day = date.getDate();
     const dispatch = useDispatch<AppDispatch>();
     return (
       <div
@@ -103,9 +85,9 @@ function EpochMobile(props: IEpochMobileProps) {
       >
         {props.isCurrent ? `Epoch ${props.epochNumber} ` : `Epoch ${props.epochNumber} `}
         <span className="font-body2 text-text-250 ml-1">
-          {selectedEpoch?.epochNumber === epochData[indexOfCurrent]?.epochNumber
+          {props.epochNumber === epochData[indexOfCurrent]?.epochNumber
             ? " (current) "
-            : dateFormat(selectedEpoch?.startTimestamp)}
+            : dateFormat(props.epoch?.startTimestamp)}
         </span>
       </div>
     );

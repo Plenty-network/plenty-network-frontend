@@ -393,6 +393,8 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "Bribes",
         id: "Bribes",
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "bribeUSD"),
         subText: "current epoch",
         columnWidth: "w-[123px] pr-2.5",
         tooltipMessage:

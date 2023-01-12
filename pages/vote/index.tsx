@@ -659,7 +659,7 @@ export default function Vote() {
                 </div>
               </div>
               {isbanner && (
-                <div className="mb-2 h-[42px] ml-4 mr-2 px-2 rounded-lg  flex items-center bg-info-500/[0.1]">
+                <div className="mb-2 h-[58px] md:h-[42px] ml-4 mr-2 px-2 rounded-lg  flex items-center bg-info-500/[0.1]">
                   <p className="relative top-0.5">
                     <Image src={infoBlue} />
                   </p>
@@ -824,17 +824,17 @@ export default function Vote() {
           </div>
         </div>
       </SideBarHOC>
-      {showCastVotingAllocation && (
-        <AllocationPopup
-          show={showCastVotingAllocation}
-          setShow={setShowCastVotingAllocation}
-          selectedDropDown={selectedDropDown} // veNFT selected
-          epochData={epochData} // epoch data
-          alreadyVoted={sumOfVotes === 100}
-          epochNumber={selectedEpoch ? selectedEpoch.epochNumber : 0}
-          castVoteOperation={castVoteOperation}
-        />
-      )}
+
+      <AllocationPopup
+        show={showCastVotingAllocation}
+        setShow={setShowCastVotingAllocation}
+        selectedDropDown={selectedDropDown} // veNFT selected
+        epochData={epochData} // epoch data
+        alreadyVoted={sumOfVotes === 100}
+        epochNumber={selectedEpoch ? selectedEpoch.epochNumber : 0}
+        castVoteOperation={castVoteOperation}
+      />
+
       {showCastVoteModal && (
         <CastVote
           show={showCastVoteModal}
