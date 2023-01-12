@@ -56,10 +56,10 @@ function EpochMobile(props: IEpochMobileProps) {
     var day = date.getDate();
     return `(${day}-${monthNames[month]}-${year.toString().substr(-2)})`;
   };
-  // React.useEffect(() => {
-  //   //@ts-ignore
-  //   dispatch(setSelectedEpoch(currentEpoch));
-  // }, [epochData[indexOfCurrent]?.epochNumber, currentEpoch?.endTimestamp]);
+  React.useEffect(() => {
+    //@ts-ignore
+    dispatch(setSelectedEpoch(currentEpoch));
+  }, [epochData[indexOfCurrent]?.epochNumber, currentEpoch?.endTimestamp]);
   useInterval(() => {
     if (minutes < 0 || seconds < 0) {
       dispatch(getEpochData());
