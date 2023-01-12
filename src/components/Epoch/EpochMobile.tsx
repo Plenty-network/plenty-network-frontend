@@ -24,12 +24,7 @@ function EpochMobile(props: IEpochMobileProps) {
   const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const dispatch = useDispatch<AppDispatch>();
   const indexOfCurrent = epochData.findIndex((data: IEpochListObject) => data.isCurrent === true);
-  console.log(
-    selectedEpoch?.epochNumber === epochData[indexOfCurrent]?.epochNumber,
-    selectedEpoch,
-    epochData,
-    indexOfCurrent
-  );
+
   const [days, hours, minutes, seconds] = useCountdown(
     currentEpoch?.endTimestamp ? currentEpoch.endTimestamp : Date.now()
   );

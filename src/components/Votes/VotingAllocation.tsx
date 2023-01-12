@@ -41,6 +41,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
         });
       } else {
         getTotalAmmVotes(props.epochNumber).then((e) => {
+          console.log(e);
           if (e.success) {
             if (e.isOtherDataAvailable) {
               setPiChartData(e.topAmmData.concat(e.otherData as IVotesData));
@@ -61,6 +62,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
     selectedDropDown,
     props.castVoteOperation,
   ]);
+  console.log(piChartData);
   useEffect(() => {
     setSelectedDropDown("Protocol");
   }, [props.epochNumber, userAddress]);
