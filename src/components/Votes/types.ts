@@ -155,7 +155,7 @@ export interface IAllocationProps {
   show: boolean;
   setShow: any;
   epochData: IEpochListObject[];
-  epochNumber?: number;
+  epochNumber: number;
   selectedDropDown: {
     votingPower: string;
     tokenId: string;

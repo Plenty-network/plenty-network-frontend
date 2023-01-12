@@ -110,8 +110,6 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
               <Image alt={"alt"} src={disconnectLogo} />
               <span>Disconnect</span>
             </p>
-
-            {/* <MobileEpoch /> */}
           </div>
         )}
       </div>
