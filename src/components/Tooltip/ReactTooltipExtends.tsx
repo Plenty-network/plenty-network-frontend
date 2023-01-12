@@ -5,7 +5,7 @@ const TOOLTIP_HIDE_TIME = 3000;
 
 export default class Tooltip extends Component<any> {
   componentDidMount() {
-    window.addEventListener("scroll", this.hideTooltip);
+    // window.addEventListener("scroll", this.hideTooltip);
     if (this.props.showInitial) {
       this.showTooltip();
     }
@@ -14,7 +14,7 @@ export default class Tooltip extends Component<any> {
     }, TOOLTIP_HIDE_TIME);
   }
   componentWillUnmount() {
-    window.removeEventListener("scroll", this.hideTooltip);
+    //window.removeEventListener("scroll", this.hideTooltip);
   }
 
   showTooltip() {
