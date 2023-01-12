@@ -40,7 +40,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
           // setPiChartData(e);
         });
       } else {
-        getTotalAmmVotes(2).then((e) => {
+        getTotalAmmVotes(props.epochNumber).then((e) => {
           console.log(e);
           if (e.success) {
             if (e.isOtherDataAvailable) {
@@ -61,6 +61,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
     props.show,
     selectedDropDown,
     props.castVoteOperation,
+    props.show,
   ]);
   console.log(piChartData);
   useEffect(() => {

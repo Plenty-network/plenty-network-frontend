@@ -21,7 +21,7 @@ function AllocationPopup(props: IAllocationProps) {
         selectedDropDown={selectedDropDown} // veNFT selected
         epochData={epochData} // epoch data
         alreadyVoted={props.alreadyVoted}
-        epochNumber={2}
+        epochNumber={selectedEpoch ? selectedEpoch.epochNumber : 0}
       />
     </PopUpModal>
   ) : null;
