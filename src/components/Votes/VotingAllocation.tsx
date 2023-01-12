@@ -40,7 +40,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
           // setPiChartData(e);
         });
       } else {
-        getTotalAmmVotes(props.epochNumber).then((e) => {
+        getTotalAmmVotes(2).then((e) => {
           console.log(e);
           if (e.success) {
             if (e.isOtherDataAvailable) {
