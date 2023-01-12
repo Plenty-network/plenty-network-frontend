@@ -18,11 +18,18 @@ interface IEpochMobileProps {
   setShow: any;
 }
 function EpochMobile(props: IEpochMobileProps) {
+  const router = useRouter();
   const epochData = useAppSelector((state) => state.epoch.epochData);
   const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
   const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const dispatch = useDispatch<AppDispatch>();
   const indexOfCurrent = epochData.findIndex((data: IEpochListObject) => data.isCurrent === true);
+  console.log(
+    selectedEpoch?.epochNumber === epochData[indexOfCurrent]?.epochNumber,
+    selectedEpoch,
+    epochData,
+    indexOfCurrent
+  );
   const [days, hours, minutes, seconds] = useCountdown(
     currentEpoch?.endTimestamp ? currentEpoch.endTimestamp : Date.now()
   );
@@ -49,10 +56,10 @@ function EpochMobile(props: IEpochMobileProps) {
     var day = date.getDate();
     return `(${day}-${monthNames[month]}-${year.toString().substr(-2)})`;
   };
-  React.useEffect(() => {
-    //@ts-ignore
-    dispatch(setSelectedEpoch(currentEpoch));
-  }, [epochData[indexOfCurrent]?.epochNumber, currentEpoch?.endTimestamp]);
+  // React.useEffect(() => {
+  //   //@ts-ignore
+  //   dispatch(setSelectedEpoch(currentEpoch));
+  // }, [epochData[indexOfCurrent]?.epochNumber, currentEpoch?.endTimestamp]);
   useInterval(() => {
     if (minutes < 0 || seconds < 0) {
       dispatch(getEpochData());
@@ -60,7 +67,7 @@ function EpochMobile(props: IEpochMobileProps) {
       dispatch(setSelectedEpoch(epochData[indexOfCurrent]));
     }
   }, 5000);
-  const router = useRouter();
+
   const closeModal = () => {
     props.setShow(false);
   };
@@ -83,9 +90,9 @@ function EpochMobile(props: IEpochMobileProps) {
       >
         {props.isCurrent ? `Epoch ${props.epochNumber} ` : `Epoch ${props.epochNumber} `}
         <span className="font-body2 text-text-250 ml-1">
-          {selectedEpoch?.epochNumber === epochData[indexOfCurrent]?.epochNumber
+          {props.epochNumber === epochData[indexOfCurrent]?.epochNumber
             ? " (current) "
-            : dateFormat(selectedEpoch?.startTimestamp)}
+            : dateFormat(props.epoch?.startTimestamp)}
         </span>
       </div>
     );
