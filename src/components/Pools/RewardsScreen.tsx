@@ -8,6 +8,7 @@ import { AppDispatch, store, useAppSelector } from "../../redux";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import fromExponential from "from-exponential";
 
 export interface IRewardsProps {
   tokenIn: tokenParameterLiquidity;
@@ -68,7 +69,7 @@ export function RewardsScreen(props: IRewardsProps) {
       <div className="flex gap-2 items-center">
         <ImageCircle src={token} className={className} />
         {!isNaN(text) ? (
-          <div className="text-f14 text-white h-5 font-medium">{text}</div>
+          <div className="text-f14 text-white h-5 font-medium">{fromExponential(text)}</div>
         ) : (
           <div className=" w-12 mr-2  h-[18px] rounded animate-pulse bg-shimmer-100"></div>
         )}
@@ -112,7 +113,7 @@ export function RewardsScreen(props: IRewardsProps) {
             <ImageCircle src={getImagesPath("PLY")} />
             {!isNaN(Number(props.rewardToken)) ? (
               <div className="text-f14 text-white h-5 font-medium">
-                {Number(props.rewardToken).toFixed(6)}
+                {fromExponential(props.rewardToken)}
               </div>
             ) : (
               <div className=" w-12 mr-2  h-[18px] rounded animate-pulse bg-shimmer-100"></div>
