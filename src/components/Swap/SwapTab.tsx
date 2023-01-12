@@ -165,7 +165,7 @@ function SwapTab(props: ISwapTabProps) {
       setpriceDiff("");
     }
   }, [props.firstTokenAmount, props.secondTokenAmount]);
-  console.log(props);
+
   useEffect(() => {
     setExpertMode(userSettings.expertMode);
   }, [props.walletAddress, userSettings]);

@@ -14,7 +14,6 @@ export interface IProgress {
 }
 
 function Progress(props: IProgress) {
-  console.log(props);
   const length = props.claimData.length;
 
   const remaining = 6 - length;
