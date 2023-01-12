@@ -159,7 +159,7 @@ export const computeAllPaths = (
                 if (bestPath) {
                     // update best path
                     if (
-                        tokenInAmountArr[tokenInAmountArr.length - 1] > bestPath.tokenOutAmount
+                        tokenInAmountArr[tokenInAmountArr.length - 1].isGreaterThan(bestPath.tokenOutAmount)
                     ) {
                         bestPath.path = path;
                         bestPath.tokenOutAmount = tokenInAmountArr[tokenInAmountArr.length - 1];
@@ -249,7 +249,7 @@ export const computeAllPathsReverse = (
                 if (bestPath) {
                     // update best path
                     if (
-                        tokenInAmountArr[tokenInAmountArr.length - 1] > bestPath.tokenOutAmount
+                        tokenInAmountArr[tokenInAmountArr.length - 1].isGreaterThan(bestPath.tokenOutAmount)
                     ) {
                         bestPath.path = path;
                         bestPath.tokenOutAmount = tokenInAmountArr[tokenInAmountArr.length - 1];
