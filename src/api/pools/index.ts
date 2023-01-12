@@ -382,9 +382,15 @@ export const getAllPoolsData = async (
             value: new BigNumber(pool.value).dividedBy(
               new BigNumber(10).pow(TOKENS[pool.name].decimals)
             ),
-            price: new BigNumber(tokenPrice[pool.name] ?? 0),
+            price: new BigNumber(pool.value)
+              .dividedBy(new BigNumber(10).pow(TOKENS[pool.name].decimals))
+              .multipliedBy(tokenPrice[pool.name] ?? 0),
           });
         }
+      }
+
+      if(bribes.length > 0) {
+        bribes.sort((a,b) => b.price.minus(a.price).toNumber());
       }
 
       if (AMM) {
@@ -521,9 +527,15 @@ export const getMyPoolsData = async (
             value: new BigNumber(pool.value).dividedBy(
               new BigNumber(10).pow(TOKENS[pool.name].decimals)
             ),
-            price: new BigNumber(tokenPrice[pool.name] ?? 0),
+            price: new BigNumber(pool.value)
+              .dividedBy(new BigNumber(10).pow(TOKENS[pool.name].decimals))
+              .multipliedBy(tokenPrice[pool.name] ?? 0),
           });
         }
+      }
+
+      if(bribes.length > 0) {
+        bribes.sort((a,b) => b.price.minus(a.price).toNumber());
       }
 
       if (AMM) {
