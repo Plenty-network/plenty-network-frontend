@@ -613,7 +613,7 @@ export default function Vote() {
                     ) : sumOfVotes === 100 ? (
                       <div
                         className={clsx(
-                          "px-4    h-[38px]  flex items-center justify-center rounded-xl ",
+                          "md:px-4  px-2  h-[38px]  flex items-center justify-center rounded-xl ",
 
                           "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
                         )}
