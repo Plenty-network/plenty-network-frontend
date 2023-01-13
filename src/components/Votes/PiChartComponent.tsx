@@ -55,7 +55,7 @@ const RenderActiveShape = (props: any) => {
               ? "<0.01"
               : nFormatter(new BigNumber(ply))
             : "0"}{" "}
-          PLY)
+          )
         </a>
       </text>
 
