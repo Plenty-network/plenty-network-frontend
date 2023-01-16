@@ -92,7 +92,6 @@ export enum EFeesStatus {
 }
 
 export interface ILockRewardsBribeData {
-  bribeId: BigNumber;
   bribeValue: BigNumber;
   bribePrice: BigNumber;
   tokenSymbol: string;
