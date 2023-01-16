@@ -369,6 +369,7 @@ export const getAllPoolsData = async (
       const poolsObject = poolsDataObject[poolData.pool] || { ...EMPTY_VE_INDEXER_POOLS_OBJECT };
       let bribe: BigNumber = new BigNumber(0);
       let bribes: Bribes[] = [];
+      const bribesObj: { [key: string] : Bribes} = {};
 
       if (poolsObject.bribes) {
         for (const pool of poolsObject.bribes) {
@@ -377,16 +378,34 @@ export const getAllPoolsData = async (
               .dividedBy(new BigNumber(10).pow(TOKENS[pool.name].decimals))
               .multipliedBy(tokenPrice[pool.name] ?? 0)
           );
-          bribes.push({
-            name: pool.name,
-            value: new BigNumber(pool.value).dividedBy(
-              new BigNumber(10).pow(TOKENS[pool.name].decimals)
-            ),
-            price: new BigNumber(pool.value)
-              .dividedBy(new BigNumber(10).pow(TOKENS[pool.name].decimals))
-              .multipliedBy(tokenPrice[pool.name] ?? 0),
-          });
+          if(bribesObj[pool.name]) {
+            const prevBribeObj = bribesObj[pool.name];
+            bribesObj[pool.name] = {
+              ...prevBribeObj,
+              value: prevBribeObj.value.plus(
+                new BigNumber(pool.value).dividedBy(
+                  new BigNumber(10).pow(TOKENS[pool.name].decimals)
+                )
+              ),
+              price: prevBribeObj.price.plus(
+                new BigNumber(pool.value)
+                  .dividedBy(new BigNumber(10).pow(TOKENS[pool.name].decimals))
+                  .multipliedBy(tokenPrice[pool.name] ?? 0)
+              ),
+            };
+          } else {
+            bribesObj[pool.name] = {
+              name: pool.name,
+              value: new BigNumber(pool.value).dividedBy(
+                new BigNumber(10).pow(TOKENS[pool.name].decimals)
+              ),
+              price: new BigNumber(pool.value)
+                .dividedBy(new BigNumber(10).pow(TOKENS[pool.name].decimals))
+                .multipliedBy(tokenPrice[pool.name] ?? 0),
+            };
+          }
         }
+        bribes = Object.values(bribesObj);
       }
 
       if(bribes.length > 0) {
@@ -514,6 +533,7 @@ export const getMyPoolsData = async (
       const analyticsObject = analyticsDataObject[positonData.amm] || { ...EMPTY_POOLS_OBJECT };
       let bribe: BigNumber = new BigNumber(0);
       let bribes: Bribes[] = [];
+      const bribesObj: { [key: string] : Bribes} = {};
 
       if (poolsObject.bribes.length > 0) {
         for (const pool of poolsObject.bribes) {
@@ -522,16 +542,34 @@ export const getMyPoolsData = async (
               .dividedBy(new BigNumber(10).pow(TOKENS[pool.name].decimals))
               .multipliedBy(tokenPrice[pool.name] ?? 0)
           );
-          bribes.push({
-            name: pool.name,
-            value: new BigNumber(pool.value).dividedBy(
-              new BigNumber(10).pow(TOKENS[pool.name].decimals)
-            ),
-            price: new BigNumber(pool.value)
-              .dividedBy(new BigNumber(10).pow(TOKENS[pool.name].decimals))
-              .multipliedBy(tokenPrice[pool.name] ?? 0),
-          });
+          if(bribesObj[pool.name]) {
+            const prevBribeObj = bribesObj[pool.name];
+            bribesObj[pool.name] = {
+              ...prevBribeObj,
+              value: prevBribeObj.value.plus(
+                new BigNumber(pool.value).dividedBy(
+                  new BigNumber(10).pow(TOKENS[pool.name].decimals)
+                )
+              ),
+              price: prevBribeObj.price.plus(
+                new BigNumber(pool.value)
+                  .dividedBy(new BigNumber(10).pow(TOKENS[pool.name].decimals))
+                  .multipliedBy(tokenPrice[pool.name] ?? 0)
+              ),
+            };
+          } else {
+            bribesObj[pool.name] = {
+              name: pool.name,
+              value: new BigNumber(pool.value).dividedBy(
+                new BigNumber(10).pow(TOKENS[pool.name].decimals)
+              ),
+              price: new BigNumber(pool.value)
+                .dividedBy(new BigNumber(10).pow(TOKENS[pool.name].decimals))
+                .multipliedBy(tokenPrice[pool.name] ?? 0),
+            };
+          }
         }
+        bribes = Object.values(bribesObj);
       }
 
       if(bribes.length > 0) {
