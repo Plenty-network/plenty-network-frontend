@@ -262,20 +262,32 @@ const getBribesData = (
 ): IBribesValueAndData => {
   try {
     let bribesValue = new BigNumber(0);
-    const bribesData: ILockRewardsBribeData[] = [];
+    let bribesData: ILockRewardsBribeData[] = [];
+    const bribesObj: { [tokenSymbol: string]: ILockRewardsBribeData } = {};
     for (const bribeData of bribes) {
       const value = new BigNumber(bribeData.value).dividedBy(
         new BigNumber(10).pow(TOKENS[bribeData.name].decimals)
       );
       const amount = value.multipliedBy(tokenPrices[bribeData.name] || 0);
       bribesValue = bribesValue.plus(amount);
-      bribesData.push({
-        bribeId: new BigNumber(bribeData.bribeId),
-        bribeValue: value,
-        bribePrice: amount,
-        tokenSymbol: bribeData.name,
-      });
+      // Sum up the bribes of all similar tokens
+      if(bribesObj[bribeData.name]) {
+        const prevBribeObj = bribesObj[bribeData.name];
+        bribesObj[bribeData.name] = {
+          ...prevBribeObj,
+          bribeValue: prevBribeObj.bribeValue.plus(value),
+          bribePrice: prevBribeObj.bribePrice.plus(amount),
+        };
+      } else {
+        bribesObj[bribeData.name] = {
+          bribeValue: value,
+          bribePrice: amount,
+          tokenSymbol: bribeData.name,
+        };
+      }
     }
+    bribesData = Object.values(bribesObj);
+
     if(bribesData.length > 0) {
       bribesData.sort((a, b) => b.bribePrice.minus(a.bribePrice).toNumber());
     }
