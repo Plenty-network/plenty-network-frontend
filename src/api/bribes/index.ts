@@ -194,6 +194,8 @@ export const getUserBribeData = async (
      for (const x of bribesData) {
        let bribe: BigNumber = new BigNumber(0);
        let bribes: Bribes[] = [];
+       const bribesObj: { [key: string] : Bribes} = {};
+
        if (!x.bribes || x.bribes.length === 0) {
          bribe = new BigNumber(0);
        } else {
@@ -203,16 +205,33 @@ export const getUserBribeData = async (
                .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
                .multipliedBy(tokenPrices[y.name] || 0)
            );
-           bribes.push({
-             name: y.name,
-             value: new BigNumber(y.value).dividedBy(
-               new BigNumber(10).pow(TOKENS[y.name].decimals)
-             ),
-             price: new BigNumber(y.value)
-               .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
-               .multipliedBy(tokenPrices[y.name] || 0),
-           });
+
+           if (bribesObj[y.name]) {
+             const prevBribeObj = bribesObj[y.name];
+             bribesObj[y.name] = {
+               ...prevBribeObj,
+               value: prevBribeObj.value.plus(
+                 new BigNumber(y.value).dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+               ),
+               price: prevBribeObj.price.plus(
+                 new BigNumber(y.value)
+                   .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+                   .multipliedBy(tokenPrices[y.name] || 0)
+               ),
+             };
+           } else {
+             bribesObj[y.name] = {
+               name: y.name,
+               value: new BigNumber(y.value).dividedBy(
+                 new BigNumber(10).pow(TOKENS[y.name].decimals)
+               ),
+               price: new BigNumber(y.value)
+                 .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+                 .multipliedBy(tokenPrices[y.name] || 0),
+             };
+           }
          }
+         bribes = Object.values(bribesObj);
        }
        const liquidity = poolsDataObject[x.pool]
          ? new BigNumber(poolsDataObject[x.pool].tvl.value)
