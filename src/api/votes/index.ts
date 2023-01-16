@@ -169,6 +169,8 @@ const mainPageRewardData = async (
     for (var x of bribesData) {
       let bribe: BigNumber = new BigNumber(0);
       let bribes: Bribes[] = [];
+      const bribesObj: { [key: string] : Bribes} = {};
+
       if (!x.bribes || x.bribes.length === 0) {
         bribe = new BigNumber(0);
       } else {
@@ -178,14 +180,32 @@ const mainPageRewardData = async (
               .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
               .multipliedBy(isCurrentEpoch ? tokenPrices[y.name] || 0 : y.price)
           );
-          bribes.push({
-            name: y.name,
-            value: new BigNumber(y.value).dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals)),
-            price: new BigNumber(y.value)
-              .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
-              .multipliedBy(isCurrentEpoch ? tokenPrices[y.name] || 0 : y.price),
-          });
+          if(bribesObj[y.name]) {
+            const prevBribeObj = bribesObj[y.name];
+            bribesObj[y.name] = {
+              ...prevBribeObj,
+              value: prevBribeObj.value.plus(
+                new BigNumber(y.value).dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+              ),
+              price: prevBribeObj.price.plus(
+                new BigNumber(y.value)
+                  .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+                  .multipliedBy(isCurrentEpoch ? tokenPrices[y.name] || 0 : y.price)
+              ),
+            };
+          } else {
+            bribesObj[y.name] = {
+              name: y.name,
+              value: new BigNumber(y.value).dividedBy(
+                new BigNumber(10).pow(TOKENS[y.name].decimals)
+              ),
+              price: new BigNumber(y.value)
+                .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+                .multipliedBy(isCurrentEpoch ? tokenPrices[y.name] || 0 : y.price),
+            };
+          }
         }
+        bribes = Object.values(bribesObj);
       }
       const fee = feesDataObject[x.pool]
         ? new BigNumber(feesDataObject[x.pool].feesEpoch.value)
@@ -196,17 +216,7 @@ const mainPageRewardData = async (
       const feeTokenB = feesDataObject[x.pool]
         ? new BigNumber(feesDataObject[x.pool].feesEpoch.token2)
         : new BigNumber(0);
-      /* let fee = new BigNumber(0);
-      let feeTokenA = new BigNumber(0);
-      let feeTokenB = new BigNumber(0);
-      for (var i of feesData) {
-        if (i.pool === x.pool) {
-          fee = new BigNumber(i.feesEpoch.value);
-          feeTokenA = new BigNumber(i.feesEpoch.token1);
-          feeTokenB = new BigNumber(i.feesEpoch.token2);
-          break;
-        }
-      } */
+
       if(bribes.length > 0) {
         bribes.sort((a,b) => b.price.minus(a.price).toNumber());
       }
