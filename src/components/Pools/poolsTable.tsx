@@ -132,7 +132,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "Pools",
         id: "pools",
-        columnWidth: "w-[130px]",
+        columnWidth: "w-[160px]",
         showOnMobile: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),

@@ -140,7 +140,7 @@ export default function Pools(props: IIndexProps) {
               <p className="relative top-0.5">
                 <Image src={info} />
               </p>
-              <p className="font-body2 text-info-500 px-3 sm:w-auto w-[249px]">
+              <p className="font-body2 text-info-500 px-3 sm:w-auto w-[280px]">
                 APR for the for the first two epochs will be 0%. Emissions begin on 19th Jan.
               </p>
               <p

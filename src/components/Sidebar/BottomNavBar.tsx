@@ -109,7 +109,7 @@ export function MenuWithLink(props: IBottomNavMenuProps) {
         {props.iconName && (
           <Image
             alt={"alt"}
-            className={props.active ? "" : "opacity-40"}
+            className={props.active ? "" : "opacity-70"}
             src={`/assets/icon/${props.iconName}.svg`}
             height={"24px"}
             width={"24px"}
@@ -139,7 +139,7 @@ export function MenuNoLink(props: IBottomMoreNavMenuProps) {
       {props.iconName && (
         <Image
           alt={"alt"}
-          className={props.active ? "opacity-100" : "opacity-40"}
+          className={props.active ? "opacity-100" : "opacity-70"}
           src={`/assets/icon/${props.iconName}.svg`}
           height={"24px"}
           width={"24px"}
