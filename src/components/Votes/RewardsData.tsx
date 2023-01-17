@@ -17,7 +17,18 @@ export function RewardsData(props: IRewardsDataProps) {
             <>
               <div className="text-center">
                 <div className="text-text-200 font-body3 text-right">Breakdown of bribes</div>
-                <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
+                {props.bribesData.map((data, index) => {
+                  return (
+                    <div
+                      className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end "
+                      key={index}
+                    >
+                      <div className={`text-white font-medium pr-1 `}>{data?.value.toFixed(6)}</div>
+                      <div className="">{data?.name}</div>
+                    </div>
+                  );
+                })}
+                {/* <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
                   <div className={`text-white font-medium pr-1 `}>
                     {props.bribesData[0] ? props.bribesData[0].value.toFixed(2) : "--"}
                   </div>
@@ -33,7 +44,7 @@ export function RewardsData(props: IRewardsDataProps) {
                   <div className={`text-white font-medium text-right pr-1`}>
                     {`+${props.bribesData.length - 2} more`}
                   </div>
-                )}
+                )} */}
               </div>
               <div className="text-center">
                 <div className="text-text-200 font-body3 text-right">Breakdown of fees</div>

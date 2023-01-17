@@ -49,7 +49,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
                 {props.iconName && (
                   <Image
                     alt={"alt"}
-                    className={props.isActive ? "opacity-100" : "opacity-40"}
+                    className={props.isActive ? "opacity-100" : "opacity-70"}
                     src={`/assets/icon/${props.iconName}.svg`}
                     height={"20px"}
                     width={"20px"}
@@ -97,7 +97,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
           {props.iconName && (
             <Image
               alt={"alt"}
-              className={props.isActive ? "opacity-100" : "opacity-40"}
+              className={props.isActive ? "opacity-100" : "opacity-70"}
               src={`/assets/icon/${props.iconName}.svg`}
               height={"20px"}
               width={"20px"}
