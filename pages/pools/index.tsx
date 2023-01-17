@@ -136,7 +136,7 @@ export default function Pools(props: IIndexProps) {
             />
           </div>
           {isbanner && (
-            <div className="h-[42px] mx-4 md:mx-[23px] px-2 rounded-lg mt-3 flex items-center bg-info-500/[0.1]">
+            <div className="py-1.5 md:h-[42px] mx-4 md:mx-[23px] px-2 rounded-lg mt-3 flex items-center bg-info-500/[0.1]">
               <p className="relative top-0.5">
                 <Image src={info} />
               </p>
