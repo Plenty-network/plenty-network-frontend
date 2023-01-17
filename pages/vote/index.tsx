@@ -40,6 +40,7 @@ import { setSelectedDropDown, setSelectedDropDownLocal } from "../../src/redux/v
 import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { setIsLoadingWallet } from "../../src/redux/walletLoading";
 import { tzktExplorer } from "../../src/common/walletconnect";
+import { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -350,7 +351,10 @@ export default function Vote() {
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, plyInput);
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(plyInput)).toString()
+    );
     localStorage.setItem(TOKEN_A, dateFormat(lockingEndData.lockingDate * 1000));
     createLock(
       userAddress,

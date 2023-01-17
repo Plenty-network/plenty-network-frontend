@@ -15,7 +15,7 @@ import {
   getStakedBalance,
   getTezBalance,
 } from "../../api/util/balance";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { getLPTokenPrice } from "../../api/util/price";
 import { ELocksState } from "../../api/votes/types";
 import playBtn from "../../assets/icon/common/playBtn.svg";
@@ -352,14 +352,22 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
 
   const handleAddLiquidityOperation = () => {
     setContentTransaction(
-      `Mint ${Number(firstTokenAmountLiq).toFixed(2)} ${tEZorCTEZtoUppercase(
-        props.tokenIn.name
-      )} / ${Number(secondTokenAmountLiq).toFixed(4)} ${tEZorCTEZtoUppercase(props.tokenOut.name)} `
+      `Mint ${nFormatterWithLesserNumber(
+        new BigNumber(firstTokenAmountLiq)
+      )} ${tEZorCTEZtoUppercase(props.tokenIn.name)} / ${nFormatterWithLesserNumber(
+        new BigNumber(secondTokenAmountLiq)
+      )} ${tEZorCTEZtoUppercase(props.tokenOut.name)} `
     );
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(firstTokenAmountLiq).toFixed(2));
-    localStorage.setItem(SECOND_TOKEN_AMOUNT, Number(secondTokenAmountLiq).toFixed(2));
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(firstTokenAmountLiq)).toString()
+    );
+    localStorage.setItem(
+      SECOND_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(secondTokenAmountLiq)).toString()
+    );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
@@ -504,11 +512,14 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const handleStakeOperation = () => {
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(stakeInput).toFixed(2));
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(stakeInput)).toString()
+    );
     localStorage.setItem(SECOND_TOKEN_AMOUNT, selectedDropDown.tokenId.toString());
     setContentTransaction(
       stakeInput !== ""
-        ? `Stake ${Number(stakeInput).toFixed(2)} PNLP`
+        ? `Stake ${nFormatterWithLesserNumber(new BigNumber(stakeInput)).toString()} PNLP`
         : `Boost ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
             TOKEN_B
           )} pool stake with # ${localStorage.getItem(SECOND_TOKEN_AMOUNT)}`
@@ -603,7 +614,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     });
   };
   const handleUnStakeOperation = () => {
-    setContentTransaction(`Unstake ${Number(unStakeInput).toFixed(2)} PNLP`);
+    setContentTransaction(
+      `Unstake ${nFormatterWithLesserNumber(new BigNumber(unStakeInput)).toString()} PNLP`
+    );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     // setStakingScreen(StakingScreenType.Unstaking);
@@ -611,7 +624,10 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     setIsAddLiquidity(false);
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(unStakeInput).toFixed(2));
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(unStakeInput)).toString()
+    );
     unstakePnlpTokens(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
@@ -684,7 +700,10 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const handleRewardsOperation = () => {
     setContentTransaction(`Harvest `);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(rewardToken).toFixed(2));
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(rewardToken)).toString()
+    );
     setShowConfirmTransaction(true);
     setScreen("1");
     harvestRewards(
@@ -749,11 +768,19 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     });
   };
   const handleRemoveLiquidityOperation = () => {
-    setContentTransaction(`Burn ${Number(burnAmount).toFixed(2)} PNLP`);
+    setContentTransaction(
+      `Burn ${nFormatterWithLesserNumber(new BigNumber(burnAmount)).toString()} PNLP`
+    );
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(firstTokenAmountLiq).toFixed(2));
-    localStorage.setItem(SECOND_TOKEN_AMOUNT, Number(secondTokenAmountLiq).toFixed(2));
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(firstTokenAmountLiq)).toString()
+    );
+    localStorage.setItem(
+      SECOND_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(secondTokenAmountLiq)).toString()
+    );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
@@ -771,9 +798,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Remove ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-          TOKEN_A
-        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `,
+        trailingText: `Burn ${nFormatterWithLesserNumber(
+          new BigNumber(burnAmount)
+        ).toString()} PNLP `,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -787,11 +814,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Remove ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} and ${localStorage.getItem(
-                SECOND_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_B)}`,
+              trailingText: `Burn ${nFormatterWithLesserNumber(
+                new BigNumber(burnAmount)
+              ).toString()} PNLP`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -817,11 +842,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Remove ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} and ${localStorage.getItem(
-                SECOND_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_B)}`,
+              trailingText: `Burn ${nFormatterWithLesserNumber(
+                new BigNumber(burnAmount)
+              ).toString()} PNLP`,
               linkText: "",
               isLoading: true,
             })
