@@ -104,12 +104,12 @@ export function MenuWithLink(props: IBottomNavMenuProps) {
             : "border-t-borderColor text-text-250"
         } ${
           props.className
-        } border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center   px-[18px] py-[9px]  hover:bg-sideBarHover hover:border-t-primary-500 `}
+        } border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center   px-[18px] py-[9px]   `}
       >
         {props.iconName && (
           <Image
             alt={"alt"}
-            className={props.active ? "" : "opacity-40"}
+            className={props.active ? "" : "opacity-70"}
             src={`/assets/icon/${props.iconName}.svg`}
             height={"24px"}
             width={"24px"}
@@ -134,12 +134,12 @@ export function MenuNoLink(props: IBottomMoreNavMenuProps) {
         props.active ? "bg-sideBarHover border-t-primary-500" : "border-t-borderColor"
       } ${
         props.className
-      } border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center gap-2  px-[18px] py-[9px]  hover:bg-sideBarHover hover:border-t-primary-500 `}
+      } border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center gap-2  px-[18px] py-[9px]  `}
     >
       {props.iconName && (
         <Image
           alt={"alt"}
-          className={props.active ? "opacity-100" : "opacity-40"}
+          className={props.active ? "opacity-100" : "opacity-70"}
           src={`/assets/icon/${props.iconName}.svg`}
           height={"24px"}
           width={"24px"}

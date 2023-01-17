@@ -13,8 +13,8 @@ export function BribesPool(props: IBribesPoolProps) {
           disable={props.bribesData.length === 0}
           toolTipChild={
             <div className="text-center">
-              <div className="text-text-200 font-body3">Breakdown of bribes</div>
-              <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
+              <div className="text-text-200 font-body3 text-right">Breakdown of bribes</div>
+              {/* <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
                 <div className={`text-white font-medium pr-1 `}>
                   {props.bribesData[0] ? props.bribesData[0].value.toFixed(2) : "--"}
                 </div>
@@ -30,8 +30,8 @@ export function BribesPool(props: IBribesPoolProps) {
                 <div className={`text-white font-medium text-right pr-1`}>
                   {`+${props.bribesData.length - 2} more`}
                 </div>
-              )}
-              {/* {props.bribesData.map((data, index) => {
+              )} */}
+              {props.bribesData.map((data, index) => {
                 return (
                   <div
                     className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end "
@@ -41,7 +41,7 @@ export function BribesPool(props: IBribesPoolProps) {
                     <div className="">{data?.name}</div>
                   </div>
                 );
-              })} */}
+              })}
             </div>
           }
         >
