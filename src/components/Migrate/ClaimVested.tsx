@@ -37,6 +37,7 @@ import { useCountdown } from "../../hooks/useCountDown";
 import PieChartButton from "../LocksPosition/PieChart";
 import { FIRST_TOKEN_AMOUNT } from "../../constants/localStorage";
 import { tzktExplorer } from "../../common/walletconnect";
+import { nFormatterWithLesserNumber } from "../../api/util/helpers";
 
 interface IMigrateProps {
   vestedData: IVestAndClaim;
@@ -92,7 +93,10 @@ function ClaimVested(props: IMigrateProps) {
     setConfirmPLYPopup(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, props.vestedData.claimableAmount?.toFixed(2));
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(props.vestedData.claimableAmount)).toString()
+    );
     claim(transactionSubmitModal, resetAllValues, setShowConfirmTransaction, {
       flashType: Flashtype.Info,
       headerText: "Transaction submitted",

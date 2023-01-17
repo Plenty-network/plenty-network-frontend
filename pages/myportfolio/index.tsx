@@ -87,7 +87,7 @@ import { fetchVotesStatsData } from "../../src/redux/myPortfolio/votesStats";
 import { VideoModal } from "../../src/components/Modal/videoModal";
 import { isMobile } from "react-device-detect";
 import { PortfolioDropdown } from "../../src/components/PortfolioSection";
-import nFormatter from "../../src/api/util/helpers";
+import nFormatter, { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
 import { tzktExplorer } from "../../src/common/walletconnect";
 
 export enum MyPortfolioSection {
@@ -780,7 +780,10 @@ function MyPortfolio(props: any) {
     setClaimState(-1 as EClaimAllState);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, plyInput);
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(plyInput)).toString()
+    );
     localStorage.setItem(TOKEN_A, dateFormat(lockingEndData.lockingDate * 1000));
     createLock(
       userAddress,

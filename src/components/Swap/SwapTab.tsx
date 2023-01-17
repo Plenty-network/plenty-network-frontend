@@ -186,9 +186,15 @@ function SwapTab(props: ISwapTabProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, props.firstTokenAmount.toString());
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(props.firstTokenAmount)).toString()
+    );
     props.setBalanceUpdate(false);
-    localStorage.setItem(SECOND_TOKEN_AMOUNT, props.secondTokenAmount.toString());
+    localStorage.setItem(
+      SECOND_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(props.secondTokenAmount)).toString()
+    );
     !expertMode && props.setShowConfirmSwap(false);
     const recepientAddress = props.recepient ? props.recepient : props.walletAddress;
     !expertMode && props.setShowConfirmTransaction(true);
@@ -1212,11 +1218,9 @@ function SwapTab(props: ISwapTabProps) {
         <ConfirmTransaction
           show={props.showConfirmTransaction}
           setShow={props.setShowConfirmTransaction}
-          content={`Swap ${Number(props.firstTokenAmount).toFixed(2)} ${tEZorCTEZtoUppercase(
-            props.tokenIn.name
-          )} for ${Number(props.secondTokenAmount).toFixed(4)} ${tEZorCTEZtoUppercase(
-            props.tokenOut.name
-          )} `}
+          content={`Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+            TOKEN_A
+          )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`}
         />
       )}
       {props.showTransactionSubmitModal && (
@@ -1226,11 +1230,9 @@ function SwapTab(props: ISwapTabProps) {
           onBtnClick={
             transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }
-          content={`Swap ${Number(localStorage.getItem(FIRST_TOKEN_AMOUNT)).toFixed(
-            2
-          )} ${localStorage.getItem(TOKEN_A)} for ${Number(
-            localStorage.getItem(SECOND_TOKEN_AMOUNT)
-          ).toFixed(4)} ${localStorage.getItem(TOKEN_B)} `}
+          content={`Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+            TOKEN_A
+          )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `}
         />
       )}
     </>
