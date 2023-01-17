@@ -52,6 +52,12 @@ const MainMenu: Array<ISingleSideBarProps> = [
     isToolTip: true,
   },
   {
+    name: "Airdrop",
+    iconName: "airdrop",
+    pathName: "/airdrop",
+    activePathName: "/airdrop",
+  },
+  {
     name: "Bribe",
     iconName: "bribes",
     pathName: "/bribes",
