@@ -46,7 +46,7 @@ function MainAirdrop(props: IMainAirdropProps) {
         Know more about Airdrop and its eligibility{" "}
         <span className="text-primary-500">
           <a
-            href="https://whitepaper.plenty.network/"
+            href="https://medium.com/plenty-defi/ply-public-airdrop-criteria-9bbf778a74ac"
             target="_blank"
             rel="noreferrer"
             className="text-primary-500 "
