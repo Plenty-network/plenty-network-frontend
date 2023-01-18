@@ -45,7 +45,7 @@ const Config: IConfig = {
     testnet: "KT1UmJmgNvy7sGztaFkr598Lj7JxiWbTFbQp",
   },
   AIRDROP: {
-    mainnet: "",
+    mainnet: "KT1HpNxd9RaeCwxrp1QX96DyocWURJXX8sZx",
     testnet: "KT1J3EQDZbLUR1Hp8TZKFwY5FLoekiPSgsmL",
   },
 
@@ -61,8 +61,8 @@ const Config: IConfig = {
   FAUCET: "KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH",
 
   AIRDROP_SERVER: {
-    mainnet: "",
-    // testnet: "http://localhost:3000/",
+    mainnet: "https://airdrop.plenty.network/",
+    // mainnet: "http://localhost:3000/",
     testnet: "https://airdrop.plenty.network/",
   },
 
