@@ -52,15 +52,16 @@ export const AIRDROP_MISSIONS_FOR_DISPLAY: {
     href: "/pools",
   },
   {
+    mission: Mission.LOCK,
+    displayText: "Lock PLY as veNFT",
+    href: "/myportfolio",
+  },
+  {
     mission: Mission.STAKE,
     displayText: "Stake the liquidity position in a gauge",
     href: "/pools",
   },
-  {
-    mission: Mission.LOCK,
-    displayText: "Lock PLY as veNFT",
-    href: "/vote",
-  },
+
   {
     mission: Mission.VOTE,
     displayText: "Vote for any pair in the gauges",
@@ -68,10 +69,10 @@ export const AIRDROP_MISSIONS_FOR_DISPLAY: {
   },
 ];
 
-// export const AIRDROP_TWEET_TEXT: string = `Just participated in the Plenty airdrop on Tezos! 
+// export const AIRDROP_TWEET_TEXT: string = `Just participated in the Plenty airdrop on Tezos!
 // Excited to join the #DeFi revolution with @plenty_test, the leading #DEX/#AMM on the #Tezos blockchain.\n\n
 // Check if you are eligible on https://app.plenty.network/swap 🪂`;//"Tweeting from plenty.network";
 
 export const AIRDROP_TWEET_TEXT: string = `Just participated in the Plenty airdrop on Tezos! 
 Excited to join the DeFi revolution with @plenty_test, the leading DEX/AMM on the Tezos blockchain.\n\n
-Check if you are eligible on https://deploy-preview-879--plenty-network-temp-development.netlify.app/airdrop 🪂`;//"Tweeting from plenty.network";
+Check if you are eligible on https://deploy-preview-879--plenty-network-temp-development.netlify.app/airdrop 🪂`; //"Tweeting from plenty.network";
