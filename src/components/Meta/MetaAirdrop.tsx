@@ -6,18 +6,18 @@ export function MetaAirdrop() {
     <Head>
       <title>Plenty | Decentralized trading on Tezos</title>
       <meta
-        content="Plenty is a decentralized exchange on the Tezos blockchain that allows users to trade and earn additional income through voting, staking, and providing liquidity. The platform offers both stable and volatile liquidity pools and a bridge from Ethereum and Polygon to Tezos."
+        content="The biggest airdrop on the Tezos blockchain is now live! Largest DeFi protocol of Tezos, Plenty Network is doing an airdrop on the occasion of it's highly anticipated platform relaunch. If you have ever used Quickswap, LooksRare, Pancakeswap, Velodrome and popular Tezos Dapps, then you might be eligible for the PLY airdrop. Claim your PLY today and start earning on the Plenty Network by locking and voting."
         name="description"
       />
       <meta content="Plenty | Decentralized trading on Tezos" property="og:title" />
       <meta
-        content="Plenty is a decentralized exchange on the Tezos blockchain that allows users to trade and earn additional income through voting, staking, and providing liquidity. The platform offers both stable and volatile liquidity pools and a bridge from Ethereum and Polygon to Tezos."
+        content="The biggest airdrop on the Tezos blockchain is now live! Largest DeFi protocol of Tezos, Plenty Network is doing an airdrop on the occasion of it's highly anticipated platform relaunch. If you have ever used Quickswap, LooksRare, Pancakeswap, Velodrome and popular Tezos Dapps, then you might be eligible for the PLY airdrop. Claim your PLY today and start earning on the Plenty Network by locking and voting."
         property="og:description"
       />
       <meta content="/assets/airdropOG.png" property="og:image" />
       <meta content="Plenty | Decentralized trading on Tezos" property="twitter:title" />
       <meta
-        content="Plenty is a decentralized exchange on the Tezos blockchain that allows users to trade and earn additional income through voting, staking, and providing liquidity. The platform offers both stable and volatile liquidity pools and a bridge from Ethereum and Polygon to Tezos."
+        content="The biggest airdrop on the Tezos blockchain is now live! Largest DeFi protocol of Tezos, Plenty Network is doing an airdrop on the occasion of it's highly anticipated platform relaunch. If you have ever used Quickswap, LooksRare, Pancakeswap, Velodrome and popular Tezos Dapps, then you might be eligible for the PLY airdrop. Claim your PLY today and start earning on the Plenty Network by locking and voting."
         property="twitter:description"
       />
       <meta content="/assets/airdropOG.png" property="twitter:image" />
