@@ -34,11 +34,6 @@ class MyDocument extends Document {
           <meta property="og:url" content={siteData.url} />
           <meta property="og:description" content={siteData.description} />
 
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={siteData.title} />
-          <meta name="twitter:description" content={siteData.description} />
-
-          <meta name="twitter:image:alt" content={siteData.title} />
           <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg" />
           <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
           <link rel="icon" href="/favicon.ico" type="image/x-icon" />
