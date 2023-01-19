@@ -23,8 +23,8 @@ class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head />
-        {/* <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg" />
+        <Head>
+          <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg" />
           <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
           <link rel="icon" href="/favicon.ico" type="image/x-icon" />
           <link rel="apple-touch-icon" sizes="57x57" href="/assets/favicon/apple-icon-57x57.png" />
@@ -89,14 +89,8 @@ class MyDocument extends Document {
           <link
             href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
             rel="stylesheet"
-          /> */}
-        {/* <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(SeoStructuredData),
-            }}
-          /> */}
-
+          />
+        </Head>
         <body>
           <Main />
           <NextScript />
