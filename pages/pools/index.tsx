@@ -135,7 +135,7 @@ export default function Pools(props: IIndexProps) {
               setSearchValue={setSearchValue}
             />
           </div>
-          {isbanner && (
+          {/* {isbanner && (
             <div className="py-1.5 md:h-[42px] mx-4 md:mx-[23px] px-2 rounded-lg mt-3 flex items-center bg-info-500/[0.1]">
               <p className="relative top-0.5">
                 <Image src={info} />
@@ -150,7 +150,7 @@ export default function Pools(props: IIndexProps) {
                 <Image src={close} />
               </p>
             </div>
-          )}
+          )} */}
           {activeStateTab === PoolsCardHeader.All && (
             <PoolsTable
               className="md:pl-5 md:py-4  pl-2 py-4"
