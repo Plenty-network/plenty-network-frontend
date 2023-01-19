@@ -23,7 +23,7 @@ export function RewardsData(props: IRewardsDataProps) {
                       className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end "
                       key={index}
                     >
-                      <div className={`text-white font-medium pr-1 `}>{data?.value.toFixed(6)}</div>
+                      <div className={`text-white font-medium pr-1 `}>{data?.value.toString()}</div>
                       <div className="">{data?.name}</div>
                     </div>
                   );

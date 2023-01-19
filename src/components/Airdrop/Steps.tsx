@@ -20,7 +20,7 @@ export interface ISteps {
 }
 
 function Steps(props: ISteps) {
-  const [isDropDownActive, setIsDropDownActive] = useState(false);
+  const [isDropDownActive, setIsDropDownActive] = useState(true);
   const userAddress = useAppSelector((state) => state.wallet.address);
   return (
     <>
@@ -69,7 +69,7 @@ function Steps(props: ISteps) {
                 <CheckPoint
                   claimData={props.claimData}
                   completed={true}
-                  text={item.displayText}
+                  text={isMobile ? item.mobileDisplayText : item.displayText}
                   isFetching={props.fetching}
                   href={item.href}
                   mission={item.mission}
