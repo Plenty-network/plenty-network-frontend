@@ -45,7 +45,9 @@ function ManageLock(props: IManageLockProps) {
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [maxLockButtonEnabled, setMaxLockButtonEnabled] = useState(true);
   const [newVeNFTThumbnailUri, setNewVeNFTThumbnailUri] = useState<string>("");
-  const [daysTillExpiry, setDaysTillExpiry] = useState<number>(0);
+  const [daysTillExpiry, setDaysTillExpiry] = useState<number>(
+    Math.floor((props.manageData.endTimeStamp - Date.now()) / (24 * 60 * 60 * 1000))
+  );
   const closeModal = () => {
     props.setShow(false);
   };

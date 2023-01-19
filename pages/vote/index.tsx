@@ -508,7 +508,7 @@ export default function Vote() {
       }
     });
   };
-  const [isbanner, setisBanner] = React.useState(true);
+  const [isbanner, setisBanner] = React.useState(false);
   const handleEpochChange = () => {
     //@ts-ignore
     dispatch(setSelectedEpoch(currentEpoch));

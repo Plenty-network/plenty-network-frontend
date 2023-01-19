@@ -453,7 +453,7 @@ export const getTotalAmmVotes = async (epochNumber: number): Promise<IVotesRespo
 
     const totalAmmVotesResponse = await getTzktBigMapData(
       totalAmmVotesBigMapId,
-      `key.epoch=${epochNumber}&select=key,value`
+      `key.epoch=${epochNumber}&select=key,value&limit=1000`
     );
     const totalAmmVotesBigMapData: ITotalAmmVotesBigMap[] = totalAmmVotesResponse.data;
     if (totalAmmVotesBigMapData.length === 0) {
@@ -532,7 +532,7 @@ export const getMyAmmVotes = async (
     
     const tokenAmmVotesResponse = await getTzktBigMapData(
       tokenAmmVotesBigMapId,
-      `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value`
+      `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value&limit=1000`
     );
     const tokenAmmVotesBigMapData: IMyAmmVotesBigMap[] = tokenAmmVotesResponse.data;
     if (tokenAmmVotesBigMapData.length === 0) {
@@ -644,7 +644,7 @@ export const addRemainingVotesDust = (
 
     const [totalEpochVotesResponse, totalAmmVotesResponse] = await Promise.all([
       getTzktBigMapData(totalEpochVotesBigMapId, `key=${epochNumber}&select=key,value`),
-      getTzktBigMapData(totalAmmVotesBigMapId, `key.epoch=${epochNumber}&select=key,value`),
+      getTzktBigMapData(totalAmmVotesBigMapId, `key.epoch=${epochNumber}&select=key,value&limit=1000`),
     ]);
     if (totalEpochVotesResponse.data.length === 0) {
       throw new Error("No votes in this epoch yet");
@@ -673,7 +673,7 @@ export const addRemainingVotesDust = (
         ),
         getTzktBigMapData(
           tokenAmmVotesBigMapId,
-          `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value`
+          `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value&limit=1000`
         ),
       ]);
       if (totalTokenVotesResponse.data.length > 0 && tokenAmmVotesResponse.data.length > 0) {

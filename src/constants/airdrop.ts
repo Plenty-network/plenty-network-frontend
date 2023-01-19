@@ -34,38 +34,48 @@ export const AIRDROP_EVM_CTA_TEXTS: { [key in EvmCTAState]: string } = {
 export const AIRDROP_MISSIONS_FOR_DISPLAY: {
   mission: Mission;
   displayText: string;
+  mobileDisplayText: string;
   href: string;
 }[] = [
   {
     mission: Mission.ELIGIBLE,
     displayText: "Allow Plenty to tweet about the airdrop on your behalf",
+    mobileDisplayText: "Tweet about the airdrop",
     href: "",
   },
   {
     mission: Mission.TRADE,
     displayText: "Make a trade on Plenty",
+    mobileDisplayText: "Make a trade on Plenty",
     href: "/swap",
   },
   {
     mission: Mission.LP,
     displayText: "Add Liquidity for any pair",
-    href: "/pools",
-  },
-  {
-    mission: Mission.STAKE,
-    displayText: "Stake the liquidity position in a gauge",
+    mobileDisplayText: "Add Liquidity for any pair",
     href: "/pools",
   },
   {
     mission: Mission.LOCK,
     displayText: "Lock PLY as veNFT",
-    href: "/vote",
+    mobileDisplayText: "Lock PLY as veNFT",
+    href: "/myportfolio",
   },
+  {
+    mission: Mission.STAKE,
+    displayText: "Stake the liquidity position in a gauge",
+    mobileDisplayText: "Stake the liquidity position in a gauge",
+    href: "/pools",
+  },
+
   {
     mission: Mission.VOTE,
     displayText: "Vote for any pair in the gauges",
+    mobileDisplayText: "Vote for any pair in the gauges",
     href: "/vote",
   },
 ];
 
-export const AIRDROP_TWEET_TEXT: string = "Tweeting from plenty.network";
+export const AIRDROP_TWEET_TEXT: string = `Just participated in the Plenty airdrop on Tezos!
+Excited to join the #DeFi revolution with @plenty_network, the leading #DEX/#AMM on the #Tezos blockchain.\n\n
+Check if you are eligible on https://app.plenty.network/airdrop 🪂`;
