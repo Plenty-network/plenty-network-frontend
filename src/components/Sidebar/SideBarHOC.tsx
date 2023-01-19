@@ -22,7 +22,7 @@ export interface ISideBarHOCProps {
 }
 
 export function SideBarHOC(props: ISideBarHOCProps) {
-  const [isBanner, setIsBanner] = React.useState(true);
+  const [isBanner, setIsBanner] = React.useState(false);
 
   const [showNotification, setShowNotification] = useState(false);
   const showNotificationClick = () => {
