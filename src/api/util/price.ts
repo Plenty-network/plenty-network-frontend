@@ -116,7 +116,7 @@ export const getTokenPrices = async (): Promise<{
 
     const tokenPrice: { [id: string]: number } = {};
 
-    const indexerPriceResponse = await axios.get(`${Config.PLY_INDEXER[connectedNetwork]}analytics/tokens`);
+    const indexerPriceResponse = await axios.get(`${Config.PLY_INDEXER[connectedNetwork]}ve/prices`);
     const indexerPricesData = indexerPriceResponse.data;
 
     for( const x of tokenPriceResponse.contracts){
@@ -124,8 +124,8 @@ export const getTokenPrices = async (): Promise<{
     }
 
     for( const x of indexerPricesData){
-      if(Number(x.price.value) !== 0)
-      tokenPrice[x.token] = Number(x.price.value);
+      if(Number(x.price) !== 0)
+      tokenPrice[x.token] = Number(x.price);
     }
 
     

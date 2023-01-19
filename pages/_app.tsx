@@ -13,11 +13,14 @@ import Script from "next/script";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiConfig } from "wagmi";
 import { customTheme } from "../src/config/rainbowWalletTheme";
+import { useRouter } from "next/router";
+import { MetaAirdrop } from "../src/components/Meta/MetaAirdrop";
 
 let persistor = persistStore(store);
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(new QueryClient());
+  const router = useRouter();
 
   return (
     <>
@@ -34,7 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           gtag('config', 'G-671PKE2RZR');
         `}
       </Script>
-      <Meta />
+      {router.pathname.includes("airdrop") ? <MetaAirdrop /> : <Meta />}
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
