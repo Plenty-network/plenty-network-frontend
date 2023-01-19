@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import MainAirdrop from "../../src/components/Airdrop";
 import Disclaimer, { ChainAirdrop } from "../../src/components/Airdrop/Disclaimer";
+import { MetaAirdrop } from "../../src/components/Meta/MetaAirdrop";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { FIRST_TIME_DISCLAIMER, TOKEN_A } from "../../src/constants/localStorage";
 import { useInterval } from "../../src/hooks/useInterval";
@@ -65,6 +66,7 @@ const Airdrop: NextPage = () => {
   const [chain, setChain] = useState<ChainAirdrop>(ChainAirdrop.Tezos);
   return (
     <>
+      <MetaAirdrop />
       <SideBarHOC makeTopBarScroll>
         {!localStorage.getItem(FIRST_TIME_DISCLAIMER) ? (
           <Disclaimer

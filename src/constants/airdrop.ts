@@ -34,37 +34,44 @@ export const AIRDROP_EVM_CTA_TEXTS: { [key in EvmCTAState]: string } = {
 export const AIRDROP_MISSIONS_FOR_DISPLAY: {
   mission: Mission;
   displayText: string;
+  mobileDisplayText: string;
   href: string;
 }[] = [
   {
     mission: Mission.ELIGIBLE,
     displayText: "Allow Plenty to tweet about the airdrop on your behalf",
+    mobileDisplayText: "Tweet about the airdrop",
     href: "",
   },
   {
     mission: Mission.TRADE,
     displayText: "Make a trade on Plenty",
+    mobileDisplayText: "Make a trade on Plenty",
     href: "/swap",
   },
   {
     mission: Mission.LP,
     displayText: "Add Liquidity for any pair",
+    mobileDisplayText: "Add Liquidity for any pair",
     href: "/pools",
   },
   {
     mission: Mission.LOCK,
     displayText: "Lock PLY as veNFT",
+    mobileDisplayText: "Lock PLY as veNFT",
     href: "/myportfolio",
   },
   {
     mission: Mission.STAKE,
     displayText: "Stake the liquidity position in a gauge",
+    mobileDisplayText: "Stake the liquidity position in a gauge",
     href: "/pools",
   },
 
   {
     mission: Mission.VOTE,
     displayText: "Vote for any pair in the gauges",
+    mobileDisplayText: "Vote for any pair in the gauges",
     href: "/vote",
   },
 ];

@@ -30,7 +30,7 @@ function MainAirdrop(props: IMainAirdropProps) {
           </p>
           <p className="ml-auto text-primary-500 font-caption2">
             <a
-              href="https://whitepaper.plenty.network/"
+              href="https://medium.com/plenty-defi/ply-public-airdrop-criteria-9bbf778a74ac"
               target="_blank"
               rel="noreferrer"
               className="text-primary-500 font-caption2"
@@ -42,7 +42,7 @@ function MainAirdrop(props: IMainAirdropProps) {
         {props.chain === ChainAirdrop.Other_chain && <OtherChain setChain={props.setChain} />}
         {props.chain === ChainAirdrop.Tezos && <TezosChain setChain={props.setChain} />}
       </div>
-      <div className="font-body2 text-text-250 mt-[10px] mx-2 md:mx-auto md:w-[568px] text-center mb-5">
+      {/* <div className="font-body2 text-text-250 mt-[10px] mx-2 md:mx-auto md:w-[568px] text-center mb-5">
         Know more about Airdrop and its eligibility{" "}
         <span className="text-primary-500">
           <a
@@ -54,7 +54,7 @@ function MainAirdrop(props: IMainAirdropProps) {
             Learn more
           </a>
         </span>
-      </div>
+      </div> */}
     </>
   );
 }
