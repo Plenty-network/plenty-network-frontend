@@ -51,7 +51,7 @@ function Disclaimer(props: IDisclaimerProps) {
             </div>
           </div>
           <div className="font-body3 mt-3">
-            Please read the instructions for Tezos and EVM-based chains below.{" "}
+            Please read the airdrop criteria before proceeding further.{" "}
           </div>
           <div className="cursor-pointer">
             <span
@@ -63,7 +63,7 @@ function Disclaimer(props: IDisclaimerProps) {
                 )
               }
             >
-              Know how?
+              Learn
             </span>
             <span className="relative top-0.5 ml-1">
               <Image src={link} />
