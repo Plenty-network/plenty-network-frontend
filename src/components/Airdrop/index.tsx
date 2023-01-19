@@ -22,7 +22,7 @@ function MainAirdrop(props: IMainAirdropProps) {
         )}
       >
         <HeaderSelection chain={props.chain} setChain={props.setChain} isDisclaimer={false} />
-        <div className="mt-4 rounded-xl bg-muted-600 pl-4 pr-5 flex items-center h-[40px]">
+        {/* <div className="mt-4 rounded-xl bg-muted-600 pl-4 pr-5 flex items-center h-[40px]">
           <p className="text-text-500 font-body2">
             {isMobile
               ? "Plenty airdrops eligibility criteria"
@@ -38,7 +38,7 @@ function MainAirdrop(props: IMainAirdropProps) {
               Learn more
             </a>
           </p>
-        </div>
+        </div> */}
         {props.chain === ChainAirdrop.Other_chain && <OtherChain setChain={props.setChain} />}
         {props.chain === ChainAirdrop.Tezos && <TezosChain setChain={props.setChain} />}
       </div>

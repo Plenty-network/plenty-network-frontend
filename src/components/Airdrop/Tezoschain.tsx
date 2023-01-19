@@ -16,6 +16,9 @@ import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
 import { useAirdropClaimData } from "../../hooks/useAirdropClaimData";
 import { useRouter } from "next/router";
+
+import info from "../../assets/icon/pools/InfoBlue.svg";
+
 import {
   authenticateUser,
   hasUserTweeted,
@@ -24,11 +27,15 @@ import {
 } from "../../api/airdrop/twitter";
 import { AIRDROP_TWEET_TEXT } from "../../constants/airdrop";
 import { tzktExplorer } from "../../common/walletconnect";
+import Image from "next/image";
+import { VideoModal } from "../Modal/videoModal";
+import { isMobile } from "react-device-detect";
 export interface ITezosChain {
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
 }
 
 function TezosChain(props: ITezosChain) {
+  const [showVideoModal, setShowVideoModal] = useState(false);
   const userAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
@@ -371,6 +378,35 @@ function TezosChain(props: ITezosChain) {
           hasTweeted={hasTweeted}
         />
       </div>
+
+      <div className="py-1.5 md:h-[42px]  px-2 rounded-lg mt-3 flex items-center bg-info-500/[0.1]">
+        <p className="relative top-0.5">
+          <Image src={info} />
+        </p>
+        <p className="font-body2 text-info-500 px-3 w-[480px]">
+          After claiming your PLY, it is recommended to lock your PLY and keep voting every week to
+          earn trading fees and bribes.{" "}
+          {isMobile && (
+            <span
+              className="text-primary-500 font-caption2 cursor-pointer"
+              onClick={() => setShowVideoModal(true)}
+            >
+              {" "}
+              Learn more
+            </span>
+          )}
+        </p>
+        {!isMobile && (
+          <p
+            className="ml-auto text-primary-500 font-caption2 w-[160px] sm:w-auto cursor-pointer"
+            onClick={() => setShowVideoModal(true)}
+          >
+            {" "}
+            Learn more
+          </p>
+        )}
+      </div>
+
       <div className="mt-[18px]">{ClaimButton}</div>
       {showConfirmTransaction && (
         <ConfirmTransaction
@@ -384,13 +420,12 @@ function TezosChain(props: ITezosChain) {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId
-              ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank")
-              : null
+            transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }
           content={`claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`}
         />
       )}
+      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"jjsL5qce3ks"} />}
     </>
   );
 }
