@@ -22,7 +22,7 @@ function MainAirdrop(props: IMainAirdropProps) {
         )}
       >
         <HeaderSelection chain={props.chain} setChain={props.setChain} isDisclaimer={false} />
-        {/* <div className="mt-4 rounded-xl bg-muted-600 pl-4 pr-5 flex items-center h-[40px]">
+        <div className="mt-4 rounded-xl bg-muted-600 pl-4 pr-5 flex items-center h-[40px]">
           <p className="text-text-500 font-body2">
             {isMobile
               ? "Plenty airdrops eligibility criteria"
@@ -30,7 +30,7 @@ function MainAirdrop(props: IMainAirdropProps) {
           </p>
           <p className="ml-auto text-primary-500 font-caption2">
             <a
-              href="https://whitepaper.plenty.network/"
+              href="https://medium.com/plenty-defi/ply-public-airdrop-criteria-9bbf778a74ac"
               target="_blank"
               rel="noreferrer"
               className="text-primary-500 font-caption2"
@@ -38,11 +38,11 @@ function MainAirdrop(props: IMainAirdropProps) {
               Learn more
             </a>
           </p>
-        </div> */}
+        </div>
         {props.chain === ChainAirdrop.Other_chain && <OtherChain setChain={props.setChain} />}
         {props.chain === ChainAirdrop.Tezos && <TezosChain setChain={props.setChain} />}
       </div>
-      <div className="font-body2 text-text-250 mt-[10px] mx-2 md:mx-auto md:w-[568px] text-center mb-5">
+      {/* <div className="font-body2 text-text-250 mt-[10px] mx-2 md:mx-auto md:w-[568px] text-center mb-5">
         Know more about Airdrop and its eligibility{" "}
         <span className="text-primary-500">
           <a
@@ -54,7 +54,7 @@ function MainAirdrop(props: IMainAirdropProps) {
             Learn more
           </a>
         </span>
-      </div>
+      </div> */}
     </>
   );
 }
