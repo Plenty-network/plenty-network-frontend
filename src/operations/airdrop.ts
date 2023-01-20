@@ -1,7 +1,9 @@
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
+import { BigNumber } from "bignumber.js";
 import { IClaimAPIData, Mission } from "../api/airdrop/types";
 import { connectedNetwork, dappClient } from "../common/walletconnect";
 import Config from "../config/config";
+import { GAS_LIMIT_EXCESS, STORAGE_LIMIT_EXCESS } from "../constants/global";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
@@ -39,20 +41,30 @@ export const claimAirdrop = async (
 
     const allBatchOperations: WalletParamsWithKind[] = [];
 
-    airdropClaimData.forEach((claimData) => {
+    for(const claimData of airdropClaimData) {
       if (!claimData.claimed) {
         if(!hasUserTweeted && claimData.mission === Mission.ELIGIBLE) {
-          return;
+          continue;
         } else {
+          const op = airdropInstance.methods
+            .claim(claimData.packedMessage, claimData.signature)
+            .toTransferParams();
+          const limits = await Tezos.estimate.transfer(op);
+          const gasLimit = new BigNumber(limits.gasLimit)
+            .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+            .toNumber();
+          const storageLimit = new BigNumber(limits.storageLimit)
+            .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+            .toNumber();
           allBatchOperations.push({
             kind: OpKind.TRANSACTION,
-            ...airdropInstance.methods
-              .claim(claimData.packedMessage, claimData.signature)
-              .toTransferParams(),
+            ...op,
+            gasLimit,
+            storageLimit,
           });
         }
       }
-    });
+    }
 
     if (allBatchOperations.length <= 0) {
       throw new Error("Nothing to claim");
