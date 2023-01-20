@@ -7,8 +7,8 @@ import {
   TSetShowConfirmTransaction,
 } from "./types";
 import Config from "../config/config";
-import { PLY_DECIMAL_MULTIPLIER } from "../constants/global";
-import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
+import { GAS_LIMIT_EXCESS, PLY_DECIMAL_MULTIPLIER, STORAGE_LIMIT_EXCESS } from "../constants/global";
+import { OpKind, ParamsWithKind, WalletParamsWithKind } from "@taquito/taquito";
 import { IAllBribesOperationData, IAllClaimableFeesData, IClaimInflationOperationData } from "../api/portfolio/types";
 import { getMaxPossibleBatchArrayV2 } from "../api/util/operations";
 import { store } from "../redux";
@@ -36,18 +36,93 @@ export const createLock = async (
     value = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
 
     const Tezos = await dappClient().tezos();
-    const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
-    const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
+    const plyInstance = await Tezos.wallet.at(Config.PLY_TOKEN[connectedNetwork]);
+    const veInstance = await Tezos.wallet.at(voteEscrowAddress);
 
-    let batch = null;
+    const allBatchOperations: WalletParamsWithKind[] = [];
+    // Fisrts op in batch
+    const op1 = plyInstance.methods
+      .approve(voteEscrowAddress, value.decimalPlaces(0, 1))
+      .toTransferParams();
+    // let limits = await Tezos.estimate.transfer(op1);
+    // console.log(limits);
+    // let gasLimit = new BigNumber(limits.gasLimit)
+    //   .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+    //   .decimalPlaces(0,1)
+    //   .toNumber();
+    // let storageLimit = new BigNumber(limits.storageLimit)
+    //   .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+    //   .decimalPlaces(0,1)
+    //   .toNumber();
 
-    batch = Tezos.wallet
-      .batch()
-      .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value.decimalPlaces(0, 1)))
-      .withContractCall(
-        veInstance.methods.create_lock(address, value.decimalPlaces(0, 1), endtime)
-      );
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...op1,
+      // gasLimit,
+      // storageLimit,
+    });
 
+    //Second op in batch
+    const op2 = veInstance.methods
+      .create_lock(address, value.decimalPlaces(0, 1), endtime)
+      .toTransferParams();
+    // Tezos.estimate.transfer(op2).catch((err) => console.log(err));
+    // limits = await Tezos.estimate.transfer(op2);
+    // console.log(limits);
+    // gasLimit = new BigNumber(limits.gasLimit)
+    //   .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+    //   .decimalPlaces(0,1)
+    //   .toNumber();
+    // storageLimit = new BigNumber(limits.storageLimit)
+    //   .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+    //   .decimalPlaces(0,1)
+    //   .toNumber();
+
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...op2,
+      // gasLimit,
+      // storageLimit,
+    });
+    console.log(allBatchOperations);
+    const limits = await Tezos.estimate
+      .batch(allBatchOperations as ParamsWithKind[])
+      .then((limits) => limits)
+      .catch((err) => {
+        console.log(err);
+        return undefined;
+      });
+    const updatedBatchOperations: WalletParamsWithKind[] = [];
+    if(limits !== undefined) {
+      allBatchOperations.forEach((op, index) => {
+        const gasLimit = new BigNumber(limits[index].gasLimit)
+          .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+          .decimalPlaces(0, 1)
+          .toNumber();
+        const storageLimit = new BigNumber(limits[index].storageLimit)
+          .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+          .decimalPlaces(0, 1)
+          .toNumber();
+
+        updatedBatchOperations.push({
+          ...op,
+          gasLimit,
+          storageLimit,
+        });
+      });
+    } else {
+      throw new Error("Failed to create batch");
+    }
+    // let batch = null;
+
+    // batch = Tezos.wallet
+    //   .batch()
+    //   .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value.decimalPlaces(0, 1)))
+    //   .withContractCall(
+    //     veInstance.methods.create_lock(address, value.decimalPlaces(0, 1), endtime)
+    //   );
+    // const batch = Tezos.wallet.batch(allBatchOperations);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
     resetAllValues();

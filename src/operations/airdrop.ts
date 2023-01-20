@@ -1,4 +1,4 @@
-import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
+import { OpKind, ParamsWithKind, WalletParamsWithKind } from "@taquito/taquito";
 import { BigNumber } from "bignumber.js";
 import { IClaimAPIData, Mission } from "../api/airdrop/types";
 import { connectedNetwork, dappClient } from "../common/walletconnect";
@@ -49,20 +49,20 @@ export const claimAirdrop = async (
           const op = airdropInstance.methods
             .claim(claimData.packedMessage, claimData.signature)
             .toTransferParams();
-          const limits = await Tezos.estimate.transfer(op);
-          const gasLimit = new BigNumber(limits.gasLimit)
-            .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-            .decimalPlaces(0,1)
-            .toNumber();
-          const storageLimit = new BigNumber(limits.storageLimit)
-            .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-            .decimalPlaces(0,1)
-            .toNumber();
+          // const limits = await Tezos.estimate.transfer(op);
+          // const gasLimit = new BigNumber(limits.gasLimit)
+          //   .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+          //   .decimalPlaces(0,1)
+          //   .toNumber();
+          // const storageLimit = new BigNumber(limits.storageLimit)
+          //   .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+          //   .decimalPlaces(0,1)
+          //   .toNumber();
           allBatchOperations.push({
             kind: OpKind.TRANSACTION,
             ...op,
-            gasLimit,
-            storageLimit,
+            // gasLimit,
+            // storageLimit,
           });
         }
       }
@@ -72,7 +72,37 @@ export const claimAirdrop = async (
       throw new Error("Nothing to claim");
     }
 
-    const batch = Tezos.wallet.batch(allBatchOperations);
+    const limits = await Tezos.estimate
+      .batch(allBatchOperations as ParamsWithKind[])
+      .then((limits) => limits)
+      .catch((err) => {
+        console.log(err);
+        return undefined;
+      });
+    const updatedBatchOperations: WalletParamsWithKind[] = [];
+    if(limits !== undefined) {
+      allBatchOperations.forEach((op, index) => {
+        const gasLimit = new BigNumber(limits[index].gasLimit)
+          .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+          .decimalPlaces(0, 1)
+          .toNumber();
+        const storageLimit = new BigNumber(limits[index].storageLimit)
+          .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+          .decimalPlaces(0, 1)
+          .toNumber();
+
+        updatedBatchOperations.push({
+          ...op,
+          gasLimit,
+          storageLimit,
+        });
+      });
+    } else {
+      throw new Error("Failed to create batch");
+    }
+
+    // const batch = Tezos.wallet.batch(allBatchOperations);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOperation = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);

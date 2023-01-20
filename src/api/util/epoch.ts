@@ -227,7 +227,7 @@ export const getCalendarRangeToEnable = (): IDatesEnabledRangeData => {
     yearsToEnable.push(i);
   }
   // Create the list of thursdays to enable on calendar
-  for (let i = startTimestamp; i < endTimestamp; i += dayInMilliSeconds) {
+  for (let i = startTimestamp; i <= endTimestamp; i += dayInMilliSeconds) {
     if (new Date(i).getDay() === 4) {
       // Skip the first(nearest) thursday as new lock end should be atleast a week or more
       if(skipFirstThursday) {
