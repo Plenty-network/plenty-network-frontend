@@ -52,9 +52,11 @@ export const claimAirdrop = async (
           const limits = await Tezos.estimate.transfer(op);
           const gasLimit = new BigNumber(limits.gasLimit)
             .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+            .decimalPlaces(0,1)
             .toNumber();
           const storageLimit = new BigNumber(limits.storageLimit)
             .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+            .decimalPlaces(0,1)
             .toNumber();
           allBatchOperations.push({
             kind: OpKind.TRANSACTION,
