@@ -67,3 +67,5 @@ export const API_RE_ATTEMPTS: number = 3;
 export const API_RE_ATTAMPT_DELAY: number = 5000;
 export const POOLS_PAGE_LIMIT: number = 10;
 export const TWEET_CHARACTER_LIMIT: number = 280;
+export const GAS_LIMIT_EXCESS: BigNumber = new BigNumber(30).dividedBy(100);
+export const STORAGE_LIMIT_EXCESS: BigNumber = new BigNumber(50).dividedBy(100);
