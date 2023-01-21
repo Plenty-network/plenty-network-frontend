@@ -179,7 +179,7 @@ export function MoreSubMenuList(props: ISubMenuListProps) {
           isBottomMenu
         />
       </div>
-      <div className="px-9 hover:bg-sideBarHover ">
+      <div className="px-9 hover:bg-sideBarHover border-t border-t-borderColor hover:border-t-primary-500">
         <SingleSideBar
           name="Airdrop"
           className="px-9 justify-between"

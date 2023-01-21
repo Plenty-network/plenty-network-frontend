@@ -84,7 +84,7 @@ export function FooterInfoIcon(props: IFooterInfoIconProps) {
         </a>
       </li>
       <li className="cursor-pointer">
-        <a href="https://github.com/Plenty-DeFi" target="_blank" rel="noreferrer">
+        <a href="https://github.com/Plenty-network" target="_blank" rel="noreferrer">
           <svg
             width="32"
             className="footerInteraction"
