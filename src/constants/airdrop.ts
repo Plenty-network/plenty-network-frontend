@@ -76,10 +76,6 @@ export const AIRDROP_MISSIONS_FOR_DISPLAY: {
   },
 ];
 
-// export const AIRDROP_TWEET_TEXT: string = `Just participated in the Plenty airdrop on Tezos!
-// Excited to join the #DeFi revolution with @plenty_test, the leading #DEX/#AMM on the #Tezos blockchain.\n\n
-// Check if you are eligible on https://app.plenty.network/swap 🪂`;//"Tweeting from plenty.network";
-
-export const AIRDROP_TWEET_TEXT: string = `Just participated in the Plenty airdrop on Tezos! 
-Excited to join the DeFi revolution with @plenty_test, the leading DEX/AMM on the Tezos blockchain.\n\n
-Check if you are eligible on https://app.plenty.network 🪂`; //"Tweeting from plenty.network";
+export const AIRDROP_TWEET_TEXT: string = `Just participated in the Plenty airdrop on Tezos!
+Excited to join the #DeFi revolution with @plenty_network, the leading #DEX/#AMM on the #Tezos blockchain.\n\n
+Check if you are eligible on https://app.plenty.network/airdrop 🪂`;
