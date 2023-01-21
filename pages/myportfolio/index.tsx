@@ -1611,7 +1611,7 @@ function MyPortfolio(props: any) {
       <SideBarHOC>
         <div>
           <div className="   ">
-            <div className="flex items-center bg-background-200 h-[97px] border-b border-text-800/[0.5] md:pl-[23px] px-2">
+            <div className="flex items-center bg-background-200 h-[97px] border-b border-text-800/[0.5] md:px-[23px] px-2">
               {isMobile ? (
                 <PortfolioDropdown
                   Options={["Positions", "Rewards"]}
