@@ -41,50 +41,21 @@ export const createLock = async (
 
     const allBatchOperations: WalletParamsWithKind[] = [];
     // Fisrts op in batch
-    const op1 = plyInstance.methods
-      .approve(voteEscrowAddress, value.decimalPlaces(0, 1))
-      .toTransferParams();
-    // let limits = await Tezos.estimate.transfer(op1);
-    // console.log(limits);
-    // let gasLimit = new BigNumber(limits.gasLimit)
-    //   .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-    //   .decimalPlaces(0,1)
-    //   .toNumber();
-    // let storageLimit = new BigNumber(limits.storageLimit)
-    //   .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-    //   .decimalPlaces(0,1)
-    //   .toNumber();
-
     allBatchOperations.push({
       kind: OpKind.TRANSACTION,
-      ...op1,
-      // gasLimit,
-      // storageLimit,
+      ...plyInstance.methods
+      .approve(voteEscrowAddress, value.decimalPlaces(0, 1))
+      .toTransferParams(),
     });
 
     //Second op in batch
-    const op2 = veInstance.methods
-      .create_lock(address, value.decimalPlaces(0, 1), endtime)
-      .toTransferParams();
-    // Tezos.estimate.transfer(op2).catch((err) => console.log(err));
-    // limits = await Tezos.estimate.transfer(op2);
-    // console.log(limits);
-    // gasLimit = new BigNumber(limits.gasLimit)
-    //   .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-    //   .decimalPlaces(0,1)
-    //   .toNumber();
-    // storageLimit = new BigNumber(limits.storageLimit)
-    //   .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-    //   .decimalPlaces(0,1)
-    //   .toNumber();
-
     allBatchOperations.push({
       kind: OpKind.TRANSACTION,
-      ...op2,
-      // gasLimit,
-      // storageLimit,
+      ...veInstance.methods
+      .create_lock(address, value.decimalPlaces(0, 1), endtime)
+      .toTransferParams(),
     });
-    console.log(allBatchOperations);
+    
     const limits = await Tezos.estimate
       .batch(allBatchOperations as ParamsWithKind[])
       .then((limits) => limits)
@@ -92,6 +63,7 @@ export const createLock = async (
         console.log(err);
         return undefined;
       });
+
     const updatedBatchOperations: WalletParamsWithKind[] = [];
     if(limits !== undefined) {
       allBatchOperations.forEach((op, index) => {
@@ -113,15 +85,7 @@ export const createLock = async (
     } else {
       throw new Error("Failed to create batch");
     }
-    // let batch = null;
-
-    // batch = Tezos.wallet
-    //   .batch()
-    //   .withContractCall(plyInstance.methods.approve(voteEscrowAddress, value.decimalPlaces(0, 1)))
-    //   .withContractCall(
-    //     veInstance.methods.create_lock(address, value.decimalPlaces(0, 1), endtime)
-    //   );
-    // const batch = Tezos.wallet.batch(allBatchOperations);
+    
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
