@@ -44,16 +44,16 @@ export const createLock = async (
     allBatchOperations.push({
       kind: OpKind.TRANSACTION,
       ...plyInstance.methods
-      .approve(voteEscrowAddress, value.decimalPlaces(0, 1))
-      .toTransferParams(),
+        .approve(voteEscrowAddress, value.decimalPlaces(0, 1))
+        .toTransferParams(),
     });
 
     //Second op in batch
     allBatchOperations.push({
       kind: OpKind.TRANSACTION,
       ...veInstance.methods
-      .create_lock(address, value.decimalPlaces(0, 1), endtime)
-      .toTransferParams(),
+        .create_lock(address, value.decimalPlaces(0, 1), endtime)
+        .toTransferParams(),
     });
     
     const limits = await Tezos.estimate

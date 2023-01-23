@@ -46,23 +46,11 @@ export const claimAirdrop = async (
         if(!hasUserTweeted && claimData.mission === Mission.ELIGIBLE) {
           continue;
         } else {
-          const op = airdropInstance.methods
-            .claim(claimData.packedMessage, claimData.signature)
-            .toTransferParams();
-          // const limits = await Tezos.estimate.transfer(op);
-          // const gasLimit = new BigNumber(limits.gasLimit)
-          //   .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-          //   .decimalPlaces(0,1)
-          //   .toNumber();
-          // const storageLimit = new BigNumber(limits.storageLimit)
-          //   .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-          //   .decimalPlaces(0,1)
-          //   .toNumber();
           allBatchOperations.push({
             kind: OpKind.TRANSACTION,
-            ...op,
-            // gasLimit,
-            // storageLimit,
+            ...airdropInstance.methods
+              .claim(claimData.packedMessage, claimData.signature)
+              .toTransferParams(),
           });
         }
       }
@@ -79,6 +67,7 @@ export const claimAirdrop = async (
         console.log(err);
         return undefined;
       });
+      
     const updatedBatchOperations: WalletParamsWithKind[] = [];
     if(limits !== undefined) {
       allBatchOperations.forEach((op, index) => {
@@ -101,7 +90,6 @@ export const claimAirdrop = async (
       throw new Error("Failed to create batch");
     }
 
-    // const batch = Tezos.wallet.batch(allBatchOperations);
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOperation = await batch.send();
 
