@@ -2,10 +2,9 @@ import { BigNumber } from "bignumber.js";
 import axios from "axios";
 import {
   IClaimAPIData,
+  IClaimAPIResponseData,
   IClaimDataResponse,
   IEvmEligibleCheckResponse,
-  Mission,
-  TClaimAPIResponseData,
 } from "./types";
 import Config from "../../config/config";
 import { connectedNetwork, tzktNode } from "../../common/walletconnect";
@@ -33,65 +32,9 @@ export const getTezosClaimData = async (userTezosAddress: string): Promise<IClai
     const tezosClaimApiResponse = await axios.get(
       `${Config.AIRDROP_SERVER[connectedNetwork]}tezos?address=${userTezosAddress}`
     );
-    const tezosClaimApiData: TClaimAPIResponseData = tezosClaimApiResponse.data;
+    const tezosClaimApiData: IClaimAPIResponseData = tezosClaimApiResponse.data;
     // Create the final claim data response
     const finalClaimData: IClaimDataResponse = getClaimData(tezosClaimApiData);
-
-    return finalClaimData;
-  } catch (error: any) {
-    console.log(error);
-    return {
-      success: false,
-      eligible: false,
-      message: "INTERNAL_SERVER_ERROR",
-      perMissionAmount: new BigNumber(0),
-      totalClaimableAmount: new BigNumber(0),
-      pendingClaimableAmount: new BigNumber(0),
-      claimData: [],
-      error: error.message,
-    };
-  }
-};
-
-/**
- * @deprecated Returns whether the selected evm wallet is eligible for airdrop or not,
- * and the claimable data if eligible.
- * @param ethMessage - Pre-set ETH message
- * @param ethSignature - Signed ETH message
- */
-export const getEvmClaimData = async (
-  ethMessage: string,
-  ethSignature: string
-): Promise<IClaimDataResponse> => {
-  try {
-    if (ethMessage === "" || ethMessage.length <= 0 || !ethMessage) {
-      return {
-        success: false,
-        eligible: false,
-        message: "INVALID_MESSAGE",
-        perMissionAmount: new BigNumber(0),
-        totalClaimableAmount: new BigNumber(0),
-        pendingClaimableAmount: new BigNumber(0),
-        claimData: [],
-      };
-    }
-    if (ethSignature === "" || ethSignature.length <= 0 || !ethSignature) {
-      return {
-        success: false,
-        eligible: false,
-        message: "MISSING_SIGNATURE",
-        perMissionAmount: new BigNumber(0),
-        totalClaimableAmount: new BigNumber(0),
-        pendingClaimableAmount: new BigNumber(0),
-        claimData: [],
-      };
-    }
-    const evmClaimApiResponse = await axios.get(
-      `${Config.AIRDROP_SERVER[connectedNetwork]}ethereum?ethMessage=${ethMessage}&signature=${ethSignature}`
-    );
-    const evmClaimApiData: TClaimAPIResponseData = evmClaimApiResponse.data;
-    // Create the final claim data response
-    const finalClaimData: IClaimDataResponse = getClaimData(evmClaimApiData);
 
     return finalClaimData;
   } catch (error: any) {
@@ -121,15 +64,13 @@ export const tezosWalletHasAirdrop = async (userTezosAddress: string): Promise<b
     const tezosClaimApiResponse = await axios.get(
       `${Config.AIRDROP_SERVER[connectedNetwork]}tezos?address=${userTezosAddress}`
     );
-    const tezosClaimApiData: TClaimAPIResponseData = tezosClaimApiResponse.data;
-    // Check if api response is a JSON data or string. It's string only in case of error or not eligible.
-    if (Array.isArray(tezosClaimApiData)) {
-      // Considering that if airdrop is available for any user then by default it will have one mission.
-      if (tezosClaimApiData.find((missionData) => missionData.mission === Mission.ELIGIBLE)) {
-        return true;
-      } else {
-        return false;
-      }
+    const tezosClaimApiData: IClaimAPIResponseData = tezosClaimApiResponse.data;
+
+    if (
+      tezosClaimApiData.message === "ELIGIBLE" ||
+      tezosClaimApiData.message === "GET_TEZ_FOR_FEES"
+    ) {
+      return true;
     } else {
       return false;
     }
@@ -213,32 +154,6 @@ export const tezosAccountHasTransactions = async (userTezosAddress: string): Pro
 };
 
 /**
- * Returns whether the selected tezos user account was already used for confirming or not.
- * @param userTezosAddress - Tezos user wallet address
- */
-/* export const tzAddressAlreadyConfirmed = (userTezosAddress: string): boolean => {
-  try {
-    let addressConfirmed = false;
-    const signaturesData = store.getState().airdropTransactions.signaturesData;
-
-    for (const data of Object.values(signaturesData)) {
-      if (data.message && data.message.length !== 0) {
-        const tezosAddress = data.message.slice(Config.AIRDROP_ETH_MESSAGE_PREFIX.length);
-        if (tezosAddress === userTezosAddress) {
-          addressConfirmed = true;
-          break;
-        }
-      }
-    }
-
-    return addressConfirmed;
-  } catch (error: any) {
-    console.log(error);
-    return false;
-  }
-}; */
-
-/**
  * Submits the signature data after signing and returns the response message string.
  * "SUBMITED_TEZOS_ADDRESS" for success for now. Changes in api needs changes to this function
  * @param ethMessage - Pre-set ETH message
@@ -267,11 +182,11 @@ export const tezosAccountHasTransactions = async (userTezosAddress: string): Pro
  * Returns the claim data created from server api response.
  * @param apiResponseData - Tezos and Eth receipts response data
  */
-const getClaimData = (apiResponseData: TClaimAPIResponseData): IClaimDataResponse => {
+const getClaimData = (apiResponseData: IClaimAPIResponseData): IClaimDataResponse => {
   try {
     // Check if api response is a JSON data or string. It's string only in case of error or not eligible.
-    if (Array.isArray(apiResponseData)) {
-      if(apiResponseData.length <= 0) {
+    if (apiResponseData.message === "ELIGIBLE") {
+      if(!apiResponseData.receipts || apiResponseData.receipts.length <= 0) {
         return {
           success: false,
           eligible: false,
@@ -285,11 +200,11 @@ const getClaimData = (apiResponseData: TClaimAPIResponseData): IClaimDataRespons
       const finalClaimData: IClaimAPIData[] = [];
       let totalClaimableAmount = new BigNumber(0);
       let pendingClaimableAmount = new BigNumber(0);
-      const perMissionAmount = new BigNumber(apiResponseData[0].message.value).isFinite()
-        ? new BigNumber(apiResponseData[0].message.value).dividedBy(PLY_DECIMAL_MULTIPLIER)
+      const perMissionAmount = new BigNumber(apiResponseData.receipts[0].message.value).isFinite()
+        ? new BigNumber(apiResponseData.receipts[0].message.value).dividedBy(PLY_DECIMAL_MULTIPLIER)
         : new BigNumber(0);
 
-      apiResponseData.forEach((missionData) => {
+      apiResponseData.receipts.forEach((missionData) => {
         totalClaimableAmount = totalClaimableAmount.plus(missionData.message.value);
         if (!missionData.claimed) {
           pendingClaimableAmount = pendingClaimableAmount.plus(missionData.message.value);
@@ -308,24 +223,26 @@ const getClaimData = (apiResponseData: TClaimAPIResponseData): IClaimDataRespons
       return {
         success: true,
         eligible: true,
-        message: "",
+        message: apiResponseData.message,
         perMissionAmount,
         totalClaimableAmount,
         pendingClaimableAmount,
         claimData: finalClaimData,
       };
-    } else if (typeof apiResponseData === "string") {
+    } else {
       return {
         success: false,
         eligible: false,
-        message: apiResponseData,
-        perMissionAmount: new BigNumber(0),
+        message: apiResponseData.message,
+        perMissionAmount:
+          apiResponseData.perReceiptValue &&
+          new BigNumber(apiResponseData.perReceiptValue).isFinite()
+            ? new BigNumber(apiResponseData.perReceiptValue).dividedBy(PLY_DECIMAL_MULTIPLIER)
+            : new BigNumber(0),
         totalClaimableAmount: new BigNumber(0),
         pendingClaimableAmount: new BigNumber(0),
         claimData: [],
       };
-    } else {
-      throw new Error("Invalid response type");
     }
   } catch (error: any) {
     throw new Error(error.message);

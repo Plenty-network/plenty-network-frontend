@@ -20,7 +20,7 @@ export function TextNewPool() {
         </span>
         <span className="ml-1">
           New pools are not attached to the vote-escrow system by default. Please raise an
-          attachment request in <i>#pool-requests</i> channel on{" "}
+          attachment request in <i>#gauge-requests</i> channel on{" "}
           <span className="text-primary-500 ml-0.5">
             <a href="https://discord.com/invite/9wZ4CuvkuJ" target="_blank" rel="noreferrer">
               Plenty&apos;s Discord.

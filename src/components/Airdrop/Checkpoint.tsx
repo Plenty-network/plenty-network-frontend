@@ -70,7 +70,8 @@ function CheckPoint(props: ICheckPoint) {
             src={
               !props.isFetching && props.href === ""
                 ? props.twitterAction.toLowerCase() === "take action" ||
-                  props.twitterAction === "Not allowed"
+                  props.twitterAction === "Not allowed" ||
+                  props.twitterAction === "Not allowedTez"
                   ? check
                   : doneCheck
                 : action !== 0
@@ -104,11 +105,21 @@ function CheckPoint(props: ICheckPoint) {
         >
           {props.href === "" ? (
             <Action
-              action={props.isFetching ? "fetching..." : props.twitterAction}
+              action={
+                props.isFetching
+                  ? "fetching..."
+                  : props.twitterAction.includes("Not allowed")
+                  ? props.twitterAction === "Not allowedTez"
+                    ? ""
+                    : "Not allowed"
+                  : props.twitterAction
+              }
               href={props.href}
               value={
                 !props.isFetching
-                  ? props.twitterAction !== "Claimed" && props.twitterAction !== "Not allowed"
+                  ? props.twitterAction !== "Claimed" &&
+                    props.twitterAction !== "Not allowed" &&
+                    props.twitterAction === "Not allowedTez"
                     ? props.claimData.perMissionAmount
                     : undefined
                   : undefined
@@ -120,7 +131,11 @@ function CheckPoint(props: ICheckPoint) {
           ) : props.isFetching ? (
             "fetching..."
           ) : props.disable ? (
-            "Not allowed"
+            props.claimData.message === "GET_TEZ_FOR_FEES" ? (
+              <Action action="" value={props.claimData.perMissionAmount} href={""} />
+            ) : (
+              "Not allowed"
+            )
           ) : action > 0 ? (
             action === 2 ? (
               <Action action="Claimed" href={props.href} />
