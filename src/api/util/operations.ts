@@ -76,7 +76,7 @@ export const getMaxPossibleBatchArrayV2 = async (
     const isTransactionPossible: boolean = await Tezos.estimate
         .batch(maxPossibleBatch)
         .then((_est) => true)
-        .catch((_err) => false);
+        .catch((_err) => {console.log(_err);return false;});
     if(isTransactionPossible) {
       return maxPossibleBatch as WalletParamsWithKind[];
     }
@@ -96,6 +96,7 @@ export const getMaxPossibleBatchArrayV2 = async (
       (result) => result.status === "fulfilled"
     );
     if (maxPossibleBatchIndex < 0) {
+      console.log(promisesResult);
       throw new Error("Couldn't find successful batch operations possible.");
     }
     

@@ -1,10 +1,12 @@
-import { OpKind } from '@taquito/taquito';
+import { OpKind, ParamsWithKind, WalletParamsWithKind } from '@taquito/taquito';
 import { getDexAddress } from '../api/util/fetchConfig';
 import { dappClient } from '../common/walletconnect';
 import { store } from '../redux';
 import { setFlashMessage } from '../redux/flashMessage';
 import { IFlashMessageProps } from '../redux/flashMessage/type';
 import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from './types';
+import { BigNumber } from "bignumber.js";
+import { GAS_LIMIT_EXCESS, STORAGE_LIMIT_EXCESS } from '../constants/global';
 
 /**
  * Harvest rewards operation for the selected pair of tokens, for which PNLP is staked.
@@ -30,8 +32,7 @@ export const harvestRewards = async (
     if (dexContractAddress === "false") {
       throw new Error("AMM does not exist for the selected pair.");
     }
-    const gaugeAddress: string | undefined =
-      AMM[dexContractAddress].gauge;
+    const gaugeAddress: string | undefined = AMM[dexContractAddress].gauge;
     if (gaugeAddress === undefined) {
       throw new Error("Gauge does not exist for the selected pair.");
     }
@@ -44,7 +45,33 @@ export const harvestRewards = async (
     const Tezos = await dappClient().tezos();
     const gaugeInstance = await Tezos.wallet.at(gaugeAddress);
 
-    const operation = await gaugeInstance.methods.get_reward([["unit"]]).send();
+    const limits = await Tezos.estimate
+      .transfer(gaugeInstance.methods.get_reward([["unit"]]).toTransferParams())
+      .then((limits) => limits)
+      .catch((err) => {
+        console.log(err);
+        return undefined;
+      });
+
+    let gasLimit = 0;
+    let storageLimit = 0;
+
+    if (limits !== undefined) {
+      gasLimit = new BigNumber(limits.gasLimit)
+        .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+        .decimalPlaces(0, 1)
+        .toNumber();
+      storageLimit = new BigNumber(limits.storageLimit)
+        .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+        .decimalPlaces(0, 1)
+        .toNumber();
+    } else {
+      throw new Error("Failed to estimate transaction limits");
+    }
+
+    const operation = await gaugeInstance.methods
+      .get_reward([["unit"]])
+      .send({ gasLimit, storageLimit });
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(operation.opHash);
@@ -55,15 +82,14 @@ export const harvestRewards = async (
     await operation.confirmation(1);
 
     const status = await operation.status();
-    if(status === "applied"){
+    if (status === "applied") {
       return {
         success: true,
         operationId: operation.opHash,
       };
-    }else{
+    } else {
       throw new Error(status);
     }
-
   } catch (error: any) {
     return {
       success: false,
@@ -82,7 +108,6 @@ export const harvestAllRewards = async (
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
-    
     const { CheckIfWalletConnected } = dappClient();
     const walletResponse = await CheckIfWalletConnected();
     if (!walletResponse.success) {
@@ -91,19 +116,49 @@ export const harvestAllRewards = async (
     const Tezos = await dappClient().tezos();
 
     const promises = [];
-    for(var guage of guages){
+    for (var guage of guages) {
       promises.push(await Tezos.wallet.at(guage));
     }
     const response = await Promise.all(promises);
-    const harvestBatch : any = [];
-        for (const key in response) {
-          harvestBatch.push({
-            kind: OpKind.TRANSACTION,
-            ...response[key].methods.get_reward([["unit"]]).toTransferParams(),
-          });
-        }
-        const batch =  Tezos.wallet.batch(harvestBatch);
-        const operation = await batch.send();
+    const harvestBatch: WalletParamsWithKind[] = [];
+    for (const key in response) {
+      harvestBatch.push({
+        kind: OpKind.TRANSACTION,
+        ...response[key].methods.get_reward([["unit"]]).toTransferParams(),
+      });
+    }
+    const limits = await Tezos.estimate
+      .batch(harvestBatch as ParamsWithKind[])
+      .then((limits) => limits)
+      .catch((err) => {
+        console.log(err);
+        return undefined;
+      });
+
+    const updatedBatchOperations: WalletParamsWithKind[] = [];
+    if (limits !== undefined) {
+      harvestBatch.forEach((op, index) => {
+        const gasLimit = new BigNumber(limits[index].gasLimit)
+          .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+          .decimalPlaces(0, 1)
+          .toNumber();
+        const storageLimit = new BigNumber(limits[index].storageLimit)
+          .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+          .decimalPlaces(0, 1)
+          .toNumber();
+
+        updatedBatchOperations.push({
+          ...op,
+          gasLimit,
+          storageLimit,
+        });
+      });
+    } else {
+      throw new Error("Failed to create batch");
+    }
+
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const operation = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(operation.opHash);
@@ -114,15 +169,14 @@ export const harvestAllRewards = async (
     await operation.confirmation(1);
 
     const status = await operation.status();
-    if(status === "applied"){
+    if (status === "applied") {
       return {
         success: true,
         operationId: operation.opHash,
       };
-    }else{
+    } else {
       throw new Error(status);
     }
-
   } catch (error: any) {
     return {
       success: false,
