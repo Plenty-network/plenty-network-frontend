@@ -23,7 +23,11 @@ export interface IClaimAPIData {
   signature: string;
 }
 
-export type TClaimAPIResponseData = IClaimAPIData[] | string;
+export interface IClaimAPIResponseData {
+  message: string;
+  perReceiptValue: string | undefined;
+  receipts: IClaimAPIData[] | undefined;
+}
 
 export enum ChainReceiptsCall {
   TEZOS = "TEZOS",
