@@ -295,9 +295,15 @@ function TezosChain(props: ITezosChain) {
         });
       }
     } else {
-      setTwitterAction("Not allowed");
+      if (res.airdropClaimData.message === "GET_TEZ_FOR_FEES") {
+        setTwitterAction("Not allowedTez");
+      } else {
+        setTwitterAction("Not allowed");
+      }
     }
   }, [res.airdropClaimData]);
+
+  console.log(res.airdropClaimData);
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
