@@ -8,9 +8,9 @@ import {
 } from "./types";
 import Config from "../config/config";
 import { GAS_LIMIT_EXCESS, PLY_DECIMAL_MULTIPLIER, STORAGE_LIMIT_EXCESS } from "../constants/global";
-import { OpKind, ParamsWithKind, WalletParamsWithKind } from "@taquito/taquito";
+import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { IAllBribesOperationData, IAllClaimableFeesData, IClaimInflationOperationData } from "../api/portfolio/types";
-import { getMaxPossibleBatchArrayV2 } from "../api/util/operations";
+import { getBatchOperationsWithLimits, getMaxPossibleBatchArrayV2 } from "../api/util/operations";
 import { store } from "../redux";
 import { getDexAddress } from "../api/util/fetchConfig";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
@@ -56,35 +56,7 @@ export const createLock = async (
         .toTransferParams(),
     });
     
-    const limits = await Tezos.estimate
-      .batch(allBatchOperations as ParamsWithKind[])
-      .then((limits) => limits)
-      .catch((err) => {
-        console.log(err);
-        return undefined;
-      });
-
-    const updatedBatchOperations: WalletParamsWithKind[] = [];
-    if(limits !== undefined) {
-      allBatchOperations.forEach((op, index) => {
-        const gasLimit = new BigNumber(limits[index].gasLimit)
-          .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-        const storageLimit = new BigNumber(limits[index].storageLimit)
-          .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-
-        updatedBatchOperations.push({
-          ...op,
-          gasLimit,
-          storageLimit,
-        });
-      });
-    } else {
-      throw new Error("Failed to create batch");
-    }
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
     
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
@@ -143,35 +115,7 @@ export const increaseLockEnd = async (
       ...veInstance.methods.increase_lock_end(id, newEnd).toTransferParams(),
     });
 
-    const limits = await Tezos.estimate
-      .batch(allBatchOperations as ParamsWithKind[])
-      .then((limits) => limits)
-      .catch((err) => {
-        console.log(err);
-        return undefined;
-      });
-
-    const updatedBatchOperations: WalletParamsWithKind[] = [];
-    if (limits !== undefined) {
-      allBatchOperations.forEach((op, index) => {
-        const gasLimit = new BigNumber(limits[index].gasLimit)
-          .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-        const storageLimit = new BigNumber(limits[index].storageLimit)
-          .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-
-        updatedBatchOperations.push({
-          ...op,
-          gasLimit,
-          storageLimit,
-        });
-      });
-    } else {
-      throw new Error("Failed to create batch");
-    }
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
 
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
@@ -241,35 +185,7 @@ export const increaseLockValue = async (
         .toTransferParams(),
     });
 
-    const limits = await Tezos.estimate
-      .batch(allBatchOperations as ParamsWithKind[])
-      .then((limits) => limits)
-      .catch((err) => {
-        console.log(err);
-        return undefined;
-      });
-
-    const updatedBatchOperations: WalletParamsWithKind[] = [];
-    if(limits !== undefined) {
-      allBatchOperations.forEach((op, index) => {
-        const gasLimit = new BigNumber(limits[index].gasLimit)
-          .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-        const storageLimit = new BigNumber(limits[index].storageLimit)
-          .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-
-        updatedBatchOperations.push({
-          ...op,
-          gasLimit,
-          storageLimit,
-        });
-      });
-    } else {
-      throw new Error("Failed to create batch");
-    }
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
 
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
@@ -346,35 +262,7 @@ export const increaseLockAndValue = async (
         .toTransferParams(),
     });
 
-    const limits = await Tezos.estimate
-      .batch(allBatchOperations as ParamsWithKind[])
-      .then((limits) => limits)
-      .catch((err) => {
-        console.log(err);
-        return undefined;
-      });
-
-    const updatedBatchOperations: WalletParamsWithKind[] = [];
-    if(limits !== undefined) {
-      allBatchOperations.forEach((op, index) => {
-        const gasLimit = new BigNumber(limits[index].gasLimit)
-          .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-        const storageLimit = new BigNumber(limits[index].storageLimit)
-          .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-
-        updatedBatchOperations.push({
-          ...op,
-          gasLimit,
-          storageLimit,
-        });
-      });
-    } else {
-      throw new Error("Failed to create batch");
-    }
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
     
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
@@ -431,35 +319,7 @@ export const withdrawLock = async (
       ...veInstance.methods.withdraw(id).toTransferParams(),
     });
 
-    const limits = await Tezos.estimate
-      .batch(allBatchOperations as ParamsWithKind[])
-      .then((limits) => limits)
-      .catch((err) => {
-        console.log(err);
-        return undefined;
-      });
-
-    const updatedBatchOperations: WalletParamsWithKind[] = [];
-    if(limits !== undefined) {
-      allBatchOperations.forEach((op, index) => {
-        const gasLimit = new BigNumber(limits[index].gasLimit)
-          .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-        const storageLimit = new BigNumber(limits[index].storageLimit)
-          .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-
-        updatedBatchOperations.push({
-          ...op,
-          gasLimit,
-          storageLimit,
-        });
-      });
-    } else {
-      throw new Error("Failed to create batch");
-    }
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
     
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
@@ -715,7 +575,9 @@ export const claimAllAndWithdrawLock = async (
       throw new Error("Failed to estimate transaction limits");
     }
 
-    const operation = await gaugeContractInstance.methods.stake(0, 0).send({gasLimit, storageLimit});
+    const operation = await gaugeContractInstance.methods
+      .stake(0, 0)
+      .send({ gasLimit, storageLimit });
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal &&

@@ -1,4 +1,4 @@
-import { OpKind, ParamsWithKind, WalletParamsWithKind } from '@taquito/taquito';
+import { OpKind, WalletParamsWithKind } from '@taquito/taquito';
 import { getDexAddress } from '../api/util/fetchConfig';
 import { dappClient } from '../common/walletconnect';
 import { store } from '../redux';
@@ -7,6 +7,7 @@ import { IFlashMessageProps } from '../redux/flashMessage/type';
 import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from './types';
 import { BigNumber } from "bignumber.js";
 import { GAS_LIMIT_EXCESS, STORAGE_LIMIT_EXCESS } from '../constants/global';
+import { getBatchOperationsWithLimits } from '../api/util/operations';
 
 /**
  * Harvest rewards operation for the selected pair of tokens, for which PNLP is staked.
@@ -127,36 +128,8 @@ export const harvestAllRewards = async (
         ...response[key].methods.get_reward([["unit"]]).toTransferParams(),
       });
     }
-    const limits = await Tezos.estimate
-      .batch(harvestBatch as ParamsWithKind[])
-      .then((limits) => limits)
-      .catch((err) => {
-        console.log(err);
-        return undefined;
-      });
 
-    const updatedBatchOperations: WalletParamsWithKind[] = [];
-    if (limits !== undefined) {
-      harvestBatch.forEach((op, index) => {
-        const gasLimit = new BigNumber(limits[index].gasLimit)
-          .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-        const storageLimit = new BigNumber(limits[index].storageLimit)
-          .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-
-        updatedBatchOperations.push({
-          ...op,
-          gasLimit,
-          storageLimit,
-        });
-      });
-    } else {
-      throw new Error("Failed to create batch");
-    }
-
+    const updatedBatchOperations = await getBatchOperationsWithLimits(harvestBatch);
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const operation = await batch.send();
 

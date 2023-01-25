@@ -6,6 +6,8 @@ import concat from "lodash-es/concat";
 import findLastIndex from "lodash-es/findLastIndex"
 import { dappClient, tzktNode } from "../../common/walletconnect";
 import axios from 'axios';
+import { BigNumber } from "bignumber.js";
+import { GAS_LIMIT_EXCESS, STORAGE_LIMIT_EXCESS } from "../../constants/global";
 
 /**
  * Find and return the maximum possible length of batch possible to run without exhausting the gas.
@@ -124,6 +126,52 @@ export const getMaxPossibleBatchArrayV2 = async (
         : maxPossibleBatch;
 
     return maxPossibleBatch as WalletParamsWithKind[];
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+};
+
+/**
+ * Returns the updated array of given batch of operations with their transactions limit set.
+ * @param allBatchOperations - Array of all the operations in batch
+ */
+export const getBatchOperationsWithLimits = async (
+  allBatchOperations: WalletParamsWithKind[]
+): Promise<WalletParamsWithKind[]> => {
+  try {
+    const Tezos = await dappClient().tezos();
+    const limits = await Tezos.estimate
+      .batch(allBatchOperations as ParamsWithKind[])
+      .then((limits) => limits)
+      .catch((err) => {
+        console.log(err);
+        return undefined;
+      });
+
+    const updatedBatchOperations: WalletParamsWithKind[] = [];
+    if (limits !== undefined) {
+      allBatchOperations.forEach((op, index) => {
+        const gasLimit = new BigNumber(limits[index].gasLimit)
+          .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+          .decimalPlaces(0, 1)
+          .toNumber();
+        const storageLimit = new BigNumber(limits[index].storageLimit)
+          .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+          .decimalPlaces(0, 1)
+          .toNumber();
+
+        updatedBatchOperations.push({
+          ...op,
+          gasLimit,
+          storageLimit,
+        });
+      });
+    } else {
+      throw new Error("Failed to create batch");
+    }
+
+    return cloneDeep(updatedBatchOperations);
   } catch (error: any) {
     console.log(error);
     throw new Error(error.message);

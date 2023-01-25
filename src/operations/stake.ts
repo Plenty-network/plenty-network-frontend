@@ -1,9 +1,9 @@
-import { OpKind, ParamsWithKind, WalletParamsWithKind } from '@taquito/taquito';
+import { OpKind, WalletParamsWithKind } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 import { getDexAddress } from '../api/util/fetchConfig';
+import { getBatchOperationsWithLimits } from '../api/util/operations';
 import { dappClient, voteEscrowAddress } from '../common/walletconnect';
 import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
-import { GAS_LIMIT_EXCESS, STORAGE_LIMIT_EXCESS } from '../constants/global';
 import { store } from '../redux';
 import { setFlashMessage } from '../redux/flashMessage';
 import { IFlashMessageProps } from '../redux/flashMessage/type';
@@ -214,36 +214,7 @@ export const stakePnlpTokensV1 = async (
          .toTransferParams(),
      });
 
-     const limits = await Tezos.estimate
-       .batch(allBatchOperations as ParamsWithKind[])
-       .then((limits) => limits)
-       .catch((err) => {
-         console.log(err);
-         return undefined;
-       });
-
-     const updatedBatchOperations: WalletParamsWithKind[] = [];
-     if (limits !== undefined) {
-       allBatchOperations.forEach((op, index) => {
-         const gasLimit = new BigNumber(limits[index].gasLimit)
-           .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-           .decimalPlaces(0, 1)
-           .toNumber();
-         const storageLimit = new BigNumber(limits[index].storageLimit)
-           .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-           .decimalPlaces(0, 1)
-           .toNumber();
-
-         updatedBatchOperations.push({
-           ...op,
-           gasLimit,
-           storageLimit,
-         });
-       });
-     } else {
-       throw new Error("Failed to create batch");
-     }
-
+     const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
      const batch = Tezos.wallet.batch(updatedBatchOperations);
      const batchOperation = await batch.send();
 
