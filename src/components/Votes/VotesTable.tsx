@@ -7,7 +7,7 @@ import { IVotePageData } from "../../api/votes/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import { useAppSelector } from "../../redux";
-import { compareNumericString } from "../../utils/commonUtils";
+import { compareNumericString, compareNumericStringRewards } from "../../utils/commonUtils";
 import Table from "../Table/Table";
 import { MyVotes } from "./MyVotes";
 import { MyVotesValue } from "./MyVotesValue";
@@ -148,7 +148,8 @@ export function VotesTable(props: IVotesTableProps) {
           "Trading fees and bribes to be distributed across the voters of this pool. The reward may increase as the epoch progresses.",
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.bribes"),
+        sortType: (a: any, b: any) =>
+          compareNumericStringRewards(a, b, "votes.bribes", "votes.fees"),
         accessor: (x: any) => (
           <RewardsData
             bribes={x.votes.bribes}
@@ -271,7 +272,8 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.bribes"),
+        sortType: (a: any, b: any) =>
+          compareNumericStringRewards(a, b, "votes.bribes", "votes.fees"),
         accessor: (x: any) => (
           <RewardsData
             bribes={x.votes.bribes}
