@@ -1,13 +1,19 @@
-import { getDexAddress } from '../api/util/fetchConfig';
-import { store } from '../redux';
-import { BigNumber } from 'bignumber.js';
-import { TokenStandard } from '../config/types';
-import { MichelsonMap, OpKind } from '@taquito/taquito';
-import Config from '../config/config';
-import { dappClient } from '../common/walletconnect';
-import { IOperationsResponse, TResetAllValues, TTransactionSubmitModal ,TSetShowConfirmTransaction } from './types';
-import { IFlashMessageProps } from '../redux/flashMessage/type';
-import { setFlashMessage } from '../redux/flashMessage';
+import { getDexAddress } from "../api/util/fetchConfig";
+import { store } from "../redux";
+import { BigNumber } from "bignumber.js";
+import { TokenStandard } from "../config/types";
+import { MichelsonMap, OpKind, WalletParamsWithKind } from "@taquito/taquito";
+import Config from "../config/config";
+import { dappClient } from "../common/walletconnect";
+import {
+  IOperationsResponse,
+  TResetAllValues,
+  TTransactionSubmitModal,
+  TSetShowConfirmTransaction,
+} from "./types";
+import { IFlashMessageProps } from "../redux/flashMessage/type";
+import { setFlashMessage } from "../redux/flashMessage";
+import { getBatchOperationsWithLimits } from "../api/util/operations";
 
 export const routerSwap = async (
   path: string[],
@@ -21,10 +27,10 @@ export const routerSwap = async (
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
-    const {CheckIfWalletConnected}=dappClient()
+    const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
     if (!WALLET_RESP.success) {
-      throw new Error('Wallet connection failed');
+      throw new Error("Wallet connection failed");
     }
 
     const state = store.getState();
@@ -34,7 +40,7 @@ export const routerSwap = async (
 
     const routerAddress = Config.ROUTER[Config.NETWORK];
     const Tezos = await dappClient().tezos();
-    const routerInstance: any = await Tezos.contract.at(routerAddress);
+    const routerInstance = await Tezos.wallet.at(routerAddress);
 
     let DataLiteral: any = [];
     for (let i = 0; i < path.length - 1; i++) {
@@ -56,57 +62,37 @@ export const routerSwap = async (
     const DataMap = MichelsonMap.fromLiteral(DataLiteral);
     let swapAmount = amount
       .multipliedBy(new BigNumber(10).pow(TOKEN_IN.decimals))
-      .decimalPlaces(0,1)
+      .decimalPlaces(0, 1)
       .toString();
     const tokenInCallType = TOKEN_IN.standard;
 
-    let batch = null;
+    const allBatchOperations: WalletParamsWithKind[] = [];
+    
     if (tokenInCallType === TokenStandard.TEZ) {
-      batch = Tezos.wallet.batch([
-        {
-          kind: OpKind.TRANSACTION,
-          ...routerInstance.methods
-            .routerSwap(DataMap, swapAmount, recipent)
-            .toTransferParams({ amount: Number(swapAmount), mutez: true }),
-        },
-      ]);
-
-      const batchOp = await batch.send();
-
-      resetAllValues();
-
-      setShowConfirmTransaction(false);
-      transactionSubmitModal(batchOp.opHash);
-      if (flashMessageContent) {
-        store.dispatch(setFlashMessage(flashMessageContent));
-      }
-      await batchOp.confirmation(1);
-      const status = await batchOp.status();
-    if(status === "applied"){
-      return {
-        success: true,
-        operationId: batchOp.opHash,
-      };
-    }else{
-      throw new Error(status);
-    }
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...routerInstance.methods
+          .routerSwap(DataMap, swapAmount, recipent)
+          .toTransferParams({ amount: Number(swapAmount), mutez: true }),
+      });
     } else {
-      const tokenInInstance: any = await Tezos.contract.at(TOKEN_IN.address as string);
+      const tokenInInstance: any = await Tezos.wallet.at(TOKEN_IN.address as string);
+      
       if (tokenInCallType === TokenStandard.FA12) {
-        batch = Tezos.wallet
-          .batch()
-          .withContractCall(
-            tokenInInstance.methods.transfer(caller, routerAddress, swapAmount)
-          )
-          .withContractCall(
-            routerInstance.methods.routerSwap(DataMap, swapAmount, recipent)
-          );
-      } else if(tokenInCallType === TokenStandard.FA2) {
+        allBatchOperations.push({
+          kind: OpKind.TRANSACTION,
+          ...tokenInInstance.methods.transfer(caller, routerAddress, swapAmount).toTransferParams(),
+        });
+        allBatchOperations.push({
+          kind: OpKind.TRANSACTION,
+          ...routerInstance.methods.routerSwap(DataMap, swapAmount, recipent).toTransferParams(),
+        });
+      } else if (tokenInCallType === TokenStandard.FA2) {
         // FA2 Call
-        batch = Tezos.wallet
-          .batch()
-          .withContractCall(
-            tokenInInstance.methods.transfer([
+        allBatchOperations.push({
+          kind: OpKind.TRANSACTION,
+          ...tokenInInstance.methods
+            .transfer([
               {
                 from_: caller,
                 txs: [
@@ -118,39 +104,44 @@ export const routerSwap = async (
                 ],
               },
             ])
-          )
-          .withContractCall(
-            routerInstance.methods.routerSwap(DataMap, swapAmount, recipent)
-          );
-      }
-      else{
+            .toTransferParams(),
+        });
+        allBatchOperations.push({
+          kind: OpKind.TRANSACTION,
+          ...routerInstance.methods.routerSwap(DataMap, swapAmount, recipent).toTransferParams(),
+        });
+      } else {
         throw new Error("Invalid Variant");
       }
+    }
 
-      const batchOp = await batch.send();
-      setShowConfirmTransaction(false);
-      resetAllValues();
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOp = await batch.send();
 
-      transactionSubmitModal(batchOp.opHash);
+    resetAllValues();
 
-      await batchOp.confirmation(1);
-
-      const status = await batchOp.status();
-    if(status === "applied"){
+    setShowConfirmTransaction(false);
+    transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
+    await batchOp.confirmation(1);
+    const status = await batchOp.status();
+    if (status === "applied") {
       return {
         success: true,
         operationId: batchOp.opHash,
       };
-    }else{
+    } else {
       throw new Error(status);
     }
-    }
-  } catch (error : any) {
+  } catch (error: any) {
     console.error(error);
     return {
       success: false,
       operationId: undefined,
-      error : error.message,
+      error: error.message,
     };
   }
 };
