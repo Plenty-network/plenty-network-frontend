@@ -1,6 +1,7 @@
 import { OpKind, WalletParamsWithKind } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 import { getDexAddress } from '../api/util/fetchConfig';
+import { getBatchOperationsWithLimits } from '../api/util/operations';
 import { dappClient, voteEscrowAddress } from '../common/walletconnect';
 import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 import { store } from '../redux';
@@ -213,7 +214,8 @@ export const stakePnlpTokensV1 = async (
          .toTransferParams(),
      });
 
-     const batch = Tezos.wallet.batch(allBatchOperations);
+     const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+     const batch = Tezos.wallet.batch(updatedBatchOperations);
      const batchOperation = await batch.send();
 
      setShowConfirmTransaction && setShowConfirmTransaction(false);

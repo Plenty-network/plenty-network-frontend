@@ -1,4 +1,4 @@
-import { OpKind } from "@taquito/taquito";
+import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { dappClient, factoryAddress, routerAddress} from "../common/walletconnect";
 import { IConfigToken, TokenStandard } from "../config/types";
 import { store } from "../redux";
@@ -12,6 +12,7 @@ import {
 } from "./types";
 import { char2Bytes } from "@taquito/utils";
 import { BigNumber } from "bignumber.js";
+import { getBatchOperationsWithLimits } from "../api/util/operations";
 
 export const deployVolatile = async (
   token1: IConfigToken,
@@ -32,11 +33,11 @@ export const deployVolatile = async (
     }
 
     const Tezos = await dappClient().tezos();
-    const factoryInstance: any = await Tezos.contract.at(factoryAddress);
-    const token1Instance = await Tezos.contract.at(token1.address as string);
-    const token2Instance = await Tezos.contract.at(token2.address as string);
+    const factoryInstance = await Tezos.wallet.at(factoryAddress);
+    const token1Instance = await Tezos.wallet.at(token1.address as string);
+    const token2Instance = await Tezos.wallet.at(token2.address as string);
 
-    const allBatch: any = [];
+    const allBatch: WalletParamsWithKind[] = [];
 
     if (token1.standard === TokenStandard.FA12) {
       allBatch.push({
@@ -117,9 +118,10 @@ export const deployVolatile = async (
         .toTransferParams(),
     });
 
-    const batch = Tezos.wallet.batch(allBatch);
-
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatch);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
+    
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     resetAllValues && resetAllValues();
 
@@ -170,11 +172,11 @@ export const deployStable = async (
     }
 
     const Tezos = await dappClient().tezos();
-    const factoryInstance: any = await Tezos.contract.at(factoryAddress);
-    const token1Instance = await Tezos.contract.at(token1.address as string);
-    const token2Instance = await Tezos.contract.at(token2.address as string);
+    const factoryInstance = await Tezos.wallet.at(factoryAddress);
+    const token1Instance = await Tezos.wallet.at(token1.address as string);
+    const token2Instance = await Tezos.wallet.at(token2.address as string);
 
-    const allBatch: any = [];
+    const allBatch: WalletParamsWithKind[] = [];
 
     if (token1.standard === TokenStandard.FA12) {
       allBatch.push({
@@ -268,9 +270,10 @@ export const deployStable = async (
         .toTransferParams(),
     });
 
-    const batch = Tezos.wallet.batch(allBatch);
-
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatch); 
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
+
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     resetAllValues && resetAllValues();
 

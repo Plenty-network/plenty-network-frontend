@@ -11,10 +11,11 @@ import {
   TTransactionSubmitModal,
 } from "./types";
 
-import { OpKind } from "@taquito/taquito";
+import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { ActiveLiquidity } from "../components/Pools/ManageLiquidityHeader";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
 import { setFlashMessage } from "../redux/flashMessage";
+import { getBatchOperationsWithLimits } from "../api/util/operations";
 
 /**
  * Add liquidity operation for given pair of tokens.
@@ -152,21 +153,21 @@ const addAllPairsLiquidity = async (
       new BigNumber(10).pow(TOKENS[secondTokenSymbol].decimals)
     );
 
-    let batch = null;
+    const allBatchOperations: WalletParamsWithKind[] = [];
     if (
       TOKENS[firstTokenSymbol].standard === TokenStandard.FA12 &&
       TOKENS[secondTokenSymbol].standard === TokenStandard.FA2
     ) {
-      batch = Tezos.wallet
-        .batch()
-        .withContractCall(
-          firstTokenInstance.methods.approve(
-            dexContractAddress,
-            firstTokenAmount.decimalPlaces(0, 1).toString()
-          )
-        )
-        .withContractCall(
-          secondTokenInstance.methods.update_operators([
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...firstTokenInstance.methods
+          .approve(dexContractAddress, firstTokenAmount.decimalPlaces(0, 1).toString())
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstance.methods
+          .update_operators([
             {
               add_operator: {
                 owner: userTezosAddress,
@@ -175,23 +176,39 @@ const addAllPairsLiquidity = async (
               },
             },
           ])
-        )
-        .withContractCall(
-          isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
-            ? dexContractInstance.methods.add_liquidity(
-                userTezosAddress,
-                firstTokenAmount.decimalPlaces(0, 1).toString(),
-                secondTokenAmount.decimalPlaces(0, 1).toString()
-              )
-            : dexContractInstance.methods.AddLiquidity(
-                userTezosAddress,
-                firstTokenAmount.decimalPlaces(0, 1).toString(),
-                secondTokenAmount.decimalPlaces(0, 1).toString()
-              )
-        )
-        .withContractCall(firstTokenInstance.methods.approve(dexContractAddress, 0))
-        .withContractCall(
-          secondTokenInstance.methods.update_operators([
+          .toTransferParams(),
+      });
+      allBatchOperations.push(
+        isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
+          ? {
+              kind: OpKind.TRANSACTION,
+              ...dexContractInstance.methods
+                .add_liquidity(
+                  userTezosAddress,
+                  firstTokenAmount.decimalPlaces(0, 1).toString(),
+                  secondTokenAmount.decimalPlaces(0, 1).toString()
+                )
+                .toTransferParams(),
+            }
+          : {
+              kind: OpKind.TRANSACTION,
+              ...dexContractInstance.methods
+                .AddLiquidity(
+                  userTezosAddress,
+                  firstTokenAmount.decimalPlaces(0, 1).toString(),
+                  secondTokenAmount.decimalPlaces(0, 1).toString()
+                )
+                .toTransferParams(),
+            }
+      );
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...firstTokenInstance.methods.approve(dexContractAddress, 0).toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstance.methods
+          .update_operators([
             {
               remove_operator: {
                 owner: userTezosAddress,
@@ -200,15 +217,16 @@ const addAllPairsLiquidity = async (
               },
             },
           ])
-        );
+          .toTransferParams(),
+      });
     } else if (
       TOKENS[firstTokenSymbol].standard === TokenStandard.FA2 &&
       TOKENS[secondTokenSymbol].standard === TokenStandard.FA12
     ) {
-      batch = Tezos.wallet
-        .batch()
-        .withContractCall(
-          firstTokenInstance.methods.update_operators([
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...firstTokenInstance.methods
+          .update_operators([
             {
               add_operator: {
                 owner: userTezosAddress,
@@ -217,28 +235,41 @@ const addAllPairsLiquidity = async (
               },
             },
           ])
-        )
-        .withContractCall(
-          secondTokenInstance.methods.approve(
-            dexContractAddress,
-            secondTokenAmount.decimalPlaces(0, 1).toString()
-          )
-        )
-        .withContractCall(
-          isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
-            ? dexContractInstance.methods.add_liquidity(
-                userTezosAddress,
-                firstTokenAmount.decimalPlaces(0, 1).toString(),
-                secondTokenAmount.decimalPlaces(0, 1).toString()
-              )
-            : dexContractInstance.methods.AddLiquidity(
-                userTezosAddress,
-                firstTokenAmount.decimalPlaces(0, 1).toString(),
-                secondTokenAmount.decimalPlaces(0, 1).toString()
-              )
-        )
-        .withContractCall(
-          firstTokenInstance.methods.update_operators([
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstance.methods
+          .approve(dexContractAddress, secondTokenAmount.decimalPlaces(0, 1).toString())
+          .toTransferParams(),
+      });
+      allBatchOperations.push(
+        isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
+          ? {
+              kind: OpKind.TRANSACTION,
+              ...dexContractInstance.methods
+                .add_liquidity(
+                  userTezosAddress,
+                  firstTokenAmount.decimalPlaces(0, 1).toString(),
+                  secondTokenAmount.decimalPlaces(0, 1).toString()
+                )
+                .toTransferParams(),
+            }
+          : {
+              kind: OpKind.TRANSACTION,
+              ...dexContractInstance.methods
+                .AddLiquidity(
+                  userTezosAddress,
+                  firstTokenAmount.decimalPlaces(0, 1).toString(),
+                  secondTokenAmount.decimalPlaces(0, 1).toString()
+                )
+                .toTransferParams(),
+            }
+      );
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...firstTokenInstance.methods
+          .update_operators([
             {
               remove_operator: {
                 owner: userTezosAddress,
@@ -247,16 +278,20 @@ const addAllPairsLiquidity = async (
               },
             },
           ])
-        )
-        .withContractCall(secondTokenInstance.methods.approve(dexContractAddress, 0));
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstance.methods.approve(dexContractAddress, 0).toTransferParams(),
+      });
     } else if (
       TOKENS[firstTokenSymbol].standard === TokenStandard.FA2 &&
       TOKENS[secondTokenSymbol].standard === TokenStandard.FA2
     ) {
-      batch = Tezos.wallet
-        .batch()
-        .withContractCall(
-          firstTokenInstance.methods.update_operators([
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...firstTokenInstance.methods
+          .update_operators([
             {
               add_operator: {
                 owner: userTezosAddress,
@@ -265,9 +300,12 @@ const addAllPairsLiquidity = async (
               },
             },
           ])
-        )
-        .withContractCall(
-          secondTokenInstance.methods.update_operators([
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstance.methods
+          .update_operators([
             {
               add_operator: {
                 owner: userTezosAddress,
@@ -276,22 +314,35 @@ const addAllPairsLiquidity = async (
               },
             },
           ])
-        )
-        .withContractCall(
-          isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
-            ? dexContractInstance.methods.add_liquidity(
-                userTezosAddress,
-                firstTokenAmount.decimalPlaces(0,1).toString(),
-                secondTokenAmount.decimalPlaces(0,1).toString()
-              )
-            : dexContractInstance.methods.AddLiquidity(
-                userTezosAddress,
-                firstTokenAmount.decimalPlaces(0,1).toString(),
-                secondTokenAmount.decimalPlaces(0,1).toString()
-              )
-        )
-        .withContractCall(
-          firstTokenInstance.methods.update_operators([
+          .toTransferParams(),
+      });
+      allBatchOperations.push(
+        isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
+          ? {
+              kind: OpKind.TRANSACTION,
+              ...dexContractInstance.methods
+                .add_liquidity(
+                  userTezosAddress,
+                  firstTokenAmount.decimalPlaces(0, 1).toString(),
+                  secondTokenAmount.decimalPlaces(0, 1).toString()
+                )
+                .toTransferParams(),
+            }
+          : {
+              kind: OpKind.TRANSACTION,
+              ...dexContractInstance.methods
+                .AddLiquidity(
+                  userTezosAddress,
+                  firstTokenAmount.decimalPlaces(0, 1).toString(),
+                  secondTokenAmount.decimalPlaces(0, 1).toString()
+                )
+                .toTransferParams(),
+            }
+      );
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...firstTokenInstance.methods
+          .update_operators([
             {
               remove_operator: {
                 owner: userTezosAddress,
@@ -300,9 +351,12 @@ const addAllPairsLiquidity = async (
               },
             },
           ])
-        )
-        .withContractCall(
-          secondTokenInstance.methods.update_operators([
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstance.methods
+          .update_operators([
             {
               remove_operator: {
                 owner: userTezosAddress,
@@ -311,58 +365,77 @@ const addAllPairsLiquidity = async (
               },
             },
           ])
-        );
+          .toTransferParams(),
+      });
     } else if (
       TOKENS[firstTokenSymbol].standard === TokenStandard.FA12 &&
       TOKENS[secondTokenSymbol].standard === TokenStandard.FA12
     ) {
-      batch = Tezos.wallet
-        .batch()
-        .withContractCall(
-          firstTokenInstance.methods.approve(
-            dexContractAddress,
-            firstTokenAmount.decimalPlaces(0, 1).toString()
-          )
-        )
-        .withContractCall(
-          secondTokenInstance.methods.approve(
-            dexContractAddress,
-            secondTokenAmount.decimalPlaces(0, 1).toString()
-          )
-        )
-        .withContractCall(
-          isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
-            ? dexContractInstance.methods.add_liquidity(
-                userTezosAddress,
-                firstTokenAmount.decimalPlaces(0, 1).toString(),
-                secondTokenAmount.decimalPlaces(0, 1).toString()
-              )
-            : dexContractInstance.methods.AddLiquidity(
-                userTezosAddress,
-                firstTokenAmount.decimalPlaces(0, 1).toString(),
-                secondTokenAmount.decimalPlaces(0, 1).toString()
-              )
-        )
-        .withContractCall(firstTokenInstance.methods.approve(dexContractAddress, 0))
-        .withContractCall(secondTokenInstance.methods.approve(dexContractAddress, 0));
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...firstTokenInstance.methods
+          .approve(dexContractAddress, firstTokenAmount.decimalPlaces(0, 1).toString())
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstance.methods
+          .approve(dexContractAddress, secondTokenAmount.decimalPlaces(0, 1).toString())
+          .toTransferParams(),
+      });
+      allBatchOperations.push(
+        isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
+          ? {
+              kind: OpKind.TRANSACTION,
+              ...dexContractInstance.methods
+                .add_liquidity(
+                  userTezosAddress,
+                  firstTokenAmount.decimalPlaces(0, 1).toString(),
+                  secondTokenAmount.decimalPlaces(0, 1).toString()
+                )
+                .toTransferParams(),
+            }
+          : {
+              kind: OpKind.TRANSACTION,
+              ...dexContractInstance.methods
+                .AddLiquidity(
+                  userTezosAddress,
+                  firstTokenAmount.decimalPlaces(0, 1).toString(),
+                  secondTokenAmount.decimalPlaces(0, 1).toString()
+                )
+                .toTransferParams(),
+            }
+      );
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...firstTokenInstance.methods.approve(dexContractAddress, 0).toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstance.methods.approve(dexContractAddress, 0).toTransferParams(),
+      });
     } else {
       throw new Error("Invalid token variants. Token variants can be FA1.2 or FA2.");
     }
-    const batchOperation = await batch?.send();
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOperation = await batch.send();
+
     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    transactionSubmitModal && transactionSubmitModal(batchOperation?.opHash as string);
+    transactionSubmitModal && transactionSubmitModal(batchOperation.opHash as string);
     setActiveState && setActiveState(ActiveLiquidity.Staking);
     resetAllValues && resetAllValues();
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    await batchOperation?.confirmation(1);
+    await batchOperation.confirmation(1);
 
     const status = await batchOperation.status();
     if(status === "applied"){
       return {
         success: true,
-        operationId: batchOperation?.opHash,
+        operationId: batchOperation.opHash,
       };
     }else{
       throw new Error(status);
@@ -437,83 +510,82 @@ const addTezPairsLiquidity = async (
       new BigNumber(10).pow(TOKENS[secondTokenSymbol].decimals)
     );
 
-    let batch = null;
+    const allBatchOperations: WalletParamsWithKind[] = [];
+
     if (TOKENS[secondTokenSymbol].standard === TokenStandard.FA12) {
-      batch = Tezos.wallet.batch([
-        {
-          kind: OpKind.TRANSACTION,
-          ...secondTokenInstance.methods
-            .approve(dexContractAddress, secondTokenAmount.decimalPlaces(0, 1).toString())
-            .toTransferParams(),
-        },
-        {
-          kind: OpKind.TRANSACTION,
-          ...dexContractInstance.methods
-            .add_liquidity(secondTokenAmount.decimalPlaces(0, 1).toString(), 0, userTezosAddress)
-            .toTransferParams({ amount: tezAmount.decimalPlaces(0, 1).toNumber(), mutez: true }),
-        },
-        {
-          kind: OpKind.TRANSACTION,
-          ...secondTokenInstance.methods.approve(dexContractAddress, 0).toTransferParams(),
-        },
-      ]);
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstance.methods
+          .approve(dexContractAddress, secondTokenAmount.decimalPlaces(0, 1).toString())
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...dexContractInstance.methods
+          .add_liquidity(secondTokenAmount.decimalPlaces(0, 1).toString(), 0, userTezosAddress)
+          .toTransferParams({ amount: tezAmount.decimalPlaces(0, 1).toNumber(), mutez: true }),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstance.methods.approve(dexContractAddress, 0).toTransferParams(),
+      });
     } else if (TOKENS[secondTokenSymbol].standard === TokenStandard.FA2) {
-      batch = Tezos.wallet.batch([
-        {
-          kind: OpKind.TRANSACTION,
-          ...secondTokenInstance.methods
-            .update_operators([
-              {
-                add_operator: {
-                  owner: userTezosAddress,
-                  operator: dexContractAddress,
-                  token_id: secondTokenId,
-                },
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstance.methods
+          .update_operators([
+            {
+              add_operator: {
+                owner: userTezosAddress,
+                operator: dexContractAddress,
+                token_id: secondTokenId,
               },
-            ])
-            .toTransferParams(),
-        },
-        {
-          kind: OpKind.TRANSACTION,
-          ...dexContractInstance.methods
-            .add_liquidity(secondTokenAmount.decimalPlaces(0, 1).toString(), 0, userTezosAddress)
-            .toTransferParams({ amount: tezAmount.decimalPlaces(0, 1).toNumber(), mutez: true }),
-        },
-        {
-          kind: OpKind.TRANSACTION,
-          ...secondTokenInstance.methods
-            .update_operators([
-              {
-                remove_operator: {
-                  owner: userTezosAddress,
-                  operator: dexContractAddress,
-                  token_id: secondTokenId,
-                },
+            },
+          ])
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...dexContractInstance.methods
+          .add_liquidity(secondTokenAmount.decimalPlaces(0, 1).toString(), 0, userTezosAddress)
+          .toTransferParams({ amount: tezAmount.decimalPlaces(0, 1).toNumber(), mutez: true }),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstance.methods
+          .update_operators([
+            {
+              remove_operator: {
+                owner: userTezosAddress,
+                operator: dexContractAddress,
+                token_id: secondTokenId,
               },
-            ])
-            .toTransferParams(),
-        },
-      ]);
+            },
+          ])
+          .toTransferParams(),
+      });
     } else {
       throw new Error("Invalid token variant. Token variant can be FA1.2 or FA2.");
     }
 
-    const batchOperation = await batch?.send();
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOperation = await batch.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    transactionSubmitModal && transactionSubmitModal(batchOperation?.opHash);
+    transactionSubmitModal && transactionSubmitModal(batchOperation.opHash);
     setActiveState && setActiveState(ActiveLiquidity.Staking);
     resetAllValues && resetAllValues();
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOperation?.confirmation(1);
+    await batchOperation.confirmation(1);
 
     const status = await batchOperation.status();
     if(status === "applied"){
       return {
         success: true,
-        operationId: batchOperation?.opHash,
+        operationId: batchOperation.opHash,
       };
     }else{
       throw new Error(status);
