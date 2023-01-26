@@ -9,8 +9,8 @@ An open source interface for Plenty network -- a protocol for decentralized exch
 ## Accessing the Plenty network Interface
 
 To access the Plenty network Interface, use link from the
-[latest release](https://github.com/Plenty-DeFi/plenty-network-frontend/),
-or visit [Plenty network](https://ghostnet.plenty.network/).
+[latest release](https://github.com/Plenty-network/plenty-network-frontend/),
+or visit [Plenty network](https://app.plenty.network/).
 
 # Project setup
 
@@ -26,7 +26,7 @@ npm install
 npm run dev
 ```
 
-The interface should automatically open. If it does not, navigate to [http://localhost:3000].
+The interface should automatically open. If it does not, navigate to [http://localhost:3010].
 
 ## Creating a production build
 
@@ -40,8 +40,8 @@ For steps on local deployment, development, and code contribution, please see [C
 
 ## Accessing Plenty network
 
-- Swap on Plenty network: https://ghostnet.plenty.network/swap
-- View and manage pools : https://ghostnet.plenty.network/pools
-- Vote on favourite pools with VeNFT: https://ghostnet.plenty.network/vote
-- Bribe users to vote on my pool: https://ghostnet.plenty.network/bribes
+- Swap on Plenty network: https://app.plenty.network/swap
+- View and manage pools : https://app.plenty.network/pools
+- Vote on favourite pools with VeNFT: https://app.plenty.network/vote
+- Bribe users to vote on my pool: https://app.plenty.network/bribes
 
