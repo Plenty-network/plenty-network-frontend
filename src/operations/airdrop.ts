@@ -1,9 +1,8 @@
-import { OpKind, ParamsWithKind, WalletParamsWithKind } from "@taquito/taquito";
-import { BigNumber } from "bignumber.js";
+import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { IClaimAPIData, Mission } from "../api/airdrop/types";
+import { getBatchOperationsWithLimits } from "../api/util/operations";
 import { connectedNetwork, dappClient } from "../common/walletconnect";
 import Config from "../config/config";
-import { GAS_LIMIT_EXCESS, STORAGE_LIMIT_EXCESS } from "../constants/global";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
@@ -60,36 +59,7 @@ export const claimAirdrop = async (
       throw new Error("Nothing to claim");
     }
 
-    const limits = await Tezos.estimate
-      .batch(allBatchOperations as ParamsWithKind[])
-      .then((limits) => limits)
-      .catch((err) => {
-        console.log(err);
-        return undefined;
-      });
-      
-    const updatedBatchOperations: WalletParamsWithKind[] = [];
-    if(limits !== undefined) {
-      allBatchOperations.forEach((op, index) => {
-        const gasLimit = new BigNumber(limits[index].gasLimit)
-          .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-        const storageLimit = new BigNumber(limits[index].storageLimit)
-          .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-
-        updatedBatchOperations.push({
-          ...op,
-          gasLimit,
-          storageLimit,
-        });
-      });
-    } else {
-      throw new Error("Failed to create batch");
-    }
-
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOperation = await batch.send();
 

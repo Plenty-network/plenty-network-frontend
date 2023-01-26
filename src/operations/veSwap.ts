@@ -12,6 +12,9 @@ import { setFlashMessage } from "../redux/flashMessage";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
 import { MigrateToken } from "../config/types";
 import Config from "../config/config";
+import { GAS_LIMIT_EXCESS, STORAGE_LIMIT_EXCESS } from "../constants/global";
+import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
+import { getBatchOperationsWithLimits } from "../api/util/operations";
 
 export const claim = async (
   transactionSubmitModal: TTransactionSubmitModal,
@@ -27,28 +30,50 @@ export const claim = async (
     }
 
     const Tezos = await dappClient().tezos();
-    const veSwapInstance: any = await Tezos.contract.at(veSwapAddress);
+    const veSwapInstance = await Tezos.wallet.at(veSwapAddress);
 
-    let batch = null;
+    const limits = await Tezos.estimate
+      .transfer(veSwapInstance.methods.claim([["unit"]]).toTransferParams())
+      .then((limits) => limits)
+      .catch((err) => {
+        console.log(err);
+        return undefined;
+      });
+    let gasLimit = 0;
+    let storageLimit = 0;
 
-    batch = Tezos.wallet.batch().withContractCall(veSwapInstance.methods.claim([["unit"]]));
+    if (limits !== undefined) {
+      gasLimit = new BigNumber(limits.gasLimit)
+        .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+        .decimalPlaces(0, 1)
+        .toNumber();
+      storageLimit = new BigNumber(limits.storageLimit)
+        .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+        .decimalPlaces(0, 1)
+        .toNumber();
+    } else {
+      throw new Error("Failed to estimate transaction limits");
+    }
 
-    const batchOp = await batch.send();
+    const operation = await veSwapInstance.methods
+      .claim([["unit"]])
+      .send({ gasLimit, storageLimit });
+
     setShowConfirmTransaction(false);
     resetAllValues();
 
-    transactionSubmitModal(batchOp.opHash);
+    transactionSubmitModal(operation.opHash);
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation(1);
+    await operation.confirmation(1);
 
-    const status = await batchOp.status();
+    const status = await operation.status();
     if (status === "applied") {
       return {
         success: true,
-        operationId: batchOp.opHash,
+        operationId: operation.opHash,
       };
     } else {
       throw new Error(status);
@@ -80,7 +105,7 @@ export const exchange = async (
     }
 
     const Tezos = await dappClient().tezos();
-    const veSwapInstance: any = await Tezos.contract.at(veSwapAddress);
+    const veSwapInstance = await Tezos.wallet.at(veSwapAddress);
 
     const state = store.getState();
     const TOKEN = state.config.tokens;
@@ -89,28 +114,33 @@ export const exchange = async (
       Config.EXCHANGE_TOKENS[token].tokenDecimals
     );
 
-    let batch = null;
+    const allBatchOperations: WalletParamsWithKind[] = [];
 
-    if(token === MigrateToken.PLENTY){
-      const plentyInstance : any = await Tezos.contract.at(TOKEN[token].address as string);
-      batch = Tezos.wallet
-      .batch()
-      .withContractCall(plentyInstance.methods.approve(veSwapAddress , value.multipliedBy(tokenDecimalMultiplier).decimalPlaces(0,1) ))
-      .withContractCall(
-        veSwapInstance.methods.exchange(
-          Config.EXCHANGE_TOKENS[token].contractEnumValue,
-          value.multipliedBy(tokenDecimalMultiplier).decimalPlaces(0,1)
-        )
-      );
-    }
-    else{
-      const wrapInstance : any = await Tezos.contract.at(TOKEN[token].address as string);
-      console.log(wrapInstance);
+    if (token === MigrateToken.PLENTY) {
+      const plentyInstance = await Tezos.wallet.at(TOKEN[token].address as string);
 
-      batch = Tezos.wallet
-        .batch()
-        .withContractCall(
-          wrapInstance.methods.update_operators([
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...plentyInstance.methods
+          .approve(veSwapAddress, value.multipliedBy(tokenDecimalMultiplier).decimalPlaces(0, 1))
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...veSwapInstance.methods
+          .exchange(
+            Config.EXCHANGE_TOKENS[token].contractEnumValue,
+            value.multipliedBy(tokenDecimalMultiplier).decimalPlaces(0, 1)
+          )
+          .toTransferParams(),
+      });
+    } else {
+      const wrapInstance = await Tezos.wallet.at(TOKEN[token].address as string);
+
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...wrapInstance.methods
+          .update_operators([
             {
               add_operator: {
                 owner: caller,
@@ -119,14 +149,21 @@ export const exchange = async (
               },
             },
           ])
-        )
-        .withContractCall(
-          veSwapInstance.methods.exchange(
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...veSwapInstance.methods
+          .exchange(
             Config.EXCHANGE_TOKENS[token].contractEnumValue,
-            value.multipliedBy(tokenDecimalMultiplier).decimalPlaces(0,1)
-          ))
-        .withContractCall(
-          wrapInstance.methods.update_operators([
+            value.multipliedBy(tokenDecimalMultiplier).decimalPlaces(0, 1)
+          )
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...wrapInstance.methods
+          .update_operators([
             {
               remove_operator: {
                 owner: caller,
@@ -135,10 +172,14 @@ export const exchange = async (
               },
             },
           ])
-        );
+          .toTransferParams(),
+      });
     }
 
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
+
     setShowConfirmTransaction(false);
     resetAllValues();
 

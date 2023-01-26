@@ -1,6 +1,7 @@
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { BigNumber } from "bignumber.js";
 import { getDexAddress } from "../api/util/fetchConfig";
+import { getBatchOperationsWithLimits } from "../api/util/operations";
 import { dappClient } from "../common/walletconnect";
 import { TokenStandard } from "../config/types";
 import { store } from "../redux";
@@ -167,7 +168,8 @@ export const addBribe = async (
       );
     }
 
-    const batch = Tezos.wallet.batch(allBatchOperations);
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOperation = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);

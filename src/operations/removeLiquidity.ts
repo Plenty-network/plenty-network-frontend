@@ -6,6 +6,7 @@ import { IOperationsResponse, TResetAllValues, TSetActiveState, TSetShowConfirmT
 import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 import { IFlashMessageProps } from '../redux/flashMessage/type';
 import { setFlashMessage } from '../redux/flashMessage';
+import { GAS_LIMIT_EXCESS, STORAGE_LIMIT_EXCESS } from '../constants/global';
 
 /**
  * Remove liquidity operation for given pair of tokens.
@@ -146,23 +147,44 @@ const removeAllPairsLiquidity = async (
       new BigNumber(10).pow(AMM[dexContractAddress].lpToken.decimals)
     );
 
-    const operation = isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
-      ? await dexContractInstance.methods
-          .remove_liquidity(
-            finalPnlpAmount.decimalPlaces(0,1).toString(),
-            userTezosAddress,
-            firstTokenMinimumAmount.decimalPlaces(0,1).toString(),
-            secondTokenMinimumAmount.decimalPlaces(0,1).toString()
-          )
-          .send()
-      : await dexContractInstance.methods
-          .RemoveLiquidity(
-            finalPnlpAmount.decimalPlaces(0,1).toString(),
-            userTezosAddress,
-            firstTokenMinimumAmount.decimalPlaces(0,1).toString(),
-            secondTokenMinimumAmount.decimalPlaces(0,1).toString()
-          )
-          .send();
+    const op = isGeneralStablePair(firstTokenSymbol, secondTokenSymbol)
+      ? dexContractInstance.methods.remove_liquidity(
+          finalPnlpAmount.decimalPlaces(0, 1).toString(),
+          userTezosAddress,
+          firstTokenMinimumAmount.decimalPlaces(0, 1).toString(),
+          secondTokenMinimumAmount.decimalPlaces(0, 1).toString()
+        )
+      : dexContractInstance.methods.RemoveLiquidity(
+          finalPnlpAmount.decimalPlaces(0, 1).toString(),
+          userTezosAddress,
+          firstTokenMinimumAmount.decimalPlaces(0, 1).toString(),
+          secondTokenMinimumAmount.decimalPlaces(0, 1).toString()
+        );
+
+    const limits = await Tezos.estimate
+      .transfer(op.toTransferParams())
+      .then((limits) => limits)
+      .catch((err) => {
+        console.log(err);
+        return undefined;
+      });
+    let gasLimit = 0;
+    let storageLimit = 0;
+
+    if (limits !== undefined) {
+      gasLimit = new BigNumber(limits.gasLimit)
+        .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+        .decimalPlaces(0, 1)
+        .toNumber();
+      storageLimit = new BigNumber(limits.storageLimit)
+        .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+        .decimalPlaces(0, 1)
+        .toNumber();
+    } else {
+      throw new Error("Failed to estimate transaction limits");
+    }
+
+    const operation = await op.send({ gasLimit, storageLimit });
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(operation.opHash);
@@ -174,15 +196,14 @@ const removeAllPairsLiquidity = async (
     await operation.confirmation(1);
 
     const status = await operation.status();
-    if(status === "applied"){
+    if (status === "applied") {
       return {
         success: true,
         operationId: operation.opHash,
       };
-    }else{
+    } else {
       throw new Error(status);
     }
-
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -258,13 +279,36 @@ const removeAllPairsLiquidity = async (
        new BigNumber(10).pow(AMM[dexContractAddress].lpToken.decimals)
      );
 
-     const operation = await dexContractInstance.methods
-       .remove_liquidity(
-         finalPnlpAmount.decimalPlaces(0, 1).toString(),
-         secondTokenMinimumAmount.decimalPlaces(0, 1),
-         tezMinimumAmount.decimalPlaces(0, 1)
-       )
-       .send();
+     const op = dexContractInstance.methods.remove_liquidity(
+       finalPnlpAmount.decimalPlaces(0, 1).toString(),
+       secondTokenMinimumAmount.decimalPlaces(0, 1),
+       tezMinimumAmount.decimalPlaces(0, 1)
+     );
+
+     const limits = await Tezos.estimate
+       .transfer(op.toTransferParams())
+       .then((limits) => limits)
+       .catch((err) => {
+         console.log(err);
+         return undefined;
+       });
+     let gasLimit = 0;
+     let storageLimit = 0;
+
+     if (limits !== undefined) {
+       gasLimit = new BigNumber(limits.gasLimit)
+         .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+         .decimalPlaces(0, 1)
+         .toNumber();
+       storageLimit = new BigNumber(limits.storageLimit)
+         .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+         .decimalPlaces(0, 1)
+         .toNumber();
+     } else {
+       throw new Error("Failed to estimate transaction limits");
+     }
+
+     const operation = await op.send({ gasLimit, storageLimit });
 
      setShowConfirmTransaction && setShowConfirmTransaction(false);
      transactionSubmitModal && transactionSubmitModal(operation.opHash);
@@ -276,15 +320,14 @@ const removeAllPairsLiquidity = async (
      await operation.confirmation(1);
 
      const status = await operation.status();
-    if(status === "applied"){
-      return {
-        success: true,
-        operationId: operation.opHash,
-      };
-    }else{
-      throw new Error(status);
-    }
-
+     if (status === "applied") {
+       return {
+         success: true,
+         operationId: operation.opHash,
+       };
+     } else {
+       throw new Error(status);
+     }
    } catch (error: any) {
      throw new Error(error.message);
    }

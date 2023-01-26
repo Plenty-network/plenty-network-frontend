@@ -8,9 +8,9 @@ import {
 } from "./types";
 import Config from "../config/config";
 import { GAS_LIMIT_EXCESS, PLY_DECIMAL_MULTIPLIER, STORAGE_LIMIT_EXCESS } from "../constants/global";
-import { OpKind, ParamsWithKind, WalletParamsWithKind } from "@taquito/taquito";
+import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { IAllBribesOperationData, IAllClaimableFeesData, IClaimInflationOperationData } from "../api/portfolio/types";
-import { getMaxPossibleBatchArrayV2 } from "../api/util/operations";
+import { getBatchOperationsWithLimits, getMaxPossibleBatchArrayV2 } from "../api/util/operations";
 import { store } from "../redux";
 import { getDexAddress } from "../api/util/fetchConfig";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
@@ -56,35 +56,7 @@ export const createLock = async (
         .toTransferParams(),
     });
     
-    const limits = await Tezos.estimate
-      .batch(allBatchOperations as ParamsWithKind[])
-      .then((limits) => limits)
-      .catch((err) => {
-        console.log(err);
-        return undefined;
-      });
-
-    const updatedBatchOperations: WalletParamsWithKind[] = [];
-    if(limits !== undefined) {
-      allBatchOperations.forEach((op, index) => {
-        const gasLimit = new BigNumber(limits[index].gasLimit)
-          .plus(new BigNumber(limits[index].gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-        const storageLimit = new BigNumber(limits[index].storageLimit)
-          .plus(new BigNumber(limits[index].storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
-          .decimalPlaces(0, 1)
-          .toNumber();
-
-        updatedBatchOperations.push({
-          ...op,
-          gasLimit,
-          storageLimit,
-        });
-      });
-    } else {
-      throw new Error("Failed to create batch");
-    }
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
     
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
@@ -134,12 +106,18 @@ export const increaseLockEnd = async (
     }
 
     const Tezos = await dappClient().tezos();
-    const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
+    const veInstance = await Tezos.wallet.at(voteEscrowAddress);
 
-    let batch = null;
+    const allBatchOperations: WalletParamsWithKind[] = [];
 
-    batch = Tezos.wallet.batch().withContractCall(veInstance.methods.increase_lock_end(id, newEnd));
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...veInstance.methods.increase_lock_end(id, newEnd).toTransferParams(),
+    });
 
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
     resetAllValues();
@@ -152,15 +130,14 @@ export const increaseLockEnd = async (
     await batchOp.confirmation(1);
 
     const status = await batchOp.status();
-    if(status === "applied"){
+    if (status === "applied") {
       return {
         success: true,
         operationId: batchOp.opHash,
       };
-    }else{
+    } else {
       throw new Error(status);
     }
-  
   } catch (error: any) {
     console.error(error);
     return {
@@ -189,20 +166,28 @@ export const increaseLockValue = async (
     // Making value to it's proper decimal form
     const plyToBeAdded = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
     const Tezos = await dappClient().tezos();
-    const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
-    const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
+    const plyInstance = await Tezos.wallet.at(Config.PLY_TOKEN[connectedNetwork]);
+    const veInstance = await Tezos.wallet.at(voteEscrowAddress);
 
-    let batch = null;
+    const allBatchOperations: WalletParamsWithKind[] = [];
 
-    batch = Tezos.wallet
-      .batch()
-      .withContractCall(
-        plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded.decimalPlaces(0, 1))
-      )
-      .withContractCall(
-        veInstance.methods.increase_lock_value(id, plyToBeAdded.decimalPlaces(0, 1))
-      );
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...plyInstance.methods
+        .approve(voteEscrowAddress, plyToBeAdded.decimalPlaces(0, 1))
+        .toTransferParams(),
+    });
 
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...veInstance.methods
+        .increase_lock_value(id, plyToBeAdded.decimalPlaces(0, 1))
+        .toTransferParams(),
+    });
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
     resetAllValues();
@@ -253,21 +238,33 @@ export const increaseLockAndValue = async (
     const plyToBeAdded = value.multipliedBy(PLY_DECIMAL_MULTIPLIER);
 
     const Tezos = await dappClient().tezos();
-    const plyInstance: any = await Tezos.contract.at(Config.PLY_TOKEN[connectedNetwork]);
-    const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
+    const plyInstance = await Tezos.wallet.at(Config.PLY_TOKEN[connectedNetwork]);
+    const veInstance = await Tezos.wallet.at(voteEscrowAddress);
 
-    let batch = null;
+    const allBatchOperations: WalletParamsWithKind[] = [];
 
-    batch = Tezos.wallet
-      .batch()
-      .withContractCall(
-        plyInstance.methods.approve(voteEscrowAddress, plyToBeAdded.decimalPlaces(0, 1))
-      )
-      .withContractCall(
-        veInstance.methods.increase_lock_value(id, plyToBeAdded.decimalPlaces(0, 1))
-      )
-      .withContractCall(veInstance.methods.increase_lock_end(id, newEnd));
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...plyInstance.methods
+        .approve(voteEscrowAddress, plyToBeAdded.decimalPlaces(0, 1))
+        .toTransferParams(),
+    });
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...veInstance.methods
+        .increase_lock_value(id, plyToBeAdded.decimalPlaces(0, 1))
+        .toTransferParams(),
+    });
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...veInstance.methods
+        .increase_lock_end(id, newEnd)
+        .toTransferParams(),
+    });
 
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
     resetAllValues();
@@ -313,12 +310,18 @@ export const withdrawLock = async (
     }
 
     const Tezos = await dappClient().tezos();
-    const veInstance: any = await Tezos.contract.at(voteEscrowAddress);
+    const veInstance = await Tezos.wallet.at(voteEscrowAddress);
 
-    let batch = null;
+    const allBatchOperations: WalletParamsWithKind[] = [];
 
-    batch = Tezos.wallet.batch().withContractCall(veInstance.methods.withdraw(id));
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...veInstance.methods.withdraw(id).toTransferParams(),
+    });
 
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
     setShowConfirmTransaction(false);
     resetAllValues();
@@ -549,7 +552,32 @@ export const claimAllAndWithdrawLock = async (
 
     const gaugeContractInstance = await Tezos.wallet.at(gaugeAddress);
 
-    const operation = await gaugeContractInstance.methods.stake(0, 0).send();
+    const limits = await Tezos.estimate
+      .transfer(gaugeContractInstance.methods.stake(0, 0).toTransferParams())
+      .then((limits) => limits)
+      .catch((err) => {
+        console.log(err);
+        return undefined;
+      });
+    let gasLimit = 0;
+    let storageLimit = 0;
+
+    if(limits !== undefined) {
+      gasLimit = new BigNumber(limits.gasLimit)
+          .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+          .decimalPlaces(0, 1)
+          .toNumber();
+      storageLimit = new BigNumber(limits.storageLimit)
+          .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+          .decimalPlaces(0, 1)
+          .toNumber();
+    } else {
+      throw new Error("Failed to estimate transaction limits");
+    }
+
+    const operation = await gaugeContractInstance.methods
+      .stake(0, 0)
+      .send({ gasLimit, storageLimit });
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal &&
