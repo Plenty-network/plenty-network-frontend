@@ -400,18 +400,20 @@ export const getAllRewardsOperationsData = async (
           allFeesOperationData.amms[voteData.amm].push(Number(epochNumber));
         }
         for (const bribe of voteData.bribes) {
-          const bribeId = Number(bribe.bribeId);
-          const amm = bribe.amm;
-          allEpochClaimTokenData[epochNumber].bribeData.push({
-            bribeId,
-            amm,
-          });
-          allBribesClaimData.push({
-            tokenId: Number(tokenId),
-            epoch: Number(epochNumber),
-            bribeId,
-            amm,
-          });
+          if(new BigNumber(bribe.value).isGreaterThan(0)) {
+            const bribeId = Number(bribe.bribeId);
+            const amm = bribe.amm;
+            allEpochClaimTokenData[epochNumber].bribeData.push({
+              bribeId,
+              amm,
+            });
+            allBribesClaimData.push({
+              tokenId: Number(tokenId),
+              epoch: Number(epochNumber),
+              bribeId,
+              amm,
+            });
+          }
         }
       }
       allEpochClaimOperationData[tokenId] = allEpochClaimTokenData;
