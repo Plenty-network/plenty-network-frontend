@@ -55,6 +55,7 @@ function CheckPoint(props: ICheckPoint) {
     });
     return flag;
   }, [props.claimData, props.mission, props.hasTweeted, userAddress]);
+
   return (
     <>
       <div
@@ -112,6 +113,12 @@ function CheckPoint(props: ICheckPoint) {
                   {action === 0 && `Take action ${props.claimData.perMissionAmount.toFixed(2)} PLY`}
                 </TwitterShareButton>
               </span>
+            ) : action === 1 ? (
+              <Action
+                action="Completed"
+                value={props.claimData.perMissionAmount}
+                href={props.href}
+              />
             ) : (
               <Action
                 action={
