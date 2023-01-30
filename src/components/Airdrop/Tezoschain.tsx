@@ -17,9 +17,7 @@ import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
 import { useAirdropClaimData } from "../../hooks/useAirdropClaimData";
 import { useRouter } from "next/router";
-
 import info from "../../assets/icon/pools/InfoBlue.svg";
-
 import {
   authenticateUser,
   hasUserTweeted,
@@ -29,19 +27,19 @@ import {
 import { AIRDROP_TWEET_TEXT } from "../../constants/airdrop";
 import { tzktExplorer } from "../../common/walletconnect";
 import Image from "next/image";
-import { VideoModal } from "../Modal/videoModal";
 import { isMobile } from "react-device-detect";
 import CreateLock from "../Votes/CreateLock";
 import { createLock } from "../../operations/locks";
 import { getBalanceFromTzkt } from "../../api/util/balance";
 import { nFormatterWithLesserNumber } from "../../api/util/helpers";
+import { setHasTweeted } from "../../redux/airdrop/transactions";
 export interface ITezosChain {
   setChain: React.Dispatch<React.SetStateAction<ChainAirdrop>>;
 }
 
 function TezosChain(props: ITezosChain) {
-  const [showVideoModal, setShowVideoModal] = useState(false);
   const userAddress = useAppSelector((state) => state.wallet.address);
+  const hasTweeted = useAppSelector((state) => state.airdropTransactions.hasTweeted);
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
@@ -50,7 +48,7 @@ function TezosChain(props: ITezosChain) {
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [transactionId, setTransactionId] = useState("");
-  const [hasTweeted, setHasTweeted] = useState(false);
+  //const [hasTweeted, setHasTweeted] = useState(false);
   const res = useAirdropClaimData();
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const router = useRouter();
@@ -231,68 +229,61 @@ function TezosChain(props: ITezosChain) {
     if (claimdata.eligible) {
       if (claimdata.claimData.length && claimdata.claimData[0].claimed) {
         setTwitterAction("Claimed");
-        setHasTweeted(true);
+        //setHasTweeted(true);
       } else {
-        hasUserTweeted(userAddress).then((res) => {
-          setHasTweeted(res.tweeted);
-          if (res.tweeted) {
-            setTwitterAction(`Completed`);
-          } else {
-            setTwitterAction("fetching...");
+        //hasUserTweeted(userAddress).then((res) => {
+        if (hasTweeted) {
+          setTwitterAction(`Completed`);
+        }
+        //setHasTweeted(res.tweeted);
+        else {
+          setTwitterAction("Take action");
 
-            if (authRef.current === "accepted") {
-              isUserAuthenticated(userAddress).then((res) => {
-                if (res.authenticated) {
-                  tweetForUser(userAddress, AIRDROP_TWEET_TEXT).then((ress) => {
-                    if (ress.status) {
-                      setTwitterAction("Completed");
-                      setHasTweeted(ress.status);
-                      dispatch(
-                        setFlashMessage({
-                          flashType: Flashtype.Success,
-                          transactionId: "",
-                          headerText: "",
-                          trailingText: `Tweeted succesfully`,
-                          linkText: "",
-                          isLoading: true,
-                        })
-                      );
-                    } else {
-                      setTwitterAction(`Take action`);
-                      dispatch(
-                        setFlashMessage({
-                          flashType: Flashtype.Info,
-                          transactionId: "",
-                          headerText: "",
-                          trailingText: `Failed to tweet`,
-                          linkText: "",
-                          isLoading: true,
-                        })
-                      );
-                    }
-                  });
-                }
-              });
-              authRef.current = undefined;
-            } else if (authRef.current === "denied") {
-              setTwitterAction(`Take action`);
-              dispatch(
-                setFlashMessage({
-                  flashType: Flashtype.Info,
-                  transactionId: "",
-                  headerText: "",
-                  trailingText: `Authentication denied`,
-                  linkText: "",
-                  isLoading: true,
-                })
-              );
-              authRef.current = undefined;
-            } else {
-              setTwitterAction(`Take action`);
-              authRef.current = undefined;
-            }
-          }
-        });
+          // if (authRef.current === "accepted") {
+          //   isUserAuthenticated(userAddress).then((res) => {
+          //     if (res.authenticated) {
+          //       tweetForUser(userAddress, AIRDROP_TWEET_TEXT).then((ress) => {
+          //         if (ress.status) {
+          //           setTwitterAction("Completed");
+
+          //         } else {
+          //           setTwitterAction(`Take action`);
+          //           dispatch(
+          //             setFlashMessage({
+          //               flashType: Flashtype.Info,
+          //               transactionId: "",
+          //               headerText: "",
+          //               trailingText: `Failed to tweet`,
+          //               linkText: "",
+          //               isLoading: true,
+          //             })
+          //           );
+          //         }
+          //       });
+          //     }
+          //   });
+          //   authRef.current = undefined;
+          // } else if (authRef.current === "denied") {
+          //   setTwitterAction(`Take action`);
+          //   dispatch(
+          //     setFlashMessage({
+          //       flashType: Flashtype.Info,
+          //       transactionId: "",
+          //       headerText: "",
+          //       trailingText: `Authentication denied`,
+          //       linkText: "",
+          //       isLoading: true,
+          //     })
+          //   );
+          //   authRef.current = undefined;
+          // }
+
+          // else {
+          //   setTwitterAction(`Take action`);
+          //   authRef.current = undefined;
+          // }
+        }
+        //});
       }
     } else {
       if (res.airdropClaimData.message === "GET_TEZ_FOR_FEES") {
@@ -301,9 +292,8 @@ function TezosChain(props: ITezosChain) {
         setTwitterAction("Not allowed");
       }
     }
-  }, [res.airdropClaimData]);
+  }, [res.airdropClaimData, hasTweeted]);
 
-  console.log(res.airdropClaimData);
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
@@ -479,56 +469,57 @@ function TezosChain(props: ITezosChain) {
     }
   }, [props, userAddress, res, hasTweeted]);
   const handleTwitter = () => {
-    isUserAuthenticated(userAddress).then((res) => {
-      if (res.authenticated) {
-        tweetForUser(userAddress, AIRDROP_TWEET_TEXT).then((res) => {
-          if (res.status) {
-            setTwitterAction("Completed");
-            setHasTweeted(res.status);
-            dispatch(
-              setFlashMessage({
-                flashType: Flashtype.Success,
-                transactionId: "",
-                headerText: "",
-                trailingText: `Tweeted succesfully`,
-                linkText: "",
-                isLoading: true,
-              })
-            );
-          } else {
-            console.log(res.message);
-            dispatch(
-              setFlashMessage({
-                flashType: Flashtype.Info,
-                transactionId: "",
-                headerText: "",
-                trailingText: `Failed to tweet`,
-                linkText: "",
-                isLoading: true,
-              })
-            );
-          }
-        });
-      } else {
-        authenticateUser(userAddress).then((res) => {
-          if (res.success) {
-            window.location.replace(res.redirectUrl);
-          } else {
-            console.log("server error");
-            dispatch(
-              setFlashMessage({
-                flashType: Flashtype.Info,
-                transactionId: "",
-                headerText: "",
-                trailingText: `Server error`,
-                linkText: "",
-                isLoading: true,
-              })
-            );
-          }
-        });
-      }
-    });
+    dispatch(setHasTweeted(true));
+    // isUserAuthenticated(userAddress).then((res) => {
+    //   if (res.authenticated) {
+    //     tweetForUser(userAddress, AIRDROP_TWEET_TEXT).then((res) => {
+    //       if (res.status) {
+    //         setTwitterAction("Completed");
+    //         setHasTweeted(res.status);
+    //         dispatch(
+    //           setFlashMessage({
+    //             flashType: Flashtype.Success,
+    //             transactionId: "",
+    //             headerText: "",
+    //             trailingText: `Tweeted succesfully`,
+    //             linkText: "",
+    //             isLoading: true,
+    //           })
+    //         );
+    //       } else {
+    //         console.log(res.message);
+    //         dispatch(
+    //           setFlashMessage({
+    //             flashType: Flashtype.Info,
+    //             transactionId: "",
+    //             headerText: "",
+    //             trailingText: `Failed to tweet`,
+    //             linkText: "",
+    //             isLoading: true,
+    //           })
+    //         );
+    //       }
+    //     });
+    //   } else {
+    //     authenticateUser(userAddress).then((res) => {
+    //       if (res.success) {
+    //         window.location.replace(res.redirectUrl);
+    //       } else {
+    //         console.log("server error");
+    //         dispatch(
+    //           setFlashMessage({
+    //             flashType: Flashtype.Info,
+    //             transactionId: "",
+    //             headerText: "",
+    //             trailingText: `Server error`,
+    //             linkText: "",
+    //             isLoading: true,
+    //           })
+    //         );
+    //       }
+    //     });
+    //   }
+    // });
   };
 
   return (
