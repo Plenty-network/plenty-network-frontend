@@ -95,9 +95,13 @@ export default function PiChart(props: IPiChartProps) {
     return {
       name:
         e.tokenOneSymbol && e.tokenTwoSymbol
-          ? `${tEZorCTEZtoUppercase(e.tokenOneSymbol ?? "")} / ${tEZorCTEZtoUppercase(
-              e.tokenTwoSymbol ?? ""
-            )}`
+          ? tEZorCTEZtoUppercase(e.tokenOneSymbol) === "CTEZ"
+            ? ` ${tEZorCTEZtoUppercase(e.tokenTwoSymbol?.toString())} / ${tEZorCTEZtoUppercase(
+                e.tokenOneSymbol?.toString()
+              )}`
+            : ` ${tEZorCTEZtoUppercase(e.tokenOneSymbol?.toString())} / ${tEZorCTEZtoUppercase(
+                e.tokenTwoSymbol?.toString()
+              )}`
           : "Others",
       value: e.votePercentage.toNumber(),
       ply: e.votes,
