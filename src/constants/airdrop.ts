@@ -39,7 +39,7 @@ export const AIRDROP_MISSIONS_FOR_DISPLAY: {
 }[] = [
   {
     mission: Mission.ELIGIBLE,
-    displayText: "Allow Plenty to tweet about the airdrop on your behalf",
+    displayText: "Tweet about Plenty & airdrop",
     mobileDisplayText: "Tweet about the airdrop",
     href: "",
   },

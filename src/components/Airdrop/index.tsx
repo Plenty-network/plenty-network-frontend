@@ -3,9 +3,7 @@ import * as React from "react";
 import HeaderSelection from "./HeaderSelection";
 import clsx from "clsx";
 import { ChainAirdrop } from "./Disclaimer";
-
 import OtherChain from "./Otherchain";
-import { useAirdropClaimData } from "../../hooks/useAirdropClaimData";
 
 import TezosChain from "./Tezoschain";
 interface IMainAirdropProps {

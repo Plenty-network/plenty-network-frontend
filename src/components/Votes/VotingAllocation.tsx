@@ -114,9 +114,13 @@ function VotingAllocation(props: IVotingAllocationProps) {
                 key={`e.votes` + i}
                 text={
                   e.tokenOneSymbol && e.tokenTwoSymbol
-                    ? `${tEZorCTEZtoUppercase(e.tokenOneSymbol ?? "")} / ${tEZorCTEZtoUppercase(
-                        e.tokenTwoSymbol ?? ""
-                      )}`
+                    ? tEZorCTEZtoUppercase(e.tokenOneSymbol) === "CTEZ"
+                      ? ` ${tEZorCTEZtoUppercase(
+                          e.tokenTwoSymbol?.toString()
+                        )} / ${tEZorCTEZtoUppercase(e.tokenOneSymbol?.toString())}`
+                      : ` ${tEZorCTEZtoUppercase(
+                          e.tokenOneSymbol?.toString()
+                        )} / ${tEZorCTEZtoUppercase(e.tokenTwoSymbol?.toString())}`
                     : "Others"
                 }
                 color={selectedColorIndex === i ? "#78F33F" : COLORSdataChart[i]}
