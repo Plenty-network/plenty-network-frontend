@@ -1,21 +1,19 @@
-import { AppDispatch, store, useAppSelector } from "../../redux";
-import bribes from "../../assets/icon/bribes/bribesLanding.svg";
-import { useEffect, useState, useRef, useMemo } from "react";
+import { AppDispatch, useAppSelector } from "../../redux";
+
+import { useRef, useMemo } from "react";
 import doneCheck from "../../assets/icon/airdrop/doneCheck.svg";
 
-import { TwitterShareButton, TwitterIcon } from "react-share";
+import { TwitterShareButton } from "react-share";
 import check from "../../assets/icon/airdrop/check.svg";
 import Image from "next/image";
-import Button from "../Button/Button";
-import { SideBarHOC } from "../Sidebar/SideBarHOC";
-import Link from "next/link";
+
 import clsx from "clsx";
-import { ChainAirdrop } from "./Disclaimer";
 import Action from "./Action";
-import info from "../../../src/assets/icon/common/infoIcon.svg";
 import { useDispatch } from "react-redux";
-// import { addTweetedAccount } from "../../redux/airdrop/transactions";
+
 import { IClaimDataResponse, Mission } from "../../api/airdrop/types";
+import { setHasTweeted } from "../../redux/airdrop/transactions";
+import { AIRDROP_TWEET_TEXT } from "../../constants/airdrop";
 export interface ICheckPoint {
   text: string;
   completed: boolean;
@@ -34,9 +32,9 @@ function CheckPoint(props: ICheckPoint) {
   const tweetRef = useRef(null);
   const userAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
-  // const handleTwitter = () => {
-  //   dispatch(addTweetedAccount(userAddress));
-  // };
+  const handleTwitter = () => {
+    dispatch(setHasTweeted(true));
+  };
   const action = useMemo(() => {
     let flag = 0;
 
@@ -57,6 +55,7 @@ function CheckPoint(props: ICheckPoint) {
     });
     return flag;
   }, [props.claimData, props.mission, props.hasTweeted, userAddress]);
+
   return (
     <>
       <div
@@ -104,30 +103,46 @@ function CheckPoint(props: ICheckPoint) {
           )}
         >
           {props.href === "" ? (
-            <Action
-              action={
-                props.isFetching
-                  ? "fetching..."
-                  : props.twitterAction.includes("Not allowed")
-                  ? props.twitterAction === "Not allowedTez"
-                    ? ""
-                    : "Not allowed"
-                  : props.twitterAction
-              }
-              href={props.href}
-              value={
-                !props.isFetching
-                  ? props.twitterAction !== "Claimed" &&
-                    props.twitterAction !== "Not allowed" &&
-                    props.twitterAction === "Not allowedTez"
-                    ? props.claimData.perMissionAmount
+            props.twitterAction.toLowerCase() === "take action" ? (
+              <span onClick={handleTwitter}>
+                <TwitterShareButton
+                  url={AIRDROP_TWEET_TEXT}
+                  style={{ height: "auto" }}
+                  ref={tweetRef}
+                >
+                  {action === 0 && `Take action ${props.claimData.perMissionAmount.toFixed(2)} PLY`}
+                </TwitterShareButton>
+              </span>
+            ) : action === 1 ? (
+              <Action
+                action="Completed"
+                value={props.claimData.perMissionAmount}
+                href={props.href}
+              />
+            ) : (
+              <Action
+                action={
+                  props.isFetching
+                    ? "fetching..."
+                    : props.twitterAction.includes("Not allowed")
+                    ? props.twitterAction === "Not allowedTez"
+                      ? ""
+                      : "Not allowed"
+                    : props.twitterAction
+                }
+                href={props.href}
+                value={
+                  !props.isFetching
+                    ? props.twitterAction !== "Claimed" &&
+                      props.twitterAction !== "Not allowed" &&
+                      props.twitterAction === "Not allowedTez"
+                      ? props.claimData.perMissionAmount
+                      : undefined
                     : undefined
-                  : undefined
-              }
-              onclick={
-                props.twitterAction.toLowerCase() === "take action" ? props.handleTwitter : () => {}
-              }
-            />
+                }
+                onclick={() => {}}
+              />
+            )
           ) : props.isFetching ? (
             "fetching..."
           ) : props.disable ? (
