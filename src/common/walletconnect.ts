@@ -70,6 +70,7 @@ export function dappClient() {
     const { BeaconWallet } = await import("@taquito/beacon-wallet");
     const dAppInfo: DAppClientOptions = {
       name: "Plenty Network",
+      iconUrl: "https://app.plenty.network/assets/icon/plentyLogo1000.svg",
       preferredNetwork: walletNetwork,
       colorMode: ColorMode.DARK,
       blockExplorer: new TzktBlockExplorer() as any,
