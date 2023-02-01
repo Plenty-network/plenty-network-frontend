@@ -16,6 +16,7 @@ import { switchWallet, walletConnection, walletDisconnection } from "../../redux
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import WertWidgetPopup from "../Wert";
 
 export interface IConnectWalletBtnDeskTopProps {
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,6 +48,11 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   useOutsideClick(reff, () => {
     setShowMenu(false);
   });
+  const [showFiat, setShowFiat] = React.useState(false);
+  const handleFiat = () => {
+    setShowMenu(false);
+    setShowFiat(true);
+  };
   if (userAddress) {
     return (
       <>
@@ -85,7 +91,10 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
                 <Image alt={"alt"} src={copyLogo} />
                 <span>Copy address</span>
               </p>
-              <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-not-allowed text-white text-f14">
+              <p
+                className="flex gap-2 px-4  py-4 hover:bg-primary-755   text-white text-f14"
+                onClick={handleFiat}
+              >
                 <Image alt={"alt"} src={fiatLogo} />
                 <span>Fiat</span>
               </p>
@@ -128,6 +137,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
             </div>
           )}
         </div>
+        {showFiat && <WertWidgetPopup hide={setShowFiat} />}
       </>
     );
   }
