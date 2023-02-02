@@ -69,18 +69,18 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
         <div className="relative flex items-center" ref={reff}>
           <ToolTip
             id="tooltip8"
-            position={Position.bottom}
+            position={Position.left}
             isShowInnitially={localStorage.getItem(BUY_CRYPTO) === "true" ? false : true}
             type={TooltipType.buyCrypto}
             toolTipChild={
-              <div className="w-[330px]">
+              <div className="">
                 <div className="flex mr-1">
                   <div className="text-white font-subtitle4">Buy crypto</div>
                   <div className="ml-auto relative -top-[3px] " onClick={() => ReactTooltip.hide()}>
                     <Image src={close} alt="close" width="13px" height="13px" />
                   </div>
                 </div>
-                <div className="font-body1 text-white mt-2">
+                <div className="font-body1 text-white mt-2 ">
                   Get tokens at the best price in web3 on plenty.network, with credit card or apple
                   pay.
                 </div>
