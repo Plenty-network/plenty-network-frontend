@@ -14,9 +14,13 @@ import { switchWallet, walletConnection, walletDisconnection } from "../../redux
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { MobileEpoch } from "../Epoch/MobileEpoch";
 
+import close from "../../assets/icon/swap/closeIcon.svg";
 import switchLogo from "../../assets/icon/navigation/copy.svg";
 import clsx from "clsx";
 import WertWidgetPopup from "../Wert";
+import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
+import { BUY_CRYPTO } from "../../constants/localStorage";
+import ReactTooltip from "react-tooltip";
 
 export interface IConnectWalletBtnMobileProps {
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
@@ -51,16 +55,43 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
     setShowMenu(false);
     setShowFiat(true);
   };
+  React.useEffect(() => {
+    setTimeout(() => {
+      userAddress !== "" && localStorage.setItem(BUY_CRYPTO, "true");
+    }, 80000);
+  }, []);
   if (userAddress) {
     return (
       <>
         <div className="relative flex" ref={reff}>
-          <Image
-            src={mobileConnectWallet}
-            onClick={() => {
-              setShowMenu((sow) => !sow);
-            }}
-          />
+          <ToolTip
+            id="tooltip8"
+            position={Position.left}
+            isShowInnitially={localStorage.getItem(BUY_CRYPTO) === "true" ? false : true}
+            type={TooltipType.buyCrypto}
+            toolTipChild={
+              <div className="">
+                <div className="flex mr-1">
+                  <div className="text-white font-subtitle4">Buy crypto</div>
+                  <div className="ml-auto relative -top-[3px] " onClick={() => ReactTooltip.hide()}>
+                    <Image src={close} alt="close" width="13px" height="13px" />
+                  </div>
+                </div>
+                <div className="font-body1 text-white mt-2 ">
+                  Get tokens at the best price in web3 on plenty.network, with credit card or apple
+                  pay.
+                </div>
+              </div>
+            }
+          >
+            <Image
+              src={mobileConnectWallet}
+              onClick={() => {
+                ReactTooltip.hide();
+                setShowMenu((sow) => !sow);
+              }}
+            />
+          </ToolTip>
           {showMenu && (
             <div
               className={clsx(
@@ -91,7 +122,7 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
                 <span>Copy address</span>
               </p>
               <p
-                className="flex gap-2 px-4  py-4 hover:bg-primary-755   text-white text-f14"
+                className="flex gap-2 px-4  py-4 hover:bg-primary-755 cursor-pointer  text-white text-f14"
                 onClick={handleFiat}
               >
                 <Image alt={"alt"} src={fiatLogo} />

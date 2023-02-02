@@ -124,7 +124,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
                 <span>Copy address</span>
               </p>
               <p
-                className="flex gap-2 px-4  py-4 hover:bg-primary-755   text-white text-f14"
+                className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
                 onClick={handleFiat}
               >
                 <Image alt={"alt"} src={fiatLogo} />

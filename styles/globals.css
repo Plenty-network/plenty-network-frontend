@@ -278,8 +278,13 @@ input[type='number'] {
   top: 63px !important;
   left: 70% !important;
   right: 1% !important;
-
-  
+}
+@media (min-width: 320px) and (max-width: 768px) {
+  .tooltipCustomCrypto {
+    top: 63px !important;
+  left: 20% !important;
+  right: 1% !important;
+  }
 }
 .tooltipCustomCrypto-bottom::after{
   content: '' !important;
