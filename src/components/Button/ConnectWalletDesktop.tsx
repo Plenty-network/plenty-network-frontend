@@ -89,6 +89,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
           >
             <button
               onClick={() => {
+                ReactTooltip.hide();
                 setShowMenu((sow) => !sow);
               }}
               className="flex flex-row justify-center items-center gap-2 bg-primary-500/10 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/30"
