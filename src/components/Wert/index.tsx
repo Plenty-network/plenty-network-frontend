@@ -28,6 +28,7 @@ function WertWidgetPopup(props: Iprops) {
       color_main_text: "#FFFFFF",
       color_secondary_text: "#958E99",
       color_secondary_buttons_hover: "#150E1E",
+      color_secondary_buttons_text: "#CFCED1",
       color_secondary_buttons: "rgb(157 92 255 / 0.3)",
       color_icons: "#958E99",
       color_links: "#9D5CFF",
