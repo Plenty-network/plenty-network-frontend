@@ -23,6 +23,7 @@ import ReactTooltip from "react-tooltip";
 import { BUY_CRYPTO } from "../../constants/localStorage";
 
 export interface IConnectWalletBtnDeskTopProps {
+  setShowFiat: React.Dispatch<React.SetStateAction<boolean>>;
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -52,10 +53,10 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   useOutsideClick(reff, () => {
     setShowMenu(false);
   });
-  const [showFiat, setShowFiat] = React.useState(false);
+  // const [showFiat, setShowFiat] = React.useState(false);
   const handleFiat = () => {
     setShowMenu(false);
-    setShowFiat(true);
+    props.setShowFiat(true);
   };
   React.useEffect(() => {
     setTimeout(() => {
@@ -170,7 +171,6 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
             </div>
           )}
         </div>
-        {showFiat && <WertWidgetPopup hide={setShowFiat} />}
       </>
     );
   }

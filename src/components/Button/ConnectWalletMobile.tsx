@@ -25,6 +25,7 @@ import ReactTooltip from "react-tooltip";
 export interface IConnectWalletBtnMobileProps {
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
   isBanner: boolean;
+  setShowFiat: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
@@ -50,10 +51,10 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
   useOutsideClick(reff, () => {
     setShowMenu(false);
   });
-  const [showFiat, setShowFiat] = React.useState(false);
+
   const handleFiat = () => {
     setShowMenu(false);
-    setShowFiat(true);
+    props.setShowFiat(true);
   };
   React.useEffect(() => {
     setTimeout(() => {
@@ -156,7 +157,6 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
             </div>
           )}
         </div>
-        {showFiat && <WertWidgetPopup hide={setShowFiat} />}
       </>
     );
   }

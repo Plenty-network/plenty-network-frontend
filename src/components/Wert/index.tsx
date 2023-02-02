@@ -42,6 +42,7 @@ function WertWidgetPopup(props: Iprops) {
     return (
       <PopUpModal
         isFullSizeOnMobile
+        Name={"videop"}
         onhide={() => props.hide(false)}
         className="w-[100%] px-0 pb-0 md:w-[550px] md:max-w-[550px] "
       >

@@ -12,6 +12,7 @@ import { Epoch } from "../Epoch";
 import { NotificationIcon } from "../NotificationIcon";
 export interface ITopNavBarProps {
   setShowNotification: Function;
+  setShowFiat: React.Dispatch<React.SetStateAction<boolean>>;
   isBanner: boolean;
   isLanding: boolean;
   isBribes: boolean;
@@ -86,7 +87,10 @@ export function TopNavBar(props: ITopNavBarProps) {
                   />
                 )}
               </div>
-              <ConnectWalletBtnDeskTop setNodeSelector={props.setNodeSelector} />
+              <ConnectWalletBtnDeskTop
+                setNodeSelector={props.setNodeSelector}
+                setShowFiat={props.setShowFiat}
+              />
             </div>
           </div>
         )}

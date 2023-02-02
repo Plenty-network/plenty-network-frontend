@@ -13,6 +13,7 @@ import "animate.css";
 import { useDispatch } from "react-redux";
 import { setClientHeight, setHeight, setScrollY } from "../../redux/walletLoading";
 import ReactTooltip from "react-tooltip";
+import WertWidgetPopup from "../Wert";
 
 export interface ISideBarHOCProps {
   children: any;
@@ -40,6 +41,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
     dispatch(setHeight(e.target.scrollHeight));
     dispatch(setClientHeight(e.target.clientHeight));
   };
+  const [showFiat, setShowFiat] = React.useState(false);
   const [showNodeSelector, setNodeSelector] = useState(false);
   return (
     <>
@@ -53,6 +55,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
             isLanding={props.isBribesLanding ? props.isBribesLanding : false}
             isBribes={props.isBribes ? props.isBribes : false}
             isBanner={isBanner}
+            setShowFiat={setShowFiat}
           />
         )}
         {showNotification && !props.isBribesLanding && (
@@ -95,11 +98,13 @@ export function SideBarHOC(props: ISideBarHOCProps) {
               isBribes={props.isBribes ? props.isBribes : false}
               setNodeSelector={setNodeSelector}
               isBanner={isBanner}
+              setShowFiat={setShowFiat}
             />
           </>
         )}
       </div>
       <NodeSelector show={showNodeSelector} setShow={setNodeSelector} />
+      {showFiat && <WertWidgetPopup hide={setShowFiat} />}
     </>
   );
 }
