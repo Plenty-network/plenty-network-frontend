@@ -26,21 +26,26 @@ function WertWidgetPopup(props: Iprops) {
       color_buttons_text: "#000",
       buttons_border_radius: "8",
       color_main_text: "#FFFFFF",
-      color_secondary_text: "#958E99",
-      color_secondary_buttons_hover: "#150E1E",
+      // color_secondary_text: "#958E99",
+      //color_secondary_buttons_hover: "#fff",
       color_secondary_buttons_text: "#CFCED1",
-      color_secondary_buttons: "rgb(157 92 255 / 0.3)",
+      color_secondary_buttons: "#0f051d",
       color_icons: "#958E99",
       color_links: "#9D5CFF",
+      color_scroll_thumb: "#1F1233",
+      color_scroll_track: "#000",
+      color_buttons_shadow: "#000000",
+      color_main_text_inactive: "#1F0E38",
+      color_buttons_inactive: "#230c44",
     };
     const wertWidget = new WertWidget(wertParams);
     return (
       <PopUpModal
         isFullSizeOnMobile
         onhide={() => props.hide(false)}
-        className="w-[100%] px-0 md:w-[540px] md:max-w-[540px] "
+        className="w-[100%] px-0 pb-0 md:w-[550px] md:max-w-[550px] "
       >
-        <div className="mt-2 inner">
+        <div className="-mt-[18px] mr-5 inner ">
           <iframe
             src={wertWidget.getEmbedUrl()}
             className="inner"
