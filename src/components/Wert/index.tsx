@@ -23,10 +23,12 @@ function WertWidgetPopup(props: Iprops) {
       commodity: "XTZ",
       color_background: "#090015",
       color_buttons: "#9D5CFF",
+      color_buttons_text: "#000",
       buttons_border_radius: "8",
       color_main_text: "#FFFFFF",
       color_secondary_text: "#958E99",
-
+      color_secondary_buttons_hover: "#150E1E",
+      color_secondary_buttons: "rgb(157 92 255 / 0.3)",
       color_icons: "#958E99",
       color_links: "#9D5CFF",
     };
