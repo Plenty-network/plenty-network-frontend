@@ -17,6 +17,10 @@ import { useOutsideClick } from "../../utils/outSideClickHook";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import WertWidgetPopup from "../Wert";
+import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
+import close from "../../assets/icon/swap/closeIcon.svg";
+import ReactTooltip from "react-tooltip";
+import { BUY_CRYPTO } from "../../constants/localStorage";
 
 export interface IConnectWalletBtnDeskTopProps {
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
@@ -53,31 +57,58 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
     setShowMenu(false);
     setShowFiat(true);
   };
+  React.useEffect(() => {
+    setTimeout(() => {
+      userAddress !== "" && localStorage.setItem(BUY_CRYPTO, "true");
+    }, 80000);
+  }, []);
+
   if (userAddress) {
     return (
       <>
         <div className="relative flex items-center" ref={reff}>
-          <button
-            onClick={() => {
-              setShowMenu((sow) => !sow);
-            }}
-            className="flex flex-row justify-center items-center gap-2 bg-primary-500/10 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/30"
+          <ToolTip
+            id="tooltip8"
+            position={Position.bottom}
+            isShowInnitially={localStorage.getItem(BUY_CRYPTO) === "true" ? false : true}
+            type={TooltipType.buyCrypto}
+            toolTipChild={
+              <div className="w-[330px]">
+                <div className="flex mr-1">
+                  <div className="text-white font-subtitle4">Buy crypto</div>
+                  <div className="ml-auto relative -top-[3px] " onClick={() => ReactTooltip.hide()}>
+                    <Image src={close} alt="close" width="13px" height="13px" />
+                  </div>
+                </div>
+                <div className="font-body1 text-white mt-2">
+                  Get tokens at the best price in web3 on plenty.network, with credit card or apple
+                  pay.
+                </div>
+              </div>
+            }
           >
-            <Image alt={"alt"} src={walletIcon} />
-            <p
-              className="text-f14 "
-              style={{
-                textOverflow: "ellipsis",
-                width: "76px",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
+            <button
+              onClick={() => {
+                setShowMenu((sow) => !sow);
               }}
+              className="flex flex-row justify-center items-center gap-2 bg-primary-500/10 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/30"
             >
-              {truncateMiddle(userAddress, 4, 4, "...")}
-            </p>
-            {isConnectWalletLoading && <Image alt={"alt"} src={loadingLogo} className="spin" />}
-            <Image alt={"alt"} src={settingLogo} />
-          </button>
+              <Image alt={"alt"} src={walletIcon} />
+              <p
+                className="text-f14 "
+                style={{
+                  textOverflow: "ellipsis",
+                  width: "76px",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                }}
+              >
+                {truncateMiddle(userAddress, 4, 4, "...")}
+              </p>
+              {isConnectWalletLoading && <Image alt={"alt"} src={loadingLogo} className="spin" />}
+              <Image alt={"alt"} src={settingLogo} />
+            </button>
+          </ToolTip>
           {showMenu && (
             <div className="absolute w-[320px] fade-in-3  right-0 top-[55px] mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
               {/* <p className="bg-primary-755 text-f14 p-4 flex gap-2">
