@@ -181,22 +181,6 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
       >
         Connect wallet
       </button>
-      {(localStorage.getItem(BUY_CRYPTO) !== "true" || showCryptoTooltip !== "true") && (
-        <div
-          className="w-[334px] absolute top-[61px] cryptoTooltip animate__animated "
-          id="animate-tooltip"
-        >
-          <div className="flex mr-1">
-            <div className="text-white font-subtitle4">Buy crypto</div>
-            <div className="ml-auto cursor-pointer relative top-[1px] " onClick={handleClick}>
-              <Image src={close} alt="close" />
-            </div>
-          </div>
-          <div className="font-body1 text-white mt-1 ">
-            Get tokens at the best price in web3 on plenty.network, with credit card or apple pay.
-          </div>
-        </div>
-      )}
     </div>
   );
 }
