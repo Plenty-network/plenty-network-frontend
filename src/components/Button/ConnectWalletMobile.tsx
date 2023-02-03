@@ -56,18 +56,17 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
     setShowMenu(false);
     props.setShowFiat(true);
   };
-  React.useEffect(() => {
-    setTimeout(() => {
-      userAddress !== "" && localStorage.setItem(BUY_CRYPTO, "true");
-    }, 80000);
-  }, []);
+
   const [showCryptoTooltip, setShowCryptoTooltip] = React.useState(
     localStorage.getItem(BUY_CRYPTO)
   );
-
+  const ele = document.getElementById("animate-tooltip");
   const handleClick = () => {
-    setShowCryptoTooltip("true");
-    localStorage.setItem(BUY_CRYPTO, "true");
+    ele && ele.classList.add("tooltipAnimation");
+    setTimeout(() => {
+      setShowCryptoTooltip("true");
+      localStorage.setItem(BUY_CRYPTO, "true");
+    }, 200);
   };
   if (userAddress) {
     return (
@@ -82,14 +81,14 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
           />
 
           {(localStorage.getItem(BUY_CRYPTO) !== "true" || showCryptoTooltip !== "true") && (
-            <div className="w-[310px] absolute top-[61px] cryptoTooltip">
+            <div className="w-[334px] absolute top-[61px] cryptoTooltip" id="animate-tooltip">
               <div className="flex mr-1">
                 <div className="text-white font-subtitle4">Buy crypto</div>
-                <div className="ml-auto cursor-pointer relative -top-[3px] " onClick={handleClick}>
-                  <Image src={close} alt="close" width="13px" height="13px" />
+                <div className="ml-auto cursor-pointer relative top-[1px] " onClick={handleClick}>
+                  <Image src={close} alt="close" />
                 </div>
               </div>
-              <div className="font-body1 text-white mt-2 ">
+              <div className="font-body1 text-white mt-1 ">
                 Get tokens at the best price in web3 on plenty.network, with credit card or apple
                 pay.
               </div>
@@ -169,14 +168,14 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
         Connect
       </button>
       {(localStorage.getItem(BUY_CRYPTO) !== "true" || showCryptoTooltip !== "true") && (
-        <div className="w-[310px] absolute top-[61px] cryptoTooltip">
+        <div className="w-[334px] absolute top-[61px] cryptoTooltip" id="animate-tooltip">
           <div className="flex mr-1">
             <div className="text-white font-subtitle4">Buy crypto</div>
-            <div className="ml-auto cursor-pointer relative -top-[3px] " onClick={handleClick}>
-              <Image src={close} alt="close" width="13px" height="13px" />
+            <div className="ml-auto cursor-pointer relative top-[1px] " onClick={handleClick}>
+              <Image src={close} alt="close" />
             </div>
           </div>
-          <div className="font-body1 text-white mt-2 ">
+          <div className="font-body1 text-white mt-1 ">
             Get tokens at the best price in web3 on plenty.network, with credit card or apple pay.
           </div>
         </div>

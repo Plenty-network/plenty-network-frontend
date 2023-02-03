@@ -893,3 +893,37 @@
 		transform: scale(1);
 }
 }
+.tooltipAnimation { 
+	animation: fadeOutAni 400ms ease-in-out forwards;
+
+}
+
+
+
+
+@keyframes fadeOutAni {
+	0% {
+		opacity: 1; visibility: visible;
+}
+80% {
+	opacity: 0.80; visibility: visible;
+}
+100% {
+	opacity: 0; visibility: hidden;
+}
+ 
+}
+
+
+@-webkit-keyframes fadeOutAni {
+	0% {
+		opacity: 1; visibility: visible;
+}
+80% {
+	opacity: 0.80; visibility: visible;
+}
+100% {
+	opacity: 0; visibility: hidden;
+}
+ 
+}

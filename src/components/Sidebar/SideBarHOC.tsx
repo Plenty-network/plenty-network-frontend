@@ -80,7 +80,9 @@ export function SideBarHOC(props: ISideBarHOCProps) {
               className={`overflow-x-hidden h-screen   z-0  ${
                 props.makeTopBarScroll || true
                   ? `static overflow-y-auto ${
-                      isBanner ? "pt-[100px] xs:pb-0 sm:pb-[50px] xl:pb-0" : "pt-[64px]"
+                      isBanner
+                        ? "pt-[100px] xs:pb-0 sm:pb-[50px] xl:pb-0"
+                        : "pt-[64px] pb-[67px] lg:pb-0"
                     } `
                   : "md:absolute fixed overflow-y-hidden top-16 !m-0  h-[calc(100%_-_121px)] md:h-[calc(100%_-_64px)] md:w-[calc(100%_-_240px)] w-full"
               }`}

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import * as React from "react";
+import "animate.css";
 import loadingLogo from "../../assets/icon/common/loadingLogo.svg";
 import settingLogo from "../../assets/icon/common/settingLogo.svg";
 import walletIcon from "../../assets/icon/common/walletIcon.svg";
@@ -16,10 +17,9 @@ import { switchWallet, walletConnection, walletDisconnection } from "../../redux
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import WertWidgetPopup from "../Wert";
-import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
-import close from "../../assets/icon/swap/closeIcon.svg";
-import ReactTooltip from "react-tooltip";
+
+import close from "../../assets/icon/common/close-icon.svg";
+
 import { BUY_CRYPTO } from "../../constants/localStorage";
 
 export interface IConnectWalletBtnDeskTopProps {
@@ -58,18 +58,17 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
     setShowMenu(false);
     props.setShowFiat(true);
   };
-  React.useEffect(() => {
-    setTimeout(() => {
-      userAddress !== "" && localStorage.setItem(BUY_CRYPTO, "true");
-    }, 80000);
-  }, []);
+
   const [showCryptoTooltip, setShowCryptoTooltip] = React.useState(
     localStorage.getItem(BUY_CRYPTO)
   );
-
+  const ele = document.getElementById("animate-tooltip");
   const handleClick = () => {
-    setShowCryptoTooltip("true");
-    localStorage.setItem(BUY_CRYPTO, "true");
+    ele && ele.classList.add("tooltipAnimation");
+    setTimeout(() => {
+      setShowCryptoTooltip("true");
+      localStorage.setItem(BUY_CRYPTO, "true");
+    }, 200);
   };
   if (userAddress) {
     return (
@@ -98,14 +97,14 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
             <Image alt={"alt"} src={settingLogo} />
           </button>
           {(localStorage.getItem(BUY_CRYPTO) !== "true" || showCryptoTooltip !== "true") && (
-            <div className="w-[310px] absolute top-[61px] cryptoTooltip">
+            <div className="w-[334px] absolute top-[61px] cryptoTooltip " id="animate-tooltip">
               <div className="flex mr-1">
                 <div className="text-white font-subtitle4">Buy crypto</div>
-                <div className="ml-auto cursor-pointer relative -top-[3px] " onClick={handleClick}>
-                  <Image src={close} alt="close" width="13px" height="13px" />
+                <div className="ml-auto cursor-pointer relative top-[1px] " onClick={handleClick}>
+                  <Image src={close} alt="close" />
                 </div>
               </div>
-              <div className="font-body1 text-white mt-2 ">
+              <div className="font-body1 text-white mt-1 ">
                 Get tokens at the best price in web3 on plenty.network, with credit card or apple
                 pay.
               </div>
@@ -183,14 +182,17 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
         Connect wallet
       </button>
       {(localStorage.getItem(BUY_CRYPTO) !== "true" || showCryptoTooltip !== "true") && (
-        <div className="w-[310px] absolute top-[61px] cryptoTooltip">
+        <div
+          className="w-[334px] absolute top-[61px] cryptoTooltip animate__animated "
+          id="animate-tooltip"
+        >
           <div className="flex mr-1">
             <div className="text-white font-subtitle4">Buy crypto</div>
-            <div className="ml-auto cursor-pointer relative -top-[3px] " onClick={handleClick}>
-              <Image src={close} alt="close" width="13px" height="13px" />
+            <div className="ml-auto cursor-pointer relative top-[1px] " onClick={handleClick}>
+              <Image src={close} alt="close" />
             </div>
           </div>
-          <div className="font-body1 text-white mt-2 ">
+          <div className="font-body1 text-white mt-1 ">
             Get tokens at the best price in web3 on plenty.network, with credit card or apple pay.
           </div>
         </div>
