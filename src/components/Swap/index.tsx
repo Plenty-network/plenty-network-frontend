@@ -590,10 +590,7 @@ function Swap(props: ISwapProps) {
     }));
   }, [tokens]);
   useEffect(() => {
-    if (
-      (Object.keys(allBalance),
-      length !== 0 && allBalance.success && Object.keys(allBalance.allTokensBalances).length !== 0)
-    ) {
+    if (allBalance.success && Object.keys(allBalance.allTokensBalances).length !== 0) {
       tokensListConfig.sort(
         (a, b) =>
           Number(
