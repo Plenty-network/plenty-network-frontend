@@ -894,7 +894,7 @@
 }
 }
 .tooltipAnimation { 
-	animation: fadeOutAni 400ms ease-in-out forwards;
+	animation: fadeOutAni 300ms ease-in-out both;
 
 }
 
@@ -903,13 +903,21 @@
 
 @keyframes fadeOutAni {
 	0% {
-		opacity: 1; visibility: visible;
+		opacity: 1; 
+	
+}
+
+65% {
+	opacity: 0.60; 
+
 }
 80% {
-	opacity: 0.80; visibility: visible;
+	opacity: 0.40; 
+
 }
 100% {
-	opacity: 0; visibility: hidden;
+	opacity: 0; 
+	
 }
  
 }

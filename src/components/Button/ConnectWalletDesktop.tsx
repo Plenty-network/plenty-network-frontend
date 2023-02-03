@@ -68,7 +68,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
     setTimeout(() => {
       setShowCryptoTooltip("true");
       localStorage.setItem(BUY_CRYPTO, "true");
-    }, 200);
+    }, 800);
   };
   if (userAddress) {
     return (

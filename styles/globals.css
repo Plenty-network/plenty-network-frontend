@@ -264,7 +264,7 @@ input[type='number'] {
   left: 5px !important;
 }
 .cryptoTooltip{
-  opacity: 0.98 !important;
+  
   background: linear-gradient(103.38deg, #F43552 -78.24%, #7316FF 95.57%) !important;
   background-color: linear-gradient(103.38deg, #F43552 -78.24%, #7316FF 95.57%) !important;
   border-color: #CBBFFF !important;
