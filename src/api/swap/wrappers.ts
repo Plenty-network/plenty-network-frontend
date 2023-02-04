@@ -288,28 +288,43 @@ export const computeReverseCalculationWrapper = (
   try {
     const state = store.getState();
     const TOKEN = state.config.tokens;
-
+    console.log("tokenIn", tokenInAmount.toString());
     const bestPath = computeAllPathsReverse(paths, tokenInAmount, slippage, swapData);
     let temp = computeAllPaths(paths2 , bestPath.tokenOutAmount , slippage , swapData2);
+
+    const path = paths2[0].split(" ");
+    const tokenIn = path[0];
+    const tokenInData = TOKEN[tokenIn];
 
     //BINARY SEARCH FOR USER AMOUNT
     let low = bestPath.tokenOutAmount;
     while(temp.tokenOutAmount.isGreaterThan(tokenInAmount) && temp.tokenOutAmount.isGreaterThan(new BigNumber(0))){
+      console.log("low1 - ", low.toString());
+      // if(low.minus(0.1).isLessThan(0)) {
+      //   break;
+      // }
       low = low.minus(1);
+      if(low.isLessThan(0)) {
+        // low = low.plus(1);
+        low = new BigNumber(1).dividedBy(new BigNumber(10).pow(tokenInData.decimals));
+        break;
+      }
       temp = computeAllPaths(paths2 , low , slippage , swapData2);
     }
     
     let high = low.plus(1);
+    // console.log(low.toString(), high.toString());
     let mid = new BigNumber(0);
 
-    const path = paths[0].split(" ");
-    const tokenIn = path[0];
-    const tokenInData = TOKEN[tokenIn];
-
+    // const path = paths2[0].split(" ");
+    // const tokenIn = path[0];
+    // const tokenInData = TOKEN[tokenIn];
+    console.log("low - ",low.toString(),"high - ", high.toString());
     while(low.isLessThanOrEqualTo(high)){
       mid = (low.plus(high)).dividedBy(2).decimalPlaces(tokenInData.decimals , 1);
+      console.log("mid", mid.toString());
       let currAns = computeAllPaths(paths2 , mid , slippage , swapData2);
-
+      console.log("currAns", currAns.tokenOutAmount.toString());
       if(currAns.tokenOutAmount.isEqualTo(tokenInAmount)){
         break;
       }
@@ -318,7 +333,7 @@ export const computeReverseCalculationWrapper = (
       }else{
         high = mid.minus(new BigNumber(1).dividedBy(new BigNumber(10).pow(tokenInData.decimals)));
       }
-
+      console.log("low - ",low.toString(),"high - ", high.toString());
     } 
 
 
