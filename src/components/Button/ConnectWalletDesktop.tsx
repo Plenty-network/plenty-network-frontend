@@ -65,10 +65,10 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const ele = document.getElementById("animate-tooltip");
   const handleClick = () => {
     ele && ele.classList.add("tooltipAnimation");
-    setTimeout(() => {
-      setShowCryptoTooltip("true");
-      localStorage.setItem(BUY_CRYPTO, "true");
-    }, 800);
+    //setTimeout(() => {
+    setShowCryptoTooltip("true");
+    localStorage.setItem(BUY_CRYPTO, "true");
+    //}, 800);
   };
   if (userAddress) {
     return (
@@ -97,11 +97,24 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
             <Image alt={"alt"} src={settingLogo} />
           </button>
           {(localStorage.getItem(BUY_CRYPTO) !== "true" || showCryptoTooltip !== "true") && (
-            <div className="gradientBorderCrypto" id="animate-tooltip">
+            <div
+              className="gradientBorderCrypto cursor-pointer"
+              id="animate-tooltip"
+              onClick={() => {
+                handleClick();
+                setShowMenu((sow) => !sow);
+              }}
+            >
               <div className="innerContentCrypto w-[334px]  top-[61px] cryptoTooltip ">
                 <div className="flex mr-1">
                   <div className="text-white font-subtitle4">Buy tez</div>
-                  <div className="ml-auto cursor-pointer relative top-[1px] " onClick={handleClick}>
+                  <div
+                    className="ml-auto cursor-pointer relative top-[1px] "
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleClick();
+                    }}
+                  >
                     <Image src={close} alt="close" />
                   </div>
                 </div>
