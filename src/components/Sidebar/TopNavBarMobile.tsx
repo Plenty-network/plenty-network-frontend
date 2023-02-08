@@ -16,6 +16,7 @@ export interface ITopNavBarMobileProps {
   setShowNotification: Function;
   isBribes: boolean;
   isBanner: boolean;
+  setShowFiat: React.Dispatch<React.SetStateAction<boolean>>;
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -57,6 +58,7 @@ export function TopNavBarMobile(props: ITopNavBarMobileProps) {
             <ConnectWalletBtnMobile
               setNodeSelector={props.setNodeSelector}
               isBanner={props.isBanner}
+              setShowFiat={props.setShowFiat}
             />
           </div>
         )}
