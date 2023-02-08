@@ -1,5 +1,6 @@
 import Image from "next/image";
 import * as React from "react";
+import "animate.css";
 import loadingLogo from "../../assets/icon/common/loadingLogo.svg";
 import settingLogo from "../../assets/icon/common/settingLogo.svg";
 import walletIcon from "../../assets/icon/common/walletIcon.svg";
@@ -17,7 +18,12 @@ import { useOutsideClick } from "../../utils/outSideClickHook";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
+import close from "../../assets/icon/common/close-icon.svg";
+
+import { BUY_CRYPTO } from "../../constants/localStorage";
+
 export interface IConnectWalletBtnDeskTopProps {
+  setShowFiat: React.Dispatch<React.SetStateAction<boolean>>;
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -47,12 +53,30 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   useOutsideClick(reff, () => {
     setShowMenu(false);
   });
+  // const [showFiat, setShowFiat] = React.useState(false);
+  const handleFiat = () => {
+    setShowMenu(false);
+    props.setShowFiat(true);
+  };
+
+  const [showCryptoTooltip, setShowCryptoTooltip] = React.useState(
+    localStorage.getItem(BUY_CRYPTO)
+  );
+  const ele = document.getElementById("animate-tooltip");
+  const handleClick = () => {
+    ele && ele.classList.add("tooltipAnimation");
+    setTimeout(() => {
+      setShowCryptoTooltip("true");
+      localStorage.setItem(BUY_CRYPTO, "true");
+    }, 800);
+  };
   if (userAddress) {
     return (
       <>
         <div className="relative flex items-center" ref={reff}>
           <button
             onClick={() => {
+              handleClick();
               setShowMenu((sow) => !sow);
             }}
             className="flex flex-row justify-center items-center gap-2 bg-primary-500/10 py-2 px-4 hover:bg-opacity-95 rounded-2xl border border-primary-500/30"
@@ -72,6 +96,22 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
             {isConnectWalletLoading && <Image alt={"alt"} src={loadingLogo} className="spin" />}
             <Image alt={"alt"} src={settingLogo} />
           </button>
+          {(localStorage.getItem(BUY_CRYPTO) !== "true" || showCryptoTooltip !== "true") && (
+            <div className="gradientBorderCrypto" id="animate-tooltip">
+              <div className="innerContentCrypto w-[334px]  top-[61px] cryptoTooltip ">
+                <div className="flex mr-1">
+                  <div className="text-white font-subtitle4">Buy tez</div>
+                  <div className="ml-auto cursor-pointer relative top-[1px] " onClick={handleClick}>
+                    <Image src={close} alt="close" />
+                  </div>
+                </div>
+                <div className="font-body1 text-white mt-1 ">
+                  Use your card or Apple Pay to purchase tez on Plenty, powered by Wert.
+                </div>
+              </div>
+            </div>
+          )}
+
           {showMenu && (
             <div className="absolute w-[320px] fade-in-3  right-0 top-[55px] mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
               {/* <p className="bg-primary-755 text-f14 p-4 flex gap-2">
@@ -85,9 +125,12 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
                 <Image alt={"alt"} src={copyLogo} />
                 <span>Copy address</span>
               </p>
-              <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-not-allowed text-white text-f14">
+              <p
+                className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+                onClick={handleFiat}
+              >
                 <Image alt={"alt"} src={fiatLogo} />
-                <span>Fiat</span>
+                <span>Buy tez with fiat</span>
               </p>
               <p
                 className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"

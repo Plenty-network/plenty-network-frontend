@@ -181,20 +181,19 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
 
   useEffect(() => {
     if (walletAddress) {
-      props.activeState === ActiveLiquidity.Staking &&
-        getStakedData(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
-          if (res.success) {
-            setBoost(res);
-            if (res.stakedData.isBoosted) {
-              setSelectedDropDown({
-                tokenId: res?.stakedData ? res.stakedData.boostedLockId.toString() : "",
-                boostValue: res?.stakedData ? res.stakedData.boostValue.toString() : "",
-                votingPower: "",
-                lockState: 0 as ELocksState,
-              });
-            }
+      getStakedData(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
+        if (res.success) {
+          setBoost(res);
+          if (res.stakedData.isBoosted) {
+            setSelectedDropDown({
+              tokenId: res?.stakedData ? res.stakedData.boostedLockId.toString() : "",
+              boostValue: res?.stakedData ? res.stakedData.boostValue.toString() : "",
+              votingPower: "",
+              lockState: 0 as ELocksState,
+            });
           }
-        });
+        }
+      });
     }
   }, [balanceUpdate, props.tokenIn.name, props.tokenOut.name, walletAddress]);
   useEffect(() => {

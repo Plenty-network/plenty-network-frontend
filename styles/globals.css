@@ -263,6 +263,105 @@ input[type='number'] {
   padding: 16px 10px !important;
   left: 5px !important;
 }
+.gradientBorderCrypto{
+  position: absolute;
+  top: 75px;
+  right: 1%;
+  
+
+  background: linear-gradient(3.02deg, #3FF3D8 -10.57%, #7E4ACC 107.84%);
+  
+  box-shadow: 0px 4px 20px #430D95;
+
+    /* background: linear-gradient(to right,rgba(63, 243, 216, 0.5)
+    ,rgba(126, 74, 204, 0.5)
+    ); */
+    padding: 0.5px;
+   
+    height: 94.5px;
+    border-radius: 12px;
+    
+}
+@media (min-width: 320px) and (max-width: 768px) {
+  .gradientBorderCrypto {
+    top: 65px !important;
+  height: 94.5px;
+ 
+  }
+}
+.innerContentCrypto{
+  z-index: 2;
+  margin:0;
+  /* position: relative; */
+ 
+}
+.cryptoTooltip{
+  
+  background: #160D24 !important;
+  background-color: #160D24 !important;
+  
+  color: white !important;
+  font-weight: 400 !important;
+  text-align: left !important;
+  /* border: 1px solid #CBBFFF !important; */
+  border-radius: 12px !important;
+  box-shadow:  0px 4px 24px rgb(0 0 0 / 40%) !important;
+  padding: 14px 16px 14px 16px !important;
+  /* top: 66px !important;
+  
+  right: 3% !important; */
+}
+.cryptoTooltip::after{
+  position: absolute;
+  content: '' !important;
+  left: 87% !important;
+  top: -0.5% !important;
+  margin-top: 0 !important;
+  width: 12px !important;
+  height: 12px !important;
+  transform: translate(50%, -50%) rotate(134deg) !important;
+  border: none !important;
+  border-left: 1px solid #7b52cd !important;
+  border-bottom-left-radius: 25%;
+  border-bottom: 1px solid #7b52cd !important;
+  background:  #160D24 !important;
+}
+.tooltipCustomCrypto {
+  opacity: 0.98 !important;
+  background: linear-gradient(103.38deg, #F43552 -78.24%, #7316FF 95.57%) !important;
+  background-color: linear-gradient(103.38deg, #F43552 -78.24%, #7316FF 95.57%) !important;
+  border-color: #CBBFFF !important;
+  color: white !important;
+  font-weight: 400 !important;
+  text-align: left !important;
+  border: 1px solid #CBBFFF !important;
+  border-radius: 12px !important;
+  box-shadow:  0px 4px 24px rgb(0 0 0 / 40%) !important;
+  padding: 16px 10px !important;
+  top: 63px !important;
+  left: 70% !important;
+  right: 1% !important;
+}
+@media (min-width: 320px) and (max-width: 768px) {
+  .tooltipCustomCrypto {
+    /* top: 63px !important;
+  left: 20% !important;
+  right: 1% !important; */
+  }
+}
+.tooltipCustomCrypto-bottom::after{
+  content: '' !important;
+  left: 80% !important;
+  top: -0.5% !important;
+  margin-top: 0 !important;
+  width: 12px !important;
+  height: 12px !important;
+  transform: translate(50%, -50%) rotate(134deg) !important;
+  border: none !important;
+  border-left: 1px solid #CBBFFF !important;
+  border-bottom: 1px solid #CBBFFF !important;
+  background:  #7316FF !important;
+}
 .tooltipCustomWithoutArrow {
   opacity: 0.98 !important;
   background-color: #160d24 !important;

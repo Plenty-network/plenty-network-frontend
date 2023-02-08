@@ -13,6 +13,7 @@ import "animate.css";
 import { useDispatch } from "react-redux";
 import { setClientHeight, setHeight, setScrollY } from "../../redux/walletLoading";
 import ReactTooltip from "react-tooltip";
+import WertWidgetPopup from "../Wert";
 
 export interface ISideBarHOCProps {
   children: any;
@@ -40,6 +41,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
     dispatch(setHeight(e.target.scrollHeight));
     dispatch(setClientHeight(e.target.clientHeight));
   };
+  const [showFiat, setShowFiat] = React.useState(false);
   const [showNodeSelector, setNodeSelector] = useState(false);
   return (
     <>
@@ -53,6 +55,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
             isLanding={props.isBribesLanding ? props.isBribesLanding : false}
             isBribes={props.isBribes ? props.isBribes : false}
             isBanner={isBanner}
+            setShowFiat={setShowFiat}
           />
         )}
         {showNotification && !props.isBribesLanding && (
@@ -77,7 +80,9 @@ export function SideBarHOC(props: ISideBarHOCProps) {
               className={`overflow-x-hidden h-screen   z-0  ${
                 props.makeTopBarScroll || true
                   ? `static overflow-y-auto ${
-                      isBanner ? "pt-[100px] xs:pb-0 sm:pb-[50px] xl:pb-0" : "pt-[64px]"
+                      isBanner
+                        ? "pt-[100px] xs:pb-0 sm:pb-[50px] xl:pb-0"
+                        : "pt-[64px] pb-[67px] lg:pb-0"
                     } `
                   : "md:absolute fixed overflow-y-hidden top-16 !m-0  h-[calc(100%_-_121px)] md:h-[calc(100%_-_64px)] md:w-[calc(100%_-_240px)] w-full"
               }`}
@@ -95,11 +100,13 @@ export function SideBarHOC(props: ISideBarHOCProps) {
               isBribes={props.isBribes ? props.isBribes : false}
               setNodeSelector={setNodeSelector}
               isBanner={isBanner}
+              setShowFiat={setShowFiat}
             />
           </>
         )}
       </div>
       <NodeSelector show={showNodeSelector} setShow={setNodeSelector} />
+      {showFiat && <WertWidgetPopup hide={setShowFiat} />}
     </>
   );
 }
