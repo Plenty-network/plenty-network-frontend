@@ -390,7 +390,7 @@ export const deployTezPair = async (
           secondTokenAmount,
           secondToken.tokenId || 0,
           // TODO: Confirm the name ordering (user selected or tez always first/second)
-          char2Bytes(`${tezToken.symbol}-${secondToken.symbol} PNLP`),
+          char2Bytes(`${secondToken.symbol}-${tezToken.symbol} PNLP`),
           secondToken.standard === TokenStandard.FA2 ? true : false,
           caller
         )
