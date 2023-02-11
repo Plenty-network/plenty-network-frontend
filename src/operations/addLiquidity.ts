@@ -1,4 +1,4 @@
-import { getDexAddress, isGeneralStablePair, isTezPair } from "../api/util/fetchConfig";
+import { getDexAddress, isGeneralStablePair, isCtezTezPair } from "../api/util/fetchConfig";
 import { BigNumber } from "bignumber.js";
 import { dappClient } from "../common/walletconnect";
 import { store } from "../redux";
@@ -44,8 +44,8 @@ export const addLiquidity = async (
 ): Promise<IOperationsResponse> => {
   try {
     let addLiquidityResult: IOperationsResponse;
-    if (isTezPair(tokenOneSymbol, tokenTwoSymbol)) {
-      addLiquidityResult = await addTezPairsLiquidity(
+    if (isCtezTezPair(tokenOneSymbol, tokenTwoSymbol)) {
+      addLiquidityResult = await addCtezTezPairLiquidity(
         tokenOneSymbol,
         tokenTwoSymbol,
         new BigNumber(tokenOneAmount),
@@ -458,7 +458,7 @@ const addAllPairsLiquidity = async (
  * @param setActiveState - Callback to change active state
  * @param flashMessageContent - Content for the flash message object(optional)
  */
-const addTezPairsLiquidity = async (
+const addCtezTezPairLiquidity = async (
   tokenOneSymbol: string,
   tokenTwoSymbol: string,
   tokenOneAmount: BigNumber,

@@ -1,4 +1,4 @@
-import { getDexAddress, isGeneralStablePair, isTezPair } from '../api/util/fetchConfig';
+import { getDexAddress, isGeneralStablePair, isCtezTezPair } from '../api/util/fetchConfig';
 import { BigNumber } from 'bignumber.js';
 import { dappClient } from '../common/walletconnect';
 import { store } from '../redux';
@@ -37,8 +37,8 @@ export const removeLiquidity = async (
 ): Promise<IOperationsResponse> => {
   try {
     let removeLiquidityResult: IOperationsResponse;
-    if (isTezPair(tokenOneSymbol, tokenTwoSymbol)) {
-      removeLiquidityResult = await removeTezPairsLiquidity(
+    if (isCtezTezPair(tokenOneSymbol, tokenTwoSymbol)) {
+      removeLiquidityResult = await removeCtezTezPairLiquidity(
         tokenOneSymbol,
         tokenTwoSymbol,
         new BigNumber(tokenOneAmount),
@@ -223,7 +223,7 @@ const removeAllPairsLiquidity = async (
  * @param setActiveState - Callback to change active state
  * @param flashMessageContent - Content for the flash message object(optional)
  */
- const removeTezPairsLiquidity = async (
+ const removeCtezTezPairLiquidity = async (
    tokenOneSymbol: string,
    tokenTwoSymbol: string,
    tokenOneAmount: BigNumber,
