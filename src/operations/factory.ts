@@ -1,5 +1,5 @@
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
-import { dappClient, factoryAddress, routerAddress} from "../common/walletconnect";
+import { dappClient, factoryAddress, routerAddress, tezDeployerAddress} from "../common/walletconnect";
 import { IConfigToken, TokenStandard } from "../config/types";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
@@ -272,6 +272,137 @@ export const deployStable = async (
 
     const updatedBatchOperations = await getBatchOperationsWithLimits(allBatch); 
     const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOp = await batch.send();
+
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+    resetAllValues && resetAllValues();
+
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
+
+    await batchOp.confirmation(1);
+
+    const status = await batchOp.status();
+    if (status === "applied") {
+      return {
+        success: true,
+        operationId: batchOp.opHash,
+      };
+    } else {
+      throw new Error(status);
+    }
+  } catch (error: any) {
+    console.error(error);
+    return {
+      success: false,
+      operationId: undefined,
+      error: error.message,
+    };
+  }
+};
+
+
+export const deployTezPair = async (
+  tokenOne: IConfigToken,
+  tokenTwo: IConfigToken,
+  caller: string,
+  tokenOneAmount: BigNumber,
+  tokenTwoAmount: BigNumber,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
+): Promise<IOperationsResponse> => {
+  try {
+    let tezToken: IConfigToken | undefined,
+      tezAmount: BigNumber = new BigNumber(0),
+      secondToken: IConfigToken | undefined,
+      secondTokenAmount: BigNumber = new BigNumber(0);
+    const { CheckIfWalletConnected } = dappClient();
+    const WALLET_RESP = await CheckIfWalletConnected();
+    if (!WALLET_RESP.success) {
+      throw new Error("Wallet connection failed");
+    }
+    const Tezos = await dappClient().tezos();
+
+    if (tokenOne.symbol === "XTZ") {
+      tezToken = tokenOne;
+      tezAmount = tokenOneAmount;
+      secondToken = tokenTwo;
+      secondTokenAmount = tokenTwoAmount;
+    } else if (tokenTwo.symbol === "XTZ") {
+      tezToken = tokenTwo;
+      tezAmount = tokenTwoAmount;
+      secondToken = tokenOne;
+      secondTokenAmount = tokenOneAmount;
+    } else {
+      throw new Error("Tez pair expected, but found none");
+    }
+    tezAmount = tezAmount
+      .multipliedBy(new BigNumber(10).pow(tezToken.decimals))
+      .decimalPlaces(0, 1);
+    secondTokenAmount = secondTokenAmount
+      .multipliedBy(new BigNumber(10).pow(secondToken.decimals))
+      .decimalPlaces(0, 1);
+
+    const tezDeployerInstance = await Tezos.wallet.at(tezDeployerAddress);
+    const secondTokenInstane = await Tezos.wallet.at(secondToken.address as string);
+
+    const allBatch: WalletParamsWithKind[] = [];
+
+    if (secondToken.standard === TokenStandard.FA12) {
+      allBatch.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstane.methods
+          .transfer(caller, routerAddress, secondTokenAmount)
+          .toTransferParams(),
+      });
+    } else if (secondToken.standard === TokenStandard.FA2) {
+      allBatch.push({
+        kind: OpKind.TRANSACTION,
+        ...secondTokenInstane.methods
+          .transfer([
+            {
+              from_: caller,
+              txs: [
+                {
+                  to_: routerAddress,
+                  token_id: secondToken.tokenId || 0,
+                  amount: secondTokenAmount,
+                },
+              ],
+            },
+          ])
+          .toTransferParams(),
+      });
+    } else {
+      throw new Error("Invalid token standard");
+    }
+
+    allBatch.push({
+      kind: OpKind.TRANSACTION,
+      ...tezDeployerInstance.methods
+        .deployTezPair(
+          tezAmount,
+          secondToken.address as string,
+          secondTokenAmount,
+          secondToken.tokenId || 0,
+          // TODO: Confirm the name ordering (user selected or tez always first/second)
+          char2Bytes(`${tezToken.symbol}-${secondToken.symbol} PNLP`),
+          secondToken.standard === TokenStandard.FA2 ? true : false,
+          caller
+        )
+        .toTransferParams({
+          mutez: true,
+          amount: tezAmount.toNumber(),
+        }),
+    });
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatch);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    // const batch = Tezos.wallet.batch(allBatch);
     const batchOp = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
