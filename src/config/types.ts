@@ -42,6 +42,7 @@ export interface IConfig {
   PLY_INDEXER: { mainnet: string; testnet: string };
   PLY_TOKEN: { mainnet: string; testnet: string };
   FACTORY: { mainnet: string; testnet: string };
+  TEZ_DEPLOYER: { mainnet: string; testnet: string };
   EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData };
   IPFS_LINKS: { primary: string; fallback: string };
   AIRDROP_SERVER: { mainnet: string; testnet: string };
@@ -169,6 +170,7 @@ export interface IExchangeTokenData {
 export enum PoolType {
   VOLATILE = "VOLATILE",
   STABLE = "STABLE",
+  TEZ = "TEZ",
 }
 
 export enum Chain {
