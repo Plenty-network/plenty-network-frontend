@@ -59,7 +59,7 @@ const Config: IConfig = {
   },
   PLY_INDEXER: {
     mainnet: "https://api.analytics.plenty.network/",
-    testnet: "https://analytics-indexer.ghostnet.plenty.network/",
+    testnet: "https://api.analytics.plenty.network/",//"https://analytics-indexer.ghostnet.plenty.network/",
   },
 
   FAUCET: "KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH",
@@ -120,7 +120,7 @@ const Config: IConfig = {
   },
   ROUTER: {
     mainnet: "KT1FNc7k9Exsz4jKp5K16p2B9L2Hfq2QcB2D",
-    testnet: "KT1BVpVm5erFaJUsa2VtLBpawteN1wG4gMch",
+    testnet: "KT1Rt1WH9pG6NtMZaUwZR8hMcwCdWgwEWpwu",
   },
 
   NETWORK: "testnet",

@@ -118,7 +118,7 @@ export const calculateTokenOutputVolatile = (
       .minus(nextTokenOutAmount)
       .dividedBy(tokenOutAmount);
     priceImpact = priceImpact.multipliedBy(100);
-    priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
+    priceImpact = priceImpact.absoluteValue();
     priceImpact = priceImpact.multipliedBy(100);
     const exchangeRate = tokenOutAmount.dividedBy(tokenInAmount);
 
@@ -204,7 +204,7 @@ export const calculateTokenInputVolatile = (
       .minus(nextTokenOutAmount)
       .dividedBy(tokenOutAmount);
     priceImpact = priceImpact.multipliedBy(100);
-    priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
+    priceImpact = priceImpact.absoluteValue();
     priceImpact = priceImpact.multipliedBy(100);
     const exchangeRate = tokenOutAmount.dividedBy(tokenInAmount);
 
