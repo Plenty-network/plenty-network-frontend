@@ -19,7 +19,7 @@ export default function CopiedToast(props: ICopiedToastProps) {
   return (
     <div
       id="toast"
-      className="flex gap-1.5 h-[36px] items-center justify-center px-3 bg-blue-600 rounded-2xl absolute xl:bottom-[45px] w-[340px] bottom-[70px]  mx-auto left-0 right-0"
+      className="flex gap-1.5 h-[36px] items-center justify-center pl-3 pr-4 bg-blue-600 rounded-2xl absolute xl:bottom-[45px] w-[340px] bottom-[70px]  mx-auto left-0 right-0"
     >
       <div className="relative top-[3px]">
         <Image src={check} alt="alt" />
