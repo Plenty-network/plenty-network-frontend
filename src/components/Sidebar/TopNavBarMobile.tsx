@@ -18,6 +18,7 @@ export interface ITopNavBarMobileProps {
   isBanner: boolean;
   setShowFiat: React.Dispatch<React.SetStateAction<boolean>>;
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function TopNavBarMobile(props: ITopNavBarMobileProps) {
@@ -59,6 +60,7 @@ export function TopNavBarMobile(props: ITopNavBarMobileProps) {
               setNodeSelector={props.setNodeSelector}
               isBanner={props.isBanner}
               setShowFiat={props.setShowFiat}
+              setShowToast={props.setShowToast}
             />
           </div>
         )}

@@ -228,6 +228,7 @@ function TezosChain(props: ITezosChain) {
     const claimdata = res.airdropClaimData;
     if (claimdata.eligible) {
       if (claimdata.claimData.length && claimdata.claimData[0].claimed) {
+        dispatch(setHasTweeted(true));
         setTwitterAction("Claimed");
         //setHasTweeted(true);
       } else {
@@ -530,7 +531,15 @@ function TezosChain(props: ITezosChain) {
           claimData={res.airdropClaimData.claimData}
           fetching={res.fetching}
           twitterAction={twitterAction}
-          hasTweeted={hasTweeted}
+          hasTweeted={
+            res.airdropClaimData.eligible
+              ? hasTweeted
+                ? true
+                : res.airdropClaimData.claimData.length && res.airdropClaimData.claimData[0].claimed
+                ? true
+                : false
+              : false
+          }
         />
         <div className="border-t border-text-800 my-3"></div>
         <Steps
@@ -538,7 +547,15 @@ function TezosChain(props: ITezosChain) {
           fetching={res.fetching}
           twitterAction={twitterAction}
           handleTwitter={handleTwitter}
-          hasTweeted={hasTweeted}
+          hasTweeted={
+            res.airdropClaimData.eligible
+              ? hasTweeted
+                ? true
+                : res.airdropClaimData.claimData.length && res.airdropClaimData.claimData[0].claimed
+                ? true
+                : false
+              : false
+          }
         />
       </div>
       <div className="flex mt-3 gap-2">

@@ -26,6 +26,7 @@ export interface IConnectWalletBtnMobileProps {
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
   isBanner: boolean;
   setShowFiat: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
@@ -67,6 +68,10 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
     setShowCryptoTooltip("true");
     localStorage.setItem(BUY_CRYPTO, "true");
     //}, 200);
+  };
+  const copyAddress = () => {
+    copy(userAddress);
+    props.setShowToast(true);
   };
   if (userAddress) {
     return (
@@ -132,7 +137,7 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
             </p> */}
               <p
                 className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
-                onClick={() => copy(userAddress)}
+                onClick={copyAddress}
               >
                 <Image alt={"alt"} src={copyLogo} />
                 <span>Copy address</span>
