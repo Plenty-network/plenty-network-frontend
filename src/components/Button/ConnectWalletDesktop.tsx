@@ -41,6 +41,9 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const copyAddress = () => {
     copy(userAddress);
     props.setShowToast(true);
+    setTimeout(() => {
+      props.setShowToast(false);
+    }, 6000);
   };
   const disconnectUserWallet = async () => {
     setShowMenu(false);

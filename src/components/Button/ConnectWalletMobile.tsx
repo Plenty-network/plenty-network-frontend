@@ -72,6 +72,9 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
   const copyAddress = () => {
     copy(userAddress);
     props.setShowToast(true);
+    setTimeout(() => {
+      props.setShowToast(false);
+    }, 6000);
   };
   if (userAddress) {
     return (

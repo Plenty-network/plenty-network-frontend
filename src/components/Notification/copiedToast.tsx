@@ -11,6 +11,9 @@ export default function CopiedToast(props: ICopiedToastProps) {
   const ele = document.getElementById("toast");
   setTimeout(() => {
     ele && ele.classList.add("tooltipAnimation");
+  }, 4000);
+  setTimeout(() => {
+    ele && ele.classList.remove("tooltipAnimation");
   }, 6000);
 
   return (
