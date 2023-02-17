@@ -25,6 +25,7 @@ import { BUY_CRYPTO } from "../../constants/localStorage";
 export interface IConnectWalletBtnDeskTopProps {
   setShowFiat: React.Dispatch<React.SetStateAction<boolean>>;
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
@@ -36,6 +37,13 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const reff = React.useRef(null);
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
+  };
+  const copyAddress = () => {
+    copy(userAddress);
+    props.setShowToast(true);
+    setTimeout(() => {
+      props.setShowToast(false);
+    }, 6000);
   };
   const disconnectUserWallet = async () => {
     setShowMenu(false);
@@ -53,7 +61,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   useOutsideClick(reff, () => {
     setShowMenu(false);
   });
-  // const [showFiat, setShowFiat] = React.useState(false);
+
   const handleFiat = () => {
     setShowMenu(false);
     props.setShowFiat(true);
@@ -133,7 +141,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
               </p> */}
               <p
                 className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
-                onClick={() => copy(userAddress)}
+                onClick={copyAddress}
               >
                 <Image alt={"alt"} src={copyLogo} />
                 <span>Copy address</span>

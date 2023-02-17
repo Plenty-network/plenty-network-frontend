@@ -58,7 +58,7 @@ function Progress(props: IProgress) {
                 return <p className={clsx("bg-blue-100", "h-[6px]  w-[105px]")} key={index}></p>;
               }
             })}
-            {props.claimData && props.claimData[0]?.mission === "ELIGIBLE" && (
+            {props.claimData && (
               <p
                 className={clsx(
                   props.hasTweeted ? "bg-blue-100" : "bg-info-300",
