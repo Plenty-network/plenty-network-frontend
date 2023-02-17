@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
-import { AppDispatch, store } from "../../redux";
+import { AppDispatch, store, useAppSelector } from "../../redux";
 import { FlashMessageHOC } from "../FlashScreen/FlashMessageHOC";
 import NodeSelector from "../NodeSelector";
 import { NotificationBar } from "../Notification";
@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { setClientHeight, setHeight, setScrollY } from "../../redux/walletLoading";
 import ReactTooltip from "react-tooltip";
 import WertWidgetPopup from "../Wert";
+import CopiedToast from "../Notification/copiedToast";
 
 export interface ISideBarHOCProps {
   children: any;
@@ -23,8 +24,9 @@ export interface ISideBarHOCProps {
 }
 
 export function SideBarHOC(props: ISideBarHOCProps) {
+  const userAddress = useAppSelector((state) => state.wallet.address);
   const [isBanner, setIsBanner] = React.useState(false);
-
+  const [showToast, setShowToast] = React.useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const showNotificationClick = () => {
     setShowNotification(!showNotification);
@@ -56,6 +58,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
             isBribes={props.isBribes ? props.isBribes : false}
             isBanner={isBanner}
             setShowFiat={setShowFiat}
+            setShowToast={setShowToast}
           />
         )}
         {showNotification && !props.isBribesLanding && (
@@ -101,9 +104,11 @@ export function SideBarHOC(props: ISideBarHOCProps) {
               setNodeSelector={setNodeSelector}
               isBanner={isBanner}
               setShowFiat={setShowFiat}
+              setShowToast={setShowToast}
             />
           </>
         )}
+        {showToast && <CopiedToast address={userAddress} />}
       </div>
       <NodeSelector show={showNodeSelector} setShow={setNodeSelector} />
       {showFiat && <WertWidgetPopup hide={setShowFiat} />}
