@@ -18,7 +18,7 @@ const Config: IConfig = {
   },
   TZKT_NODES: {
     mainnet: process.env.NEXT_PUBLIC_TZKT_MAINNET || "https://api.tzkt.io/",
-    testnet: process.env.NEXT_PUBLIC_TZKT_GHOSTNET || "https://api.ghostnet.tzkt.io/",
+    testnet: "https://api.ghostnet.tzkt.io/",//process.env.NEXT_PUBLIC_TZKT_GHOSTNET || "https://api.ghostnet.tzkt.io/",
   },
   PUBLIC_TZKT_NODES: {
     mainnet: "https://api.tzkt.io/",
