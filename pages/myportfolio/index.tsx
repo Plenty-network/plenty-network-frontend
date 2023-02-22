@@ -1677,14 +1677,14 @@ function MyPortfolio(props: any) {
               )}
             </div>
             {activeSection === MyPortfolioSection.Rewards && (
-              <div className="py-1.5 md:h-[42px]  px-2 rounded-lg  flex items-center bg-info-500/[0.1] mx-2 md:mx-[23px] mt-2">
+              <div className="py-1.5   px-2 rounded-lg  flex items-center bg-info-500/[0.1] mx-2 md:mx-[23px] mt-2">
                 <p className="relative top-0.5">
                   <Image src={info} />
                 </p>
-                <p className="font-body2 text-info-500 px-3 sm:w-[50%] md:w-[700px]">
+                <p className="font-body2 text-info-500 px-3 w-[90%] md:w-auto">
                   {isMobile
-                    ? "Bribes less than $0.1 are not visible or claimable to prevent wastage of fees."
-                    : "Bribes less than $0.1 are not visible or claimable to prevent wastage of fees."}
+                    ? "Bribes that are less than $0.1 are not displayed or made claimable in the UI to prevent wastage of transaction fees. Further, users should avoid claiming any reward below $0.1"
+                    : "Bribes that are less than $0.1 are not displayed or made claimable in the UI to prevent wastage of transaction fees. Further, users should avoid claiming any reward below $0.1"}
                 </p>
               </div>
             )}
