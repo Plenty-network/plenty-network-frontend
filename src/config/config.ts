@@ -46,7 +46,7 @@ const Config: IConfig = {
   },
   TEZ_DEPLOYER: {
     mainnet: "",
-    testnet: "KT1Q5kw9KfDVdKcfh5iwtqXPBXqg8sYCLE2p",
+    testnet: "KT1Mr3fLViGYZCztpMUWxdGNSHjA8xPtczVA",
   },
   AIRDROP: {
     mainnet: "KT1HpNxd9RaeCwxrp1QX96DyocWURJXX8sZx",
@@ -120,7 +120,7 @@ const Config: IConfig = {
   },
   ROUTER: {
     mainnet: "KT1FNc7k9Exsz4jKp5K16p2B9L2Hfq2QcB2D",
-    testnet: "KT1Rt1WH9pG6NtMZaUwZR8hMcwCdWgwEWpwu",
+    testnet: "KT1CWvM4nLoyHBGKkGBKjnPNTNLzoJ9JpAW3",
   },
 
   NETWORK: "testnet",
