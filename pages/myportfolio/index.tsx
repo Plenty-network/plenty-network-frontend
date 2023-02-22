@@ -248,7 +248,9 @@ function MyPortfolio(props: any) {
       dispatch(
         fetchAllLocksRewardsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
-      dispatch(fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice }));
+      dispatch(
+        fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+      );
       dispatch(
         fetchUnclaimedInflationData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
@@ -266,7 +268,9 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (userAddress && Object.keys(tokenPrice).length !== 0 && rewardsOperationDataError) {
       setTimeout(() => {
-        dispatch(fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice }));
+        dispatch(
+          fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+        );
       }, API_RE_ATTAMPT_DELAY);
     }
   }, [rewardsOperationDataError]);
@@ -435,7 +439,9 @@ function MyPortfolio(props: any) {
       dispatch(
         fetchAllLocksRewardsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
-      dispatch(fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice }));
+      dispatch(
+        fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+      );
       dispatch(
         fetchUnclaimedInflationData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
@@ -1677,8 +1683,8 @@ function MyPortfolio(props: any) {
                 </p>
                 <p className="font-body2 text-info-500 px-3 sm:w-[50%] md:w-[700px]">
                   {isMobile
-                    ? "Bribes less than $0.05 are not visible or claimable to prevent wastage of fees."
-                    : "Bribes less than $0.05 are not visible or claimable to prevent wastage of fees."}
+                    ? "Bribes less than $0.1 are not visible or claimable to prevent wastage of fees."
+                    : "Bribes less than $0.1 are not visible or claimable to prevent wastage of fees."}
                 </p>
               </div>
             )}
