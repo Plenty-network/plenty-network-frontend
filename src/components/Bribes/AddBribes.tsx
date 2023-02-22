@@ -200,7 +200,7 @@ function AddBribes(props: IAddBribes) {
         Number(props.bribeInputValue) > 0 &&
         new BigNumber(props.bribeInputValue)
           .multipliedBy(new BigNumber(tokenPrice[props.bribeToken.name]))
-          .isLessThan(50)
+          .isLessThan(20)
       ) {
         return (
           <Button color="disabled" width="w-full">
@@ -332,7 +332,7 @@ function AddBribes(props: IAddBribes) {
                       (Number(props.bribeInputValue) > 0 &&
                         new BigNumber(props.bribeInputValue)
                           .multipliedBy(new BigNumber(tokenPrice[props.bribeToken.name]))
-                          .isLessThan(50))
+                          .isLessThan(20))
                       ? "border-error-500/[0.4] bg-error-500/[0.01]"
                       : "border-text-700 bg-muted-200/[0.1] hover:border-text-700"
                   )}
