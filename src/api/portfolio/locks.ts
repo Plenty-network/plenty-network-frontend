@@ -269,21 +269,24 @@ const getBribesData = (
         new BigNumber(10).pow(TOKENS[bribeData.name].decimals)
       );
       const amount = value.multipliedBy(tokenPrices[bribeData.name] || 0);
-      bribesValue = bribesValue.plus(amount);
-      // Sum up the bribes of all similar tokens
-      if(bribesObj[bribeData.name]) {
-        const prevBribeObj = bribesObj[bribeData.name];
-        bribesObj[bribeData.name] = {
-          ...prevBribeObj,
-          bribeValue: prevBribeObj.bribeValue.plus(value),
-          bribePrice: prevBribeObj.bribePrice.plus(amount),
-        };
-      } else {
-        bribesObj[bribeData.name] = {
-          bribeValue: value,
-          bribePrice: amount,
-          tokenSymbol: bribeData.name,
-        };
+      // Filtering out the bribes which are less that 0.1$ as of current price.
+      if(amount.isGreaterThanOrEqualTo(0.1)) {
+        bribesValue = bribesValue.plus(amount);
+        // Sum up the bribes of all similar tokens
+        if (bribesObj[bribeData.name]) {
+          const prevBribeObj = bribesObj[bribeData.name];
+          bribesObj[bribeData.name] = {
+            ...prevBribeObj,
+            bribeValue: prevBribeObj.bribeValue.plus(value),
+            bribePrice: prevBribeObj.bribePrice.plus(amount),
+          };
+        } else {
+          bribesObj[bribeData.name] = {
+            bribeValue: value,
+            bribePrice: amount,
+            tokenSymbol: bribeData.name,
+          };
+        }
       }
     }
     bribesData = Object.values(bribesObj);
@@ -359,12 +362,16 @@ const getFeesData = (
  * @param userTezosAddress - Tezos wallet address of the user
  */
 export const getAllRewardsOperationsData = async (
-  userTezosAddress: string
+  userTezosAddress: string,
+  tokenPrices: ITokenPriceList
 ): Promise<IAllRewardsOperationsData> => {
   try {
     if (!userTezosAddress) {
       throw new Error("Invalid or empty arguments.");
     }
+    const state = store.getState();
+    const TOKENS = state.config.tokens;
+
     const allEpochClaimOperationData: IAllEpochClaimOperationData = {};
     const allBribesClaimData: IAllBribesOperationData[] = [];
     const allFeesClaimData: IAllFeesOperationData[] = [];
@@ -400,7 +407,13 @@ export const getAllRewardsOperationsData = async (
           allFeesOperationData.amms[voteData.amm].push(Number(epochNumber));
         }
         for (const bribe of voteData.bribes) {
-          if(new BigNumber(bribe.value).isGreaterThan(0)) {
+          const value = new BigNumber(bribe.value).dividedBy(
+            new BigNumber(10).pow(TOKENS[bribe.name].decimals)
+          );
+          const amount = value.multipliedBy(tokenPrices[bribe.name] || 0);
+          // Claim bribe only if the bribe value is greater than 0 and the amount is
+          // greater than 0.1$ as of current price.
+          if(value.isGreaterThan(0) && amount.isGreaterThanOrEqualTo(0.1)) {
             const bribeId = Number(bribe.bribeId);
             const amm = bribe.amm;
             allEpochClaimTokenData[epochNumber].bribeData.push({
