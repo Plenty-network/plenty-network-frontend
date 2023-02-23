@@ -14,7 +14,7 @@ import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/token
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getEpochData } from "../../src/redux/epoch/epoch";
 import { useInterval } from "../../src/hooks/useInterval";
-
+import info from "../../src/assets/icon/pools/InfoBlue.svg";
 import rewardsViolet from "../../src/assets/icon/myPortfolio/rewardsViolet.svg";
 import positionsViolet from "../../src/assets/icon/myPortfolio/positionsViolet.svg";
 import rewards from "../../src/assets/icon/myPortfolio/rewards.svg";
@@ -248,7 +248,9 @@ function MyPortfolio(props: any) {
       dispatch(
         fetchAllLocksRewardsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
-      dispatch(fetchAllRewardsOperationsData(userAddress));
+      dispatch(
+        fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+      );
       dispatch(
         fetchUnclaimedInflationData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
@@ -266,7 +268,9 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (userAddress && Object.keys(tokenPrice).length !== 0 && rewardsOperationDataError) {
       setTimeout(() => {
-        dispatch(fetchAllRewardsOperationsData(userAddress));
+        dispatch(
+          fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+        );
       }, API_RE_ATTAMPT_DELAY);
     }
   }, [rewardsOperationDataError]);
@@ -435,7 +439,9 @@ function MyPortfolio(props: any) {
       dispatch(
         fetchAllLocksRewardsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
-      dispatch(fetchAllRewardsOperationsData(userAddress));
+      dispatch(
+        fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+      );
       dispatch(
         fetchUnclaimedInflationData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
@@ -1670,6 +1676,18 @@ function MyPortfolio(props: any) {
                 </div>
               )}
             </div>
+            {activeSection === MyPortfolioSection.Rewards && (
+              <div className="py-1.5   px-2 rounded-lg  flex items-center bg-info-500/[0.1] mx-2 md:mx-[23px] mt-2">
+                <p className="relative top-0.5">
+                  <Image src={info} />
+                </p>
+                <p className="font-body2 text-info-500 px-3 w-[90%] md:w-auto">
+                  {isMobile
+                    ? "Bribes that are less than $0.1 are not displayed or made claimable in the UI to prevent wastage of transaction fees. Further, users should avoid claiming any reward below $0.1"
+                    : "Bribes that are less than $0.1 are not displayed or made claimable in the UI to prevent wastage of transaction fees. Further, users should avoid claiming any reward below $0.1"}
+                </p>
+              </div>
+            )}
             <div className="mt-5 overflow-x-auto inner md:pl-[23px] pl-2">
               {activeSection === MyPortfolioSection.Positions ? (
                 <Stats

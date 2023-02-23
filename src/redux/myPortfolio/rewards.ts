@@ -40,8 +40,8 @@ export const fetchAllLocksRewardsData = createAsyncThunk(
 // Unclaimed rewards data for operations fetch for all user locks
 export const fetchAllRewardsOperationsData = createAsyncThunk(
   'rewards/fetchAllRewardsOperationsData',
-  async (userTezosAddress: string, thunkAPI) => {
-    const res = await getAllRewardsOperationsData(userTezosAddress);
+  async ({userTezosAddress, tokenPrices}: IAllLocksRewardArgument, thunkAPI) => {
+    const res = await getAllRewardsOperationsData(userTezosAddress, tokenPrices);
     return res;
   }
 );
