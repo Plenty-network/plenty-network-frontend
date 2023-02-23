@@ -31,6 +31,7 @@ function AddBribes(props: IAddBribes) {
   const tokens = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const userAddress = useAppSelector((state) => state.wallet.address);
+  //const userAddress = "tz1VKAzp3FoerqzvKZTv8aRrg2AD16NjNx9S";
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
 
   const [listofEpoch, setListofEpoch] = useState<IEpochDataResponse>({} as IEpochDataResponse);
@@ -114,7 +115,7 @@ function AddBribes(props: IAddBribes) {
 
     props.bribeToken.name === "tez"
       ? handleTokenInput(Number(props.allBalance[props.bribeToken.name]?.balance) - 0.02)
-      : handleTokenInput(props.allBalance[props.bribeToken.name]?.balance.toNumber());
+      : handleTokenInput(props.allBalance[props.bribeToken.name]?.balance.toString());
   };
   const [selectedDropDown, setSelectedDropDown] = useState<IEpochListObject>(
     {} as IEpochListObject
@@ -150,11 +151,11 @@ function AddBribes(props: IAddBribes) {
 
     setSwapModalShow(false);
   };
-  const [bottomValue, setBottomValue] = useState(0);
+  const [bottomValue, setBottomValue] = useState<Number | string>("0");
   useEffect(() => {
     props.setEpochArray([]);
     if (isSelectedEpoch) {
-      setBottomValue(Number(props.bribeInputValue));
+      setBottomValue(props.bribeInputValue);
       setSelectedEndDropDown({} as IEpochListObject);
       if (selectedDropDown.epochNumber > 0) {
         props.setEpochArray([selectedDropDown.epochNumber]);
@@ -189,7 +190,7 @@ function AddBribes(props: IAddBribes) {
           new BigNumber(props.bribeInputValue).isGreaterThan(
             props.allBalance[props.bribeToken.name]?.balance
           )) ||
-        new BigNumber(bottomValue).isGreaterThan(props.allBalance[props.bribeToken.name]?.balance)
+        Number(bottomValue) > Number(props.allBalance[props.bribeToken.name]?.balance)
       ) {
         return (
           <Button color="disabled" width="w-full">
@@ -326,9 +327,8 @@ function AddBribes(props: IAddBribes) {
                       new BigNumber(props.bribeInputValue).isGreaterThan(
                         props.allBalance[props.bribeToken.name]?.balance
                       )) ||
-                      new BigNumber(bottomValue).isGreaterThan(
-                        props.allBalance[props.bribeToken.name]?.balance
-                      ) ||
+                      Number(bottomValue) >
+                        Number(props.allBalance[props.bribeToken.name]?.balance) ||
                       (Number(props.bribeInputValue) > 0 &&
                         new BigNumber(props.bribeInputValue)
                           .multipliedBy(new BigNumber(tokenPrice[props.bribeToken.name]))
@@ -478,14 +478,13 @@ function AddBribes(props: IAddBribes) {
                     <span
                       className={clsx(
                         "ml-1",
-                        new BigNumber(bottomValue).isGreaterThan(
-                          props.allBalance[props.bribeToken.name]?.balance
-                        )
+                        Number(bottomValue) >
+                          Number(props.allBalance[props.bribeToken.name]?.balance)
                           ? "text-error-500"
                           : "text-white"
                       )}
                     >
-                      {bottomValue} {tEZorCTEZtoUppercase(props.bribeToken.name)}
+                      {Number(bottomValue)} {tEZorCTEZtoUppercase(props.bribeToken.name)}
                     </span>{" "}
                     from Epoch {selectedDropDown.epochNumber} {!isSelectedEpoch && "-"}{" "}
                     {!isSelectedEpoch && selectedEndDropDown.epochNumber} (
