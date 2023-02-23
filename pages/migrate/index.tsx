@@ -160,7 +160,7 @@ function MigrateMain(props: any) {
       dispatch(
         fetchAllLocksRewardsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
-      dispatch(fetchAllRewardsOperationsData(userAddress));
+      dispatch(fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice }));
       dispatch(
         fetchUnclaimedInflationData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
@@ -178,7 +178,7 @@ function MigrateMain(props: any) {
   useEffect(() => {
     if (userAddress && Object.keys(tokenPrice).length !== 0 && rewardsOperationDataError) {
       setTimeout(() => {
-        dispatch(fetchAllRewardsOperationsData(userAddress));
+        dispatch(fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice }));
       }, API_RE_ATTAMPT_DELAY);
     }
   }, [rewardsOperationDataError]);
