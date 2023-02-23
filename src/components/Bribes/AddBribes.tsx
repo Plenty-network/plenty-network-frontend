@@ -204,7 +204,7 @@ function AddBribes(props: IAddBribes) {
       ) {
         return (
           <Button color="disabled" width="w-full">
-            Minimum $50 bribe
+            Minimum $20 bribe
           </Button>
         );
       } else if (
