@@ -198,6 +198,17 @@ function AddBribes(props: IAddBribes) {
         );
       } else if (
         Number(props.bribeInputValue) > 0 &&
+        new BigNumber(props.bribeInputValue)
+          .multipliedBy(new BigNumber(tokenPrice[props.bribeToken.name]))
+          .isLessThan(20)
+      ) {
+        return (
+          <Button color="disabled" width="w-full">
+            Minimum $20 bribe
+          </Button>
+        );
+      } else if (
+        Number(props.bribeInputValue) > 0 &&
         (!isSelectedEpoch ? selectedEndDropDown.epochNumber > 0 : selectedDropDown.epochNumber > 0)
       ) {
         return (
@@ -309,9 +320,21 @@ function AddBribes(props: IAddBribes) {
                 </div>
                 <div
                   className={clsx(
-                    " mt-4 h-[102px] border bg-muted-200/[0.1]  mx-4  rounded-2xl px-4 hover:border-text-700",
+                    " mt-4 h-[102px] border   mx-4  rounded-2xl px-4 ",
 
-                    true ? "border-text-700" : "border-text-800 "
+                    (Number(props.bribeInputValue) > 0 &&
+                      new BigNumber(props.bribeInputValue).isGreaterThan(
+                        props.allBalance[props.bribeToken.name]?.balance
+                      )) ||
+                      new BigNumber(bottomValue).isGreaterThan(
+                        props.allBalance[props.bribeToken.name]?.balance
+                      ) ||
+                      (Number(props.bribeInputValue) > 0 &&
+                        new BigNumber(props.bribeInputValue)
+                          .multipliedBy(new BigNumber(tokenPrice[props.bribeToken.name]))
+                          .isLessThan(20))
+                      ? "border-error-500/[0.4] bg-error-500/[0.01]"
+                      : "border-text-700 bg-muted-200/[0.1] hover:border-text-700"
                   )}
                 >
                   <div className="flex ">
