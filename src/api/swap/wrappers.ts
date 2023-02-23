@@ -16,6 +16,7 @@ import { store } from "../../redux";
 import axios from "axios";
 import Config from "../../config/config";
 import { connectedNetwork } from "../../common/walletconnect";
+import { loadSwapDataTezPairs } from "./tezpairs";
 
 export const loadSwapDataWrapper = async (
   tokenIn: string,
@@ -24,8 +25,9 @@ export const loadSwapDataWrapper = async (
   try {
     const type = getDexType(tokenIn, tokenOut);
     let swapData: ISwapDataResponse;
-
-    if (type === PoolType.VOLATILE) {
+    if(type === PoolType.TEZ) {
+      swapData = await loadSwapDataTezPairs(tokenIn, tokenOut);
+    } else if (type === PoolType.VOLATILE) {
       swapData = await loadSwapDataVolatile(tokenIn, tokenOut);
     } else {
       if (
@@ -69,7 +71,7 @@ export const calculateTokensOutWrapper = (
     const type = getDexType(tokenIn, tokenOut);
     let outputData: ICalculateTokenResponse;
 
-    if (type === PoolType.VOLATILE && tokenInSupply && tokenOutSupply) {
+    if ((type === PoolType.VOLATILE || type === PoolType.TEZ) && tokenInSupply && tokenOutSupply) {
       outputData = calculateTokenOutputVolatile(
         tokenInAmount,
         tokenInSupply,
@@ -147,7 +149,7 @@ export const calculateTokensInWrapper = (
     const type = getDexType(tokenIn, tokenOut);
     let outputData: ICalculateTokenResponse;
 
-    if (type === PoolType.VOLATILE && tokenInSupply && tokenOutSupply) {
+    if ((type === PoolType.VOLATILE || type === PoolType.TEZ) && tokenInSupply && tokenOutSupply) {
       outputData = calculateTokenInputVolatile(
         tokenInAmount,
         tokenInSupply,

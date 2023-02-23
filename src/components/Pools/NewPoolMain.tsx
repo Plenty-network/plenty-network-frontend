@@ -441,7 +441,12 @@ function NewPoolMain(props: ILiquidityProps) {
       </div>
       <div className="flex gap-2 mb-5">
         <div
-          onClick={() => props.setPair(Pair.STABLE)}
+          onClick={
+            (props.tokenIn.name === "XTZ" && props.tokenOut.name !== "CTez") ||
+            (props.tokenOut.name === "XTZ" && props.tokenIn.name !== "CTez")
+              ? undefined
+              : () => props.setPair(Pair.STABLE)
+          }
           className={clsx(
             "  px-4 border w-full flex items-center h-[54px] z-10 cursor-pointer font-body4 rounded-2xl ",
             props.pair === Pair.STABLE

@@ -18,7 +18,7 @@ const Config: IConfig = {
   },
   TZKT_NODES: {
     mainnet: process.env.NEXT_PUBLIC_TZKT_MAINNET || "https://api.tzkt.io/",
-    testnet: process.env.NEXT_PUBLIC_TZKT_GHOSTNET || "https://api.ghostnet.tzkt.io/",
+    testnet: "https://api.ghostnet.tzkt.io/",//process.env.NEXT_PUBLIC_TZKT_GHOSTNET || "https://api.ghostnet.tzkt.io/",
   },
   PUBLIC_TZKT_NODES: {
     mainnet: "https://api.tzkt.io/",
@@ -44,6 +44,10 @@ const Config: IConfig = {
     mainnet: "KT1ECkj846eLwRSexCKagq8FfkBBxqhsNhkD",
     testnet: "KT1UmJmgNvy7sGztaFkr598Lj7JxiWbTFbQp",
   },
+  TEZ_DEPLOYER: {
+    mainnet: "",
+    testnet: "KT1Mr3fLViGYZCztpMUWxdGNSHjA8xPtczVA",
+  },
   AIRDROP: {
     mainnet: "KT1HpNxd9RaeCwxrp1QX96DyocWURJXX8sZx",
     testnet: "KT1J3EQDZbLUR1Hp8TZKFwY5FLoekiPSgsmL",
@@ -51,18 +55,17 @@ const Config: IConfig = {
 
   VE_INDEXER: {
     mainnet: "https://ply-indexer.mainnet.plenty.network/v1/",
-    testnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
+    testnet: "https://ply-indexer.mainnet.plenty.network/v1/",//"https://ply-indexer.ghostnet.plenty.network/v1/",
   },
   PLY_INDEXER: {
     mainnet: "https://api.analytics.plenty.network/",
-    testnet: "https://analytics-indexer.ghostnet.plenty.network/",
+    testnet: "http://3.111.147.231:3000/",//"https://analytics-indexer.ghostnet.plenty.network/",
   },
 
   FAUCET: "KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH",
 
   AIRDROP_SERVER: {
     mainnet: "https://airdrop.plenty.network/",
-    // mainnet: "http://localhost:3000/",
     testnet: "https://airdrop.plenty.network/",
   },
 
@@ -90,8 +93,8 @@ const Config: IConfig = {
 
   CONFIG_LINKS: {
     testnet: {
-      POOL: "https://config.ghostnet.plenty.network/pools",
-      TOKEN: "https://config.ghostnet.plenty.network/tokens",
+      POOL: "https://ghostnet.data-config.plenty.network/pools",
+      TOKEN: "https://ghostnet.data-config.plenty.network/tokens",
     },
     mainnet: {
       POOL: "https://config.mainnet.plenty.network/pools",
@@ -117,11 +120,11 @@ const Config: IConfig = {
   },
   ROUTER: {
     mainnet: "KT1FNc7k9Exsz4jKp5K16p2B9L2Hfq2QcB2D",
-    testnet: "KT1MsMSjppFUxHHhzY8XKqdwBKS8HV1roaWf",
+    testnet: "KT1CWvM4nLoyHBGKkGBKjnPNTNLzoJ9JpAW3",
   },
 
-  NETWORK: "mainnet",
-  WALLET_NETWORK: NetworkType.MAINNET,
+  NETWORK: "testnet",
+  WALLET_NETWORK: NetworkType.GHOSTNET,
   ADMIN_ADDRESS: "KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW",
   BURNER: "tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg",
 
