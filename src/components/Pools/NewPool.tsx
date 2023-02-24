@@ -13,7 +13,7 @@ import playBtn from "../../assets/icon/common/playBtn.svg";
 import { Chain, IConfigToken, MigrateToken } from "../../config/types";
 import { FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_B } from "../../constants/localStorage";
 import { tokensModalNewPool, tokenType } from "../../constants/swap";
-import { deployStable, deployVolatile } from "../../operations/factory";
+import { deployStable, deployTezPair, deployVolatile } from "../../operations/factory";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { getConfig } from "../../redux/config/config";
 import { setFlashMessage } from "../../redux/flashMessage";
@@ -137,7 +137,7 @@ export function NewPool(props: IManageLiquidityProps) {
     allTokensBalances: {} as IAllTokensBalance,
   });
   useEffect(() => {
-    if (userAddress) {
+    if (props.show && userAddress) {
       getAllTokensBalanceFromTzkt(Object.values(tokens), userAddress).then(
         (response: IAllTokensBalanceResponse) => {
           console.log("newpool", response);
@@ -150,7 +150,7 @@ export function NewPool(props: IManageLiquidityProps) {
         allTokensBalances: {} as IAllTokensBalance,
       });
     }
-  }, [userAddress, TOKEN, balanceUpdate, tokenIn.name, tokenOut.name]);
+  }, [userAddress, TOKEN, balanceUpdate, tokenIn.name, tokenOut.name, props.show]);
   const [contractTokenBalance, setContractTokenBalance] = useState<IAllTokensBalance>(
     {} as IAllTokensBalance
   );
@@ -203,6 +203,20 @@ export function NewPool(props: IManageLiquidityProps) {
       );
     }
   }, [tokensListConfig, allBalance.allTokensBalances]);
+  useEffect(() => {
+    setPair("");
+    if (
+      (tokenIn.name === "XTZ" && tokenOut.name !== "CTez") ||
+      (tokenOut.name === "XTZ" && tokenIn.name !== "CTez")
+    ) {
+      setPair(Pair.VOLATILE);
+    } else if (
+      (tokenIn.name === "XTZ" && tokenOut.name === "CTez") ||
+      (tokenOut.name === "XTZ" && tokenIn.name === "CTez")
+    ) {
+      setPair(Pair.STABLE);
+    }
+  }, [tokenIn.name, tokenOut.name]);
 
   const handleTokenType = (type: tokenType) => {
     setBalanceUpdate(false);
@@ -221,8 +235,90 @@ export function NewPool(props: IManageLiquidityProps) {
     props.setReFetchPool(false);
     setRefetch(false);
     setShowConfirmTransaction(true);
-    if (pair === Pair.VOLATILE) {
+    if (pair === Pair.VOLATILE && tokenIn.name !== "XTZ" && tokenOut.name !== "XTZ") {
       deployVolatile(
+        tokenInOp,
+        tokenOutOp,
+        userAddress,
+        new BigNumber(firstTokenAmountLiq),
+        new BigNumber(secondTokenAmountLiq),
+        transactionSubmitModal,
+        resetAllValues,
+        setShowConfirmTransaction,
+        {
+          flashType: Flashtype.Info,
+          headerText: "Transaction submitted",
+          trailingText: `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+            TOKEN_B
+          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
+          linkText: "View in Explorer",
+          isLoading: true,
+          transactionId: "",
+        }
+      ).then((response) => {
+        if (response.success) {
+          closeModal();
+          setBalanceUpdate(true);
+          resetAllValues();
+          setTimeout(() => {
+            setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Success,
+                headerText: "Success",
+                trailingText: `Addition of new ${localStorage.getItem(
+                  TOKEN_A
+                )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
+                  FIRST_TOKEN_AMOUNT
+                )} pool`,
+                linkText: "View in Explorer",
+                isLoading: true,
+                onClick: () => {
+                  window.open(
+                    `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
+                    "_blank"
+                  );
+                },
+                transactionId: response.operationId ? response.operationId : "",
+              })
+            );
+            setRefetch(true);
+          }, 6000);
+
+          setTimeout(() => {
+            props.setReFetchPool(true);
+          }, 7000);
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          setContentTransaction("");
+        } else {
+          setBalanceUpdate(true);
+          closeModal();
+          //resetAllValues();
+          setShowConfirmTransaction(false);
+          setTimeout(() => {
+            setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Rejected,
+                transactionId: "",
+                headerText: "Rejected",
+                trailingText: `Addition of new ${localStorage.getItem(
+                  TOKEN_A
+                )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
+                  FIRST_TOKEN_AMOUNT
+                )} pool`,
+                linkText: "",
+                isLoading: true,
+              })
+            );
+          }, 2000);
+
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          setContentTransaction("");
+        }
+      });
+    } else if (pair === Pair.VOLATILE && (tokenIn.name === "XTZ" || tokenOut.name === "XTZ")) {
+      deployTezPair(
         tokenInOp,
         tokenOutOp,
         userAddress,
@@ -471,7 +567,7 @@ export function NewPool(props: IManageLiquidityProps) {
         tokens={tokensListConfig.filter((e: any) => {
           return (
             e.name.toLowerCase() !== MigrateToken.PLENTY.toLowerCase() &&
-            e.name.toLowerCase() !== "XTZ".toLowerCase() &&
+            // e.name.toLowerCase() !== "XTZ".toLowerCase() &&
             e.name.toLowerCase() !== MigrateToken.WRAP.toLowerCase()
           );
         })}
