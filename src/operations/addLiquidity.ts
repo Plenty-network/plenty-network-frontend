@@ -1,4 +1,4 @@
-import { getDexAddress, isGeneralStablePair, isTezPair } from "../api/util/fetchConfig";
+import { getDexAddress, isGeneralStablePair, isCtezTezPair, isTezPair } from "../api/util/fetchConfig";
 import { BigNumber } from "bignumber.js";
 import { dappClient } from "../common/walletconnect";
 import { store } from "../redux";
@@ -44,7 +44,20 @@ export const addLiquidity = async (
 ): Promise<IOperationsResponse> => {
   try {
     let addLiquidityResult: IOperationsResponse;
-    if (isTezPair(tokenOneSymbol, tokenTwoSymbol)) {
+    if (isCtezTezPair(tokenOneSymbol, tokenTwoSymbol)) {
+      addLiquidityResult = await addCtezTezPairLiquidity(
+        tokenOneSymbol,
+        tokenTwoSymbol,
+        new BigNumber(tokenOneAmount),
+        new BigNumber(tokenTwoAmount),
+        userTezosAddress,
+        transactionSubmitModal,
+        resetAllValues,
+        setShowConfirmTransaction,
+        setActiveState,
+        flashMessageContent
+      );
+    } else if (isTezPair(tokenOneSymbol, tokenTwoSymbol)) {
       addLiquidityResult = await addTezPairsLiquidity(
         tokenOneSymbol,
         tokenTwoSymbol,
@@ -446,7 +459,118 @@ const addAllPairsLiquidity = async (
 };
 
 /**
- * Add liquidity operation for given pair of tokens when either of them is tez token.
+ * Add liquidity operation for ctez-tez pair.
+ * @param tokenOneSymbol - Symbol of first token of the pair
+ * @param tokenTwoSymbol - Symbol of second token of the pair
+ * @param tokenOneAmount - Amount of first token entered by user
+ * @param tokenTwoAmount - Amount of second token entered by user
+ * @param userTezosAddress - Tezos wallet address of user
+ * @param transactionSubmitModal - Callback to open modal when transaction is submiited
+ * @param resetAllValues - Callback to reset values when transaction is submitted
+ * @param setShowConfirmTransaction - Callback to show transaction confirmed
+ * @param setActiveState - Callback to change active state
+ * @param flashMessageContent - Content for the flash message object(optional)
+ */
+const addCtezTezPairLiquidity = async (
+  tokenOneSymbol: string,
+  tokenTwoSymbol: string,
+  tokenOneAmount: BigNumber,
+  tokenTwoAmount: BigNumber,
+  userTezosAddress: string,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  setActiveState: TSetActiveState | undefined,
+  flashMessageContent?: IFlashMessageProps
+): Promise<IOperationsResponse> => {
+  try {
+    let tezSymbol: string | undefined,
+      tezAmount: BigNumber = new BigNumber(0),
+      ctezSymbol: string | undefined,
+      ctezAmount: BigNumber = new BigNumber(0);
+    const { CheckIfWalletConnected } = dappClient();
+    const walletResponse = await CheckIfWalletConnected();
+    if (!walletResponse.success) {
+      throw new Error("Wallet connection failed");
+    }
+    const Tezos = await dappClient().tezos();
+    const state = store.getState();
+    const TOKENS = state.config.tokens;
+    const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
+    if (dexContractAddress === "false") {
+      throw new Error("No dex found for the given pair of tokens.");
+    }
+    
+    if (tokenOneSymbol === "XTZ") {
+      tezSymbol = tokenOneSymbol;
+      tezAmount = tokenOneAmount;
+      ctezSymbol = tokenTwoSymbol;
+      ctezAmount = tokenTwoAmount;
+    } else {
+      tezSymbol = tokenTwoSymbol;
+      tezAmount = tokenTwoAmount;
+      ctezSymbol = tokenOneSymbol;
+      ctezAmount = tokenOneAmount;
+    }
+
+    const ctezAddress = TOKENS[ctezSymbol].address as string;
+    const ctezTokenInstance = await Tezos.wallet.at(ctezAddress);
+    const dexContractInstance = await Tezos.wallet.at(dexContractAddress);
+
+    tezAmount = tezAmount.multipliedBy(new BigNumber(10).pow(TOKENS[tezSymbol].decimals));
+    ctezAmount = ctezAmount.multipliedBy(
+      new BigNumber(10).pow(TOKENS[ctezSymbol].decimals)
+    );
+
+    const allBatchOperations: WalletParamsWithKind[] = [];
+
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...ctezTokenInstance.methods
+        .approve(dexContractAddress, ctezAmount.decimalPlaces(0, 1).toString())
+        .toTransferParams(),
+    });
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...dexContractInstance.methods
+        .add_liquidity(ctezAmount.decimalPlaces(0, 1).toString(), 0, userTezosAddress)
+        .toTransferParams({ amount: tezAmount.decimalPlaces(0, 1).toNumber(), mutez: true }),
+    });
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...ctezTokenInstance.methods.approve(dexContractAddress, 0).toTransferParams(),
+    });
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOperation = await batch.send();
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+    transactionSubmitModal && transactionSubmitModal(batchOperation.opHash);
+    setActiveState && setActiveState(ActiveLiquidity.Staking);
+    resetAllValues && resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
+
+    await batchOperation.confirmation(1);
+
+    const status = await batchOperation.status();
+    if(status === "applied"){
+      return {
+        success: true,
+        operationId: batchOperation.opHash,
+      };
+    }else{
+      throw new Error(status);
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+
+/**
+ * Add liquidity operation for given pair of tokens when either of them is tez token and not ctez-tez pair.
  * @param tokenOneSymbol - Symbol of first token of the pair
  * @param tokenTwoSymbol - Symbol of second token of the pair
  * @param tokenOneAmount - Amount of first token entered by user
@@ -487,7 +611,7 @@ const addTezPairsLiquidity = async (
     if (dexContractAddress === "false") {
       throw new Error("No dex found for the given pair of tokens.");
     }
-    // Make the order of tokens according to the order in contract.
+
     if (tokenOneSymbol === "XTZ") {
       tezSymbol = tokenOneSymbol;
       tezAmount = tokenOneAmount;
@@ -522,7 +646,11 @@ const addTezPairsLiquidity = async (
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         ...dexContractInstance.methods
-          .add_liquidity(secondTokenAmount.decimalPlaces(0, 1).toString(), 0, userTezosAddress)
+          .AddLiquidity(
+            userTezosAddress,
+            tezAmount.decimalPlaces(0, 1),
+            secondTokenAmount.decimalPlaces(0, 1)
+          )
           .toTransferParams({ amount: tezAmount.decimalPlaces(0, 1).toNumber(), mutez: true }),
       });
       allBatchOperations.push({
@@ -547,7 +675,11 @@ const addTezPairsLiquidity = async (
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         ...dexContractInstance.methods
-          .add_liquidity(secondTokenAmount.decimalPlaces(0, 1).toString(), 0, userTezosAddress)
+          .AddLiquidity(
+            userTezosAddress,
+            tezAmount.decimalPlaces(0, 1),
+            secondTokenAmount.decimalPlaces(0, 1)
+          )
           .toTransferParams({ amount: tezAmount.decimalPlaces(0, 1).toNumber(), mutez: true }),
       });
       allBatchOperations.push({

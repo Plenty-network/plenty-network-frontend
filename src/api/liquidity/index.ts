@@ -1,4 +1,4 @@
-import { getDexAddress } from '../util/fetchConfig';
+import { getDexAddress, isCtezTezPair } from '../util/fetchConfig';
 import { BigNumber } from "bignumber.js";
 import {
   ELiquidityProcess,
@@ -79,10 +79,7 @@ export const getPnlpOutputEstimate = (
       .multipliedBy(lpTokenSupply)
       .dividedBy(tokenTwoSupply);
 
-    if (
-      (tokenOneSymbol === "XTZ" && tokenTwoSymbol === "CTez") ||
-      (tokenOneSymbol === "CTez" && tokenTwoSymbol === "XTZ")
-    ) {
+    if (isCtezTezPair(tokenOneSymbol, tokenTwoSymbol)) {
       // For tez-ctez pair estimated PNLP output will be based on tez token only
       pnlpEstimatedOutput = tokenOneSymbol === "XTZ" ? pnlpBasedOnTokenOne : pnlpBasedOnTokenTwo;
     } else {
