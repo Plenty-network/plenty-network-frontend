@@ -152,7 +152,8 @@ export const isVolatilePair = (
    tokenOneSymbol: string,
    tokenTwoSymbol: string
  ): boolean => {
-   return tokenOneSymbol === "XTZ" || tokenTwoSymbol === "XTZ" ? true : false;
+   const dexType = getDexType(tokenOneSymbol, tokenTwoSymbol);
+   return dexType !== "false" && dexType === PoolType.TEZ ? true : false;
  };
 
  /**
@@ -164,7 +165,6 @@ export const isVolatilePair = (
     tokenOneSymbol: string,
     tokenTwoSymbol: string
   ): boolean => {
-    const dexType = getDexType(tokenOneSymbol, tokenTwoSymbol);
     return (tokenOneSymbol === "XTZ" && tokenTwoSymbol === "CTez") ||
     (tokenOneSymbol === "CTez" && tokenTwoSymbol === "XTZ")
     ? true

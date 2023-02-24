@@ -55,6 +55,7 @@ export const voterAddress = Config.VOTER[connectedNetwork];
 export const veSwapAddress = Config.VE_SWAP[connectedNetwork];
 export const faucetAddress = Config.FAUCET;
 export const factoryAddress = Config.FACTORY[connectedNetwork];
+export const tezDeployerAddress = Config.TEZ_DEPLOYER[connectedNetwork];
 export const routerAddress = Config.ROUTER[connectedNetwork];
 export const tzktExplorer = Config.EXPLORER_LINKS.TEZOS[connectedNetwork];
 

@@ -15,6 +15,8 @@ export const usePoolsTableSearch = (
           e.tokenA.toLowerCase().includes(searchText.trim().toLowerCase()) ||
           e.tokenB.toLowerCase().includes(searchText.trim().toLowerCase()) ||
           (searchText.toLowerCase() === "xtz" && e.tokenA.toLowerCase().search(/\btez\b/) >= 0) ||
+          (searchText.toLowerCase() === "tez" && e.tokenA.toLowerCase().search(/\bxtz\b/) >= 0) ||
+          (searchText.toLowerCase() === "tez" && e.tokenB.toLowerCase().search(/\bxtz\b/) >= 0) ||
           (searchText.toLowerCase() === "xtz" && e.tokenB.toLowerCase().search(/\btez\b/) >= 0)
         );
       });
