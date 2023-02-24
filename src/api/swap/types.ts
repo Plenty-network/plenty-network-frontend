@@ -675,3 +675,148 @@ export const volatileSwapStorageType : any = {
     }
   ]
 }
+
+export const tezPairsStorageType: any = {
+  prim: "pair",
+  args: [
+    {
+      prim: "pair",
+      args: [
+        {
+          prim: "pair",
+          args: [
+            {
+              prim: "pair",
+              args: [
+                {
+                  prim: "address",
+                  annots: ["%admin"],
+                },
+                {
+                  prim: "nat",
+                  annots: ["%lpFee"],
+                },
+              ],
+            },
+            {
+              prim: "pair",
+              args: [
+                {
+                  prim: "address",
+                  annots: ["%lpTokenAddress"],
+                },
+                {
+                  prim: "nat",
+                  annots: ["%maxSwapLimit"],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          prim: "pair",
+          args: [
+            {
+              prim: "pair",
+              args: [
+                {
+                  prim: "bool",
+                  annots: ["%paused"],
+                },
+                {
+                  prim: "bool",
+                  annots: ["%rewardDistribution"],
+                },
+              ],
+            },
+            {
+              prim: "pair",
+              args: [
+                {
+                  prim: "bool",
+                  annots: ["%state"],
+                },
+                {
+                  prim: "address",
+                  annots: ["%token1Address"],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      prim: "pair",
+      args: [
+        {
+          prim: "pair",
+          args: [
+            {
+              prim: "pair",
+              args: [
+                {
+                  prim: "bool",
+                  annots: ["%token1Check"],
+                },
+                {
+                  prim: "nat",
+                  annots: ["%token1Id"],
+                },
+              ],
+            },
+            {
+              prim: "pair",
+              args: [
+                {
+                  prim: "nat",
+                  annots: ["%token1_Fee"],
+                },
+                {
+                  prim: "nat",
+                  annots: ["%token1_pool"],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          prim: "pair",
+          args: [
+            {
+              prim: "pair",
+              args: [
+                {
+                  prim: "nat",
+                  annots: ["%token2_Fee"],
+                },
+                {
+                  prim: "nat",
+                  annots: ["%token2_pool"],
+                },
+              ],
+            },
+            {
+              prim: "pair",
+              args: [
+                {
+                  prim: "nat",
+                  annots: ["%totalSupply"],
+                },
+                {
+                  prim: "option",
+                  args: [
+                    {
+                      prim: "address",
+                    },
+                  ],
+                  annots: ["%voterContract"],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};

@@ -3,10 +3,6 @@ import { NetworkType } from "@airgap/beacon-types";
 
 const Config: IConfig = {
   NAME: "Plenty Network",
-  // STANDARD_CONFIG : 'https://config.plenty.network/v1/config/token?type=standard' ,
-  // LP_CONFIG : "https://config.plenty.network/v1/config/token?type=lp",
-  // TOKENS_CONFIG : "https://config.plenty.network/v1/config/token",
-  // AMM_CONFIG : 'https://config.plenty.network/v1/config/amm' ,
   API: {
     url: "https://api.coingecko.com/api/v3/coins/tezos?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false",
     API_KEY: "4824FE50-DB6E-4316-B099-72283C964891",
@@ -44,6 +40,10 @@ const Config: IConfig = {
     mainnet: "KT1ECkj846eLwRSexCKagq8FfkBBxqhsNhkD",
     testnet: "KT1UmJmgNvy7sGztaFkr598Lj7JxiWbTFbQp",
   },
+  TEZ_DEPLOYER: {
+    mainnet: "KT1JnpY4fUQ9DurUhb7uCQtKkunLiamgdzyc",
+    testnet: "KT1Mr3fLViGYZCztpMUWxdGNSHjA8xPtczVA",
+  },
   AIRDROP: {
     mainnet: "KT1HpNxd9RaeCwxrp1QX96DyocWURJXX8sZx",
     testnet: "KT1J3EQDZbLUR1Hp8TZKFwY5FLoekiPSgsmL",
@@ -55,14 +55,13 @@ const Config: IConfig = {
   },
   PLY_INDEXER: {
     mainnet: "https://api.analytics.plenty.network/",
-    testnet: "https://analytics-indexer.ghostnet.plenty.network/",
+    testnet: "http://3.111.147.231:3000/",//"https://analytics-indexer.ghostnet.plenty.network/",
   },
 
   FAUCET: "KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH",
 
   AIRDROP_SERVER: {
     mainnet: "https://airdrop.plenty.network/",
-    // mainnet: "http://localhost:3000/",
     testnet: "https://airdrop.plenty.network/",
   },
 
@@ -90,8 +89,8 @@ const Config: IConfig = {
 
   CONFIG_LINKS: {
     testnet: {
-      POOL: "https://config.ghostnet.plenty.network/pools",
-      TOKEN: "https://config.ghostnet.plenty.network/tokens",
+      POOL: "https://ghostnet.data-config.plenty.network/pools",
+      TOKEN: "https://ghostnet.data-config.plenty.network/tokens",
     },
     mainnet: {
       POOL: "https://config.mainnet.plenty.network/pools",
@@ -116,8 +115,8 @@ const Config: IConfig = {
     testnet: {},
   },
   ROUTER: {
-    mainnet: "KT1FNc7k9Exsz4jKp5K16p2B9L2Hfq2QcB2D",
-    testnet: "KT1MsMSjppFUxHHhzY8XKqdwBKS8HV1roaWf",
+    mainnet: "KT1Kg1yxbettARbgvBMNtZLT6GkZcZsDdZny",
+    testnet: "KT1CWvM4nLoyHBGKkGBKjnPNTNLzoJ9JpAW3",
   },
 
   NETWORK: "mainnet",

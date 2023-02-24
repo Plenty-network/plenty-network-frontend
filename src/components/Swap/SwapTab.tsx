@@ -768,7 +768,7 @@ function SwapTab(props: ISwapTabProps) {
                       <div
                         className={clsx(
                           swapRoute && swapRoute?.length > 3
-                            ? "w-[360px] md:w-[500px]"
+                            ? "w-[360px] md:w-auto"
                             : "w-[360px] md:w-[400px]"
                         )}
                       >
@@ -780,7 +780,12 @@ function SwapTab(props: ISwapTabProps) {
 
                           <>
                             <div className="border-dashed relative top-[20px] md:top-[24px]   border-t-2 border-muted-50 mx-2"></div>
-                            <div className="mt-2 flex justify-between ">
+                            <div
+                              className={clsx(
+                                isMobile && "max-w-[375px] overflow-x-auto",
+                                "mt-2 flex justify-between "
+                              )}
+                            >
                               {swapRoute?.map((token, idx) => {
                                 const index = idx + 1;
                                 return (
