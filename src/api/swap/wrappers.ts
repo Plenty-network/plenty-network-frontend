@@ -78,7 +78,8 @@ export const calculateTokensOutWrapper = (
         tokenOutSupply,
         Exchangefee,
         slippage,
-        tokenOut
+        tokenOut,
+        type
       );
     } else {
       if (tokenIn === "XTZ" && tokenOut === "CTez" && target) {
