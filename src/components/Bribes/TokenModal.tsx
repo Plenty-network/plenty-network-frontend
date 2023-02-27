@@ -2,26 +2,46 @@ import { PopUpModal } from "../Modal/popupModal";
 import SearchBar from "../SearchBar/SearchBar";
 import Image from "next/image";
 import { tokenParameter, tokensModal } from "../../constants/swap";
+import fromExponential from "from-exponential";
 import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
+import { Chain } from "../../config/types";
+import { IAllTokensBalance } from "../../api/util/types";
+import nFormatter, { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { useAppSelector } from "../../redux";
+import { tokenIcons } from "../../constants/tokensList";
 
 interface ISwapModalProps {
-  tokens: tokensModal[];
+  tokens: {
+    name: string;
+    image: string;
+    chainType: Chain;
+    address: string | undefined;
+  }[];
+  isLoading?: boolean;
   show: boolean;
   selectToken: Function;
   onhide: Function;
   tokenIn: tokenParameter;
 
-  allBalance: {
-    [id: string]: BigNumber;
-  };
+  allBalance: IAllTokensBalance;
   isSucess: boolean;
 }
 function TokenModal(props: ISwapModalProps) {
+  const tokens = useAppSelector((state) => state.config.tokens);
   const [searchQuery, setSearchQuery] = useState("");
   const searchTokenEl = useRef(null);
-  const [tokensToShow, setTokensToShow] = useState<tokensModal[] | []>([]);
+  const [tokensToShow, setTokensToShow] = useState<
+    | {
+        name: string;
+        image: string;
+        chainType: Chain;
+        address: string | undefined;
+      }[]
+    | []
+  >([]);
   const [topTokens, setTopTokens] = useState<{
     [id: string]: number;
   }>(
@@ -31,7 +51,7 @@ function TokenModal(props: ISwapModalProps) {
   );
 
   const searchHits = useCallback(
-    (token: tokensModal) => {
+    (token: { name: string; image: string; chainType: Chain; address: string | undefined }) => {
       return (
         searchQuery.length === 0 ||
         token.name.trim().toLowerCase().includes(searchQuery.trim().toLowerCase()) ||
@@ -43,7 +63,8 @@ function TokenModal(props: ISwapModalProps) {
   );
   useEffect(() => {
     props.tokens.sort(
-      (a, b) => Number(props.allBalance[b.name]) - Number(props.allBalance[a.name])
+      (a, b) =>
+        Number(props.allBalance[b.name]?.balance) - Number(props.allBalance[a.name]?.balance)
     );
     const filterTokens = () => {
       const filterTokenslist = props.tokens
@@ -57,8 +78,7 @@ function TokenModal(props: ISwapModalProps) {
     };
     filterTokens();
   }, [props.tokens, searchQuery, props.tokenIn.name, searchHits]);
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   return props.show ? (
     <PopUpModal title="Select Token" onhide={() => props.onhide(false)}>
       {
@@ -93,7 +113,19 @@ function TokenModal(props: ISwapModalProps) {
                   >
                     <div>
                       <span className="w-[30px] h-[30px] relative top-1">
-                        <Image alt={"alt"} src={token.image} width={"30px"} height={"30px"} />{" "}
+                        <img
+                          alt={"alt"}
+                          src={
+                            tokenIcons[token.name]
+                              ? tokenIcons[token.name].src
+                              : tokens[token.name.toString()]?.iconUrl
+                              ? tokens[token.name.toString()].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
+                          width={"30px"}
+                          height={"30px"}
+                          onError={changeSource}
+                        />{" "}
                       </span>
                     </div>
                     <div className="ml-2">
@@ -104,19 +136,33 @@ function TokenModal(props: ISwapModalProps) {
                           props.tokenIn.name === token.name ? "text-white/[0.1]" : "text-white"
                         )}
                       >
-                        {token.name === "tez" ? "TEZ" : token.name === "ctez" ? "CTEZ" : token.name}
+                        {tEZorCTEZtoUppercase(token.name)}
                       </div>
                     </div>
-                    {token.new && (
+                    {/* {token.new && (
                       <div className="ml-auto mt-[6px] bg-primary-500/[0.2] py-1 px-1.5 h-[26px] text-center text-primary-500 font-body2 rounded-xl">
                         <span>New!</span>
                       </div>
-                    )}
-                    {props.isSucess && props.allBalance[token.name] ? (
-                      <div className="font-subtitle4 ml-auto mt-[7px]">
-                        {props.allBalance[token.name]
-                          ? Number(props.allBalance[token.name]).toFixed(2)
-                          : 0.0}
+                    )} */}
+                    {props.isSucess && props.allBalance[token.name]?.balance ? (
+                      <div className="font-subtitle4 cursor-pointer ml-auto mt-[7px]">
+                        <ToolTip
+                          position={Position.top}
+                          message={
+                            props.allBalance[token.name]?.balance
+                              ? fromExponential(props.allBalance[token.name]?.balance.toString())
+                              : "0"
+                          }
+                          disable={Number(props.allBalance[token.name]?.balance) === 0}
+                        >
+                          {props.allBalance[token.name]?.balance
+                            ? Number(props.allBalance[token.name]?.balance) > 0
+                              ? props.allBalance[token.name]?.balance.isLessThan(0.01)
+                                ? "<0.01"
+                                : nFormatter(props.allBalance[token.name]?.balance)
+                              : "0.0"
+                            : "0.0"}
+                        </ToolTip>
                       </div>
                     ) : props.isSucess === false ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">0</div>

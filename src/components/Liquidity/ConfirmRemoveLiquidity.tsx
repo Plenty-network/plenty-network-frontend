@@ -1,12 +1,23 @@
 import clsx from "clsx";
 import Image from "next/image";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
+
+import { BigNumber } from "bignumber.js";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import ctez from "../../../src/assets/Tokens/ctez.png";
 import add from "../../../src/assets/icon/pools/addIcon.svg";
 import Button from "../Button/Button";
 import { PopUpModal } from "../Modal/popupModal";
 import { tokenParameterLiquidity } from "./types";
+import nFormatter, {
+  changeSource,
+  imageExists,
+  nFormatterWithLesserNumber,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
+import { useAppSelector } from "../../redux";
+import fallback from "../../../src/assets/icon/pools/fallback.png";
+import { tokenIcons } from "../../constants/tokensList";
 
 interface IConfirmRemoveLiquidityProps {
   setScreen: React.Dispatch<React.SetStateAction<string>>;
@@ -26,6 +37,7 @@ interface IConfirmRemoveLiquidityProps {
   };
 }
 function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
+  const tokens = useAppSelector((state) => state.config.tokens);
   return (
     <>
       <div className="flex">
@@ -45,53 +57,72 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
         <div className="flex mt-3 h-[50px] items-center border-t border-b border-text-800/[0.5] bg-card-500 px-5">
           <div className="flex items-center">
             <span className="relative top-[3px]">
-              <Image alt={"alt"} src={props.tokenIn.image} width={"24px"} height={"24px"} />
+              <img
+                alt={"alt"}
+                src={
+                  tokenIcons[props.tokenIn.symbol]
+                    ? tokenIcons[props.tokenIn.symbol].src
+                    : tokens[props.tokenIn.symbol.toString()]?.iconUrl
+                    ? tokens[props.tokenIn.symbol.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
+                width={"24px"}
+                height={"24px"}
+                onError={changeSource}
+              />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
-              {props.removeTokenAmount.tokenOneAmount}{" "}
-              {props.tokenIn.name === "tez"
-                ? "TEZ"
-                : props.tokenIn.name === "ctez"
-                ? "CTEZ"
-                : props.tokenIn.name}
+              {props.removeTokenAmount.tokenOneAmount} {tEZorCTEZtoUppercase(props.tokenIn.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
             $
             {Number(
               Number(props.removeTokenAmount.tokenOneAmount) *
-                Number(props.tokenPrice[props.tokenIn.name])
+                Number(props.tokenPrice[props.tokenIn.name] ?? 0)
             ).toFixed(2)}
           </div>
         </div>
         <div className="flex  h-[50px] items-center border-b border-text-800/[0.5] bg-card-500 px-5">
           <div className="flex items-center">
             <span className="relative top-[3px]">
-              <Image alt={"alt"} src={ctez} width={"24px"} height={"24px"} />
+              <img
+                alt={"alt"}
+                src={
+                  tokenIcons[props.tokenOut.symbol]
+                    ? tokenIcons[props.tokenOut.symbol].src
+                    : tokens[props.tokenOut.symbol.toString()]?.iconUrl
+                    ? tokens[props.tokenOut.symbol.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
+                width={"24px"}
+                height={"24px"}
+                onError={changeSource}
+              />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
-              {props.removeTokenAmount.tokenTwoAmount}{" "}
-              {props.tokenOut.name === "tez"
-                ? "TEZ"
-                : props.tokenOut.name === "ctez"
-                ? "CTEZ"
-                : props.tokenOut.name}
+              {nFormatterWithLesserNumber(new BigNumber(props.removeTokenAmount.tokenTwoAmount))}{" "}
+              {tEZorCTEZtoUppercase(props.tokenOut.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
             $
             {Number(
               Number(props.removeTokenAmount.tokenTwoAmount) *
-                Number(props.tokenPrice[props.tokenIn.name])
+                Number(props.tokenPrice[props.tokenIn.name] ?? 0)
             ).toFixed(2)}
           </div>
         </div>
-        <div className="mt-4 px-5 text-text-250 font-body4 ">You will receive (atleast)</div>
-        <div className="mt-1 px-5 text-white font-title2 ">{props.burnAmount} PNLP</div>
+        <div className="mt-4 px-5 text-text-250 font-body4 ">PNLP being burnt (atleast)</div>
+        <div className="mt-1 px-5 text-white font-title2 ">
+          {nFormatterWithLesserNumber(new BigNumber(props.burnAmount))} PNLP
+        </div>
         <div className="mt-5 border-t border-text-800/[0.5]"></div>
         <div className="px-5 mt-[18px] flex justify-between">
           <p className="text-text-250 font-body2">Share of pool</p>
-          <p className="font-body4 text-white">{Number(props.sharePool).toFixed(6)}% </p>
+          <p className="font-body4 text-white">
+            {nFormatterWithLesserNumber(new BigNumber(props.sharePool))}%{" "}
+          </p>
         </div>
       </div>
       <div className="mt-5">

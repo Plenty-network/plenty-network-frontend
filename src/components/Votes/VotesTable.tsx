@@ -2,9 +2,12 @@ import Image from "next/image";
 import * as React from "react";
 import { isMobile, isTablet } from "react-device-detect";
 import { Column } from "react-table";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { IVotePageData } from "../../api/votes/types";
+import { tokenIcons } from "../../constants/tokensList";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
-import { compareNumericString } from "../../utils/commonUtils";
+import { useAppSelector } from "../../redux";
+import { compareNumericString, compareNumericStringRewards } from "../../utils/commonUtils";
 import Table from "../Table/Table";
 import { MyVotes } from "./MyVotes";
 import { MyVotesValue } from "./MyVotesValue";
@@ -14,7 +17,7 @@ import { IVotesTableProps } from "./types";
 
 export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
-
+  const tokens = useAppSelector((state) => state.config.tokens);
   const votesArray = Object.entries(props.voteData);
   const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
     new Array(votesArray.length).fill(0)
@@ -66,8 +69,6 @@ export function VotesTable(props: IVotesTableProps) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const mobilecolumns = React.useMemo<Column<IVotePageData>[]>(
     () => [
@@ -81,26 +82,57 @@ export function VotesTable(props: IVotesTableProps) {
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-              <Image
+              <img
                 alt={"alt"}
-                src={getImagesPath(x.votes.tokenA)}
+                src={
+                  tEZorCTEZtoUppercase(x.votes.tokenA) === "CTEZ"
+                    ? tokenIcons[x.votes.tokenB]
+                      ? tokenIcons[x.votes.tokenB].src
+                      : tokens[x.votes.tokenB]?.iconUrl
+                      ? tokens[x.votes.tokenB].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.votes.tokenA]
+                    ? tokenIcons[x.votes.tokenA].src
+                    : tokens[x.votes.tokenA]?.iconUrl
+                    ? tokens[x.votes.tokenA].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 width={"20px"}
                 height={"20px"}
+                onError={changeSource}
               />
             </div>
             <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image
+              <img
                 alt={"alt"}
-                src={getImagesPath(x.votes.tokenB)}
+                src={
+                  tEZorCTEZtoUppercase(x.votes.tokenA) === "CTEZ"
+                    ? tokenIcons[x.votes.tokenA]
+                      ? tokenIcons[x.votes.tokenA].src
+                      : tokens[x.votes.tokenA]?.iconUrl
+                      ? tokens[x.votes.tokenA].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.votes.tokenB]
+                    ? tokenIcons[x.votes.tokenB].src
+                    : tokens[x.votes.tokenB]?.iconUrl
+                    ? tokens[x.votes.tokenB].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 width={"20px"}
                 height={"20px"}
+                onError={changeSource}
               />
             </div>
             <div>
               <div className="font-body2 md:font-body4">
                 {" "}
-                {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.votes.tokenA) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.votes.tokenB?.toString())} / ${tEZorCTEZtoUppercase(
+                      x.votes.tokenA?.toString()
+                    )}`
+                  : ` ${tEZorCTEZtoUppercase(x.votes.tokenA?.toString())} / ${tEZorCTEZtoUppercase(
+                      x.votes.tokenB?.toString()
+                    )}`}
               </div>
               <div className="font-subtitle1 text-text-500">{x.votes.poolType} Pool</div>
             </div>
@@ -110,13 +142,14 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "Rewards",
         id: "Rewards",
-        columnWidth: "w-[130px] flex-1",
+        columnWidth: "w-[130px] flex-1 pr-2.5",
         isToolTipEnabled: true,
         tooltipMessage:
           "Trading fees and bribes to be distributed across the voters of this pool. The reward may increase as the epoch progresses.",
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.bribes"),
+        sortType: (a: any, b: any) =>
+          compareNumericStringRewards(a, b, "votes.bribes", "votes.fees"),
         accessor: (x: any) => (
           <RewardsData
             bribes={x.votes.bribes}
@@ -167,32 +200,63 @@ export function VotesTable(props: IVotesTableProps) {
         Header: "Pools",
         id: "pools",
         showOnMobile: true,
-        columnWidth: "w-[160px]",
+        columnWidth: "w-[190px]",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.tokenA", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-              <Image
+              <img
                 alt={"alt"}
-                src={getImagesPath(x.votes.tokenA)}
+                src={
+                  tEZorCTEZtoUppercase(x.votes.tokenA) === "CTEZ"
+                    ? tokenIcons[x.votes.tokenB]
+                      ? tokenIcons[x.votes.tokenB].src
+                      : tokens[x.votes.tokenB]?.iconUrl
+                      ? tokens[x.votes.tokenB].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.votes.tokenA]
+                    ? tokenIcons[x.votes.tokenA].src
+                    : tokens[x.votes.tokenA]?.iconUrl
+                    ? tokens[x.votes.tokenA].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 width={"24px"}
                 height={"24px"}
+                onError={changeSource}
               />
             </div>
             <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-              <Image
+              <img
                 alt={"alt"}
-                src={getImagesPath(x.votes.tokenB)}
+                src={
+                  tEZorCTEZtoUppercase(x.votes.tokenA) === "CTEZ"
+                    ? tokenIcons[x.votes.tokenA]
+                      ? tokenIcons[x.votes.tokenA].src
+                      : tokens[x.votes.tokenA]?.iconUrl
+                      ? tokens[x.votes.tokenA].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.votes.tokenB]
+                    ? tokenIcons[x.votes.tokenB].src
+                    : tokens[x.votes.tokenB]?.iconUrl
+                    ? tokens[x.votes.tokenB].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
                 width={"24px"}
                 height={"24px"}
+                onError={changeSource}
               />
             </div>
             <div>
               <div className="font-body4">
                 {" "}
-                {tEZorCTEZtoUppercase(x.votes.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.votes.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.votes.tokenA) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.votes.tokenB?.toString())} / ${tEZorCTEZtoUppercase(
+                      x.votes.tokenA?.toString()
+                    )}`
+                  : ` ${tEZorCTEZtoUppercase(x.votes.tokenA?.toString())} / ${tEZorCTEZtoUppercase(
+                      x.votes.tokenB?.toString()
+                    )}`}
               </div>
               <div className="font-subtitle1 text-text-500">{x.votes.poolType} Pool</div>
             </div>
@@ -208,7 +272,8 @@ export function VotesTable(props: IVotesTableProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.bribes"),
+        sortType: (a: any, b: any) =>
+          compareNumericStringRewards(a, b, "votes.bribes", "votes.fees"),
         accessor: (x: any) => (
           <RewardsData
             bribes={x.votes.bribes}
@@ -239,7 +304,7 @@ export function VotesTable(props: IVotesTableProps) {
       {
         Header: "My votes",
         id: "Myvotes",
-        columnWidth: "w-[112px]",
+        columnWidth: "w-[112px] pr-2.5",
         tooltipMessage: "Number of votes given through the selected veNFT to this pool.",
         isToolTipEnabled: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.myVotesPercentage"),

@@ -25,12 +25,13 @@ import { VotingPower } from "./VotingPower";
 import { getVeNFTsList } from "../../api/votes";
 import { compareNumericString } from "../../utils/commonUtils";
 import { NoLocks } from "../Rewards/NoLocks";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
 TimeAgo.addDefaultLocale(en);
 
 export function LocksTablePosition(props: ILocksTablePosition) {
-  // const epochData = store.getState().epoch.currentEpoch;
+  const tokens = useAppSelector((state) => state.config.tokens);
   const epochData = useAppSelector((state) => state.epoch.currentEpoch);
-  // const userAddress = store.getState().wallet.address;
   const userAddress = useAppSelector((state) => state.wallet.address);
   const totalTime = epochData ? epochData.endTimestamp - epochData.startTimestamp : 0;
   const remainingTime = epochData ? epochData.endTimestamp - new Date().getTime() : 0;
@@ -51,8 +52,6 @@ export function LocksTablePosition(props: ILocksTablePosition) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const mobilecolumns = React.useMemo<Column<IAllLocksPositionData>[]>(
     () => [
@@ -68,26 +67,57 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           x.attached ? (
             <div className=" flex justify-center items-center">
               <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-                <Image
+                <img
                   alt={"alt"}
-                  src={getImagesPath(x.attachedTokenASymbol)}
+                  src={
+                    tEZorCTEZtoUppercase(x.attachedTokenASymbol) === "CTEZ"
+                      ? tokenIcons[x.attachedTokenBSymbol]
+                        ? tokenIcons[x.attachedTokenBSymbol].src
+                        : tokens[x.attachedTokenBSymbol.toString()]?.iconUrl
+                        ? tokens[x.attachedTokenBSymbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : tokenIcons[x.attachedTokenASymbol]
+                      ? tokenIcons[x.attachedTokenASymbol].src
+                      : tokens[x.attachedTokenASymbol.toString()]?.iconUrl
+                      ? tokens[x.attachedTokenASymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
                   width={"20px"}
                   height={"20px"}
+                  onError={changeSource}
                 />
               </div>
               <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-                <Image
+                <img
                   alt={"alt"}
-                  src={getImagesPath(x.attachedTokenBSymbol)}
+                  src={
+                    tEZorCTEZtoUppercase(x.attachedTokenASymbol) === "CTEZ"
+                      ? tokenIcons[x.attachedTokenASymbol]
+                        ? tokenIcons[x.attachedTokenASymbol].src
+                        : tokens[x.attachedTokenASymbol.toString()]?.iconUrl
+                        ? tokens[x.attachedTokenASymbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : tokenIcons[x.attachedTokenBSymbol]
+                      ? tokenIcons[x.attachedTokenBSymbol].src
+                      : tokens[x.attachedTokenBSymbol.toString()]?.iconUrl
+                      ? tokens[x.attachedTokenBSymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
                   width={"20px"}
                   height={"20px"}
+                  onError={changeSource}
                 />
               </div>
               <div>
                 <div className="font-body2 md:font-body4">
                   {" "}
-                  {tEZorCTEZtoUppercase(x.attachedTokenASymbol.toString())}/
-                  {tEZorCTEZtoUppercase(x.attachedTokenBSymbol.toString())}
+                  {tEZorCTEZtoUppercase(x.attachedTokenASymbol) === "CTEZ"
+                    ? ` ${tEZorCTEZtoUppercase(x.attachedTokenBSymbol)} / ${tEZorCTEZtoUppercase(
+                        x.attachedTokenASymbol
+                      )}`
+                    : ` ${tEZorCTEZtoUppercase(x.attachedTokenASymbol)} / ${tEZorCTEZtoUppercase(
+                        x.attachedTokenBSymbol
+                      )}`}
                 </div>
                 <div className="font-subtitle1 text-text-500">{} Pool</div>
               </div>
@@ -154,7 +184,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenId"),
         showOnMobile: true,
-        accessor: (x: any) => <LocksCloumn id={x.tokenId} />,
+        accessor: (x: any) => <LocksCloumn id={x.tokenId} thumbnailUri={x.thumbnailUri} />,
       },
       {
         Header: "Pool",
@@ -169,26 +199,57 @@ export function LocksTablePosition(props: ILocksTablePosition) {
           x.attached ? (
             <div className=" flex justify-center items-center">
               <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                <Image
+                <img
                   alt={"alt"}
-                  src={getImagesPath(x.attachedTokenASymbol)}
+                  src={
+                    tEZorCTEZtoUppercase(x.attachedTokenASymbol) === "CTEZ"
+                      ? tokenIcons[x.attachedTokenBSymbol]
+                        ? tokenIcons[x.attachedTokenBSymbol].src
+                        : tokens[x.attachedTokenBSymbol.toString()]?.iconUrl
+                        ? tokens[x.attachedTokenBSymbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : tokenIcons[x.attachedTokenASymbol]
+                      ? tokenIcons[x.attachedTokenASymbol].src
+                      : tokens[x.attachedTokenASymbol.toString()]?.iconUrl
+                      ? tokens[x.attachedTokenASymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
                   width={"24px"}
                   height={"24px"}
+                  onError={changeSource}
                 />
               </div>
               <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                <Image
+                <img
                   alt={"alt"}
-                  src={getImagesPath(x.attachedTokenBSymbol)}
+                  src={
+                    tEZorCTEZtoUppercase(x.attachedTokenASymbol) === "CTEZ"
+                      ? tokenIcons[x.attachedTokenASymbol]
+                        ? tokenIcons[x.attachedTokenASymbol].src
+                        : tokens[x.attachedTokenASymbol.toString()]?.iconUrl
+                        ? tokens[x.attachedTokenASymbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : tokenIcons[x.attachedTokenBSymbol]
+                      ? tokenIcons[x.attachedTokenBSymbol].src
+                      : tokens[x.attachedTokenBSymbol.toString()]?.iconUrl
+                      ? tokens[x.attachedTokenBSymbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
                   width={"24px"}
                   height={"24px"}
+                  onError={changeSource}
                 />
               </div>
               <div>
                 <div className="font-body4">
                   {" "}
-                  {tEZorCTEZtoUppercase(x.attachedTokenASymbol.toString())}/
-                  {tEZorCTEZtoUppercase(x.attachedTokenBSymbol.toString())}
+                  {tEZorCTEZtoUppercase(x.attachedTokenASymbol) === "CTEZ"
+                    ? ` ${tEZorCTEZtoUppercase(x.attachedTokenBSymbol)} / ${tEZorCTEZtoUppercase(
+                        x.attachedTokenASymbol
+                      )}`
+                    : ` ${tEZorCTEZtoUppercase(x.attachedTokenASymbol)} / ${tEZorCTEZtoUppercase(
+                        x.attachedTokenBSymbol
+                      )}`}
                 </div>
               </div>
             </div>
@@ -281,7 +342,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
     } else if (false) {
       return (
         <div
-          className="bg-primary-500 md:w-[151px] w-[78px] cursor-pointer  md:font-subtitle4 font-f11-600 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
+          className="bg-primary-500 md:w-[151px] w-[78px] cursor-pointer  md:font-subtitle4 font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
           onClick={() => {}}
         >
           Stake
@@ -296,7 +357,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
       if (props.locksState === ELocksState.CONSUMED) {
         return (
           <div
-            className="bg-primary-500/10 w-[59px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
+            className="bg-primary-500/10 w-[59px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
             onClick={() => {}}
           >
             <span className="relative top-0.5">
@@ -396,7 +457,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         //isstaked
         return (
           <div
-            className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
+            className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
             onClick={() => {}}
           >
             Voted{" "}
@@ -470,7 +531,7 @@ export function LocksTablePosition(props: ILocksTablePosition) {
         //isstaked
         return (
           <div
-            className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
+            className="bg-primary-500/10 w-[151px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle4 rounded-lg flex items-center h-[40px] justify-center"
             onClick={() => {}}
           >
             Vote{" "}

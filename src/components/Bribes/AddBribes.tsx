@@ -22,12 +22,16 @@ import { getNextListOfEpochs } from "../../api/util/epoch";
 import ConfirmAddBribes from "./ConfirmBribes";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
+import fromExponential from "from-exponential";
 
 function AddBribes(props: IAddBribes) {
   const [swapModalShow, setSwapModalShow] = useState(false);
-  const tokens = useAppSelector((state) => state.config.standard);
+  const tokens = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const userAddress = useAppSelector((state) => state.wallet.address);
+  //const userAddress = "tz1VKAzp3FoerqzvKZTv8aRrg2AD16NjNx9S";
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
 
   const [listofEpoch, setListofEpoch] = useState<IEpochDataResponse>({} as IEpochDataResponse);
@@ -46,8 +50,8 @@ function AddBribes(props: IAddBribes) {
     return tokensArray.map((token) => ({
       name: token[0],
       image: `/assets/Tokens/${token[1].symbol}.png`,
-      new: token[1].extras?.isNew as boolean,
-      chainType: token[1].extras?.chain as Chain,
+
+      chainType: token[1].originChain as Chain,
       address: token[1].address,
     }));
   }, [tokens]);
@@ -56,9 +60,6 @@ function AddBribes(props: IAddBribes) {
       (a, b) => Number(props.allBalance[b.name]) - Number(props.allBalance[a.name])
     );
   }, [tokensListConfig, props.allBalance]);
-
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const closeModal = () => {
     props.setShow(false);
@@ -72,13 +73,13 @@ function AddBribes(props: IAddBribes) {
   };
   function nFormatter(num: BigNumber) {
     if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
+      return num.dividedBy(1000000000).toFixed(2) + "b";
     }
     if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
+      return num.dividedBy(1000000).toFixed(2) + "m";
     }
     if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
+      return num.dividedBy(1000).toFixed(2) + "k";
     }
 
     return num.toFixed(2);
@@ -113,8 +114,8 @@ function AddBribes(props: IAddBribes) {
     props.setBribeInputValue("");
 
     props.bribeToken.name === "tez"
-      ? handleTokenInput(Number(props.allBalance[props.bribeToken.name]) - 0.02)
-      : handleTokenInput(props.allBalance[props.bribeToken.name].toNumber());
+      ? handleTokenInput(Number(props.allBalance[props.bribeToken.name]?.balance) - 0.02)
+      : handleTokenInput(props.allBalance[props.bribeToken.name]?.balance.toString());
   };
   const [selectedDropDown, setSelectedDropDown] = useState<IEpochListObject>(
     {} as IEpochListObject
@@ -150,11 +151,11 @@ function AddBribes(props: IAddBribes) {
 
     setSwapModalShow(false);
   };
-  const [bottomValue, setBottomValue] = useState(0);
+  const [bottomValue, setBottomValue] = useState<Number | string>("0");
   useEffect(() => {
     props.setEpochArray([]);
     if (isSelectedEpoch) {
-      setBottomValue(Number(props.bribeInputValue));
+      setBottomValue(props.bribeInputValue);
       setSelectedEndDropDown({} as IEpochListObject);
       if (selectedDropDown.epochNumber > 0) {
         props.setEpochArray([selectedDropDown.epochNumber]);
@@ -187,13 +188,24 @@ function AddBribes(props: IAddBribes) {
       if (
         (Number(props.bribeInputValue) > 0 &&
           new BigNumber(props.bribeInputValue).isGreaterThan(
-            props.allBalance[props.bribeToken.name]
+            props.allBalance[props.bribeToken.name]?.balance
           )) ||
-        new BigNumber(bottomValue).isGreaterThan(props.allBalance[props.bribeToken.name])
+        Number(bottomValue) > Number(props.allBalance[props.bribeToken.name]?.balance)
       ) {
         return (
           <Button color="disabled" width="w-full">
             InSufficient Balance
+          </Button>
+        );
+      } else if (
+        Number(props.bribeInputValue) > 0 &&
+        new BigNumber(props.bribeInputValue)
+          .multipliedBy(new BigNumber(tokenPrice[props.bribeToken.name]))
+          .isLessThan(20)
+      ) {
+        return (
+          <Button color="disabled" width="w-full">
+            Minimum $20 bribe
           </Button>
         );
       } else if (
@@ -221,7 +233,7 @@ function AddBribes(props: IAddBribes) {
     } else {
       return (
         <Button color="primary" onClick={connectTempleWallet} width="w-full">
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     }
@@ -256,7 +268,7 @@ function AddBribes(props: IAddBribes) {
                       </div>
                     }
                   >
-                    <Image alt={"alt"} src={info} />
+                    <Image alt={"alt"} src={info} className="cursor-pointer" />
                   </ToolTip>
                 </div>
               </div>
@@ -309,9 +321,20 @@ function AddBribes(props: IAddBribes) {
                 </div>
                 <div
                   className={clsx(
-                    " mt-4 h-[102px] border bg-muted-200/[0.1]  mx-4  rounded-2xl px-4 hover:border-text-700",
+                    " mt-4 h-[102px] border   mx-4  rounded-2xl px-4 ",
 
-                    true ? "border-text-700" : "border-text-800 "
+                    (Number(props.bribeInputValue) > 0 &&
+                      new BigNumber(props.bribeInputValue).isGreaterThan(
+                        props.allBalance[props.bribeToken.name]?.balance
+                      )) ||
+                      Number(bottomValue) >
+                        Number(props.allBalance[props.bribeToken.name]?.balance) ||
+                      (Number(props.bribeInputValue) > 0 &&
+                        new BigNumber(props.bribeInputValue)
+                          .multipliedBy(new BigNumber(tokenPrice[props.bribeToken.name]))
+                          .isLessThan(20))
+                      ? "border-error-500/[0.4] bg-error-500/[0.01]"
+                      : "border-text-700 bg-muted-200/[0.1] hover:border-text-700"
                   )}
                 >
                   <div className="flex ">
@@ -325,18 +348,14 @@ function AddBribes(props: IAddBribes) {
                         <TokenDropdown
                           onClick={() => handleTokenType()}
                           tokenIcon={props.bribeToken.image}
-                          tokenName={
-                            props.bribeToken.name === "tez"
-                              ? "TEZ"
-                              : props.bribeToken.name === "ctez"
-                              ? "CTEZ"
-                              : props.bribeToken.name
-                          }
+                          tokenName={tEZorCTEZtoUppercase(props.bribeToken.name)}
+                          tokenSymbol={props.bribeToken.name}
                         />
                       ) : (
                         <TokenDropdown
                           tokenName="Select a token"
                           onClick={() => handleTokenType()}
+                          tokenSymbol=""
                         />
                       )}
                     </div>
@@ -352,7 +371,7 @@ function AddBribes(props: IAddBribes) {
                             placeholder="0.0"
                             lang="en"
                             onChange={(e) => props.setBribeInputValue(e.target.value)}
-                            value={props.bribeInputValue}
+                            value={fromExponential(props.bribeInputValue)}
                             onFocus={() => setIsFirstInputFocus(true)}
                             onBlur={() => setIsFirstInputFocus(false)}
                           />
@@ -373,18 +392,20 @@ function AddBribes(props: IAddBribes) {
                   <div className="flex -mt-[12px]">
                     <div className="text-left cursor-pointer" onClick={onClickAmount}>
                       <span className="text-text-600 font-body3">Balance:</span>{" "}
-                      <span className="font-body4 text-primary-500 ">
-                        {Number(props.allBalance[props.bribeToken.name]) >= 0 ? (
+                      <span className="font-body4 text-primary-500 cursor-pointer">
+                        {Number(props.allBalance[props.bribeToken.name]?.balance) >= 0 ? (
                           <ToolTip
-                            message={props.allBalance[props.bribeToken.name].toString()}
+                            message={props.allBalance[props.bribeToken.name]?.balance.toString()}
                             disable={
-                              Number(props.allBalance[props.bribeToken.name]) > 0 ? false : true
+                              Number(props.allBalance[props.bribeToken.name]?.balance) > 0
+                                ? false
+                                : true
                             }
                             id="tooltip8"
                             position={Position.right}
                           >
-                            {Number(props.allBalance[props.bribeToken.name]) > 0
-                              ? Number(props.allBalance[props.bribeToken.name]).toFixed(4)
+                            {Number(props.allBalance[props.bribeToken.name]?.balance) > 0
+                              ? Number(props.allBalance[props.bribeToken.name]?.balance).toFixed(4)
                               : 0}
                           </ToolTip>
                         ) : (
@@ -407,19 +428,33 @@ function AddBribes(props: IAddBribes) {
                   <div className="flex items-center ">
                     <span className="flex">
                       <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                        <Image
+                        <img
                           alt={"alt"}
-                          src={getImagesPath(props.selectedPool.tokenA)}
+                          src={
+                            tokenIcons[props.selectedPool.tokenA]
+                              ? tokenIcons[props.selectedPool.tokenA].src
+                              : tokens[props.selectedPool.tokenA.toString()]?.iconUrl
+                              ? tokens[props.selectedPool.tokenA.toString()].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
                           width={"24px"}
                           height={"24px"}
+                          onError={changeSource}
                         />
                       </div>
                       <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                        <Image
+                        <img
                           alt={"alt"}
-                          src={getImagesPath(props.selectedPool.tokenB)}
+                          src={
+                            tokenIcons[props.selectedPool.tokenB]
+                              ? tokenIcons[props.selectedPool.tokenB].src
+                              : tokens[props.selectedPool.tokenB.toString()]?.iconUrl
+                              ? tokens[props.selectedPool.tokenB.toString()].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
                           width={"24px"}
                           height={"24px"}
+                          onError={changeSource}
                         />
                       </div>
                     </span>
@@ -443,14 +478,13 @@ function AddBribes(props: IAddBribes) {
                     <span
                       className={clsx(
                         "ml-1",
-                        new BigNumber(bottomValue).isGreaterThan(
-                          props.allBalance[props.bribeToken.name]
-                        )
+                        Number(bottomValue) >
+                          Number(props.allBalance[props.bribeToken.name]?.balance)
                           ? "text-error-500"
                           : "text-white"
                       )}
                     >
-                      {bottomValue} {tEZorCTEZtoUppercase(props.bribeToken.name)}
+                      {Number(bottomValue)} {tEZorCTEZtoUppercase(props.bribeToken.name)}
                     </span>{" "}
                     from Epoch {selectedDropDown.epochNumber} {!isSelectedEpoch && "-"}{" "}
                     {!isSelectedEpoch && selectedEndDropDown.epochNumber} (

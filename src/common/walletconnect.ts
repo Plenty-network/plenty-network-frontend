@@ -49,12 +49,15 @@ export const configName = Config.NAME;
 // const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
 // export const rpcNode = Config.RPC_NODES[connectedNetwork];
 export const tzktNode = Config.TZKT_NODES[connectedNetwork];
+export const publicTzktNode = Config.PUBLIC_TZKT_NODES[connectedNetwork];
 export const voteEscrowAddress = Config.VOTE_ESCROW[connectedNetwork];
 export const voterAddress = Config.VOTER[connectedNetwork];
 export const veSwapAddress = Config.VE_SWAP[connectedNetwork];
 export const faucetAddress = Config.FAUCET;
 export const factoryAddress = Config.FACTORY[connectedNetwork];
+export const tezDeployerAddress = Config.TEZ_DEPLOYER[connectedNetwork];
 export const routerAddress = Config.ROUTER[connectedNetwork];
+export const tzktExplorer = Config.EXPLORER_LINKS.TEZOS[connectedNetwork];
 
 export const getRpcNode = () =>
   store.getState().rpcData.rpcNode || Config.RPC_NODES[connectedNetwork];
@@ -68,6 +71,7 @@ export function dappClient() {
     const { BeaconWallet } = await import("@taquito/beacon-wallet");
     const dAppInfo: DAppClientOptions = {
       name: "Plenty Network",
+      iconUrl: "https://app.plenty.network/assets/icon/plentyLogo1000.svg",
       preferredNetwork: walletNetwork,
       colorMode: ColorMode.DARK,
       blockExplorer: new TzktBlockExplorer() as any,

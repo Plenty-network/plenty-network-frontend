@@ -17,10 +17,12 @@ import { MAX_TIME, WEEK, YEAR } from "../../constants/global";
 import { Datepicker } from "../DatePicker";
 import { getCalendarRangeToEnable } from "../../api/util/epoch";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { getThumbnailUriForNewVeNFT } from "../../api/util/locks";
 
 function CreateLock(props: ICreateLockProps) {
   // const walletAddress = store.getState().wallet.address;
   const walletAddress = useAppSelector((state) => state.wallet.address);
+  const TOKENS = useAppSelector((state) => state.config.tokens);
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const [screen, setScreen] = useState("1");
   const [votingPower, setVotingPower] = useState(0);
@@ -40,11 +42,19 @@ function CreateLock(props: ICreateLockProps) {
     }
   );
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [newVeNFTThumbnailUri, setNewVeNFTThumbnailUri] = useState<string>("");
+  const [daysTillExpiry, setDaysTillExpiry] = useState<number>(0);
   const closeModal = () => {
     props.setShow(false);
   };
   const handleInputPercentage = (value: number) => {
-    props.setPlyInput((value * Number(props.plyBalance)).toString());
+    props.setPlyInput(
+      new BigNumber(props.plyBalance)
+        .multipliedBy(value)
+        .dividedBy(100)
+        .decimalPlaces(TOKENS["PLY"].decimals, 1)
+        .toString()
+    );
   };
   useEffect(() => {
     const res = getCalendarRangeToEnable();
@@ -63,6 +73,17 @@ function CreateLock(props: ICreateLockProps) {
       props.lockingEndData.lockingDate
     );
     setVotingPower(res);
+    if (res > 0) {
+      setNewVeNFTThumbnailUri(
+        getThumbnailUriForNewVeNFT(
+          new BigNumber(props.plyInput),
+          new BigNumber(res),
+          daysTillExpiry
+        )
+      );
+    } else {
+      setNewVeNFTThumbnailUri("");
+    }
   }, [props.plyInput, props.lockingDate]);
   const handlePlyInput = async (input: string | number) => {
     if (input == ".") {
@@ -86,6 +107,7 @@ function CreateLock(props: ICreateLockProps) {
       }
     }
   };
+
   const dateFormat = (dates: number) => {
     var date = new Date(dates);
 
@@ -105,10 +127,24 @@ function CreateLock(props: ICreateLockProps) {
         ? Math.floor((now + timeSpan) / WEEK) * WEEK
         : Math.floor((now + (timeSpan + WEEK - 1)) / WEEK) * WEEK;
 
+    const daysTillExpiry = Math.floor((lockEnd - now) / (24 * 60 * 60));
+    setDaysTillExpiry(daysTillExpiry);
+
     props.setLockingDate(dateFormat(lockEnd * 1000));
     if (Number(props.plyInput) > 0) {
       const res = estimateVotingPower(new BigNumber(props.plyInput), lockEnd);
       setVotingPower(res);
+      if (res > 0) {
+        setNewVeNFTThumbnailUri(
+          getThumbnailUriForNewVeNFT(
+            new BigNumber(props.plyInput),
+            new BigNumber(res),
+            daysTillExpiry
+          )
+        );
+      } else {
+        setNewVeNFTThumbnailUri("");
+      }
     }
     props.setLockingEndData({ selected: days ? days : 0, lockingDate: lockEnd });
     // send new BigNumber(lockEnd) as argument to api
@@ -121,7 +157,7 @@ function CreateLock(props: ICreateLockProps) {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (Number(props.plyInput) <= 0) {
@@ -143,7 +179,7 @@ function CreateLock(props: ICreateLockProps) {
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else {
@@ -155,7 +191,7 @@ function CreateLock(props: ICreateLockProps) {
     }
   }, [props]);
   const onClickAmount = () => {
-    handlePlyInput(Number(props.plyBalance));
+    handlePlyInput(props.plyBalance.toString());
   };
   const [showTooltip, setShowTooltip] = useState(false);
   // useEffect(() => {
@@ -218,7 +254,7 @@ function CreateLock(props: ICreateLockProps) {
                   position={Position.top}
                   message={fromExponential(props.plyBalance?.toString())}
                 >
-                  <div className=" ml-1 text-primary-500 font-body2">
+                  <div className="cursor-pointer ml-1 text-primary-500 font-body2">
                     {Number(props.plyBalance) > 0 ? props.plyBalance.toFixed(2) : "0"} PLY
                   </div>
                 </ToolTip>
@@ -235,7 +271,7 @@ function CreateLock(props: ICreateLockProps) {
               )}
               {...(!walletAddress || Number(props.plyBalance) === 0
                 ? {}
-                : { onClick: () => handleInputPercentage(0.25) })}
+                : { onClick: () => handleInputPercentage(25) })}
             >
               25%
             </p>
@@ -248,7 +284,7 @@ function CreateLock(props: ICreateLockProps) {
               )}
               {...(!walletAddress || Number(props.plyBalance) === 0
                 ? {}
-                : { onClick: () => handleInputPercentage(0.5) })}
+                : { onClick: () => handleInputPercentage(50) })}
             >
               50%
             </p>
@@ -261,7 +297,7 @@ function CreateLock(props: ICreateLockProps) {
               )}
               {...(!walletAddress || Number(props.plyBalance) === 0
                 ? {}
-                : { onClick: () => handleInputPercentage(0.75) })}
+                : { onClick: () => handleInputPercentage(75) })}
             >
               75%
             </p>
@@ -339,7 +375,7 @@ function CreateLock(props: ICreateLockProps) {
                 >
                   <p
                     className={clsx(
-                      "rounded-[32px] bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3 cursor-pointer",
+                      "rounded-[32px] cursor-pointer bg-muted-200/[0.1] border border-border-200 px-[14px] md:px-[18px] md:px-[25px] flex items-center h-[44px]  font-caption1-small md:font-subtitle3 cursor-pointer",
                       props.lockingEndData.selected === MAX_TIME
                         ? "bg-primary-500/[0.2] border-primary-500 text-white"
                         : "bg-muted-200/[0.1] border-border-200 text-text-500"
@@ -354,7 +390,7 @@ function CreateLock(props: ICreateLockProps) {
             <div className="mt-3 border-t border-text-800/[0.5]"></div>
             <div className="px-5 flex mt-4 flex items-center space-between">
               <div className="text-text-250 w-[155px] md:w-auto font-mobile-f1020 md:font-subtitle3">
-                Your will receive a veNFT with a voting power of{" "}
+                You will receive a veNFT with a voting power of{" "}
               </div>
               <div className="ml-auto px-3 h-[38px] flex items-center text-primary-500 bg-primary-500/[0.1] rounded-[30px]">
                 ~ {isNaN(votingPower) ? "0.00" : votingPower.toFixed(2)}
@@ -372,6 +408,7 @@ function CreateLock(props: ICreateLockProps) {
           handleLockOperation={props.handleLockOperation}
           votingPower={votingPower}
           endDate={props.lockingDate}
+          newVeNFTThumbnailUri={newVeNFTThumbnailUri}
         />
       )}
     </PopUpModal>

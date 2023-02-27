@@ -5,10 +5,10 @@ import { getMyAmmVotes, getTotalAmmVotes } from "../../api/votes";
 import { COLORSdataChart } from "./PiChartComponent";
 import Protocol from "./Protocol";
 import { IAllocationProps } from "./types";
-import { tEZorCTEZTtoUpperCase } from "../../utils/commonUtils";
 import Image from "next/image";
 import loadingLogo from "../../assets/icon/common/loadingLogo.svg";
 import { useAppSelector } from "../../redux";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 const PiChart = dynamic(() => import("./PiChartComponent"), {
   loading: () => <></>,
 });
@@ -23,7 +23,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
     if (props.epochNumber) {
       if (
         props.selectedDropDown &&
-        props.selectedDropDown.tokenId &&
+        props.selectedDropDown.tokenId !== "" &&
         props.selectedDropDown.tokenId.length > 0 &&
         selectedDropDown === "My votes"
       ) {
@@ -57,17 +57,18 @@ function VotingAllocation(props: IVotingAllocationProps) {
   }, [
     props.epochNumber,
     props.selectedDropDown,
-    props.show,
     selectedDropDown,
     props.castVoteOperation,
+    props.show,
   ]);
+
   useEffect(() => {
     setSelectedDropDown("Protocol");
   }, [props.epochNumber, userAddress]);
   let Options = ["My votes", "Protocol"];
 
   return (
-    <div className="md:border mt-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px] md:h-[calc(100vh_-_278px)] lg:h-[calc(100vh_-_278px)] lg:min-h-[500px]">
+    <div className="md:border my-3 pb-3 rounded-xl border-text-800/[0.5] md:bg-card-400 md:py-[26px] md:px-[22px] md:h-[calc(100vh_-_278px)] lg:h-[calc(100vh_-_278px)] lg:min-h-[530px]">
       <div className="font-body3 text-white pr-2">Voting allocation</div>
       <div className="font-body3 text-white mt-[18px]">
         <Protocol
@@ -113,9 +114,13 @@ function VotingAllocation(props: IVotingAllocationProps) {
                 key={`e.votes` + i}
                 text={
                   e.tokenOneSymbol && e.tokenTwoSymbol
-                    ? `${tEZorCTEZTtoUpperCase(e.tokenOneSymbol ?? "")} / ${tEZorCTEZTtoUpperCase(
-                        e.tokenTwoSymbol ?? ""
-                      )}`
+                    ? tEZorCTEZtoUppercase(e.tokenOneSymbol) === "CTEZ"
+                      ? ` ${tEZorCTEZtoUppercase(
+                          e.tokenTwoSymbol?.toString()
+                        )} / ${tEZorCTEZtoUppercase(e.tokenOneSymbol?.toString())}`
+                      : ` ${tEZorCTEZtoUppercase(
+                          e.tokenOneSymbol?.toString()
+                        )} / ${tEZorCTEZtoUppercase(e.tokenTwoSymbol?.toString())}`
                     : "Others"
                 }
                 color={selectedColorIndex === i ? "#78F33F" : COLORSdataChart[i]}
@@ -139,7 +144,7 @@ export function ColorText(props: IColorTextProps) {
   return (
     <div
       className="flex gap-1 items-center text-f12 w-max cursor-pointer"
-      onClick={() => props.onClick()}
+      onMouseEnter={() => props.onClick()}
     >
       <div className="w-[15px] h-[15px]" style={{ backgroundColor: props.color }}></div>
       <div>{props.text}</div>

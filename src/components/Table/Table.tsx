@@ -8,6 +8,7 @@ import { getHeightOfElement } from "../../utils/getHeight";
 import { WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
 import { Tabs } from "../Pools/ShortCardHeader";
 import { NoSearchResult } from "../Votes/NoSearchResult";
+import TablePagination from "./pagination-action";
 
 export interface ISimmerEffectProps {
   lines: number;
@@ -32,6 +33,7 @@ const Table = <D extends object>({
   data,
   shortby,
   tableType,
+  loading,
   isConnectWalletRequired = false,
   isFetched = false,
   isVotesTable = false,
@@ -43,6 +45,7 @@ const Table = <D extends object>({
   columns: Column<D>[];
   data: D[];
   shortby?: string;
+  loading?: boolean;
   noSearchResult?: boolean;
   isConnectWalletRequired?: boolean;
   isFetched?: boolean;
@@ -63,7 +66,7 @@ const Table = <D extends object>({
 
   useEffect(() => {
     const heightOfbody = getHeightOfElement(headerRef.current);
-    isMobile ? setheightBody(heightOfbody - 64) : setheightBody(heightOfbody);
+    isMobile ? setheightBody(heightOfbody) : setheightBody(heightOfbody);
   }, [headerRef, isMobile]);
   const {
     getTableProps,
@@ -81,7 +84,7 @@ const Table = <D extends object>({
       data,
       initialState: {
         pageIndex: 0,
-        pageSize: 100,
+        pageSize: 10,
         sortBy: [shortByGroup],
       },
       autoResetPage: false,
@@ -119,7 +122,10 @@ const Table = <D extends object>({
   const router = useRouter();
   return (
     <div>
-      <table className={clsx(" flex flex-col ", isVotesTable ? "gap-1.5" : "gap-1.5", TableWidth)}>
+      <table
+        {...getTableProps()}
+        className={clsx(" flex flex-col ", isVotesTable ? "gap-1.5" : "gap-1.5", TableWidth)}
+      >
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr
@@ -130,7 +136,11 @@ const Table = <D extends object>({
                 TableName === "poolsRewards" || TableName === "locksRewards"
                   ? "justify-between "
                   : "",
-                TableName === "lockPosition" ? "lg:pl-[30px]" : "lg:pl-[50px] "
+                TableName === "lockPosition"
+                  ? "lg:pl-[30px]"
+                  : TableName === "newPools"
+                  ? "lg:pl-[20px]"
+                  : "lg:pl-[50px] "
               )}
             >
               {headerGroup.headers.map((column, i) => (
@@ -176,7 +186,7 @@ const Table = <D extends object>({
           className={clsx(" flex-col flex ", isVotesTable ? "gap-1" : "gap-1", isFetched ? "" : "")}
           {...(!router.pathname.includes("myportfolio") &&
             !router.pathname.includes("pools") && {
-              style: { height: `${heightBody}px` },
+              style: { height: "auto" },
             })}
         >
           {/* {isConnectWalletRequired && walletAddress && isFetched && !data.length ? (
@@ -203,7 +213,13 @@ const Table = <D extends object>({
                         ? "justify-between  "
                         : ""
                     } 
-                    ${TableName === "lockPosition" ? "lg:pl-[30px]" : "lg:pl-[50px] "}
+                    ${
+                      TableName === "lockPosition"
+                        ? "lg:pl-[30px]"
+                        : TableName === "newPools"
+                        ? "lg:pl-[20px]"
+                        : "lg:pl-[50px] "
+                    }
                     ${
                       TableName === "locksRewards" && row.original?.epoch !== ""
                         ? "py-1 "
@@ -216,7 +232,11 @@ const Table = <D extends object>({
                         // eslint-disable-next-line react/jsx-key
                         <td
                           className={` flex items-center ${cell.column.columnWidth} ${
-                            i == 0 ? "justify-start" : "justify-end "
+                            i == 0
+                              ? "justify-start"
+                              : TableName === "mybribes" && i !== 3
+                              ? "justify-start"
+                              : "justify-end "
                           }  ${tableType === true ? "colSticky" : ""} `}
                         >
                           {cell.render("Cell")}
@@ -227,6 +247,22 @@ const Table = <D extends object>({
                 );
               })
             : null}
+          {isFetched && data.length > 0 && (
+            <tr className="h-[60px] mt-2 border border-borderCommon bg-cardBackGround px-5 py-4 rounded-lg  items-center ">
+              <TablePagination
+                count={pageCount}
+                rowsPerPage={10}
+                page={pageIndex}
+                setPageSize={setPageSize}
+                onChangePage={(number) => gotoPage(number)}
+              />
+            </tr>
+          )}
+          {loading && (
+            <tr
+              className={` border border-borderCommon h-16 bg-cardBackGround flex px-5 py-3 items-center justify-between rounded-lg animate-pulse-table `}
+            ></tr>
+          )}
         </tbody>
       </table>
     </div>

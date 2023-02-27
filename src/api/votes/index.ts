@@ -24,9 +24,8 @@ import {
 } from "./types";
 import { Bribes, VolumeV1Data, VolumeVeData } from "../pools/types";
 import { fetchEpochData } from "../util/epoch";
-import { IEpochData, IEpochResponse } from "../util/types";
+import { IEpochData, IEpochResponse, ITokenPriceList } from "../util/types";
 import { pools } from "../../redux/pools";
-import { IAmmContracts } from "../../config/types";
 import { getDexAddress } from "../util/fetchConfig";
 import { store } from "../../redux";
 import { IVotes } from "../../operations/types";
@@ -132,21 +131,26 @@ export const votingPower = async (tokenId: number, ts2: number, time: number): P
   }
 };
 
-const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataResponse> => {
+const mainPageRewardData = async (
+  epoch: number,
+  tokenPrices: ITokenPriceList
+): Promise<IVotePageRewardDataResponse> => {
   try {
     const state = store.getState();
     const TOKENS = state.config.tokens;
-    const bribes = await axios.get(`${Config.VE_INDEXER}bribes?epoch=${epoch}`);
+    const bribes = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}bribes?epoch=${epoch}`);
     const bribesData: IBribesResponse[] = bribes.data;
 
     const res: IEpochResponse = await fetchEpochData(epoch);
-    let feesData : VolumeVeData[];
+    let feesData: VolumeVeData[];
+    let isCurrentEpoch = false;
 
     if (res.success) {
       const epochData = res.epochData as IEpochData;
+      isCurrentEpoch = epochData.isCurrent;
 
       const feesResponse = await axios.get(
-        `${Config.PLY_INDEXER}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
+        `${Config.PLY_INDEXER[connectedNetwork]}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
       );
       feesData = feesResponse.data;
     } else {
@@ -161,10 +165,12 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
     );
 
     const finalData: IVotePageRewardData = {};
-    // TODO: Optimise this O(2n) loop
+
     for (var x of bribesData) {
       let bribe: BigNumber = new BigNumber(0);
       let bribes: Bribes[] = [];
+      const bribesObj: { [key: string] : Bribes} = {};
+
       if (!x.bribes || x.bribes.length === 0) {
         bribe = new BigNumber(0);
       } else {
@@ -172,14 +178,34 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
           bribe = bribe.plus(
             new BigNumber(y.value)
               .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
-              .multipliedBy(y.price)
+              .multipliedBy(isCurrentEpoch ? tokenPrices[y.name] || 0 : y.price)
           );
-          bribes.push({
-            name: y.name,
-            value: new BigNumber(y.value).dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals)),
-            price: new BigNumber(y.price),
-          });
+          if(bribesObj[y.name]) {
+            const prevBribeObj = bribesObj[y.name];
+            bribesObj[y.name] = {
+              ...prevBribeObj,
+              value: prevBribeObj.value.plus(
+                new BigNumber(y.value).dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+              ),
+              price: prevBribeObj.price.plus(
+                new BigNumber(y.value)
+                  .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+                  .multipliedBy(isCurrentEpoch ? tokenPrices[y.name] || 0 : y.price)
+              ),
+            };
+          } else {
+            bribesObj[y.name] = {
+              name: y.name,
+              value: new BigNumber(y.value).dividedBy(
+                new BigNumber(10).pow(TOKENS[y.name].decimals)
+              ),
+              price: new BigNumber(y.value)
+                .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+                .multipliedBy(isCurrentEpoch ? tokenPrices[y.name] || 0 : y.price),
+            };
+          }
         }
+        bribes = Object.values(bribesObj);
       }
       const fee = feesDataObject[x.pool]
         ? new BigNumber(feesDataObject[x.pool].feesEpoch.value)
@@ -190,19 +216,18 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
       const feeTokenB = feesDataObject[x.pool]
         ? new BigNumber(feesDataObject[x.pool].feesEpoch.token2)
         : new BigNumber(0);
-      /* let fee = new BigNumber(0);
-      let feeTokenA = new BigNumber(0);
-      let feeTokenB = new BigNumber(0);
-      for (var i of feesData) {
-        if (i.pool === x.pool) {
-          fee = new BigNumber(i.feesEpoch.value);
-          feeTokenA = new BigNumber(i.feesEpoch.token1);
-          feeTokenB = new BigNumber(i.feesEpoch.token2);
-          break;
-        }
-      } */
 
-      finalData[x.pool] = { fees: fee, bribes: bribe , bribesData : bribes , feesTokenA: feeTokenA  , feesTokenB : feeTokenB };
+      if(bribes.length > 0) {
+        bribes.sort((a,b) => b.price.minus(a.price).toNumber());
+      }
+
+      finalData[x.pool] = {
+        fees: fee,
+        bribes: bribe,
+        bribesData: bribes,
+        feesTokenA: feeTokenA,
+        feesTokenB: feeTokenB,
+      };
     }
 
     return {
@@ -213,7 +238,15 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
     console.log(error);
     return {
       success: false,
-      allData: { false: { fees: new BigNumber(0), bribes: new BigNumber(0) , bribesData : [] , feesTokenA: new BigNumber(0)  , feesTokenB : new BigNumber(0) } },
+      allData: {
+        false: {
+          fees: new BigNumber(0),
+          bribes: new BigNumber(0),
+          bribesData: [],
+          feesTokenA: new BigNumber(0),
+          feesTokenB: new BigNumber(0),
+        },
+      },
       error: error.message,
     };
   }
@@ -221,14 +254,15 @@ const mainPageRewardData = async (epoch: number): Promise<IVotePageRewardDataRes
 
 export const votesPageDataWrapper = async (
   epoch: number,
-  tokenId: number | undefined
+  tokenId: number | undefined,
+  tokenPrices: ITokenPriceList
 ): Promise<IVotePageDataResponse> => {
   try {
     const state = store.getState();
     const AMMS = state.config.AMMs;
  
     const [rewardData, votesData] = await Promise.all([
-      mainPageRewardData(epoch),
+      mainPageRewardData(epoch, tokenPrices),
       getAllVotesData(epoch, tokenId),
     ]);
 
@@ -246,7 +280,7 @@ export const votesPageDataWrapper = async (
     for (let poolData of Object.keys(rewardData.allData)) {
       const AMM = AMMS[poolData];
 
-      if(AMM && AMM.gaugeAddress) {
+      if(AMM && AMM.gauge) {
         allData[poolData] = {
           tokenA: AMM.token1.symbol,
           tokenB: AMM.token2.symbol,
@@ -331,7 +365,7 @@ export const votesPageDataWrapper = async (
     const epochTimestamp = epochData.epochEndTimestamp - 10; // Timestamp within the epoch.
 
     const locksResponse = await axios.get(
-      `${Config.VE_INDEXER}locks?address=${userTezosAddress}&epoch=${epochNumber}&timestamp=${epochTimestamp}`
+      `${Config.VE_INDEXER[connectedNetwork]}locks?address=${userTezosAddress}&epoch=${epochNumber}&timestamp=${epochTimestamp}`
     );
     const locksData = locksResponse.data.result;
 
@@ -419,7 +453,7 @@ export const getTotalAmmVotes = async (epochNumber: number): Promise<IVotesRespo
 
     const totalAmmVotesResponse = await getTzktBigMapData(
       totalAmmVotesBigMapId,
-      `key.epoch=${epochNumber}&select=key,value`
+      `key.epoch=${epochNumber}&select=key,value&limit=1000`
     );
     const totalAmmVotesBigMapData: ITotalAmmVotesBigMap[] = totalAmmVotesResponse.data;
     if (totalAmmVotesBigMapData.length === 0) {
@@ -498,7 +532,7 @@ export const getMyAmmVotes = async (
     
     const tokenAmmVotesResponse = await getTzktBigMapData(
       tokenAmmVotesBigMapId,
-      `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value`
+      `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value&limit=1000`
     );
     const tokenAmmVotesBigMapData: IMyAmmVotesBigMap[] = tokenAmmVotesResponse.data;
     if (tokenAmmVotesBigMapData.length === 0) {
@@ -580,7 +614,7 @@ export const addRemainingVotesDust = (
   }
 };
 
-// TODO: Remove export during mainnet launch.
+
 /**
  * Fetch all votes data in an epoch for a particular veNFT or for all.
  * @param epochNumber - Numeric value of the epoch for which the data is to be fetched
@@ -610,7 +644,7 @@ export const addRemainingVotesDust = (
 
     const [totalEpochVotesResponse, totalAmmVotesResponse] = await Promise.all([
       getTzktBigMapData(totalEpochVotesBigMapId, `key=${epochNumber}&select=key,value`),
-      getTzktBigMapData(totalAmmVotesBigMapId, `key.epoch=${epochNumber}&select=key,value`),
+      getTzktBigMapData(totalAmmVotesBigMapId, `key.epoch=${epochNumber}&select=key,value&limit=1000`),
     ]);
     if (totalEpochVotesResponse.data.length === 0) {
       throw new Error("No votes in this epoch yet");
@@ -639,7 +673,7 @@ export const addRemainingVotesDust = (
         ),
         getTzktBigMapData(
           tokenAmmVotesBigMapId,
-          `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value`
+          `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value&limit=1000`
         ),
       ]);
       if (totalTokenVotesResponse.data.length > 0 && tokenAmmVotesResponse.data.length > 0) {

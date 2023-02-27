@@ -31,13 +31,12 @@ import { Flashtype } from "../FlashScreen";
 import { setFlashMessage } from "../../redux/flashMessage";
 import Config from "../../config/config";
 import { FIRST_TOKEN_AMOUNT, TOKEN_A } from "../../constants/localStorage";
+import { IAllTokensBalanceResponse } from "../../api/util/types";
+import { tzktExplorer } from "../../common/walletconnect";
 
 interface IMigrateProps {
   allBalance: {
-    success: boolean;
-    userBalance: {
-      [id: string]: BigNumber;
-    };
+    [key: string]: string;
   };
 }
 
@@ -56,8 +55,8 @@ function Migrate(props: IMigrateProps) {
 
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [tokenIn, setTokenIn] = useState<tokenParameter>({
-    name: MigrateTokens[0].name,
-    image: MigrateTokens[0].image,
+    name: MigrateTokens[1].name,
+    image: MigrateTokens[1].image,
   });
 
   const [tokenOut, setTokenOut] = useState<tokenParameter>({
@@ -92,9 +91,7 @@ function Migrate(props: IMigrateProps) {
             Enter an amount
           </Button>
         );
-      } else if (
-        new BigNumber(firstTokenAmount).isGreaterThan(props.allBalance.userBalance[tokenIn.name])
-      ) {
+      } else if (new BigNumber(firstTokenAmount).isGreaterThan(props.allBalance[tokenIn.name])) {
         return (
           <Button color="disabled" width="w-full">
             Insufficient balance
@@ -110,11 +107,11 @@ function Migrate(props: IMigrateProps) {
     } else {
       return (
         <Button color="primary" onClick={connectTempleWallet} width="w-full">
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     }
-  }, [firstTokenAmount, props.allBalance.userBalance, tokenIn]);
+  }, [firstTokenAmount, props.allBalance.allTokensBalances, tokenIn]);
   const [exchangeRes, setExchangeRes] = useState<IMigrateExchange>({} as IMigrateExchange);
   const handleTokenInput = (input: string | number) => {
     if (input == ".") {
@@ -131,7 +128,7 @@ function Migrate(props: IMigrateProps) {
         tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP
       );
       setExchangeRes(res);
-      setSecondTokenAmount(res.claimableAmount.toString());
+      setSecondTokenAmount(res.claimableAmount.decimalPlaces(6, 1).toString());
     }
   };
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
@@ -141,7 +138,7 @@ function Migrate(props: IMigrateProps) {
   const onClickAmount = () => {
     setSecondTokenAmount("");
 
-    handleTokenInput(props.allBalance.userBalance[tokenIn.name].toNumber());
+    handleTokenInput(props.allBalance[tokenIn.name]);
   };
 
   const handleTokenType = () => {
@@ -159,7 +156,10 @@ function Migrate(props: IMigrateProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
 
     localStorage.setItem(TOKEN_A, tokenIn.name);
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, firstTokenAmount);
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      new BigNumber(firstTokenAmount).decimalPlaces(4, 1).toString()
+    );
     exchange(
       tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP,
       new BigNumber(firstTokenAmount),
@@ -172,7 +172,7 @@ function Migrate(props: IMigrateProps) {
         headerText: "Transaction submitted",
         trailingText: `Migration of ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
-        )} ${localStorage.getItem(TOKEN_A)} confirmed`,
+        )} ${localStorage.getItem(TOKEN_A)} `,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -193,7 +193,7 @@ function Migrate(props: IMigrateProps) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -219,7 +219,7 @@ function Migrate(props: IMigrateProps) {
             headerText: "Rejected",
             trailingText: `Migration of ${localStorage.getItem(
               FIRST_TOKEN_AMOUNT
-            )} ${localStorage.getItem(TOKEN_A)} confirmed`,
+            )} ${localStorage.getItem(TOKEN_A)} `,
             linkText: "",
             isLoading: true,
             transactionId: "",
@@ -232,7 +232,7 @@ function Migrate(props: IMigrateProps) {
   return (
     <>
       <div className="lg:w-640  md:mx-auto mt-[36px]">
-        <div className="flex  border border-text-800 bg-card-500 h-[48px] items-center  px-5 md:rounded-2xl gap-1.5 md:gap-2.5 md:w-[410px]">
+        <div className="flex  border border-text-800 bg-card-500 h-[48px] items-center  px-3 md:rounded-2xl gap-1 md:gap-2.5 md:w-[460px]">
           <Image src={exchange1} />
           <span className="font-body1">Exchange rate:</span>
           <span className="md:font-body4 font-body2">
@@ -255,9 +255,7 @@ function Migrate(props: IMigrateProps) {
         <div
           className={clsx(
             "lg:w-580  h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700",
-            (new BigNumber(firstTokenAmount).isGreaterThan(
-              props.allBalance.userBalance[tokenIn.name]
-            ) ||
+            (new BigNumber(firstTokenAmount).isGreaterThan(props.allBalance[tokenIn.name]) ||
               errorMessage !== "") &&
               "border-errorBorder hover:border-errorBorder bg-errorBg",
             isFirstInputFocus ? "border-text-700" : "border-text-800 "
@@ -269,10 +267,11 @@ function Migrate(props: IMigrateProps) {
                 onClick={() => handleTokenType()}
                 tokenIcon={tokenIn.image}
                 tokenName={tokenIn.name}
+                tokenSymbol={tokenIn.name}
               />
             </div>
-            <div className="flex-auto my-3 ">
-              <div className="text-right font-body1 text-text-400 pt-2">YOU PAY</div>
+            <div className="flex-auto my-3 ml-2 ">
+              <div className="text-right font-body1 text-text-400 ">YOU PAY</div>
               <div>
                 <input
                   type="text"
@@ -291,16 +290,16 @@ function Migrate(props: IMigrateProps) {
           <div className="flex -mt-[20px]">
             <div className="text-left cursor-pointer" onClick={onClickAmount}>
               <span className="text-text-600 font-body3">Balance:</span>{" "}
-              <span className="font-body4 text-primary-500 ">
-                {Number(props.allBalance.userBalance[tokenIn.name]) >= 0 ? (
+              <span className="font-body4 cursor-pointer text-primary-500 ">
+                {Number(props.allBalance[tokenIn.name]) >= 0 ? (
                   <ToolTip
-                    message={fromExponential(props.allBalance.userBalance[tokenIn.name].toString())}
-                    disable={Number(props.allBalance.userBalance[tokenIn.name]) > 0 ? false : true}
+                    message={fromExponential(props.allBalance[tokenIn.name].toString())}
+                    disable={Number(props.allBalance[tokenIn.name]) > 0 ? false : true}
                     id="tooltip8"
                     position={Position.right}
                   >
-                    {Number(props.allBalance.userBalance[tokenIn.name]) > 0
-                      ? Number(props.allBalance.userBalance[tokenIn.name]).toFixed(4)
+                    {Number(props.allBalance[tokenIn.name]) > 0
+                      ? Number(props.allBalance[tokenIn.name])?.toFixed(4)
                       : 0}
                   </ToolTip>
                 ) : (
@@ -334,9 +333,10 @@ function Migrate(props: IMigrateProps) {
                   tokenIcon={tokenOut.image}
                   tokenName={tokenOut.name}
                   isArrow={true}
+                  tokenSymbol={tokenOut.name}
                 />
               </div>
-              <div className=" my-3 flex-auto ">
+              <div className=" my-3 flex-auto ml-2">
                 <div className="text-right font-body1 text-text-400 ">YOU RECEIVE</div>
                 <div>
                   <input
@@ -367,10 +367,10 @@ function Migrate(props: IMigrateProps) {
                     <span className="text-white mr-1">
                       + {exchangeRes?.vestedAmount?.toFixed(2)} PLY
                     </span>{" "}
-                    vested <span className="md:block hidden ml-1">for upto 25-Aug-2024</span>
-                    <span className="md:hidden relative top-1">
+                    vested <span className="md:block hidden ml-1">for upto 05-Jan-2025</span>
+                    {/* <span className="md:hidden relative top-1">
                       <Image src={info} />
-                    </span>
+                    </span> */}
                   </>
                 ) : (
                   "--"
@@ -382,10 +382,10 @@ function Migrate(props: IMigrateProps) {
           <div className="mt-5">{MigrateButton}</div>
         </div>
       </div>
-      <div className="font-body2 text-text-250 mt-4 mx-2 md:mx-auto md:w-[568px] text-center mb-5">
+      {/* <div className="font-body2 text-text-250 mt-4 mx-2 md:mx-auto md:w-[568px] text-center mb-5">
         Tip: Convert PLENTY/WRAP to PLY. By locking PLY, you&apos;re earning fees and bribe rewards
         from your veNFT, plus you may boost your gauge rewards.
-      </div>
+      </div> */}
 
       {showConfirmTransaction && (
         <ConfirmTransaction
@@ -401,24 +401,20 @@ function Migrate(props: IMigrateProps) {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
-              : null
+            transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }
           content={`Migration of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
             TOKEN_A
-          )} confirmed`}
+          )}`}
         />
       )}
       <TokenModalMigrate
         tokens={MigrateTokens.sort(
-          (a, b) =>
-            Number(props.allBalance.userBalance[b.name]) -
-            Number(props.allBalance.userBalance[a.name])
+          (a, b) => Number(props.allBalance[b.name]) - Number(props.allBalance[a.name])
         )}
         show={tokenModal}
-        allBalance={props.allBalance.userBalance}
-        isSuccess={props.allBalance.success}
+        allBalance={props.allBalance}
+        isSuccess={true}
         selectToken={selectToken}
         onhide={setTokenModal}
         tokenIn={tokenIn}

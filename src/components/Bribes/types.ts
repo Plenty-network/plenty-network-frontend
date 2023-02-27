@@ -5,7 +5,7 @@ import {
   IUserBribeData,
 } from "../../api/bribes/types";
 import { Bribes } from "../../api/pools/types";
-import { IEpochListObject } from "../../api/util/types";
+import { IAllTokensBalance, IEpochListObject } from "../../api/util/types";
 import { tokenParameter } from "../../constants/swap";
 
 export interface BribesMainProps {
@@ -52,9 +52,7 @@ export interface IAddBribes {
   isSucess: boolean;
   setBalanceUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   balanceUpdate: boolean;
-  allBalance: {
-    [id: string]: BigNumber;
-  };
+  allBalance: IAllTokensBalance;
   epochArray: number[];
   handleOperation: () => void;
   setEpochArray: React.Dispatch<React.SetStateAction<number[]>>;

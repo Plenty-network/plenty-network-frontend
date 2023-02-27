@@ -1,42 +1,59 @@
 import axios from 'axios';
 import { connectedNetwork, voterAddress as voterContractAddress } from '../../common/walletconnect';
 import Config from '../../config/config';
-import { AMM_TYPE, IAmmContracts, IContractsConfig, ITokenInterface, ITokens } from '../../config/types';
+import { IConfigLPToken, IConfigPools, IConfigToken, IConfigTokens, IContractsConfig, PoolType } from '../../config/types';
 import { store } from '../../redux';
 import { getTzktBigMapData, getTzktStorageData } from './storageProvider';
+import { getIconUrl } from './tokens';
 import { IGaugeExistsResponse } from './types';
 
 export const fetchConfig = async (): Promise<IContractsConfig> => {
   try {
-    const tokensUrl: string = `${Config.TOKENS_CONFIG}${
-      connectedNetwork === "testnet" ? "?network=testnet" : ""
-    }`;
-    const ammsUrl: string = `${Config.AMM_CONFIG}${
-      connectedNetwork === "testnet" ? "?network=testnet" : ""
-    }`;
-    const lpTokensUrl: string = `${Config.LP_CONFIG}${
-      connectedNetwork === "testnet" ? "&network=testnet" : ""
-    }`;
-    const standardTokensUrl: string = `${Config.STANDARD_CONFIG}${
-      connectedNetwork === "testnet" ? "&network=testnet" : ""
-    }`;
+    // const tokensUrl: string = `${Config.TOKENS_CONFIG}${
+    //   connectedNetwork === "testnet" ? "?network=testnet" : ""
+    // }`;
+    // const ammsUrl: string = `${Config.AMM_CONFIG}${
+    //   connectedNetwork === "testnet" ? "?network=testnet" : ""
+    // }`;
+    // const lpTokensUrl: string = `${Config.LP_CONFIG}${
+    //   connectedNetwork === "testnet" ? "&network=testnet" : ""
+    // }`;
+    // const standardTokensUrl: string = `${Config.STANDARD_CONFIG}${
+    //   connectedNetwork === "testnet" ? "&network=testnet" : ""
+    // }`;
+    const newTokensUrl: string = Config.CONFIG_LINKS[connectedNetwork].TOKEN;
+    const newPoolsUrl: string = Config.CONFIG_LINKS[connectedNetwork].POOL;
     const configResult = await Promise.all([
-      axios.get(tokensUrl),
-      axios.get(lpTokensUrl),
-      axios.get(standardTokensUrl),
-      axios.get(ammsUrl),
+      // axios.get(tokensUrl),
+      // axios.get(lpTokensUrl),
+      // axios.get(standardTokensUrl),
+      // axios.get(ammsUrl),
+      axios.get(newTokensUrl),
+      axios.get(newPoolsUrl),
     ]);
     if (configResult.find((result) => result.status !== 200)) {
       throw new Error("Failed to fetch the config from server.");
     } else {
-      const TOKEN: ITokens = configResult[0].data;
-      const LP: ITokens = configResult[1].data;
-      const STANDARD: ITokens = configResult[2].data;
-      const AMM: IAmmContracts = configResult[3].data;
+      // const TOKEN: ITokens = configResult[0].data;
+      // const LP: ITokens = configResult[1].data;
+      // const STANDARD: ITokens = configResult[2].data;
+      // const AMM: IAmmContracts = configResult[3].data;
+      // Create a valid https url for each token if thumbnail uri available.
+      const tokenData: IConfigTokens = configResult[0].data;
+      for(const token of Object.keys(tokenData)) {
+        if(tokenData[token].thumbnailUri) {
+          const iconUrl = await getIconUrl({thumbnailUri: tokenData[token].thumbnailUri});
+          tokenData[token].iconUrl = iconUrl;
+        }
+      }
+      const TOKEN: IConfigTokens = tokenData;
+      const AMM: IConfigPools = configResult[1].data;
       return {
+        // TOKEN,
+        // LP,
+        // STANDARD,
+        // AMM,
         TOKEN,
-        LP,
-        STANDARD,
         AMM,
       };
     }
@@ -76,12 +93,11 @@ export const getDexType = (tokenIn: string, tokenOut: string): string => {
 };
 
 /**
- * Returns the LP token symbol for given pair of tokens.
+ * Returns the LP token details for given pair of tokens.
  * @param tokenOneSymbol - Symbol of token one of the pair.
  * @param tokenTwoSymbol - Symbol of token two of the pair.
- * @returns Symbol of the LP token.
  */
-export const getLpTokenSymbol = (tokenOneSymbol: string, tokenTwoSymbol: string): string | undefined => {
+export const getLpToken = (tokenOneSymbol: string, tokenTwoSymbol: string): IConfigLPToken | undefined => {
   const state = store.getState();
   const AMMs = state.config.AMMs;
 
@@ -93,7 +109,7 @@ export const getLpTokenSymbol = (tokenOneSymbol: string, tokenTwoSymbol: string)
         AMMs[ammAddress].token1.symbol === tokenTwoSymbol)
   );
   
-  return tokensAmm ? AMMs[tokensAmm].lpToken.symbol : undefined;
+  return tokensAmm ? AMMs[tokensAmm].lpToken : undefined;
 
 };
 
@@ -107,7 +123,7 @@ export const isVolatilePair = (
   tokenTwoSymbol: string
 ): boolean => {
   const dexType = getDexType(tokenOneSymbol, tokenTwoSymbol);
-  return dexType !== "false" && dexType === AMM_TYPE.VOLATILE ? true : false;
+  return dexType !== "false" && dexType === PoolType.VOLATILE ? true : false;
 };
 
 /**
@@ -120,8 +136,8 @@ export const isVolatilePair = (
    tokenTwoSymbol: string
  ): boolean => {
    const dexType = getDexType(tokenOneSymbol, tokenTwoSymbol);
-   return dexType !== "false" && dexType === AMM_TYPE.STABLE
-     ? tokenOneSymbol !== "tez" && tokenTwoSymbol !== "tez"
+   return dexType !== "false" && dexType === PoolType.STABLE
+     ? tokenOneSymbol !== "XTZ" && tokenTwoSymbol !== "XTZ"
        ? true
        : false
      : false;
@@ -136,7 +152,8 @@ export const isVolatilePair = (
    tokenOneSymbol: string,
    tokenTwoSymbol: string
  ): boolean => {
-   return tokenOneSymbol === "tez" || tokenTwoSymbol === "tez" ? true : false;
+   const dexType = getDexType(tokenOneSymbol, tokenTwoSymbol);
+   return dexType !== "false" && dexType === PoolType.TEZ ? true : false;
  };
 
  /**
@@ -148,9 +165,8 @@ export const isVolatilePair = (
     tokenOneSymbol: string,
     tokenTwoSymbol: string
   ): boolean => {
-    const dexType = getDexType(tokenOneSymbol, tokenTwoSymbol);
-    return (tokenOneSymbol === "tez" && tokenTwoSymbol === "ctez") ||
-    (tokenOneSymbol === "ctez" && tokenTwoSymbol === "tez")
+    return (tokenOneSymbol === "XTZ" && tokenTwoSymbol === "CTez") ||
+    (tokenOneSymbol === "CTez" && tokenTwoSymbol === "XTZ")
     ? true
     : false;
   };
@@ -158,14 +174,19 @@ export const isVolatilePair = (
   /**
    * Search the config for the the token by token contract address and return the token data if found.
    * @param tokenContract - Contract address of the token to be searched in the config
+   * @param tokenId - Id of the token if it's FA2 (optional)
    */
-  export const getTokenDataByAddress = (tokenContract: string): ITokenInterface | undefined => {
+  export const getTokenDataByAddress = (tokenContract: string, tokenId: number | undefined): IConfigToken | undefined => {
     try {
       const state = store.getState();
       const TOKENS = state.config.tokens;
-      const tokenSymbol = Object.keys(TOKENS).find(
-        (tokenSymbol) => TOKENS[tokenSymbol].address === tokenContract
-      );
+      const tokenSymbol = tokenId
+        ? Object.keys(TOKENS).find(
+            (tokenSymbol) =>
+              TOKENS[tokenSymbol].address === tokenContract &&
+              TOKENS[tokenSymbol].tokenId === tokenId
+          )
+        : Object.keys(TOKENS).find((tokenSymbol) => TOKENS[tokenSymbol].address === tokenContract);
       const tokenData = tokenSymbol ? TOKENS[tokenSymbol as string] : undefined;
       return tokenData;
     } catch (error: any) {

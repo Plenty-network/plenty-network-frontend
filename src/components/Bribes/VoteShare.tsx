@@ -2,21 +2,9 @@ import * as React from "react";
 import { BigNumber } from "bignumber.js";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IVoteShare } from "./types";
+import nFormatter from "../../api/util/helpers";
 
 export function VoteShare(props: IVoteShare) {
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
   return (
     <>
       <ToolTip
@@ -29,7 +17,7 @@ export function VoteShare(props: IVoteShare) {
           </div>
         }
       >
-        <div className="flex-1 text-end flex-col justify-center items-center">
+        <div className="flex-1 cursor-pointer text-end flex-col justify-center items-center">
           <div className=" ">
             <span className="font-f13">
               {props.percentage.toNumber() > 0

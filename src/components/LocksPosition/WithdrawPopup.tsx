@@ -8,6 +8,7 @@ import ply from "../../assets/Tokens/ply.png";
 import Button from "../Button/Button";
 import { IUnclaimedRewardsForLockData } from "../../api/portfolio/types";
 import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
+import nFormatter from "../../api/util/helpers";
 
 interface IWithdrawPlyProps {
   show: boolean;
@@ -22,19 +23,7 @@ function WithdrawPly(props: IWithdrawPlyProps) {
   const closeModal = () => {
     props.setShow(false);
   };
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
 
-    return num.toFixed(2);
-  }
   return props.show ? (
     <PopUpModal
       onhide={closeModal}
@@ -49,7 +38,7 @@ function WithdrawPly(props: IWithdrawPlyProps) {
             <div className="mx-2 text-white font-title3">Withdraw locks</div>
           </div>
           <div className="border border-text-800 bg-card-200 p-4 mt-3 rounded-2xl">
-            <div className="text-text-400 font-body1 ">Your will receive </div>
+            <div className="text-text-400 font-body1 ">You will receive </div>
             <div className="flex mt-[11px] items-center">
               <Image alt={"alt"} src={ply} width={"28px"} height={"28px"} />
               <span className="text-white font-body4 ml-2">
@@ -89,7 +78,13 @@ function WithdrawPly(props: IWithdrawPlyProps) {
                       type={TooltipType.withoutArrowsAndTitle}
                       position={Position.top}
                     >
-                      <Image alt={"alt"} src={lock} width={"16px"} height={"16px"} />
+                      <Image
+                        alt={"alt"}
+                        src={lock}
+                        width={"16px"}
+                        height={"16px"}
+                        className="cursor-pointer"
+                      />
                     </ToolTip>
                   </span>
                   <span className="text-white ml-0.5">

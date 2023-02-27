@@ -4,6 +4,8 @@ import * as React from "react";
 import { useDispatch } from "react-redux";
 import { IEpochListObject } from "../../api/util/types";
 import vectorDown from "../../assets/icon/common/vector.svg";
+
+import epoch from "../../assets/icon/navigation/epoch.svg";
 import { useCountdown } from "../../hooks/useCountDown";
 import { useInterval } from "../../hooks/useInterval";
 import { AppDispatch, store, useAppSelector } from "../../redux";
@@ -18,17 +20,13 @@ export function MobileEpoch(props: IMobileEpochProps) {
   const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const dispatch = useDispatch<AppDispatch>();
   const indexOfCurrent = epochData.findIndex((data: IEpochListObject) => data.isCurrent === true);
-  // React.useEffect(() => {
-  //   console.log("currentEpoch", currentEpoch);
-  //   dispatch(setSelectedEpoch(currentEpoch));
-  // }, [epochData[indexOfCurrent]?.epochNumber, currentEpoch?.endTimestamp]);
   const [days, hours, minutes, seconds] = useCountdown(
     currentEpoch?.endTimestamp ? currentEpoch.endTimestamp : Date.now()
   );
   useInterval(() => {
     if (minutes < 0 || seconds < 0) {
-      console.log("currentEpoch", currentEpoch);
       dispatch(getEpochData());
+      //@ts-ignore
       dispatch(setSelectedEpoch(epochData[indexOfCurrent]));
     }
   }, 5000);
@@ -39,7 +37,9 @@ export function MobileEpoch(props: IMobileEpochProps) {
         className={`flex justify-between cursor-pointer py-2 px-5 ${
           currentEpoch.isCurrent ? "bg-primary-700" : ""
         }`}
-        onClick={() => setIsDropDownActive(!isDropDownActive)}
+        onClick={
+          router.pathname.includes("vote") ? () => setIsDropDownActive(!isDropDownActive) : () => {}
+        }
       >
         <p className="text-white font-body4">
           Epoch
@@ -58,13 +58,15 @@ export function MobileEpoch(props: IMobileEpochProps) {
             </span>
           </span>
         </p>
-        <Image
-          alt={"alt"}
-          className={isDropDownActive ? "rotate-0" : "rotate-180"}
-          src={vectorDown}
-        />
+        {router.pathname.includes("vote") && (
+          <Image
+            alt={"alt"}
+            className={isDropDownActive ? "rotate-0" : "rotate-180"}
+            src={vectorDown}
+          />
+        )}
       </div>
-      {isDropDownActive && (
+      {isDropDownActive && router.pathname.includes("vote") && (
         <>
           {epochData.map((epoch, i) => (
             <EpochOptions
@@ -72,6 +74,7 @@ export function MobileEpoch(props: IMobileEpochProps) {
               text={epoch.epochNumber}
               isCurrent={epoch.isCurrent}
               onClick={() => {
+                //@ts-ignore
                 dispatch(setSelectedEpoch(epoch));
                 setIsDropDownActive(false);
               }}

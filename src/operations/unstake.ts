@@ -1,17 +1,18 @@
-import { BigNumber } from 'bignumber.js';
-import { getDexAddress } from '../api/util/fetchConfig';
-import { dappClient } from '../common/walletconnect';
-import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
-import { store } from '../redux';
-import { setFlashMessage } from '../redux/flashMessage';
-import { IFlashMessageProps } from '../redux/flashMessage/type';
+import { BigNumber } from "bignumber.js";
+import { getDexAddress } from "../api/util/fetchConfig";
+import { dappClient } from "../common/walletconnect";
+import { ActiveLiquidity } from "../components/Pools/ManageLiquidityHeader";
+import { GAS_LIMIT_EXCESS, STORAGE_LIMIT_EXCESS } from "../constants/global";
+import { store } from "../redux";
+import { setFlashMessage } from "../redux/flashMessage";
+import { IFlashMessageProps } from "../redux/flashMessage/type";
 import {
   IOperationsResponse,
   TResetAllValues,
   TSetActiveState,
   TSetShowConfirmTransaction,
   TTransactionSubmitModal,
-} from './types';
+} from "./types";
 
 /**
  * Unstake PNLP token operation for the selected pair of tokens.
@@ -37,19 +38,18 @@ export const unstakePnlpTokens = async (
     const state = store.getState();
     const AMM = state.config.AMMs;
     const dexContractAddress = getDexAddress(tokenOneSymbol, tokenTwoSymbol);
-    if (dexContractAddress === 'false') {
-      throw new Error('AMM does not exist for the selected pair.');
+    if (dexContractAddress === "false") {
+      throw new Error("AMM does not exist for the selected pair.");
     }
-    const gaugeAddress: string | undefined =
-      AMM[dexContractAddress].gaugeAddress;
+    const gaugeAddress: string | undefined = AMM[dexContractAddress].gauge;
     if (gaugeAddress === undefined) {
-      throw new Error('Gauge does not exist for the selected pair.');
+      throw new Error("Gauge does not exist for the selected pair.");
     }
 
     const { CheckIfWalletConnected } = dappClient();
     const walletResponse = await CheckIfWalletConnected();
     if (!walletResponse.success) {
-      throw new Error('Wallet connection failed.');
+      throw new Error("Wallet connection failed.");
     }
     const Tezos = await dappClient().tezos();
 
@@ -60,14 +60,41 @@ export const unstakePnlpTokens = async (
     const pnlpAmountToUnstake = new BigNumber(pnlpAmount).multipliedBy(
       new BigNumber(10).pow(PNLP_TOKEN.decimals)
     );
-    
+
+    const limits = await Tezos.estimate
+      .transfer(
+        gaugeContractInstance.methods
+          .withdraw(pnlpAmountToUnstake.decimalPlaces(0, 1).toString())
+          .toTransferParams()
+      )
+      .then((limits) => limits)
+      .catch((err) => {
+        console.log(err);
+        return undefined;
+      });
+
+    let gasLimit = 0;
+    let storageLimit = 0;
+
+    if (limits !== undefined) {
+      gasLimit = new BigNumber(limits.gasLimit)
+        .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+        .decimalPlaces(0, 1)
+        .toNumber();
+      storageLimit = new BigNumber(limits.storageLimit)
+        .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+        .decimalPlaces(0, 1)
+        .toNumber();
+    } else {
+      throw new Error("Failed to estimate transaction limits");
+    }
+
     const operation = await gaugeContractInstance.methods
       .withdraw(pnlpAmountToUnstake.decimalPlaces(0, 1).toString())
-      .send();
+      .send({ gasLimit, storageLimit });
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    transactionSubmitModal &&
-      transactionSubmitModal(operation.opHash);
+    transactionSubmitModal && transactionSubmitModal(operation.opHash);
     setActiveState && setActiveState(ActiveLiquidity.Liquidity);
     resetAllValues && resetAllValues();
     if (flashMessageContent) {
@@ -76,12 +103,12 @@ export const unstakePnlpTokens = async (
     await operation.confirmation(1);
 
     const status = await operation.status();
-    if(status === "applied"){
+    if (status === "applied") {
       return {
         success: true,
         operationId: operation.opHash,
       };
-    }else{
+    } else {
       throw new Error(status);
     }
   } catch (error: any) {

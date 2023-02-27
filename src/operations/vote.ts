@@ -17,6 +17,8 @@ import { getMaxPossibleBatchArrayV2} from "../api/util/operations";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
+import { GAS_LIMIT_EXCESS, STORAGE_LIMIT_EXCESS } from "../constants/global";
+import { BigNumber } from "bignumber.js";
 
 export const vote = async (
   id: number,
@@ -34,28 +36,54 @@ export const vote = async (
     }
 
     const Tezos = await dappClient().tezos();
-    const voterInstance: any = await Tezos.contract.at(voterAddress);
+    const voterInstance = await Tezos.wallet.at(voterAddress);
 
-    let batch = null;
+    const limits = await Tezos.estimate
+      .transfer(voterInstance.methods.vote(id, votes).toTransferParams())
+      .then((limits) => limits)
+      .catch((err) => {
+        console.log(err);
+        return undefined;
+      });
 
-    batch = Tezos.wallet.batch().withContractCall(voterInstance.methods.vote(id, votes));
+    let gasLimit = 0;
+    let storageLimit = 0;
 
-    const batchOp = await batch.send();
+    if (limits !== undefined) {
+      gasLimit = new BigNumber(limits.gasLimit)
+        .plus(new BigNumber(limits.gasLimit).multipliedBy(GAS_LIMIT_EXCESS))
+        .decimalPlaces(0, 1)
+        .toNumber();
+      storageLimit = new BigNumber(limits.storageLimit)
+        .plus(new BigNumber(limits.storageLimit).multipliedBy(STORAGE_LIMIT_EXCESS))
+        .decimalPlaces(0, 1)
+        .toNumber();
+    } else {
+      throw new Error("Failed to estimate transaction limits");
+    }
+
+    const operation = await voterInstance.methods.vote(id, votes).send({ gasLimit, storageLimit });
+
+    // let batch = null;
+
+    // batch = Tezos.wallet.batch().withContractCall(voterInstance.methods.vote(id, votes));
+
+    // const batchOp = await batch.send();
     setShowConfirmTransaction(false);
     resetAllValues();
 
-    transactionSubmitModal(batchOp.opHash);
+    transactionSubmitModal(operation.opHash);
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await batchOp.confirmation(1);
+    await operation.confirmation(1);
 
-    const status = await batchOp.status();
+    const status = await operation.status();
     if( status === "applied"){
       return {
         success: true,
-        operationId: batchOp.opHash,
+        operationId: operation.opHash,
       };
     }else{
       throw new Error(status);
@@ -301,7 +329,9 @@ export const claimAllForEpoch = async (
       });
     }
 
-    const batch = Tezos.wallet.batch(allBatch);
+    const bestPossibleBatch = await getMaxPossibleBatchArrayV2(allBatch);
+
+    const batch = Tezos.wallet.batch(bestPossibleBatch);
 
     const batchOp = await batch.send();
     setShowConfirmTransaction && setShowConfirmTransaction(false);

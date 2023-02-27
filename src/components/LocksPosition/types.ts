@@ -1,6 +1,7 @@
 import { ELocksState } from "../../api/votes/types";
 import { BigNumber } from "bignumber.js";
 import { IAllLocksPositionData } from "../../api/portfolio/types";
+import { IAllTokensBalanceResponse } from "../../api/util/types";
 
 export interface ILocksTablePosition {
   isfetched: boolean;
@@ -32,6 +33,7 @@ export interface IVoteBtnProps {
 }
 export interface ILocksColumnProps {
   id: BigNumber;
+  thumbnailUri: string;
 }
 export interface ILockExpiryProps {
   endTime: number;
@@ -56,7 +58,9 @@ export interface IManageLockProps {
   handleIncreaseVoteOperation: () => void;
   setUpdatedPlyVoteValue: React.Dispatch<React.SetStateAction<string>>;
 
-  plyBalance: BigNumber;
+  allBalance: {
+    [key: string]: string;
+  };
   show: boolean;
 
   setLockingEndData: React.Dispatch<

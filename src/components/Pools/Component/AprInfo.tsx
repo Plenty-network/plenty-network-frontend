@@ -3,6 +3,7 @@ import * as React from "react";
 import { Position, ToolTip } from "../../Tooltip/TooltipAdvanced";
 import boostIcon from "../../../assets/icon/myPortfolio/boostBlue.svg";
 import { BigNumber } from "bignumber.js";
+import nFormatter from "../../../api/util/helpers";
 export interface IAprInfoProps {
   isMobile?: boolean;
 
@@ -11,19 +12,6 @@ export interface IAprInfoProps {
 }
 
 export function AprInfo(props: IAprInfoProps) {
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
   return (
     <ToolTip
       position={Position.top}
@@ -40,7 +28,13 @@ export function AprInfo(props: IAprInfoProps) {
         </div>
       }
     >
-      <div className={props.isMobile ? "flex  flex-col gap-[7px]" : "flex  items-center "}>
+      <div
+        className={
+          props.isMobile
+            ? "flex  flex-col cursor-pointer gap-[7px]"
+            : "flex  items-center cursor-pointer"
+        }
+      >
         <div className="bg-muted-200  md:text-f14 text-f12 cursor-pointer text-text-50 border-border-500 rounded-lg py-[3px] px-2 ">
           {nFormatter(props.currentApr)}%
         </div>

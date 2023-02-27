@@ -2,8 +2,9 @@ import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/do
 
 const siteData = {
   title: "plenty network",
-  url: "https://plentydefi.com/",
-  description: "plenty defi description",
+  url: "https://ghostnet.plenty.network/",
+  description:
+    "Plenty is a decentralized exchange on the Tezos blockchain that allows users to trade and earn additional income through voting, staking, and providing liquidity. The platform offers both stable and volatile liquidity pools and a bridge from Ethereum and Polygon to Tezos.",
 };
 const SeoStructuredData = {
   "@context": "https://schema.org/",
@@ -23,21 +24,6 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <meta name="description" content={siteData.description} />
-          <meta
-            name="keywords"
-            content="plentydefi, plenty, tezos, v3, defi, plenty network,veply, PLY, v(3,3), ecosystem"
-          />
-          <meta property="og:title" content={siteData.title} />
-          <meta property="og:type" content="website" />
-          <meta property="og:url" content={siteData.url} />
-          <meta property="og:description" content={siteData.description} />
-
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={siteData.title} />
-          <meta name="twitter:description" content={siteData.description} />
-
-          <meta name="twitter:image:alt" content={siteData.title} />
           <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg" />
           <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
           <link rel="icon" href="/favicon.ico" type="image/x-icon" />
@@ -103,12 +89,6 @@ class MyDocument extends Document {
           <link
             href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
             rel="stylesheet"
-          />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(SeoStructuredData),
-            }}
           />
         </Head>
         <body>

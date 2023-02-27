@@ -9,8 +9,11 @@ import arrow from "../../../src/assets/icon/swap/downArrow.svg";
 import info from "../../../src/assets/icon/swap/info.svg";
 import { BigNumber } from "bignumber.js";
 import stableSwap from "../../../src/assets/icon/swap/stableswapViolet.svg";
-import { tokensList } from "../../constants/tokensList";
+import { tokenIcons, tokensList } from "../../constants/tokensList";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { Chain } from "../../config/types";
+import { useAppSelector } from "../../redux";
 
 interface IConfirmSwapProps {
   show: boolean;
@@ -31,8 +34,15 @@ interface IConfirmSwapProps {
   };
   secondTokenAmount: string | number;
   onClick: () => void;
+  tokens: {
+    name: string;
+    image: string;
+    chainType: Chain;
+    address: string | undefined;
+  }[];
 }
 function ConfirmSwap(props: IConfirmSwapProps) {
+  const tokens = useAppSelector((state) => state.config.tokens);
   const [isConvert, setConvert] = useState(false);
   const convertRates = (e: any) => {
     e.stopPropagation();
@@ -44,7 +54,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
   const swapRoute = useMemo(() => {
     if (props.routeDetails.path?.length >= 2) {
       return props.routeDetails.path.map((tokenName) =>
-        tokensList.find((token) => token.name === tokenName)
+        props.tokens.find((token) => token.name === tokenName)
       );
     }
 
@@ -59,16 +69,22 @@ function ConfirmSwap(props: IConfirmSwapProps) {
             <div className="border bg-muted-100/[0.1] rounded-2xl border-text-800 p-3 flex content-center justify-center">
               <div className="border rounded-xl border-text-800/[0.5] bg-muted-400 p-3 h-[50px] justify-center flex">
                 <span className="h-[26px] w-[26px]">
-                  <Image alt={"alt"} src={props.tokenIn.image} height={"26px"} width={"26px"} />
+                  <img
+                    alt={"alt"}
+                    src={
+                      tokenIcons[props.tokenIn.name]
+                        ? tokenIcons[props.tokenIn.name].src
+                        : tokens[props.tokenIn.name.toString()]?.iconUrl
+                        ? tokens[props.tokenIn.name.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                    }
+                    height={"26px"}
+                    width={"26px"}
+                    onError={changeSource}
+                  />
                 </span>
                 <span className="font-title3 ml-2">
-                  <span>
-                    {props.tokenIn.name === "tez"
-                      ? "TEZ"
-                      : props.tokenIn.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenIn.name}
-                  </span>
+                  <span>{tEZorCTEZtoUppercase(props.tokenIn.name)}</span>
                 </span>
               </div>
               <div className="ml-auto items-center flex font-medium2">{props.firstTokenAmount}</div>
@@ -79,16 +95,22 @@ function ConfirmSwap(props: IConfirmSwapProps) {
             <div className="border -mt-[18px] bg-muted-100/[0.1] rounded-2xl border-text-800 p-3 flex content-center justify-center">
               <div className="border rounded-xl border-text-800/[0.5] bg-muted-400 p-3 h-[50px] justify-center flex">
                 <span className="h-[26px] w-[26px]">
-                  <Image alt={"alt"} src={props.tokenOut.image} height={"26px"} width={"26px"} />
+                  <img
+                    alt={"alt"}
+                    src={
+                      tokenIcons[props.tokenOut.name]
+                        ? tokenIcons[props.tokenOut.name].src
+                        : tokens[props.tokenOut.name.toString()]?.iconUrl
+                        ? tokens[props.tokenOut.name.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                    }
+                    height={"26px"}
+                    width={"26px"}
+                    onError={changeSource}
+                  />
                 </span>
                 <span className="font-title3 ml-2">
-                  <span>
-                    {props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name}
-                  </span>
+                  <span>{tEZorCTEZtoUppercase(props.tokenOut.name)}</span>
                 </span>
               </div>
               <div className="ml-auto items-center flex font-medium2">
@@ -101,33 +123,15 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
                     1{" "}
                     {!isConvert
-                      ? props.tokenIn.name === "tez"
-                        ? "TEZ"
-                        : props.tokenIn.name === "ctez"
-                        ? "CTEZ"
-                        : props.tokenIn.name
-                      : props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name}{" "}
+                      ? tEZorCTEZtoUppercase(props.tokenIn.name)
+                      : tEZorCTEZtoUppercase(props.tokenOut.name)}{" "}
                     =
                     {!isConvert
                       ? ` ${props.routeDetails.exchangeRate.toFixed(3)} 
-                            ${
-                              props.tokenOut.name === "tez"
-                                ? "TEZ"
-                                : props.tokenOut.name === "ctez"
-                                ? "CTEZ"
-                                : props.tokenOut.name
-                            }`
-                      : `${Number(1 / Number(props.routeDetails.exchangeRate)).toFixed(3)} ${
-                          props.tokenIn.name === "tez"
-                            ? "TEZ"
-                            : props.tokenIn.name === "ctez"
-                            ? "CTEZ"
-                            : props.tokenIn.name
-                        }`}
+                            ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
+                      : `${Number(1 / Number(props.routeDetails.exchangeRate)).toFixed(
+                          3
+                        )} ${tEZorCTEZtoUppercase(props.tokenIn.name)}`}
                   </span>
                   <span className="relative top-px cursor-pointer ">
                     <Image alt={"alt"} src={ratesrefresh} onClick={(e) => convertRates(e)} />
@@ -165,13 +169,9 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${
-                    props.tokenOut.name === "tez"
-                      ? "TEZ"
-                      : props.tokenOut.name === "ctez"
-                      ? "CTEZ"
-                      : props.tokenOut.name
-                  }`}
+                  {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${tEZorCTEZtoUppercase(
+                    props.tokenOut.name
+                  )}`}
                 </div>
               </div>
 
@@ -282,11 +282,18 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                                       : "w-[24px] h-[24px] lg:w-[28px] lg:h-[28px]"
                                   )}
                                 >
-                                  <Image
+                                  <img
                                     alt={"alt"}
-                                    src={token?.image}
+                                    src={
+                                      tokenIcons[token?.name as string]
+                                        ? tokenIcons[token?.name as string].src
+                                        : tokens[token?.name as string]?.iconUrl
+                                        ? tokens[token?.name as string].iconUrl
+                                        : `/assets/Tokens/fallback.png`
+                                    }
                                     width={"28px"}
                                     height={"28px"}
+                                    onError={changeSource}
                                   />
                                 </span>
                               </div>
@@ -347,11 +354,18 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                                           : "w-[24px] h-[24px] lg:w-[28px] lg:h-[28px]"
                                       )}
                                     >
-                                      <Image
+                                      <img
                                         alt={"alt"}
-                                        src={token?.image}
+                                        src={
+                                          tokenIcons[token?.name as string]
+                                            ? tokenIcons[token?.name as string].src
+                                            : tokens[token?.name as string]?.iconUrl
+                                            ? tokens[token?.name as string].iconUrl
+                                            : `/assets/Tokens/fallback.png`
+                                        }
                                         width={"28px"}
                                         height={"28px"}
+                                        onError={changeSource}
                                       />
                                     </span>
                                   </div>
@@ -371,10 +385,17 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                                           : "w-[24px] h-[24px] lg:w-[28px] lg:h-[28px]"
                                       )}
                                     >
-                                      <Image
-                                        src={swapRoute[index]?.image}
+                                      <img
+                                        src={
+                                          tokenIcons[swapRoute[index]?.name as string]
+                                            ? tokenIcons[swapRoute[index]?.name as string].src
+                                            : tokens[swapRoute[index]?.name as string]?.iconUrl
+                                            ? tokens[swapRoute[index]?.name as string].iconUrl
+                                            : `/assets/Tokens/fallback.png`
+                                        }
                                         width={"28px"}
                                         height={"28px"}
+                                        onError={changeSource}
                                       />
                                     </span>
                                   </div>

@@ -2,21 +2,9 @@ import * as React from "react";
 import { BigNumber } from "bignumber.js";
 import { IMyVotesValueProps } from "./types";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import nFormatter from "../../api/util/helpers";
 
 export function MyVotesValue(props: IMyVotesValueProps) {
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
   return (
     <>
       <ToolTip
@@ -29,7 +17,7 @@ export function MyVotesValue(props: IMyVotesValueProps) {
           </div>
         }
       >
-        <div className="flex-1 text-end flex-col justify-center items-center">
+        <div className="flex-1 text-end cursor-pointer flex-col justify-center items-center">
           <div className=" ">
             <span className="font-f13">
               {Number(props.myVotes) > 0

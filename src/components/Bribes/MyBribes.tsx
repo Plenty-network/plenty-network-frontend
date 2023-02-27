@@ -16,10 +16,13 @@ import { Token } from "./Token";
 import { IUserBribeData } from "../../api/bribes/types";
 import { BribeValue } from "./Bribe";
 import { WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
 TimeAgo.addDefaultLocale(en);
 
 export function MyBribesTableBribes(props: IBribesTableBribes) {
   // const userAddress = store.getState().wallet.address;
+  const tokens = useAppSelector((state) => state.config.tokens);
   const userAddress = useAppSelector((state) => state.wallet.address);
 
   const { valueFormat } = useTableNumberUtils();
@@ -32,8 +35,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
 
   const [noSearchResult, setNoSearchResult] = React.useState(false);
   const [tabledata, setTabledata] = React.useState(props.locksPosition);
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   useEffect(() => {
     setTabledata(props.locksPosition);
   }, [props.locksPosition]);
@@ -85,21 +87,58 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
       {
         Header: "Pool",
         id: "pools",
-        columnWidth: "w-[153px]",
+        columnWidth: "w-[183px]",
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         showOnMobile: true,
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
-              <Image alt={"alt"} src={getImagesPath(x.tokenA)} width={"20px"} height={"20px"} />
+              <img
+                alt={"alt"}
+                src={
+                  tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
+                    ? tokenIcons[x.tokenB]
+                      ? tokenIcons[x.tokenB].src
+                      : tokens[x.tokenB.toString()]?.iconUrl
+                      ? tokens[x.tokenB.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.tokenA]
+                    ? tokenIcons[x.tokenA].src
+                    : tokens[x.tokenA.toString()]?.iconUrl
+                    ? tokens[x.tokenA.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
+                width={"20px"}
+                height={"20px"}
+                onError={changeSource}
+              />
             </div>
             <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
-              <Image alt={"alt"} src={getImagesPath(x.tokenB)} width={"20px"} height={"20px"} />
+              <img
+                alt={"alt"}
+                src={
+                  tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
+                    ? tokenIcons[x.tokenA]
+                      ? tokenIcons[x.tokenA].src
+                      : tokens[x.tokenA.toString()]?.iconUrl
+                      ? tokens[x.tokenA.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.tokenB]
+                    ? tokenIcons[x.tokenB].src
+                    : tokens[x.tokenB.toString()]?.iconUrl
+                    ? tokens[x.tokenB.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
+                width={"20px"}
+                height={"20px"}
+                onError={changeSource}
+              />
             </div>
             <div className="flex flex-col gap-[2px]">
               <span className="font-body4">
-                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.tokenB)} / ${tEZorCTEZtoUppercase(x.tokenA)}`
+                  : ` ${tEZorCTEZtoUppercase(x.tokenA)} / ${tEZorCTEZtoUppercase(x.tokenB)}`}
               </span>
               <span className="text-f12 text-text-500">{x.poolType} Pool</span>
             </div>
@@ -155,22 +194,59 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
         id: "pool",
         showOnMobile: true,
 
-        columnWidth: "w-[153px]",
+        columnWidth: "w-[180px]",
 
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-              <Image alt={"alt"} src={getImagesPath(x.tokenA)} width={"24px"} height={"24px"} />
+              <img
+                alt={"alt"}
+                src={
+                  tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
+                    ? tokenIcons[x.tokenB]
+                      ? tokenIcons[x.tokenB].src
+                      : tokens[x.tokenB.toString()]?.iconUrl
+                      ? tokens[x.tokenB.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.tokenA]
+                    ? tokenIcons[x.tokenA].src
+                    : tokens[x.tokenA.toString()]?.iconUrl
+                    ? tokens[x.tokenA.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
+                width={"24px"}
+                height={"24px"}
+                onError={changeSource}
+              />
             </div>
             <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-              <Image alt={"alt"} src={getImagesPath(x.tokenB)} width={"24px"} height={"24px"} />
+              <img
+                alt={"alt"}
+                src={
+                  tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
+                    ? tokenIcons[x.tokenA]
+                      ? tokenIcons[x.tokenA].src
+                      : tokens[x.tokenA.toString()]?.iconUrl
+                      ? tokens[x.tokenA.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                    : tokenIcons[x.tokenB]
+                    ? tokenIcons[x.tokenB].src
+                    : tokens[x.tokenB.toString()]?.iconUrl
+                    ? tokens[x.tokenB.toString()].iconUrl
+                    : `/assets/Tokens/fallback.png`
+                }
+                width={"24px"}
+                height={"24px"}
+                onError={changeSource}
+              />
             </div>
             <div className="flex flex-col gap-[2px]">
               <span className="font-body4">
-                {tEZorCTEZtoUppercase(x.tokenA.toString())}/
-                {tEZorCTEZtoUppercase(x.tokenB.toString())}
+                {tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.tokenB)} / ${tEZorCTEZtoUppercase(x.tokenA)}`
+                  : ` ${tEZorCTEZtoUppercase(x.tokenA)} / ${tEZorCTEZtoUppercase(x.tokenB)}`}
               </span>
               <span className="text-f12 text-text-500">{x.poolType} Pool</span>
             </div>
@@ -229,7 +305,7 @@ export function MyBribesTableBribes(props: IBribesTableBribes) {
           noSearchResult={noSearchResult}
           shortby="Epochs"
           isFetched={props.isfetched}
-          TableName={""}
+          TableName={"mybribes"}
           NoData={NoData}
           TableWidth="min-w-[700px] lg:min-w-[1100px]"
         />

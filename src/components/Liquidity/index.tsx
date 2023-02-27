@@ -4,6 +4,7 @@ import settings from "../../../src/assets/icon/swap/settings.svg";
 import { useMemo, useRef, useState } from "react";
 import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
 
+import infoblue from "../../../src/assets/icon/pools/InfoBlue.svg";
 import info from "../../../src/assets/icon/swap/info.svg";
 import { BigNumber } from "bignumber.js";
 import AddLiquidity from "./AddLiquidity";
@@ -17,9 +18,13 @@ import { ISwapData, tokenParameterLiquidity } from "./types";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { ITokenInterface } from "../../config/types";
+import { getDexType } from "../../api/util/fetchConfig";
+import { PoolType } from "../../config/types";
 
 interface ILiquidityProps {
+  userBalances: {
+    [key: string]: string;
+  };
   firstTokenAmount: string | number;
   secondTokenAmount: string | number;
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
@@ -29,9 +34,7 @@ interface ILiquidityProps {
   onChange?: any;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  userBalances: {
-    [key: string]: string;
-  };
+
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   setIsAddLiquidity: React.Dispatch<React.SetStateAction<boolean>>;
   isAddLiquidity: boolean;
@@ -75,7 +78,7 @@ function Liquidity(props: ILiquidityProps) {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (Number(props.firstTokenAmount) <= 0 || Number(props.secondTokenAmount) <= 0) {
@@ -87,13 +90,13 @@ function Liquidity(props: ILiquidityProps) {
     } else if (
       walletAddress &&
       ((props.firstTokenAmount &&
-        props.firstTokenAmount > props.userBalances[props.tokenIn.name]) ||
+        props.firstTokenAmount > Number(props.userBalances[props.tokenIn.name])) ||
         (props.secondTokenAmount && props.secondTokenAmount) >
-          props.userBalances[props.tokenOut.name])
+          Number(props.userBalances[props.tokenOut.name]))
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else {
@@ -108,7 +111,7 @@ function Liquidity(props: ILiquidityProps) {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (Number(props.burnAmount) <= 0) {
@@ -120,7 +123,7 @@ function Liquidity(props: ILiquidityProps) {
     } else if (walletAddress && props.burnAmount && props.burnAmount > props.pnlpBalance) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else {
@@ -192,6 +195,18 @@ function Liquidity(props: ILiquidityProps) {
           />
         )}
       </div>
+      {props.isAddLiquidity &&
+        getDexType(props.tokenIn.symbol, props.tokenOut.symbol) === PoolType.TEZ && (
+          <div className="py-2   px-2 rounded-lg  flex items-center bg-info-500/[0.1]  my-4">
+            <p className="relative top-0.5">
+              <Image src={infoblue} />
+            </p>
+            <p className="font-body2 text-info-500 px-3 w-[90%] md:w-auto">
+              For TEZ pools, 60% of baking rewards is used for bribing, 25% goes to the team and 15%
+              to the treasury.
+            </p>
+          </div>
+        )}
       {props.isAddLiquidity ? (
         <div className="">{AddButton}</div>
       ) : (
@@ -207,7 +222,7 @@ function Liquidity(props: ILiquidityProps) {
                   position={Position.top}
                   toolTipChild={<div className="">LP tokens in your wallet</div>}
                 >
-                  <span>
+                  <span className="cursor-pointer">
                     <Image alt={"alt"} src={info} width={"14px"} height={"14px"} />
                   </span>
                 </ToolTip>

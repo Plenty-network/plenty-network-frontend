@@ -1,16 +1,27 @@
 import { PopUpModal } from "../Modal/popupModal";
 import SearchBar from "../SearchBar/SearchBar";
 import Image from "next/image";
+import fromExponential from "from-exponential";
 import infogrey from "../../assets/icon/swap/info-grey.svg";
 import { tokenParameter, tokensModal, tokenType } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import clsx from "clsx";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { topTokenListGhostnet } from "../../api/swap/wrappers";
+import { topTokensList } from "../../api/swap/wrappers";
+import { Chain } from "../../config/types";
+import { IAllTokensBalance } from "../../api/util/types";
+import nFormatter, { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tokenIcons } from "../../constants/tokensList";
+import { useAppSelector } from "../../redux";
 
 interface ISwapModalProps {
-  tokens: tokensModal[];
+  tokens: {
+    name: string;
+    image: string;
+    chainType: Chain;
+    address: string | undefined;
+  }[];
   show: boolean;
   selectToken: Function;
   onhide?: Function;
@@ -19,15 +30,22 @@ interface ISwapModalProps {
   searchQuery: string;
   tokenType: tokenType;
   setSearchQuery: Function;
-  allBalance: {
-    [id: string]: BigNumber;
-  };
+  allBalance: IAllTokensBalance;
   isLoading: boolean;
   isSuccess: boolean;
 }
 function SwapModal(props: ISwapModalProps) {
+  const tokens = useAppSelector((state) => state.config.tokens);
   const searchTokenEl = useRef(null);
-  const [tokensToShow, setTokensToShow] = useState<tokensModal[] | []>([]);
+  const [tokensToShow, setTokensToShow] = useState<
+    | {
+        name: string;
+        image: string;
+        chainType: Chain;
+        address: string | undefined;
+      }[]
+    | []
+  >([]);
   const [topTokens, setTopTokens] = useState<{
     [id: string]: number;
   }>(
@@ -36,7 +54,7 @@ function SwapModal(props: ISwapModalProps) {
     }
   );
   useEffect(() => {
-    topTokenListGhostnet().then((res) => {
+    topTokensList().then((res) => {
       setTopTokens(res.topTokens);
     });
   }, []);
@@ -50,7 +68,7 @@ function SwapModal(props: ISwapModalProps) {
   }, [topTokens]);
 
   const searchHits = useCallback(
-    (token: tokensModal) => {
+    (token: { name: string; image: string; chainType: Chain; address: string | undefined }) => {
       return (
         props.searchQuery.length === 0 ||
         token.name.toLowerCase().includes(props.searchQuery.trim().toLowerCase()) ||
@@ -82,8 +100,7 @@ function SwapModal(props: ISwapModalProps) {
     props.tokenOut.name,
     searchHits,
   ]);
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   return props.show ? (
     <PopUpModal title="Select Token" onhide={props.onhide}>
       {
@@ -107,7 +124,7 @@ function SwapModal(props: ISwapModalProps) {
                   </div>
                 }
               >
-                <Image alt={"alt"} src={infogrey} />
+                <Image alt={"alt"} src={infogrey} className="cursor-pointer" />
               </ToolTip>
             </span>
           </div>
@@ -116,7 +133,7 @@ function SwapModal(props: ISwapModalProps) {
               return (
                 <div
                   className={clsx(
-                    "border mr-2 mt-2 border-text-800 px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100",
+                    "border mr-2 mt-2 border-text-800 flex items-center  px-2.5 py-1 rounded-[31px] h-[34px] bg-card-100",
                     props.tokenIn.name === token.name || props.tokenOut.name === token.name
                       ? "cursor-not-allowed"
                       : "cursor-pointer"
@@ -126,10 +143,22 @@ function SwapModal(props: ISwapModalProps) {
                     ? {}
                     : { onClick: () => props.selectToken(token) })}
                 >
-                  <span className="w-[18px] h-[18px] relative top-1">
-                    <Image alt={"alt"} src={token.image} width={"18px"} height={"18px"} />{" "}
+                  <span className="w-[18px] h-[18px] relative top-0">
+                    <img
+                      alt={"alt"}
+                      src={
+                        tokenIcons[token.name]
+                          ? tokenIcons[token.name].src
+                          : tokens[token.name.toString()]?.iconUrl
+                          ? tokens[token.name.toString()].iconUrl
+                          : `/assets/Tokens/fallback.png`
+                      }
+                      width={"18px"}
+                      height={"18px"}
+                      onError={changeSource}
+                    />
                   </span>
-                  <span className="font-body3">{tEZorCTEZtoUppercase(token.name)}</span>
+                  <span className="font-body3 ml-1">{tEZorCTEZtoUppercase(token.name)}</span>
                 </div>
               );
             })}
@@ -159,7 +188,19 @@ function SwapModal(props: ISwapModalProps) {
                   >
                     <div>
                       <span className="w-[30px] h-[30px] relative top-1">
-                        <Image alt={"alt"} src={token.image} width={"30px"} height={"30px"} />{" "}
+                        <img
+                          alt={"alt"}
+                          src={
+                            tokenIcons[token.name]
+                              ? tokenIcons[token.name].src
+                              : tokens[token.name.toString()]?.iconUrl
+                              ? tokens[token.name.toString()].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
+                          width={"30px"}
+                          height={"30px"}
+                          onError={changeSource}
+                        />{" "}
                       </span>
                     </div>
                     <div className="ml-2">
@@ -172,19 +213,33 @@ function SwapModal(props: ISwapModalProps) {
                             : "text-white"
                         )}
                       >
-                        {token.name === "tez" ? "TEZ" : token.name === "ctez" ? "CTEZ" : token.name}
+                        {tEZorCTEZtoUppercase(token.name)}
                       </div>
                     </div>
-                    {token.new && (
+                    {/* {token.new && (
                       <div className="ml-auto mt-[6px] bg-primary-500/[0.2] py-1 px-1.5 h-[26px] text-center text-primary-500 font-body2 rounded-xl">
                         <span>New!</span>
                       </div>
-                    )}
+                    )} */}
                     {props.isSuccess && props.allBalance[token.name] ? (
-                      <div className="font-subtitle4 ml-auto mt-[7px]">
-                        {props.allBalance[token.name]
-                          ? Number(props.allBalance[token.name]).toFixed(2)
-                          : 0.0}
+                      <div className="font-subtitle4 cursor-pointer ml-auto mt-[7px]">
+                        <ToolTip
+                          position={Position.top}
+                          message={
+                            props.allBalance[token.name]?.balance
+                              ? fromExponential(props.allBalance[token.name]?.balance.toString())
+                              : "0"
+                          }
+                          disable={Number(props.allBalance[token.name]?.balance) === 0}
+                        >
+                          {props.allBalance[token.name]?.balance
+                            ? Number(props.allBalance[token.name]?.balance) > 0
+                              ? props.allBalance[token.name]?.balance.isLessThan(0.01)
+                                ? "<0.01"
+                                : nFormatter(props.allBalance[token.name]?.balance)
+                              : "0.0"
+                            : "0.0"}
+                        </ToolTip>
                       </div>
                     ) : props.isSuccess === false ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]">0</div>

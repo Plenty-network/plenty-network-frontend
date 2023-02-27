@@ -36,7 +36,7 @@ export const getUserBribeData = async (
     const TOKEN = state.config.tokens;
 
     const userBribeResponse = await axios.get(
-      `${Config.VE_INDEXER}bribes-provider?address=${address}`
+      `${Config.VE_INDEXER[connectedNetwork]}bribes-provider?address=${address}`
     );
     const myBribesData: IUserBribeIndexerData[] = userBribeResponse.data;
     const allData: IUserBribeData[] = [];
@@ -98,7 +98,7 @@ export const getUserBribeData = async (
       //0 : value , 1 : name , 2 : amm  , 3 : price
 
       const AMM = AMMS[splitKey[2]];
-      let bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]]);
+      let bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]] ?? 0);
 
       const epochs = entry.value;
 
@@ -111,7 +111,7 @@ export const getUserBribeData = async (
       let startDate;
       if(epochData[epochStart]){
         startDate = epochData[epochStart].epochStartTimestamp / 1000;
-        bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]]);
+        bribeValuePerEpoch = new BigNumber(splitKey[0]).dividedBy(new BigNumber(10).pow(TOKEN[splitKey[1]].decimals)).multipliedBy(tokenPrice[splitKey[1]] ?? 0);
       }
       else {
         startDate =  pastEpochData.epochStartTimestamp;
@@ -165,7 +165,7 @@ export const getUserBribeData = async (
    try {
      const state = store.getState();
      const TOKENS = state.config.tokens;
-     const bribes = await axios.get(`${Config.VE_INDEXER}bribes?epoch=${epoch}`);
+     const bribes = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}bribes?epoch=${epoch}`);
      const bribesData: IBribesResponse[] = bribes.data;
 
      const res: IEpochResponse = await fetchEpochData(epoch);
@@ -174,10 +174,10 @@ export const getUserBribeData = async (
      if (res.success) {
        const epochData = res.epochData as IEpochData;
 
-       const poolssResponse = await axios.get(
-         `${Config.PLY_INDEXER}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
+       const poolsResponse = await axios.get(
+         `${Config.PLY_INDEXER[connectedNetwork]}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
        );
-       poolsData = poolssResponse.data;
+       poolsData = poolsResponse.data;
      } else {
        throw new Error(res.error as string);
      }
@@ -194,6 +194,8 @@ export const getUserBribeData = async (
      for (const x of bribesData) {
        let bribe: BigNumber = new BigNumber(0);
        let bribes: Bribes[] = [];
+       const bribesObj: { [key: string] : Bribes} = {};
+
        if (!x.bribes || x.bribes.length === 0) {
          bribe = new BigNumber(0);
        } else {
@@ -201,16 +203,35 @@ export const getUserBribeData = async (
            bribe = bribe.plus(
              new BigNumber(y.value)
                .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
-               .multipliedBy(tokenPrices[y.name])
+               .multipliedBy(tokenPrices[y.name] || 0)
            );
-           bribes.push({
-             name: y.name,
-             value: new BigNumber(y.value).dividedBy(
-               new BigNumber(10).pow(TOKENS[y.name].decimals)
-             ),
-             price: new BigNumber(tokenPrices[y.name]),
-           });
+
+           if (bribesObj[y.name]) {
+             const prevBribeObj = bribesObj[y.name];
+             bribesObj[y.name] = {
+               ...prevBribeObj,
+               value: prevBribeObj.value.plus(
+                 new BigNumber(y.value).dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+               ),
+               price: prevBribeObj.price.plus(
+                 new BigNumber(y.value)
+                   .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+                   .multipliedBy(tokenPrices[y.name] || 0)
+               ),
+             };
+           } else {
+             bribesObj[y.name] = {
+               name: y.name,
+               value: new BigNumber(y.value).dividedBy(
+                 new BigNumber(10).pow(TOKENS[y.name].decimals)
+               ),
+               price: new BigNumber(y.value)
+                 .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
+                 .multipliedBy(tokenPrices[y.name] || 0),
+             };
+           }
          }
+         bribes = Object.values(bribesObj);
        }
        const liquidity = poolsDataObject[x.pool]
          ? new BigNumber(poolsDataObject[x.pool].tvl.value)
@@ -221,6 +242,10 @@ export const getUserBribeData = async (
        const liquidityTokenB = poolsDataObject[x.pool]
          ? new BigNumber(poolsDataObject[x.pool].tvl.token2)
          : new BigNumber(0);
+
+        if(bribes.length > 0) {
+          bribes.sort((a,b) => b.price.minus(a.price).toNumber());
+        }
 
        finalData[x.pool] = {
          liquidity,
@@ -276,9 +301,6 @@ export const getPoolsDataForBribes = async (
   try {
     const state = store.getState();
     const AMMS = state.config.AMMs;
-    // console.log(`epoch:${epoch}, tokenId:${tokenId}`);
-    // TODO: Remove this get call
-   
 
     const [poolsData, votesDataCurrent, votesDataPrevious] = await Promise.all([
       getPoolsBribeLiquidityData(epoch, tokenPrices),
@@ -294,7 +316,7 @@ export const getPoolsDataForBribes = async (
     for (const poolData of Object.keys(poolsData)) {
       const AMM = AMMS[poolData];
 
-      if(AMM && AMM.bribeAddress) {
+      if(AMM && AMM.bribe) {
         allDataForPools.push({
           amm: AMM.address,
           tokenA: AMM.token1.symbol,
@@ -338,9 +360,6 @@ export const getPoolsDataForBribes = async (
         });
       }
     }
-
-    //TODO: Remove next line in mainnet
-    // const finalData = allDataForPools.filter((data) => data.amm !== "false");
 
     return {
       success: true,

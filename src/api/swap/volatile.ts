@@ -3,6 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';
 import { ISwapDataResponse , ICalculateTokenResponse, volatileSwapStorageType} from './types';
 import { getStorage } from '../util/storageProvider';
+import { PoolType } from '../../config/types';
 
 export const loadSwapDataVolatile = async (
   tokenIn: string,
@@ -10,7 +11,7 @@ export const loadSwapDataVolatile = async (
 ): Promise<ISwapDataResponse> => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
     const AMM = state.config.AMMs;
 
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
@@ -72,13 +73,14 @@ export const calculateTokenOutputVolatile = (
   tokenOutSupply: BigNumber,
   exchangeFee: BigNumber,
   slippage: BigNumber,
-  tokenOut: string
+  tokenOut: string,
+  poolType: PoolType
 ): ICalculateTokenResponse => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
-    const feePerc = new BigNumber(0.05);
+    const feePerc = new BigNumber(poolType === PoolType.TEZ ? 0.05 : 0.05);
     let tokenOutAmount = new BigNumber(0);
     tokenOutAmount = new BigNumber(1)
       .minus(exchangeFee)
@@ -118,7 +120,7 @@ export const calculateTokenOutputVolatile = (
       .minus(nextTokenOutAmount)
       .dividedBy(tokenOutAmount);
     priceImpact = priceImpact.multipliedBy(100);
-    priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
+    priceImpact = priceImpact.absoluteValue();
     priceImpact = priceImpact.multipliedBy(100);
     const exchangeRate = tokenOutAmount.dividedBy(tokenInAmount);
 
@@ -154,7 +156,7 @@ export const calculateTokenInputVolatile = (
 ): ICalculateTokenResponse => {
   try {
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const feePerc = new BigNumber(0.05);
     let tokenOutAmount = new BigNumber(0);
@@ -204,7 +206,7 @@ export const calculateTokenInputVolatile = (
       .minus(nextTokenOutAmount)
       .dividedBy(tokenOutAmount);
     priceImpact = priceImpact.multipliedBy(100);
-    priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
+    priceImpact = priceImpact.absoluteValue();
     priceImpact = priceImpact.multipliedBy(100);
     const exchangeRate = tokenOutAmount.dividedBy(tokenInAmount);
 

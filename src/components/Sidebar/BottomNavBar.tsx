@@ -104,12 +104,12 @@ export function MenuWithLink(props: IBottomNavMenuProps) {
             : "border-t-borderColor text-text-250"
         } ${
           props.className
-        } border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center   px-[18px] py-[9px]  hover:bg-sideBarHover hover:border-t-primary-500 `}
+        } border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center   px-[18px] py-[9px]   `}
       >
         {props.iconName && (
           <Image
             alt={"alt"}
-            className={props.active ? "" : "opacity-40"}
+            className={props.active ? "" : "opacity-70"}
             src={`/assets/icon/${props.iconName}.svg`}
             height={"24px"}
             width={"24px"}
@@ -134,12 +134,12 @@ export function MenuNoLink(props: IBottomMoreNavMenuProps) {
         props.active ? "bg-sideBarHover border-t-primary-500" : "border-t-borderColor"
       } ${
         props.className
-      } border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center gap-2  px-[18px] py-[9px]  hover:bg-sideBarHover hover:border-t-primary-500 `}
+      } border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center gap-2  px-[18px] py-[9px]  `}
     >
       {props.iconName && (
         <Image
           alt={"alt"}
-          className={props.active ? "opacity-100" : "opacity-40"}
+          className={props.active ? "opacity-100" : "opacity-70"}
           src={`/assets/icon/${props.iconName}.svg`}
           height={"24px"}
           width={"24px"}
@@ -168,17 +168,7 @@ export function MoreSubMenuList(props: ISubMenuListProps) {
   return (
     <div className="w-screen flex flex-col text-f12 bg-topBar z-10" ref={props.refWrapper}>
       {/*  */}
-      <div className="px-9 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
-        <SingleSideBar
-          name="Bribes"
-          className="px-9 justify-between"
-          iconName="bribes"
-          pathName={"/bribes"}
-          isBottomMenu
-          isHrefIcon={true}
-          openNewPage={true}
-        />
-      </div>
+
       {/*  */}
       <div className="px-9 hover:bg-sideBarHover ">
         <SingleSideBar
@@ -187,6 +177,38 @@ export function MoreSubMenuList(props: ISubMenuListProps) {
           iconName="migrate"
           pathName={"/migrate"}
           isBottomMenu
+        />
+      </div>
+      <div className="px-9 hover:bg-sideBarHover border-t border-t-borderColor hover:border-t-primary-500">
+        <SingleSideBar
+          name="Airdrop"
+          className="px-9 justify-between"
+          iconName="airdrop"
+          pathName={"/airdrop"}
+          isBottomMenu
+        />
+      </div>
+      <div className="px-9 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
+        <SingleSideBar
+          name="Bribe"
+          className="px-9 justify-between"
+          iconName="bribes"
+          pathName={"/bribes"}
+          isBottomMenu
+          isHrefIcon={true}
+          openNewPage={true}
+        />
+      </div>
+
+      <div className="px-9 border-t border-t-borderColor  hover:bg-sideBarHover hover:border-t-primary-500">
+        <SingleSideBar
+          name="Bridge"
+          className="px-9 justify-between"
+          iconName="bridge"
+          pathName={"https://bridge.plenty.network/"}
+          isBottomMenu
+          isHrefIcon={true}
+          openNewPage={true}
         />
       </div>
 

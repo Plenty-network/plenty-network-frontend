@@ -7,21 +7,9 @@ import Image from "next/image";
 import veNFT from "../../assets/icon/myPortfolio/veNFT.svg";
 import info from "../../assets/icon/common/infoIcon.svg";
 import link from "../../assets/icon/myPortfolio/link.svg";
+import nFormatter from "../../api/util/helpers";
 
 export function TopBar(props: ITopBar) {
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
   const dateFormat = useMemo(() => {
     var date = new Date(props.manageData.endTimeStamp);
     return `${date.getUTCFullYear()}-${("0" + (date.getUTCMonth() + 1)).slice(-2)}-${(
@@ -42,7 +30,7 @@ export function TopBar(props: ITopBar) {
               id="tooltip8"
               position={Position.bottom}
             >
-              <Image alt={"alt"} src={info} />
+              <Image alt={"alt"} src={info} className="cursor-pointer" />
             </ToolTip>
           </div>
           <div className="text-white font-body2 relative -top-0.5 ml-1">My Lock</div>
@@ -51,7 +39,14 @@ export function TopBar(props: ITopBar) {
         <div className="flex gap-2 mt-2  min-w-[521px] sm:min-w-full">
           <p className="border border-text-800 bg-card-900 flex  pl-4 items-center h-16 w-[156px] rounded-lg">
             <p>
-              <Image alt={"alt"} src={veNFT} />
+              <Image
+                height={"44px"}
+                width={"30px"}
+                alt={"alt"}
+                src={
+                  props.manageData.thumbnailUri.length > 0 ? props.manageData.thumbnailUri : veNFT
+                }
+              />
             </p>
             <p className="ml-2">
               <div className="text-white font-subtitle3">#{Number(props.manageData.tokenId)}</div>

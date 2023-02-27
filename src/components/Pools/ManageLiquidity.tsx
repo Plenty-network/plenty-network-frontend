@@ -2,17 +2,26 @@ import { BigNumber } from "bignumber.js";
 import Image from "next/image";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { POOL_TYPE } from "../../../pages/pools";
 import { getPnlpOutputEstimate, getPoolShareForPnlp } from "../../api/liquidity";
 import { ELiquidityProcess } from "../../api/liquidity/types";
 import { getDepositedAmounts, getRewards } from "../../api/rewards";
 import { getStakedData, getVePLYListForUser } from "../../api/stake";
 import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 import { loadSwapDataWrapper } from "../../api/swap/wrappers";
-import { getPnlpBalance, getStakedBalance, getUserBalanceByRpc } from "../../api/util/balance";
+import {
+  getBalanceFromTzkt,
+  getPnlpBalance,
+  getStakedBalance,
+  getTezBalance,
+} from "../../api/util/balance";
+import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { getLPTokenPrice } from "../../api/util/price";
 import { ELocksState } from "../../api/votes/types";
 import playBtn from "../../assets/icon/common/playBtn.svg";
-import { ITokenInterface } from "../../config/types";
+import { tzktExplorer } from "../../common/walletconnect";
+import { IConfigLPToken } from "../../config/types";
+
 import {
   FIRST_TOKEN_AMOUNT,
   SECOND_TOKEN_AMOUNT,
@@ -45,11 +54,15 @@ import { RewardsScreen } from "./RewardsScreen";
 import { StakingScreen, StakingScreenType } from "./StakingScreen";
 
 export interface IManageLiquidityProps {
-  closeFn: React.Dispatch<React.SetStateAction<boolean>>;
+  closeFn: (val: boolean) => void;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
   setActiveState: React.Dispatch<React.SetStateAction<string>>;
   activeState: string;
+  isGaugeAvailable: boolean;
+  showLiquidityModal?: boolean;
+  setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  filter?: POOL_TYPE | undefined;
 }
 
 export function ManageLiquidity(props: IManageLiquidityProps) {
@@ -64,7 +77,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [firstTokenAmountLiq, setFirstTokenAmountLiq] = React.useState<string | number>("");
   const [secondTokenAmountLiq, setSecondTokenAmountLiq] = React.useState<number | string>("");
 
-  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   const [boost, setBoost] = useState<IStakedDataResponse>();
 
   const [selectedDropDown, setSelectedDropDown] = useState<IVePLYData>({
@@ -80,7 +92,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const swapData = React.useRef<ISwapData>({
     tokenInSupply: new BigNumber(0),
     tokenOutSupply: new BigNumber(0),
-    lpToken: "",
+    lpToken: undefined,
     lpTokenSupply: new BigNumber(0),
     isloading: true,
   });
@@ -95,6 +107,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
+
   const [sharePool, setSharePool] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
@@ -111,6 +124,61 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   const [contentTransaction, setContentTransaction] = useState("");
   const [vePLYOptions, setVePLYOptions] = useState<IVePLYData[]>([]);
   const [isListLoading, setIsListLoading] = useState(false);
+  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    const updateBalance = async () => {
+      const balancePromises = [];
+
+      if (walletAddress) {
+        if (
+          props.tokenIn.symbol.toLowerCase() === "xtz" ||
+          props.tokenOut.symbol.toLowerCase() === "xtz"
+        ) {
+          balancePromises.push(getTezBalance(walletAddress));
+        }
+
+        props.tokenIn.symbol &&
+          props.tokenIn.symbol.toLowerCase() !== "xtz" &&
+          balancePromises.push(
+            getBalanceFromTzkt(
+              String(TOKEN[props.tokenIn.symbol]?.address),
+              TOKEN[props.tokenIn.symbol].tokenId,
+              TOKEN[props.tokenIn.symbol].standard,
+              walletAddress,
+              props.tokenIn.symbol
+            )
+          );
+        props.tokenOut.symbol &&
+          props.tokenOut.symbol.toLowerCase() !== "xtz" &&
+          balancePromises.push(
+            getBalanceFromTzkt(
+              String(TOKEN[props.tokenOut.symbol]?.address),
+              TOKEN[props.tokenOut.symbol].tokenId,
+              TOKEN[props.tokenOut.symbol].standard,
+
+              walletAddress,
+              props.tokenOut.symbol
+            )
+          );
+
+        const balanceResponse = await Promise.all(balancePromises);
+
+        setUserBalances((prev) => ({
+          ...prev,
+          ...balanceResponse.reduce(
+            (acc, cur) => ({
+              ...acc,
+              [cur.identifier]: cur.balance,
+            }),
+            {}
+          ),
+        }));
+      }
+    };
+    updateBalance();
+  }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
+
   useEffect(() => {
     if (walletAddress) {
       getStakedData(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
@@ -129,7 +197,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     }
   }, [balanceUpdate, props.tokenIn.name, props.tokenOut.name, walletAddress]);
   useEffect(() => {
-    if (walletAddress || (screen === "2" && props.activeState === ActiveLiquidity.Staking)) {
+    if (walletAddress && props.activeState === ActiveLiquidity.Staking) {
       setIsListLoading(true);
       getVePLYListForUser(
         props.tokenIn.symbol,
@@ -187,12 +255,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     });
     if (walletAddress) {
       const updateBalance = async () => {
-        const balancePromises = [];
-
-        Object.keys(props.tokenIn).length !== 0 &&
-          balancePromises.push(getUserBalanceByRpc(props.tokenIn.name, walletAddress));
-        Object.keys(props.tokenOut).length !== 0 &&
-          balancePromises.push(getUserBalanceByRpc(props.tokenOut.name, walletAddress));
         getPnlpBalance(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
           setPnlpBalance(res.balance);
         });
@@ -215,19 +277,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         getRewards(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
           setRewardToken(res.rewards);
         });
-
-        const balanceResponse = await Promise.all(balancePromises);
-
-        setUserBalances((prev) => ({
-          ...prev,
-          ...balanceResponse.reduce(
-            (acc, cur) => ({
-              ...acc,
-              [cur.identifier]: cur.balance.toNumber(),
-            }),
-            {}
-          ),
-        }));
       };
       updateBalance();
     }
@@ -241,7 +290,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     balanceUpdate,
     swapData.current,
   ]);
-  const [lpToken, setLpToken] = useState<ITokenInterface | undefined>({} as ITokenInterface);
+  const [lpToken, setLpToken] = useState<IConfigLPToken | undefined>({} as IConfigLPToken);
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(props.tokenIn, "name") &&
@@ -254,7 +303,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           swapData.current = {
             tokenInSupply: response.tokenInSupply as BigNumber,
             tokenOutSupply: response.tokenOutSupply as BigNumber,
-            lpToken: response.lpToken?.symbol,
+            lpToken: response.lpToken,
             lpTokenSupply: response.lpTokenSupply,
             isloading: false,
           };
@@ -273,8 +322,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         secondTokenAmountLiq.toString(),
         swapData.current.tokenInSupply as BigNumber,
         swapData.current.tokenOutSupply as BigNumber,
-        swapData.current.lpTokenSupply,
-        swapData.current.lpToken
+        swapData.current.lpTokenSupply
       );
       setPnlpEstimates(res.pnlpEstimate);
       const sharePool = getPoolShareForPnlp(
@@ -303,42 +351,25 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
 
   const handleAddLiquidityOperation = () => {
     setContentTransaction(
-      `Mint ${Number(firstTokenAmountLiq).toFixed(2)} ${
-        props.tokenIn.name === "tez"
-          ? "TEZ"
-          : props.tokenIn.name === "ctez"
-          ? "CTEZ"
-          : props.tokenIn.name
-      } / ${Number(secondTokenAmountLiq).toFixed(4)} ${
-        props.tokenOut.name === "tez"
-          ? "TEZ"
-          : props.tokenOut.name === "ctez"
-          ? "CTEZ"
-          : props.tokenOut.name
-      } `
+      `Mint ${nFormatterWithLesserNumber(
+        new BigNumber(firstTokenAmountLiq)
+      )} ${tEZorCTEZtoUppercase(props.tokenIn.name)} / ${nFormatterWithLesserNumber(
+        new BigNumber(secondTokenAmountLiq)
+      )} ${tEZorCTEZtoUppercase(props.tokenOut.name)} `
+    );
+    localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
+    localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(firstTokenAmountLiq)).toString()
     );
     localStorage.setItem(
-      TOKEN_A,
-      props.tokenIn.name === "tez"
-        ? "TEZ"
-        : props.tokenIn.name === "ctez"
-        ? "CTEZ"
-        : props.tokenIn.name
+      SECOND_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(secondTokenAmountLiq)).toString()
     );
-    localStorage.setItem(
-      TOKEN_B,
-      props.tokenOut.name === "tez"
-        ? "TEZ"
-        : props.tokenOut.name === "ctez"
-        ? "CTEZ"
-        : props.tokenOut.name
-    );
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(firstTokenAmountLiq).toFixed(2));
-    localStorage.setItem(SECOND_TOKEN_AMOUNT, Number(secondTokenAmountLiq).toFixed(2));
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
-
     addLiquidity(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
@@ -348,13 +379,13 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      props.setActiveState,
+      props.isGaugeAvailable ? props.setActiveState : undefined,
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
           TOKEN_A
-        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}.`,
+        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -363,7 +394,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
-        //resetAllValues();
+
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
           dispatch(
@@ -377,7 +408,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -386,7 +417,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
         }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
+        // setContentTransaction("");
       } else {
         setBalanceUpdate(true);
         //resetAllValues();
@@ -408,12 +439,10 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
+        // setContentTransaction("");
       }
     });
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
 
   const handleDetach = () => {
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.symbol));
@@ -480,27 +509,16 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     });
   };
   const handleStakeOperation = () => {
+    localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
+    localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
     localStorage.setItem(
-      TOKEN_A,
-      props.tokenIn.name === "tez"
-        ? "TEZ"
-        : props.tokenIn.name === "ctez"
-        ? "CTEZ"
-        : props.tokenIn.name
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(stakeInput)).toString()
     );
-    localStorage.setItem(
-      TOKEN_B,
-      props.tokenOut.name === "tez"
-        ? "TEZ"
-        : props.tokenOut.name === "ctez"
-        ? "CTEZ"
-        : props.tokenOut.name
-    );
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(stakeInput).toFixed(2));
     localStorage.setItem(SECOND_TOKEN_AMOUNT, selectedDropDown.tokenId.toString());
     setContentTransaction(
       stakeInput !== ""
-        ? `Stake ${Number(stakeInput).toFixed(2)} PNLP`
+        ? `Stake ${nFormatterWithLesserNumber(new BigNumber(stakeInput)).toString()} PNLP`
         : `Boost ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
             TOKEN_B
           )} pool stake with # ${localStorage.getItem(SECOND_TOKEN_AMOUNT)}`
@@ -556,7 +574,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -565,7 +583,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
         }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
       } else {
         setBalanceUpdate(true);
         //resetAllValues();
@@ -592,34 +609,24 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
       }
     });
   };
   const handleUnStakeOperation = () => {
-    setContentTransaction(`Unstake ${Number(unStakeInput).toFixed(2)} PNLP`);
+    setContentTransaction(
+      `Unstake ${nFormatterWithLesserNumber(new BigNumber(unStakeInput)).toString()} PNLP`
+    );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     // setStakingScreen(StakingScreenType.Unstaking);
     setScreen("1");
     setIsAddLiquidity(false);
+    localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
+    localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
     localStorage.setItem(
-      TOKEN_A,
-      props.tokenIn.name === "tez"
-        ? "TEZ"
-        : props.tokenIn.name === "ctez"
-        ? "CTEZ"
-        : props.tokenIn.name
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(unStakeInput)).toString()
     );
-    localStorage.setItem(
-      TOKEN_B,
-      props.tokenOut.name === "tez"
-        ? "TEZ"
-        : props.tokenOut.name === "ctez"
-        ? "CTEZ"
-        : props.tokenOut.name
-    );
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(unStakeInput).toFixed(2));
     unstakePnlpTokens(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
@@ -656,7 +663,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -665,7 +672,6 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
         }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
       } else {
         setBalanceUpdate(true);
         //resetAllValues();
@@ -687,14 +693,16 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
       }
     });
   };
   const handleRewardsOperation = () => {
     setContentTransaction(`Harvest `);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(rewardToken).toFixed(2));
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(rewardToken)).toString()
+    );
     setShowConfirmTransaction(true);
     setScreen("1");
     harvestRewards(
@@ -726,7 +734,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -735,7 +743,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
         }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
+        // setContentTransaction("");
       } else {
         setBalanceUpdate(true);
         setShowConfirmTransaction(false);
@@ -754,37 +762,30 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
+        // setContentTransaction("");
       }
     });
   };
   const handleRemoveLiquidityOperation = () => {
-    setContentTransaction(`Burn ${Number(burnAmount).toFixed(2)} PNLP`);
+    setContentTransaction(
+      `Burn ${nFormatterWithLesserNumber(new BigNumber(burnAmount)).toString()} PNLP`
+    );
+    localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
+    localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
     localStorage.setItem(
-      TOKEN_A,
-      props.tokenIn.name === "tez"
-        ? "TEZ"
-        : props.tokenIn.name === "ctez"
-        ? "CTEZ"
-        : props.tokenIn.name
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(firstTokenAmountLiq)).toString()
     );
     localStorage.setItem(
-      TOKEN_B,
-      props.tokenOut.name === "tez"
-        ? "TEZ"
-        : props.tokenOut.name === "ctez"
-        ? "CTEZ"
-        : props.tokenOut.name
+      SECOND_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(secondTokenAmountLiq)).toString()
     );
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, Number(firstTokenAmountLiq).toFixed(2));
-    localStorage.setItem(SECOND_TOKEN_AMOUNT, Number(secondTokenAmountLiq).toFixed(2));
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen("1");
     removeLiquidity(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
-      swapData.current.lpToken as string,
       removeTokenAmount.tokenOneAmount.toString(),
       removeTokenAmount.tokenTwoAmount.toString(),
       burnAmount.toString(),
@@ -796,9 +797,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Remove ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-          TOKEN_A
-        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `,
+        trailingText: `Burn ${nFormatterWithLesserNumber(
+          new BigNumber(burnAmount)
+        ).toString()} PNLP `,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -812,16 +813,14 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Remove ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} and ${localStorage.getItem(
-                SECOND_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_B)}`,
+              trailingText: `Burn ${nFormatterWithLesserNumber(
+                new BigNumber(burnAmount)
+              ).toString()} PNLP`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -830,7 +829,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           );
         }, 6000);
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
+        //setContentTransaction("");
       } else {
         setBalanceUpdate(true);
 
@@ -842,11 +841,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Remove ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} and ${localStorage.getItem(
-                SECOND_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_B)}`,
+              trailingText: `Burn ${nFormatterWithLesserNumber(
+                new BigNumber(burnAmount)
+              ).toString()} PNLP`,
               linkText: "",
               isLoading: true,
             })
@@ -854,16 +851,21 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         }, 2000);
 
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-        setContentTransaction("");
+        //setContentTransaction("");
       }
     });
   };
 
-  return (
+  const closeModal = () => {
+    // props.setShowLiquidityModalPopup(false);
+    props.closeFn(false);
+  };
+
+  return props.showLiquidityModal ? (
     <>
       <PopUpModal
-        onhide={props.closeFn}
-        className="w-[390px] max-w-[390px] md:w-[620px] md:max-w-[620px] rounded-none md:rounded-3xl "
+        onhide={closeModal}
+        className="w-[390px] max-w-[390px] sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
         footerChild={
           <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
             <p className="font-subtitle1 md:text-f16 text-text-150">
@@ -872,7 +874,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               {props.activeState === ActiveLiquidity.Staking &&
                 "Add liquidity, stake, and earn PLY"}
               {props.activeState === ActiveLiquidity.Rewards &&
-                "Lock PLY, and vote to earn trading fees & bribes"}
+                "Add liquidity, stake, and earn PLY"}
             </p>
             <Image
               className="cursor-pointer hover:opacity-90"
@@ -905,6 +907,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             <ManageLiquidityHeader
               className="mt-5 mb-6"
               activeStateTab={props.activeState}
+              isGaugeAvailable={props.isGaugeAvailable}
               setActiveStateTab={props.setActiveState}
             />
 
@@ -1026,7 +1029,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           </>
         )}
       </PopUpModal>
-      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"UXBs3vi26_A"} />}
+      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"HtDOhje7Y5A"} />}
       {showConfirmTransaction && (
         <ConfirmTransaction
           show={showConfirmTransaction}
@@ -1039,13 +1042,11 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
-              : null
+            transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }
           content={contentTransaction}
         />
       )}
     </>
-  );
+  ) : null;
 }

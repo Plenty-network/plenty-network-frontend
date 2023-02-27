@@ -49,6 +49,7 @@ export interface IConfirmLockingProps {
   setShow?: any;
   setShowCreateLockModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowConfirmTransaction: React.Dispatch<React.SetStateAction<boolean>>;
+  newVeNFTThumbnailUri: string;
 }
 export interface ICastVoteProps {
   show: boolean;
@@ -154,7 +155,7 @@ export interface IAllocationProps {
   show: boolean;
   setShow: any;
   epochData: IEpochListObject[];
-  epochNumber?: number;
+  epochNumber: number;
   selectedDropDown: {
     votingPower: string;
     tokenId: string;

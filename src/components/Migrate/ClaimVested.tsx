@@ -16,8 +16,12 @@ import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
 import { AppDispatch, store, useAppDispatch, useAppSelector } from "../../redux";
 import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
-import { getCompleteUserBalace } from "../../api/util/balance";
-import { IAllBalanceResponse } from "../../api/util/types";
+import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
+import {
+  IAllBalanceResponse,
+  IAllTokensBalance,
+  IAllTokensBalanceResponse,
+} from "../../api/util/types";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import Image from "next/image";
@@ -32,6 +36,8 @@ import { IVestAndClaim } from "../../api/migrate/types";
 import { useCountdown } from "../../hooks/useCountDown";
 import PieChartButton from "../LocksPosition/PieChart";
 import { FIRST_TOKEN_AMOUNT } from "../../constants/localStorage";
+import { tzktExplorer } from "../../common/walletconnect";
+import { nFormatterWithLesserNumber } from "../../api/util/helpers";
 
 interface IMigrateProps {
   vestedData: IVestAndClaim;
@@ -39,12 +45,8 @@ interface IMigrateProps {
 
 function ClaimVested(props: IMigrateProps) {
   const [firstTokenAmount, setFirstTokenAmount] = useState("");
-  const [allBalance, setAllBalance] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
 
-  const tokens = useAppSelector((state) => state.config.standard);
+  const tokens = useAppSelector((state) => state.config.tokens);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const userAddress = useAppSelector((state) => state.wallet.address);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
@@ -53,14 +55,26 @@ function ClaimVested(props: IMigrateProps) {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
+  const [allBalance, setAllBalance] = useState<IAllTokensBalanceResponse>({
+    success: false,
+    allTokensBalances: {} as IAllTokensBalance,
+  });
   useEffect(() => {
-    setAllBalance({ success: false, userBalance: {} });
+    setAllBalance({
+      success: false,
+      allTokensBalances: {} as IAllTokensBalance,
+    });
     if (userAddress) {
-      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-        setAllBalance(response);
-      });
+      getAllTokensBalanceFromTzkt(Object.values(tokens), userAddress).then(
+        (response: IAllTokensBalanceResponse) => {
+          setAllBalance(response);
+        }
+      );
     } else {
-      setAllBalance({ success: true, userBalance: {} });
+      setAllBalance({
+        success: false,
+        allTokensBalances: {} as IAllTokensBalance,
+      });
     }
   }, [userAddress, tokens, balanceUpdate]);
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
@@ -79,7 +93,10 @@ function ClaimVested(props: IMigrateProps) {
     setConfirmPLYPopup(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, props.vestedData.claimableAmount.toFixed(2));
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(props.vestedData.claimableAmount)).toString()
+    );
     claim(transactionSubmitModal, resetAllValues, setShowConfirmTransaction, {
       flashType: Flashtype.Info,
       headerText: "Transaction submitted",
@@ -101,7 +118,7 @@ function ClaimVested(props: IMigrateProps) {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -160,7 +177,7 @@ function ClaimVested(props: IMigrateProps) {
         >
           <div
             className={clsx(
-              "h-[50px] flex items-center justify-center w-full rounded-xl  font-title3-bold ",
+              "h-[50px] cursor-pointer  flex items-center justify-center w-full rounded-xl  font-title3-bold ",
               props.vestedData.isClaimable
                 ? "bg-primary-500 text-black"
                 : "bg-blue-200 text-blue-300"
@@ -182,7 +199,7 @@ function ClaimVested(props: IMigrateProps) {
     } else {
       return (
         <Button color="primary" onClick={connectTempleWallet} width="w-full">
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     }
@@ -212,6 +229,7 @@ function ClaimVested(props: IMigrateProps) {
                   tokenIcon={tokenOut.image}
                   tokenName={tokenOut.name}
                   isArrow={true}
+                  tokenSymbol={tokenOut.name}
                 />
               </div>
               <div className=" my-3 flex-auto">
@@ -223,7 +241,7 @@ function ClaimVested(props: IMigrateProps) {
                       "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 "
                     )}
                     placeholder="0.0"
-                    value={props.vestedData.claimableAmount.toFixed(6)}
+                    value={props.vestedData?.claimableAmount?.toFixed(6)}
                   />
                 </div>
               </div>
@@ -231,16 +249,22 @@ function ClaimVested(props: IMigrateProps) {
             <div className="flex -mt-[12px]">
               <div className="text-left">
                 <span className="text-text-600 font-body3">Balance:</span>{" "}
-                <span className="font-body4 text-text-500 ">
-                  {Number(allBalance.userBalance[tokenOut.name]) >= 0 ? (
+                <span className="font-body4 cursor-pointer text-text-500 ">
+                  {Number(allBalance.allTokensBalances[tokenOut.name]?.balance) >= 0 ? (
                     <ToolTip
-                      message={fromExponential(allBalance.userBalance[tokenOut.name].toString())}
-                      disable={Number(allBalance.userBalance[tokenOut.name]) > 0 ? false : true}
+                      message={fromExponential(
+                        allBalance.allTokensBalances[tokenOut.name]?.balance.toString()
+                      )}
+                      disable={
+                        Number(allBalance.allTokensBalances[tokenOut.name]?.balance) > 0
+                          ? false
+                          : true
+                      }
                       id="tooltip9"
                       position={Position.right}
                     >
-                      {Number(allBalance.userBalance[tokenOut.name]) > 0
-                        ? Number(allBalance.userBalance[tokenOut.name]).toFixed(4)
+                      {Number(allBalance.allTokensBalances[tokenOut.name]?.balance) > 0
+                        ? Number(allBalance.allTokensBalances[tokenOut.name]?.balance)?.toFixed(4)
                         : 0}
                     </ToolTip>
                   ) : (
@@ -250,9 +274,9 @@ function ClaimVested(props: IMigrateProps) {
               </div>
               <div className="text-right ml-auto font-body2 text-text-400 flex">
                 <span className="text-white mr-1">
-                  + {props.vestedData.vestedAmount.toFixed(2)} PLY
+                  + {props.vestedData?.vestedAmount?.toFixed(2)} PLY
                 </span>{" "}
-                vested <span className="md:block hidden ml-1">for upto 25-Aug-2024</span>
+                vested <span className="md:block hidden ml-1">for upto 05-Jan-2025</span>
                 <span className="relative top-1 md:hidden">
                   <Image src={info} />
                 </span>
@@ -263,10 +287,10 @@ function ClaimVested(props: IMigrateProps) {
           <div className="mt-5">{ClaimButton}</div>
         </div>
       </div>
-      <div className="font-body2 text-text-250 mt-4 mx-2 md:mx-auto md:w-[568px] text-center">
+      {/* <div className="font-body2 text-text-250 mt-4 mx-2 md:mx-auto md:w-[568px] text-center">
         Tip: Convert PLENTY/WRAP to PLY. By locking PLY, you&apos;re earning fees and bribe rewards
         from your veNFT, plus you may boost your gauge rewards.
-      </div>
+      </div> */}
 
       {showConfirmTransaction && (
         <ConfirmTransaction
@@ -280,9 +304,7 @@ function ClaimVested(props: IMigrateProps) {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
-              : null
+            transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }
           content={`Claim of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `}
         />

@@ -32,9 +32,10 @@ import {
 import { store } from "../../redux";
 import { ITokenPriceList } from "../util/types";
 import { ELocksState } from "../votes/types";
-import { voteEscrowAddress } from "../../common/walletconnect";
+import { connectedNetwork, voteEscrowAddress } from "../../common/walletconnect";
 import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
-import { IAMM, ITokens } from "../../config/types";
+import { IConfigPool, IConfigTokens } from "../../config/types";
+import { getThumbnailForVeNFT } from "../util/locks";
 
 
 /**
@@ -52,7 +53,7 @@ export const getAllLocksPositionData = async (
     const GAUGES = state.config.gauges;
 
     const [locksResponse, veStorageResponse] = await Promise.all([
-      axios.get(`${Config.VE_INDEXER}locks?address=${userTezosAddress}`),
+      axios.get(`${Config.VE_INDEXER[connectedNetwork]}locks?address=${userTezosAddress}`),
       getTzktStorageData(voteEscrowAddress),
     ]);
     const locksData = locksResponse.data.result;
@@ -101,6 +102,7 @@ export const getAllLocksPositionData = async (
       );
       const lockEndTimestamp = new BigNumber(lock.endTs);
       const attached = Boolean(lock.attached);
+      const thumbnailUri = await getThumbnailForVeNFT(tokenId.toNumber());
       const finalLock: IAllLocksPositionData = {
         tokenId,
         baseValue: new BigNumber(lock.baseValue).dividedBy(PLY_DECIMAL_MULTIPLIER),
@@ -116,6 +118,7 @@ export const getAllLocksPositionData = async (
         attachedAmmAddress: undefined,
         attachedTokenASymbol: undefined,
         attachedTokenBSymbol: undefined,
+        thumbnailUri,
       };
 
       if (epochVotingPower.isFinite() && epochVotingPower.isGreaterThan(0)) {
@@ -132,11 +135,6 @@ export const getAllLocksPositionData = async (
           finalLock.locksState = ELocksState.DISABLED;
         }
       }
-      // TODO: Remove next if on redeployment
-      if(attachedLocks[tokenId.toString()] === "KT19zYN4twVndWprTXhU8G48Sxom8JMZqc1F") {
-        finalLock.attached = false;
-      }
-      // TODO: Remove above if on redeployment
 
       if (
         attached &&
@@ -148,6 +146,8 @@ export const getAllLocksPositionData = async (
         finalLock.attachedAmmAddress = GAUGES[gaugeAttached].ammAddress;
         finalLock.attachedTokenASymbol = GAUGES[gaugeAttached].tokenOneSymbol;
         finalLock.attachedTokenBSymbol = GAUGES[gaugeAttached].tokenTwoSymbol;
+      } else {
+        finalLock.attached = false;
       }
       finalVeNFTData.push(finalLock);
     }
@@ -190,7 +190,7 @@ export const getAllLocksRewardsData = async (
     let totalBribesAmount = new BigNumber(0);
 
     const locksIndexerResponse = await axios.get(
-      `${Config.VE_INDEXER}votes?address=${userTezosAddress}`
+      `${Config.VE_INDEXER[connectedNetwork]}votes?address=${userTezosAddress}`
     );
     const locksIndexerData: IAllLocksRewardsIndexerData[] = locksIndexerResponse.data;
     for (const lockData of locksIndexerData) {
@@ -258,22 +258,41 @@ export const getAllLocksRewardsData = async (
 const getBribesData = (
   bribes: IBribeIndexer[],
   tokenPrices: ITokenPriceList,
-  TOKENS: ITokens
+  TOKENS: IConfigTokens
 ): IBribesValueAndData => {
   try {
     let bribesValue = new BigNumber(0);
-    const bribesData: ILockRewardsBribeData[] = [];
+    let bribesData: ILockRewardsBribeData[] = [];
+    const bribesObj: { [tokenSymbol: string]: ILockRewardsBribeData } = {};
     for (const bribeData of bribes) {
       const value = new BigNumber(bribeData.value).dividedBy(
         new BigNumber(10).pow(TOKENS[bribeData.name].decimals)
       );
       const amount = value.multipliedBy(tokenPrices[bribeData.name] || 0);
-      bribesValue = bribesValue.plus(amount);
-      bribesData.push({
-        bribeId: new BigNumber(bribeData.bribeId),
-        bribeValue: value,
-        tokenSymbol: bribeData.name,
-      });
+      // Filtering out the bribes which are less that 0.1$ as of current price.
+      if(amount.isGreaterThanOrEqualTo(0.1)) {
+        bribesValue = bribesValue.plus(amount);
+        // Sum up the bribes of all similar tokens
+        if (bribesObj[bribeData.name]) {
+          const prevBribeObj = bribesObj[bribeData.name];
+          bribesObj[bribeData.name] = {
+            ...prevBribeObj,
+            bribeValue: prevBribeObj.bribeValue.plus(value),
+            bribePrice: prevBribeObj.bribePrice.plus(amount),
+          };
+        } else {
+          bribesObj[bribeData.name] = {
+            bribeValue: value,
+            bribePrice: amount,
+            tokenSymbol: bribeData.name,
+          };
+        }
+      }
+    }
+    bribesData = Object.values(bribesObj);
+
+    if(bribesData.length > 0) {
+      bribesData.sort((a, b) => b.bribePrice.minus(a.bribePrice).toNumber());
     }
     return {
       bribesValue,
@@ -298,8 +317,8 @@ const getFeesData = (
   feeData: IFeeIndexer,
   feeClaimed: boolean,
   tokenPrices: ITokenPriceList,
-  AMM: IAMM,
-  TOKENS: ITokens
+  AMM: IConfigPool,
+  TOKENS: IConfigTokens
 ): IFeesValueAndData => {
   try {
     const token1Symbol = feeData.token1Symbol;
@@ -343,18 +362,22 @@ const getFeesData = (
  * @param userTezosAddress - Tezos wallet address of the user
  */
 export const getAllRewardsOperationsData = async (
-  userTezosAddress: string
+  userTezosAddress: string,
+  tokenPrices: ITokenPriceList
 ): Promise<IAllRewardsOperationsData> => {
   try {
     if (!userTezosAddress) {
       throw new Error("Invalid or empty arguments.");
     }
+    const state = store.getState();
+    const TOKENS = state.config.tokens;
+
     const allEpochClaimOperationData: IAllEpochClaimOperationData = {};
     const allBribesClaimData: IAllBribesOperationData[] = [];
     const allFeesClaimData: IAllFeesOperationData[] = [];
 
     const locksIndexerResponse = await axios.get(
-      `${Config.VE_INDEXER}votes?address=${userTezosAddress}`
+      `${Config.VE_INDEXER[connectedNetwork]}votes?address=${userTezosAddress}`
     );
     const locksIndexerData: IAllLocksRewardsIndexerData[] = locksIndexerResponse.data;
 
@@ -384,18 +407,26 @@ export const getAllRewardsOperationsData = async (
           allFeesOperationData.amms[voteData.amm].push(Number(epochNumber));
         }
         for (const bribe of voteData.bribes) {
-          const bribeId = Number(bribe.bribeId);
-          const amm = bribe.amm;
-          allEpochClaimTokenData[epochNumber].bribeData.push({
-            bribeId,
-            amm,
-          });
-          allBribesClaimData.push({
-            tokenId: Number(tokenId),
-            epoch: Number(epochNumber),
-            bribeId,
-            amm,
-          });
+          const value = new BigNumber(bribe.value).dividedBy(
+            new BigNumber(10).pow(TOKENS[bribe.name].decimals)
+          );
+          const amount = value.multipliedBy(tokenPrices[bribe.name] || 0);
+          // Claim bribe only if the bribe value is greater than 0 and the amount is
+          // greater than 0.1$ as of current price.
+          if(value.isGreaterThan(0) && amount.isGreaterThanOrEqualTo(0.1)) {
+            const bribeId = Number(bribe.bribeId);
+            const amm = bribe.amm;
+            allEpochClaimTokenData[epochNumber].bribeData.push({
+              bribeId,
+              amm,
+            });
+            allBribesClaimData.push({
+              tokenId: Number(tokenId),
+              epoch: Number(epochNumber),
+              bribeId,
+              amm,
+            });
+          }
         }
       }
       allEpochClaimOperationData[tokenId] = allEpochClaimTokenData;

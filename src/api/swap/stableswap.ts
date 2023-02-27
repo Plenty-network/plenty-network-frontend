@@ -83,12 +83,12 @@ export const calculateTokensOutTezCtez = (
   tokenIn: string
 ): ICalculateTokenResponse => {
 
-  const feePerc = new BigNumber(0.05);
+  const feePerc = new BigNumber(0.1); //TODO: Update after any changes in contract
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(6));
   tezSupply = tezSupply.multipliedBy(new BigNumber(10).pow(6));
   ctezSupply = ctezSupply.multipliedBy(new BigNumber(10).pow(6));
   try {
-    if (tokenIn === 'ctez') {
+    if (tokenIn === 'CTez') {
       const dy = newton_dx_to_dy(
         target.multipliedBy(ctezSupply),
         tezSupply.multipliedBy(new BigNumber(2).pow(48)),
@@ -130,7 +130,7 @@ export const calculateTokensOutTezCtez = (
         exchangeRate,
         priceImpact,
       };
-    } else if (tokenIn === 'tez') {
+    } else if (tokenIn === 'XTZ') {
       const dy = newton_dx_to_dy(
         tezSupply.multipliedBy(new BigNumber(2).pow(48)),
         target.multipliedBy(ctezSupply),
@@ -207,7 +207,7 @@ export const calculateTokensInTezCtez = (
   tezSupply = tezSupply.multipliedBy(new BigNumber(10).pow(6));
   ctezSupply = ctezSupply.multipliedBy(new BigNumber(10).pow(6));
   try {
-    if (tokenIn === 'ctez') {
+    if (tokenIn === 'CTez') {
       const dy = newton_dx_to_dy(
         target.multipliedBy(ctezSupply),
         tezSupply.multipliedBy(new BigNumber(2).pow(48)),
@@ -251,7 +251,7 @@ export const calculateTokensInTezCtez = (
         exchangeRate,
         priceImpact,
       };
-    } else if (tokenIn === 'tez') {
+    } else if (tokenIn === 'XTZ') {
       const dy = newton_dx_to_dy(
         tezSupply.multipliedBy(new BigNumber(2).pow(48)),
         target.multipliedBy(ctezSupply),
@@ -393,7 +393,7 @@ export const calculateTokensOutGeneralStable = (
   tokenOutPrecision: BigNumber
 ): ICalculateTokenResponse => {
   const state = store.getState();
-  const TOKEN = state.config.standard;
+  const TOKEN = state.config.tokens;
   const feePerc = new BigNumber(0.05);
 
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
@@ -475,7 +475,7 @@ export const calculateTokensInGeneralStable = (
   tokenOutPrecision: BigNumber
 ): ICalculateTokenResponse => {
   const state = store.getState();
-  const TOKEN = state.config.standard;
+  const TOKEN = state.config.tokens;
   const feePerc = new BigNumber(0.05);
 
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
@@ -555,7 +555,7 @@ export const loadSwapDataGeneralStable = async (
   try {
     const state = store.getState();
     const AMM = state.config.AMMs;
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
     if (dexContractAddress === 'false') {

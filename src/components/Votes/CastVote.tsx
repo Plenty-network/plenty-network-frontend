@@ -9,9 +9,12 @@ import { ICastVoteProps } from "./types";
 import React, { useMemo } from "react";
 import { store, useAppSelector } from "../../redux";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { tokenIcons } from "../../constants/tokensList";
+import { changeSource } from "../../api/util/helpers";
 
 function CastVote(props: ICastVoteProps) {
   // const currentEpoch = store.getState().epoch.currentEpoch;
+  const tokens = useAppSelector((state) => state.config.tokens);
   const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
   const closeModal = () => {
     props.setShow(false);
@@ -73,19 +76,33 @@ function CastVote(props: ICastVoteProps) {
                   <div className="flex items-center">
                     <span className="flex">
                       <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
-                        <Image
+                        <img
                           alt={"alt"}
-                          src={getImagesPath(pool.tokenA)}
+                          src={
+                            tokenIcons[pool.tokenA]
+                              ? tokenIcons[pool.tokenA].src
+                              : tokens[pool.tokenA]?.iconUrl
+                              ? tokens[pool.tokenA].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
                           width={"24px"}
                           height={"24px"}
+                          onError={changeSource}
                         />
                       </div>
                       <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
-                        <Image
+                        <img
                           alt={"alt"}
-                          src={getImagesPath(pool.tokenB)}
+                          src={
+                            tokenIcons[pool.tokenB]
+                              ? tokenIcons[pool.tokenB].src
+                              : tokens[pool.tokenB]?.iconUrl
+                              ? tokens[pool.tokenB].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
                           width={"24px"}
                           height={"24px"}
+                          onError={changeSource}
                         />
                       </div>
                     </span>

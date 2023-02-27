@@ -1,8 +1,8 @@
 import { getDexAddress } from "../api/util/fetchConfig";
 import { store} from "../redux";
 import { BigNumber } from "bignumber.js";
-import { TokenVariant } from "../config/types";
-import { OpKind } from "@taquito/taquito";
+import { TokenStandard } from "../config/types";
+import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { routerSwap } from "./router";
 import { dappClient } from "../common/walletconnect";
 import {
@@ -13,6 +13,7 @@ import {
 } from "./types";
 import { setFlashMessage } from "../redux/flashMessage";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
+import { getBatchOperationsWithLimits } from "../api/util/operations";
 
 export const allSwapWrapper = async (
   tokenInAmount: BigNumber,
@@ -84,7 +85,7 @@ export const directSwapWrapper = async (
 ): Promise<IOperationsResponse> => {
   try {
     let res;
-    if (tokenIn === "tez" && tokenOut === "ctez") {
+    if (tokenIn === "XTZ" && tokenOut === "CTez") {
       res = await tez_to_ctez(
         tokenIn,
         tokenOut,
@@ -96,13 +97,29 @@ export const directSwapWrapper = async (
         setShowConfirmTransaction,
         flashMessageContent
       );
-    } else if (tokenIn === "ctez" && tokenOut === "tez") {
+    } else if (tokenIn === "CTez" && tokenOut === "XTZ") {
       res = await ctez_to_tez(
         tokenIn,
         tokenOut,
         minimumTokenOut,
         recipent,
         tokenInAmount,
+        transactionSubmitModal,
+        resetAllValues,
+        setShowConfirmTransaction,
+        flashMessageContent
+      );
+    } else if (
+      (tokenIn === "XTZ" && tokenOut !== "CTez") ||
+      (tokenIn !== "CTez" && tokenOut === "XTZ")
+    ) {
+      res = await swapTezPairs(
+        tokenIn,
+        tokenOut,
+        minimumTokenOut,
+        recipent,
+        tokenInAmount,
+        caller,
         transactionSubmitModal,
         resetAllValues,
         setShowConfirmTransaction,
@@ -157,7 +174,7 @@ const swapTokens = async (
     }
 
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const TOKEN_IN = TOKEN[tokenIn];
     const TOKEN_OUT = TOKEN[tokenOut];
@@ -168,34 +185,40 @@ const swapTokens = async (
     const tokenOutId = TOKEN_OUT.tokenId ?? 0;
     const Tezos = await dappClient().tezos();
     const tokenInAddress = TOKEN_IN.address as string;
-    const tokenInInstance: any = await Tezos.contract.at(tokenInAddress);
-    const dexContractInstance: any = await Tezos.contract.at(dexContractAddress);
+    const tokenInInstance = await Tezos.wallet.at(tokenInAddress);
+    const dexContractInstance = await Tezos.wallet.at(dexContractAddress);
 
     tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN_IN.decimals));
     minimumTokenOut = minimumTokenOut.multipliedBy(new BigNumber(10).pow(TOKEN_OUT.decimals));
 
-    let batch = null;
+    const allBatchOperations: WalletParamsWithKind[] = [];
     // Approve call for FA1.2 type token
-    if (TOKEN_IN.variant === TokenVariant.FA12) {
-      batch = Tezos.wallet
-        .batch()
-        .withContractCall(tokenInInstance.methods.approve(dexContractAddress, tokenInAmount.decimalPlaces(0,1)))
-        .withContractCall(
-          dexContractInstance.methods.Swap(
-            minimumTokenOut.decimalPlaces(0,1).toString(),
+    if (TOKEN_IN.standard === TokenStandard.FA12) {
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...tokenInInstance.methods
+          .approve(dexContractAddress, tokenInAmount.decimalPlaces(0, 1))
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...dexContractInstance.methods
+          .Swap(
+            minimumTokenOut.decimalPlaces(0, 1).toString(),
             recipent,
             tokenOutAddress,
             tokenOutId,
-            tokenInAmount.decimalPlaces(0,1)
+            tokenInAmount.decimalPlaces(0, 1)
           )
-        );
+          .toTransferParams(),
+      });
     }
     // add_operator for FA2 type token
     else {
-      batch = Tezos.wallet
-        .batch()
-        .withContractCall(
-          tokenInInstance.methods.update_operators([
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...tokenInInstance.methods
+          .update_operators([
             {
               add_operator: {
                 owner: caller,
@@ -204,18 +227,24 @@ const swapTokens = async (
               },
             },
           ])
-        )
-        .withContractCall(
-          dexContractInstance.methods.Swap(
-            minimumTokenOut.decimalPlaces(0,1).toString(),
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...dexContractInstance.methods
+          .Swap(
+            minimumTokenOut.decimalPlaces(0, 1).toString(),
             recipent,
             tokenOutAddress,
             tokenOutId,
-            tokenInAmount.decimalPlaces(0,1)
+            tokenInAmount.decimalPlaces(0, 1)
           )
-        )
-        .withContractCall(
-          tokenInInstance.methods.update_operators([
+          .toTransferParams(),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...tokenInInstance.methods
+          .update_operators([
             {
               remove_operator: {
                 owner: caller,
@@ -224,9 +253,12 @@ const swapTokens = async (
               },
             },
           ])
-        );
+          .toTransferParams(),
+      });
     }
 
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOperation: any = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
@@ -239,12 +271,12 @@ const swapTokens = async (
     const opHash = await batchOperation.confirmation(1);
 
     const status = await batchOperation.status();
-    if(status === "applied"){
+    if (status === "applied") {
       return {
         success: true,
         operationId: batchOperation.opHash,
       };
-    }else{
+    } else {
       throw new Error(status);
     }
   } catch (error: any) {
@@ -274,7 +306,7 @@ async function ctez_to_tez(
       throw new Error("Wallet connection failed");
     }
     const state = store.getState();
-    const TOKEN = state.config.standard;
+    const TOKEN = state.config.tokens;
 
     const TOKEN_IN = TOKEN[tokenIn];
 
@@ -284,22 +316,44 @@ async function ctez_to_tez(
     const Tezos = await dappClient().tezos();
     const contract = await Tezos.wallet.at(contractAddress);
     const ctez_contract = await Tezos.wallet.at(CTEZ);
-    const batch = Tezos.wallet
-      .batch()
-      .withContractCall(
-        ctez_contract.methods.approve(
+
+    const allBatchOperations: WalletParamsWithKind[] = [];
+
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...ctez_contract.methods
+        .approve(
           contractAddress,
-          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).decimalPlaces(0,1).toString()
+          tokenInAmount
+            .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
+            .decimalPlaces(0, 1)
+            .toString()
         )
-      )
-      .withContractCall(
-        contract.methods.ctez_to_tez(
-          tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).decimalPlaces(0,1).toString(),
-          minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).decimalPlaces(0,1).toString(),
+        .toTransferParams(),
+    });
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...contract.methods
+        .ctez_to_tez(
+          tokenInAmount
+            .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
+            .decimalPlaces(0, 1)
+            .toString(),
+          minimumTokenOut
+            .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
+            .decimalPlaces(0, 1)
+            .toString(),
           recipent
         )
-      )
-      .withContractCall(ctez_contract.methods.approve(contractAddress, 0));
+        .toTransferParams(),
+    });
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...ctez_contract.methods.approve(contractAddress, 0).toTransferParams(),
+    });
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp: any = await batch.send();
     {
       batchOp.opHash === null
@@ -359,23 +413,32 @@ async function tez_to_ctez(
 
     const tokenInDecimals = 6;
     const tokenOutDecimals = 6;
-    const batch = Tezos.wallet.batch([
-      {
-        kind: OpKind.TRANSACTION,
-        ...contract.methods
-          .tez_to_ctez(
-            minimumTokenOut.multipliedBy(new BigNumber(10).pow(tokenOutDecimals)).decimalPlaces(0,1).toString(),
-            recipent
-          )
-          .toTransferParams({
-            amount: Number(
-              tokenInAmount.multipliedBy(new BigNumber(10).pow(tokenInDecimals)).decimalPlaces(0,1).toString()
-            ),
-            mutez: true,
-          }),
-      },
-    ]);
 
+    const allBatchOperations: WalletParamsWithKind[] = [];
+
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...contract.methods
+        .tez_to_ctez(
+          minimumTokenOut
+            .multipliedBy(new BigNumber(10).pow(tokenOutDecimals))
+            .decimalPlaces(0, 1)
+            .toString(),
+          recipent
+        )
+        .toTransferParams({
+          amount: Number(
+            tokenInAmount
+              .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
+              .decimalPlaces(0, 1)
+              .toString()
+          ),
+          mutez: true,
+        }),
+    });
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);   
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp: any = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
@@ -385,16 +448,7 @@ async function tez_to_ctez(
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    // dispatch(
-    //   setFlashMessage({
-    //     flashType: Flashtype.Success,
-    //     headerText: "Success",
-    //     trailingText: `Swap confirmed`,
-    //     linkText: "View in Explorer",
-    //     isLoading: true,
-    //     transactionId: "",
-    //   })
-    // );
+    
     await batchOp.confirmation(1);
 
     const status = await batchOp.status();
@@ -413,3 +467,163 @@ async function tez_to_ctez(
     };
   }
 }
+
+const swapTezPairs = async (
+  tokenIn: string,
+  tokenOut: string,
+  minimumTokenOut: BigNumber,
+  recipent: string,
+  tokenInAmount: BigNumber,
+  caller: string,
+  transactionSubmitModal: TTransactionSubmitModal,
+  resetAllValues: TResetAllValues,
+  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  flashMessageContent?: IFlashMessageProps
+): Promise<IOperationsResponse> => {
+  try {
+    const { CheckIfWalletConnected } = dappClient();
+    const WALLET_RESP = await CheckIfWalletConnected();
+    if (!WALLET_RESP.success) {
+      throw new Error("Wallet connection failed");
+    }
+
+    const state = store.getState();
+    const TOKEN = state.config.tokens;
+
+    const TOKEN_IN = TOKEN[tokenIn];
+    const TOKEN_OUT = TOKEN[tokenOut];
+
+    const dexContractAddress = getDexAddress(tokenIn, tokenOut);
+    const tokenInId = TOKEN_IN.tokenId ?? 0;
+    const tokenOutAddress = TOKEN_OUT.address;
+    const tokenOutId = TOKEN_OUT.tokenId ?? 0;
+    const Tezos = await dappClient().tezos();
+    const tokenInAddress = TOKEN_IN.address as string;
+    const dexContractInstance = await Tezos.wallet.at(dexContractAddress);
+
+    tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN_IN.decimals));
+    minimumTokenOut = minimumTokenOut.multipliedBy(new BigNumber(10).pow(TOKEN_OUT.decimals));
+
+    const allBatchOperations: WalletParamsWithKind[] = [];
+
+    // Tez to other token swap
+    if (tokenIn === "XTZ") {
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        ...dexContractInstance.methods
+          .Swap(
+            minimumTokenOut.decimalPlaces(0, 1).toString(),
+            recipent,
+            tokenOutAddress,
+            tokenOutId,
+            tokenInAmount.decimalPlaces(0, 1)
+          )
+          .toTransferParams({
+            mutez: true,
+            amount: tokenInAmount.decimalPlaces(0, 1).toNumber(),
+          }),
+      });
+    }
+    // Other token to Tez swap
+    else if (tokenOut === "XTZ") {
+      const tokenInInstance = await Tezos.wallet.at(tokenInAddress);
+      // Approve call for FA1.2 type token
+      if (TOKEN_IN.standard === TokenStandard.FA12) {
+        allBatchOperations.push({
+          kind: OpKind.TRANSACTION,
+          ...tokenInInstance.methods
+            .approve(dexContractAddress, tokenInAmount.decimalPlaces(0, 1))
+            .toTransferParams(),
+        });
+        allBatchOperations.push({
+          kind: OpKind.TRANSACTION,
+          ...dexContractInstance.methods
+            .Swap(
+              minimumTokenOut.decimalPlaces(0, 1).toString(),
+              recipent,
+              tokenOutAddress || recipent,
+              tokenOutId,
+              tokenInAmount.decimalPlaces(0, 1)
+            )
+            .toTransferParams(),
+        });
+      }
+      // add_operator for FA2 type token
+      else {
+        allBatchOperations.push({
+          kind: OpKind.TRANSACTION,
+          ...tokenInInstance.methods
+            .update_operators([
+              {
+                add_operator: {
+                  owner: caller,
+                  operator: dexContractAddress,
+                  token_id: tokenInId,
+                },
+              },
+            ])
+            .toTransferParams(),
+        });
+        allBatchOperations.push({
+          kind: OpKind.TRANSACTION,
+          ...dexContractInstance.methods
+            .Swap(
+              minimumTokenOut.decimalPlaces(0, 1).toString(),
+              recipent,
+              tokenOutAddress || recipent,
+              tokenOutId,
+              tokenInAmount.decimalPlaces(0, 1)
+            )
+            .toTransferParams(),
+        });
+        allBatchOperations.push({
+          kind: OpKind.TRANSACTION,
+          ...tokenInInstance.methods
+            .update_operators([
+              {
+                remove_operator: {
+                  owner: caller,
+                  operator: dexContractAddress,
+                  token_id: tokenInId,
+                },
+              },
+            ])
+            .toTransferParams(),
+        });
+      }
+    } else {
+      throw new Error("Tez pair expected, but found none");
+    }
+
+    // const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    // const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batch = Tezos.wallet.batch(allBatchOperations);
+    const batchOperation: any = await batch.send();
+
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+
+    transactionSubmitModal(batchOperation.opHash);
+    resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
+
+    await batchOperation.confirmation(1);
+
+    const status = await batchOperation.status();
+    if (status === "applied") {
+      return {
+        success: true,
+        operationId: batchOperation.opHash,
+      };
+    } else {
+      throw new Error(status);
+    }
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+};

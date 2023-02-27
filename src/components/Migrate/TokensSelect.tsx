@@ -1,10 +1,15 @@
 import { PopUpModal } from "../Modal/popupModal";
 import SearchBar from "../SearchBar/SearchBar";
 import Image from "next/image";
+
+import fromExponential from "from-exponential";
 import { tokenParameter, tokensModal } from "../../constants/swap";
 import { BigNumber } from "bignumber.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
+import { IAllTokensBalance } from "../../api/util/types";
+import nFormatter, { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 interface ISwapModalProps {
   tokens: tokensModal[];
@@ -14,7 +19,7 @@ interface ISwapModalProps {
   tokenIn: tokenParameter;
   isSuccess: boolean;
   allBalance: {
-    [id: string]: BigNumber;
+    [key: string]: string;
   };
 }
 function TokenModalMigrate(props: ISwapModalProps) {
@@ -49,8 +54,7 @@ function TokenModalMigrate(props: ISwapModalProps) {
     };
     filterTokens();
   }, [props.tokens, searchQuery, props.tokenIn.name, searchHits]);
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   return props.show ? (
     <PopUpModal title="Select token" onhide={() => props.onhide(false)}>
       {
@@ -96,7 +100,7 @@ function TokenModalMigrate(props: ISwapModalProps) {
                           props.tokenIn.name === token.name ? "text-white/[0.1]" : "text-white"
                         )}
                       >
-                        {token.name === "tez" ? "TEZ" : token.name === "ctez" ? "CTEZ" : token.name}
+                        {tEZorCTEZtoUppercase(token.name)}
                       </div>
                     </div>
                     {token.new && (
@@ -105,10 +109,24 @@ function TokenModalMigrate(props: ISwapModalProps) {
                       </div>
                     )}
                     {props.isSuccess && props.allBalance[token.name] ? (
-                      <div className="font-subtitle4 ml-auto mt-[7px]">
-                        {props.allBalance[token.name]
-                          ? Number(props.allBalance[token.name]).toFixed(2)
-                          : 0.0}
+                      <div className="font-subtitle4 cursor-pointer ml-auto mt-[7px]">
+                        <ToolTip
+                          position={Position.top}
+                          message={
+                            props.allBalance[token.name]
+                              ? fromExponential(props.allBalance[token.name].toString())
+                              : "0"
+                          }
+                          disable={Number(props.allBalance[token.name]) === 0}
+                        >
+                          {props.allBalance[token.name]
+                            ? Number(props.allBalance[token.name]) > 0
+                              ? new BigNumber(props.allBalance[token.name]).isLessThan(0.01)
+                                ? "<0.01"
+                                : nFormatter(new BigNumber(props.allBalance[token.name]))
+                              : "0.0"
+                            : "0.0"}
+                        </ToolTip>
                       </div>
                     ) : props.isSuccess === false ? (
                       <div className="font-subtitle4 ml-auto mt-[7px]"> 0</div>

@@ -1,5 +1,5 @@
 import { ISimpleButtonProps, SimpleButton } from "./Component/SimpleButton";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import fromExponential from "from-exponential";
 import clsx from "clsx";
 import walletIcon from "../../assets/icon/pools/wallet.svg";
@@ -24,13 +24,11 @@ import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 
 import { VePLY } from "../DropDown/VePLY";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { detachLockFromGauge } from "../../operations/locks";
-import { setIsLoadingWallet } from "../../redux/walletLoading";
-import { setFlashMessage } from "../../redux/flashMessage";
-import { Flashtype } from "../FlashScreen";
-import { getStakedData } from "../../api/stake";
-import { FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_B } from "../../constants/localStorage";
-import { ITokenInterface } from "../../config/types";
+import { IConfigLPToken } from "../../config/types";
+import nFormatter, {
+  nFormatterWithLesserNumber,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 
 export enum StakingScreenType {
   Staking = "Staking",
@@ -57,7 +55,7 @@ export interface IStakingScreenProps {
   selectedDropDown: IVePLYData;
   vePLYOptions: IVePLYData[];
   isListLoading: boolean;
-  lpToken: ITokenInterface | undefined;
+  lpToken: IConfigLPToken | undefined;
 }
 export interface IStakingProps {
   boost: IStakedDataResponse | undefined;
@@ -76,7 +74,7 @@ export interface IStakingProps {
   vePLYOptions: IVePLYData[];
   isListLoading: boolean;
   handleDetach: () => void;
-  lpToken: ITokenInterface | undefined;
+  lpToken: IConfigLPToken | undefined;
 }
 
 export interface IUnstakingProps {
@@ -90,7 +88,7 @@ export interface IUnstakingProps {
   setUnStakeInput: React.Dispatch<React.SetStateAction<string | number>>;
   setScreen: React.Dispatch<React.SetStateAction<string>>;
   stakedToken: string;
-  lpToken: ITokenInterface | undefined;
+  lpToken: IConfigLPToken | undefined;
 }
 export function StakingScreen(props: IStakingScreenProps) {
   return (
@@ -137,19 +135,6 @@ export function StakingScreen(props: IStakingScreenProps) {
 
 export function Staking(props: IStakingProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
 
   const handleInputPercentage = (value: number) => {
     const decimal = new BigNumber(value * Number(props.pnlpBalance)).decimalPlaces();
@@ -196,8 +181,7 @@ export function Staking(props: IStakingProps) {
       }
     }
   };
-  const tEZorCTEZtoUppercase = (a: string) =>
-    a.trim().toLowerCase() === "tez" || a.trim().toLowerCase() === "ctez" ? a.toUpperCase() : a;
+
   const onClickAmount = () => {
     handleStakeInput(props.pnlpBalance);
   };
@@ -205,12 +189,16 @@ export function Staking(props: IStakingProps) {
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
+  const previous = useRef("");
+  useEffect(() => {
+    previous.current = props.selectedDropDown.tokenId;
+  }, []);
 
   const stakeButton = useMemo(() => {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (Number(props.stakeInput) <= 0 && props.selectedDropDown.boostValue === "") {
@@ -226,7 +214,7 @@ export function Staking(props: IStakingProps) {
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else {
@@ -237,7 +225,9 @@ export function Staking(props: IStakingProps) {
             props.setScreen("2");
           }}
         >
-          {props.stakeInput <= 0 && props.selectedDropDown.tokenId !== "" ? "Boost" : "Stake"}
+          {props.stakeInput <= 0 && props.selectedDropDown.tokenId !== previous.current.toString()
+            ? "Update Boost veNFT"
+            : "Stake"}
         </Button>
       );
     }
@@ -304,7 +294,7 @@ export function Staking(props: IStakingProps) {
         {/* Start of Wallet app section */}
         <div className="border flex  items-center bg-muted-200/10 border-border-500/50 rounded-2xl">
           <div className=" flex flex-col py-3.5 px-4 flex-auto w-0">
-            <InputText value={props.stakeInput} onChange={handleStakeInput} />
+            <InputText value={fromExponential(props.stakeInput)} onChange={handleStakeInput} />
             <div className="font-body2 md:font-body4 text-text-400">
               ~$
               {!isNaN(Number(props.lpTokenPrice))
@@ -315,9 +305,7 @@ export function Staking(props: IStakingProps) {
           {walletAddress && (
             <div className="pr-2 md:pr-5 ">
               <BtnWithWalletIcon
-                text={`${
-                  Number(props.pnlpBalance) > 0 ? Number(props.pnlpBalance).toFixed(2) : 0
-                } PNLP`}
+                text={`${nFormatterWithLesserNumber(new BigNumber(props.pnlpBalance))} PNLP`}
                 onClick={onClickAmount}
               />
             </div>
@@ -325,7 +313,7 @@ export function Staking(props: IStakingProps) {
         </div>
         {/* end of Waller app section */}
         {/* dropDown And InfoTab */}
-        <div className="flex py-2 px-2 rounded-2xl md:px-2.5 justify-between bg-primary-850 border border-secondary-300">
+        <div className="flex py-2 px-2 mt-2 rounded-2xl md:px-2.5 justify-between bg-primary-850 border border-secondary-300">
           <VePLY
             Options={props.vePLYOptions}
             selectedText={props.selectedDropDown}
@@ -368,11 +356,12 @@ export function Staking(props: IStakingProps) {
                   )}
                 </div>
                 <BtnWithWalletIconEnd
-                  text={`${
-                    Number(props.pnlpBalance) > 0 ? nFormatter(new BigNumber(props.pnlpBalance)) : 0
-                  } PNLP`}
+                  text={`${nFormatterWithLesserNumber(new BigNumber(props.pnlpBalance))}
+                    PNLP`}
                 />
-                <BtnWithStakeIcon text={`${nFormatter(new BigNumber(props.stakedToken))} PNLP`} />
+                <BtnWithStakeIcon
+                  text={`${nFormatterWithLesserNumber(new BigNumber(props.stakedToken))} PNLP`}
+                />
               </div>
             </div>
             <div className="ml-auto block md:hidden">
@@ -386,7 +375,7 @@ export function Staking(props: IStakingProps) {
             </div>
           </>
         ) : (
-          <div className="font-body2 text-white pl-4">No staked positions</div>
+          <div className="font-body2 text-white py-2 pl-4">No staked positions</div>
         )}
       </div>
 
@@ -447,7 +436,7 @@ export function Unstaking(props: IUnstakingProps) {
     if (!walletAddress) {
       return (
         <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     } else if (Number(props.unStakeInput) <= 0) {
@@ -463,7 +452,7 @@ export function Unstaking(props: IUnstakingProps) {
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
-          Insufficient Balance
+          Insufficient balance
         </Button>
       );
     } else {
@@ -542,7 +531,7 @@ export function Unstaking(props: IUnstakingProps) {
       {/* Start of Wallet app section */}
       <div className="border flex  items-center bg-muted-200/10 border-border-500/50 mb-5 rounded-2xl">
         <div className=" flex flex-col py-3.5 px-4 flex-auto w-0">
-          <InputText value={props.unStakeInput} onChange={handleUnStakeInput} />
+          <InputText value={fromExponential(props.unStakeInput)} onChange={handleUnStakeInput} />
           <div className="font-body2 md:font-body4 text-text-400">
             ~$
             {!isNaN(Number(props.lpTokenPrice))
@@ -551,7 +540,7 @@ export function Unstaking(props: IUnstakingProps) {
           </div>
         </div>
         {walletAddress && (
-          <div className="pr-2 md:pr-5  ">
+          <div className="pr-2 md:pr-5 cursor-pointer ">
             <ToolTip
               disable={Number(props.stakedToken) > 0 ? false : true}
               message={fromExponential(props.stakedToken)}
@@ -559,9 +548,7 @@ export function Unstaking(props: IUnstakingProps) {
               position={Position.top}
             >
               <BtnWithUnStakeIcon
-                text={`${
-                  Number(props.stakedToken) > 0 ? Number(props.stakedToken).toFixed(2) : 0
-                } PNLP`}
+                text={`${nFormatterWithLesserNumber(new BigNumber(props.stakedToken))} PNLP`}
                 onClick={onClickAmount}
               />
             </ToolTip>

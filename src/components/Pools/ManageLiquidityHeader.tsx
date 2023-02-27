@@ -4,6 +4,7 @@ export interface IManageLiquidityHeaderProps {
   activeStateTab: any;
   setActiveStateTab: Function;
   className?: string;
+  isGaugeAvailable: boolean;
 }
 
 export interface ITabProps {
@@ -34,7 +35,13 @@ export enum ActiveLiquidity {
 }
 export function ManageLiquidityHeader(props: IManageLiquidityHeaderProps) {
   const { activeStateTab, setActiveStateTab } = props;
-  const ListOfTabs = ["Liquidity", "Staking", "Rewards"];
+  var ListOfTabs;
+  if (props.isGaugeAvailable) {
+    ListOfTabs = ["Liquidity", "Staking", "Rewards"];
+  } else {
+    ListOfTabs = ["Liquidity"];
+  }
+
   return (
     <div
       className={`flex row justify-between text-text-400 text-f16 bg-muted-500 rounded-xl ${props.className}`}

@@ -5,21 +5,9 @@ import Image from "next/image";
 import { BigNumber } from "bignumber.js";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IRewardsDataProps } from "./types";
+import nFormatter from "../../api/util/helpers";
 
 export function RewardsData(props: IRewardsDataProps) {
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
   return (
     <>
       <div className="flex flex-col  items-end">
@@ -29,7 +17,18 @@ export function RewardsData(props: IRewardsDataProps) {
             <>
               <div className="text-center">
                 <div className="text-text-200 font-body3 text-right">Breakdown of bribes</div>
-                <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
+                {props.bribesData.map((data, index) => {
+                  return (
+                    <div
+                      className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end "
+                      key={index}
+                    >
+                      <div className={`text-white font-medium pr-1 `}>{data?.value.toString()}</div>
+                      <div className="">{data?.name}</div>
+                    </div>
+                  );
+                })}
+                {/* <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end">
                   <div className={`text-white font-medium pr-1 `}>
                     {props.bribesData[0] ? props.bribesData[0].value.toFixed(2) : "--"}
                   </div>
@@ -41,6 +40,11 @@ export function RewardsData(props: IRewardsDataProps) {
                   </div>
                   <div className="">{props.bribesData[1]?.name}</div>
                 </div>
+                {props.bribesData.length - 2 > 0 && (
+                  <div className={`text-white font-medium text-right pr-1`}>
+                    {`+${props.bribesData.length - 2} more`}
+                  </div>
+                )} */}
               </div>
               <div className="text-center">
                 <div className="text-text-200 font-body3 text-right">Breakdown of fees</div>
@@ -56,7 +60,7 @@ export function RewardsData(props: IRewardsDataProps) {
             </>
           }
         >
-          <div className=" text-right">
+          <div className="cursor-pointer text-right">
             <span className="font-f13">
               $
               {Number(props.bribes) > 0

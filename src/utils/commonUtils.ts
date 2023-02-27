@@ -36,3 +36,38 @@ export const compareNumericString = (inp: any, inp2: any, id: string, isNumber?:
   if (a < b) return -1;
   return 0;
 };
+export const compareNumericStringRewards = (
+  inp: any,
+  inp2: any,
+  id1: string,
+  id2: string,
+  isNumber?: boolean
+) => {
+  const rowA = inp;
+  const rowB = inp2;
+  if (isNumber) {
+    return dotNotationToObject(rowA.original, id1).localeCompare(
+      dotNotationToObject(rowB.original, id1),
+      undefined,
+      { numeric: true }
+    );
+  }
+  const desc = false;
+  let a =
+    Number.parseFloat(dotNotationToObject(rowA.original, id1)) +
+    Number.parseFloat(dotNotationToObject(rowA.original, id2));
+  let b =
+    Number.parseFloat(dotNotationToObject(rowB.original, id1)) +
+    Number.parseFloat(dotNotationToObject(rowB.original, id2));
+
+  if (Number.isNaN(a)) {
+    // Blanks and non-numeric strings to bottom
+    a = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+  }
+  if (Number.isNaN(b)) {
+    b = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+  }
+  if (a > b) return 1;
+  if (a < b) return -1;
+  return 0;
+};

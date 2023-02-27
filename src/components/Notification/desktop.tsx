@@ -30,6 +30,7 @@ export default function NotificationBar(props: INotificationBarProps) {
   };
   const clearNotification = () => {
     setTimeout(() => {
+      //@ts-ignore
       dispatch(setHasNotification(false));
       setClearNotification((currentState) => !currentState);
     }, 500);

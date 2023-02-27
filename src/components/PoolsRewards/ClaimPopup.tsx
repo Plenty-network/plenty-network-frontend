@@ -8,6 +8,7 @@ import Button from "../Button/Button";
 import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
 import { store, useAppSelector } from "../../redux";
 import { EClaimAllState } from "../Rewards/types";
+import nFormatter from "../../api/util/helpers";
 
 interface IClaimProps {
   subValue?: string;
@@ -27,19 +28,6 @@ function ClaimPly(props: IClaimProps) {
   };
   // const tokenPrice = store.getState().tokenPrice.tokenPrice;
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
-
-    return num.toFixed(2);
-  }
 
   return props.show ? (
     <PopUpModal onhide={closeModal}>
@@ -68,15 +56,15 @@ function ClaimPly(props: IClaimProps) {
                   <ToolTip
                     message={
                       props.state === EClaimAllState.UNCLAIMED
-                        ? `$${(tokenPrice["PLY"] * Number(props.plyValue)).toFixed(6)}`
-                        : `$${(tokenPrice["PLY"] * Number(props.value)).toFixed(6)}`
+                        ? `$${((tokenPrice["PLY"] ?? 0) * Number(props.plyValue)).toFixed(6)}`
+                        : `$${((tokenPrice["PLY"] ?? 0) * Number(props.value)).toFixed(6)}`
                     }
                     id="tooltip8"
                     type={TooltipType.withoutArrowsAndTitle}
                     position={Position.top}
                   >
                     <>
-                      <span className="text-white font-body4 ml-2">
+                      <span className="text-white cursor-pointer font-body4 ml-2">
                         {props.state === EClaimAllState.UNCLAIMED
                           ? Number(props.plyValue) > 0
                             ? props.plyValue?.isLessThan(0.01)
@@ -112,7 +100,13 @@ function ClaimPly(props: IClaimProps) {
                           type={TooltipType.withoutArrowsAndTitle}
                           position={Position.top}
                         >
-                          <Image alt={"alt"} src={lock} width={"16px"} height={"16px"} />
+                          <Image
+                            alt={"alt"}
+                            src={lock}
+                            width={"16px"}
+                            height={"16px"}
+                            className="cursor-pointer"
+                          />
                         </ToolTip>
                       </span>
                       <span className="text-white ml-0.5">

@@ -1,5 +1,5 @@
 import { BigNumber } from "bignumber.js";
-import { AMM_TYPE } from "../../config/types";
+import { PoolType } from "../../config/types";
 import { Bribes, VolumeVeData } from "../pools/types";
 
 export interface IUserBribeIndexerData {
@@ -14,7 +14,7 @@ export interface IUserBribeData {
   ammAddress: string;
   tokenA: string;
   tokenB: string;
-  poolType: AMM_TYPE;
+  poolType: PoolType;
   bribeValue: BigNumber;
   bribeValuePerEpoch : BigNumber;
   bribeToken: string;
@@ -58,7 +58,7 @@ export interface IPoolsForBribesData{
   amm: string;
   tokenA: string;
   tokenB: string;
-  poolType: AMM_TYPE;
+  poolType: PoolType;
   bribes : BigNumber;
   bribesData : Bribes[];
   liquidity : BigNumber;

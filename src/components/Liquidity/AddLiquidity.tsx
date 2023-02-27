@@ -3,8 +3,18 @@ import Image from "next/image";
 import add from "../../../src/assets/icon/pools/addIcon.svg";
 import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import { estimateOtherTokenAmount } from "../../api/liquidity";
+import nFormatter, {
+  changeSource,
+  imageExists,
+  nFormatterWithLesserNumber,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
+import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
 import { useAppSelector } from "../../redux";
 import { ISwapData, tokenParameterLiquidity } from "./types";
+import fallback from "../../../src/assets/icon/pools/fallback.png";
+import { tokenIcons } from "../../constants/tokensList";
+import fromExponential from "from-exponential";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -23,7 +33,8 @@ interface IAddLiquidityProps {
 }
 function AddLiquidity(props: IAddLiquidityProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
-  const tokens = useAppSelector((state) => state.config.standard);
+  const tokens = useAppSelector((state) => state.config.tokens);
+
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
@@ -96,26 +107,29 @@ function AddLiquidity(props: IAddLiquidityProps) {
       <div className="border mt-[10px] flex border-text-800/[0.5] rounded-2xl h-[88px]">
         <div className="w-[50%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
           <div className="ml-2 md:ml-5">
-            <Image
-              src={props.tokenIn.image}
+            <img
+              src={
+                tokenIcons[props.tokenIn.symbol]
+                  ? tokenIcons[props.tokenIn.symbol].src
+                  : tokens[props.tokenIn.symbol.toString()]?.iconUrl
+                  ? tokens[props.tokenIn.symbol.toString()].iconUrl
+                  : `/assets/Tokens/fallback.png`
+              }
               className="tokenIconLiq"
               width={"42px"}
               height={"42px"}
+              onError={changeSource}
             />
           </div>
           <div className="ml-1 md:ml-2">
             <p className="text-text-900 font-body2">Input</p>
             <p className="font-caption1 md:font-title2 text-white">
-              {props.tokenIn.name === "tez"
-                ? "TEZ"
-                : props.tokenIn.name === "ctez"
-                ? "CTEZ"
-                : props.tokenIn.name}
+              {tEZorCTEZtoUppercase(props.tokenIn.name)}
             </p>
           </div>
         </div>
         <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
-          <div className="">
+          <div className="w-0 flex-auto">
             <p>
               {props.swapData.isloading ? (
                 <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
@@ -123,7 +137,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
                 <input
                   type="text"
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%] placeholder:text-text-400"
-                  value={props.firstTokenAmount}
+                  value={fromExponential(props.firstTokenAmount)}
                   placeholder="0.0"
                   onChange={(e) => handleLiquidityInput(e.target.value, "tokenIn")}
                 />
@@ -142,7 +156,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
             </p>
           </div>
           {walletAddress && (
-            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-2 md:px-3">
+            <div className="ml-auto border border-text-800/[0.5] rounded-lg  bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-1 md:px-3">
               <div className="relative top-0.5 md:top-0">
                 <Image alt={"alt"} src={wallet} className="walletIcon" />
               </div>
@@ -154,16 +168,12 @@ function AddLiquidity(props: IAddLiquidityProps) {
                   <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances[props.tokenIn.name]) > 0
-                      ? Number(props.userBalances[props.tokenIn.name]).toFixed(4)
-                      : 0}{" "}
+                    {nFormatterWithLesserNumber(
+                      new BigNumber(props.userBalances[props.tokenIn.name])
+                    )}{" "}
                   </span>
                 )}
-                {props.tokenIn.name === "tez"
-                  ? "TEZ"
-                  : props.tokenIn.name === "ctez"
-                  ? "CTEZ"
-                  : props.tokenIn.name}
+                {tEZorCTEZtoUppercase(props.tokenIn.name)}
               </div>
             </div>
           )}
@@ -175,33 +185,36 @@ function AddLiquidity(props: IAddLiquidityProps) {
       <div className="border -mt-[25px] flex border-text-800/[0.5] rounded-2xl h-[88px]">
         <div className="w-[50%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
           <div className="ml-2 md:ml-5">
-            <Image
-              src={props.tokenOut.image}
+            <img
+              src={
+                tokenIcons[props.tokenOut.symbol]
+                  ? tokenIcons[props.tokenOut.symbol].src
+                  : tokens[props.tokenOut.symbol.toString()]?.iconUrl
+                  ? tokens[props.tokenOut.symbol.toString()].iconUrl
+                  : `/assets/Tokens/fallback.png`
+              }
               className="tokenIconLiq"
               width={"42px"}
               height={"42px"}
+              onError={changeSource}
             />
           </div>
           <div className="ml-1 md:ml-2">
             <p className="text-text-900 font-body2">Input</p>
             <p className="font-caption1 md:font-title2 text-white">
-              {props.tokenOut.name === "tez"
-                ? "TEZ"
-                : props.tokenOut.name === "ctez"
-                ? "CTEZ"
-                : props.tokenOut.name}
+              {tEZorCTEZtoUppercase(props.tokenOut.name)}
             </p>
           </div>
         </div>
         <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
-          <div className="">
+          <div className="w-0 flex-auto">
             <p>
               {props.swapData.isloading ? (
                 <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
               ) : (
                 <input
                   type="text"
-                  value={props.secondTokenAmount}
+                  value={fromExponential(props.secondTokenAmount)}
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%] placeholder:text-text-400"
                   placeholder="0.0"
                   onChange={(e) => handleLiquidityInput(e.target.value, "tokenOut")}
@@ -221,7 +234,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
             </p>
           </div>
           {walletAddress && (
-            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-2 md:px-3">
+            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-1 md:px-3">
               <div className="relative top-0.5 md:top-0">
                 <Image alt={"alt"} src={wallet} className="walletIcon" />
               </div>
@@ -233,16 +246,12 @@ function AddLiquidity(props: IAddLiquidityProps) {
                   <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <span className="mr-1">
-                    {Number(props.userBalances[props.tokenOut.name]) > 0
-                      ? Number(props.userBalances[props.tokenOut.name]).toFixed(4)
-                      : 0}{" "}
+                    {nFormatterWithLesserNumber(
+                      new BigNumber(props.userBalances[props.tokenOut.name])
+                    )}
                   </span>
                 )}
-                {props.tokenOut.name === "tez"
-                  ? "TEZ"
-                  : props.tokenOut.name === "ctez"
-                  ? "CTEZ"
-                  : props.tokenOut.name}
+                {tEZorCTEZtoUppercase(props.tokenOut.name)}
               </div>
             </div>
           )}

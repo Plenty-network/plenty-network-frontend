@@ -1,7 +1,5 @@
 import { useRouter } from "next/router";
 import * as React from "react";
-import TooltipViolet from "../Migrate/TooltipViolet";
-import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { FooterInfoIcon } from "./FooterIconList";
 import { HrefIcon, IHrefIconProps } from "./LinkIconList";
 import { ISingleSideBarProps, SingleSideBar } from "./SideBarTabList";
@@ -10,11 +8,11 @@ export interface ISideBarProps {
   isBanner: boolean;
 }
 export const FooterMenu: Array<IHrefIconProps> = [
-  // {
-  //   name: "Analytics",
-  //   iconName: "VectorfooterMenu",
-  //   href: "",
-  // },
+  {
+    name: "Analytics",
+    iconName: "VectorfooterMenu",
+    href: "https://analytics.plenty.network/",
+  },
   {
     name: "Docs",
     iconName: "VectorfooterMenu-1",
@@ -23,7 +21,7 @@ export const FooterMenu: Array<IHrefIconProps> = [
   {
     name: "Feedback",
     iconName: "VectorfooterMenu-2",
-    href: "https://tally.so/r/wLD1rj",
+    href: "https://tally.so/r/mOQg0M ",
   },
 ];
 
@@ -47,19 +45,34 @@ const MainMenu: Array<ISingleSideBarProps> = [
     activePathName: "/vote",
   },
   {
-    name: "Bribes",
+    name: "Migrate",
+    iconName: "migrate",
+    pathName: "/migrate",
+    activePathName: "/migrate",
+    isToolTip: true,
+  },
+  {
+    name: "Airdrop",
+    iconName: "airdrop",
+    pathName: "/airdrop",
+    activePathName: "/airdrop",
+  },
+  {
+    name: "Bribe",
     iconName: "bribes",
     pathName: "/bribes",
     activePathName: "/bribes",
     isHrefIcon: true,
     openNewPage: true,
   },
+
   {
-    name: "Migrate",
-    iconName: "migrate",
-    pathName: "/migrate",
-    activePathName: "/migrate",
-    isToolTip: true,
+    name: "Bridge",
+    iconName: "bridge",
+    pathName: "https://bridge.plenty.network/",
+    activePathName: "/bridge",
+    isHrefIcon: true,
+    openNewPage: true,
   },
 ];
 

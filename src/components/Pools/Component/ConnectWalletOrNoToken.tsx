@@ -8,6 +8,9 @@ import { PoolsCardHeader } from "../Cardheader";
 export interface IWalletNotConnectedProps {
   setActiveStateTab: React.Dispatch<React.SetStateAction<string>>;
 }
+export interface INoDataProps {
+  content: string;
+}
 
 export function NoContentAvailable(props: IWalletNotConnectedProps) {
   return (
@@ -48,4 +51,7 @@ export function WalletNotConnected(props: IWallet) {
       </div>
     </div>
   );
+}
+export function NoDataError(props: INoDataProps) {
+  return <div className="flex justify-start  items-center  mt-2 md:mt-12  ">{props.content}</div>;
 }

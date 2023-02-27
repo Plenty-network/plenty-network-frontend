@@ -1,11 +1,11 @@
-import { AMM_TYPE, IAMM } from "../../config/types";
+import { PoolType } from "../../config/types";
 import { BigNumber } from 'bignumber.js'
 
 export interface VolumeV1Data {
   pool: string;
   bribes: Bribes[];
   apr: string;
-  futureApr : number
+  futureApr : string
 }
 
 export interface Volume24H {
@@ -60,10 +60,11 @@ export interface Bribes{
   name : string;
 }
 
+/** @deprecated */
 export interface IPoolsDataWrapperResponse {
   tokenA : String;
   tokenB : String;
-  poolType : AMM_TYPE;
+  poolType : PoolType;
   apr : BigNumber;
   futureApr : BigNumber;
   boostedApr : BigNumber;
@@ -85,4 +86,48 @@ export interface IPoolsDataWrapperResponse {
 
 export interface IAnalyticsDataObject {
   [key: string]: VolumeVeData;
+}
+
+
+export interface IIndexerPoolsDataObject {
+  [key: string]: VolumeV1Data;
+}
+
+
+export interface IAllPoolsData {
+  tokenA : String;
+  tokenB : String;
+  poolType : PoolType;
+  apr : BigNumber;
+  futureApr : BigNumber;
+  boostedApr : BigNumber;
+  volume : BigNumber;
+  volumeTokenA : BigNumber;
+  volumeTokenB : BigNumber;
+  tvl : BigNumber;
+  tvlTokenA : BigNumber;
+  tvlTokenB : BigNumber;
+  fees : BigNumber;
+  feesTokenA : BigNumber;
+  feesTokenB : BigNumber;
+  bribeUSD : BigNumber;
+  bribes : Bribes[];
+  isGaugeAvailable: boolean;
+}
+
+export interface IAllPoolsDataResponse {
+  success: boolean;
+  allData: IAllPoolsData[];
+  error?: string;
+}
+
+export interface IMyPoolsData extends IAllPoolsData {
+  isLiquidityAvailable : boolean;
+  isStakeAvailable: boolean;
+}
+
+export interface IMyPoolsDataResponse {
+  success: boolean;
+  allData: IMyPoolsData[];
+  error?: string;
 }

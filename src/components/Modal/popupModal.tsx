@@ -22,7 +22,7 @@ export function PopUpModal(props: IPopUpModalProps) {
   const currentTimeToClose = props.isAnimteToLoader ? TIME_TO_TRANSACTION_CLOSE : TIME_TO_CLOSE;
   const clickedInModal = (e: any) => {
     try {
-      if (e.target.id === "modal_outer") {
+      if (e.target.id === "modal_outer" && props.Name !== "disclaimer") {
         setIsClose(true);
         setTimeout(() => {
           props.onhide && props.onhide();
@@ -52,22 +52,24 @@ export function PopUpModal(props: IPopUpModalProps) {
             : props.isFullSizeOnMobile
             ? "w-full md:w-[calc(100vw_-_38px)]"
             : "w-[calc(100vw_-_38px)]",
-          props.Name === "addBribes" ? "md:rounded-3xl" : "rounded-3xl",
+          props.Name === "addBribes" ? "rounded-3xl" : "rounded-3xl",
           props.className
         )}
       >
-        <div
-          className="absolute right-0 top-[23px] px-6 cursor-pointer hover:opacity-90 hover:scale-90"
-          onClick={() => {
-            setIsClose(true);
-            setTimeout(() => {
+        {props.Name !== "disclaimer" && (
+          <div
+            className="absolute right-0 top-[23px] px-6 cursor-pointer hover:opacity-90 hover:scale-90"
+            onClick={() => {
+              setIsClose(true);
+              //setTimeout(() => {
               props.onhide && props.onhide();
-            }, currentTimeToClose);
-          }}
-        >
-          {/* close btn */}
-          <Image alt={"alt"} src={close} />
-        </div>
+              // }, currentTimeToClose);
+            }}
+          >
+            {/* close btn */}
+            <Image alt={"alt"} src={close} />
+          </div>
+        )}
         {props.headerChild && <div className="font-title3">{props.headerChild}</div>}
         {props.title && <div className="font-title3">{props.title}</div>}
         {props.title === "Confirm" && (

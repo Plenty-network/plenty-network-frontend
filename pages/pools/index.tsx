@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import HeadInfo from "../../src/components/HeadInfo";
 import { CardHeader, PoolsCardHeader } from "../../src/components/Pools/Cardheader";
@@ -16,11 +16,22 @@ import info from "../../src/assets/icon/pools/InfoBlue.svg";
 import close from "../../src/assets/icon/pools/closeBlue.svg";
 import Image from "next/image";
 import { USERADDRESS } from "../../src/constants/localStorage";
+import { NewPool } from "../../src/components/Pools/NewPool";
+import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
+import clsx from "clsx";
+import { getAllPoolsData, getMyPoolsData } from "../../src/api/pools";
+import {
+  IAllPoolsData,
+  IAllPoolsDataResponse,
+  IMyPoolsData,
+  IMyPoolsDataResponse,
+} from "../../src/api/pools/types";
+import { MyPoolTable } from "../../src/components/Pools/MyPoolTable";
 export interface IIndexProps {}
-export enum AMM_TYPE {
+export enum POOL_TYPE {
   VOLATILE = "VOLATILE",
   STABLE = "STABLE",
-  MYPOOS = "MyPools",
+  MYPOOLS = "My pools",
 }
 export default function Pools(props: IIndexProps) {
   const [activeStateTab, setActiveStateTab] = React.useState<PoolsCardHeader | string>(
@@ -29,11 +40,17 @@ export default function Pools(props: IIndexProps) {
 
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.config.tokens);
+
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
-
+  const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
+  const initialPriceCall = React.useRef<boolean>(true);
+  const initialLpPriceCall = React.useRef<boolean>(true);
+  const handleCloseManagePopup = (val: boolean) => {
+    setShowLiquidityModal(val);
+  };
   useEffect(() => {
     if (epochError) {
       dispatch(getEpochData());
@@ -60,16 +77,34 @@ export default function Pools(props: IIndexProps) {
     }
   }, [totalVotingPowerError]);
   useEffect(() => {
-    Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    if (!initialPriceCall.current) {
+      Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    } else {
+      initialPriceCall.current = false;
+    }
   }, [token]);
   useEffect(() => {
-    Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+    if (!initialLpPriceCall.current) {
+      Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+    } else {
+      initialLpPriceCall.current = false;
+    }
   }, [tokenPrices]);
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
   const [searchValue, setSearchValue] = React.useState("");
-  const [isbanner, setisBanner] = React.useState(true);
+  const [isbanner, setisBanner] = React.useState(false);
+  const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
+  const handleNewPool = () => {
+    setShowNewPoolPopup(true);
+  };
+  const [reFetchPool, setReFetchPool] = React.useState(false);
+
+  const [isFetching, setIsFetching] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
+
   return (
     <>
       <SideBarHOC>
@@ -81,8 +116,17 @@ export default function Pools(props: IIndexProps) {
             searchValue={searchValue}
             setSearchValue={setSearchValue}
             isFirst={walletAddress !== null && localStorage.getItem(USERADDRESS) !== walletAddress}
+            onClick={handleNewPool}
+            videoLink="HtDOhje7Y5A"
           />
-          <div className="sticky top-0 z-10">
+          <div className="my-2 mx-3">
+            <InputSearchBox
+              className={clsx("md:hidden")}
+              value={searchValue}
+              onChange={setSearchValue}
+            />
+          </div>
+          <div className="sticky top-[-1px] z-10">
             <CardHeader
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
@@ -91,13 +135,13 @@ export default function Pools(props: IIndexProps) {
               setSearchValue={setSearchValue}
             />
           </div>
-          {isbanner && (
-            <div className="h-[42px] mx-4 md:mx-[23px] px-2 rounded-lg mt-3 flex items-center bg-info-500/[0.1]">
+          {/* {isbanner && (
+            <div className="py-1.5 md:h-[42px] mx-4 md:mx-[23px] px-2 rounded-lg mt-3 flex items-center bg-info-500/[0.1]">
               <p className="relative top-0.5">
                 <Image src={info} />
               </p>
-              <p className="font-body2 text-info-500 px-3 md:w-auto w-[249px]">
-                APR for the first week will be 0%. Emissions begin in the second week.
+              <p className="font-body2 text-info-500 px-3 sm:w-auto w-[280px]">
+                APR for the for the first two epochs will be 0%. Emissions begin on 19th Jan.
               </p>
               <p
                 className="ml-auto relative top-[7px] cursor-pointer"
@@ -106,44 +150,75 @@ export default function Pools(props: IIndexProps) {
                 <Image src={close} />
               </p>
             </div>
-          )}
+          )} */}
           {activeStateTab === PoolsCardHeader.All && (
             <PoolsTable
               className="md:pl-5 md:py-4  pl-2 py-4"
               searchValue={searchValue}
               activeStateTab={activeStateTab}
+              setShowLiquidityModalPopup={setShowLiquidityModal}
               setActiveStateTab={setActiveStateTab}
+              setShowLiquidityModal={handleCloseManagePopup}
+              showLiquidityModal={showLiquidityModal}
+              reFetchPool={reFetchPool}
+              isFetching={isFetching}
+              isError={isError}
             />
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
             <PoolsTable
               className="md:pl-5 md:py-4  pl-2 py-4"
-              poolsFilter={AMM_TYPE.STABLE}
+              poolsFilter={POOL_TYPE.STABLE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
+              setShowLiquidityModalPopup={setShowLiquidityModal}
               setActiveStateTab={setActiveStateTab}
+              setShowLiquidityModal={handleCloseManagePopup}
+              showLiquidityModal={showLiquidityModal}
+              reFetchPool={reFetchPool}
+              isFetching={isFetching}
+              isError={isError}
             />
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
             <PoolsTable
               className="md:pl-5 md:py-4  pl-2 py-4"
-              poolsFilter={AMM_TYPE.VOLATILE}
+              poolsFilter={POOL_TYPE.VOLATILE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
+              setShowLiquidityModalPopup={setShowLiquidityModal}
               setActiveStateTab={setActiveStateTab}
+              setShowLiquidityModal={handleCloseManagePopup}
+              showLiquidityModal={showLiquidityModal}
+              reFetchPool={reFetchPool}
+              isFetching={isFetching}
+              isError={isError}
             />
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
-            <PoolsTable
+            <MyPoolTable
               className="md:pl-5 md:py-4  pl-2 py-4"
-              poolsFilter={AMM_TYPE.MYPOOS}
+              poolsFilter={POOL_TYPE.MYPOOLS}
               isConnectWalletRequired={true}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
+              setShowLiquidityModalPopup={setShowLiquidityModal}
               setActiveStateTab={setActiveStateTab}
+              setShowLiquidityModal={handleCloseManagePopup}
+              showLiquidityModal={showLiquidityModal}
+              reFetchPool={reFetchPool}
+              isFetchingMyPool={isFetchingMyPool}
             />
           )}
-
+          <NewPool
+            show={showNewPoolPopup}
+            setShow={setShowNewPoolPopup}
+            setShowLiquidityModal={handleCloseManagePopup}
+            showLiquidityModal={showLiquidityModal}
+            setReFetchPool={setReFetchPool}
+            reFetchPool={reFetchPool}
+            setShowLiquidityModalPopup={setShowLiquidityModal}
+          />
           {/* poolsTable */}
         </div>
       </SideBarHOC>

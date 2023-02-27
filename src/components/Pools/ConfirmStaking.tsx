@@ -1,11 +1,13 @@
 import clsx from "clsx";
 import Image from "next/image";
+import { BigNumber } from "bignumber.js";
 import "animate.css";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import Button from "../Button/Button";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { IVePLYData } from "../../api/stake/types";
 import { VePLY } from "../DropDown/VePLY";
+import nFormatter, { nFormatterWithLesserNumber } from "../../api/util/helpers";
 
 interface IConfirmStakeLiquidity {
   tokenIn: tokenParameterLiquidity;
@@ -60,14 +62,15 @@ export function ConfirmStakeLiquidity(props: IConfirmStakeLiquidity) {
           <p>
             <div className="mt-4 font-body4 text-text-250">You’re staking</div>
             <div className="mt-1 text-white font-title2">
-              {props.stakeInput ? props.stakeInput : 0} PNLP
+              {props.stakeInput ? nFormatterWithLesserNumber(new BigNumber(props.stakeInput)) : 0}{" "}
+              PNLP
             </div>
           </p>
           <p
             className={clsx(
               "ml-auto",
               props.selectedDropDown.tokenId !== ""
-                ? "block animate__animated animate__fadeInDown animate__faster"
+                ? "block animate__animated animate__fadeInDown animate__faster "
                 : "hidden"
             )}
           >

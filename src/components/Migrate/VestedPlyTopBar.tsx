@@ -11,6 +11,7 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { IVestedPlyTopbarProps } from "./types";
 import PieChartButton from "../LocksPosition/PieChart";
 import { useCountdown } from "../../hooks/useCountDown";
+import nFormatter from "../../api/util/helpers";
 
 export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
   const remainingTime = new BigNumber(props.vestedData.nextClaim).minus(Date.now());
@@ -19,19 +20,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
   );
 
   const remainingPercentage = remainingTime.multipliedBy(100).dividedBy(totalWaitingTime);
-  function nFormatter(num: BigNumber) {
-    if (num.isGreaterThanOrEqualTo(1000000000)) {
-      return num.dividedBy(1000000000).toFixed(2) + "B";
-    }
-    if (num.isGreaterThanOrEqualTo(1000000)) {
-      return num.dividedBy(1000000).toFixed(2) + "M";
-    }
-    if (num.isGreaterThanOrEqualTo(1000)) {
-      return num.dividedBy(1000).toFixed(2) + "K";
-    }
 
-    return num.toFixed(2);
-  }
   const [days, hours, minutes, seconds] = useCountdown(
     props.vestedData?.nextClaim?.isGreaterThan(0)
       ? props.vestedData?.nextClaim?.toNumber()
@@ -40,22 +29,27 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
 
   return (
     <>
-      <div className={clsx("ml-auto h-[72px] py-4 px-5  flex items-center bg-background-200 ", "")}>
-        <span className="border-r border-text-700 h-[30px] w-px mr-6"></span>
+      <div
+        className={clsx(
+          "md:ml-auto h-[68px] py-4 px-3 md:px-5  flex items-center bg-background-200 ",
+          "border-b border-b-borderCommon"
+        )}
+      >
+        <span className="hidden md:block border-r border-text-700 h-[30px] w-px mr-6"></span>
         <p>
           <div className="flex gap-1 items-center">
             <p className="relative top-px">
-              <ToolTip disable={true} id="tooltip8">
-                <Image alt={"alt"} src={info} />
+              <ToolTip id="tooltip8" message="Claimable and locked PLY" position={Position.top}>
+                <Image alt={"alt"} src={info} className="cursor-pointer" />
               </ToolTip>
             </p>
             <Image alt={"alt"} src={ply} />
 
-            <p className="text-white font-body3 ">Vested PLY</p>
+            <p className="text-white font-body1 md:font-body3 ">Vested PLY</p>
 
-            <div className="font-title1-bold text-white ml-2 flex items-end">
+            <div className="font-title2-bold md:font-title1-bold cursor-pointer text-white ml-0.5 md:ml-2 flex items-end">
               {props.vestedData.claimableAmount === undefined ? (
-                <p className=" my-[4px] w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+                <p className=" my-[4px]  w-[60px] h-[24px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
               ) : (
                 <ToolTip
                   position={Position.top}
@@ -70,11 +64,11 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
                 </ToolTip>
               )}
 
-              <p className="font-title2-normal text-border-400 ml-1 mb-px">PLY</p>
+              <p className="font-subtitle5 md:font-title2-normal text-border-400 ml-1 mb-px">PLY</p>
               <p className="relative top-1 ml-1">
                 <Image alt={"alt"} src={lock} />
               </p>
-              <p className="font-body3  text-text-250 ml-1 mb-0.5">
+              <p className="font-body1 md:font-body3 cursor-pointer text-text-250 ml-1 mb-0.5">
                 <ToolTip
                   position={Position.top}
                   message={props.vestedData?.vestedAmount?.toFixed(6)}
@@ -91,12 +85,12 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
             </div>
           </div>
         </p>
-        <p className="ml-6">
+        <p className="ml-1.5 md:ml-6">
           <ToolTip
             position={Position.bottom}
             disable={props.vestedData.isClaimable}
             toolTipChild={
-              <div>
+              <div className="cursor-pointer">
                 <span>{hours} h </span>:<span> {minutes} m </span>:<span> {seconds} s </span>
               </div>
             }
@@ -104,7 +98,7 @@ export function VestedPlyTopbar(props: IVestedPlyTopbarProps) {
           >
             <div
               className={clsx(
-                "cursor-pointer h-[50px] flex items-center justify-center w-[148px] rounded-xl  font-title3-bold ",
+                "cursor-pointer h-[50px] flex items-center justify-center w-[100px] md:w-[148px] rounded-xl  font-title3-bold ",
                 props.vestedData.isClaimable
                   ? "bg-primary-500 text-black"
                   : "bg-blue-200 text-blue-300"

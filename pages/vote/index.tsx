@@ -2,10 +2,12 @@ import { BigNumber } from "bignumber.js";
 import clsx from "clsx";
 import Image from "next/image";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import close from "../../src/assets/icon/pools/closeBlue.svg";
+
+import infoBlue from "../../src/assets/icon/pools/InfoBlue.svg";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { getCompleteUserBalace } from "../../src/api/util/balance";
-import { IAllBalanceResponse } from "../../src/api/util/types";
+import { getBalanceFromTzkt } from "../../src/api/util/balance";
 import { addRemainingVotesDust, getVeNFTsList, votesPageDataWrapper } from "../../src/api/votes";
 import { ELocksState, ISelectedPool, IVeNFTData, IVotePageData } from "../../src/api/votes/types";
 import info from "../../src/assets/icon/swap/info.svg";
@@ -37,6 +39,8 @@ import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/token
 import { setSelectedDropDown, setSelectedDropDownLocal } from "../../src/redux/veNFT";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { setIsLoadingWallet } from "../../src/redux/walletLoading";
+import { tzktExplorer } from "../../src/common/walletconnect";
+import { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -77,13 +81,12 @@ export default function Vote() {
   const [searchValue, setSearchValue] = useState("");
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const amm = useAppSelector((state) => state.config.AMMs);
+  const initialPriceCall = useRef<boolean>(true);
+  const initialLpPriceCall = useRef<boolean>(true);
   const handleCreateLock = () => {
     setShowCreateLockModal(true);
   };
-  const [allBalance, setAllBalance] = useState<{
-    success: boolean;
-    userBalance: { [id: string]: BigNumber };
-  }>({ success: false, userBalance: {} });
+
   const [alreadyVoted, setAlreadyVoted] = useState(false);
   const [castVoteOperation, setCastVoteOperation] = useState(false);
   const [lockOperation, setLockOperation] = useState(false);
@@ -94,6 +97,37 @@ export default function Vote() {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
+  const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
+  useEffect(() => {
+    const updateBalance = async () => {
+      const balancePromises = [];
+
+      if (userAddress) {
+        balancePromises.push(
+          getBalanceFromTzkt(
+            String(token["PLY"]?.address),
+            token["PLY"].tokenId,
+            token["PLY"].standard,
+            userAddress,
+            "PLY"
+          )
+        );
+        const balanceResponse = await Promise.all(balancePromises);
+
+        setUserBalances((prev) => ({
+          ...prev,
+          ...balanceResponse.reduce(
+            (acc, cur) => ({
+              ...acc,
+              [cur.identifier]: cur.balance,
+            }),
+            {}
+          ),
+        }));
+      }
+    };
+    updateBalance();
+  }, [userAddress, token, balanceUpdate]);
   const dateFormat = (dates: number) => {
     const monthNames = [
       "Jan",
@@ -122,7 +156,8 @@ export default function Vote() {
     !showTransactionSubmitModal && setVotes([] as IVotes[]);
     votesPageDataWrapper(
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
-      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
+      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
+      tokenPrice
     ).then((res) => {
       setVoteData(res.allData);
     });
@@ -141,7 +176,8 @@ export default function Vote() {
       sum = 0;
       votesPageDataWrapper(
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
-        selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
+        selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
+        tokenPrice
       ).then((res) => {
         setVoteData(res.allData);
 
@@ -161,7 +197,8 @@ export default function Vote() {
       sum = 0;
       votesPageDataWrapper(
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
-        selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined
+        selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
+        tokenPrice
       ).then((res) => {
         setVoteData(res.allData);
 
@@ -274,23 +311,22 @@ export default function Vote() {
   }, [veNFTlist.data, userAddress]);
 
   useEffect(() => {
-    Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    if (!initialPriceCall.current) {
+      Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    } else {
+      initialPriceCall.current = false;
+    }
   }, [token]);
   useEffect(() => {
-    Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
+    if (!initialLpPriceCall.current) {
+      Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
+    } else {
+      initialLpPriceCall.current = false;
+    }
   }, [tokenPrice]);
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
-  useEffect(() => {
-    if (userAddress) {
-      getCompleteUserBalace(userAddress).then((response: IAllBalanceResponse) => {
-        setAllBalance(response);
-      });
-    } else {
-      setAllBalance({ success: false, userBalance: {} });
-    }
-  }, [userAddress, TOKEN, balanceUpdate]);
 
   const resetAllValues = () => {
     setPlyInput("");
@@ -311,11 +347,14 @@ export default function Vote() {
   };
 
   const handleLockOperation = () => {
-    setContentTransaction(`Locking ${plyInput} PLY`);
+    setContentTransaction(`Locking PLY`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, plyInput);
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(plyInput)).toString()
+    );
     localStorage.setItem(TOKEN_A, dateFormat(lockingEndData.lockingDate * 1000));
     createLock(
       userAddress,
@@ -350,7 +389,7 @@ export default function Vote() {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -430,7 +469,7 @@ export default function Vote() {
               isLoading: true,
               onClick: () => {
                 window.open(
-                  `https://ghostnet.tzkt.io/${response.operationId ? response.operationId : ""}`,
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
                   "_blank"
                 );
               },
@@ -469,7 +508,9 @@ export default function Vote() {
       }
     });
   };
+  const [isbanner, setisBanner] = React.useState(false);
   const handleEpochChange = () => {
+    //@ts-ignore
     dispatch(setSelectedEpoch(currentEpoch));
     setShowEpochPopUp(false);
   };
@@ -482,11 +523,12 @@ export default function Vote() {
             <HeadInfo
               className="px-2 md:px-3"
               title="Vote"
-              toolTipContent=""
+              toolTipContent="Watch How to lock and vote to earn fees and bribes."
               handleCreateLock={handleCreateLock}
               searchValue={searchValue}
               setSearchValue={setSearchValue}
               isFirst={userAddress !== null && localStorage.getItem(USERADDRESS) !== userAddress}
+              videoLink="jjsL5qce3ks"
             />
 
             <div className="">
@@ -504,48 +546,93 @@ export default function Vote() {
                     className=""
                     value={searchValue}
                     onChange={setSearchValue}
-                    width={"md:w-245px xl:w-[260px]"}
+                    width={"w-[180px] md:w-245px xl:w-[260px]"}
                   />
                 </div>
               </div>
               <div className="md:hidden block flex flex-row justify-between items-center px-3 md:px-0 py-2 md:py-0 border-b border-text-800/[0.5]">
-                <div className="font-mobile-400 w-[134px] text-text-50">
-                  Verify your vote percentage and cast vote
-                </div>
+                <div className="flex gap-2">
+                  <div className="font-mobile-400 w-[134px] text-text-50">
+                    Verify your vote percentage and cast vote
+                  </div>
 
-                <div className="border border-muted-50 px-5 bg-muted-300 h-[38px]  flex items-center justify-center rounded-xl">
-                  {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
+                  <div className="font-subtitle1 border border-muted-50 px-5 bg-muted-300 h-[38px]  flex items-center justify-center rounded-xl">
+                    {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "0"}%
+                  </div>
                 </div>
-                <div className="">
-                  {alreadyVoted ? (
-                    <div
-                      className={clsx(
-                        "px-4   h-[38px] flex items-center justify-center rounded-xl ",
-
-                        "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
-                      )}
-                    >
-                      Cast vote
-                    </div>
-                  ) : (sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
-                    (selectedEpoch?.epochNumber
-                      ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                      : true) ? (
-                    <ToolTip
-                      message={
-                        "Percentage allocation of the veNFT’s voting power. A 100% allocation is required to cast a vote."
-                      }
-                      id="tooltip8"
-                      position={Position.top}
-                    >
+                <div className="flex gap-2 items-center">
+                  <div className="">
+                    {alreadyVoted ? (
                       <div
                         className={clsx(
-                          " px-3  h-[38px] ] flex items-center justify-center rounded-xl ",
-                          votes.length !== 0 &&
+                          "px-4   h-[38px] flex items-center justify-center rounded-xl ",
+
+                          "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                        )}
+                      >
+                        Cast vote
+                      </div>
+                    ) : (sumOfVotes ? sumOfVotes !== 100 : totalVotingPower !== 100) &&
+                      (selectedEpoch?.epochNumber
+                        ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                        : true) ? (
+                      <ToolTip
+                        message={
+                          "Percentage allocation of the veNFT’s voting power. A 100% allocation is required to cast a vote."
+                        }
+                        id="tooltip8"
+                        position={Position.top}
+                      >
+                        <div
+                          className={clsx(
+                            "cursor-pointer px-3  h-[38px] ] flex items-center justify-center rounded-xl ",
+                            votes.length !== 0 &&
+                              (selectedEpoch?.epochNumber
+                                ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                                : false) &&
+                              totalVotingPower !== 0 &&
+                              totalVotingPower === 100 &&
+                              Number(selectedDropDown.votingPower) > 0
+                              ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
+                              : "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                          )}
+                          onClick={() =>
+                            votes.length !== 0 &&
                             (selectedEpoch?.epochNumber
                               ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                               : false) &&
                             totalVotingPower !== 0 &&
+                            totalVotingPower === 100 &&
+                            sumOfVotes !== 100 &&
+                            Number(selectedDropDown.votingPower) > 0
+                              ? setShowCastVoteModal(true)
+                              : currentEpoch?.epochNumber !== selectedEpoch?.epochNumber
+                              ? setShowEpochPopUp(true)
+                              : () => {}
+                          }
+                        >
+                          Cast vote
+                        </div>
+                      </ToolTip>
+                    ) : sumOfVotes === 100 ? (
+                      <div
+                        className={clsx(
+                          "md:px-4  px-2  h-[38px]  flex items-center justify-center rounded-xl ",
+
+                          "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
+                        )}
+                      >
+                        Already voted
+                      </div>
+                    ) : (
+                      <div
+                        className={clsx(
+                          "px-3  cursor-pointer  h-[38px]  flex items-center justify-center rounded-xl ",
+
+                          votes.length !== 0 &&
+                            (selectedEpoch?.epochNumber
+                              ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
+                              : false) &&
                             totalVotingPower === 100 &&
                             Number(selectedDropDown.votingPower) > 0
                             ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
@@ -556,7 +643,6 @@ export default function Vote() {
                           (selectedEpoch?.epochNumber
                             ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                             : false) &&
-                          totalVotingPower !== 0 &&
                           totalVotingPower === 100 &&
                           sumOfVotes !== 100 &&
                           Number(selectedDropDown.votingPower) > 0
@@ -568,54 +654,30 @@ export default function Vote() {
                       >
                         Cast vote
                       </div>
-                    </ToolTip>
-                  ) : sumOfVotes === 100 ? (
-                    <div
-                      className={clsx(
-                        "px-4    h-[38px]  flex items-center justify-center rounded-xl ",
+                    )}
+                  </div>
 
-                        "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
-                      )}
-                    >
-                      Already voted
-                    </div>
-                  ) : (
-                    <div
-                      className={clsx(
-                        "px-3    h-[38px]  flex items-center justify-center rounded-xl ",
-
-                        votes.length !== 0 &&
-                          (selectedEpoch?.epochNumber
-                            ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                            : false) &&
-                          totalVotingPower === 100 &&
-                          Number(selectedDropDown.votingPower) > 0
-                          ? "cursor-pointer bg-primary-500 hover:bg-primary-400 text-black font-subtitle6"
-                          : "cursor-not-allowed bg-card-700 text-text-400 font-subtitle4"
-                      )}
-                      onClick={() =>
-                        votes.length !== 0 &&
-                        (selectedEpoch?.epochNumber
-                          ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
-                          : false) &&
-                        totalVotingPower === 100 &&
-                        sumOfVotes !== 100 &&
-                        Number(selectedDropDown.votingPower) > 0
-                          ? setShowCastVoteModal(true)
-                          : currentEpoch?.epochNumber !== selectedEpoch?.epochNumber
-                          ? setShowEpochPopUp(true)
-                          : () => {}
-                      }
-                    >
-                      Cast vote
-                    </div>
-                  )}
-                </div>
-
-                <div onClick={() => setShowCastVotingAllocation(true)}>
-                  <Image alt={"alt"} src={chartMobile} width={"24px"} height={"24px"} />
+                  <div onClick={() => setShowCastVotingAllocation(true)}>
+                    <Image alt={"alt"} src={chartMobile} width={"24px"} height={"24px"} />
+                  </div>
                 </div>
               </div>
+              {isbanner && (
+                <div className="mb-2 h-[58px] md:h-[42px] ml-4 mr-2 px-2 rounded-lg  flex items-center bg-info-500/[0.1]">
+                  <p className="relative top-0.5">
+                    <Image src={infoBlue} />
+                  </p>
+                  <p className="font-body2 text-info-500 px-3 sm:w-auto w-[249px]">
+                    VeNFTs created in this epoch can only be used for voting from the next epoch
+                  </p>
+                  <p
+                    className="ml-auto relative top-[7px] cursor-pointer"
+                    onClick={() => setisBanner(false)}
+                  >
+                    <Image src={close} />
+                  </p>
+                </div>
+              )}
               <VotesTable
                 className="md:pl-5  "
                 searchValue={searchValue}
@@ -663,11 +725,11 @@ export default function Vote() {
                       </div>
                     }
                   >
-                    <Image alt={"alt"} src={info} className="infoIcon " />
+                    <Image alt={"alt"} src={info} className="infoIcon cursor-pointer" />
                   </ToolTip>
                 </span>
                 <span className="ml-1">
-                  {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "00"}%
+                  {sumOfVotes ? sumOfVotes : totalVotingPower ? totalVotingPower : "0"}%
                 </span>
               </div>
               <div className="basis-3/4">
@@ -766,17 +828,17 @@ export default function Vote() {
           </div>
         </div>
       </SideBarHOC>
-      {showCastVotingAllocation && (
-        <AllocationPopup
-          show={showCastVotingAllocation}
-          setShow={setShowCastVotingAllocation}
-          selectedDropDown={selectedDropDown} // veNFT selected
-          epochData={epochData} // epoch data
-          alreadyVoted={sumOfVotes === 100}
-          epochNumber={selectedEpoch ? selectedEpoch.epochNumber : 0}
-          castVoteOperation={castVoteOperation}
-        />
-      )}
+
+      <AllocationPopup
+        show={showCastVotingAllocation}
+        setShow={setShowCastVotingAllocation}
+        selectedDropDown={selectedDropDown} // veNFT selected
+        epochData={epochData} // epoch data
+        alreadyVoted={sumOfVotes === 100}
+        epochNumber={selectedEpoch ? selectedEpoch.epochNumber : 0}
+        castVoteOperation={castVoteOperation}
+      />
+
       {showCastVoteModal && (
         <CastVote
           show={showCastVoteModal}
@@ -804,7 +866,7 @@ export default function Vote() {
           setLockingEndData={setLockingEndData}
           lockingEndData={lockingEndData}
           tokenPrice={tokenPrice}
-          plyBalance={allBalance.userBalance["PLY"]}
+          plyBalance={new BigNumber(userBalances["PLY"])}
         />
       )}
 
@@ -820,9 +882,7 @@ export default function Vote() {
           show={showTransactionSubmitModal}
           setShow={setShowTransactionSubmitModal}
           onBtnClick={
-            transactionId
-              ? () => window.open(`https://ghostnet.tzkt.io/${transactionId}`, "_blank")
-              : null
+            transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }
           content={contentTransaction}
         />

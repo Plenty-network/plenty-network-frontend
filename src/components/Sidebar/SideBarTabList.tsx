@@ -37,7 +37,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
             type={TooltipType.withoutBorder}
           >
             <div
-              className={`flex w-full items-center justify-between h-[50px] ${
+              className={`flex w-full  items-center justify-between h-[50px] ${
                 props.isActive ? "sideNavactive text-white" : "text-text-250"
               } ${
                 !props.isBottomMenu ? "px-6" : ""
@@ -49,7 +49,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
                 {props.iconName && (
                   <Image
                     alt={"alt"}
-                    className={props.isActive ? "opacity-100" : "opacity-40"}
+                    className={props.isActive ? "opacity-100" : "opacity-70"}
                     src={`/assets/icon/${props.iconName}.svg`}
                     height={"20px"}
                     width={"20px"}
@@ -97,7 +97,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
           {props.iconName && (
             <Image
               alt={"alt"}
-              className={props.isActive ? "opacity-100" : "opacity-40"}
+              className={props.isActive ? "opacity-100" : "opacity-70"}
               src={`/assets/icon/${props.iconName}.svg`}
               height={"20px"}
               width={"20px"}

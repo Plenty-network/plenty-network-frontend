@@ -33,6 +33,7 @@ export function Epoch(props: IEpochProps) {
   const indexOfCurrent = epochData.findIndex((data: IEpochListObject) => data.isCurrent === true);
 
   React.useEffect(() => {
+    //@ts-ignore
     dispatch(setSelectedEpoch(currentEpoch));
   }, [epochData[indexOfCurrent]?.epochNumber, currentEpoch?.endTimestamp]);
 
@@ -90,6 +91,7 @@ export function Epoch(props: IEpochProps) {
     return (
       <div
         onClick={() => {
+          //@ts-ignore
           dispatch(setSelectedEpoch(props.epoch));
           setIsDropDownActive(false);
         }}
@@ -111,6 +113,7 @@ export function Epoch(props: IEpochProps) {
   useInterval(() => {
     if (minutes < 0 || seconds < 0) {
       dispatch(getEpochData());
+      //@ts-ignore
       dispatch(setSelectedEpoch(epochData[indexOfCurrent]));
     }
   }, 5000);
@@ -139,7 +142,13 @@ export function Epoch(props: IEpochProps) {
                   </div>
                 }
               >
-                <Image alt={"alt"} src={info} width={"14px"} height={"14px"} />
+                <Image
+                  alt={"alt"}
+                  src={info}
+                  width={"14px"}
+                  height={"14px"}
+                  className="cursor-pointer"
+                />
               </ToolTip>
             </p>
 

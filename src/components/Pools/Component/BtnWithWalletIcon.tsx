@@ -69,7 +69,7 @@ export function BtnwithBoost(props: IWalletBtnWithIconProps) {
         className={`ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround  items-center flex px-1 md:px-3 h-[36px] cursor-pointer`}
       >
         <ToolTip message={` #${props.tokenid} `} id="tooltip8" position={Position.top}>
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer">
             <div className="relative top-1">
               <Image
                 alt={"alt"}

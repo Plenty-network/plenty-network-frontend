@@ -4,15 +4,14 @@ import { useDispatch } from "react-redux";
 import { getPoolsDataForBribes, getUserBribeData } from "../../src/api/bribes";
 import { IPoolsForBribesResponse, IUserBribeData } from "../../src/api/bribes/types";
 import BribesMain from "../../src/components/Bribes";
-import Landing from "../../src/components/Bribes/LandingPage";
-import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
+
 import { useInterval } from "../../src/hooks/useInterval";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getEpochData } from "../../src/redux/epoch/epoch";
 import { AppDispatch, store, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
-import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
+import { fetchWallet } from "../../src/redux/wallet/wallet";
 
 const Dapp: NextPage = () => {
   const userAddress = useAppSelector((state) => state.wallet.address);

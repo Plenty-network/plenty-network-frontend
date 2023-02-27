@@ -2,13 +2,13 @@ import { BigNumber } from 'bignumber.js';
 import { store } from '../../redux';
 import { calculateTokensInWrapper, calculateTokensOutWrapper, loadSwapDataWrapper } from './wrappers';
 import { IBestPathResponse, ISwapDataResponse} from './types'
-import { ITokens } from '../../config/types';
+import { IConfigTokens } from '../../config/types';
 
 
 export const allPaths = async (tokenIn: string, tokenOut: string , multihop : boolean): Promise<{ paths: string[], swapData: ISwapDataResponse[][] }> => {
     try {
         const state = store.getState();
-        const TOKEN = state.config.standard;
+        const TOKEN = state.config.tokens;
         // Making Empty Visited Array
         const visited: { [x: string]: boolean } = {};
 
@@ -35,17 +35,37 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
                 tempPaths.push(paths[i]);
             }
         }
+        tempPaths.sort((a, b) => a.length - b.length);
         paths = tempPaths;
     
-        let swapData: ISwapDataResponse[][] = [[], []];
+        let swapData: ISwapDataResponse[][] = [];
+        // const allSwapDataPromises: Promise<ISwapDataResponse>[][] = [];
+        const preLoadedSwapData: { [tokenPair:string] : ISwapDataResponse } = {};
 
         for (const i in paths) {
             const path = paths[i].split(' ');
+            // const swapDataPromises: Promise<ISwapDataResponse>[] = [];
+            swapData[i] = [];
             for (let j = 0; j < path.length - 1; j++) {
                 // Getting Swap Details
-                swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
+                // swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
+                // swapDataPromises.push(loadSwapDataWrapper(path[j], path[j + 1]));  // Creating array of promises for all pairs in path
+                // Check if swap data exists for the pair and use it if found
+                if(preLoadedSwapData[`${path[j]}_${path[j + 1]}`]) {
+                    swapData[i][j] = preLoadedSwapData[`${path[j]}_${path[j + 1]}`]
+                } else {
+                    swapData[i][j] = await loadSwapDataWrapper(path[j], path[j + 1]);
+                    // Store the swap data for later use if the same pair occurs again
+                    preLoadedSwapData[`${path[j]}_${path[j + 1]}`] = swapData[i][j];
+                }
             }
+            // allSwapDataPromises.push(swapDataPromises); // Creating array of promises for all paths.
         }
+        // Executing array of array of promises
+        // swapData = await Promise.all(
+        //   allSwapDataPromises.map((swapDataPromises) => Promise.all(swapDataPromises))
+        // ); 
+
         return {
             paths,
             swapData
@@ -55,7 +75,7 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
         console.log(error);
         return {
             paths: [],
-            swapData: [[], []]
+            swapData: []
         };
     }
 };
@@ -65,9 +85,10 @@ const allPathHelper = (
     dest: string,
     visited: { [x: string]: boolean },
     psf: string,
-    TOKEN: ITokens,
+    TOKEN: IConfigTokens,
     paths : string[],
 ) => {
+    // console.log(src, dest, TOKEN[src]);
     if (src === dest) {
         paths.push(psf);
     }
@@ -138,7 +159,7 @@ export const computeAllPaths = (
                 if (bestPath) {
                     // update best path
                     if (
-                        tokenInAmountArr[tokenInAmountArr.length - 1] > bestPath.tokenOutAmount
+                        tokenInAmountArr[tokenInAmountArr.length - 1].isGreaterThan(bestPath.tokenOutAmount)
                     ) {
                         bestPath.path = path;
                         bestPath.tokenOutAmount = tokenInAmountArr[tokenInAmountArr.length - 1];
@@ -228,7 +249,7 @@ export const computeAllPathsReverse = (
                 if (bestPath) {
                     // update best path
                     if (
-                        tokenInAmountArr[tokenInAmountArr.length - 1] > bestPath.tokenOutAmount
+                        tokenInAmountArr[tokenInAmountArr.length - 1].isGreaterThan(bestPath.tokenOutAmount)
                     ) {
                         bestPath.path = path;
                         bestPath.tokenOutAmount = tokenInAmountArr[tokenInAmountArr.length - 1];

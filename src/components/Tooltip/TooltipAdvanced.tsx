@@ -18,6 +18,7 @@ export enum TooltipType {
   swapRoute,
   swap,
   withoutBorder,
+  buyCrypto,
 }
 export interface IToolTipProps {
   position?: Position;
@@ -36,7 +37,7 @@ export interface IToolTipProps {
 
 export function ToolTip(props: IToolTipProps) {
   const randomId = generateRandomString(8);
-  if (props.type === TooltipType.swapRoute) {
+  if (props.type === TooltipType.buyCrypto) {
     return (
       <>
         <a className={props.classNameAncorToolTip} data-tip data-for={`tooltip_${randomId}`}>
@@ -44,6 +45,34 @@ export function ToolTip(props: IToolTipProps) {
         </a>
         <ReactTooltip
           disable={props.disable}
+          data-iscapture="true"
+          eventOff="scroll"
+          showInitial={props.isShowInnitially}
+          className={` tooltipCustomCrypto tooltipCustomCrypto-bottom`}
+          arrowColor={
+            isMobile
+              ? "rgba(60, 60, 60,0)"
+              : "linear-gradient(103.38deg, #F43552 -78.24%, #7316FF 95.57%)"
+          }
+          place={props.position ? props.position : "right"}
+          id={`tooltip_${randomId}`}
+          effect="solid"
+        >
+          {props.message && <span className="font-normal">{props.message}</span>}
+          {props.toolTipChild}
+        </ReactTooltip>
+      </>
+    );
+  } else if (props.type === TooltipType.swapRoute) {
+    return (
+      <>
+        <a className={props.classNameAncorToolTip} data-tip data-for={`tooltip_${randomId}`}>
+          {props.children}
+        </a>
+        <ReactTooltip
+          disable={props.disable}
+          data-iscapture="true"
+          eventOff="scroll"
           showInitial={props.isShowInnitially}
           className={` tooltipCustomSwap ${props.classNameToolTipContainer}-${
             props.position ? props.position : "right"
@@ -66,6 +95,8 @@ export function ToolTip(props: IToolTipProps) {
         </a>
         <ReactTooltip
           disable={props.disable}
+          data-iscapture="true"
+          eventOff="scroll"
           showInitial={props.isShowInnitially}
           className={` tooltipCustomWithoutBorder ${props.classNameToolTipContainer}-${
             props.position ? props.position : "right"
@@ -88,6 +119,8 @@ export function ToolTip(props: IToolTipProps) {
         </a>
         <ReactTooltip
           disable={props.disable}
+          data-iscapture="true"
+          eventOff="scroll"
           showInitial={props.isShowInnitially}
           className={` tooltipCustomWithoutArrow ${props.classNameToolTipContainer}-${
             props.position ? props.position : "right"
@@ -110,6 +143,8 @@ export function ToolTip(props: IToolTipProps) {
         </a>
         <ReactTooltip
           disable={props.disable}
+          data-iscapture="true"
+          eventOff="scroll"
           showInitial={props.isShowInnitially}
           className={` tooltipCustom ${props.classNameToolTipContainer}`}
           arrowColor={isMobile ? "rgba(60, 60, 60,0)" : "#341E54"}
@@ -138,6 +173,8 @@ export function ToolTip(props: IToolTipProps) {
         </a>
         <ReactTooltip
           disable={props.disable}
+          data-iscapture="true"
+          eventOff="scroll"
           showInitial={props.isShowInnitially}
           className={clsx(
             " tooltipCustom",
@@ -148,7 +185,7 @@ export function ToolTip(props: IToolTipProps) {
           id={`tooltip_${randomId}`}
           effect="solid"
         >
-          {props.message && <span className="font-body1">{props.message}</span>}
+          {props.message && <span className="font-normal">{props.message}</span>}
           {props.toolTipChild}
         </ReactTooltip>
       </>
@@ -162,6 +199,8 @@ export function ToolTip(props: IToolTipProps) {
       </a>
       <ReactTooltip
         disable={props.disable}
+        data-iscapture="true"
+        eventOff="scroll"
         showInitial={props.isShowInnitially}
         className={clsx(
           " tooltipCustom",
@@ -172,7 +211,7 @@ export function ToolTip(props: IToolTipProps) {
         id={`tooltip_${randomId}`}
         effect="solid"
       >
-        {props.message && <span className="font-body1">{props.message}</span>}
+        {props.message && <span className="font-normal">{props.message}</span>}
         {props.toolTipChild}
       </ReactTooltip>
     </>

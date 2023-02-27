@@ -1,8 +1,9 @@
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { BigNumber } from "bignumber.js";
 import { getDexAddress } from "../api/util/fetchConfig";
+import { getBatchOperationsWithLimits } from "../api/util/operations";
 import { dappClient } from "../common/walletconnect";
-import { TokenVariant } from "../config/types";
+import { TokenStandard } from "../config/types";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
@@ -48,7 +49,7 @@ export const addBribe = async (
     if (dexContractAddress === "false") {
       throw new Error("AMM does not exist for the selected pair.");
     }
-    const bribeAddress: string | undefined = AMM[dexContractAddress].bribeAddress;
+    const bribeAddress: string | undefined = AMM[dexContractAddress].bribe;
     if (bribeAddress === undefined) {
       throw new Error("Bribe does not exist for the selected pair.");
     }
@@ -78,7 +79,7 @@ export const addBribe = async (
 
     const allBatchOperations: WalletParamsWithKind[] = [];
 
-    if (bribeToken.variant === TokenVariant.TEZ) {
+    if (bribeToken.standard === TokenStandard.TEZ) {
       epochNumbers.forEach((epoch) => {
         allBatchOperations.push({
           kind: OpKind.TRANSACTION,
@@ -90,7 +91,7 @@ export const addBribe = async (
             }),
         });
       });
-    } else if (bribeToken.variant === TokenVariant.FA12) {
+    } else if (bribeToken.standard === TokenStandard.FA12) {
       if (bribeTokenContractInstance === undefined) {
         throw new Error("Failed to create token instance.");
       }
@@ -114,7 +115,7 @@ export const addBribe = async (
             .toTransferParams(),
         });
       });
-    } else if (bribeToken.variant === TokenVariant.FA2) {
+    } else if (bribeToken.standard === TokenStandard.FA2) {
       if (bribeTokenContractInstance === undefined) {
         throw new Error("Failed to create token instance.");
       }
@@ -167,7 +168,8 @@ export const addBribe = async (
       );
     }
 
-    const batch = Tezos.wallet.batch(allBatchOperations);
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOperation = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
