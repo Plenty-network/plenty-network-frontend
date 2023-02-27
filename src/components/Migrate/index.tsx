@@ -122,7 +122,7 @@ function Migrate(props: IMigrateProps) {
       setSecondTokenAmount("");
       setExchangeRes({} as IMigrateExchange);
     } else {
-      setFirstTokenAmount(input.toString());
+      setFirstTokenAmount(input.toString().trim());
       const res = getMigrateExchangeAmount(
         new BigNumber(input),
         tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP

@@ -199,7 +199,7 @@ function NewPoolMain(props: ILiquidityProps) {
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
 
-      props.setSecondTokenAmount(input);
+      props.setSecondTokenAmount(input.toString().trim());
     }
   };
   const onClickAmount = () => {
@@ -268,7 +268,7 @@ function NewPoolMain(props: ILiquidityProps) {
                     <input
                       type="text"
                       className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%] placeholder:text-text-400"
-                      value={fromExponential(props.firstTokenAmount)}
+                      value={fromExponential(props.firstTokenAmount).toString().trim()}
                       placeholder="0.0"
                       onChange={(e) => handleLiquidityInput(e.target.value, "tokenIn")}
                     />
