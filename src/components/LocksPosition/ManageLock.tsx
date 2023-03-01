@@ -107,7 +107,7 @@ function ManageLock(props: IManageLockProps) {
 
       return;
     } else {
-      props.setUpdatedPlyVoteValue(input.toString());
+      props.setUpdatedPlyVoteValue(input.toString().trim());
       if (Number(props.lockingEndData.lockingDate) > 0) {
         const res = estimateVotingPower(
           new BigNumber(Number(props.updatedPlyVoteValue) + Number(props.manageData.baseValue)),
