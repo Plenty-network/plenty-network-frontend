@@ -33,6 +33,7 @@ import Config from "../../config/config";
 import { FIRST_TOKEN_AMOUNT, TOKEN_A } from "../../constants/localStorage";
 import { IAllTokensBalanceResponse } from "../../api/util/types";
 import { tzktExplorer } from "../../common/walletconnect";
+import { nFormatterWithLesserNumber } from "../../api/util/helpers";
 
 interface IMigrateProps {
   allBalance: {
@@ -122,7 +123,7 @@ function Migrate(props: IMigrateProps) {
       setSecondTokenAmount("");
       setExchangeRes({} as IMigrateExchange);
     } else {
-      setFirstTokenAmount(input.toString());
+      setFirstTokenAmount(input.toString().trim());
       const res = getMigrateExchangeAmount(
         new BigNumber(input),
         tokenIn.name === "PLENTY" ? MigrateToken.PLENTY : MigrateToken.WRAP
@@ -365,7 +366,7 @@ function Migrate(props: IMigrateProps) {
                 {exchangeRes.vestedAmount ? (
                   <>
                     <span className="text-white mr-1">
-                      + {exchangeRes?.vestedAmount?.toFixed(2)} PLY
+                      + {nFormatterWithLesserNumber(exchangeRes?.vestedAmount)} PLY
                     </span>{" "}
                     vested <span className="md:block hidden ml-1">for upto 05-Jan-2025</span>
                     {/* <span className="md:hidden relative top-1">

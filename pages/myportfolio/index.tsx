@@ -1370,7 +1370,7 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimALLEpoch = () => {
-    setContentTransaction(`Claim lock rewards for <Epoch ${epochClaim}`);
+    setContentTransaction(`Claim lock rewards for Epoch ${epochClaim}`);
     setClaimState(EClaimAllState.EPOCH);
     setShowClaimPly(false);
     setShowClaimPlyInd(false);
@@ -1385,7 +1385,7 @@ function MyPortfolio(props: any) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Claim lock rewards for <Epoch ${localStorage.getItem(CLAIM)}`,
+        trailingText: `Claim lock rewards for Epoch ${localStorage.getItem(CLAIM)}`,
         linkText: "View in Explorer",
         isLoading: true,
 
@@ -1401,7 +1401,7 @@ function MyPortfolio(props: any) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Claim lock rewards for <Epoch ${localStorage.getItem(CLAIM)}`,
+              trailingText: `Claim lock rewards for Epoch ${localStorage.getItem(CLAIM)}`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -1439,7 +1439,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Claim lock rewards for <Epoch ${localStorage.getItem(CLAIM)}`,
+              trailingText: `Claim lock rewards for Epoch ${localStorage.getItem(CLAIM)}`,
               linkText: "",
               isLoading: true,
             })
