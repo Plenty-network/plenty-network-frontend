@@ -68,7 +68,7 @@ function AddBribes(props: IAddBribes) {
     if (input === "" || isNaN(Number(input))) {
       props.setBribeInputValue("");
     } else {
-      props.setBribeInputValue(input.toString());
+      props.setBribeInputValue(input.toString().trim());
     }
   };
   function nFormatter(num: BigNumber) {
@@ -370,7 +370,7 @@ function AddBribes(props: IAddBribes) {
                             )}
                             placeholder="0.0"
                             lang="en"
-                            onChange={(e) => props.setBribeInputValue(e.target.value)}
+                            onChange={(e) => props.setBribeInputValue(e.target.value.trim())}
                             value={fromExponential(props.bribeInputValue)}
                             onFocus={() => setIsFirstInputFocus(true)}
                             onBlur={() => setIsFirstInputFocus(false)}

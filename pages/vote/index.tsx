@@ -544,7 +544,7 @@ export default function Vote() {
                 <div className="ml-auto ">
                   <InputSearchBox
                     className=""
-                    value={searchValue}
+                    value={searchValue.toString().trim()}
                     onChange={setSearchValue}
                     width={"w-[180px] md:w-245px xl:w-[260px]"}
                   />

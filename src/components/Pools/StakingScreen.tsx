@@ -177,7 +177,7 @@ export function Staking(props: IStakingProps) {
           )} token cant be greater than ${props.lpToken?.decimals} decimals`
         );
       } else {
-        props.setStakeInput(input);
+        props.setStakeInput(input.toString().trim());
       }
     }
   };
@@ -421,7 +421,7 @@ export function Unstaking(props: IUnstakingProps) {
         new BigNumber(decimal).isGreaterThan(props.lpToken?.decimals)
       ) {
       } else {
-        props.setUnStakeInput(input);
+        props.setUnStakeInput(input.toString().trim());
       }
     }
   };
