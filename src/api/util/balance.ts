@@ -1,6 +1,7 @@
 import { TezosMessageUtils, TezosParameterFormat } from "conseiljs";
 import axios from "axios";
 import {
+  PROMISE_ALL_CONCURRENCY_LIMIT,
   type1MapIds,
   type2MapIds,
   type3MapIds,
@@ -28,6 +29,7 @@ import {
   getTzktTokenData,
 } from "./storageProvider";
 import { gaugeStorageType } from "../rewards/data";
+import pLimit from "p-limit";
 
 /**
  * Returns packed key (expr...) which will help to fetch user specific data from bigmap directly using rpc.
@@ -411,18 +413,22 @@ export const getAllTokensBalanceFromTzkt = async (
 ): Promise<IAllTokensBalanceResponse> => {
   try {
     const allTokensBalances: IAllTokensBalance = {};
+    // Only 5 promises will run at a time
+    const limit = pLimit(PROMISE_ALL_CONCURRENCY_LIMIT);
     const allTokensBalanceResponse = await Promise.all(
       tokens.map((token) => {
         if (!token.address && token.standard === TokenStandard.TEZ) {
           // Get the XTZ balance from wallet as it's a native token to TEZOS
-          return getTezBalance(userTezosAddress);
+          return limit(() => getTezBalance(userTezosAddress));
         } else {
-          return getBalanceFromTzkt(
-            token.address as string,
-            token.tokenId,
-            token.standard,
-            userTezosAddress,
-            token.symbol
+          return limit(() =>
+            getBalanceFromTzkt(
+              token.address as string,
+              token.tokenId,
+              token.standard,
+              userTezosAddress,
+              token.symbol
+            )
           );
         }
       })
