@@ -413,7 +413,7 @@ export const getAllTokensBalanceFromTzkt = async (
 ): Promise<IAllTokensBalanceResponse> => {
   try {
     const allTokensBalances: IAllTokensBalance = {};
-    // Only 5 promises will run at a time
+    // All promises concurrency is set to 8 for now.
     const limit = pLimit(PROMISE_ALL_CONCURRENCY_LIMIT);
     const allTokensBalanceResponse = await Promise.all(
       tokens.map((token) => {
