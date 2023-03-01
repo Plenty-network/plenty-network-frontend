@@ -96,7 +96,7 @@ function CreateLock(props: ICreateLockProps) {
 
       return;
     } else {
-      props.setPlyInput(input.toString());
+      props.setPlyInput(input.toString().trim());
       if (Number(props.lockingEndData.lockingDate) > 0) {
         const res = estimateVotingPower(
           new BigNumber(props.plyInput),

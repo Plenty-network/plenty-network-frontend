@@ -288,7 +288,7 @@ function Swap(props: ISwapProps) {
         isLoadingfirst: false,
       };
     } else if (Number(input) === 0) {
-      setFirstTokenAmount(input);
+      setFirstTokenAmount(input.toString().trim());
 
       routeDetails.current = {
         minimumOut: new BigNumber(0),
@@ -305,16 +305,16 @@ function Swap(props: ISwapProps) {
         isLoadingSecond: false,
         isLoadingfirst: false,
       };
-      setSecondTokenAmount(input);
+      setSecondTokenAmount(input.toString().trim());
     } else {
       if (tokenType === "tokenIn") {
-        setFirstTokenAmount(input);
+        setFirstTokenAmount(input.toString().trim());
         const decimal = new BigNumber(input).decimalPlaces();
 
         if (
           input !== null &&
           decimal !== null &&
-          new BigNumber(decimal).isGreaterThan(tokens[tokenIn.name].decimals)
+          new BigNumber(decimal).isGreaterThan(tokens[tokenIn.name]?.decimals)
         ) {
           flag = 0;
           setErrorMessage(
@@ -360,11 +360,11 @@ function Swap(props: ISwapProps) {
           }
 
           setSecondTokenAmount(
-            res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString()
+            res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString().trim()
           );
         }
       } else if (tokenType === "tokenOut") {
-        setSecondTokenAmount(input.toString());
+        setSecondTokenAmount(input.toString().trim());
         const decimal = new BigNumber(input).decimalPlaces();
 
         if (
@@ -413,7 +413,9 @@ function Swap(props: ISwapProps) {
             flag = 0;
             setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY);
           }
-          setFirstTokenAmount(res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString());
+          setFirstTokenAmount(
+            res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString().trim()
+          );
         }
       }
     }

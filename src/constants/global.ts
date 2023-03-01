@@ -69,3 +69,4 @@ export const POOLS_PAGE_LIMIT: number = 10;
 export const TWEET_CHARACTER_LIMIT: number = 280;
 export const GAS_LIMIT_EXCESS: BigNumber = new BigNumber(30).dividedBy(100);
 export const STORAGE_LIMIT_EXCESS: BigNumber = new BigNumber(50).dividedBy(100);
+export const PROMISE_ALL_CONCURRENCY_LIMIT: number = 8;
