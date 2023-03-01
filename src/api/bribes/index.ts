@@ -175,7 +175,7 @@ export const getUserBribeData = async (
        const epochData = res.epochData as IEpochData;
 
        const poolsResponse = await axios.get(
-         `${Config.PLY_INDEXER[connectedNetwork]}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
+         `${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
        );
        poolsData = poolsResponse.data;
      } else {
