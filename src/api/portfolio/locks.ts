@@ -207,6 +207,11 @@ export const getAllLocksRewardsData = async (
             tokenPrices,
             TOKENS
           );
+          // If fees is not claimable and bribes data is empty after filtering out <0.1$ values,
+          // then move to next iteration
+          if(!isFeeClaimable(voteData) && bribesValueAndData.bribesData.length <= 0) {
+            continue;
+          }
           const feesValueAndData: IFeesValueAndData = getFeesData(
             voteData.fee,
             voteData.feeClaimed,
