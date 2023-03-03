@@ -35,8 +35,22 @@ const MainMenu: Array<ISingleSideBarProps> = [
   {
     name: "Pools",
     iconName: "pools",
-    pathName: "/pools",
-    activePathName: "/pools",
+    // pathName: "/pools",
+    // activePathName: "/pools",
+    subMenu: [
+      {
+        name: "poolsv2",
+        iconName: "pools",
+        pathName: "/pools",
+        activePathName: "/pools",
+      },
+      {
+        name: "poolsv3",
+        iconName: "pools",
+        pathName: "/pools",
+        activePathName: "/pools",
+      },
+    ],
   },
   {
     name: "Vote",
