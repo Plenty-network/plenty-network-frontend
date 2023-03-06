@@ -57,7 +57,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
         new BigNumber(decimal).isGreaterThan(tokens[props.tokenIn.name].decimals)
       ) {
       } else {
-        props.setFirstTokenAmount(input);
+        props.setFirstTokenAmount(input.toString().trim());
       }
       const res = estimateOtherTokenAmount(
         input.toString(),
@@ -65,7 +65,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
         props.swapData.tokenOutSupply as BigNumber,
         props.tokenOut.symbol
       );
-      props.setSecondTokenAmount(res.otherTokenAmount);
+      props.setSecondTokenAmount(res.otherTokenAmount.toString().trim());
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
 
@@ -75,7 +75,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
         new BigNumber(decimal).isGreaterThan(tokens[props.tokenOut.name].decimals)
       ) {
       } else {
-        props.setSecondTokenAmount(input);
+        props.setSecondTokenAmount(input.toString().trim());
       }
 
       const res = estimateOtherTokenAmount(
@@ -84,7 +84,7 @@ function AddLiquidity(props: IAddLiquidityProps) {
         props.swapData.tokenInSupply as BigNumber,
         props.tokenIn.symbol
       );
-      props.setFirstTokenAmount(res.otherTokenAmount);
+      props.setFirstTokenAmount(res.otherTokenAmount.toString().trim());
     }
   };
 

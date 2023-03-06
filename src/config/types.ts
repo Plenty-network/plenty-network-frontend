@@ -39,7 +39,7 @@ export interface IConfig {
   VOTER: { mainnet: string; testnet: string };
   VOTE_ESCROW: { mainnet: string; testnet: string };
   VE_INDEXER: { mainnet: string; testnet: string };
-  PLY_INDEXER: { mainnet: string; testnet: string };
+  ANALYTICS_INDEXER: { mainnet: string; testnet: string };
   PLY_TOKEN: { mainnet: string; testnet: string };
   FACTORY: { mainnet: string; testnet: string };
   TEZ_DEPLOYER: { mainnet: string; testnet: string };

@@ -78,7 +78,8 @@ export const calculateTokensOutWrapper = (
         tokenOutSupply,
         Exchangefee,
         slippage,
-        tokenOut
+        tokenOut,
+        type
       );
     } else {
       if (tokenIn === "XTZ" && tokenOut === "CTez" && target) {
@@ -392,7 +393,7 @@ export const topTokensList = async (): Promise<{
   topTokens: { [id: string]: number };
 }> => {
   try {
-    const tokenTvlResponse = await axios.get(`${Config.PLY_INDEXER[connectedNetwork]}analytics/tokens`);
+    const tokenTvlResponse = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}analytics/tokens`);
     const tokenTvl = tokenTvlResponse.data;
     const topTokens: { [id: string]: number } = {};
 

@@ -40,7 +40,7 @@ export const poolsDataWrapperV1 = async (
 
     const [poolsResponse, analyticsResponse] = await Promise.all([
       axios.get(`${Config.VE_INDEXER[connectedNetwork]}pools`),
-      axios.get(`${Config.PLY_INDEXER[connectedNetwork]}ve/pools`),
+      axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/pools`),
     ]);
 
     const poolsData: VolumeV1Data[] = poolsResponse.data;
@@ -204,7 +204,7 @@ export const poolsDataWrapper = async (
 
     const [poolsResponse, analyticsResponse] = await Promise.all([
       axios.get(`${Config.VE_INDEXER[connectedNetwork]}pools`),
-      axios.get(`${Config.PLY_INDEXER[connectedNetwork]}ve/pools`),
+      axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/pools`),
     ]);
 
     const poolsData: VolumeV1Data[] = poolsResponse.data;
@@ -336,7 +336,7 @@ export const getAllPoolsData = async (
 
     const [poolsResponse, analyticsResponse] = await Promise.all([
       axios.get(`${Config.VE_INDEXER[connectedNetwork]}pools`),
-      axios.get(`${Config.PLY_INDEXER[connectedNetwork]}ve/pools`),
+      axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/pools`),
     ]);
 
     const poolsData: VolumeV1Data[] = poolsResponse.data;
@@ -486,7 +486,7 @@ export const getMyPoolsData = async (
     const [poolsResponse, analyticsResponse, positionsResponse, nonVePositionsResponse] =
       await Promise.all([
         axios.get(`${Config.VE_INDEXER[connectedNetwork]}pools`),
-        axios.get(`${Config.PLY_INDEXER[connectedNetwork]}ve/pools`),
+        axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/pools`),
         axios.get(`${Config.VE_INDEXER[connectedNetwork]}positions?address=${userTezosAddress}`),
         getMyNonVEPoolsData(userTezosAddress),
       ]);

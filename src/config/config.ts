@@ -3,10 +3,6 @@ import { NetworkType } from "@airgap/beacon-types";
 
 const Config: IConfig = {
   NAME: "Plenty Network",
-  // STANDARD_CONFIG : 'https://config.plenty.network/v1/config/token?type=standard' ,
-  // LP_CONFIG : "https://config.plenty.network/v1/config/token?type=lp",
-  // TOKENS_CONFIG : "https://config.plenty.network/v1/config/token",
-  // AMM_CONFIG : 'https://config.plenty.network/v1/config/amm' ,
   API: {
     url: "https://api.coingecko.com/api/v3/coins/tezos?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false",
     API_KEY: "4824FE50-DB6E-4316-B099-72283C964891",
@@ -18,7 +14,7 @@ const Config: IConfig = {
   },
   TZKT_NODES: {
     mainnet: process.env.NEXT_PUBLIC_TZKT_MAINNET || "https://api.tzkt.io/",
-    testnet: "https://api.ghostnet.tzkt.io/",//process.env.NEXT_PUBLIC_TZKT_GHOSTNET || "https://api.ghostnet.tzkt.io/",
+    testnet: process.env.NEXT_PUBLIC_TZKT_GHOSTNET || "https://api.ghostnet.tzkt.io/",
   },
   PUBLIC_TZKT_NODES: {
     mainnet: "https://api.tzkt.io/",
@@ -45,7 +41,7 @@ const Config: IConfig = {
     testnet: "KT1UmJmgNvy7sGztaFkr598Lj7JxiWbTFbQp",
   },
   TEZ_DEPLOYER: {
-    mainnet: "",
+    mainnet: "KT1JnpY4fUQ9DurUhb7uCQtKkunLiamgdzyc",
     testnet: "KT1Mr3fLViGYZCztpMUWxdGNSHjA8xPtczVA",
   },
   AIRDROP: {
@@ -55,9 +51,9 @@ const Config: IConfig = {
 
   VE_INDEXER: {
     mainnet: "https://ply-indexer.mainnet.plenty.network/v1/",
-    testnet: "https://ply-indexer.mainnet.plenty.network/v1/",//"https://ply-indexer.ghostnet.plenty.network/v1/",
+    testnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
   },
-  PLY_INDEXER: {
+  ANALYTICS_INDEXER: {
     mainnet: "https://api.analytics.plenty.network/",
     testnet: "http://3.111.147.231:3000/",//"https://analytics-indexer.ghostnet.plenty.network/",
   },
@@ -119,12 +115,12 @@ const Config: IConfig = {
     testnet: {},
   },
   ROUTER: {
-    mainnet: "KT1FNc7k9Exsz4jKp5K16p2B9L2Hfq2QcB2D",
+    mainnet: "KT1Kg1yxbettARbgvBMNtZLT6GkZcZsDdZny",
     testnet: "KT1CWvM4nLoyHBGKkGBKjnPNTNLzoJ9JpAW3",
   },
 
-  NETWORK: "testnet",
-  WALLET_NETWORK: NetworkType.GHOSTNET,
+  NETWORK: "mainnet",
+  WALLET_NETWORK: NetworkType.MAINNET,
   ADMIN_ADDRESS: "KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW",
   BURNER: "tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg",
 

@@ -5,7 +5,7 @@ import { Column, useFilters, usePagination, useSortBy, useTable } from "react-ta
 import { useRouter } from "next/router";
 import { useAppSelector } from "../../redux";
 import { getHeightOfElement } from "../../utils/getHeight";
-import { WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
+import { NoDataError, WalletNotConnected } from "../Pools/Component/ConnectWalletOrNoToken";
 import { Tabs } from "../Pools/ShortCardHeader";
 import { NoSearchResult } from "../Votes/NoSearchResult";
 import TablePagination from "./pagination-action";
@@ -201,8 +201,9 @@ const Table = <D extends object>({
             />
           ) : null}
           {!isFetched ? <SimmerEffect lines={3} /> : null}
-          {isFetched && data.length
-            ? page.map((row: any) => {
+          {isFetched && data.length ? (
+            page.length ? (
+              page.map((row: any) => {
                 prepareRow(row);
                 return (
                   // eslint-disable-next-line react/jsx-key
@@ -246,7 +247,10 @@ const Table = <D extends object>({
                   </tr>
                 );
               })
-            : null}
+            ) : (
+              <NoDataError content={"No data on this selected page"} />
+            )
+          ) : null}
           {isFetched && data.length > 0 && (
             <tr className="h-[60px] mt-2 border border-borderCommon bg-cardBackGround px-5 py-4 rounded-lg  items-center ">
               <TablePagination

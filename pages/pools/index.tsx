@@ -122,7 +122,7 @@ export default function Pools(props: IIndexProps) {
           <div className="my-2 mx-3">
             <InputSearchBox
               className={clsx("md:hidden")}
-              value={searchValue}
+              value={searchValue.toString().trim()}
               onChange={setSearchValue}
             />
           </div>

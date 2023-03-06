@@ -42,7 +42,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
     handleRemoveLiquidityInput(value * Number(props.pnlpBalance));
   };
   const handleRemoveLiquidityInput = async (input: string | number) => {
-    props.setBurnAmount(input);
+    props.setBurnAmount(input.toString().trim());
     if (input == ".") {
       props.setBurnAmount("0.");
 
