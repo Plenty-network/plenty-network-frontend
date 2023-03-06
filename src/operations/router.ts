@@ -21,9 +21,9 @@ export const routerSwap = async (
   caller: string,
   recipent: string,
   amount: BigNumber,
-  transactionSubmitModal: TTransactionSubmitModal,
-  resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
@@ -119,10 +119,10 @@ export const routerSwap = async (
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp = await batch.send();
 
-    resetAllValues();
+    resetAllValues && resetAllValues();
 
-    setShowConfirmTransaction(false);
-    transactionSubmitModal(batchOp.opHash);
+    setShowConfirmTransaction && setShowConfirmTransaction(false);
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }

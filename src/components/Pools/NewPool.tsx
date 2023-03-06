@@ -50,7 +50,6 @@ export function NewPool(props: IManageLiquidityProps) {
   const [firstTokenAmountLiq, setFirstTokenAmountLiq] = React.useState<string | number>("");
   const [secondTokenAmountLiq, setSecondTokenAmountLiq] = React.useState<number | string>("");
 
-  const [isAddLiquidity, setIsAddLiquidity] = useState(true);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
   const [burnAmount, setBurnAmount] = React.useState<string | number>("");
   const [transactionId, setTransactionId] = useState("");
@@ -517,8 +516,6 @@ export function NewPool(props: IManageLiquidityProps) {
                 setFirstTokenAmount={setFirstTokenAmountLiq}
                 tokenIn={tokenIn}
                 tokenOut={tokenOut}
-                setIsAddLiquidity={setIsAddLiquidity}
-                isAddLiquidity={isAddLiquidity}
                 pnlpBalance={pnlpBalance}
                 setBurnAmount={setBurnAmount}
                 burnAmount={burnAmount}
