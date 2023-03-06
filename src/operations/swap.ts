@@ -21,9 +21,9 @@ export const allSwapWrapper = async (
   minimumOut_All: BigNumber[],
   caller: string,
   recipent: string,
-  transactionSubmitModal: TTransactionSubmitModal,
-  resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
@@ -78,9 +78,9 @@ export const directSwapWrapper = async (
   recipent: string,
   tokenInAmount: BigNumber,
   caller: string,
-  transactionSubmitModal: TTransactionSubmitModal,
-  resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
@@ -161,9 +161,9 @@ const swapTokens = async (
   recipent: string,
   tokenInAmount: BigNumber,
   caller: string,
-  transactionSubmitModal: TTransactionSubmitModal,
-  resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
@@ -263,8 +263,8 @@ const swapTokens = async (
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
 
-    transactionSubmitModal(batchOperation.opHash);
-    resetAllValues();
+    transactionSubmitModal && transactionSubmitModal(batchOperation.opHash);
+    resetAllValues && resetAllValues();
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
@@ -294,9 +294,9 @@ async function ctez_to_tez(
   minimumTokenOut: BigNumber,
   recipent: string,
   tokenInAmount: BigNumber,
-  transactionSubmitModal: TTransactionSubmitModal,
-  resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> {
   try {
@@ -363,11 +363,11 @@ async function ctez_to_tez(
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
 
-    transactionSubmitModal(batchOp.opHash);
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    resetAllValues();
+    resetAllValues && resetAllValues();
     await batchOp.confirmation(1);
 
     const status = await batchOp.status();
@@ -395,9 +395,9 @@ async function tez_to_ctez(
   minimumTokenOut: BigNumber,
   recipent: string,
   tokenInAmount: BigNumber,
-  transactionSubmitModal: TTransactionSubmitModal,
-  resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> {
   try {
@@ -443,8 +443,8 @@ async function tez_to_ctez(
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
 
-    transactionSubmitModal(batchOp.opHash);
-    resetAllValues();
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
+    resetAllValues && resetAllValues();
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
@@ -475,9 +475,9 @@ const swapTezPairs = async (
   recipent: string,
   tokenInAmount: BigNumber,
   caller: string,
-  transactionSubmitModal: TTransactionSubmitModal,
-  resetAllValues: TResetAllValues,
-  setShowConfirmTransaction: TSetShowConfirmTransaction,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
@@ -602,8 +602,8 @@ const swapTezPairs = async (
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
 
-    transactionSubmitModal(batchOperation.opHash);
-    resetAllValues();
+    transactionSubmitModal && transactionSubmitModal(batchOperation.opHash);
+    resetAllValues && resetAllValues();
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
