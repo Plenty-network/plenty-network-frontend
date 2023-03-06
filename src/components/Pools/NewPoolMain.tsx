@@ -49,8 +49,6 @@ interface ILiquidityProps {
   tokenOut: tokenParameterLiquidity;
   userBalances: IAllTokensBalance;
   setShowConfirmPool: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsAddLiquidity: React.Dispatch<React.SetStateAction<boolean>>;
-  isAddLiquidity: boolean;
   pnlpBalance: string;
   setBurnAmount: React.Dispatch<React.SetStateAction<string | number>>;
   burnAmount: string | number;
@@ -93,6 +91,12 @@ function NewPoolMain(props: ILiquidityProps) {
   );
   const [isExist, setIsExist] = useState(false);
   const [isGauge, setIsGauge] = useState(false);
+  const [showNewPoolsManage, setShowNewPoolsManage] = useState<boolean>(false);
+  
+  const handleNewPoolsManagePopup = (val: boolean) => {
+    setShowNewPoolsManage(val);
+  };
+
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(props.tokenIn, "symbol") &&
@@ -490,23 +494,23 @@ function NewPoolMain(props: ILiquidityProps) {
           </p>
           <p
             className="ml-auto relative top-[0px] bg-info-500/[0.1] text-info-500 cursor-pointer font-body2 rounded-[6px] px-3 py-2 h-[34px]"
-            onClick={() => props.setShowLiquidityModal(true)}
+            onClick={() => setShowNewPoolsManage(true)}
           >
             Manage
           </p>
         </div>
       )}
       <div className="">{AddButton}</div>
-      {props.showLiquidityModal && (
+      {showNewPoolsManage && (
         <ManageLiquidity
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}
-          closeFn={props.setShowLiquidityModal}
-          showLiquidityModal={props.showLiquidityModal}
+          closeFn={handleNewPoolsManagePopup}
+          showLiquidityModal={showNewPoolsManage}
           setActiveState={setActiveState}
           activeState={activeState}
           isGaugeAvailable={isExist && isGauge}
-          setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
+          setShowLiquidityModalPopup={setShowNewPoolsManage}
         />
       )}
     </>
