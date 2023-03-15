@@ -9,35 +9,15 @@ import { IGaugeExistsResponse } from './types';
 
 export const fetchConfig = async (): Promise<IContractsConfig> => {
   try {
-    // const tokensUrl: string = `${Config.TOKENS_CONFIG}${
-    //   connectedNetwork === "testnet" ? "?network=testnet" : ""
-    // }`;
-    // const ammsUrl: string = `${Config.AMM_CONFIG}${
-    //   connectedNetwork === "testnet" ? "?network=testnet" : ""
-    // }`;
-    // const lpTokensUrl: string = `${Config.LP_CONFIG}${
-    //   connectedNetwork === "testnet" ? "&network=testnet" : ""
-    // }`;
-    // const standardTokensUrl: string = `${Config.STANDARD_CONFIG}${
-    //   connectedNetwork === "testnet" ? "&network=testnet" : ""
-    // }`;
     const newTokensUrl: string = Config.CONFIG_LINKS[connectedNetwork].TOKEN;
     const newPoolsUrl: string = Config.CONFIG_LINKS[connectedNetwork].POOL;
     const configResult = await Promise.all([
-      // axios.get(tokensUrl),
-      // axios.get(lpTokensUrl),
-      // axios.get(standardTokensUrl),
-      // axios.get(ammsUrl),
       axios.get(newTokensUrl),
       axios.get(newPoolsUrl),
     ]);
     if (configResult.find((result) => result.status !== 200)) {
       throw new Error("Failed to fetch the config from server.");
     } else {
-      // const TOKEN: ITokens = configResult[0].data;
-      // const LP: ITokens = configResult[1].data;
-      // const STANDARD: ITokens = configResult[2].data;
-      // const AMM: IAmmContracts = configResult[3].data;
       // Create a valid https url for each token if thumbnail uri available.
       const tokenData: IConfigTokens = configResult[0].data;
       for(const token of Object.keys(tokenData)) {
@@ -49,10 +29,6 @@ export const fetchConfig = async (): Promise<IContractsConfig> => {
       const TOKEN: IConfigTokens = tokenData;
       const AMM: IConfigPools = configResult[1].data;
       return {
-        // TOKEN,
-        // LP,
-        // STANDARD,
-        // AMM,
         TOKEN,
         AMM,
       };
