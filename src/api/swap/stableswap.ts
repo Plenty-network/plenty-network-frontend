@@ -83,7 +83,7 @@ export const calculateTokensOutTezCtez = (
   tokenIn: string
 ): ICalculateTokenResponse => {
 
-  const feePerc = new BigNumber(0.1); //TODO: Update after any changes in contract
+  const feePerc = new BigNumber(100).dividedBy(pairFeeDenom);
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(6));
   tezSupply = tezSupply.multipliedBy(new BigNumber(10).pow(6));
   ctezSupply = ctezSupply.multipliedBy(new BigNumber(10).pow(6));
@@ -202,7 +202,7 @@ export const calculateTokensInTezCtez = (
   tokenIn: string
 ): ICalculateTokenResponse => {
 
-  const feePerc = new BigNumber(0.05);
+  const feePerc = new BigNumber(100).dividedBy(pairFeeDenom);
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(6));
   tezSupply = tezSupply.multipliedBy(new BigNumber(10).pow(6));
   ctezSupply = ctezSupply.multipliedBy(new BigNumber(10).pow(6));
@@ -394,7 +394,7 @@ export const calculateTokensOutGeneralStable = (
 ): ICalculateTokenResponse => {
   const state = store.getState();
   const TOKEN = state.config.tokens;
-  const feePerc = new BigNumber(0.05);
+  const feePerc = new BigNumber(100).dividedBy(Exchangefee);
 
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
   tokenInSupply = tokenInSupply.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
@@ -476,7 +476,7 @@ export const calculateTokensInGeneralStable = (
 ): ICalculateTokenResponse => {
   const state = store.getState();
   const TOKEN = state.config.tokens;
-  const feePerc = new BigNumber(0.05);
+  const feePerc = new BigNumber(100).dividedBy(Exchangefee);
 
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
   tokenInSupply = tokenInSupply.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));
