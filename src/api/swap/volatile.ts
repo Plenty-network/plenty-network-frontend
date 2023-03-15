@@ -80,7 +80,7 @@ export const calculateTokenOutputVolatile = (
     const state = store.getState();
     const TOKEN = state.config.tokens;
 
-    const feePerc = new BigNumber(poolType === PoolType.TEZ ? 0.05 : 0.05);
+    const feePerc = exchangeFee.multipliedBy(100);
     let tokenOutAmount = new BigNumber(0);
     tokenOutAmount = new BigNumber(1)
       .minus(exchangeFee)
@@ -158,7 +158,7 @@ export const calculateTokenInputVolatile = (
     const state = store.getState();
     const TOKEN = state.config.tokens;
 
-    const feePerc = new BigNumber(0.05);
+    const feePerc = exchangeFee.multipliedBy(100);
     let tokenOutAmount = new BigNumber(0);
 
     tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals));

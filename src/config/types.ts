@@ -218,6 +218,7 @@ export interface IConfigPool {
   token2Precision?: string;
   gauge?: string;
   bribe?: string;
+  fees?: number;
 }
 
 export interface IConfigPools {
