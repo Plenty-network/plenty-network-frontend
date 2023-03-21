@@ -47,8 +47,8 @@ const MainMenu: Array<ISingleSideBarProps> = [
       {
         name: "poolsv3",
         iconName: "pools",
-        pathName: "/pools",
-        activePathName: "/pools",
+        pathName: "/pools/v3",
+        activePathName: "/pools/v3",
       },
     ],
   },
