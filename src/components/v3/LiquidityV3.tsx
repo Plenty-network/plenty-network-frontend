@@ -68,13 +68,13 @@ function LiquidityV3(props: ILiquidityProps) {
   const AddButton = useMemo(() => {
     if (!walletAddress) {
       return (
-        <Button onClick={connectTempleWallet} color={"primary"}>
+        <Button height="52px" onClick={connectTempleWallet} color={"primary"}>
           Connect wallet
         </Button>
       );
     } else if (Number(props.firstTokenAmount) <= 0 || Number(props.secondTokenAmount) <= 0) {
       return (
-        <Button onClick={() => null} color={"disabled"}>
+        <Button height="52px" onClick={() => null} color={"disabled"}>
           Add
         </Button>
       );
@@ -86,13 +86,13 @@ function LiquidityV3(props: ILiquidityProps) {
           Number(props.userBalances[props.tokenOut.name]))
     ) {
       return (
-        <Button onClick={() => null} color={"disabled"}>
+        <Button height="52px" onClick={() => null} color={"disabled"}>
           Insufficient balance
         </Button>
       );
     } else {
       return (
-        <Button color={"primary"} onClick={handleAddLiquidity}>
+        <Button height="52px" color={"primary"} onClick={handleAddLiquidity}>
           Add
         </Button>
       );
@@ -101,7 +101,7 @@ function LiquidityV3(props: ILiquidityProps) {
 
   return (
     <>
-      <div className="border w-[546px] rounded-2xl border-text-800 bg-card-200 px-[10px] md:px-3.5 pt-3 pb-3  ">
+      <div className="border w-[546px] rounded-2xl border-text-800 bg-card-200 px-[10px] md:px-3.5 pt-5 pb-4  ">
         <div className="flex items-center justify-between flex-row  relative">
           <div>
             {/* <span className="relative ml-2 top-[3px]">
@@ -145,7 +145,7 @@ function LiquidityV3(props: ILiquidityProps) {
         }
       </div>
       <FeeTierMain />
-      <div className="">{AddButton}</div>
+      <div className="mt-2">{AddButton}</div>
     </>
   );
 }
