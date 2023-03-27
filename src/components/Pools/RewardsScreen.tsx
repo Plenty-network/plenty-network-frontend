@@ -39,11 +39,12 @@ export function RewardsScreen(props: IRewardsProps) {
         </Button>
       );
     } else if (
-      (walletAddress &&
+      ((walletAddress &&
         props.tokenInAmount &&
         props.tokenOutAmount &&
         Number(props.tokenInAmount) === 0) ||
-      Number(props.tokenOutAmount) === 0
+        Number(props.tokenOutAmount) === 0) &&
+      Number(props.rewardToken) === 0
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
