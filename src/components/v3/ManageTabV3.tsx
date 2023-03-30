@@ -4,6 +4,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { POOL_TYPE } from "../../../pages/pools";
 import { getPnlpOutputEstimate, getPoolShareForPnlp } from "../../api/liquidity";
+import settings from "../../../src/assets/icon/swap/settings.svg";
 import { ELiquidityProcess } from "../../api/liquidity/types";
 import { getDepositedAmounts, getRewards } from "../../api/rewards";
 import { getStakedData, getVePLYListForUser } from "../../api/stake";
@@ -34,12 +35,13 @@ import { removeLiquidity } from "../../operations/removeLiquidity";
 import { harvestRewards } from "../../operations/rewards";
 import { stakePnlpTokens } from "../../operations/stake";
 import { unstakePnlpTokens } from "../../operations/unstake";
-import { useAppDispatch, useAppSelector } from "../../redux";
+import { AppDispatch, useAppDispatch, useAppSelector } from "../../redux";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
 import ConfirmTransaction from "../ConfirmTransaction";
 import { Flashtype } from "../FlashScreen";
 import Liquidity from "../Liquidity";
+import PositionsPopup from "./Positions";
 import ConfirmAddLiquidity from "../Liquidity/ConfirmAddLiquidity";
 import ConfirmRemoveLiquidity from "../Liquidity/ConfirmRemoveLiquidity";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
@@ -51,6 +53,11 @@ import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
 import TransactionSubmitted from "../TransactionSubmitted";
 import LiquidityV3 from "./LiquidityV3";
 import PriceRangeV3 from "./PriceRange";
+import clsx from "clsx";
+import Button from "../Button/Button";
+import { useDispatch } from "react-redux";
+import { walletConnection } from "../../redux/wallet/wallet";
+import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -62,6 +69,7 @@ export interface IManageLiquidityProps {
   showLiquidityModal?: boolean;
   setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
   filter?: POOL_TYPE | undefined;
+  feeTier: string;
 }
 
 export function ManageTabV3(props: IManageLiquidityProps) {
@@ -71,11 +79,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
 
-  const [screen, setScreen] = React.useState("1");
+  const [screen, setScreen] = React.useState("3");
   const [firstTokenAmountLiq, setFirstTokenAmountLiq] = React.useState<string | number>("");
   const [secondTokenAmountLiq, setSecondTokenAmountLiq] = React.useState<number | string>("");
-
-  const [boost, setBoost] = useState<IStakedDataResponse>();
 
   const [isAddLiquidity, setIsAddLiquidity] = useState(true);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
@@ -107,9 +113,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
 
   const [contentTransaction, setContentTransaction] = useState("");
   const [vePLYOptions, setVePLYOptions] = useState<IVePLYData[]>([]);
-
+  const [settingsShow, setSettingsShow] = useState(false);
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
-
+  const refSettingTab = React.useRef(null);
   useEffect(() => {
     const updateBalance = async () => {
       const balancePromises = [];
@@ -339,12 +345,55 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     // props.setShowLiquidityModalPopup(false);
     props.closeFn(false);
   };
-
+  const handleAddLiquidity = () => {
+    setScreen("2");
+  };
+  const connectTempleWallet = () => {
+    return dispatch(walletConnection());
+  };
+  const AddButton = React.useMemo(() => {
+    if (!walletAddress) {
+      return (
+        <Button height="52px" onClick={connectTempleWallet} color={"primary"}>
+          Connect wallet
+        </Button>
+      );
+    } else if (Number(firstTokenAmountLiq) <= 0 || Number(secondTokenAmountLiq) <= 0) {
+      return (
+        <Button height="52px" onClick={() => null} color={"disabled"}>
+          Add
+        </Button>
+      );
+    } else if (
+      walletAddress &&
+      ((firstTokenAmountLiq && firstTokenAmountLiq > Number(userBalances[props.tokenIn.name])) ||
+        (secondTokenAmountLiq && secondTokenAmountLiq) > Number(userBalances[props.tokenOut.name]))
+    ) {
+      return (
+        <Button height="52px" onClick={() => null} color={"disabled"}>
+          Insufficient balance
+        </Button>
+      );
+    } else {
+      return (
+        <Button height="52px" color={"primary"} onClick={handleAddLiquidity}>
+          Add
+        </Button>
+      );
+    }
+  }, [props]);
+  const [selectedToken, setSelectedToken] = useState({} as tokenParameterLiquidity);
+  useEffect(() => {
+    setSelectedToken(props.tokenIn);
+  }, []);
   return props.showLiquidityModal ? (
     <>
       <PopUpModal
         onhide={closeModal}
-        className="w-[390px] max-w-[390px] sm:w-[972px] sm:max-w-[972px] rounded-none sm:rounded-3xl "
+        className={clsx(
+          screen === "3" ? "sm:w-[820px] sm:max-w-[820px]" : "sm:w-[972px] sm:max-w-[972px]",
+          "w-[390px] max-w-[390px]  rounded-none sm:rounded-3xl "
+        )}
         footerChild={
           <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
             <p className="font-subtitle1 md:text-f16 text-text-150">
@@ -363,22 +412,68 @@ export function ManageTabV3(props: IManageLiquidityProps) {
           </div>
         }
       >
-        {screen === "1" && (
+        {screen === "1" ? (
           <>
-            <div className="flex gap-1">
+            <div className="flex gap-1 items-center">
               <p className="text-white">
                 {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
               </p>
-              <p className="ml-1 relative top-[6px]">
+              <p className="ml-1 relative top-[0px]">
                 <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
               </p>
+              <p className="text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer">
+                Clear All
+              </p>
+              <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
+                <div
+                  className={clsx(
+                    selectedToken.symbol === props.tokenIn.symbol
+                      ? "h-[23px] px-2 py-1 bg-shimmer-200 rounded-lg	"
+                      : "text-text-250 px-2",
+                    "font-subtitle1"
+                  )}
+                  onClick={() => setSelectedToken(props.tokenIn)}
+                >
+                  {props.tokenIn.symbol}
+                </div>
+                <div
+                  className={clsx(
+                    selectedToken.symbol === props.tokenOut.symbol
+                      ? "h-[23px] px-2 py-1 bg-shimmer-200 rounded-lg	"
+                      : "text-text-250 px-2",
+                    "font-subtitle1"
+                  )}
+                  onClick={() => setSelectedToken(props.tokenOut)}
+                >
+                  {props.tokenOut.symbol}
+                </div>
+              </div>
+              <div className="flex items-center justify-between flex-row  relative mr-[48px]">
+                <div
+                  ref={refSettingTab}
+                  className="py-1  px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] "
+                  onClick={() => setSettingsShow(!settingsShow)}
+                >
+                  <Image alt={"alt"} src={settings} height={"20px"} width={"20px"} />
+                  <span className="text-white font-body4 ml-2 relative -top-[3px]">
+                    {slippage ? Number(slippage) : 0.5}%
+                  </span>
+                </div>
+                <TransactionSettingsLiquidity
+                  show={settingsShow}
+                  setSlippage={setSlippage}
+                  slippage={slippage}
+                  setSettingsShow={setSettingsShow}
+                />
+              </div>
             </div>
 
             <div className="flex gap-4 mt-4">
-              <PriceRangeV3 />
+              <PriceRangeV3 tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
               <div className="">
                 <LiquidityV3
                   setScreen={setScreen}
+                  feeTier={props.feeTier}
                   firstTokenAmount={firstTokenAmountLiq}
                   secondTokenAmount={secondTokenAmountLiq}
                   userBalances={userBalances}
@@ -398,7 +493,24 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               </div>
             </div>
           </>
+        ) : (
+          <>
+            <div className="flex gap-1">
+              <p className="text-white">
+                {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
+              </p>
+              <p className="ml-1 relative top-[6px]">
+                <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
+              </p>
+            </div>
+            <PositionsPopup
+              tokenIn={props.tokenIn}
+              tokenOut={props.tokenOut}
+              setScreen={setScreen}
+            />
+          </>
         )}
+        {screen === "1" && <div className="mt-2">{AddButton}</div>}
         {props.activeState === ActiveLiquidity.Liquidity && screen === "2" && (
           <>
             <ConfirmAddLiquidity

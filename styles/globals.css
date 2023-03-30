@@ -645,6 +645,10 @@ input[type='number'] {
     @apply font-medium;
     @apply text-f13;
   }
+  .font-f13-normal {
+    @apply font-normal;
+    @apply text-f13;
+  }
   .font-mobile-f9 {
     @apply font-normal;
     @apply text-f9;

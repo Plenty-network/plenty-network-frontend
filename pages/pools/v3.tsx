@@ -94,7 +94,7 @@ export default function Pools(props: IIndexProps) {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
   const [searchValue, setSearchValue] = React.useState("");
-  const [isbanner, setisBanner] = React.useState(false);
+  const [isbanner, setisBanner] = React.useState(true);
   const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
   const handleNewPool = () => {
     setShowNewPoolPopup(true);
@@ -111,7 +111,7 @@ export default function Pools(props: IIndexProps) {
         <div>
           <HeadInfo
             className="px-2 md:px-3"
-            title="Pools v3"
+            title="Pools"
             toolTipContent="Watch how to add liquidity, stake, and earn PLY. "
             searchValue={searchValue}
             setSearchValue={setSearchValue}
@@ -135,13 +135,13 @@ export default function Pools(props: IIndexProps) {
               setSearchValue={setSearchValue}
             />
           </div>
-          {/* {isbanner && (
+          {isbanner && (
             <div className="py-1.5 md:h-[42px] mx-4 md:mx-[23px] px-2 rounded-lg mt-3 flex items-center bg-info-500/[0.1]">
               <p className="relative top-0.5">
                 <Image src={info} />
               </p>
               <p className="font-body2 text-info-500 px-3 sm:w-auto w-[280px]">
-                APR for the for the first two epochs will be 0%. Emissions begin on 19th Jan.
+                APR for the first week will be 0
               </p>
               <p
                 className="ml-auto relative top-[7px] cursor-pointer"
@@ -150,7 +150,7 @@ export default function Pools(props: IIndexProps) {
                 <Image src={close} />
               </p>
             </div>
-          )} */}
+          )}
           {activeStateTab === PoolsCardHeaderV3.All && (
             <PoolsTableV3
               className="md:pl-5 md:py-4  pl-2 py-4"

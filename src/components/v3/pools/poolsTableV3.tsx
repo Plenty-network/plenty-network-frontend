@@ -30,6 +30,7 @@ import { AprInfoFuture } from "../../Pools/Component/AprFuture";
 import { PoolsTextWithTooltip } from "../../Pools/Component/PoolsText";
 import { ManageLiquidity } from "../../Pools/ManageLiquidity";
 import { ManageTabV3 } from "../ManageTabV3";
+import { Apr } from "./Apr";
 
 export interface IShortCardProps {
   className?: string;
@@ -239,7 +240,7 @@ export function PoolsTableV3(props: IShortCardProps) {
       {
         Header: "Pools",
         id: "pools",
-        columnWidth: "w-[220px]",
+        columnWidth: "w-[290px]",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
@@ -256,7 +257,7 @@ export function PoolsTableV3(props: IShortCardProps) {
             ) : null}
             <div
               className={clsx(
-                "flex gap-1 items-center max-w-[200px]",
+                "flex gap-1 items-center max-w-[270px]",
                 !x.isGaugeAvailable ? "ml-[14px]" : "ml-[34px]"
               )}
             >
@@ -282,7 +283,7 @@ export function PoolsTableV3(props: IShortCardProps) {
                     : getImagesPath(x.tokenB.toString())
                 }
               />
-              <div className="flex flex-col gap-[2px]">
+              <div className="flex items-center ">
                 <span className="md:text-f14 text-f12 text-white ">
                   {tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
@@ -292,7 +293,7 @@ export function PoolsTableV3(props: IShortCardProps) {
                         x.tokenB.toString()
                       )}`}
                 </span>
-                <span className="font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] mt-1">
+                <span className="font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-1">
                   0.05%
                 </span>
               </div>
@@ -303,8 +304,8 @@ export function PoolsTableV3(props: IShortCardProps) {
       {
         Header: "APR",
         id: "apr",
-        columnWidth: "w-[210px]",
-        subText: "current epoch",
+        columnWidth: "w-[150px]",
+        subText: "external",
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         isToolTipEnabled: true,
         canShort: true,
@@ -312,36 +313,18 @@ export function PoolsTableV3(props: IShortCardProps) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
         accessor: (x: any) =>
           x.isGaugeAvailable ? (
-            <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} />
+            <Apr currentApr={x.apr} boostedApr={x.boostedApr} />
           ) : (
             <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
               -
             </div>
           ),
       },
-      {
-        Header: "APR",
-        id: "apr1",
-        columnWidth: "w-[110px]",
-        subText: "next epoch",
-        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
-        isToolTipEnabled: true,
-        canShort: true,
-        showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "futureApr"),
-        accessor: (x: any) =>
-          x.isGaugeAvailable ? (
-            <AprInfoFuture futureApr={x.futureApr} />
-          ) : (
-            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              -
-            </div>
-          ),
-      },
+
       {
         Header: "Volume",
         id: "Volume24h",
-        subText: "24h",
+        subText: "(24h)",
         columnWidth: "w-[129px]",
         isToolTipEnabled: true,
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
@@ -379,7 +362,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         Header: "Fees",
         id: "fees",
         columnWidth: "w-[122px]",
-        subText: "7D",
+        subText: "(7D)",
         tooltipMessage: "Trading fees collected by the pool in the current epoch.",
         isToolTipEnabled: true,
         canShort: true,
@@ -394,25 +377,7 @@ export function PoolsTableV3(props: IShortCardProps) {
           />
         ),
       },
-      {
-        Header: "Bribes",
-        id: "Bribes",
-        canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "bribeUSD"),
-        subText: "current epoch",
-        columnWidth: "w-[123px] pr-2.5",
-        tooltipMessage:
-          "Incentives provided by the protocols to boost the liquidity of their tokens.",
-        isToolTipEnabled: true,
-        accessor: (x) =>
-          x.isGaugeAvailable ? (
-            <BribesPool value={x.bribeUSD} bribesData={x.bribes} />
-          ) : (
-            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              -
-            </div>
-          ),
-      },
+
       {
         Header: "",
         id: "manage",
@@ -484,6 +449,7 @@ export function PoolsTableV3(props: IShortCardProps) {
           showLiquidityModal={props.showLiquidityModal}
           setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
           filter={props.poolsFilter}
+          feeTier={"0.05"}
         />
       )}
       <div className={` overflow-x-auto innerPool  ${props.className}`}>
@@ -495,7 +461,7 @@ export function PoolsTableV3(props: IShortCardProps) {
           tableType={true}
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
-          TableWidth="min-w-[535px] lg:min-w-[1140px]"
+          TableWidth="min-w-[535px] lg:min-w-[750px]"
           NoData={NoData}
           loading={props.isFetching}
         />

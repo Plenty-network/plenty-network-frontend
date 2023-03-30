@@ -1,7 +1,12 @@
+import clsx from "clsx";
 import Image from "next/image";
 import * as React from "react";
 
-interface IFeeTierMainProps {}
+interface IFeeTierMainProps {
+  setSelectedFeeTier: React.Dispatch<React.SetStateAction<string>>;
+  selectedFeeTier: string;
+  feeTier: string;
+}
 function FeeTierMain(props: IFeeTierMainProps) {
   const fee = [
     {
@@ -10,27 +15,42 @@ function FeeTierMain(props: IFeeTierMainProps) {
       selectPercentage: "46",
     },
     {
-      percentage: "0.01",
+      percentage: "0.05",
       text: "Best for many stable pairs",
       selectPercentage: "46",
     },
     {
-      percentage: "0.01",
+      percentage: "0.07",
       text: "Best for many stable pairs",
       selectPercentage: "46",
     },
     {
-      percentage: "0.01",
+      percentage: "0.1",
       text: "Best for many stable pairs",
       selectPercentage: "46",
     },
   ];
   return (
-    <div className="flex gap-[10px] mt-5 items-center justify-center">
+    <div className="flex gap-[10px]  items-center justify-center">
       {fee.map((feeInd) => {
         return (
-          <div className="border w-[127px] rounded-2xl border-text-800 bg-card-200   mb-5 h-[144px] py-[25px] px-4">
-            <div className="font-subtitle4 text-text-250">{feeInd.percentage}% fee tier</div>
+          <div
+            className={clsx(
+              props.selectedFeeTier === feeInd.percentage
+                ? "border-blue-700"
+                : "border-text-800 hover:border-text-400",
+              "border w-[127px] rounded-2xl   bg-card-200   mb-5 h-[128px] py-[12px] px-2 cursor-pointer"
+            )}
+            onClick={() => props.setSelectedFeeTier(feeInd.percentage)}
+          >
+            <div
+              className={clsx(
+                props.selectedFeeTier === feeInd.percentage ? "text-blue-700" : "text-text-250",
+                "font-subtitle4 "
+              )}
+            >
+              {feeInd.percentage}% fee tier
+            </div>
             <div className="mt-1 font-body1 text-text-250">{feeInd.text}</div>
             <div className="mt-[10px]">
               <span className="text-white rounded-xl	bg-shimmer-100 px-2 py-1.5 font-caption2 ">
