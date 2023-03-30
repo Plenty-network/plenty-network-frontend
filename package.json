@@ -23,7 +23,7 @@
     "copy-to-clipboard": "^3.3.2",
     "ethers": "^5.7.2",
     "from-exponential": "^1.1.1",
-    "is-ipfs": "7.0.3",
+    "is-ipfs": "^8.0.1",
     "javascript-time-ago": "^2.5.7",
     "lodash-es": "^4.17.21",
     "lottie-react": "^2.3.1",
