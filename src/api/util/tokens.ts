@@ -1,5 +1,5 @@
 import axios from "axios";
-import * as isIPFS from "is-ipfs";
+// import * as isIPFS from "is-ipfs";
 import { validateContractAddress, ValidationResult } from "@taquito/utils";
 import { getTzktTokenData } from "./storageProvider";
 import { Chain, IConfigToken, TokenStandard } from "../../config/types";
@@ -186,7 +186,7 @@ export const getIconUrl = async (tokenMetadata: any): Promise<string | undefined
     if (isValidIPFSPath(iconUri as string)) {
       const path = getPathFromIPFS(iconUri as string);
       // Check if the path of ipfs url is valid or not
-      if (isIPFS.ipfsPath(`/ipfs/${path as string}`)) {
+      /* if (isIPFS.ipfsPath(`/ipfs/${path as string}`)) {
         const ipfsUri = `${Config.IPFS_LINKS.primary}${path as string}`;
         // Fallback ipfs viewing service if first one fails.
         const fallBackIpfsUri = `${Config.IPFS_LINKS.fallback}${path as string}`;
@@ -198,7 +198,9 @@ export const getIconUrl = async (tokenMetadata: any): Promise<string | undefined
           : undefined;
       } else {
         return undefined;
-      }
+      } */
+      const ipfsUri = `${Config.IPFS_LINKS.primary}${path as string}`;
+      return await isValidURL(ipfsUri as string) ? ipfsUri : undefined;
       // If not a valid IPFS it can be a nomal http url to icon, check and confirm
     } else if (await isValidURL(iconUri as string)) {
       return iconUri as string;
