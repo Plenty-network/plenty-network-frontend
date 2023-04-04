@@ -58,6 +58,7 @@ import Button from "../Button/Button";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
+import ConfirmAddLiquidityv3 from "./ConfirmAddLiqV3";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -381,7 +382,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         </Button>
       );
     }
-  }, [props]);
+  }, [props, firstTokenAmountLiq, secondTokenAmountLiq]);
   const [selectedToken, setSelectedToken] = useState({} as tokenParameterLiquidity);
   useEffect(() => {
     setSelectedToken(props.tokenIn);
@@ -391,7 +392,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       <PopUpModal
         onhide={closeModal}
         className={clsx(
-          screen === "3" ? "sm:w-[820px] sm:max-w-[820px]" : "sm:w-[972px] sm:max-w-[972px]",
+          screen === "3"
+            ? "sm:w-[820px] sm:max-w-[820px]"
+            : screen === "2"
+            ? "sm:w-[602px] sm:max-w-[602px]"
+            : "sm:w-[972px] sm:max-w-[972px]",
           "w-[390px] max-w-[390px]  rounded-none sm:rounded-3xl "
         )}
         footerChild={
@@ -493,7 +498,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               </div>
             </div>
           </>
-        ) : (
+        ) : screen === "3" ? (
           <>
             <div className="flex gap-1">
               <p className="text-white">
@@ -509,11 +514,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               setScreen={setScreen}
             />
           </>
-        )}
+        ) : null}
         {screen === "1" && <div className="mt-2">{AddButton}</div>}
         {props.activeState === ActiveLiquidity.Liquidity && screen === "2" && (
           <>
-            <ConfirmAddLiquidity
+            <ConfirmAddLiquidityv3
               setScreen={setScreen}
               firstTokenAmount={firstTokenAmountLiq}
               secondTokenAmount={secondTokenAmountLiq}

@@ -45,13 +45,8 @@ interface ILiquidityProps {
 }
 function LiquidityV3(props: ILiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  const walletAddress = useAppSelector((state) => state.wallet.address);
-  const [settingsShow, setSettingsShow] = useState(false);
-  const refSettingTab = useRef(null);
+
   const [selectedFeeTier, setSelectedFeeTier] = useState("0.05");
-  const handleRemoveLiquidity = () => {
-    props.setScreen("3");
-  };
 
   return (
     <>

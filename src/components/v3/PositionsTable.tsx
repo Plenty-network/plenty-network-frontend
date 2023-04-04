@@ -7,8 +7,12 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import PositionsData from "./PositionsData";
+import { tokenParameterLiquidity } from "../Liquidity/types";
 
-interface IPositionsProps {}
+interface IPositionsProps {
+  tokenIn: tokenParameterLiquidity;
+  tokenOut: tokenParameterLiquidity;
+}
 function PositionsTable(props: IPositionsProps) {
   return (
     <>
@@ -53,7 +57,7 @@ function PositionsTable(props: IPositionsProps) {
           </div>
         </div>
       </div>
-      <PositionsData />
+      <PositionsData tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
     </>
   );
 }

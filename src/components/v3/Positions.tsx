@@ -29,10 +29,7 @@ interface IPositionsProps {
   setScreen: React.Dispatch<React.SetStateAction<string>>;
 }
 function PositionsPopup(props: IPositionsProps) {
-  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
-  const [settingsShow, setSettingsShow] = useState(false);
-  const refSettingTab = useRef(null);
 
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
@@ -80,7 +77,7 @@ function PositionsPopup(props: IPositionsProps) {
           </>
         }
       </div>
-      <PositionsTable />
+      <PositionsTable tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
       <div className="mt-2">{ButtonComp}</div>
     </>
   );

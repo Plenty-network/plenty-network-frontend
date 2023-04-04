@@ -8,8 +8,13 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import infoOrange from "../../../src/assets/icon/poolsv3/infoOrange.svg";
 import infoGreen from "../../../src/assets/icon/poolsv3/infoGreen.svg";
 import clsx from "clsx";
+import { tokenParameterLiquidity } from "../Liquidity/types";
+import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 
-interface IPositionsProps {}
+interface IPositionsProps {
+  tokenIn: tokenParameterLiquidity;
+  tokenOut: tokenParameterLiquidity;
+}
 function PositionsData(props: IPositionsProps) {
   const data = [
     {
@@ -62,11 +67,17 @@ function PositionsData(props: IPositionsProps) {
             <div className="w-[152px] text-white font-subtitle3 flex">{d.liquidity}</div>
             <div className="w-[152px] text-text-50 font-subtitle4 ">
               {d.liquidity}
-              <div className="font-body3 text-text-500">CTEZ per XTZ</div>
+              <div className="font-body3 text-text-500">
+                {tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
+                {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
+              </div>
             </div>
             <div className="w-[152px] text-text-50 font-subtitle4">
               {d.liquidity}
-              <div className="font-body3 text-text-500">CTEZ per XTZ</div>
+              <div className="font-body3 text-text-500">
+                {tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
+                {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
+              </div>
             </div>
             <div className="w-[172px]">
               {d.price_range === "Yes" ? (
