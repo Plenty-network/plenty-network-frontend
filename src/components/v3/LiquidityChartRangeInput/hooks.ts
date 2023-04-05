@@ -3,6 +3,7 @@ import { FeeAmount } from "@uniswap/v3-sdk";
 import JSBI from "jsbi";
 
 import { useCallback, useMemo } from "react";
+import { tokenParameterLiquidity } from "../../Liquidity/types";
 
 import { ChartEntry } from "./types";
 export interface TickProcessed {
@@ -16,8 +17,8 @@ export function useDensityChartData({
   currencyB,
   feeAmount,
 }: {
-  currencyA: Currency | undefined;
-  currencyB: Currency | undefined;
+  currencyA: tokenParameterLiquidity | undefined;
+  currencyB: tokenParameterLiquidity | undefined;
   feeAmount: FeeAmount | undefined;
 }) {
   // const { isLoading, error, data } = usePoolActiveLiquidity(currencyA, currencyB, feeAmount);

@@ -8,6 +8,7 @@ import { batch, useDispatch } from "react-redux";
 import styled, { useTheme } from "styled-components";
 import { AppDispatch, useAppSelector } from "../../../redux";
 import { setIsLeftDiff, setIsRightDiff } from "../../../redux/poolsv3";
+import { tokenParameterLiquidity } from "../../Liquidity/types";
 
 import { Chart } from "./Chart";
 import { useDensityChartData } from "./hooks";
@@ -62,8 +63,8 @@ export default function LiquidityChartRangeInput({
   onRightRangeInput,
   interactive,
 }: {
-  currencyA: Currency | undefined;
-  currencyB: Currency | undefined;
+  currencyA: tokenParameterLiquidity | undefined;
+  currencyB: tokenParameterLiquidity | undefined;
   feeAmount?: FeeAmount;
   ticksAtLimit: { [bound in Bound]?: boolean | undefined };
   price: number | undefined;

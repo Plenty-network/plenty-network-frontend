@@ -428,9 +428,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 <div
                   className={clsx(
                     selectedToken.symbol === props.tokenA.symbol
-                      ? "h-[23px] px-2 py-1 bg-shimmer-200 rounded-lg	"
+                      ? "h-[23px] px-2  bg-shimmer-200 rounded-lg	"
                       : "text-text-250 px-2",
-                    "font-subtitle1"
+                    "font-subtitle1223"
                   )}
                   onClick={() => setSelectedToken(props.tokenA)}
                 >
@@ -439,9 +439,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 <div
                   className={clsx(
                     selectedToken.symbol === props.tokenB.symbol
-                      ? "h-[23px] px-2 py-1 bg-shimmer-200 rounded-lg	"
+                      ? "h-[23px] px-2  bg-shimmer-200 rounded-lg	"
                       : "text-text-250 px-2",
-                    "font-subtitle1"
+                    "font-subtitle1223"
                   )}
                   onClick={() => setSelectedToken(props.tokenB)}
                 >

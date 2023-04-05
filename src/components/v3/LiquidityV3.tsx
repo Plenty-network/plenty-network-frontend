@@ -69,7 +69,7 @@ function LiquidityV3(props: ILiquidityProps) {
           tokenPrice={tokenPrice}
         />
         {props.feeTier !== selectedFeeTier && (
-          <div className="h-[56px] mt-[10px] flex items-center  px-2 bg-error-300/[0.1]  rounded-lg	">
+          <div className="h-[56px] mt-[7px] flex items-center  px-2 bg-error-300/[0.1]  rounded-lg	">
             <Image src={infoOrangeBig} />
             <span className="ml-3 text-error-300 text-[13px] leading-[20px] ">
               Your position will not earn fees or be used in trades until the market price moves
