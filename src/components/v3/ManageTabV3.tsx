@@ -6,8 +6,7 @@ import { POOL_TYPE } from "../../../pages/pools";
 import { getPnlpOutputEstimate, getPoolShareForPnlp } from "../../api/liquidity";
 import settings from "../../../src/assets/icon/swap/settings.svg";
 import { ELiquidityProcess } from "../../api/liquidity/types";
-import { getDepositedAmounts, getRewards } from "../../api/rewards";
-import { getStakedData, getVePLYListForUser } from "../../api/stake";
+
 import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 import { loadSwapDataWrapper } from "../../api/swap/wrappers";
 import {
@@ -30,11 +29,6 @@ import {
   TOKEN_B,
 } from "../../constants/localStorage";
 import { addLiquidity } from "../../operations/addLiquidity";
-import { detachLockFromGauge } from "../../operations/locks";
-import { removeLiquidity } from "../../operations/removeLiquidity";
-import { harvestRewards } from "../../operations/rewards";
-import { stakePnlpTokens } from "../../operations/stake";
-import { unstakePnlpTokens } from "../../operations/unstake";
 import { AppDispatch, useAppDispatch, useAppSelector } from "../../redux";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
@@ -42,8 +36,6 @@ import ConfirmTransaction from "../ConfirmTransaction";
 import { Flashtype } from "../FlashScreen";
 import Liquidity from "../Liquidity";
 import PositionsPopup from "./Positions";
-import ConfirmAddLiquidity from "../Liquidity/ConfirmAddLiquidity";
-import ConfirmRemoveLiquidity from "../Liquidity/ConfirmRemoveLiquidity";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import { PopUpModal } from "../Modal/popupModal";
 import { VideoModal } from "../Modal/videoModal";
@@ -59,11 +51,14 @@ import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
 import ConfirmAddLiquidityv3 from "./ConfirmAddLiqV3";
+import { settopLevelSelectedToken } from "../../redux/poolsv3";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
+  tokenA: tokenParameterLiquidity;
+  tokenB: tokenParameterLiquidity;
   setActiveState: React.Dispatch<React.SetStateAction<string>>;
   activeState: string;
   isGaugeAvailable: boolean;
@@ -107,16 +102,15 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
   const [pnlpBalance, setPnlpBalance] = useState("");
-  const [stakeInput, setStakeInput] = useState<string | number>("");
-  const [unStakeInput, setUnStakeInput] = useState<string | number>("");
   const [lpTokenPrice, setLpTokenPrice] = useState(new BigNumber(0));
   const [isLoading, setIsLoading] = useState(false);
 
   const [contentTransaction, setContentTransaction] = useState("");
-  const [vePLYOptions, setVePLYOptions] = useState<IVePLYData[]>([]);
+
   const [settingsShow, setSettingsShow] = useState(false);
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   const refSettingTab = React.useRef(null);
+
   useEffect(() => {
     const updateBalance = async () => {
       const balancePromises = [];
@@ -242,8 +236,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     setFirstTokenAmountLiq("");
     setSecondTokenAmountLiq("");
 
-    setStakeInput("");
-    setUnStakeInput("");
     setBalanceUpdate(false);
   };
 
@@ -387,6 +379,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   useEffect(() => {
     setSelectedToken(props.tokenIn);
   }, []);
+  useEffect(() => {
+    dispatch(settopLevelSelectedToken(selectedToken));
+  }, [selectedToken]);
   return props.showLiquidityModal ? (
     <>
       <PopUpModal
@@ -432,25 +427,25 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
                 <div
                   className={clsx(
-                    selectedToken.symbol === props.tokenIn.symbol
+                    selectedToken.symbol === props.tokenA.symbol
                       ? "h-[23px] px-2 py-1 bg-shimmer-200 rounded-lg	"
                       : "text-text-250 px-2",
                     "font-subtitle1"
                   )}
-                  onClick={() => setSelectedToken(props.tokenIn)}
+                  onClick={() => setSelectedToken(props.tokenA)}
                 >
-                  {props.tokenIn.symbol}
+                  {tEZorCTEZtoUppercase(props.tokenA.symbol)}
                 </div>
                 <div
                   className={clsx(
-                    selectedToken.symbol === props.tokenOut.symbol
+                    selectedToken.symbol === props.tokenB.symbol
                       ? "h-[23px] px-2 py-1 bg-shimmer-200 rounded-lg	"
                       : "text-text-250 px-2",
                     "font-subtitle1"
                   )}
-                  onClick={() => setSelectedToken(props.tokenOut)}
+                  onClick={() => setSelectedToken(props.tokenB)}
                 >
-                  {props.tokenOut.symbol}
+                  {tEZorCTEZtoUppercase(props.tokenB.symbol)}
                 </div>
               </div>
               <div className="flex items-center justify-between flex-row  relative mr-[48px]">

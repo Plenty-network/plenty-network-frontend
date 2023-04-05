@@ -19,7 +19,7 @@ import { NoSearchResult } from "../../Votes/NoSearchResult";
 import newPool from "../../../assets/icon/pools/newPool.svg";
 import Image from "next/image";
 import clsx from "clsx";
-import { tEZorCTEZtoUppercase } from "../../../api/util/helpers";
+import { tEZorCTEZtoUppercase, tokenChange, tokenChangeB } from "../../../api/util/helpers";
 import { Position, ToolTip } from "../../Tooltip/TooltipAdvanced";
 import { PoolsCardHeaderV3 } from "./CardHeaderv3";
 import { ActiveLiquidity } from "../../Pools/ManageLiquidityHeader";
@@ -31,6 +31,7 @@ import { PoolsTextWithTooltip } from "../../Pools/Component/PoolsText";
 import { ManageLiquidity } from "../../Pools/ManageLiquidity";
 import { ManageTabV3 } from "../ManageTabV3";
 import { Apr } from "./Apr";
+import { settopLevelSelectedToken } from "../../../redux/poolsv3";
 
 export interface IShortCardProps {
   className?: string;
@@ -62,15 +63,8 @@ export function PoolsTableV3(props: IShortCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  const scrollY = useAppSelector((state) => state.walletLoading.scrollY);
-  const height = useAppSelector((state) => state.walletLoading.height);
-  const clientHeight = useAppSelector((state) => state.walletLoading.clientHeight);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [isCompletedMypool, setIsCompletedMypool] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
-  const [page, setPage] = useState(1);
+
+  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
 
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
     tokenPrices,
@@ -422,6 +416,13 @@ export function PoolsTableV3(props: IShortCardProps) {
               image: getImagesPath(props.tokenA.toString()),
               symbol: props.tokenA,
             });
+            dispatch(
+              settopLevelSelectedToken({
+                name: props.tokenA,
+                image: getImagesPath(props.tokenA.toString()),
+                symbol: props.tokenA,
+              })
+            );
             setTokenOut({
               name: props.tokenB,
               image: getImagesPath(props.tokenB.toString()),
@@ -440,8 +441,10 @@ export function PoolsTableV3(props: IShortCardProps) {
     <>
       {props.showLiquidityModal && (
         <ManageTabV3
-          tokenIn={tokenIn}
-          tokenOut={tokenOut}
+          tokenIn={tokenChange(topLevelSelectedToken, tokenIn, tokenOut)}
+          tokenOut={tokenChangeB(topLevelSelectedToken, tokenIn, tokenOut)}
+          tokenA={tokenIn}
+          tokenB={tokenOut}
           closeFn={props.setShowLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}

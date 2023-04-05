@@ -1,6 +1,8 @@
 import { BigNumber } from "bignumber.js";
 
 import fallback from "../../assets/icon/pools/fallback.png";
+import { tokenParameterLiquidity } from "../../components/Liquidity/types";
+
 /**
  * Returns the percentage change from old number to new number
  * @param oldNumber - The previous number from which change happened
@@ -18,6 +20,18 @@ export const tEZorCTEZtoUppercase = (a: string) =>
     : a.trim().toLowerCase() === "ctez"
     ? a.toUpperCase()
     : a;
+
+export const tokenChange = (
+  topLevelSelectedToken: tokenParameterLiquidity,
+  tokenA: tokenParameterLiquidity,
+  tokenB: tokenParameterLiquidity
+) => (topLevelSelectedToken.symbol === tokenA.symbol ? tokenA : tokenB);
+
+export const tokenChangeB = (
+  topLevelSelectedToken: tokenParameterLiquidity,
+  tokenA: tokenParameterLiquidity,
+  tokenB: tokenParameterLiquidity
+) => (topLevelSelectedToken.symbol === tokenA.symbol ? tokenB : tokenA);
 
 export default function nFormatter(num: BigNumber) {
   if (num.isGreaterThanOrEqualTo(1000000000)) {

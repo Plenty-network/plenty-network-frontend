@@ -29,6 +29,13 @@ import {
 import { MyPoolTable } from "../../src/components/Pools/MyPoolTable";
 import { CardHeaderV3, PoolsCardHeaderV3 } from "../../src/components/v3/pools/CardHeaderv3";
 import { PoolsTableV3 } from "../../src/components/v3/pools/poolsTableV3";
+import {
+  setcurrentPrice,
+  setleftbrush,
+  setleftRangeInput,
+  setrightbrush,
+  setRightRangeInput,
+} from "../../src/redux/poolsv3";
 export interface IIndexProps {}
 export enum POOL_TYPE {
   MYPOOLS = "My pools",
@@ -104,7 +111,14 @@ export default function Pools(props: IIndexProps) {
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
+  useEffect(() => {
+    dispatch(setleftbrush(85));
+    dispatch(setrightbrush(90));
+    dispatch(setleftRangeInput("85"));
+    dispatch(setRightRangeInput("90"));
 
+    dispatch(setcurrentPrice(87));
+  }, []);
   return (
     <>
       <SideBarHOC>

@@ -1,7 +1,10 @@
 // import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from 'components/LiquidityChartRangeInput/svg'
 import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from "d3";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { AppDispatch } from "../../../redux";
+import { setleftbrush, setrightbrush } from "../../../redux/poolsv3";
 
 import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from "./svg";
 import usePrevious from "./usePrevious";
@@ -20,7 +23,7 @@ const HandleAccent = styled.path`
   pointer-events: none;
 
   stroke-width: 1.5;
-  stroke: "#8fce00";
+  stroke: #ffffff;
   opacity: 1;
 `;
 
@@ -31,7 +34,7 @@ const LabelGroup = styled.g<{ visible: boolean }>`
 `;
 
 const TooltipBackground = styled.rect`
-  fill: "#211336";
+  fill: #211336;
 `;
 
 const Tooltip = styled.text`
@@ -89,12 +92,11 @@ export const Brush = ({
 
   // only used to drag the handles on brush for performance
   const [localBrushExtent, setLocalBrushExtent] = useState<[number, number] | null>(brushExtent);
-
   const [showLabels, setShowLabels] = useState(false);
   const [hovering, setHovering] = useState(false);
-
+  const dispatch = useDispatch<AppDispatch>();
   const previousBrushExtent = usePrevious(brushExtent);
-
+  console.log("pp", localBrushExtent, brushExtent);
   const brushed = useCallback(
     (event: D3BrushEvent<unknown>) => {
       const { type, selection, mode } = event;
@@ -107,10 +109,11 @@ export const Brush = ({
 
       // avoid infinite render loop by checking for change
       if (type === "end" && !compare(brushExtent, scaled, xScale)) {
-        console.log("hj");
+        console.log("hj", scaled);
+        dispatch(setleftbrush(scaled[0]));
+        dispatch(setrightbrush(scaled[1]));
         setBrushExtent(scaled, mode);
       }
-      console.log("h", localBrushExtent, scaled);
 
       setLocalBrushExtent(scaled);
     },
@@ -126,7 +129,6 @@ export const Brush = ({
 
   // initialize the brush
   useEffect(() => {
-    console.log("kk", brushRef.current);
     if (!brushRef.current) return;
 
     brushBehavior.current = brushX<SVGGElement>()
@@ -151,7 +153,7 @@ export const Brush = ({
       .selectAll(".selection")
       .attr("stroke", "none")
       .attr("fill-opacity", "0.2")
-      .attr("fill", `url(#${id}-gradient-selection)`);
+      .attr("fill", "#1570F1");
   }, [brushExtent, brushed, id, innerHeight, innerWidth, interactive, previousBrushExtent, xScale]);
 
   // respond to xScale changes only

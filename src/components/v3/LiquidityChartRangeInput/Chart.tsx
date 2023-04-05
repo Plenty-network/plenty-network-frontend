@@ -69,7 +69,6 @@ export function Chart({
 
   useEffect(() => {
     if (!brushDomain) {
-      console.log("ishu", xScale);
       onBrushDomainChange(xScale.domain() as [number, number], undefined);
     }
   }, [brushDomain, onBrushDomainChange, xScale]);

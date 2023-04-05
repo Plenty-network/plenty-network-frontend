@@ -4,10 +4,16 @@ import fromExponential from "from-exponential";
 import Image from "next/image";
 import * as React from "react";
 import { useDispatch } from "react-redux";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { tEZorCTEZtoUppercase, tokenChange, tokenChangeB } from "../../api/util/helpers";
 import { dispatch } from "../../common/walletconnect";
 import { AppDispatch, useAppSelector } from "../../redux";
-import { setleftRangeInput, setRightRangeInput } from "../../redux/poolsv3";
+import {
+  setcurrentPrice,
+  setleftbrush,
+  setleftRangeInput,
+  setrightbrush,
+  setRightRangeInput,
+} from "../../redux/poolsv3";
 
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import LiquidityChartRangeInput from "./LiquidityChartRangeInput";
@@ -10075,11 +10081,21 @@ function PriceRangeV3(props: IPriceRangeProps) {
 
   const leftRangeInput = useAppSelector((state) => state.poolsv3.leftRangeInput);
   const rightRangeInput = useAppSelector((state) => state.poolsv3.RightRangeInput);
+  const leftbrush = useAppSelector((state) => state.poolsv3.leftbrush);
+  const rightbrush = useAppSelector((state) => state.poolsv3.rightbrush);
+  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const dispatch = useDispatch<AppDispatch>();
+
   const onLeftRangeInputFn = (value: string) => {
+    if (Number(value) !== leftbrush) {
+      dispatch(setleftbrush(value));
+    }
     dispatch(setleftRangeInput(value));
   };
   const onRightRangeInputFn = (value: string) => {
+    if (Number(value) !== rightbrush) {
+      dispatch(setrightbrush(value));
+    }
     dispatch(setRightRangeInput(value));
   };
   return (
@@ -10093,7 +10109,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
           </div> */}
         </div>
         <div className="mt-[19.5px] text-center font-mobile-f1020">
-          Current Price: 1637.85{" "}
+          Current Price: 87{" "}
           <span className="font-mobile-f9 ml-[6px]">
             ({tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
             {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
@@ -10186,7 +10202,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
               </div>
               <div
                 className="w-[24px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
-                onClick={() => onRightRangeInputFn((Number(rightRangeInput) - 1).toString())}
+                onClick={() => onRightRangeInputFn((Number(rightRangeInput) + 1).toString())}
               >
                 +
               </div>

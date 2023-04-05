@@ -6,7 +6,7 @@ import { saturate } from "polished";
 import React, { useCallback, useMemo } from "react";
 import { batch, useDispatch } from "react-redux";
 import styled, { useTheme } from "styled-components";
-import { AppDispatch } from "../../../redux";
+import { AppDispatch, useAppSelector } from "../../../redux";
 import { setIsLeftDiff, setIsRightDiff } from "../../../redux/poolsv3";
 
 import { Chart } from "./Chart";
@@ -74,8 +74,9 @@ export default function LiquidityChartRangeInput({
   interactive: boolean;
 }) {
   const tokenAColor = "#1570F1";
-  const tokenBColor = "#1AAE80";
-
+  const tokenBColor = "#1570F1";
+  const leftbrush = useAppSelector((state) => state.poolsv3.leftbrush);
+  const rightbrush = useAppSelector((state) => state.poolsv3.rightbrush);
   const isSorted = true;
 
   const { isLoading, error, formattedData } = useDensityChartData({
@@ -86,7 +87,6 @@ export default function LiquidityChartRangeInput({
 
   const onBrushDomainChangeEnded = useCallback(
     (domain: [number, number], mode: string | undefined) => {
-      console.log("hj", isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit, domain);
       let leftRangeValue = Number(domain[0]);
       const rightRangeValue = Number(domain[1]);
 
@@ -123,16 +123,21 @@ export default function LiquidityChartRangeInput({
   interactive = interactive && Boolean(formattedData?.length);
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
-    console.log("ishu23");
-    const leftPrice = isSorted ? priceLower : priceUpper;
-    const rightPrice = isSorted ? priceUpper : priceLower;
+    let leftPrice, rightPrice;
+    if (rightbrush && leftbrush) {
+      console.log("ish99", leftbrush, rightbrush);
+      leftPrice = isSorted ? Number(leftbrush) : priceUpper;
+      rightPrice = isSorted ? Number(rightbrush) : priceLower;
+    } else {
+      console.log("ish999", priceLower, priceUpper);
+      leftPrice = isSorted ? priceLower : priceUpper;
+      rightPrice = isSorted ? priceUpper : priceLower;
+    }
 
     return leftPrice && rightPrice
       ? [parseFloat(leftPrice?.toFixed(6)), parseFloat(rightPrice?.toFixed(6))]
       : undefined;
-
-    //return [80, 90];
-  }, [isSorted]);
+  }, [isSorted, leftbrush, rightbrush]);
   const dispatch = useDispatch<AppDispatch>();
   const brushLabelValue = useCallback(
     (d: "w" | "e", x: number) => {
@@ -172,8 +177,9 @@ export default function LiquidityChartRangeInput({
   }
 
   const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading);
-
   return (
+    // useMemo(
+    //   () => (
     <div style={{ minHeight: "200px" }}>
       {isUninitialized ? (
         "Your position will appear here."
@@ -191,7 +197,7 @@ export default function LiquidityChartRangeInput({
             margins={{ top: 10, right: 2, bottom: 20, left: 0 }}
             styles={{
               area: {
-                selection: "#1AAE80",
+                selection: "rgba(21,112,241,0.2)",
               },
               brush: {
                 handle: {
@@ -210,5 +216,7 @@ export default function LiquidityChartRangeInput({
         </ChartWrapper>
       )}
     </div>
+    //   ),
+    //   [leftbrush, rightbrush, onLeftRangeInput, onRightRangeInput]
   );
 }

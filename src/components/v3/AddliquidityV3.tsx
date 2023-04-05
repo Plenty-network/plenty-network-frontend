@@ -16,6 +16,7 @@ import lock from "../../../src/assets/icon/poolsv3/Lock.svg";
 import { tokenIcons } from "../../constants/tokensList";
 import fromExponential from "from-exponential";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import clsx from "clsx";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -34,17 +35,11 @@ interface IAddLiquidityProps {
 }
 function AddLiquidityV3(props: IAddLiquidityProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
-  const rightdiff = useAppSelector((state) => state.poolsv3.Rightdiff).slice(0, -1);
-  const LeftDiff = useAppSelector((state) => state.poolsv3.Leftdiff).slice(0, -1);
+  const rightbrush = useAppSelector((state) => state.poolsv3.rightbrush);
+  const leftbrush = useAppSelector((state) => state.poolsv3.leftbrush);
+  const currentPrice = useAppSelector((state) => state.poolsv3.currentPrice);
   const tokens = useAppSelector((state) => state.config.tokens);
-  // console.log(
-  //   "iihu",
-  //   Math.sign(Number(LeftDiff)),
-  //   LeftDiff.substring(0, 1),
-  //   rightdiff.substring(0, 1),
-  //   rightdiff.substring(0, 1) == "-",
-  //   LeftDiff.substring(0, 1) == "-"
-  // );
+
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
@@ -114,7 +109,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   };
   return (
     <div className="border relative border-text-800 bg-card-200 p-4 rounded-2xl	">
-      {false ? (
+      {leftbrush < currentPrice && rightbrush < currentPrice ? (
         <>
           <div className="border  flex border-text-800/[0.5] rounded-2xl h-[70px]">
             <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
@@ -278,21 +273,24 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           </div>
         </div>
       )}
-
-      <div className="relative -top-[9px] left-[50%] md:left-[50%]">
-        <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
-      </div>
-      {false ? (
+      {leftbrush < currentPrice && rightbrush > currentPrice ? (
+        <div className="relative -top-[9px] left-[30%] md:left-[25%]">
+          <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
+        </div>
+      ) : (
+        <div className="h-[4px]"></div>
+      )}
+      {leftbrush > currentPrice && rightbrush > currentPrice ? (
         <>
           <div className="border  flex border-text-800/[0.5] rounded-2xl h-[70px]">
             <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
               <div className="ml-2 md:ml-5">
                 <img
                   src={
-                    tokenIcons[props.tokenIn.symbol]
-                      ? tokenIcons[props.tokenIn.symbol].src
-                      : tokens[props.tokenIn.symbol.toString()]?.iconUrl
-                      ? tokens[props.tokenIn.symbol.toString()].iconUrl
+                    tokenIcons[props.tokenOut.symbol]
+                      ? tokenIcons[props.tokenOut.symbol].src
+                      : tokens[props.tokenOut.symbol.toString()]?.iconUrl
+                      ? tokens[props.tokenOut.symbol.toString()].iconUrl
                       : `/assets/Tokens/fallback.png`
                   }
                   className="tokenIconLiq"
@@ -304,7 +302,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
               <div className="ml-1 md:ml-2">
                 <p className="text-text-900 font-body2">Input</p>
                 <p className="font-caption1 md:font-title3 text-white">
-                  {tEZorCTEZtoUppercase(props.tokenIn.name)}
+                  {tEZorCTEZtoUppercase(props.tokenOut.name)}
                 </p>
               </div>
             </div>
@@ -317,9 +315,9 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
                     <input
                       type="text"
                       className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium2 outline-none w-[100%] placeholder:text-text-400"
-                      value={fromExponential(props.firstTokenAmount)}
+                      value={fromExponential(props.secondTokenAmount)}
                       placeholder="0.0"
-                      onChange={(e) => handleLiquidityInput(e.target.value, "tokenIn")}
+                      onChange={(e) => handleLiquidityInput(e.target.value, "tokenOut")}
                     />
                   )}
                 </p>
@@ -327,10 +325,10 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
                   <span className="mt-1 ml-1 font-body2 md:font-body2  text-text-400">
                     {" "}
                     ~$
-                    {props.firstTokenAmount && props.tokenPrice[props.tokenIn.name]
+                    {props.secondTokenAmount && props.tokenPrice[props.tokenOut.name]
                       ? Number(
-                          Number(props.firstTokenAmount) *
-                            Number(props.tokenPrice[props.tokenIn.name])
+                          Number(props.secondTokenAmount) *
+                            Number(props.tokenPrice[props.tokenOut.name])
                         ).toFixed(2)
                       : "0.00"}
                   </span>
@@ -345,23 +343,23 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
                     className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
                     onClick={onClickAmount}
                   >
-                    {!(Number(props.userBalances[props.tokenIn.name]) >= 0) ? (
+                    {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (
                       <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
                     ) : (
                       <span className="mr-1">
                         {nFormatterWithLesserNumber(
-                          new BigNumber(props.userBalances[props.tokenIn.name])
+                          new BigNumber(props.userBalances[props.tokenOut.name])
                         )}{" "}
                       </span>
                     )}
-                    {tEZorCTEZtoUppercase(props.tokenIn.name)}
+                    {tEZorCTEZtoUppercase(props.tokenOut.name)}
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
+          <div className="absolute top-[92px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
             <Image src={lock} />
             <span className="font-subtitle3 w-[318px] ml-5">
               The market price is outside your specified price range. Single-asset deposit only.
@@ -369,7 +367,12 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           </div>
         </>
       ) : (
-        <div className="border -mt-[25px] flex border-text-800/[0.5] rounded-2xl h-[70px]">
+        <div
+          className={clsx(
+            leftbrush < currentPrice && rightbrush < currentPrice ? "mt-[1px]" : "-mt-[25px] ",
+            "border flex border-text-800/[0.5] rounded-2xl h-[70px]"
+          )}
+        >
           <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
             <div className="ml-2 md:ml-5">
               <img
