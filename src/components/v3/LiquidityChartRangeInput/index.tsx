@@ -79,7 +79,13 @@ export default function LiquidityChartRangeInput({
   const leftbrush = useAppSelector((state) => state.poolsv3.leftbrush);
   const rightbrush = useAppSelector((state) => state.poolsv3.rightbrush);
   const isSorted = true;
+  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
 
+  const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
+  const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
+
+  const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
+  const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
   const { isLoading, error, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
@@ -125,12 +131,14 @@ export default function LiquidityChartRangeInput({
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
     let leftPrice, rightPrice;
-    if (rightbrush && leftbrush) {
-      console.log("ish99", leftbrush, rightbrush);
+
+    if (topLevelSelectedToken.symbol === tokeninorg.symbol && rightbrush && leftbrush) {
       leftPrice = isSorted ? Number(leftbrush) : priceUpper;
       rightPrice = isSorted ? Number(rightbrush) : priceLower;
+    } else if (Brightbrush && Bleftbrush) {
+      leftPrice = isSorted ? Number(Bleftbrush) : priceUpper;
+      rightPrice = isSorted ? Number(Brightbrush) : priceLower;
     } else {
-      console.log("ish999", priceLower, priceUpper);
       leftPrice = isSorted ? priceLower : priceUpper;
       rightPrice = isSorted ? priceUpper : priceLower;
     }
@@ -138,7 +146,7 @@ export default function LiquidityChartRangeInput({
     return leftPrice && rightPrice
       ? [parseFloat(leftPrice?.toFixed(6)), parseFloat(rightPrice?.toFixed(6))]
       : undefined;
-  }, [isSorted, leftbrush, rightbrush]);
+  }, [isSorted, leftbrush, rightbrush, Bleftbrush, Brightbrush, topLevelSelectedToken]);
   const dispatch = useDispatch<AppDispatch>();
   const brushLabelValue = useCallback(
     (d: "w" | "e", x: number) => {

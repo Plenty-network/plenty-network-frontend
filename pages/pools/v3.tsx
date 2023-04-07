@@ -30,6 +30,11 @@ import { MyPoolTable } from "../../src/components/Pools/MyPoolTable";
 import { CardHeaderV3, PoolsCardHeaderV3 } from "../../src/components/v3/pools/CardHeaderv3";
 import { PoolsTableV3 } from "../../src/components/v3/pools/poolsTableV3";
 import {
+  setBcurrentPrice,
+  setBleftbrush,
+  setBleftRangeInput,
+  setBrightbrush,
+  setBRightRangeInput,
   setcurrentPrice,
   setleftbrush,
   setleftRangeInput,
@@ -112,12 +117,16 @@ export default function Pools(props: IIndexProps) {
   const [isError, setIsError] = useState(false);
   const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
   useEffect(() => {
-    dispatch(setleftbrush(85));
-    dispatch(setrightbrush(90));
-    dispatch(setleftRangeInput("85"));
-    dispatch(setRightRangeInput("90"));
-
+    dispatch(setleftbrush(70));
+    dispatch(setrightbrush(100));
+    dispatch(setleftRangeInput("70"));
+    dispatch(setRightRangeInput("100"));
     dispatch(setcurrentPrice(87));
+    dispatch(setBleftbrush(87));
+    dispatch(setBrightbrush(92));
+    dispatch(setBleftRangeInput("87"));
+    dispatch(setBRightRangeInput("92"));
+    dispatch(setBcurrentPrice(90));
   }, []);
   return (
     <>

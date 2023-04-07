@@ -51,7 +51,14 @@ import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
 import ConfirmAddLiquidityv3 from "./ConfirmAddLiqV3";
-import { settopLevelSelectedToken } from "../../redux/poolsv3";
+import {
+  setTokenInOrg,
+  setTokenInV3,
+  setTokeOutOrg,
+  setTokeOutV3,
+  settopLevelSelectedToken,
+} from "../../redux/poolsv3";
+import { Pool } from "@plenty-labs/v3-sdk";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -69,9 +76,11 @@ export interface IManageLiquidityProps {
 }
 
 export function ManageTabV3(props: IManageLiquidityProps) {
+  //const pooldatafromsdk = new Pool(-275611, 10, 1251963215603107302);
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState<string>("0.5");
   const TOKEN = useAppSelector((state) => state.config.tokens);
+  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
 
@@ -110,7 +119,14 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [settingsShow, setSettingsShow] = useState(false);
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   const refSettingTab = React.useRef(null);
+  useEffect(() => {
+    topLevelSelectedToken.symbol === props.tokenIn.symbol
+      ? dispatch(setTokenInV3(props.tokenIn))
+      : dispatch(setTokeOutV3(props.tokenOut));
 
+    dispatch(setTokenInOrg(props.tokenA));
+    dispatch(setTokeOutOrg(props.tokenB));
+  }, [props.tokenIn, props.tokenOut]);
   useEffect(() => {
     const updateBalance = async () => {
       const balancePromises = [];
@@ -388,7 +404,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         onhide={closeModal}
         className={clsx(
           screen === "3"
-            ? "sm:w-[820px] sm:max-w-[820px]"
+            ? "sm:w-[880px] sm:max-w-[880px]"
             : screen === "2"
             ? "sm:w-[602px] sm:max-w-[602px]"
             : "sm:w-[972px] sm:max-w-[972px]",

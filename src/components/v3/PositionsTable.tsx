@@ -17,7 +17,7 @@ function PositionsTable(props: IPositionsProps) {
   return (
     <>
       <div className="flex  my-[24px] ml-10 ">
-        <div className="w-[152px] text-text-250 font-body2 flex">
+        <div className="w-[135px] text-text-250 font-body2 flex">
           Liquidity
           <div className="relative top-[2px] ml-1 cursor-pointer">
             <ToolTip
@@ -30,8 +30,8 @@ function PositionsTable(props: IPositionsProps) {
             </ToolTip>
           </div>
         </div>
-        <div className="w-[152px] text-text-250 font-body2 flex">
-          Min price
+        <div className="w-[146px] text-text-250 font-body2 flex">
+          Min/Max price
           <div className="relative top-[2px] ml-1 cursor-pointer">
             <ToolTip
               id="tooltip2"
@@ -43,8 +43,8 @@ function PositionsTable(props: IPositionsProps) {
             </ToolTip>
           </div>
         </div>
-        <div className="w-[152px] text-text-250 font-body2 flex">
-          Max price
+        <div className="w-[120px] text-text-250 font-body2 flex">
+          Fees Collected
           <div className="relative top-[2px] ml-1 cursor-pointer">
             <ToolTip
               id="tooltip2"

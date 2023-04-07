@@ -2,26 +2,19 @@ import Image from "next/image";
 import * as React from "react";
 
 import { useMemo, useRef, useState } from "react";
-import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
 
-import { BigNumber } from "bignumber.js";
 import Button from "../Button/Button";
-import { SwitchWithIcon } from "../SwitchCheckbox/switchWithIcon";
 
 import { AppDispatch, useAppSelector } from "../../redux";
 
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
-import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { getDexType } from "../../api/util/fetchConfig";
-import { PoolType } from "../../config/types";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
-import AddLiquidity from "../Liquidity/AddLiquidity";
-import AddLiquidityV3 from "./AddliquidityV3";
-import FeeTierMain from "./FeeTierMain";
 import { CircularImageInfo } from "../Pools/Component/CircularImageInfo";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import PositionsTable from "./PositionsTable";
+import feeimg from "../../assets/icon/poolsv3/feeMP.svg";
+import dollarimg from "../../assets/icon/poolsv3/dollarMP.svg";
 
 interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
@@ -70,8 +63,13 @@ function PositionsPopup(props: IPositionsProps) {
                   {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
                 </span>
               </div>
-              <div className="font-title3 text-white rounded-lg text-center	 bg-info-800 flex items-center justify-center w-[83px] h-[44px] ml-1">
-                0.05%
+              <div className="text-white rounded-lg text-center	 bg-info-800 flex items-center justify-center w-[90px] h-[44px] ml-auto">
+                <Image src={feeimg} />
+                <span className="ml-1 font-title3">0.05%</span>
+              </div>
+              <div className="text-white rounded-lg text-center	 bg-info-800 flex items-center justify-center w-[90px] h-[44px] ml-3">
+                <Image src={dollarimg} />
+                <span className="ml-1 font-title3">$3.45</span>
               </div>
             </div>
           </>

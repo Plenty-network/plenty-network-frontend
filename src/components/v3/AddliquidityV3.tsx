@@ -38,7 +38,12 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   const rightbrush = useAppSelector((state) => state.poolsv3.rightbrush);
   const leftbrush = useAppSelector((state) => state.poolsv3.leftbrush);
   const currentPrice = useAppSelector((state) => state.poolsv3.currentPrice);
+  const brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
+  const bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
+  const bcurrentPrice = useAppSelector((state) => state.poolsv3.BcurrentPrice);
   const tokens = useAppSelector((state) => state.config.tokens);
+  const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
+  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
 
   const handleLiquidityInput = async (
     input: string | number,
@@ -109,7 +114,11 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   };
   return (
     <div className="border relative border-text-800 bg-card-200 p-4 rounded-2xl	">
-      {leftbrush < currentPrice && rightbrush < currentPrice ? (
+      {(
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? leftbrush < currentPrice && rightbrush < currentPrice
+          : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice
+      ) ? (
         <>
           <div className="border  flex border-text-800/[0.5] rounded-2xl h-[70px]">
             <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
@@ -273,14 +282,22 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           </div>
         </div>
       )}
-      {leftbrush < currentPrice && rightbrush > currentPrice ? (
+      {(
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? leftbrush < currentPrice && rightbrush > currentPrice
+          : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice
+      ) ? (
         <div className="relative -top-[9px] left-[30%] md:left-[25%]">
           <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
         </div>
       ) : (
         <div className="h-[4px]"></div>
       )}
-      {leftbrush > currentPrice && rightbrush > currentPrice ? (
+      {(
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? leftbrush > currentPrice && rightbrush > currentPrice
+          : bleftbrush > bcurrentPrice && brightbrush > bcurrentPrice
+      ) ? (
         <>
           <div className="border  flex border-text-800/[0.5] rounded-2xl h-[70px]">
             <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
@@ -369,7 +386,13 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       ) : (
         <div
           className={clsx(
-            leftbrush < currentPrice && rightbrush < currentPrice ? "mt-[1px]" : "-mt-[25px] ",
+            (
+              topLevelSelectedToken.symbol === tokeninorg.symbol
+                ? leftbrush < currentPrice && rightbrush < currentPrice
+                : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice
+            )
+              ? "mt-[1px]"
+              : "-mt-[25px] ",
             "border flex border-text-800/[0.5] rounded-2xl h-[70px]"
           )}
         >

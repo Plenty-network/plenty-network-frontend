@@ -31,7 +31,7 @@ import { PoolsTextWithTooltip } from "../../Pools/Component/PoolsText";
 import { ManageLiquidity } from "../../Pools/ManageLiquidity";
 import { ManageTabV3 } from "../ManageTabV3";
 import { Apr } from "./Apr";
-import { settopLevelSelectedToken } from "../../../redux/poolsv3";
+import { setTokenInV3, settopLevelSelectedToken } from "../../../redux/poolsv3";
 
 export interface IShortCardProps {
   className?: string;

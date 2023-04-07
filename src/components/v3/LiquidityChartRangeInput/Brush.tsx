@@ -1,10 +1,12 @@
 // import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from 'components/LiquidityChartRangeInput/svg'
+import { Tick } from "@plenty-labs/v3-sdk";
+//import { nearestUsableTick } from "@uniswap/v3-sdk";
 import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from "d3";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { AppDispatch } from "../../../redux";
-import { setleftbrush, setrightbrush } from "../../../redux/poolsv3";
+import { AppDispatch, useAppSelector } from "../../../redux";
+import { setBleftbrush, setBrightbrush, setleftbrush, setrightbrush } from "../../../redux/poolsv3";
 
 import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from "./svg";
 import usePrevious from "./usePrevious";
@@ -87,9 +89,14 @@ export const Brush = ({
   westHandleColor: string;
   eastHandleColor: string;
 }) => {
+  //const tick = new Tick();
+
   const brushRef = useRef<SVGGElement | null>(null);
   const brushBehavior = useRef<BrushBehavior<SVGGElement> | null>(null);
-
+  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
+  const tokenIn = useAppSelector((state) => state.poolsv3.tokenIn);
+  const tokenOut = useAppSelector((state) => state.poolsv3.tokenOut);
+  const tickSpacing = 10;
   // only used to drag the handles on brush for performance
   const [localBrushExtent, setLocalBrushExtent] = useState<[number, number] | null>(brushExtent);
   const [showLabels, setShowLabels] = useState(false);
@@ -109,13 +116,28 @@ export const Brush = ({
 
       // avoid infinite render loop by checking for change
       if (type === "end" && !compare(brushExtent, scaled, xScale)) {
-        console.log("hj", scaled);
-        dispatch(setleftbrush(scaled[0]));
-        dispatch(setrightbrush(scaled[1]));
-        setBrushExtent(scaled, mode);
+        topLevelSelectedToken.symbol === tokenIn.symbol
+          ? dispatch(setleftbrush(scaled[0]))
+          : dispatch(setBleftbrush(scaled[0]));
+        topLevelSelectedToken.symbol === tokenIn.symbol
+          ? dispatch(setrightbrush(scaled[1]))
+          : dispatch(setBrightbrush(scaled[1]));
+        console.log(
+          "hj",
+          Tick.nearestUsableTick(scaled[0], 10),
+          Tick.nearestUsableTick(scaled[1], 10)
+        );
+
+        setBrushExtent(
+          [Tick.nearestUsableTick(scaled[0], 10), Tick.nearestUsableTick(scaled[1], 10)],
+          mode
+        );
       }
 
-      setLocalBrushExtent(scaled);
+      setLocalBrushExtent([
+        Tick.nearestUsableTick(scaled[0], 10),
+        Tick.nearestUsableTick(scaled[1], 10),
+      ]);
     },
     [xScale, brushExtent, setBrushExtent]
   );
@@ -123,7 +145,6 @@ export const Brush = ({
   //keep local and external brush extent in sync
   //i.e. snap to ticks on bruhs end
   useEffect(() => {
-    console.log("hj", localBrushExtent, brushExtent);
     setLocalBrushExtent(brushExtent);
   }, [brushExtent]);
 
