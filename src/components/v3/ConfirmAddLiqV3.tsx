@@ -161,7 +161,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
           </div>
         </div>
 
-        <div className="flex gap-4 mt-2 px-5">
+        <div className="sm:flex gap-4 mt-2 px-5">
           <div>
             <div className="flex text-text-250">
               <span className="font-caption1 pl-1">Min Price</span>
@@ -170,29 +170,29 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
                 {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
               </span>
             </div>
-            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-[163px] text-center py-2">
+            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
               <div className="font-title3">820.63</div>
               <div className="font-subtitle5 text-text-250 mt-[1.5px]">$23.38</div>
             </div>
           </div>
           <div>
-            <div className="flex text-text-250">
+            <div className="flex text-text-250 mt-3 sm:mt-0">
               <span className="font-caption1 pl-1">Max Price</span>
               <span className="font-mobile-f1020">
                 ({tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
                 {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
               </span>
             </div>
-            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-[163px] text-center py-2">
+            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
               <div className="font-title3">820.63</div>
               <div className="font-subtitle5 text-text-250 mt-[1.5px]">$23.38</div>
             </div>
           </div>
           <div>
-            <div className="flex text-text-250">
+            <div className="flex text-text-250 mt-3 sm:mt-0">
               <span className="font-caption1 pl-1">Current price</span>
             </div>
-            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-[163px] text-center py-2">
+            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
               <div className="font-title3">820.63</div>
               <div className="font-subtitle5 text-text-250 mt-[1.5px]">$23.38</div>
             </div>

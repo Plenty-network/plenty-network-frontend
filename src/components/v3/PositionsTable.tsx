@@ -16,7 +16,7 @@ interface IPositionsProps {
 function PositionsTable(props: IPositionsProps) {
   return (
     <>
-      <div className="flex  my-[24px] ml-10 ">
+      {/* <div className="flex  my-[24px] ml-10 ">
         <div className="w-[135px] text-text-250 font-body2 flex">
           Liquidity
           <div className="relative top-[2px] ml-1 cursor-pointer">
@@ -57,6 +57,7 @@ function PositionsTable(props: IPositionsProps) {
           </div>
         </div>
       </div>
+       */}
       <PositionsData tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
     </>
   );

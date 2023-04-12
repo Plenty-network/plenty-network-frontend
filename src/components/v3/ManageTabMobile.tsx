@@ -32,6 +32,8 @@ import { addLiquidity } from "../../operations/addLiquidity";
 import { AppDispatch, useAppDispatch, useAppSelector } from "../../redux";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
+
+import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import ConfirmTransaction from "../ConfirmTransaction";
 import { Flashtype } from "../FlashScreen";
 import Liquidity from "../Liquidity";
@@ -69,6 +71,7 @@ import {
   settopLevelSelectedToken,
 } from "../../redux/poolsv3";
 import { Pool, Tick } from "@plenty-labs/v3-sdk";
+import FeeTierMain from "./FeeTierMain";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -85,7 +88,7 @@ export interface IManageLiquidityProps {
   feeTier: string;
 }
 
-export function ManageTabV3(props: IManageLiquidityProps) {
+export function ManageTabMobile(props: IManageLiquidityProps) {
   const pooldatafromsdk = new Pool(-275611, 10, new BigNumber(1251963215603107302), "", "");
   console.log("kk", pooldatafromsdk.getInitialBoundaries());
   const g = pooldatafromsdk.getInitialBoundaries();
@@ -94,7 +97,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     Tick.computeSqrtPriceFromTick(g[0]).toFixed(2),
     Tick.computeSqrtPriceFromTick(g[1]).toFixed(2)
   );
-  const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
+
   useEffect(() => {
     dispatch(setleftbrush(70));
     dispatch(setrightbrush(100));
@@ -278,6 +281,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       setSharePool(sharePool.pnlpPoolShare);
     }
   }, [firstTokenAmountLiq, secondTokenAmountLiq, screen, balanceUpdate]);
+  const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
   const resetAllValues = () => {
     setFirstTokenAmountLiq("");
     setSecondTokenAmountLiq("");
@@ -430,152 +434,150 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   }, [selectedToken]);
   return props.showLiquidityModal ? (
     <>
-      <PopUpModal
-        onhide={closeModal}
+      <div
+        id="modal_outer"
         className={clsx(
-          screen === "3"
-            ? "sm:w-[880px] sm:max-w-[880px]"
-            : screen === "2"
-            ? "sm:w-[602px] sm:max-w-[602px]"
-            : "sm:w-[972px] sm:max-w-[972px]",
-          "w-[414px] max-w-[414px]  rounded-none sm:rounded-3xl "
+          true &&
+            "z-index-max fixed top-[74px] left-0 flex flex-col gap-2 w-screen h-[84vh]  z-50 items-center justify-center topNavblurEffect overflow-y-auto"
         )}
-        footerChild={
-          <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
-            <p className="font-subtitle1 md:text-f16 text-text-150">
-              {props.activeState === ActiveLiquidity.Liquidity &&
-                "Add liquidity, stake, and earn PLY"}
-              {props.activeState === ActiveLiquidity.Staking &&
-                "Add liquidity, stake, and earn PLY"}
-              {props.activeState === ActiveLiquidity.Rewards &&
-                "Add liquidity, stake, and earn PLY"}
-            </p>
-            <Image
-              className="cursor-pointer hover:opacity-90"
-              onClick={() => setShowVideoModal(true)}
-              src={playBtn}
-            />
-          </div>
-        }
       >
-        {screen === "1" ? (
-          <>
-            <div className="flex gap-1 items-center">
-              <p className="text-white">
-                {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
-              </p>
-              <p className="ml-1 relative top-[0px]">
-                <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
-              </p>
-              <p className="text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer">
-                Clear All
-              </p>
-              <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
-                <div
-                  className={clsx(
-                    selectedToken.symbol === props.tokenA.symbol
-                      ? "h-[23px] px-2  bg-shimmer-200 rounded-lg	"
-                      : "text-text-250 px-2",
-                    "font-subtitle1223"
-                  )}
-                  onClick={() => setSelectedToken(props.tokenA)}
-                >
-                  {tEZorCTEZtoUppercase(props.tokenA.symbol)}
+        <div
+          className={clsx(
+            screen === "3"
+              ? "sm:w-[880px] sm:max-w-[880px] "
+              : screen === "2"
+              ? "sm:w-[602px] sm:max-w-[602px]"
+              : "sm:w-[972px] sm:max-w-[972px] mt-[32px]",
+            "w-[414px] max-w-[414px]  rounded-none sm:rounded-3xl   border-popUpNotification    bg-sideBar   border px-3 py-5 overflow-x-hidden"
+          )}
+        >
+          {screen === "1" ? (
+            <>
+              <div className="flex gap-1 items-center">
+                <p className="cursor-pointer" onClick={() => setScreen("3")}>
+                  <Image alt={"alt"} src={arrowLeft} />
+                </p>
+                <p className="text-white">
+                  {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
+                </p>
+                <p className="ml-1 relative top-[0px]">
+                  <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
+                </p>
+                <p className="text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer">
+                  Clear All
+                </p>
+                <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
+                  <div
+                    className={clsx(
+                      selectedToken.symbol === props.tokenA.symbol
+                        ? "h-[23px] px-2  bg-shimmer-200 rounded-lg	"
+                        : "text-text-250 px-2",
+                      "font-subtitle1223"
+                    )}
+                    onClick={() => setSelectedToken(props.tokenA)}
+                  >
+                    {tEZorCTEZtoUppercase(props.tokenA.symbol)}
+                  </div>
+                  <div
+                    className={clsx(
+                      selectedToken.symbol === props.tokenB.symbol
+                        ? "h-[23px] px-2  bg-shimmer-200 rounded-lg	"
+                        : "text-text-250 px-2",
+                      "font-subtitle1223"
+                    )}
+                    onClick={() => setSelectedToken(props.tokenB)}
+                  >
+                    {tEZorCTEZtoUppercase(props.tokenB.symbol)}
+                  </div>
                 </div>
-                <div
-                  className={clsx(
-                    selectedToken.symbol === props.tokenB.symbol
-                      ? "h-[23px] px-2  bg-shimmer-200 rounded-lg	"
-                      : "text-text-250 px-2",
-                    "font-subtitle1223"
-                  )}
-                  onClick={() => setSelectedToken(props.tokenB)}
-                >
-                  {tEZorCTEZtoUppercase(props.tokenB.symbol)}
+                <div className="flex items-center justify-between flex-row  relative mr-[48px]">
+                  <div
+                    ref={refSettingTab}
+                    className="py-1  px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] "
+                    onClick={() => setSettingsShow(!settingsShow)}
+                  >
+                    <Image alt={"alt"} src={settings} height={"20px"} width={"20px"} />
+                    <span className="text-white font-body4 ml-2 relative -top-[3px]">
+                      {slippage ? Number(slippage) : 0.5}%
+                    </span>
+                  </div>
+                  <TransactionSettingsLiquidity
+                    show={settingsShow}
+                    setSlippage={setSlippage}
+                    slippage={slippage}
+                    setSettingsShow={setSettingsShow}
+                  />
                 </div>
               </div>
-              <div className="flex items-center justify-between flex-row  relative mr-[48px]">
-                <div
-                  ref={refSettingTab}
-                  className="py-1  px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] "
-                  onClick={() => setSettingsShow(!settingsShow)}
-                >
-                  <Image alt={"alt"} src={settings} height={"20px"} width={"20px"} />
-                  <span className="text-white font-body4 ml-2 relative -top-[3px]">
-                    {slippage ? Number(slippage) : 0.5}%
-                  </span>
-                </div>
-                <TransactionSettingsLiquidity
-                  show={settingsShow}
-                  setSlippage={setSlippage}
-                  slippage={slippage}
-                  setSettingsShow={setSettingsShow}
-                />
-              </div>
-            </div>
 
-            <div className="sm:flex gap-4 mt-4">
-              <PriceRangeV3 tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
-              <div className="">
-                <LiquidityV3
+              <div className=" mt-4">
+                <FeeTierMain
                   setSelectedFeeTier={setSelectedFeeTier}
                   selectedFeeTier={selectedFeeTier}
-                  setScreen={setScreen}
                   feeTier={props.feeTier}
-                  firstTokenAmount={firstTokenAmountLiq}
-                  secondTokenAmount={secondTokenAmountLiq}
-                  userBalances={userBalances}
-                  setSecondTokenAmount={setSecondTokenAmountLiq}
-                  setFirstTokenAmount={setFirstTokenAmountLiq}
-                  tokenIn={props.tokenIn}
-                  tokenOut={props.tokenOut}
-                  setIsAddLiquidity={setIsAddLiquidity}
-                  isAddLiquidity={isAddLiquidity}
-                  swapData={swapData.current}
-                  pnlpBalance={pnlpBalance}
-                  setSlippage={setSlippage}
-                  slippage={slippage}
-                  lpTokenPrice={lpTokenPrice}
-                  isLoading={isLoading}
                 />
+                <PriceRangeV3 tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
+                <div className="mt-3">
+                  <LiquidityV3
+                    setSelectedFeeTier={setSelectedFeeTier}
+                    selectedFeeTier={selectedFeeTier}
+                    setScreen={setScreen}
+                    feeTier={props.feeTier}
+                    firstTokenAmount={firstTokenAmountLiq}
+                    secondTokenAmount={secondTokenAmountLiq}
+                    userBalances={userBalances}
+                    setSecondTokenAmount={setSecondTokenAmountLiq}
+                    setFirstTokenAmount={setFirstTokenAmountLiq}
+                    tokenIn={props.tokenIn}
+                    tokenOut={props.tokenOut}
+                    setIsAddLiquidity={setIsAddLiquidity}
+                    isAddLiquidity={isAddLiquidity}
+                    swapData={swapData.current}
+                    pnlpBalance={pnlpBalance}
+                    setSlippage={setSlippage}
+                    slippage={slippage}
+                    lpTokenPrice={lpTokenPrice}
+                    isLoading={isLoading}
+                  />
+                </div>
               </div>
-            </div>
-          </>
-        ) : screen === "3" ? (
-          <>
-            <div className="flex gap-1">
-              <p className="text-white">
-                {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
-              </p>
-              <p className="ml-1 relative top-[6px]">
-                <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
-              </p>
-            </div>
-            <PositionsPopup
-              tokenIn={props.tokenIn}
-              tokenOut={props.tokenOut}
-              setScreen={setScreen}
-            />
-          </>
-        ) : null}
-        {screen === "1" && <div className="mt-2">{AddButton}</div>}
-        {props.activeState === ActiveLiquidity.Liquidity && screen === "2" && (
-          <>
-            <ConfirmAddLiquidityv3
-              setScreen={setScreen}
-              firstTokenAmount={firstTokenAmountLiq}
-              secondTokenAmount={secondTokenAmountLiq}
-              tokenIn={props.tokenIn}
-              tokenOut={props.tokenOut}
-              tokenPrice={tokenPrice}
-              pnlpEstimates={pnlpEstimates}
-              sharePool={sharePool}
-              slippage={slippage}
-              handleAddLiquidityOperation={handleAddLiquidityOperation}
-            />
-          </>
-        )}
-      </PopUpModal>
+            </>
+          ) : screen === "3" ? (
+            <>
+              <div className="flex gap-1">
+                <p className="text-white">
+                  {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
+                </p>
+                <p className="ml-1 relative top-[6px]">
+                  <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
+                </p>
+              </div>
+              <PositionsPopup
+                tokenIn={props.tokenIn}
+                tokenOut={props.tokenOut}
+                setScreen={setScreen}
+              />
+            </>
+          ) : null}
+          {screen === "1" && <div className="mt-2">{AddButton}</div>}
+          {props.activeState === ActiveLiquidity.Liquidity && screen === "2" && (
+            <>
+              <ConfirmAddLiquidityv3
+                setScreen={setScreen}
+                firstTokenAmount={firstTokenAmountLiq}
+                secondTokenAmount={secondTokenAmountLiq}
+                tokenIn={props.tokenIn}
+                tokenOut={props.tokenOut}
+                tokenPrice={tokenPrice}
+                pnlpEstimates={pnlpEstimates}
+                sharePool={sharePool}
+                slippage={slippage}
+                handleAddLiquidityOperation={handleAddLiquidityOperation}
+              />
+            </>
+          )}
+        </div>
+      </div>
       {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"HtDOhje7Y5A"} />}
       {showConfirmTransaction && (
         <ConfirmTransaction

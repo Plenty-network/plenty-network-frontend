@@ -32,6 +32,7 @@ import { ManageLiquidity } from "../../Pools/ManageLiquidity";
 import { ManageTabV3 } from "../ManageTabV3";
 import { Apr } from "./Apr";
 import { setTokenInV3, settopLevelSelectedToken } from "../../../redux/poolsv3";
+import { ManageTabMobile } from "../ManageTabMobile";
 
 export interface IShortCardProps {
   className?: string;
@@ -129,87 +130,54 @@ export function PoolsTableV3(props: IShortCardProps) {
       {
         Header: "Pools",
         id: "pools",
-        columnWidth: "w-[160px]",
-        showOnMobile: true,
+        columnWidth: "w-[210px]",
         canShort: true,
+        showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x) => (
-          <div className="flex gap-1 items-center max-w-[180px]">
-            <CircularOverLappingImage
-              tokenA={
-                tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
-                  ? x.tokenB.toString()
-                  : x.tokenA.toString()
-              }
-              tokenB={
-                tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
-                  ? x.tokenA.toString()
-                  : x.tokenB.toString()
-              }
-              src1={
-                tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
-                  ? getImagesPath(x.tokenB.toString())
-                  : getImagesPath(x.tokenA.toString())
-              }
-              src2={
-                tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
-                  ? getImagesPath(x.tokenA.toString())
-                  : getImagesPath(x.tokenB.toString())
-              }
-            />
-            <div className="flex flex-col gap-[2px]">
-              <span className="md:text-f14 text-f12 text-white ">
-                {tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
-                  ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
-                      x.tokenA.toString()
-                    )}`
-                  : ` ${tEZorCTEZtoUppercase(x.tokenA.toString())} / ${tEZorCTEZtoUppercase(
-                      x.tokenB.toString()
-                    )}`}
-              </span>
-              <span className="text-f12 text-text-500">{x.poolType} Pool</span>
+          <>
+            <div className={clsx("flex gap-1 items-center max-w-[220px]")}>
+              <CircularOverLappingImage
+                tokenA={
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                    ? x.tokenB.toString()
+                    : x.tokenA.toString()
+                }
+                tokenB={
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                    ? x.tokenA.toString()
+                    : x.tokenB.toString()
+                }
+                src1={
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                    ? getImagesPath(x.tokenB.toString())
+                    : getImagesPath(x.tokenA.toString())
+                }
+                src2={
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                    ? getImagesPath(x.tokenA.toString())
+                    : getImagesPath(x.tokenB.toString())
+                }
+              />
+              <div className="flex items-center ">
+                <span className="md:text-f14 text-f12 text-white ">
+                  {tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                    ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
+                        x.tokenA.toString()
+                      )}`
+                    : ` ${tEZorCTEZtoUppercase(x.tokenA.toString())} / ${tEZorCTEZtoUppercase(
+                        x.tokenB.toString()
+                      )}`}
+                </span>
+                <span className="font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-1">
+                  0.05%
+                </span>
+              </div>
             </div>
-          </div>
+          </>
         ),
       },
-      {
-        Header: "APR",
-        id: "apr",
-        subText: "current epoch",
-        columnWidth: "w-[130px]",
-        isToolTipEnabled: true,
-        canShort: true,
-        showOnMobile: true,
-        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
-        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x) =>
-          x.isGaugeAvailable ? (
-            <AprInfo currentApr={x.apr} boostedApr={x.boostedApr} isMobile={true} />
-          ) : (
-            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              -
-            </div>
-          ),
-      },
-      {
-        Header: "APR",
-        id: "apr1",
-        columnWidth: "w-[90px] pr-2.5",
-        subText: "next epoch",
-        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
-        isToolTipEnabled: true,
-        canShort: true,
-        showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "futureApr"),
-        accessor: (x: any) =>
-          x.isGaugeAvailable ? (
-            <AprInfoFuture futureApr={x.futureApr} />
-          ) : (
-            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              -
-            </div>
-          ),
-      },
+
       {
         Header: "",
         id: "manage",
@@ -439,36 +407,70 @@ export function PoolsTableV3(props: IShortCardProps) {
   }
   return (
     <>
-      {props.showLiquidityModal && (
-        <ManageTabV3
-          tokenIn={tokenChange(topLevelSelectedToken, tokenIn, tokenOut)}
-          tokenOut={tokenChangeB(topLevelSelectedToken, tokenIn, tokenOut)}
-          tokenA={tokenIn}
-          tokenB={tokenOut}
-          closeFn={props.setShowLiquidityModal}
-          setActiveState={setActiveState}
-          activeState={activeState}
-          isGaugeAvailable={isGaugeAvailable}
-          showLiquidityModal={props.showLiquidityModal}
-          setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
-          filter={props.poolsFilter}
-          feeTier={"0.05"}
-        />
+      {props.showLiquidityModal &&
+        (isMobile ? (
+          <ManageTabMobile
+            tokenIn={tokenChange(topLevelSelectedToken, tokenIn, tokenOut)}
+            tokenOut={tokenChangeB(topLevelSelectedToken, tokenIn, tokenOut)}
+            tokenA={tokenIn}
+            tokenB={tokenOut}
+            closeFn={props.setShowLiquidityModal}
+            setActiveState={setActiveState}
+            activeState={activeState}
+            isGaugeAvailable={isGaugeAvailable}
+            showLiquidityModal={props.showLiquidityModal}
+            setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
+            filter={props.poolsFilter}
+            feeTier={"0.01"}
+          />
+        ) : (
+          <ManageTabV3
+            tokenIn={tokenChange(topLevelSelectedToken, tokenIn, tokenOut)}
+            tokenOut={tokenChangeB(topLevelSelectedToken, tokenIn, tokenOut)}
+            tokenA={tokenIn}
+            tokenB={tokenOut}
+            closeFn={props.setShowLiquidityModal}
+            setActiveState={setActiveState}
+            activeState={activeState}
+            isGaugeAvailable={isGaugeAvailable}
+            showLiquidityModal={props.showLiquidityModal}
+            setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
+            filter={props.poolsFilter}
+            feeTier={"0.01"}
+          />
+        ))}
+      {!isMobile && (
+        <div className={` overflow-x-auto innerPool  ${props.className}`}>
+          <Table<any>
+            columns={isMobile ? mobilecolumns : desktopcolumns}
+            data={poolsTableData}
+            shortby="fees"
+            TableName="newPools"
+            tableType={true}
+            isFetched={isFetched}
+            isConnectWalletRequired={props.isConnectWalletRequired}
+            TableWidth="min-w-[320px] lg:min-w-[750px]"
+            NoData={NoData}
+            loading={props.isFetching}
+          />
+        </div>
       )}
-      <div className={` overflow-x-auto innerPool  ${props.className}`}>
-        <Table<any>
-          columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={poolsTableData}
-          shortby="fees"
-          TableName="newPools"
-          tableType={true}
-          isFetched={isFetched}
-          isConnectWalletRequired={props.isConnectWalletRequired}
-          TableWidth="min-w-[535px] lg:min-w-[750px]"
-          NoData={NoData}
-          loading={props.isFetching}
-        />
-      </div>
+      {isMobile && !props.showLiquidityModal && (
+        <div className={` overflow-x-auto innerPool  ${props.className}`}>
+          <Table<any>
+            columns={isMobile ? mobilecolumns : desktopcolumns}
+            data={poolsTableData}
+            shortby="fees"
+            TableName="newPools"
+            tableType={true}
+            isFetched={isFetched}
+            isConnectWalletRequired={props.isConnectWalletRequired}
+            TableWidth="min-w-[320px] lg:min-w-[750px]"
+            NoData={NoData}
+            loading={props.isFetching}
+          />
+        </div>
+      )}
     </>
   );
 }

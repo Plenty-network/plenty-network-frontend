@@ -148,8 +148,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 onClick={() =>
                   onLeftRangeInputFn(
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? (Number(leftRangeInput) - 1).toString()
-                      : (Number(BleftRangeInput) - 1).toString()
+                      ? (Number(leftRangeInput) - 10).toString()
+                      : (Number(BleftRangeInput) - 10).toString()
                   )
                 }
               >
@@ -176,8 +176,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 onClick={() =>
                   onLeftRangeInputFn(
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? (Number(leftRangeInput) + 1).toString()
-                      : (Number(BleftRangeInput) + 1).toString()
+                      ? (Number(leftRangeInput) + 10).toString()
+                      : (Number(BleftRangeInput) + 10).toString()
                   )
                 }
               >
@@ -199,8 +199,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 onClick={() =>
                   onRightRangeInputFn(
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? (Number(rightRangeInput) - 1).toString()
-                      : (Number(BrightRangeInput) - 1).toString()
+                      ? (Number(rightRangeInput) - 10).toString()
+                      : (Number(BrightRangeInput) - 10).toString()
                   )
                 }
               >
@@ -227,8 +227,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 onClick={() =>
                   onRightRangeInputFn(
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? (Number(rightRangeInput) + 1).toString()
-                      : (Number(BrightRangeInput) + 1).toString()
+                      ? (Number(rightRangeInput) + 10).toString()
+                      : (Number(BrightRangeInput) + 10).toString()
                   )
                 }
               >

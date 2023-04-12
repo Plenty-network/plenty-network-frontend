@@ -116,18 +116,7 @@ export default function Pools(props: IIndexProps) {
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
-  useEffect(() => {
-    dispatch(setleftbrush(70));
-    dispatch(setrightbrush(100));
-    dispatch(setleftRangeInput("70"));
-    dispatch(setRightRangeInput("100"));
-    dispatch(setcurrentPrice(87));
-    dispatch(setBleftbrush(87));
-    dispatch(setBrightbrush(92));
-    dispatch(setBleftRangeInput("87"));
-    dispatch(setBRightRangeInput("92"));
-    dispatch(setBcurrentPrice(90));
-  }, []);
+
   return (
     <>
       <SideBarHOC>

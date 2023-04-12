@@ -52,11 +52,11 @@ function PositionsPopup(props: IPositionsProps) {
 
   return (
     <>
-      <div className=" mt-4 rounded-2xl flex flex-col justify-between items-center h-[64px] px-[25px] py-1.5 border-text-800  border-2 bg-secondary-400 ">
+      <div className=" mt-4 rounded-2xl flex flex-col justify-between items-center h-[64px] px-3 sm:px-[25px] py-1.5 border-text-800  border-2 bg-secondary-400 ">
         {
           <>
             <div className="flex w-full justify-between">
-              <div className="flex gap-1 md:gap-2 items-center pl-2 md:pl-4">
+              <div className="flex gap-1 md:gap-2 items-center pl-0 md:pl-4">
                 <CircularImageInfo imageArray={[props.tokenIn.image, props.tokenOut.image]} />
                 <span className="font-body2 md:text-f14 text-white ">
                   {tEZorCTEZtoUppercase(props.tokenIn.symbol)} /

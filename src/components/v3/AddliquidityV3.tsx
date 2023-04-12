@@ -287,7 +287,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           ? leftbrush < currentPrice && rightbrush > currentPrice
           : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice
       ) ? (
-        <div className="relative -top-[9px] left-[30%] md:left-[25%]">
+        <div className="relative -top-[9px] left-[25%]">
           <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
         </div>
       ) : (

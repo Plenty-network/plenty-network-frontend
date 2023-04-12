@@ -16,6 +16,7 @@ import { AppDispatch, useAppSelector } from "../../redux";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import AddLiquidityV3 from "./AddliquidityV3";
 import FeeTierMain from "./FeeTierMain";
+import { isMobile } from "react-device-detect";
 
 interface ILiquidityProps {
   userBalances: {
@@ -36,7 +37,8 @@ interface ILiquidityProps {
   isAddLiquidity: boolean;
   swapData: ISwapData;
   pnlpBalance: string;
-
+  setSelectedFeeTier: React.Dispatch<React.SetStateAction<string>>;
+  selectedFeeTier: string;
   setSlippage: React.Dispatch<React.SetStateAction<string>>;
   slippage: string;
   lpTokenPrice: BigNumber;
@@ -46,16 +48,16 @@ interface ILiquidityProps {
 function LiquidityV3(props: ILiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
 
-  const [selectedFeeTier, setSelectedFeeTier] = useState("0.05");
-
   return (
     <>
-      <div className=" w-[546px] rounded-2xl border-text-800 px-[10px] md:px-3.5  pb-4  ">
-        <FeeTierMain
-          setSelectedFeeTier={setSelectedFeeTier}
-          selectedFeeTier={selectedFeeTier}
-          feeTier={props.feeTier}
-        />
+      <div className="w-auto sm:w-[546px] rounded-2xl border-text-800  md:px-3.5  pb-4  ">
+        {!isMobile && (
+          <FeeTierMain
+            setSelectedFeeTier={props.setSelectedFeeTier}
+            selectedFeeTier={props.selectedFeeTier}
+            feeTier={props.feeTier}
+          />
+        )}
 
         <AddLiquidityV3
           tokenIn={props.tokenIn}
@@ -68,7 +70,7 @@ function LiquidityV3(props: ILiquidityProps) {
           swapData={props.swapData}
           tokenPrice={tokenPrice}
         />
-        {props.feeTier !== selectedFeeTier && (
+        {props.feeTier !== props.selectedFeeTier && (
           <div className="h-[56px] mt-[7px] flex items-center  px-2 bg-error-300/[0.1]  rounded-lg	">
             <Image src={infoOrangeBig} />
             <span className="ml-3 text-error-300 text-[13px] leading-[20px] ">

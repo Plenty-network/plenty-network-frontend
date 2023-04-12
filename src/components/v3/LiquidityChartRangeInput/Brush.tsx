@@ -103,7 +103,6 @@ export const Brush = ({
   const [hovering, setHovering] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const previousBrushExtent = usePrevious(brushExtent);
-  console.log("pp", localBrushExtent, brushExtent);
   const brushed = useCallback(
     (event: D3BrushEvent<unknown>) => {
       const { type, selection, mode } = event;
