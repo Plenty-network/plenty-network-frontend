@@ -75,6 +75,8 @@ export const dappClient = () => {
       preferredNetwork: walletNetwork,
       colorMode: ColorMode.DARK,
       blockExplorer: new TzktBlockExplorer() as any,
+      appUrl: "https://app.plenty.network",
+      featuredWallets: ['temple', 'naan', 'kukai', 'airgap'],
     };
 
     return new BeaconWallet(dAppInfo);
