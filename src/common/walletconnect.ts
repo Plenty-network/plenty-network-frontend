@@ -26,6 +26,8 @@ class TzktBlockExplorer extends BlockExplorer {
       [NetworkType.MONDAYNET]: "https://mondaynet.tzkt.io/",
       [NetworkType.DAILYNET]: "https://mondaynet.tzkt.io/",
       [NetworkType.KATHMANDUNET]: "https://kathmandunet.tzkt.io/",
+      [NetworkType.LIMANET]: "https://limanet.tzkt.io/",
+      [NetworkType.MUMBAINET]: "https://mumbainet.tzkt.io/"
     }
   ) {
     super(rpcUrls);
@@ -46,8 +48,6 @@ class TzktBlockExplorer extends BlockExplorer {
 export const connectedNetwork = Config.NETWORK;
 export const walletNetwork = Config.WALLET_NETWORK;
 export const configName = Config.NAME;
-// const rpcNode = localStorage.getItem(RPC_NODE) ?? Config.RPC_NODES[connectedNetwork];
-// export const rpcNode = Config.RPC_NODES[connectedNetwork];
 export const tzktNode = Config.TZKT_NODES[connectedNetwork];
 export const publicTzktNode = Config.PUBLIC_TZKT_NODES[connectedNetwork];
 export const voteEscrowAddress = Config.VOTE_ESCROW[connectedNetwork];
@@ -64,7 +64,7 @@ export const getRpcNode = () =>
 
 export const dispatch = () => useAppDispatch();
 
-export function dappClient() {
+export const dappClient = () => {
   let instance: BeaconWallet | undefined;
 
   async function init() {
@@ -141,7 +141,7 @@ export function dappClient() {
     return Tezos;
   }
   async function disconnectWallet() {
-    const wallet = await getDAppClientWallet();
+    const wallet = await getDAppClient();
     try {
       await wallet.disconnect();
       return {
@@ -157,7 +157,6 @@ export function dappClient() {
     }
   }
   return {
-    loadWallet,
     getDAppClient,
     connectAccount,
     swapAccount,
