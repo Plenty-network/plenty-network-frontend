@@ -15,11 +15,12 @@ import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import PositionsTable from "./PositionsTable";
 import feeimg from "../../assets/icon/poolsv3/feeMP.svg";
 import dollarimg from "../../assets/icon/poolsv3/dollarMP.svg";
+import { ActivePopUp } from "./ManageTabV3";
 
 interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  setScreen: React.Dispatch<React.SetStateAction<string>>;
+  setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
 }
 function PositionsPopup(props: IPositionsProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
@@ -43,7 +44,11 @@ function PositionsPopup(props: IPositionsProps) {
       );
     } else if (true) {
       return (
-        <Button height="52px" onClick={() => props.setScreen("1")} color={"primary"}>
+        <Button
+          height="52px"
+          onClick={() => props.setScreen(ActivePopUp.NewPosition)}
+          color={"primary"}
+        >
           New position
         </Button>
       );
@@ -75,7 +80,11 @@ function PositionsPopup(props: IPositionsProps) {
           </>
         }
       </div>
-      <PositionsTable tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
+      <PositionsTable
+        setScreen={props.setScreen}
+        tokenIn={props.tokenIn}
+        tokenOut={props.tokenOut}
+      />
       <div className="mt-2">{ButtonComp}</div>
     </>
   );

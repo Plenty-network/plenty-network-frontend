@@ -11,10 +11,12 @@ import infoGreen from "../../../src/assets/icon/poolsv3/infoGreen.svg";
 import clsx from "clsx";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { ActivePopUp } from "./ManageTabV3";
 
 interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
+  setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
 }
 function PositionsData(props: IPositionsProps) {
   const data = [
@@ -134,7 +136,10 @@ function PositionsData(props: IPositionsProps) {
                 Collect fees
                 <span className=" h-[28px] border-r border-card-700 ml-auto"></span>
               </div>
-              <div className=" font-subtitle4 text-primary-500 text-right pr-5 w-[119px]">
+              <div
+                className=" font-subtitle4 text-primary-500 text-right pr-5 w-[119px]"
+                onClick={() => props.setScreen(ActivePopUp.ManageExisting)}
+              >
                 Manage
               </div>
             </div>

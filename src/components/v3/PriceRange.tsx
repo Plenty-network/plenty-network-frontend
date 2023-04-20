@@ -91,7 +91,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
   };
   return (
     <div>
-      <div className=" w-[362px]   px-[10px]  pt-2 pb-6  mb-5 h-[254px]">
+      <div className="mx-auto md:w-[400px] w-[362px]   px-[10px]  pt-2 pb-6  mb-5 h-[254px]">
         <div className="flex justify-between">
           <div className="font-body4 ">Set Price Range</div>
           {/* <div className="flex gap-1">
@@ -133,7 +133,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
           </span>
         </div>
       ) : (
-        <div className="flex gap-[14px] justify-between	mt-[16px]">
+        <div className="flex w-[362px] mx-auto gap-[14px] justify-between	mt-[16px]">
           <div>
             <div className="font-body4 text-text-250">
               Min Price{" "}

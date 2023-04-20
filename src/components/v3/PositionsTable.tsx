@@ -8,10 +8,12 @@ import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import PositionsData from "./PositionsData";
 import { tokenParameterLiquidity } from "../Liquidity/types";
+import { ActivePopUp } from "./ManageTabV3";
 
 interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
+  setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
 }
 function PositionsTable(props: IPositionsProps) {
   return (
@@ -58,7 +60,11 @@ function PositionsTable(props: IPositionsProps) {
         </div>
       </div>
        */}
-      <PositionsData tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
+      <PositionsData
+        tokenIn={props.tokenIn}
+        tokenOut={props.tokenOut}
+        setScreen={props.setScreen}
+      />
     </>
   );
 }

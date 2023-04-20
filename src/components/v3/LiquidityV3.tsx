@@ -16,7 +16,8 @@ import { AppDispatch, useAppSelector } from "../../redux";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import AddLiquidityV3 from "./AddliquidityV3";
 import FeeTierMain from "./FeeTierMain";
-import { isMobile } from "react-device-detect";
+import { isMobile, isTablet } from "react-device-detect";
+import { ActivePopUp } from "./ManageTabV3";
 
 interface ILiquidityProps {
   userBalances: {
@@ -32,7 +33,7 @@ interface ILiquidityProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
 
-  setScreen: React.Dispatch<React.SetStateAction<string>>;
+  setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
   setIsAddLiquidity: React.Dispatch<React.SetStateAction<boolean>>;
   isAddLiquidity: boolean;
   swapData: ISwapData;
@@ -50,8 +51,15 @@ function LiquidityV3(props: ILiquidityProps) {
 
   return (
     <>
-      <div className="w-auto sm:w-[546px] rounded-2xl border-text-800  md:px-3.5  pb-4  ">
+      <div className="w-auto lg:w-[546px] mx-auto rounded-2xl border-text-800  md:px-3.5  pb-4  ">
         {!isMobile && (
+          <FeeTierMain
+            setSelectedFeeTier={props.setSelectedFeeTier}
+            selectedFeeTier={props.selectedFeeTier}
+            feeTier={props.feeTier}
+          />
+        )}
+        {isTablet && (
           <FeeTierMain
             setSelectedFeeTier={props.setSelectedFeeTier}
             selectedFeeTier={props.selectedFeeTier}

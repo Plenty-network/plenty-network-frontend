@@ -153,6 +153,7 @@ module.exports = {
     fontSize: {
       f60: ["60px", "90px"],
       f40: ["40px", "60px"],
+      f40600: ["40px", "9.1px"],
       f32: ["32px", "40px"],
       f28: ["28px", "42px"],
       f24: ["24px", "38px"],

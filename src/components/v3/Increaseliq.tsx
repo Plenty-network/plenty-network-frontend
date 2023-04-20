@@ -1,28 +1,28 @@
-import Image from "next/image";
-import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-
 import infoOrange from "../../../src/assets/icon/poolsv3/infoOrange.svg";
 import infoGreen from "../../../src/assets/icon/poolsv3/infoGreen.svg";
-import { BigNumber } from "bignumber.js";
+import { tokenIcons } from "../../constants/tokensList";
+import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import clsx from "clsx";
 import nFormatter, {
   changeSource,
   imageExists,
   nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
-import { useAppSelector } from "../../redux";
+import { useMemo, useState } from "react";
+import Image from "next/image";
+import { BigNumber } from "bignumber.js";
+import { AppDispatch, useAppSelector } from "../../redux";
+import AddLiquidityV3 from "./AddliquidityV3";
 import Button from "../Button/Button";
-import fallback from "../../../src/assets/icon/pools/fallback.png";
-import { tokenIcons } from "../../constants/tokensList";
-import { tokenParameterLiquidity } from "../Liquidity/types";
-import clsx from "clsx";
-import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { walletConnection } from "../../redux/wallet/wallet";
 import { ActivePopUp } from "./ManageTabV3";
 
-interface IConfirmAddLiquidityProps {
+interface IIncLiquidityProp {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  firstTokenAmount: string | number | BigNumber;
+  firstTokenAmount: string | number;
   secondTokenAmount: string | number;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
   tokenPrice: {
@@ -31,30 +31,63 @@ interface IConfirmAddLiquidityProps {
   pnlpEstimates: string;
   sharePool: string;
   slippage: string;
-  handleAddLiquidityOperation: () => void;
+  setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
+  setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
+  swapData: ISwapData;
+  userBalances: {
+    [key: string]: string;
+  };
 }
-function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
-  const tokens = useAppSelector((state) => state.config.tokens);
+export default function IncreaseLiq(props: IIncLiquidityProp) {
   const [selectedToken, setSelectedToken] = useState(props.tokenIn);
+  const tokens = useAppSelector((state) => state.config.tokens);
+  const walletAddress = useAppSelector((state) => state.wallet.address);
+  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const dispatch = useDispatch<AppDispatch>();
+  const connectTempleWallet = () => {
+    return dispatch(walletConnection());
+  };
+  const IncreaseButton = useMemo(() => {
+    if (!walletAddress) {
+      return (
+        <Button onClick={connectTempleWallet} color={"primary"}>
+          Connect wallet
+        </Button>
+      );
+    } else if (Number(props.firstTokenAmount) <= 0 || Number(props.secondTokenAmount) <= 0) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Add
+        </Button>
+      );
+    } else if (
+      walletAddress &&
+      ((props.firstTokenAmount &&
+        props.firstTokenAmount > Number(props.userBalances[props.tokenIn.name])) ||
+        (props.secondTokenAmount && props.secondTokenAmount) >
+          Number(props.userBalances[props.tokenOut.name]))
+    ) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Insufficient balance
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          color={"primary"}
+          onClick={() => {
+            props.setScreen(ActivePopUp.ConfirmExisting);
+          }}
+        >
+          Add
+        </Button>
+      );
+    }
+  }, [props]);
   return (
     <>
-      <div className="flex">
-        <div
-          className="cursor-pointer  relative top-[3px]"
-          onClick={() => props.setScreen(ActivePopUp.NewPosition)}
-        >
-          <Image alt={"alt"} src={arrowLeft} />
-        </div>
-        <div className="mx-2 text-white font-title3">Confirm add liquidity </div>
-        {/* <div className="relative cursor-pointer top-[2px]">
-          <Image alt={"alt"} src={info} />
-        </div> */}
-      </div>
-      <div className="mt-3 text-text-500 font-body4">
-        Output is estimated. If the price changes by more than{" "}
-        {props.slippage ? props.slippage : 0.5}% your transaction will revert
-      </div>
-      <div className="mt-[17px] border border-text-800 bg-card-200 rounded-2xl py-5">
+      <div className="mt-[17px] border border-text-800 bg-card-200 rounded-2xl py-5 mb-3">
         <div className="flex px-5">
           <div className="text-text-250 font-body4 ">You are depositing</div>{" "}
           <div className=" ml-auto">
@@ -149,7 +182,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
               )}
               onClick={() => setSelectedToken(props.tokenIn)}
             >
-              {props.tokenIn.symbol}
+              {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
             </div>
             <div
               className={clsx(
@@ -160,7 +193,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
               )}
               onClick={() => setSelectedToken(props.tokenOut)}
             >
-              {props.tokenOut.symbol}
+              {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
             </div>
           </div>
         </div>
@@ -203,13 +236,18 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
           </div>
         </div>
       </div>
-      <div className="mt-5">
-        <Button color={"primary"} onClick={props.handleAddLiquidityOperation}>
-          Confirm deposit
-        </Button>
-      </div>
+      <AddLiquidityV3
+        tokenIn={props.tokenIn}
+        tokenOut={props.tokenOut}
+        firstTokenAmount={props.firstTokenAmount}
+        secondTokenAmount={props.secondTokenAmount}
+        userBalances={props.userBalances}
+        setSecondTokenAmount={props.setSecondTokenAmount}
+        setFirstTokenAmount={props.setFirstTokenAmount}
+        swapData={props.swapData}
+        tokenPrice={tokenPrice}
+      />
+      <div className="mt-4"> {IncreaseButton}</div>
     </>
   );
 }
-
-export default ConfirmAddLiquidityv3;

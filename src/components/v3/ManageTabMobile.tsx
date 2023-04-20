@@ -6,8 +6,6 @@ import { POOL_TYPE } from "../../../pages/pools";
 import { getPnlpOutputEstimate, getPoolShareForPnlp } from "../../api/liquidity";
 import settings from "../../../src/assets/icon/swap/settings.svg";
 import { ELiquidityProcess } from "../../api/liquidity/types";
-
-import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
 import { loadSwapDataWrapper } from "../../api/swap/wrappers";
 import {
   getBalanceFromTzkt,
@@ -17,8 +15,6 @@ import {
 } from "../../api/util/balance";
 import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { getLPTokenPrice } from "../../api/util/price";
-import { ELocksState } from "../../api/votes/types";
-import playBtn from "../../assets/icon/common/playBtn.svg";
 import { tzktExplorer } from "../../common/walletconnect";
 import { IConfigLPToken } from "../../config/types";
 
@@ -72,6 +68,11 @@ import {
 } from "../../redux/poolsv3";
 import { Pool, Tick } from "@plenty-labs/v3-sdk";
 import FeeTierMain from "./FeeTierMain";
+import { isTablet } from "react-device-detect";
+import IncreaseDecreaseLiqMain from "./IncreaseDecreaseliqMain";
+import { ActiveIncDecState, ActivePopUp } from "./ManageTabV3";
+import ConfirmIncreaseLiq from "./Confirmaddliq";
+import ConfirmDecreaseLiq from "./Confirmremoveliq";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -89,6 +90,9 @@ export interface IManageLiquidityProps {
 }
 
 export function ManageTabMobile(props: IManageLiquidityProps) {
+  const [activeStateIncDec, setActiveStateIncDec] = React.useState<ActiveIncDecState | string>(
+    ActiveIncDecState.Increase
+  );
   const pooldatafromsdk = new Pool(-275611, 10, new BigNumber(1251963215603107302), "", "");
   console.log("kk", pooldatafromsdk.getInitialBoundaries());
   const g = pooldatafromsdk.getInitialBoundaries();
@@ -117,7 +121,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
 
-  const [screen, setScreen] = React.useState("3");
+  const [screen, setScreen] = React.useState(ActivePopUp.Positions);
   const [firstTokenAmountLiq, setFirstTokenAmountLiq] = React.useState<string | number>("");
   const [secondTokenAmountLiq, setSecondTokenAmountLiq] = React.useState<number | string>("");
 
@@ -309,7 +313,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
     );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
-    setScreen("1");
+    setScreen(ActivePopUp.NewPosition);
     addLiquidity(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
@@ -389,7 +393,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
     props.closeFn(false);
   };
   const handleAddLiquidity = () => {
-    setScreen("2");
+    setScreen(ActivePopUp.ConfirmAddV3);
   };
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
@@ -438,23 +442,23 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
         id="modal_outer"
         className={clsx(
           true &&
-            "z-index-max fixed top-[74px] left-0 flex flex-col gap-2 w-screen h-[84vh]  z-50 items-center justify-center topNavblurEffect overflow-y-auto"
+            "z-index-max fixed top-[74px] left-0 flex flex-col gap-2 w-screen h-[84vh]  z-50 items-center justify-center topNavblurEffect overflow-y-auto swap"
         )}
       >
         <div
           className={clsx(
-            screen === "3"
-              ? "sm:w-[880px] sm:max-w-[880px] "
-              : screen === "2"
-              ? "sm:w-[602px] sm:max-w-[602px]"
-              : "sm:w-[972px] sm:max-w-[972px] mt-[32px]",
-            "w-[414px] max-w-[414px]  rounded-none sm:rounded-3xl   border-popUpNotification    bg-sideBar   border px-3 py-5 overflow-x-hidden"
+            screen === ActivePopUp.Positions
+              ? "lg:w-[880px] lg:max-w-[880px] "
+              : screen === ActivePopUp.ConfirmAddV3
+              ? "lg:w-[602px] lg:max-w-[602px] md:w-[600px] md:max-w-[600px]"
+              : "lg:w-[972px] lg:max-w-[972px] mt-[32px] md:w-[600px] md:max-w-[600px]",
+            " w-screen   rounded-none sm:rounded-3xl   border-popUpNotification    bg-sideBar   border px-3 py-5 overflow-x-hidden"
           )}
         >
-          {screen === "1" ? (
+          {screen === ActivePopUp.NewPosition ? (
             <>
               <div className="flex gap-1 items-center">
-                <p className="cursor-pointer" onClick={() => setScreen("3")}>
+                <p className="cursor-pointer" onClick={() => setScreen(ActivePopUp.Positions)}>
                   <Image alt={"alt"} src={arrowLeft} />
                 </p>
                 <p className="text-white">
@@ -510,12 +514,14 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                 </div>
               </div>
 
-              <div className=" mt-4">
-                <FeeTierMain
-                  setSelectedFeeTier={setSelectedFeeTier}
-                  selectedFeeTier={selectedFeeTier}
-                  feeTier={props.feeTier}
-                />
+              <div className="mx-auto mt-4 lg:flex">
+                {!isTablet && (
+                  <FeeTierMain
+                    setSelectedFeeTier={setSelectedFeeTier}
+                    selectedFeeTier={selectedFeeTier}
+                    feeTier={props.feeTier}
+                  />
+                )}
                 <PriceRangeV3 tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
                 <div className="mt-3">
                   <LiquidityV3
@@ -542,7 +548,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                 </div>
               </div>
             </>
-          ) : screen === "3" ? (
+          ) : screen === ActivePopUp.Positions ? (
             <>
               <div className="flex gap-1">
                 <p className="text-white">
@@ -558,12 +564,25 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                 setScreen={setScreen}
               />
             </>
-          ) : null}
-          {screen === "1" && <div className="mt-2">{AddButton}</div>}
-          {props.activeState === ActiveLiquidity.Liquidity && screen === "2" && (
-            <>
-              <ConfirmAddLiquidityv3
-                setScreen={setScreen}
+          ) : screen === ActivePopUp.ManageExisting ? (
+            <div>
+              <div className="flex items-center">
+                <p
+                  className="cursor-pointer  relative top-[3px]"
+                  onClick={() => setScreen(ActivePopUp.Positions)}
+                >
+                  <Image alt={"alt"} src={arrowLeft} />
+                </p>
+                <p className="text-white">
+                  {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
+                </p>
+                <p className="ml-1 relative top-[0px]">
+                  <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
+                </p>
+              </div>
+              <IncreaseDecreaseLiqMain
+                setActiveStateIncDec={setActiveStateIncDec}
+                activeStateIncDec={activeStateIncDec}
                 firstTokenAmount={firstTokenAmountLiq}
                 secondTokenAmount={secondTokenAmountLiq}
                 tokenIn={props.tokenIn}
@@ -572,12 +591,66 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                 pnlpEstimates={pnlpEstimates}
                 sharePool={sharePool}
                 slippage={slippage}
-                handleAddLiquidityOperation={handleAddLiquidityOperation}
+                setScreen={setScreen}
+                userBalances={userBalances}
+                swapData={swapData.current}
+                setSecondTokenAmount={setSecondTokenAmountLiq}
+                setFirstTokenAmount={setFirstTokenAmountLiq}
               />
-            </>
-          )}
+            </div>
+          ) : null}
+          {screen === ActivePopUp.NewPosition && <div className="mt-2">{AddButton}</div>}
+          {props.activeState === ActiveLiquidity.Liquidity &&
+            screen === ActivePopUp.ConfirmAddV3 && (
+              <>
+                <ConfirmAddLiquidityv3
+                  setScreen={setScreen}
+                  firstTokenAmount={firstTokenAmountLiq}
+                  secondTokenAmount={secondTokenAmountLiq}
+                  tokenIn={props.tokenIn}
+                  tokenOut={props.tokenOut}
+                  tokenPrice={tokenPrice}
+                  pnlpEstimates={pnlpEstimates}
+                  sharePool={sharePool}
+                  slippage={slippage}
+                  handleAddLiquidityOperation={handleAddLiquidityOperation}
+                />
+              </>
+            )}
         </div>
       </div>
+      {activeStateIncDec === ActiveIncDecState.Increase &&
+        screen === ActivePopUp.ConfirmExisting && (
+          <ConfirmIncreaseLiq
+            setScreen={setScreen}
+            tokenIn={props.tokenIn}
+            tokenOut={props.tokenOut}
+            addTokenA={2}
+            addTokenB={5}
+            existingTokenA={9}
+            existingTokenB={9}
+            show={true}
+            setShow={() => {}}
+            handleClick={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
+        )}
+      {activeStateIncDec === ActiveIncDecState.Decrease &&
+        screen === ActivePopUp.ConfirmExisting && (
+          <ConfirmDecreaseLiq
+            setScreen={setScreen}
+            tokenIn={props.tokenIn}
+            tokenOut={props.tokenOut}
+            removeTokenA={8}
+            removeTokenB={9}
+            show={true}
+            setShow={() => {}}
+            handleClick={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
+        )}
       {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"HtDOhje7Y5A"} />}
       {showConfirmTransaction && (
         <ConfirmTransaction

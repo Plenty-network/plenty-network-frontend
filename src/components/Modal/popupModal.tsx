@@ -34,7 +34,7 @@ export function PopUpModal(props: IPopUpModalProps) {
     <div
       onClick={clickedInModal}
       id="modal_outer"
-      className={`z-index-max fixed top-0 left-0 flex flex-col gap-2 w-screen h-screen  z-50 items-center justify-center ${
+      className={`z-index-max fixed top-0 left-0 flex flex-col gap-2 w-screen h-screen  z-50 items-center justify-center   ${
         isClose ? "fade-out-3" : "fade-in-3"
       }
       
@@ -44,7 +44,7 @@ export function PopUpModal(props: IPopUpModalProps) {
       <div
         id="popuploadermain"
         className={clsx(
-          "broder relative border-popUpNotification  max-w-[460px]    bg-sideBar   border flex  flex-col   py-5",
+          "broder relative border-popUpNotification  max-w-[460px] h-auto overflow-y-auto overflow-x-hidden bg-sideBar   border flex  flex-col   py-5",
           props.title === "Select Token" && "h-[576px] ",
           props.Name === "Manage" ? "px-0 py-3" : "py-5 px-3 md:px-5",
           props.Name === "video"

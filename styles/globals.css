@@ -669,6 +669,10 @@ input[type='number'] {
     @apply font-semibold;
     @apply text-f11;
   }
+  .font-f40-600 {
+    @apply font-semibold;
+    @apply text-f40600;
+  }
 }
 
 .ReactTable .rt-thead {
