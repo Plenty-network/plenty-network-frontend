@@ -21,7 +21,7 @@ function WertWidgetPopup(props: Iprops) {
       origin: "https://widget.wert.io",
       currency: "USD",
       commodity: "XTZ",
-      commodities: "XTZ",
+      commodities: ["DOGA", "XTZ", "EURL"],
       color_background: "#090015",
       color_buttons: "#9D5CFF",
       color_buttons_text: "#000",
