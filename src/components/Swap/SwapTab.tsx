@@ -4,6 +4,8 @@ import { isMobile } from "react-device-detect";
 import fromExponential from "from-exponential";
 import refresh from "../../../public/assets/swapRefresh.json";
 //import refresh from "../../../src/assets/icon/swap/refresh.svg";
+
+import lottiee from "../../../public/assets/refresh.json";
 import settings from "../../../src/assets/icon/swap/settings.svg";
 import arrowDown from "../../../src/assets/icon/swap/arrowDown.svg";
 import ratesrefresh from "../../../src/assets/icon/swap/ratesrefresh.svg";
@@ -359,14 +361,15 @@ function SwapTab(props: ISwapTabProps) {
       <div className="flex items-center flex-row px-5 lg:px-9 relative">
         <div className="font-title2">Swap</div>
         <div
-          className="py-1 cursor-pointer px-15 h-8 border border-text-700 rounded-[21px] ml-auto"
+          className="py-1 cursor-pointer px-15 h-8  ml-auto"
           onClick={() => refreshAllData(true)}
         >
-          <Lottie
-            animationData={refresh}
-            loop={isRefresh ? true : false}
-            style={{ height: "20px", width: "20px" }}
-          />
+          <span className="relative top-[2px] left-[0px]">
+            <Lottie animationData={lottiee} loop={true} style={{ height: "30px", width: "40px" }} />
+          </span>
+          <span className="relative -top-[32px] left-[14px]">
+            <Lottie animationData={refresh} loop={true} style={{ height: "20px", width: "20px" }} />
+          </span>
           {/* <Image alt={"alt"} src={refresh} height={"14px"} width={"15px"} /> */}
         </div>
         <div
