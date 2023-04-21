@@ -2,6 +2,7 @@ import { BigNumber } from "bignumber.js";
 import Image from "next/image";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import close from "../../assets/icon/swap/closeIcon.svg";
 import { POOL_TYPE } from "../../../pages/pools";
 import { getPnlpOutputEstimate, getPoolShareForPnlp } from "../../api/liquidity";
 import settings from "../../../src/assets/icon/swap/settings.svg";
@@ -458,7 +459,10 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
           {screen === ActivePopUp.NewPosition ? (
             <>
               <div className="flex gap-1 items-center">
-                <p className="cursor-pointer" onClick={() => setScreen(ActivePopUp.Positions)}>
+                <p
+                  className="cursor-pointer relative top-0.5"
+                  onClick={() => setScreen(ActivePopUp.Positions)}
+                >
                   <Image alt={"alt"} src={arrowLeft} />
                 </p>
                 <p className="text-white">
@@ -467,9 +471,30 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                 <p className="ml-1 relative top-[0px]">
                   <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
                 </p>
-                <p className="text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer">
+              </div>
+              <div className="flex border-t border-text-800 pt-2.5 mt-[18px] items-center">
+                <p className="ml-auto text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer">
                   Clear All
                 </p>
+                <div className="flex items-center justify-between flex-row  relative mr-[8px]">
+                  <div
+                    ref={refSettingTab}
+                    className="py-1  px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] "
+                    onClick={() => setSettingsShow(!settingsShow)}
+                  >
+                    <Image alt={"alt"} src={settings} height={"20px"} width={"20px"} />
+                    <span className="text-white font-body4 ml-2 relative -top-[3px]">
+                      {slippage ? Number(slippage) : 0.5}%
+                    </span>
+                  </div>
+                  <TransactionSettingsLiquidity
+                    show={settingsShow}
+                    setSlippage={setSlippage}
+                    slippage={slippage}
+                    setSettingsShow={setSettingsShow}
+                  />
+                </div>
+
                 <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
                   <div
                     className={clsx(
@@ -494,26 +519,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                     {tEZorCTEZtoUppercase(props.tokenB.symbol)}
                   </div>
                 </div>
-                <div className="flex items-center justify-between flex-row  relative mr-[48px]">
-                  <div
-                    ref={refSettingTab}
-                    className="py-1  px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] "
-                    onClick={() => setSettingsShow(!settingsShow)}
-                  >
-                    <Image alt={"alt"} src={settings} height={"20px"} width={"20px"} />
-                    <span className="text-white font-body4 ml-2 relative -top-[3px]">
-                      {slippage ? Number(slippage) : 0.5}%
-                    </span>
-                  </div>
-                  <TransactionSettingsLiquidity
-                    show={settingsShow}
-                    setSlippage={setSlippage}
-                    slippage={slippage}
-                    setSettingsShow={setSettingsShow}
-                  />
-                </div>
               </div>
-
               <div className="mx-auto mt-4 lg:flex">
                 {!isTablet && (
                   <FeeTierMain
@@ -556,6 +562,9 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                 </p>
                 <p className="ml-1 relative top-[6px]">
                   <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
+                </p>
+                <p className="ml-auto" onClick={closeModal}>
+                  <Image alt={"alt"} src={close} />
                 </p>
               </div>
               <PositionsPopup
