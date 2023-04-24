@@ -364,10 +364,10 @@ function SwapTab(props: ISwapTabProps) {
           className="py-1 cursor-pointer px-15 h-8  ml-auto"
           onClick={() => refreshAllData(true)}
         >
-          <span className="relative top-[2px] left-[0px]">
-            <Lottie animationData={lottiee} loop={true} style={{ height: "30px", width: "40px" }} />
+          <span className="relative -top-[7px] left-[4px]">
+            <Lottie animationData={lottiee} loop={true} style={{ width: "51px" }} />
           </span>
-          <span className="relative -top-[32px] left-[14px]">
+          <span className="relative -top-[36px] left-[20px]">
             <Lottie animationData={refresh} loop={true} style={{ height: "20px", width: "20px" }} />
           </span>
           {/* <Image alt={"alt"} src={refresh} height={"14px"} width={"15px"} /> */}
