@@ -17,7 +17,6 @@ import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/token
 import { fetchWallet } from "../../src/redux/wallet/wallet";
 
 const Airdrop: NextPage = () => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
@@ -35,35 +34,41 @@ const Airdrop: NextPage = () => {
     dispatch(fetchWallet());
     dispatch(getConfig());
   }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (epochError) {
       dispatch(getEpochData());
     }
   }, [epochError]);
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useInterval(() => {
     dispatch(getEpochData());
   }, 60000);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (userAddress) {
       dispatch(getTotalVotingPower());
     }
   }, [userAddress]);
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (userAddress && totalVotingPowerError) {
       dispatch(getTotalVotingPower());
     }
   }, [totalVotingPowerError]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
   }, [token]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
   }, [tokenPrices]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const [chain, setChain] = useState<ChainAirdrop>(ChainAirdrop.Tezos);
   return (
     <>
