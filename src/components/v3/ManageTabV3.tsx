@@ -74,6 +74,7 @@ import { Pool, Tick } from "@plenty-labs/v3-sdk";
 import IncreaseDecreaseLiqMain from "./IncreaseDecreaseliqMain";
 import ConfirmIncreaseLiq from "./Confirmaddliq";
 import ConfirmDecreaseLiq from "./Confirmremoveliq";
+import TransactionSettingsV3 from "./TransactionSettingv3";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -458,7 +459,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             : screen === ActivePopUp.NewPosition
             ? "sm:w-[972px] sm:max-w-[972px]"
             : "sm:w-[602px] sm:max-w-[602px]",
-          "w-[414px] max-w-[414px]  rounded-none sm:rounded-3xl "
+          "w-[414px] max-w-[414px]  rounded-none sm:rounded-3xl px-4"
         )}
         footerChild={
           <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
@@ -528,10 +529,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 >
                   <Image alt={"alt"} src={settings} height={"20px"} width={"20px"} />
                   <span className="text-white font-body4 ml-2 relative -top-[3px]">
-                    {slippage ? Number(slippage) : 0.5}%
+                    {slippage ? Number(slippage) : 0.5}s
                   </span>
                 </div>
-                <TransactionSettingsLiquidity
+                <TransactionSettingsV3
                   show={settingsShow}
                   setSlippage={setSlippage}
                   slippage={slippage}
@@ -540,7 +541,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               </div>
             </div>
 
-            <div className="sm:flex gap-4 mt-4">
+            <div className="sm:flex  mt-4">
               <PriceRangeV3 tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
               <div className="">
                 <LiquidityV3

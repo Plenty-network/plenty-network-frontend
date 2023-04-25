@@ -6405,7 +6405,7 @@ export function useDensityChartData({
     const newData: ChartEntry[] = [];
 
     for (let i = 0; i < data.length; i++) {
-      const t: TickProcessed = data[i];
+      const t: any = data[i];
 
       const chartEntry = {
         activeLiquidity: parseFloat(t.liquidityActive.toString()),

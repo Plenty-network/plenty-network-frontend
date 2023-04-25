@@ -8,12 +8,19 @@ import { setIsLeftDiff, setIsRightDiff } from "../../../redux/poolsv3";
 import { tokenParameterLiquidity } from "../../Liquidity/types";
 
 import { Chart } from "./Chart";
-import { FeeAmount, useDensityChartData } from "./hooks";
+import { useDensityChartData } from "./hooks";
 import { ZoomLevels } from "./types";
 export enum Bound {
   LOWER = "LOWER",
   UPPER = "UPPER",
 }
+export enum FeeAmount {
+  LOWEST = 100,
+  LOW = 500,
+  MEDIUM = 3000,
+  HIGH = 10000,
+}
+
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
   [FeeAmount.LOWEST]: {
     initialMin: 0.999,
