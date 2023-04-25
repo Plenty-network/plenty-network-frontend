@@ -2,10 +2,9 @@
 
 An open source interface for Plenty network -- a protocol for decentralized exchange of Tezos tokens.
 
-- Website: [Plenty network](https://ghostnet.plenty.network/)
-- Twitter: [@PlentyDeFi](https://twitter.com/plenty_network/)
+- Website: [Plenty network](https://plenty.network/)
+- Twitter: [@Plenty_network](https://twitter.com/plenty_network/)
 - Discord: [Plenty](https://discord.gg/9wZ4CuvkuJ)
-- Telegram: [Plenty](https://t.me/PlentyDeFi)
 
 ## Accessing the Plenty network Interface
 
