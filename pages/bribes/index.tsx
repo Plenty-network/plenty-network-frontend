@@ -13,6 +13,7 @@ import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/token
 import { fetchWallet, walletConnection } from "../../src/redux/wallet/wallet";
 
 const Bribes: NextPage = () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
@@ -49,14 +50,14 @@ const Bribes: NextPage = () => {
     }
   }, [totalVotingPowerError]);
   useEffect(() => {
-    if(!initialPriceCall.current) {
+    if (!initialPriceCall.current) {
       Object.keys(token).length !== 0 && dispatch(getTokenPrice());
     } else {
       initialPriceCall.current = false;
     }
   }, [token]);
   useEffect(() => {
-    if(!initialLpPriceCall.current) {
+    if (!initialLpPriceCall.current) {
       Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
     } else {
       initialLpPriceCall.current = false;

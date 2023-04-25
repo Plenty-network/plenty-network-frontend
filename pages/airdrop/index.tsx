@@ -17,6 +17,7 @@ import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/token
 import { fetchWallet } from "../../src/redux/wallet/wallet";
 
 const Airdrop: NextPage = () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);

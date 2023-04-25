@@ -11,14 +11,9 @@
   "dependencies": {
     "@airgap/beacon-sdk": "^3.0.0",
     "@apollo/client": "^3.7.10",
-    "@ethersproject/address": "^5.7.0",
-    "@ethersproject/contracts": "^5.7.0",
-    "@ethersproject/providers": "^5.7.2",
-    "@lingui/macro": "^3.17.2",
     "@plenty-labs/v3-sdk": "^1.0.0",
     "@rainbow-me/rainbowkit": "^0.8.1",
     "@reduxjs/toolkit": "^1.8.2",
-    "@sentry/react": "^7.46.0",
     "@taquito/beacon-wallet": "^13.0.0",
     "@taquito/michel-codec": "^10.1.1",
     "@taquito/taquito": "^12.0.3",
@@ -60,8 +55,7 @@
     "styled-components": "^5.3.9",
     "styled-components.macro": "^1.0.0",
     "truncate-middle": "^1.0.6",
-    "wagmi": "^0.9.5",
-    "wcag-contrast": "^3.0.0"
+    "wagmi": "^0.9.5"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",
@@ -72,7 +66,6 @@
     "@types/react-dom": "18.0.5",
     "@types/react-table": "^7.7.9",
     "@types/truncate-middle": "^1.0.1",
-    "@types/wcag-contrast": "^3.0.0",
     "autoprefixer": "^10.4.7",
     "eslint": "8.16.0",
     "eslint-config-next": "12.1.6",
