@@ -1,6 +1,3 @@
-import { Currency, Price, Token } from "@uniswap/sdk-core";
-import { FeeAmount } from "@uniswap/v3-sdk";
-
 import { format } from "d3";
 import { saturate } from "polished";
 import React, { useCallback, useMemo } from "react";
@@ -11,7 +8,7 @@ import { setIsLeftDiff, setIsRightDiff } from "../../../redux/poolsv3";
 import { tokenParameterLiquidity } from "../../Liquidity/types";
 
 import { Chart } from "./Chart";
-import { useDensityChartData } from "./hooks";
+import { FeeAmount, useDensityChartData } from "./hooks";
 import { ZoomLevels } from "./types";
 export enum Bound {
   LOWER = "LOWER",

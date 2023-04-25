@@ -1,9 +1,13 @@
-import { Currency } from "@uniswap/sdk-core";
-import { FeeAmount } from "@uniswap/v3-sdk";
 import JSBI from "jsbi";
 
 import { useCallback, useMemo } from "react";
 import { tokenParameterLiquidity } from "../../Liquidity/types";
+export declare enum FeeAmount {
+  LOWEST = 100,
+  LOW = 500,
+  MEDIUM = 3000,
+  HIGH = 10000,
+}
 
 import { ChartEntry } from "./types";
 export interface TickProcessed {
