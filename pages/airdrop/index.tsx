@@ -33,40 +33,54 @@ const Airdrop: NextPage = () => {
   useEffect(() => {
     dispatch(fetchWallet());
     dispatch(getConfig());
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (epochError) {
       dispatch(getEpochData());
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [epochError]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useInterval(() => {
     dispatch(getEpochData());
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, 60000);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (userAddress) {
       dispatch(getTotalVotingPower());
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userAddress]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (userAddress && totalVotingPowerError) {
       dispatch(getTotalVotingPower());
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalVotingPowerError]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenPrices]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amm]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const [chain, setChain] = useState<ChainAirdrop>(ChainAirdrop.Tezos);
