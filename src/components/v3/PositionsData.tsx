@@ -105,6 +105,7 @@ function PositionsData(props: IPositionsProps) {
         {data.map((d, index) => {
           return (
             <div
+              key={index}
               className={clsx(
                 index % 2 === 0 ? "bg-secondary-600" : "bg-card-500",
                 "flex   h-[64px] items-center pl-10 min-w-[792px]"

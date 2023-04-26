@@ -33,9 +33,10 @@ function FeeTierMain(props: IFeeTierMainProps) {
   ];
   return (
     <div className="flex gap-[7px]  items-center justify-center">
-      {fee.map((feeInd) => {
+      {fee.map((feeInd, index) => {
         return (
           <div
+            key={index}
             className={clsx(
               props.selectedFeeTier === feeInd.percentage
                 ? "border-blue-700"
