@@ -42,7 +42,12 @@
     "recharts": "2.1.12",
     "redux-persist": "^6.0.0",
     "truncate-middle": "^1.0.6",
-    "wagmi": "^0.9.5"
+    "wagmi": "^0.9.5",
+    "@types/d3": "^7.4.0",
+    "d3": "^7.8.2",
+    "jsbi": "^4.3.0",
+    "polished": "^4.2.2",
+    "react-feather": "^2.0.10"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",
