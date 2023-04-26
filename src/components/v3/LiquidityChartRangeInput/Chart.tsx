@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Area } from "./Area";
 import { AxisBottom } from "./AxisBottom";
-import { Brush } from "./Brush";
+//import { Brush } from "./Brush";
 import { Line } from "./Line";
 import { ChartEntry, LiquidityChartRangeInputProps } from "./types";
 import Zoom from "./Zoom";
@@ -155,7 +155,7 @@ export function Chart({
             ref={zoomRef}
           />
 
-          <Brush
+          {/* <Brush
             id={id}
             xScale={xScale}
             interactive={interactive}
@@ -166,7 +166,7 @@ export function Chart({
             setBrushExtent={onBrushDomainChange}
             westHandleColor={styles.brush.handle.west}
             eastHandleColor={styles.brush.handle.east}
-          />
+          /> */}
         </g>
       </svg>
     </>

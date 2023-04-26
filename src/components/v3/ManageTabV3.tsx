@@ -70,7 +70,6 @@ import {
   setTokeOutV3,
   settopLevelSelectedToken,
 } from "../../redux/poolsv3";
-import { Pool, Tick } from "@plenty-labs/v3-sdk";
 import IncreaseDecreaseLiqMain from "./IncreaseDecreaseliqMain";
 import ConfirmIncreaseLiq from "./Confirmaddliq";
 import ConfirmDecreaseLiq from "./Confirmremoveliq";
@@ -103,14 +102,14 @@ export enum ActivePopUp {
 }
 
 export function ManageTabV3(props: IManageLiquidityProps) {
-  const pooldatafromsdk = new Pool(-275611, 10, new BigNumber(1251963215603107302), "", "");
-  console.log("kk", pooldatafromsdk.getInitialBoundaries());
-  const g = pooldatafromsdk.getInitialBoundaries();
-  console.log(
-    "kk",
-    Tick.computeSqrtPriceFromTick(g[0]).toFixed(2),
-    Tick.computeSqrtPriceFromTick(g[1]).toFixed(2)
-  );
+  // const pooldatafromsdk = new Pool(-275611, 10, new BigNumber(1251963215603107302), "", "");
+  // console.log("kk", pooldatafromsdk.getInitialBoundaries());
+  // const g = pooldatafromsdk.getInitialBoundaries();
+  // console.log(
+  //   "kk",
+  //   Tick.computeSqrtPriceFromTick(g[0]).toFixed(2),
+  //   Tick.computeSqrtPriceFromTick(g[1]).toFixed(2)
+  // );
   const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
   useEffect(() => {
     dispatch(setleftbrush(70));

@@ -67,7 +67,6 @@ import {
   setTokeOutV3,
   settopLevelSelectedToken,
 } from "../../redux/poolsv3";
-import { Pool, Tick } from "@plenty-labs/v3-sdk";
 import FeeTierMain from "./FeeTierMain";
 import { isTablet } from "react-device-detect";
 import IncreaseDecreaseLiqMain from "./IncreaseDecreaseliqMain";
@@ -94,14 +93,14 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   const [activeStateIncDec, setActiveStateIncDec] = React.useState<ActiveIncDecState | string>(
     ActiveIncDecState.Increase
   );
-  const pooldatafromsdk = new Pool(-275611, 10, new BigNumber(1251963215603107302), "", "");
-  console.log("kk", pooldatafromsdk.getInitialBoundaries());
-  const g = pooldatafromsdk.getInitialBoundaries();
-  console.log(
-    "kk",
-    Tick.computeSqrtPriceFromTick(g[0]).toFixed(2),
-    Tick.computeSqrtPriceFromTick(g[1]).toFixed(2)
-  );
+  // const pooldatafromsdk = new Pool(-275611, 10, new BigNumber(1251963215603107302), "", "");
+  // console.log("kk", pooldatafromsdk.getInitialBoundaries());
+  // const g = pooldatafromsdk.getInitialBoundaries();
+  // console.log(
+  //   "kk",
+  //   Tick.computeSqrtPriceFromTick(g[0]).toFixed(2),
+  //   Tick.computeSqrtPriceFromTick(g[1]).toFixed(2)
+  // );
 
   useEffect(() => {
     dispatch(setleftbrush(70));
