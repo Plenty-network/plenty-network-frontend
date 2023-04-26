@@ -126,7 +126,7 @@ export default function Pools(props: IIndexProps) {
               onChange={setSearchValue}
             />
           </div>
-          <div className="sticky top-[-1px] z-10">
+          <div className="sticky top-[-3px] z-10">
             <CardHeader
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
