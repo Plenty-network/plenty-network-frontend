@@ -2,7 +2,7 @@ import { format } from "d3";
 import { saturate } from "polished";
 import React, { useCallback, useMemo } from "react";
 import { batch, useDispatch } from "react-redux";
-import styled, { useTheme } from "styled-components";
+
 import { AppDispatch, useAppSelector } from "../../../redux";
 import { setIsLeftDiff, setIsRightDiff } from "../../../redux/poolsv3";
 import { tokenParameterLiquidity } from "../../Liquidity/types";
@@ -48,12 +48,12 @@ const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
   },
 };
 
-const ChartWrapper = styled.div`
-  position: relative;
+// const ChartWrapper = styled.div`
+//   position: relative;
 
-  justify-content: center;
-  align-content: center;
-`;
+//   justify-content: center;
+//   align-content: center;
+// `;
 
 export default function LiquidityChartRangeInput({
   currencyA,
@@ -203,7 +203,7 @@ export default function LiquidityChartRangeInput({
       ) : !formattedData || formattedData.length === 0 || !price ? (
         "There is no liquidity data."
       ) : (
-        <ChartWrapper>
+        <div className="relative justify-center items-center">
           <Chart
             data={{ series: formattedData, current: price }}
             dimensions={{ width: 400, height: 200 }}
@@ -226,7 +226,7 @@ export default function LiquidityChartRangeInput({
             zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
             ticksAtLimit={ticksAtLimit}
           />
-        </ChartWrapper>
+        </div>
       )}
     </div>
     //   ),

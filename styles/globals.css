@@ -752,3 +752,14 @@ tfoot .thSticky:last-child,
   flex-direction: column;
   gap: 10px;
 }
+
+.zoomv3{
+  display: grid;
+  
+  grid-gap: 6px;
+
+  position: absolute;
+  top: -63px;
+  right: 0;
+  
+}

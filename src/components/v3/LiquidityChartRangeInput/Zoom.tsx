@@ -2,7 +2,6 @@ import { ScaleLinear, select, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } 
 import Image from "next/image";
 import React, { useEffect, useMemo, useRef } from "react";
 import { RefreshCcw, ZoomIn, ZoomOut } from "react-feather";
-import styled from "styled-components";
 
 import zoomin from "../../../assets/icon/poolsv3/zoomin.svg";
 import zoomout from "../../../assets/icon/poolsv3/zoomout.svg";
@@ -10,15 +9,15 @@ import Button from "../../Button/Button";
 
 import { ZoomLevels } from "./types";
 
-const Wrapper = styled.div<{ count: number }>`
-  display: grid;
-  grid-template-columns: repeat(${({ count }) => count.toString()}, 1fr);
-  grid-gap: 6px;
+// const Wrapper = styled.div<{ count: number }>`
+//   display: grid;
+//   grid-template-columns: repeat(${({ count }) => count.toString()}, 1fr);
+//   grid-gap: 6px;
 
-  position: absolute;
-  top: -63px;
-  right: 0;
-`;
+//   position: absolute;
+//   top: -63px;
+//   right: 0;
+// `;
 
 // const Button = styled(Button)`
 //   &:hover {
@@ -31,14 +30,14 @@ const Wrapper = styled.div<{ count: number }>`
 //   padding: 4px;
 // `;
 
-export const ZoomOverlay = styled.rect`
-  fill: transparent;
-  cursor: grab;
+// export const ZoomOverlay = styled.rect`
+//   fill: transparent;
+//   cursor: grab;
 
-  &:active {
-    cursor: grabbing;
-  }
-`;
+//   &:active {
+//     cursor: grabbing;
+//   }
+// `;
 
 export default function Zoom({
   svg,
@@ -122,7 +121,7 @@ export default function Zoom({
   }, [zoomInitial, zoomLevels]);
 
   return (
-    <Wrapper count={showResetButton ? 3 : 2}>
+    <div className="gap-2 absolute top-[-63px] right-0 flex">
       {showResetButton && (
         <div
           onClick={() => {
@@ -139,6 +138,6 @@ export default function Zoom({
       <div onClick={zoomOut} className="cursor-pointer">
         <Image src={zoomout} />
       </div>
-    </Wrapper>
+    </div>
   );
 }

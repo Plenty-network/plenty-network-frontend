@@ -6,7 +6,7 @@ import { AxisBottom } from "./AxisBottom";
 import { Brush } from "./Brush";
 import { Line } from "./Line";
 import { ChartEntry, LiquidityChartRangeInputProps } from "./types";
-import Zoom, { ZoomOverlay } from "./Zoom";
+import Zoom from "./Zoom";
 export enum Bound {
   LOWER = "LOWER",
   UPPER = "UPPER",
@@ -147,7 +147,13 @@ export function Chart({
             <AxisBottom xScale={xScale} innerHeight={innerHeight} />
           </g>
 
-          <ZoomOverlay width={innerWidth} height={height} ref={zoomRef} />
+          <rect
+            fill={"transparent"}
+            cursor={"grab"}
+            width={innerWidth}
+            height={height}
+            ref={zoomRef}
+          />
 
           <Brush
             id={id}

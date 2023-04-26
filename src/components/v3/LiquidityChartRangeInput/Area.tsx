@@ -1,14 +1,13 @@
 import { area, curveStepAfter, ScaleLinear } from "d3";
 import React, { useMemo } from "react";
-import styled from "styled-components";
 
 import { ChartEntry } from "./types";
 
-const Path = styled.path<{ fill: string | undefined }>`
-  opacity: 1;
-  stroke: ${({ fill, theme }) => "#1570F1" ?? "#1570F1"};
-  fill: ${({ fill, theme }) => fill ?? "rgba(21,112,241,0.2)"};
-`;
+// const Path = styled.path<{ fill: string | undefined }>`
+//   opacity: 1;
+//   stroke: ${({ fill, theme }) => "#1570F1" ?? "#1570F1"};
+//   fill: ${({ fill, theme }) => fill ?? "rgba(21,112,241,0.2)"};
+// `;
 
 export const Area = ({
   series,
@@ -27,8 +26,10 @@ export const Area = ({
 }) =>
   useMemo(
     () => (
-      <Path
-        fill={fill}
+      <path
+        fill={fill ?? "rgba(21,112,241,0.2)"}
+        opacity={1}
+        stroke={"#1570F1"}
         d={
           area()
             .curve(curveStepAfter)

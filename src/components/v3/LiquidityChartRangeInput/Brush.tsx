@@ -3,46 +3,45 @@ import { Tick } from "@plenty-labs/v3-sdk";
 import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from "d3";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import styled from "styled-components";
 import { AppDispatch, useAppSelector } from "../../../redux";
 import { setBleftbrush, setBrightbrush, setleftbrush, setrightbrush } from "../../../redux/poolsv3";
 
 import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from "./svg";
 import usePrevious from "./usePrevious";
 
-const Handle = styled.path<{ color: string }>`
-  cursor: ew-resize;
-  pointer-events: none;
+// const Handle = styled.path<{ color: string }>`
+//   cursor: ew-resize;
+//   pointer-events: none;
 
-  stroke-width: 3;
-  stroke: ${({ color }) => color};
-  fill: ${({ color }) => color};
-`;
+//   stroke-width: 3;
+//   stroke: ${({ color }) => color};
+//   fill: ${({ color }) => color};
+// `;
 
-const HandleAccent = styled.path`
-  cursor: ew-resize;
-  pointer-events: none;
+// const HandleAccent = styled.path`
+//   cursor: ew-resize;
+//   pointer-events: none;
 
-  stroke-width: 1.5;
-  stroke: #ffffff;
-  opacity: 1;
-`;
+//   stroke-width: 1.5;
+//   stroke: #ffffff;
+//   opacity: 1;
+// `;
 
-const LabelGroup = styled.g<{ visible: boolean }>`
-  opacity: ${({ visible }) => (visible ? "1" : "0")};
-  transition: opacity 300ms;
-  fill: #211336;
-`;
+// const LabelGroup = styled.g<{ visible: boolean }>`
+//   opacity: ${({ visible }) => (visible ? "1" : "0")};
+//   transition: opacity 300ms;
+//   fill: #211336;
+// `;
 
-const TooltipBackground = styled.rect`
-  fill: #211336;
-`;
+// const TooltipBackground = styled.rect`
+//   fill: #211336;
+// `;
 
-const Tooltip = styled.text`
-  text-anchor: middle;
-  font-size: 13px;
-  fill: #cfced1;
-`;
+// const Tooltip = styled.text`
+//   text-anchor: middle;
+//   font-size: 13px;
+//   fill: #cfced1;
+// `;
 
 // flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20;
@@ -243,19 +242,43 @@ export const Brush = ({
                 }, 1)`}
               >
                 <g>
-                  <Handle color={westHandleColor} d={brushHandlePath(innerHeight)} />
-                  <HandleAccent d={brushHandleAccentPath()} />
+                  <path
+                    cursor={"ew-resiz"}
+                    pointerEvents={"none"}
+                    strokeWidth={3}
+                    stroke={westHandleColor}
+                    fill={westHandleColor}
+                    color={westHandleColor}
+                    d={brushHandlePath(innerHeight)}
+                  />
+
+                  <path
+                    cursor={"ew-resiz"}
+                    pointerEvents={"none"}
+                    strokeWidth={1.5}
+                    stroke={"#ffffff"}
+                    opacity={1}
+                    d={brushHandleAccentPath()}
+                  />
                 </g>
 
-                <LabelGroup
+                <g
+                  opacity={1}
+                  fill={"#211336"}
                   transform={`translate(50,0), scale(${flipWestHandle ? "1" : "-1"}, 1)`}
-                  visible={true}
                 >
-                  <TooltipBackground y="0" x="-30" height="30" width="60" rx="8" />
-                  <Tooltip transform="scale(-1, 1)" y="15" dominantBaseline="middle">
+                  <rect y="0" x="-30" height="30" width="60" rx="8" fill={"#211336"} />
+                  <text
+                    fontSize={"13px"}
+                    fill={"#cfced1"}
+                    textAnchor={"middle"}
+                    transform="scale(-1, 1)"
+                    y="15"
+                    dominantBaseline="middle"
+                  >
                     {brushLabelValue("w", localBrushExtent[0])}
-                  </Tooltip>
-                </LabelGroup>
+                  </text>
+                </g>
               </g>
             ) : null}
 
@@ -267,19 +290,41 @@ export const Brush = ({
                 }, 1)`}
               >
                 <g>
-                  <Handle color={eastHandleColor} d={brushHandlePath(innerHeight)} />
-                  <HandleAccent d={brushHandleAccentPath()} />
+                  <path
+                    cursor={"ew-resiz"}
+                    pointerEvents={"none"}
+                    strokeWidth={3}
+                    stroke={eastHandleColor}
+                    fill={eastHandleColor}
+                    color={eastHandleColor}
+                    d={brushHandlePath(innerHeight)}
+                  />
+                  <path
+                    cursor={"ew-resiz"}
+                    pointerEvents={"none"}
+                    strokeWidth={1.5}
+                    stroke={"#ffffff"}
+                    opacity={1}
+                    d={brushHandleAccentPath()}
+                  />
                 </g>
 
-                <LabelGroup
+                <g
+                  opacity={1}
+                  fill={"#211336"}
                   transform={`translate(50,0), scale(${flipEastHandle ? "-1" : "1"}, 1)`}
-                  visible={true}
                 >
-                  <TooltipBackground y="0" x="-30" height="30" width="60" rx="8" />
-                  <Tooltip y="15" dominantBaseline="middle">
+                  <rect y="0" x="-30" height="30" width="60" rx="8" fill={"#211336"} />
+                  <text
+                    fontSize={"13px"}
+                    fill={"#cfced1"}
+                    textAnchor={"middle"}
+                    y="15"
+                    dominantBaseline="middle"
+                  >
                     {brushLabelValue("e", localBrushExtent[1])}
-                  </Tooltip>
-                </LabelGroup>
+                  </text>
+                </g>
               </g>
             ) : null}
 
