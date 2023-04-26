@@ -130,8 +130,8 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
           <div
             className={clsx(
               selectedPercentage === DecreasePercentage.FIFTY
-                ? "bg-primary-500"
-                : "bg-muted-235 text-text-500 text-black",
+                ? "bg-primary-500 text-black"
+                : "bg-muted-235 text-text-500 ",
               "cursor-pointer w-[91px] h-[36px] rounded-lg font-body4	 text-center py-2"
             )}
             onClick={() => setSelectedPercentage(DecreasePercentage.FIFTY)}

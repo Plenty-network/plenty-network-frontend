@@ -55,7 +55,7 @@ function FeeTierMain(props: IFeeTierMainProps) {
             </div>
             <div className="mt-1 font-mobile-400 sm:font-body1 text-text-250">{feeInd.text}</div>
             <div className="mt-[10px]">
-              <span className="text-white rounded-xl	bg-shimmer-100 px-2 py-1.5 font-caption2 ">
+              <span className="text-white rounded-xl	bg-shimmer-100 px-2 items-center flex w-fit font-caption2 h-[24px]">
                 {feeInd.selectPercentage}%
               </span>
             </div>

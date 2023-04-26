@@ -159,7 +159,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 <div className="font-body4 text-white">
                   <input
                     type="text"
-                    className="text-white font-body4 bg-muted-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
+                    className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
                     value={
                       topLevelSelectedToken.symbol === tokeninorg.symbol
                         ? leftRangeInput
@@ -210,7 +210,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 <div className="font-body4 text-white">
                   <input
                     type="text"
-                    className="text-white font-body4 bg-muted-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
+                    className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
                     value={
                       topLevelSelectedToken.symbol === tokeninorg.symbol
                         ? rightRangeInput
@@ -239,7 +239,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         </div>
       )}
       <div
-        className="mt-3 cursor-pointer border border-info-700 rounded-lg	text-center py-2.5 font-body1"
+        className="mt-3 cursor-pointer border border-info-700 rounded-lg	text-center py-2.5 font-body1 mx-4"
         onClick={() => setFullRange(!isFullRange)}
       >
         Full Range

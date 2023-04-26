@@ -88,7 +88,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
   return (
     <>
       <div className="mt-[17px] border border-text-800 bg-card-200 rounded-2xl py-5 mb-3">
-        <div className="flex px-5">
+        <div className="flex items-center px-5">
           <div className="text-text-250 font-body4 ">You are depositing</div>{" "}
           <div className=" ml-auto">
             {true ? (
@@ -177,7 +177,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
               className={clsx(
                 selectedToken.symbol === props.tokenIn.symbol
                   ? "rounded-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
-                  : "text-text-400",
+                  : "text-text-400 bg-background-600 rounded-r-xl",
                 "px-[30px] py-[5px]"
               )}
               onClick={() => setSelectedToken(props.tokenIn)}
@@ -188,7 +188,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
               className={clsx(
                 selectedToken.symbol === props.tokenOut.symbol
                   ? "rounded-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
-                  : "text-text-400",
+                  : "text-text-400 bg-background-600 rounded-r-xl",
                 "px-[30px] py-[5px]"
               )}
               onClick={() => setSelectedToken(props.tokenOut)}

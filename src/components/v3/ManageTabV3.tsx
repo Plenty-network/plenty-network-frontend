@@ -2,6 +2,7 @@ import { BigNumber } from "bignumber.js";
 import Image from "next/image";
 
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
+import clock from "../../../src/assets/icon/poolsv3/settingsClock.svg";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { POOL_TYPE } from "../../../pages/pools";
@@ -500,7 +501,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 <div
                   className={clsx(
                     selectedToken.symbol === props.tokenA.symbol
-                      ? "h-[23px] px-2  bg-shimmer-200 rounded-lg	"
+                      ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
                       : "text-text-250 px-2",
                     "font-subtitle1223"
                   )}
@@ -511,7 +512,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 <div
                   className={clsx(
                     selectedToken.symbol === props.tokenB.symbol
-                      ? "h-[23px] px-2  bg-shimmer-200 rounded-lg	"
+                      ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
                       : "text-text-250 px-2",
                     "font-subtitle1223"
                   )}
@@ -523,11 +524,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               <div className="flex items-center justify-between flex-row  relative mr-[48px]">
                 <div
                   ref={refSettingTab}
-                  className="py-1  px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] "
+                  className="py-1  px-[8.5px] h-8 border border-text-700 cursor-pointer rounded-lg flex items-center "
                   onClick={() => setSettingsShow(!settingsShow)}
                 >
-                  <Image alt={"alt"} src={settings} height={"20px"} width={"20px"} />
-                  <span className="text-white font-body4 ml-2 relative -top-[3px]">
+                  <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
+                  <span className="text-white font-body4 ml-2 relative ">
                     {slippage ? Number(slippage) : 0.5}s
                   </span>
                 </div>
