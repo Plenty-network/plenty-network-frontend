@@ -3,7 +3,7 @@ import * as React from "react";
 import settings from "../../../src/assets/icon/swap/settings.svg";
 import { useMemo, useRef, useState } from "react";
 import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
-import infoOrangeBig from "../../../src/assets/icon/poolsv3/infoOrangeBig.svg";
+import infoOrangeBig from "../../../src/assets/icon/poolsv3/InfoOrangeBig.svg";
 import infoblue from "../../../src/assets/icon/pools/InfoBlue.svg";
 import info from "../../../src/assets/icon/swap/info.svg";
 import { BigNumber } from "bignumber.js";
