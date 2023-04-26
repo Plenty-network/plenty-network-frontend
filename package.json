@@ -45,7 +45,7 @@
     "react-table": "^7.7.0",
     "react-time-ago": "^7.2.1",
     "react-tooltip": "^4.2.21",
-    "recharts": "^2.5.0",
+    "recharts": "2.1.12",
     "redux-persist": "^6.0.0",
     "truncate-middle": "^1.0.6",
     "wagmi": "^0.9.5"
