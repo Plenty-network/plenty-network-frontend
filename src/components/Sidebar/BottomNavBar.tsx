@@ -11,6 +11,9 @@ import { ISingleSideBarProps, SingleSideBar } from "./SideBarTabList";
 export interface IBottomNavigationBarProps {}
 
 export interface IBottomNavMenuProps extends IBottomMoreNavMenuProps {
+  activeSubMenuPool: boolean;
+  setActiveSubMenuPool: React.Dispatch<React.SetStateAction<boolean>>;
+  subMenu: false | ISingleSideBarProps[] | undefined;
   link?: string;
 }
 export interface IBottomMoreNavMenuProps {
@@ -39,9 +42,23 @@ const mainMenu: Array<ISingleSideBarProps> = [
   },
   {
     name: "Pools",
-    iconName: "verified-user",
-    pathName: "/pools",
-    activePathName: "/pools",
+    iconName: "pools",
+    // pathName: "/pools",
+    // activePathName: "/pools",
+    subMenu: [
+      {
+        name: "v2",
+        iconName: "pools",
+        pathName: "/pools",
+        activePathName: "/pools",
+      },
+      {
+        name: "v3",
+        iconName: "pools",
+        pathName: "/pools/v3",
+        activePathName: "/pools/v3",
+      },
+    ],
   },
   {
     name: "Vote",
@@ -55,8 +72,10 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
   const { pathname } = useRouter();
   const reff = React.useRef(null);
   useOutsideClick(reff, () => {
+    setActiveSubMenuPool(false);
     setActiveSubMenu(MenuType.NoMenu);
   });
+  const [activeSubMenuPool, setActiveSubMenuPool] = React.useState(false);
   return (
     <div
       className={`${
@@ -66,6 +85,7 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
       <div className="bg-cardBackGround" ref={reff}>
         {activeSubMenu === MenuType.Menu && <SubMenuList />}
         {activeSubMenu === MenuType.MoreNavMenu && <MoreSubMenuList />}
+        {activeSubMenuPool && <SubMenuForPool />}
         <div className="justify-between flex w-screen">
           <>
             {mainMenu.map((e) => (
@@ -74,6 +94,9 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
                 link={e.pathName}
                 text={e.name}
                 iconName={e.iconName}
+                subMenu={e.subMenu}
+                activeSubMenuPool={activeSubMenuPool}
+                setActiveSubMenuPool={setActiveSubMenuPool}
                 active={e.activePathName === pathname && activeSubMenu != MenuType.MoreNavMenu}
               />
             ))}
@@ -95,8 +118,8 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
 }
 
 export function MenuWithLink(props: IBottomNavMenuProps) {
-  return (
-    <Link href={props.link ? props.link : ""}>
+  if (props.subMenu) {
+    return (
       <div
         className={`${
           props.active
@@ -105,6 +128,7 @@ export function MenuWithLink(props: IBottomNavMenuProps) {
         } ${
           props.className
         } border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center   px-[18px] py-[9px]   `}
+        onClick={() => props.setActiveSubMenuPool(!props.activeSubMenuPool)}
       >
         {props.iconName && (
           <Image
@@ -117,10 +141,60 @@ export function MenuWithLink(props: IBottomNavMenuProps) {
         )}
         <p className="text-f1015">{props.text}</p>
       </div>
-    </Link>
+    );
+  } else {
+    return (
+      <Link href={props.link ? props.link : ""}>
+        <div
+          className={`${
+            props.active
+              ? "bg-sideBarHover border-t-primary-500 text-white"
+              : "border-t-borderColor text-text-250"
+          } ${
+            props.className
+          } border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center   px-[18px] py-[9px]   `}
+        >
+          {props.iconName && (
+            <Image
+              alt={"alt"}
+              className={props.active ? "" : "opacity-70"}
+              src={`/assets/icon/${props.iconName}.svg`}
+              height={"24px"}
+              width={"24px"}
+            />
+          )}
+          <p className="text-f1015">{props.text}</p>
+        </div>
+      </Link>
+    );
+  }
+}
+export function SubMenuForPool() {
+  return (
+    <div className="w-screen flex flex-col text-f12 bg-topBar z-10">
+      <div className="px-9 hover:bg-sideBarHover ">
+        <SingleSideBar
+          name="v2"
+          className="px-9 justify-between"
+          iconName="migrate"
+          pathName={"/pools"}
+          isBottomMenu
+        />
+      </div>
+      <div className="px-9 hover:bg-sideBarHover border-t border-t-borderColor hover:border-t-primary-500">
+        <SingleSideBar
+          name="v3"
+          className="px-9 justify-between"
+          iconName="airdrop"
+          pathName={"/pools/v3"}
+          isBottomMenu
+        />
+      </div>
+    </div>
   );
 }
 export function MenuNoLink(props: IBottomMoreNavMenuProps) {
+  console.log("ishuuu", props);
   return (
     <div
       onClick={

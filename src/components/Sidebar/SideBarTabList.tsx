@@ -18,6 +18,7 @@ export interface ISingleSideBarProps {
   isHrefIcon?: boolean;
   openNewPage?: boolean;
   isToolTip?: boolean;
+  isSubmenu?: boolean;
 }
 
 export function SingleSideBar(props: ISingleSideBarProps) {
@@ -40,7 +41,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
               className={`flex w-full  items-center justify-between h-[50px] ${
                 props.isActive ? "sideNavactive text-white" : "text-text-250"
               } ${
-                !props.isBottomMenu ? "px-6" : ""
+                props.isSubmenu ? "pl-[68px] pr-6" : !props.isBottomMenu ? "px-6" : ""
               } text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-muted-250/60 ${
                 !props.isBottomMenu ? "border-x-2" : ""
               } border border-transprent `}
@@ -124,6 +125,8 @@ export function SingleSideBar(props: ISingleSideBarProps) {
               name={submenuItem.name}
               className="ml-8 border-l-2 border-borderColor"
               key={`submenu_${index}`}
+              pathName={submenuItem.pathName}
+              isSubmenu={true}
             />
           ))}
         </div>
