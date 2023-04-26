@@ -865,7 +865,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     <>
       <PopUpModal
         onhide={closeModal}
-        className="w-[390px] max-w-[390px] sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
+        className="w-screen max-w-screen sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
         footerChild={
           <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
             <p className="font-subtitle1 md:text-f16 text-text-150">
