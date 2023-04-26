@@ -38,7 +38,7 @@ export function Tabs(props: ITabsProps) {
       } ${props.tableType ? "thSticky" : ""} ${
         (props.TableName === "newPools" || props.TableName === "poolsPosition") &&
         props.index === 0 &&
-        "pl-[40px]"
+        "pl-20 sm:pl-[40px]"
       }`}
     >
       <div className="flex gap-0 flex-col">
