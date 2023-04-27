@@ -200,6 +200,79 @@ export function MyPoolTable(props: IShortCardProps) {
           ),
       },
       {
+        Header: "Volume",
+        id: "Volume24h",
+        subText: "24h",
+        columnWidth: "w-[129px]",
+        isToolTipEnabled: true,
+        tooltipMessage: "Pool’s trading volume in the last 24 hours.",
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
+        accessor: (x: any) => (
+          <PoolsTextWithTooltip
+            text={valueFormat(x.volume.toNumber())}
+            token1={x.volumeTokenA.toString()}
+            token2={x.volumeTokenB.toString()}
+            token1Name={x.tokenA.toString()}
+            token2Name={x.tokenB.toString()}
+          />
+        ),
+      },
+      {
+        Header: "TVL",
+        id: "TVL",
+        columnWidth: "w-[122px]",
+        tooltipMessage: "Total value locked up in the pool.",
+        isToolTipEnabled: true,
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
+        accessor: (x) => (
+          <PoolsTextWithTooltip
+            text={valueFormat(x.tvl.toNumber())}
+            token1={x.tvlTokenA.toString()}
+            token2={x.tvlTokenB.toString()}
+            token1Name={x.tokenA.toString()}
+            token2Name={x.tokenB.toString()}
+          />
+        ),
+      },
+      {
+        Header: "Fees",
+        id: "fees",
+        columnWidth: "w-[122px]",
+        subText: "7D",
+        tooltipMessage: "Trading fees collected by the pool in the current epoch.",
+        isToolTipEnabled: true,
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
+        accessor: (x) => (
+          <PoolsTextWithTooltip
+            text={valueFormat(x.fees.toNumber())}
+            token1={x.feesTokenA.toString()}
+            token2={x.feesTokenB.toString()}
+            token1Name={x.tokenA.toString()}
+            token2Name={x.tokenB.toString()}
+          />
+        ),
+      },
+      {
+        Header: "Bribes",
+        id: "Bribes",
+        subText: "current epoch",
+        columnWidth: "w-[123px] pr-2.5",
+        tooltipMessage:
+          "Incentives provided by the protocols to boost the liquidity of their tokens.",
+        isToolTipEnabled: true,
+        accessor: (x) =>
+          x.isGaugeAvailable ? (
+            <BribesPool value={x.bribeUSD} bribesData={x.bribes} />
+          ) : (
+            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+              -
+            </div>
+          ),
+      },
+      {
         Header: "",
         id: "manage",
         columnWidth: "w-[115px] ml-auto",
@@ -474,7 +547,7 @@ export function MyPoolTable(props: IShortCardProps) {
           tableType={true}
           isFetched={isFetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
-          TableWidth="min-w-[535px] lg:min-w-[1140px]"
+          TableWidth="min-w-[1100px] lg:min-w-[1140px]"
           NoData={NoData}
           loading={props.isFetchingMyPool}
         />

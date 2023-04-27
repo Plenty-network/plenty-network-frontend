@@ -252,14 +252,16 @@ const Table = <D extends object>({
             )
           ) : null}
           {isFetched && data.length > 0 && (
-            <tr className="h-[60px] mt-2 border border-borderCommon bg-cardBackGround px-5 py-4 rounded-lg  items-center ">
-              <TablePagination
-                count={pageCount}
-                rowsPerPage={10}
-                page={pageIndex}
-                setPageSize={setPageSize}
-                onChangePage={(number) => gotoPage(number)}
-              />
+            <tr className="h-[60px] mt-2 border border-borderCommon bg-cardBackGround px-5 py-4 rounded-lg  items-center w-auto">
+              <div className="w-screen sm:w-auto">
+                <TablePagination
+                  count={pageCount}
+                  rowsPerPage={10}
+                  page={pageIndex}
+                  setPageSize={setPageSize}
+                  onChangePage={(number) => gotoPage(number)}
+                />
+              </div>
             </tr>
           )}
           {loading && (
