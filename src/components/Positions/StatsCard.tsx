@@ -48,15 +48,12 @@ function StatsCard(props: IStatsCardProps) {
         </p>
         <p className="ml-auto">
           {props.isLast && (
-            <Button
-              color={"primary"}
-              height={"h-[50px]"}
-              width={" w-[148px] "}
-              borderRadius={"rounded-xl"}
+            <div
+              className="bg-primary-500 h-[50px] w-[140px] font-title3-bold text-black px-4 rounded-xl flex items-center justify-center"
               onClick={() => props.setShowCreateLockModal(true)}
             >
               Create lock
-            </Button>
+            </div>
           )}
         </p>
       </div>
