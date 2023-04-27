@@ -27,7 +27,7 @@ export const getThumbnailForVeNFT = async (lockId: number): Promise<string> => {
       voteEscrowInstance,
       //@ts-ignore
       Tezos.rpc,
-      Tezos.getFactory(RpcReadAdapter)(),
+      new RpcReadAdapter(Tezos.rpc),
       metadataStorage.returnType,
       metadataStorage.code,
       metadataStorage.parameter
