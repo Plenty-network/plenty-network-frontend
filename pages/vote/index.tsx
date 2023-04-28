@@ -38,7 +38,7 @@ import { setFlashMessage } from "../../src/redux/flashMessage";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { setSelectedDropDown, setSelectedDropDownLocal } from "../../src/redux/veNFT";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
-import { setIsLoadingWallet } from "../../src/redux/walletLoading";
+import { setbannerClicked, setIsLoadingWallet } from "../../src/redux/walletLoading";
 import { tzktExplorer } from "../../src/common/walletconnect";
 import { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
 import { getTotalVotingPower } from "../../src/redux/pools";
@@ -51,6 +51,7 @@ export default function Vote() {
   const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
+  const bannerClicked = useAppSelector((state) => state.walletLoading.bannerClicked);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const [veNFTlist, setVeNFTlist] = useState<{ data: IVeNFTData[]; isfetching: boolean }>({
     data: [] as IVeNFTData[],
@@ -97,13 +98,20 @@ export default function Vote() {
   const [contentTransaction, setContentTransaction] = useState("");
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
-  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
+  const rewardsAprEstimateError = useAppSelector(
+    (state) => state.rewardsApr.rewardsAprEstimateError
+  );
   var sum = 0;
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
+  useEffect(() => {
+    if (bannerClicked) {
+      setShowCreateLockModal(true);
+    }
+  }, [bannerClicked]);
   useEffect(() => {
     const updateBalance = async () => {
       const balancePromises = [];
@@ -169,6 +177,7 @@ export default function Vote() {
     });
   }, []);
   useEffect(() => {
+    dispatch(setbannerClicked(false));
     if (!(localStorage.getItem(USERADDRESS) === userAddress)) {
       localStorage.setItem(USERADDRESS, userAddress);
     }
@@ -375,6 +384,7 @@ export default function Vote() {
     });
   };
   const handleCloseLock = () => {
+    dispatch(setbannerClicked(false));
     setShowCreateLockModal(false);
     setPlyInput("");
     setLockingDate("");
