@@ -41,6 +41,8 @@ import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { setIsLoadingWallet } from "../../src/redux/walletLoading";
 import { tzktExplorer } from "../../src/common/walletconnect";
 import { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
+import { getTotalVotingPower } from "../../src/redux/pools";
+import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -83,6 +85,7 @@ export default function Vote() {
   const amm = useAppSelector((state) => state.config.AMMs);
   const initialPriceCall = useRef<boolean>(true);
   const initialLpPriceCall = useRef<boolean>(true);
+  const initialRewardsAprCall = useRef<boolean>(true);
   const handleCreateLock = () => {
     setShowCreateLockModal(true);
   };
@@ -92,6 +95,9 @@ export default function Vote() {
   const [lockOperation, setLockOperation] = useState(false);
   const [sumOfVotes, setSumofVotes] = useState(0);
   const [contentTransaction, setContentTransaction] = useState("");
+  const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
+  const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
+  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
   var sum = 0;
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
@@ -311,6 +317,14 @@ export default function Vote() {
   }, [veNFTlist.data, userAddress]);
 
   useEffect(() => {
+    dispatch(getTotalVotingPower());
+  }, [userAddress]);
+  useEffect(() => {
+    if (totalVotingPowerError) {
+      dispatch(getTotalVotingPower());
+    }
+  }, [totalVotingPowerError]);
+  useEffect(() => {
     if (!initialPriceCall.current) {
       Object.keys(token).length !== 0 && dispatch(getTokenPrice());
     } else {
@@ -327,6 +341,30 @@ export default function Vote() {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  useEffect(() => {
+    if (!initialRewardsAprCall.current) {
+      if (Object.keys(tokenPrice).length !== 0) {
+        dispatch(
+          getRewardsAprEstimate({
+            totalVotingPower: currentTotalVotingPower,
+            tokenPrices: tokenPrice,
+          })
+        );
+      }
+    } else {
+      initialRewardsAprCall.current = false;
+    }
+  }, [currentTotalVotingPower, tokenPrice]);
+  useEffect(() => {
+    if (rewardsAprEstimateError && Object.keys(tokenPrice).length !== 0) {
+      dispatch(
+        getRewardsAprEstimate({
+          totalVotingPower: currentTotalVotingPower,
+          tokenPrices: tokenPrice,
+        })
+      );
+    }
+  }, [rewardsAprEstimateError]);
 
   const resetAllValues = () => {
     setPlyInput("");

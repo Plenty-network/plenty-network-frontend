@@ -74,7 +74,7 @@ export const dappClient = () => {
       name: "Plenty Network",
       iconUrl: "https://app.plenty.network/assets/icon/plentyLogo1000.svg",
       preferredNetwork: walletNetwork,
-      colorMode: ColorMode.LIGHT,
+      colorMode: ColorMode.DARK,
       blockExplorer: new TzktBlockExplorer() as any,
       appUrl: "https://app.plenty.network",
       featuredWallets: ['temple', 'naan', 'kukai', 'trust'],

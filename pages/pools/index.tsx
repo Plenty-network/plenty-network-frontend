@@ -27,6 +27,7 @@ import {
   IMyPoolsDataResponse,
 } from "../../src/api/pools/types";
 import { MyPoolTable } from "../../src/components/Pools/MyPoolTable";
+import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
 export interface IIndexProps {}
 export enum POOL_TYPE {
   VOLATILE = "VOLATILE",
@@ -48,6 +49,9 @@ export default function Pools(props: IIndexProps) {
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   const initialPriceCall = React.useRef<boolean>(true);
   const initialLpPriceCall = React.useRef<boolean>(true);
+  const initialRewardsAprCall = React.useRef<boolean>(true);
+  const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
+  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
   const handleCloseManagePopup = (val: boolean) => {
     setShowLiquidityModal(val);
   };
@@ -68,11 +72,11 @@ export default function Pools(props: IIndexProps) {
   useEffect(() => {
     if (walletAddress) {
       localStorage.setItem(USERADDRESS, walletAddress);
-      dispatch(getTotalVotingPower());
     }
+    dispatch(getTotalVotingPower());
   }, [walletAddress]);
   useEffect(() => {
-    if (walletAddress && totalVotingPowerError) {
+    if (totalVotingPowerError) {
       dispatch(getTotalVotingPower());
     }
   }, [totalVotingPowerError]);
@@ -93,6 +97,30 @@ export default function Pools(props: IIndexProps) {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  useEffect(() => {
+    if (!initialRewardsAprCall.current) {
+      if (Object.keys(tokenPrices).length !== 0) {
+        dispatch(
+          getRewardsAprEstimate({
+            totalVotingPower: currentTotalVotingPower,
+            tokenPrices,
+          })
+        );
+      }
+    } else {
+      initialRewardsAprCall.current = false;
+    }
+  }, [currentTotalVotingPower, tokenPrices]);
+  useEffect(() => {
+    if (rewardsAprEstimateError && Object.keys(tokenPrices).length !== 0) {
+      dispatch(
+        getRewardsAprEstimate({
+          totalVotingPower: currentTotalVotingPower,
+          tokenPrices,
+        })
+      );
+    }
+  }, [rewardsAprEstimateError]);
   const [searchValue, setSearchValue] = React.useState("");
   const [isbanner, setisBanner] = React.useState(false);
   const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
