@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import MainAirdrop from "../../src/components/Airdrop";
 import Disclaimer, { ChainAirdrop } from "../../src/components/Airdrop/Disclaimer";
@@ -15,6 +15,7 @@ import { AppDispatch, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
+import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
 
 const Airdrop: NextPage = () => {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -23,6 +24,11 @@ const Airdrop: NextPage = () => {
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
+  const initialPriceCall = useRef<boolean>(true);
+  const initialLpPriceCall = useRef<boolean>(true);
+  const initialRewardsAprCall = useRef<boolean>(true);
+  const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
+  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
 
   const dispatch = useDispatch<AppDispatch>();
   const [isDisclaimer, setIsDisclaimer] = useState(true);
@@ -44,25 +50,55 @@ const Airdrop: NextPage = () => {
     dispatch(getEpochData());
   }, 60000);
   useEffect(() => {
-    if (userAddress) {
-      dispatch(getTotalVotingPower());
-    }
+    dispatch(getTotalVotingPower());
   }, [userAddress]);
 
   useEffect(() => {
-    if (userAddress && totalVotingPowerError) {
+    if (totalVotingPowerError) {
       dispatch(getTotalVotingPower());
     }
   }, [totalVotingPowerError]);
   useEffect(() => {
-    Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    if(!initialPriceCall.current) {
+      Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    } else {
+      initialPriceCall.current = false;
+    }
   }, [token]);
   useEffect(() => {
-    Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+    if(!initialLpPriceCall.current) {
+      Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+    } else {
+      initialLpPriceCall.current = false;
+    }
   }, [tokenPrices]);
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  useEffect(() => {
+    if (!initialRewardsAprCall.current) {
+      if (Object.keys(tokenPrices).length !== 0) {
+        dispatch(
+          getRewardsAprEstimate({
+            totalVotingPower: currentTotalVotingPower,
+            tokenPrices,
+          })
+        );
+      }
+    } else {
+      initialRewardsAprCall.current = false;
+    }
+  }, [currentTotalVotingPower, tokenPrices]);
+  useEffect(() => {
+    if (rewardsAprEstimateError && Object.keys(tokenPrices).length !== 0) {
+      dispatch(
+        getRewardsAprEstimate({
+          totalVotingPower: currentTotalVotingPower,
+          tokenPrices,
+        })
+      );
+    }
+  }, [rewardsAprEstimateError]);
   const [chain, setChain] = useState<ChainAirdrop>(ChainAirdrop.Tezos);
   return (
     <>

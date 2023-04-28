@@ -122,17 +122,14 @@ export const getVePLYListForUser = async (
 export const fetchTotalVotingPower = async (): Promise<BigNumber> => {
   try {
     const voteEscrowAddress = Config.VOTE_ESCROW[connectedNetwork];
-    const { CheckIfWalletConnected } = dappClient();
-    const walletResponse = await CheckIfWalletConnected();
-    if (!walletResponse.success) {
-      throw new Error('Wallet connection failed');
-    }
     const Tezos = await dappClient().tezos();
     const voteEscrowInstance = await Tezos.contract.at(voteEscrowAddress);
     const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+    
     const totalVotingPower = await voteEscrowInstance.contractViews
       .get_total_voting_power({ time: 0, ts: currentTimestamp })
       .executeView({ viewCaller: voteEscrowAddress });
+    
     return totalVotingPower.dividedBy(PLY_DECIMAL_MULTIPLIER);
   } catch (error: any) {
     throw new Error(error.message);

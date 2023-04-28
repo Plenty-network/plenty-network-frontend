@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as React from "react";
+import { useAppDispatch } from "../../redux";
+import { setbannerClicked } from "../../redux/walletLoading";
 import { useOutsideClick } from "../../utils/outSideClickHook";
 import { FooterInfoIcon } from "./FooterIconList";
 import { HrefIcon } from "./LinkIconList";
@@ -165,8 +167,16 @@ export function SubMenuList(props: ISubMenuListProps) {
   );
 }
 export function MoreSubMenuList(props: ISubMenuListProps) {
+  const dispatch = useAppDispatch();
+  const handleClick = () => {
+    dispatch(setbannerClicked(false));
+  };
   return (
-    <div className="w-screen flex flex-col text-f12 bg-topBar z-10" ref={props.refWrapper}>
+    <div
+      className="w-screen flex flex-col text-f12 bg-topBar z-10"
+      ref={props.refWrapper}
+      onClick={handleClick}
+    >
       {/*  */}
 
       {/*  */}
