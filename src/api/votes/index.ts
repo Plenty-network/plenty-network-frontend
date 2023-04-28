@@ -23,7 +23,7 @@ import {
   IVotesResponse,
 } from "./types";
 import { Bribes, VolumeV1Data, VolumeVeData } from "../pools/types";
-import { fetchEpochData } from "../util/epoch";
+import { fetchEpochData, getCurrentEpochNumber } from "../util/epoch";
 import { IEpochData, IEpochResponse, ITokenPriceList } from "../util/types";
 import { pools } from "../../redux/pools";
 import { getDexAddress } from "../util/fetchConfig";
@@ -705,6 +705,47 @@ export const addRemainingVotesDust = (
       myVotesData: {},
       error: error.message,
     };
+  }
+};
+
+/**
+ * Return the APR received in bribes and fees through voting on the value of  PLY locked for 4 years.
+ * @param totalVotingPower Total voting power as of now
+ * @param epoch Current epoch number
+ * @param tokenPrices Token prices list
+ */
+export const fetchRewardsAprEstimate = async (
+  totalVotingPower: BigNumber,
+  tokenPrices: ITokenPriceList
+): Promise<BigNumber> => {
+  try {
+    const plyPrice = tokenPrices["PLY"] || 0;
+    const epoch = await getCurrentEpochNumber();
+    const rewardData = await mainPageRewardData(epoch, tokenPrices);
+    if (!rewardData.success || Object.keys(rewardData.allData).length === 0) {
+      throw new Error("No pools data found");
+    }
+
+    const [totalBribesValue, totalFeesValue] = Object.values(
+      rewardData.allData
+    ).reduce(
+      ([bribesValueSum, feesValueSum]: [BigNumber, BigNumber], data) =>
+        ([bribesValueSum, feesValueSum] = [
+          bribesValueSum.plus(data.bribes),
+          feesValueSum.plus(data.fees),
+        ]),
+      [new BigNumber(0), new BigNumber(0)]
+    );
+
+    const rewardsAprEstimate = totalBribesValue
+      .plus(totalFeesValue)
+      .dividedBy(totalVotingPower.multipliedBy(plyPrice))
+      .multipliedBy(52)
+      .multipliedBy(100);
+
+    return rewardsAprEstimate;
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 };
 

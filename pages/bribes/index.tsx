@@ -11,6 +11,7 @@ import { AppDispatch, store, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet, walletConnection } from "../../src/redux/wallet/wallet";
+import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
 
 const Bribes: NextPage = () => {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -24,6 +25,9 @@ const Bribes: NextPage = () => {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const initialPriceCall = useRef<boolean>(true);
   const initialLpPriceCall = useRef<boolean>(true);
+  const initialRewardsAprCall = useRef<boolean>(true);
+  const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
+  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
 
   useEffect(() => {
     dispatch(fetchWallet());
@@ -63,6 +67,30 @@ const Bribes: NextPage = () => {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  useEffect(() => {
+    if (!initialRewardsAprCall.current) {
+      if (Object.keys(tokenPrice).length !== 0) {
+        dispatch(
+          getRewardsAprEstimate({
+            totalVotingPower: currentTotalVotingPower,
+            tokenPrices: tokenPrice,
+          })
+        );
+      }
+    } else {
+      initialRewardsAprCall.current = false;
+    }
+  }, [currentTotalVotingPower, tokenPrice]);
+  useEffect(() => {
+    if (rewardsAprEstimateError && Object.keys(tokenPrice).length !== 0) {
+      dispatch(
+        getRewardsAprEstimate({
+          totalVotingPower: currentTotalVotingPower,
+          tokenPrices: tokenPrice,
+        })
+      );
+    }
+  }, [rewardsAprEstimateError]);
   const [isBribesMain, setBribesMain] = useState(false);
 
   useEffect(() => {

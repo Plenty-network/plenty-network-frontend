@@ -12,6 +12,7 @@ import { flashMessage } from "./flashMessage";
 import { userSettings } from "./userSettings/userSettings";
 import { veNFT } from "./veNFT";
 import { pools } from "./pools";
+import { rewardsApr } from "./rewardsApr";
 import { epoch } from "./epoch/epoch";
 import { walletLoading } from "./walletLoading";
 import { portfolioRewards } from "./myPortfolio/rewards";
@@ -28,6 +29,7 @@ const reducers = combineReducers({
   tokenPrice: tokenPrice,
   userSettings: userSettings,
   pools: pools,
+  rewardsApr: rewardsApr,
   epoch: epoch,
   veNFT: veNFT,
   walletLoading: walletLoading,
@@ -48,6 +50,7 @@ const persistConfig = {
     "userSettings",
     "config",
     "pools",
+    "rewardsApr",
     "epoch",
     "tokenPrice",
     "portfolioStatsTvl",

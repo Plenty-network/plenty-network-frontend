@@ -32,6 +32,7 @@ import { IVestAndClaim } from "../../src/api/migrate/types";
 import { getBalanceFromTzkt } from "../../src/api/util/balance";
 import { MigrateToken } from "../../src/config/types";
 import { useCountdown } from "../../src/hooks/useCountDown";
+import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
 
 function MigrateMain(props: any) {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -60,6 +61,9 @@ function MigrateMain(props: any) {
 
   const initialPriceCall = useRef<boolean>(true);
   const initialLpPriceCall = useRef<boolean>(true);
+  const initialRewardsAprCall = useRef<boolean>(true);
+  const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
+  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
 
   const tokenIn = { symbol: "WRAP" };
   const tokenOut = { symbol: "PLENTY" };
@@ -189,6 +193,30 @@ function MigrateMain(props: any) {
       }, API_RE_ATTAMPT_DELAY);
     }
   }, [unclaimedInflationDataError]);
+  useEffect(() => {
+    if (!initialRewardsAprCall.current) {
+      if (Object.keys(tokenPrice).length !== 0) {
+        dispatch(
+          getRewardsAprEstimate({
+            totalVotingPower: currentTotalVotingPower,
+            tokenPrices: tokenPrice,
+          })
+        );
+      }
+    } else {
+      initialRewardsAprCall.current = false;
+    }
+  }, [currentTotalVotingPower, tokenPrice]);
+  useEffect(() => {
+    if (rewardsAprEstimateError && Object.keys(tokenPrice).length !== 0) {
+      dispatch(
+        getRewardsAprEstimate({
+          totalVotingPower: currentTotalVotingPower,
+          tokenPrices: tokenPrice,
+        })
+      );
+    }
+  }, [rewardsAprEstimateError]);
   const [vestedData, setVestedData] = useState<IVestAndClaim>({} as IVestAndClaim);
   useEffect(() => {
     if (userAddress) {
