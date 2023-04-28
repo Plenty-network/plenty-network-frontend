@@ -41,6 +41,7 @@ import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { setIsLoadingWallet } from "../../src/redux/walletLoading";
 import { tzktExplorer } from "../../src/common/walletconnect";
 import { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
+import { getTotalVotingPower } from "../../src/redux/pools";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -92,6 +93,7 @@ export default function Vote() {
   const [lockOperation, setLockOperation] = useState(false);
   const [sumOfVotes, setSumofVotes] = useState(0);
   const [contentTransaction, setContentTransaction] = useState("");
+  const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   var sum = 0;
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
@@ -310,6 +312,14 @@ export default function Vote() {
     }
   }, [veNFTlist.data, userAddress]);
 
+  useEffect(() => {
+    dispatch(getTotalVotingPower());
+  }, [userAddress]);
+  useEffect(() => {
+    if (totalVotingPowerError) {
+      dispatch(getTotalVotingPower());
+    }
+  }, [totalVotingPowerError]);
   useEffect(() => {
     if (!initialPriceCall.current) {
       Object.keys(token).length !== 0 && dispatch(getTokenPrice());

@@ -68,11 +68,11 @@ export default function Pools(props: IIndexProps) {
   useEffect(() => {
     if (walletAddress) {
       localStorage.setItem(USERADDRESS, walletAddress);
-      dispatch(getTotalVotingPower());
     }
+    dispatch(getTotalVotingPower());
   }, [walletAddress]);
   useEffect(() => {
-    if (walletAddress && totalVotingPowerError) {
+    if (totalVotingPowerError) {
       dispatch(getTotalVotingPower());
     }
   }, [totalVotingPowerError]);

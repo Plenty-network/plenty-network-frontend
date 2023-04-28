@@ -41,12 +41,10 @@ const Home: NextPage = () => {
     dispatch(getEpochData());
   }, 60000);
   useEffect(() => {
-    if (userAddress) {
-      dispatch(getTotalVotingPower());
-    }
+    dispatch(getTotalVotingPower());
   }, [userAddress]);
   useEffect(() => {
-    if (userAddress && totalVotingPowerError) {
+    if (totalVotingPowerError) {
       dispatch(getTotalVotingPower());
     }
   }, [totalVotingPowerError]);
