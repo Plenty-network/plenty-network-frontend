@@ -16,10 +16,7 @@ interface IBanner {
 function Banner(props: IBanner) {
   const dispatch = useAppDispatch();
   const percentage = useAppSelector((state) => state.rewardsApr.rewardsAprEstimate);
-  console.log(
-    "kk",
-    useAppSelector((state) => state.rewardsApr.rewardsAprEstimate)
-  );
+
   const handleFaucet = () => {
     claimFaucet(undefined, undefined, undefined, {
       flashType: Flashtype.Info,
