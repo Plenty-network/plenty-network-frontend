@@ -66,8 +66,8 @@ function Banner(props: IBanner) {
         !props.isBanner && "hidden"
       )}
     >
-      <p className="w-full text-center cursor-pointer" onClick={handleClick}>
-        <Link href={"/vote"}>
+      <Link href={"/vote"}>
+        <p className="w-full h-[38px] pt-[10px] text-center cursor-pointer" onClick={handleClick}>
           {!isMobile
             ? `Earn up to ${
                 Number(percentage) > 0 ? Number(percentage)?.toFixed(1) : "-"
@@ -75,8 +75,8 @@ function Banner(props: IBanner) {
             : `Earn up to ${
                 Number(percentage) > 0 ? Number(percentage)?.toFixed(1) : "-"
               }% APR by vote locking your PLY`}
-        </Link>
-      </p>
+        </p>
+      </Link>
       <p
         className="text-right mr-2 md:mr-[10px] cursor-pointer"
         onClick={() => {
