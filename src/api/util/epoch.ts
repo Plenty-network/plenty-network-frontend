@@ -347,3 +347,16 @@ export const getNextListOfEpochsMODIFY = async (
   }
 };
 
+/**
+ * Returns the current epoch number
+ */
+export const getCurrentEpochNumber = async (): Promise<number> => {
+  try {
+    const voterStorageResponse = await getTzktStorageData(voterContractAddress);
+    const currentEpochNumber = new BigNumber(voterStorageResponse.data.epoch).toNumber();
+    return currentEpochNumber;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
+

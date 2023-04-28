@@ -23,7 +23,7 @@ import {
   IVotesResponse,
 } from "./types";
 import { Bribes, VolumeV1Data, VolumeVeData } from "../pools/types";
-import { fetchEpochData } from "../util/epoch";
+import { fetchEpochData, getCurrentEpochNumber } from "../util/epoch";
 import { IEpochData, IEpochResponse, ITokenPriceList } from "../util/types";
 import { pools } from "../../redux/pools";
 import { getDexAddress } from "../util/fetchConfig";
@@ -150,7 +150,9 @@ const mainPageRewardData = async (
       isCurrentEpoch = epochData.isCurrent;
 
       const feesResponse = await axios.get(
-        `${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
+        `${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/pools?ts=${
+          epochData.epochEndTimestamp - 1
+        }`
       );
       feesData = feesResponse.data;
     } else {
@@ -169,7 +171,7 @@ const mainPageRewardData = async (
     for (var x of bribesData) {
       let bribe: BigNumber = new BigNumber(0);
       let bribes: Bribes[] = [];
-      const bribesObj: { [key: string] : Bribes} = {};
+      const bribesObj: { [key: string]: Bribes } = {};
 
       if (!x.bribes || x.bribes.length === 0) {
         bribe = new BigNumber(0);
@@ -180,7 +182,7 @@ const mainPageRewardData = async (
               .dividedBy(new BigNumber(10).pow(TOKENS[y.name].decimals))
               .multipliedBy(isCurrentEpoch ? tokenPrices[y.name] || 0 : y.price)
           );
-          if(bribesObj[y.name]) {
+          if (bribesObj[y.name]) {
             const prevBribeObj = bribesObj[y.name];
             bribesObj[y.name] = {
               ...prevBribeObj,
@@ -217,8 +219,8 @@ const mainPageRewardData = async (
         ? new BigNumber(feesDataObject[x.pool].feesEpoch.token2)
         : new BigNumber(0);
 
-      if(bribes.length > 0) {
-        bribes.sort((a,b) => b.price.minus(a.price).toNumber());
+      if (bribes.length > 0) {
+        bribes.sort((a, b) => b.price.minus(a.price).toNumber());
       }
 
       finalData[x.pool] = {
@@ -260,7 +262,7 @@ export const votesPageDataWrapper = async (
   try {
     const state = store.getState();
     const AMMS = state.config.AMMs;
- 
+
     const [rewardData, votesData] = await Promise.all([
       mainPageRewardData(epoch, tokenPrices),
       getAllVotesData(epoch, tokenId),
@@ -280,26 +282,28 @@ export const votesPageDataWrapper = async (
     for (let poolData of Object.keys(rewardData.allData)) {
       const AMM = AMMS[poolData];
 
-      if(AMM && AMM.gauge) {
+      if (AMM && AMM.gauge) {
         allData[poolData] = {
           tokenA: AMM.token1.symbol,
           tokenB: AMM.token2.symbol,
           poolType: AMM.type,
-  
+
           bribes: rewardData.allData[poolData]
             ? rewardData.allData[poolData].bribes
             : new BigNumber(0),
-  
-          bribesData : rewardData.allData[poolData]
-          ? rewardData.allData[poolData].bribesData
-          : [],
-            
+
+          bribesData: rewardData.allData[poolData] ? rewardData.allData[poolData].bribesData : [],
+
           fees: rewardData.allData[poolData] ? rewardData.allData[poolData].fees : new BigNumber(0),
-  
-          feesTokenA: rewardData.allData[poolData] ? rewardData.allData[poolData].feesTokenA : new BigNumber(0),
-  
-          feesTokenB: rewardData.allData[poolData] ? rewardData.allData[poolData].feesTokenB : new BigNumber(0),
-  
+
+          feesTokenA: rewardData.allData[poolData]
+            ? rewardData.allData[poolData].feesTokenA
+            : new BigNumber(0),
+
+          feesTokenB: rewardData.allData[poolData]
+            ? rewardData.allData[poolData].feesTokenB
+            : new BigNumber(0),
+
           totalVotes:
             Object.keys(votesData.totalVotesData).length === 0
               ? new BigNumber(0)
@@ -312,7 +316,7 @@ export const votesPageDataWrapper = async (
               : votesData.totalVotesData[poolData]
               ? votesData.totalVotesData[poolData].votePercentage
               : new BigNumber(0),
-  
+
           myVotes:
             Object.keys(votesData.myVotesData).length === 0
               ? new BigNumber(0)
@@ -324,8 +328,7 @@ export const votesPageDataWrapper = async (
               ? new BigNumber(0)
               : votesData.myVotesData[poolData]
               ? votesData.myVotesData[poolData].votePercentage
-              : new BigNumber(0), 
-  
+              : new BigNumber(0),
         };
       }
     }
@@ -344,12 +347,11 @@ export const votesPageDataWrapper = async (
   }
 };
 
-
 /**
  * Returns the list of veNFT tokens for a particular user address.
  * @param userTezosAddress - Tezos wallet address of the user
  */
- export const getVeNFTsList = async (
+export const getVeNFTsList = async (
   userTezosAddress: string,
   epochNumber: number
 ): Promise<IVeNFTListResponse> => {
@@ -373,7 +375,7 @@ export const votesPageDataWrapper = async (
     const currentTimestamp: BigNumber = new BigNumber(Date.now())
       .dividedBy(1000)
       .decimalPlaces(0, 1);
-    
+
     locksData.forEach((lock: any) => {
       const epochVotingPower = new BigNumber(lock.epochtVotingPower);
       const availableVotingPower = new BigNumber(lock.availableVotingPower);
@@ -529,7 +531,7 @@ export const getMyAmmVotes = async (
       throw new Error("No votes in this epoch yet");
     }
     const totalTokenVotes: BigNumber = new BigNumber(totalTokenVotesResponse.data[0].value);
-    
+
     const tokenAmmVotesResponse = await getTzktBigMapData(
       tokenAmmVotesBigMapId,
       `key.epoch=${epochNumber}&key.token_id=${tokenId}&select=key,value&limit=1000`
@@ -540,7 +542,7 @@ export const getMyAmmVotes = async (
     }
     // Sort the list to get top votes with highest first.
     tokenAmmVotesBigMapData.sort(compareBigMapData);
-    
+
     const myAmmVotesData: IVotesData[] = tokenAmmVotesBigMapData.map(
       (voteData): IVotesData => ({
         dexContractAddress: voteData.key.amm,
@@ -597,13 +599,13 @@ export const addRemainingVotesDust = (
   try {
     const finalVotesData = [...votesData];
     const availableVotingPower = new BigNumber(votingPower).multipliedBy(PLY_DECIMAL_MULTIPLIER);
-    
+
     const currentVotesSum = finalVotesData.reduce((sum, vote) => {
       sum = sum.plus(vote.votes);
       return sum;
     }, new BigNumber(0));
     const remainingVotesDust = availableVotingPower.minus(currentVotesSum);
-    
+
     if (remainingVotesDust.isGreaterThan(0) && new BigNumber(totalVotesPercentage).isEqualTo(100)) {
       finalVotesData[finalVotesData.length - 1].votes =
         finalVotesData[finalVotesData.length - 1].votes.plus(remainingVotesDust);
@@ -614,13 +616,12 @@ export const addRemainingVotesDust = (
   }
 };
 
-
 /**
  * Fetch all votes data in an epoch for a particular veNFT or for all.
  * @param epochNumber - Numeric value of the epoch for which the data is to be fetched
  * @param tokenId - veNFT token ID for which the data is to be fetched
  */
- export const getAllVotesData = async (
+export const getAllVotesData = async (
   epochNumber: number,
   tokenId: number | undefined
 ): Promise<IAllVotesResponse> => {
@@ -634,17 +635,28 @@ export const addRemainingVotesDust = (
     // const totalAmmVotesBigMapId: string = voterStorageResponse.total_amm_votes;
     // const totalEpochVotesBigMapId: string = voterStorageResponse.total_epoch_votes;
     const voterStorageResponse = await getTzktStorageData(voterContractAddress);
-    const tokenAmmVotesBigMapId: string = Number(voterStorageResponse.data.token_amm_votes).toString();
-    const totalTokenVotesBigMapId: string = Number(voterStorageResponse.data.total_token_votes).toString();
-    const totalAmmVotesBigMapId: string = Number(voterStorageResponse.data.total_amm_votes).toString();
-    const totalEpochVotesBigMapId: string = Number(voterStorageResponse.data.total_epoch_votes).toString();
+    const tokenAmmVotesBigMapId: string = Number(
+      voterStorageResponse.data.token_amm_votes
+    ).toString();
+    const totalTokenVotesBigMapId: string = Number(
+      voterStorageResponse.data.total_token_votes
+    ).toString();
+    const totalAmmVotesBigMapId: string = Number(
+      voterStorageResponse.data.total_amm_votes
+    ).toString();
+    const totalEpochVotesBigMapId: string = Number(
+      voterStorageResponse.data.total_epoch_votes
+    ).toString();
 
     const totalVotesData: IAllVotesData = {};
     const myVotesData: IAllVotesData = {};
 
     const [totalEpochVotesResponse, totalAmmVotesResponse] = await Promise.all([
       getTzktBigMapData(totalEpochVotesBigMapId, `key=${epochNumber}&select=key,value`),
-      getTzktBigMapData(totalAmmVotesBigMapId, `key.epoch=${epochNumber}&select=key,value&limit=1000`),
+      getTzktBigMapData(
+        totalAmmVotesBigMapId,
+        `key.epoch=${epochNumber}&select=key,value&limit=1000`
+      ),
     ]);
     if (totalEpochVotesResponse.data.length === 0) {
       throw new Error("No votes in this epoch yet");
@@ -709,6 +721,45 @@ export const addRemainingVotesDust = (
 };
 
 /**
+ * Return the APR received in bribes and fees through voting on the value of  PLY locked for 4 years.
+ * @param totalVotingPower Total voting power as of now
+ * @param epoch Current epoch number
+ * @param tokenPrices Token prices list
+ */
+export const fetchRewardsAprEstimate = async (
+  totalVotingPower: BigNumber,
+  tokenPrices: ITokenPriceList
+): Promise<BigNumber> => {
+  try {
+    const plyPrice = tokenPrices["PLY"] || 0;
+    const epoch = await getCurrentEpochNumber();
+    const rewardData = await mainPageRewardData(epoch, tokenPrices);
+    if (!rewardData.success || Object.keys(rewardData.allData).length === 0) {
+      throw new Error("No pools data found");
+    }
+
+    const [totalBribesValue, totalFeesValue] = Object.values(rewardData.allData).reduce(
+      ([bribesValueSum, feesValueSum]: [BigNumber, BigNumber], data) =>
+        ([bribesValueSum, feesValueSum] = [
+          bribesValueSum.plus(data.bribes),
+          feesValueSum.plus(data.fees),
+        ]),
+      [new BigNumber(0), new BigNumber(0)]
+    );
+
+    const rewardsAprEstimate = totalBribesValue
+      .plus(totalFeesValue)
+      .dividedBy(new BigNumber(totalVotingPower).multipliedBy(plyPrice))
+      .multipliedBy(52)
+      .multipliedBy(100);
+
+    return rewardsAprEstimate;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+/**
  * Function used as a callback for sorting the AMM votes allocation data in descending order of the votes count.
  */
 const compareBigMapData = (
@@ -726,7 +777,7 @@ const compareBigMapData = (
 
 /**
  * Function to slice the votes allocation data list into 2 lists of TOP 'N' and remaining,
- * and further sum up the remaining data into one object. Returns the TOP 'N' AMM array and 
+ * and further sum up the remaining data into one object. Returns the TOP 'N' AMM array and
  * the summed object of other AMM votes.
  * @param allAmmVotesData - Array of vote allocation data for all the AMMs
  */
