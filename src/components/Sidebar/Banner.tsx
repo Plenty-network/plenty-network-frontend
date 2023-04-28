@@ -72,10 +72,12 @@ function Banner(props: IBanner) {
       <p className="w-full text-center cursor-pointer" onClick={handleClick}>
         <Link href={"/vote"}>
           {!isMobile
-            ? `Earn up to ${Number(percentage)?.toFixed(
-                1
-              )}% APR in bribes and fee rewards by locking PLY for 4 years and voting every week.`
-            : `Earn up to ${Number(percentage)?.toFixed(1)}% APR by vote locking your PLY`}
+            ? `Earn up to ${
+                Number(percentage) > 0 ? Number(percentage)?.toFixed(1) : "-"
+              }% APR in bribes and fee rewards by locking PLY for 4 years and voting every week.`
+            : `Earn up to ${
+                Number(percentage) > 0 ? Number(percentage)?.toFixed(1) : "-"
+              }% APR by vote locking your PLY`}
         </Link>
       </p>
       <p
