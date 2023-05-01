@@ -71,9 +71,11 @@ export const getMaxPossibleBatchArrayV2 = async (
     const listOfAllBatches: ParamsWithKind[][] = [];
     const listOfLeftoverBatches: ParamsWithKind[][] = [];
     const Tezos = await dappClient().tezos();
-    // Add complete list as first possibility
-    // listOfAllBatches.push(maxPossibleBatch);
-    // listOfLeftoverBatches.push([]);
+    // Add complete list as first possibility if original array length is 1
+    if(maxPossibleBatch.length === 1) {
+      listOfAllBatches.push(maxPossibleBatch);
+      listOfLeftoverBatches.push([]);
+    }
     // Check if it's possible to execute the original batch and return immediately if so.
     const isTransactionPossible: boolean = await Tezos.estimate
         .batch(maxPossibleBatch)
@@ -99,6 +101,18 @@ export const getMaxPossibleBatchArrayV2 = async (
     );
     if (maxPossibleBatchIndex < 0) {
       console.log(promisesResult);
+      /* if the tiniest possible batch(second from last as last batch size will always be 0) 
+         fails because of not enough tez (storage_exhausted), throw "NOT_ENOUGH_TEZ" */
+      const secondToLastIndex = promisesResult.length - 2;
+      const storageExhaustionErrorIndex = promisesResult.findLastIndex(
+        (result) =>
+          result.status === "rejected" &&
+          String(result.reason.message).includes("storage_exhausted")
+      );
+      if (secondToLastIndex >= 0 && storageExhaustionErrorIndex === secondToLastIndex) {
+        throw new Error("NOT_ENOUGH_TEZ");
+      }
+      // for all other failures
       throw new Error("Couldn't find successful batch operations possible.");
     }
     
