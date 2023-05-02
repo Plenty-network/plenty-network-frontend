@@ -154,12 +154,21 @@ export const getBatchOperationsWithLimits = async (
   allBatchOperations: WalletParamsWithKind[]
 ): Promise<WalletParamsWithKind[]> => {
   try {
+    let notEnoughTez = false;
+    let notRevealed = false;
+    
     const Tezos = await dappClient().tezos();
     const limits = await Tezos.estimate
       .batch(allBatchOperations as ParamsWithKind[])
       .then((limits) => limits)
       .catch((err) => {
         console.log(err);
+        const errorMessage = String(err.message);
+        if(errorMessage.includes("storage_exhausted")) {
+          notEnoughTez = true;
+        } else if(errorMessage.includes("reveal")) {
+          notRevealed = true;
+        }
         return undefined;
       });
 
@@ -182,6 +191,12 @@ export const getBatchOperationsWithLimits = async (
         });
       });
     } else {
+      if(notEnoughTez) {
+        throw new Error("NOT_ENOUGH_TEZ");
+      } else if(notRevealed) {
+        // return the original batch if address is not revealed
+        return allBatchOperations;
+      }
       throw new Error("Failed to create batch");
     }
 
