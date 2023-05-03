@@ -130,7 +130,7 @@ export default function Pools(props: IIndexProps) {
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
-  const [poolFilterwithTvl, setPoolFilterwithTvl] = useState(false);
+  const [poolFilterwithTvl, setPoolFilterwithTvl] = useState(true);
   return (
     <>
       <SideBarHOC>
