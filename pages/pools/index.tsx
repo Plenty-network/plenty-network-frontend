@@ -156,7 +156,7 @@ export default function Pools(props: IIndexProps) {
                 id="tooltipj"
                 position={Position.left}
                 isShowInnitially={true}
-                toolTipChild={<div className="">Hide very small pools</div>}
+                toolTipChild={<div className="">Hide small pools</div>}
               >
                 <SwitchPools
                   isChecked={poolFilterwithTvl}
