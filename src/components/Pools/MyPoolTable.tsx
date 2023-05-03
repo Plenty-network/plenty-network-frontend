@@ -44,6 +44,7 @@ export interface IShortCardProps {
   //data: IMyPoolsData[];
   isFetchingMyPool: boolean;
   setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  poolFilterwithTvl: boolean;
 }
 export interface IManageBtnProps {
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -66,7 +67,8 @@ export function MyPoolTable(props: IShortCardProps) {
     tokenPrices,
     props.poolsFilter,
 
-    props.reFetchPool
+    props.reFetchPool,
+    props.poolFilterwithTvl
   );
 
   const [poolsTableData, isFetched] = usePoolsTableSearch(
