@@ -206,7 +206,9 @@ function MyPortfolio(props: any) {
   const initialLpPriceCall = useRef<boolean>(true);
   const initialRewardsAprCall = useRef<boolean>(true);
   const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
-  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
+  const rewardsAprEstimateError = useAppSelector(
+    (state) => state.rewardsApr.rewardsAprEstimateError
+  );
 
   useEffect(() => {
     dispatch(fetchWallet());
@@ -709,7 +711,10 @@ function MyPortfolio(props: any) {
           setFlashMessage({
             flashType: Flashtype.Rejected,
             headerText: "Rejected",
-            trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
+            trailingText:
+              response.error === "NOT_ENOUGH_TEZ"
+                ? `You do not have enough tez`
+                : `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
             linkText: "",
             isLoading: true,
             transactionId: "",
@@ -796,7 +801,10 @@ function MyPortfolio(props: any) {
           setFlashMessage({
             flashType: Flashtype.Rejected,
             headerText: "Rejected",
-            trailingText: `Claim and withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
+            trailingText:
+              response.error === "NOT_ENOUGH_TEZ"
+                ? `You do not have enough tez`
+                : `Claim and withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
             linkText: "",
             isLoading: true,
             transactionId: "",
@@ -875,9 +883,12 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Lock ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} PLY till ${localStorage.getItem(TOKEN_A)}`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Lock ${localStorage.getItem(
+                      FIRST_TOKEN_AMOUNT
+                    )} PLY till ${localStorage.getItem(TOKEN_A)}`,
               linkText: "",
               isLoading: true,
             })
@@ -949,7 +960,10 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
               isLoading: true,
             })
@@ -1022,7 +1036,10 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
               isLoading: true,
             })
@@ -1094,7 +1111,10 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
               linkText: "",
               isLoading: true,
             })
@@ -1166,7 +1186,10 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Claim ${localStorage.getItem(CLAIM)} PLY`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Claim ${localStorage.getItem(CLAIM)} PLY`,
               linkText: "",
               isLoading: true,
             })
@@ -1238,7 +1261,10 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Claim bribes $${localStorage.getItem(CLAIM)}`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Claim bribes $${localStorage.getItem(CLAIM)}`,
               linkText: "",
               isLoading: true,
             })
@@ -1311,7 +1337,10 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Claim trading fees $${localStorage.getItem(CLAIM)}`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Claim trading fees $${localStorage.getItem(CLAIM)}`,
               linkText: "",
               isLoading: true,
             })
@@ -1374,6 +1403,7 @@ function MyPortfolio(props: any) {
         }, 2000);
         setContentTransaction("");
       } else {
+        console.log("res", response);
         setBalanceUpdate(true);
         setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
@@ -1384,7 +1414,10 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Claim all lock rewards`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Claim all lock rewards`,
               linkText: "",
               isLoading: true,
             })
@@ -1455,6 +1488,7 @@ function MyPortfolio(props: any) {
         }, 2000);
         setContentTransaction("");
       } else {
+        console.log("res", response);
         setBalanceUpdate(true);
         setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
@@ -1465,7 +1499,10 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Claim lock rewards for Epoch ${localStorage.getItem(CLAIM)}`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Claim lock rewards for Epoch ${localStorage.getItem(CLAIM)}`,
               linkText: "",
               isLoading: true,
             })
@@ -1546,7 +1583,10 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Claim inflation ${localStorage.getItem(CLAIM)} PLY`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Claim inflation ${localStorage.getItem(CLAIM)} PLY`,
               linkText: "",
               isLoading: true,
             })
@@ -1627,7 +1667,10 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Claim all emissions, inflation, fees and bribes`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Claim all emissions, inflation, fees and bribes`,
               linkText: "",
               isLoading: true,
             })

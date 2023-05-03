@@ -218,9 +218,12 @@ function Migrate(props: IMigrateProps) {
           setFlashMessage({
             flashType: Flashtype.Rejected,
             headerText: "Rejected",
-            trailingText: `Migration of ${localStorage.getItem(
-              FIRST_TOKEN_AMOUNT
-            )} ${localStorage.getItem(TOKEN_A)} `,
+            trailingText:
+              response.error === "NOT_ENOUGH_TEZ"
+                ? `You do not have enough tez`
+                : `Migration of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+                    TOKEN_A
+                  )} `,
             linkText: "",
             isLoading: true,
             transactionId: "",

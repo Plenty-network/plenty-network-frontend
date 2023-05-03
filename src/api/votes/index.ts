@@ -753,7 +753,7 @@ export const fetchRewardsAprEstimate = async (
       .multipliedBy(52)
       .multipliedBy(100);
 
-    return rewardsAprEstimate;
+    return rewardsAprEstimate.isFinite() ? rewardsAprEstimate : new BigNumber(0);
   } catch (error: any) {
     throw new Error(error.message);
   }

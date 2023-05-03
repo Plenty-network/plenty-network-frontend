@@ -1,4 +1,4 @@
-import { OpKind } from "@taquito/taquito";
+import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { dappClient, voteEscrowAddress, voterAddress } from "../common/walletconnect";
 import {
   IOperationsResponse,
@@ -13,7 +13,7 @@ import {
   IAllEpochClaimData,
   IClaimInflationOperationData,
 } from "../api/portfolio/types";
-import { getMaxPossibleBatchArrayV2} from "../api/util/operations";
+import { getBatchOperationsWithLimits, getMaxPossibleBatchArrayV2} from "../api/util/operations";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
@@ -38,7 +38,7 @@ export const vote = async (
     const Tezos = await dappClient().tezos();
     const voterInstance = await Tezos.wallet.at(voterAddress);
 
-    const limits = await Tezos.estimate
+    /* const limits = await Tezos.estimate
       .transfer(voterInstance.methods.vote(id, votes).toTransferParams())
       .then((limits) => limits)
       .catch((err) => {
@@ -62,28 +62,33 @@ export const vote = async (
       throw new Error("Failed to estimate transaction limits");
     }
 
-    const operation = await voterInstance.methods.vote(id, votes).send({ gasLimit, storageLimit });
+    const operation = await voterInstance.methods.vote(id, votes).send({ gasLimit, storageLimit }); */
+    const allBatchOperations: WalletParamsWithKind[] = [];
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...voterInstance.methods.vote(id, votes).toTransferParams(),
+    });
 
-    // let batch = null;
-
-    // batch = Tezos.wallet.batch().withContractCall(voterInstance.methods.vote(id, votes));
-
-    // const batchOp = await batch.send();
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOp = await batch.send();
+    
     setShowConfirmTransaction(false);
     resetAllValues();
 
-    transactionSubmitModal(operation.opHash);
+    transactionSubmitModal(batchOp.opHash);
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await operation.confirmation(1);
+    await batchOp.confirmation(1);
 
-    const status = await operation.status();
+    const status = await batchOp.status();
     if( status === "applied"){
       return {
         success: true,
-        operationId: operation.opHash,
+        operationId: batchOp.opHash,
       };
     }else{
       throw new Error(status);
