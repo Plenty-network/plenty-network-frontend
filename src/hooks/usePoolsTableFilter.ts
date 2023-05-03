@@ -34,7 +34,7 @@ export const usePoolsTableFilter = (
     if (filterText) {
       const newpoolTableData = poolTableData.filter((e) => e.poolType === filterText);
       if (tvlFilter) {
-        const result = poolTableData.filter((e) => e.tvl.isGreaterThan(new BigNumber(50)));
+        const result = newpoolTableData.filter((e) => e.tvl.isGreaterThan(new BigNumber(50)));
         return { data: result, isFetched: isFetched };
       }
 

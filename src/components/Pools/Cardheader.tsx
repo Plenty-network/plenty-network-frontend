@@ -57,14 +57,14 @@ export function CardHeader(props: ICardHeaderProps) {
         {PoolsHeaderCard("My pools", 3, "")}
       </div>
       <div className="hidden md:flex items-center ml-auto gap-3 mr-5 ">
-        <p className="font-body1 hidden lg:flex">Hide very small pools</p>
+        <p className="font-body1 hidden lg:flex">Hide small pools</p>
         <p>
           <ToolTip
             id="tooltipj"
             disable={!isTablet}
             position={Position.top}
             isShowInnitially={true}
-            toolTipChild={<div className="">Hide very small pools</div>}
+            toolTipChild={<div className="">Hide small pools</div>}
           >
             <SwitchPools
               isChecked={props.poolFilterwithTvl}
