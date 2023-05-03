@@ -45,7 +45,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         showOnMobile: true,
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
-            <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
+            <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center overflow-hidden">
               <img
                 alt={"alt"}
                 src={
@@ -66,7 +66,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
                 onError={changeSource}
               />
             </div>
-            <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
+            <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center overflow-hidden">
               <img
                 alt={"alt"}
                 src={
@@ -142,7 +142,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenOneSymbol", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
-            <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
+            <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center overflow-hidden">
               <img
                 alt={"alt"}
                 src={
@@ -163,7 +163,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
                 onError={changeSource}
               />
             </div>
-            <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
+            <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center overflow-hidden">
               <img
                 alt={"alt"}
                 src={

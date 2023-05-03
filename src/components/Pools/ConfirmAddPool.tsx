@@ -12,7 +12,7 @@ import info from "../../../src/assets/icon/swap/info.svg";
 import { BigNumber } from "bignumber.js";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import stableSwap from "../../../src/assets/icon/swap/stableswapViolet.svg";
-import { tokenIcons, tokensList } from "../../constants/tokensList";
+import { tokenIcons } from "../../constants/tokensList";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import nFormatter, {
   changeSource,
