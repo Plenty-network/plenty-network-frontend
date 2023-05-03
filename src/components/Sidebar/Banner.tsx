@@ -46,7 +46,10 @@ function Banner(props: IBanner) {
             flashType: Flashtype.Rejected,
             transactionId: "",
             headerText: "Rejected",
-            trailingText: `Claim test tokens on Ghostnet`,
+            trailingText:
+              res.error === "NOT_ENOUGH_TEZ"
+                ? `You do not have enough tez`
+                : `Claim test tokens on Ghostnet`,
             linkText: "",
             isLoading: true,
           })

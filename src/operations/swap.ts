@@ -595,9 +595,9 @@ const swapTezPairs = async (
       throw new Error("Tez pair expected, but found none");
     }
 
-    // const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
-    // const batch = Tezos.wallet.batch(updatedBatchOperations);
-    const batch = Tezos.wallet.batch(allBatchOperations);
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    // const batch = Tezos.wallet.batch(allBatchOperations);
     const batchOperation: any = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);

@@ -71,9 +71,11 @@ export const getMaxPossibleBatchArrayV2 = async (
     const listOfAllBatches: ParamsWithKind[][] = [];
     const listOfLeftoverBatches: ParamsWithKind[][] = [];
     const Tezos = await dappClient().tezos();
-    // Add complete list as first possibility
-    // listOfAllBatches.push(maxPossibleBatch);
-    // listOfLeftoverBatches.push([]);
+    // Add complete list as first possibility if original array length is 1
+    if(maxPossibleBatch.length === 1) {
+      listOfAllBatches.push(maxPossibleBatch);
+      listOfLeftoverBatches.push([]);
+    }
     // Check if it's possible to execute the original batch and return immediately if so.
     const isTransactionPossible: boolean = await Tezos.estimate
         .batch(maxPossibleBatch)
@@ -99,6 +101,18 @@ export const getMaxPossibleBatchArrayV2 = async (
     );
     if (maxPossibleBatchIndex < 0) {
       console.log(promisesResult);
+      /* if the tiniest possible batch(second from last as last batch size will always be 0) 
+         fails because of not enough tez (storage_exhausted), throw "NOT_ENOUGH_TEZ" */
+      const secondToLastIndex = promisesResult.length - 2;
+      const storageExhaustionErrorIndex = promisesResult.findLastIndex(
+        (result) =>
+          result.status === "rejected" &&
+          String(result.reason.message).includes("storage_exhausted")
+      );
+      if (secondToLastIndex >= 0 && storageExhaustionErrorIndex === secondToLastIndex) {
+        throw new Error("NOT_ENOUGH_TEZ");
+      }
+      // for all other failures
       throw new Error("Couldn't find successful batch operations possible.");
     }
     
@@ -140,12 +154,21 @@ export const getBatchOperationsWithLimits = async (
   allBatchOperations: WalletParamsWithKind[]
 ): Promise<WalletParamsWithKind[]> => {
   try {
+    let notEnoughTez = false;
+    let notRevealed = false;
+    
     const Tezos = await dappClient().tezos();
     const limits = await Tezos.estimate
       .batch(allBatchOperations as ParamsWithKind[])
       .then((limits) => limits)
       .catch((err) => {
         console.log(err);
+        const errorMessage = String(err.message);
+        if(errorMessage.includes("storage_exhausted")) {
+          notEnoughTez = true;
+        } else if(errorMessage.includes("reveal")) {
+          notRevealed = true;
+        }
         return undefined;
       });
 
@@ -168,6 +191,12 @@ export const getBatchOperationsWithLimits = async (
         });
       });
     } else {
+      if(notEnoughTez) {
+        throw new Error("NOT_ENOUGH_TEZ");
+      } else if(notRevealed) {
+        // return the original batch if address is not revealed
+        return allBatchOperations;
+      }
       throw new Error("Failed to create batch");
     }
 
