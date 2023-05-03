@@ -42,7 +42,7 @@ export const CircularOverLappingImage = (props: {
 
   return (
     <div className=" flex justify-center items-center">
-      <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
+      <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center overflow-hidden">
         <img
           alt={"alt"}
           src={
@@ -57,7 +57,7 @@ export const CircularOverLappingImage = (props: {
           onError={changeSource}
         />
       </div>
-      <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
+      <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center overflow-hidden">
         <img
           alt={"alt"}
           src={
@@ -86,7 +86,9 @@ export interface IImageCircleProps {
 export function ImageCircle(props: IImageCircleProps) {
   const { className = "" } = props;
   return (
-    <span className={`w-[19px] h-[19px] md:w-[28px] md:h-[28px] -ml-1 ${className}`}>
+    <span
+      className={`w-[19px] h-[19px] md:w-[28px] md:h-[28px] -ml-1 overflow-hidden ${className}`}
+    >
       <Image
         alt={"alt"}
         src={props.src}
