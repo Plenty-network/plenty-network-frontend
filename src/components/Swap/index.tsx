@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
-import { tokensList } from "../../constants/tokensList";
 import { useLocationStateInSwap } from "../../hooks/useLocationStateInSwap";
 import SwapModal from "../../components/SwapModal/SwapModal";
 import SwapTab from "../../components/Swap/SwapTab";
