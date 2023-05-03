@@ -464,9 +464,12 @@ export default function Vote() {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Lock ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} PLY till ${localStorage.getItem(TOKEN_A)}`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Lock ${localStorage.getItem(
+                      FIRST_TOKEN_AMOUNT
+                    )} PLY till ${localStorage.getItem(TOKEN_A)}`,
               linkText: "",
               isLoading: true,
             })
@@ -544,7 +547,10 @@ export default function Vote() {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Vote with VeNFT #
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Vote with VeNFT #
               ${localStorage.getItem(FIRST_TOKEN_AMOUNT)}`,
               linkText: "",
               isLoading: true,
