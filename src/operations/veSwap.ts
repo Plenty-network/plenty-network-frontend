@@ -32,7 +32,7 @@ export const claim = async (
     const Tezos = await dappClient().tezos();
     const veSwapInstance = await Tezos.wallet.at(veSwapAddress);
 
-    const limits = await Tezos.estimate
+    /* const limits = await Tezos.estimate
       .transfer(veSwapInstance.methods.claim([["unit"]]).toTransferParams())
       .then((limits) => limits)
       .catch((err) => {
@@ -57,23 +57,33 @@ export const claim = async (
 
     const operation = await veSwapInstance.methods
       .claim([["unit"]])
-      .send({ gasLimit, storageLimit });
+      .send({ gasLimit, storageLimit }); */
+    const allBatchOperations: WalletParamsWithKind[] = [];
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...veSwapInstance.methods.claim([["unit"]]).toTransferParams(),
+    });
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOp = await batch.send();
 
     setShowConfirmTransaction(false);
     resetAllValues();
 
-    transactionSubmitModal(operation.opHash);
+    transactionSubmitModal(batchOp.opHash);
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await operation.confirmation(1);
+    await batchOp.confirmation(1);
 
-    const status = await operation.status();
+    const status = await batchOp.status();
     if (status === "applied") {
       return {
         success: true,
-        operationId: operation.opHash,
+        operationId: batchOp.opHash,
       };
     } else {
       throw new Error(status);

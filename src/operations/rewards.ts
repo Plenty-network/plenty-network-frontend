@@ -46,7 +46,7 @@ export const harvestRewards = async (
     const Tezos = await dappClient().tezos();
     const gaugeInstance = await Tezos.wallet.at(gaugeAddress);
 
-    const limits = await Tezos.estimate
+    /* const limits = await Tezos.estimate
       .transfer(gaugeInstance.methods.get_reward([["unit"]]).toTransferParams())
       .then((limits) => limits)
       .catch((err) => {
@@ -72,21 +72,31 @@ export const harvestRewards = async (
 
     const operation = await gaugeInstance.methods
       .get_reward([["unit"]])
-      .send({ gasLimit, storageLimit });
+      .send({ gasLimit, storageLimit }); */
+    const allBatchOperations: WalletParamsWithKind[] = [];
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...gaugeInstance.methods.get_reward([["unit"]]).toTransferParams(),
+    });
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOp = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    transactionSubmitModal && transactionSubmitModal(operation.opHash);
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
     resetAllValues && resetAllValues();
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    await operation.confirmation(1);
+    await batchOp.confirmation(1);
 
-    const status = await operation.status();
+    const status = await batchOp.status();
     if (status === "applied") {
       return {
         success: true,
-        operationId: operation.opHash,
+        operationId: batchOp.opHash,
       };
     } else {
       throw new Error(status);
