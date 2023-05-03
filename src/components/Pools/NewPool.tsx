@@ -300,11 +300,12 @@ export function NewPool(props: IManageLiquidityProps) {
                 flashType: Flashtype.Rejected,
                 transactionId: "",
                 headerText: "Rejected",
-                trailingText: `Addition of new ${localStorage.getItem(
-                  TOKEN_A
-                )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
-                  FIRST_TOKEN_AMOUNT
-                )} pool`,
+                trailingText:
+                  response.error === "NOT_ENOUGH_TEZ"
+                    ? `You do not have enough tez`
+                    : `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+                        TOKEN_B
+                      )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
                 linkText: "",
                 isLoading: true,
               })
@@ -382,11 +383,12 @@ export function NewPool(props: IManageLiquidityProps) {
                 flashType: Flashtype.Rejected,
                 transactionId: "",
                 headerText: "Rejected",
-                trailingText: `Addition of new ${localStorage.getItem(
-                  TOKEN_A
-                )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
-                  FIRST_TOKEN_AMOUNT
-                )} pool`,
+                trailingText:
+                  response.error === "NOT_ENOUGH_TEZ"
+                    ? `You do not have enough tez`
+                    : `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+                        TOKEN_B
+                      )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
                 linkText: "",
                 isLoading: true,
               })
@@ -459,11 +461,12 @@ export function NewPool(props: IManageLiquidityProps) {
                 flashType: Flashtype.Rejected,
                 transactionId: "",
                 headerText: "Rejected",
-                trailingText: `Addition of new ${localStorage.getItem(
-                  TOKEN_A
-                )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
-                  FIRST_TOKEN_AMOUNT
-                )} pool`,
+                trailingText:
+                  response.error === "NOT_ENOUGH_TEZ"
+                    ? `You do not have enough tez`
+                    : `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+                        TOKEN_B
+                      )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
                 linkText: "",
                 isLoading: true,
               })
