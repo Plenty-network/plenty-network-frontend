@@ -39,16 +39,16 @@ const MainMenu: Array<ISingleSideBarProps> = [
     // activePathName: "/pools",
     subMenu: [
       {
-        name: "v2",
-        iconName: "pools",
-        pathName: "/pools",
-        activePathName: "/pools",
-      },
-      {
         name: "v3",
         iconName: "pools",
         pathName: "/pools/v3",
         activePathName: "/pools/v3",
+      },
+      {
+        name: "v2",
+        iconName: "pools",
+        pathName: "/pools",
+        activePathName: "/pools",
       },
     ],
   },
@@ -92,6 +92,7 @@ const MainMenu: Array<ISingleSideBarProps> = [
 
 export function SideBar(props: ISideBarProps) {
   const [activeMenu, setActiveMenu] = React.useState<string>("");
+  const [openSubMenu, setOpenSubMenu] = React.useState(true);
   const { pathname } = useRouter();
   try {
     if (pathname == "/swap" || pathname == "/migrate")
@@ -120,7 +121,8 @@ export function SideBar(props: ISideBarProps) {
                   : setActiveMenu(`menuItem${index}`)
               }
               isActive={pathname === menuItem.activePathName}
-              isMenuOpen={activeMenu === `menuItem${index}`}
+              isMenuOpen={openSubMenu}
+              setOpenSubMenu={setOpenSubMenu}
               subMenu={menuItem.subMenu ? menuItem.subMenu : false}
               isToolTip={menuItem.isToolTip}
               pathName={menuItem.pathName}

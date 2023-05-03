@@ -19,6 +19,7 @@ export interface ISingleSideBarProps {
   openNewPage?: boolean;
   isToolTip?: boolean;
   isSubmenu?: boolean;
+  setOpenSubMenu?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function SingleSideBar(props: ISingleSideBarProps) {
@@ -84,7 +85,10 @@ export function SingleSideBar(props: ISingleSideBarProps) {
   }
 
   return (
-    <div className={`flex flex-col ${props?.className}`} onClick={props.onClick}>
+    <div
+      className={`flex flex-col ${props?.className}`}
+      onClick={() => props.setOpenSubMenu && props.setOpenSubMenu(!props.isMenuOpen)}
+    >
       <div
         className={`flex w-full items-center justify-between h-[50px] ${
           props.isActive ? "sideNavactive text-white" : "text-text-250"
