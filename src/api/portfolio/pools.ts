@@ -14,6 +14,8 @@ import { getRewards } from "../rewards";
 import { IConfigPool } from "../../config/types";
 import { getPnlpBalance } from "../util/balance";
 import { connectedNetwork } from "../../common/walletconnect";
+import pLimit from "p-limit";
+import { PROMISE_ALL_CONCURRENCY_LIMIT } from "../../constants/global";
 
 
 /**
@@ -193,6 +195,8 @@ const getPositionsFromConfig = async (
 
     const state = store.getState();
     const AMM = state.config.AMMs;
+    // All promises concurrency is set to 8 for now.
+    const limit = pLimit(PROMISE_ALL_CONCURRENCY_LIMIT);
 
     let liquidityAmountSum = new BigNumber(0);
     let positionsData: IPositionsData[] = [];
@@ -205,7 +209,7 @@ const getPositionsFromConfig = async (
     
     const lpBalancesData: IPnlpBalanceResponse[] = await Promise.all(
       poolsWithoutGauge.map((pool: IConfigPool) =>
-        getPnlpBalance(pool.token1.symbol, pool.token2.symbol, userTezosAddress)
+        limit(() => getPnlpBalance(pool.token1.symbol, pool.token2.symbol, userTezosAddress))
       )
     );
     
