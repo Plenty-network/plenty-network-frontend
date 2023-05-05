@@ -19,11 +19,13 @@ import {
   EMPTY_POOLS_OBJECT,
   EMPTY_VE_INDEXER_POOLS_OBJECT,
   POOLS_PAGE_LIMIT,
+  PROMISE_ALL_CONCURRENCY_LIMIT,
 } from "../../constants/global";
 import { store } from "../../redux";
 import { connectedNetwork } from "../../common/walletconnect";
 import { IPnlpBalanceResponse, ITokenPriceList } from "../util/types";
 import { IPositionsIndexerData } from "../portfolio/types";
+import pLimit from "p-limit";
 
 /** @deprecated */
 export const poolsDataWrapperV1 = async (
@@ -635,6 +637,8 @@ const getMyNonVEPoolsData = async (userTezosAddress: string): Promise<IPositions
   try {
     const state = store.getState();
     const AMM = state.config.AMMs;
+    // All promises concurrency is set to 8 for now.
+    const limit = pLimit(PROMISE_ALL_CONCURRENCY_LIMIT);
 
     const positionsData: IPositionsIndexerData[] = [];
 
@@ -646,7 +650,7 @@ const getMyNonVEPoolsData = async (userTezosAddress: string): Promise<IPositions
 
     const lpBalancesData: IPnlpBalanceResponse[] = await Promise.all(
       poolsWithoutGauge.map((pool: IConfigPool) =>
-        getPnlpBalance(pool.token1.symbol, pool.token2.symbol, userTezosAddress)
+        limit(() => getPnlpBalance(pool.token1.symbol, pool.token2.symbol, userTezosAddress))
       )
     );
 
