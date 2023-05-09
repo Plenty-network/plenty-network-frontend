@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@airgap/beacon-sdk": "^3.0.0",
+    "@plenty-labs/v3-sdk": "^1.0.2",
     "@rainbow-me/rainbowkit": "^0.8.1",
     "@reduxjs/toolkit": "^1.8.2",
     "@taquito/beacon-wallet": "^13.0.0",
@@ -47,8 +48,7 @@
     "recharts": "2.1.12",
     "redux-persist": "^6.0.0",
     "truncate-middle": "^1.0.6",
-    "wagmi": "^0.9.5",
-    "@plenty-labs/v3-sdk": "^1.0.0"
+    "wagmi": "^0.9.5"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",
