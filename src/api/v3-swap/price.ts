@@ -20,8 +20,8 @@ export const calculatePrice = async (
         let maxTickPriceValue = Tick.computeRealPriceFromTick(4);
 
         let PoolObject = new Pool(currTickIndex, tickSpacing, sqrtPriceValue);
+        let amountXFromY = PoolObject.estimateAmountXFromY(0,0,0);
 
-        console.log('v3-------v3', PoolObject);
     }
     catch(error) {
         console.log("v3 error: ", error);
