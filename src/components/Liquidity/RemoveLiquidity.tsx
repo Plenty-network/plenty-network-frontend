@@ -12,6 +12,7 @@ import nFormatter, {
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
 import fallback from "../../../src/assets/icon/pools/fallback.png";
+import fromExponential from "from-exponential";
 import { tokenIcons } from "../../constants/tokensList";
 interface IRemoveLiquidityProps {
   swapData: ISwapData;
@@ -127,7 +128,7 @@ function RemoveLiquidity(props: IRemoveLiquidityProps) {
                 type="text"
                 className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium1 outline-none w-[100%] placeholder:text-text-400"
                 placeholder="0.0"
-                value={props.burnAmount}
+                value={fromExponential(props.burnAmount)}
                 onChange={(e) => handleRemoveLiquidityInput(e.target.value)}
               />
             )}

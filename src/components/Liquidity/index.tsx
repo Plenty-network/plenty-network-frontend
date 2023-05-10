@@ -120,7 +120,11 @@ function Liquidity(props: ILiquidityProps) {
           Remove
         </Button>
       );
-    } else if (walletAddress && props.burnAmount && props.burnAmount > props.pnlpBalance) {
+    } else if (
+      walletAddress &&
+      props.burnAmount &&
+      new BigNumber(props.burnAmount).isGreaterThan(props.pnlpBalance)
+    ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
           Insufficient balance
