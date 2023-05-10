@@ -210,7 +210,7 @@ export function Staking(props: IStakingProps) {
     } else if (
       walletAddress &&
       props.stakeInput &&
-      Number(props.stakeInput) > Number(props.pnlpBalance)
+      new BigNumber(props.stakeInput).isGreaterThan(new BigNumber(props.pnlpBalance))
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
