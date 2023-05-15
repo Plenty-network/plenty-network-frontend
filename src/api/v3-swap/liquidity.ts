@@ -20,42 +20,96 @@ const TokenDetail = async(tokenSymbol : String) : Promise<Token> => {
     }
 }
 
-export const calculateCurrentPrice = async (
+export const calculateCurrentPrice = async ( tokenXSymbol: String, tokenYSymbol: String, refernceToken: String
   ): Promise<any>  => {
     try {
         const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
         let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.args[3].int));
         let currTickIndex = parseInt(v3ContractStorage.data.args[0].args[0].args[1].int);
         let tickSpacing = parseInt(v3ContractStorage.data.args[0].args[0].args[0].args[0].args[4].int);
-        
-        let tokenXSymbol = "CTez";
-        let tokenYSymbol = "PLY";
 
         let tokenX = await TokenDetail(tokenXSymbol);
         let tokenY = await TokenDetail(tokenYSymbol);
+        let currentPrice;
 
         let PoolObject = new Pool(tokenX, tokenY, currTickIndex, tickSpacing, sqrtPriceValue);
         
-        let currentPriceTokenY = PoolObject.getRealPriceTokenY();
-        let currentPriceTokenX = PoolObject.getRealPriceTokenX();
+        if(refernceToken === "tokenYSymbol") {
+            currentPrice = PoolObject.getRealPriceTokenY();
+        } else {
+            currentPrice = PoolObject.getRealPriceTokenX();
+        }
 
-        let estimateAmountXFromY = PoolObject.estimateAmountXFromY(BigNumber(2), 0, 1);
-        let estimateAmountYFromX = PoolObject.estimateAmountYFromX(BigNumber(2), 0, 1);
-
-        console.log('v3-------v3', PoolObject);
+        return currentPrice;
     }
     catch(error) {
         console.log("v3 error: ", error);
     }
 }
 
-export const calculatePriceRange = async (
+export const calculateTickRange = async ( tokenXSymbol: String, tokenYSymbol: String
     ): Promise<any>  => {
       try {
-          let minTickPriceValue = Tick.computeRealPriceFromTick(2, tokenX, tokenY);
-          let maxTickPriceValue = Tick.computeRealPriceFromTick(4, tokenX, tokenY);
+          const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
+          let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.args[3].int));
+          let currTickIndex = parseInt(v3ContractStorage.data.args[0].args[0].args[1].int);
+          let tickSpacing = parseInt(v3ContractStorage.data.args[0].args[0].args[0].args[0].args[4].int);
+        
+          let tokenX = await TokenDetail(tokenXSymbol);
+          let tokenY = await TokenDetail(tokenYSymbol);
+
+          let PoolObject = new Pool(tokenX, tokenY, currTickIndex, tickSpacing, sqrtPriceValue);
+
+          let tickFullRange = PoolObject.getFullRangeBoundaries();
+          console.log('v3-------v3', tickFullRange);
+
+          return tickFullRange;
+      }
+      catch(error) {
+          console.log("v3 error: ", error);
+      }
+}
+
+export const calculateMinandMaxPriceFromTick = async ( minTick: number, maxTick: number, tokenXSymbol: String, tokenYSymbol: String
+    ): Promise<any>  => {
+      try {
+          const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
+
+          let tokenX = await TokenDetail(tokenXSymbol);
+          let tokenY = await TokenDetail(tokenYSymbol);
+
+          let minPriceValue = Tick.computeRealPriceFromTick(minTick, tokenX, tokenY);
+          let maxPriceValue = Tick.computeRealPriceFromTick(maxTick, tokenX, tokenY);
     
-          console.log('v3-------v3', minTickPriceValue, maxTickPriceValue);
+          console.log('v3-------v3', minPriceValue, maxPriceValue);
+
+          return {
+            minValue : minPriceValue,
+            maxValue : minPriceValue,
+          }
+      }
+      catch(error) {
+          console.log("v3 error: ", error);
+      }
+}
+
+export const estimateTokenAFromTokenB = async ( amount: BigNumber, tokenXSymbol: String, tokenYSymbol: String, lowerTickIndex: number, upperTickIndex: number
+    ): Promise<any>  => {
+      try {
+          const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
+          let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.args[3].int));
+          let currTickIndex = parseInt(v3ContractStorage.data.args[0].args[0].args[1].int);
+          let tickSpacing = parseInt(v3ContractStorage.data.args[0].args[0].args[0].args[0].args[4].int);
+          let estimatedAmount;
+
+          let tokenX = await TokenDetail(tokenXSymbol);
+          let tokenY = await TokenDetail(tokenYSymbol);
+  
+          let PoolObject = new Pool(tokenX, tokenY, currTickIndex, tickSpacing, sqrtPriceValue);
+  
+          estimatedAmount = PoolObject.estimateAmountXFromY(amount, lowerTickIndex, upperTickIndex);
+
+          return estimatedAmount;
       }
       catch(error) {
           console.log("v3 error: ", error);
