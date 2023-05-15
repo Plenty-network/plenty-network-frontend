@@ -3,6 +3,7 @@ import { store } from '../../redux';
 import { calculateTokensInWrapper, calculateTokensOutWrapper, loadSwapDataWrapper } from './wrappers';
 import { IBestPathResponse, ISwapDataResponse} from './types'
 import { IConfigTokens } from '../../config/types';
+import { ROUTER_BLACKLISTED_TOKENS } from '../../constants/global';
 
 
 export const allPaths = async (tokenIn: string, tokenOut: string , multihop : boolean): Promise<{ paths: string[], swapData: ISwapDataResponse[][] }> => {
@@ -35,8 +36,10 @@ export const allPaths = async (tokenIn: string, tokenOut: string , multihop : bo
                 tempPaths.push(paths[i]);
             }
         }
-        tempPaths.sort((a, b) => a.length - b.length);
-        paths = tempPaths;
+
+        const filteredPaths = filterPathsWithBlacklistedTokens(tempPaths);
+        filteredPaths.sort((a, b) => a.length - b.length);
+        paths = filteredPaths;
     
         let swapData: ISwapDataResponse[][] = [];
         // const allSwapDataPromises: Promise<ISwapDataResponse>[][] = [];
@@ -290,4 +293,18 @@ export const computeAllPathsReverse = (
     }
 };
 
-
+/**
+ * Returns all possible paths after filtering out the paths which include
+ * any of the blacklisted tokens from router
+ * @param paths All possible paths between selected tokens for swapping
+ */
+const filterPathsWithBlacklistedTokens = (paths: string[]): string[] =>
+  paths.reduce((finalPaths: string[], currPath: string) => {
+    const blacklistedTokenExistsInPath = ROUTER_BLACKLISTED_TOKENS.some((token) =>
+      currPath.includes(token)
+    );
+    if (!blacklistedTokenExistsInPath) {
+      finalPaths.push(currPath);
+    }
+    return finalPaths;
+  }, []);
