@@ -20,20 +20,32 @@ const TokenDetail = async(tokenSymbol : String) : Promise<Token> => {
     }
 }
 
+const ContractStorage = async(tokenXSymbol : String, tokenYSymbol : String) : Promise<any> => {
+    const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
+    let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.args[3].int));
+    let currTickIndex = parseInt(v3ContractStorage.data.args[0].args[0].args[1].int);
+    let tickSpacing = parseInt(v3ContractStorage.data.args[0].args[0].args[0].args[0].args[4].int);
+    
+    let tokenX = await TokenDetail(tokenXSymbol);
+    let tokenY = await TokenDetail(tokenYSymbol);
+    
+    return {
+        sqrtPriceValue : sqrtPriceValue,
+        currTickIndex : currTickIndex,
+        tickSpacing : tickSpacing,
+        tokenX : tokenX,
+        tokenY : tokenY,
+    };
+}
+
 export const calculateCurrentPrice = async ( tokenXSymbol: String, tokenYSymbol: String, refernceToken: String
   ): Promise<any>  => {
     try {
-        const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
-        let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.args[3].int));
-        let currTickIndex = parseInt(v3ContractStorage.data.args[0].args[0].args[1].int);
-        let tickSpacing = parseInt(v3ContractStorage.data.args[0].args[0].args[0].args[0].args[4].int);
-        
-        let tokenX = await TokenDetail(tokenXSymbol);
-        let tokenY = await TokenDetail(tokenYSymbol);
         let currentPrice;
 
-        let PoolObject = new Pool(tokenX, tokenY, currTickIndex, tickSpacing, sqrtPriceValue);
-        
+        let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol)
+        let PoolObject = new Pool(contractStorageParameters.tokenX, contractStorageParameters.tokenY, contractStorageParameters.currTickIndex, contractStorageParameters.tickSpacing, contractStorageParameters.sqrtPriceValue);
+
         if(refernceToken === "tokenYSymbol") {
             currentPrice = PoolObject.getRealPriceTokenY();
         } else {
@@ -50,18 +62,9 @@ export const calculateCurrentPrice = async ( tokenXSymbol: String, tokenYSymbol:
 export const calculateFullRange = async ( tokenXSymbol: String, tokenYSymbol: String
     ): Promise<any>  => {
       try {
-          const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
-          let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.args[3].int));
-          let currTickIndex = parseInt(v3ContractStorage.data.args[0].args[0].args[1].int);
-          let tickSpacing = parseInt(v3ContractStorage.data.args[0].args[0].args[0].args[0].args[4].int);
-        
-          let tokenX = await TokenDetail(tokenXSymbol);
-          let tokenY = await TokenDetail(tokenYSymbol);
-
-          let PoolObject = new Pool(tokenX, tokenY, currTickIndex, tickSpacing, sqrtPriceValue);
-
+          let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol)
+          let PoolObject = new Pool(contractStorageParameters.tokenX, contractStorageParameters.tokenY, contractStorageParameters.currTickIndex, contractStorageParameters.tickSpacing, contractStorageParameters.sqrtPriceValue);
           let tickFullRange = PoolObject.getFullRangeBoundaries();
-          console.log('v3-------v3', tickFullRange);
 
           return tickFullRange;
       }
@@ -70,18 +73,20 @@ export const calculateFullRange = async ( tokenXSymbol: String, tokenYSymbol: St
       }
 }
 
-export const calculateMinandMaxPriceFromTick = async ( minTick: number, maxTick: number, tokenXSymbol: String, tokenYSymbol: String
+export const calculateMinandMaxPriceFromTick = async (tokenXSymbol: String, tokenYSymbol: String
     ): Promise<any>  => {
       try {
-          const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
+          let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol)
+          let PoolObject = new Pool(contractStorageParameters.tokenX, contractStorageParameters.tokenY, contractStorageParameters.currTickIndex, contractStorageParameters.tickSpacing, contractStorageParameters.sqrtPriceValue);
 
-          let tokenX = await TokenDetail(tokenXSymbol);
-          let tokenY = await TokenDetail(tokenYSymbol);
+          let initialBoundaries = PoolObject.getInitialBoundaries();
+          let minTick = initialBoundaries[0];
+          let maxTick = initialBoundaries[1];
 
-          let minPriceValue = Tick.computeRealPriceFromTick(minTick, tokenX, tokenY);
-          let maxPriceValue = Tick.computeRealPriceFromTick(maxTick, tokenX, tokenY);
+          let minPriceValue = Tick.computeRealPriceFromTick(minTick, contractStorageParameters.tokenX, contractStorageParameters.tokenY);
+          let maxPriceValue = Tick.computeRealPriceFromTick(maxTick, contractStorageParameters.tokenX, contractStorageParameters.tokenY);
     
-          console.log('v3-------v3', minPriceValue, maxPriceValue);
+          console.log('v3-------v3', minTick, maxTick, minPriceValue, maxPriceValue);
 
           return {
             minValue : minPriceValue,
@@ -93,20 +98,17 @@ export const calculateMinandMaxPriceFromTick = async ( minTick: number, maxTick:
       }
 }
 
-export const estimateTokenAFromTokenB = async ( amount: BigNumber, tokenXSymbol: String, tokenYSymbol: String, lowerTickIndex: number, upperTickIndex: number
+export const estimateTokenAFromTokenB = async ( amount: BigNumber, tokenXSymbol: String, tokenYSymbol: String
     ): Promise<any>  => {
       try {
-          const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
-          let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.args[3].int));
-          let currTickIndex = parseInt(v3ContractStorage.data.args[0].args[0].args[1].int);
-          let tickSpacing = parseInt(v3ContractStorage.data.args[0].args[0].args[0].args[0].args[4].int);
           let estimatedAmount;
+          let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol)
+          let PoolObject = new Pool(contractStorageParameters.tokenX, contractStorageParameters.tokenY, contractStorageParameters.currTickIndex, contractStorageParameters.tickSpacing, contractStorageParameters.sqrtPriceValue);
 
-          let tokenX = await TokenDetail(tokenXSymbol);
-          let tokenY = await TokenDetail(tokenYSymbol);
-  
-          let PoolObject = new Pool(tokenX, tokenY, currTickIndex, tickSpacing, sqrtPriceValue);
-  
+          let initialBoundaries = PoolObject.getInitialBoundaries();
+          let lowerTickIndex = initialBoundaries[0];
+          let upperTickIndex = initialBoundaries[1];
+
           estimatedAmount = PoolObject.estimateAmountXFromY(amount, lowerTickIndex, upperTickIndex);
 
           return estimatedAmount;
@@ -116,20 +118,17 @@ export const estimateTokenAFromTokenB = async ( amount: BigNumber, tokenXSymbol:
       }
 }
 
-export const estimateTokenBFromTokenA = async ( amount: BigNumber, tokenXSymbol: String, tokenYSymbol: String, lowerTickIndex: number, upperTickIndex: number
+export const estimateTokenBFromTokenA = async ( amount: BigNumber, tokenXSymbol: String, tokenYSymbol: String
     ): Promise<any>  => {
       try {
-          const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
-          let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.args[3].int));
-          let currTickIndex = parseInt(v3ContractStorage.data.args[0].args[0].args[1].int);
-          let tickSpacing = parseInt(v3ContractStorage.data.args[0].args[0].args[0].args[0].args[4].int);
           let estimatedAmount;
-
-          let tokenX = await TokenDetail(tokenXSymbol);
-          let tokenY = await TokenDetail(tokenYSymbol);
-  
-          let PoolObject = new Pool(tokenX, tokenY, currTickIndex, tickSpacing, sqrtPriceValue);
-  
+          let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol)
+          let PoolObject = new Pool(contractStorageParameters.tokenX, contractStorageParameters.tokenY, contractStorageParameters.currTickIndex, contractStorageParameters.tickSpacing, contractStorageParameters.sqrtPriceValue);
+          
+          let initialBoundaries = PoolObject.getInitialBoundaries();
+          let lowerTickIndex = initialBoundaries[0];
+          let upperTickIndex = initialBoundaries[1];
+          
           estimatedAmount = PoolObject.estimateAmountYFromX(amount, lowerTickIndex, upperTickIndex);
 
           return estimatedAmount;
