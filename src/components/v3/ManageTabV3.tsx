@@ -117,10 +117,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       props.tokenOut.symbol,
       topLevelSelectedToken.symbol
     ).then((response) => {
-      console.log("lll", response.toString());
+      console.log("lll", response?.toString());
       topLevelSelectedToken.symbol === props.tokenIn.symbol
-        ? dispatch(setcurrentPrice(response.toString()))
-        : dispatch(setBcurrentPrice(response.toString()));
+        ? dispatch(setcurrentPrice(response?.toString()))
+        : dispatch(setBcurrentPrice(response?.toString()));
     });
 
     calculateMinandMaxPriceFromTick(props.tokenIn.symbol, props.tokenOut.symbol).then(

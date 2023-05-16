@@ -106,7 +106,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
         </div>
         <div className="flex mt-3 h-[50px] items-center border-t border-b border-text-800/[0.5] bg-card-500 px-5">
           <div className="flex items-center">
-            <span className="relative top-[3px]">
+            <span className="relative ">
               <img
                 alt={"alt"}
                 src={
@@ -123,7 +123,8 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
               {nFormatterWithLesserNumber(new BigNumber(props.firstTokenAmount))}{" "}
-              {tEZorCTEZtoUppercase(props.tokenIn.name)}
+              {tEZorCTEZtoUppercase(props.tokenIn.name)} (+
+              {nFormatterWithLesserNumber(new BigNumber(props.firstTokenAmount))} fees)
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
@@ -135,7 +136,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
         </div>
         <div className="flex  h-[50px] items-center border-b border-text-800/[0.5] bg-card-500 px-5">
           <div className="flex items-center">
-            <span className="relative top-[3px]">
+            <span className="relative ">
               <img
                 alt={"alt"}
                 src={
@@ -152,7 +153,8 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
               {nFormatterWithLesserNumber(new BigNumber(props.secondTokenAmount))}{" "}
-              {tEZorCTEZtoUppercase(props.tokenOut.name)}
+              {tEZorCTEZtoUppercase(props.tokenOut.name)} (+
+              {nFormatterWithLesserNumber(new BigNumber(props.firstTokenAmount))} fees)
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
@@ -244,7 +246,6 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
         userBalances={props.userBalances}
         setSecondTokenAmount={props.setSecondTokenAmount}
         setFirstTokenAmount={props.setFirstTokenAmount}
-        swapData={props.swapData}
         tokenPrice={tokenPrice}
       />
       <div className="mt-4"> {IncreaseButton}</div>

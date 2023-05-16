@@ -138,7 +138,7 @@ function PositionsData(props: IPositionsProps) {
                 <span className=" h-[28px] border-r border-card-700 ml-auto"></span>
               </div>
               <div
-                className=" font-subtitle4 text-primary-500 text-right pr-5 w-[119px]"
+                className=" font-subtitle4 text-primary-500 text-right pr-5 w-[119px] cursor-pointer"
                 onClick={() => props.setScreen(ActivePopUp.ManageExisting)}
               >
                 Manage
