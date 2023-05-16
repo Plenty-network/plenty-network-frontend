@@ -300,10 +300,12 @@ export const computeAllPathsReverse = (
  */
 const filterPathsWithBlacklistedTokens = (paths: string[]): string[] =>
   paths.reduce((finalPaths: string[], currPath: string) => {
+    const tokensInPath = currPath.split(' ').length; // Get length of path
     const blacklistedTokenExistsInPath = ROUTER_BLACKLISTED_TOKENS.some((token) =>
       currPath.includes(token)
     );
-    if (!blacklistedTokenExistsInPath) {
+    // Allow direct path or path without blacklisted tokens only
+    if (!blacklistedTokenExistsInPath || tokensInPath === 2) {
       finalPaths.push(currPath);
     }
     return finalPaths;
