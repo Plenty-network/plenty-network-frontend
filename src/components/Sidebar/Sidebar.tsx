@@ -35,8 +35,8 @@ const MainMenu: Array<ISingleSideBarProps> = [
   {
     name: "Pools",
     iconName: "pools",
-    // pathName: "/pools",
-    // activePathName: "/pools",
+    link: "/pools/v3",
+    activePathName: "/pools/v3",
     subMenu: [
       {
         name: "v3",
@@ -120,6 +120,7 @@ export function SideBar(props: ISideBarProps) {
                   ? setActiveMenu("")
                   : setActiveMenu(`menuItem${index}`)
               }
+              link={menuItem.link}
               isActive={pathname === menuItem.activePathName}
               isMenuOpen={openSubMenu}
               setOpenSubMenu={setOpenSubMenu}

@@ -1,5 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import Image from "next/image";
+import * as React from "react";
 import add from "../../../src/assets/icon/pools/addIcon.svg";
 import wallet from "../../../src/assets/icon/pools/wallet.svg";
 import { estimateOtherTokenAmount } from "../../api/liquidity";
@@ -17,6 +18,7 @@ import { tokenIcons } from "../../constants/tokensList";
 import fromExponential from "from-exponential";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
+import { estimateTokenAFromTokenB, estimateTokenBFromTokenA } from "../../api/v3/liquidity";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -28,7 +30,7 @@ interface IAddLiquidityProps {
   };
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
-  swapData: ISwapData;
+
   tokenPrice: {
     [id: string]: number;
   };
@@ -44,6 +46,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
+  const [isFirstLaoding, setFirstLoading] = React.useState(false);
+  const [isSecondLaoding, setSecondLoading] = React.useState(false);
 
   const handleLiquidityInput = async (
     input: string | number,
@@ -67,15 +71,19 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         new BigNumber(decimal).isGreaterThan(tokens[props.tokenIn.name].decimals)
       ) {
       } else {
+        props.setSecondTokenAmount("");
         props.setFirstTokenAmount(input.toString().trim());
       }
-      const res = estimateOtherTokenAmount(
-        input.toString(),
-        props.swapData.tokenInSupply as BigNumber,
-        props.swapData.tokenOutSupply as BigNumber,
+      setSecondLoading(true);
+      estimateTokenAFromTokenB(
+        new BigNumber(input),
+        props.tokenIn.symbol,
         props.tokenOut.symbol
-      );
-      props.setSecondTokenAmount(res.otherTokenAmount.toString().trim());
+      ).then((response) => {
+        setSecondLoading(false);
+        console.log("secondtoken", response.toString());
+        props.setSecondTokenAmount(response);
+      });
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
 
@@ -85,16 +93,19 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         new BigNumber(decimal).isGreaterThan(tokens[props.tokenOut.name].decimals)
       ) {
       } else {
+        props.setFirstTokenAmount("");
         props.setSecondTokenAmount(input.toString().trim());
       }
-
-      const res = estimateOtherTokenAmount(
-        input.toString(),
-        props.swapData.tokenOutSupply as BigNumber,
-        props.swapData.tokenInSupply as BigNumber,
-        props.tokenIn.symbol
-      );
-      props.setFirstTokenAmount(res.otherTokenAmount.toString().trim());
+      setFirstLoading(true);
+      estimateTokenBFromTokenA(
+        new BigNumber(input),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol
+      ).then((response) => {
+        setFirstLoading(false);
+        console.log("secondtoken", response.toString());
+        props.setFirstTokenAmount(response);
+      });
     }
   };
 
@@ -147,7 +158,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
               <div className="w-0 flex-auto">
                 <p>
-                  {props.swapData.isloading ? (
+                  {isFirstLaoding ? (
                     <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input
@@ -232,7 +243,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
             <div className="w-0 flex-auto">
               <p>
-                {props.swapData.isloading ? (
+                {isFirstLaoding ? (
                   <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <input
@@ -326,7 +337,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
               <div className="w-0 flex-auto">
                 <p>
-                  {props.swapData.isloading ? (
+                  {isSecondLaoding ? (
                     <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input
@@ -422,7 +433,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
             <div className="w-0 flex-auto">
               <p>
-                {props.swapData.isloading ? (
+                {isSecondLaoding ? (
                   <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                 ) : (
                   <input

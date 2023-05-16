@@ -36,13 +36,12 @@ interface ILiquidityProps {
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
   setIsAddLiquidity: React.Dispatch<React.SetStateAction<boolean>>;
   isAddLiquidity: boolean;
-  swapData: ISwapData;
-  pnlpBalance: string;
+
   setSelectedFeeTier: React.Dispatch<React.SetStateAction<string>>;
   selectedFeeTier: string;
   setSlippage: React.Dispatch<React.SetStateAction<string>>;
   slippage: string;
-  lpTokenPrice: BigNumber;
+
   feeTier: string;
   isLoading: boolean;
 }
@@ -75,7 +74,6 @@ function LiquidityV3(props: ILiquidityProps) {
           userBalances={props.userBalances}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}
-          swapData={props.swapData}
           tokenPrice={tokenPrice}
         />
         {props.feeTier !== props.selectedFeeTier && (

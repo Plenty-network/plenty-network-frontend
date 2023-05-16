@@ -29,18 +29,7 @@ import {
 import { MyPoolTable } from "../../src/components/Pools/MyPoolTable";
 import { CardHeaderV3, PoolsCardHeaderV3 } from "../../src/components/v3/pools/CardHeaderv3";
 import { PoolsTableV3 } from "../../src/components/v3/pools/poolsTableV3";
-import {
-  setBcurrentPrice,
-  setBleftbrush,
-  setBleftRangeInput,
-  setBrightbrush,
-  setBRightRangeInput,
-  setcurrentPrice,
-  setleftbrush,
-  setleftRangeInput,
-  setrightbrush,
-  setRightRangeInput,
-} from "../../src/redux/poolsv3";
+
 export interface IIndexProps {}
 export enum POOL_TYPE {
   MYPOOLS = "My pools",

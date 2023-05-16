@@ -75,6 +75,11 @@ import IncreaseDecreaseLiqMain from "./IncreaseDecreaseliqMain";
 import ConfirmIncreaseLiq from "./Confirmaddliq";
 import ConfirmDecreaseLiq from "./Confirmremoveliq";
 import TransactionSettingsV3 from "./TransactionSettingv3";
+import {
+  calculateCurrentPrice,
+  calculateMinandMaxPriceFromTick,
+  estimateTokenAFromTokenB,
+} from "../../api/v3/liquidity";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -103,31 +108,49 @@ export enum ActivePopUp {
 }
 
 export function ManageTabV3(props: IManageLiquidityProps) {
-  // const pooldatafromsdk = new Pool(-275611, 10, new BigNumber(1251963215603107302), "", "");
-  // console.log("kk", pooldatafromsdk.getInitialBoundaries());
-  // const g = pooldatafromsdk.getInitialBoundaries();
-  // console.log(
-  //   "kk",
-  //   Tick.computeSqrtPriceFromTick(g[0]).toFixed(2),
-  //   Tick.computeSqrtPriceFromTick(g[1]).toFixed(2)
-  // );
   const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
-  useEffect(() => {
-    dispatch(setleftbrush(70));
-    dispatch(setrightbrush(100));
-    dispatch(setleftRangeInput("70"));
-    dispatch(setRightRangeInput("100"));
-    dispatch(setcurrentPrice(87));
-    dispatch(setBleftbrush(60));
-    dispatch(setBrightbrush(100));
-    dispatch(setBleftRangeInput("60"));
-    dispatch(setBRightRangeInput("100"));
-    dispatch(setBcurrentPrice(90));
-  }, []);
+  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
+  React.useEffect(() => {
+    console.log("ll", props.tokenIn.symbol, props.tokenOut.symbol, topLevelSelectedToken.symbol);
+    calculateCurrentPrice(
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
+      topLevelSelectedToken.symbol
+    ).then((response) => {
+      console.log("lll", response.toString());
+      topLevelSelectedToken.symbol === props.tokenIn.symbol
+        ? dispatch(setcurrentPrice(response.toString()))
+        : dispatch(setBcurrentPrice(response.toString()));
+    });
+
+    calculateMinandMaxPriceFromTick(props.tokenIn.symbol, props.tokenOut.symbol).then(
+      (response) => {
+        topLevelSelectedToken.symbol === props.tokenA.symbol
+          ? dispatch(setleftbrush(response.minValue))
+          : dispatch(setBleftbrush(response.minValue));
+        topLevelSelectedToken.symbol === props.tokenA.symbol
+          ? dispatch(setrightbrush(response.maxValue))
+          : dispatch(setBrightbrush(response.maxValue));
+        console.log("minmax", response.maxValue, response.minValue);
+      }
+    );
+  }, [topLevelSelectedToken, props.tokenA, props.tokenB]);
+  // useEffect(() => {
+  //   dispatch(setleftbrush(70));
+  //   dispatch(setrightbrush(100));
+  //   dispatch(setleftRangeInput("70"));
+  //   dispatch(setRightRangeInput("100"));
+  //   dispatch(setcurrentPrice(87));
+  //   dispatch(setBleftbrush(60));
+  //   dispatch(setBrightbrush(100));
+  //   dispatch(setBleftRangeInput("60"));
+  //   dispatch(setBRightRangeInput("100"));
+  //   dispatch(setBcurrentPrice(90));
+  // }, []);
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState<string>("0.5");
   const TOKEN = useAppSelector((state) => state.config.tokens);
-  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
+
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const [activeStateIncDec, setActiveStateIncDec] = React.useState<ActiveIncDecState | string>(
@@ -159,8 +182,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [sharePool, setSharePool] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
-  const [pnlpBalance, setPnlpBalance] = useState("");
-  const [lpTokenPrice, setLpTokenPrice] = useState(new BigNumber(0));
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [contentTransaction, setContentTransaction] = useState("");
@@ -229,74 +251,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     updateBalance();
   }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
 
-  useEffect(() => {
-    getLPTokenPrice(props.tokenIn.name, props.tokenOut.name, {
-      [props.tokenIn.name]: tokenPrice[props.tokenIn.name],
-      [props.tokenOut.name]: tokenPrice[props.tokenOut.name],
-    }).then((res) => {
-      setLpTokenPrice(res.lpTokenPrice);
-    });
-    if (walletAddress) {
-      const updateBalance = async () => {
-        getPnlpBalance(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
-          setPnlpBalance(res.balance);
-        });
-      };
-      updateBalance();
-    }
-  }, [
-    props.tokenIn,
-    props.tokenOut,
-    props,
-    tokenPrice[props.tokenIn.name],
-    tokenPrice[props.tokenOut.name],
-    TOKEN,
-    balanceUpdate,
-    swapData.current,
-  ]);
-  const [lpToken, setLpToken] = useState<IConfigLPToken | undefined>({} as IConfigLPToken);
-  useEffect(() => {
-    if (
-      Object.prototype.hasOwnProperty.call(props.tokenIn, "name") &&
-      Object.prototype.hasOwnProperty.call(props.tokenOut, "name")
-    ) {
-      setIsLoading(true);
-      loadSwapDataWrapper(props.tokenIn.name, props.tokenOut.name).then((response) => {
-        if (response.success) {
-          setLpToken(response?.lpToken);
-          swapData.current = {
-            tokenInSupply: response.tokenInSupply as BigNumber,
-            tokenOutSupply: response.tokenOutSupply as BigNumber,
-            lpToken: response.lpToken,
-            lpTokenSupply: response.lpTokenSupply,
-            isloading: false,
-          };
-          setIsLoading(false);
-        }
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (firstTokenAmountLiq > 0 && secondTokenAmountLiq > 0 && isAddLiquidity) {
-      const res = getPnlpOutputEstimate(
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        firstTokenAmountLiq.toString(),
-        secondTokenAmountLiq.toString(),
-        swapData.current.tokenInSupply as BigNumber,
-        swapData.current.tokenOutSupply as BigNumber,
-        swapData.current.lpTokenSupply
-      );
-      setPnlpEstimates(res.pnlpEstimate);
-      const sharePool = getPoolShareForPnlp(
-        res.pnlpEstimate,
-        swapData.current.lpTokenSupply,
-        ELiquidityProcess.ADD
-      );
-      setSharePool(sharePool.pnlpPoolShare);
-    }
-  }, [firstTokenAmountLiq, secondTokenAmountLiq, screen, balanceUpdate]);
   const resetAllValues = () => {
     setFirstTokenAmountLiq("");
     setSecondTokenAmountLiq("");
@@ -558,11 +512,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                   tokenOut={props.tokenOut}
                   setIsAddLiquidity={setIsAddLiquidity}
                   isAddLiquidity={isAddLiquidity}
-                  swapData={swapData.current}
-                  pnlpBalance={pnlpBalance}
                   setSlippage={setSlippage}
                   slippage={slippage}
-                  lpTokenPrice={lpTokenPrice}
                   isLoading={isLoading}
                 />
               </div>

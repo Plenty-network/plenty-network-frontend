@@ -53,8 +53,8 @@ function FeeTierMain(props: IFeeTierMainProps) {
             >
               {feeInd.percentage}% {!isMobile && " fee tier"}
             </div>
-            <div className="mt-1 font-mobile-400 sm:font-body1 text-text-250">{feeInd.text}</div>
-            <div className="mt-[10px]">
+            <div className="mt-2 font-mobile-400 sm:font-body1 text-text-250">{feeInd.text}</div>
+            <div className="mt-[12px]">
               <span className="text-white rounded-xl	bg-shimmer-100 px-2 items-center flex w-fit font-caption2 h-[24px]">
                 {feeInd.selectPercentage}%
               </span>

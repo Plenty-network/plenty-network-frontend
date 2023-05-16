@@ -1,9 +1,15 @@
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { tEZorCTEZtoUppercase, tokenChange, tokenChangeB } from "../../api/util/helpers";
+import {
+  calculateCurrentPrice,
+  calculateFullRange,
+  calculateMinandMaxPriceFromTick,
+} from "../../api/v3/liquidity";
 import { dispatch } from "../../common/walletconnect";
 import { AppDispatch, useAppSelector } from "../../redux";
 import {
+  setBcurrentPrice,
   setBleftbrush,
   setBleftRangeInput,
   setBrightbrush,
@@ -58,6 +64,31 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const BrightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
+  React.useEffect(() => {
+    console.log("ll", props.tokenIn.symbol, props.tokenOut.symbol, topLevelSelectedToken.symbol);
+    calculateCurrentPrice(
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
+      topLevelSelectedToken.symbol
+    ).then((response) => {
+      console.log("lll", response.toString());
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? dispatch(setcurrentPrice(response.toString()))
+        : dispatch(setBcurrentPrice(response.toString()));
+    });
+
+    calculateMinandMaxPriceFromTick(props.tokenIn.symbol, props.tokenOut.symbol).then(
+      (response) => {
+        // topLevelSelectedToken.symbol === tokeninorg.symbol
+        //   ? dispatch(setleftbrush(response.minValue))
+        //   : dispatch(setBleftbrush(response.minValue));
+        // topLevelSelectedToken.symbol === tokeninorg.symbol
+        //   ? dispatch(setrightbrush(response.maxValue))
+        //   : dispatch(setBrightbrush(response.maxValue));
+        console.log("minmax", response.maxValue, response.minValue);
+      }
+    );
+  }, [topLevelSelectedToken]);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -88,6 +119,12 @@ function PriceRangeV3(props: IPriceRangeProps) {
     topLevelSelectedToken.symbol === tokeninorg.symbol
       ? dispatch(setRightRangeInput(value))
       : dispatch(setBRightRangeInput(value));
+  };
+  const fullrangeCalc = () => {
+    setFullRange(!isFullRange);
+    calculateFullRange("PLY", "CTez").then((response) => {
+      console.log("kk", response);
+    });
   };
   return (
     <div>
@@ -240,7 +277,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       )}
       <div
         className="mt-3 cursor-pointer border border-info-700 rounded-lg	text-center py-2.5 font-body1 mx-4"
-        onClick={() => setFullRange(!isFullRange)}
+        onClick={fullrangeCalc}
       >
         Full Range
       </div>
