@@ -1,0 +1,39 @@
+import axios from 'axios';
+import Config from '../../config/config';
+import BigNumber from 'bignumber.js';
+import { Token } from './types';
+
+const v3ContractAddress = `KT1M5yHd85ikngHm5YCu9gkfM2oqtbsKak8Y`;
+
+const TokenDetail = async(tokenSymbol : String) : Promise<Token> => {
+    let configResponse :any = await axios.get(Config.CONFIG_LINKS.testnet.TOKEN);
+    configResponse = configResponse.data[`${tokenSymbol}`];
+
+    let tokenAddress = configResponse.address;
+    let tokenStandard = configResponse.standard;
+    let tokenDecimals = configResponse.decimals;
+
+    return {
+        address: tokenAddress,
+        standard: tokenStandard,
+        decimals: tokenDecimals,
+    }
+}
+
+export const ContractStorage = async(tokenXSymbol : String, tokenYSymbol : String) : Promise<any> => {
+    const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
+    let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.args[3].int));
+    let currTickIndex = parseInt(v3ContractStorage.data.args[0].args[0].args[1].int);
+    let tickSpacing = parseInt(v3ContractStorage.data.args[0].args[0].args[0].args[0].args[4].int);
+    
+    let tokenX = await TokenDetail(tokenXSymbol);
+    let tokenY = await TokenDetail(tokenYSymbol);
+    
+    return {
+        sqrtPriceValue : sqrtPriceValue,
+        currTickIndex : currTickIndex,
+        tickSpacing : tickSpacing,
+        tokenX : tokenX,
+        tokenY : tokenY,
+    };
+}

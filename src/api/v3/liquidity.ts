@@ -3,43 +3,10 @@ import Config from '../../config/config';
 import { Tick, Pool } from "@plenty-labs/v3-sdk";
 import BigNumber from 'bignumber.js';
 import { Token } from './types';
+import { ContractStorage } from "./helper";
 
 const v3ContractAddress = `KT1M5yHd85ikngHm5YCu9gkfM2oqtbsKak8Y`;
 export const connectedNetwork = Config.NETWORK;
-
-const TokenDetail = async(tokenSymbol : String) : Promise<Token> => {
-    let configResponse :any = await axios.get(Config.CONFIG_LINKS.testnet.TOKEN);
-    configResponse = configResponse.data[`${tokenSymbol}`];
-
-    let tokenAddress = configResponse.address;
-    let tokenStandard = configResponse.standard;
-    let tokenDecimals = configResponse.decimals;
-
-    return {
-        address: tokenAddress,
-        standard: tokenStandard,
-        decimals: tokenDecimals,
-    }
-    
-}
-
-const ContractStorage = async(tokenXSymbol : String, tokenYSymbol : String) : Promise<any> => {
-    const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
-    let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.args[3].int));
-    let currTickIndex = parseInt(v3ContractStorage.data.args[0].args[0].args[1].int);
-    let tickSpacing = parseInt(v3ContractStorage.data.args[0].args[0].args[0].args[0].args[4].int);
-    
-    let tokenX = await TokenDetail(tokenXSymbol);
-    let tokenY = await TokenDetail(tokenYSymbol);
-    
-    return {
-        sqrtPriceValue : sqrtPriceValue,
-        currTickIndex : currTickIndex,
-        tickSpacing : tickSpacing,
-        tokenX : tokenX,
-        tokenY : tokenY,
-    };
-}
 
 export const calculateCurrentPrice = async ( tokenXSymbol: String, tokenYSymbol: String, refernceToken: String
   ): Promise<any>  => {
@@ -55,7 +22,7 @@ export const calculateCurrentPrice = async ( tokenXSymbol: String, tokenYSymbol:
             currentPrice = PoolObject.getRealPriceTokenX();
         }
         
-        console.log('v3', currentPrice)
+        console.log('v3------calculateCurrentPrice', currentPrice)
         return currentPrice;
     }
     catch(error) {
@@ -70,7 +37,7 @@ export const calculateFullRange = async ( tokenXSymbol: String, tokenYSymbol: St
           let PoolObject = new Pool(contractStorageParameters.tokenX, contractStorageParameters.tokenY, contractStorageParameters.currTickIndex, contractStorageParameters.tickSpacing, contractStorageParameters.sqrtPriceValue);
           let tickFullRange = PoolObject.getFullRangeBoundaries();
             
-          console.log("v3----", tickFullRange);
+          console.log("v3----calculateFullRange", tickFullRange);
           return tickFullRange;
       }
       catch(error) {
@@ -91,7 +58,7 @@ export const calculateMinandMaxPriceFromTick = async (tokenXSymbol: String, toke
           let minPriceValue = Tick.computeRealPriceFromTick(minTick, contractStorageParameters.tokenX, contractStorageParameters.tokenY);
           let maxPriceValue = Tick.computeRealPriceFromTick(maxTick, contractStorageParameters.tokenX, contractStorageParameters.tokenY);
     
-          console.log('v3-------v3', minTick, maxTick, minPriceValue, maxPriceValue);
+          console.log('v3-------calculateMinandMaxPriceFromTick', minTick, maxTick, minPriceValue, maxPriceValue);
 
           return {
             minTick : minTick,
@@ -118,6 +85,7 @@ export const estimateTokenAFromTokenB = async ( amount: BigNumber, tokenXSymbol:
 
           estimatedAmount = PoolObject.estimateAmountXFromY(amount, lowerTickIndex, upperTickIndex);
 
+          console.log('v3-------estimateTokenAFromTokenB', estimatedAmount);
           return estimatedAmount;
       }
       catch(error) {
@@ -138,6 +106,7 @@ export const estimateTokenBFromTokenA = async ( amount: BigNumber, tokenXSymbol:
           
           estimatedAmount = PoolObject.estimateAmountYFromX(amount, lowerTickIndex, upperTickIndex);
 
+          console.log('v3-------estimateTokenBFromTokenA', estimatedAmount);
           return estimatedAmount;
       }
       catch(error) {
@@ -150,7 +119,7 @@ export const calculateNearTickSpacing = async ( tick: number, space: number
       try {
           let nearestTick = Tick.nearestUsableTick(tick, space);
             
-          console.log("v3----", nearestTick);
+          console.log("v3------calculateNearTickSpacing", nearestTick);
           return nearestTick;
       }
       catch(error) {
