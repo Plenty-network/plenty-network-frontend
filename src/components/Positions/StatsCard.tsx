@@ -49,7 +49,7 @@ function StatsCard(props: IStatsCardProps) {
         <p className="ml-auto">
           {props.isLast && (
             <div
-              className="bg-primary-500 h-[50px] w-[140px] font-title3-bold text-black px-4 rounded-xl flex items-center justify-center"
+              className="bg-primary-500 h-[50px] w-[140px] font-title3-bold text-black px-4 rounded-xl flex items-center justify-center cursor-pointer"
               onClick={() => props.setShowCreateLockModal(true)}
             >
               Create lock
