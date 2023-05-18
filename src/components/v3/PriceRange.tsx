@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { tEZorCTEZtoUppercase, tokenChange, tokenChangeB } from "../../api/util/helpers";
@@ -163,118 +164,123 @@ function PriceRangeV3(props: IPriceRangeProps) {
           />
         )}
       </div>
-      {isFullRange ? (
-        <div className="h-[78px] mt-[10px] flex items-center justify-center w-[362px] px-[20px] bg-error-300/[0.1]  rounded-lg	">
+      {isFullRange && (
+        <div className=" absolute h-[78px]  flex items-center justify-center w-[362px] px-[20px] bg-error-300/[0.1]  rounded-lg	ml-4 z-10">
           <span className=" text-error-300 text-[13px] leading-[20px] ">
             Full range liquidity is highly capital inefficient. Please proceed with caution.
           </span>
         </div>
-      ) : (
-        <div className="flex w-[362px] mx-auto gap-[14px] justify-between	mt-[16px]">
-          <div>
-            <div className="font-body4 text-text-250">
-              Min Price{" "}
-              <span className="font-caption1-small">
-                ({tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
-                {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
-              </span>
-            </div>
-            <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
-              <div
-                className="w-[24px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
-                onClick={() =>
-                  onLeftRangeInputFn(
-                    topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? (Number(leftRangeInput) - 10).toString()
-                      : (Number(BleftRangeInput) - 10).toString()
-                  )
-                }
-              >
-                -
-              </div>
-              <div className="text-center">
-                <div className="font-body4 text-white">
-                  <input
-                    type="text"
-                    className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
-                    value={
-                      topLevelSelectedToken.symbol === tokeninorg.symbol
-                        ? leftRangeInput
-                        : BleftRangeInput
-                    }
-                    placeholder="0.0"
-                    onChange={(e) => onLeftRangeInputFn(e.target.value)}
-                  />
-                </div>
-                <div className="font-body2 text-text-250">$9.8</div>
-              </div>
-              <div
-                className=" w-[24px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
-                onClick={() =>
-                  onLeftRangeInputFn(
-                    topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? (Number(leftRangeInput) + 10).toString()
-                      : (Number(BleftRangeInput) + 10).toString()
-                  )
-                }
-              >
-                +
-              </div>
-            </div>
+      )}
+      <div
+        className={clsx(
+          "relative flex w-[362px] mx-auto gap-[14px] justify-between	mt-[16px]",
+          isFullRange && "opacity-[0.1]"
+        )}
+      >
+        <div>
+          <div className="font-body4 text-text-250">
+            Min Price{" "}
+            <span className="font-caption1-small">
+              ({tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
+              {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
+            </span>
           </div>
-          <div>
-            <div className="font-body4 text-text-250">
-              Max Price{" "}
-              <span className="font-caption1-small">
-                ({tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
-                {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
-              </span>
+          <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
+            <div
+              className="w-[24px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
+              onClick={() =>
+                onLeftRangeInputFn(
+                  topLevelSelectedToken.symbol === tokeninorg.symbol
+                    ? (Number(leftRangeInput) - 10).toString()
+                    : (Number(BleftRangeInput) - 10).toString()
+                )
+              }
+            >
+              -
             </div>
-            <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
-              <div
-                className="w-[24px] h-[24px] text-white rounded bg-info-600  flex items-center cursor-pointer justify-center"
-                onClick={() =>
-                  onRightRangeInputFn(
+            <div className="text-center">
+              <div className="font-body4 text-white">
+                <input
+                  type="text"
+                  className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
+                  value={
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? (Number(rightRangeInput) - 10).toString()
-                      : (Number(BrightRangeInput) - 10).toString()
-                  )
-                }
-              >
-                -
+                      ? leftRangeInput
+                      : BleftRangeInput
+                  }
+                  placeholder="0.0"
+                  onChange={(e) => onLeftRangeInputFn(e.target.value)}
+                />
               </div>
-              <div className="text-center">
-                <div className="font-body4 text-white">
-                  <input
-                    type="text"
-                    className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
-                    value={
-                      topLevelSelectedToken.symbol === tokeninorg.symbol
-                        ? rightRangeInput
-                        : BrightRangeInput
-                    }
-                    placeholder="0.0"
-                    onChange={(e) => onRightRangeInputFn(e.target.value)}
-                  />
-                </div>
-                <div className="font-body2 text-text-250">$9.8</div>
-              </div>
-              <div
-                className="w-[24px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
-                onClick={() =>
-                  onRightRangeInputFn(
-                    topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? (Number(rightRangeInput) + 10).toString()
-                      : (Number(BrightRangeInput) + 10).toString()
-                  )
-                }
-              >
-                +
-              </div>
+              <div className="font-body2 text-text-250">$9.8</div>
+            </div>
+            <div
+              className=" w-[24px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
+              onClick={() =>
+                onLeftRangeInputFn(
+                  topLevelSelectedToken.symbol === tokeninorg.symbol
+                    ? (Number(leftRangeInput) + 10).toString()
+                    : (Number(BleftRangeInput) + 10).toString()
+                )
+              }
+            >
+              +
             </div>
           </div>
         </div>
-      )}
+        <div>
+          <div className="font-body4 text-text-250">
+            Max Price{" "}
+            <span className="font-caption1-small">
+              ({tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
+              {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
+            </span>
+          </div>
+          <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
+            <div
+              className="w-[24px] h-[24px] text-white rounded bg-info-600  flex items-center cursor-pointer justify-center"
+              onClick={() =>
+                onRightRangeInputFn(
+                  topLevelSelectedToken.symbol === tokeninorg.symbol
+                    ? (Number(rightRangeInput) - 10).toString()
+                    : (Number(BrightRangeInput) - 10).toString()
+                )
+              }
+            >
+              -
+            </div>
+            <div className="text-center">
+              <div className="font-body4 text-white">
+                <input
+                  type="text"
+                  className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
+                  value={
+                    topLevelSelectedToken.symbol === tokeninorg.symbol
+                      ? rightRangeInput
+                      : BrightRangeInput
+                  }
+                  placeholder="0.0"
+                  onChange={(e) => onRightRangeInputFn(e.target.value)}
+                />
+              </div>
+              <div className="font-body2 text-text-250">$9.8</div>
+            </div>
+            <div
+              className="w-[24px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
+              onClick={() =>
+                onRightRangeInputFn(
+                  topLevelSelectedToken.symbol === tokeninorg.symbol
+                    ? (Number(rightRangeInput) + 10).toString()
+                    : (Number(BrightRangeInput) + 10).toString()
+                )
+              }
+            >
+              +
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div
         className="mt-3 cursor-pointer border border-info-700 rounded-lg	text-center py-2.5 font-body1 mx-4"
         onClick={fullrangeCalc}

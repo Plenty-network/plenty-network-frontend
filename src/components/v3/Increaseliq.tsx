@@ -18,6 +18,7 @@ import Button from "../Button/Button";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { ActivePopUp } from "./ManageTabV3";
+import IncreaseLiquidityInputV3 from "./IncreaseliqInput";
 
 interface IIncLiquidityProp {
   tokenIn: tokenParameterLiquidity;
@@ -238,7 +239,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
           </div>
         </div>
       </div>
-      <AddLiquidityV3
+      <IncreaseLiquidityInputV3
         tokenIn={props.tokenIn}
         tokenOut={props.tokenOut}
         firstTokenAmount={props.firstTokenAmount}

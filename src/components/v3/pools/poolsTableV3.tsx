@@ -380,21 +380,21 @@ export function PoolsTableV3(props: IShortCardProps) {
               setActiveState(ActiveLiquidity.Liquidity);
             }
             setTokenIn({
-              name: props.tokenA,
+              name: "PLENTY",
               image: getImagesPath(props.tokenA.toString()),
-              symbol: props.tokenA,
+              symbol: "PLENTY",
             });
             dispatch(
               settopLevelSelectedToken({
-                name: props.tokenA,
+                name: "PLENTY",
                 image: getImagesPath(props.tokenA.toString()),
-                symbol: props.tokenA,
+                symbol: "PLENTY",
               })
             );
             setTokenOut({
-              name: props.tokenB,
+              name: "XTZ",
               image: getImagesPath(props.tokenB.toString()),
-              symbol: props.tokenB,
+              symbol: "XTZ",
             });
 
             props.setShowLiquidityModal(true);

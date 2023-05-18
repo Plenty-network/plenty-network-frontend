@@ -293,11 +293,10 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           </div>
         </div>
       )}
-      {(
-        topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? leftbrush < currentPrice && rightbrush > currentPrice
-          : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice
-      ) ? (
+      {// topLevelSelectedToken.symbol === tokeninorg.symbol
+      //   ? leftbrush < currentPrice && rightbrush > currentPrice
+      //   : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice
+      true ? (
         <div className="relative -top-[9px] left-[25%]">
           <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
         </div>
