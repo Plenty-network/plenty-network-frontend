@@ -103,21 +103,25 @@ export const getTokenPrices = async (): Promise<{
   tokenPrice: { [id: string]: number };
 }> => {
   try {
-    // const state = store.getState();
-    // const TOKEN = state.config.tokens;
-    const pricesResponse = await axios.get(
-      'https://api.teztools.io/token/prices'
-    );
-    const tokenPriceResponse = pricesResponse.data;
-    // const ctezPrice = await getCtezPrice();
-    // const uDEFIPrice = await getuDEFIPrice();
-    // const agEurePrice = await getagEURePrice();
-    // const xtzPrice = await getXtzDollarPrice();
+    const pricesResponse = await axios
+      .get("https://api.teztools.io/token/prices")
+      .then((resp) => resp.data)
+      .catch((err) => {
+        console.log(err);
+        return { contracts: [] };
+      });
+    const tokenPriceResponse = pricesResponse;
 
     const tokenPrice: { [id: string]: number } = {};
 
-    const indexerPriceResponse = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/prices`);
-    const indexerPricesData = indexerPriceResponse.data;
+    const indexerPriceResponse = await axios
+      .get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/prices`)
+      .then((resp) => resp.data)
+      .catch((err) => {
+        console.log(err);
+        return [];
+      });
+    const indexerPricesData = indexerPriceResponse;
 
     for( const x of tokenPriceResponse.contracts){
       tokenPrice[x.symbol] = Number(x.usdValue);
@@ -127,31 +131,6 @@ export const getTokenPrices = async (): Promise<{
       if(Number(x.price) !== 0)
       tokenPrice[x.token] = Number(x.price);
     }
-
-    
-    // for (const x in Config.WRAPPED_ASSETS[connectedNetwork]) {
-    //   if (
-    //     // x === 'DAI.e' ||
-    //     // x === 'USDC.e' ||
-    //     // x === 'USDT.e' ||
-    //     // x === 'LINK.e' ||
-    //     x === 'MATIC.e' ||
-    //     // x === 'BUSD.e' ||
-    //     x === 'WETH.e' 
-    //     // x === 'WBTC.e'
-    //   ) {
-    //     tokenPrice[x] =
-    //       tokenPrice[Config.WRAPPED_ASSETS[connectedNetwork][x].REF_TOKEN];
-    //   }
-    // }
-    // External Price Feeds
-    // tokenPrice['ctez'] = ctezPrice.ctezPriceInUSD;
-    // tokenPrice['uDEFI'] = uDEFIPrice.uDEFIinUSD;
-    // tokenPrice['agEUR.e'] = agEurePrice.agEUReInUSD;
-    // tokenPrice['tez'] = xtzPrice;
-
-    // Hardcoding PLY Price for development
-    // tokenPrice['PLY'] = 1;
 
     return {
       success: true,
