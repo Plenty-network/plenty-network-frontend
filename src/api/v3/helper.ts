@@ -1,9 +1,10 @@
 import axios from 'axios';
 import Config from '../../config/config';
 import BigNumber from 'bignumber.js';
-import { Token } from './types';
+import { Token, BalanceNat, } from './types';
+import { Tick, Liquidity } from "@plenty-labs/v3-sdk";
 
-const v3ContractAddress = `KT1M5yHd85ikngHm5YCu9gkfM2oqtbsKak8Y`;
+export const v3ContractAddress = `KT1M5yHd85ikngHm5YCu9gkfM2oqtbsKak8Y`;
 
 const TokenDetail = async(tokenSymbol : String) : Promise<Token> => {
     let configResponse :any = await axios.get(Config.CONFIG_LINKS.testnet.TOKEN);
@@ -36,4 +37,52 @@ export const ContractStorage = async(tokenXSymbol : String, tokenYSymbol : Strin
         tokenX : tokenX,
         tokenY : tokenY,
     };
+}
+
+export const calculateWitnessValue = async(witnessFrom : number) : Promise<any> => {
+    let rpcResponse :any = await axios.get(`${Config.RPC_NODES.testnet}/ticks?pool=${v3ContractAddress}&witnessOf=${witnessFrom}`);
+    let witnessValue = rpcResponse.witness;
+
+    return {
+        witness: witnessValue
+    }
+}
+
+export const calculateNearTickSpacing = async ( tick: number, space: number
+    ): Promise<any>  => {
+      try {
+          let nearestTick = Tick.nearestUsableTick(tick, space);
+        
+          return nearestTick;
+      }
+      catch(error) {
+          console.log("v3 error: ", error);
+      }
+}
+
+export const nearestTickIndex = async ( 
+    ): Promise<any>  => {
+      try {
+          let nearestTick = Tick;
+        
+          return nearestTick;
+      }
+      catch(error) {
+          console.log("v3 error: ", error);
+      }
+}
+
+export const calculateliquidity = async (amount: BalanceNat, lowerTick: number, upperTick: number, tokenXSymbol: String, tokenYSymbol: String 
+    ): Promise<any>  => {
+      try {
+        let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol)
+        let sqrtPriceFromLowerTick = Tick.computeSqrtPriceFromTick(lowerTick);
+        let sqrtPriceFromUpperTick = Tick.computeSqrtPriceFromTick(upperTick);
+
+        let liquidity = Liquidity.computeLiquidityFromAmount(amount, contractStorageParameters.sqrtPriceValue, sqrtPriceFromLowerTick, sqrtPriceFromUpperTick)   
+        console.log('---v3----', liquidity);
+    }
+      catch(error) {
+          console.log("v3 error: ", error);
+      }
 }
