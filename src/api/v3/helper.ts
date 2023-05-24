@@ -2,8 +2,9 @@ import axios from 'axios';
 import Config from '../../config/config';
 import BigNumber from 'bignumber.js';
 import { Token, BalanceNat, } from './types';
-import { Tick, Liquidity } from "@plenty-labs/v3-sdk";
+import { Tick, Liquidity, PositionManager } from "@plenty-labs/v3-sdk";
 import { getDexAddress } from "../../api/util/fetchConfig";
+import { dappClient } from "../../common/walletconnect";
 
 const TokenDetail = async(tokenSymbol : String) : Promise<Token> => {
     let configResponse :any = await axios.get(Config.CONFIG_LINKS.testnet.TOKEN);
@@ -82,6 +83,42 @@ export const calculateliquidity = async (amount: BalanceNat, lowerTick: number, 
 
         let liquidity = Liquidity.computeLiquidityFromAmount(amount, contractStorageParameters.sqrtPriceValue, sqrtPriceFromLowerTick, sqrtPriceFromUpperTick)   
         console.log('---v3----', liquidity);
+    }
+      catch(error) {
+          console.log("v3 error: ", error);
+      }
+}
+
+export const createPositionInstance = async (amountTokenX: BigNumber, amountTokenY: BigNumber, lowerTick: number, upperTick: number, tokenXSymbol: string, tokenYSymbol: string, deadline: number, maximumTokensContributed: BalanceNat
+    ): Promise<any>  => {
+      try {
+        const Tezos = await dappClient().tezos();
+
+        const contractAddress = getDexAddress(tokenXSymbol, tokenYSymbol);
+        const contractInstance = await Tezos.wallet.at(contractAddress);
+        
+        let amount = {
+            x: amountTokenX,
+            y: amountTokenY
+        }
+        let liquidity = await calculateliquidity(amount, lowerTick, upperTick, tokenXSymbol, tokenYSymbol )
+
+        let lowerTickWitness = await calculateWitnessValue(lowerTick, tokenXSymbol, tokenYSymbol);
+        let upperTickWitness = await calculateWitnessValue(lowerTick, tokenXSymbol, tokenYSymbol);
+
+        let optionSet = {
+            lowerTickIndex: lowerTick,
+            upperTickIndex: lowerTick,
+            lowerTickWitness: lowerTickWitness,
+            upperTickWitness: upperTickWitness,
+            liquidity: liquidity,
+            deadline: deadline,
+            maximumTokensContributed: maximumTokensContributed,
+        }
+        // @ts-ignore
+        let createPosition = PositionManager.setPositionOp(contractInstance, optionSet);
+
+        return createPosition;
     }
       catch(error) {
           console.log("v3 error: ", error);
