@@ -12,16 +12,8 @@ import { AppDispatch, store, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
-import {calculateCurrentPrice, calculateFullRange, getInitialBoundaries, estimateTokenAFromTokenB, estimateTokenBFromTokenA } from "../../src/api/v3/liquidity";
 
 const Home: NextPage = () => {
-  calculateCurrentPrice("PLENTY", "USDC.e" , "USDC.e");
-  calculateFullRange("PLENTY", "USDC.e");
-  getInitialBoundaries("PLENTY", "USDC.e");
-  estimateTokenAFromTokenB(BigNumber(4), "PLENTY", "USDC.e");
-  estimateTokenBFromTokenA(BigNumber(4), "PLENTY", "USDC.e");
-  // calculateNearTickSpacing(4, 2);
-
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);

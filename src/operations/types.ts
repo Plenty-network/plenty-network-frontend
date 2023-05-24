@@ -28,8 +28,3 @@ export type TSetShowConfirmTransaction = React.Dispatch<React.SetStateAction<boo
 export type TResetAllValues = () => void;
 
 export type TSetActiveState = React.Dispatch<React.SetStateAction<string>>;
-
-export interface BalanceNat {
-    x: BigNumber;
-    y: BigNumber;
-}

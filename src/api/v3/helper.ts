@@ -3,8 +3,7 @@ import Config from '../../config/config';
 import BigNumber from 'bignumber.js';
 import { Token, BalanceNat, } from './types';
 import { Tick, Liquidity } from "@plenty-labs/v3-sdk";
-
-export const v3ContractAddress = `KT1M5yHd85ikngHm5YCu9gkfM2oqtbsKak8Y`;
+import { getDexAddress } from "../../api/util/fetchConfig";
 
 const TokenDetail = async(tokenSymbol : String) : Promise<Token> => {
     let configResponse :any = await axios.get(Config.CONFIG_LINKS.testnet.TOKEN);
@@ -21,7 +20,8 @@ const TokenDetail = async(tokenSymbol : String) : Promise<Token> => {
     }
 }
 
-export const ContractStorage = async(tokenXSymbol : String, tokenYSymbol : String) : Promise<any> => {
+export const ContractStorage = async(tokenXSymbol : string, tokenYSymbol : string) : Promise<any> => {
+    let v3ContractAddress = getDexAddress(tokenXSymbol, tokenYSymbol);
     const v3ContractStorage = await axios.get(`${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`);
     let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.args[3].int));
     let currTickIndex = parseInt(v3ContractStorage.data.args[0].args[0].args[1].int);
@@ -39,7 +39,8 @@ export const ContractStorage = async(tokenXSymbol : String, tokenYSymbol : Strin
     };
 }
 
-export const calculateWitnessValue = async(witnessFrom : number) : Promise<any> => {
+export const calculateWitnessValue = async(witnessFrom : number, tokenXSymbol: string, tokenYSymbol: string) : Promise<any> => {
+    let v3ContractAddress = getDexAddress(tokenXSymbol, tokenYSymbol);
     let rpcResponse :any = await axios.get(`${Config.RPC_NODES.testnet}/ticks?pool=${v3ContractAddress}&witnessOf=${witnessFrom}`);
     let witnessValue = rpcResponse.witness;
 
@@ -72,7 +73,7 @@ export const nearestTickIndex = async (
       }
 }
 
-export const calculateliquidity = async (amount: BalanceNat, lowerTick: number, upperTick: number, tokenXSymbol: String, tokenYSymbol: String 
+export const calculateliquidity = async (amount: BalanceNat, lowerTick: number, upperTick: number, tokenXSymbol: string, tokenYSymbol: string 
     ): Promise<any>  => {
       try {
         let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol)
