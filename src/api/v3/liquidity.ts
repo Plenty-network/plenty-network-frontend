@@ -1,11 +1,8 @@
-import axios from 'axios';
-import Config from '../../config/config';
-import { Tick, Pool } from "@plenty-labs/v3-sdk";
 import BigNumber from 'bignumber.js';
-import { Token } from './types';
+import { Tick, Pool } from "@plenty-labs/v3-sdk";
+import Config from '../../config/config';
 import { ContractStorage } from "./helper";
 
-const v3ContractAddress = `KT1M5yHd85ikngHm5YCu9gkfM2oqtbsKak8Y`;
 export const connectedNetwork = Config.NETWORK;
 
 export const calculateCurrentPrice = async ( tokenXSymbol: String, tokenYSymbol: String, refernceToken: String
@@ -22,7 +19,6 @@ export const calculateCurrentPrice = async ( tokenXSymbol: String, tokenYSymbol:
             currentPrice = PoolObject.getRealPriceTokenX();
         }
         
-        console.log('v3------calculateCurrentPrice', currentPrice)
         return currentPrice;
     }
     catch(error) {
@@ -37,7 +33,6 @@ export const calculateFullRange = async ( tokenXSymbol: String, tokenYSymbol: St
           let PoolObject = new Pool(contractStorageParameters.tokenX, contractStorageParameters.tokenY, contractStorageParameters.currTickIndex, contractStorageParameters.tickSpacing, contractStorageParameters.sqrtPriceValue);
           let tickFullRange = PoolObject.getFullRangeBoundaries();
             
-          console.log("v3----calculateFullRange", tickFullRange);
           return tickFullRange;
       }
       catch(error) {
@@ -45,7 +40,7 @@ export const calculateFullRange = async ( tokenXSymbol: String, tokenYSymbol: St
       }
 }
 
-export const calculateMinandMaxPriceFromTick = async (tokenXSymbol: String, tokenYSymbol: String
+export const getInitialBoundaries = async (tokenXSymbol: String, tokenYSymbol: String
     ): Promise<any>  => {
       try {
           let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol)
@@ -85,7 +80,7 @@ export const estimateTokenAFromTokenB = async ( amount: BigNumber, tokenXSymbol:
 
           estimatedAmount = PoolObject.estimateAmountXFromY(amount, lowerTickIndex, upperTickIndex);
 
-          console.log('v3-------estimateTokenAFromTokenB', estimatedAmount);
+        //   console.log('v3-------estimateTokenAFromTokenB', estimatedAmount);
           return estimatedAmount;
       }
       catch(error) {
@@ -106,21 +101,8 @@ export const estimateTokenBFromTokenA = async ( amount: BigNumber, tokenXSymbol:
           
           estimatedAmount = PoolObject.estimateAmountYFromX(amount, lowerTickIndex, upperTickIndex);
 
-          console.log('v3-------estimateTokenBFromTokenA', estimatedAmount);
+        //   console.log('v3-------estimateTokenBFromTokenA', estimatedAmount);
           return estimatedAmount;
-      }
-      catch(error) {
-          console.log("v3 error: ", error);
-      }
-}
-
-export const calculateNearTickSpacing = async ( tick: number, space: number
-    ): Promise<any>  => {
-      try {
-          let nearestTick = Tick.nearestUsableTick(tick, space);
-            
-          console.log("v3------calculateNearTickSpacing", nearestTick);
-          return nearestTick;
       }
       catch(error) {
           console.log("v3 error: ", error);
