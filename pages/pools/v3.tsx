@@ -30,6 +30,7 @@ import { MyPoolTable } from "../../src/components/Pools/MyPoolTable";
 import { CardHeaderV3, PoolsCardHeaderV3 } from "../../src/components/v3/pools/CardHeaderv3";
 import { PoolsTableV3 } from "../../src/components/v3/pools/poolsTableV3";
 import { calculateCurrentPrice, getInitialBoundaries } from "../../src/api/v3/liquidity";
+import { getTickAndRealPriceFromPool } from "../../src/api/v3/helper";
 
 export interface IIndexProps {}
 export enum POOL_TYPE {
@@ -107,10 +108,13 @@ export default function Pools(props: IIndexProps) {
   const [isError, setIsError] = useState(false);
   const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
   calculateCurrentPrice("DAI.e", "USDC.e", "DAI.e").then((response) => {
-    console.log("cp", response);
+    console.log("cp", response.toString());
   });
   getInitialBoundaries("DAI.e", "USDC.e").then((response) => {
     console.log("init bound", response);
+  });
+  getTickAndRealPriceFromPool("KT1AmeUTxh28afcKVgD6mJEzoSo95NThe3TW").then((response) => {
+    console.log("data", response);
   });
   return (
     <>

@@ -2,6 +2,7 @@ import clsx from "clsx";
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { tEZorCTEZtoUppercase, tokenChange, tokenChangeB } from "../../api/util/helpers";
+import { getTickAndRealPriceFromPool } from "../../api/v3/helper";
 import {
   calculateCurrentPrice,
   calculateFullRange,
@@ -67,31 +68,32 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
   React.useEffect(() => {
     console.log("ll", props.tokenIn.symbol, props.tokenOut.symbol, topLevelSelectedToken.symbol);
-    calculateCurrentPrice(
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
-      topLevelSelectedToken.symbol
-    ).then((response) => {
-      console.log("lll", response?.toString());
+    // calculateCurrentPrice(
+    //   props.tokenIn.symbol,
+    //   props.tokenOut.symbol,
+    //   topLevelSelectedToken.symbol
+    // ).then((response) => {
+    //   console.log("lll", response?.toString());
+    //   topLevelSelectedToken.symbol === tokeninorg.symbol
+    //     ? dispatch(setcurrentPrice(response.toString()))
+    //     : dispatch(setBcurrentPrice(response.toString()));
+    // });
+    // getInitialBoundaries(props.tokenIn.symbol, props.tokenOut.symbol).then((response) => {
+    //   console.log("init", response);
+    // });
+
+    calculateCurrentPrice("DAI.e", "USDC.e", "DAI.e").then((response) => {
+      console.log("cp", response.toString());
       topLevelSelectedToken.symbol === tokeninorg.symbol
         ? dispatch(setcurrentPrice(response.toString()))
         : dispatch(setBcurrentPrice(response.toString()));
     });
-    getInitialBoundaries(props.tokenIn.symbol, props.tokenOut.symbol).then((response) => {
-      console.log("init", response);
+    getInitialBoundaries("DAI.e", "USDC.e").then((response) => {
+      console.log("init bound", response);
     });
-
-    // calculateMinandMaxPriceFromTick(props.tokenIn.symbol, props.tokenOut.symbol).then(
-    //   (response) => {
-    //     // topLevelSelectedToken.symbol === tokeninorg.symbol
-    //     //   ? dispatch(setleftbrush(response.minValue))
-    //     //   : dispatch(setBleftbrush(response.minValue));
-    //     // topLevelSelectedToken.symbol === tokeninorg.symbol
-    //     //   ? dispatch(setrightbrush(response.maxValue))
-    //     //   : dispatch(setBrightbrush(response.maxValue));
-    //     console.log("minmax", response.maxValue, response.minValue);
-    //   }
-    //);
+    getTickAndRealPriceFromPool("KT1AmeUTxh28afcKVgD6mJEzoSo95NThe3TW").then((response) => {
+      console.log("data", response);
+    });
   }, [topLevelSelectedToken]);
 
   const dispatch = useDispatch<AppDispatch>();

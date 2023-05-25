@@ -20,6 +20,7 @@ export interface IConfig {
     mainnet: Record<string, string>;
   };
   ROUTER: INodes;
+  V3_CONFIG_URL: INodes;
 
   // WRAPPED_ASSETS: {
   //   testnet: Record<string, IWrappedToken>;

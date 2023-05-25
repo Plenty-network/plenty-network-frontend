@@ -132,6 +132,10 @@ const Config: IConfig = {
       testnet: "https://ghostnet.tzkt.io/",
     },
   },
+  V3_CONFIG_URL: {
+    testnet: "https://ghostnet.data-config.plenty.network/",
+    mainnet: "https://config.mainnet.plenty.network/",
+  },
 };
 
 export default Config;
