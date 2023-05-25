@@ -75,11 +75,7 @@ import IncreaseDecreaseLiqMain from "./IncreaseDecreaseliqMain";
 import ConfirmIncreaseLiq from "./Confirmaddliq";
 import ConfirmDecreaseLiq from "./Confirmremoveliq";
 import TransactionSettingsV3 from "./TransactionSettingv3";
-import {
-  calculateCurrentPrice,
-  calculateMinandMaxPriceFromTick,
-  estimateTokenAFromTokenB,
-} from "../../api/v3/liquidity";
+import { calculateCurrentPrice, estimateTokenAFromTokenB } from "../../api/v3/liquidity";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -110,6 +106,8 @@ export enum ActivePopUp {
 export function ManageTabV3(props: IManageLiquidityProps) {
   const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
+  const tokens = useAppSelector((state) => state.config.tokens);
+  console.log(tokens, "tokens");
   React.useEffect(() => {
     console.log("ll", props.tokenIn.symbol, props.tokenOut.symbol, topLevelSelectedToken.symbol);
     calculateCurrentPrice(
@@ -123,17 +121,17 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         : dispatch(setBcurrentPrice(response?.toString()));
     });
 
-    calculateMinandMaxPriceFromTick(props.tokenIn.symbol, props.tokenOut.symbol).then(
-      (response) => {
-        topLevelSelectedToken.symbol === props.tokenA.symbol
-          ? dispatch(setleftbrush(response.minValue))
-          : dispatch(setBleftbrush(response.minValue));
-        topLevelSelectedToken.symbol === props.tokenA.symbol
-          ? dispatch(setrightbrush(response.maxValue))
-          : dispatch(setBrightbrush(response.maxValue));
-        console.log("minmax", response.maxValue, response.minValue);
-      }
-    );
+    // calculateMinandMaxPriceFromTick(props.tokenIn.symbol, props.tokenOut.symbol).then(
+    //   (response) => {
+    //     topLevelSelectedToken.symbol === props.tokenA.symbol
+    //       ? dispatch(setleftbrush(response.minValue))
+    //       : dispatch(setBleftbrush(response.minValue));
+    //     topLevelSelectedToken.symbol === props.tokenA.symbol
+    //       ? dispatch(setrightbrush(response.maxValue))
+    //       : dispatch(setBrightbrush(response.maxValue));
+    //     console.log("minmax", response.maxValue, response.minValue);
+    //   }
+    // );
   }, [topLevelSelectedToken, props.tokenA, props.tokenB]);
   // useEffect(() => {
   //   dispatch(setleftbrush(70));
@@ -150,7 +148,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState<string>("0.5");
   const TOKEN = useAppSelector((state) => state.config.tokens);
-
+  console.log("token", TOKEN);
+  console.log("token");
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const [activeStateIncDec, setActiveStateIncDec] = React.useState<ActiveIncDecState | string>(
@@ -401,7 +400,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   useEffect(() => {
     dispatch(settopLevelSelectedToken(selectedToken));
   }, [selectedToken]);
-  return props.showLiquidityModal ? (
+  return true ? (
     <>
       <PopUpModal
         onhide={closeModal}

@@ -3,12 +3,6 @@ import React, { useMemo } from "react";
 
 import { ChartEntry } from "./types";
 
-// const Path = styled.path<{ fill: string | undefined }>`
-//   opacity: 1;
-//   stroke: ${({ fill, theme }) => "#1570F1" ?? "#1570F1"};
-//   fill: ${({ fill, theme }) => fill ?? "rgba(21,112,241,0.2)"};
-// `;
-
 export const Area = ({
   series,
   xScale,

@@ -5,7 +5,7 @@ import { tEZorCTEZtoUppercase, tokenChange, tokenChangeB } from "../../api/util/
 import {
   calculateCurrentPrice,
   calculateFullRange,
-  calculateMinandMaxPriceFromTick,
+  getInitialBoundaries,
 } from "../../api/v3/liquidity";
 import { dispatch } from "../../common/walletconnect";
 import { AppDispatch, useAppSelector } from "../../redux";
@@ -72,23 +72,26 @@ function PriceRangeV3(props: IPriceRangeProps) {
       props.tokenOut.symbol,
       topLevelSelectedToken.symbol
     ).then((response) => {
-      console.log("lll", response.toString());
+      console.log("lll", response?.toString());
       topLevelSelectedToken.symbol === tokeninorg.symbol
         ? dispatch(setcurrentPrice(response.toString()))
         : dispatch(setBcurrentPrice(response.toString()));
     });
+    getInitialBoundaries(props.tokenIn.symbol, props.tokenOut.symbol).then((response) => {
+      console.log("init", response);
+    });
 
-    calculateMinandMaxPriceFromTick(props.tokenIn.symbol, props.tokenOut.symbol).then(
-      (response) => {
-        // topLevelSelectedToken.symbol === tokeninorg.symbol
-        //   ? dispatch(setleftbrush(response.minValue))
-        //   : dispatch(setBleftbrush(response.minValue));
-        // topLevelSelectedToken.symbol === tokeninorg.symbol
-        //   ? dispatch(setrightbrush(response.maxValue))
-        //   : dispatch(setBrightbrush(response.maxValue));
-        console.log("minmax", response.maxValue, response.minValue);
-      }
-    );
+    // calculateMinandMaxPriceFromTick(props.tokenIn.symbol, props.tokenOut.symbol).then(
+    //   (response) => {
+    //     // topLevelSelectedToken.symbol === tokeninorg.symbol
+    //     //   ? dispatch(setleftbrush(response.minValue))
+    //     //   : dispatch(setBleftbrush(response.minValue));
+    //     // topLevelSelectedToken.symbol === tokeninorg.symbol
+    //     //   ? dispatch(setrightbrush(response.maxValue))
+    //     //   : dispatch(setBrightbrush(response.maxValue));
+    //     console.log("minmax", response.maxValue, response.minValue);
+    //   }
+    //);
   }, [topLevelSelectedToken]);
 
   const dispatch = useDispatch<AppDispatch>();

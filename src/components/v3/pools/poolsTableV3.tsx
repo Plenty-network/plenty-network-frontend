@@ -115,14 +115,14 @@ export function PoolsTableV3(props: IShortCardProps) {
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
+    name: "DAI.e",
+    image: `/assets/tokens/USDC.e.png`,
+    symbol: "DAI.e",
+  });
+  const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
     name: "USDC.e",
     image: `/assets/tokens/USDC.e.png`,
     symbol: "USDC.e",
-  });
-  const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
-    name: "USDT.e",
-    image: `/assets/tokens/USDT.e.png`,
-    symbol: "USDT.e",
   });
 
   const mobilecolumns = React.useMemo<Column<IAllPoolsData>[]>(
@@ -380,21 +380,21 @@ export function PoolsTableV3(props: IShortCardProps) {
               setActiveState(ActiveLiquidity.Liquidity);
             }
             setTokenIn({
-              name: "PLENTY",
+              name: "DAI.e",
               image: getImagesPath(props.tokenA.toString()),
-              symbol: "PLENTY",
+              symbol: "DAI.e",
             });
             dispatch(
               settopLevelSelectedToken({
-                name: "PLENTY",
+                name: "DAI.e",
                 image: getImagesPath(props.tokenA.toString()),
-                symbol: "PLENTY",
+                symbol: "DAI.e",
               })
             );
             setTokenOut({
-              name: "XTZ",
+              name: "USDC.e",
               image: getImagesPath(props.tokenB.toString()),
-              symbol: "XTZ",
+              symbol: "USDC.e",
             });
 
             props.setShowLiquidityModal(true);
@@ -407,7 +407,7 @@ export function PoolsTableV3(props: IShortCardProps) {
   }
   return (
     <>
-      {props.showLiquidityModal &&
+      {true &&
         (isMobile ? (
           <ManageTabMobile
             tokenIn={tokenChange(topLevelSelectedToken, tokenIn, tokenOut)}
@@ -433,7 +433,7 @@ export function PoolsTableV3(props: IShortCardProps) {
             setActiveState={setActiveState}
             activeState={activeState}
             isGaugeAvailable={isGaugeAvailable}
-            showLiquidityModal={props.showLiquidityModal}
+            showLiquidityModal={true}
             setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
             filter={props.poolsFilter}
             feeTier={"0.01"}

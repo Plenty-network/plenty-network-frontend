@@ -1,4 +1,4 @@
-import { IConfig, TokenStandard } from './types';
+import { IConfig, TokenStandard } from "./types";
 import { NetworkType } from "@airgap/beacon-types";
 
 const Config: IConfig = {
@@ -55,7 +55,7 @@ const Config: IConfig = {
   },
   ANALYTICS_INDEXER: {
     mainnet: "https://api.analytics.plenty.network/",
-    testnet: "http://3.111.147.231:3000/",//"https://analytics-indexer.ghostnet.plenty.network/",
+    testnet: "http://3.111.147.231:3000/", //"https://analytics-indexer.ghostnet.plenty.network/",
   },
 
   FAUCET: "KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH",
@@ -119,18 +119,17 @@ const Config: IConfig = {
     testnet: "KT1CWvM4nLoyHBGKkGBKjnPNTNLzoJ9JpAW3",
   },
 
-  NETWORK: "mainnet",
-  WALLET_NETWORK: NetworkType.MAINNET,
+  NETWORK: "testnet",
+  WALLET_NETWORK: NetworkType.GHOSTNET,
   ADMIN_ADDRESS: "KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW",
   BURNER: "tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg",
-
 
   EXPLORER_LINKS: {
     RINKEBY: "https://rinkeby.etherscan.io/tx/",
     ETHEREUM: "https://etherscan.io/tx/",
-    TEZOS: { 
+    TEZOS: {
       mainnet: "https://tzkt.io/",
-      testnet: "https://ghostnet.tzkt.io/"
+      testnet: "https://ghostnet.tzkt.io/",
     },
   },
 };
