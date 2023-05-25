@@ -12,16 +12,24 @@ import { createPositionInstance } from "../../api/v3/helper";
 export const LiquidityOperation = async (amountTokenX: BigNumber, amountTokenY: BigNumber, lowerTick: number, upperTick: number, tokenXSymbol: string, tokenYSymbol: string, deadline: number, maximumTokensContributed: BalanceNat
     ): Promise<any>  => {
       try {
-        let configResponse :any = await axios.get(Config.CONFIG_LINKS.testnet.TOKEN);
+        let configResponse: any = await axios.get(Config.CONFIG_LINKS.testnet.TOKEN);
         const Tezos = await dappClient().tezos();
         const state = store.getState();
         const TOKENS = state.config.tokens;
 
+        amountTokenX = amountTokenX.multipliedBy(
+            new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals)
+        );
+
+        amountTokenY = amountTokenX.multipliedBy(
+            new BigNumber(10).pow(TOKENS[tokenYSymbol].decimals)
+        );
+
         const contractAddress = getDexAddress(tokenXSymbol, tokenYSymbol);
         const contractInstance = await Tezos.wallet.at(contractAddress);
 
-        const tokenX = await Tezos.wallet.at(configResponse.tokenXSymbol.address);
-        const tokenY = await Tezos.wallet.at(configResponse.tokenYSymbol.address);
+        const tokenX = await Tezos.wallet.at(configResponse[tokenXSymbol].address);
+        const tokenY = await Tezos.wallet.at(configResponse[tokenYSymbol].address);
         let createPosition = await createPositionInstance(amountTokenX, amountTokenY, lowerTick, upperTick, tokenXSymbol, tokenYSymbol, deadline, maximumTokensContributed);
 
         if (
