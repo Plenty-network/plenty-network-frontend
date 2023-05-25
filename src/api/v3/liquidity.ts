@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import { Tick, Pool } from "@plenty-labs/v3-sdk";
 import Config from '../../config/config';
 import { ContractStorage } from "./helper";
+import { store } from "../../redux";
 
 export const connectedNetwork = Config.NETWORK;
 
@@ -71,6 +72,13 @@ export const estimateTokenAFromTokenB = async ( amount: BigNumber, tokenXSymbol:
     ): Promise<any>  => {
       try {
           let estimatedAmount;
+          const state = store.getState();
+          const TOKENS = state.config.tokens;
+
+          amount = amount.multipliedBy(
+            new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals)
+          );
+
           let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol)
           let PoolObject = new Pool(contractStorageParameters.tokenX, contractStorageParameters.tokenY, contractStorageParameters.currTickIndex, contractStorageParameters.tickSpacing, contractStorageParameters.sqrtPriceValue);
 
@@ -92,6 +100,13 @@ export const estimateTokenBFromTokenA = async ( amount: BigNumber, tokenXSymbol:
     ): Promise<any>  => {
       try {
           let estimatedAmount;
+          const state = store.getState();
+          const TOKENS = state.config.tokens;
+
+          amount = amount.multipliedBy(
+            new BigNumber(10).pow(TOKENS[tokenYSymbol].decimals)
+          );
+
           let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol)
           let PoolObject = new Pool(contractStorageParameters.tokenX, contractStorageParameters.tokenY, contractStorageParameters.currTickIndex, contractStorageParameters.tickSpacing, contractStorageParameters.sqrtPriceValue);
           
