@@ -5,7 +5,7 @@ import { ContractStorage } from "./helper";
 
 export const connectedNetwork = Config.NETWORK;
 
-export const calculateCurrentPrice = async ( tokenXSymbol: String, tokenYSymbol: String, refernceToken: String
+export const calculateCurrentPrice = async ( tokenXSymbol: string, tokenYSymbol: string, refernceToken: String
   ): Promise<any>  => {
     try {
         let currentPrice;
@@ -26,7 +26,7 @@ export const calculateCurrentPrice = async ( tokenXSymbol: String, tokenYSymbol:
     }
 }
 
-export const calculateFullRange = async ( tokenXSymbol: String, tokenYSymbol: String
+export const calculateFullRange = async ( tokenXSymbol: string, tokenYSymbol: string
     ): Promise<any>  => {
       try {
           let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol)
@@ -40,7 +40,7 @@ export const calculateFullRange = async ( tokenXSymbol: String, tokenYSymbol: St
       }
 }
 
-export const getInitialBoundaries = async (tokenXSymbol: String, tokenYSymbol: String
+export const getInitialBoundaries = async (tokenXSymbol: string, tokenYSymbol: string
     ): Promise<any>  => {
       try {
           let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol)
@@ -67,7 +67,7 @@ export const getInitialBoundaries = async (tokenXSymbol: String, tokenYSymbol: S
       }
 }
 
-export const estimateTokenAFromTokenB = async ( amount: BigNumber, tokenXSymbol: String, tokenYSymbol: String
+export const estimateTokenAFromTokenB = async ( amount: BigNumber, tokenXSymbol: string, tokenYSymbol: string
     ): Promise<any>  => {
       try {
           let estimatedAmount;
@@ -88,7 +88,7 @@ export const estimateTokenAFromTokenB = async ( amount: BigNumber, tokenXSymbol:
       }
 }
 
-export const estimateTokenBFromTokenA = async ( amount: BigNumber, tokenXSymbol: String, tokenYSymbol: String
+export const estimateTokenBFromTokenA = async ( amount: BigNumber, tokenXSymbol: string, tokenYSymbol: string
     ): Promise<any>  => {
       try {
           let estimatedAmount;

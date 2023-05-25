@@ -74,6 +74,18 @@ export const nearestTickIndex = async (
       }
 }
 
+export const getTickAndRealPriceFromPool = async ( contractAddress: string
+    ): Promise<any>  => {
+      try {
+        let rpcResponse :any = await axios.get(`${Config.RPC_NODES.testnet}/ticks?pool=${contractAddress}`);
+        
+        return rpcResponse;
+      }
+      catch(error) {
+          console.log("v3 error: ", error);
+      }
+}
+
 export const calculateliquidity = async (amount: BalanceNat, lowerTick: number, upperTick: number, tokenXSymbol: string, tokenYSymbol: string 
     ): Promise<any>  => {
       try {
