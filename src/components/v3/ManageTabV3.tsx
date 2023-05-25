@@ -148,9 +148,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState<string>("0.5");
   const TOKEN = useAppSelector((state) => state.config.tokens);
+  const amm = useAppSelector((state) => state.config.AMMs);
   console.log("token", TOKEN);
   console.log("token");
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  console.log("amm", amm);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const [activeStateIncDec, setActiveStateIncDec] = React.useState<ActiveIncDecState | string>(
     ActiveIncDecState.Increase

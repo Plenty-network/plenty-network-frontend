@@ -29,6 +29,7 @@ import {
 import { MyPoolTable } from "../../src/components/Pools/MyPoolTable";
 import { CardHeaderV3, PoolsCardHeaderV3 } from "../../src/components/v3/pools/CardHeaderv3";
 import { PoolsTableV3 } from "../../src/components/v3/pools/poolsTableV3";
+import { calculateCurrentPrice, getInitialBoundaries } from "../../src/api/v3/liquidity";
 
 export interface IIndexProps {}
 export enum POOL_TYPE {
@@ -105,7 +106,12 @@ export default function Pools(props: IIndexProps) {
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
-
+  calculateCurrentPrice("DAI.e", "USDC.e", "DAI.e").then((response) => {
+    console.log("cp", response);
+  });
+  getInitialBoundaries("DAI.e", "USDC.e").then((response) => {
+    console.log("init bound", response);
+  });
   return (
     <>
       <SideBarHOC>
