@@ -79,16 +79,13 @@ export const getInitialBoundaries = async (
       contractStorageParameters.tokenX,
       contractStorageParameters.tokenY
     );
+
     let maxPriceValue = Tick.computeRealPriceFromTick(
       maxTick,
       contractStorageParameters.tokenX,
       contractStorageParameters.tokenY
     );
-    console.log(
-      "contractStorageParameters",
-      contractStorageParameters.tokenX,
-      contractStorageParameters.tokenY
-    );
+    
     console.log(
       "v3-------calculateMinandMaxPriceFromTick",
       minTick,
@@ -118,7 +115,7 @@ export const estimateTokenAFromTokenB = async (
     const state = store.getState();
     const TOKENS = state.config.tokens;
 
-    amount = amount.multipliedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals));
+    amount = amount.multipliedBy(new BigNumber(10).pow(TOKENS[tokenYSymbol].decimals));
 
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
     let PoolObject = new Pool(
@@ -133,9 +130,10 @@ export const estimateTokenAFromTokenB = async (
     let lowerTickIndex = initialBoundaries[0];
     let upperTickIndex = initialBoundaries[1];
 
-    estimatedAmount = PoolObject.estimateAmountXFromY(amount, lowerTickIndex, upperTickIndex);
+    let estimatedAmountCalc = PoolObject.estimateAmountXFromY(amount, lowerTickIndex, upperTickIndex);
+    
+    estimatedAmount= estimatedAmountCalc.dividedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals));
 
-    //   console.log('v3-------estimateTokenAFromTokenB', estimatedAmount);
     return estimatedAmount;
   } catch (error) {
     console.log("v3 error: ", error);
@@ -152,7 +150,7 @@ export const estimateTokenBFromTokenA = async (
     const state = store.getState();
     const TOKENS = state.config.tokens;
 
-    amount = amount.multipliedBy(new BigNumber(10).pow(TOKENS[tokenYSymbol].decimals));
+    amount = amount.multipliedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals));
 
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
     let PoolObject = new Pool(
@@ -167,9 +165,9 @@ export const estimateTokenBFromTokenA = async (
     let lowerTickIndex = initialBoundaries[0];
     let upperTickIndex = initialBoundaries[1];
 
-    estimatedAmount = PoolObject.estimateAmountYFromX(amount, lowerTickIndex, upperTickIndex);
+    let estimatedAmountCalc = PoolObject.estimateAmountYFromX(amount, lowerTickIndex, upperTickIndex);
+    estimatedAmount= estimatedAmountCalc.dividedBy(new BigNumber(10).pow(TOKENS[tokenYSymbol].decimals));
 
-    //   console.log('v3-------estimateTokenBFromTokenA', estimatedAmount);
     return estimatedAmount;
   } catch (error) {
     console.log("v3 error: ", error);
