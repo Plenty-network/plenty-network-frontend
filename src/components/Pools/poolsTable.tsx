@@ -44,6 +44,7 @@ export interface IShortCardProps {
   isFetching: boolean;
   isError: boolean;
   setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  poolFilterwithTvl: boolean;
 }
 export interface IManageBtnProps {
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -59,22 +60,14 @@ export function ShortCard(props: IShortCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  const scrollY = useAppSelector((state) => state.walletLoading.scrollY);
-  const height = useAppSelector((state) => state.walletLoading.height);
-  const clientHeight = useAppSelector((state) => state.walletLoading.clientHeight);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [isCompletedMypool, setIsCompletedMypool] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
-  const [page, setPage] = useState(1);
 
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
     tokenPrices,
     props.poolsFilter,
 
     props.reFetchPool,
-    0
+    0,
+    props.poolFilterwithTvl
   );
 
   const [poolsTableData, isFetched] = usePoolsTableSearch(

@@ -48,13 +48,6 @@ const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
   },
 };
 
-// const ChartWrapper = styled.div`
-//   position: relative;
-
-//   justify-content: center;
-//   align-content: center;
-// `;
-
 export default function LiquidityChartRangeInput({
   currencyA,
   currencyB,
@@ -135,7 +128,7 @@ export default function LiquidityChartRangeInput({
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
     let leftPrice, rightPrice;
-
+    console.log("kk", Number(leftbrush), Number(rightbrush));
     if (topLevelSelectedToken.symbol === tokeninorg.symbol && rightbrush && leftbrush) {
       leftPrice = isSorted ? Number(leftbrush) : priceUpper;
       rightPrice = isSorted ? Number(rightbrush) : priceLower;

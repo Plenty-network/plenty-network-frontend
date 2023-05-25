@@ -19,14 +19,11 @@ import { USERADDRESS } from "../../src/constants/localStorage";
 import { NewPool } from "../../src/components/Pools/NewPool";
 import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
 import clsx from "clsx";
-import { getAllPoolsData, getMyPoolsData } from "../../src/api/pools";
-import {
-  IAllPoolsData,
-  IAllPoolsDataResponse,
-  IMyPoolsData,
-  IMyPoolsDataResponse,
-} from "../../src/api/pools/types";
+
 import { MyPoolTable } from "../../src/components/Pools/MyPoolTable";
+import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
+import { SwitchPools } from "../../src/components/SwitchCheckbox/SwitchPools";
+import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
 export interface IIndexProps {}
 export enum POOL_TYPE {
   VOLATILE = "VOLATILE",
@@ -48,6 +45,11 @@ export default function Pools(props: IIndexProps) {
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   const initialPriceCall = React.useRef<boolean>(true);
   const initialLpPriceCall = React.useRef<boolean>(true);
+  const initialRewardsAprCall = React.useRef<boolean>(true);
+  const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
+  const rewardsAprEstimateError = useAppSelector(
+    (state) => state.rewardsApr.rewardsAprEstimateError
+  );
   const handleCloseManagePopup = (val: boolean) => {
     setShowLiquidityModal(val);
   };
@@ -68,11 +70,11 @@ export default function Pools(props: IIndexProps) {
   useEffect(() => {
     if (walletAddress) {
       localStorage.setItem(USERADDRESS, walletAddress);
-      dispatch(getTotalVotingPower());
     }
+    dispatch(getTotalVotingPower());
   }, [walletAddress]);
   useEffect(() => {
-    if (walletAddress && totalVotingPowerError) {
+    if (totalVotingPowerError) {
       dispatch(getTotalVotingPower());
     }
   }, [totalVotingPowerError]);
@@ -93,6 +95,30 @@ export default function Pools(props: IIndexProps) {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  useEffect(() => {
+    if (!initialRewardsAprCall.current) {
+      if (Object.keys(tokenPrices).length !== 0) {
+        dispatch(
+          getRewardsAprEstimate({
+            totalVotingPower: currentTotalVotingPower,
+            tokenPrices,
+          })
+        );
+      }
+    } else {
+      initialRewardsAprCall.current = false;
+    }
+  }, [currentTotalVotingPower, tokenPrices]);
+  useEffect(() => {
+    if (rewardsAprEstimateError && Object.keys(tokenPrices).length !== 0) {
+      dispatch(
+        getRewardsAprEstimate({
+          totalVotingPower: currentTotalVotingPower,
+          tokenPrices,
+        })
+      );
+    }
+  }, [rewardsAprEstimateError]);
   const [searchValue, setSearchValue] = React.useState("");
   const [isbanner, setisBanner] = React.useState(false);
   const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
@@ -104,7 +130,7 @@ export default function Pools(props: IIndexProps) {
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
-
+  const [poolFilterwithTvl, setPoolFilterwithTvl] = useState(true);
   return (
     <>
       <SideBarHOC>
@@ -119,20 +145,36 @@ export default function Pools(props: IIndexProps) {
             onClick={handleNewPool}
             videoLink="HtDOhje7Y5A"
           />
-          <div className="my-2 mx-3">
+          <div className="my-2 mx-3 flex gap-2">
             <InputSearchBox
-              className={clsx("md:hidden")}
+              className={clsx("md:hidden w-full")}
               value={searchValue.toString().trim()}
               onChange={setSearchValue}
             />
+            <p className="md:hidden">
+              <ToolTip
+                id="tooltipj"
+                position={Position.left}
+                isShowInnitially={true}
+                toolTipChild={<div className="">Hide small pools</div>}
+              >
+                <SwitchPools
+                  isChecked={poolFilterwithTvl}
+                  id="i"
+                  onChange={() => setPoolFilterwithTvl(!poolFilterwithTvl)}
+                />
+              </ToolTip>
+            </p>
           </div>
-          <div className="sticky top-[-1px] z-10">
+          <div className="sticky top-[-3px] z-10">
             <CardHeader
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
               className="md:px-3"
               searchValue={searchValue}
               setSearchValue={setSearchValue}
+              setPoolFilterwithTvl={setPoolFilterwithTvl}
+              poolFilterwithTvl={poolFilterwithTvl}
             />
           </div>
           {/* {isbanner && (
@@ -163,6 +205,7 @@ export default function Pools(props: IIndexProps) {
               reFetchPool={reFetchPool}
               isFetching={isFetching}
               isError={isError}
+              poolFilterwithTvl={poolFilterwithTvl}
             />
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
@@ -178,6 +221,7 @@ export default function Pools(props: IIndexProps) {
               reFetchPool={reFetchPool}
               isFetching={isFetching}
               isError={isError}
+              poolFilterwithTvl={poolFilterwithTvl}
             />
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
@@ -193,6 +237,7 @@ export default function Pools(props: IIndexProps) {
               reFetchPool={reFetchPool}
               isFetching={isFetching}
               isError={isError}
+              poolFilterwithTvl={poolFilterwithTvl}
             />
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
@@ -208,6 +253,7 @@ export default function Pools(props: IIndexProps) {
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               isFetchingMyPool={isFetchingMyPool}
+              poolFilterwithTvl={poolFilterwithTvl}
             />
           )}
           <NewPool

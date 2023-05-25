@@ -81,7 +81,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         props.tokenOut.symbol
       ).then((response) => {
         setSecondLoading(false);
-        console.log("secondtoken", response?.toString());
+
         props.setSecondTokenAmount(response);
       });
     } else if (tokenType === "tokenOut") {
@@ -103,7 +103,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         props.tokenOut.symbol
       ).then((response) => {
         setFirstLoading(false);
-        console.log("secondtoken", response?.toString());
+
         props.setFirstTokenAmount(response);
       });
     }
@@ -293,16 +293,18 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           </div>
         </div>
       )}
-      {// topLevelSelectedToken.symbol === tokeninorg.symbol
-      //   ? leftbrush < currentPrice && rightbrush > currentPrice
-      //   : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice
-      true ? (
-        <div className="relative -top-[9px] left-[25%]">
-          <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
-        </div>
-      ) : (
-        <div className="h-[4px]"></div>
-      )}
+      {
+        // topLevelSelectedToken.symbol === tokeninorg.symbol
+        //   ? leftbrush < currentPrice && rightbrush > currentPrice
+        //   : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice
+        true ? (
+          <div className="relative -top-[9px] left-[25%]">
+            <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
+          </div>
+        ) : (
+          <div className="h-[4px]"></div>
+        )
+      }
       {(
         topLevelSelectedToken.symbol === tokeninorg.symbol
           ? leftbrush > currentPrice && rightbrush > currentPrice

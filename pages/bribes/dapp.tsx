@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getPoolsDataForBribes, getUserBribeData } from "../../src/api/bribes";
 import { IPoolsForBribesResponse, IUserBribeData } from "../../src/api/bribes/types";
@@ -12,6 +12,7 @@ import { AppDispatch, store, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
+import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
 
 const Dapp: NextPage = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -24,6 +25,11 @@ const Dapp: NextPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const epoch = useAppSelector((state) => state.epoch.currentEpoch);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const initialPriceCall = useRef<boolean>(true);
+  const initialLpPriceCall = useRef<boolean>(true);
+  const initialRewardsAprCall = useRef<boolean>(true);
+  const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
+  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
 
   useEffect(() => {
     dispatch(fetchWallet());
@@ -39,25 +45,55 @@ const Dapp: NextPage = () => {
     dispatch(getEpochData());
   }, 60000);
   useEffect(() => {
-    if (userAddress) {
-      dispatch(getTotalVotingPower());
-    }
+    dispatch(getTotalVotingPower());
   }, [userAddress]);
   useEffect(() => {
-    if (userAddress && totalVotingPowerError) {
+    if (totalVotingPowerError) {
       dispatch(getTotalVotingPower());
     }
   }, [totalVotingPowerError]);
   const [isOperationComplete, setIsOperationComplete] = useState(false);
   useEffect(() => {
-    Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    if(!initialPriceCall.current) {
+      Object.keys(token).length !== 0 && dispatch(getTokenPrice());
+    } else {
+      initialPriceCall.current = false;
+    }
   }, [token]);
   useEffect(() => {
-    Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+    if(!initialLpPriceCall.current) {
+      Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+    } else {
+      initialLpPriceCall.current = false;
+    }
   }, [tokenPrices]);
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  useEffect(() => {
+    if (!initialRewardsAprCall.current) {
+      if (Object.keys(tokenPrices).length !== 0) {
+        dispatch(
+          getRewardsAprEstimate({
+            totalVotingPower: currentTotalVotingPower,
+            tokenPrices,
+          })
+        );
+      }
+    } else {
+      initialRewardsAprCall.current = false;
+    }
+  }, [currentTotalVotingPower, tokenPrices]);
+  useEffect(() => {
+    if (rewardsAprEstimateError && Object.keys(tokenPrices).length !== 0) {
+      dispatch(
+        getRewardsAprEstimate({
+          totalVotingPower: currentTotalVotingPower,
+          tokenPrices,
+        })
+      );
+    }
+  }, [rewardsAprEstimateError]);
 
   const [poolsArr, setPoolsArr] = useState<{
     data: IPoolsForBribesResponse;

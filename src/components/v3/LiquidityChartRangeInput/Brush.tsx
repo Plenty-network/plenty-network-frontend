@@ -103,6 +103,7 @@ export const Brush = ({
   const previousBrushExtent = usePrevious(brushExtent);
   const brushed = useCallback(
     (event: D3BrushEvent<unknown>) => {
+      console.log(xScale, brushExtent, setBrushExtent, "lla");
       const { type, selection, mode } = event;
       if (!selection) {
         setLocalBrushExtent(null);
@@ -110,15 +111,15 @@ export const Brush = ({
       }
 
       const scaled = (selection as [number, number]).map(xScale.invert) as [number, number];
-
+      console.log("scaled", scaled, type);
       // avoid infinite render loop by checking for change
       if (type === "end" && !compare(brushExtent, scaled, xScale)) {
-        topLevelSelectedToken.symbol === tokenIn.symbol
-          ? dispatch(setleftbrush(scaled[0]))
-          : dispatch(setBleftbrush(scaled[0]));
-        topLevelSelectedToken.symbol === tokenIn.symbol
-          ? dispatch(setrightbrush(scaled[1]))
-          : dispatch(setBrightbrush(scaled[1]));
+        // topLevelSelectedToken.symbol === tokenIn.symbol
+        //   ? dispatch(setleftbrush(scaled[0]))
+        //   : dispatch(setBleftbrush(scaled[0]));
+        // topLevelSelectedToken.symbol === tokenIn.symbol
+        //   ? dispatch(setrightbrush(scaled[1]))
+        //   : dispatch(setBrightbrush(scaled[1]));
         console.log(
           "hj",
           Tick.nearestUsableTick(scaled[0], 10),

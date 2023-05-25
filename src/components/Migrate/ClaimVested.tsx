@@ -142,7 +142,10 @@ function ClaimVested(props: IMigrateProps) {
           setFlashMessage({
             flashType: Flashtype.Rejected,
             headerText: "Rejected",
-            trailingText: `Claim of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `,
+            trailingText:
+              response.error === "NOT_ENOUGH_TEZ"
+                ? `You do not have enough tez`
+                : `Claim of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `,
             linkText: "",
             isLoading: true,
             transactionId: "",

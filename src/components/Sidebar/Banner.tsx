@@ -1,9 +1,11 @@
 import clsx from "clsx";
+import Link from "next/link";
 import { useState } from "react";
+import { isMobile } from "react-device-detect";
 import { claimFaucet } from "../../operations/faucet";
-import { useAppDispatch } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../redux";
 import { setFlashMessage } from "../../redux/flashMessage";
-import { setIsBanner, setIsLoadingWallet } from "../../redux/walletLoading";
+import { setbannerClicked, setIsBanner, setIsLoadingWallet } from "../../redux/walletLoading";
 import { Flashtype } from "../FlashScreen";
 
 interface IBanner {
@@ -13,6 +15,7 @@ interface IBanner {
 }
 function Banner(props: IBanner) {
   const dispatch = useAppDispatch();
+  const percentage = useAppSelector((state) => state.rewardsApr.rewardsAprEstimate);
 
   const handleFaucet = () => {
     claimFaucet(undefined, undefined, undefined, {
@@ -43,7 +46,10 @@ function Banner(props: IBanner) {
             flashType: Flashtype.Rejected,
             transactionId: "",
             headerText: "Rejected",
-            trailingText: `Claim test tokens on Ghostnet`,
+            trailingText:
+              res.error === "NOT_ENOUGH_TEZ"
+                ? `You do not have enough tez`
+                : `Claim test tokens on Ghostnet`,
             linkText: "",
             isLoading: true,
           })
@@ -53,6 +59,9 @@ function Banner(props: IBanner) {
     });
   };
   const [isHover, setHover] = useState(false);
+  const handleClick = () => {
+    dispatch(setbannerClicked(true));
+  };
   return (
     <div
       className={clsx(
@@ -60,10 +69,17 @@ function Banner(props: IBanner) {
         !props.isBanner && "hidden"
       )}
     >
-      <p className="w-full text-center cursor-pointer">
-        Voting starts from 12th Jan. Rewards starts from 19th Jan{" "}
-        {/* <span className="font-[600]">LEARN MORE</span>{" "} */}
-      </p>
+      <Link href={"/vote"}>
+        <p className="w-full h-[38px] pt-[10px] text-center cursor-pointer" onClick={handleClick}>
+          {!isMobile
+            ? `Earn up to ${
+                Number(percentage) > 0 ? Number(percentage)?.toFixed(1) : "-"
+              }% APR in bribes and fee rewards by locking PLY for 4 years and voting every week.`
+            : `Earn up to ${
+                Number(percentage) > 0 ? Number(percentage)?.toFixed(1) : "-"
+              }% APR by vote locking your PLY`}
+        </p>
+      </Link>
       <p
         className="text-right mr-2 md:mr-[10px] cursor-pointer"
         onClick={() => {

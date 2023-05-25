@@ -22,9 +22,8 @@ export function RangeSliderDecLiq(props: IRangeSliderProps) {
   React.useEffect(() => {
     setSliderVal(props.decreaseValue);
   }, []);
-  console.log("ishu", sliderVal);
+
   const handleslider = (value: string) => {
-    console.log("ishu", value);
     setSliderVal(parseInt(value));
     props.setRemovePercentage(parseInt(value));
   };

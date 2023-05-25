@@ -154,9 +154,12 @@ function BribesMain(props: BribesMainProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
-                TOKEN_B
-              )} pool
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+                      TOKEN_B
+                    )} pool
               `,
               linkText: "",
               isLoading: true,

@@ -61,7 +61,7 @@ export function Chart({
     innerHeight,
     zoom,
   ]);
-  //console.log("ishu", xScale.domain());
+
   useEffect(() => {
     // reset zoom as necessary
     setZoom(null);

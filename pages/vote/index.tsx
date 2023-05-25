@@ -38,9 +38,11 @@ import { setFlashMessage } from "../../src/redux/flashMessage";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { setSelectedDropDown, setSelectedDropDownLocal } from "../../src/redux/veNFT";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
-import { setIsLoadingWallet } from "../../src/redux/walletLoading";
+import { setbannerClicked, setIsLoadingWallet } from "../../src/redux/walletLoading";
 import { tzktExplorer } from "../../src/common/walletconnect";
 import { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
+import { getTotalVotingPower } from "../../src/redux/pools";
+import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -49,6 +51,7 @@ export default function Vote() {
   const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
+  const bannerClicked = useAppSelector((state) => state.walletLoading.bannerClicked);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const [veNFTlist, setVeNFTlist] = useState<{ data: IVeNFTData[]; isfetching: boolean }>({
     data: [] as IVeNFTData[],
@@ -83,6 +86,7 @@ export default function Vote() {
   const amm = useAppSelector((state) => state.config.AMMs);
   const initialPriceCall = useRef<boolean>(true);
   const initialLpPriceCall = useRef<boolean>(true);
+  const initialRewardsAprCall = useRef<boolean>(true);
   const handleCreateLock = () => {
     setShowCreateLockModal(true);
   };
@@ -92,12 +96,22 @@ export default function Vote() {
   const [lockOperation, setLockOperation] = useState(false);
   const [sumOfVotes, setSumofVotes] = useState(0);
   const [contentTransaction, setContentTransaction] = useState("");
+  const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
+  const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
+  const rewardsAprEstimateError = useAppSelector(
+    (state) => state.rewardsApr.rewardsAprEstimateError
+  );
   var sum = 0;
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
+  useEffect(() => {
+    if (bannerClicked) {
+      setShowCreateLockModal(true);
+    }
+  }, [bannerClicked]);
   useEffect(() => {
     const updateBalance = async () => {
       const balancePromises = [];
@@ -163,6 +177,7 @@ export default function Vote() {
     });
   }, []);
   useEffect(() => {
+    dispatch(setbannerClicked(false));
     if (!(localStorage.getItem(USERADDRESS) === userAddress)) {
       localStorage.setItem(USERADDRESS, userAddress);
     }
@@ -311,6 +326,14 @@ export default function Vote() {
   }, [veNFTlist.data, userAddress]);
 
   useEffect(() => {
+    dispatch(getTotalVotingPower());
+  }, [userAddress]);
+  useEffect(() => {
+    if (totalVotingPowerError) {
+      dispatch(getTotalVotingPower());
+    }
+  }, [totalVotingPowerError]);
+  useEffect(() => {
     if (!initialPriceCall.current) {
       Object.keys(token).length !== 0 && dispatch(getTokenPrice());
     } else {
@@ -327,6 +350,30 @@ export default function Vote() {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  useEffect(() => {
+    if (!initialRewardsAprCall.current) {
+      if (Object.keys(tokenPrice).length !== 0) {
+        dispatch(
+          getRewardsAprEstimate({
+            totalVotingPower: currentTotalVotingPower,
+            tokenPrices: tokenPrice,
+          })
+        );
+      }
+    } else {
+      initialRewardsAprCall.current = false;
+    }
+  }, [currentTotalVotingPower, tokenPrice]);
+  useEffect(() => {
+    if (rewardsAprEstimateError && Object.keys(tokenPrice).length !== 0) {
+      dispatch(
+        getRewardsAprEstimate({
+          totalVotingPower: currentTotalVotingPower,
+          tokenPrices: tokenPrice,
+        })
+      );
+    }
+  }, [rewardsAprEstimateError]);
 
   const resetAllValues = () => {
     setPlyInput("");
@@ -337,6 +384,7 @@ export default function Vote() {
     });
   };
   const handleCloseLock = () => {
+    dispatch(setbannerClicked(false));
     setShowCreateLockModal(false);
     setPlyInput("");
     setLockingDate("");
@@ -416,9 +464,12 @@ export default function Vote() {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Lock ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} PLY till ${localStorage.getItem(TOKEN_A)}`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Lock ${localStorage.getItem(
+                      FIRST_TOKEN_AMOUNT
+                    )} PLY till ${localStorage.getItem(TOKEN_A)}`,
               linkText: "",
               isLoading: true,
             })
@@ -496,7 +547,10 @@ export default function Vote() {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Vote with VeNFT #
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Vote with VeNFT #
               ${localStorage.getItem(FIRST_TOKEN_AMOUNT)}`,
               linkText: "",
               isLoading: true,

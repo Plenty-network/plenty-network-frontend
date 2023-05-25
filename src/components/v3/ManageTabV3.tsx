@@ -107,52 +107,26 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const tokens = useAppSelector((state) => state.config.tokens);
-  console.log(tokens, "tokens");
+
   React.useEffect(() => {
-    console.log("ll", props.tokenIn.symbol, props.tokenOut.symbol, topLevelSelectedToken.symbol);
     calculateCurrentPrice(
       props.tokenIn.symbol,
       props.tokenOut.symbol,
       topLevelSelectedToken.symbol
     ).then((response) => {
-      console.log("lll", response?.toString());
       topLevelSelectedToken.symbol === props.tokenIn.symbol
         ? dispatch(setcurrentPrice(response?.toString()))
         : dispatch(setBcurrentPrice(response?.toString()));
     });
-
-    // calculateMinandMaxPriceFromTick(props.tokenIn.symbol, props.tokenOut.symbol).then(
-    //   (response) => {
-    //     topLevelSelectedToken.symbol === props.tokenA.symbol
-    //       ? dispatch(setleftbrush(response.minValue))
-    //       : dispatch(setBleftbrush(response.minValue));
-    //     topLevelSelectedToken.symbol === props.tokenA.symbol
-    //       ? dispatch(setrightbrush(response.maxValue))
-    //       : dispatch(setBrightbrush(response.maxValue));
-    //     console.log("minmax", response.maxValue, response.minValue);
-    //   }
-    // );
   }, [topLevelSelectedToken, props.tokenA, props.tokenB]);
-  // useEffect(() => {
-  //   dispatch(setleftbrush(70));
-  //   dispatch(setrightbrush(100));
-  //   dispatch(setleftRangeInput("70"));
-  //   dispatch(setRightRangeInput("100"));
-  //   dispatch(setcurrentPrice(87));
-  //   dispatch(setBleftbrush(60));
-  //   dispatch(setBrightbrush(100));
-  //   dispatch(setBleftRangeInput("60"));
-  //   dispatch(setBRightRangeInput("100"));
-  //   dispatch(setBcurrentPrice(90));
-  // }, []);
+
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState<string>("0.5");
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const amm = useAppSelector((state) => state.config.AMMs);
-  console.log("token", TOKEN);
-  console.log("token");
+
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  console.log("amm", amm);
+
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const [activeStateIncDec, setActiveStateIncDec] = React.useState<ActiveIncDecState | string>(
     ActiveIncDecState.Increase

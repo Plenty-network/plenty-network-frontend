@@ -107,15 +107,7 @@ export default function Pools(props: IIndexProps) {
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
-  calculateCurrentPrice("DAI.e", "USDC.e", "DAI.e").then((response) => {
-    console.log("cp", response.toString());
-  });
-  getInitialBoundaries("DAI.e", "USDC.e").then((response) => {
-    console.log("init bound", response);
-  });
-  getTickAndRealPriceFromPool("KT1AmeUTxh28afcKVgD6mJEzoSo95NThe3TW").then((response) => {
-    console.log("data", response);
-  });
+
   return (
     <>
       <SideBarHOC>

@@ -13,6 +13,8 @@ import {
   TSetShowConfirmTransaction,
   TTransactionSubmitModal,
 } from "./types";
+import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
+import { getBatchOperationsWithLimits } from "../api/util/operations";
 
 /**
  * Unstake PNLP token operation for the selected pair of tokens.
@@ -61,7 +63,7 @@ export const unstakePnlpTokens = async (
       new BigNumber(10).pow(PNLP_TOKEN.decimals)
     );
 
-    const limits = await Tezos.estimate
+    /* const limits = await Tezos.estimate
       .transfer(
         gaugeContractInstance.methods
           .withdraw(pnlpAmountToUnstake.decimalPlaces(0, 1).toString())
@@ -91,22 +93,34 @@ export const unstakePnlpTokens = async (
 
     const operation = await gaugeContractInstance.methods
       .withdraw(pnlpAmountToUnstake.decimalPlaces(0, 1).toString())
-      .send({ gasLimit, storageLimit });
+      .send({ gasLimit, storageLimit }); */
+    const allBatchOperations: WalletParamsWithKind[] = [];
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...gaugeContractInstance.methods
+        .withdraw(pnlpAmountToUnstake.decimalPlaces(0, 1).toString())
+        .toTransferParams(),
+    });
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOp = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    transactionSubmitModal && transactionSubmitModal(operation.opHash);
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
     setActiveState && setActiveState(ActiveLiquidity.Liquidity);
     resetAllValues && resetAllValues();
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    await operation.confirmation(1);
+    await batchOp.confirmation(1);
 
-    const status = await operation.status();
+    const status = await batchOp.status();
     if (status === "applied") {
       return {
         success: true,
-        operationId: operation.opHash,
+        operationId: batchOp.opHash,
       };
     } else {
       throw new Error(status);

@@ -81,7 +81,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
         props.tokenOut.symbol
       ).then((response) => {
         setSecondLoading(false);
-        console.log("secondtoken", response?.toString());
+
         props.setSecondTokenAmount(response);
       });
     } else if (tokenType === "tokenOut") {
@@ -103,7 +103,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
         props.tokenOut.symbol
       ).then((response) => {
         setFirstLoading(false);
-        console.log("secondtoken", response?.toString());
+
         props.setFirstTokenAmount(response);
       });
     }

@@ -211,9 +211,12 @@ function TezosChain(props: ITezosChain) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Lock ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} PLY till ${localStorage.getItem(TOKEN_A)}`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Lock ${localStorage.getItem(
+                      FIRST_TOKEN_AMOUNT
+                    )} PLY till ${localStorage.getItem(TOKEN_A)}`,
               linkText: "",
               isLoading: true,
             })
@@ -362,7 +365,10 @@ function TezosChain(props: ITezosChain) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
               linkText: "",
               isLoading: true,
             })

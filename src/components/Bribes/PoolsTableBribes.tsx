@@ -76,7 +76,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         showOnMobile: true,
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
-            <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center">
+            <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center overflow-hidden items-center">
               <img
                 alt={"alt"}
                 src={
@@ -97,7 +97,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
                 onError={changeSource}
               />
             </div>
-            <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center items-center">
+            <div className="w-[24px] relative -left-2 bg-card-600 rounded-full h-[24px] flex justify-center overflow-hidden items-center">
               <img
                 alt={"alt"}
                 src={
@@ -209,7 +209,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
-            <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
+            <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex overflow-hidden justify-center items-center">
               <img
                 alt={"alt"}
                 src={
@@ -230,7 +230,7 @@ export function PoolsTableBribes(props: IPoolsTableBribes) {
                 onError={changeSource}
               />
             </div>
-            <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
+            <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center overflow-hidden items-center">
               <img
                 alt={"alt"}
                 src={

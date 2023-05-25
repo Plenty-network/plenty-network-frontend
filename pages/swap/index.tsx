@@ -12,6 +12,7 @@ import { AppDispatch, store, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
+import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
 
 const Home: NextPage = () => {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -22,6 +23,9 @@ const Home: NextPage = () => {
   const amm = useAppSelector((state) => state.config.AMMs);
   const initialPriceCall = useRef<boolean>(true);
   const initialLpPriceCall = useRef<boolean>(true);
+  const initialRewardsAprCall = useRef<boolean>(true);
+  const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
+  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -42,12 +46,10 @@ const Home: NextPage = () => {
     dispatch(getEpochData());
   }, 60000);
   useEffect(() => {
-    if (userAddress) {
-      dispatch(getTotalVotingPower());
-    }
+    dispatch(getTotalVotingPower());
   }, [userAddress]);
   useEffect(() => {
-    if (userAddress && totalVotingPowerError) {
+    if (totalVotingPowerError) {
       dispatch(getTotalVotingPower());
     }
   }, [totalVotingPowerError]);
@@ -68,6 +70,30 @@ const Home: NextPage = () => {
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
+  useEffect(() => {
+    if (!initialRewardsAprCall.current) {
+      if (Object.keys(tokenPrices).length !== 0) {
+        dispatch(
+          getRewardsAprEstimate({
+            totalVotingPower: currentTotalVotingPower,
+            tokenPrices,
+          })
+        );
+      }
+    } else {
+      initialRewardsAprCall.current = false;
+    }
+  }, [currentTotalVotingPower, tokenPrices]);
+  useEffect(() => {
+    if (rewardsAprEstimateError && Object.keys(tokenPrices).length !== 0) {
+      dispatch(
+        getRewardsAprEstimate({
+          totalVotingPower: currentTotalVotingPower,
+          tokenPrices,
+        })
+      );
+    }
+  }, [rewardsAprEstimateError]);
   const disconnectUserWallet = async () => {
     if (userAddress) {
       return dispatch(walletDisconnection());

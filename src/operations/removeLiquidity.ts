@@ -7,6 +7,8 @@ import { ActiveLiquidity } from '../components/Pools/ManageLiquidityHeader';
 import { IFlashMessageProps } from '../redux/flashMessage/type';
 import { setFlashMessage } from '../redux/flashMessage';
 import { GAS_LIMIT_EXCESS, STORAGE_LIMIT_EXCESS } from '../constants/global';
+import { OpKind, WalletParamsWithKind } from '@taquito/taquito';
+import { getBatchOperationsWithLimits } from '../api/util/operations';
 
 /**
  * Remove liquidity operation for given pair of tokens.
@@ -175,7 +177,7 @@ const removeAllPairsLiquidity = async (
           secondTokenMinimumAmount.decimalPlaces(0, 1).toString()
         );
 
-    const limits = await Tezos.estimate
+    /* const limits = await Tezos.estimate
       .transfer(op.toTransferParams())
       .then((limits) => limits)
       .catch((err) => {
@@ -198,22 +200,32 @@ const removeAllPairsLiquidity = async (
       throw new Error("Failed to estimate transaction limits");
     }
 
-    const operation = await op.send({ gasLimit, storageLimit });
+    const operation = await op.send({ gasLimit, storageLimit }); */
+    const allBatchOperations: WalletParamsWithKind[] = [];
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...op.toTransferParams(),
+    });
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOp = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    transactionSubmitModal && transactionSubmitModal(operation.opHash);
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
     setActiveState && setActiveState(ActiveLiquidity.Staking);
     resetAllValues && resetAllValues();
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    await operation.confirmation(1);
+    await batchOp.confirmation(1);
 
-    const status = await operation.status();
+    const status = await batchOp.status();
     if (status === "applied") {
       return {
         success: true,
-        operationId: operation.opHash,
+        operationId: batchOp.opHash,
       };
     } else {
       throw new Error(status);
@@ -298,7 +310,7 @@ const removeAllPairsLiquidity = async (
        tezMinimumAmount.decimalPlaces(0, 1)
      );
 
-     const limits = await Tezos.estimate
+     /* const limits = await Tezos.estimate
        .transfer(op.toTransferParams())
        .then((limits) => limits)
        .catch((err) => {
@@ -321,22 +333,32 @@ const removeAllPairsLiquidity = async (
        throw new Error("Failed to estimate transaction limits");
      }
 
-     const operation = await op.send({ gasLimit, storageLimit });
+     const operation = await op.send({ gasLimit, storageLimit }); */
+     const allBatchOperations: WalletParamsWithKind[] = [];
+     allBatchOperations.push({
+       kind: OpKind.TRANSACTION,
+       ...op.toTransferParams(),
+     });
+
+     const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+
+     const batch = Tezos.wallet.batch(updatedBatchOperations);
+     const batchOp = await batch.send();
 
      setShowConfirmTransaction && setShowConfirmTransaction(false);
-     transactionSubmitModal && transactionSubmitModal(operation.opHash);
+     transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
      setActiveState && setActiveState(ActiveLiquidity.Staking);
      resetAllValues && resetAllValues();
      if (flashMessageContent) {
        store.dispatch(setFlashMessage(flashMessageContent));
      }
-     await operation.confirmation(1);
+     await batchOp.confirmation(1);
 
-     const status = await operation.status();
+     const status = await batchOp.status();
      if (status === "applied") {
        return {
          success: true,
-         operationId: operation.opHash,
+         operationId: batchOp.opHash,
        };
      } else {
        throw new Error(status);
@@ -424,7 +446,7 @@ const removeTezPairsLiquidity = async (
       secondTokenMinimumAmount.decimalPlaces(0, 1)
     );
 
-    const limits = await Tezos.estimate
+    /* const limits = await Tezos.estimate
       .transfer(op.toTransferParams())
       .then((limits) => limits)
       .catch((err) => {
@@ -447,22 +469,32 @@ const removeTezPairsLiquidity = async (
       throw new Error("Failed to estimate transaction limits");
     }
 
-    const operation = await op.send({ gasLimit, storageLimit });
+    const operation = await op.send({ gasLimit, storageLimit }); */
+    const allBatchOperations: WalletParamsWithKind[] = [];
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...op.toTransferParams(),
+    });
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOp = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    transactionSubmitModal && transactionSubmitModal(operation.opHash);
+    transactionSubmitModal && transactionSubmitModal(batchOp.opHash);
     setActiveState && setActiveState(ActiveLiquidity.Staking);
     resetAllValues && resetAllValues();
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    await operation.confirmation(1);
+    await batchOp.confirmation(1);
 
-    const status = await operation.status();
+    const status = await batchOp.status();
     if (status === "applied") {
       return {
         success: true,
-        operationId: operation.opHash,
+        operationId: batchOp.opHash,
       };
     } else {
       throw new Error(status);

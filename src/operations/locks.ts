@@ -552,7 +552,7 @@ export const claimAllAndWithdrawLock = async (
 
     const gaugeContractInstance = await Tezos.wallet.at(gaugeAddress);
 
-    const limits = await Tezos.estimate
+    /* const limits = await Tezos.estimate
       .transfer(gaugeContractInstance.methods.stake(0, 0).toTransferParams())
       .then((limits) => limits)
       .catch((err) => {
@@ -577,23 +577,33 @@ export const claimAllAndWithdrawLock = async (
 
     const operation = await gaugeContractInstance.methods
       .stake(0, 0)
-      .send({ gasLimit, storageLimit });
+      .send({ gasLimit, storageLimit }); */
+    const allBatchOperations: WalletParamsWithKind[] = [];
+    allBatchOperations.push({
+      kind: OpKind.TRANSACTION,
+      ...gaugeContractInstance.methods.stake(0, 0).toTransferParams(),
+    });
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOp = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal &&
-      transactionSubmitModal(operation.opHash as string);
+      transactionSubmitModal(batchOp.opHash as string);
     resetAllValues && resetAllValues();
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
 
-    await operation.confirmation(1);
+    await batchOp.confirmation(1);
 
-    const status = await operation.status();
+    const status = await batchOp.status();
     if(status === "applied"){
       return {
         success: true,
-        operationId: operation.opHash,
+        operationId: batchOp.opHash,
       };
     }else{
       throw new Error(status);

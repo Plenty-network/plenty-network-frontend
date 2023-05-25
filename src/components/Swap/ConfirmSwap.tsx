@@ -9,7 +9,7 @@ import arrow from "../../../src/assets/icon/swap/downArrow.svg";
 import info from "../../../src/assets/icon/swap/info.svg";
 import { BigNumber } from "bignumber.js";
 import stableSwap from "../../../src/assets/icon/swap/stableswapViolet.svg";
-import { tokenIcons, tokensList } from "../../constants/tokensList";
+import { tokenIcons } from "../../constants/tokensList";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { Chain } from "../../config/types";

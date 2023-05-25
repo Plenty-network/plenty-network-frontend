@@ -6,6 +6,7 @@ const initialState = {
   activePortfolio: MyPortfolioSection.Positions,
   operationSuccesful: false,
   isBanner: true,
+  bannerClicked: false,
   scrollY: 0,
   height: 0,
   clientHeight: 0,
@@ -34,6 +35,9 @@ const IsLoadingSlice = createSlice({
     setMyPortfolioSection: (state, action) => {
       state.activePortfolio = action.payload;
     },
+    setbannerClicked: (state, action) => {
+      state.bannerClicked = action.payload;
+    },
   },
 });
 export const {
@@ -43,5 +47,6 @@ export const {
   setMyPortfolioSection,
   setHeight,
   setClientHeight,
+  setbannerClicked,
 } = IsLoadingSlice.actions;
 export const walletLoading = IsLoadingSlice.reducer;

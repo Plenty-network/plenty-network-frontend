@@ -429,9 +429,14 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-                TOKEN_A
-              )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+                      TOKEN_A
+                    )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(
+                      TOKEN_B
+                    )}`,
               linkText: "",
               isLoading: true,
             })
@@ -497,9 +502,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             flashType: Flashtype.Rejected,
             transactionId: "",
             headerText: "Rejected",
-            trailingText: `Detach # ${localStorage.getItem(
-              FIRST_TOKEN_AMOUNT
-            )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool`,
+            trailingText:
+              response.error === "NOT_ENOUGH_TEZ"
+                ? `You do not have enough tez`
+                : `Detach # ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} from ${localStorage.getItem(
+                    TOKEN_A
+                  )}/${localStorage.getItem(TOKEN_B)} pool`,
             linkText: "",
             isLoading: true,
           })
@@ -595,7 +603,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               transactionId: "",
               headerText: "Rejected",
               trailingText:
-                stakeInput !== ""
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : stakeInput !== ""
                   ? `Stake ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
                       TOKEN_A
                     )} / ${localStorage.getItem(TOKEN_B)} PNLP`
@@ -683,9 +693,12 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Unstake ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(TOKEN_B)} PNLP`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Unstake ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+                      TOKEN_A
+                    )} / ${localStorage.getItem(TOKEN_B)} PNLP`,
               linkText: "",
               isLoading: true,
             })
@@ -754,7 +767,10 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Claim ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Claim ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
               linkText: "",
               isLoading: true,
             })
@@ -841,9 +857,10 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Burn ${nFormatterWithLesserNumber(
-                new BigNumber(burnAmount)
-              ).toString()} PNLP`,
+              trailingText:
+                response.error === "NOT_ENOUGH_TEZ"
+                  ? `You do not have enough tez`
+                  : `Burn ${nFormatterWithLesserNumber(new BigNumber(burnAmount)).toString()} PNLP`,
               linkText: "",
               isLoading: true,
             })
@@ -865,7 +882,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     <>
       <PopUpModal
         onhide={closeModal}
-        className="w-[390px] max-w-[390px] sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
+        className="w-screen max-w-screen sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
         footerChild={
           <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
             <p className="font-subtitle1 md:text-f16 text-text-150">

@@ -205,7 +205,7 @@ export function VotesTable(props: IVotesTableProps) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.tokenA", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
-            <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">
+            <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center overflow-hidden">
               <img
                 alt={"alt"}
                 src={
@@ -226,7 +226,7 @@ export function VotesTable(props: IVotesTableProps) {
                 onError={changeSource}
               />
             </div>
-            <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
+            <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center overflow-hidden">
               <img
                 alt={"alt"}
                 src={
