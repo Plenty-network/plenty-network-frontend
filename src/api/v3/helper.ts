@@ -92,6 +92,17 @@ export const getTickAndRealPriceFromPool = async (contractAddress: string): Prom
   }
 };
 
+export const getRealPriceFromTick = async (tick: number, tokenXSymbol: string, tokenYSymbol: string): Promise<any> => {
+  try {
+    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    let priceValue = Tick.computeRealPriceFromTick(tick, contractStorageParameters.tokenX, contractStorageParameters.tokenY);
+
+    return priceValue;
+  } catch (error) {
+    console.log("v3 error: ", error);
+  }
+};
+
 export const calculateliquidity = async (
   amount: BalanceNat,
   lowerTick: number,
