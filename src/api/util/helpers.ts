@@ -53,7 +53,7 @@ export function nFormatterWithLesserNumber(num: BigNumber) {
   }
 }
 export const changeSource = (e: any) => {
-  e.target.src = { fallback };
+  e.target.src = fallback.src;
   e.onerror = null;
 };
 export function imageExists(image_url: string) {
