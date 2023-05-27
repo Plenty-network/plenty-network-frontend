@@ -90,8 +90,8 @@ export const getInitialBoundaries = async (
       "v3-------calculateMinandMaxPriceFromTick",
       minTick,
       maxTick,
-      minPriceValue,
-      maxPriceValue
+      minPriceValue.toNumber(),
+      maxPriceValue.toNumber()
     );
 
     return {
@@ -105,7 +105,7 @@ export const getInitialBoundaries = async (
   }
 };
 
-export const estimateTokenAFromTokenB = async (
+export const estimateTokenXFromTokenY = async (
   amount: BigNumber,
   tokenXSymbol: string,
   tokenYSymbol: string
@@ -133,6 +133,7 @@ export const estimateTokenAFromTokenB = async (
     let estimatedAmountCalc = PoolObject.estimateAmountXFromY(amount, lowerTickIndex, upperTickIndex);
     
     estimatedAmount= estimatedAmountCalc.dividedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals));
+    console.log('estimatedAmountCalc', estimatedAmount.toNumber());
 
     return estimatedAmount;
   } catch (error) {
@@ -140,7 +141,7 @@ export const estimateTokenAFromTokenB = async (
   }
 };
 
-export const estimateTokenBFromTokenA = async (
+export const estimateTokenYFromTokenX = async (
   amount: BigNumber,
   tokenXSymbol: string,
   tokenYSymbol: string
