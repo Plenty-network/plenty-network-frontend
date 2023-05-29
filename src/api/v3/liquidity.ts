@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { Tick, Pool } from "@plenty-labs/v3-sdk";
 import Config from "../../config/config";
-import { ContractStorage } from "./helper";
+import { ContractStorage, getRealPriceFromTick } from "./helper";
 import { store } from "../../redux";
 
 export const connectedNetwork = Config.NETWORK;
@@ -50,7 +50,17 @@ export const calculateFullRange = async (
     );
     let tickFullRange = PoolObject.getFullRangeBoundaries();
 
-    return tickFullRange;
+    let minTickPrice = await getRealPriceFromTick(tickFullRange[0], tokenXSymbol, tokenYSymbol);
+    let maxTickPrice = await getRealPriceFromTick(tickFullRange[1], tokenXSymbol, tokenYSymbol);
+
+    console.log("tickFullRange", tickFullRange[0], tickFullRange[1], minTickPrice.toNumber(), maxTickPrice.toNumber());
+
+    return {
+      minTick: tickFullRange[0],
+      maxTick: tickFullRange[1],
+      minTickPrice: minTickPrice,
+      maxTickPrice: maxTickPrice,
+    };
   } catch (error) {
     console.log("v3 error: ", error);
   }
