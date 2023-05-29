@@ -10,8 +10,6 @@ import { store } from "../../redux";
 import { createPositionInstance } from "../../api/v3/helper";
 
 export const LiquidityOperation = async (
-  amountTokenX: BigNumber,
-  amountTokenY: BigNumber,
   lowerTick: number,
   upperTick: number,
   tokenXSymbol: string,
@@ -24,6 +22,8 @@ export const LiquidityOperation = async (
     const Tezos = await dappClient().tezos();
     const state = store.getState();
     const TOKENS = state.config.tokens;
+    let amountTokenX = maximumTokensContributed.x;
+    let amountTokenY = maximumTokensContributed.y;
 
     amountTokenX = amountTokenX.multipliedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals));
 
