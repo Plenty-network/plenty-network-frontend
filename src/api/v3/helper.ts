@@ -103,6 +103,17 @@ export const getRealPriceFromTick = async (tick: number, tokenXSymbol: string, t
   }
 };
 
+export const getTickFromRealPrice = async (realPrice: BigNumber, tokenXSymbol: string, tokenYSymbol: string): Promise<any> => {
+  try {
+    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    let tick = Tick.computeTickFromRealPrice(realPrice, contractStorageParameters.tokenX, contractStorageParameters.tokenY, contractStorageParameters.tickSpacing);
+
+    return tick;
+  } catch (error) {
+    console.log("v3 error: ", error);
+  }
+};
+
 export const calculateliquidity = async (
   amount: BalanceNat,
   lowerTick: number,
