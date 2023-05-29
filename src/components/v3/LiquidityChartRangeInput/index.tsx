@@ -128,7 +128,13 @@ export default function LiquidityChartRangeInput({
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
     let leftPrice, rightPrice;
-    console.log("kk", Number(leftbrush), Number(rightbrush));
+    console.log(
+      "kk",
+      Number(leftbrush),
+      Number(rightbrush),
+      Number(Bleftbrush),
+      Number(Brightbrush)
+    );
     if (topLevelSelectedToken.symbol === tokeninorg.symbol && rightbrush && leftbrush) {
       leftPrice = isSorted ? Number(leftbrush) : priceUpper;
       rightPrice = isSorted ? Number(rightbrush) : priceLower;

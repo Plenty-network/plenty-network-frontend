@@ -75,7 +75,7 @@ import IncreaseDecreaseLiqMain from "./IncreaseDecreaseliqMain";
 import ConfirmIncreaseLiq from "./Confirmaddliq";
 import ConfirmDecreaseLiq from "./Confirmremoveliq";
 import TransactionSettingsV3 from "./TransactionSettingv3";
-import { calculateCurrentPrice, estimateTokenAFromTokenB } from "../../api/v3/liquidity";
+import { calculateCurrentPrice } from "../../api/v3/liquidity";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -371,6 +371,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   }, [props, firstTokenAmountLiq, secondTokenAmountLiq]);
   const [selectedToken, setSelectedToken] = useState({} as tokenParameterLiquidity);
   useEffect(() => {
+    console.log(props.tokenIn, "selectedToken");
     setSelectedToken(props.tokenIn);
   }, []);
   useEffect(() => {

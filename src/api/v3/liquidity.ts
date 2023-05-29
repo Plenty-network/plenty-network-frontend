@@ -85,7 +85,7 @@ export const getInitialBoundaries = async (
       contractStorageParameters.tokenX,
       contractStorageParameters.tokenY
     );
-    
+
     console.log(
       "v3-------calculateMinandMaxPriceFromTick",
       minTick,
@@ -98,7 +98,7 @@ export const getInitialBoundaries = async (
       minTick: minTick,
       maxTick: maxTick,
       minValue: minPriceValue,
-      maxValue: minPriceValue,
+      maxValue: maxPriceValue,
     };
   } catch (error) {
     console.log("v3 error: ", error);
@@ -130,10 +130,16 @@ export const estimateTokenXFromTokenY = async (
     let lowerTickIndex = initialBoundaries[0];
     let upperTickIndex = initialBoundaries[1];
 
-    let estimatedAmountCalc = PoolObject.estimateAmountXFromY(amount, lowerTickIndex, upperTickIndex);
-    
-    estimatedAmount= estimatedAmountCalc.dividedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals));
-    console.log('estimatedAmountCalc', estimatedAmount.toNumber());
+    let estimatedAmountCalc = PoolObject.estimateAmountXFromY(
+      amount,
+      lowerTickIndex,
+      upperTickIndex
+    );
+
+    estimatedAmount = estimatedAmountCalc.dividedBy(
+      new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals)
+    );
+    console.log("estimatedAmountCalc", estimatedAmount.toNumber());
 
     return estimatedAmount;
   } catch (error) {
@@ -166,8 +172,14 @@ export const estimateTokenYFromTokenX = async (
     let lowerTickIndex = initialBoundaries[0];
     let upperTickIndex = initialBoundaries[1];
 
-    let estimatedAmountCalc = PoolObject.estimateAmountYFromX(amount, lowerTickIndex, upperTickIndex);
-    estimatedAmount= estimatedAmountCalc.dividedBy(new BigNumber(10).pow(TOKENS[tokenYSymbol].decimals));
+    let estimatedAmountCalc = PoolObject.estimateAmountYFromX(
+      amount,
+      lowerTickIndex,
+      upperTickIndex
+    );
+    estimatedAmount = estimatedAmountCalc.dividedBy(
+      new BigNumber(10).pow(TOKENS[tokenYSymbol].decimals)
+    );
 
     return estimatedAmount;
   } catch (error) {

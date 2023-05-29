@@ -1,5 +1,6 @@
 import { Tick } from "@plenty-labs/v3-sdk";
 import clsx from "clsx";
+import { BigNumber } from "bignumber.js";
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { tEZorCTEZtoUppercase, tokenChange, tokenChangeB } from "../../api/util/helpers";
@@ -68,27 +69,35 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
   React.useEffect(() => {
-    calculateCurrentPrice("DAI.e", "USDC.e", "DAI.e").then((response) => {
+    calculateCurrentPrice("DAI.e", "USDC.e", "USDC.e").then((response) => {
       console.log("cp", response.toString());
       topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setcurrentPrice(response.toString()))
-        : dispatch(setBcurrentPrice(response.toString()));
+        ? dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toString()))
+        : dispatch(setBcurrentPrice(new BigNumber(1).dividedBy(response).toString()));
     });
 
     getInitialBoundaries("DAI.e", "USDC.e").then((response) => {
       console.log(
         "init bound",
         response,
+        response.minValue.toString(),
+        response.maxValue.toString(),
         topLevelSelectedToken.symbol === tokeninorg.symbol,
         tokeninorg,
         topLevelSelectedToken
       );
-      // topLevelSelectedToken.symbol === tokeninorg.symbol
-      //   ? dispatch(setleftbrush(response.minTick))
-      //   : dispatch(setBleftbrush(response.minTick));
-      // topLevelSelectedToken.symbol === tokeninorg.symbol
-      //   ? dispatch(setrightbrush(response.maxTick))
-      //   : dispatch(setBrightbrush(response.maxTick));
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? dispatch(setleftRangeInput(response.minValue.toString()))
+        : dispatch(setBleftRangeInput(response.minValue.toString()));
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? dispatch(setRightRangeInput(response.maxValue.toString()))
+        : dispatch(setBRightRangeInput(response.maxValue.toString()));
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? dispatch(setleftbrush(response.minValue.toString()))
+        : dispatch(setBleftbrush(response.minValue.toString()));
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? dispatch(setrightbrush(response.maxValue.toString()))
+        : dispatch(setBrightbrush(response.maxValue.toString()));
     });
     getTickAndRealPriceFromPool("KT1AmeUTxh28afcKVgD6mJEzoSo95NThe3TW").then((response) => {
       console.log("data", response);

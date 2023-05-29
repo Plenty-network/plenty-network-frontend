@@ -9,40 +9,6 @@ import { setBleftbrush, setBrightbrush, setleftbrush, setrightbrush } from "../.
 import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from "./svg";
 import usePrevious from "./usePrevious";
 
-// const Handle = styled.path<{ color: string }>`
-//   cursor: ew-resize;
-//   pointer-events: none;
-
-//   stroke-width: 3;
-//   stroke: ${({ color }) => color};
-//   fill: ${({ color }) => color};
-// `;
-
-// const HandleAccent = styled.path`
-//   cursor: ew-resize;
-//   pointer-events: none;
-
-//   stroke-width: 1.5;
-//   stroke: #ffffff;
-//   opacity: 1;
-// `;
-
-// const LabelGroup = styled.g<{ visible: boolean }>`
-//   opacity: ${({ visible }) => (visible ? "1" : "0")};
-//   transition: opacity 300ms;
-//   fill: #211336;
-// `;
-
-// const TooltipBackground = styled.rect`
-//   fill: #211336;
-// `;
-
-// const Tooltip = styled.text`
-//   text-anchor: middle;
-//   font-size: 13px;
-//   fill: #cfced1;
-// `;
-
 // flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20;
 
@@ -103,7 +69,6 @@ export const Brush = ({
   const previousBrushExtent = usePrevious(brushExtent);
   const brushed = useCallback(
     (event: D3BrushEvent<unknown>) => {
-      console.log(xScale, brushExtent, setBrushExtent, "lla");
       const { type, selection, mode } = event;
       if (!selection) {
         setLocalBrushExtent(null);
@@ -111,31 +76,25 @@ export const Brush = ({
       }
 
       const scaled = (selection as [number, number]).map(xScale.invert) as [number, number];
-      console.log("scaled", scaled, type);
+
       // avoid infinite render loop by checking for change
       if (type === "end" && !compare(brushExtent, scaled, xScale)) {
-        // topLevelSelectedToken.symbol === tokenIn.symbol
-        //   ? dispatch(setleftbrush(scaled[0]))
-        //   : dispatch(setBleftbrush(scaled[0]));
-        // topLevelSelectedToken.symbol === tokenIn.symbol
-        //   ? dispatch(setrightbrush(scaled[1]))
-        //   : dispatch(setBrightbrush(scaled[1]));
-        console.log(
-          "hj",
-          Tick.nearestUsableTick(scaled[0], 10),
-          Tick.nearestUsableTick(scaled[1], 10)
-        );
+        topLevelSelectedToken.symbol === tokenIn.symbol
+          ? dispatch(setleftbrush(scaled[0]))
+          : dispatch(setBleftbrush(scaled[0]));
+        topLevelSelectedToken.symbol === tokenIn.symbol
+          ? dispatch(setrightbrush(scaled[1]))
+          : dispatch(setBrightbrush(scaled[1]));
+        console.log("hj", scaled[0], scaled[1]);
 
-        setBrushExtent(
-          [Tick.nearestUsableTick(scaled[0], 10), Tick.nearestUsableTick(scaled[1], 10)],
-          mode
-        );
+        // setBrushExtent(
+        //   [Tick.nearestUsableTick(scaled[0], 10), Tick.nearestUsableTick(scaled[1], 10)],
+        //   mode
+        // );
+        setBrushExtent([scaled[0], scaled[1]], mode);
       }
 
-      setLocalBrushExtent([
-        Tick.nearestUsableTick(scaled[0], 10),
-        Tick.nearestUsableTick(scaled[1], 10),
-      ]);
+      setLocalBrushExtent([scaled[0], scaled[1]]);
     },
     [xScale, brushExtent, setBrushExtent]
   );

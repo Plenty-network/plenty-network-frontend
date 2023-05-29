@@ -535,11 +535,8 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                     tokenOut={props.tokenOut}
                     setIsAddLiquidity={setIsAddLiquidity}
                     isAddLiquidity={isAddLiquidity}
-                    swapData={swapData.current}
-                    pnlpBalance={pnlpBalance}
                     setSlippage={setSlippage}
                     slippage={slippage}
-                    lpTokenPrice={lpTokenPrice}
                     isLoading={isLoading}
                   />
                 </div>

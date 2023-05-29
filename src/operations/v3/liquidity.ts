@@ -16,7 +16,7 @@ export const LiquidityOperation = async (
   upperTick: number,
   tokenXSymbol: string,
   tokenYSymbol: string,
-  deadline: number,
+  deadline: number, //in seconds timestamp
   maximumTokensContributed: BalanceNat
 ): Promise<any> => {
   try {
