@@ -162,7 +162,11 @@ export default function LiquidityChartRangeInput({
         dispatch(setIsRightDiff({ LeftDiff: "∞" }));
         return "∞";
       }
-
+      if (isFull) {
+        if (d === "e") {
+          return "-100%";
+        } else return "100%";
+      }
       const percent =
         (x < price ? -1 : 1) * ((Math.max(x, price) - Math.min(x, price)) / price) * 100;
       d === "e"
@@ -180,7 +184,7 @@ export default function LiquidityChartRangeInput({
           );
       return price ? `${format(Math.abs(percent) > 1 ? ".2~s" : ".2~f")(percent)}%` : "";
     },
-    [isSorted, price, ticksAtLimit]
+    [isSorted, price, ticksAtLimit, isFull]
   );
 
   if (error) {
@@ -195,7 +199,9 @@ export default function LiquidityChartRangeInput({
       {isUninitialized ? (
         "Your position will appear here."
       ) : isLoadingData ? (
-        "loading"
+        <div className="justify-center items-center  flex h-[180px]">
+          <div className="spinner"></div>
+        </div>
       ) : error ? (
         "Liquidity data not available."
       ) : !formattedData || formattedData.length === 0 || !price ? (

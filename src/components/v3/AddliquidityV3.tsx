@@ -65,8 +65,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
 
   const dispatch = useAppDispatch();
   useEffect(() => {
-    setFirstLoading(true);
-    setSecondLoading(true);
+    // setFirstLoading(true);
+    // setSecondLoading(true);
 
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
       getTickFromRealPrice(

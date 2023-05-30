@@ -225,6 +225,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
 
   const resetAllValues = () => {
+    setFirstTokenAmountLiq("");
+    setSecondTokenAmountLiq("");
     setBalanceUpdate(false);
   };
   const [deadline, setDeadline] = useState(0);
@@ -445,7 +447,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                       : "text-text-250 px-2",
                     "font-subtitle1223"
                   )}
-                  onClick={() => setSelectedToken(props.tokenA)}
+                  onClick={() => {
+                    resetAllValues();
+                    setSelectedToken(props.tokenA);
+                  }}
                 >
                   {tEZorCTEZtoUppercase(props.tokenA.symbol)}
                 </div>
@@ -456,7 +461,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                       : "text-text-250 px-2",
                     "font-subtitle1223"
                   )}
-                  onClick={() => setSelectedToken(props.tokenB)}
+                  onClick={() => {
+                    resetAllValues();
+                    setSelectedToken(props.tokenB);
+                  }}
                 >
                   {tEZorCTEZtoUppercase(props.tokenB.symbol)}
                 </div>
@@ -563,8 +571,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               setScreen={setScreen}
               firstTokenAmount={firstTokenAmountLiq}
               secondTokenAmount={secondTokenAmountLiq}
-              tokenIn={props.tokenIn}
-              tokenOut={props.tokenOut}
+              tokenIn={props.tokenA}
+              tokenOut={props.tokenB}
               tokenPrice={tokenPrice}
               pnlpEstimates={pnlpEstimates}
               sharePool={sharePool}
