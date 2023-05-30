@@ -225,9 +225,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
 
   const resetAllValues = () => {
-    setFirstTokenAmountLiq("");
-    setSecondTokenAmountLiq("");
-
     setBalanceUpdate(false);
   };
   const [deadline, setDeadline] = useState(0);
@@ -256,6 +253,16 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen(ActivePopUp.NewPosition);
+    console.log(
+      "operation parameters",
+      topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
+      topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
+      deadline,
+      firstTokenAmountLiq,
+      secondTokenAmountLiq
+    );
     LiquidityOperation(
       topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
       topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
@@ -278,6 +285,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         transactionId: "",
       }
     ).then((response) => {
+      console.log("res", response);
       if (response.success) {
         setBalanceUpdate(true);
 
@@ -503,7 +511,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               <p className="text-white">
                 {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
               </p>
-              <p className="ml-1 relative top-[6px]">
+              <p className="ml-1 relative top-[3px]">
                 <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
               </p>
             </div>

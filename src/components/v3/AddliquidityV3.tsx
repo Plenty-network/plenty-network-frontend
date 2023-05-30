@@ -55,52 +55,71 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   const [isFirstLaoding, setFirstLoading] = React.useState(false);
   const [isSecondLaoding, setSecondLoading] = React.useState(false);
   const isLoadingData = useAppSelector((state) => state.poolsv3.isLoading);
+  const minTickA = useAppSelector((state) => state.poolsv3.minTickA);
+  const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
+  const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
+  const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
   const [minValue, setMinValue] = React.useState(0);
   const [maxValue, setMaxValue] = React.useState(0);
   const [value, setValue] = React.useState<[number, number]>([0, 0]);
 
   const dispatch = useAppDispatch();
   useEffect(() => {
+    setFirstLoading(true);
+    setSecondLoading(true);
+
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
       getTickFromRealPrice(
         new BigNumber(leftbrush),
         props.tokenIn.symbol,
         props.tokenOut.symbol
-      ).then((response) => {
-        setMinValue(Tick.nearestUsableTick(response, 10));
+      ).then((response1) => {
+        dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
+        setMinValue(Tick.nearestUsableTick(response1, 10));
+        setValue([Tick.nearestUsableTick(response1, 10), maxValue] as [number, number]);
+        getTickFromRealPrice(
+          new BigNumber(rightbrush),
+          props.tokenIn.symbol,
+          props.tokenOut.symbol
+        ).then((response) => {
+          dispatch(setmaxTickA(Tick.nearestUsableTick(response, 10)));
+          setMaxValue(Tick.nearestUsableTick(response, 10));
+          setValue([
+            Tick.nearestUsableTick(response1, 10),
+            Tick.nearestUsableTick(response, 10),
+          ] as [number, number]);
+          setFirstLoading(false);
+          setSecondLoading(false);
+        });
       });
 
-      getTickFromRealPrice(
-        new BigNumber(rightbrush),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
-      ).then((response) => {
-        setMaxValue(Tick.nearestUsableTick(response, 10));
-      });
-
-      dispatch(setminTickA(minValue));
-      dispatch(setmaxTickA(maxValue));
-      setValue([minValue, maxValue] as [number, number]);
+      console.log("ticks", minValue, maxValue);
+      // setValue([minValue, maxValue] as [number, number]);
     } else {
       getTickFromRealPrice(
         new BigNumber(bleftbrush),
         props.tokenIn.symbol,
         props.tokenOut.symbol
-      ).then((response) => {
-        setMinValue(Tick.nearestUsableTick(response, 10));
-      });
+      ).then((response1) => {
+        dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
+        setMinValue(Tick.nearestUsableTick(response1, 10));
+        setValue([Tick.nearestUsableTick(response1, 10), maxValue] as [number, number]);
+        getTickFromRealPrice(
+          new BigNumber(brightbrush),
+          props.tokenIn.symbol,
+          props.tokenOut.symbol
+        ).then((response) => {
+          dispatch(setmaxTickB(Tick.nearestUsableTick(response, 10)));
 
-      getTickFromRealPrice(
-        new BigNumber(brightbrush),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
-      ).then((response) => {
-        setMaxValue(Tick.nearestUsableTick(response, 10));
+          setMaxValue(Tick.nearestUsableTick(response, 10));
+          setValue([
+            Tick.nearestUsableTick(response1, 10),
+            Tick.nearestUsableTick(response, 10),
+          ] as [number, number]);
+          setFirstLoading(false);
+          setSecondLoading(false);
+        });
       });
-
-      dispatch(setminTickB(minValue));
-      dispatch(setmaxTickB(maxValue));
-      setValue([minValue, maxValue] as [number, number]);
     }
   }, [leftbrush, rightbrush, bleftbrush, brightbrush, topLevelSelectedToken, tokeninorg]);
 
@@ -138,8 +157,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         new BigNumber(input),
         props.tokenIn.symbol,
         props.tokenOut.symbol,
-        value[0],
-        value[1]
+        topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
+        topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB
       ).then((response) => {
         setSecondLoading(false);
         console.log(
@@ -147,8 +166,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           input,
           new BigNumber(1).dividedBy(new BigNumber(response)).toString(),
           response.toString(),
-          value[0],
-          value[1]
+          topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
+          topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB
         );
         topLevelSelectedToken.symbol === tokeninorg.symbol
           ? props.setSecondTokenAmount(response)
@@ -175,15 +194,15 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         new BigNumber(input),
         props.tokenIn.symbol,
         props.tokenOut.symbol,
-        value[0],
-        value[1]
+        topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
+        topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB
       ).then((response) => {
         setFirstLoading(false);
         console.log(
           "estimateTokenBFromTokenA",
           input,
-          value[0],
-          value[1],
+          topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
+          topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB,
           response.toString(),
           new BigNumber(1).dividedBy(new BigNumber(response)).toString()
         );
