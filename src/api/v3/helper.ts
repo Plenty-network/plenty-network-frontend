@@ -139,8 +139,6 @@ export const calculateliquidity = async (
 };
 
 export const createPositionInstance = async (
-  amountTokenX: BigNumber,
-  amountTokenY: BigNumber,
   lowerTick: number,
   upperTick: number,
   tokenXSymbol: string,
@@ -154,12 +152,8 @@ export const createPositionInstance = async (
     const contractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
     const contractInstance = await Tezos.wallet.at(contractAddress);
 
-    let amount = {
-      x: amountTokenX,
-      y: amountTokenY,
-    };
     let liquidity = await calculateliquidity(
-      amount,
+      maximumTokensContributed,
       lowerTick,
       upperTick,
       tokenXSymbol,

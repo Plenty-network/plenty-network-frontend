@@ -118,7 +118,9 @@ export const getInitialBoundaries = async (
 export const estimateTokenXFromTokenY = async (
   amount: BigNumber,
   tokenXSymbol: string,
-  tokenYSymbol: string
+  tokenYSymbol: string,
+  lowerTickIndex: number,
+  upperTickIndex: number
 ): Promise<any> => {
   try {
     let estimatedAmount;
@@ -135,10 +137,6 @@ export const estimateTokenXFromTokenY = async (
       contractStorageParameters.tickSpacing,
       contractStorageParameters.sqrtPriceValue
     );
-
-    let initialBoundaries = PoolObject.getInitialBoundaries();
-    let lowerTickIndex = initialBoundaries[0];
-    let upperTickIndex = initialBoundaries[1];
 
     let estimatedAmountCalc = PoolObject.estimateAmountXFromY(
       amount,
@@ -160,7 +158,9 @@ export const estimateTokenXFromTokenY = async (
 export const estimateTokenYFromTokenX = async (
   amount: BigNumber,
   tokenXSymbol: string,
-  tokenYSymbol: string
+  tokenYSymbol: string,
+  lowerTickIndex: number,
+  upperTickIndex: number
 ): Promise<any> => {
   try {
     let estimatedAmount;
@@ -177,10 +177,6 @@ export const estimateTokenYFromTokenX = async (
       contractStorageParameters.tickSpacing,
       contractStorageParameters.sqrtPriceValue
     );
-
-    let initialBoundaries = PoolObject.getInitialBoundaries();
-    let lowerTickIndex = initialBoundaries[0];
-    let upperTickIndex = initialBoundaries[1];
 
     let estimatedAmountCalc = PoolObject.estimateAmountYFromX(
       amount,
