@@ -121,11 +121,11 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         });
       });
     }
-  }, [leftbrush, rightbrush, bleftbrush, brightbrush, topLevelSelectedToken, tokeninorg]);
+  }, [leftbrush, rightbrush, bleftbrush, brightbrush, topLevelSelectedToken]);
 
   React.useEffect(() => {
     handleLiquidityInput(props.firstTokenAmount, "tokenIn");
-  }, [props.tokenIn, props.tokenOut, value]);
+  }, [props.tokenIn, props.tokenOut, minTickA, minTickB]);
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"

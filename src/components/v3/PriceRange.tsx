@@ -264,12 +264,12 @@ function PriceRangeV3(props: IPriceRangeProps) {
           </div>
           <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
             <div
-              className="w-[24px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
+              className="w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
               onClick={() =>
                 onLeftRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
-                    ? (Number(leftRangeInput) - 10).toString()
-                    : (Number(BleftRangeInput) - 10).toString()
+                    ? (Number(leftRangeInput) - 1).toString()
+                    : (Number(BleftRangeInput) - 1).toString()
                 )
               }
             >
@@ -292,12 +292,12 @@ function PriceRangeV3(props: IPriceRangeProps) {
               <div className="font-body2 text-text-250">$9.8</div>
             </div>
             <div
-              className=" w-[24px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
+              className=" w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
               onClick={() =>
                 onLeftRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
-                    ? (Number(leftRangeInput) + 10).toString()
-                    : (Number(BleftRangeInput) + 10).toString()
+                    ? (Number(leftRangeInput) + 1).toString()
+                    : (Number(BleftRangeInput) + 1).toString()
                 )
               }
             >
@@ -315,12 +315,12 @@ function PriceRangeV3(props: IPriceRangeProps) {
           </div>
           <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
             <div
-              className="w-[24px] h-[24px] text-white rounded bg-info-600  flex items-center cursor-pointer justify-center"
+              className="w-[35px] h-[24px] text-white rounded bg-info-600  flex items-center cursor-pointer justify-center"
               onClick={() =>
                 onRightRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
-                    ? (Number(rightRangeInput) - 10).toString()
-                    : (Number(BrightRangeInput) - 10).toString()
+                    ? (Number(rightRangeInput) - 1).toString()
+                    : (Number(BrightRangeInput) - 1).toString()
                 )
               }
             >
@@ -343,12 +343,12 @@ function PriceRangeV3(props: IPriceRangeProps) {
               <div className="font-body2 text-text-250">$9.8</div>
             </div>
             <div
-              className="w-[24px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
+              className="w-[34px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
               onClick={() =>
                 onRightRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
-                    ? (Number(rightRangeInput) + 10).toString()
-                    : (Number(BrightRangeInput) + 10).toString()
+                    ? (Number(rightRangeInput) + 1).toString()
+                    : (Number(BrightRangeInput) + 1).toString()
                 )
               }
             >
