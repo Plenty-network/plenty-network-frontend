@@ -196,7 +196,6 @@ export function SubMenuForPool() {
   );
 }
 export function MenuNoLink(props: IBottomMoreNavMenuProps) {
-  console.log("ishuuu", props);
   return (
     <div
       onClick={

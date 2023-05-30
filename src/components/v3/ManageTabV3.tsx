@@ -55,16 +55,8 @@ import { walletConnection } from "../../redux/wallet/wallet";
 import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
 import ConfirmAddLiquidityv3 from "./ConfirmAddLiqV3";
 import {
-  setleftbrush,
-  setrightbrush,
   setBcurrentPrice,
-  setBleftbrush,
-  setBleftRangeInput,
-  setBrightbrush,
-  setBRightRangeInput,
   setcurrentPrice,
-  setleftRangeInput,
-  setRightRangeInput,
   setTokenInOrg,
   setTokenInV3,
   setTokeOutOrg,
@@ -76,6 +68,7 @@ import ConfirmIncreaseLiq from "./Confirmaddliq";
 import ConfirmDecreaseLiq from "./Confirmremoveliq";
 import TransactionSettingsV3 from "./TransactionSettingv3";
 import { calculateCurrentPrice } from "../../api/v3/liquidity";
+import { LiquidityOperation } from "../../operations/v3/liquidity";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -106,7 +99,10 @@ export enum ActivePopUp {
 export function ManageTabV3(props: IManageLiquidityProps) {
   const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
-  const tokens = useAppSelector((state) => state.config.tokens);
+  const minTickA = useAppSelector((state) => state.poolsv3.minTickA);
+  const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
+  const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
+  const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
 
   React.useEffect(() => {
     calculateCurrentPrice(
@@ -115,13 +111,15 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       topLevelSelectedToken.symbol
     ).then((response) => {
       topLevelSelectedToken.symbol === props.tokenIn.symbol
-        ? dispatch(setcurrentPrice(response?.toString()))
-        : dispatch(setBcurrentPrice(response?.toString()));
+        ? dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toString()))
+        : dispatch(setBcurrentPrice(response.toString()));
+      // dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toString()));
+      // dispatch(setBcurrentPrice(response.toString()));
     });
-  }, [topLevelSelectedToken, props.tokenA, props.tokenB]);
+  }, [topLevelSelectedToken, props.tokenIn, props.tokenOut]);
 
   const [showVideoModal, setShowVideoModal] = React.useState(false);
-  const [slippage, setSlippage] = useState<string>("0.5");
+  const [slippage, setSlippage] = useState<string>("30m");
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const amm = useAppSelector((state) => state.config.AMMs);
 
@@ -166,13 +164,13 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   const refSettingTab = React.useRef(null);
   useEffect(() => {
-    topLevelSelectedToken.symbol === props.tokenIn.symbol
-      ? dispatch(setTokenInV3(props.tokenIn))
-      : dispatch(setTokeOutV3(props.tokenOut));
+    //topLevelSelectedToken.symbol === props.tokenIn.symbol
+    dispatch(setTokenInV3(props.tokenIn));
+    dispatch(setTokeOutV3(props.tokenOut));
 
     dispatch(setTokenInOrg(props.tokenA));
     dispatch(setTokeOutOrg(props.tokenB));
-  }, [props.tokenIn, props.tokenOut]);
+  }, [props.tokenIn, props.tokenA, props.tokenB]);
   useEffect(() => {
     const updateBalance = async () => {
       const balancePromises = [];
@@ -232,7 +230,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
 
     setBalanceUpdate(false);
   };
-
+  const [deadline, setDeadline] = useState(0);
+  useEffect(() => {
+    const n = Number(slippage.slice(0, -1));
+    setDeadline(Math.floor(new Date().getTime() / 1000) + n * 60);
+  }, [slippage]);
   const handleAddLiquidityOperation = () => {
     setContentTransaction(
       `Mint ${nFormatterWithLesserNumber(
@@ -254,25 +256,25 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen(ActivePopUp.NewPosition);
-    addLiquidity(
+    LiquidityOperation(
+      topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
+      topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
       props.tokenIn.symbol,
       props.tokenOut.symbol,
-      firstTokenAmountLiq.toString(),
-      secondTokenAmountLiq.toString(),
-      walletAddress,
+      deadline,
+      {
+        x: new BigNumber(firstTokenAmountLiq),
+        y: new BigNumber(secondTokenAmountLiq),
+      },
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      props.isGaugeAvailable ? props.setActiveState : undefined,
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-          TOKEN_A
-        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
+        trailingText: `add liq`,
         linkText: "View in Explorer",
         isLoading: true,
-
         transactionId: "",
       }
     ).then((response) => {
@@ -371,12 +373,12 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   }, [props, firstTokenAmountLiq, secondTokenAmountLiq]);
   const [selectedToken, setSelectedToken] = useState({} as tokenParameterLiquidity);
   useEffect(() => {
-    console.log(props.tokenIn, "selectedToken");
-    setSelectedToken(props.tokenIn);
+    setSelectedToken(props.tokenA);
   }, []);
   useEffect(() => {
     dispatch(settopLevelSelectedToken(selectedToken));
   }, [selectedToken]);
+
   return true ? (
     <>
       <PopUpModal
@@ -454,12 +456,12 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               <div className="flex items-center justify-between flex-row  relative mr-[48px]">
                 <div
                   ref={refSettingTab}
-                  className="py-1  px-[8.5px] h-8 border border-text-700 cursor-pointer rounded-lg flex items-center "
+                  className="py-1  px-[8.5px] h-8 border border-text-700 cursor-pointer rounded-lg flex items-center w-[80px]"
                   onClick={() => setSettingsShow(!settingsShow)}
                 >
                   <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
-                  <span className="text-white font-body4 ml-2 relative ">
-                    {slippage ? Number(slippage) : 0.5}s
+                  <span className="text-white font-body4 ml-2 relative top-px">
+                    {slippage ? slippage : "30m"}
                   </span>
                 </div>
                 <TransactionSettingsV3

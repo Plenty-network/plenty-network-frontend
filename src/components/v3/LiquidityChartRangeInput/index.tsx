@@ -59,6 +59,7 @@ export default function LiquidityChartRangeInput({
   onLeftRangeInput,
   onRightRangeInput,
   interactive,
+  isFull,
 }: {
   currencyA: tokenParameterLiquidity | undefined;
   currencyB: tokenParameterLiquidity | undefined;
@@ -70,6 +71,7 @@ export default function LiquidityChartRangeInput({
   onLeftRangeInput: (value: string) => void;
   onRightRangeInput: (value: string) => void;
   interactive: boolean;
+  isFull: boolean;
 }) {
   const tokenAColor = "#1570F1";
   const tokenBColor = "#1570F1";
@@ -83,6 +85,7 @@ export default function LiquidityChartRangeInput({
 
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
+  const isLoadingData = useAppSelector((state) => state.poolsv3.isLoading);
   const { isLoading, error, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
@@ -128,28 +131,24 @@ export default function LiquidityChartRangeInput({
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
     let leftPrice, rightPrice;
-    console.log(
-      "kk",
-      Number(leftbrush),
-      Number(rightbrush),
-      Number(Bleftbrush),
-      Number(Brightbrush)
-    );
-    if (topLevelSelectedToken.symbol === tokeninorg.symbol && rightbrush && leftbrush) {
-      leftPrice = isSorted ? Number(leftbrush) : priceUpper;
-      rightPrice = isSorted ? Number(rightbrush) : priceLower;
-    } else if (Brightbrush && Bleftbrush) {
-      leftPrice = isSorted ? Number(Bleftbrush) : priceUpper;
-      rightPrice = isSorted ? Number(Brightbrush) : priceLower;
-    } else {
-      leftPrice = isSorted ? priceLower : priceUpper;
-      rightPrice = isSorted ? priceUpper : priceLower;
-    }
 
-    return leftPrice && rightPrice
-      ? [parseFloat(leftPrice?.toFixed(6)), parseFloat(rightPrice?.toFixed(6))]
-      : undefined;
-  }, [isSorted, leftbrush, rightbrush, Bleftbrush, Brightbrush, topLevelSelectedToken]);
+    if (!isFull) {
+      if (topLevelSelectedToken.symbol === tokeninorg.symbol && rightbrush && leftbrush) {
+        leftPrice = isSorted ? Number(leftbrush) : priceUpper;
+        rightPrice = isSorted ? Number(rightbrush) : priceLower;
+      } else if (Brightbrush && Bleftbrush) {
+        leftPrice = isSorted ? Number(Bleftbrush) : priceUpper;
+        rightPrice = isSorted ? Number(Brightbrush) : priceLower;
+      } else {
+        leftPrice = isSorted ? priceLower : priceUpper;
+        rightPrice = isSorted ? priceUpper : priceLower;
+      }
+      return leftPrice && rightPrice
+        ? [parseFloat(leftPrice?.toFixed(6)), parseFloat(rightPrice?.toFixed(6))]
+        : undefined;
+    }
+    return leftPrice && rightPrice ? [parseFloat(leftPrice), parseFloat(rightPrice)] : undefined;
+  }, [isSorted, leftbrush, rightbrush, Bleftbrush, Brightbrush, topLevelSelectedToken, isFull]);
   const dispatch = useDispatch<AppDispatch>();
   const brushLabelValue = useCallback(
     (d: "w" | "e", x: number) => {
@@ -195,7 +194,7 @@ export default function LiquidityChartRangeInput({
     <div style={{ minHeight: "200px" }}>
       {isUninitialized ? (
         "Your position will appear here."
-      ) : isLoading ? (
+      ) : isLoadingData ? (
         "loading"
       ) : error ? (
         "Liquidity data not available."

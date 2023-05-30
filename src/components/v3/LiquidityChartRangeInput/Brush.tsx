@@ -1,8 +1,9 @@
-// import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from 'components/LiquidityChartRangeInput/svg'
+import { BigNumber } from "bignumber.js";
 import { Tick } from "@plenty-labs/v3-sdk";
 import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from "d3";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { getRealPriceFromTick, getTickFromRealPrice } from "../../../api/v3/helper";
 import { AppDispatch, useAppSelector } from "../../../redux";
 import { setBleftbrush, setBrightbrush, setleftbrush, setrightbrush } from "../../../redux/poolsv3";
 
@@ -67,6 +68,30 @@ export const Brush = ({
   const [hovering, setHovering] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const previousBrushExtent = usePrevious(brushExtent);
+  const [d, setD] = useState(0);
+  const [e, setE] = useState(0);
+  const [minValue, setMinValue] = useState(0);
+  const [maxValue, setMaxValue] = useState(0);
+  const values = (scaled: [number, number]) => {
+    getTickFromRealPrice(new BigNumber(scaled[0]), tokenIn.symbol, tokenOut.symbol).then(
+      (response) => {
+        setD(Tick.nearestUsableTick(response, 10));
+      }
+    );
+    getRealPriceFromTick(d, tokenIn.symbol, tokenOut.symbol).then((res) => {
+      setMinValue(res.toString());
+    });
+    getTickFromRealPrice(new BigNumber(scaled[1]), tokenIn.symbol, tokenOut.symbol).then(
+      (response) => {
+        setE(Tick.nearestUsableTick(response, 10));
+      }
+    );
+    getRealPriceFromTick(e, tokenIn.symbol, tokenOut.symbol).then((res) => {
+      setMaxValue(res.toString());
+    });
+
+    return [minValue, maxValue] as [number, number];
+  };
   const brushed = useCallback(
     (event: D3BrushEvent<unknown>) => {
       const { type, selection, mode } = event;
@@ -75,17 +100,18 @@ export const Brush = ({
         return;
       }
 
+      const scaledTemp = (selection as [number, number]).map(xScale.invert) as [number, number];
       const scaled = (selection as [number, number]).map(xScale.invert) as [number, number];
 
       // avoid infinite render loop by checking for change
-      if (type === "end" && !compare(brushExtent, scaled, xScale)) {
+      if (type === "end" && !compare(brushExtent, scaledTemp, xScale)) {
+        //const scaled = values(scaledTemp);
         topLevelSelectedToken.symbol === tokenIn.symbol
           ? dispatch(setleftbrush(scaled[0]))
           : dispatch(setBleftbrush(scaled[0]));
         topLevelSelectedToken.symbol === tokenIn.symbol
           ? dispatch(setrightbrush(scaled[1]))
           : dispatch(setBrightbrush(scaled[1]));
-        console.log("hj", scaled[0], scaled[1]);
 
         // setBrushExtent(
         //   [Tick.nearestUsableTick(scaled[0], 10), Tick.nearestUsableTick(scaled[1], 10)],
@@ -94,7 +120,7 @@ export const Brush = ({
         setBrushExtent([scaled[0], scaled[1]], mode);
       }
 
-      setLocalBrushExtent([scaled[0], scaled[1]]);
+      setLocalBrushExtent([scaledTemp[0], scaledTemp[1]]);
     },
     [xScale, brushExtent, setBrushExtent]
   );
@@ -102,7 +128,13 @@ export const Brush = ({
   //keep local and external brush extent in sync
   //i.e. snap to ticks on bruhs end
   useEffect(() => {
+    // if (brushExtent[0] !== 0 && brushExtent[1] !== 0) {
+    //   const scaled = values(brushExtent);
+
+    //   setLocalBrushExtent(scaled);
+    // } else {
     setLocalBrushExtent(brushExtent);
+    //}
   }, [brushExtent]);
 
   // initialize the brush

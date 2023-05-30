@@ -94,18 +94,6 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
     ActiveIncDecState.Increase
   );
 
-  // useEffect(() => {
-  //   dispatch(setleftbrush(70));
-  //   dispatch(setrightbrush(100));
-  //   dispatch(setleftRangeInput("70"));
-  //   dispatch(setRightRangeInput("100"));
-  //   dispatch(setcurrentPrice(87));
-  //   dispatch(setBleftbrush(60));
-  //   dispatch(setBrightbrush(100));
-  //   dispatch(setBleftRangeInput("60"));
-  //   dispatch(setBRightRangeInput("100"));
-  //   dispatch(setBcurrentPrice(90));
-  // }, []);
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState<string>("0.5");
   const TOKEN = useAppSelector((state) => state.config.tokens);

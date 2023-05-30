@@ -8,6 +8,10 @@ import { BalanceNat, TokenStandard } from "./types";
 import { dappClient } from "../../common/walletconnect";
 import { store } from "../../redux";
 import { createPositionInstance } from "../../api/v3/helper";
+import { TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from "../types";
+
+import { setFlashMessage } from "../../redux/flashMessage";
+import { IFlashMessageProps } from "../../redux/flashMessage/type";
 
 export const LiquidityOperation = async (
   lowerTick: number,
@@ -15,7 +19,11 @@ export const LiquidityOperation = async (
   tokenXSymbol: string,
   tokenYSymbol: string,
   deadline: number, //in seconds timestamp
-  maximumTokensContributed: BalanceNat
+  maximumTokensContributed: BalanceNat,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<any> => {
   try {
     let configResponse: any = await axios.get(Config.CONFIG_LINKS.testnet.TOKEN);
@@ -35,8 +43,6 @@ export const LiquidityOperation = async (
     const tokenX = await Tezos.wallet.at(configResponse[tokenXSymbol].address);
     const tokenY = await Tezos.wallet.at(configResponse[tokenYSymbol].address);
     let createPosition = await createPositionInstance(
-      amountTokenX,
-      amountTokenY,
       lowerTick,
       upperTick,
       tokenXSymbol,
@@ -168,6 +174,13 @@ export const LiquidityOperation = async (
           },
         ])
         .send();
+      setShowConfirmTransaction && setShowConfirmTransaction(false);
+      transactionSubmitModal && transactionSubmitModal(op.opHash as string);
+      resetAllValues && resetAllValues();
+      if (flashMessageContent) {
+        store.dispatch(setFlashMessage(flashMessageContent));
+      }
+
       await op.confirmation();
     }
   } catch (error) {

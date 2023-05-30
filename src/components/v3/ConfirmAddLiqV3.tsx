@@ -35,12 +35,24 @@ interface IConfirmAddLiquidityProps {
 }
 function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
+  const leftRangeInput = useAppSelector((state) => state.poolsv3.leftRangeInput);
+  const rightRangeInput = useAppSelector((state) => state.poolsv3.RightRangeInput);
+  const currentprice = useAppSelector((state) => state.poolsv3.currentPrice);
+  const bcurrentprice = useAppSelector((state) => state.poolsv3.BcurrentPrice);
+  const leftbrush = useAppSelector((state) => state.poolsv3.leftbrush);
+  const rightbrush = useAppSelector((state) => state.poolsv3.rightbrush);
+  const BleftRangeInput = useAppSelector((state) => state.poolsv3.BleftRangeInput);
+  const BrightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
+  const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
+  const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
   const [selectedToken, setSelectedToken] = useState(props.tokenIn);
+  const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
+  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   return (
     <>
       <div className="flex">
         <div
-          className="cursor-pointer  relative top-[3px]"
+          className="cursor-pointer  relative "
           onClick={() => props.setScreen(ActivePopUp.NewPosition)}
         >
           <Image alt={"alt"} src={arrowLeft} />
@@ -175,7 +187,11 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
               </span>
             </div>
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
-              <div className="font-title3">820.63</div>
+              <div className="font-title3">
+                {selectedToken.symbol === props.tokenIn.symbol
+                  ? Number(leftbrush)?.toFixed(6)
+                  : Number(Bleftbrush)?.toFixed(6)}
+              </div>
               <div className="font-subtitle5 text-text-250 mt-[1.5px]">$23.38</div>
             </div>
           </div>
@@ -188,7 +204,11 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
               </span>
             </div>
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
-              <div className="font-title3">820.63</div>
+              <div className="font-title3">
+                {selectedToken.symbol === props.tokenIn.symbol
+                  ? Number(rightbrush)?.toFixed(6)
+                  : Number(Brightbrush)?.toFixed(6)}
+              </div>
               <div className="font-subtitle5 text-text-250 mt-[1.5px]">$23.38</div>
             </div>
           </div>
@@ -197,7 +217,11 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
               <span className="font-caption1 pl-1">Current price</span>
             </div>
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
-              <div className="font-title3">820.63</div>
+              <div className="font-title3">
+                {selectedToken.symbol === props.tokenIn.symbol
+                  ? Number(currentprice)?.toFixed(6)
+                  : Number(bcurrentprice)?.toFixed(6)}
+              </div>
               <div className="font-subtitle5 text-text-250 mt-[1.5px]">$23.38</div>
             </div>
           </div>

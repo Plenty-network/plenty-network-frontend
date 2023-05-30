@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { tokenParameterLiquidity } from "../../components/Liquidity/types";
 
 const initialState = {
+  isLoading: false,
   Rightdiff: "0",
   Leftdiff: "0",
   leftRangeInput: 0,
@@ -21,6 +22,10 @@ const initialState = {
   tokenOut: {} as tokenParameterLiquidity,
   tokenInOrg: {} as tokenParameterLiquidity,
   tokenOutOrg: {} as tokenParameterLiquidity,
+  minTickA: 0,
+  maxTickA: 0,
+  minTickB: 0,
+  maxTickB: 0,
 };
 
 const PoolsV3Slice = createSlice({
@@ -40,9 +45,11 @@ const PoolsV3Slice = createSlice({
       state.RightRangeInput = action.payload;
     },
     setleftbrush: (state, action) => {
+      console.log("fulls", action.payload);
       state.leftbrush = action.payload;
     },
     setrightbrush: (state, action) => {
+      console.log("fulls", action.payload);
       state.rightbrush = action.payload;
     },
     setcurrentPrice: (state, action) => {
@@ -84,9 +91,29 @@ const PoolsV3Slice = createSlice({
     setTokeOutOrg: (state, action) => {
       state.tokenOutOrg = action.payload;
     },
+    setminTickA: (state, action) => {
+      state.minTickA = action.payload;
+    },
+    setmaxTickA: (state, action) => {
+      state.maxTickA = action.payload;
+    },
+    setminTickB: (state, action) => {
+      state.minTickB = action.payload;
+    },
+    setmaxTickB: (state, action) => {
+      state.maxTickA = action.payload;
+    },
+    setIsLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
   },
 });
 export const {
+  setminTickA,
+  setIsLoading,
+  setmaxTickA,
+  setminTickB,
+  setmaxTickB,
   setTokenInOrg,
   setTokeOutOrg,
   setTokenInV3,

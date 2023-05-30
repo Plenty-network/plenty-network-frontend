@@ -25,8 +25,7 @@ import { PoolsCardHeaderV3 } from "./CardHeaderv3";
 import { ActiveLiquidity } from "../../Pools/ManageLiquidityHeader";
 import { NoContentAvailable, NoDataError } from "../../Pools/Component/ConnectWalletOrNoToken";
 import { CircularOverLappingImage } from "../../Pools/Component/CircularImageInfo";
-import { AprInfo } from "../../Pools/Component/AprInfo";
-import { AprInfoFuture } from "../../Pools/Component/AprFuture";
+
 import { PoolsTextWithTooltip } from "../../Pools/Component/PoolsText";
 import { ManageLiquidity } from "../../Pools/ManageLiquidity";
 import { ManageTabV3 } from "../ManageTabV3";
@@ -94,6 +93,7 @@ export function PoolsTableV3(props: IShortCardProps) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
+
   const NoData = React.useMemo(() => {
     if (
       userAddress &&
@@ -116,14 +116,14 @@ export function PoolsTableV3(props: IShortCardProps) {
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
-    name: "USDC.e",
-    image: `/assets/tokens/USDC.e.png`,
-    symbol: "USDC.e",
-  });
-  const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
     name: "DAI.e",
     image: `/assets/tokens/USDC.e.png`,
     symbol: "DAI.e",
+  });
+  const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
+    name: "USDC.e",
+    image: `/assets/tokens/USDC.e.png`,
+    symbol: "USDC.e",
   });
 
   const mobilecolumns = React.useMemo<Column<IAllPoolsData>[]>(

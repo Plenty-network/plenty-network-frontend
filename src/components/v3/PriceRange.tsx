@@ -19,8 +19,13 @@ import {
   setBrightbrush,
   setBRightRangeInput,
   setcurrentPrice,
+  setIsLoading,
   setleftbrush,
   setleftRangeInput,
+  setmaxTickA,
+  setmaxTickB,
+  setminTickA,
+  setminTickB,
   setrightbrush,
   setRightRangeInput,
 } from "../../redux/poolsv3";
@@ -58,6 +63,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
+  const tokenoutv3 = useAppSelector((state) => state.poolsv3.tokenOut);
+  const tokenInv3 = useAppSelector((state) => state.poolsv3.tokenIn);
   const leftRangeInput = useAppSelector((state) => state.poolsv3.leftRangeInput);
   const rightRangeInput = useAppSelector((state) => state.poolsv3.RightRangeInput);
   const currentprice = useAppSelector((state) => state.poolsv3.currentPrice);
@@ -69,40 +76,71 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
   React.useEffect(() => {
-    calculateCurrentPrice("DAI.e", "USDC.e", "USDC.e").then((response) => {
-      console.log("cp", response.toString());
-      topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toString()))
-        : dispatch(setBcurrentPrice(new BigNumber(1).dividedBy(response).toString()));
-    });
+    if (!isFullRange) {
+      dispatch(setIsLoading(true));
+      calculateCurrentPrice(
+        tokeninorg.symbol,
+        tokenoutorg.symbol,
+        topLevelSelectedToken.symbol
+      ).then((response) => {
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toString()))
+          : dispatch(setBcurrentPrice(response.toString()));
 
-    getInitialBoundaries("DAI.e", "USDC.e").then((response) => {
-      console.log(
-        "init bound",
-        response,
-        response.minValue.toString(),
-        response.maxValue.toString(),
-        topLevelSelectedToken.symbol === tokeninorg.symbol,
-        tokeninorg,
-        topLevelSelectedToken
-      );
-      topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setleftRangeInput(response.minValue.toString()))
-        : dispatch(setBleftRangeInput(response.minValue.toString()));
-      topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setRightRangeInput(response.maxValue.toString()))
-        : dispatch(setBRightRangeInput(response.maxValue.toString()));
-      topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setleftbrush(response.minValue.toString()))
-        : dispatch(setBleftbrush(response.minValue.toString()));
-      topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setrightbrush(response.maxValue.toString()))
-        : dispatch(setBrightbrush(response.maxValue.toString()));
-    });
-    getTickAndRealPriceFromPool("KT1AmeUTxh28afcKVgD6mJEzoSo95NThe3TW").then((response) => {
-      console.log("data", response);
-    });
-  }, [topLevelSelectedToken]);
+        // dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toString()));
+        // dispatch(setBcurrentPrice(response.toString()));
+      });
+      dispatch(setIsLoading(true));
+      getInitialBoundaries(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
+        if (
+          new BigNumber(1)
+            .dividedBy(response.minValue)
+            .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
+        ) {
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? dispatch(setleftRangeInput(response.minValue.toString()))
+            : dispatch(
+                setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toString())
+              );
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? dispatch(setRightRangeInput(response.maxValue.toString()))
+            : dispatch(
+                setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toString())
+              );
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? dispatch(setleftbrush(response.minValue.toString()))
+            : dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.maxValue).toString()));
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? dispatch(setrightbrush(response.maxValue.toString()))
+            : dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toString()));
+        } else {
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? dispatch(setleftRangeInput(response.minValue.toString()))
+            : dispatch(
+                setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toString())
+              );
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? dispatch(setRightRangeInput(response.maxValue.toString()))
+            : dispatch(
+                setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toString())
+              );
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? dispatch(setleftbrush(response.minValue.toString()))
+            : dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minValue).toString()));
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? dispatch(setrightbrush(response.maxValue.toString()))
+            : dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toString()));
+        }
+        dispatch(setIsLoading(false));
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? dispatch(setminTickA(response.minTick.toString()))
+          : dispatch(setminTickB(response.minTick.toString()));
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? dispatch(setmaxTickA(response.maxTick.toString()))
+          : dispatch(setmaxTickB(response.maxTick.toString()));
+      });
+    }
+  }, [topLevelSelectedToken, tokeninorg, isFullRange]);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -134,28 +172,37 @@ function PriceRangeV3(props: IPriceRangeProps) {
       ? dispatch(setRightRangeInput(value))
       : dispatch(setBRightRangeInput(value));
   };
-  const fullrangeCalc = () => {
+  const fullrangeCalc = (value: boolean) => {
     setFullRange(!isFullRange);
+    dispatch(setIsLoading(true));
 
-    calculateFullRange("DAI.e", "USDC.e").then(async (res) => {
-      let contractStorageParameters = await ContractStorage("DAI.e", "USDC.e");
-      console.log(
-        "minprice",
-        Tick.computeRealPriceFromTick(
-          res[0],
-          contractStorageParameters.tokenX,
-          contractStorageParameters.tokenY
-        )
-      );
-      console.log("full", res);
-      topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setleftbrush(parseFloat(res[0])))
-        : dispatch(setBleftbrush(parseFloat(res[0])));
-      topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setrightbrush(parseFloat(res[1])))
-        : dispatch(setBrightbrush(parseFloat(res[1])));
-    });
+    if (value) {
+      calculateFullRange(tokeninorg.symbol, tokenoutorg.symbol).then(async (response) => {
+        console.log(
+          "fullish",
+          response,
+          response.minTickPrice.toString(),
+          response.maxTickPrice.toString()
+        );
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? dispatch(setleftRangeInput("0"))
+          : dispatch(setBleftRangeInput("0"));
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? dispatch(setRightRangeInput("0"))
+          : dispatch(setBRightRangeInput("0"));
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? dispatch(setleftbrush(response.minTickPrice.toString()))
+          : dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minTickPrice).toString()));
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? dispatch(setrightbrush(response.maxTickPrice.toString()))
+          : dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxTickPrice).toString()));
+
+        dispatch(setIsLoading(false));
+        console.log(leftbrush, rightbrush, "full");
+      });
+    }
   };
+
   return (
     <div>
       <div className="mx-auto md:w-[400px] w-[362px]   px-[10px]  pt-2 pb-6  mb-5 h-[254px]">
@@ -190,6 +237,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
             onLeftRangeInput={onLeftRangeInputFn}
             onRightRangeInput={onRightRangeInputFn}
             interactive={true}
+            isFull={isFullRange}
           />
         )}
       </div>
@@ -312,7 +360,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
 
       <div
         className="mt-3 cursor-pointer border border-info-700 rounded-lg	text-center py-2.5 font-body1 mx-4"
-        onClick={fullrangeCalc}
+        onClick={() => fullrangeCalc(!isFullRange)}
       >
         Full Range
       </div>

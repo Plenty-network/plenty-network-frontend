@@ -10,8 +10,10 @@ import nFormatter, {
   nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
+
+import { useEffect, useRef, useState, useMemo } from "react";
 import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
-import { useAppSelector } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../redux";
 import fallback from "../../../src/assets/icon/pools/fallback.png";
 import lock from "../../../src/assets/icon/poolsv3/Lock.svg";
 import { tokenIcons } from "../../constants/tokensList";
@@ -19,6 +21,10 @@ import fromExponential from "from-exponential";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
 import { estimateTokenXFromTokenY, estimateTokenYFromTokenX } from "../../api/v3/liquidity";
+
+import { getTickFromRealPrice } from "../../api/v3/helper";
+import { Tick } from "@plenty-labs/v3-sdk";
+import { setmaxTickA, setmaxTickB, setminTickA, setminTickB } from "../../redux/poolsv3";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -48,7 +54,59 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const [isFirstLaoding, setFirstLoading] = React.useState(false);
   const [isSecondLaoding, setSecondLoading] = React.useState(false);
+  const isLoadingData = useAppSelector((state) => state.poolsv3.isLoading);
+  const [minValue, setMinValue] = React.useState(0);
+  const [maxValue, setMaxValue] = React.useState(0);
+  const [value, setValue] = React.useState<[number, number]>([0, 0]);
 
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
+      getTickFromRealPrice(
+        new BigNumber(leftbrush),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol
+      ).then((response) => {
+        setMinValue(Tick.nearestUsableTick(response, 10));
+      });
+
+      getTickFromRealPrice(
+        new BigNumber(rightbrush),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol
+      ).then((response) => {
+        setMaxValue(Tick.nearestUsableTick(response, 10));
+      });
+
+      dispatch(setminTickA(minValue));
+      dispatch(setmaxTickA(maxValue));
+      setValue([minValue, maxValue] as [number, number]);
+    } else {
+      getTickFromRealPrice(
+        new BigNumber(bleftbrush),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol
+      ).then((response) => {
+        setMinValue(Tick.nearestUsableTick(response, 10));
+      });
+
+      getTickFromRealPrice(
+        new BigNumber(brightbrush),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol
+      ).then((response) => {
+        setMaxValue(Tick.nearestUsableTick(response, 10));
+      });
+
+      dispatch(setminTickB(minValue));
+      dispatch(setmaxTickB(maxValue));
+      setValue([minValue, maxValue] as [number, number]);
+    }
+  }, [leftbrush, rightbrush, bleftbrush, brightbrush, topLevelSelectedToken, tokeninorg]);
+
+  React.useEffect(() => {
+    handleLiquidityInput(props.firstTokenAmount, "tokenIn");
+  }, [props.tokenIn, props.tokenOut, value]);
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
@@ -75,14 +133,28 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         props.setFirstTokenAmount(input.toString().trim());
       }
       setSecondLoading(true);
+      console.log("estimateTokenAFromTokenB", input, props.tokenIn.symbol, props.tokenOut.symbol);
       estimateTokenXFromTokenY(
         new BigNumber(input),
         props.tokenIn.symbol,
-        props.tokenOut.symbol
+        props.tokenOut.symbol,
+        value[0],
+        value[1]
       ).then((response) => {
         setSecondLoading(false);
-        console.log("estimateTokenAFromTokenB", input, response.toString());
-        props.setSecondTokenAmount(response);
+        console.log(
+          "estimateTokenAFromTokenB",
+          input,
+          new BigNumber(1).dividedBy(new BigNumber(response)).toString(),
+          response.toString(),
+          value[0],
+          value[1]
+        );
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? props.setSecondTokenAmount(response)
+          : props.setSecondTokenAmount(
+              new BigNumber(1).dividedBy(new BigNumber(response)).toString()
+            );
       });
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
@@ -94,17 +166,30 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       ) {
       } else {
         props.setFirstTokenAmount("");
+
         props.setSecondTokenAmount(input.toString().trim());
       }
       setFirstLoading(true);
+
       estimateTokenYFromTokenX(
         new BigNumber(input),
         props.tokenIn.symbol,
-        props.tokenOut.symbol
+        props.tokenOut.symbol,
+        value[0],
+        value[1]
       ).then((response) => {
         setFirstLoading(false);
-        console.log("estimateTokenBFromTokenA", input, response.toString());
-        props.setFirstTokenAmount(response);
+        console.log(
+          "estimateTokenBFromTokenA",
+          input,
+          value[0],
+          value[1],
+          response.toString(),
+          new BigNumber(1).dividedBy(new BigNumber(response)).toString()
+        );
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? props.setFirstTokenAmount(response)
+          : props.setFirstTokenAmount(response);
       });
     }
   };
@@ -125,364 +210,201 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   };
   return (
     <div className="border relative border-text-800 bg-card-200 p-4 rounded-2xl	">
-      {(
-        topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? leftbrush < currentPrice && rightbrush < currentPrice
-          : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice
-      ) ? (
-        <>
-          <div className="border  flex border-text-800/[0.5] rounded-2xl h-[70px]">
-            <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
-              <div className="ml-2 md:ml-5">
-                <img
-                  src={
-                    tokenIcons[props.tokenIn.symbol]
-                      ? tokenIcons[props.tokenIn.symbol].src
-                      : tokens[props.tokenIn.symbol.toString()]?.iconUrl
-                      ? tokens[props.tokenIn.symbol.toString()].iconUrl
-                      : `/assets/Tokens/fallback.png`
-                  }
-                  className="tokenIconLiq"
-                  width={"32px"}
-                  height={"32px"}
-                  onError={changeSource}
-                />
-              </div>
-              <div className="ml-1 md:ml-2">
-                <p className="text-text-900 font-body2">Input</p>
-                <p className="font-caption1 md:font-title3 text-white">
-                  {tEZorCTEZtoUppercase(props.tokenIn.name)}
-                </p>
-              </div>
-            </div>
-            <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
-              <div className="w-0 flex-auto">
-                <p>
-                  {isFirstLaoding ? (
-                    <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
-                  ) : (
-                    <input
-                      type="text"
-                      className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium2 outline-none w-[100%] placeholder:text-text-400"
-                      value={fromExponential(props.firstTokenAmount)}
-                      placeholder="0.0"
-                      onChange={(e) => handleLiquidityInput(e.target.value, "tokenIn")}
-                    />
-                  )}
-                </p>
-                <p>
-                  <span className="mt-1 ml-1 font-body2 md:font-body2  text-text-400">
-                    {" "}
-                    ~$
-                    {props.firstTokenAmount && props.tokenPrice[props.tokenIn.name]
-                      ? Number(
-                          Number(props.firstTokenAmount) *
-                            Number(props.tokenPrice[props.tokenIn.name])
-                        ).toFixed(2)
-                      : "0.00"}
-                  </span>
-                </p>
-              </div>
-              {walletAddress && (
-                <div className="ml-auto border border-text-800/[0.5] rounded-lg  bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-1 md:px-3">
-                  <div className="relative top-0.5 md:top-0">
-                    <Image alt={"alt"} src={wallet} className="walletIcon" />
-                  </div>
-                  <div
-                    className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
-                    onClick={onClickAmount}
-                  >
-                    {!(Number(props.userBalances[props.tokenIn.name]) >= 0) ? (
-                      <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
-                    ) : (
-                      <span className="mr-1">
-                        {nFormatterWithLesserNumber(
-                          new BigNumber(props.userBalances[props.tokenIn.name])
-                        )}{" "}
-                      </span>
-                    )}
-                    {tEZorCTEZtoUppercase(props.tokenIn.name)}
-                  </div>
-                </div>
-              )}
-            </div>
+      <div className="border relative flex border-text-800/[0.5] rounded-2xl h-[72px]">
+        <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
+          <div className="ml-2 md:ml-5">
+            <img
+              src={
+                tokenIcons[props.tokenIn.symbol]
+                  ? tokenIcons[props.tokenIn.symbol].src
+                  : tokens[props.tokenIn.symbol.toString()]?.iconUrl
+                  ? tokens[props.tokenIn.symbol.toString()].iconUrl
+                  : `/assets/Tokens/fallback.png`
+              }
+              className="tokenIconLiq"
+              width={"32px"}
+              height={"32px"}
+              onError={changeSource}
+            />
           </div>
+          <div className="ml-1 md:ml-2">
+            <p className="text-text-900 font-body2">Input</p>
+            <p className="font-caption1 md:font-title3 text-white">
+              {tEZorCTEZtoUppercase(props.tokenIn.name)}
+            </p>
+          </div>
+        </div>
+        <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
+          <div className="w-0 flex-auto">
+            <p>
+              {isFirstLaoding ? (
+                <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+              ) : (
+                <input
+                  type="text"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium2 outline-none w-[100%] placeholder:text-text-400"
+                  value={fromExponential(props.firstTokenAmount)}
+                  placeholder="0.0"
+                  onChange={(e) => handleLiquidityInput(e.target.value, "tokenIn")}
+                />
+              )}
+            </p>
+            <p>
+              <span className="mt-1 ml-1 font-body2 md:font-body2  text-text-400">
+                {" "}
+                ~$
+                {props.firstTokenAmount && props.tokenPrice[props.tokenIn.name]
+                  ? Number(
+                      Number(props.firstTokenAmount) * Number(props.tokenPrice[props.tokenIn.name])
+                    ).toFixed(2)
+                  : "0.00"}
+              </span>
+            </p>
+          </div>
+          {walletAddress && (
+            <div className="ml-auto border border-text-800/[0.5] rounded-lg  bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-1 md:px-3">
+              <div className="relative top-0.5 md:top-0">
+                <Image alt={"alt"} src={wallet} className="walletIcon" />
+              </div>
+              <div
+                className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
+                onClick={onClickAmount}
+              >
+                {!(Number(props.userBalances[props.tokenIn.name]) >= 0) ? (
+                  <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
+                ) : (
+                  <span className="mr-1">
+                    {nFormatterWithLesserNumber(
+                      new BigNumber(props.userBalances[props.tokenIn.name])
+                    )}{" "}
+                  </span>
+                )}
+                {tEZorCTEZtoUppercase(props.tokenIn.name)}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
 
+      {!isLoadingData &&
+        (topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? leftbrush < currentPrice && rightbrush < currentPrice
+          : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice) && (
           <div className="absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
             <Image src={lock} />
             <span className="font-subtitle3 w-[318px] ml-5">
               The market price is outside your specified price range. Single-asset deposit only.
             </span>
           </div>
-        </>
+        )}
+      {(topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? leftbrush < currentPrice && rightbrush > currentPrice
+        : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice) || isLoadingData ? (
+        <div className="relative -top-[9px] left-[25%]">
+          <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
+        </div>
       ) : (
-        <div className="border  flex border-text-800/[0.5] rounded-2xl h-[70px]">
-          <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
-            <div className="ml-2 md:ml-5">
-              <img
-                src={
-                  tokenIcons[props.tokenIn.symbol]
-                    ? tokenIcons[props.tokenIn.symbol].src
-                    : tokens[props.tokenIn.symbol.toString()]?.iconUrl
-                    ? tokens[props.tokenIn.symbol.toString()].iconUrl
-                    : `/assets/Tokens/fallback.png`
-                }
-                className="tokenIconLiq"
-                width={"32px"}
-                height={"32px"}
-                onError={changeSource}
-              />
-            </div>
-            <div className="ml-1 md:ml-2">
-              <p className="text-text-900 font-body2">Input</p>
-              <p className="font-caption1 md:font-title3 text-white">
-                {tEZorCTEZtoUppercase(props.tokenIn.name)}
-              </p>
-            </div>
+        <div className="h-[4px]"></div>
+      )}
+
+      <div
+        className={clsx(
+          (
+            topLevelSelectedToken.symbol === tokeninorg.symbol
+              ? leftbrush < currentPrice && rightbrush < currentPrice
+              : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice
+          )
+            ? "mt-[1px]"
+            : "-mt-[25px] ",
+          "border flex border-text-800/[0.5] rounded-2xl h-[72px]"
+        )}
+      >
+        <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
+          <div className="ml-2 md:ml-5">
+            <img
+              src={
+                tokenIcons[props.tokenOut.symbol]
+                  ? tokenIcons[props.tokenOut.symbol].src
+                  : tokens[props.tokenOut.symbol.toString()]?.iconUrl
+                  ? tokens[props.tokenOut.symbol.toString()].iconUrl
+                  : `/assets/Tokens/fallback.png`
+              }
+              className="tokenIconLiq"
+              width={"32px"}
+              height={"32px"}
+              onError={changeSource}
+            />
           </div>
-          <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
-            <div className="w-0 flex-auto">
-              <p>
-                {isFirstLaoding ? (
-                  <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
-                ) : (
-                  <input
-                    type="text"
-                    className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium2 outline-none w-[100%] placeholder:text-text-400"
-                    value={fromExponential(props.firstTokenAmount)}
-                    placeholder="0.0"
-                    onChange={(e) => handleLiquidityInput(e.target.value, "tokenIn")}
-                  />
-                )}
-              </p>
-              <p>
-                <span className="mt-1 ml-1 font-body2 md:font-body2  text-text-400">
-                  {" "}
-                  ~$
-                  {props.firstTokenAmount && props.tokenPrice[props.tokenIn.name]
-                    ? Number(
-                        Number(props.firstTokenAmount) *
-                          Number(props.tokenPrice[props.tokenIn.name])
-                      ).toFixed(2)
-                    : "0.00"}
-                </span>
-              </p>
-            </div>
-            {walletAddress && (
-              <div className="ml-auto border border-text-800/[0.5] rounded-lg  bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-1 md:px-3">
-                <div className="relative top-0.5 md:top-0">
-                  <Image alt={"alt"} src={wallet} className="walletIcon" />
-                </div>
-                <div
-                  className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
-                  onClick={onClickAmount}
-                >
-                  {!(Number(props.userBalances[props.tokenIn.name]) >= 0) ? (
-                    <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
-                  ) : (
-                    <span className="mr-1">
-                      {nFormatterWithLesserNumber(
-                        new BigNumber(props.userBalances[props.tokenIn.name])
-                      )}{" "}
-                    </span>
-                  )}
-                  {tEZorCTEZtoUppercase(props.tokenIn.name)}
-                </div>
-              </div>
-            )}
+          <div className="ml-1 md:ml-2">
+            <p className="text-text-900 font-body2">Input</p>
+            <p className="font-caption1 md:font-title3 text-white">
+              {tEZorCTEZtoUppercase(props.tokenOut.name)}
+            </p>
           </div>
         </div>
-      )}
-      {
-        // topLevelSelectedToken.symbol === tokeninorg.symbol
-        //   ? leftbrush < currentPrice && rightbrush > currentPrice
-        //   : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice
-        true ? (
-          <div className="relative -top-[9px] left-[25%]">
-            <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
-          </div>
-        ) : (
-          <div className="h-[4px]"></div>
-        )
-      }
-      {(
-        topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? leftbrush > currentPrice && rightbrush > currentPrice
-          : bleftbrush > bcurrentPrice && brightbrush > bcurrentPrice
-      ) ? (
-        <>
-          <div className="border  flex border-text-800/[0.5] rounded-2xl h-[70px]">
-            <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
-              <div className="ml-2 md:ml-5">
-                <img
-                  src={
-                    tokenIcons[props.tokenOut.symbol]
-                      ? tokenIcons[props.tokenOut.symbol].src
-                      : tokens[props.tokenOut.symbol.toString()]?.iconUrl
-                      ? tokens[props.tokenOut.symbol.toString()].iconUrl
-                      : `/assets/Tokens/fallback.png`
-                  }
-                  className="tokenIconLiq"
-                  width={"32px"}
-                  height={"32px"}
-                  onError={changeSource}
+        <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
+          <div className="w-0 flex-auto">
+            <p>
+              {isSecondLaoding ? (
+                <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
+              ) : (
+                <input
+                  type="text"
+                  value={fromExponential(props.secondTokenAmount)}
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium2 outline-none w-[100%] placeholder:text-text-400"
+                  placeholder="0.0"
+                  onChange={(e) => handleLiquidityInput(e.target.value, "tokenOut")}
                 />
-              </div>
-              <div className="ml-1 md:ml-2">
-                <p className="text-text-900 font-body2">Input</p>
-                <p className="font-caption1 md:font-title3 text-white">
-                  {tEZorCTEZtoUppercase(props.tokenOut.name)}
-                </p>
-              </div>
-            </div>
-            <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
-              <div className="w-0 flex-auto">
-                <p>
-                  {isSecondLaoding ? (
-                    <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
-                  ) : (
-                    <input
-                      type="text"
-                      className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium2 outline-none w-[100%] placeholder:text-text-400"
-                      value={fromExponential(props.secondTokenAmount)}
-                      placeholder="0.0"
-                      onChange={(e) => handleLiquidityInput(e.target.value, "tokenOut")}
-                    />
-                  )}
-                </p>
-                <p>
-                  <span className="mt-1 ml-1 font-body2 md:font-body2  text-text-400">
-                    {" "}
-                    ~$
-                    {props.secondTokenAmount && props.tokenPrice[props.tokenOut.name]
-                      ? Number(
-                          Number(props.secondTokenAmount) *
-                            Number(props.tokenPrice[props.tokenOut.name])
-                        ).toFixed(2)
-                      : "0.00"}
-                  </span>
-                </p>
-              </div>
-              {walletAddress && (
-                <div className="ml-auto border border-text-800/[0.5] rounded-lg  bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-1 md:px-3">
-                  <div className="relative top-0.5 md:top-0">
-                    <Image alt={"alt"} src={wallet} className="walletIcon" />
-                  </div>
-                  <div
-                    className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
-                    onClick={onClickAmount}
-                  >
-                    {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (
-                      <p className=" w-8 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
-                    ) : (
-                      <span className="mr-1">
-                        {nFormatterWithLesserNumber(
-                          new BigNumber(props.userBalances[props.tokenOut.name])
-                        )}{" "}
-                      </span>
-                    )}
-                    {tEZorCTEZtoUppercase(props.tokenOut.name)}
-                  </div>
-                </div>
               )}
-            </div>
+            </p>
+            <p>
+              <span className="mt-1 ml-1 font-body2 md:font-body2 text-text-400">
+                ~$
+                {props.secondTokenAmount && props.tokenPrice[props.tokenOut.name]
+                  ? Number(
+                      Number(props.secondTokenAmount) *
+                        Number(props.tokenPrice[props.tokenOut.name])
+                    ).toFixed(2)
+                  : "0.00"}
+              </span>
+            </p>
           </div>
+          {walletAddress && (
+            <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-1 md:px-3">
+              <div className="relative top-0.5 md:top-0">
+                <Image alt={"alt"} src={wallet} className="walletIcon" />
+              </div>
+              <div
+                className="ml-1 cursor-pointer flex text-primary-500  font-caption1-small md:font-body2"
+                onClick={onClickSecondAmount}
+              >
+                {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (
+                  <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
+                ) : (
+                  <span className="mr-1">
+                    {nFormatterWithLesserNumber(
+                      new BigNumber(props.userBalances[props.tokenOut.name])
+                    )}
+                  </span>
+                )}
+                {tEZorCTEZtoUppercase(props.tokenOut.name)}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
 
-          <div className="absolute top-[92px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
+      {!isLoadingData &&
+        (topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? leftbrush > currentPrice && rightbrush > currentPrice
+          : bleftbrush > bcurrentPrice && brightbrush > bcurrentPrice) && (
+          <div className="absolute top-[77px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
             <Image src={lock} />
             <span className="font-subtitle3 w-[318px] ml-5">
               The market price is outside your specified price range. Single-asset deposit only.
             </span>
           </div>
-        </>
-      ) : (
-        <div
-          className={clsx(
-            (
-              topLevelSelectedToken.symbol === tokeninorg.symbol
-                ? leftbrush < currentPrice && rightbrush < currentPrice
-                : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice
-            )
-              ? "mt-[1px]"
-              : "-mt-[25px] ",
-            "border flex border-text-800/[0.5] rounded-2xl h-[70px]"
-          )}
-        >
-          <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
-            <div className="ml-2 md:ml-5">
-              <img
-                src={
-                  tokenIcons[props.tokenOut.symbol]
-                    ? tokenIcons[props.tokenOut.symbol].src
-                    : tokens[props.tokenOut.symbol.toString()]?.iconUrl
-                    ? tokens[props.tokenOut.symbol.toString()].iconUrl
-                    : `/assets/Tokens/fallback.png`
-                }
-                className="tokenIconLiq"
-                width={"32px"}
-                height={"32px"}
-                onError={changeSource}
-              />
-            </div>
-            <div className="ml-1 md:ml-2">
-              <p className="text-text-900 font-body2">Input</p>
-              <p className="font-caption1 md:font-title3 text-white">
-                {tEZorCTEZtoUppercase(props.tokenOut.name)}
-              </p>
-            </div>
-          </div>
-          <div className="pl-[10px] md:pl-[25px] w-[100%] pr-2 md:pr-[18px] items-center  flex bg-muted-200/[0.1]">
-            <div className="w-0 flex-auto">
-              <p>
-                {isSecondLaoding ? (
-                  <p className=" my-[4px] w-[100px] h-[28px] md:h-[32px] rounded animate-pulse bg-shimmer-100"></p>
-                ) : (
-                  <input
-                    type="text"
-                    value={fromExponential(props.secondTokenAmount)}
-                    className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium2 outline-none w-[100%] placeholder:text-text-400"
-                    placeholder="0.0"
-                    onChange={(e) => handleLiquidityInput(e.target.value, "tokenOut")}
-                  />
-                )}
-              </p>
-              <p>
-                <span className="mt-1 ml-1 font-body2 md:font-body2 text-text-400">
-                  ~$
-                  {props.secondTokenAmount && props.tokenPrice[props.tokenOut.name]
-                    ? Number(
-                        Number(props.secondTokenAmount) *
-                          Number(props.tokenPrice[props.tokenOut.name])
-                      ).toFixed(2)
-                    : "0.00"}
-                </span>
-              </p>
-            </div>
-            {walletAddress && (
-              <div className="ml-auto border border-text-800/[0.5] rounded-lg bg-cardBackGround h-[36px] md:h-[48px] items-center flex px-1 md:px-3">
-                <div className="relative top-0.5 md:top-0">
-                  <Image alt={"alt"} src={wallet} className="walletIcon" />
-                </div>
-                <div
-                  className="ml-1 cursor-pointer flex text-primary-500  font-caption1-small md:font-body2"
-                  onClick={onClickSecondAmount}
-                >
-                  {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (
-                    <p className=" w-6 mr-2  h-[16px] rounded animate-pulse bg-shimmer-100"></p>
-                  ) : (
-                    <span className="mr-1">
-                      {nFormatterWithLesserNumber(
-                        new BigNumber(props.userBalances[props.tokenOut.name])
-                      )}
-                    </span>
-                  )}
-                  {tEZorCTEZtoUppercase(props.tokenOut.name)}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+        )}
     </div>
   );
 }

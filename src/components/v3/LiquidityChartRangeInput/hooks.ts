@@ -2,6 +2,7 @@ import JSBI from "jsbi";
 
 import { useCallback, useMemo, useState } from "react";
 import { getTickAndRealPriceFromPool } from "../../../api/v3/helper";
+import { useAppSelector } from "../../../redux";
 import { tokenParameterLiquidity } from "../../Liquidity/types";
 export declare enum FeeAmount {
   LOWEST = 100,
@@ -26,6 +27,8 @@ export function useDensityChartData({
   currencyB: tokenParameterLiquidity | undefined;
   feeAmount: FeeAmount | undefined;
 }) {
+  const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
+  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const isLoading = false;
   const error = undefined;
   const [data, setData] = useState<any>();
@@ -47,7 +50,10 @@ export function useDensityChartData({
 
       const chartEntry = {
         activeLiquidity: parseFloat(t.liquidityNet.toString()),
-        price0: parseFloat(t.realPriceX),
+        price0:
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? parseFloat(t.realPriceX)
+            : parseFloat(t.realPriceY),
       };
 
       if (chartEntry.activeLiquidity > 0) {
