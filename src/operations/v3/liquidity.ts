@@ -81,6 +81,12 @@ export const LiquidityOperation = async (
           },
         ])
         .send();
+        setShowConfirmTransaction && setShowConfirmTransaction(false);
+        transactionSubmitModal && transactionSubmitModal(op.opHash as string);
+        resetAllValues && resetAllValues();
+        if (flashMessageContent) {
+          store.dispatch(setFlashMessage(flashMessageContent));
+        }
       await op.confirmation();
     } else if (
       TOKENS[tokenXSymbol].standard === TokenStandard.FA2 &&
@@ -112,6 +118,12 @@ export const LiquidityOperation = async (
           },
         ])
         .send();
+        setShowConfirmTransaction && setShowConfirmTransaction(false);
+        transactionSubmitModal && transactionSubmitModal(op.opHash as string);
+        resetAllValues && resetAllValues();
+        if (flashMessageContent) {
+          store.dispatch(setFlashMessage(flashMessageContent));
+        }
       await op.confirmation();
     } else if (
       TOKENS[tokenXSymbol].standard === TokenStandard.FA12 &&
@@ -135,6 +147,12 @@ export const LiquidityOperation = async (
           },
         ])
         .send();
+        setShowConfirmTransaction && setShowConfirmTransaction(false);
+        transactionSubmitModal && transactionSubmitModal(op.opHash as string);
+        resetAllValues && resetAllValues();
+        if (flashMessageContent) {
+          store.dispatch(setFlashMessage(flashMessageContent));
+        }
       await op.confirmation();
     } else if (
       TOKENS[tokenXSymbol].standard === TokenStandard.FA2 &&
