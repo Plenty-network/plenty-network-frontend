@@ -4,7 +4,11 @@ import { BigNumber } from "bignumber.js";
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { tEZorCTEZtoUppercase, tokenChange, tokenChangeB } from "../../api/util/helpers";
-import { ContractStorage, getTickAndRealPriceFromPool } from "../../api/v3/helper";
+import {
+  ContractStorage,
+  getRealPriceFromTick,
+  getTickAndRealPriceFromPool,
+} from "../../api/v3/helper";
 import {
   calculateCurrentPrice,
   calculateFullRange,
@@ -19,6 +23,8 @@ import {
   setBrightbrush,
   setBRightRangeInput,
   setcurrentPrice,
+  setInitBound,
+  setIsBrushChanged,
   setIsLoading,
   setleftbrush,
   setleftRangeInput,
@@ -32,6 +38,7 @@ import {
 
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import LiquidityChartRangeInput from "./LiquidityChartRangeInput";
+import { calcrealPrice } from "../../utils/outSideClickHook";
 
 export interface SerializedToken {
   chainId: number;
@@ -49,6 +56,7 @@ export interface SerializedPair {
 interface IPriceRangeProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
+  isClearAll: boolean;
 }
 export enum Bound {
   LOWER = "LOWER",
@@ -58,7 +66,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const currenyAA = props.tokenIn;
 
   const currencyBB = props.tokenOut;
-
+  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const [isFullRange, setFullRange] = React.useState(false);
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
@@ -75,6 +83,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const BrightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
+  const initBound = useAppSelector((state) => state.poolsv3.initBound);
   React.useEffect(() => {
     if (!isFullRange) {
       dispatch(setIsLoading(true));
@@ -84,26 +93,28 @@ function PriceRangeV3(props: IPriceRangeProps) {
         topLevelSelectedToken.symbol
       ).then((response) => {
         topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toString()))
-          : dispatch(setBcurrentPrice(response.toString()));
+          ? dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toFixed(6)))
+          : dispatch(setBcurrentPrice(response.toFixed(6)));
 
         // dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toString()));
         // dispatch(setBcurrentPrice(response.toString()));
       });
       dispatch(setIsLoading(true));
       getInitialBoundaries(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
+        dispatch(setInitBound(response));
         if (
           new BigNumber(1)
             .dividedBy(response.minValue)
             .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
         ) {
           topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setleftRangeInput(response.minValue.toString()))
+            ? dispatch(setleftRangeInput(response.minTick.toString()))
             : dispatch(
                 setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toString())
               );
+
           topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setRightRangeInput(response.maxValue.toString()))
+            ? dispatch(setRightRangeInput(response.maxTick.toString()))
             : dispatch(
                 setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toString())
               );
@@ -113,14 +124,15 @@ function PriceRangeV3(props: IPriceRangeProps) {
           topLevelSelectedToken.symbol === tokeninorg.symbol
             ? dispatch(setrightbrush(response.maxValue.toString()))
             : dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toString()));
+          dispatch(setIsBrushChanged(true));
         } else {
           topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setleftRangeInput(response.minValue.toString()))
+            ? dispatch(setleftRangeInput(response.minTick.toString()))
             : dispatch(
                 setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toString())
               );
           topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setRightRangeInput(response.maxValue.toString()))
+            ? dispatch(setRightRangeInput(response.maxTick.toString()))
             : dispatch(
                 setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toString())
               );
@@ -130,7 +142,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
           topLevelSelectedToken.symbol === tokeninorg.symbol
             ? dispatch(setrightbrush(response.maxValue.toString()))
             : dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toString()));
+          dispatch(setIsBrushChanged(true));
         }
+        dispatch(setIsBrushChanged(true));
         dispatch(setIsLoading(false));
         topLevelSelectedToken.symbol === tokeninorg.symbol
           ? dispatch(setminTickA(response.minTick.toString()))
@@ -140,7 +154,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
           : dispatch(setmaxTickB(response.maxTick.toString()));
       });
     }
-  }, [topLevelSelectedToken, tokeninorg, isFullRange]);
+  }, [topLevelSelectedToken, tokeninorg, isFullRange, props.isClearAll]);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -196,7 +210,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         topLevelSelectedToken.symbol === tokeninorg.symbol
           ? dispatch(setrightbrush(response.maxTickPrice.toString()))
           : dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxTickPrice).toString()));
-
+        dispatch(setIsBrushChanged(true));
         dispatch(setIsLoading(false));
         console.log(leftbrush, rightbrush, "full");
       });
@@ -217,8 +231,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
           Current Price:{" "}
           {topLevelSelectedToken.symbol === tokeninorg.symbol ? currentprice : bcurrentprice}{" "}
           <span className="font-mobile-f9 ml-[4px]">
-            ( {tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
-            {tEZorCTEZtoUppercase(props.tokenOut.symbol)} )
+            ( {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
+            {tEZorCTEZtoUppercase(props.tokenIn.symbol)} )
           </span>
         </div>
         {currenyAA && currencyBB && (
@@ -258,8 +272,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
           <div className="font-body4 text-text-250">
             Min Price{" "}
             <span className="font-caption1-small">
-              ({tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
-              {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
+              ( {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
+              {tEZorCTEZtoUppercase(props.tokenIn.symbol)} )
             </span>
           </div>
           <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
@@ -282,14 +296,31 @@ function PriceRangeV3(props: IPriceRangeProps) {
                   className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
                   value={
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? leftRangeInput
+                      ? calcrealPrice(
+                          initBound.minTick,
+                          props.tokenIn.symbol,
+                          props.tokenOut.symbol
+                        )
                       : BleftRangeInput
                   }
                   placeholder="0.0"
                   onChange={(e) => onLeftRangeInputFn(e.target.value)}
                 />
               </div>
-              <div className="font-body2 text-text-250">$9.8</div>
+              <div className="font-body2 text-text-250">
+                $
+                {(topLevelSelectedToken.symbol === tokeninorg.symbol
+                  ? leftRangeInput
+                  : BleftRangeInput) && tokenPrice[props.tokenIn.name]
+                  ? Number(
+                      Number(
+                        topLevelSelectedToken.symbol === tokeninorg.symbol
+                          ? leftRangeInput
+                          : BleftRangeInput
+                      ) * Number(tokenPrice[props.tokenIn.name])
+                    ).toFixed(2)
+                  : "0.00"}
+              </div>
             </div>
             <div
               className=" w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
@@ -309,8 +340,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
           <div className="font-body4 text-text-250">
             Max Price{" "}
             <span className="font-caption1-small">
-              ({tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
-              {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
+              ( {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
+              {tEZorCTEZtoUppercase(props.tokenIn.symbol)} )
             </span>
           </div>
           <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
@@ -333,14 +364,31 @@ function PriceRangeV3(props: IPriceRangeProps) {
                   className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
                   value={
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? rightRangeInput
+                      ? calcrealPrice(
+                          initBound.maxTick,
+                          props.tokenIn.symbol,
+                          props.tokenOut.symbol
+                        )
                       : BrightRangeInput
                   }
                   placeholder="0.0"
                   onChange={(e) => onRightRangeInputFn(e.target.value)}
                 />
               </div>
-              <div className="font-body2 text-text-250">$9.8</div>
+              <div className="font-body2 text-text-250">
+                $
+                {(topLevelSelectedToken.symbol === tokeninorg.symbol
+                  ? rightRangeInput
+                  : BrightRangeInput) && tokenPrice[props.tokenOut.name]
+                  ? Number(
+                      Number(
+                        topLevelSelectedToken.symbol === tokeninorg.symbol
+                          ? rightRangeInput
+                          : BrightRangeInput
+                      ) * Number(tokenPrice[props.tokenOut.name])
+                    ).toFixed(2)
+                  : "0.00"}
+              </div>
             </div>
             <div
               className="w-[34px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"

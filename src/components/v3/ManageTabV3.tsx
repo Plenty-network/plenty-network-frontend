@@ -111,8 +111,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       topLevelSelectedToken.symbol
     ).then((response) => {
       topLevelSelectedToken.symbol === props.tokenIn.symbol
-        ? dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toString()))
-        : dispatch(setBcurrentPrice(response.toString()));
+        ? dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toFixed(6)))
+        : dispatch(setBcurrentPrice(response.toFixed(6)));
       // dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toString()));
       // dispatch(setBcurrentPrice(response.toString()));
     });
@@ -223,15 +223,23 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     };
     updateBalance();
   }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
-
+  const [isClearAll, setisClearAll] = useState(false);
   const resetAllValues = () => {
+    setisClearAll(true);
     setFirstTokenAmountLiq("");
     setSecondTokenAmountLiq("");
+    dispatch(settopLevelSelectedToken(props.tokenA));
     setBalanceUpdate(false);
   };
   const [deadline, setDeadline] = useState(0);
   useEffect(() => {
-    const n = Number(slippage.slice(0, -1));
+    const n =
+      Number(slippage.slice(0, -1)) === 1
+        ? 60
+        : Number(slippage.slice(0, -1)) === 2
+        ? 120
+        : Number(slippage.slice(0, -1));
+    console.log(n, "deadline");
     setDeadline(Math.floor(new Date().getTime() / 1000) + n * 60);
   }, [slippage]);
   const handleAddLiquidityOperation = () => {
@@ -436,7 +444,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               <p className="ml-1 relative top-[0px]">
                 <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
               </p>
-              <p className="text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer">
+              <p
+                className="text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer"
+                onClick={resetAllValues}
+              >
                 Clear All
               </p>
               <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
@@ -490,7 +501,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             </div>
 
             <div className="sm:flex  mt-4">
-              <PriceRangeV3 tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
+              <PriceRangeV3
+                tokenIn={props.tokenIn}
+                tokenOut={props.tokenOut}
+                isClearAll={isClearAll}
+              />
               <div className="">
                 <LiquidityV3
                   setSelectedFeeTier={setSelectedFeeTier}

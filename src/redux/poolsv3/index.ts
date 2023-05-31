@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { initialBoundaries } from "../../api/v3/types";
 import { tokenParameterLiquidity } from "../../components/Liquidity/types";
 
 const initialState = {
+  isBrushChanged: false,
   isLoading: false,
   Rightdiff: "0",
   Leftdiff: "0",
@@ -26,6 +28,8 @@ const initialState = {
   maxTickA: 0,
   minTickB: 0,
   maxTickB: 0,
+  initBound: {} as initialBoundaries,
+  BinitBound: {} as initialBoundaries,
 };
 
 const PoolsV3Slice = createSlice({
@@ -34,6 +38,12 @@ const PoolsV3Slice = createSlice({
   reducers: {
     setIsRightDiff: (state, action) => {
       state.Rightdiff = action.payload.Rightdiff;
+    },
+    setInitBound: (state, action) => {
+      state.initBound = action.payload;
+    },
+    setBInitBound: (state, action) => {
+      state.BinitBound = action.payload;
     },
     setIsLeftDiff: (state, action) => {
       state.Leftdiff = action.payload.LeftDiff;
@@ -106,9 +116,15 @@ const PoolsV3Slice = createSlice({
     setIsLoading: (state, action) => {
       state.isLoading = action.payload;
     },
+    setIsBrushChanged: (state, action) => {
+      state.isBrushChanged = action.payload;
+    },
   },
 });
 export const {
+  setInitBound,
+  setBInitBound,
+  setIsBrushChanged,
   setminTickA,
   setIsLoading,
   setmaxTickA,

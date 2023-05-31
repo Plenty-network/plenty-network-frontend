@@ -92,10 +92,18 @@ export const getTickAndRealPriceFromPool = async (contractAddress: string): Prom
   }
 };
 
-export const getRealPriceFromTick = async (tick: number, tokenXSymbol: string, tokenYSymbol: string): Promise<any> => {
+export const getRealPriceFromTick = async (
+  tick: number,
+  tokenXSymbol: string,
+  tokenYSymbol: string
+): Promise<any> => {
   try {
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
-    let priceValue = Tick.computeRealPriceFromTick(tick, contractStorageParameters.tokenX, contractStorageParameters.tokenY);
+    let priceValue = Tick.computeRealPriceFromTick(
+      tick,
+      contractStorageParameters.tokenX,
+      contractStorageParameters.tokenY
+    );
 
     return priceValue;
   } catch (error) {
@@ -103,10 +111,19 @@ export const getRealPriceFromTick = async (tick: number, tokenXSymbol: string, t
   }
 };
 
-export const getTickFromRealPrice = async (realPrice: BigNumber, tokenXSymbol: string, tokenYSymbol: string): Promise<any> => {
+export const getTickFromRealPrice = async (
+  realPrice: BigNumber,
+  tokenXSymbol: string,
+  tokenYSymbol: string
+): Promise<any> => {
   try {
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
-    let tick = Tick.computeTickFromRealPrice(realPrice, contractStorageParameters.tokenX, contractStorageParameters.tokenY, contractStorageParameters.tickSpacing);
+    let tick = Tick.computeTickFromRealPrice(
+      realPrice,
+      contractStorageParameters.tokenX,
+      contractStorageParameters.tokenY,
+      contractStorageParameters.tickSpacing
+    );
 
     return tick;
   } catch (error) {

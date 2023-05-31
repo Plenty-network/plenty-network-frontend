@@ -53,7 +53,13 @@ export const calculateFullRange = async (
     let minTickPrice = await getRealPriceFromTick(tickFullRange[0], tokenXSymbol, tokenYSymbol);
     let maxTickPrice = await getRealPriceFromTick(tickFullRange[1], tokenXSymbol, tokenYSymbol);
 
-    console.log("tickFullRange", tickFullRange[0], tickFullRange[1], minTickPrice.toNumber(), maxTickPrice.toNumber());
+    console.log(
+      "tickFullRange",
+      tickFullRange[0],
+      tickFullRange[1],
+      minTickPrice.toNumber(),
+      maxTickPrice.toNumber()
+    );
 
     return {
       minTick: tickFullRange[0],

@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getRealPriceFromTick } from "../api/v3/helper";
 
-export function useOutsideClick(ref:any,callBack:Function) {
+export function useOutsideClick(ref: any, callBack: Function) {
   useEffect(() => {
-    function handleClickOutside(event:any) {
+    function handleClickOutside(event: any) {
       if (ref.current && !ref.current.contains(event.target)) {
         callBack();
       }
@@ -15,3 +16,13 @@ export function useOutsideClick(ref:any,callBack:Function) {
     };
   }, [ref]);
 }
+
+export const calcrealPrice = (tick: number, tokenXSymbol: string, tokenYSymbol: string) => {
+  const [realPrice, setRealPrice] = useState(0);
+
+  getRealPriceFromTick(tick, tokenXSymbol, tokenYSymbol).then(function (result) {
+    setRealPrice(result);
+    return realPrice?.toFixed(6);
+  });
+  return realPrice?.toFixed(6);
+};

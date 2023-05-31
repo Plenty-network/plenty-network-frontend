@@ -24,7 +24,13 @@ import { estimateTokenXFromTokenY, estimateTokenYFromTokenX } from "../../api/v3
 
 import { getTickFromRealPrice } from "../../api/v3/helper";
 import { Tick } from "@plenty-labs/v3-sdk";
-import { setmaxTickA, setmaxTickB, setminTickA, setminTickB } from "../../redux/poolsv3";
+import {
+  setIsBrushChanged,
+  setmaxTickA,
+  setmaxTickB,
+  setminTickA,
+  setminTickB,
+} from "../../redux/poolsv3";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -50,6 +56,10 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   const bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const bcurrentPrice = useAppSelector((state) => state.poolsv3.BcurrentPrice);
   const tokens = useAppSelector((state) => state.config.tokens);
+  const leftRangeInput = useAppSelector((state) => state.poolsv3.leftRangeInput);
+  const rightRangeInput = useAppSelector((state) => state.poolsv3.RightRangeInput);
+  const BleftRangeInput = useAppSelector((state) => state.poolsv3.BleftRangeInput);
+  const BRightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const [isFirstLaoding, setFirstLoading] = React.useState(false);
@@ -59,6 +69,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
   const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
   const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
+  const isBrushChanged = useAppSelector((state) => state.poolsv3.isBrushChanged);
   const [minValue, setMinValue] = React.useState(0);
   const [maxValue, setMaxValue] = React.useState(0);
   const [value, setValue] = React.useState<[number, number]>([0, 0]);
@@ -70,7 +81,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
 
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
       getTickFromRealPrice(
-        new BigNumber(leftbrush),
+        new BigNumber(leftRangeInput),
         props.tokenIn.symbol,
         props.tokenOut.symbol
       ).then((response1) => {
@@ -78,7 +89,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         setMinValue(Tick.nearestUsableTick(response1, 10));
         setValue([Tick.nearestUsableTick(response1, 10), maxValue] as [number, number]);
         getTickFromRealPrice(
-          new BigNumber(rightbrush),
+          new BigNumber(rightRangeInput),
           props.tokenIn.symbol,
           props.tokenOut.symbol
         ).then((response) => {
@@ -97,7 +108,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       // setValue([minValue, maxValue] as [number, number]);
     } else {
       getTickFromRealPrice(
-        new BigNumber(bleftbrush),
+        new BigNumber(BleftRangeInput),
         props.tokenIn.symbol,
         props.tokenOut.symbol
       ).then((response1) => {
@@ -105,7 +116,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         setMinValue(Tick.nearestUsableTick(response1, 10));
         setValue([Tick.nearestUsableTick(response1, 10), maxValue] as [number, number]);
         getTickFromRealPrice(
-          new BigNumber(brightbrush),
+          new BigNumber(BRightRangeInput),
           props.tokenIn.symbol,
           props.tokenOut.symbol
         ).then((response) => {
@@ -121,11 +132,18 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         });
       });
     }
-  }, [leftbrush, rightbrush, bleftbrush, brightbrush, topLevelSelectedToken]);
+  }, [leftRangeInput, rightRangeInput, BRightRangeInput, BleftRangeInput, topLevelSelectedToken]);
 
   React.useEffect(() => {
     handleLiquidityInput(props.firstTokenAmount, "tokenIn");
-  }, [props.tokenIn, props.tokenOut, minTickA, minTickB]);
+  }, [
+    props.tokenIn,
+    props.tokenOut,
+    leftRangeInput,
+    rightRangeInput,
+    BRightRangeInput,
+    BleftRangeInput,
+  ]);
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
@@ -174,6 +192,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           : props.setSecondTokenAmount(
               new BigNumber(1).dividedBy(new BigNumber(response)).toString()
             );
+
+        dispatch(setIsBrushChanged(false));
       });
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
@@ -209,6 +229,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         topLevelSelectedToken.symbol === tokeninorg.symbol
           ? props.setFirstTokenAmount(response)
           : props.setFirstTokenAmount(response);
+
+        dispatch(setIsBrushChanged(false));
       });
     }
   };
