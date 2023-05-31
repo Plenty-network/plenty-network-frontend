@@ -9,6 +9,7 @@ import { setBleftbrush, setBrightbrush, setleftbrush, setrightbrush } from "../.
 
 import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from "./svg";
 import usePrevious from "./usePrevious";
+import { ChartEntry } from "./types";
 
 // flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20;
@@ -42,6 +43,7 @@ export const Brush = ({
   innerHeight,
   westHandleColor,
   eastHandleColor,
+  tick,
 }: {
   id: string;
   xScale: ScaleLinear<number, number>;
@@ -53,9 +55,8 @@ export const Brush = ({
   innerHeight: number;
   westHandleColor: string;
   eastHandleColor: string;
+  tick: (d: ChartEntry) => number;
 }) => {
-  //const tick = new Tick();
-
   const brushRef = useRef<SVGGElement | null>(null);
   const brushBehavior = useRef<BrushBehavior<SVGGElement> | null>(null);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
@@ -72,26 +73,26 @@ export const Brush = ({
   const [e, setE] = useState(0);
   const [minValue, setMinValue] = useState(0);
   const [maxValue, setMaxValue] = useState(0);
-  const values = (scaled: [number, number]) => {
-    getTickFromRealPrice(new BigNumber(scaled[0]), tokenIn.symbol, tokenOut.symbol).then(
-      (response) => {
-        setD(Tick.nearestUsableTick(response, 10));
-      }
-    );
-    getRealPriceFromTick(d, tokenIn.symbol, tokenOut.symbol).then((res) => {
-      setMinValue(res.toString());
-    });
-    getTickFromRealPrice(new BigNumber(scaled[1]), tokenIn.symbol, tokenOut.symbol).then(
-      (response) => {
-        setE(Tick.nearestUsableTick(response, 10));
-      }
-    );
-    getRealPriceFromTick(e, tokenIn.symbol, tokenOut.symbol).then((res) => {
-      setMaxValue(res.toString());
-    });
+  // const values = (scaled: [number, number]) => {
+  //   getTickFromRealPrice(new BigNumber(scaled[0]), tokenIn.symbol, tokenOut.symbol).then(
+  //     (response) => {
+  //       setD(Tick.nearestUsableTick(response, 10));
+  //     }
+  //   );
+  //   getRealPriceFromTick(d, tokenIn.symbol, tokenOut.symbol).then((res) => {
+  //     setMinValue(res.toString());
+  //   });
+  //   getTickFromRealPrice(new BigNumber(scaled[1]), tokenIn.symbol, tokenOut.symbol).then(
+  //     (response) => {
+  //       setE(Tick.nearestUsableTick(response, 10));
+  //     }
+  //   );
+  //   getRealPriceFromTick(e, tokenIn.symbol, tokenOut.symbol).then((res) => {
+  //     setMaxValue(res.toString());
+  //   });
 
-    return [minValue, maxValue] as [number, number];
-  };
+  //   return [minValue, maxValue] as [number, number];
+  // };
   const brushed = useCallback(
     (event: D3BrushEvent<unknown>) => {
       const { type, selection, mode } = event;
@@ -105,6 +106,7 @@ export const Brush = ({
 
       // avoid infinite render loop by checking for change
       if (type === "end" && !compare(brushExtent, scaledTemp, xScale)) {
+        console.log("klm", tick);
         //const scaled = values(scaledTemp);
         topLevelSelectedToken.symbol === tokenIn.symbol
           ? dispatch(setleftbrush(scaled[0]))

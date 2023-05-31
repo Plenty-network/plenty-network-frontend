@@ -1,5 +1,6 @@
+import { BigNumber } from "bignumber.js";
 import { useEffect, useState } from "react";
-import { getRealPriceFromTick } from "../api/v3/helper";
+import { getRealPriceFromTick, getTickFromRealPrice } from "../api/v3/helper";
 
 export function useOutsideClick(ref: any, callBack: Function) {
   useEffect(() => {
@@ -25,4 +26,13 @@ export const calcrealPrice = (tick: number, tokenXSymbol: string, tokenYSymbol: 
     return realPrice?.toFixed(6);
   });
   return realPrice?.toFixed(6);
+};
+
+export const calcTick = (price: BigNumber, tokenXSymbol: string, tokenYSymbol: string) => {
+  const [tick, setTick] = useState(0);
+  getTickFromRealPrice(price, tokenXSymbol, tokenYSymbol).then(function (result) {
+    setTick(result);
+    return tick.toString();
+  });
+  return tick.toString();
 };

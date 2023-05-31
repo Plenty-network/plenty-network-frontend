@@ -71,8 +71,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
-  const tokenoutv3 = useAppSelector((state) => state.poolsv3.tokenOut);
-  const tokenInv3 = useAppSelector((state) => state.poolsv3.tokenIn);
+
   const leftRangeInput = useAppSelector((state) => state.poolsv3.leftRangeInput);
   const rightRangeInput = useAppSelector((state) => state.poolsv3.RightRangeInput);
   const currentprice = useAppSelector((state) => state.poolsv3.currentPrice);
@@ -296,11 +295,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
                   className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
                   value={
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? calcrealPrice(
-                          initBound.minTick,
-                          props.tokenIn.symbol,
-                          props.tokenOut.symbol
-                        )
+                      ? leftRangeInput
                       : BleftRangeInput
                   }
                   placeholder="0.0"
@@ -364,11 +359,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
                   className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
                   value={
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? calcrealPrice(
-                          initBound.maxTick,
-                          props.tokenIn.symbol,
-                          props.tokenOut.symbol
-                        )
+                      ? rightRangeInput
                       : BrightRangeInput
                   }
                   placeholder="0.0"

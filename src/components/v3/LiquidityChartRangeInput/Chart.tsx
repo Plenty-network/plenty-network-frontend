@@ -13,6 +13,7 @@ export enum Bound {
 }
 const xAccessor = (d: ChartEntry) => d.price0;
 const yAccessor = (d: ChartEntry) => d.activeLiquidity;
+const Tick = (d: ChartEntry) => d.Tick;
 
 export function Chart({
   id = "liquidityChartRangeInput",
@@ -163,6 +164,7 @@ export function Chart({
             brushExtent={brushDomain ?? (xScale.domain() as [number, number])}
             innerWidth={innerWidth}
             innerHeight={innerHeight}
+            tick={Tick}
             setBrushExtent={onBrushDomainChange}
             westHandleColor={styles.brush.handle.west}
             eastHandleColor={styles.brush.handle.east}

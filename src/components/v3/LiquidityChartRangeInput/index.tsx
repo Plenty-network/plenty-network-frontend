@@ -2,7 +2,7 @@ import { format } from "d3";
 import { saturate } from "polished";
 import React, { useCallback, useMemo } from "react";
 import { batch, useDispatch } from "react-redux";
-
+import { BigNumber } from "bignumber.js";
 import { AppDispatch, useAppSelector } from "../../../redux";
 import { setIsLeftDiff, setIsRightDiff } from "../../../redux/poolsv3";
 import { tokenParameterLiquidity } from "../../Liquidity/types";
@@ -10,6 +10,7 @@ import { tokenParameterLiquidity } from "../../Liquidity/types";
 import { Chart } from "./Chart";
 import { useDensityChartData } from "./hooks";
 import { ZoomLevels } from "./types";
+import { calcTick } from "../../../utils/outSideClickHook";
 export enum Bound {
   LOWER = "LOWER",
   UPPER = "UPPER",
@@ -73,6 +74,8 @@ export default function LiquidityChartRangeInput({
   interactive: boolean;
   isFull: boolean;
 }) {
+  const tokenoutv3 = useAppSelector((state) => state.poolsv3.tokenOut);
+  const tokenInv3 = useAppSelector((state) => state.poolsv3.tokenIn);
   const tokenAColor = "#1570F1";
   const tokenBColor = "#1570F1";
   const leftbrush = useAppSelector((state) => state.poolsv3.leftbrush);
@@ -109,6 +112,9 @@ export default function LiquidityChartRangeInput({
             mode === "reset") &&
           leftRangeValue > 0
         ) {
+          // onLeftRangeInput(
+          //   calcTick(new BigNumber(leftRangeValue), tokenInv3.symbol, tokenoutv3.symbol)
+          // );
           onLeftRangeInput(leftRangeValue.toFixed(6));
         }
 
@@ -119,12 +125,15 @@ export default function LiquidityChartRangeInput({
           // todo: remove this check. Upper bound for large numbers
           // sometimes fails to parse to tick.
           if (rightRangeValue < 1e35) {
+            // onRightRangeInput(
+            //   calcTick(new BigNumber(rightRangeValue), tokenInv3.symbol, tokenoutv3.symbol)
+            // );
             onRightRangeInput(rightRangeValue.toFixed(6));
           }
         }
       });
     },
-    [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit]
+    [onLeftRangeInput, onRightRangeInput]
   );
 
   interactive = interactive && Boolean(formattedData?.length);
