@@ -314,7 +314,7 @@ export function VotesTable(props: IVotesTableProps) {
 
         accessor: (x: any) => (
           <span className="font-subtitle4">
-            {props.selectedDropDown.tokenId === "" ? "-" : `${x.votes.expectedRewards.toFixed(2)}`}{" "}
+            {props.selectedDropDown.tokenId === "" ? "-" : `$${x.votes.expectedRewards.toFixed(2)}`}{" "}
           </span>
         ),
       },
