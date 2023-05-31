@@ -18,6 +18,9 @@ import { IVotesTableProps } from "./types";
 export function VotesTable(props: IVotesTableProps) {
   const { valueFormat } = useTableNumberUtils();
   const tokens = useAppSelector((state) => state.config.tokens);
+  const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
+  const epochData = useAppSelector((state) => state.epoch.epochData);
+  const selectedEpoch = useAppSelector((state) => state.epoch.selectedEpoch);
   const votesArray = Object.entries(props.voteData);
   const [totalVotes1, setTotalVotes1] = React.useState<number[]>(
     new Array(votesArray.length).fill(0)
@@ -359,7 +362,7 @@ export function VotesTable(props: IVotesTableProps) {
         ),
       },
     ],
-    [valueFormat]
+    [valueFormat, props]
   );
   const desktopcolumns = React.useMemo<Column<IVotePageData>[]>(
     () => [
@@ -515,17 +518,28 @@ export function VotesTable(props: IVotesTableProps) {
     ],
     [valueFormat]
   );
+  console.log(props.selectedDropDown, "ll", props.selectedDropDown.tokenId == "");
   return (
     <>
       <div className={`overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={
             isTablet
-              ? props.sumOfVotes === 100
-                ? desktopcolumnsNFT
+              ? currentEpoch.epochNumber === selectedEpoch.epochNumber
+                ? props.selectedDropDown.tokenId == ""
+                  ? desktopcolumnsNFT
+                  : props.sumOfVotes === 100
+                  ? desktopcolumns
+                  : desktopcolumnsNFT
                 : desktopcolumns
               : isMobile
               ? mobilecolumns
+              : currentEpoch.epochNumber === selectedEpoch.epochNumber
+              ? props.selectedDropDown.tokenId == ""
+                ? desktopcolumnsNFT
+                : props.sumOfVotes === 100
+                ? desktopcolumns
+                : desktopcolumnsNFT
               : desktopcolumns
           }
           data={votedata}
@@ -536,7 +550,15 @@ export function VotesTable(props: IVotesTableProps) {
           isConnectWalletRequired={props.isConnectWalletRequired}
           isVotesTable={true}
           TableName="votesTable"
-          TableWidth="md:min-w-[805px]"
+          TableWidth={
+            currentEpoch.epochNumber === selectedEpoch.epochNumber
+              ? props.selectedDropDown.tokenId == ""
+                ? "md:min-w-[1005px]"
+                : props.sumOfVotes === 100
+                ? "md:min-w-[805px]"
+                : "md:min-w-[1005px]"
+              : "md:min-w-[805px]"
+          }
         />
       </div>
     </>
