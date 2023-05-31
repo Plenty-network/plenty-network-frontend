@@ -2,7 +2,11 @@ import Image from "next/image";
 import * as React from "react";
 import { isMobile, isTablet } from "react-device-detect";
 import { Column } from "react-table";
-import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import {
+  changeSource,
+  nFormatterWithLesserNumber,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { IVotePageData } from "../../api/votes/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
@@ -314,7 +318,9 @@ export function VotesTable(props: IVotesTableProps) {
 
         accessor: (x: any) => (
           <span className="font-subtitle4">
-            {props.selectedDropDown.tokenId === "" ? "-" : `$${x.votes.expectedRewards.toFixed(2)}`}{" "}
+            {props.selectedDropDown.tokenId === ""
+              ? "-"
+              : `$${nFormatterWithLesserNumber(x.votes.expectedRewards)}`}{" "}
           </span>
         ),
       },
