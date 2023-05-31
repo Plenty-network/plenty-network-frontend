@@ -307,7 +307,7 @@ export function VotesTable(props: IVotesTableProps) {
         Header: "Max rewards",
         id: "Max rewards",
         columnWidth: "w-[112px] pr-2.5",
-        tooltipMessage: "Number of votes given through the selected veNFT to this pool.",
+        tooltipMessage: "Maximum possible reward if you vote entirely for the pool.",
         isToolTipEnabled: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.expectedRewards"),
         canShort: true,
