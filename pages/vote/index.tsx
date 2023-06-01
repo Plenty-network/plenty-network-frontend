@@ -171,7 +171,8 @@ export default function Vote() {
     votesPageDataWrapper(
       selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
       selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
-      tokenPrice
+      tokenPrice,
+      selectedDropDown.tokenId ? new BigNumber(selectedDropDown.votingPower) : undefined
     ).then((res) => {
       setVoteData(res.allData);
     });
@@ -192,7 +193,8 @@ export default function Vote() {
       votesPageDataWrapper(
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
         selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
-        tokenPrice
+        tokenPrice,
+        selectedDropDown.tokenId ? new BigNumber(selectedDropDown.votingPower) : undefined
       ).then((res) => {
         setVoteData(res.allData);
 
@@ -213,7 +215,8 @@ export default function Vote() {
       votesPageDataWrapper(
         selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
         selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
-        tokenPrice
+        tokenPrice,
+        selectedDropDown.tokenId ? new BigNumber(selectedDropDown.votingPower) : undefined
       ).then((res) => {
         setVoteData(res.allData);
 
