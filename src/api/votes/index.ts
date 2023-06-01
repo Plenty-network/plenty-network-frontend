@@ -257,7 +257,8 @@ const mainPageRewardData = async (
 export const votesPageDataWrapper = async (
   epoch: number,
   tokenId: number | undefined,
-  tokenPrices: ITokenPriceList
+  tokenPrices: ITokenPriceList,
+  availableVotingPower?: BigNumber
 ): Promise<IVotePageDataResponse> => {
   try {
     const state = store.getState();
@@ -283,18 +284,39 @@ export const votesPageDataWrapper = async (
       const AMM = AMMS[poolData];
 
       if (AMM && AMM.gauge) {
+        let expectedRewards = new BigNumber(0);
+        const bribesTotal = rewardData.allData[poolData]
+          ? rewardData.allData[poolData].bribes
+          : new BigNumber(0);
+        const feesTotal = rewardData.allData[poolData]
+          ? rewardData.allData[poolData].fees
+          : new BigNumber(0);
+        const totalVotes =
+          Object.keys(votesData.totalVotesData).length === 0
+            ? new BigNumber(0)
+            : votesData.totalVotesData[poolData]
+            ? votesData.totalVotesData[poolData].votes
+            : new BigNumber(0);
+        const rewardsTotal = bribesTotal.plus(feesTotal);
+
+        if(tokenId && availableVotingPower) {
+          const finalVotes = availableVotingPower.plus(totalVotes);
+          const calculatedRewards = rewardsTotal
+            .dividedBy(finalVotes)
+            .multipliedBy(availableVotingPower);
+          expectedRewards = calculatedRewards.isFinite() ? calculatedRewards : new BigNumber(0);
+        }
+
         allData[poolData] = {
           tokenA: AMM.token1.symbol,
           tokenB: AMM.token2.symbol,
           poolType: AMM.type,
 
-          bribes: rewardData.allData[poolData]
-            ? rewardData.allData[poolData].bribes
-            : new BigNumber(0),
+          bribes: bribesTotal,
 
           bribesData: rewardData.allData[poolData] ? rewardData.allData[poolData].bribesData : [],
 
-          fees: rewardData.allData[poolData] ? rewardData.allData[poolData].fees : new BigNumber(0),
+          fees: feesTotal,
 
           feesTokenA: rewardData.allData[poolData]
             ? rewardData.allData[poolData].feesTokenA
@@ -304,12 +326,7 @@ export const votesPageDataWrapper = async (
             ? rewardData.allData[poolData].feesTokenB
             : new BigNumber(0),
 
-          totalVotes:
-            Object.keys(votesData.totalVotesData).length === 0
-              ? new BigNumber(0)
-              : votesData.totalVotesData[poolData]
-              ? votesData.totalVotesData[poolData].votes
-              : new BigNumber(0),
+          totalVotes,
           totalVotesPercentage:
             Object.keys(votesData.totalVotesData).length === 0
               ? new BigNumber(0)
@@ -329,6 +346,7 @@ export const votesPageDataWrapper = async (
               : votesData.myVotesData[poolData]
               ? votesData.myVotesData[poolData].votePercentage
               : new BigNumber(0),
+          expectedRewards,
         };
       }
     }

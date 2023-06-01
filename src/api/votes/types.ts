@@ -99,6 +99,7 @@ export interface IVotePageData{
         totalVotesPercentage : BigNumber;
         myVotes : BigNumber;
         myVotesPercentage : BigNumber;
+        expectedRewards: BigNumber;
 }
 
 export interface IVotePageDataResponse {
