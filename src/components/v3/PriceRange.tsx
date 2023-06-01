@@ -107,13 +107,13 @@ function PriceRangeV3(props: IPriceRangeProps) {
             .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
         ) {
           topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setleftRangeInput(response.minTick.toString()))
+            ? dispatch(setleftRangeInput(response.minValue.toString()))
             : dispatch(
                 setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toString())
               );
 
           topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setRightRangeInput(response.maxTick.toString()))
+            ? dispatch(setRightRangeInput(response.maxValue.toString()))
             : dispatch(
                 setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toString())
               );
@@ -126,12 +126,12 @@ function PriceRangeV3(props: IPriceRangeProps) {
           dispatch(setIsBrushChanged(true));
         } else {
           topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setleftRangeInput(response.minTick.toString()))
+            ? dispatch(setleftRangeInput(response.minValue.toString()))
             : dispatch(
                 setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toString())
               );
           topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setRightRangeInput(response.maxTick.toString()))
+            ? dispatch(setRightRangeInput(response.maxValue.toString()))
             : dispatch(
                 setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toString())
               );

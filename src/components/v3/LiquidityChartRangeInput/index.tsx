@@ -97,6 +97,7 @@ export default function LiquidityChartRangeInput({
 
   const onBrushDomainChangeEnded = useCallback(
     (domain: [number, number], mode: string | undefined) => {
+      console.log(domain, "domain", mode);
       let leftRangeValue = Number(domain[0]);
       const rightRangeValue = Number(domain[1]);
 
@@ -106,22 +107,26 @@ export default function LiquidityChartRangeInput({
 
       batch(() => {
         // simulate user input for auto-formatting and other validations
-        if (
-          (!ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ||
-            mode === "handle" ||
-            mode === "reset") &&
-          leftRangeValue > 0
-        ) {
+        if ((mode === "handle" || mode === "reset") && leftRangeValue > 0) {
+          console.log(
+            "left",
+            mode,
+            !ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER],
+            leftRangeValue
+          );
           // onLeftRangeInput(
           //   calcTick(new BigNumber(leftRangeValue), tokenInv3.symbol, tokenoutv3.symbol)
-          // );
+          //);
           onLeftRangeInput(leftRangeValue.toFixed(6));
         }
 
-        if (
-          (!ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] || mode === "reset") &&
-          rightRangeValue > 0
-        ) {
+        if ((mode === "handle" || mode === "reset") && rightRangeValue > 0) {
+          console.log(
+            "right",
+            mode,
+            !ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER],
+            rightRangeValue
+          );
           // todo: remove this check. Upper bound for large numbers
           // sometimes fails to parse to tick.
           if (rightRangeValue < 1e35) {
