@@ -308,9 +308,9 @@ export function VotesTable(props: IVotesTableProps) {
         ),
       },
       {
-        Header: "Max rewards",
+        Header: "Max reward",
         id: "Max rewards",
-        columnWidth: "w-[112px] pr-2.5",
+        columnWidth: "w-[122px] pr-2.5",
         tooltipMessage: "Maximum possible reward if you vote entirely for the pool.",
         isToolTipEnabled: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "votes.expectedRewards"),
@@ -322,19 +322,6 @@ export function VotesTable(props: IVotesTableProps) {
               ? "-"
               : `$${nFormatterWithLesserNumber(x.votes.expectedRewards)}`}{" "}
           </span>
-        ),
-      },
-      {
-        Header: "My votes",
-        id: "Myvotes",
-        columnWidth: "w-[112px] pr-2.5",
-        tooltipMessage: "Number of votes given through the selected veNFT to this pool.",
-        isToolTipEnabled: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "votes.myVotesPercentage"),
-        canShort: true,
-
-        accessor: (x: any) => (
-          <MyVotesValue myVotes={x.votes.myVotes} myVotesPercentage={x.votes.myVotesPercentage} />
         ),
       },
 
@@ -556,15 +543,7 @@ export function VotesTable(props: IVotesTableProps) {
           isConnectWalletRequired={props.isConnectWalletRequired}
           isVotesTable={true}
           TableName="votesTable"
-          TableWidth={
-            currentEpoch.epochNumber === selectedEpoch.epochNumber
-              ? props.selectedDropDown.tokenId == ""
-                ? "md:min-w-[1005px]"
-                : props.sumOfVotes === 100
-                ? "md:min-w-[805px]"
-                : "md:min-w-[1005px]"
-              : "md:min-w-[805px]"
-          }
+          TableWidth={"md:min-w-[845px]"}
         />
       </div>
     </>
