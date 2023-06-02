@@ -60,7 +60,7 @@ export const Brush = ({
   const brushRef = useRef<SVGGElement | null>(null);
   const brushBehavior = useRef<BrushBehavior<SVGGElement> | null>(null);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
-  const tokenIn = useAppSelector((state) => state.poolsv3.tokenIn);
+  const tokenIn = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const tokenOut = useAppSelector((state) => state.poolsv3.tokenOut);
   const tickSpacing = 10;
   // only used to drag the handles on brush for performance
@@ -73,6 +73,7 @@ export const Brush = ({
   const brushed = useCallback(
     (event: D3BrushEvent<unknown>) => {
       const { type, selection, mode } = event;
+
       if (!selection) {
         setLocalBrushExtent(null);
         return;
@@ -83,7 +84,6 @@ export const Brush = ({
 
       // avoid infinite render loop by checking for change
       if (type === "end" && !compare(brushExtent, scaledTemp, xScale)) {
-        console.log("klm", tick);
         //const scaled = values(scaledTemp);
         topLevelSelectedToken.symbol === tokenIn.symbol
           ? dispatch(setleftbrush(scaled[0]))
@@ -137,7 +137,7 @@ export const Brush = ({
       .attr("stroke", "none")
       .attr("fill-opacity", "0.2")
       .attr("fill", "#1570F1");
-  }, [brushExtent, brushed, id, innerHeight, innerWidth, interactive, previousBrushExtent, xScale]);
+  }, [brushExtent, previousBrushExtent, xScale]);
 
   // respond to xScale changes only
   useEffect(() => {

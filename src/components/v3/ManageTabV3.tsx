@@ -232,7 +232,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         : Number(slippage.slice(0, -1)) === 2
         ? 120
         : Number(slippage.slice(0, -1));
-    console.log(n, "deadline");
+
     setDeadline(Math.floor(new Date().getTime() / 1000) + n * 60);
   }, [slippage]);
   const handleAddLiquidityOperation = () => {
@@ -256,16 +256,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen(ActivePopUp.NewPosition);
-    console.log(
-      "operation parameters",
-      topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
-      topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
-      deadline,
-      firstTokenAmountLiq,
-      secondTokenAmountLiq
-    );
+
     LiquidityOperation(
       topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
       topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
@@ -453,7 +444,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                     "font-subtitle1223"
                   )}
                   onClick={() => {
-                    resetAllValues();
                     setSelectedToken(props.tokenA);
                   }}
                 >
@@ -467,7 +457,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                     "font-subtitle1223"
                   )}
                   onClick={() => {
-                    resetAllValues();
                     setSelectedToken(props.tokenB);
                   }}
                 >

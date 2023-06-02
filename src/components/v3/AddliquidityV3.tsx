@@ -66,28 +66,15 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
   const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
   const isFullRange = useAppSelector((state) => state.poolsv3.isFullRange);
-  console.log(
-    leftbrush,
-    rightbrush,
-    currentPrice,
-    leftbrush < currentPrice && rightbrush < currentPrice,
-    !isLoadingData,
-    !isLoadingData &&
-      currentPrice !== 0 &&
-      bcurrentPrice !== 0 &&
-      leftbrush !== 0 &&
-      rightbrush !== 0 &&
-      (topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? leftbrush < currentPrice && rightbrush < currentPrice
-        : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice),
-    "ujn"
-  );
 
   const dispatch = useAppDispatch();
-
   React.useEffect(() => {
-    handleLiquidityInput(props.firstTokenAmount, "tokenIn");
-  }, [props.tokenIn, props.tokenOut, minTickA, maxTickA, minTickB, maxTickB]);
+    Number(props.secondTokenAmount) !== 0 &&
+      handleLiquidityInput(Number(props.secondTokenAmount).toFixed(4), "tokenIn");
+  }, [topLevelSelectedToken]);
+  React.useEffect(() => {
+    Number(props.firstTokenAmount) !== 0 && handleLiquidityInput(props.firstTokenAmount, "tokenIn");
+  }, [minTickA, maxTickA, minTickB, maxTickB]);
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
@@ -114,40 +101,38 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         props.setFirstTokenAmount(input.toString().trim());
       }
       setSecondLoading(true);
-      console.log(
-        "estimateTokenAFromTokenB",
-        input,
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        minTickA,
-        maxTickA,
-        minTickB,
-        maxTickB
-      );
-      estimateTokenXFromTokenY(
-        new BigNumber(input),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
-        topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB
-      ).then((response) => {
-        setSecondLoading(false);
-        console.log(
-          "estimateTokenAFromTokenB",
-          input,
-          new BigNumber(1).dividedBy(new BigNumber(response)).toString(),
-          response.toString(),
-          topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
-          topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB
-        );
-        topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? props.setSecondTokenAmount(response)
-          : props.setSecondTokenAmount(
-              new BigNumber(1).dividedBy(new BigNumber(response)).toString()
-            );
 
-        dispatch(setIsBrushChanged(false));
-      });
+      if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
+        console.log("tokenin", minTickA, maxTickA);
+        estimateTokenXFromTokenY(
+          new BigNumber(input),
+          props.tokenIn.symbol,
+          props.tokenOut.symbol,
+          minTickA,
+          maxTickA
+        ).then((response) => {
+          setSecondLoading(false);
+          props.setSecondTokenAmount(response);
+          dispatch(setIsBrushChanged(false));
+        });
+      } else {
+        console.log("tokenin", minTickB, maxTickB);
+        estimateTokenYFromTokenX(
+          new BigNumber(input),
+          props.tokenOut.symbol,
+          props.tokenIn.symbol,
+          minTickB,
+          maxTickB
+        ).then((response) => {
+          setSecondLoading(false);
+
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? props.setSecondTokenAmount(response)
+            : props.setSecondTokenAmount(response);
+
+          dispatch(setIsBrushChanged(false));
+        });
+      }
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
 
@@ -162,29 +147,36 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         props.setSecondTokenAmount(input.toString().trim());
       }
       setFirstLoading(true);
+      if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
+        console.log("tokenout", minTickA, maxTickA);
+        estimateTokenYFromTokenX(
+          new BigNumber(input),
+          props.tokenIn.symbol,
+          props.tokenOut.symbol,
+          minTickA,
+          maxTickA
+        ).then((response) => {
+          setFirstLoading(false);
 
-      estimateTokenYFromTokenX(
-        new BigNumber(input),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
-        topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB
-      ).then((response) => {
-        setFirstLoading(false);
-        console.log(
-          "estimateTokenBFromTokenA",
-          input,
-          topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
-          topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB,
-          response.toString(),
-          new BigNumber(1).dividedBy(new BigNumber(response)).toString()
-        );
-        topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? props.setFirstTokenAmount(response)
-          : props.setFirstTokenAmount(response);
+          props.setFirstTokenAmount(response);
 
-        dispatch(setIsBrushChanged(false));
-      });
+          dispatch(setIsBrushChanged(false));
+        });
+      } else {
+        console.log("tokenout", minTickB, maxTickB);
+        estimateTokenXFromTokenY(
+          new BigNumber(input),
+          props.tokenOut.symbol,
+          props.tokenIn.symbol,
+          minTickB,
+          maxTickB
+        ).then((response) => {
+          setFirstLoading(false);
+          props.setFirstTokenAmount(response.toString());
+
+          dispatch(setIsBrushChanged(false));
+        });
+      }
     }
   };
 

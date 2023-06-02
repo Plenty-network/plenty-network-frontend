@@ -71,13 +71,9 @@ export enum Bound {
   UPPER = "UPPER",
 }
 
-// export declare const TICK_SPACINGS: {
-//   [amount in FeeAmount]: number;
-// };
-
 function PriceRangeV3(props: IPriceRangeProps) {
   const currenyAA = props.tokenIn;
-  console.log("hj", props.selectedFeeTier);
+
   const currencyBB = props.tokenOut;
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const [isFullRange, setFullRange] = React.useState(false);
@@ -100,7 +96,6 @@ function PriceRangeV3(props: IPriceRangeProps) {
     props.isClearAll && setFullRange(false);
   }, [props.isClearAll]);
   React.useEffect(() => {
-    console.log("gt", isFullRange);
     if (!isFullRange) {
       dispatch(setIsLoading(true));
       calculateCurrentPrice(tokeninorg.symbol, tokenoutorg.symbol, tokeninorg.symbol).then(
@@ -115,7 +110,6 @@ function PriceRangeV3(props: IPriceRangeProps) {
       );
       dispatch(setIsLoading(true));
       getInitialBoundaries(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
-        console.log("init", response);
         dispatch(setInitBound(response));
         if (
           new BigNumber(1)
@@ -183,7 +177,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         dispatch(setmaxTickB(response.maxTick.toString()));
       });
     }
-  }, [isFullRange, full, topLevelSelectedToken]);
+  }, [isFullRange, full]);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -197,8 +191,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
     } else {
       getTickFromRealPrice(
         new BigNumber(1).dividedBy(new BigNumber(value)),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
+        props.tokenOut.symbol,
+        props.tokenIn.symbol
       ).then((response1) => {
         dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
       });
@@ -228,8 +222,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
     } else {
       getTickFromRealPrice(
         new BigNumber(1).dividedBy(new BigNumber(value)),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
+        props.tokenOut.symbol,
+        props.tokenIn.symbol
       ).then((response1) => {
         dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
       });
@@ -255,12 +249,6 @@ function PriceRangeV3(props: IPriceRangeProps) {
 
     if (value) {
       calculateFullRange(tokeninorg.symbol, tokenoutorg.symbol).then(async (response) => {
-        console.log(
-          "fullish",
-          response,
-          response.minTickPrice.toString(),
-          response.maxTickPrice.toString()
-        );
         topLevelSelectedToken.symbol === tokeninorg.symbol
           ? dispatch(setleftRangeInput("0"))
           : dispatch(setBleftRangeInput("0"));
@@ -275,7 +263,6 @@ function PriceRangeV3(props: IPriceRangeProps) {
           : dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxTickPrice).toString()));
         dispatch(setIsBrushChanged(true));
         // dispatch(setIsLoading(false));
-        console.log(leftbrush, rightbrush, "full");
       });
     }
   };

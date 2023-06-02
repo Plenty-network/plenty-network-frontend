@@ -97,7 +97,6 @@ export default function LiquidityChartRangeInput({
 
   const onBrushDomainChangeEnded = useCallback(
     (domain: [number, number], mode: string | undefined) => {
-      console.log(domain, "domain", mode);
       let leftRangeValue = Number(domain[0]);
       const rightRangeValue = Number(domain[1]);
 
@@ -112,12 +111,6 @@ export default function LiquidityChartRangeInput({
         }
 
         if ((mode === "handle" || mode === "reset") && rightRangeValue > 0) {
-          console.log(
-            "right",
-            mode,
-            !ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER],
-            rightRangeValue
-          );
           // todo: remove this check. Upper bound for large numbers
           // sometimes fails to parse to tick.
           if (rightRangeValue < 1e35) {
@@ -150,7 +143,7 @@ export default function LiquidityChartRangeInput({
         : undefined;
     }
     return leftPrice && rightPrice ? [parseFloat(leftPrice), parseFloat(rightPrice)] : undefined;
-  }, [isSorted, leftbrush, rightbrush, Bleftbrush, Brightbrush, topLevelSelectedToken, isFull]);
+  }, [priceLower, priceUpper, topLevelSelectedToken, isFull]);
   const dispatch = useDispatch<AppDispatch>();
   const brushLabelValue = useCallback(
     (d: "w" | "e", x: number) => {
