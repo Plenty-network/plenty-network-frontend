@@ -3,7 +3,6 @@ import Image from "next/image";
 import * as React from "react";
 import add from "../../../src/assets/icon/pools/addIcon.svg";
 import wallet from "../../../src/assets/icon/pools/wallet.svg";
-import { estimateOtherTokenAmount } from "../../api/liquidity";
 import nFormatter, {
   changeSource,
   imageExists,
@@ -12,13 +11,13 @@ import nFormatter, {
 } from "../../api/util/helpers";
 
 import { useEffect, useRef, useState, useMemo } from "react";
-import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
+
 import { useAppDispatch, useAppSelector } from "../../redux";
 import fallback from "../../../src/assets/icon/pools/fallback.png";
 import lock from "../../../src/assets/icon/poolsv3/Lock.svg";
 import { tokenIcons } from "../../constants/tokensList";
 import fromExponential from "from-exponential";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import { tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
 import { estimateTokenXFromTokenY, estimateTokenYFromTokenX } from "../../api/v3/liquidity";
 
@@ -56,10 +55,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   const bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const bcurrentPrice = useAppSelector((state) => state.poolsv3.BcurrentPrice);
   const tokens = useAppSelector((state) => state.config.tokens);
-  const leftRangeInput = useAppSelector((state) => state.poolsv3.leftRangeInput);
-  const rightRangeInput = useAppSelector((state) => state.poolsv3.RightRangeInput);
-  const BleftRangeInput = useAppSelector((state) => state.poolsv3.BleftRangeInput);
-  const BRightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
+
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const [isFirstLaoding, setFirstLoading] = React.useState(false);
@@ -69,81 +65,29 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
   const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
   const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
-  const isBrushChanged = useAppSelector((state) => state.poolsv3.isBrushChanged);
-  const [minValue, setMinValue] = React.useState(0);
-  const [maxValue, setMaxValue] = React.useState(0);
-  const [value, setValue] = React.useState<[number, number]>([0, 0]);
+  const isFullRange = useAppSelector((state) => state.poolsv3.isFullRange);
+  console.log(
+    leftbrush,
+    rightbrush,
+    currentPrice,
+    leftbrush < currentPrice && rightbrush < currentPrice,
+    !isLoadingData,
+    !isLoadingData &&
+      currentPrice !== 0 &&
+      bcurrentPrice !== 0 &&
+      leftbrush !== 0 &&
+      rightbrush !== 0 &&
+      (topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? leftbrush < currentPrice && rightbrush < currentPrice
+        : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice),
+    "ujn"
+  );
 
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    // setFirstLoading(true);
-    // setSecondLoading(true);
-
-    if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
-      getTickFromRealPrice(
-        new BigNumber(leftRangeInput),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
-      ).then((response1) => {
-        dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
-        setMinValue(Tick.nearestUsableTick(response1, 10));
-        setValue([Tick.nearestUsableTick(response1, 10), maxValue] as [number, number]);
-        getTickFromRealPrice(
-          new BigNumber(rightRangeInput),
-          props.tokenIn.symbol,
-          props.tokenOut.symbol
-        ).then((response) => {
-          dispatch(setmaxTickA(Tick.nearestUsableTick(response, 10)));
-          setMaxValue(Tick.nearestUsableTick(response, 10));
-          setValue([
-            Tick.nearestUsableTick(response1, 10),
-            Tick.nearestUsableTick(response, 10),
-          ] as [number, number]);
-          setFirstLoading(false);
-          setSecondLoading(false);
-        });
-      });
-
-      console.log("ticks", minValue, maxValue);
-      // setValue([minValue, maxValue] as [number, number]);
-    } else {
-      getTickFromRealPrice(
-        new BigNumber(BleftRangeInput),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
-      ).then((response1) => {
-        dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
-        setMinValue(Tick.nearestUsableTick(response1, 10));
-        setValue([Tick.nearestUsableTick(response1, 10), maxValue] as [number, number]);
-        getTickFromRealPrice(
-          new BigNumber(BRightRangeInput),
-          props.tokenIn.symbol,
-          props.tokenOut.symbol
-        ).then((response) => {
-          dispatch(setmaxTickB(Tick.nearestUsableTick(response, 10)));
-
-          setMaxValue(Tick.nearestUsableTick(response, 10));
-          setValue([
-            Tick.nearestUsableTick(response1, 10),
-            Tick.nearestUsableTick(response, 10),
-          ] as [number, number]);
-          setFirstLoading(false);
-          setSecondLoading(false);
-        });
-      });
-    }
-  }, [leftRangeInput, rightRangeInput, BRightRangeInput, BleftRangeInput, topLevelSelectedToken]);
 
   React.useEffect(() => {
     handleLiquidityInput(props.firstTokenAmount, "tokenIn");
-  }, [
-    props.tokenIn,
-    props.tokenOut,
-    leftRangeInput,
-    rightRangeInput,
-    BRightRangeInput,
-    BleftRangeInput,
-  ]);
+  }, [props.tokenIn, props.tokenOut, minTickA, maxTickA, minTickB, maxTickB]);
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
@@ -170,7 +114,16 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         props.setFirstTokenAmount(input.toString().trim());
       }
       setSecondLoading(true);
-      console.log("estimateTokenAFromTokenB", input, props.tokenIn.symbol, props.tokenOut.symbol);
+      console.log(
+        "estimateTokenAFromTokenB",
+        input,
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        minTickA,
+        maxTickA,
+        minTickB,
+        maxTickB
+      );
       estimateTokenXFromTokenY(
         new BigNumber(input),
         props.tokenIn.symbol,
@@ -328,19 +281,28 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       </div>
 
       {!isLoadingData &&
-        (topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? leftbrush < currentPrice && rightbrush < currentPrice
-          : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice) && (
-          <div className="absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
-            <Image src={lock} />
-            <span className="font-subtitle3 w-[318px] ml-5">
-              The market price is outside your specified price range. Single-asset deposit only.
-            </span>
-          </div>
-        )}
-      {(topLevelSelectedToken.symbol === tokeninorg.symbol
+      currentPrice !== 0 &&
+      bcurrentPrice !== 0 &&
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? leftbrush !== 0
+        : bleftbrush !== 0 && topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? rightbrush !== 0
+        : brightbrush !== 0 &&
+          (topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? leftbrush < currentPrice && rightbrush < currentPrice
+            : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice) && (
+            <div className="absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
+              <Image src={lock} />
+              <span className="font-subtitle3 w-[318px] ml-5">
+                The market price is outside your specified price range. Single-asset deposit only.
+              </span>
+            </div>
+          )}
+      {isFullRange ||
+      (topLevelSelectedToken.symbol === tokeninorg.symbol
         ? leftbrush < currentPrice && rightbrush > currentPrice
-        : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice) || isLoadingData ? (
+        : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice) ||
+      isLoadingData ? (
         <div className="relative -top-[9px] left-[25%]">
           <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
         </div>

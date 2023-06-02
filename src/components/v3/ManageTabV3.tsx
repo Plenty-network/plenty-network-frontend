@@ -57,6 +57,7 @@ import ConfirmAddLiquidityv3 from "./ConfirmAddLiqV3";
 import {
   setBcurrentPrice,
   setcurrentPrice,
+  setFullRange,
   setTokenInOrg,
   setTokenInV3,
   setTokeOutOrg,
@@ -103,20 +104,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
   const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
   const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
-
-  React.useEffect(() => {
-    calculateCurrentPrice(
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
-      topLevelSelectedToken.symbol
-    ).then((response) => {
-      topLevelSelectedToken.symbol === props.tokenIn.symbol
-        ? dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toFixed(6)))
-        : dispatch(setBcurrentPrice(response.toFixed(6)));
-      // dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toString()));
-      // dispatch(setBcurrentPrice(response.toString()));
-    });
-  }, [topLevelSelectedToken, props.tokenIn, props.tokenOut]);
+  const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
+  const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
 
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState<string>("30m");
@@ -229,7 +218,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     setFirstTokenAmountLiq("");
     setSecondTokenAmountLiq("");
     dispatch(settopLevelSelectedToken(props.tokenA));
+    dispatch(setFullRange(false));
     setBalanceUpdate(false);
+    setTimeout(() => {
+      setisClearAll(false);
+    }, 4000);
   };
   const [deadline, setDeadline] = useState(0);
   useEffect(() => {
@@ -355,6 +348,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const handleAddLiquidity = () => {
     setScreen(ActivePopUp.ConfirmAddV3);
   };
+
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
@@ -505,6 +499,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 tokenIn={props.tokenIn}
                 tokenOut={props.tokenOut}
                 isClearAll={isClearAll}
+                selectedFeeTier={selectedFeeTier}
               />
               <div className="">
                 <LiquidityV3

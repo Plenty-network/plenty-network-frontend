@@ -3,6 +3,7 @@ import { initialBoundaries } from "../../api/v3/types";
 import { tokenParameterLiquidity } from "../../components/Liquidity/types";
 
 const initialState = {
+  isFullRange: false,
   isBrushChanged: false,
   isLoading: false,
   Rightdiff: "0",
@@ -36,6 +37,9 @@ const PoolsV3Slice = createSlice({
   name: "PoolsV3",
   initialState,
   reducers: {
+    setFullRange: (state, action) => {
+      state.isFullRange = action.payload;
+    },
     setIsRightDiff: (state, action) => {
       state.Rightdiff = action.payload.Rightdiff;
     },
@@ -111,7 +115,7 @@ const PoolsV3Slice = createSlice({
       state.minTickB = action.payload;
     },
     setmaxTickB: (state, action) => {
-      state.maxTickA = action.payload;
+      state.maxTickB = action.payload;
     },
     setIsLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -122,6 +126,7 @@ const PoolsV3Slice = createSlice({
   },
 });
 export const {
+  setFullRange,
   setInitBound,
   setBInitBound,
   setIsBrushChanged,

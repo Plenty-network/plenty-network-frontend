@@ -117,7 +117,7 @@ export function PoolsTableV3(props: IShortCardProps) {
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "DAI.e",
-    image: `/assets/tokens/USDC.e.png`,
+    image: `/assets/tokens/DAI.e.png`,
     symbol: "DAI.e",
   });
   const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({

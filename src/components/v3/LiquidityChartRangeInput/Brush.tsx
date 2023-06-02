@@ -69,30 +69,7 @@ export const Brush = ({
   const [hovering, setHovering] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const previousBrushExtent = usePrevious(brushExtent);
-  const [d, setD] = useState(0);
-  const [e, setE] = useState(0);
-  const [minValue, setMinValue] = useState(0);
-  const [maxValue, setMaxValue] = useState(0);
-  // const values = (scaled: [number, number]) => {
-  //   getTickFromRealPrice(new BigNumber(scaled[0]), tokenIn.symbol, tokenOut.symbol).then(
-  //     (response) => {
-  //       setD(Tick.nearestUsableTick(response, 10));
-  //     }
-  //   );
-  //   getRealPriceFromTick(d, tokenIn.symbol, tokenOut.symbol).then((res) => {
-  //     setMinValue(res.toString());
-  //   });
-  //   getTickFromRealPrice(new BigNumber(scaled[1]), tokenIn.symbol, tokenOut.symbol).then(
-  //     (response) => {
-  //       setE(Tick.nearestUsableTick(response, 10));
-  //     }
-  //   );
-  //   getRealPriceFromTick(e, tokenIn.symbol, tokenOut.symbol).then((res) => {
-  //     setMaxValue(res.toString());
-  //   });
 
-  //   return [minValue, maxValue] as [number, number];
-  // };
   const brushed = useCallback(
     (event: D3BrushEvent<unknown>) => {
       const { type, selection, mode } = event;
@@ -130,13 +107,7 @@ export const Brush = ({
   //keep local and external brush extent in sync
   //i.e. snap to ticks on bruhs end
   useEffect(() => {
-    // if (brushExtent[0] !== 0 && brushExtent[1] !== 0) {
-    //   const scaled = values(brushExtent);
-
-    //   setLocalBrushExtent(scaled);
-    // } else {
     setLocalBrushExtent(brushExtent);
-    //}
   }, [brushExtent]);
 
   // initialize the brush

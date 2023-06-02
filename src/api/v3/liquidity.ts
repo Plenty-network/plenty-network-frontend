@@ -23,10 +23,10 @@ export const calculateCurrentPrice = async (
       contractStorageParameters.sqrtPriceValue
     );
 
-    if (refernceToken === "tokenYSymbol") {
-      currentPrice = PoolObject.getRealPriceTokenY();
-    } else {
+    if (refernceToken === tokenYSymbol) {
       currentPrice = PoolObject.getRealPriceTokenX();
+    } else {
+      currentPrice = PoolObject.getRealPriceTokenY();
     }
 
     return currentPrice;

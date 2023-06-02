@@ -45,9 +45,11 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
   const BrightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
-  const [selectedToken, setSelectedToken] = useState(props.tokenIn);
+
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
+  const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
+  const [selectedToken, setSelectedToken] = useState(tokeninorg);
   return (
     <>
       <div className="flex">
@@ -70,7 +72,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
         <div className="flex px-5">
           <div className="text-text-250 font-body4 ">You are depositing</div>{" "}
           <div className=" ml-auto">
-            {true ? (
+            {false ? (
               <span className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1 rounded-lg	 text-error-300 bg-error-300/[0.1] ">
                 <Image src={infoOrange} />
                 Out of range
@@ -85,14 +87,14 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
         </div>
         <div className="flex mt-3 h-[50px] items-center border-t border-b border-text-800/[0.5] bg-card-500 px-5">
           <div className="flex items-center">
-            <span className="relative top-[3px]">
+            <span className="">
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[props.tokenIn.symbol]
-                    ? tokenIcons[props.tokenIn.symbol].src
-                    : tokens[props.tokenIn.symbol.toString()]?.iconUrl
-                    ? tokens[props.tokenIn.symbol.toString()].iconUrl
+                  tokenIcons[tokeninorg.symbol]
+                    ? tokenIcons[tokeninorg.symbol].src
+                    : tokens[tokeninorg.symbol.toString()]?.iconUrl
+                    ? tokens[tokeninorg.symbol.toString()].iconUrl
                     : `/assets/Tokens/fallback.png`
                 }
                 width={"24px"}
@@ -102,26 +104,26 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
               {nFormatterWithLesserNumber(new BigNumber(props.firstTokenAmount))}{" "}
-              {tEZorCTEZtoUppercase(props.tokenIn.name)}
+              {tEZorCTEZtoUppercase(tokeninorg.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
             $
             {Number(
-              Number(props.firstTokenAmount) * Number(props.tokenPrice[props.tokenIn.name] ?? 0)
+              Number(props.firstTokenAmount) * Number(props.tokenPrice[tokeninorg.name] ?? 0)
             ).toFixed(2)}
           </div>
         </div>
         <div className="flex  h-[50px] items-center border-b border-text-800/[0.5] bg-card-500 px-5">
           <div className="flex items-center">
-            <span className="relative top-[3px]">
+            <span className="">
               <img
                 alt={"alt"}
                 src={
-                  tokenIcons[props.tokenOut.symbol]
-                    ? tokenIcons[props.tokenOut.symbol].src
-                    : tokens[props.tokenOut.symbol.toString()]?.iconUrl
-                    ? tokens[props.tokenOut.symbol.toString()].iconUrl
+                  tokenIcons[tokenoutorg.symbol]
+                    ? tokenIcons[tokenoutorg.symbol].src
+                    : tokens[tokenoutorg.symbol.toString()]?.iconUrl
+                    ? tokens[tokenoutorg.symbol.toString()].iconUrl
                     : `/assets/Tokens/fallback.png`
                 }
                 width={"24px"}
@@ -131,13 +133,13 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
               {nFormatterWithLesserNumber(new BigNumber(props.secondTokenAmount))}{" "}
-              {tEZorCTEZtoUppercase(props.tokenOut.name)}
+              {tEZorCTEZtoUppercase(tokenoutorg.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
             $
             {Number(
-              Number(props.secondTokenAmount) * Number(props.tokenPrice[props.tokenOut.name] ?? 0)
+              Number(props.secondTokenAmount) * Number(props.tokenPrice[tokenoutorg.name] ?? 0)
             ).toFixed(2)}
           </div>
         </div>
@@ -154,25 +156,25 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
           <div className="ml-auto font-body2 flex cursor-pointer">
             <div
               className={clsx(
-                selectedToken.symbol === props.tokenIn.symbol
+                selectedToken.symbol === tokeninorg.symbol
                   ? "rounded-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
                   : "text-text-400 bg-background-600 rounded-r-xl",
                 "px-[30px] py-[5px]"
               )}
-              onClick={() => setSelectedToken(props.tokenIn)}
+              onClick={() => setSelectedToken(tokeninorg)}
             >
-              {props.tokenIn.symbol}
+              {tokeninorg.symbol}
             </div>
             <div
               className={clsx(
-                selectedToken.symbol === props.tokenOut.symbol
+                selectedToken.symbol === tokenoutorg.symbol
                   ? "rounded-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
                   : "text-text-400 bg-background-600 rounded-r-xl",
                 "px-[30px] py-[5px]"
               )}
-              onClick={() => setSelectedToken(props.tokenOut)}
+              onClick={() => setSelectedToken(tokenoutorg)}
             >
-              {props.tokenOut.symbol}
+              {tokenoutorg.symbol}
             </div>
           </div>
         </div>
@@ -182,34 +184,34 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             <div className="flex text-text-250">
               <span className="font-caption1 pl-1">Min Price</span>
               <span className="font-mobile-f1020 ">
-                ({tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
-                {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
+                ({tEZorCTEZtoUppercase(tokeninorg.symbol)} per{" "}
+                {tEZorCTEZtoUppercase(tokenoutorg.symbol)})
               </span>
             </div>
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
               <div className="font-title3">
-                {selectedToken.symbol === props.tokenIn.symbol
-                  ? Number(leftbrush)?.toFixed(6)
-                  : Number(Bleftbrush)?.toFixed(6)}
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? Number(leftRangeInput)?.toFixed(6)
+                  : Number(BleftRangeInput)?.toFixed(6)}
               </div>
-              <div className="font-subtitle5 text-text-250 mt-[1.5px]">$23.38</div>
+              <div className="font-subtitle5 text-text-250 mt-[1.5px]">$0.0</div>
             </div>
           </div>
           <div>
             <div className="flex text-text-250 mt-3 sm:mt-0">
               <span className="font-caption1 pl-1">Max Price</span>
               <span className="font-mobile-f1020">
-                ({tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
-                {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
+                ({tEZorCTEZtoUppercase(tokeninorg.symbol)} per{" "}
+                {tEZorCTEZtoUppercase(tokenoutorg.symbol)})
               </span>
             </div>
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
               <div className="font-title3">
-                {selectedToken.symbol === props.tokenIn.symbol
-                  ? Number(rightbrush)?.toFixed(6)
-                  : Number(Brightbrush)?.toFixed(6)}
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? Number(rightRangeInput)?.toFixed(6)
+                  : Number(BrightRangeInput)?.toFixed(6)}
               </div>
-              <div className="font-subtitle5 text-text-250 mt-[1.5px]">$23.38</div>
+              <div className="font-subtitle5 text-text-250 mt-[1.5px]">$0.0</div>
             </div>
           </div>
           <div>
@@ -218,11 +220,11 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             </div>
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
               <div className="font-title3">
-                {selectedToken.symbol === props.tokenIn.symbol
+                {selectedToken.symbol === tokeninorg.symbol
                   ? Number(currentprice)?.toFixed(6)
                   : Number(bcurrentprice)?.toFixed(6)}
               </div>
-              <div className="font-subtitle5 text-text-250 mt-[1.5px]">$23.38</div>
+              <div className="font-subtitle5 text-text-250 mt-[1.5px]">$0.0</div>
             </div>
           </div>
         </div>

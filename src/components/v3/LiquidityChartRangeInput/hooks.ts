@@ -1,8 +1,10 @@
 import JSBI from "jsbi";
 
 import { useCallback, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 import { getTickAndRealPriceFromPool } from "../../../api/v3/helper";
-import { useAppSelector } from "../../../redux";
+import { AppDispatch, useAppSelector } from "../../../redux";
+import { setIsLoading } from "../../../redux/poolsv3";
 import { tokenParameterLiquidity } from "../../Liquidity/types";
 export declare enum FeeAmount {
   LOWEST = 100,
@@ -32,7 +34,9 @@ export function useDensityChartData({
   const isLoading = false;
   const error = undefined;
   const [data, setData] = useState<any>();
+  const dispatch = useDispatch<AppDispatch>();
   useMemo(() => {
+    dispatch(setIsLoading(true));
     getTickAndRealPriceFromPool("KT1AmeUTxh28afcKVgD6mJEzoSo95NThe3TW").then((response) => {
       setData(response);
     });
@@ -61,7 +65,7 @@ export function useDensityChartData({
         newData.push(chartEntry);
       }
     }
-
+    dispatch(setIsLoading(false));
     return newData;
   }, [data]);
 

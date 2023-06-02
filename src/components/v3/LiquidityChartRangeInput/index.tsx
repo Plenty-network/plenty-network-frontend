@@ -108,15 +108,6 @@ export default function LiquidityChartRangeInput({
       batch(() => {
         // simulate user input for auto-formatting and other validations
         if ((mode === "handle" || mode === "reset") && leftRangeValue > 0) {
-          console.log(
-            "left",
-            mode,
-            !ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER],
-            leftRangeValue
-          );
-          // onLeftRangeInput(
-          //   calcTick(new BigNumber(leftRangeValue), tokenInv3.symbol, tokenoutv3.symbol)
-          //);
           onLeftRangeInput(leftRangeValue.toFixed(6));
         }
 
@@ -130,9 +121,6 @@ export default function LiquidityChartRangeInput({
           // todo: remove this check. Upper bound for large numbers
           // sometimes fails to parse to tick.
           if (rightRangeValue < 1e35) {
-            // onRightRangeInput(
-            //   calcTick(new BigNumber(rightRangeValue), tokenInv3.symbol, tokenoutv3.symbol)
-            // );
             onRightRangeInput(rightRangeValue.toFixed(6));
           }
         }

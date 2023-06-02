@@ -30,6 +30,7 @@ export const calcrealPrice = (tick: number, tokenXSymbol: string, tokenYSymbol: 
 
 export const calcTick = (price: BigNumber, tokenXSymbol: string, tokenYSymbol: string) => {
   const [tick, setTick] = useState(0);
+  setTick(0);
   getTickFromRealPrice(price, tokenXSymbol, tokenYSymbol).then(function (result) {
     setTick(result);
     return tick.toString();

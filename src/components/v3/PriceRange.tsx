@@ -8,6 +8,7 @@ import {
   ContractStorage,
   getRealPriceFromTick,
   getTickAndRealPriceFromPool,
+  getTickFromRealPrice,
 } from "../../api/v3/helper";
 import {
   calculateCurrentPrice,
@@ -38,8 +39,14 @@ import {
 
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import LiquidityChartRangeInput from "./LiquidityChartRangeInput";
-import { calcrealPrice } from "../../utils/outSideClickHook";
+import { calcrealPrice, calcTick } from "../../utils/outSideClickHook";
+// 1 -> 0.0001
 
+// 10 -> 0.001
+
+// 60 -> 0.006
+
+// 200 -> 0.02
 export interface SerializedToken {
   chainId: number;
   address: string;
@@ -57,14 +64,20 @@ interface IPriceRangeProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
   isClearAll: boolean;
+  selectedFeeTier: string;
 }
 export enum Bound {
   LOWER = "LOWER",
   UPPER = "UPPER",
 }
+
+// export declare const TICK_SPACINGS: {
+//   [amount in FeeAmount]: number;
+// };
+
 function PriceRangeV3(props: IPriceRangeProps) {
   const currenyAA = props.tokenIn;
-
+  console.log("hj", props.selectedFeeTier);
   const currencyBB = props.tokenOut;
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const [isFullRange, setFullRange] = React.useState(false);
@@ -82,112 +95,163 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const BrightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
-  const initBound = useAppSelector((state) => state.poolsv3.initBound);
+  const full = useAppSelector((state) => state.poolsv3.isFullRange);
   React.useEffect(() => {
+    props.isClearAll && setFullRange(false);
+  }, [props.isClearAll]);
+  React.useEffect(() => {
+    console.log("gt", isFullRange);
     if (!isFullRange) {
       dispatch(setIsLoading(true));
-      calculateCurrentPrice(
-        tokeninorg.symbol,
-        tokenoutorg.symbol,
-        topLevelSelectedToken.symbol
-      ).then((response) => {
-        topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toFixed(6)))
-          : dispatch(setBcurrentPrice(response.toFixed(6)));
-
-        // dispatch(setcurrentPrice(new BigNumber(1).dividedBy(response).toString()));
-        // dispatch(setBcurrentPrice(response.toString()));
-      });
+      calculateCurrentPrice(tokeninorg.symbol, tokenoutorg.symbol, tokeninorg.symbol).then(
+        (response) => {
+          dispatch(setcurrentPrice(response.toFixed(6)));
+        }
+      );
+      calculateCurrentPrice(tokeninorg.symbol, tokenoutorg.symbol, tokenoutorg.symbol).then(
+        (response) => {
+          dispatch(setBcurrentPrice(response.toFixed(6)));
+        }
+      );
       dispatch(setIsLoading(true));
       getInitialBoundaries(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
+        console.log("init", response);
         dispatch(setInitBound(response));
         if (
           new BigNumber(1)
             .dividedBy(response.minValue)
             .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
         ) {
-          topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setleftRangeInput(response.minValue.toString()))
-            : dispatch(
-                setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toString())
-              );
+          // topLevelSelectedToken.symbol === tokeninorg.symbol
+          //   ?
+          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+          //:
+          dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
 
-          topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setRightRangeInput(response.maxValue.toString()))
-            : dispatch(
-                setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toString())
-              );
-          topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setleftbrush(response.minValue.toString()))
-            : dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.maxValue).toString()));
-          topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setrightbrush(response.maxValue.toString()))
-            : dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toString()));
+          // topLevelSelectedToken.symbol === tokeninorg.symbol
+          //   ?
+          dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
+          //:
+          dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+          // topLevelSelectedToken.symbol === tokeninorg.symbol
+          //   ?
+          dispatch(setleftbrush(response.minValue.toFixed(6)));
+          // :
+          dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+          // topLevelSelectedToken.symbol === tokeninorg.symbol
+          //   ?
+          dispatch(setrightbrush(response.maxValue.toFixed(6)));
+          //:
+          dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
           dispatch(setIsBrushChanged(true));
+          dispatch(setIsLoading(false));
         } else {
-          topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setleftRangeInput(response.minValue.toString()))
-            : dispatch(
-                setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toString())
-              );
-          topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setRightRangeInput(response.maxValue.toString()))
-            : dispatch(
-                setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toString())
-              );
-          topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setleftbrush(response.minValue.toString()))
-            : dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minValue).toString()));
-          topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? dispatch(setrightbrush(response.maxValue.toString()))
-            : dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toString()));
+          // topLevelSelectedToken.symbol === tokeninorg.symbol
+          //   ?
+          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+          //:
+          dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+          // topLevelSelectedToken.symbol === tokeninorg.symbol
+          //   ?
+          dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
+          //:
+          dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+          // topLevelSelectedToken.symbol === tokeninorg.symbol
+          //   ?
+          dispatch(setleftbrush(response.minValue.toFixed(6)));
+          //:
+          dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+          // topLevelSelectedToken.symbol === tokeninorg.symbol
+          //   ?
+          dispatch(setrightbrush(response.maxValue.toFixed(6)));
+          //:
+          dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
           dispatch(setIsBrushChanged(true));
+          dispatch(setIsLoading(false));
         }
         dispatch(setIsBrushChanged(true));
-        dispatch(setIsLoading(false));
-        topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? dispatch(setminTickA(response.minTick.toString()))
-          : dispatch(setminTickB(response.minTick.toString()));
-        topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? dispatch(setmaxTickA(response.maxTick.toString()))
-          : dispatch(setmaxTickB(response.maxTick.toString()));
+        // dispatch(setIsLoading(false));
+        // topLevelSelectedToken.symbol === tokeninorg.symbol
+        //   ?
+        dispatch(setminTickA(response.minTick.toString()));
+        //:
+        dispatch(setminTickB(response.minTick.toString()));
+        // topLevelSelectedToken.symbol === tokeninorg.symbol
+        //   ?
+        dispatch(setmaxTickA(response.maxTick.toString()));
+        //:
+        dispatch(setmaxTickB(response.maxTick.toString()));
       });
     }
-  }, [topLevelSelectedToken, tokeninorg, isFullRange, props.isClearAll]);
+  }, [isFullRange, full, topLevelSelectedToken]);
 
   const dispatch = useDispatch<AppDispatch>();
 
   const onLeftRangeInputFn = (value: string) => {
+    if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
+      getTickFromRealPrice(new BigNumber(value), props.tokenIn.symbol, props.tokenOut.symbol).then(
+        (response1) => {
+          dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
+        }
+      );
+    } else {
+      getTickFromRealPrice(
+        new BigNumber(1).dividedBy(new BigNumber(value)),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol
+      ).then((response1) => {
+        dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
+      });
+    }
+
     if (
       topLevelSelectedToken.symbol === tokeninorg.symbol
         ? leftbrush !== Number(value)
         : Bleftbrush !== Number(value)
     ) {
       topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setleftbrush(value))
-        : dispatch(setBleftbrush(value));
+        ? dispatch(setleftbrush(Number(value).toFixed(6)))
+        : dispatch(setBleftbrush(Number(value).toFixed(6)));
     }
+
     topLevelSelectedToken.symbol === tokeninorg.symbol
-      ? dispatch(setleftRangeInput(value))
-      : dispatch(setBleftRangeInput(value));
+      ? dispatch(setleftRangeInput(Number(value).toFixed(6)))
+      : dispatch(setBleftRangeInput(Number(value).toFixed(6)));
   };
   const onRightRangeInputFn = (value: string) => {
+    if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
+      getTickFromRealPrice(new BigNumber(value), props.tokenIn.symbol, props.tokenOut.symbol).then(
+        (response) => {
+          dispatch(setmaxTickA(Tick.nearestUsableTick(response, 10)));
+        }
+      );
+    } else {
+      getTickFromRealPrice(
+        new BigNumber(1).dividedBy(new BigNumber(value)),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol
+      ).then((response1) => {
+        dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
+      });
+    }
+
     if (
       topLevelSelectedToken.symbol === tokeninorg.symbol
         ? rightbrush !== Number(value)
         : Brightbrush !== Number(value)
     ) {
       topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setrightbrush(value))
-        : dispatch(setBrightbrush(value));
+        ? dispatch(setrightbrush(Number(value).toFixed(6)))
+        : dispatch(setBrightbrush(Number(value).toFixed(6)));
     }
+
     topLevelSelectedToken.symbol === tokeninorg.symbol
-      ? dispatch(setRightRangeInput(value))
-      : dispatch(setBRightRangeInput(value));
+      ? dispatch(setRightRangeInput(Number(value).toFixed(6)))
+      : dispatch(setBRightRangeInput(Number(value).toFixed(6)));
   };
   const fullrangeCalc = (value: boolean) => {
     setFullRange(!isFullRange);
-    dispatch(setIsLoading(true));
+    dispatch(setFullRange(!isFullRange));
 
     if (value) {
       calculateFullRange(tokeninorg.symbol, tokenoutorg.symbol).then(async (response) => {
@@ -210,9 +274,20 @@ function PriceRangeV3(props: IPriceRangeProps) {
           ? dispatch(setrightbrush(response.maxTickPrice.toString()))
           : dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxTickPrice).toString()));
         dispatch(setIsBrushChanged(true));
-        dispatch(setIsLoading(false));
+        // dispatch(setIsLoading(false));
         console.log(leftbrush, rightbrush, "full");
       });
+    }
+  };
+  const percentage = () => {
+    if (props.selectedFeeTier === "0.01") {
+      return 0.0001;
+    } else if (props.selectedFeeTier === "0.05") {
+      return 0.001;
+    } else if (props.selectedFeeTier === "0.03") {
+      return 0.006;
+    } else {
+      return 0.002;
     }
   };
 
@@ -281,8 +356,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
               onClick={() =>
                 onLeftRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
-                    ? (Number(leftRangeInput) - 0.01).toString()
-                    : (Number(BleftRangeInput) - 0.01).toString()
+                    ? (Number(leftRangeInput) - percentage()).toString()
+                    : (Number(BleftRangeInput) - percentage()).toString()
                 )
               }
             >
@@ -322,8 +397,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
               onClick={() =>
                 onLeftRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
-                    ? (Number(leftRangeInput) + 0.01).toString()
-                    : (Number(BleftRangeInput) + 0.01).toString()
+                    ? (Number(leftRangeInput) + percentage()).toString()
+                    : (Number(BleftRangeInput) + percentage()).toString()
                 )
               }
             >
@@ -345,8 +420,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
               onClick={() =>
                 onRightRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
-                    ? (Number(rightRangeInput) - 0.01).toString()
-                    : (Number(BrightRangeInput) - 0.01).toString()
+                    ? (Number(rightRangeInput) - percentage()).toString()
+                    : (Number(BrightRangeInput) - percentage()).toString()
                 )
               }
             >
@@ -386,8 +461,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
               onClick={() =>
                 onRightRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
-                    ? (Number(rightRangeInput) + 0.01).toString()
-                    : (Number(BrightRangeInput) + 0.01).toString()
+                    ? (Number(rightRangeInput) + percentage()).toString()
+                    : (Number(BrightRangeInput) + percentage()).toString()
                 )
               }
             >
