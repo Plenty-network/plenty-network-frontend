@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@airgap/beacon-sdk": "^4.0.0",
-    "@plenty-labs/v3-sdk": "^1.0.8",
+    "@plenty-labs/v3-sdk": "^1.0.9",
     "@rainbow-me/rainbowkit": "^0.8.1",
     "@reduxjs/toolkit": "^1.8.2",
     "@taquito/beacon-wallet": "^16.1.2",
