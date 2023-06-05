@@ -2,7 +2,7 @@ import { format } from "d3";
 import { saturate } from "polished";
 import React, { useCallback, useMemo } from "react";
 import { batch, useDispatch } from "react-redux";
-
+import { BigNumber } from "bignumber.js";
 import { AppDispatch, useAppSelector } from "../../../redux";
 import { setIsLeftDiff, setIsRightDiff } from "../../../redux/poolsv3";
 import { tokenParameterLiquidity } from "../../Liquidity/types";
@@ -10,6 +10,7 @@ import { tokenParameterLiquidity } from "../../Liquidity/types";
 import { Chart } from "./Chart";
 import { useDensityChartData } from "./hooks";
 import { ZoomLevels } from "./types";
+import { calcTick } from "../../../utils/outSideClickHook";
 export enum Bound {
   LOWER = "LOWER",
   UPPER = "UPPER",
@@ -59,6 +60,7 @@ export default function LiquidityChartRangeInput({
   onLeftRangeInput,
   onRightRangeInput,
   interactive,
+  isFull,
 }: {
   currencyA: tokenParameterLiquidity | undefined;
   currencyB: tokenParameterLiquidity | undefined;
@@ -70,7 +72,10 @@ export default function LiquidityChartRangeInput({
   onLeftRangeInput: (value: string) => void;
   onRightRangeInput: (value: string) => void;
   interactive: boolean;
+  isFull: boolean;
 }) {
+  const tokenoutv3 = useAppSelector((state) => state.poolsv3.tokenOut);
+  const tokenInv3 = useAppSelector((state) => state.poolsv3.tokenIn);
   const tokenAColor = "#1570F1";
   const tokenBColor = "#1570F1";
   const leftbrush = useAppSelector((state) => state.poolsv3.leftbrush);
@@ -83,6 +88,7 @@ export default function LiquidityChartRangeInput({
 
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
+  const isLoadingData = useAppSelector((state) => state.poolsv3.isLoading);
   const { isLoading, error, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
@@ -100,19 +106,11 @@ export default function LiquidityChartRangeInput({
 
       batch(() => {
         // simulate user input for auto-formatting and other validations
-        if (
-          (!ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ||
-            mode === "handle" ||
-            mode === "reset") &&
-          leftRangeValue > 0
-        ) {
+        if ((mode === "handle" || mode === "reset") && leftRangeValue > 0) {
           onLeftRangeInput(leftRangeValue.toFixed(6));
         }
 
-        if (
-          (!ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] || mode === "reset") &&
-          rightRangeValue > 0
-        ) {
+        if ((mode === "handle" || mode === "reset") && rightRangeValue > 0) {
           // todo: remove this check. Upper bound for large numbers
           // sometimes fails to parse to tick.
           if (rightRangeValue < 1e35) {
@@ -121,29 +119,31 @@ export default function LiquidityChartRangeInput({
         }
       });
     },
-    [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit]
+    [onLeftRangeInput, onRightRangeInput]
   );
 
   interactive = interactive && Boolean(formattedData?.length);
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
     let leftPrice, rightPrice;
-    console.log("kk", Number(leftbrush), Number(rightbrush));
-    if (topLevelSelectedToken.symbol === tokeninorg.symbol && rightbrush && leftbrush) {
-      leftPrice = isSorted ? Number(leftbrush) : priceUpper;
-      rightPrice = isSorted ? Number(rightbrush) : priceLower;
-    } else if (Brightbrush && Bleftbrush) {
-      leftPrice = isSorted ? Number(Bleftbrush) : priceUpper;
-      rightPrice = isSorted ? Number(Brightbrush) : priceLower;
-    } else {
-      leftPrice = isSorted ? priceLower : priceUpper;
-      rightPrice = isSorted ? priceUpper : priceLower;
-    }
 
-    return leftPrice && rightPrice
-      ? [parseFloat(leftPrice?.toFixed(6)), parseFloat(rightPrice?.toFixed(6))]
-      : undefined;
-  }, [isSorted, leftbrush, rightbrush, Bleftbrush, Brightbrush, topLevelSelectedToken]);
+    if (!isFull) {
+      if (topLevelSelectedToken.symbol === tokeninorg.symbol && rightbrush && leftbrush) {
+        leftPrice = isSorted ? Number(leftbrush) : priceUpper;
+        rightPrice = isSorted ? Number(rightbrush) : priceLower;
+      } else if (Brightbrush && Bleftbrush) {
+        leftPrice = isSorted ? Number(Bleftbrush) : priceUpper;
+        rightPrice = isSorted ? Number(Brightbrush) : priceLower;
+      } else {
+        leftPrice = isSorted ? priceLower : priceUpper;
+        rightPrice = isSorted ? priceUpper : priceLower;
+      }
+      return leftPrice && rightPrice
+        ? [parseFloat(leftPrice?.toFixed(6)), parseFloat(rightPrice?.toFixed(6))]
+        : undefined;
+    }
+    return leftPrice && rightPrice ? [parseFloat(leftPrice), parseFloat(rightPrice)] : undefined;
+  }, [priceLower, priceUpper, topLevelSelectedToken, isFull]);
   const dispatch = useDispatch<AppDispatch>();
   const brushLabelValue = useCallback(
     (d: "w" | "e", x: number) => {
@@ -157,7 +157,11 @@ export default function LiquidityChartRangeInput({
         dispatch(setIsRightDiff({ LeftDiff: "∞" }));
         return "∞";
       }
-
+      if (isFull) {
+        if (d === "e") {
+          return "-100%";
+        } else return "100%";
+      }
       const percent =
         (x < price ? -1 : 1) * ((Math.max(x, price) - Math.min(x, price)) / price) * 100;
       d === "e"
@@ -175,7 +179,7 @@ export default function LiquidityChartRangeInput({
           );
       return price ? `${format(Math.abs(percent) > 1 ? ".2~s" : ".2~f")(percent)}%` : "";
     },
-    [isSorted, price, ticksAtLimit]
+    [isSorted, price, ticksAtLimit, isFull]
   );
 
   if (error) {
@@ -189,8 +193,10 @@ export default function LiquidityChartRangeInput({
     <div style={{ minHeight: "200px" }}>
       {isUninitialized ? (
         "Your position will appear here."
-      ) : isLoading ? (
-        "loading"
+      ) : isLoadingData ? (
+        <div className="justify-center items-center  flex h-[180px]">
+          <div className="spinner"></div>
+        </div>
       ) : error ? (
         "Liquidity data not available."
       ) : !formattedData || formattedData.length === 0 || !price ? (

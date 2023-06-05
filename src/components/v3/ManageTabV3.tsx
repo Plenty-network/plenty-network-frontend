@@ -55,16 +55,9 @@ import { walletConnection } from "../../redux/wallet/wallet";
 import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
 import ConfirmAddLiquidityv3 from "./ConfirmAddLiqV3";
 import {
-  setleftbrush,
-  setrightbrush,
   setBcurrentPrice,
-  setBleftbrush,
-  setBleftRangeInput,
-  setBrightbrush,
-  setBRightRangeInput,
   setcurrentPrice,
-  setleftRangeInput,
-  setRightRangeInput,
+  setFullRange,
   setTokenInOrg,
   setTokenInV3,
   setTokeOutOrg,
@@ -75,7 +68,8 @@ import IncreaseDecreaseLiqMain from "./IncreaseDecreaseliqMain";
 import ConfirmIncreaseLiq from "./Confirmaddliq";
 import ConfirmDecreaseLiq from "./Confirmremoveliq";
 import TransactionSettingsV3 from "./TransactionSettingv3";
-import { calculateCurrentPrice, estimateTokenAFromTokenB } from "../../api/v3/liquidity";
+import { calculateCurrentPrice } from "../../api/v3/liquidity";
+import { LiquidityOperation } from "../../operations/v3/liquidity";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -106,22 +100,15 @@ export enum ActivePopUp {
 export function ManageTabV3(props: IManageLiquidityProps) {
   const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
-  const tokens = useAppSelector((state) => state.config.tokens);
-
-  React.useEffect(() => {
-    calculateCurrentPrice(
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
-      topLevelSelectedToken.symbol
-    ).then((response) => {
-      topLevelSelectedToken.symbol === props.tokenIn.symbol
-        ? dispatch(setcurrentPrice(response?.toString()))
-        : dispatch(setBcurrentPrice(response?.toString()));
-    });
-  }, [topLevelSelectedToken, props.tokenA, props.tokenB]);
+  const minTickA = useAppSelector((state) => state.poolsv3.minTickA);
+  const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
+  const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
+  const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
+  const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
+  const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
 
   const [showVideoModal, setShowVideoModal] = React.useState(false);
-  const [slippage, setSlippage] = useState<string>("0.5");
+  const [slippage, setSlippage] = useState<string>("30m");
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const amm = useAppSelector((state) => state.config.AMMs);
 
@@ -166,13 +153,13 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   const refSettingTab = React.useRef(null);
   useEffect(() => {
-    topLevelSelectedToken.symbol === props.tokenIn.symbol
-      ? dispatch(setTokenInV3(props.tokenIn))
-      : dispatch(setTokeOutV3(props.tokenOut));
+    //topLevelSelectedToken.symbol === props.tokenIn.symbol
+    dispatch(setTokenInV3(props.tokenIn));
+    dispatch(setTokeOutV3(props.tokenOut));
 
     dispatch(setTokenInOrg(props.tokenA));
     dispatch(setTokeOutOrg(props.tokenB));
-  }, [props.tokenIn, props.tokenOut]);
+  }, [props.tokenIn, props.tokenA, props.tokenB]);
   useEffect(() => {
     const updateBalance = async () => {
       const balancePromises = [];
@@ -225,14 +212,29 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     };
     updateBalance();
   }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
-
+  const [isClearAll, setisClearAll] = useState(false);
   const resetAllValues = () => {
+    setisClearAll(true);
     setFirstTokenAmountLiq("");
     setSecondTokenAmountLiq("");
-
+    dispatch(settopLevelSelectedToken(props.tokenA));
+    dispatch(setFullRange(false));
     setBalanceUpdate(false);
+    setTimeout(() => {
+      setisClearAll(false);
+    }, 4000);
   };
+  const [deadline, setDeadline] = useState(0);
+  useEffect(() => {
+    const n =
+      Number(slippage.slice(0, -1)) === 1
+        ? 60
+        : Number(slippage.slice(0, -1)) === 2
+        ? 120
+        : Number(slippage.slice(0, -1));
 
+    setDeadline(Math.floor(new Date().getTime() / 1000) + n * 60);
+  }, [slippage]);
   const handleAddLiquidityOperation = () => {
     setContentTransaction(
       `Mint ${nFormatterWithLesserNumber(
@@ -254,28 +256,30 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen(ActivePopUp.NewPosition);
-    addLiquidity(
+
+    LiquidityOperation(
+      topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
+      topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
       props.tokenIn.symbol,
       props.tokenOut.symbol,
-      firstTokenAmountLiq.toString(),
-      secondTokenAmountLiq.toString(),
-      walletAddress,
+      deadline,
+      {
+        x: new BigNumber(firstTokenAmountLiq),
+        y: new BigNumber(secondTokenAmountLiq),
+      },
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      props.isGaugeAvailable ? props.setActiveState : undefined,
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-          TOKEN_A
-        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
+        trailingText: `add liq`,
         linkText: "View in Explorer",
         isLoading: true,
-
         transactionId: "",
       }
     ).then((response) => {
+      console.log("res", response);
       if (response.success) {
         setBalanceUpdate(true);
 
@@ -335,6 +339,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const handleAddLiquidity = () => {
     setScreen(ActivePopUp.ConfirmAddV3);
   };
+
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
@@ -371,11 +376,12 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   }, [props, firstTokenAmountLiq, secondTokenAmountLiq]);
   const [selectedToken, setSelectedToken] = useState({} as tokenParameterLiquidity);
   useEffect(() => {
-    setSelectedToken(props.tokenIn);
+    setSelectedToken(props.tokenA);
   }, []);
   useEffect(() => {
     dispatch(settopLevelSelectedToken(selectedToken));
   }, [selectedToken]);
+
   return true ? (
     <>
       <PopUpModal
@@ -423,7 +429,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               <p className="ml-1 relative top-[0px]">
                 <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
               </p>
-              <p className="text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer">
+              <p
+                className="text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer"
+                onClick={resetAllValues}
+              >
                 Clear All
               </p>
               <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
@@ -434,7 +443,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                       : "text-text-250 px-2",
                     "font-subtitle1223"
                   )}
-                  onClick={() => setSelectedToken(props.tokenA)}
+                  onClick={() => {
+                    setSelectedToken(props.tokenA);
+                  }}
                 >
                   {tEZorCTEZtoUppercase(props.tokenA.symbol)}
                 </div>
@@ -445,7 +456,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                       : "text-text-250 px-2",
                     "font-subtitle1223"
                   )}
-                  onClick={() => setSelectedToken(props.tokenB)}
+                  onClick={() => {
+                    setSelectedToken(props.tokenB);
+                  }}
                 >
                   {tEZorCTEZtoUppercase(props.tokenB.symbol)}
                 </div>
@@ -453,12 +466,12 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               <div className="flex items-center justify-between flex-row  relative mr-[48px]">
                 <div
                   ref={refSettingTab}
-                  className="py-1  px-[8.5px] h-8 border border-text-700 cursor-pointer rounded-lg flex items-center "
+                  className="py-1  px-[8.5px] h-8 border border-text-700 cursor-pointer rounded-lg flex items-center w-[80px]"
                   onClick={() => setSettingsShow(!settingsShow)}
                 >
                   <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
-                  <span className="text-white font-body4 ml-2 relative ">
-                    {slippage ? Number(slippage) : 0.5}s
+                  <span className="text-white font-body4 ml-2 relative top-px">
+                    {slippage ? slippage : "30m"}
                   </span>
                 </div>
                 <TransactionSettingsV3
@@ -471,7 +484,12 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             </div>
 
             <div className="sm:flex  mt-4">
-              <PriceRangeV3 tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
+              <PriceRangeV3
+                tokenIn={props.tokenIn}
+                tokenOut={props.tokenOut}
+                isClearAll={isClearAll}
+                selectedFeeTier={selectedFeeTier}
+              />
               <div className="">
                 <LiquidityV3
                   setSelectedFeeTier={setSelectedFeeTier}
@@ -500,7 +518,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               <p className="text-white">
                 {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
               </p>
-              <p className="ml-1 relative top-[6px]">
+              <p className="ml-1 relative top-[3px]">
                 <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
               </p>
             </div>
@@ -552,8 +570,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               setScreen={setScreen}
               firstTokenAmount={firstTokenAmountLiq}
               secondTokenAmount={secondTokenAmountLiq}
-              tokenIn={props.tokenIn}
-              tokenOut={props.tokenOut}
+              tokenIn={props.tokenA}
+              tokenOut={props.tokenB}
               tokenPrice={tokenPrice}
               pnlpEstimates={pnlpEstimates}
               sharePool={sharePool}

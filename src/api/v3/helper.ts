@@ -92,6 +92,45 @@ export const getTickAndRealPriceFromPool = async (contractAddress: string): Prom
   }
 };
 
+export const getRealPriceFromTick = async (
+  tick: number,
+  tokenXSymbol: string,
+  tokenYSymbol: string
+): Promise<any> => {
+  try {
+    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    let priceValue = Tick.computeRealPriceFromTick(
+      tick,
+      contractStorageParameters.tokenX,
+      contractStorageParameters.tokenY
+    );
+
+    return priceValue;
+  } catch (error) {
+    console.log("v3 error: ", error);
+  }
+};
+
+export const getTickFromRealPrice = async (
+  realPrice: BigNumber,
+  tokenXSymbol: string,
+  tokenYSymbol: string
+): Promise<any> => {
+  try {
+    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    let tick = Tick.computeTickFromRealPrice(
+      realPrice,
+      contractStorageParameters.tokenX,
+      contractStorageParameters.tokenY,
+      contractStorageParameters.tickSpacing
+    );
+
+    return tick;
+  } catch (error) {
+    console.log("v3 error: ", error);
+  }
+};
+
 export const calculateliquidity = async (
   amount: BalanceNat,
   lowerTick: number,
@@ -117,8 +156,6 @@ export const calculateliquidity = async (
 };
 
 export const createPositionInstance = async (
-  amountTokenX: BigNumber,
-  amountTokenY: BigNumber,
   lowerTick: number,
   upperTick: number,
   tokenXSymbol: string,
@@ -132,12 +169,8 @@ export const createPositionInstance = async (
     const contractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
     const contractInstance = await Tezos.wallet.at(contractAddress);
 
-    let amount = {
-      x: amountTokenX,
-      y: amountTokenY,
-    };
     let liquidity = await calculateliquidity(
-      amount,
+      maximumTokensContributed,
       lowerTick,
       upperTick,
       tokenXSymbol,

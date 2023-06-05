@@ -18,3 +18,10 @@ export interface BalanceNat {
   x: BigNumber;
   y: BigNumber;
 }
+
+export interface initialBoundaries {
+  minTick: number;
+  maxTick: number;
+  minValue: BigNumber;
+  maxVlaue: BigNumber;
+}

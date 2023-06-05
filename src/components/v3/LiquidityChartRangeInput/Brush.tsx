@@ -1,47 +1,15 @@
-// import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from 'components/LiquidityChartRangeInput/svg'
+import { BigNumber } from "bignumber.js";
 import { Tick } from "@plenty-labs/v3-sdk";
 import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from "d3";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { getRealPriceFromTick, getTickFromRealPrice } from "../../../api/v3/helper";
 import { AppDispatch, useAppSelector } from "../../../redux";
 import { setBleftbrush, setBrightbrush, setleftbrush, setrightbrush } from "../../../redux/poolsv3";
 
 import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from "./svg";
 import usePrevious from "./usePrevious";
-
-// const Handle = styled.path<{ color: string }>`
-//   cursor: ew-resize;
-//   pointer-events: none;
-
-//   stroke-width: 3;
-//   stroke: ${({ color }) => color};
-//   fill: ${({ color }) => color};
-// `;
-
-// const HandleAccent = styled.path`
-//   cursor: ew-resize;
-//   pointer-events: none;
-
-//   stroke-width: 1.5;
-//   stroke: #ffffff;
-//   opacity: 1;
-// `;
-
-// const LabelGroup = styled.g<{ visible: boolean }>`
-//   opacity: ${({ visible }) => (visible ? "1" : "0")};
-//   transition: opacity 300ms;
-//   fill: #211336;
-// `;
-
-// const TooltipBackground = styled.rect`
-//   fill: #211336;
-// `;
-
-// const Tooltip = styled.text`
-//   text-anchor: middle;
-//   font-size: 13px;
-//   fill: #cfced1;
-// `;
+import { ChartEntry } from "./types";
 
 // flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20;
@@ -75,6 +43,7 @@ export const Brush = ({
   innerHeight,
   westHandleColor,
   eastHandleColor,
+  tick,
 }: {
   id: string;
   xScale: ScaleLinear<number, number>;
@@ -86,13 +55,12 @@ export const Brush = ({
   innerHeight: number;
   westHandleColor: string;
   eastHandleColor: string;
+  tick: (d: ChartEntry) => number;
 }) => {
-  //const tick = new Tick();
-
   const brushRef = useRef<SVGGElement | null>(null);
   const brushBehavior = useRef<BrushBehavior<SVGGElement> | null>(null);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
-  const tokenIn = useAppSelector((state) => state.poolsv3.tokenIn);
+  const tokenIn = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const tokenOut = useAppSelector((state) => state.poolsv3.tokenOut);
   const tickSpacing = 10;
   // only used to drag the handles on brush for performance
@@ -101,41 +69,37 @@ export const Brush = ({
   const [hovering, setHovering] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const previousBrushExtent = usePrevious(brushExtent);
+
   const brushed = useCallback(
     (event: D3BrushEvent<unknown>) => {
-      console.log(xScale, brushExtent, setBrushExtent, "lla");
       const { type, selection, mode } = event;
+
       if (!selection) {
         setLocalBrushExtent(null);
         return;
       }
 
+      const scaledTemp = (selection as [number, number]).map(xScale.invert) as [number, number];
       const scaled = (selection as [number, number]).map(xScale.invert) as [number, number];
-      console.log("scaled", scaled, type);
-      // avoid infinite render loop by checking for change
-      if (type === "end" && !compare(brushExtent, scaled, xScale)) {
-        // topLevelSelectedToken.symbol === tokenIn.symbol
-        //   ? dispatch(setleftbrush(scaled[0]))
-        //   : dispatch(setBleftbrush(scaled[0]));
-        // topLevelSelectedToken.symbol === tokenIn.symbol
-        //   ? dispatch(setrightbrush(scaled[1]))
-        //   : dispatch(setBrightbrush(scaled[1]));
-        console.log(
-          "hj",
-          Tick.nearestUsableTick(scaled[0], 10),
-          Tick.nearestUsableTick(scaled[1], 10)
-        );
 
-        setBrushExtent(
-          [Tick.nearestUsableTick(scaled[0], 10), Tick.nearestUsableTick(scaled[1], 10)],
-          mode
-        );
+      // avoid infinite render loop by checking for change
+      if (type === "end" && !compare(brushExtent, scaledTemp, xScale)) {
+        //const scaled = values(scaledTemp);
+        topLevelSelectedToken.symbol === tokenIn.symbol
+          ? dispatch(setleftbrush(scaled[0]))
+          : dispatch(setBleftbrush(scaled[0]));
+        topLevelSelectedToken.symbol === tokenIn.symbol
+          ? dispatch(setrightbrush(scaled[1]))
+          : dispatch(setBrightbrush(scaled[1]));
+
+        // setBrushExtent(
+        //   [Tick.nearestUsableTick(scaled[0], 10), Tick.nearestUsableTick(scaled[1], 10)],
+        //   mode
+        // );
+        setBrushExtent([scaled[0], scaled[1]], mode);
       }
 
-      setLocalBrushExtent([
-        Tick.nearestUsableTick(scaled[0], 10),
-        Tick.nearestUsableTick(scaled[1], 10),
-      ]);
+      setLocalBrushExtent([scaledTemp[0], scaledTemp[1]]);
     },
     [xScale, brushExtent, setBrushExtent]
   );
@@ -173,7 +137,7 @@ export const Brush = ({
       .attr("stroke", "none")
       .attr("fill-opacity", "0.2")
       .attr("fill", "#1570F1");
-  }, [brushExtent, brushed, id, innerHeight, innerWidth, interactive, previousBrushExtent, xScale]);
+  }, [brushExtent, previousBrushExtent, xScale]);
 
   // respond to xScale changes only
   useEffect(() => {

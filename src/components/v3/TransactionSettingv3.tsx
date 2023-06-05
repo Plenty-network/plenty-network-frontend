@@ -25,15 +25,15 @@ function TransactionSettingsV3(props: ITransactionSettingsProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
 
   const handleSlippage = (input: string | number) => {
-    if (input === "" || isNaN(Number(input))) {
+    if (input === "") {
       props.setSlippage("");
     } else {
       props.setSlippage(input.toString());
     }
   };
 
-  const handleAutoSlippage = () => {
-    props.setSlippage("0.5");
+  const handleClick = (value: string) => {
+    props.setSlippage(value);
   };
   useOutsideClick(refSetting, () => {
     props.setSettingsShow(false);
@@ -82,26 +82,29 @@ function TransactionSettingsV3(props: ITransactionSettingsProps) {
       <div className="flex gap-1.5 mt-3 items-center">
         <div
           className={clsx(
-            "rounded-lg w-[67px] bg-primary-500 h-[30px] flex items-center justify-center font-body2 text-black"
+            props.slippage === "30m" ? "bg-primary-500  text-black" : "bg-muted-235 text-text-500",
+            "rounded-lg w-[67px]  h-[30px] flex items-center justify-center font-body2 cursor-pointer"
           )}
-          onClick={handleAutoSlippage}
+          onClick={() => handleClick("30m")}
         >
           30m
         </div>
         <div
           className={clsx(
-            "rounded-lg w-[67px] bg-primary-500 h-[30px] flex items-center justify-center font-body2 text-black"
+            props.slippage === "01h" ? "bg-primary-500  text-black" : "bg-muted-235 text-text-500",
+            "rounded-lg w-[67px]  h-[30px] flex items-center justify-center font-body2 cursor-pointer"
           )}
-          onClick={handleAutoSlippage}
+          onClick={() => handleClick("01h")}
         >
           01h
         </div>
 
         <div
           className={clsx(
-            "rounded-lg w-[67px] bg-primary-500 h-[30px] flex items-center justify-center font-body2 text-black"
+            props.slippage === "02h" ? "bg-primary-500  text-black" : "bg-muted-235 text-text-500",
+            "rounded-lg w-[67px]  h-[30px] flex items-center justify-center font-body2 cursor-pointer"
           )}
-          onClick={handleAutoSlippage}
+          onClick={() => handleClick("02h")}
         >
           02h
         </div>

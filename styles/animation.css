@@ -935,3 +935,32 @@
 }
  
 }
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  animation: spinner-plncf9 4s infinite;
+}
+
+.spinner::before,
+.spinner::after {
+  content: '';
+  grid-area: 1/1;
+  border: 9px solid;
+  border-radius: 50%;
+  border-color: #9D5CFF #9D5CFF #0000 #0000;
+  mix-blend-mode: darken;
+  animation: spinner-plncf9 1s infinite linear;
+}
+
+.spinner::after {
+  border-color: #0000 #0000 #e6d4ff #e6d4ff;
+  animation-direction: reverse;
+}
+
+@keyframes spinner-plncf9 {
+  100% {
+    transform: rotate(1turn);
+  }
+}

@@ -8,22 +8,30 @@ import { BalanceNat, TokenStandard } from "./types";
 import { dappClient } from "../../common/walletconnect";
 import { store } from "../../redux";
 import { createPositionInstance } from "../../api/v3/helper";
+import { TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from "../types";
+
+import { setFlashMessage } from "../../redux/flashMessage";
+import { IFlashMessageProps } from "../../redux/flashMessage/type";
 
 export const LiquidityOperation = async (
-  amountTokenX: BigNumber,
-  amountTokenY: BigNumber,
   lowerTick: number,
   upperTick: number,
   tokenXSymbol: string,
   tokenYSymbol: string,
-  deadline: number,
-  maximumTokensContributed: BalanceNat
+  deadline: number, //in seconds timestamp
+  maximumTokensContributed: BalanceNat,
+  transactionSubmitModal: TTransactionSubmitModal | undefined,
+  resetAllValues: TResetAllValues | undefined,
+  setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<any> => {
   try {
     let configResponse: any = await axios.get(Config.CONFIG_LINKS.testnet.TOKEN);
     const Tezos = await dappClient().tezos();
     const state = store.getState();
     const TOKENS = state.config.tokens;
+    let amountTokenX = maximumTokensContributed.x;
+    let amountTokenY = maximumTokensContributed.y;
 
     amountTokenX = amountTokenX.multipliedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals));
 
@@ -35,8 +43,6 @@ export const LiquidityOperation = async (
     const tokenX = await Tezos.wallet.at(configResponse[tokenXSymbol].address);
     const tokenY = await Tezos.wallet.at(configResponse[tokenYSymbol].address);
     let createPosition = await createPositionInstance(
-      amountTokenX,
-      amountTokenY,
       lowerTick,
       upperTick,
       tokenXSymbol,
@@ -75,6 +81,12 @@ export const LiquidityOperation = async (
           },
         ])
         .send();
+        setShowConfirmTransaction && setShowConfirmTransaction(false);
+        transactionSubmitModal && transactionSubmitModal(op.opHash as string);
+        resetAllValues && resetAllValues();
+        if (flashMessageContent) {
+          store.dispatch(setFlashMessage(flashMessageContent));
+        }
       await op.confirmation();
     } else if (
       TOKENS[tokenXSymbol].standard === TokenStandard.FA2 &&
@@ -106,6 +118,12 @@ export const LiquidityOperation = async (
           },
         ])
         .send();
+        setShowConfirmTransaction && setShowConfirmTransaction(false);
+        transactionSubmitModal && transactionSubmitModal(op.opHash as string);
+        resetAllValues && resetAllValues();
+        if (flashMessageContent) {
+          store.dispatch(setFlashMessage(flashMessageContent));
+        }
       await op.confirmation();
     } else if (
       TOKENS[tokenXSymbol].standard === TokenStandard.FA12 &&
@@ -129,6 +147,12 @@ export const LiquidityOperation = async (
           },
         ])
         .send();
+        setShowConfirmTransaction && setShowConfirmTransaction(false);
+        transactionSubmitModal && transactionSubmitModal(op.opHash as string);
+        resetAllValues && resetAllValues();
+        if (flashMessageContent) {
+          store.dispatch(setFlashMessage(flashMessageContent));
+        }
       await op.confirmation();
     } else if (
       TOKENS[tokenXSymbol].standard === TokenStandard.FA2 &&
@@ -168,6 +192,13 @@ export const LiquidityOperation = async (
           },
         ])
         .send();
+      setShowConfirmTransaction && setShowConfirmTransaction(false);
+      transactionSubmitModal && transactionSubmitModal(op.opHash as string);
+      resetAllValues && resetAllValues();
+      if (flashMessageContent) {
+        store.dispatch(setFlashMessage(flashMessageContent));
+      }
+
       await op.confirmation();
     }
   } catch (error) {
