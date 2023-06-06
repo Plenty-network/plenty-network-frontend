@@ -9,11 +9,6 @@ export interface IPoolsTablePosition {
   isConnectWalletRequired?: boolean;
 }
 export interface IManageBtnProps {
-  isManage: boolean;
-  setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
-  isGauge: boolean;
-  isLiquidityAvailable?: boolean;
-  isStakeAvailable?: boolean;
   tokenA: string;
   tokenB: string;
 }

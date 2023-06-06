@@ -26,12 +26,17 @@ import { compareNumericString } from "../../utils/commonUtils";
 import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import clsx from "clsx";
 import { tokenIcons } from "../../constants/tokensList";
+import { ActiveIncDecState, ActivePopUp, ManageTabV3 } from "../v3/ManageTabV3";
+import IncreaseDecreaseLiqMain from "../v3/IncreaseDecreaseliqMain";
+import { getBalanceFromTzkt, getTezBalance } from "../../api/util/balance";
+import { ManagePoolsV3 } from "./ManagePoolsV3";
 
 export function PoolsV3TablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   const tokens = useAppSelector((state) => state.config.tokens);
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
@@ -48,7 +53,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
     image: `/assets/tokens/USDT.e.png`,
     symbol: "USDT.e",
   });
-  const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
+
   const NoData = React.useMemo(() => {
     return <NoPoolsPosition h1={"No active liquidity positions"} cta={"View Pools"} />;
   }, []);
@@ -142,15 +147,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         Header: "",
         id: "manage",
         columnWidth: "w-[120px] flex-1",
-        accessor: (x) => (
-          <ManageBtn
-            isManage={Number(x.stakedPercentage) > 0}
-            tokenA={x.tokenA.toString()}
-            tokenB={x.tokenB.toString()}
-            isGauge={x.isGaugeAvailable}
-            setIsGaugeAvailable={setIsGaugeAvailable}
-          />
-        ),
+        accessor: (x) => <ManageBtn tokenA={x.tokenA.toString()} tokenB={x.tokenB.toString()} />,
       },
     ],
     [valueFormat]
@@ -313,79 +310,35 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         Header: "",
         id: "manage",
         columnWidth: "w-[200px] ",
-        accessor: (x) => (
-          <ManageBtn
-            isManage={Number(x.stakedPercentage) > 0}
-            tokenA={x.tokenA.toString()}
-            tokenB={x.tokenB.toString()}
-            isGauge={x.isGaugeAvailable}
-            setIsGaugeAvailable={setIsGaugeAvailable}
-          />
-        ),
+        accessor: (x) => <ManageBtn tokenA={x.tokenA.toString()} tokenB={x.tokenB.toString()} />,
       },
     ],
     [valueFormat]
   );
   function ManageBtn(props: IManageBtnProps): any {
-    if (props.isManage || !props.isGauge) {
-      return (
-        <div
-          className="bg-primary-500/10 md:w-[151px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
-          onClick={() => {
-            setShowLiquidityModal(true);
-            dispatch(getTotalVotingPower());
-            props.setIsGaugeAvailable(props.isGauge);
-            if (props.isGauge) {
-              props.isManage
-                ? setActiveState(ActiveLiquidity.Liquidity)
-                : setActiveState(ActiveLiquidity.Staking);
-            } else {
-              setActiveState(ActiveLiquidity.Liquidity);
-            }
+    return (
+      <div
+        className="bg-primary-500/10 md:w-[151px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
+        onClick={() => {
+          setShowLiquidityModal(true);
 
-            setTokenIn({
-              name: props.tokenA,
-              image: getImagesPath(props.tokenA.toString()),
-              symbol: props.tokenA,
-            });
-            setTokenOut({
-              name: props.tokenB,
-              image: getImagesPath(props.tokenB.toString()),
-              symbol: props.tokenB,
-            });
-          }}
-        >
-          Manage
-        </div>
-      );
-    } else {
-      return (
-        <div
-          className="bg-primary-500 md:w-[151px] w-[100px] cursor-pointer font-subtitle4 text-black hover:opacity-90  rounded-lg flex items-center justify-center h-[40px]"
-          onClick={() => {
-            setShowLiquidityModal(true);
-            dispatch(getTotalVotingPower());
-            props.setIsGaugeAvailable(props.isGauge);
-            props.isManage
-              ? setActiveState(ActiveLiquidity.Liquidity)
-              : setActiveState(ActiveLiquidity.Staking);
+          setActiveState(ActiveLiquidity.Liquidity);
 
-            setTokenIn({
-              name: props.tokenA,
-              image: getImagesPath(props.tokenA.toString()),
-              symbol: props.tokenA,
-            });
-            setTokenOut({
-              name: props.tokenB,
-              image: getImagesPath(props.tokenB.toString()),
-              symbol: props.tokenB,
-            });
-          }}
-        >
-          Stake
-        </div>
-      );
-    }
+          setTokenIn({
+            name: props.tokenA,
+            image: getImagesPath(props.tokenA.toString()),
+            symbol: props.tokenA,
+          });
+          setTokenOut({
+            name: props.tokenB,
+            image: getImagesPath(props.tokenB.toString()),
+            symbol: props.tokenB,
+          });
+        }}
+      >
+        Manage
+      </div>
+    );
   }
   return (
     <>
@@ -404,14 +357,13 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         />
       </div>
       {showLiquidityModal && (
-        <ManageLiquidity
+        <ManagePoolsV3
           tokenIn={tokenIn}
           tokenOut={tokenOut}
           closeFn={setShowLiquidityModal}
           showLiquidityModal={showLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}
-          isGaugeAvailable={isGaugeAvailable}
           setShowLiquidityModalPopup={setShowLiquidityModal}
         />
       )}

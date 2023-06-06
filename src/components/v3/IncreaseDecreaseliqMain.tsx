@@ -18,15 +18,10 @@ interface IIncreaseDecreaseLiqMainProps {
   firstTokenAmount: string | number;
   secondTokenAmount: string | number;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
-  tokenPrice: {
-    [id: string]: number;
-  };
-  pnlpEstimates: string;
-  sharePool: string;
-  slippage: string;
+
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
-  swapData: ISwapData;
+
   userBalances: {
     [key: string]: string;
   };
@@ -53,6 +48,7 @@ export function Tab(props: ITabProps) {
   );
 }
 function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
+  console.log(props);
   const ListOfTabs = ["Increase liquidity", "Remove liquidity"];
   return (
     <>
@@ -74,12 +70,7 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
           secondTokenAmount={props.secondTokenAmount}
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}
-          tokenPrice={props.tokenPrice}
-          pnlpEstimates={props.pnlpEstimates}
-          sharePool={props.sharePool}
-          slippage={props.slippage}
           userBalances={props.userBalances}
-          swapData={props.swapData}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}
         />
@@ -90,12 +81,7 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
           secondTokenAmount={props.secondTokenAmount}
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}
-          tokenPrice={props.tokenPrice}
-          pnlpEstimates={props.pnlpEstimates}
-          sharePool={props.sharePool}
-          slippage={props.slippage}
           userBalances={props.userBalances}
-          swapData={props.swapData}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}
         />

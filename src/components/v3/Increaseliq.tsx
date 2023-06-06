@@ -26,15 +26,10 @@ interface IIncLiquidityProp {
   firstTokenAmount: string | number;
   secondTokenAmount: string | number;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
-  tokenPrice: {
-    [id: string]: number;
-  };
-  pnlpEstimates: string;
-  sharePool: string;
-  slippage: string;
+
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
-  swapData: ISwapData;
+
   userBalances: {
     [key: string]: string;
   };
@@ -42,6 +37,7 @@ interface IIncLiquidityProp {
 export default function IncreaseLiq(props: IIncLiquidityProp) {
   const [selectedToken, setSelectedToken] = useState(props.tokenIn);
   const tokens = useAppSelector((state) => state.config.tokens);
+
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const dispatch = useDispatch<AppDispatch>();
@@ -131,7 +127,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
           <div className="ml-auto font-body4 text-text-400">
             $
             {Number(
-              Number(props.firstTokenAmount) * Number(props.tokenPrice[props.tokenIn.name] ?? 0)
+              Number(props.firstTokenAmount) * Number(tokenPrice[props.tokenIn.name] ?? 0)
             ).toFixed(2)}
           </div>
         </div>
@@ -161,7 +157,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
           <div className="ml-auto font-body4 text-text-400">
             $
             {Number(
-              Number(props.secondTokenAmount) * Number(props.tokenPrice[props.tokenOut.name] ?? 0)
+              Number(props.secondTokenAmount) * Number(tokenPrice[props.tokenOut.name] ?? 0)
             ).toFixed(2)}
           </div>
         </div>

@@ -104,13 +104,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
   const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
   const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
-  const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
-  const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
 
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState<string>("30m");
   const TOKEN = useAppSelector((state) => state.config.tokens);
-  const amm = useAppSelector((state) => state.config.AMMs);
 
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
 
@@ -551,13 +548,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               secondTokenAmount={secondTokenAmountLiq}
               tokenIn={props.tokenIn}
               tokenOut={props.tokenOut}
-              tokenPrice={tokenPrice}
-              pnlpEstimates={pnlpEstimates}
-              sharePool={sharePool}
-              slippage={slippage}
               setScreen={setScreen}
               userBalances={userBalances}
-              swapData={swapData.current}
               setSecondTokenAmount={setSecondTokenAmountLiq}
               setFirstTokenAmount={setFirstTokenAmountLiq}
             />
