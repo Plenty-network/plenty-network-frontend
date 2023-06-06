@@ -1,14 +1,14 @@
 import axios from "axios";
 import BigNumber from "bignumber.js";
-import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
-import { Approvals } from "@plenty-labs/v3-sdk";
+import { ContractAbstraction, OpKind, Wallet, WalletContract, WalletParamsWithKind } from "@taquito/taquito";
+import { Approvals, Contract } from "@plenty-labs/v3-sdk";
 import Config from "../../config/config";
 import { getV3DexAddress } from "../../api/util/fetchConfig";
 import { BalanceNat, TokenStandard } from "./types";
 import { dappClient } from "../../common/walletconnect";
 import { store } from "../../redux";
 import { createPositionInstance } from "../../api/v3/helper";
-import { TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from "../types";
+import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from "../types";
 import { getBatchOperationsWithLimits } from "../../api/util/operations";
 
 import { setFlashMessage } from "../../redux/flashMessage";
@@ -26,9 +26,8 @@ export const LiquidityOperation = async (
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
   flashMessageContent?: IFlashMessageProps
-): Promise<any> => {
+): Promise<IOperationsResponse> => {
   try {
-    let configResponse: any = await axios.get(Config.CONFIG_LINKS.testnet.TOKEN);
     const Tezos = await dappClient().tezos();
     const state = store.getState();
     const TOKENS = state.config.tokens;
@@ -61,7 +60,7 @@ export const LiquidityOperation = async (
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         // @ts-ignore
-        ...Approvals.approveFA12(contractAddress, amountTokenX.decimalPlaces(0, 1)),
+        ...Approvals.approveFA12(tokenX, {spender: contractAddress, value: amountTokenX.decimalPlaces(0, 1)}),
       });
 
     } else if (TOKENS[tokenXSymbol].standard === TokenStandard.FA2) {
@@ -70,11 +69,11 @@ export const LiquidityOperation = async (
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         // @ts-ignore
-        ...Approvals.updateOperatorsFA2(tokenX, [
+        ...Approvals.updateOperatorsFA2(tokenX as Contract, [
           {
             add_operator: {
               owner: userAddress,
-              token_id: configResponse.tokenXSymbol.tokenId,
+              token_id: TOKENS[tokenXSymbol].tokenId || 0,
               operator: contractInstance.address,
             },
           },
@@ -87,18 +86,19 @@ export const LiquidityOperation = async (
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         // @ts-ignore
-        ...Approvals.approveFA12(contractAddress, amountTokenY.decimalPlaces(0, 1)),
+        ...Approvals.approveFA12(tokenY, {spender: contractAddress, value: amountTokenY.decimalPlaces(0, 1)}),
       });
 
     } else if (TOKENS[tokenYSymbol].standard === TokenStandard.FA2) {
       // push add_operator op for token2;
       allBatchOperations.push({
           kind: OpKind.TRANSACTION,
+          // @ts-ignore
           ...Approvals.updateOperatorsFA2(tokenX, [
             {
               add_operator: {
                 owner: userAddress,
-                token_id: configResponse.tokenYSymbol.tokenId,
+                token_id: TOKENS[tokenYSymbol].tokenId || 0,
                 operator: contractInstance.address,
               },
             },
@@ -121,7 +121,7 @@ export const LiquidityOperation = async (
           {
             remove_operator: {
               owner: userAddress,
-              token_id: configResponse.tokenXSymbol.tokenId,
+              token_id: TOKENS[tokenXSymbol].tokenId || 0,
               operator: contractInstance.address,
             },
           },
@@ -139,7 +139,7 @@ export const LiquidityOperation = async (
           {
             add_operator: {
               owner: userAddress,
-              token_id: configResponse.tokenYSymbol.tokenId,
+              token_id: TOKENS[tokenYSymbol].tokenId || 0,
               operator: contractInstance.address,
             },
           },
@@ -169,158 +169,12 @@ export const LiquidityOperation = async (
        throw new Error(status);
      }
 
-    // if (
-    //   TOKENS[tokenXSymbol].standard === TokenStandard.FA12 &&
-    //   TOKENS[tokenYSymbol].standard === TokenStandard.FA2
-    // ) {
-    //   const op = await Tezos.wallet
-    //     .batch([
-    //       {
-    //         kind: OpKind.TRANSACTION,
-    //         // @ts-ignore
-    //         ...Approvals.approveFA12(contractAddress, amountTokenX.decimalPlaces(0, 1)),
-    //       },
-    //       {
-    //         kind: OpKind.TRANSACTION,
-    //         // @ts-ignore
-    //         ...Approvals.updateOperatorsFA2(tokenY, [
-    //           {
-    //             add_operator: {
-    //               owner: userAddress,
-    //               token_id: configResponse.tokenYSymbol.tokenId,
-    //               operator: contractInstance.address,
-    //             },
-    //           },
-    //         ]),
-    //       },
-    //       {
-    //         kind: OpKind.TRANSACTION,
-    //         ...createPosition,
-    //       },
-    //     ])
-    //     .send();
-    //     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    //     transactionSubmitModal && transactionSubmitModal(op.opHash as string);
-    //     resetAllValues && resetAllValues();
-    //     if (flashMessageContent) {
-    //       store.dispatch(setFlashMessage(flashMessageContent));
-    //     }
-    //   await op.confirmation();
-    // } else if (
-    //   TOKENS[tokenXSymbol].standard === TokenStandard.FA2 &&
-    //   TOKENS[tokenYSymbol].standard === TokenStandard.FA12
-    // ) {
-    //   const op = await Tezos.wallet
-    //     .batch([
-    //       {
-    //         kind: OpKind.TRANSACTION,
-    //         // @ts-ignore
-    //         ...Approvals.updateOperatorsFA2(tokenX, [
-    //           {
-    //             add_operator: {
-    //               owner: userAddress,
-    //               token_id: configResponse.tokenXSymbol.tokenId,
-    //               operator: contractInstance.address,
-    //             },
-    //           },
-    //         ]),
-    //       },
-    //       {
-    //         kind: OpKind.TRANSACTION,
-    //         // @ts-ignore
-    //         ...Approvals.approveFA12(contractAddress, amountTokenY.decimalPlaces(0, 1)),
-    //       },
-    //       {
-    //         kind: OpKind.TRANSACTION,
-    //         ...createPosition,
-    //       },
-    //     ])
-    //     .send();
-    //     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    //     transactionSubmitModal && transactionSubmitModal(op.opHash as string);
-    //     resetAllValues && resetAllValues();
-    //     if (flashMessageContent) {
-    //       store.dispatch(setFlashMessage(flashMessageContent));
-    //     }
-    //   await op.confirmation();
-    // } else if (
-    //   TOKENS[tokenXSymbol].standard === TokenStandard.FA12 &&
-    //   TOKENS[tokenYSymbol].standard === TokenStandard.FA12
-    // ) {
-    //   const op = await Tezos.wallet
-    //     .batch([
-    //       {
-    //         kind: OpKind.TRANSACTION,
-    //         // @ts-ignore
-    //         ...Approvals.approveFA12(contractAddress, amountTokenX.decimalPlaces(0, 1)),
-    //       },
-    //       {
-    //         kind: OpKind.TRANSACTION,
-    //         // @ts-ignore
-    //         ...Approvals.approveFA12(contractAddress, amountTokenY.decimalPlaces(0, 1)),
-    //       },
-    //       {
-    //         kind: OpKind.TRANSACTION,
-    //         ...createPosition,
-    //       },
-    //     ])
-    //     .send();
-    //     setShowConfirmTransaction && setShowConfirmTransaction(false);
-    //     transactionSubmitModal && transactionSubmitModal(op.opHash as string);
-    //     resetAllValues && resetAllValues();
-    //     if (flashMessageContent) {
-    //       store.dispatch(setFlashMessage(flashMessageContent));
-    //     }
-    //   await op.confirmation();
-    // } else if (
-    //   TOKENS[tokenXSymbol].standard === TokenStandard.FA2 &&
-    //   TOKENS[tokenYSymbol].standard === TokenStandard.FA2
-    // ) {
-    //   const op = await Tezos.wallet
-    //     .batch([
-    //       {
-    //         kind: OpKind.TRANSACTION,
-    //         // @ts-ignore
-    //         ...Approvals.updateOperatorsFA2(tokenX, [
-    //           {
-    //             add_operator: {
-    //               owner: userAddress,
-    //               token_id: configResponse.tokenXSymbol.tokenId,
-    //               operator: contractInstance.address,
-    //             },
-    //           },
-    //         ]),
-    //       },
-    //       {
-    //         kind: OpKind.TRANSACTION,
-    //         // @ts-ignore
-    //         ...Approvals.updateOperatorsFA2(tokenY, [
-    //           {
-    //             add_operator: {
-    //               owner: userAddress,
-    //               token_id: configResponse.tokenYSymbol.tokenId,
-    //               operator: contractInstance.address,
-    //             },
-    //           },
-    //         ]),
-    //       },
-    //       {
-    //         kind: OpKind.TRANSACTION,
-    //         ...createPosition,
-    //       },
-    //     ])
-    //     .send();
-    //   setShowConfirmTransaction && setShowConfirmTransaction(false);
-    //   transactionSubmitModal && transactionSubmitModal(op.opHash as string);
-    //   resetAllValues && resetAllValues();
-    //   if (flashMessageContent) {
-    //     store.dispatch(setFlashMessage(flashMessageContent));
-    //   }
-
-    //   await op.confirmation();
-    // }
-
-  } catch (error) {
+  } catch (error : any) {
     console.log("v3operationerror: ", error);
+    return {
+      success: false,
+      operationId: undefined,
+      error: error.message,
+    };
   }
 };
