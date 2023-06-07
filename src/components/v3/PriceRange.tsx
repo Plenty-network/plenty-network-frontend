@@ -100,6 +100,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       dispatch(setIsLoading(true));
       calculateCurrentPrice(tokeninorg.symbol, tokenoutorg.symbol, tokeninorg.symbol).then(
         (response) => {
+          console.log("cp", response);
           dispatch(setcurrentPrice(response.toFixed(6)));
         }
       );

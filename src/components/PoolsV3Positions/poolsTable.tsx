@@ -352,7 +352,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsPositionv3"
-          TableWidth="md:min-w-[787px] lg:min-w-[950px]"
+          TableWidth="md:min-w-[980px] lg:min-w-[980px]"
           NoData={NoData}
         />
       </div>
