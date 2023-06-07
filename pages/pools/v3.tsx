@@ -111,7 +111,7 @@ export default function Pools(props: IIndexProps) {
   return (
     <>
       <SideBarHOC>
-        <div>
+        {/* <div>
           <HeadInfo
             className="px-2 md:px-3"
             title="Pools"
@@ -193,8 +193,9 @@ export default function Pools(props: IIndexProps) {
             reFetchPool={reFetchPool}
             setShowLiquidityModalPopup={setShowLiquidityModal}
           />
-          {/* poolsTable */}
+        
         </div>
+       */}
       </SideBarHOC>
     </>
   );
