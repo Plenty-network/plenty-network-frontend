@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { Tick, Pool } from "@plenty-labs/v3-sdk";
+import { Tick, Pool, Price } from "@plenty-labs/v3-sdk";
 import Config from "../../config/config";
 import { ContractStorage, getRealPriceFromTick } from "./helper";
 import { store } from "../../redux";
@@ -16,17 +16,28 @@ export const calculateCurrentPrice = async (
 
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
     let PoolObject = new Pool(
-      contractStorageParameters.tokenX,
-      contractStorageParameters.tokenY,
       contractStorageParameters.currTickIndex,
+      contractStorageParameters.currentTickWitness,
       contractStorageParameters.tickSpacing,
-      contractStorageParameters.sqrtPriceValue
+      contractStorageParameters.sqrtPriceValue,
+      contractStorageParameters.feeBps,
+      contractStorageParameters.liquidity
     );
 
     if (refernceToken === tokenYSymbol) {
-      currentPrice = PoolObject.getRealPriceTokenX();
+      currentPrice = BigNumber(1).dividedBy(
+        Price.computeRealPriceFromSqrtPrice(
+          PoolObject.sqrtPrice,
+          contractStorageParameters.tokenX.decimals,
+          contractStorageParameters.tokenY.decimals
+        )
+      );
     } else {
-      currentPrice = PoolObject.getRealPriceTokenY();
+      currentPrice = Price.computeRealPriceFromSqrtPrice(
+        contractStorageParameters.sqrtPriceValue,
+        contractStorageParameters.tokenX.decimals,
+        contractStorageParameters.tokenY.decimals
+      );
     }
 
     return currentPrice;
@@ -42,11 +53,12 @@ export const calculateFullRange = async (
   try {
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
     let PoolObject = new Pool(
-      contractStorageParameters.tokenX,
-      contractStorageParameters.tokenY,
       contractStorageParameters.currTickIndex,
+      contractStorageParameters.currentTickWitness,
       contractStorageParameters.tickSpacing,
-      contractStorageParameters.sqrtPriceValue
+      contractStorageParameters.sqrtPriceValue,
+      contractStorageParameters.feeBps,
+      contractStorageParameters.liquidity
     );
     let tickFullRange = PoolObject.getFullRangeBoundaries();
 
@@ -79,27 +91,28 @@ export const getInitialBoundaries = async (
   try {
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
     let PoolObject = new Pool(
-      contractStorageParameters.tokenX,
-      contractStorageParameters.tokenY,
       contractStorageParameters.currTickIndex,
+      contractStorageParameters.currentTickWitness,
       contractStorageParameters.tickSpacing,
-      contractStorageParameters.sqrtPriceValue
+      contractStorageParameters.sqrtPriceValue,
+      contractStorageParameters.feeBps,
+      contractStorageParameters.liquidity
     );
 
     let initialBoundaries = PoolObject.getInitialBoundaries();
     let minTick = initialBoundaries[0];
     let maxTick = initialBoundaries[1];
 
-    let minPriceValue = Tick.computeRealPriceFromTick(
-      minTick,
-      contractStorageParameters.tokenX,
-      contractStorageParameters.tokenY
+    let minPriceValue = Price.computeRealPriceFromSqrtPrice(
+      Tick.computeSqrtPriceFromTick(minTick),
+      contractStorageParameters.tokenX.decimals,
+      contractStorageParameters.tokenY.decimals
     );
 
-    let maxPriceValue = Tick.computeRealPriceFromTick(
-      maxTick,
-      contractStorageParameters.tokenX,
-      contractStorageParameters.tokenY
+    let maxPriceValue = Price.computeRealPriceFromSqrtPrice(
+      Tick.computeSqrtPriceFromTick(maxTick),
+      contractStorageParameters.tokenX.decimals,
+      contractStorageParameters.tokenY.decimals
     );
 
     console.log(
@@ -137,11 +150,12 @@ export const estimateTokenXFromTokenY = async (
 
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
     let PoolObject = new Pool(
-      contractStorageParameters.tokenX,
-      contractStorageParameters.tokenY,
       contractStorageParameters.currTickIndex,
+      contractStorageParameters.currentTickWitness,
       contractStorageParameters.tickSpacing,
-      contractStorageParameters.sqrtPriceValue
+      contractStorageParameters.sqrtPriceValue,
+      contractStorageParameters.feeBps,
+      contractStorageParameters.liquidity
     );
 
     let estimatedAmountCalc = PoolObject.estimateAmountXFromY(
@@ -177,11 +191,12 @@ export const estimateTokenYFromTokenX = async (
 
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
     let PoolObject = new Pool(
-      contractStorageParameters.tokenX,
-      contractStorageParameters.tokenY,
       contractStorageParameters.currTickIndex,
+      contractStorageParameters.currentTickWitness,
       contractStorageParameters.tickSpacing,
-      contractStorageParameters.sqrtPriceValue
+      contractStorageParameters.sqrtPriceValue,
+      contractStorageParameters.feeBps,
+      contractStorageParameters.liquidity
     );
 
     let estimatedAmountCalc = PoolObject.estimateAmountYFromX(

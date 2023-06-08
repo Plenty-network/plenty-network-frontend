@@ -1,9 +1,9 @@
-import axios from 'axios';
-import Config from '../../config/config';
-import { store } from '../../redux';
-import { connectedNetwork } from '../../common/walletconnect';
-import { loadSwapDataWrapper } from '../swap/wrappers';
-import { BigNumber } from 'bignumber.js'
+import axios from "axios";
+import Config from "../../config/config";
+import { store } from "../../redux";
+import { connectedNetwork } from "../../common/walletconnect";
+import { loadSwapDataWrapper } from "../swap/wrappers";
+import { BigNumber } from "bignumber.js";
 
 /**
  * @deprecated
@@ -59,18 +59,18 @@ const getuDEFIPrice = async (): Promise<{ uDEFIinUSD: number }> => {
  */
 const getagEURePrice = async (): Promise<{ agEUReInUSD: number }> => {
   try {
-    const url = 'https://api.angle.money/v1/prices';
+    const url = "https://api.angle.money/v1/prices";
     const APIpriceResponse = await axios.get(url);
     const dataObject = APIpriceResponse.data[4];
 
     let agEUReInUSD;
-    if (dataObject.token === 'agEUR') {
+    if (dataObject.token === "agEUR") {
       agEUReInUSD = dataObject.rate;
       parseFloat(agEUReInUSD);
       return { agEUReInUSD: agEUReInUSD };
     } else {
       for (const x in APIpriceResponse.data) {
-        if (APIpriceResponse.data[x].token === 'agEUR') {
+        if (APIpriceResponse.data[x].token === "agEUR") {
           agEUReInUSD = APIpriceResponse.data[x].rate;
           parseFloat(agEUReInUSD);
           return { agEUReInUSD: agEUReInUSD };
@@ -107,7 +107,7 @@ export const getTokenPrices = async (): Promise<{
       .get("https://api.teztools.io/token/prices")
       .then((resp) => resp.data)
       .catch((err) => {
-        console.log(err);
+        console.log("teztool", err);
         return { contracts: [] };
       });
     const tokenPriceResponse = pricesResponse;
@@ -123,13 +123,12 @@ export const getTokenPrices = async (): Promise<{
       });
     const indexerPricesData = indexerPriceResponse;
 
-    for( const x of tokenPriceResponse.contracts){
+    for (const x of tokenPriceResponse.contracts) {
       tokenPrice[x.symbol] = Number(x.usdValue);
     }
 
-    for( const x of indexerPricesData){
-      if(Number(x.price) !== 0)
-      tokenPrice[x.token] = Number(x.price);
+    for (const x of indexerPricesData) {
+      if (Number(x.price) !== 0) tokenPrice[x.token] = Number(x.price);
     }
 
     return {
@@ -145,7 +144,11 @@ export const getTokenPrices = async (): Promise<{
   }
 };
 
-export const getLPTokenPrice = async (tokenA : string , tokenB : string , tokenPrice: { [id: string]: number }): Promise<{
+export const getLPTokenPrice = async (
+  tokenA: string,
+  tokenB: string,
+  tokenPrice: { [id: string]: number }
+): Promise<{
   success: boolean;
   lpTokenPrice: BigNumber;
 }> => {
@@ -153,18 +156,31 @@ export const getLPTokenPrice = async (tokenA : string , tokenB : string , tokenP
     const state = store.getState();
     const TOKEN = state.config.tokens;
 
-    const swapData = await loadSwapDataWrapper(tokenA , tokenB);
+    const swapData = await loadSwapDataWrapper(tokenA, tokenB);
 
-    const tokenInSupply = swapData.tokenInSupply.multipliedBy(new BigNumber(10).pow(TOKEN[swapData.tokenIn].decimals));
-    const tokenOutSupply = swapData.tokenOutSupply.multipliedBy(new BigNumber(10).pow(TOKEN[swapData.tokenOut].decimals));
-    const lpTokenSupply = swapData.lpTokenSupply.multipliedBy(new BigNumber(10).pow(swapData.lpToken?.decimals as number));
+    const tokenInSupply = swapData.tokenInSupply.multipliedBy(
+      new BigNumber(10).pow(TOKEN[swapData.tokenIn].decimals)
+    );
+    const tokenOutSupply = swapData.tokenOutSupply.multipliedBy(
+      new BigNumber(10).pow(TOKEN[swapData.tokenOut].decimals)
+    );
+    const lpTokenSupply = swapData.lpTokenSupply.multipliedBy(
+      new BigNumber(10).pow(swapData.lpToken?.decimals as number)
+    );
 
-    let tokenAAmount = ((tokenInSupply).multipliedBy(new BigNumber(10).pow(swapData.lpToken?.decimals as number))).dividedBy(lpTokenSupply);
-    tokenAAmount = (tokenAAmount.multipliedBy(tokenPrice[swapData.tokenIn] ?? 0)).dividedBy(new BigNumber(10).pow(TOKEN[swapData.tokenIn].decimals));
+    let tokenAAmount = tokenInSupply
+      .multipliedBy(new BigNumber(10).pow(swapData.lpToken?.decimals as number))
+      .dividedBy(lpTokenSupply);
+    tokenAAmount = tokenAAmount
+      .multipliedBy(tokenPrice[swapData.tokenIn] ?? 0)
+      .dividedBy(new BigNumber(10).pow(TOKEN[swapData.tokenIn].decimals));
 
-
-    let tokenBAmount = new BigNumber((tokenOutSupply).multipliedBy(new BigNumber(10).pow(swapData.lpToken?.decimals as number))).dividedBy(lpTokenSupply);
-    tokenBAmount = (tokenBAmount.multipliedBy(tokenPrice[swapData.tokenOut] ?? 0)).dividedBy(new BigNumber(10).pow(TOKEN[swapData.tokenOut].decimals));
+    let tokenBAmount = new BigNumber(
+      tokenOutSupply.multipliedBy(new BigNumber(10).pow(swapData.lpToken?.decimals as number))
+    ).dividedBy(lpTokenSupply);
+    tokenBAmount = tokenBAmount
+      .multipliedBy(tokenPrice[swapData.tokenOut] ?? 0)
+      .dividedBy(new BigNumber(10).pow(TOKEN[swapData.tokenOut].decimals));
 
     const lpTokenPrice = tokenAAmount.plus(tokenBAmount);
 
@@ -181,27 +197,31 @@ export const getLPTokenPrice = async (tokenA : string , tokenB : string , tokenP
   }
 };
 
-export const getLPTokenPrices =async (tokenPrice: { [id: string]: number }) : Promise<{success : boolean , lpPrices : { [id: string]: BigNumber } }> => {
-
+export const getLPTokenPrices = async (tokenPrice: {
+  [id: string]: number;
+}): Promise<{ success: boolean; lpPrices: { [id: string]: BigNumber } }> => {
   try {
     const state = store.getState();
     const AMM = state.config.AMMs;
-    
+
     let lpPrices: { [id: string]: BigNumber } = {};
-    for(const key in AMM) {
-      const price = await getLPTokenPrice(AMM[key].token1.symbol , AMM[key].token2.symbol , tokenPrice);
-      lpPrices = {...lpPrices, [AMM[key].lpToken.address]: price.lpTokenPrice};
+    for (const key in AMM) {
+      const price = await getLPTokenPrice(
+        AMM[key].token1.symbol,
+        AMM[key].token2.symbol,
+        tokenPrice
+      );
+      lpPrices = { ...lpPrices, [AMM[key].lpToken.address]: price.lpTokenPrice };
     }
     return {
-      success : true , 
+      success: true,
       lpPrices,
-    };    
+    };
   } catch (error) {
     console.log(error);
-    return{
-      success : false,
-      lpPrices : {},
+    return {
+      success: false,
+      lpPrices: {},
     };
   }
-  
-}
+};

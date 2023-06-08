@@ -57,13 +57,15 @@ export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
 export const getV3DexAddress = (tokenIn: string, tokenOut: string): string => {
   const state = store.getState();
   const AMM = state.config.AMMs;
-
+  console.log("v3 amms", state.config.AMMs);
   const address = Object.keys(AMM).find(
     (key) =>
-      (AMM[key].token1.symbol === tokenIn && AMM[key].token2.symbol === tokenOut) ||
-      (AMM[key].token2.symbol === tokenIn && AMM[key].token1.symbol === tokenOut)
+      // @ts-ignore
+      (AMM[key].tokenX.symbol === tokenIn && AMM[key].tokenY.symbol === tokenOut) ||
+      // @ts-ignore
+      (AMM[key].tokenY.symbol === tokenIn && AMM[key].tokenX.symbol === tokenOut)
   );
-
+  //console.log("address v3", address);
   return address ?? "false";
 };
 

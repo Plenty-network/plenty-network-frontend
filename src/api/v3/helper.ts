@@ -2,7 +2,7 @@ import axios from "axios";
 import Config from "../../config/config";
 import BigNumber from "bignumber.js";
 import { Token, BalanceNat } from "./types";
-import { Tick, Liquidity, PositionManager } from "@plenty-labs/v3-sdk";
+import { Tick, Liquidity, PositionManager, Price } from "@plenty-labs/v3-sdk";
 import { getV3DexAddress } from "../../api/util/fetchConfig";
 import { dappClient } from "../../common/walletconnect";
 
@@ -23,22 +23,41 @@ const TokenDetail = async (tokenSymbol: String): Promise<Token> => {
   };
 };
 
-export const ContractStorage = async (tokenXSymbol: string, tokenYSymbol: string): Promise<any> => {
+export const ContractStorage = async (
+  tokenXSymbol: string,
+  tokenYSymbol: string
+): Promise<{
+  currTickIndex: number;
+  currentTickWitness: number;
+  tickSpacing: number;
+  sqrtPriceValue: BigNumber;
+  liquidity: BigNumber;
+  feeBps: number;
+  tokenX: Token;
+  tokenY: Token;
+}> => {
   let v3ContractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
   const v3ContractStorage = await axios.get(
-    `${Config.RPC_NODES.testnet}/chains/main/blocks/head/context/contracts/${v3ContractAddress}/storage`
+    `${Config.TZKT_NODES.testnet}v1/contracts/${v3ContractAddress}/storage`
   );
-  let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.args[3].int));
-  let currTickIndex = parseInt(v3ContractStorage.data.args[0].args[0].args[1].int);
-  let tickSpacing = parseInt(v3ContractStorage.data.args[0].args[0].args[0].args[0].args[4].int);
 
+  // https://rpc.tzkt.io/ghostnet/chains/main/blocks/head/context/contracts/KT1M5yHd85ikngHm5YCu9gkfM2oqtbsKak8Y/storage
+  let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.sqrt_price));
+  let currTickIndex = parseInt(v3ContractStorage.data.cur_tick_index);
+  let tickSpacing = parseInt(v3ContractStorage.data.constants.tick_spacing);
+  let feeBps = parseInt(v3ContractStorage.data.constants.fee_bps);
+  let currentTickWitness = parseInt(v3ContractStorage.data.cur_tick_witness);
+  let liquidity = BigNumber(parseInt(v3ContractStorage.data.liquidity));
   let tokenX = await TokenDetail(tokenXSymbol);
   let tokenY = await TokenDetail(tokenYSymbol);
 
   return {
-    sqrtPriceValue: sqrtPriceValue,
     currTickIndex: currTickIndex,
+    currentTickWitness: currentTickWitness,
     tickSpacing: tickSpacing,
+    sqrtPriceValue: sqrtPriceValue,
+    liquidity: liquidity,
+    feeBps: feeBps,
     tokenX: tokenX,
     tokenY: tokenY,
   };
@@ -99,10 +118,10 @@ export const getRealPriceFromTick = async (
 ): Promise<any> => {
   try {
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
-    let priceValue = Tick.computeRealPriceFromTick(
-      tick,
-      contractStorageParameters.tokenX,
-      contractStorageParameters.tokenY
+    let priceValue = Price.computeRealPriceFromSqrtPrice(
+      Tick.computeSqrtPriceFromTick(tick),
+      contractStorageParameters.tokenX.decimals,
+      contractStorageParameters.tokenY.decimals
     );
 
     return priceValue;
@@ -118,10 +137,12 @@ export const getTickFromRealPrice = async (
 ): Promise<any> => {
   try {
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
-    let tick = Tick.computeTickFromRealPrice(
-      realPrice,
-      contractStorageParameters.tokenX,
-      contractStorageParameters.tokenY,
+    let tick = Tick.computeTickFromSqrtPrice(
+      Price.computeSqrtPriceFromRealPrice(
+        realPrice,
+        contractStorageParameters.tokenX.decimals,
+        contractStorageParameters.tokenY.decimals
+      ),
       contractStorageParameters.tickSpacing
     );
 
