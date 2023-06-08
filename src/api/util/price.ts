@@ -108,14 +108,21 @@ export const getTokenPrices = async (): Promise<{
       .then((resp) => resp.data)
       .catch((err) => {
         console.log("teztool", err);
-        return { contracts: [] };
+        return {
+          contracts: [
+            {
+              symbol: "DAI.e",
+              usdValue: "1.0",
+            },
+          ],
+        };
       });
     const tokenPriceResponse = pricesResponse;
 
     const tokenPrice: { [id: string]: number } = {};
 
     const indexerPriceResponse = await axios
-      .get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/prices`)
+      .get(`${Config.ANALYTICS_INDEXER["mainnet"]}ve/prices`)
       .then((resp) => resp.data)
       .catch((err) => {
         console.log(err);

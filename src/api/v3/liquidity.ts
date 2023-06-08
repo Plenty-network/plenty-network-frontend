@@ -40,6 +40,14 @@ export const calculateCurrentPrice = async (
       );
     }
 
+    console.log(
+      "v3 currentPrice",
+      currentPrice.toString(),
+      contractStorageParameters.sqrtPriceValue.toString(),
+      contractStorageParameters.tokenX.decimals,
+      contractStorageParameters.tokenY.decimals
+    );
+
     return currentPrice;
   } catch (error) {
     console.log("v3 error: ", error);
@@ -119,8 +127,12 @@ export const getInitialBoundaries = async (
       "v3-------calculateMinandMaxPriceFromTick",
       minTick,
       maxTick,
-      minPriceValue.toNumber(),
-      maxPriceValue.toNumber()
+      minPriceValue.toString(),
+      maxPriceValue.toString(),
+      contractStorageParameters.tokenX.decimals,
+      contractStorageParameters.tokenY.decimals,
+      Tick.computeSqrtPriceFromTick(minTick).toString(),
+      Tick.computeSqrtPriceFromTick(maxTick).toString()
     );
 
     return {
