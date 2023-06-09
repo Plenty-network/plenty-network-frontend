@@ -24,8 +24,6 @@ import {
   setBrightbrush,
   setBRightRangeInput,
   setcurrentPrice,
-  setInitBound,
-  setIsBrushChanged,
   setIsLoading,
   setleftbrush,
   setleftRangeInput,
@@ -110,7 +108,6 @@ function PriceRangeV3(props: IPriceRangeProps) {
       );
       dispatch(setIsLoading(true));
       getInitialBoundaries(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
-        dispatch(setInitBound(response));
         if (
           new BigNumber(1)
             .dividedBy(response.minValue)
@@ -137,7 +134,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
           dispatch(setrightbrush(response.maxValue.toFixed(6)));
           //:
           dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
-          dispatch(setIsBrushChanged(true));
+
           dispatch(setIsLoading(false));
         } else {
           // topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -160,10 +157,10 @@ function PriceRangeV3(props: IPriceRangeProps) {
           dispatch(setrightbrush(response.maxValue.toFixed(6)));
           //:
           dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
-          dispatch(setIsBrushChanged(true));
+
           dispatch(setIsLoading(false));
         }
-        dispatch(setIsBrushChanged(true));
+
         // dispatch(setIsLoading(false));
         // topLevelSelectedToken.symbol === tokeninorg.symbol
         //   ?
@@ -245,24 +242,23 @@ function PriceRangeV3(props: IPriceRangeProps) {
   };
   const fullrangeCalc = (value: boolean) => {
     setFullRange(!isFullRange);
-    dispatch(setFullRange(!isFullRange));
-
+    //dispatch(setFullRange(!isFullRange));
+    console.log("fullrange", value);
     if (value) {
-      calculateFullRange(tokeninorg.symbol, tokenoutorg.symbol).then(async (response) => {
+      calculateFullRange(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
+        console.log(response, "fullrange");
         topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? dispatch(setleftRangeInput("0"))
-          : dispatch(setBleftRangeInput("0"));
+          ? dispatch(setminTickA(response.minTick))
+          : dispatch(setminTickB(response.minTick));
         topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? dispatch(setRightRangeInput("0"))
-          : dispatch(setBRightRangeInput("0"));
+          ? dispatch(setmaxTickA(response.maxTick))
+          : dispatch(setmaxTickB(response.maxTick));
         topLevelSelectedToken.symbol === tokeninorg.symbol
           ? dispatch(setleftbrush(response.minTickPrice.toString()))
           : dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minTickPrice).toString()));
         topLevelSelectedToken.symbol === tokeninorg.symbol
           ? dispatch(setrightbrush(response.maxTickPrice.toString()))
           : dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxTickPrice).toString()));
-        dispatch(setIsBrushChanged(true));
-        // dispatch(setIsLoading(false));
       });
     }
   };

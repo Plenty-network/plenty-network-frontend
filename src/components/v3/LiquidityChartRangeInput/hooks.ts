@@ -23,11 +23,9 @@ export interface TickProcessed {
 export function useDensityChartData({
   currencyA,
   currencyB,
-  feeAmount,
 }: {
   currencyA: tokenParameterLiquidity | undefined;
   currencyB: tokenParameterLiquidity | undefined;
-  feeAmount: FeeAmount | undefined;
 }) {
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);

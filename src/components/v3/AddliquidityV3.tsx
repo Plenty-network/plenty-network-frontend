@@ -23,13 +23,7 @@ import { estimateTokenXFromTokenY, estimateTokenYFromTokenX } from "../../api/v3
 
 import { getTickFromRealPrice } from "../../api/v3/helper";
 import { Tick } from "@plenty-labs/v3-sdk";
-import {
-  setIsBrushChanged,
-  setmaxTickA,
-  setmaxTickB,
-  setminTickA,
-  setminTickB,
-} from "../../redux/poolsv3";
+import { setmaxTickA, setmaxTickB, setminTickA, setminTickB } from "../../redux/poolsv3";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -113,7 +107,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         ).then((response) => {
           setSecondLoading(false);
           props.setSecondTokenAmount(response);
-          dispatch(setIsBrushChanged(false));
         });
       } else {
         console.log("tokenin", minTickB, maxTickB);
@@ -129,8 +122,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           topLevelSelectedToken.symbol === tokeninorg.symbol
             ? props.setSecondTokenAmount(response)
             : props.setSecondTokenAmount(response);
-
-          dispatch(setIsBrushChanged(false));
         });
       }
     } else if (tokenType === "tokenOut") {
@@ -159,8 +150,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           setFirstLoading(false);
 
           props.setFirstTokenAmount(response);
-
-          dispatch(setIsBrushChanged(false));
         });
       } else {
         console.log("tokenout", minTickB, maxTickB);
@@ -173,8 +162,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         ).then((response) => {
           setFirstLoading(false);
           props.setFirstTokenAmount(response.toString());
-
-          dispatch(setIsBrushChanged(false));
         });
       }
     }

@@ -4,7 +4,7 @@ import React, { useCallback, useMemo } from "react";
 import { batch, useDispatch } from "react-redux";
 import { BigNumber } from "bignumber.js";
 import { AppDispatch, useAppSelector } from "../../../redux";
-import { setIsLeftDiff, setIsRightDiff } from "../../../redux/poolsv3";
+
 import { tokenParameterLiquidity } from "../../Liquidity/types";
 
 import { Chart } from "./Chart";
@@ -30,8 +30,8 @@ const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
     max: 1.5,
   },
   [FeeAmount.LOW]: {
-    initialMin: 0.999,
-    initialMax: 1.001,
+    initialMin: 0.9,
+    initialMax: 1.1,
     min: 0.00001,
     max: 1.5,
   },
@@ -74,8 +74,6 @@ export default function LiquidityChartRangeInput({
   interactive: boolean;
   isFull: boolean;
 }) {
-  const tokenoutv3 = useAppSelector((state) => state.poolsv3.tokenOut);
-  const tokenInv3 = useAppSelector((state) => state.poolsv3.tokenIn);
   const tokenAColor = "#1570F1";
   const tokenBColor = "#1570F1";
   const leftbrush = useAppSelector((state) => state.poolsv3.leftbrush);
@@ -92,7 +90,6 @@ export default function LiquidityChartRangeInput({
   const { isLoading, error, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
-    feeAmount,
   });
 
   const onBrushDomainChangeEnded = useCallback(
@@ -150,11 +147,9 @@ export default function LiquidityChartRangeInput({
       if (!price) return "";
 
       if (d === "w" && ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]) {
-        dispatch(setIsLeftDiff({ Rightdiff: "0" }));
         return "0";
       }
       if (d === "e" && ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]) {
-        dispatch(setIsRightDiff({ LeftDiff: "∞" }));
         return "∞";
       }
       if (isFull) {
@@ -164,19 +159,7 @@ export default function LiquidityChartRangeInput({
       }
       const percent =
         (x < price ? -1 : 1) * ((Math.max(x, price) - Math.min(x, price)) / price) * 100;
-      d === "e"
-        ? dispatch(
-            setIsRightDiff({
-              Rightdiff: price
-                ? `${format(Math.abs(percent) > 1 ? ".2~s" : ".2~f")(percent)}%`
-                : "",
-            })
-          )
-        : dispatch(
-            setIsLeftDiff({
-              LeftDiff: price ? `${format(Math.abs(percent) > 1 ? ".2~s" : ".2~f")(percent)}%` : "",
-            })
-          );
+
       return price ? `${format(Math.abs(percent) > 1 ? ".2~s" : ".2~f")(percent)}%` : "";
     },
     [isSorted, price, ticksAtLimit, isFull]

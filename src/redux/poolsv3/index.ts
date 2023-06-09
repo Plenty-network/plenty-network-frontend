@@ -4,17 +4,14 @@ import { tokenParameterLiquidity } from "../../components/Liquidity/types";
 
 const initialState = {
   isFullRange: false,
-  isBrushChanged: false,
   isLoading: false,
-  Rightdiff: "0",
-  Leftdiff: "0",
+
   leftRangeInput: 0,
   RightRangeInput: 0,
   leftbrush: 0,
   rightbrush: 0,
   currentPrice: 0,
-  BRightdiff: "0",
-  BLeftdiff: "0",
+
   BleftRangeInput: 0,
   BRightRangeInput: 0,
   Bleftbrush: 0,
@@ -29,8 +26,6 @@ const initialState = {
   maxTickA: 0,
   minTickB: 0,
   maxTickB: 0,
-  initBound: {} as initialBoundaries,
-  BinitBound: {} as initialBoundaries,
 };
 
 const PoolsV3Slice = createSlice({
@@ -40,18 +35,7 @@ const PoolsV3Slice = createSlice({
     setFullRange: (state, action) => {
       state.isFullRange = action.payload;
     },
-    setIsRightDiff: (state, action) => {
-      state.Rightdiff = action.payload.Rightdiff;
-    },
-    setInitBound: (state, action) => {
-      state.initBound = action.payload;
-    },
-    setBInitBound: (state, action) => {
-      state.BinitBound = action.payload;
-    },
-    setIsLeftDiff: (state, action) => {
-      state.Leftdiff = action.payload.LeftDiff;
-    },
+
     setleftRangeInput: (state, action) => {
       state.leftRangeInput = action.payload;
     },
@@ -69,12 +53,7 @@ const PoolsV3Slice = createSlice({
     setcurrentPrice: (state, action) => {
       state.currentPrice = action.payload;
     },
-    setBIsRightDiff: (state, action) => {
-      state.BRightdiff = action.payload;
-    },
-    setBIsLeftDiff: (state, action) => {
-      state.BLeftdiff = action.payload;
-    },
+
     setBleftRangeInput: (state, action) => {
       state.BleftRangeInput = action.payload;
     },
@@ -120,16 +99,10 @@ const PoolsV3Slice = createSlice({
     setIsLoading: (state, action) => {
       state.isLoading = action.payload;
     },
-    setIsBrushChanged: (state, action) => {
-      state.isBrushChanged = action.payload;
-    },
   },
 });
 export const {
   setFullRange,
-  setInitBound,
-  setBInitBound,
-  setIsBrushChanged,
   setminTickA,
   setIsLoading,
   setmaxTickA,
@@ -139,16 +112,12 @@ export const {
   setTokeOutOrg,
   setTokenInV3,
   setTokeOutV3,
-  setIsRightDiff,
-  setIsLeftDiff,
   setleftRangeInput,
   setRightRangeInput,
   setleftbrush,
   setrightbrush,
   setcurrentPrice,
   settopLevelSelectedToken,
-  setBIsRightDiff,
-  setBIsLeftDiff,
   setBleftRangeInput,
   setBRightRangeInput,
   setBleftbrush,

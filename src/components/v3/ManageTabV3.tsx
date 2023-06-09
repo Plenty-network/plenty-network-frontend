@@ -256,8 +256,21 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen(ActivePopUp.NewPosition);
-
+    console.log(
+      "parameters",
+      walletAddress,
+      topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
+      topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
+      deadline,
+      {
+        x: new BigNumber(firstTokenAmountLiq),
+        y: new BigNumber(secondTokenAmountLiq),
+      }
+    );
     LiquidityOperation(
+      walletAddress,
       topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
       topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
       props.tokenIn.symbol,
