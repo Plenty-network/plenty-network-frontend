@@ -244,7 +244,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       {
         Header: `Min/Max price`,
         id: "Min/Max price",
-        columnWidth: "w-[124px]",
+        columnWidth: "w-[144px]",
         tooltipMessage: "Percentage liquidity staked in the pool’s gauge.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "stakedPercentage"),
         canShort: true,
@@ -261,7 +261,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       {
         Header: "Fees collected",
         id: "Fees collected",
-        columnWidth: "w-[124px]",
+        columnWidth: "w-[138px]",
         tooltipMessage: "Annual percentage rate of return on your staked position.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "userAPR"),
         isToolTipEnabled: true,
@@ -297,7 +297,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       {
         Header: "",
         id: "collect fee",
-        columnWidth: "w-[195px] ",
+        columnWidth: "w-[185px] ",
 
         sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
         accessor: (x: any) => (
