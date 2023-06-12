@@ -69,14 +69,13 @@ export const calculateWitnessValue = async (
   tokenYSymbol: string
 ): Promise<any> => {
   let v3ContractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
-  let rpcResponse: any = await axios.get(
-    `${Config.RPC_NODES.testnet}/ticks?pool=${v3ContractAddress}&witnessOf=${witnessFrom}`
+  let rpcResponse = await axios.get(
+    `${Config.V3_CONFIG_URL.testnet}/ticks?pool=${v3ContractAddress}&witnessOf=${witnessFrom}`
   );
-  let witnessValue = rpcResponse.witness;
 
-  return {
-    witness: witnessValue,
-  };
+  let witnessValue = rpcResponse.data.witness;
+
+  return witnessValue;
 };
 
 export const calculateNearTickSpacing = async (tick: number, space: number): Promise<any> => {
@@ -171,6 +170,7 @@ export const calculateliquidity = async (
       sqrtPriceFromUpperTick
     );
     console.log("---v3----", liquidity);
+    return liquidity;
   } catch (error) {
     console.log("v3 error: ", error);
   }
@@ -189,7 +189,14 @@ export const createPositionInstance = async (
 
     const contractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
     const contractInstance = await Tezos.wallet.at(contractAddress);
-
+    console.log(
+      "data createPositionInstance: ",
+      maximumTokensContributed,
+      lowerTick,
+      upperTick,
+      tokenXSymbol,
+      tokenYSymbol
+    );
     let liquidity = await calculateliquidity(
       maximumTokensContributed,
       lowerTick,
@@ -199,17 +206,30 @@ export const createPositionInstance = async (
     );
 
     let lowerTickWitness = await calculateWitnessValue(lowerTick, tokenXSymbol, tokenYSymbol);
-    let upperTickWitness = await calculateWitnessValue(lowerTick, tokenXSymbol, tokenYSymbol);
+    let upperTickWitness = await calculateWitnessValue(upperTick, tokenXSymbol, tokenYSymbol);
 
     let optionSet = {
       lowerTickIndex: lowerTick,
-      upperTickIndex: lowerTick,
+      upperTickIndex: upperTick,
       lowerTickWitness: lowerTickWitness,
       upperTickWitness: upperTickWitness,
       liquidity: liquidity,
       deadline: deadline,
       maximumTokensContributed: maximumTokensContributed,
     };
+
+    let optionSet2 = {
+      lowerTickIndex: lowerTick,
+      upperTickIndex: upperTick,
+      lowerTickWitness: lowerTickWitness,
+      upperTickWitness: upperTickWitness,
+      liquidity: liquidity.toString(),
+      deadline: deadline,
+      maximumTokensContributedX: maximumTokensContributed.x.toString(),
+      maximumTokensContributedY: maximumTokensContributed.y.toString(),
+    };
+
+    console.log("optionSet: ", optionSet2);
     // @ts-ignore
     let createPosition = PositionManager.setPositionOp(contractInstance, optionSet);
 

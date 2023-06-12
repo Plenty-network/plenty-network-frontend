@@ -214,8 +214,10 @@ export const getLPTokenPrices = async (tokenPrice: {
     let lpPrices: { [id: string]: BigNumber } = {};
     for (const key in AMM) {
       const price = await getLPTokenPrice(
-        AMM[key].token1.symbol,
-        AMM[key].token2.symbol,
+        // @ts-ignore
+        AMM[key].token1?.symbol || AMM[key].tokenX?.symbol,
+        // @ts-ignore
+        AMM[key].token2?.symbol || AMM[key].tokenY?.symbol,
         tokenPrice
       );
       lpPrices = { ...lpPrices, [AMM[key].lpToken.address]: price.lpTokenPrice };

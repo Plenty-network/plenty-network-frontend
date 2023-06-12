@@ -1,6 +1,12 @@
 import axios from "axios";
 import BigNumber from "bignumber.js";
-import { ContractAbstraction, OpKind, Wallet, WalletContract, WalletParamsWithKind } from "@taquito/taquito";
+import {
+  ContractAbstraction,
+  OpKind,
+  Wallet,
+  WalletContract,
+  WalletParamsWithKind,
+} from "@taquito/taquito";
 import { Approvals, Contract } from "@plenty-labs/v3-sdk";
 import Config from "../../config/config";
 import { getV3DexAddress } from "../../api/util/fetchConfig";
@@ -8,7 +14,12 @@ import { BalanceNat, TokenStandard } from "./types";
 import { dappClient } from "../../common/walletconnect";
 import { store } from "../../redux";
 import { createPositionInstance } from "../../api/v3/helper";
-import { IOperationsResponse, TResetAllValues, TSetShowConfirmTransaction, TTransactionSubmitModal } from "../types";
+import {
+  IOperationsResponse,
+  TResetAllValues,
+  TSetShowConfirmTransaction,
+  TTransactionSubmitModal,
+} from "../types";
 import { getBatchOperationsWithLimits } from "../../api/util/operations";
 
 import { setFlashMessage } from "../../redux/flashMessage";
@@ -36,7 +47,14 @@ export const LiquidityOperation = async (
 
     amountTokenX = amountTokenX.multipliedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals));
 
-    amountTokenY = amountTokenX.multipliedBy(new BigNumber(10).pow(TOKENS[tokenYSymbol].decimals));
+    amountTokenY = amountTokenY
+      .multipliedBy(new BigNumber(10).pow(TOKENS[tokenYSymbol].decimals))
+      .decimalPlaces(0, BigNumber.ROUND_UP);
+
+    const maximumTokensContributedMain = {
+      x: amountTokenX,
+      y: amountTokenY,
+    };
 
     const contractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
     const contractInstance = await Tezos.wallet.at(contractAddress);
@@ -49,20 +67,22 @@ export const LiquidityOperation = async (
       tokenXSymbol,
       tokenYSymbol,
       deadline,
-      maximumTokensContributed
+      maximumTokensContributedMain
     );
     const allBatchOperations: WalletParamsWithKind[] = [];
 
     console.log("v3operationerror: contractAddress ", tokenX, tokenY);
 
-    if(TOKENS[tokenXSymbol].standard === TokenStandard.FA12) {
+    if (TOKENS[tokenXSymbol].standard === TokenStandard.FA12) {
       // push approveFA12 op for token1;
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         // @ts-ignore
-        ...Approvals.approveFA12(tokenX, {spender: contractAddress, value: amountTokenX.decimalPlaces(0, 1)}),
+        ...Approvals.approveFA12(tokenX, {
+          spender: contractAddress,
+          value: amountTokenX.decimalPlaces(0, 1),
+        }),
       });
-
     } else if (TOKENS[tokenXSymbol].standard === TokenStandard.FA2) {
       // push add_operator op for token1;
 
@@ -74,45 +94,47 @@ export const LiquidityOperation = async (
             add_operator: {
               owner: userAddress,
               token_id: TOKENS[tokenXSymbol].tokenId || 0,
-              operator: contractInstance.address,
+              operator: contractAddress,
             },
           },
         ]),
       });
     }
 
-    if(TOKENS[tokenYSymbol].standard === TokenStandard.FA12) {
+    if (TOKENS[tokenYSymbol].standard === TokenStandard.FA12) {
       // push approveFA12 op for token2;
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         // @ts-ignore
-        ...Approvals.approveFA12(tokenY, {spender: contractAddress, value: amountTokenY.decimalPlaces(0, 1)}),
+        ...Approvals.approveFA12(tokenY, {
+          spender: contractAddress,
+          value: amountTokenY.decimalPlaces(0, 1),
+        }),
       });
-
     } else if (TOKENS[tokenYSymbol].standard === TokenStandard.FA2) {
       // push add_operator op for token2;
       allBatchOperations.push({
-          kind: OpKind.TRANSACTION,
-          // @ts-ignore
-          ...Approvals.updateOperatorsFA2(tokenX, [
-            {
-              add_operator: {
-                owner: userAddress,
-                token_id: TOKENS[tokenYSymbol].tokenId || 0,
-                operator: contractInstance.address,
-              },
+        kind: OpKind.TRANSACTION,
+        // @ts-ignore
+        ...Approvals.updateOperatorsFA2(tokenX, [
+          {
+            add_operator: {
+              owner: userAddress,
+              token_id: TOKENS[tokenYSymbol].tokenId || 0,
+              operator: contractAddress,
             },
-          ]),
-        });
-      }
+          },
+        ]),
+      });
+    }
 
     // push createPosition op;
     allBatchOperations.push({
-              kind: OpKind.TRANSACTION,
-              ...createPosition,
+      kind: OpKind.TRANSACTION,
+      ...createPosition,
     });
 
-    if(TOKENS[tokenXSymbol].standard === TokenStandard.FA2) {
+    if (TOKENS[tokenXSymbol].standard === TokenStandard.FA2) {
       // push remove_operator op for token1;
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
@@ -122,14 +144,13 @@ export const LiquidityOperation = async (
             remove_operator: {
               owner: userAddress,
               token_id: TOKENS[tokenXSymbol].tokenId || 0,
-              operator: contractInstance.address,
+              operator: contractAddress,
             },
           },
         ]),
       });
-
     }
-    if(TOKENS[tokenYSymbol].standard === TokenStandard.FA2) {
+    if (TOKENS[tokenYSymbol].standard === TokenStandard.FA2) {
       // push remove_operator op for token2;
 
       allBatchOperations.push({
@@ -137,10 +158,10 @@ export const LiquidityOperation = async (
         // @ts-ignore
         ...Approvals.updateOperatorsFA2(tokenX, [
           {
-            add_operator: {
+            remove_operator: {
               owner: userAddress,
               token_id: TOKENS[tokenYSymbol].tokenId || 0,
-              operator: contractInstance.address,
+              operator: contractAddress,
             },
           },
         ]),
@@ -152,24 +173,23 @@ export const LiquidityOperation = async (
     const batchOperation = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
-     transactionSubmitModal && transactionSubmitModal(batchOperation.opHash as string);
-     resetAllValues && resetAllValues();
-     if (flashMessageContent) {
-       store.dispatch(setFlashMessage(flashMessageContent));
-     }
-     await batchOperation.confirmation(1);
+    transactionSubmitModal && transactionSubmitModal(batchOperation.opHash as string);
+    resetAllValues && resetAllValues();
+    if (flashMessageContent) {
+      store.dispatch(setFlashMessage(flashMessageContent));
+    }
+    await batchOperation.confirmation(1);
 
-     const status = await batchOperation.status();
-     if (status === "applied") {
-       return {
-         success: true,
-         operationId: batchOperation.opHash,
-       };
-     } else {
-       throw new Error(status);
-     }
-
-  } catch (error : any) {
+    const status = await batchOperation.status();
+    if (status === "applied") {
+      return {
+        success: true,
+        operationId: batchOperation.opHash,
+      };
+    } else {
+      throw new Error(status);
+    }
+  } catch (error: any) {
     console.log("v3operationerror: ", error);
     return {
       success: false,
