@@ -111,7 +111,35 @@ function PositionsData(props: IPositionsProps) {
                 "flex   h-[64px] items-center pl-10 min-w-[792px]"
               )}
             >
-              <div className="w-[135px] text-white font-subtitle3 flex">{d.liquidity}</div>
+              <div className="w-[135px] text-white font-subtitle3 flex">
+                {" "}
+                <ToolTip
+                  id="tooltipj"
+                  position={Position.top}
+                  toolTipChild={
+                    <>
+                      {" "}
+                      <div
+                        className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end "
+                        key={index}
+                      >
+                        <div className={`text-white font-medium pr-1 `}>{"344"}</div>
+                        <div className="">{"ctez"}</div>
+                      </div>
+                      <div
+                        className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end "
+                        key={index}
+                      >
+                        <div className={`text-white font-medium pr-1 `}>{234}</div>
+                        <div className="">{"tez"}</div>
+                      </div>
+                    </>
+                  }
+                >
+                  {d.liquidity}{" "}
+                </ToolTip>
+              </div>
+
               <div className="w-[156px] text-text-50 font-subtitle4 ">
                 {d.min_price}
                 <div className="font-body3 text-text-500">
