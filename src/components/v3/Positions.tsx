@@ -16,6 +16,7 @@ import PositionsTable from "./PositionsTable";
 import feeimg from "../../assets/icon/poolsv3/feeMP.svg";
 import dollarimg from "../../assets/icon/poolsv3/dollarMP.svg";
 import { ActivePopUp } from "./ManageTabV3";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
@@ -61,20 +62,28 @@ function PositionsPopup(props: IPositionsProps) {
         {
           <>
             <div className="flex w-full justify-between">
-              <div className="flex gap-1 md:gap-2 items-center pl-0 md:pl-4">
+              <div className="flex gap-1 md:gap-2 items-center ">
                 <CircularImageInfo imageArray={[props.tokenIn.image, props.tokenOut.image]} />
                 <span className="font-body2 md:text-f14 text-white ">
                   {tEZorCTEZtoUppercase(props.tokenIn.symbol)} /
                   {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
                 </span>
               </div>
-              <div className="text-white rounded-lg text-center	 bg-info-800 flex items-center justify-center w-[90px] h-[44px] ml-auto">
-                <Image src={feeimg} />
-                <span className="ml-1 font-title3">0.05%</span>
+              <div className="ml-auto">
+                <ToolTip
+                  id="tooltipj"
+                  position={Position.top}
+                  message="Fee collected by all positions"
+                >
+                  <div className="text-white rounded-lg text-center	 bg-info-800 flex items-center justify-center w-[90px] h-[44px] ">
+                    <Image src={feeimg} />
+                    <span className="ml-1 font-title3">0.05%</span>
+                  </div>
+                </ToolTip>
               </div>
               <div className="text-white rounded-lg text-center	 bg-info-800 flex items-center justify-center w-[90px] h-[44px] ml-3">
                 <Image src={dollarimg} />
-                <span className="ml-1 font-title3">$3.45</span>
+                <span className="ml-1 font-title3">3.45</span>
               </div>
             </div>
           </>
