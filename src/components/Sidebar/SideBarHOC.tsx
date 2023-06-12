@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { isMobile } from "react-device-detect";
 import { AppDispatch, store, useAppSelector } from "../../redux";
 import { FlashMessageHOC } from "../FlashScreen/FlashMessageHOC";
@@ -15,6 +15,8 @@ import { setClientHeight, setHeight, setScrollY } from "../../redux/walletLoadin
 import ReactTooltip from "react-tooltip";
 import WertWidgetPopup from "../Wert";
 import CopiedToast from "../Notification/copiedToast";
+
+import { CLEARLS } from "../../constants/localStorage";
 
 export interface ISideBarHOCProps {
   children: any;
@@ -45,6 +47,12 @@ export function SideBarHOC(props: ISideBarHOCProps) {
   };
   const [showFiat, setShowFiat] = React.useState(false);
   const [showNodeSelector, setNodeSelector] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem(CLEARLS) !== "true") {
+      localStorage.clear();
+      localStorage.setItem(CLEARLS, "true");
+    }
+  }, []);
   return (
     <>
       <FlashMessageHOC />
