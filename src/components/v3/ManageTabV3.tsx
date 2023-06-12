@@ -6,24 +6,10 @@ import clock from "../../../src/assets/icon/poolsv3/settingsClock.svg";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { POOL_TYPE } from "../../../pages/pools";
-import { getPnlpOutputEstimate, getPoolShareForPnlp } from "../../api/liquidity";
-import settings from "../../../src/assets/icon/swap/settings.svg";
-import { ELiquidityProcess } from "../../api/liquidity/types";
-
-import { IStakedDataResponse, IVePLYData } from "../../api/stake/types";
-import { loadSwapDataWrapper } from "../../api/swap/wrappers";
-import {
-  getBalanceFromTzkt,
-  getPnlpBalance,
-  getStakedBalance,
-  getTezBalance,
-} from "../../api/util/balance";
+import { getBalanceFromTzkt, getTezBalance } from "../../api/util/balance";
 import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
-import { getLPTokenPrice } from "../../api/util/price";
-import { ELocksState } from "../../api/votes/types";
 import playBtn from "../../assets/icon/common/playBtn.svg";
 import { tzktExplorer } from "../../common/walletconnect";
-import { IConfigLPToken } from "../../config/types";
 
 import {
   FIRST_TOKEN_AMOUNT,
@@ -31,7 +17,6 @@ import {
   TOKEN_A,
   TOKEN_B,
 } from "../../constants/localStorage";
-import { addLiquidity } from "../../operations/addLiquidity";
 import { AppDispatch, useAppDispatch, useAppSelector } from "../../redux";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
@@ -42,8 +27,7 @@ import PositionsPopup from "./Positions";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import { PopUpModal } from "../Modal/popupModal";
 import { VideoModal } from "../Modal/videoModal";
-import { ActiveLiquidity, ManageLiquidityHeader } from "../Pools/ManageLiquidityHeader";
-import { StakingScreenType } from "../Pools/StakingScreen";
+import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
 import TransactionSubmitted from "../TransactionSubmitted";
 import LiquidityV3 from "./LiquidityV3";
@@ -52,11 +36,9 @@ import clsx from "clsx";
 import Button from "../Button/Button";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
-import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
+
 import ConfirmAddLiquidityv3 from "./ConfirmAddLiqV3";
 import {
-  setBcurrentPrice,
-  setcurrentPrice,
   setFullRange,
   setTokenInOrg,
   setTokenInV3,
@@ -68,7 +50,6 @@ import IncreaseDecreaseLiqMain from "./IncreaseDecreaseliqMain";
 import ConfirmIncreaseLiq from "./Confirmaddliq";
 import ConfirmDecreaseLiq from "./Confirmremoveliq";
 import TransactionSettingsV3 from "./TransactionSettingv3";
-import { calculateCurrentPrice } from "../../api/v3/liquidity";
 import { LiquidityOperation } from "../../operations/v3/liquidity";
 
 export interface IManageLiquidityProps {
@@ -108,7 +89,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
 
   const [showVideoModal, setShowVideoModal] = React.useState(false);
-  const [slippage, setSlippage] = useState<string>("30m");
+  const [slippage, setSlippage] = useState(30);
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const amm = useAppSelector((state) => state.config.AMMs);
 
@@ -226,12 +207,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   };
   const [deadline, setDeadline] = useState(0);
   useEffect(() => {
-    const n =
-      Number(slippage.slice(0, -1)) === 1
-        ? 60
-        : Number(slippage.slice(0, -1)) === 2
-        ? 120
-        : Number(slippage.slice(0, -1));
+    const n = slippage === 1 ? 60 : slippage === 2 ? 120 : Number(slippage);
 
     setDeadline(Math.floor(new Date().getTime() / 1000) + n * 60);
   }, [slippage]);
@@ -484,7 +460,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 >
                   <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
                   <span className="text-white font-body4 ml-2 relative top-px">
-                    {slippage ? slippage : "30m"}
+                    {slippage ? slippage : "30"}m
                   </span>
                 </div>
                 <TransactionSettingsV3
@@ -567,7 +543,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               tokenPrice={tokenPrice}
               pnlpEstimates={pnlpEstimates}
               sharePool={sharePool}
-              slippage={slippage}
               setScreen={setScreen}
               userBalances={userBalances}
               swapData={swapData.current}

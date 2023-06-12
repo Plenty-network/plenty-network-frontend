@@ -4,16 +4,8 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import close from "../../assets/icon/swap/closeIcon.svg";
 import { POOL_TYPE } from "../../../pages/pools";
-import { getPnlpOutputEstimate, getPoolShareForPnlp } from "../../api/liquidity";
-import settings from "../../../src/assets/icon/swap/settings.svg";
-import { ELiquidityProcess } from "../../api/liquidity/types";
-import { loadSwapDataWrapper } from "../../api/swap/wrappers";
-import {
-  getBalanceFromTzkt,
-  getPnlpBalance,
-  getStakedBalance,
-  getTezBalance,
-} from "../../api/util/balance";
+import clock from "../../../src/assets/icon/poolsv3/settingsClock.svg";
+import { getBalanceFromTzkt, getTezBalance } from "../../api/util/balance";
 import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { getLPTokenPrice } from "../../api/util/price";
 import { tzktExplorer } from "../../common/walletconnect";
@@ -25,7 +17,6 @@ import {
   TOKEN_A,
   TOKEN_B,
 } from "../../constants/localStorage";
-import { addLiquidity } from "../../operations/addLiquidity";
 import { AppDispatch, useAppDispatch, useAppSelector } from "../../redux";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
@@ -51,16 +42,7 @@ import { walletConnection } from "../../redux/wallet/wallet";
 import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
 import ConfirmAddLiquidityv3 from "./ConfirmAddLiqV3";
 import {
-  setleftbrush,
-  setrightbrush,
-  setBcurrentPrice,
-  setBleftbrush,
-  setBleftRangeInput,
-  setBrightbrush,
-  setBRightRangeInput,
-  setcurrentPrice,
-  setleftRangeInput,
-  setRightRangeInput,
+  setFullRange,
   setTokenInOrg,
   setTokenInV3,
   setTokeOutOrg,
@@ -73,6 +55,8 @@ import IncreaseDecreaseLiqMain from "./IncreaseDecreaseliqMain";
 import { ActiveIncDecState, ActivePopUp } from "./ManageTabV3";
 import ConfirmIncreaseLiq from "./Confirmaddliq";
 import ConfirmDecreaseLiq from "./Confirmremoveliq";
+import { LiquidityOperation } from "../../operations/v3/liquidity";
+import TransactionSettingsV3 from "./TransactionSettingv3";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -95,7 +79,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   );
 
   const [showVideoModal, setShowVideoModal] = React.useState(false);
-  const [slippage, setSlippage] = useState<string>("0.5");
+  const [slippage, setSlippage] = useState(30);
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
@@ -132,6 +116,10 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [contentTransaction, setContentTransaction] = useState("");
+  const minTickA = useAppSelector((state) => state.poolsv3.minTickA);
+  const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
+  const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
+  const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
 
   const [settingsShow, setSettingsShow] = useState(false);
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
@@ -197,82 +185,25 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
     updateBalance();
   }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
 
-  useEffect(() => {
-    getLPTokenPrice(props.tokenIn.name, props.tokenOut.name, {
-      [props.tokenIn.name]: tokenPrice[props.tokenIn.name],
-      [props.tokenOut.name]: tokenPrice[props.tokenOut.name],
-    }).then((res) => {
-      setLpTokenPrice(res.lpTokenPrice);
-    });
-    if (walletAddress) {
-      const updateBalance = async () => {
-        getPnlpBalance(props.tokenIn.name, props.tokenOut.name, walletAddress).then((res) => {
-          setPnlpBalance(res.balance);
-        });
-      };
-      updateBalance();
-    }
-  }, [
-    props.tokenIn,
-    props.tokenOut,
-    props,
-    tokenPrice[props.tokenIn.name],
-    tokenPrice[props.tokenOut.name],
-    TOKEN,
-    balanceUpdate,
-    swapData.current,
-  ]);
-  const [lpToken, setLpToken] = useState<IConfigLPToken | undefined>({} as IConfigLPToken);
-  useEffect(() => {
-    if (
-      Object.prototype.hasOwnProperty.call(props.tokenIn, "name") &&
-      Object.prototype.hasOwnProperty.call(props.tokenOut, "name")
-    ) {
-      setIsLoading(true);
-      loadSwapDataWrapper(props.tokenIn.name, props.tokenOut.name).then((response) => {
-        if (response.success) {
-          setLpToken(response?.lpToken);
-          swapData.current = {
-            tokenInSupply: response.tokenInSupply as BigNumber,
-            tokenOutSupply: response.tokenOutSupply as BigNumber,
-            lpToken: response.lpToken,
-            lpTokenSupply: response.lpTokenSupply,
-            isloading: false,
-          };
-          setIsLoading(false);
-        }
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (firstTokenAmountLiq > 0 && secondTokenAmountLiq > 0 && isAddLiquidity) {
-      const res = getPnlpOutputEstimate(
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        firstTokenAmountLiq.toString(),
-        secondTokenAmountLiq.toString(),
-        swapData.current.tokenInSupply as BigNumber,
-        swapData.current.tokenOutSupply as BigNumber,
-        swapData.current.lpTokenSupply
-      );
-      setPnlpEstimates(res.pnlpEstimate);
-      const sharePool = getPoolShareForPnlp(
-        res.pnlpEstimate,
-        swapData.current.lpTokenSupply,
-        ELiquidityProcess.ADD
-      );
-      setSharePool(sharePool.pnlpPoolShare);
-    }
-  }, [firstTokenAmountLiq, secondTokenAmountLiq, screen, balanceUpdate]);
   const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
+  const [isClearAll, setisClearAll] = useState(false);
   const resetAllValues = () => {
+    setisClearAll(true);
     setFirstTokenAmountLiq("");
     setSecondTokenAmountLiq("");
-
+    dispatch(settopLevelSelectedToken(props.tokenA));
+    dispatch(setFullRange(false));
     setBalanceUpdate(false);
+    setTimeout(() => {
+      setisClearAll(false);
+    }, 4000);
   };
+  const [deadline, setDeadline] = useState(0);
+  useEffect(() => {
+    const n = slippage === 1 ? 60 : slippage === 2 ? 120 : Number(slippage);
 
+    setDeadline(Math.floor(new Date().getTime() / 1000) + n * 60);
+  }, [slippage]);
   const handleAddLiquidityOperation = () => {
     setContentTransaction(
       `Mint ${nFormatterWithLesserNumber(
@@ -294,28 +225,43 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen(ActivePopUp.NewPosition);
-    addLiquidity(
+    console.log(
+      "parameters",
+      walletAddress,
+      topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
+      topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
       props.tokenIn.symbol,
       props.tokenOut.symbol,
-      firstTokenAmountLiq.toString(),
-      secondTokenAmountLiq.toString(),
+      deadline,
+      {
+        x: new BigNumber(firstTokenAmountLiq),
+        y: new BigNumber(secondTokenAmountLiq),
+      }
+    );
+    LiquidityOperation(
       walletAddress,
+      topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
+      topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
+      deadline,
+      {
+        x: new BigNumber(firstTokenAmountLiq),
+        y: new BigNumber(secondTokenAmountLiq),
+      },
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
-      props.isGaugeAvailable ? props.setActiveState : undefined,
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-          TOKEN_A
-        )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
+        trailingText: `add liq`,
         linkText: "View in Explorer",
         isLoading: true,
-
         transactionId: "",
       }
     ).then((response) => {
+      console.log("res", response);
       if (response.success) {
         setBalanceUpdate(true);
 
@@ -416,13 +362,13 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   useEffect(() => {
     dispatch(settopLevelSelectedToken(selectedToken));
   }, [selectedToken]);
-  return props.showLiquidityModal ? (
+  return true ? (
     <>
       <div
         id="modal_outer"
         className={clsx(
           true &&
-            "z-index-max fixed top-[74px] left-0 flex flex-col gap-2 w-screen h-[84vh]  z-50 items-center justify-center topNavblurEffect overflow-y-auto swap"
+            "z-index-max fixed top-[106px] left-0 flex flex-col gap-2 w-screen h-[81vh]  z-50 items-center justify-center topNavblurEffect overflow-y-auto swap"
         )}
       >
         <div
@@ -461,12 +407,12 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                     className="py-1  px-2 h-8 border border-text-700 cursor-pointer rounded-[12px] "
                     onClick={() => setSettingsShow(!settingsShow)}
                   >
-                    <Image alt={"alt"} src={settings} height={"20px"} width={"20px"} />
-                    <span className="text-white font-body4 ml-2 relative -top-[3px]">
-                      {slippage ? Number(slippage) : 0.5}%
+                    <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
+                    <span className="text-white font-body4 ml-2 relative top-px">
+                      {slippage ? slippage : "30"}m
                     </span>
                   </div>
-                  <TransactionSettingsLiquidity
+                  <TransactionSettingsV3
                     show={settingsShow}
                     setSlippage={setSlippage}
                     slippage={slippage}
@@ -507,7 +453,12 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                     feeTier={props.feeTier}
                   />
                 )}
-                <PriceRangeV3 tokenIn={props.tokenIn} tokenOut={props.tokenOut} />
+                <PriceRangeV3
+                  tokenIn={props.tokenIn}
+                  tokenOut={props.tokenOut}
+                  isClearAll={isClearAll}
+                  selectedFeeTier={selectedFeeTier}
+                />
                 <div className="mt-3">
                   <LiquidityV3
                     setSelectedFeeTier={setSelectedFeeTier}
@@ -575,7 +526,6 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                 tokenPrice={tokenPrice}
                 pnlpEstimates={pnlpEstimates}
                 sharePool={sharePool}
-                slippage={slippage}
                 setScreen={setScreen}
                 userBalances={userBalances}
                 swapData={swapData.current}

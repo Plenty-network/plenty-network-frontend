@@ -31,7 +31,7 @@ interface IIncLiquidityProp {
   };
   pnlpEstimates: string;
   sharePool: string;
-  slippage: string;
+
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   swapData: ISwapData;

@@ -259,45 +259,39 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         </div>
       </div>
 
-      {!isLoadingData &&
+      {(!isLoadingData &&
       currentPrice !== 0 &&
       bcurrentPrice !== 0 &&
       topLevelSelectedToken.symbol === tokeninorg.symbol
         ? leftbrush !== 0
         : bleftbrush !== 0 && topLevelSelectedToken.symbol === tokeninorg.symbol
         ? rightbrush !== 0
-        : brightbrush !== 0 &&
-          (topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? leftbrush < currentPrice && rightbrush < currentPrice
-            : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice) && (
-            <div className="absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
-              <Image src={lock} />
-              <span className="font-subtitle3 w-[318px] ml-5">
-                The market price is outside your specified price range. Single-asset deposit only.
-              </span>
-            </div>
-          )}
-      {isFullRange ||
-      (topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? leftbrush < currentPrice && rightbrush > currentPrice
-        : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice) ||
-      isLoadingData ? (
+        : brightbrush !== 0) &&
+        (topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? leftbrush < currentPrice && rightbrush < currentPrice
+          : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice) && (
+          <div className="absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
+            <Image src={lock} />
+            <span className="font-subtitle3 w-[318px] ml-5">
+              The market price is outside your specified price range. Single-asset deposit only.
+            </span>
+          </div>
+        )}
+      {(
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? leftbrush < currentPrice && rightbrush > currentPrice
+          : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice
+      ) ? (
         <div className="relative -top-[9px] left-[25%]">
           <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
         </div>
       ) : (
-        <div className="h-[4px]"></div>
+        <div className="h-[30px]"></div>
       )}
 
       <div
         className={clsx(
-          (
-            topLevelSelectedToken.symbol === tokeninorg.symbol
-              ? leftbrush < currentPrice && rightbrush < currentPrice
-              : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice
-          )
-            ? "mt-[1px]"
-            : "-mt-[25px] ",
+          false ? "mt-[1px]" : "-mt-[25px]",
           "border flex border-text-800/[0.5] rounded-2xl h-[72px]"
         )}
       >
@@ -380,7 +374,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         (topLevelSelectedToken.symbol === tokeninorg.symbol
           ? leftbrush > currentPrice && rightbrush > currentPrice
           : bleftbrush > bcurrentPrice && brightbrush > bcurrentPrice) && (
-          <div className="absolute top-[77px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
+          <div className="absolute top-[93px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
             <Image src={lock} />
             <span className="font-subtitle3 w-[318px] ml-5">
               The market price is outside your specified price range. Single-asset deposit only.
