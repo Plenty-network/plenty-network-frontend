@@ -24,6 +24,7 @@ import { getBatchOperationsWithLimits } from "../../api/util/operations";
 
 import { setFlashMessage } from "../../redux/flashMessage";
 import { IFlashMessageProps } from "../../redux/flashMessage/type";
+import { estimateTokenYFromTokenX } from "../../api/v3/liquidity";
 
 export const LiquidityOperation = async (
   userAddress: string,
@@ -42,12 +43,12 @@ export const LiquidityOperation = async (
     const Tezos = await dappClient().tezos();
     const state = store.getState();
     const TOKENS = state.config.tokens;
-    let amountTokenX = maximumTokensContributed.x;
-    let amountTokenY = maximumTokensContributed.y;
 
-    amountTokenX = amountTokenX.multipliedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals));
+    let amountTokenX = maximumTokensContributed.x
+      .multipliedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals))
+      .decimalPlaces(0, BigNumber.ROUND_UP);
 
-    amountTokenY = amountTokenY
+    let amountTokenY = maximumTokensContributed.y
       .multipliedBy(new BigNumber(10).pow(TOKENS[tokenYSymbol].decimals))
       .decimalPlaces(0, BigNumber.ROUND_UP);
 
@@ -57,7 +58,6 @@ export const LiquidityOperation = async (
     };
 
     const contractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
-    const contractInstance = await Tezos.wallet.at(contractAddress);
 
     const tokenX = await Tezos.wallet.at(TOKENS[tokenXSymbol].address as string);
     const tokenY = await Tezos.wallet.at(TOKENS[tokenYSymbol].address as string);
