@@ -110,7 +110,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         });
       } else {
         console.log("tokenin", minTickB, maxTickB);
-        estimateTokenYFromTokenX(
+        estimateTokenXFromTokenY(
           new BigNumber(input),
           props.tokenOut.symbol,
           props.tokenIn.symbol,
@@ -153,7 +153,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         });
       } else {
         console.log("tokenout", minTickB, maxTickB);
-        estimateTokenXFromTokenY(
+        estimateTokenYFromTokenX(
           new BigNumber(input),
           props.tokenOut.symbol,
           props.tokenIn.symbol,
