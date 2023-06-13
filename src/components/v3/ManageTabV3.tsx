@@ -84,6 +84,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const minTickA = useAppSelector((state) => state.poolsv3.minTickA);
   const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
+  const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
+
   const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
   const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
 
