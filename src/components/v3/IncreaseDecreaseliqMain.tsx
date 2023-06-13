@@ -26,7 +26,7 @@ interface IIncreaseDecreaseLiqMainProps {
 
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
-  swapData: ISwapData;
+
   userBalances: {
     [key: string]: string;
   };
@@ -78,7 +78,6 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
           pnlpEstimates={props.pnlpEstimates}
           sharePool={props.sharePool}
           userBalances={props.userBalances}
-          swapData={props.swapData}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}
         />
@@ -93,7 +92,6 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
           pnlpEstimates={props.pnlpEstimates}
           sharePool={props.sharePool}
           userBalances={props.userBalances}
-          swapData={props.swapData}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}
         />

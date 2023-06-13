@@ -37,7 +37,7 @@ interface IDecLiquidityProp {
 
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
-  swapData: ISwapData;
+
   userBalances: {
     [key: string]: string;
   };

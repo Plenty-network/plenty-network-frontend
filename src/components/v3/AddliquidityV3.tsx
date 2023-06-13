@@ -10,8 +10,6 @@ import nFormatter, {
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
 
-import { useEffect, useRef, useState, useMemo } from "react";
-
 import { useAppDispatch, useAppSelector } from "../../redux";
 import fallback from "../../../src/assets/icon/pools/fallback.png";
 import lock from "../../../src/assets/icon/poolsv3/Lock.svg";
@@ -20,10 +18,7 @@ import fromExponential from "from-exponential";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
 import { estimateTokenXFromTokenY, estimateTokenYFromTokenX } from "../../api/v3/liquidity";
-
-import { getTickFromRealPrice } from "../../api/v3/helper";
-import { Tick } from "@plenty-labs/v3-sdk";
-import { setmaxTickA, setmaxTickB, setminTickA, setminTickB } from "../../redux/poolsv3";
+import { setInputDisable } from "../../redux/poolsv3";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -59,15 +54,32 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
   const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
   const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
-  const isFullRange = useAppSelector((state) => state.poolsv3.isFullRange);
+  const inputDisabled = useAppSelector((state) => state.poolsv3.inputDisable);
 
   const dispatch = useAppDispatch();
   React.useEffect(() => {
     Number(props.secondTokenAmount) !== 0 &&
       handleLiquidityInput(Number(props.secondTokenAmount).toFixed(4), "tokenIn");
   }, [topLevelSelectedToken]);
+
   React.useEffect(() => {
     Number(props.firstTokenAmount) !== 0 && handleLiquidityInput(props.firstTokenAmount, "tokenIn");
+
+    if (
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? leftbrush < currentPrice && rightbrush < currentPrice
+        : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice
+    ) {
+      dispatch(setInputDisable("first"));
+    } else if (
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? leftbrush > currentPrice && rightbrush > currentPrice
+        : bleftbrush > bcurrentPrice && brightbrush > bcurrentPrice
+    ) {
+      dispatch(setInputDisable("second"));
+    } else {
+      dispatch(setInputDisable("false"));
+    }
   }, [minTickA, maxTickA, minTickB, maxTickB]);
   const handleLiquidityInput = async (
     input: string | number,
@@ -106,7 +118,9 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           maxTickA
         ).then((response) => {
           setSecondLoading(false);
-          props.setSecondTokenAmount(response);
+          inputDisabled === "false"
+            ? props.setSecondTokenAmount(response)
+            : props.setSecondTokenAmount(0);
         });
       } else {
         console.log("tokenin", minTickB, maxTickB);
@@ -119,9 +133,9 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         ).then((response) => {
           setSecondLoading(false);
 
-          topLevelSelectedToken.symbol === tokeninorg.symbol
+          inputDisabled === "false"
             ? props.setSecondTokenAmount(response)
-            : props.setSecondTokenAmount(response);
+            : props.setSecondTokenAmount(0);
         });
       }
     } else if (tokenType === "tokenOut") {
@@ -139,7 +153,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       }
       setFirstLoading(true);
       if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
-        console.log("tokenout", minTickA, maxTickA);
         estimateTokenXFromTokenY(
           new BigNumber(input),
           props.tokenIn.symbol,
@@ -149,10 +162,11 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         ).then((response) => {
           setFirstLoading(false);
 
-          props.setFirstTokenAmount(response);
+          inputDisabled === "false"
+            ? props.setFirstTokenAmount(response)
+            : props.setFirstTokenAmount(0);
         });
       } else {
-        console.log("tokenout", minTickB, maxTickB);
         estimateTokenYFromTokenX(
           new BigNumber(input),
           props.tokenOut.symbol,
@@ -161,7 +175,9 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           maxTickB
         ).then((response) => {
           setFirstLoading(false);
-          props.setFirstTokenAmount(response.toString());
+          inputDisabled === "false"
+            ? props.setFirstTokenAmount(response.toString())
+            : props.setFirstTokenAmount(0);
         });
       }
     }

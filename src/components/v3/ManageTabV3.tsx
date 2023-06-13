@@ -80,18 +80,16 @@ export enum ActivePopUp {
 
 export function ManageTabV3(props: IManageLiquidityProps) {
   const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
+  const inputDisabled = useAppSelector((state) => state.poolsv3.inputDisable);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const minTickA = useAppSelector((state) => state.poolsv3.minTickA);
   const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
   const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
   const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
-  const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
-  const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
 
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState(30);
   const TOKEN = useAppSelector((state) => state.config.tokens);
-  const amm = useAppSelector((state) => state.config.AMMs);
 
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
 
@@ -107,13 +105,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
 
   const [transactionId, setTransactionId] = useState("");
-  const swapData = React.useRef<ISwapData>({
-    tokenInSupply: new BigNumber(0),
-    tokenOutSupply: new BigNumber(0),
-    lpToken: undefined,
-    lpTokenSupply: new BigNumber(0),
-    isloading: true,
-  });
 
   const dispatch = useAppDispatch();
   const [pnlpEstimates, setPnlpEstimates] = useState("");
@@ -339,7 +330,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
           Connect wallet
         </Button>
       );
-    } else if (Number(firstTokenAmountLiq) <= 0 || Number(secondTokenAmountLiq) <= 0) {
+    } else if (
+      (inputDisabled == "false" && Number(firstTokenAmountLiq) <= 0) ||
+      (inputDisabled == "false" && Number(secondTokenAmountLiq) <= 0)
+    ) {
       return (
         <Button height="52px" onClick={() => null} color={"disabled"}>
           Add
@@ -362,7 +356,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         </Button>
       );
     }
-  }, [props, firstTokenAmountLiq, secondTokenAmountLiq]);
+  }, [props, firstTokenAmountLiq, secondTokenAmountLiq, inputDisabled]);
   const [selectedToken, setSelectedToken] = useState({} as tokenParameterLiquidity);
   useEffect(() => {
     setSelectedToken(props.tokenA);
@@ -545,7 +539,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               sharePool={sharePool}
               setScreen={setScreen}
               userBalances={userBalances}
-              swapData={swapData.current}
               setSecondTokenAmount={setSecondTokenAmountLiq}
               setFirstTokenAmount={setFirstTokenAmountLiq}
             />

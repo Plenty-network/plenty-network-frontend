@@ -11,7 +11,7 @@ const initialState = {
   leftbrush: 0,
   rightbrush: 0,
   currentPrice: 0,
-
+  inputDisable: "false",
   BleftRangeInput: 0,
   BRightRangeInput: 0,
   Bleftbrush: 0,
@@ -34,6 +34,9 @@ const PoolsV3Slice = createSlice({
   reducers: {
     setFullRange: (state, action) => {
       state.isFullRange = action.payload;
+    },
+    setInputDisable: (state, action) => {
+      state.inputDisable = action.payload;
     },
 
     setleftRangeInput: (state, action) => {
@@ -102,6 +105,7 @@ const PoolsV3Slice = createSlice({
   },
 });
 export const {
+  setInputDisable,
   setFullRange,
   setminTickA,
   setIsLoading,

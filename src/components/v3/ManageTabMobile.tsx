@@ -528,7 +528,6 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                 sharePool={sharePool}
                 setScreen={setScreen}
                 userBalances={userBalances}
-                swapData={swapData.current}
                 setSecondTokenAmount={setSecondTokenAmountLiq}
                 setFirstTokenAmount={setFirstTokenAmountLiq}
               />
