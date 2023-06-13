@@ -73,7 +73,7 @@ function PositionsData(props: IPositionsProps) {
             </ToolTip>
           </div>
         </div>
-        <div className="w-[146px] text-text-250 font-body2 flex">
+        <div className="w-[156px] text-text-250 font-body2 flex">
           Min/Max price
           <div className="relative top-[2px] ml-1 cursor-pointer">
             <ToolTip
@@ -86,7 +86,7 @@ function PositionsData(props: IPositionsProps) {
             </ToolTip>
           </div>
         </div>
-        <div className="w-[120px] text-text-250 font-body2 flex">
+        <div className="w-[130px] text-text-250 font-body2 flex">
           Fees Collected
           <div className="relative top-[2px] ml-1 cursor-pointer">
             <ToolTip
@@ -111,16 +111,44 @@ function PositionsData(props: IPositionsProps) {
                 "flex   h-[64px] items-center pl-10 min-w-[792px]"
               )}
             >
-              <div className="w-[135px] text-white font-subtitle3 flex">{d.liquidity}</div>
-              <div className="w-[146px] text-text-50 font-subtitle4 ">
+              <div className="w-[135px] text-white font-subtitle3 flex">
+                {" "}
+                <ToolTip
+                  id="tooltipj"
+                  position={Position.top}
+                  toolTipChild={
+                    <>
+                      {" "}
+                      <div
+                        className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end "
+                        key={index}
+                      >
+                        <div className={`text-white font-medium pr-1 `}>{"344"}</div>
+                        <div className="">{"ctez"}</div>
+                      </div>
+                      <div
+                        className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-end "
+                        key={index}
+                      >
+                        <div className={`text-white font-medium pr-1 `}>{234}</div>
+                        <div className="">{"tez"}</div>
+                      </div>
+                    </>
+                  }
+                >
+                  {d.liquidity}{" "}
+                </ToolTip>
+              </div>
+
+              <div className="w-[156px] text-text-50 font-subtitle4 ">
                 {d.min_price}
                 <div className="font-body3 text-text-500">
                   {tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
                   {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
                 </div>
               </div>
-              <div className="w-[102px] text-white font-subtitle3 flex">{d.liquidity}</div>
-              <div className="w-[140px]">
+              <div className="w-[112px] text-white font-subtitle3 flex">{d.liquidity}</div>
+              <div className="w-[150px]">
                 {d.price_range === "Yes" ? (
                   <span className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1 rounded-lg	 text-error-300 bg-error-300/[0.1] ">
                     <Image src={infoOrange} />
@@ -133,12 +161,12 @@ function PositionsData(props: IPositionsProps) {
                   </div>
                 )}
               </div>
-              <div className="w-[119px] flex items-center font-subtitle4 text-primary-500 ">
+              <div className="w-[110px] flex items-center font-subtitle4 text-primary-500 ">
                 Collect fees
                 <span className=" h-[28px] border-r border-card-700 ml-auto"></span>
               </div>
               <div
-                className=" font-subtitle4 text-primary-500 text-right pr-5 w-[119px] cursor-pointer"
+                className=" font-subtitle4 text-primary-500 text-right pr-3 w-[110px] cursor-pointer"
                 onClick={() => props.setScreen(ActivePopUp.ManageExisting)}
               >
                 Manage

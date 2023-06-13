@@ -39,8 +39,8 @@ interface ILiquidityProps {
 
   setSelectedFeeTier: React.Dispatch<React.SetStateAction<string>>;
   selectedFeeTier: string;
-  setSlippage: React.Dispatch<React.SetStateAction<string>>;
-  slippage: string;
+  setSlippage: React.Dispatch<React.SetStateAction<number>>;
+  slippage: number;
 
   feeTier: string;
   isLoading: boolean;

@@ -14,8 +14,8 @@ interface ITransactionSettingsProps {
   show: boolean;
   setSettingsShow: any;
   className?: string;
-  setSlippage: React.Dispatch<React.SetStateAction<string>>;
-  slippage: string;
+  setSlippage: React.Dispatch<React.SetStateAction<number>>;
+  slippage: number;
 }
 function TransactionSettingsV3(props: ITransactionSettingsProps) {
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,23 +26,23 @@ function TransactionSettingsV3(props: ITransactionSettingsProps) {
 
   const handleSlippage = (input: string | number) => {
     if (input === "") {
-      props.setSlippage("");
+      props.setSlippage(30);
     } else {
-      props.setSlippage(input.toString());
+      props.setSlippage(Number(input));
     }
   };
 
-  const handleClick = (value: string) => {
-    props.setSlippage(value);
+  const handleClick = (value: number) => {
+    props.setSlippage(Number(value));
   };
   useOutsideClick(refSetting, () => {
     props.setSettingsShow(false);
   });
   useEffect(() => {
     if (Number(props.slippage) > 30 && Number(props.slippage) <= 100) {
-      setErrorMessage(ERRORMESSAGES.TRANSACTIONSETTINGSWARNING);
+      //setErrorMessage(ERRORMESSAGES.TRANSACTIONSETTINGSWARNING);
     } else if (Number(props.slippage) > 100) {
-      setErrorMessage(ERRORMESSAGES.TRANSACTIONSETTINGSERROR);
+      //setErrorMessage(ERRORMESSAGES.TRANSACTIONSETTINGSERROR);
     } else {
       setErrorMessage("");
     }
@@ -82,29 +82,29 @@ function TransactionSettingsV3(props: ITransactionSettingsProps) {
       <div className="flex gap-1.5 mt-3 items-center">
         <div
           className={clsx(
-            props.slippage === "30m" ? "bg-primary-500  text-black" : "bg-muted-235 text-text-500",
+            props.slippage === 30 ? "bg-primary-500  text-black" : "bg-muted-235 text-text-500",
             "rounded-lg w-[67px]  h-[30px] flex items-center justify-center font-body2 cursor-pointer"
           )}
-          onClick={() => handleClick("30m")}
+          onClick={() => handleClick(30)}
         >
           30m
         </div>
         <div
           className={clsx(
-            props.slippage === "01h" ? "bg-primary-500  text-black" : "bg-muted-235 text-text-500",
+            props.slippage === 60 ? "bg-primary-500  text-black" : "bg-muted-235 text-text-500",
             "rounded-lg w-[67px]  h-[30px] flex items-center justify-center font-body2 cursor-pointer"
           )}
-          onClick={() => handleClick("01h")}
+          onClick={() => handleClick(60)}
         >
           01h
         </div>
 
         <div
           className={clsx(
-            props.slippage === "02h" ? "bg-primary-500  text-black" : "bg-muted-235 text-text-500",
+            props.slippage === 120 ? "bg-primary-500  text-black" : "bg-muted-235 text-text-500",
             "rounded-lg w-[67px]  h-[30px] flex items-center justify-center font-body2 cursor-pointer"
           )}
-          onClick={() => handleClick("02h")}
+          onClick={() => handleClick(120)}
         >
           02h
         </div>
@@ -128,7 +128,7 @@ function TransactionSettingsV3(props: ITransactionSettingsProps) {
               onChange={(e) => handleSlippage(e.target.value)}
             />
           </p>
-          {/* <p className="text-right">%</p> */}
+          <p className="text-right">m</p>
         </div>
       </div>
       {errorMessage && (

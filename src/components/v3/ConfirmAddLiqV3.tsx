@@ -30,7 +30,7 @@ interface IConfirmAddLiquidityProps {
   };
   pnlpEstimates: string;
   sharePool: string;
-  slippage: string;
+  slippage: number;
   handleAddLiquidityOperation: () => void;
 }
 function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
