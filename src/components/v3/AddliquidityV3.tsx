@@ -167,7 +167,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             : props.setFirstTokenAmount(0);
         });
       } else {
-        estimateTokenXFromTokenY(
+        estimateTokenYFromTokenX(
           new BigNumber(input),
           props.tokenOut.symbol,
           props.tokenIn.symbol,
