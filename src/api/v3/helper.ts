@@ -213,7 +213,7 @@ export const createPositionInstance = async (
       upperTickIndex: upperTick,
       lowerTickWitness: lowerTickWitness,
       upperTickWitness: upperTickWitness,
-      liquidity: liquidity,
+      liquidity: liquidity.decimalPlaces(0, BigNumber.ROUND_DOWN),
       deadline: deadline,
       maximumTokensContributed: maximumTokensContributed,
     };
@@ -223,7 +223,7 @@ export const createPositionInstance = async (
       upperTickIndex: upperTick,
       lowerTickWitness: lowerTickWitness,
       upperTickWitness: upperTickWitness,
-      liquidity: liquidity.toString(),
+      liquidity: liquidity.decimalPlaces(0, BigNumber.ROUND_DOWN),
       deadline: deadline,
       maximumTokensContributedX: maximumTokensContributed.x.toString(),
       maximumTokensContributedY: maximumTokensContributed.y.toString(),

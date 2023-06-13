@@ -259,26 +259,46 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     console.log(
       "parameters",
       walletAddress,
-      topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
-      topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
+      topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
+      topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB,
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? props.tokenIn.symbol
+        : props.tokenOut.symbol,
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? props.tokenOut.symbol
+        : props.tokenIn.symbol,
       deadline,
       {
-        x: new BigNumber(firstTokenAmountLiq),
-        y: new BigNumber(secondTokenAmountLiq),
+        x:
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? new BigNumber(firstTokenAmountLiq).toString()
+            : new BigNumber(secondTokenAmountLiq).toString(),
+        y:
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? new BigNumber(secondTokenAmountLiq).toString()
+            : new BigNumber(firstTokenAmountLiq).toString(),
       }
     );
     LiquidityOperation(
       walletAddress,
-      topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
-      topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
+      topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
+      topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB,
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? props.tokenIn.symbol
+        : props.tokenOut.symbol,
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? props.tokenOut.symbol
+        : props.tokenIn.symbol,
       deadline,
       {
-        x: new BigNumber(firstTokenAmountLiq),
-        y: new BigNumber(secondTokenAmountLiq),
+        x:
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? new BigNumber(firstTokenAmountLiq)
+            : new BigNumber(secondTokenAmountLiq),
+        y:
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? new BigNumber(secondTokenAmountLiq)
+            : new BigNumber(firstTokenAmountLiq),
       },
       transactionSubmitModal,
       resetAllValues,

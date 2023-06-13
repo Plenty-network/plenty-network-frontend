@@ -109,8 +109,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           props.setSecondTokenAmount(response);
         });
       } else {
-        console.log("tokenin", minTickB, maxTickB);
-        estimateTokenYFromTokenX(
+        console.log("tokenin", minTickB, maxTickB, props.tokenIn, props.tokenOut, input);
+        estimateTokenXFromTokenY(
           new BigNumber(input),
           props.tokenOut.symbol,
           props.tokenIn.symbol,
@@ -139,7 +139,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       }
       setFirstLoading(true);
       if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
-        console.log("tokenout", minTickA, maxTickA);
+        console.log("tokenout", minTickA, maxTickA, props.tokenIn, props.tokenOut, input);
         estimateTokenXFromTokenY(
           new BigNumber(input),
           props.tokenIn.symbol,
@@ -152,8 +152,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           props.setFirstTokenAmount(response);
         });
       } else {
-        console.log("tokenout", minTickB, maxTickB);
-        estimateTokenXFromTokenY(
+        console.log("tokenout", minTickB, maxTickB, props.tokenIn, props.tokenOut, input);
+        estimateTokenYFromTokenX(
           new BigNumber(input),
           props.tokenOut.symbol,
           props.tokenIn.symbol,
