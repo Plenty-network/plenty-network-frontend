@@ -181,9 +181,9 @@ export default function LiquidityChartRangeInput({
           <div className="spinner"></div>
         </div>
       ) : error ? (
-        "Liquidity data not available."
+        <div className="flex items-center justify-center">Liquidity data not available.</div>
       ) : !formattedData || formattedData.length === 0 || !price ? (
-        "There is no liquidity data."
+        <div className="flex items-center justify-center">There is no liquidity data.</div>
       ) : (
         <div className="relative justify-center items-center">
           <Chart
