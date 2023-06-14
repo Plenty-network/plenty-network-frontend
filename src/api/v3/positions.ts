@@ -25,15 +25,6 @@ export const getPositons = async (
       )
     ).data;
 
-    const pool = new Pool(
-      contractStorageParameters.currTickIndex,
-      contractStorageParameters.currentTickWitness,
-      contractStorageParameters.tickSpacing,
-      contractStorageParameters.sqrtPriceValue,
-      contractStorageParameters.feeBps,
-      contractStorageParameters.liquidity
-    );
-
     const finalPositionPromise = positions.map(async (position) => {
       const liquidity = Liquidity.computeAmountFromLiquidity(
         contractStorageParameters.liquidity,
