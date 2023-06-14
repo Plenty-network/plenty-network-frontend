@@ -200,9 +200,9 @@ export const getIconUrl = async (tokenMetadata: any): Promise<string | undefined
         return undefined;
       } */
       const ipfsUri = `${Config.IPFS_LINKS.primary}${path as string}`;
-      return await isValidURL(ipfsUri as string) ? ipfsUri : undefined;
+      return await isValidHttpURL(ipfsUri as string) ? ipfsUri : undefined;
       // If not a valid IPFS it can be a nomal http url to icon, check and confirm
-    } else if (await isValidURL(iconUri as string)) {
+    } else if (await isValidHttpURL(iconUri as string)) {
       return iconUri as string;
     } else {
       return undefined;
@@ -258,6 +258,20 @@ const isValidURL = async (url: string): Promise<boolean> => {
   try {
     const response = await axios.get(url);
     return response.status === 200;
+  } catch (error) {
+    return false;
+  }
+};
+
+
+/**
+ * Validates the URL string for http/https.
+ * @param url - A http/https url string
+ */
+const isValidHttpURL = async (url: string): Promise<boolean> => {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.protocol === "http:" || urlObj.protocol === "https:";
   } catch (error) {
     return false;
   }
