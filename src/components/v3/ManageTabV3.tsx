@@ -136,10 +136,14 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     dispatch(setTokeOutOrg(props.tokenB));
   }, [props.tokenIn, props.tokenA, props.tokenB]);
   useEffect(() => {
-    /*     getPositons(props.tokenIn.symbol, props.tokenOut.symbol, "0.05", walletAddress).then((res) => {
-      console.log("positions", 
-        res,
-      );
+    /*     getPositons(
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
+      "0.05",
+      walletAddress,
+      tokenPrice
+    ).then((res) => {
+      console.log("positions", res);
     }); */
     const updateBalance = async () => {
       const balancePromises = [];

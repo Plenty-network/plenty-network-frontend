@@ -7,6 +7,7 @@ import axios from "axios";
 import { BalanceNat, IV3Position } from "./types";
 import { getV3DexAddress } from "../util/fetchConfig";
 import { parse } from "path";
+import { ITokenPriceList } from "../util/types";
 
 export const connectedNetwork = Config.NETWORK;
 
@@ -14,9 +15,15 @@ export const getPositons = async (
   tokenXSymbol: string,
   tokenYSymbol: string,
   feeTier: string,
-  userAddress: string
+  userAddress: string,
+  tokenPrices: ITokenPriceList
 ) => {
+  if (!userAddress || Object.keys(tokenPrices).length === 0) {
+    throw new Error("Invalid or empty arguments.");
+  }
   try {
+    console.log("price X", tokenPrices[tokenXSymbol]);
+    console.log("price Y", tokenPrices[tokenYSymbol]);
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
     let v3ContractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
     const positions: IV3Position[] = (
@@ -27,7 +34,7 @@ export const getPositons = async (
 
     const finalPositionPromise = positions.map(async (position) => {
       const liquidity = Liquidity.computeAmountFromLiquidity(
-        contractStorageParameters.liquidity,
+        BigNumber(position.liquidity),
         contractStorageParameters.sqrtPriceValue,
         Tick.computeSqrtPriceFromTick(parseInt(position.lower_tick_index)),
         Tick.computeSqrtPriceFromTick(parseInt(position.upper_tick_index))
@@ -78,20 +85,89 @@ export const getPositons = async (
       const isInRange =
         parseInt(position.lower_tick_index) <= contractStorageParameters.currTickIndex &&
         contractStorageParameters.currTickIndex <= parseInt(position.upper_tick_index);
+
       /*       console.log("positions", {
-        liquidityX: liquidity.x.toString(),
-        liquidityY: liquidity.y.toString(),
-        minPrice: minPrice.toString(), // min price (Y/X)
-        maxPrice: maxPrice.toString(), // max price (Y/X)
-        feesx: fees.x.toString(),
-        feesy: fees.y.toString(),
+        liquidity: {
+          x: new BigNumber(
+            liquidity.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
+          ).toString(),
+          y: new BigNumber(
+            liquidity.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
+          ).toString(),
+        },
+        liquidityDollar: new BigNumber(
+          liquidity.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
+        )
+          .multipliedBy(tokenPrices[tokenXSymbol])
+          .plus(
+            BigNumber(
+              liquidity.y.dividedBy(
+                new BigNumber(10).pow(contractStorageParameters.tokenY.decimals)
+              )
+            ).multipliedBy(tokenPrices[tokenYSymbol])
+          )
+          .toString(),
+        minPrice: minPrice, // min price (Y/X)
+        maxPrice: maxPrice, // max price (Y/X)
+        fees: {
+          x: new BigNumber(
+            fees.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
+          ).toString(),
+          y: new BigNumber(
+            fees.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
+          ).toString(),
+        },
+        feesDollar: new BigNumber(
+          fees.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
+        )
+          .multipliedBy(tokenPrices[tokenXSymbol])
+          .plus(
+            BigNumber(
+              fees.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
+            ).multipliedBy(tokenPrices[tokenYSymbol])
+          )
+          .toString(),
         isInRange: isInRange,
       }); */
       return {
-        liquidity: liquidity,
+        liquidity: {
+          x: new BigNumber(
+            liquidity.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
+          ),
+          y: new BigNumber(
+            liquidity.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
+          ),
+        },
+        liquidityDollar: new BigNumber(
+          liquidity.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
+        )
+          .multipliedBy(tokenPrices[tokenXSymbol])
+          .plus(
+            BigNumber(
+              liquidity.y.dividedBy(
+                new BigNumber(10).pow(contractStorageParameters.tokenY.decimals)
+              )
+            ).multipliedBy(tokenPrices[tokenYSymbol])
+          ),
         minPrice: minPrice, // min price (Y/X)
         maxPrice: maxPrice, // max price (Y/X)
-        fees: fees,
+        fees: {
+          x: new BigNumber(
+            fees.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
+          ),
+          y: new BigNumber(
+            fees.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
+          ),
+        },
+        feesDollar: new BigNumber(
+          fees.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
+        )
+          .multipliedBy(tokenPrices[tokenXSymbol])
+          .plus(
+            BigNumber(
+              fees.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
+            ).multipliedBy(tokenPrices[tokenYSymbol])
+          ),
         isInRange: isInRange,
       };
     });
