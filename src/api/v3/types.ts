@@ -25,3 +25,14 @@ export interface initialBoundaries {
   minValue: BigNumber;
   maxVlaue: BigNumber;
 }
+
+export interface IV3Position {
+  key_id: string;
+  amm: string;
+  owner: string;
+  upper_tick_index: string;
+  lower_tick_index: string;
+  liquidity: string;
+  fee_growth_inside_last_x: string;
+  fee_growth_inside_last_y: string;
+}

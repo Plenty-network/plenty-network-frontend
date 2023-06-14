@@ -51,6 +51,7 @@ import ConfirmIncreaseLiq from "./Confirmaddliq";
 import ConfirmDecreaseLiq from "./Confirmremoveliq";
 import TransactionSettingsV3 from "./TransactionSettingv3";
 import { LiquidityOperation } from "../../operations/v3/liquidity";
+import { getPositons } from "../../api/v3/positions";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -135,6 +136,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     dispatch(setTokeOutOrg(props.tokenB));
   }, [props.tokenIn, props.tokenA, props.tokenB]);
   useEffect(() => {
+    /*     getPositons(props.tokenIn.symbol, props.tokenOut.symbol, "0.05", walletAddress).then((res) => {
+      console.log("positions", 
+        res,
+      );
+    }); */
     const updateBalance = async () => {
       const balancePromises = [];
 

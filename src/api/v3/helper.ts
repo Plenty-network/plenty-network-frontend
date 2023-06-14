@@ -35,6 +35,11 @@ export const ContractStorage = async (
   feeBps: number;
   tokenX: Token;
   tokenY: Token;
+  feeGrowth: {
+    x: BigNumber;
+    y: BigNumber;
+  };
+  ticksBigMap: number;
 }> => {
   let v3ContractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
   const v3ContractStorage = await axios.get(
@@ -50,6 +55,11 @@ export const ContractStorage = async (
   let liquidity = BigNumber(parseInt(v3ContractStorage.data.liquidity));
   let tokenX = await TokenDetail(tokenXSymbol);
   let tokenY = await TokenDetail(tokenYSymbol);
+  const fee_growth = {
+    x: BigNumber(parseInt(v3ContractStorage.data.fee_growth.x)),
+    y: BigNumber(parseInt(v3ContractStorage.data.fee_growth.y)),
+  };
+  let ticksBigMap = parseInt(v3ContractStorage.data.ticks);
 
   return {
     currTickIndex: currTickIndex,
@@ -60,6 +70,8 @@ export const ContractStorage = async (
     feeBps: feeBps,
     tokenX: tokenX,
     tokenY: tokenY,
+    feeGrowth: fee_growth,
+    ticksBigMap: ticksBigMap,
   };
 };
 
@@ -85,6 +97,28 @@ export const calculateNearTickSpacing = async (tick: number, space: number): Pro
     return nearestTick;
   } catch (error) {
     console.log("v3 error: ", error);
+  }
+};
+
+export const getOutsideFeeGrowth = async (
+  ticksBigmap: number,
+  tick: number
+): Promise<BalanceNat> => {
+  try {
+    const feeGrowthOutside = await axios.get(
+      `${Config.TZKT_NODES.testnet}v1/bigmaps/${ticksBigmap}/keys/${tick}`
+    );
+
+    return {
+      x: new BigNumber(parseInt(feeGrowthOutside.data.value.fee_growth_outside.x)),
+      y: new BigNumber(parseInt(feeGrowthOutside.data.value.fee_growth_outside.y)),
+    };
+  } catch (error) {
+    console.log("v3 error: ", error);
+    return {
+      x: BigNumber("0"),
+      y: BigNumber("0"),
+    };
   }
 };
 
@@ -223,7 +257,7 @@ export const createPositionInstance = async (
       upperTickIndex: upperTick,
       lowerTickWitness: lowerTickWitness,
       upperTickWitness: upperTickWitness,
-      liquidity: liquidity.decimalPlaces(0, BigNumber.ROUND_DOWN),
+      liquidity: liquidity.decimalPlaces(0, BigNumber.ROUND_DOWN).toString(),
       deadline: deadline,
       maximumTokensContributedX: maximumTokensContributed.x.toString(),
       maximumTokensContributedY: maximumTokensContributed.y.toString(),
