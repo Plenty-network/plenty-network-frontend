@@ -169,7 +169,7 @@ export default function Pools(props: IIndexProps) {
             />
           )}
 
-          {activeStateTab === PoolsCardHeader.Mypools && (
+          {/* {activeStateTab === PoolsCardHeader.Mypools && (
             <MyPoolTable
               className="md:pl-5 md:py-4  pl-2 py-4"
               poolsFilter={POOL_TYPE.MYPOOLS}
@@ -183,7 +183,7 @@ export default function Pools(props: IIndexProps) {
               reFetchPool={reFetchPool}
               isFetchingMyPool={isFetchingMyPool}
             />
-          )}
+          )} */}
           <NewPool
             show={showNewPoolPopup}
             setShow={setShowNewPoolPopup}

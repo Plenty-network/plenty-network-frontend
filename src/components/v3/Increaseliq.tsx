@@ -26,11 +26,6 @@ interface IIncLiquidityProp {
   firstTokenAmount: string | number;
   secondTokenAmount: string | number;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
-  tokenPrice: {
-    [id: string]: number;
-  };
-  pnlpEstimates: string;
-  sharePool: string;
 
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
@@ -131,7 +126,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
           <div className="ml-auto font-body4 text-text-400">
             $
             {Number(
-              Number(props.firstTokenAmount) * Number(props.tokenPrice[props.tokenIn.name] ?? 0)
+              Number(props.firstTokenAmount) * Number(tokenPrice[props.tokenIn.name] ?? 0)
             ).toFixed(2)}
           </div>
         </div>
@@ -161,7 +156,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
           <div className="ml-auto font-body4 text-text-400">
             $
             {Number(
-              Number(props.secondTokenAmount) * Number(props.tokenPrice[props.tokenOut.name] ?? 0)
+              Number(props.secondTokenAmount) * Number(tokenPrice[props.tokenOut.name] ?? 0)
             ).toFixed(2)}
           </div>
         </div>

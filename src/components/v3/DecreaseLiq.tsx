@@ -29,11 +29,6 @@ interface IDecLiquidityProp {
   firstTokenAmount: string | number;
   secondTokenAmount: string | number;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
-  tokenPrice: {
-    [id: string]: number;
-  };
-  pnlpEstimates: string;
-  sharePool: string;
 
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
