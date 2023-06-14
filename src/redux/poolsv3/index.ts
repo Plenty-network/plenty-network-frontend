@@ -4,7 +4,7 @@ import { tokenParameterLiquidity } from "../../components/Liquidity/types";
 
 const initialState = {
   isFullRange: false,
-  isLoading: false,
+  isLoading: true,
 
   leftRangeInput: 0,
   RightRangeInput: 0,

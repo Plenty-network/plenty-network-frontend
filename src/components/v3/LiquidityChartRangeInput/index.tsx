@@ -66,7 +66,7 @@ export default function LiquidityChartRangeInput({
   currencyB: tokenParameterLiquidity | undefined;
   feeAmount?: FeeAmount;
   ticksAtLimit: { [bound in Bound]?: boolean | undefined };
-  price: number | undefined;
+  price: number;
   priceLower?: number;
   priceUpper?: number;
   onLeftRangeInput: (value: string) => void;
@@ -86,8 +86,8 @@ export default function LiquidityChartRangeInput({
 
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
-  const isLoadingData = useAppSelector((state) => state.poolsv3.isLoading);
-  const { isLoading, error, formattedData } = useDensityChartData({
+
+  const { isLoadingData, error, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
   });
@@ -169,10 +169,8 @@ export default function LiquidityChartRangeInput({
     // Sentry.captureMessage(error.toString(), "log");
   }
 
-  const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading);
+  const isUninitialized = !currencyA || !currencyB || formattedData === undefined;
   return (
-    // useMemo(
-    //   () => (
     <div style={{ minHeight: "200px" }}>
       {isUninitialized ? (
         "Your position will appear here."
@@ -181,9 +179,13 @@ export default function LiquidityChartRangeInput({
           <div className="spinner"></div>
         </div>
       ) : error ? (
-        <div className="flex items-center justify-center">Liquidity data not available.</div>
-      ) : !formattedData || formattedData.length === 0 || !price ? (
-        <div className="flex items-center justify-center">There is no liquidity data.</div>
+        <div className="flex items-center pt-[100px]  justify-center">
+          Liquidity data not available.
+        </div>
+      ) : !isLoadingData && (!formattedData || formattedData.length === 0 || !price) ? (
+        <div className="flex items-center pt-[100px] justify-center">
+          There is no liquidity data.
+        </div>
       ) : (
         <div className="relative justify-center items-center">
           <Chart
@@ -211,7 +213,5 @@ export default function LiquidityChartRangeInput({
         </div>
       )}
     </div>
-    //   ),
-    //   [leftbrush, rightbrush, onLeftRangeInput, onRightRangeInput]
   );
 }
