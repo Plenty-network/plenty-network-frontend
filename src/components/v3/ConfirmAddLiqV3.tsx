@@ -67,40 +67,40 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
       setMaxA(rightRangeInput.toString());
       setMaxB((1 / Number(rightRangeInput)).toFixed(6));
 
-      getTickFromRealPrice(
-        new BigNumber(1).dividedBy(new BigNumber(leftRangeInput)),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
-      ).then((response1) => {
-        dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
-      });
-      getTickFromRealPrice(
-        new BigNumber(1).dividedBy(new BigNumber(rightRangeInput)),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
-      ).then((response1) => {
-        dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
-      });
+      // getTickFromRealPrice(
+      //   new BigNumber(1).dividedBy(new BigNumber(leftRangeInput)),
+      //   props.tokenIn.symbol,
+      //   props.tokenOut.symbol
+      // ).then((response1) => {
+      //   dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
+      // });
+      // getTickFromRealPrice(
+      //   new BigNumber(1).dividedBy(new BigNumber(rightRangeInput)),
+      //   props.tokenIn.symbol,
+      //   props.tokenOut.symbol
+      // ).then((response1) => {
+      //   dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
+      // });
     } else {
       setMinA((1 / Number(BleftRangeInput)).toFixed(6));
       setMinB(BleftRangeInput.toString());
       setMaxA((1 / Number(BrightRangeInput)).toFixed(6));
       setMaxB(BrightRangeInput.toString());
 
-      getTickFromRealPrice(
-        new BigNumber(1).dividedBy(new BigNumber(BleftRangeInput)),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
-      ).then((response1) => {
-        dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
-      });
-      getTickFromRealPrice(
-        new BigNumber(1).dividedBy(new BigNumber(BrightRangeInput)),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
-      ).then((response1) => {
-        dispatch(setmaxTickA(Tick.nearestUsableTick(response1, 10)));
-      });
+      // getTickFromRealPrice(
+      //   new BigNumber(1).dividedBy(new BigNumber(BleftRangeInput)),
+      //   props.tokenIn.symbol,
+      //   props.tokenOut.symbol
+      // ).then((response1) => {
+      //   dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
+      // });
+      // getTickFromRealPrice(
+      //   new BigNumber(1).dividedBy(new BigNumber(BrightRangeInput)),
+      //   props.tokenIn.symbol,
+      //   props.tokenOut.symbol
+      // ).then((response1) => {
+      //   dispatch(setmaxTickA(Tick.nearestUsableTick(response1, 10)));
+      // });
     }
   }, []);
 
