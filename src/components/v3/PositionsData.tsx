@@ -67,7 +67,9 @@ function PositionsData(props: IPositionsProps) {
               id="tooltip2"
               disable={false}
               position={Position.top}
-              toolTipChild={<div className="w-[100px] md:w-[150px]">Instructions for airdrop</div>}
+              toolTipChild={
+                <div className="w-[100px] md:w-[150px]">Total value locked in the position</div>
+              }
             >
               <Image alt={"alt"} src={info} />
             </ToolTip>
@@ -80,7 +82,11 @@ function PositionsData(props: IPositionsProps) {
               id="tooltip2"
               disable={false}
               position={Position.top}
-              toolTipChild={<div className="w-[100px] md:w-[150px]">Instructions for airdrop</div>}
+              toolTipChild={
+                <div className="w-[100px] md:w-[150px]">
+                  Lower and upper price boundaries of the position
+                </div>
+              }
             >
               <Image alt={"alt"} src={info} />
             </ToolTip>
@@ -93,7 +99,9 @@ function PositionsData(props: IPositionsProps) {
               id="tooltip2"
               disable={false}
               position={Position.top}
-              toolTipChild={<div className="w-[100px] md:w-[150px]">Instructions for airdrop</div>}
+              toolTipChild={
+                <div className="w-[100px] md:w-[150px]">Fees accrued by the position</div>
+              }
             >
               <Image alt={"alt"} src={info} />
             </ToolTip>

@@ -1,0 +1,366 @@
+import Image from "next/image";
+import * as React from "react";
+
+import infoBlue from "../../../../src/assets/icon/pools/InfoBlue.svg";
+import violetNode from "../../../../src/assets/icon/common/violetNode.svg";
+
+import greyNode from "../../../../src/assets/icon/common/greyNode.svg";
+import vectorDown from "../../../assets/icon/common/vector.svg";
+
+import add from "../../../../src/assets/icon/pools/addIcon.svg";
+import { useMemo, useRef, useState, useEffect } from "react";
+
+import { BigNumber } from "bignumber.js";
+import Button from "../../Button/Button";
+
+import wallet from "../../../../src/assets/icon/pools/wallet.svg";
+import { AppDispatch, useAppSelector } from "../../../redux";
+import { useDispatch } from "react-redux";
+import { walletConnection } from "../../../redux/wallet/wallet";
+
+import { tokenParameterLiquidity } from "../../Liquidity/types";
+import clsx from "clsx";
+import { tokenType } from "../../../constants/swap";
+
+import { getDexAddress } from "../../../api/util/fetchConfig";
+
+import nFormatter, {
+  changeSource,
+  imageExists,
+  tEZorCTEZtoUppercase,
+} from "../../../api/util/helpers";
+import { IAllTokensBalance } from "../../../api/util/types";
+import { tokenIcons } from "../../../constants/tokensList";
+
+import fromExponential from "from-exponential";
+import FeeTierMainNewPool from "./FeeTierNewPool";
+
+interface ILiquidityProps {
+  firstTokenAmount: string | number;
+  secondTokenAmount: string | number;
+  setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
+  setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
+  inputRef?: any;
+  value?: string | "";
+  onChange?: any;
+  tokenIn: tokenParameterLiquidity;
+  tokenOut: tokenParameterLiquidity;
+  userBalances: IAllTokensBalance;
+  setShowConfirmPool: React.Dispatch<React.SetStateAction<boolean>>;
+  pnlpBalance: string;
+  setBurnAmount: React.Dispatch<React.SetStateAction<string | number>>;
+  burnAmount: string | number;
+  setRemoveTokenAmount: React.Dispatch<
+    React.SetStateAction<{
+      tokenOneAmount: string;
+      tokenTwoAmount: string;
+    }>
+  >;
+  removeTokenAmount: {
+    tokenOneAmount: string;
+    tokenTwoAmount: string;
+  };
+  pair: string;
+  setSlippage: React.Dispatch<React.SetStateAction<string>>;
+  slippage: string;
+  handleTokenType: (type: tokenType) => void;
+  isLoading: boolean;
+  setPair: React.Dispatch<React.SetStateAction<string>>;
+  setShowLiquidityModal: (val: boolean) => void;
+  showLiquidityModal: boolean;
+  contractTokenBalance: IAllTokensBalance;
+  setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export const Pair = {
+  VOLATILE: "Volatile pair",
+  STABLE: "Stable pair",
+};
+function NewPoolMain(props: ILiquidityProps) {
+  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const amm = useAppSelector((state) => state.config.AMMs);
+  const TOKEN = useAppSelector((state) => state.config.tokens);
+  const walletAddress = useAppSelector((state) => state.wallet.address);
+  const dispatch = useDispatch<AppDispatch>();
+  const connectTempleWallet = () => {
+    return dispatch(walletConnection());
+  };
+
+  const [isExist, setIsExist] = useState(false);
+  const [isGauge, setIsGauge] = useState(false);
+  const [showNewPoolsManage, setShowNewPoolsManage] = useState<boolean>(false);
+  const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
+  const handleNewPoolsManagePopup = (val: boolean) => {
+    setShowNewPoolsManage(val);
+  };
+  const [selectedToken, setSelectedToken] = useState({} as tokenParameterLiquidity);
+
+  // useEffect(() => {
+  //   if (
+  //     Object.prototype.hasOwnProperty.call(props.tokenIn, "symbol") &&
+  //     Object.prototype.hasOwnProperty.call(props.tokenOut, "symbol")
+  //   ) {
+  //     const res = getDexAddress(props.tokenIn.symbol, props.tokenOut.symbol);
+
+  //     if (res !== "false") {
+  //       setIsExist(true);
+  //       if (amm[res]?.gauge !== undefined) {
+  //         setIsGauge(true);
+  //       } else {
+  //         setIsGauge(false);
+  //       }
+  //     } else {
+  //       setIsExist(false);
+  //       setIsGauge(false);
+  //     }
+  //   }
+  // }, [props.tokenIn, props.tokenOut]);
+
+  const AddButton = useMemo(() => {
+    if (!walletAddress) {
+      return (
+        <Button onClick={connectTempleWallet} color={"primary"}>
+          Connect wallet
+        </Button>
+      );
+    } else if (
+      !props.tokenIn.name ||
+      !props.tokenOut.name ||
+      Number(props.firstTokenAmount) <= 0 ||
+      Number(props.secondTokenAmount) <= 0 ||
+      props.pair === "" ||
+      isExist
+    ) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Create pool
+        </Button>
+      );
+    } else if (
+      walletAddress &&
+      props.pair === Pair.STABLE &&
+      props.firstTokenAmount &&
+      props.secondTokenAmount &&
+      props.firstTokenAmount !== props.secondTokenAmount
+    ) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Enter the same amount for both tokens
+        </Button>
+      );
+    } else if (
+      walletAddress &&
+      ((props.firstTokenAmount &&
+        props.firstTokenAmount > Number(props.userBalances[props.tokenIn.name]?.balance)) ||
+        (props.secondTokenAmount && props.secondTokenAmount) >
+          Number(props.userBalances[props.tokenOut.name]?.balance))
+    ) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Insufficient balance
+        </Button>
+      );
+    } else {
+      return (
+        <Button color={"primary"} onClick={() => props.setShowConfirmPool(true)}>
+          Create pool
+        </Button>
+      );
+    }
+  }, [
+    props.pair,
+    props.tokenIn,
+    props.tokenOut,
+    props.firstTokenAmount,
+    props.secondTokenAmount,
+    props.userBalances,
+    isExist,
+  ]);
+
+  const handleLiquidityInput = async (
+    input: string | number,
+    tokenType: "tokenIn" | "tokenOut"
+  ) => {
+    if (input == ".") {
+      props.setSecondTokenAmount("0.");
+      props.setFirstTokenAmount("0.");
+      return;
+    }
+    if (input === "" || isNaN(Number(input))) {
+      if (tokenType === "tokenIn") {
+        props.setFirstTokenAmount("");
+      } else if (tokenType === "tokenOut") {
+        props.setSecondTokenAmount("");
+      }
+
+      return;
+    } else if (tokenType === "tokenIn") {
+      const decimal = new BigNumber(input).decimalPlaces();
+
+      props.setFirstTokenAmount(input);
+    } else if (tokenType === "tokenOut") {
+      const decimal = new BigNumber(input).decimalPlaces();
+
+      props.setSecondTokenAmount(input.toString().trim());
+    }
+  };
+  const onClickAmount = () => {
+    props.tokenIn.name === "tez"
+      ? handleLiquidityInput(
+          Number(props.userBalances[props.tokenIn.name]?.balance) - 0.02,
+          "tokenIn"
+        )
+      : handleLiquidityInput(props.userBalances[props.tokenIn.name]?.balance.toNumber(), "tokenIn");
+  };
+
+  const onClickSecondAmount = () => {
+    props.tokenOut.name === "tez"
+      ? handleLiquidityInput(
+          Number(props.userBalances[props.tokenOut.name]?.balance) - 0.02,
+          "tokenOut"
+        )
+      : handleLiquidityInput(
+          props.userBalances[props.tokenOut.name]?.balance.toNumber(),
+          "tokenOut"
+        );
+  };
+
+  return (
+    <>
+      <div className="border rounded-2xl border-text-800 bg-card-200 px-[10px] md:px-3.5 pt-4 pb-4  mb-3">
+        <>
+          <div className=" relative gap-2 flex border-text-800/[0.5] rounded-2xl h-[89px]">
+            <div
+              className="w-[50%] rounded-l-2xl border items-center flex border-text-800/[0.5] bg-card-300 cursor-pointer"
+              onClick={() => props.handleTokenType("tokenIn")}
+            >
+              <div className="ml-2 md:ml-5 -mb-1">
+                <img
+                  src={
+                    props.tokenIn.image
+                      ? tokenIcons[props.tokenIn.name]
+                        ? tokenIcons[props.tokenIn.name].src
+                        : TOKEN[props.tokenIn.name.toString()]?.iconUrl
+                        ? TOKEN[props.tokenIn.name.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : `/assets/icon/emptyIcon.svg`
+                  }
+                  className=""
+                  width={"42px"}
+                  height={"42px"}
+                  onError={changeSource}
+                />
+              </div>
+              <div className="ml-1 md:ml-2">
+                <p className="text-text-900 font-body2">Input</p>
+                <p className="font-caption1 md:font-title2 text-white">
+                  {props.tokenIn.name ? tEZorCTEZtoUppercase(props.tokenIn.name) : "Select"}
+                  <span className="relative ml-2 -top-[1.5px]">
+                    <Image alt={"alt"} className="rotate-180" src={vectorDown} />
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div className="absolute top-[41%] left-[48%]">
+              <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
+            </div>
+            <div
+              className="w-[50%] rounded-r-2xl border items-center flex border-text-800/[0.5] bg-card-300 cursor-pointer"
+              onClick={() => props.handleTokenType("tokenOut")}
+            >
+              <div className="ml-2 md:ml-5 -mb-1">
+                <img
+                  src={
+                    props.tokenOut.image
+                      ? tokenIcons[props.tokenOut.name]
+                        ? tokenIcons[props.tokenOut.name].src
+                        : TOKEN[props.tokenOut.name.toString()]?.iconUrl
+                        ? TOKEN[props.tokenOut.name.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                      : `/assets/icon/emptyIcon.svg`
+                  }
+                  className=""
+                  width={"42px"}
+                  height={"42px"}
+                  onError={changeSource}
+                />
+              </div>
+              <div className="ml-1 md:ml-2">
+                <p className="text-text-900 font-body2">Input</p>
+                <p className="font-caption1 md:font-title2 text-white">
+                  {props.tokenOut.name ? tEZorCTEZtoUppercase(props.tokenOut.name) : "Select"}
+                  <span className="relative ml-2 -top-[1.5px]">
+                    <Image alt={"alt"} className="rotate-180" src={vectorDown} />
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className={clsx(
+              "border  pl-4 pr-5 mt-[12px] bg-muted-200/[0.1] items-center flex  rounded-2xl h-[86px] hover:border-text-700",
+              "border-text-800 "
+            )}
+          >
+            <div className="w-0 flex-auto">
+              <p>
+                <span className="mt-2  font-body4 text-text-400">INITIAL PRIZE</span>
+              </p>
+              <p>
+                <input
+                  type="text"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 ml-1 font-medium2  lg:font-medium1 outline-none w-[100%] placeholder:text-text-500 "
+                  placeholder="0.0"
+                  value={1}
+                />
+              </p>
+            </div>
+            {props.tokenIn.symbol && props.tokenOut.symbol && (
+              <div>
+                <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit ml-auto ">
+                  <div
+                    className={clsx(
+                      selectedToken.symbol === props.tokenIn.symbol
+                        ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
+                        : "text-text-250 px-2",
+                      "font-subtitle1223"
+                    )}
+                    onClick={() => {
+                      setSelectedToken(props.tokenIn);
+                    }}
+                  >
+                    {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
+                  </div>
+                  <div
+                    className={clsx(
+                      selectedToken.symbol === props.tokenOut.symbol
+                        ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
+                        : "text-text-250 px-2",
+                      "font-subtitle1223"
+                    )}
+                    onClick={() => {
+                      setSelectedToken(props.tokenOut);
+                    }}
+                  >
+                    {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
+                  </div>
+                </div>
+                <div className="font-body3 text-text-600 mt-[5.5px]">
+                  Select initial price token
+                </div>
+              </div>
+            )}
+          </div>
+        </>
+      </div>
+      <FeeTierMainNewPool
+        setSelectedFeeTier={setSelectedFeeTier}
+        selectedFeeTier={selectedFeeTier}
+        feeTier={"0.05"}
+      />
+      <div className="">{AddButton}</div>
+    </>
+  );
+}
+
+export default NewPoolMain;

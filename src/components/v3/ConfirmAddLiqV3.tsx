@@ -64,10 +64,10 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
           <Image alt={"alt"} src={info} />
         </div> */}
       </div>
-      <div className="mt-3 text-text-500 font-body4">
+      {/* <div className="mt-3 text-text-500 font-body4">
         Output is estimated. If the price changes by more than{" "}
         {props.slippage ? props.slippage : 0.5}% your transaction will revert
-      </div>
+      </div> */}
       <div className="mt-[17px] border border-text-800 bg-card-200 rounded-2xl py-5">
         <div className="flex px-5">
           <div className="text-text-250 font-body4 ">You are depositing</div>{" "}

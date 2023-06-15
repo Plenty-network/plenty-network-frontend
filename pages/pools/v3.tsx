@@ -31,6 +31,7 @@ import { CardHeaderV3, PoolsCardHeaderV3 } from "../../src/components/v3/pools/C
 import { PoolsTableV3 } from "../../src/components/v3/pools/poolsTableV3";
 import { calculateCurrentPrice, getInitialBoundaries } from "../../src/api/v3/liquidity";
 import { getTickAndRealPriceFromPool } from "../../src/api/v3/helper";
+import { NewPoolv3 } from "../../src/components/v3/NewPoolV3";
 
 export interface IIndexProps {}
 export enum POOL_TYPE {
@@ -184,7 +185,7 @@ export default function Pools(props: IIndexProps) {
               isFetchingMyPool={isFetchingMyPool}
             />
           )} */}
-          <NewPool
+          <NewPoolv3
             show={showNewPoolPopup}
             setShow={setShowNewPoolPopup}
             setShowLiquidityModal={handleCloseManagePopup}
