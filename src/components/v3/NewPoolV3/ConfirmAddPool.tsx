@@ -19,13 +19,15 @@ import nFormatter, {
   tEZorCTEZtoUppercase,
 } from "../../../api/util/helpers";
 import { useAppSelector } from "../../../redux";
+import { tokenParameterLiquidity } from "../../Liquidity/types";
 
 interface IConfirmSwapProps {
   show: boolean;
   setShow: any;
-  tokenIn: { name: string; image: any };
-  tokenOut: { name: string; image: any };
-  firstTokenAmount: string | number;
+  priceAmount: string;
+  tokenIn: { name: string; image: any; symbol: string };
+  tokenOut: { name: string; image: any; symbol: string };
+
   routeDetails: {
     path: string[];
     minimumOut: BigNumber;
@@ -37,7 +39,7 @@ interface IConfirmSwapProps {
     exchangeRate: BigNumber;
     success: boolean;
   };
-  secondTokenAmount: string | number;
+
   onClick: () => void;
   pair: string;
 }
@@ -52,6 +54,7 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
     props.setShow(false);
   };
 
+  const [selectedToken, setSelectedToken] = useState(props.tokenIn as tokenParameterLiquidity);
   return props.show ? (
     <PopUpModal onhide={closeModal}>
       {
@@ -66,11 +69,10 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
         </div> */}
           </div>
           <div className="mt-6">
-            <div className="border bg-muted-100/[0.1] rounded-2xl border-text-800 p-3 flex content-center justify-center">
-              <div className="border rounded-xl border-text-800/[0.5] bg-muted-400 p-3 h-[50px] justify-center flex">
-                <span className="h-[26px] w-[26px]">
+            <div className="relative rounded-2xl gap-2 h-[78px]  flex content-center justify-center">
+              <div className="w-[50%] rounded-l-2xl border items-center flex border-text-800/[0.5] bg-card-300 cursor-pointer">
+                <div className="ml-2 md:ml-5 ">
                   <img
-                    alt={"alt"}
                     src={
                       props.tokenIn.image
                         ? tokenIcons[props.tokenIn.name]
@@ -80,31 +82,25 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                           : `/assets/Tokens/fallback.png`
                         : `/assets/icon/emptyIcon.svg`
                     }
-                    height={"26px"}
-                    width={"26px"}
+                    className=""
+                    width={"42px"}
+                    height={"42px"}
                     onError={changeSource}
                   />
-                </span>
-                <span className="font-title3 ml-2">
-                  <span>{tEZorCTEZtoUppercase(props.tokenIn.name)}</span>
-                </span>
+                </div>
+                <div className="ml-1 md:ml-2">
+                  <p className="text-text-900 font-body2">Input</p>
+                  <p className="font-caption1 md:font-title2 text-white">
+                    {props.tokenIn.name ? tEZorCTEZtoUppercase(props.tokenIn.name) : "Select"}
+                  </p>
+                </div>
               </div>
-              <div className="ml-auto items-center flex font-medium2">
-                {Number(props.firstTokenAmount) > 0
-                  ? new BigNumber(props.firstTokenAmount).isLessThan(0.01)
-                    ? "<0.01"
-                    : nFormatter(new BigNumber(props.firstTokenAmount))
-                  : "0"}
+              <div className="absolute top-[38%] left-[48%]">
+                <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
               </div>
-            </div>
-            <div className="flex justify-center -mt-[8px]">
-              <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
-            </div>
-            <div className="border -mt-[7px] bg-muted-100/[0.1] rounded-2xl border-text-800 p-3 flex content-center justify-center">
-              <div className="border rounded-xl border-text-800/[0.5] bg-muted-400 p-3 h-[50px] justify-center flex">
-                <span className="h-[26px] w-[26px]">
+              <div className="w-[50%] rounded-r-2xl border items-center flex border-text-800/[0.5] bg-card-300 cursor-pointer">
+                <div className="ml-2 md:ml-5 ">
                   <img
-                    alt={"alt"}
                     src={
                       props.tokenOut.image
                         ? tokenIcons[props.tokenOut.name]
@@ -114,56 +110,129 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                           : `/assets/Tokens/fallback.png`
                         : `/assets/icon/emptyIcon.svg`
                     }
-                    height={"26px"}
-                    width={"26px"}
+                    className=""
+                    width={"42px"}
+                    height={"42px"}
                     onError={changeSource}
                   />
-                </span>
-                <span className="font-title3 ml-2">
-                  <span>{tEZorCTEZtoUppercase(props.tokenOut.name)}</span>
-                </span>
-              </div>
-              <div className="ml-auto items-center flex font-medium2">
-                {Number(props.secondTokenAmount) > 0
-                  ? new BigNumber(props.secondTokenAmount).isLessThan(0.01)
-                    ? "<0.01"
-                    : nFormatter(new BigNumber(props.secondTokenAmount))
-                  : "0"}
-              </div>
-            </div>
-            <div className="h-12 mt-3 px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2]  items-center flex  ">
-              <>
-                <div>
-                  <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px]">
-                    1{" "}
-                    {!isConvert
-                      ? tEZorCTEZtoUppercase(props.tokenIn.name)
-                      : tEZorCTEZtoUppercase(props.tokenOut.name)}{" "}
-                    =
-                    {!isConvert
-                      ? ` ${nFormatterWithLesserNumber(
-                          new BigNumber(props.secondTokenAmount).dividedBy(
-                            new BigNumber(props.firstTokenAmount)
-                          )
-                        )} 
-                            ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
-                      : `${nFormatterWithLesserNumber(
-                          new BigNumber(props.firstTokenAmount).dividedBy(
-                            new BigNumber(props.secondTokenAmount)
-                          )
-                        )} ${tEZorCTEZtoUppercase(props.tokenIn.name)}`}
-                  </span>
-                  <span className="relative top-px cursor-pointer ">
-                    <Image alt={"alt"} src={ratesrefresh} onClick={(e) => convertRates(e)} />
-                  </span>
                 </div>
-                <div className="ml-auto bg-primary-500/10 px-3  cursor-pointer  text-primary-500 hover:opacity-90  font-body2 rounded-lg flex items-center h-[28px] justify-center">
-                  {props.pair}
+                <div className="ml-1 md:ml-2">
+                  <p className="text-text-900 font-body2">Input</p>
+                  <p className="font-caption1 md:font-title2 text-white">
+                    {props.tokenOut.name ? tEZorCTEZtoUppercase(props.tokenOut.name) : "Select"}
+                  </p>
                 </div>
-              </>
+              </div>
             </div>
 
-            <div className="mt-4">
+            <div
+              className={clsx(
+                "border  pl-4 pr-5 mt-[12px] bg-muted-200/[0.1] items-center flex  rounded-2xl h-[86px] hover:border-text-700",
+                "border-text-800 "
+              )}
+            >
+              <div className="w-0 flex-auto">
+                <p>
+                  <span className="mt-2  font-body4 text-text-400">
+                    INITIAL PRIZE{" "}
+                    {selectedToken.symbol
+                      ? `: 1 ${
+                          selectedToken.symbol === props.tokenIn.symbol
+                            ? props.tokenIn.name
+                            : props.tokenOut.symbol
+                        } =`
+                      : null}
+                  </span>
+                </p>
+                <p className="flex items-center">
+                  <input
+                    type="text"
+                    className="text-white bg-muted-200/[0.1] text-left border-0 ml-1 font-medium2  lg:font-medium1 outline-none w-[100px] placeholder:text-text-500 "
+                    placeholder="0.0"
+                    value={props.priceAmount}
+                  />
+                  {props.tokenIn.symbol && props.tokenOut.symbol && (
+                    <>
+                      <img
+                        src={
+                          selectedToken.symbol === props.tokenIn.symbol
+                            ? props.tokenOut.name
+                            : props.tokenIn.symbol
+                            ? tokenIcons[
+                                selectedToken.symbol === props.tokenIn.symbol
+                                  ? props.tokenOut.name
+                                  : props.tokenIn.symbol
+                              ]
+                              ? tokenIcons[
+                                  selectedToken.symbol === props.tokenIn.symbol
+                                    ? props.tokenOut.name
+                                    : props.tokenIn.symbol
+                                ].src
+                              : TOKEN[
+                                  selectedToken.symbol === props.tokenIn.symbol
+                                    ? props.tokenOut.name.toString()
+                                    : props.tokenIn.symbol.toString()
+                                ]?.iconUrl
+                              ? TOKEN[
+                                  selectedToken.symbol === props.tokenIn.symbol
+                                    ? props.tokenOut.name.toString()
+                                    : props.tokenIn.symbol.toString()
+                                ].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                            : `/assets/icon/emptyIcon.svg`
+                        }
+                        className=""
+                        width={"16px"}
+                        height={"16px"}
+                        onError={changeSource}
+                      />
+                      <span className="ml-1 font-caption1">
+                        {selectedToken.symbol === props.tokenIn.symbol
+                          ? props.tokenOut.name
+                          : props.tokenIn.symbol}
+                      </span>
+                    </>
+                  )}{" "}
+                </p>
+              </div>
+              {props.tokenIn.symbol && props.tokenOut.symbol && (
+                <div>
+                  <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit ml-auto ">
+                    <div
+                      className={clsx(
+                        selectedToken.symbol === props.tokenIn.symbol
+                          ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
+                          : "text-text-250 px-2",
+                        "font-subtitle1223"
+                      )}
+                      onClick={() => {
+                        setSelectedToken(props.tokenIn);
+                      }}
+                    >
+                      {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
+                    </div>
+                    <div
+                      className={clsx(
+                        selectedToken.symbol === props.tokenOut.symbol
+                          ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
+                          : "text-text-250 px-2",
+                        "font-subtitle1223"
+                      )}
+                      onClick={() => {
+                        setSelectedToken(props.tokenOut);
+                      }}
+                    >
+                      {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
+                    </div>
+                  </div>
+                  <div className="font-body3 text-text-600 mt-[5.5px]">
+                    Select initial price token
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-5">
               <Button color="primary" width="w-full" onClick={props.onClick}>
                 Confirm
               </Button>

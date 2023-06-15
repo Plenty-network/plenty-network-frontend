@@ -23,7 +23,7 @@ export interface initialBoundaries {
   minTick: number;
   maxTick: number;
   minValue: BigNumber;
-  maxVlaue: BigNumber;
+  maxValue: BigNumber;
 }
 
 export interface IV3Position {

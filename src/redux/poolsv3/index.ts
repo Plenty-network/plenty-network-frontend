@@ -5,7 +5,7 @@ import { tokenParameterLiquidity } from "../../components/Liquidity/types";
 const initialState = {
   isFullRange: false,
   isLoading: true,
-
+  initBound: {} as initialBoundaries,
   leftRangeInput: 0,
   RightRangeInput: 0,
   leftbrush: 0,
@@ -32,6 +32,9 @@ const PoolsV3Slice = createSlice({
   name: "PoolsV3",
   initialState,
   reducers: {
+    setInitBound: (state, action) => {
+      state.initBound = action.payload;
+    },
     setFullRange: (state, action) => {
       state.isFullRange = action.payload;
     },
@@ -105,6 +108,7 @@ const PoolsV3Slice = createSlice({
   },
 });
 export const {
+  setInitBound,
   setInputDisable,
   setFullRange,
   setminTickA,

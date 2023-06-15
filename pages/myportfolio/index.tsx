@@ -20,7 +20,11 @@ import positionsViolet from "../../src/assets/icon/myPortfolio/positionsViolet.s
 import rewards from "../../src/assets/icon/myPortfolio/rewards.svg";
 import position from "../../src/assets/icon/myPortfolio/positions.svg";
 import Stats from "../../src/components/Positions/Stats";
-import { MyPortfolioCardHeader, MyPortfolioHeader } from "../../src/components/Positions/Header";
+import {
+  MyPortfolioCardHeader,
+  MyPortfolioCardHeaderRewards,
+  MyPortfolioHeader,
+} from "../../src/components/Positions/Header";
 import { PoolsTablePosition } from "../../src/components/PoolsPosition/poolsTable";
 import { getVeNFTsList } from "../../src/api/votes";
 import { IVeNFTData } from "../../src/api/votes/types";
@@ -1792,11 +1796,19 @@ function MyPortfolio(props: any) {
 
           <div>
             <div className="bg-card-50 md:sticky -top-[3px] md:top-0 z-10">
-              <MyPortfolioCardHeader
-                activeStateTab={activeStateTab}
-                setActiveStateTab={setActiveStateTab}
-                className=""
-              />
+              {activeSection === MyPortfolioSection.Positions ? (
+                <MyPortfolioCardHeader
+                  activeStateTab={activeStateTab}
+                  setActiveStateTab={setActiveStateTab}
+                  className=""
+                />
+              ) : (
+                <MyPortfolioCardHeaderRewards
+                  activeStateTab={activeStateTab}
+                  setActiveStateTab={setActiveStateTab}
+                  className=""
+                />
+              )}
             </div>
             {activeStateTab === MyPortfolioHeader.Pools &&
               (activeSection === MyPortfolioSection.Positions ? (

@@ -24,6 +24,7 @@ import {
   setBrightbrush,
   setBRightRangeInput,
   setcurrentPrice,
+  setInitBound,
   setIsLoading,
   setleftbrush,
   setleftRangeInput,
@@ -108,69 +109,55 @@ function PriceRangeV3(props: IPriceRangeProps) {
       );
       dispatch(setIsLoading(true));
       getInitialBoundaries(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
+        dispatch(setInitBound(response));
         if (
           new BigNumber(1)
             .dividedBy(response.minValue)
             .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
         ) {
-          // topLevelSelectedToken.symbol === tokeninorg.symbol
-          //   ?
           dispatch(setleftRangeInput(response.minValue.toFixed(6)));
-          //:
+
           dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
 
-          // topLevelSelectedToken.symbol === tokeninorg.symbol
-          //   ?
           dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
-          //:
+
           dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
-          // topLevelSelectedToken.symbol === tokeninorg.symbol
-          //   ?
+
           dispatch(setleftbrush(response.minValue.toFixed(6)));
-          // :
+
           dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
-          // topLevelSelectedToken.symbol === tokeninorg.symbol
-          //   ?
+
           dispatch(setrightbrush(response.maxValue.toFixed(6)));
-          //:
+
           dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
 
           dispatch(setIsLoading(false));
         } else {
-          // topLevelSelectedToken.symbol === tokeninorg.symbol
-          //   ?
           dispatch(setleftRangeInput(response.minValue.toFixed(6)));
-          //:
+
           dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
-          // topLevelSelectedToken.symbol === tokeninorg.symbol
-          //   ?
+
           dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
-          //:
+
           dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
-          // topLevelSelectedToken.symbol === tokeninorg.symbol
-          //   ?
+
           dispatch(setleftbrush(response.minValue.toFixed(6)));
-          //:
+
           dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
-          // topLevelSelectedToken.symbol === tokeninorg.symbol
-          //   ?
+
           dispatch(setrightbrush(response.maxValue.toFixed(6)));
-          //:
+
           dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
 
           dispatch(setIsLoading(false));
         }
 
-        // dispatch(setIsLoading(false));
-        // topLevelSelectedToken.symbol === tokeninorg.symbol
-        //   ?
         dispatch(setminTickA(response.minTick.toString()));
-        //:
+
         dispatch(setminTickB(response.minTick.toString()));
-        // topLevelSelectedToken.symbol === tokeninorg.symbol
-        //   ?
+
         dispatch(setmaxTickA(response.maxTick.toString()));
-        //:
+
         dispatch(setmaxTickB(response.maxTick.toString()));
       });
     }
@@ -183,6 +170,13 @@ function PriceRangeV3(props: IPriceRangeProps) {
       getTickFromRealPrice(new BigNumber(value), props.tokenIn.symbol, props.tokenOut.symbol).then(
         (response1) => {
           dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
+          getTickFromRealPrice(
+            new BigNumber(1).dividedBy(new BigNumber(value)),
+            props.tokenOut.symbol,
+            props.tokenIn.symbol
+          ).then((response) => {
+            dispatch(setminTickB(Tick.nearestUsableTick(response, 10)));
+          });
         }
       );
     } else {
@@ -192,6 +186,13 @@ function PriceRangeV3(props: IPriceRangeProps) {
         props.tokenIn.symbol
       ).then((response1) => {
         dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
+        getTickFromRealPrice(
+          new BigNumber(value),
+          props.tokenIn.symbol,
+          props.tokenOut.symbol
+        ).then((response) => {
+          dispatch(setminTickA(Tick.nearestUsableTick(response, 10)));
+        });
       });
     }
 

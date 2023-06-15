@@ -278,7 +278,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       {
         Header: "",
         id: "range",
-        columnWidth: "w-[148px] ",
+        columnWidth: "w-[158px] ",
 
         sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
         accessor: (x: any) =>
@@ -297,7 +297,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       {
         Header: "",
         id: "collect fee",
-        columnWidth: "w-[185px] ",
+        columnWidth: "w-[175px] ",
 
         sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
         accessor: (x: any) => (
@@ -309,7 +309,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       {
         Header: "",
         id: "manage",
-        columnWidth: "w-[200px] ",
+        columnWidth: "w-[180px] ",
         accessor: (x) => <ManageBtn tokenA={x.tokenA.toString()} tokenB={x.tokenB.toString()} />,
       },
     ],
@@ -352,7 +352,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsPositionv3"
-          TableWidth="md:min-w-[980px] lg:min-w-[980px]"
+          TableWidth="sm:min-w-[980px] lg:min-w-[980px]"
           NoData={NoData}
         />
       </div>

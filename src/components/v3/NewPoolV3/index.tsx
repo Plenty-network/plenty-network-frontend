@@ -41,22 +41,16 @@ export interface IManageLiquidityProps {
 
 export function NewPoolv3(props: IManageLiquidityProps) {
   const [showVideoModal, setShowVideoModal] = React.useState(false);
-  const [slippage, setSlippage] = useState<string>("0.5");
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const [pair, setPair] = useState("");
-  const [firstTokenAmountLiq, setFirstTokenAmountLiq] = React.useState<string | number>("");
-  const [secondTokenAmountLiq, setSecondTokenAmountLiq] = React.useState<number | string>("");
+  const [priceAmount, setPriceAmount] = useState("");
 
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
-  const [burnAmount, setBurnAmount] = React.useState<string | number>("");
+
   const [transactionId, setTransactionId] = useState("");
 
-  const [removeTokenAmount, setRemoveTokenAmount] = useState({
-    tokenOneAmount: "",
-    tokenTwoAmount: "",
-  });
   const tokens = useAppSelector((state) => state.config.tokens);
   const userAddress = useAppSelector((state) => state.wallet.address);
   const tokensArray = Object.entries(tokens);
@@ -67,7 +61,6 @@ export function NewPoolv3(props: IManageLiquidityProps) {
   };
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
-  const [pnlpBalance, setPnlpBalance] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -81,25 +74,22 @@ export function NewPoolv3(props: IManageLiquidityProps) {
   const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>(
     {} as tokenParameterLiquidity
   );
-  const [tokenInOp, setTokenInOp] = React.useState<IConfigToken>({} as IConfigToken);
-  const [tokenOutOp, setTokenOutOp] = React.useState<IConfigToken>({} as IConfigToken);
 
   const [swapModalShow, setSwapModalShow] = useState(false);
 
   const [tokenType, setTokenType] = useState<tokenType>("tokenIn");
   const selectToken = (token: tokensModalNewPool) => {
-    if ((tokenType === "tokenOut" || tokenType === "tokenIn") && firstTokenAmountLiq !== "") {
-      setSecondTokenAmountLiq("");
+    if (tokenType === "tokenOut" || tokenType === "tokenIn") {
+      setPriceAmount("");
+      //setSecondTokenAmountLiq("");
     }
     if (tokenType === "tokenIn") {
-      setTokenInOp(token.interface);
       setTokenIn({
         name: token.name,
         symbol: token.name,
         image: token.image,
       });
     } else {
-      setTokenOutOp(token.interface);
       setTokenOut({
         name: token.name,
         symbol: token.name,
@@ -116,15 +106,13 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     props.setShow(false);
     setTokenIn({} as tokenParameterLiquidity);
     setTokenOut({} as tokenParameterLiquidity);
-    setFirstTokenAmountLiq("");
-    setSecondTokenAmountLiq("");
+    setPriceAmount("");
     setPair("");
   };
   const resetAllValues = () => {
     closeModal();
     setPair("");
-    setFirstTokenAmountLiq("");
-    setSecondTokenAmountLiq("");
+    setPriceAmount("");
 
     setBalanceUpdate(false);
   };
@@ -232,251 +220,6 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     props.setReFetchPool(false);
     setRefetch(false);
     setShowConfirmTransaction(true);
-    if (pair === Pair.VOLATILE && tokenIn.name !== "XTZ" && tokenOut.name !== "XTZ") {
-      deployVolatile(
-        tokenInOp,
-        tokenOutOp,
-        userAddress,
-        new BigNumber(firstTokenAmountLiq),
-        new BigNumber(secondTokenAmountLiq),
-        transactionSubmitModal,
-        resetAllValues,
-        setShowConfirmTransaction,
-        {
-          flashType: Flashtype.Info,
-          headerText: "Transaction submitted",
-          trailingText: `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
-            TOKEN_B
-          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
-          linkText: "View in Explorer",
-          isLoading: true,
-          transactionId: "",
-        }
-      ).then((response) => {
-        if (response.success) {
-          closeModal();
-          setBalanceUpdate(true);
-          resetAllValues();
-          setTimeout(() => {
-            setShowTransactionSubmitModal(false);
-            dispatch(
-              setFlashMessage({
-                flashType: Flashtype.Success,
-                headerText: "Success",
-                trailingText: `Addition of new ${localStorage.getItem(
-                  TOKEN_A
-                )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
-                  FIRST_TOKEN_AMOUNT
-                )} pool`,
-                linkText: "View in Explorer",
-                isLoading: true,
-                onClick: () => {
-                  window.open(
-                    `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
-                    "_blank"
-                  );
-                },
-                transactionId: response.operationId ? response.operationId : "",
-              })
-            );
-            setRefetch(true);
-          }, 6000);
-
-          setTimeout(() => {
-            props.setReFetchPool(true);
-          }, 7000);
-          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-          setContentTransaction("");
-        } else {
-          setBalanceUpdate(true);
-          closeModal();
-          //resetAllValues();
-          setShowConfirmTransaction(false);
-          setTimeout(() => {
-            setShowTransactionSubmitModal(false);
-            dispatch(
-              setFlashMessage({
-                flashType: Flashtype.Rejected,
-                transactionId: "",
-                headerText: "Rejected",
-                trailingText:
-                  response.error === "NOT_ENOUGH_TEZ"
-                    ? `You do not have enough tez`
-                    : `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
-                        TOKEN_B
-                      )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
-                linkText: "",
-                isLoading: true,
-              })
-            );
-          }, 2000);
-
-          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-          setContentTransaction("");
-        }
-      });
-    } else if (pair === Pair.VOLATILE && (tokenIn.name === "XTZ" || tokenOut.name === "XTZ")) {
-      deployTezPair(
-        tokenInOp,
-        tokenOutOp,
-        userAddress,
-        new BigNumber(firstTokenAmountLiq),
-        new BigNumber(secondTokenAmountLiq),
-        transactionSubmitModal,
-        resetAllValues,
-        setShowConfirmTransaction,
-        {
-          flashType: Flashtype.Info,
-          headerText: "Transaction submitted",
-          trailingText: `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
-            TOKEN_B
-          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
-          linkText: "View in Explorer",
-          isLoading: true,
-          transactionId: "",
-        }
-      ).then((response) => {
-        if (response.success) {
-          closeModal();
-          setBalanceUpdate(true);
-          resetAllValues();
-          setTimeout(() => {
-            setShowTransactionSubmitModal(false);
-            dispatch(
-              setFlashMessage({
-                flashType: Flashtype.Success,
-                headerText: "Success",
-                trailingText: `Addition of new ${localStorage.getItem(
-                  TOKEN_A
-                )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
-                  FIRST_TOKEN_AMOUNT
-                )} pool`,
-                linkText: "View in Explorer",
-                isLoading: true,
-                onClick: () => {
-                  window.open(
-                    `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
-                    "_blank"
-                  );
-                },
-                transactionId: response.operationId ? response.operationId : "",
-              })
-            );
-            setRefetch(true);
-          }, 6000);
-
-          setTimeout(() => {
-            props.setReFetchPool(true);
-          }, 7000);
-          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-          setContentTransaction("");
-        } else {
-          setBalanceUpdate(true);
-          closeModal();
-          //resetAllValues();
-          setShowConfirmTransaction(false);
-          setTimeout(() => {
-            setShowTransactionSubmitModal(false);
-            dispatch(
-              setFlashMessage({
-                flashType: Flashtype.Rejected,
-                transactionId: "",
-                headerText: "Rejected",
-                trailingText:
-                  response.error === "NOT_ENOUGH_TEZ"
-                    ? `You do not have enough tez`
-                    : `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
-                        TOKEN_B
-                      )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
-                linkText: "",
-                isLoading: true,
-              })
-            );
-          }, 2000);
-
-          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-          setContentTransaction("");
-        }
-      });
-    } else if (pair === Pair.STABLE) {
-      deployStable(
-        tokenInOp,
-        tokenOutOp,
-        userAddress,
-        new BigNumber(firstTokenAmountLiq),
-        new BigNumber(secondTokenAmountLiq),
-        transactionSubmitModal,
-        resetAllValues,
-        setShowConfirmTransaction,
-        {
-          flashType: Flashtype.Info,
-          headerText: "Transaction submitted",
-          trailingText: `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
-            TOKEN_B
-          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
-          linkText: "View in Explorer",
-          isLoading: true,
-          transactionId: "",
-        }
-      ).then((response) => {
-        if (response.success) {
-          closeModal();
-          setBalanceUpdate(true);
-          resetAllValues();
-          setTimeout(() => {
-            setShowTransactionSubmitModal(false);
-            dispatch(
-              setFlashMessage({
-                flashType: Flashtype.Success,
-                headerText: "Success",
-                trailingText: `Addition of new ${localStorage.getItem(
-                  TOKEN_A
-                )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
-                  FIRST_TOKEN_AMOUNT
-                )} pool`,
-                linkText: "View in Explorer",
-                isLoading: true,
-                onClick: () => {
-                  window.open(
-                    `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
-                    "_blank"
-                  );
-                },
-                transactionId: response.operationId ? response.operationId : "",
-              })
-            );
-          }, 6000);
-          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-          setContentTransaction("");
-        } else {
-          closeModal();
-          setBalanceUpdate(true);
-          resetAllValues();
-          setShowConfirmTransaction(false);
-          setTimeout(() => {
-            setShowTransactionSubmitModal(false);
-            dispatch(
-              setFlashMessage({
-                flashType: Flashtype.Rejected,
-                transactionId: "",
-                headerText: "Rejected",
-                trailingText:
-                  response.error === "NOT_ENOUGH_TEZ"
-                    ? `You do not have enough tez`
-                    : `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
-                        TOKEN_B
-                      )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
-                linkText: "",
-                isLoading: true,
-              })
-            );
-          }, 2000);
-
-          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-          setContentTransaction("");
-        }
-      });
-    }
   };
   return (
     <>
@@ -488,7 +231,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
           <>
             <div className="flex ">
               <div className="mx-2 text-white font-title3">Add new pool</div>
-              <div className="relative top-[2px]">
+              <div className="relative top-[5px]">
                 <ToolTip
                   id="tooltip2"
                   position={Position.top}
@@ -508,22 +251,13 @@ export function NewPoolv3(props: IManageLiquidityProps) {
             <TextNewPool />
             <div className="">
               <NewPoolMain
+                priceAmount={priceAmount}
+                setPriceAmount={setPriceAmount}
                 setShowConfirmPool={setShowConfirmPool}
-                firstTokenAmount={firstTokenAmountLiq}
-                secondTokenAmount={secondTokenAmountLiq}
                 userBalances={allBalance.allTokensBalances}
                 setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
-                setSecondTokenAmount={setSecondTokenAmountLiq}
-                setFirstTokenAmount={setFirstTokenAmountLiq}
                 tokenIn={tokenIn}
                 tokenOut={tokenOut}
-                pnlpBalance={pnlpBalance}
-                setBurnAmount={setBurnAmount}
-                burnAmount={burnAmount}
-                setRemoveTokenAmount={setRemoveTokenAmount}
-                removeTokenAmount={removeTokenAmount}
-                setSlippage={setSlippage}
-                slippage={slippage}
                 isLoading={isLoading}
                 handleTokenType={handleTokenType}
                 setPair={setPair}
@@ -543,8 +277,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
           setShow={setShowConfirmPool}
           tokenIn={tokenIn}
           tokenOut={tokenOut}
-          firstTokenAmount={firstTokenAmountLiq}
-          secondTokenAmount={secondTokenAmountLiq}
+          priceAmount={priceAmount}
           onClick={handleAddNewPoolOperation}
           routeDetails={
             {} as {

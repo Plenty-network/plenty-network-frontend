@@ -36,10 +36,6 @@ import fromExponential from "from-exponential";
 import FeeTierMainNewPool from "./FeeTierNewPool";
 
 interface ILiquidityProps {
-  firstTokenAmount: string | number;
-  secondTokenAmount: string | number;
-  setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
-  setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   inputRef?: any;
   value?: string | "";
   onChange?: any;
@@ -47,22 +43,10 @@ interface ILiquidityProps {
   tokenOut: tokenParameterLiquidity;
   userBalances: IAllTokensBalance;
   setShowConfirmPool: React.Dispatch<React.SetStateAction<boolean>>;
-  pnlpBalance: string;
-  setBurnAmount: React.Dispatch<React.SetStateAction<string | number>>;
-  burnAmount: string | number;
-  setRemoveTokenAmount: React.Dispatch<
-    React.SetStateAction<{
-      tokenOneAmount: string;
-      tokenTwoAmount: string;
-    }>
-  >;
-  removeTokenAmount: {
-    tokenOneAmount: string;
-    tokenTwoAmount: string;
-  };
+
   pair: string;
-  setSlippage: React.Dispatch<React.SetStateAction<string>>;
-  slippage: string;
+  priceAmount: string;
+  setPriceAmount: React.Dispatch<React.SetStateAction<string>>;
   handleTokenType: (type: tokenType) => void;
   isLoading: boolean;
   setPair: React.Dispatch<React.SetStateAction<string>>;
@@ -76,8 +60,6 @@ export const Pair = {
   STABLE: "Stable pair",
 };
 function NewPoolMain(props: ILiquidityProps) {
-  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  const amm = useAppSelector((state) => state.config.AMMs);
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
@@ -86,7 +68,7 @@ function NewPoolMain(props: ILiquidityProps) {
   };
 
   const [isExist, setIsExist] = useState(false);
-  const [isGauge, setIsGauge] = useState(false);
+
   const [showNewPoolsManage, setShowNewPoolsManage] = useState<boolean>(false);
   const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
   const handleNewPoolsManagePopup = (val: boolean) => {
@@ -94,26 +76,14 @@ function NewPoolMain(props: ILiquidityProps) {
   };
   const [selectedToken, setSelectedToken] = useState({} as tokenParameterLiquidity);
 
-  // useEffect(() => {
-  //   if (
-  //     Object.prototype.hasOwnProperty.call(props.tokenIn, "symbol") &&
-  //     Object.prototype.hasOwnProperty.call(props.tokenOut, "symbol")
-  //   ) {
-  //     const res = getDexAddress(props.tokenIn.symbol, props.tokenOut.symbol);
-
-  //     if (res !== "false") {
-  //       setIsExist(true);
-  //       if (amm[res]?.gauge !== undefined) {
-  //         setIsGauge(true);
-  //       } else {
-  //         setIsGauge(false);
-  //       }
-  //     } else {
-  //       setIsExist(false);
-  //       setIsGauge(false);
-  //     }
-  //   }
-  // }, [props.tokenIn, props.tokenOut]);
+  useEffect(() => {
+    if (
+      Object.prototype.hasOwnProperty.call(props.tokenIn, "symbol") &&
+      Object.prototype.hasOwnProperty.call(props.tokenOut, "symbol")
+    ) {
+      setSelectedToken(props.tokenIn);
+    }
+  }, [props.tokenIn, props.tokenOut]);
 
   const AddButton = useMemo(() => {
     if (!walletAddress) {
@@ -122,38 +92,19 @@ function NewPoolMain(props: ILiquidityProps) {
           Connect wallet
         </Button>
       );
-    } else if (
-      !props.tokenIn.name ||
-      !props.tokenOut.name ||
-      Number(props.firstTokenAmount) <= 0 ||
-      Number(props.secondTokenAmount) <= 0 ||
-      props.pair === "" ||
-      isExist
-    ) {
+    } else if (!props.tokenIn.name || !props.tokenOut.name) {
       return (
         <Button onClick={() => null} color={"disabled"}>
           Create pool
         </Button>
       );
-    } else if (
-      walletAddress &&
-      props.pair === Pair.STABLE &&
-      props.firstTokenAmount &&
-      props.secondTokenAmount &&
-      props.firstTokenAmount !== props.secondTokenAmount
-    ) {
+    } else if (walletAddress && props.pair === Pair.STABLE) {
       return (
         <Button onClick={() => null} color={"disabled"}>
           Enter the same amount for both tokens
         </Button>
       );
-    } else if (
-      walletAddress &&
-      ((props.firstTokenAmount &&
-        props.firstTokenAmount > Number(props.userBalances[props.tokenIn.name]?.balance)) ||
-        (props.secondTokenAmount && props.secondTokenAmount) >
-          Number(props.userBalances[props.tokenOut.name]?.balance))
-    ) {
+    } else if (walletAddress && false) {
       return (
         <Button onClick={() => null} color={"disabled"}>
           Insufficient balance
@@ -166,62 +117,21 @@ function NewPoolMain(props: ILiquidityProps) {
         </Button>
       );
     }
-  }, [
-    props.pair,
-    props.tokenIn,
-    props.tokenOut,
-    props.firstTokenAmount,
-    props.secondTokenAmount,
-    props.userBalances,
-    isExist,
-  ]);
+  }, [props.pair, props.tokenIn, props.tokenOut, props.userBalances, isExist]);
 
-  const handleLiquidityInput = async (
-    input: string | number,
-    tokenType: "tokenIn" | "tokenOut"
-  ) => {
+  const handleLiquidityInput = async (input: string | number) => {
     if (input == ".") {
-      props.setSecondTokenAmount("0.");
-      props.setFirstTokenAmount("0.");
+      props.setPriceAmount("0.");
+
       return;
     }
     if (input === "" || isNaN(Number(input))) {
-      if (tokenType === "tokenIn") {
-        props.setFirstTokenAmount("");
-      } else if (tokenType === "tokenOut") {
-        props.setSecondTokenAmount("");
-      }
+      props.setPriceAmount("");
 
       return;
-    } else if (tokenType === "tokenIn") {
-      const decimal = new BigNumber(input).decimalPlaces();
-
-      props.setFirstTokenAmount(input);
-    } else if (tokenType === "tokenOut") {
-      const decimal = new BigNumber(input).decimalPlaces();
-
-      props.setSecondTokenAmount(input.toString().trim());
+    } else {
+      props.setPriceAmount(input.toString());
     }
-  };
-  const onClickAmount = () => {
-    props.tokenIn.name === "tez"
-      ? handleLiquidityInput(
-          Number(props.userBalances[props.tokenIn.name]?.balance) - 0.02,
-          "tokenIn"
-        )
-      : handleLiquidityInput(props.userBalances[props.tokenIn.name]?.balance.toNumber(), "tokenIn");
-  };
-
-  const onClickSecondAmount = () => {
-    props.tokenOut.name === "tez"
-      ? handleLiquidityInput(
-          Number(props.userBalances[props.tokenOut.name]?.balance) - 0.02,
-          "tokenOut"
-        )
-      : handleLiquidityInput(
-          props.userBalances[props.tokenOut.name]?.balance.toNumber(),
-          "tokenOut"
-        );
   };
 
   return (
@@ -233,7 +143,7 @@ function NewPoolMain(props: ILiquidityProps) {
               className="w-[50%] rounded-l-2xl border items-center flex border-text-800/[0.5] bg-card-300 cursor-pointer"
               onClick={() => props.handleTokenType("tokenIn")}
             >
-              <div className="ml-2 md:ml-5 -mb-1">
+              <div className="ml-2 md:ml-5 ">
                 <img
                   src={
                     props.tokenIn.image
@@ -260,14 +170,14 @@ function NewPoolMain(props: ILiquidityProps) {
                 </p>
               </div>
             </div>
-            <div className="absolute top-[41%] left-[48%]">
+            <div className="absolute top-[38%] left-[48%]">
               <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
             </div>
             <div
               className="w-[50%] rounded-r-2xl border items-center flex border-text-800/[0.5] bg-card-300 cursor-pointer"
               onClick={() => props.handleTokenType("tokenOut")}
             >
-              <div className="ml-2 md:ml-5 -mb-1">
+              <div className="ml-2 md:ml-5 ">
                 <img
                   src={
                     props.tokenOut.image
@@ -304,15 +214,67 @@ function NewPoolMain(props: ILiquidityProps) {
           >
             <div className="w-0 flex-auto">
               <p>
-                <span className="mt-2  font-body4 text-text-400">INITIAL PRIZE</span>
+                <span className="mt-2  font-body4 text-text-400">
+                  INITIAL PRIZE{" "}
+                  {selectedToken.symbol
+                    ? `: 1 ${
+                        selectedToken.symbol === props.tokenIn.symbol
+                          ? props.tokenIn.name
+                          : props.tokenOut.symbol
+                      } =`
+                    : null}
+                </span>
               </p>
-              <p>
+              <p className="flex items-center">
                 <input
                   type="text"
-                  className="text-white bg-muted-200/[0.1] text-left border-0 ml-1 font-medium2  lg:font-medium1 outline-none w-[100%] placeholder:text-text-500 "
+                  className="text-white bg-muted-200/[0.1] text-left border-0 ml-1 font-medium2  lg:font-medium1 outline-none w-[100px] placeholder:text-text-500 "
                   placeholder="0.0"
-                  value={1}
+                  value={props.priceAmount}
+                  onChange={(e) => handleLiquidityInput(e.target.value)}
                 />
+                {props.tokenIn.symbol && props.tokenOut.symbol && (
+                  <>
+                    <img
+                      src={
+                        selectedToken.symbol === props.tokenIn.symbol
+                          ? props.tokenOut.name
+                          : props.tokenIn.symbol
+                          ? tokenIcons[
+                              selectedToken.symbol === props.tokenIn.symbol
+                                ? props.tokenOut.name
+                                : props.tokenIn.symbol
+                            ]
+                            ? tokenIcons[
+                                selectedToken.symbol === props.tokenIn.symbol
+                                  ? props.tokenOut.name
+                                  : props.tokenIn.symbol
+                              ].src
+                            : TOKEN[
+                                selectedToken.symbol === props.tokenIn.symbol
+                                  ? props.tokenOut.name.toString()
+                                  : props.tokenIn.symbol.toString()
+                              ]?.iconUrl
+                            ? TOKEN[
+                                selectedToken.symbol === props.tokenIn.symbol
+                                  ? props.tokenOut.name.toString()
+                                  : props.tokenIn.symbol.toString()
+                              ].iconUrl
+                            : `/assets/Tokens/fallback.png`
+                          : `/assets/icon/emptyIcon.svg`
+                      }
+                      className=""
+                      width={"16px"}
+                      height={"16px"}
+                      onError={changeSource}
+                    />
+                    <span className="ml-1 font-caption1">
+                      {selectedToken.symbol === props.tokenIn.symbol
+                        ? props.tokenOut.name
+                        : props.tokenIn.symbol}
+                    </span>
+                  </>
+                )}{" "}
               </p>
             </div>
             {props.tokenIn.symbol && props.tokenOut.symbol && (
@@ -353,11 +315,14 @@ function NewPoolMain(props: ILiquidityProps) {
           </div>
         </>
       </div>
-      <FeeTierMainNewPool
-        setSelectedFeeTier={setSelectedFeeTier}
-        selectedFeeTier={selectedFeeTier}
-        feeTier={"0.05"}
-      />
+      {props.tokenIn.symbol && props.tokenOut.symbol && (
+        <FeeTierMainNewPool
+          setSelectedFeeTier={setSelectedFeeTier}
+          selectedFeeTier={selectedFeeTier}
+          feeTier={""}
+        />
+      )}
+
       <div className="">{AddButton}</div>
     </>
   );

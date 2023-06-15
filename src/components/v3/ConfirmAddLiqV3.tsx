@@ -16,7 +16,7 @@ import fallback from "../../../src/assets/icon/pools/fallback.png";
 import { tokenIcons } from "../../constants/tokensList";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ActivePopUp } from "./ManageTabV3";
 
 interface IConfirmAddLiquidityProps {
@@ -35,21 +35,93 @@ interface IConfirmAddLiquidityProps {
 }
 function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
+  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const leftRangeInput = useAppSelector((state) => state.poolsv3.leftRangeInput);
   const rightRangeInput = useAppSelector((state) => state.poolsv3.RightRangeInput);
   const currentprice = useAppSelector((state) => state.poolsv3.currentPrice);
   const bcurrentprice = useAppSelector((state) => state.poolsv3.BcurrentPrice);
-  const leftbrush = useAppSelector((state) => state.poolsv3.leftbrush);
-  const rightbrush = useAppSelector((state) => state.poolsv3.rightbrush);
+
   const BleftRangeInput = useAppSelector((state) => state.poolsv3.BleftRangeInput);
   const BrightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
-  const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
-  const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
 
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
-  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
+  const initBound = useAppSelector((state) => state.poolsv3.initBound);
   const [selectedToken, setSelectedToken] = useState(tokeninorg);
+  const [minA, setMinA] = useState("0");
+  const [maxA, setMaxA] = useState("0");
+  const [minB, setMinB] = useState("0");
+  const [maxB, setMaxB] = useState("0");
+
+  useEffect(() => {
+    console.log(
+      "init",
+      initBound?.minValue?.toFixed(6),
+      initBound?.maxValue?.toFixed(6),
+      Number(new BigNumber(1).dividedBy(initBound?.maxValue)?.toFixed(6)),
+      new BigNumber(1).dividedBy(initBound?.minValue)?.toFixed(6),
+      leftRangeInput,
+      rightRangeInput,
+      BleftRangeInput,
+
+      BrightRangeInput
+    );
+    if (Number(initBound?.minValue?.toFixed(6)) != leftRangeInput) {
+      setMinA(leftRangeInput.toString());
+      setMinB((1 / Number(leftRangeInput)).toFixed(6));
+    } else if (
+      Number(new BigNumber(1).dividedBy(initBound?.maxValue)?.toFixed(6)) != BleftRangeInput
+    ) {
+      setMinB(BleftRangeInput.toString());
+      setMinA((1 / Number(BleftRangeInput)).toFixed(6));
+    } else {
+      setMinA(leftRangeInput.toString());
+      setMinB(BleftRangeInput.toString());
+    }
+
+    if (Number(initBound?.maxValue?.toFixed(6)) != rightRangeInput) {
+      setMaxA(rightRangeInput.toString());
+      setMaxB((1 / Number(rightRangeInput)).toFixed(6));
+    } else if (
+      Number(new BigNumber(1).dividedBy(initBound?.minValue)?.toFixed(6)) != BrightRangeInput
+    ) {
+      setMaxB(BrightRangeInput.toString());
+      setMaxB((1 / Number(BrightRangeInput)).toFixed(6));
+    } else {
+      setMaxA(rightRangeInput.toString());
+      setMaxB(BrightRangeInput.toString());
+    }
+    // if (Number(new BigNumber(1).dividedBy(initBound?.maxValue)?.toFixed(6)) == BleftRangeInput) {
+    //   console.log("init3");
+    //   setMinB(BleftRangeInput.toString());
+    // } else {
+    //   setMinA((1 / Number(BleftRangeInput)).toFixed(6));
+    //   //setMinB(BleftRangeInput.toString());
+    //   console.log("init33", BleftRangeInput, 1 / Number(BleftRangeInput));
+    // }
+    // if (Number(new BigNumber(1).dividedBy(initBound?.minValue)?.toFixed(6)) == BrightRangeInput) {
+    //   console.log("init4");
+    //   setMaxB(BrightRangeInput.toString());
+    // } else {
+    //   //setMaxB(BrightRangeInput.toString());
+    //   setMaxA((1 / Number(BrightRangeInput)).toFixed(6));
+    //   console.log("init44", BrightRangeInput, 1 / Number(BrightRangeInput));
+    // }
+    // if (minA > maxA) {
+    //   const min = minA;
+    //   const max = maxA;
+    //   setMaxA(min);
+    //   setMinA(max);
+    // }
+    // if (minB > maxB) {
+    //   const min = minB;
+    //   const max = maxB;
+    //   setMaxB(min);
+    //   setMinB(max);
+    // }
+  }, []);
+  console.log(minA, maxA, minB, maxB, "init");
+
   return (
     <>
       <div className="flex">
@@ -191,10 +263,23 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
               <div className="font-title3">
                 {selectedToken.symbol === tokeninorg.symbol
-                  ? Number(leftRangeInput)?.toFixed(6)
-                  : Number(BleftRangeInput)?.toFixed(6)}
+                  ? minA > maxA
+                    ? maxA
+                    : minA
+                  : minB > maxB
+                  ? maxB
+                  : minB}
               </div>
-              <div className="font-subtitle5 text-text-250 mt-[1.5px]">$0.0</div>
+              <div className="font-subtitle5 text-text-250 mt-[1.5px]">
+                $
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? minA > maxA
+                    ? (Number(tokenPrice[props.tokenIn.name]) * Number(maxA)).toFixed(2)
+                    : (Number(tokenPrice[props.tokenIn.name]) * Number(minA)).toFixed(2)
+                  : minB > maxB
+                  ? (Number(tokenPrice[props.tokenIn.name]) * Number(maxB)).toFixed(2)
+                  : (Number(tokenPrice[props.tokenIn.name]) * Number(minB)).toFixed(2)}
+              </div>
             </div>
           </div>
           <div>
@@ -208,10 +293,23 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
               <div className="font-title3">
                 {selectedToken.symbol === tokeninorg.symbol
-                  ? Number(rightRangeInput)?.toFixed(6)
-                  : Number(BrightRangeInput)?.toFixed(6)}
+                  ? maxA < minA
+                    ? minA
+                    : maxA
+                  : maxB < minB
+                  ? minB
+                  : maxB}
               </div>
-              <div className="font-subtitle5 text-text-250 mt-[1.5px]">$0.0</div>
+              <div className="font-subtitle5 text-text-250 mt-[1.5px]">
+                $
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? maxA < minA
+                    ? (Number(tokenPrice[props.tokenIn.name]) * Number(minA)).toFixed(2)
+                    : (Number(tokenPrice[props.tokenIn.name]) * Number(maxA)).toFixed(2)
+                  : maxB < minB
+                  ? (Number(tokenPrice[props.tokenIn.name]) * Number(minB)).toFixed(2)
+                  : (Number(tokenPrice[props.tokenIn.name]) * Number(maxB)).toFixed(2)}
+              </div>
             </div>
           </div>
           <div>
@@ -224,7 +322,12 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
                   ? Number(currentprice)?.toFixed(6)
                   : Number(bcurrentprice)?.toFixed(6)}
               </div>
-              <div className="font-subtitle5 text-text-250 mt-[1.5px]">$0.0</div>
+              <div className="font-subtitle5 text-text-250 mt-[1.5px]">
+                $
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? (Number(tokenPrice[props.tokenIn.name]) * Number(currentprice)).toFixed(2)
+                  : (Number(tokenPrice[props.tokenIn.name]) * Number(bcurrentprice)).toFixed(2)}
+              </div>
             </div>
           </div>
         </div>

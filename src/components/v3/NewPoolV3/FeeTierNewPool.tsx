@@ -14,21 +14,25 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
       percentage: "0.01",
       text: "Best for many stable pairs",
       selectPercentage: "46",
+      created: true,
     },
     {
       percentage: "0.05",
       text: "Best for many stable pairs",
       selectPercentage: "46",
+      created: false,
     },
     {
       percentage: "0.03",
       text: "Best for many stable pairs",
       selectPercentage: "46",
+      created: true,
     },
     {
       percentage: "1",
       text: "Best for many stable pairs",
       selectPercentage: "46",
+      created: false,
     },
   ];
   return (
@@ -38,7 +42,9 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
           <div
             key={index}
             className={clsx(
-              props.selectedFeeTier === feeInd.percentage
+              feeInd.created
+                ? "border-text-800"
+                : props.selectedFeeTier === feeInd.percentage
                 ? "border-blue-700"
                 : "border-text-800 hover:border-text-400",
               "border w-[133px]  rounded-2xl   bg-card-200   mb-5 h-[139px] sm:h-[128px] py-[12px] pl-[14px]  pr-3 cursor-pointer"
@@ -47,16 +53,32 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
           >
             <div
               className={clsx(
-                props.selectedFeeTier === feeInd.percentage ? "text-blue-700" : "text-text-250",
+                feeInd.created
+                  ? "text-text-700"
+                  : props.selectedFeeTier === feeInd.percentage
+                  ? "text-blue-700"
+                  : "text-text-250",
                 "font-caption2 sm:font-subtitle4 "
               )}
             >
               {feeInd.percentage}% {!isMobile && " fee tier"}
             </div>
-            <div className="mt-2 font-mobile-400 sm:font-body1 text-text-250">{feeInd.text}</div>
+            <div
+              className={clsx(
+                feeInd.created ? "text-text-700" : " text-text-250",
+                "mt-2 font-mobile-400 sm:font-body1 "
+              )}
+            >
+              {feeInd.text}
+            </div>
             <div className="mt-[12px]">
-              <span className="text-white rounded-xl	bg-shimmer-100 px-2 items-center flex w-fit font-caption2 h-[24px]">
-                {feeInd.selectPercentage}%
+              <span
+                className={clsx(
+                  feeInd.created ? "text-info-500 bg-info-500/[0.2]" : "text-white bg-shimmer-100",
+                  " rounded-xl	 px-2 items-center flex w-fit font-caption2 h-[24px]"
+                )}
+              >
+                {feeInd.created ? "Created" : "Not Created"}
               </span>
             </div>
           </div>
