@@ -67,8 +67,8 @@ export const getPositons = async (
         upperTickOutsideLast: upperTickOutsideLast,
 
         positionInsideLast: {
-          x: new BigNumber(parseInt(position.fee_growth_inside_last_x)),
-          y: new BigNumber(parseInt(position.fee_growth_inside_last_y)),
+          x: new BigNumber(position.fee_growth_inside_last_x),
+          y: new BigNumber(position.fee_growth_inside_last_y),
         },
 
         currentTickIndex: contractStorageParameters.currTickIndex,
@@ -77,7 +77,7 @@ export const getPositons = async (
 
         upperTickIndex: parseInt(position.upper_tick_index),
 
-        liquidity: new BigNumber(parseInt(position.liquidity)),
+        liquidity: new BigNumber(position.liquidity),
       };
 
       const fees = Fee.computePositionFee(feeParam);

@@ -47,17 +47,17 @@ export const ContractStorage = async (
   );
 
   // https://rpc.tzkt.io/ghostnet/chains/main/blocks/head/context/contracts/KT1M5yHd85ikngHm5YCu9gkfM2oqtbsKak8Y/storage
-  let sqrtPriceValue = BigNumber(parseInt(v3ContractStorage.data.sqrt_price));
+  let sqrtPriceValue = BigNumber(v3ContractStorage.data.sqrt_price);
   let currTickIndex = parseInt(v3ContractStorage.data.cur_tick_index);
   let tickSpacing = parseInt(v3ContractStorage.data.constants.tick_spacing);
   let feeBps = parseInt(v3ContractStorage.data.constants.fee_bps);
   let currentTickWitness = parseInt(v3ContractStorage.data.cur_tick_witness);
-  let liquidity = BigNumber(parseInt(v3ContractStorage.data.liquidity));
+  let liquidity = BigNumber(v3ContractStorage.data.liquidity);
   let tokenX = await TokenDetail(tokenXSymbol);
   let tokenY = await TokenDetail(tokenYSymbol);
   const fee_growth = {
-    x: BigNumber(parseInt(v3ContractStorage.data.fee_growth.x)),
-    y: BigNumber(parseInt(v3ContractStorage.data.fee_growth.y)),
+    x: BigNumber(v3ContractStorage.data.fee_growth.x),
+    y: BigNumber(v3ContractStorage.data.fee_growth.y),
   };
   let ticksBigMap = parseInt(v3ContractStorage.data.ticks);
 
@@ -110,8 +110,8 @@ export const getOutsideFeeGrowth = async (
     );
 
     return {
-      x: new BigNumber(parseInt(feeGrowthOutside.data.value.fee_growth_outside.x)),
-      y: new BigNumber(parseInt(feeGrowthOutside.data.value.fee_growth_outside.y)),
+      x: new BigNumber(feeGrowthOutside.data.value.fee_growth_outside.x),
+      y: new BigNumber(feeGrowthOutside.data.value.fee_growth_outside.y),
     };
   } catch (error) {
     console.log("v3 error: ", error);
@@ -240,6 +240,14 @@ export const createPositionInstance = async (
       tokenXSymbol,
       tokenYSymbol
     );
+
+    /*     console.log(
+      "testssss",
+      liquidity.toString(),
+      contractStorageParameters.sqrtPriceValue.toString(),
+      Tick.computeSqrtPriceFromTick(lowerTick).toString(),
+      Tick.computeSqrtPriceFromTick(upperTick).toString()
+    ); */
 
     const maxTokenFinal = Liquidity.computeAmountFromLiquidity(
       liquidity,
