@@ -90,6 +90,7 @@ import { PortfolioDropdown } from "../../src/components/PortfolioSection";
 import nFormatter, { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
 import { tzktExplorer } from "../../src/common/walletconnect";
 import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
+import { PoolsV3TablePosition } from "../../src/components/PoolsV3Positions/poolsTable";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -1800,6 +1801,52 @@ function MyPortfolio(props: any) {
             {activeStateTab === MyPortfolioHeader.Pools &&
               (activeSection === MyPortfolioSection.Positions ? (
                 <PoolsTablePosition
+                  className="md:px-5 md:py-4   py-4"
+                  poolsPosition={poolsPosition.data}
+                  isfetched={poolsPosition.isfetched}
+                />
+              ) : (
+                <>
+                  <div className="flex z-10 md:px-[25px] px-4 bg-sideBar md:sticky top-[58px] pt-5">
+                    <p>
+                      <div className="text-white font-title3">List of my PLY emissions</div>
+                      <div className="text-text-250 font-body1">
+                        Claim voting rewards for your locks
+                      </div>
+                    </p>
+                    {(isMobile ? scrollY > 100 : scrollY > 150) && (
+                      <p
+                        id="backToTop"
+                        className={clsx(
+                          " flex items-center md:font-title3-bold font-subtitle4 text-primary-500 ml-auto h-[50px] px-[22px] md:px-[26px] bg-primary-500/[0.1] rounded-xl w-[155px]  justify-center animate__animated animate__zoomIn animate__faster",
+                          poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                            ? "cursor-not-allowed"
+                            : "cursor-pointer"
+                        )}
+                        onClick={
+                          poolsRewards.data?.gaugeEmissionsTotal?.isEqualTo(0)
+                            ? () => {}
+                            : () => {
+                                setShowClaimPly(true);
+                                setClaimValueDollar(poolsRewards.data.gaugeEmissionsTotal);
+                                setClaimState(EClaimAllState.PLYEMISSION);
+                              }
+                        }
+                      >
+                        Claim all
+                      </p>
+                    )}
+                  </div>
+                  <PoolsTableRewards
+                    className="md:px-5 md:py-4   py-4"
+                    poolsData={poolsRewards.data.poolsRewardsData}
+                    isfetched={poolsRewards.isfetched}
+                  />
+                </>
+              ))}
+            {activeStateTab === MyPortfolioHeader.Poolsv3 &&
+              (activeSection === MyPortfolioSection.Positions ? (
+                <PoolsV3TablePosition
                   className="md:px-5 md:py-4   py-4"
                   poolsPosition={poolsPosition.data}
                   isfetched={poolsPosition.isfetched}

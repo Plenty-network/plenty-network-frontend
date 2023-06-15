@@ -216,7 +216,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   }, [slippage]);
   const handleAddLiquidityOperation = () => {
     setContentTransaction(
-      `Mint ${nFormatterWithLesserNumber(
+      `Mint Position ${nFormatterWithLesserNumber(
         new BigNumber(firstTokenAmountLiq)
       )} ${tEZorCTEZtoUppercase(props.tokenIn.name)} / ${nFormatterWithLesserNumber(
         new BigNumber(secondTokenAmountLiq)
@@ -295,7 +295,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `add liq`,
+        trailingText: `Mint Position ${localStorage.getItem(
+          FIRST_TOKEN_AMOUNT
+        )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+          SECOND_TOKEN_AMOUNT
+        )} ${localStorage.getItem(TOKEN_B)}`,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -311,9 +315,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-                TOKEN_A
-              )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
+              trailingText: `Mint Position ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)}`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -339,9 +345,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-                TOKEN_A
-              )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
+              trailingText: `Mint Position ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)}`,
               linkText: "",
               isLoading: true,
             })
@@ -407,7 +415,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     dispatch(settopLevelSelectedToken(selectedToken));
   }, [selectedToken]);
 
-  return true ? (
+  return props.showLiquidityModal ? (
     <>
       <PopUpModal
         onhide={closeModal}
@@ -449,11 +457,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 <Image alt={"alt"} src={arrowLeft} />
               </p>
               <p className="text-white">
-                {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
+                {props.activeState === ActiveLiquidity.Liquidity && "New position"}
               </p>
-              <p className="ml-1 relative top-[0px]">
+              {/* <p className="ml-1 relative top-[0px]">
                 <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
-              </p>
+              </p> */}
               <p
                 className="text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer"
                 onClick={resetAllValues}
@@ -544,7 +552,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
               </p>
               <p className="ml-1 relative top-[3px]">
-                <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
+                <InfoIconToolTip
+                  message={
+                    "Create a new position or manage liquidity and collect fees for existing positions."
+                  }
+                />
               </p>
             </div>
             <PositionsPopup
@@ -576,9 +588,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               secondTokenAmount={secondTokenAmountLiq}
               tokenIn={props.tokenIn}
               tokenOut={props.tokenOut}
-              tokenPrice={tokenPrice}
-              pnlpEstimates={pnlpEstimates}
-              sharePool={sharePool}
               setScreen={setScreen}
               userBalances={userBalances}
               setSecondTokenAmount={setSecondTokenAmountLiq}

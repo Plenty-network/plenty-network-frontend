@@ -18,7 +18,6 @@ import { tokenIcons } from "../../constants/tokensList";
 import fromExponential from "from-exponential";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
-import { estimateTokenAFromTokenB, estimateTokenBFromTokenA } from "../../api/v3/liquidity";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -75,15 +74,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
         props.setFirstTokenAmount(input.toString().trim());
       }
       setSecondLoading(true);
-      estimateTokenAFromTokenB(
-        new BigNumber(input),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
-      ).then((response) => {
-        setSecondLoading(false);
-
-        props.setSecondTokenAmount(response);
-      });
+      props.setSecondTokenAmount(2);
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
 
@@ -97,15 +88,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
         props.setSecondTokenAmount(input.toString().trim());
       }
       setFirstLoading(true);
-      estimateTokenBFromTokenA(
-        new BigNumber(input),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
-      ).then((response) => {
-        setFirstLoading(false);
-
-        props.setFirstTokenAmount(response);
-      });
+      props.setFirstTokenAmount(2);
     }
   };
 

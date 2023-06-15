@@ -8,6 +8,7 @@ import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import IncreaseLiq from "./Increaseliq";
 import { ActiveIncDecState, ActivePopUp } from "./ManageTabV3";
 import DecreaseLiq from "./DecreaseLiq";
+import { useAppSelector } from "../../redux";
 
 interface IIncreaseDecreaseLiqMainProps {
   setActiveStateIncDec: React.Dispatch<React.SetStateAction<ActiveIncDecState | string>>;
@@ -18,11 +19,6 @@ interface IIncreaseDecreaseLiqMainProps {
   firstTokenAmount: string | number;
   secondTokenAmount: string | number;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
-  tokenPrice: {
-    [id: string]: number;
-  };
-  pnlpEstimates: string;
-  sharePool: string;
 
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
@@ -74,9 +70,6 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
           secondTokenAmount={props.secondTokenAmount}
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}
-          tokenPrice={props.tokenPrice}
-          pnlpEstimates={props.pnlpEstimates}
-          sharePool={props.sharePool}
           userBalances={props.userBalances}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}
@@ -88,9 +81,6 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
           secondTokenAmount={props.secondTokenAmount}
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}
-          tokenPrice={props.tokenPrice}
-          pnlpEstimates={props.pnlpEstimates}
-          sharePool={props.sharePool}
           userBalances={props.userBalances}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}

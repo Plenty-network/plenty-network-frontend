@@ -104,7 +104,7 @@ export const getTokenPrices = async (): Promise<{
 }> => {
   try {
     const pricesResponse = await axios
-      .get("https://api.teztools.io/token/prices")
+      .get("https://api.teztools.io/token/prices", { timeout: 3000 })
       .then((resp) => resp.data)
       .catch((err) => {
         console.log("teztool", err);

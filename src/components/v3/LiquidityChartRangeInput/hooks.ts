@@ -29,14 +29,16 @@ export function useDensityChartData({
 }) {
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
-  const isLoading = false;
+
   const error = undefined;
   const [data, setData] = useState<any>();
+  const [isLoadingData, setisloading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
   useMemo(() => {
-    dispatch(setIsLoading(true));
+    setisloading(true);
     getTickAndRealPriceFromPool("KT1AmeUTxh28afcKVgD6mJEzoSo95NThe3TW").then((response) => {
       setData(response);
+      setisloading(false);
     });
   }, [currencyA, currencyB]);
 
@@ -69,9 +71,9 @@ export function useDensityChartData({
 
   return useMemo(() => {
     return {
-      isLoading,
+      isLoadingData,
       error,
-      formattedData: !isLoading ? formatData() : undefined,
+      formattedData: !isLoadingData ? formatData() : undefined,
     };
-  }, [isLoading, error, formatData]);
+  }, [isLoadingData, error, formatData]);
 }
