@@ -222,6 +222,8 @@ export const createPositionInstance = async (
     const Tezos = await dappClient().tezos();
 
     const contractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+
     const contractInstance = await Tezos.wallet.at(contractAddress);
     console.log(
       "data createPositionInstance: ",
@@ -239,6 +241,13 @@ export const createPositionInstance = async (
       tokenYSymbol
     );
 
+    const maxTokenFinal = Liquidity.computeAmountFromLiquidity(
+      liquidity,
+      contractStorageParameters.sqrtPriceValue,
+      Tick.computeSqrtPriceFromTick(lowerTick),
+      Tick.computeSqrtPriceFromTick(upperTick)
+    );
+
     let lowerTickWitness = await calculateWitnessValue(lowerTick, tokenXSymbol, tokenYSymbol);
     let upperTickWitness = await calculateWitnessValue(upperTick, tokenXSymbol, tokenYSymbol);
 
@@ -247,9 +256,9 @@ export const createPositionInstance = async (
       upperTickIndex: upperTick,
       lowerTickWitness: lowerTickWitness,
       upperTickWitness: upperTickWitness,
-      liquidity: liquidity.decimalPlaces(0, BigNumber.ROUND_DOWN),
+      liquidity: liquidity,
       deadline: deadline,
-      maximumTokensContributed: maximumTokensContributed,
+      maximumTokensContributed: maxTokenFinal,
     };
 
     let optionSet2 = {
@@ -257,10 +266,20 @@ export const createPositionInstance = async (
       upperTickIndex: upperTick,
       lowerTickWitness: lowerTickWitness,
       upperTickWitness: upperTickWitness,
-      liquidity: liquidity.decimalPlaces(0, BigNumber.ROUND_DOWN).toString(),
+      liquidity: liquidity.toString(),
       deadline: deadline,
-      maximumTokensContributedX: maximumTokensContributed.x.toString(),
-      maximumTokensContributedY: maximumTokensContributed.y.toString(),
+      maximumTokensContributedX: maxTokenFinal.x.toString(),
+      maximumTokensContributedY: maxTokenFinal.y.toString(),
+      priceLowerTick: Price.computeRealPriceFromSqrtPrice(
+        Tick.computeSqrtPriceFromTick(lowerTick),
+        contractStorageParameters.tokenX.decimals,
+        contractStorageParameters.tokenY.decimals
+      ).toString(),
+      priceUpperTick: Price.computeRealPriceFromSqrtPrice(
+        Tick.computeSqrtPriceFromTick(upperTick),
+        contractStorageParameters.tokenX.decimals,
+        contractStorageParameters.tokenY.decimals
+      ).toString(),
     };
 
     console.log("optionSet: ", optionSet2);

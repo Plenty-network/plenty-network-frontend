@@ -236,6 +236,16 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     setShowConfirmTransaction(true);
     setScreen(ActivePopUp.NewPosition);
     console.log(
+      "minTickA",
+      minTickA,
+      "maxTickA",
+      maxTickA,
+      "minTickB",
+      minTickB,
+      "maxTickB",
+      maxTickB
+    );
+    console.log(
       "parameters",
       walletAddress,
       topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,

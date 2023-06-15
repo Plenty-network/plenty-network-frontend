@@ -191,7 +191,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         props.tokenOut.symbol,
         props.tokenIn.symbol
       ).then((response1) => {
-        dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
+        dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
       });
     }
 
@@ -222,7 +222,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         props.tokenOut.symbol,
         props.tokenIn.symbol
       ).then((response1) => {
-        dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
+        dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
       });
     }
 
