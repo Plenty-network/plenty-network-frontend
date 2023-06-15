@@ -230,34 +230,38 @@ function NewPoolMain(props: ILiquidityProps) {
                   type="text"
                   className="text-white bg-muted-200/[0.1] text-left border-0 ml-1 font-medium2  lg:font-medium1 outline-none w-[100px] placeholder:text-text-500 "
                   placeholder="0.0"
-                  value={props.priceAmount}
+                  value={
+                    props.priceAmount
+                      ? selectedToken.symbol === props.tokenIn.symbol
+                        ? props.priceAmount
+                        : 1 / Number(props.priceAmount)
+                      : ""
+                  }
                   onChange={(e) => handleLiquidityInput(e.target.value)}
                 />
                 {props.tokenIn.symbol && props.tokenOut.symbol && (
                   <>
                     <img
                       src={
-                        selectedToken.symbol === props.tokenIn.symbol
-                          ? props.tokenOut.name
-                          : props.tokenIn.symbol
+                        props.tokenOut.symbol && props.tokenIn.symbol
                           ? tokenIcons[
                               selectedToken.symbol === props.tokenIn.symbol
-                                ? props.tokenOut.name
+                                ? props.tokenOut.symbol
                                 : props.tokenIn.symbol
                             ]
                             ? tokenIcons[
                                 selectedToken.symbol === props.tokenIn.symbol
-                                  ? props.tokenOut.name
+                                  ? props.tokenOut.symbol
                                   : props.tokenIn.symbol
                               ].src
                             : TOKEN[
                                 selectedToken.symbol === props.tokenIn.symbol
-                                  ? props.tokenOut.name.toString()
+                                  ? props.tokenOut.symbol.toString()
                                   : props.tokenIn.symbol.toString()
                               ]?.iconUrl
                             ? TOKEN[
                                 selectedToken.symbol === props.tokenIn.symbol
-                                  ? props.tokenOut.name.toString()
+                                  ? props.tokenOut.symbol.toString()
                                   : props.tokenIn.symbol.toString()
                               ].iconUrl
                             : `/assets/Tokens/fallback.png`

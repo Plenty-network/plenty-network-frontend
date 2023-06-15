@@ -43,11 +43,11 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
             key={index}
             className={clsx(
               feeInd.created
-                ? "border-text-800"
+                ? "border-text-800 cursor-not-allowed"
                 : props.selectedFeeTier === feeInd.percentage
                 ? "border-blue-700"
-                : "border-text-800 hover:border-text-400",
-              "border w-[133px]  rounded-2xl   bg-card-200   mb-5 h-[139px] sm:h-[128px] py-[12px] pl-[14px]  pr-3 cursor-pointer"
+                : "border-text-800 hover:border-text-400 cursor-pointer",
+              "border w-[133px]  rounded-2xl   bg-card-200   mb-5 h-[139px] sm:h-[128px] py-[12px] pl-[14px]  pr-3 "
             )}
             onClick={() => props.setSelectedFeeTier(feeInd.percentage)}
           >
@@ -75,7 +75,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
               <span
                 className={clsx(
                   feeInd.created ? "text-info-500 bg-info-500/[0.2]" : "text-white bg-shimmer-100",
-                  " rounded-xl	 px-2 items-center flex w-fit font-caption2 h-[24px]"
+                  " rounded-xl	 px-2 items-center flex w-fit font-caption1 h-[24px]"
                 )}
               >
                 {feeInd.created ? "Created" : "Not Created"}

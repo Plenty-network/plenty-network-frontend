@@ -23,6 +23,7 @@ interface IPositionsProps {
 function PositionsData(props: IPositionsProps) {
   const [isLoading, setIsLoading] = useState(true);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const walletAddress = useAppSelector((state) => state.wallet.address);
   const [data, setData] = useState<
     | {
         liquidity: {
@@ -43,13 +44,17 @@ function PositionsData(props: IPositionsProps) {
     | undefined
   >([]);
   useEffect(() => {
-    if (Object.keys(tokenPrice).length !== 0) {
+    if (
+      Object.keys(tokenPrice).length !== 0 &&
+      Object.prototype.hasOwnProperty.call(props.tokenIn, "symbol") &&
+      Object.prototype.hasOwnProperty.call(props.tokenOut, "symbol")
+    ) {
       setIsLoading(true);
       getPositons(
         props.tokenIn.symbol,
         props.tokenOut.symbol,
         "0.05",
-        "tz1WDRu8H4dHbUwygocLsmaXgHthGiV6JGJG",
+        walletAddress,
         tokenPrice
       ).then((res) => {
         console.log("positions", res);
@@ -57,7 +62,7 @@ function PositionsData(props: IPositionsProps) {
         setIsLoading(false);
       });
     }
-  }, [props.tokenIn.symbol, props.tokenOut.symbol, tokenPrice]);
+  }, [props.tokenIn.symbol, props.tokenOut.symbol, Object.keys(tokenPrice).length]);
   return (
     <div className="overflow-x-auto ">
       <div className="flex  my-[24px] ml-8 min-w-[792px] ">

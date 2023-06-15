@@ -91,10 +91,12 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
   const full = useAppSelector((state) => state.poolsv3.isFullRange);
+  const dispatch = useDispatch<AppDispatch>();
   React.useEffect(() => {
     props.isClearAll && setFullRange(false);
   }, [props.isClearAll]);
   React.useEffect(() => {
+    console.log("new", isFullRange, full);
     if (!isFullRange) {
       dispatch(setIsLoading(true));
       calculateCurrentPrice(tokeninorg.symbol, tokenoutorg.symbol, tokeninorg.symbol).then(
@@ -163,20 +165,11 @@ function PriceRangeV3(props: IPriceRangeProps) {
     }
   }, [isFullRange, full]);
 
-  const dispatch = useDispatch<AppDispatch>();
-
   const onLeftRangeInputFn = (value: string) => {
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
       getTickFromRealPrice(new BigNumber(value), props.tokenIn.symbol, props.tokenOut.symbol).then(
         (response1) => {
           dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
-          getTickFromRealPrice(
-            new BigNumber(1).dividedBy(new BigNumber(value)),
-            props.tokenOut.symbol,
-            props.tokenIn.symbol
-          ).then((response) => {
-            dispatch(setminTickB(Tick.nearestUsableTick(response, 10)));
-          });
         }
       );
     } else {
@@ -186,13 +179,6 @@ function PriceRangeV3(props: IPriceRangeProps) {
         props.tokenIn.symbol
       ).then((response1) => {
         dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
-        getTickFromRealPrice(
-          new BigNumber(value),
-          props.tokenIn.symbol,
-          props.tokenOut.symbol
-        ).then((response) => {
-          dispatch(setminTickA(Tick.nearestUsableTick(response, 10)));
-        });
       });
     }
 
@@ -223,7 +209,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         props.tokenOut.symbol,
         props.tokenIn.symbol
       ).then((response1) => {
-        dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
+        dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
       });
     }
 

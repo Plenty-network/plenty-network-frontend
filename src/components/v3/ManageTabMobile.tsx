@@ -545,6 +545,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                   sharePool={sharePool}
                   slippage={slippage}
                   handleAddLiquidityOperation={handleAddLiquidityOperation}
+                  topLevelSelectedToken={topLevelSelectedToken}
                 />
               </>
             )}

@@ -10,7 +10,7 @@ import nFormatter, {
   nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
-import { useAppSelector } from "../../redux";
+import { AppDispatch, useAppSelector } from "../../redux";
 import Button from "../Button/Button";
 import fallback from "../../../src/assets/icon/pools/fallback.png";
 import { tokenIcons } from "../../constants/tokensList";
@@ -18,10 +18,15 @@ import { tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
 import { ActivePopUp } from "./ManageTabV3";
+import { getTickFromRealPrice } from "../../api/v3/helper";
+import { useDispatch } from "react-redux";
+import { setmaxTickA, setmaxTickB, setminTickA, setminTickB } from "../../redux/poolsv3";
+import { Tick } from "@plenty-labs/v3-sdk";
 
 interface IConfirmAddLiquidityProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
+
   firstTokenAmount: string | number | BigNumber;
   secondTokenAmount: string | number;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
@@ -32,6 +37,7 @@ interface IConfirmAddLiquidityProps {
   sharePool: string;
   slippage: number;
   handleAddLiquidityOperation: () => void;
+  topLevelSelectedToken: tokenParameterLiquidity;
 }
 function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
@@ -46,81 +52,57 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
 
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
-  const initBound = useAppSelector((state) => state.poolsv3.initBound);
+
   const [selectedToken, setSelectedToken] = useState(tokeninorg);
   const [minA, setMinA] = useState("0");
   const [maxA, setMaxA] = useState("0");
   const [minB, setMinB] = useState("0");
   const [maxB, setMaxB] = useState("0");
 
+  const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    console.log(
-      "init",
-      initBound?.minValue?.toFixed(6),
-      initBound?.maxValue?.toFixed(6),
-      Number(new BigNumber(1).dividedBy(initBound?.maxValue)?.toFixed(6)),
-      new BigNumber(1).dividedBy(initBound?.minValue)?.toFixed(6),
-      leftRangeInput,
-      rightRangeInput,
-      BleftRangeInput,
-
-      BrightRangeInput
-    );
-    if (Number(initBound?.minValue?.toFixed(6)) != leftRangeInput) {
+    if (props.topLevelSelectedToken.symbol === props.tokenIn.symbol) {
       setMinA(leftRangeInput.toString());
       setMinB((1 / Number(leftRangeInput)).toFixed(6));
-    } else if (
-      Number(new BigNumber(1).dividedBy(initBound?.maxValue)?.toFixed(6)) != BleftRangeInput
-    ) {
-      setMinB(BleftRangeInput.toString());
-      setMinA((1 / Number(BleftRangeInput)).toFixed(6));
-    } else {
-      setMinA(leftRangeInput.toString());
-      setMinB(BleftRangeInput.toString());
-    }
-
-    if (Number(initBound?.maxValue?.toFixed(6)) != rightRangeInput) {
       setMaxA(rightRangeInput.toString());
       setMaxB((1 / Number(rightRangeInput)).toFixed(6));
-    } else if (
-      Number(new BigNumber(1).dividedBy(initBound?.minValue)?.toFixed(6)) != BrightRangeInput
-    ) {
-      setMaxB(BrightRangeInput.toString());
-      setMaxB((1 / Number(BrightRangeInput)).toFixed(6));
+
+      getTickFromRealPrice(
+        new BigNumber(1).dividedBy(new BigNumber(leftRangeInput)),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol
+      ).then((response1) => {
+        dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
+      });
+      getTickFromRealPrice(
+        new BigNumber(1).dividedBy(new BigNumber(rightRangeInput)),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol
+      ).then((response1) => {
+        dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
+      });
     } else {
-      setMaxA(rightRangeInput.toString());
+      setMinA((1 / Number(BleftRangeInput)).toFixed(6));
+      setMinB(BleftRangeInput.toString());
+      setMaxA((1 / Number(BrightRangeInput)).toFixed(6));
       setMaxB(BrightRangeInput.toString());
+
+      getTickFromRealPrice(
+        new BigNumber(1).dividedBy(new BigNumber(BleftRangeInput)),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol
+      ).then((response1) => {
+        dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
+      });
+      getTickFromRealPrice(
+        new BigNumber(1).dividedBy(new BigNumber(BrightRangeInput)),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol
+      ).then((response1) => {
+        dispatch(setmaxTickA(Tick.nearestUsableTick(response1, 10)));
+      });
     }
-    // if (Number(new BigNumber(1).dividedBy(initBound?.maxValue)?.toFixed(6)) == BleftRangeInput) {
-    //   console.log("init3");
-    //   setMinB(BleftRangeInput.toString());
-    // } else {
-    //   setMinA((1 / Number(BleftRangeInput)).toFixed(6));
-    //   //setMinB(BleftRangeInput.toString());
-    //   console.log("init33", BleftRangeInput, 1 / Number(BleftRangeInput));
-    // }
-    // if (Number(new BigNumber(1).dividedBy(initBound?.minValue)?.toFixed(6)) == BrightRangeInput) {
-    //   console.log("init4");
-    //   setMaxB(BrightRangeInput.toString());
-    // } else {
-    //   //setMaxB(BrightRangeInput.toString());
-    //   setMaxA((1 / Number(BrightRangeInput)).toFixed(6));
-    //   console.log("init44", BrightRangeInput, 1 / Number(BrightRangeInput));
-    // }
-    // if (minA > maxA) {
-    //   const min = minA;
-    //   const max = maxA;
-    //   setMaxA(min);
-    //   setMinA(max);
-    // }
-    // if (minB > maxB) {
-    //   const min = minB;
-    //   const max = maxB;
-    //   setMaxB(min);
-    //   setMinB(max);
-    // }
   }, []);
-  console.log(minA, maxA, minB, maxB, "init");
 
   return (
     <>

@@ -136,15 +136,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     dispatch(setTokeOutOrg(props.tokenB));
   }, [props.tokenIn, props.tokenA, props.tokenB]);
   useEffect(() => {
-    /*     getPositons(
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
-      "0.05",
-      walletAddress,
-      tokenPrice
-    ).then((res) => {
-      console.log("positions", res);
-    }); */
     const updateBalance = async () => {
       const balancePromises = [];
 
@@ -248,6 +239,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     console.log(
       "parameters",
       walletAddress,
+      minTickA,
+      maxTickA,
+      minTickB,
+      maxTickB,
+      "ll",
       topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
       topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB,
       topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -559,11 +555,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 />
               </p>
             </div>
-            <PositionsPopup
-              tokenIn={props.tokenIn}
-              tokenOut={props.tokenOut}
-              setScreen={setScreen}
-            />
+            <PositionsPopup tokenIn={props.tokenA} tokenOut={props.tokenB} setScreen={setScreen} />
           </>
         ) : screen === ActivePopUp.ManageExisting ? (
           <div>
@@ -609,6 +601,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               sharePool={sharePool}
               slippage={slippage}
               handleAddLiquidityOperation={handleAddLiquidityOperation}
+              topLevelSelectedToken={topLevelSelectedToken}
             />
           </>
         )}

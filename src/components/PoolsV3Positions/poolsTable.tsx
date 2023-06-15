@@ -282,7 +282,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
 
         sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
         accessor: (x: any) =>
-          true ? (
+          false ? (
             <span className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1 rounded-lg	 text-error-300 bg-error-300/[0.1] ">
               <Image src={infoOrange} />
               Out of range
