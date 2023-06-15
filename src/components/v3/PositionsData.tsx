@@ -38,6 +38,7 @@ function PositionsData(props: IPositionsProps) {
         };
         feesDollar: BigNumber;
         isInRange: boolean;
+        isMaxPriceInfinity: boolean;
       }[]
     | undefined
   >([]);
@@ -155,7 +156,7 @@ function PositionsData(props: IPositionsProps) {
 
                   <div className="w-[166px] text-text-50 font-subtitle4 ">
                     {nFormatterWithLesserNumber(d.minPrice)} /{" "}
-                    {nFormatterWithLesserNumber(d.maxPrice)}
+                    {d.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber(d.maxPrice)}
                     <div className="font-body3 text-text-500">
                       {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
                       {tEZorCTEZtoUppercase(props.tokenIn.symbol)}

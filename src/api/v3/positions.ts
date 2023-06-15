@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { Tick, Pool, Price, Liquidity, Fee } from "@plenty-labs/v3-sdk";
+import { Tick, Pool, Price, Liquidity, Fee, MAX_TICK } from "@plenty-labs/v3-sdk";
 import Config from "../../config/config";
 import { ContractStorage, getOutsideFeeGrowth, getRealPriceFromTick } from "./helper";
 import { store } from "../../redux";
@@ -45,11 +45,22 @@ export const getPositons = async (
         contractStorageParameters.tokenX.decimals,
         contractStorageParameters.tokenY.decimals
       );
-      const maxPrice = Price.computeRealPriceFromSqrtPrice(
-        Tick.computeSqrtPriceFromTick(parseInt(position.upper_tick_index)),
-        contractStorageParameters.tokenX.decimals,
-        contractStorageParameters.tokenY.decimals
+
+      console.log(
+        "max",
+        parseInt(position.upper_tick_index) ==
+          Tick.nearestUsableTick(MAX_TICK, contractStorageParameters.tickSpacing),
+        position.upper_tick_index
       );
+
+      const maxPrice =
+        parseInt(position.upper_tick_index) == MAX_TICK
+          ? BigNumber(Infinity)
+          : Price.computeRealPriceFromSqrtPrice(
+              Tick.computeSqrtPriceFromTick(parseInt(position.upper_tick_index)),
+              contractStorageParameters.tokenX.decimals,
+              contractStorageParameters.tokenY.decimals
+            );
 
       const lowerTickOutsideLast = await getOutsideFeeGrowth(
         contractStorageParameters.ticksBigMap,
@@ -67,8 +78,8 @@ export const getPositons = async (
         upperTickOutsideLast: upperTickOutsideLast,
 
         positionInsideLast: {
-          x: new BigNumber(parseInt(position.fee_growth_inside_last_x)),
-          y: new BigNumber(parseInt(position.fee_growth_inside_last_y)),
+          x: new BigNumber(position.fee_growth_inside_last_x),
+          y: new BigNumber(position.fee_growth_inside_last_y),
         },
 
         currentTickIndex: contractStorageParameters.currTickIndex,
@@ -77,7 +88,7 @@ export const getPositons = async (
 
         upperTickIndex: parseInt(position.upper_tick_index),
 
-        liquidity: new BigNumber(parseInt(position.liquidity)),
+        liquidity: new BigNumber(position.liquidity),
       };
 
       const fees = Fee.computePositionFee(feeParam);
@@ -169,6 +180,9 @@ export const getPositons = async (
             ).multipliedBy(tokenPrices[tokenYSymbol])
           ),
         isInRange: isInRange,
+        isMaxPriceInfinity:
+          parseInt(position.upper_tick_index) ==
+          Tick.nearestUsableTick(MAX_TICK, contractStorageParameters.tickSpacing),
       };
     });
 

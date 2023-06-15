@@ -49,6 +49,9 @@ export default function nFormatter(num: BigNumber) {
 
 export function nFormatterWithLesserNumber(num: BigNumber) {
   if (num.isGreaterThan(0)) {
+    if (!num.isFinite()) {
+      return "∞";
+    }
     if (num.isLessThan(0.01)) {
       return "<0.01";
     }
