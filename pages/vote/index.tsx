@@ -168,14 +168,14 @@ export default function Vote() {
     dispatch(getEpochData());
     setVoteData({} as { [id: string]: IVotePageData });
     !showTransactionSubmitModal && setVotes([] as IVotes[]);
-    votesPageDataWrapper(
-      selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
-      selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
-      tokenPrice,
-      selectedDropDown.tokenId ? new BigNumber(selectedDropDown.votingPower) : undefined
-    ).then((res) => {
-      setVoteData(res.allData);
-    });
+    // votesPageDataWrapper(
+    //   selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber,
+    //   selectedDropDown.tokenId ? Number(selectedDropDown.tokenId) : undefined,
+    //   tokenPrice,
+    //   selectedDropDown.tokenId ? new BigNumber(selectedDropDown.votingPower) : undefined
+    // ).then((res) => {
+    //   setVoteData(res.allData);
+    // });
   }, []);
   useEffect(() => {
     dispatch(setbannerClicked(false));
