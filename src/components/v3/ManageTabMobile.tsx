@@ -42,7 +42,23 @@ import { walletConnection } from "../../redux/wallet/wallet";
 import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
 import ConfirmAddLiquidityv3 from "./ConfirmAddLiqV3";
 import {
+  setIsLoading,
+  setBcurrentPrice,
+  setBleftbrush,
+  setBleftRangeInput,
+  setBrightbrush,
+  setBRightRangeInput,
+  setcurrentPrice,
   setFullRange,
+  setInitBound,
+  setleftbrush,
+  setleftRangeInput,
+  setmaxTickA,
+  setmaxTickB,
+  setminTickA,
+  setminTickB,
+  setrightbrush,
+  setRightRangeInput,
   setTokenInOrg,
   setTokenInV3,
   setTokeOutOrg,
@@ -57,6 +73,7 @@ import ConfirmIncreaseLiq from "./Confirmaddliq";
 import ConfirmDecreaseLiq from "./Confirmremoveliq";
 import { LiquidityOperation } from "../../operations/v3/liquidity";
 import TransactionSettingsV3 from "./TransactionSettingv3";
+import { calculateCurrentPrice, getInitialBoundaries } from "../../api/v3/liquidity";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -111,16 +128,13 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   const [sharePool, setSharePool] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
-  const [pnlpBalance, setPnlpBalance] = useState("");
-  const [lpTokenPrice, setLpTokenPrice] = useState(new BigNumber(0));
-  const [isLoading, setIsLoading] = useState(false);
 
   const [contentTransaction, setContentTransaction] = useState("");
   const minTickA = useAppSelector((state) => state.poolsv3.minTickA);
   const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
   const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
   const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
-
+  const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const [settingsShow, setSettingsShow] = useState(false);
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   const refSettingTab = React.useRef(null);
@@ -206,7 +220,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   }, [slippage]);
   const handleAddLiquidityOperation = () => {
     setContentTransaction(
-      `Mint ${nFormatterWithLesserNumber(
+      `Mint Position ${nFormatterWithLesserNumber(
         new BigNumber(firstTokenAmountLiq)
       )} ${tEZorCTEZtoUppercase(props.tokenIn.name)} / ${nFormatterWithLesserNumber(
         new BigNumber(secondTokenAmountLiq)
@@ -226,28 +240,63 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
     setShowConfirmTransaction(true);
     setScreen(ActivePopUp.NewPosition);
     console.log(
+      "minTickA",
+      minTickA,
+      "maxTickA",
+      maxTickA,
+      "minTickB",
+      minTickB,
+      "maxTickB",
+      maxTickB
+    );
+    console.log(
       "parameters",
       walletAddress,
-      topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
-      topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
-      deadline,
+      minTickA,
+      maxTickA,
+      minTickB,
+      maxTickB,
+      "ll",
+      topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
+      topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB,
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? props.tokenIn.symbol
+        : props.tokenOut.symbol,
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? props.tokenOut.symbol
+        : props.tokenIn.symbol,
+      Math.floor(new Date().getTime() / 1000) + slippage * 60,
       {
-        x: new BigNumber(firstTokenAmountLiq),
-        y: new BigNumber(secondTokenAmountLiq),
+        x:
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? new BigNumber(firstTokenAmountLiq).toString()
+            : new BigNumber(secondTokenAmountLiq).toString(),
+        y:
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? new BigNumber(secondTokenAmountLiq).toString()
+            : new BigNumber(firstTokenAmountLiq).toString(),
       }
     );
     LiquidityOperation(
       walletAddress,
-      topLevelSelectedToken.symbol === props.tokenIn.symbol ? minTickA : minTickB,
-      topLevelSelectedToken.symbol === props.tokenIn.symbol ? maxTickA : maxTickB,
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
-      deadline,
+      topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
+      topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB,
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? props.tokenIn.symbol
+        : props.tokenOut.symbol,
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? props.tokenOut.symbol
+        : props.tokenIn.symbol,
+      Math.floor(new Date().getTime() / 1000) + slippage * 60,
       {
-        x: new BigNumber(firstTokenAmountLiq),
-        y: new BigNumber(secondTokenAmountLiq),
+        x:
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? new BigNumber(firstTokenAmountLiq)
+            : new BigNumber(secondTokenAmountLiq),
+        y:
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? new BigNumber(secondTokenAmountLiq)
+            : new BigNumber(firstTokenAmountLiq),
       },
       transactionSubmitModal,
       resetAllValues,
@@ -255,7 +304,11 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `add liq`,
+        trailingText: `Mint Position ${localStorage.getItem(
+          FIRST_TOKEN_AMOUNT
+        )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+          SECOND_TOKEN_AMOUNT
+        )} ${localStorage.getItem(TOKEN_B)}`,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -271,9 +324,11 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-                TOKEN_A
-              )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
+              trailingText: `Mint Position ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)}`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -299,9 +354,11 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-                TOKEN_A
-              )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
+              trailingText: `Mint Position ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)}`,
               linkText: "",
               isLoading: true,
             })
@@ -362,6 +419,78 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   useEffect(() => {
     dispatch(settopLevelSelectedToken(selectedToken));
   }, [selectedToken]);
+  const [isFullRange, setFullRangee] = React.useState(false);
+  const full = useAppSelector((state) => state.poolsv3.isFullRange);
+  React.useEffect(() => {
+    if (!isFullRange) {
+      console.log("ghhhhh", isFullRange, full);
+      dispatch(setIsLoading(true));
+
+      calculateCurrentPrice(props.tokenA.symbol, props.tokenB.symbol, props.tokenA.symbol).then(
+        (response) => {
+          dispatch(setcurrentPrice(response.toFixed(6)));
+        }
+      );
+      calculateCurrentPrice(props.tokenA.symbol, props.tokenB.symbol, props.tokenB.symbol).then(
+        (response) => {
+          dispatch(setBcurrentPrice(response.toFixed(6)));
+        }
+      );
+      dispatch(setIsLoading(true));
+      getInitialBoundaries(props.tokenA.symbol, props.tokenB.symbol).then((response) => {
+        dispatch(setInitBound(response));
+        if (
+          new BigNumber(1)
+            .dividedBy(response.minValue)
+            .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
+        ) {
+          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+
+          dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+
+          dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
+
+          dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+
+          dispatch(setleftbrush(response.minValue.toFixed(6)));
+
+          dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+
+          dispatch(setrightbrush(response.maxValue.toFixed(6)));
+
+          dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+
+          dispatch(setIsLoading(false));
+        } else {
+          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+
+          dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+
+          dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
+
+          dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+
+          dispatch(setleftbrush(response.minValue.toFixed(6)));
+
+          dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+
+          dispatch(setrightbrush(response.maxValue.toFixed(6)));
+
+          dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+
+          dispatch(setIsLoading(false));
+        }
+
+        dispatch(setminTickA(response.minTick.toString()));
+
+        dispatch(setminTickB(response.minTick.toString()));
+
+        dispatch(setmaxTickA(response.maxTick.toString()));
+
+        dispatch(setmaxTickB(response.maxTick.toString()));
+      });
+    }
+  }, [isFullRange, full]);
   return true ? (
     <>
       <div
@@ -458,6 +587,8 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                   tokenOut={props.tokenOut}
                   isClearAll={isClearAll}
                   selectedFeeTier={selectedFeeTier}
+                  isFullRange={isFullRange}
+                  setFullRange={setFullRangee}
                 />
                 <div className="mt-3">
                   <LiquidityV3
@@ -476,7 +607,6 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                     isAddLiquidity={isAddLiquidity}
                     setSlippage={setSlippage}
                     slippage={slippage}
-                    isLoading={isLoading}
                   />
                 </div>
               </div>

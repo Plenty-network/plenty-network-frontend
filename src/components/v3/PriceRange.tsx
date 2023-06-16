@@ -64,6 +64,8 @@ interface IPriceRangeProps {
   tokenOut: tokenParameterLiquidity;
   isClearAll: boolean;
   selectedFeeTier: string;
+  isFullRange: boolean;
+  setFullRange: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export enum Bound {
   LOWER = "LOWER",
@@ -75,7 +77,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
 
   const currencyBB = props.tokenOut;
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  const [isFullRange, setFullRange] = React.useState(false);
+  //const [props.isFullRange, props.setFullRange] = React.useState(false);
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
@@ -90,80 +92,81 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const BrightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
-  const full = useAppSelector((state) => state.poolsv3.isFullRange);
+
   const dispatch = useDispatch<AppDispatch>();
   React.useEffect(() => {
-    props.isClearAll && setFullRange(false);
+    props.isClearAll && props.setFullRange(false);
   }, [props.isClearAll]);
-  React.useEffect(() => {
-    console.log("new", isFullRange, full);
-    if (!isFullRange) {
-      dispatch(setIsLoading(true));
-      calculateCurrentPrice(tokeninorg.symbol, tokenoutorg.symbol, tokeninorg.symbol).then(
-        (response) => {
-          dispatch(setcurrentPrice(response.toFixed(6)));
-        }
-      );
-      calculateCurrentPrice(tokeninorg.symbol, tokenoutorg.symbol, tokenoutorg.symbol).then(
-        (response) => {
-          dispatch(setBcurrentPrice(response.toFixed(6)));
-        }
-      );
-      dispatch(setIsLoading(true));
-      getInitialBoundaries(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
-        dispatch(setInitBound(response));
-        if (
-          new BigNumber(1)
-            .dividedBy(response.minValue)
-            .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
-        ) {
-          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+  // React.useEffect(() => {
+  //   console.log("new", props.isFullRange);
+  //   if (!props.isFullRange) {
+  //     console.log(tokeninorg.symbol, tokenoutorg.symbol, tokeninorg.symbol, "ghhh");
+  //     dispatch(setIsLoading(true));
+  //     calculateCurrentPrice(tokeninorg.symbol, tokenoutorg.symbol, tokeninorg.symbol).then(
+  //       (response) => {
+  //         dispatch(setcurrentPrice(response.toFixed(6)));
+  //       }
+  //     );
+  //     calculateCurrentPrice(tokeninorg.symbol, tokenoutorg.symbol, tokenoutorg.symbol).then(
+  //       (response) => {
+  //         dispatch(setBcurrentPrice(response.toFixed(6)));
+  //       }
+  //     );
+  //     dispatch(setIsLoading(true));
+  //     getInitialBoundaries(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
+  //       dispatch(setInitBound(response));
+  //       if (
+  //         new BigNumber(1)
+  //           .dividedBy(response.minValue)
+  //           .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
+  //       ) {
+  //         dispatch(setleftRangeInput(response.minValue.toFixed(6)));
 
-          dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+  //         dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
 
-          dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
+  //         dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
 
-          dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+  //         dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
 
-          dispatch(setleftbrush(response.minValue.toFixed(6)));
+  //         dispatch(setleftbrush(response.minValue.toFixed(6)));
 
-          dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+  //         dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
 
-          dispatch(setrightbrush(response.maxValue.toFixed(6)));
+  //         dispatch(setrightbrush(response.maxValue.toFixed(6)));
 
-          dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+  //         dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
 
-          dispatch(setIsLoading(false));
-        } else {
-          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+  //         dispatch(setIsLoading(false));
+  //       } else {
+  //         dispatch(setleftRangeInput(response.minValue.toFixed(6)));
 
-          dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+  //         dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
 
-          dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
+  //         dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
 
-          dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+  //         dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
 
-          dispatch(setleftbrush(response.minValue.toFixed(6)));
+  //         dispatch(setleftbrush(response.minValue.toFixed(6)));
 
-          dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+  //         dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
 
-          dispatch(setrightbrush(response.maxValue.toFixed(6)));
+  //         dispatch(setrightbrush(response.maxValue.toFixed(6)));
 
-          dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+  //         dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
 
-          dispatch(setIsLoading(false));
-        }
+  //         dispatch(setIsLoading(false));
+  //       }
 
-        dispatch(setminTickA(response.minTick.toString()));
+  //       dispatch(setminTickA(response.minTick.toString()));
 
-        dispatch(setminTickB(response.minTick.toString()));
+  //       dispatch(setminTickB(response.minTick.toString()));
 
-        dispatch(setmaxTickA(response.maxTick.toString()));
+  //       dispatch(setmaxTickA(response.maxTick.toString()));
 
-        dispatch(setmaxTickB(response.maxTick.toString()));
-      });
-    }
-  }, [isFullRange, full]);
+  //       dispatch(setmaxTickB(response.maxTick.toString()));
+  //     });
+  //   }
+  // }, [props.isFullRange]);
 
   const onLeftRangeInputFn = (value: string) => {
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
@@ -228,16 +231,16 @@ function PriceRangeV3(props: IPriceRangeProps) {
       : dispatch(setBRightRangeInput(Number(value).toFixed(6)));
   };
   const fullrangeCalc = (value: boolean) => {
-    setFullRange(!isFullRange);
-    //dispatch(setFullRange(!isFullRange));
+    props.setFullRange(!props.isFullRange);
+    //dispatch(props.setFullRange(!props.isFullRange));
     console.log("fullrange", value);
     if (value) {
       topLevelSelectedToken.symbol === tokeninorg.symbol
         ? dispatch(setleftRangeInput("0"))
         : dispatch(setBleftRangeInput("0"));
       topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setRightRangeInput("Infinity"))
-        : dispatch(setBRightRangeInput("Infinity"));
+        ? dispatch(setRightRangeInput("∞"))
+        : dispatch(setBRightRangeInput("∞"));
       calculateFullRange(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
         console.log(response, "fullrange");
 
@@ -296,11 +299,11 @@ function PriceRangeV3(props: IPriceRangeProps) {
             onLeftRangeInput={onLeftRangeInputFn}
             onRightRangeInput={onRightRangeInputFn}
             interactive={true}
-            isFull={isFullRange}
+            isFull={props.isFullRange}
           />
         )}
       </div>
-      {isFullRange && (
+      {props.isFullRange && (
         <div className=" absolute h-[78px]  flex items-center justify-center w-[362px] px-[20px] bg-error-300/[0.1]  rounded-lg	ml-4 z-10">
           <span className=" text-error-300 text-[13px] leading-[20px] ">
             Full range liquidity is highly capital inefficient. Please proceed with caution.
@@ -310,7 +313,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       <div
         className={clsx(
           "relative flex w-[362px] mx-auto gap-[14px] justify-between	mt-[16px]",
-          isFullRange && "opacity-[0.1]"
+          props.isFullRange && "opacity-[0.1]"
         )}
       >
         <div>
@@ -461,9 +464,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
 
       <div
         className="mt-3 cursor-pointer border border-info-700 rounded-lg	text-center py-2.5 font-body1 mx-4"
-        onClick={() => fullrangeCalc(!isFullRange)}
+        onClick={() => fullrangeCalc(!props.isFullRange)}
       >
-        {isFullRange ? "Remove Full Range" : "Full Range"}
+        {props.isFullRange ? "Remove Full Range" : "Full Range"}
       </div>
       {/* <div className="mt-3 border border-text-800/[0.5] bg-cardBackGround rounded-lg	text-center py-4 font-body1 text-primary-500 h-[52px]">
         View all positions
