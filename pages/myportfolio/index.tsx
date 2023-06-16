@@ -1403,7 +1403,6 @@ function MyPortfolio(props: any) {
         }, 2000);
         setContentTransaction("");
       } else {
-        console.log("res", response);
         setBalanceUpdate(true);
         setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
@@ -1488,7 +1487,6 @@ function MyPortfolio(props: any) {
         }, 2000);
         setContentTransaction("");
       } else {
-        console.log("res", response);
         setBalanceUpdate(true);
         setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
