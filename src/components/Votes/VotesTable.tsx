@@ -511,7 +511,7 @@ export function VotesTable(props: IVotesTableProps) {
     ],
     [valueFormat]
   );
-  console.log(props.selectedDropDown, "ll", props.selectedDropDown.tokenId == "");
+
   return (
     <>
       <div className={`overflow-x-auto inner ${props.className}`}>
