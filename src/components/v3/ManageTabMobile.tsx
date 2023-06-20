@@ -314,7 +314,6 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
         transactionId: "",
       }
     ).then((response) => {
-      console.log("res", response);
       if (response.success) {
         setBalanceUpdate(true);
 
@@ -423,7 +422,6 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   const full = useAppSelector((state) => state.poolsv3.isFullRange);
   React.useEffect(() => {
     if (!isFullRange) {
-      console.log("ghhhhh", isFullRange, full);
       dispatch(setIsLoading(true));
 
       calculateCurrentPrice(props.tokenA.symbol, props.tokenB.symbol, props.tokenA.symbol).then(
