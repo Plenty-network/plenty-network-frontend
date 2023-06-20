@@ -1,12 +1,21 @@
 import BigNumber from "bignumber.js";
-import { Tick, Pool, Price, Liquidity, Fee, MAX_TICK } from "@plenty-labs/v3-sdk";
+import {
+  Tick,
+  Pool,
+  Price,
+  Liquidity,
+  Fee,
+  MAX_TICK,
+  Position,
+  PositionManager,
+} from "@plenty-labs/v3-sdk";
 import Config from "../../config/config";
 import { ContractStorage, getOutsideFeeGrowth, getRealPriceFromTick } from "./helper";
-import { store } from "../../redux";
+
 import axios from "axios";
-import { BalanceNat, IV3Position } from "./types";
+import { BalanceNat, IV3Position, IV3PositionObject } from "./types";
 import { getV3DexAddress } from "../util/fetchConfig";
-import { parse } from "path";
+
 import { ITokenPriceList } from "../util/types";
 
 export const connectedNetwork = Config.NETWORK;
@@ -17,7 +26,7 @@ export const getPositons = async (
   feeTier: string,
   userAddress: string,
   tokenPrices: ITokenPriceList
-) => {
+): Promise<IV3PositionObject[] | undefined> => {
   if (!userAddress || Object.keys(tokenPrices).length === 0) {
     throw new Error("Invalid or empty arguments.");
   }
@@ -141,6 +150,7 @@ export const getPositons = async (
         isInRange: isInRange,
       }); */
       return {
+        position: position,
         liquidity: {
           x: new BigNumber(
             liquidity.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
@@ -189,5 +199,101 @@ export const getPositons = async (
     return await Promise.all(finalPositionPromise);
   } catch (error) {
     console.log("v3 position error: ", error);
+  }
+};
+
+export const createIncreaseLiquidityOperation = async (
+  position: IV3PositionObject,
+  maxTokensContributed: BalanceNat,
+  userAddress: string,
+  contractInstance: any,
+  sqrt_price: BigNumber
+) => {
+  const liquidity = Liquidity.computeLiquidityFromAmount(
+    maxTokensContributed,
+    sqrt_price,
+    Tick.computeSqrtPriceFromTick(parseInt(position.position.lower_tick_index)),
+    Tick.computeSqrtPriceFromTick(parseInt(position.position.upper_tick_index))
+  );
+
+  const options = {
+    liquidityDelta: liquidity,
+
+    maximumTokensContributed: maxTokensContributed,
+
+    positionId: parseInt(position.position.key_id),
+
+    toX: userAddress,
+
+    toY: userAddress,
+
+    deadline: Math.floor(new Date().getTime() / 1000) + 30 * 60, //default 30 min deadline
+  };
+
+  // @ts-ignore
+  return PositionManager.updatePositionOp(contractInstance, options);
+};
+
+export const createRemoveLiquidityOperation = async (
+  position: IV3PositionObject,
+  percentage: number,
+  userAddress: string,
+  contractInstance: any
+) => {
+  const liquidity = new BigNumber(position.position.liquidity)
+    .multipliedBy(percentage)
+    .dividedBy(100)
+    .multipliedBy(-1);
+
+  const options = {
+    liquidityDelta: liquidity,
+
+    maximumTokensContributed: {
+      x: new BigNumber(0),
+      y: new BigNumber(0),
+    },
+
+    positionId: parseInt(position.position.key_id),
+
+    toX: userAddress,
+
+    toY: userAddress,
+
+    deadline: Math.floor(new Date().getTime() / 1000) + 30 * 60, //default 30 min deadline
+  };
+
+  // @ts-ignore
+  return PositionManager.updatePositionOp(contractInstance, options);
+};
+
+export const calculateTokensForRemoveLiquidity = async (
+  percentage: number,
+  tokenXSymbol: string,
+  tokenYSymbol: string,
+  position: IV3PositionObject
+): Promise<any> => {
+  try {
+    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    const newLiquidty = new BigNumber(position.position.liquidity).minus(
+      BigNumber(position.position.liquidity).multipliedBy(percentage).dividedBy(100)
+    );
+
+    const tokenAmounts = Liquidity.computeAmountFromLiquidity(
+      newLiquidty,
+      contractStorageParameters.sqrtPriceValue,
+      Tick.computeSqrtPriceFromTick(parseInt(position.position.lower_tick_index)),
+      Tick.computeSqrtPriceFromTick(parseInt(position.position.upper_tick_index))
+    );
+
+    return {
+      x: new BigNumber(
+        tokenAmounts.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
+      ),
+      y: new BigNumber(
+        tokenAmounts.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
+      ),
+    };
+  } catch (error) {
+    console.log("v3 error: ", error);
   }
 };

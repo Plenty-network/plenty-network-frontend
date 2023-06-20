@@ -14,6 +14,7 @@ import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util
 import { ActivePopUp } from "./ManageTabV3";
 import { getPositons } from "../../api/v3/positions";
 import { useAppSelector } from "../../redux";
+import { IV3PositionObject } from "../../api/v3/types";
 
 interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
@@ -24,25 +25,7 @@ function PositionsData(props: IPositionsProps) {
   const [isLoading, setIsLoading] = useState(true);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
-  const [data, setData] = useState<
-    | {
-        liquidity: {
-          x: BigNumber;
-          y: BigNumber;
-        };
-        liquidityDollar: BigNumber;
-        minPrice: BigNumber;
-        maxPrice: BigNumber;
-        fees: {
-          x: BigNumber;
-          y: BigNumber;
-        };
-        feesDollar: BigNumber;
-        isInRange: boolean;
-        isMaxPriceInfinity: boolean;
-      }[]
-    | undefined
-  >([]);
+  const [data, setData] = useState<IV3PositionObject[] | undefined>([]);
   useEffect(() => {
     if (
       Object.keys(tokenPrice).length !== 0 &&

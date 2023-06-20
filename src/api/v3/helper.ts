@@ -39,6 +39,7 @@ export const ContractStorage = async (
     x: BigNumber;
     y: BigNumber;
   };
+  poolAddress: string;
   ticksBigMap: number;
 }> => {
   let v3ContractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
@@ -72,6 +73,7 @@ export const ContractStorage = async (
     tokenY: tokenY,
     feeGrowth: fee_growth,
     ticksBigMap: ticksBigMap,
+    poolAddress: v3ContractAddress,
   };
 };
 

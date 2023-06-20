@@ -36,3 +36,21 @@ export interface IV3Position {
   fee_growth_inside_last_x: string;
   fee_growth_inside_last_y: string;
 }
+
+export interface IV3PositionObject {
+  liquidity: {
+    x: BigNumber;
+    y: BigNumber;
+  };
+  liquidityDollar: BigNumber;
+  minPrice: BigNumber;
+  maxPrice: BigNumber;
+  fees: {
+    x: BigNumber;
+    y: BigNumber;
+  };
+  feesDollar: BigNumber;
+  isInRange: boolean;
+  isMaxPriceInfinity: boolean;
+  position: IV3Position;
+}
