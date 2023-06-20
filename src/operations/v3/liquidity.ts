@@ -1,14 +1,9 @@
-import axios from "axios";
 import BigNumber from "bignumber.js";
 import {
-  ContractAbstraction,
   OpKind,
-  Wallet,
-  WalletContract,
   WalletParamsWithKind,
 } from "@taquito/taquito";
 import { Approvals, Contract } from "@plenty-labs/v3-sdk";
-import Config from "../../config/config";
 import { getV3DexAddress } from "../../api/util/fetchConfig";
 import { BalanceNat, TokenStandard } from "./types";
 import { dappClient } from "../../common/walletconnect";
@@ -24,7 +19,6 @@ import { getBatchOperationsWithLimits } from "../../api/util/operations";
 
 import { setFlashMessage } from "../../redux/flashMessage";
 import { IFlashMessageProps } from "../../redux/flashMessage/type";
-import { estimateTokenYFromTokenX } from "../../api/v3/liquidity";
 
 export const LiquidityOperation = async (
   userAddress: string,
