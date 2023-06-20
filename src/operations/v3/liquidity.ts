@@ -1,14 +1,6 @@
-import axios from "axios";
 import BigNumber from "bignumber.js";
-import {
-  ContractAbstraction,
-  OpKind,
-  Wallet,
-  WalletContract,
-  WalletParamsWithKind,
-} from "@taquito/taquito";
+import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { Approvals, Contract } from "@plenty-labs/v3-sdk";
-import Config from "../../config/config";
 import { getV3DexAddress } from "../../api/util/fetchConfig";
 import { BalanceNat, TokenStandard } from "./types";
 import { dappClient } from "../../common/walletconnect";
