@@ -39,7 +39,23 @@ import { walletConnection } from "../../redux/wallet/wallet";
 
 import ConfirmAddLiquidityv3 from "./ConfirmAddLiqV3";
 import {
+  setIsLoading,
+  setBcurrentPrice,
+  setBleftbrush,
+  setBleftRangeInput,
+  setBrightbrush,
+  setBRightRangeInput,
+  setcurrentPrice,
   setFullRange,
+  setInitBound,
+  setleftbrush,
+  setleftRangeInput,
+  setmaxTickA,
+  setmaxTickB,
+  setminTickA,
+  setminTickB,
+  setrightbrush,
+  setRightRangeInput,
   setTokenInOrg,
   setTokenInV3,
   setTokeOutOrg,
@@ -52,6 +68,7 @@ import ConfirmDecreaseLiq from "./Confirmremoveliq";
 import TransactionSettingsV3 from "./TransactionSettingv3";
 import { LiquidityOperation } from "../../operations/v3/liquidity";
 import { getPositons } from "../../api/v3/positions";
+import { calculateCurrentPrice, getInitialBoundaries } from "../../api/v3/liquidity";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -119,8 +136,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [sharePool, setSharePool] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const [contentTransaction, setContentTransaction] = useState("");
 
@@ -199,12 +214,12 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       setisClearAll(false);
     }, 4000);
   };
-  const [deadline, setDeadline] = useState(0);
-  useEffect(() => {
-    const n = slippage === 1 ? 60 : slippage === 2 ? 120 : Number(slippage);
+  // const [deadline, setDeadline] = useState(0);
+  // useEffect(() => {
+  //   const n = slippage === 1 ? 60 : slippage === 2 ? 120 : Number(slippage);
 
-    setDeadline(Math.floor(new Date().getTime() / 1000) + n * 60);
-  }, [slippage]);
+  //   setDeadline(Math.floor(new Date().getTime() / 1000) + n * 60);
+  // }, [slippage]);
   const handleAddLiquidityOperation = () => {
     setContentTransaction(
       `Mint Position ${nFormatterWithLesserNumber(
@@ -239,11 +254,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     console.log(
       "parameters",
       walletAddress,
-      minTickA,
-      maxTickA,
-      minTickB,
-      maxTickB,
-      "ll",
       topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
       topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB,
       topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -252,7 +262,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       topLevelSelectedToken.symbol === tokeninorg.symbol
         ? props.tokenOut.symbol
         : props.tokenIn.symbol,
-      deadline,
+      Math.floor(new Date().getTime() / 1000) + slippage * 60,
       {
         x:
           topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -274,7 +284,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       topLevelSelectedToken.symbol === tokeninorg.symbol
         ? props.tokenOut.symbol
         : props.tokenIn.symbol,
-      deadline,
+      Math.floor(new Date().getTime() / 1000) + slippage * 60,
       {
         x:
           topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -411,6 +421,78 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     dispatch(settopLevelSelectedToken(selectedToken));
   }, [selectedToken]);
 
+  const [isFullRange, setFullRangee] = React.useState(false);
+  const full = useAppSelector((state) => state.poolsv3.isFullRange);
+  React.useEffect(() => {
+    if (!isFullRange) {
+      dispatch(setIsLoading(true));
+
+      calculateCurrentPrice(props.tokenA.symbol, props.tokenB.symbol, props.tokenA.symbol).then(
+        (response) => {
+          dispatch(setcurrentPrice(response.toFixed(6)));
+        }
+      );
+      calculateCurrentPrice(props.tokenA.symbol, props.tokenB.symbol, props.tokenB.symbol).then(
+        (response) => {
+          dispatch(setBcurrentPrice(response.toFixed(6)));
+        }
+      );
+      dispatch(setIsLoading(true));
+      getInitialBoundaries(props.tokenA.symbol, props.tokenB.symbol).then((response) => {
+        dispatch(setInitBound(response));
+        if (
+          new BigNumber(1)
+            .dividedBy(response.minValue)
+            .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
+        ) {
+          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+
+          dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+
+          dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
+
+          dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+
+          dispatch(setleftbrush(response.minValue.toFixed(6)));
+
+          dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+
+          dispatch(setrightbrush(response.maxValue.toFixed(6)));
+
+          dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+
+          dispatch(setIsLoading(false));
+        } else {
+          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+
+          dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+
+          dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
+
+          dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+
+          dispatch(setleftbrush(response.minValue.toFixed(6)));
+
+          dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+
+          dispatch(setrightbrush(response.maxValue.toFixed(6)));
+
+          dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+
+          dispatch(setIsLoading(false));
+        }
+
+        dispatch(setminTickA(response.minTick.toString()));
+
+        dispatch(setminTickB(response.minTick.toString()));
+
+        dispatch(setmaxTickA(response.maxTick.toString()));
+
+        dispatch(setmaxTickB(response.maxTick.toString()));
+      });
+    }
+  }, [isFullRange, full, isClearAll]);
+
   return props.showLiquidityModal ? (
     <>
       <PopUpModal
@@ -518,6 +600,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 tokenOut={props.tokenOut}
                 isClearAll={isClearAll}
                 selectedFeeTier={selectedFeeTier}
+                isFullRange={isFullRange}
+                setFullRange={setFullRangee}
               />
               <div className="">
                 <LiquidityV3
@@ -536,7 +620,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                   isAddLiquidity={isAddLiquidity}
                   setSlippage={setSlippage}
                   slippage={slippage}
-                  isLoading={isLoading}
                 />
               </div>
             </div>

@@ -43,7 +43,6 @@ interface ILiquidityProps {
   slippage: number;
 
   feeTier: string;
-  isLoading: boolean;
 }
 function LiquidityV3(props: ILiquidityProps) {
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);

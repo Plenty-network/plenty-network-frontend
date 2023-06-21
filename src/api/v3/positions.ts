@@ -1,14 +1,5 @@
 import BigNumber from "bignumber.js";
-import {
-  Tick,
-  Pool,
-  Price,
-  Liquidity,
-  Fee,
-  MAX_TICK,
-  Position,
-  PositionManager,
-} from "@plenty-labs/v3-sdk";
+import { Tick, Pool, Price, Liquidity, Fee, MAX_TICK, PositionManager } from "@plenty-labs/v3-sdk";
 import Config from "../../config/config";
 import { ContractStorage, getOutsideFeeGrowth, getRealPriceFromTick } from "./helper";
 

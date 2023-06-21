@@ -109,7 +109,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       setSecondLoading(true);
 
       if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
-        console.log("tokenin", minTickA, maxTickA);
         estimateTokenYFromTokenX(
           new BigNumber(input),
           props.tokenIn.symbol,
@@ -123,7 +122,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             : props.setSecondTokenAmount(0);
         });
       } else {
-        console.log("tokenin", minTickB, maxTickB, props.tokenIn, props.tokenOut, input);
         estimateTokenXFromTokenY(
           new BigNumber(input),
           props.tokenOut.symbol,
