@@ -55,4 +55,5 @@ export interface IV3PositionObject {
   position: IV3Position;
   tokenX?: String;
   tokenY?: String;
+  currentTickIndex: number;
 }

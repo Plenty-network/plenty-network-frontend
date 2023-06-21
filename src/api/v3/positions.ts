@@ -142,6 +142,7 @@ export const getPositions = async (
       }); */
       return {
         position: position,
+        currentTickIndex: contractStorageParameters.currTickIndex,
         liquidity: {
           x: new BigNumber(
             liquidity.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
@@ -325,6 +326,7 @@ export const getPositionsAll = async (
       }); */
       return {
         position: position,
+        currentTickIndex: contractStorageParameters.currTickIndex,
         tokenX: tokenX,
         tokenY: tokenY,
         liquidity: {
@@ -464,10 +466,10 @@ export const calculateTokensForRemoveLiquidity = async (
     return {
       x: new BigNumber(
         tokenAmounts.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
-      ),
+      ).abs(),
       y: new BigNumber(
         tokenAmounts.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
-      ),
+      ).abs(),
     };
   } catch (error) {
     console.log("v3 error: ", error);
