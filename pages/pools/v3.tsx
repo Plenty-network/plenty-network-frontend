@@ -2,8 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import HeadInfo from "../../src/components/HeadInfo";
-import { CardHeader, PoolsCardHeader } from "../../src/components/Pools/Cardheader";
-import { ShortCard as PoolsTable } from "../../src/components/Pools/poolsTable";
+
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { useInterval } from "../../src/hooks/useInterval";
 import { AppDispatch, useAppSelector } from "../../src/redux";
@@ -16,21 +15,11 @@ import info from "../../src/assets/icon/pools/InfoBlue.svg";
 import close from "../../src/assets/icon/pools/closeBlue.svg";
 import Image from "next/image";
 import { USERADDRESS } from "../../src/constants/localStorage";
-import { NewPool } from "../../src/components/Pools/NewPool";
 import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
 import clsx from "clsx";
-import { getAllPoolsData, getMyPoolsData } from "../../src/api/pools";
-import {
-  IAllPoolsData,
-  IAllPoolsDataResponse,
-  IMyPoolsData,
-  IMyPoolsDataResponse,
-} from "../../src/api/pools/types";
-import { MyPoolTable } from "../../src/components/Pools/MyPoolTable";
+
 import { CardHeaderV3, PoolsCardHeaderV3 } from "../../src/components/v3/pools/CardHeaderv3";
 import { PoolsTableV3 } from "../../src/components/v3/pools/poolsTableV3";
-import { calculateCurrentPrice, getInitialBoundaries } from "../../src/api/v3/liquidity";
-import { getTickAndRealPriceFromPool } from "../../src/api/v3/helper";
 import { NewPoolv3 } from "../../src/components/v3/NewPoolV3";
 
 export interface IIndexProps {}

@@ -9,16 +9,17 @@ import nFormatter, {
   nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { BigNumber } from "bignumber.js";
 import { AppDispatch, useAppSelector } from "../../redux";
-import AddLiquidityV3 from "./AddliquidityV3";
 import Button from "../Button/Button";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { ActivePopUp } from "./ManageTabV3";
 import IncreaseLiquidityInputV3 from "./IncreaseliqInput";
+import { getRealPriceFromTick } from "../../api/v3/helper";
+import { setcurrentPrice } from "../../redux/poolsv3";
 
 interface IIncLiquidityProp {
   tokenIn: tokenParameterLiquidity;
@@ -46,6 +47,17 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
     return dispatch(walletConnection());
   };
 
+  const [currentPrice, setCurrentPrice] = useState();
+  useEffect(() => {
+    getRealPriceFromTick(
+      selectedPosition.currentTickIndex,
+      props.tokenIn.symbol,
+      props.tokenOut.symbol
+    ).then((res) => {
+      console.log(res, "k");
+      setCurrentPrice(res);
+    });
+  }, [selectedPosition]);
   const IncreaseButton = useMemo(() => {
     if (!walletAddress) {
       return (
@@ -91,7 +103,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
         <div className="flex items-center px-5">
           <div className="text-text-250 font-body4 ">You are depositing</div>{" "}
           <div className=" ml-auto">
-            {true ? (
+            {!selectedPosition.isInRange ? (
               <span className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1 rounded-lg	 text-error-300 bg-error-300/[0.1] ">
                 <Image src={infoOrange} />
                 Out of range
