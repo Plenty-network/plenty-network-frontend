@@ -384,13 +384,8 @@ export const removeLiquidity = async (
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
-    const state = store.getState();
-    const TOKENS = state.config.tokens;
-
     const Tezos = await dappClient().tezos();
 
-    const tokenX = await Tezos.wallet.at(TOKENS[tokenXSymbol].address as string);
-    const tokenY = await Tezos.wallet.at(TOKENS[tokenYSymbol].address as string);
     let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
 
     const contractInstance = await Tezos.wallet.at(contractStorageParameters.poolAddress);
