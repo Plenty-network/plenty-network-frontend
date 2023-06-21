@@ -13,24 +13,29 @@ import { tokenParameterLiquidity } from "../Liquidity/types";
 import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { ActivePopUp } from "./ManageTabV3";
 import { getPositions, getPositionsAll } from "../../api/v3/positions";
-import { useAppSelector } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../redux";
 import { IV3PositionObject } from "../../api/v3/types";
+import { setSelectedPosition } from "../../redux/poolsv3";
 
 interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
+  handleCollectFeeOperation: () => void;
   tokenOut: tokenParameterLiquidity;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
 }
 function PositionsData(props: IPositionsProps) {
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const [data, setData] = useState<IV3PositionObject[] | undefined>([]);
+
   useEffect(() => {
     if (
       Object.keys(tokenPrice).length !== 0 &&
       Object.prototype.hasOwnProperty.call(props.tokenIn, "symbol") &&
-      Object.prototype.hasOwnProperty.call(props.tokenOut, "symbol")
+      Object.prototype.hasOwnProperty.call(props.tokenOut, "symbol") &&
+      walletAddress
     ) {
       setIsLoading(true);
       getPositions(
@@ -40,16 +45,14 @@ function PositionsData(props: IPositionsProps) {
         walletAddress,
         tokenPrice
       ).then((res) => {
-        console.log("positions", res);
         setData(res);
         setIsLoading(false);
       });
-
-      /*       getPositionsAll(walletAddress, tokenPrice).then((res) => {
-        console.log("positions all", res);
-      }); */
+      if (walletAddress === null) {
+        setIsLoading(false);
+      }
     }
-  }, [props.tokenIn.symbol, props.tokenOut.symbol, Object.keys(tokenPrice).length]);
+  }, [props.tokenIn.symbol, props.tokenOut.symbol, Object.keys(tokenPrice).length, walletAddress]);
   return (
     <div className="overflow-x-auto ">
       <div className="flex  my-[24px] ml-8 min-w-[792px] ">
@@ -103,8 +106,17 @@ function PositionsData(props: IPositionsProps) {
       </div>
 
       <div className="h-[300px] overflow-y-auto swap min-w-[792px] ">
-        {!isLoading && data
-          ? data.map((d, index) => {
+        {walletAddress === null ? (
+          <span className="flex items-center justify-center h-[280px] text-border-600 font-title3">
+            please connect your wallet
+          </span>
+        ) : !isLoading && data ? (
+          data?.length === 0 ? (
+            <span className="flex items-center justify-center h-[280px] text-border-600 font-title3">
+              No new positions
+            </span>
+          ) : (
+            data.map((d, index) => {
               return (
                 <div
                   key={index}
@@ -170,27 +182,36 @@ function PositionsData(props: IPositionsProps) {
                       </div>
                     )}
                   </div>
-                  <div className="w-[110px] flex items-center font-subtitle4 text-primary-500 ">
+                  <div
+                    className="w-[110px] flex items-center font-subtitle4 text-primary-500 "
+                    onClick={props.handleCollectFeeOperation}
+                  >
                     Collect fees
                     <span className=" h-[28px] border-r border-card-700 ml-auto"></span>
                   </div>
                   <div
                     className=" font-subtitle4 text-primary-500 text-right pr-2 w-[100px] cursor-pointer"
-                    onClick={() => props.setScreen(ActivePopUp.ManageExisting)}
+                    onClick={() => {
+                      dispatch(setSelectedPosition(d));
+                      props.setScreen(ActivePopUp.ManageExisting);
+                    }}
                   >
                     Manage
                   </div>
                 </div>
               );
             })
-          : Array(4)
-              .fill(1)
-              .map((_, i) => (
-                <div
-                  key={`simmerEffect_${i}`}
-                  className={` border border-borderCommon h-16 bg-secondary-600 flex px-5 mx-3 py-3 items-center justify-between rounded-lg animate-pulse-table mt-2`}
-                ></div>
-              ))}{" "}
+          )
+        ) : (
+          Array(4)
+            .fill(1)
+            .map((_, i) => (
+              <div
+                key={`simmerEffect_${i}`}
+                className={` border border-borderCommon h-16 bg-secondary-600 flex px-5 mx-3 py-3 items-center justify-between rounded-lg animate-pulse-table mt-2`}
+              ></div>
+            ))
+        )}{" "}
       </div>
     </div>
   );

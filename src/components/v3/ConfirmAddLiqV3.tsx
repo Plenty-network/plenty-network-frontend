@@ -211,8 +211,8 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             <div
               className={clsx(
                 selectedToken.symbol === tokeninorg.symbol
-                  ? "rounded-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
-                  : "text-text-400 bg-background-600 rounded-r-xl",
+                  ? "rounded-l-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
+                  : "text-text-400 bg-background-600 rounded-l-xl",
                 "px-[30px] py-[5px]"
               )}
               onClick={() => setSelectedToken(tokeninorg)}
@@ -222,7 +222,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             <div
               className={clsx(
                 selectedToken.symbol === tokenoutorg.symbol
-                  ? "rounded-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
+                  ? "rounded-r-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
                   : "text-text-400 bg-background-600 rounded-r-xl",
                 "px-[30px] py-[5px]"
               )}

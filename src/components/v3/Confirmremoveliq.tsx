@@ -8,7 +8,11 @@ import Button from "../Button/Button";
 
 import { store, useAppSelector } from "../../redux";
 import { EClaimAllState } from "../Rewards/types";
-import nFormatter, { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import nFormatter, {
+  changeSource,
+  nFormatterWithLesserNumber,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { ActivePopUp } from "./ManageTabV3";
@@ -16,13 +20,13 @@ import { ActivePopUp } from "./ManageTabV3";
 interface IConfirmLiqProps {
   show: boolean;
 
-  setShow: any;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
   handleClick: () => void;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  removeTokenA: number;
-  removeTokenB: number;
+  removeTokenA: BigNumber;
+  removeTokenB: BigNumber;
 }
 function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
@@ -66,7 +70,9 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">2.35</p>
+              <p className="font-title2-bold ml-1">
+                {nFormatterWithLesserNumber(props.removeTokenA)}
+              </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
 
@@ -86,7 +92,9 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">2.35</p>
+              <p className="font-title2-bold ml-1">
+                {nFormatterWithLesserNumber(props.removeTokenB)}
+              </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>
           </div>

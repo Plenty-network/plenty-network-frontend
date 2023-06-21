@@ -255,6 +255,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
               <div className="font-body4 text-white">
                 <input
                   type="text"
+                  disabled
                   className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
                   value={
                     topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -327,6 +328,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
               <div className="font-body4 text-white">
                 <input
                   type="text"
+                  disabled
                   className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
                   value={
                     topLevelSelectedToken.symbol === tokeninorg.symbol

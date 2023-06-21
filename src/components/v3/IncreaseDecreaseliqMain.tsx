@@ -9,6 +9,7 @@ import IncreaseLiq from "./Increaseliq";
 import { ActiveIncDecState, ActivePopUp } from "./ManageTabV3";
 import DecreaseLiq from "./DecreaseLiq";
 import { useAppSelector } from "../../redux";
+import { BalanceNat } from "../../api/v3/types";
 
 interface IIncreaseDecreaseLiqMainProps {
   setActiveStateIncDec: React.Dispatch<React.SetStateAction<ActiveIncDecState | string>>;
@@ -22,10 +23,14 @@ interface IIncreaseDecreaseLiqMainProps {
 
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
-
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
   userBalances: {
     [key: string]: string;
   };
+  setRemove: React.Dispatch<React.SetStateAction<BalanceNat>>;
+  remove: BalanceNat;
+  setRemovePercentage: React.Dispatch<React.SetStateAction<number>>;
+  removePercentage: number;
 }
 export interface ITabProps {
   isActive: boolean;
@@ -70,20 +75,26 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
           secondTokenAmount={props.secondTokenAmount}
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}
+          setShow={props.setShow}
           userBalances={props.userBalances}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}
         />
       ) : (
         <DecreaseLiq
+          setShow={props.setShow}
           setScreen={props.setScreen}
           firstTokenAmount={props.firstTokenAmount}
           secondTokenAmount={props.secondTokenAmount}
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}
+          setRemove={props.setRemove}
+          remove={props.remove}
           userBalances={props.userBalances}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}
+          removePercentage={props.removePercentage}
+          setRemovePercentage={props.setRemovePercentage}
         />
       )}
     </>

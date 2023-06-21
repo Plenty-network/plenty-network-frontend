@@ -1,5 +1,3 @@
-import infoOrange from "../../../src/assets/icon/poolsv3/infoOrange.svg";
-import infoGreen from "../../../src/assets/icon/poolsv3/infoGreen.svg";
 import { tokenIcons } from "../../constants/tokensList";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 
@@ -11,7 +9,7 @@ import nFormatter, {
   nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { BigNumber } from "bignumber.js";
 import { AppDispatch, useAppSelector } from "../../redux";
@@ -22,6 +20,8 @@ import { walletConnection } from "../../redux/wallet/wallet";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { RangeSliderDecLiq } from "./RangeSliderDecrease";
 import { ActivePopUp } from "./ManageTabV3";
+import { calculateTokensForRemoveLiquidity } from "../../api/v3/positions";
+import { BalanceNat } from "../../api/v3/types";
 
 interface IDecLiquidityProp {
   tokenIn: tokenParameterLiquidity;
@@ -30,18 +30,22 @@ interface IDecLiquidityProp {
   secondTokenAmount: string | number;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
 
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
-
+  setRemove: React.Dispatch<React.SetStateAction<BalanceNat>>;
+  remove: BalanceNat;
   userBalances: {
     [key: string]: string;
   };
+  setRemovePercentage: React.Dispatch<React.SetStateAction<number>>;
+  removePercentage: number;
 }
 export default function DecreaseLiq(props: IDecLiquidityProp) {
-  const [selectedToken, setSelectedToken] = useState(props.tokenIn);
   const tokens = useAppSelector((state) => state.config.tokens);
   const walletAddress = useAppSelector((state) => state.wallet.address);
-  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+
+  const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
@@ -52,8 +56,6 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
     SEVEENTYFIVE = "75%",
     HUNDRED = "100%",
   }
-  const [selectedPercentage, setSelectedPercentage] = useState(DecreasePercentage.TWENTYFIVE);
-  const [removePercentage, setRemovePercentage] = useState(25);
 
   const DecreaseButton = useMemo(() => {
     if (!walletAddress) {
@@ -62,7 +64,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
           Connect wallet
         </Button>
       );
-    } else if (Number(props.firstTokenAmount) <= 0 || Number(props.secondTokenAmount) <= 0) {
+    } else if (props.removePercentage == 0) {
       return (
         <Button onClick={() => null} color={"disabled"}>
           Remove
@@ -85,6 +87,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
         <Button
           color={"primary"}
           onClick={() => {
+            props.setShow(true);
             props.setScreen(ActivePopUp.ConfirmExisting);
           }}
         >
@@ -92,7 +95,19 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
         </Button>
       );
     }
-  }, [props]);
+  }, [props, props.removePercentage]);
+
+  useEffect(() => {
+    calculateTokensForRemoveLiquidity(
+      Number(props.removePercentage),
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
+      selectedPosition
+    ).then((res) => {
+      props.setRemove(res);
+    });
+  }, [props.removePercentage]);
+
   return (
     <>
       <div className="border border-text-800 bg-card-200 rounded-2xl	py-5 px-4 mt-5">
@@ -110,55 +125,55 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
           </div>
         </div>
         <div className="mt-[18px] flex gap-2 items-center mb-[40px]">
-          <div className="font-f40-600 mr-[28px] w-[100px]">{removePercentage}%</div>
+          <div className="font-f40-600 mr-[28px] w-[100px]">{props.removePercentage}%</div>
           <div
             className={clsx(
-              selectedPercentage === DecreasePercentage.TWENTYFIVE
+              props.removePercentage === 25
                 ? "bg-primary-500 text-black"
                 : "bg-muted-235 text-text-500",
               "cursor-pointer w-[91px] h-[36px] rounded-lg	text-center font-body4  py-2"
             )}
-            onClick={() => setSelectedPercentage(DecreasePercentage.TWENTYFIVE)}
+            onClick={() => props.setRemovePercentage(25)}
           >
             {DecreasePercentage.TWENTYFIVE}
           </div>
           <div
             className={clsx(
-              selectedPercentage === DecreasePercentage.FIFTY
+              props.removePercentage === 50
                 ? "bg-primary-500 text-black"
                 : "bg-muted-235 text-text-500 ",
               "cursor-pointer w-[91px] h-[36px] rounded-lg font-body4	 text-center py-2"
             )}
-            onClick={() => setSelectedPercentage(DecreasePercentage.FIFTY)}
+            onClick={() => props.setRemovePercentage(50)}
           >
             {DecreasePercentage.FIFTY}
           </div>
           <div
             className={clsx(
-              selectedPercentage === DecreasePercentage.SEVEENTYFIVE
+              props.removePercentage === 75
                 ? "bg-primary-500 text-black"
                 : "bg-muted-235 text-text-500",
               "cursor-pointer w-[91px] h-[36px] rounded-lg	font-body4 text-center py-2"
             )}
-            onClick={() => setSelectedPercentage(DecreasePercentage.SEVEENTYFIVE)}
+            onClick={() => props.setRemovePercentage(75)}
           >
             {DecreasePercentage.SEVEENTYFIVE}
           </div>
           <div
             className={clsx(
-              selectedPercentage === DecreasePercentage.HUNDRED
+              props.removePercentage === 100
                 ? "bg-primary-500 text-black"
                 : "bg-muted-235 text-text-500",
               "cursor-pointer w-[91px] h-[36px] rounded-lg	font-body4  text-center py-2"
             )}
-            onClick={() => setSelectedPercentage(DecreasePercentage.HUNDRED)}
+            onClick={() => props.setRemovePercentage(100)}
           >
             {DecreasePercentage.HUNDRED}
           </div>
         </div>
         <RangeSliderDecLiq
-          decreaseValue={removePercentage}
-          setRemovePercentage={setRemovePercentage}
+          decreaseValue={props.removePercentage}
+          setRemovePercentage={props.setRemovePercentage}
         />
       </div>
       <div className="border border-text-800 bg-card-200 rounded-2xl	py-5  mt-3">
@@ -169,7 +184,9 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
               Pooled {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
             </p>
             <p className="ml-auto flex gap-2 items-center">
-              <span className="font-body4">12.7644</span>
+              <span className="font-body4">
+                {props.remove.x ? nFormatterWithLesserNumber(props.remove.x) : 0}
+              </span>
               <span className="font-body4">{tEZorCTEZtoUppercase(props.tokenIn.symbol)}</span>
               <span>
                 {" "}
@@ -195,7 +212,9 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
               Pooled {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
             </p>
             <p className="ml-auto flex gap-2 items-center">
-              <span className="font-body4">12.7644</span>
+              <span className="font-body4">
+                {props.remove.y ? nFormatterWithLesserNumber(props.remove.y) : 0}
+              </span>
               <span className="font-body4">{tEZorCTEZtoUppercase(props.tokenOut.symbol)}</span>
               <span>
                 {" "}
@@ -221,7 +240,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
               {tEZorCTEZtoUppercase(props.tokenIn.symbol)} fees earned
             </p>
             <p className="ml-auto flex gap-2 items-center">
-              <span className="font-body4">12.7644</span>
+              <span className="font-body4">{selectedPosition.fees.x.toFixed(2)}</span>
 
               <span>
                 {" "}
@@ -246,7 +265,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
               {tEZorCTEZtoUppercase(props.tokenOut.symbol)} fees earned
             </p>
             <p className="ml-auto flex gap-2 items-center">
-              <span className="font-body4">12.7644</span>
+              <span className="font-body4">{selectedPosition.fees.y.toFixed(2)}</span>
 
               <span>
                 {" "}

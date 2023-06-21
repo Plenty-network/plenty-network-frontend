@@ -66,9 +66,14 @@ import IncreaseDecreaseLiqMain from "./IncreaseDecreaseliqMain";
 import ConfirmIncreaseLiq from "./Confirmaddliq";
 import ConfirmDecreaseLiq from "./Confirmremoveliq";
 import TransactionSettingsV3 from "./TransactionSettingv3";
-import { LiquidityOperation } from "../../operations/v3/liquidity";
-import { getPositons } from "../../api/v3/positions";
+import {
+  increaseLiquidity,
+  LiquidityOperation,
+  removeLiquidity,
+} from "../../operations/v3/liquidity";
 import { calculateCurrentPrice, getInitialBoundaries } from "../../api/v3/liquidity";
+import { BalanceNat } from "../../api/v3/types";
+import { collectFees } from "../../operations/v3/fee";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -99,14 +104,16 @@ export enum ActivePopUp {
 export function ManageTabV3(props: IManageLiquidityProps) {
   const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
   const inputDisabled = useAppSelector((state) => state.poolsv3.inputDisable);
+  const [showConfirm, setShowConfirm] = useState(false);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const minTickA = useAppSelector((state) => state.poolsv3.minTickA);
   const maxTickA = useAppSelector((state) => state.poolsv3.maxTickA);
+  const [removePercentage, setRemovePercentage] = useState(25);
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
-
+  const [remove, setRemove] = useState({} as BalanceNat);
   const minTickB = useAppSelector((state) => state.poolsv3.minTickB);
   const maxTickB = useAppSelector((state) => state.poolsv3.maxTickB);
-
+  const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const [slippage, setSlippage] = useState(30);
   const TOKEN = useAppSelector((state) => state.config.tokens);
@@ -120,6 +127,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [screen, setScreen] = React.useState(ActivePopUp.Positions);
   const [firstTokenAmountLiq, setFirstTokenAmountLiq] = React.useState<string | number>("");
   const [secondTokenAmountLiq, setSecondTokenAmountLiq] = React.useState<number | string>("");
+  const [firstTokenAmountIncLiq, setFirstTokenAmountIncLiq] = React.useState<string | number>("");
+  const [secondTokenAmountIncLiq, setSecondTokenAmountIncLiq] = React.useState<number | string>("");
 
   const [isAddLiquidity, setIsAddLiquidity] = useState(true);
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
@@ -205,6 +214,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [isClearAll, setisClearAll] = useState(false);
   const resetAllValues = () => {
     setisClearAll(true);
+    setFirstTokenAmountIncLiq("");
+    setSecondTokenAmountIncLiq("");
+    setRemove({} as BalanceNat);
     setFirstTokenAmountLiq("");
     setSecondTokenAmountLiq("");
     dispatch(settopLevelSelectedToken(props.tokenA));
@@ -241,16 +253,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen(ActivePopUp.NewPosition);
-    console.log(
-      "minTickA",
-      minTickA,
-      "maxTickA",
-      maxTickA,
-      "minTickB",
-      minTickB,
-      "maxTickB",
-      maxTickB
-    );
+
     console.log(
       "parameters",
       walletAddress,
@@ -311,7 +314,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         transactionId: "",
       }
     ).then((response) => {
-      console.log("res", response);
       if (response.success) {
         setBalanceUpdate(true);
 
@@ -493,6 +495,279 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     }
   }, [isFullRange, full, isClearAll]);
 
+  const handleIncreaseLiquidityOperation = () => {
+    setContentTransaction(
+      `Increase Liquidity ${nFormatterWithLesserNumber(
+        new BigNumber(firstTokenAmountIncLiq)
+      )} ${tEZorCTEZtoUppercase(props.tokenIn.name)} / ${nFormatterWithLesserNumber(
+        new BigNumber(secondTokenAmountIncLiq)
+      )} ${tEZorCTEZtoUppercase(props.tokenOut.name)} `
+    );
+    localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenA.name));
+    localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenB.name));
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(firstTokenAmountIncLiq)).toString()
+    );
+    localStorage.setItem(
+      SECOND_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber(new BigNumber(secondTokenAmountIncLiq)).toString()
+    );
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    setScreen(ActivePopUp.ManageExisting);
+    setShowConfirm(false);
+    setShowConfirmTransaction(true);
+
+    increaseLiquidity(
+      selectedPosition,
+      {
+        x: new BigNumber(firstTokenAmountIncLiq),
+        y: new BigNumber(secondTokenAmountIncLiq),
+      },
+      props.tokenA.symbol,
+      props.tokenB.symbol,
+      walletAddress,
+
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Increase Liquidity ${localStorage.getItem(
+          FIRST_TOKEN_AMOUNT
+        )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+          SECOND_TOKEN_AMOUNT
+        )} ${localStorage.getItem(TOKEN_B)}`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Increase Liquidity ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
+              },
+              transactionId: response.operationId ? response.operationId : "",
+            })
+          );
+        }, 6000);
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        // setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+        //resetAllValues();
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              transactionId: "",
+              headerText: "Rejected",
+              trailingText: `Increase Liquidity ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)}`,
+              linkText: "",
+              isLoading: true,
+            })
+          );
+        }, 2000);
+
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        // setContentTransaction("");
+      }
+    });
+  };
+
+  const handleRemoveLiquidityOperation = () => {
+    setContentTransaction(
+      `Remove Liquidity ${nFormatterWithLesserNumber(remove.x)} ${tEZorCTEZtoUppercase(
+        props.tokenA.name
+      )} / ${nFormatterWithLesserNumber(remove.y)} ${tEZorCTEZtoUppercase(props.tokenB.name)} `
+    );
+    localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenA.name));
+    localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenB.name));
+    localStorage.setItem(FIRST_TOKEN_AMOUNT, nFormatterWithLesserNumber(remove.x).toString());
+    localStorage.setItem(SECOND_TOKEN_AMOUNT, nFormatterWithLesserNumber(remove.y).toString());
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+    setScreen(ActivePopUp.ManageExisting);
+    setShowConfirm(false);
+    setShowConfirmTransaction(true);
+
+    removeLiquidity(
+      selectedPosition,
+      removePercentage,
+      walletAddress,
+      props.tokenA.symbol,
+      props.tokenB.symbol,
+
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Remove Liquidity ${localStorage.getItem(
+          FIRST_TOKEN_AMOUNT
+        )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+          SECOND_TOKEN_AMOUNT
+        )} ${localStorage.getItem(TOKEN_B)}`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Remove Liquidity ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)}`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
+              },
+              transactionId: response.operationId ? response.operationId : "",
+            })
+          );
+        }, 6000);
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        // setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+        //resetAllValues();
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              transactionId: "",
+              headerText: "Rejected",
+              trailingText: `Remove Liquidity ${localStorage.getItem(
+                FIRST_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
+                SECOND_TOKEN_AMOUNT
+              )} ${localStorage.getItem(TOKEN_B)}`,
+              linkText: "",
+              isLoading: true,
+            })
+          );
+        }, 2000);
+
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        // setContentTransaction("");
+      }
+    });
+  };
+
+  const handleCollectFeeOperation = () => {
+    setContentTransaction(`Collecting fee`);
+
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+
+    collectFees(
+      selectedPosition,
+      walletAddress,
+      selectedPosition.tokenX.toString(),
+      selectedPosition.tokenY.toString(),
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Collecting fee`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Collecting fee`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
+              },
+              transactionId: response.operationId ? response.operationId : "",
+            })
+          );
+        }, 6000);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(
+          setFlashMessage({
+            flashType: Flashtype.Rejected,
+            headerText: "Rejected",
+            trailingText:
+              response.error === "NOT_ENOUGH_TEZ" ? `You do not have enough tez` : `Collecting fee`,
+            linkText: "",
+            isLoading: true,
+            transactionId: "",
+          })
+        );
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
+
   return props.showLiquidityModal ? (
     <>
       <PopUpModal
@@ -507,23 +782,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             : "sm:w-[602px] sm:max-w-[602px]",
           "w-[414px] max-w-[414px]  rounded-none sm:rounded-3xl px-4"
         )}
-        footerChild={
-          <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
-            <p className="font-subtitle1 md:text-f16 text-text-150">
-              {props.activeState === ActiveLiquidity.Liquidity &&
-                "Add liquidity, stake, and earn PLY"}
-              {props.activeState === ActiveLiquidity.Staking &&
-                "Add liquidity, stake, and earn PLY"}
-              {props.activeState === ActiveLiquidity.Rewards &&
-                "Add liquidity, stake, and earn PLY"}
-            </p>
-            <Image
-              className="cursor-pointer hover:opacity-90"
-              onClick={() => setShowVideoModal(true)}
-              src={playBtn}
-            />
-          </div>
-        }
       >
         {screen === ActivePopUp.NewPosition ? (
           <>
@@ -638,14 +896,23 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 />
               </p>
             </div>
-            <PositionsPopup tokenIn={props.tokenA} tokenOut={props.tokenB} setScreen={setScreen} />
+            <PositionsPopup
+              tokenIn={props.tokenA}
+              tokenOut={props.tokenB}
+              setScreen={setScreen}
+              handleCollectFeeOperation={handleCollectFeeOperation}
+            />
           </>
         ) : screen === ActivePopUp.ManageExisting ? (
           <div>
             <div className="flex items-center">
               <p
                 className="cursor-pointer  relative top-[3px]"
-                onClick={() => setScreen(ActivePopUp.Positions)}
+                onClick={() => {
+                  setFirstTokenAmountIncLiq("");
+                  setSecondTokenAmountIncLiq("");
+                  setScreen(ActivePopUp.Positions);
+                }}
               >
                 <Image alt={"alt"} src={arrowLeft} />
               </p>
@@ -659,14 +926,19 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             <IncreaseDecreaseLiqMain
               setActiveStateIncDec={setActiveStateIncDec}
               activeStateIncDec={activeStateIncDec}
-              firstTokenAmount={firstTokenAmountLiq}
-              secondTokenAmount={secondTokenAmountLiq}
+              firstTokenAmount={firstTokenAmountIncLiq}
+              secondTokenAmount={secondTokenAmountIncLiq}
               tokenIn={props.tokenIn}
+              setRemove={setRemove}
+              removePercentage={removePercentage}
+              setRemovePercentage={setRemovePercentage}
+              remove={remove}
               tokenOut={props.tokenOut}
               setScreen={setScreen}
+              setShow={setShowConfirm}
               userBalances={userBalances}
-              setSecondTokenAmount={setSecondTokenAmountLiq}
-              setFirstTokenAmount={setFirstTokenAmountLiq}
+              setSecondTokenAmount={setSecondTokenAmountIncLiq}
+              setFirstTokenAmount={setFirstTokenAmountIncLiq}
             />
           </div>
         ) : null}
@@ -695,15 +967,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             setScreen={setScreen}
             tokenIn={props.tokenIn}
             tokenOut={props.tokenOut}
-            addTokenA={2}
-            addTokenB={5}
-            existingTokenA={9}
-            existingTokenB={9}
-            show={true}
-            setShow={() => {}}
-            handleClick={function (): void {
-              throw new Error("Function not implemented.");
-            }}
+            addTokenA={firstTokenAmountIncLiq}
+            addTokenB={secondTokenAmountIncLiq}
+            show={showConfirm}
+            setShow={setShowConfirm}
+            handleClick={handleIncreaseLiquidityOperation}
           />
         )}
       {activeStateIncDec === ActiveIncDecState.Decrease &&
@@ -712,13 +980,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             setScreen={setScreen}
             tokenIn={props.tokenIn}
             tokenOut={props.tokenOut}
-            removeTokenA={8}
-            removeTokenB={9}
-            show={true}
-            setShow={() => {}}
-            handleClick={function (): void {
-              throw new Error("Function not implemented.");
-            }}
+            removeTokenA={remove.x}
+            removeTokenB={remove.y}
+            show={showConfirm}
+            setShow={setShowConfirm}
+            handleClick={handleRemoveLiquidityOperation}
           />
         )}
       {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"HtDOhje7Y5A"} />}

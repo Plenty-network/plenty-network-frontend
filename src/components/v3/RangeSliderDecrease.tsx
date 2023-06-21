@@ -18,10 +18,10 @@ export interface IRangeSliderProps {
 }
 
 export function RangeSliderDecLiq(props: IRangeSliderProps) {
-  const [sliderVal, setSliderVal] = React.useState<number>(0);
+  const [sliderVal, setSliderVal] = React.useState<number>(props.decreaseValue);
   React.useEffect(() => {
     setSliderVal(props.decreaseValue);
-  }, []);
+  }, [props.decreaseValue]);
 
   const handleslider = (value: string) => {
     setSliderVal(parseInt(value));

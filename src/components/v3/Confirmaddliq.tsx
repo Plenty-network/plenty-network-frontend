@@ -21,18 +21,17 @@ interface IConfirmIncreaseLiqProps {
   handleClick: () => void;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  addTokenA: number;
-  addTokenB: number;
-  existingTokenA: number;
-  existingTokenB: number;
+  addTokenA: string | number;
+  addTokenB: string | number;
 }
 function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
   const closeModal = () => {
     props.setShow(false);
   };
-  // const tokenPrice = store.getState().tokenPrice.tokenPrice;
+
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
 
   return props.show ? (
     <PopUpModal onhide={closeModal}>
@@ -68,8 +67,8 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">2.35</p>
-              <p className="font-body4 ">(+ 4.5)</p>
+              <p className="font-title2-bold ml-1">{selectedPosition.liquidity.x.toFixed(2)}</p>
+              <p className="font-body4 ">(+ {props.addTokenA} )</p>
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
 
@@ -89,8 +88,8 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">2.35</p>
-              <p className="font-body4 ">(+ 4.5)</p>
+              <p className="font-title2-bold ml-1">{selectedPosition.liquidity.y.toFixed(2)}</p>
+              <p className="font-body4 ">(+ {props.addTokenB} )</p>
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>
           </div>

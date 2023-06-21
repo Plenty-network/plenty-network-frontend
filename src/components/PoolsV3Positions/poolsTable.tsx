@@ -23,13 +23,17 @@ import newPool from "../../assets/icon/pools/newPool.svg";
 import { getTotalVotingPower } from "../../redux/pools";
 import { NoPoolsPosition } from "../Rewards/NoContent";
 import { compareNumericString } from "../../utils/commonUtils";
-import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import {
+  changeSource,
+  nFormatterWithLesserNumber,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import clsx from "clsx";
 import { tokenIcons } from "../../constants/tokensList";
-import { ActiveIncDecState, ActivePopUp, ManageTabV3 } from "../v3/ManageTabV3";
-import IncreaseDecreaseLiqMain from "../v3/IncreaseDecreaseliqMain";
-import { getBalanceFromTzkt, getTezBalance } from "../../api/util/balance";
+
 import { ManagePoolsV3 } from "./ManagePoolsV3";
+import { IV3PositionObject } from "../../api/v3/types";
+import { setSelectedPosition } from "../../redux/poolsv3";
 
 export function PoolsV3TablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,8 +44,6 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
-
-  const [noSearchResult, setNoSearchResult] = React.useState(false);
 
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "USDC.e",
@@ -63,30 +65,30 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
     else return "";
   };
 
-  const mobilecolumns = React.useMemo<Column<IPositionsData>[]>(
+  const mobilecolumns = React.useMemo<Column<IV3PositionObject>[]>(
     () => [
       {
         Header: "Pool",
         id: "pools",
         columnWidth: "w-[150px]",
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenX", true),
         accessor: (x: any) => (
           <div className=" flex justify-center items-center">
             <div className="bg-card-600 rounded-full w-[24px] h-[24px] flex justify-center items-center overflow-hidden ">
               <img
                 alt={"alt"}
                 src={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
-                    ? tokenIcons[x.tokenB]
-                      ? tokenIcons[x.tokenB].src
-                      : tokens[x.tokenB.toString()]?.iconUrl
-                      ? tokens[x.tokenB.toString()].iconUrl
+                  tEZorCTEZtoUppercase(x.tokenX.toString()) === "CTEZ"
+                    ? tokenIcons[x.tokenY]
+                      ? tokenIcons[x.tokenY].src
+                      : tokens[x.tokenY.toString()]?.iconUrl
+                      ? tokens[x.tokenY.toString()].iconUrl
                       : `/assets/Tokens/fallback.png`
-                    : tokenIcons[x.tokenA]
-                    ? tokenIcons[x.tokenA].src
-                    : tokens[x.tokenA.toString()]?.iconUrl
-                    ? tokens[x.tokenA.toString()].iconUrl
+                    : tokenIcons[x.tokenX]
+                    ? tokenIcons[x.tokenX].src
+                    : tokens[x.tokenX.toString()]?.iconUrl
+                    ? tokens[x.tokenX.toString()].iconUrl
                     : `/assets/Tokens/fallback.png`
                 }
                 width={"20px"}
@@ -98,16 +100,16 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
               <img
                 alt={"alt"}
                 src={
-                  tEZorCTEZtoUppercase(x.tokenA) === "CTEZ"
-                    ? tokenIcons[x.tokenA]
-                      ? tokenIcons[x.tokenA].src
-                      : tokens[x.tokenA.toString()]?.iconUrl
-                      ? tokens[x.tokenA.toString()].iconUrl
+                  tEZorCTEZtoUppercase(x.tokenX) === "CTEZ"
+                    ? tokenIcons[x.tokenX]
+                      ? tokenIcons[x.tokenX].src
+                      : tokens[x.tokenX.toString()]?.iconUrl
+                      ? tokens[x.tokenX.toString()].iconUrl
                       : `/assets/Tokens/fallback.png`
-                    : tokenIcons[x.tokenB]
-                    ? tokenIcons[x.tokenB].src
-                    : tokens[x.tokenB.toString()]?.iconUrl
-                    ? tokens[x.tokenB.toString()].iconUrl
+                    : tokenIcons[x.tokenY]
+                    ? tokenIcons[x.tokenY].src
+                    : tokens[x.tokenY.toString()]?.iconUrl
+                    ? tokens[x.tokenY.toString()].iconUrl
                     : `/assets/Tokens/fallback.png`
                 }
                 width={"20px"}
@@ -118,12 +120,12 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
             <div>
               <div className="font-body2 md:font-body4">
                 {" "}
-                {tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
-                  ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
-                      x.tokenA.toString()
+                {tEZorCTEZtoUppercase(x.tokenX.toString()) === "CTEZ"
+                  ? ` ${tEZorCTEZtoUppercase(x.tokenY.toString())} / ${tEZorCTEZtoUppercase(
+                      x.tokenX.toString()
                     )}`
-                  : ` ${tEZorCTEZtoUppercase(x.tokenA.toString())} / ${tEZorCTEZtoUppercase(
-                      x.tokenB.toString()
+                  : ` ${tEZorCTEZtoUppercase(x.tokenX.toString())} / ${tEZorCTEZtoUppercase(
+                      x.tokenY.toString()
                     )}`}
               </div>
               <div className="font-subtitle1 text-text-500">{x.ammType} Pool</div>
@@ -141,19 +143,32 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         accessorFn: (x: any) => x.totalLiquidityAmount,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "totalLiquidityAmount"),
-        accessor: (x: any) => <YourLiquidity value={x.totalLiquidityAmount} />,
+        accessor: (x: any) => (
+          <YourLiquidity
+            value={x.totalLiquidityAmount}
+            liquidity={x.liquidity}
+            tokenA={x.tokenX.toString()}
+            tokenB={x.tokenY.toString()}
+          />
+        ),
       },
       {
         Header: "",
         id: "manage",
         columnWidth: "w-[120px] flex-1",
-        accessor: (x) => <ManageBtn tokenA={x.tokenA.toString()} tokenB={x.tokenB.toString()} />,
+        accessor: (x) => (
+          <ManageBtn
+            tokenA={x.tokenX ? x.tokenX.toString() : ""}
+            tokenB={x.tokenY ? x.tokenY.toString() : ""}
+            data={x}
+          />
+        ),
       },
     ],
     [valueFormat]
   );
 
-  const desktopcolumns = React.useMemo<Column<IPositionsData>[]>(
+  const desktopcolumns = React.useMemo<Column<IV3PositionObject>[]>(
     () => [
       {
         Header: "Pool",
@@ -161,30 +176,24 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         columnWidth: "w-[204px]",
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenX", true),
         accessor: (x: any) => (
           <>
-            {!x.isGaugeAvailable ? <Image src={newPool} width={"20px"} height={"20px"} /> : null}
-            <div
-              className={clsx(
-                " flex justify-center items-center",
-                !x.isGaugeAvailable ? "ml-[14px]" : ""
-              )}
-            >
+            <div className={clsx(" flex justify-center items-center")}>
               <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center overflow-hidden">
                 <img
                   alt={"alt"}
                   src={
-                    tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
-                      ? tokenIcons[x.tokenB]
-                        ? tokenIcons[x.tokenB].src
-                        : tokens[x.tokenB.toString()]?.iconUrl
-                        ? tokens[x.tokenB.toString()].iconUrl
+                    tEZorCTEZtoUppercase(x.tokenX.toString()) === "CTEZ"
+                      ? tokenIcons[x.tokenY]
+                        ? tokenIcons[x.tokenY].src
+                        : tokens[x.tokenY.toString()]?.iconUrl
+                        ? tokens[x.tokenY.toString()].iconUrl
                         : `/assets/Tokens/fallback.png`
-                      : tokenIcons[x.tokenA]
-                      ? tokenIcons[x.tokenA].src
-                      : tokens[x.tokenA.toString()]?.iconUrl
-                      ? tokens[x.tokenA.toString()].iconUrl
+                      : tokenIcons[x.tokenX]
+                      ? tokenIcons[x.tokenX].src
+                      : tokens[x.tokenX.toString()]?.iconUrl
+                      ? tokens[x.tokenX.toString()].iconUrl
                       : `/assets/Tokens/fallback.png`
                   }
                   width={"24px"}
@@ -196,16 +205,16 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
                 <img
                   alt={"alt"}
                   src={
-                    tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
-                      ? tokenIcons[x.tokenA]
-                        ? tokenIcons[x.tokenA].src
-                        : tokens[x.tokenA.toString()]?.iconUrl
-                        ? tokens[x.tokenA.toString()].iconUrl
+                    tEZorCTEZtoUppercase(x.tokenX.toString()) === "CTEZ"
+                      ? tokenIcons[x.tokenX]
+                        ? tokenIcons[x.tokenX].src
+                        : tokens[x.tokenX.toString()]?.iconUrl
+                        ? tokens[x.tokenX.toString()].iconUrl
                         : `/assets/Tokens/fallback.png`
-                      : tokenIcons[x.tokenB]
-                      ? tokenIcons[x.tokenB].src
-                      : tokens[x.tokenB.toString()]?.iconUrl
-                      ? tokens[x.tokenB.toString()].iconUrl
+                      : tokenIcons[x.tokenY]
+                      ? tokenIcons[x.tokenY].src
+                      : tokens[x.tokenY.toString()]?.iconUrl
+                      ? tokens[x.tokenY.toString()].iconUrl
                       : `/assets/Tokens/fallback.png`
                   }
                   width={"24px"}
@@ -216,15 +225,14 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
               <div>
                 <div className="font-body4">
                   {" "}
-                  {tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
-                    ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
-                        x.tokenA.toString()
+                  {tEZorCTEZtoUppercase(x.tokenX.toString()) === "CTEZ"
+                    ? ` ${tEZorCTEZtoUppercase(x.tokenY.toString())} / ${tEZorCTEZtoUppercase(
+                        x.tokenX.toString()
                       )}`
-                    : ` ${tEZorCTEZtoUppercase(x.tokenA.toString())} / ${tEZorCTEZtoUppercase(
-                        x.tokenB.toString()
+                    : ` ${tEZorCTEZtoUppercase(x.tokenX.toString())} / ${tEZorCTEZtoUppercase(
+                        x.tokenY.toString()
                       )}`}
                 </div>
-                <div className="font-subtitle1 text-text-500">{x.ammType} Pool</div>
               </div>
             </div>
           </>
@@ -238,42 +246,45 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "totalLiquidityAmount"),
-        accessor: (x: any) => <YourLiquidity value={x.totalLiquidityAmount} />,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "liquidityDollar"),
+        accessor: (x: any) => (
+          <YourLiquidity
+            value={x.liquidityDollar}
+            liquidity={x.liquidity}
+            tokenA={x.tokenX.toString()}
+            tokenB={x.tokenY.toString()}
+          />
+        ),
       },
       {
         Header: `Min/Max price`,
         id: "Min/Max price",
-        columnWidth: "w-[144px]",
+        columnWidth: "w-[154px]",
         tooltipMessage: "Percentage liquidity staked in the pool’s gauge.",
-        sortType: (a: any, b: any) => compareNumericString(a, b, "stakedPercentage"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "maxPrice"),
         canShort: true,
         isToolTipEnabled: true,
-        accessor: (x: any) =>
-          x.isGaugeAvailable ? (
-            <StakePercentage value={x.stakedPercentage} />
-          ) : (
-            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              -
+        accessor: (x: any) => (
+          <div className="text-end">
+            <div className=" text-text-50 font-subtitle4 ">
+              {nFormatterWithLesserNumber(x.minPrice)} /{" "}
+              {x.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber(x.maxPrice)}
+              {/* <div className="font-body3 text-text-500">
+                {tEZorCTEZtoUppercase(x.tokenX)} per {tEZorCTEZtoUppercase(x.tokenY)}
+              </div> */}
             </div>
-          ),
+          </div>
+        ),
       },
       {
         Header: "Fees collected",
         id: "Fees collected",
         columnWidth: "w-[138px]",
         tooltipMessage: "Annual percentage rate of return on your staked position.",
-        sortType: (a: any, b: any) => compareNumericString(a, b, "userAPR"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "feesDollar"),
         isToolTipEnabled: true,
         canShort: true,
-        accessor: (x: any) =>
-          x.isGaugeAvailable ? (
-            <StakePercentage value={x.userAPR} />
-          ) : (
-            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              -
-            </div>
-          ),
+        accessor: (x: any) => <StakePercentage value={x.feesDollar} />,
       },
       {
         Header: "",
@@ -282,7 +293,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
 
         sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
         accessor: (x: any) =>
-          false ? (
+          !x.isInRange ? (
             <span className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1 rounded-lg	 text-error-300 bg-error-300/[0.1] ">
               <Image src={infoOrange} />
               Out of range
@@ -301,7 +312,13 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
 
         sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
         accessor: (x: any) => (
-          <div className="bg-primary-500/10 md:w-[151px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center">
+          <div
+            className="bg-primary-500/10 md:w-[151px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
+            onClick={() => {
+              dispatch(setSelectedPosition(x));
+              props.handleCollectFeeOperation();
+            }}
+          >
             collect fees
           </div>
         ),
@@ -310,7 +327,13 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         Header: "",
         id: "manage",
         columnWidth: "w-[180px] ",
-        accessor: (x) => <ManageBtn tokenA={x.tokenA.toString()} tokenB={x.tokenB.toString()} />,
+        accessor: (x) => (
+          <ManageBtn
+            tokenA={x.tokenX ? x.tokenX.toString() : ""}
+            tokenB={x.tokenY ? x.tokenY.toString() : ""}
+            data={x}
+          />
+        ),
       },
     ],
     [valueFormat]
@@ -318,10 +341,10 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
   function ManageBtn(props: IManageBtnProps): any {
     return (
       <div
-        className="bg-primary-500/10 md:w-[151px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
+        className="bg-primary-500/10 md:w-[141px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
         onClick={() => {
           setShowLiquidityModal(true);
-
+          dispatch(setSelectedPosition(props.data));
           setActiveState(ActiveLiquidity.Liquidity);
 
           setTokenIn({
@@ -345,14 +368,13 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       <div className={` overflow-x-auto inner ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
-          data={props.poolsPosition}
-          noSearchResult={noSearchResult}
+          data={props.poolsPosition ? props.poolsPosition : []}
           shortby="yourliquidity"
           tableType={true}
           isFetched={props.isfetched}
           isConnectWalletRequired={props.isConnectWalletRequired}
           TableName="poolsPositionv3"
-          TableWidth="sm:min-w-[980px] lg:min-w-[980px]"
+          TableWidth="min-w-[980px]"
           NoData={NoData}
         />
       </div>

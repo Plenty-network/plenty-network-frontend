@@ -178,15 +178,16 @@ export default function LiquidityChartRangeInput({
         <div className="justify-center items-center  flex h-[180px]">
           <div className="spinner"></div>
         </div>
-      ) : error ? (
-        <div className="flex items-center pt-[100px]  justify-center">
-          Liquidity data not available.
-        </div>
-      ) : !isLoadingData && (!formattedData || formattedData.length === 0 || !price) ? (
-        <div className="flex items-center pt-[100px] justify-center">
-          There is no liquidity data.
-        </div>
       ) : (
+        // : error ? (
+        //   <div className="flex items-center pt-[100px]  justify-center">
+        //     Liquidity data not available.
+        //   </div>
+        // ) : !isLoadingData && (!formattedData || formattedData.length === 0 || !price) ? (
+        //   <div className="flex items-center pt-[100px] justify-center">
+        //     There is no liquidity data.
+        //   </div>
+        // )
         <div className="relative justify-center items-center">
           <Chart
             data={{ series: formattedData, current: price }}

@@ -13,6 +13,7 @@ import { ActivePopUp } from "./ManageTabV3";
 interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
+  handleCollectFeeOperation: () => void;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
 }
 function PositionsTable(props: IPositionsProps) {
@@ -22,6 +23,7 @@ function PositionsTable(props: IPositionsProps) {
         tokenIn={props.tokenIn}
         tokenOut={props.tokenOut}
         setScreen={props.setScreen}
+        handleCollectFeeOperation={props.handleCollectFeeOperation}
       />
     </>
   );

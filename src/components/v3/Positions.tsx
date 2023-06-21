@@ -22,6 +22,7 @@ interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
+  handleCollectFeeOperation: () => void;
 }
 function PositionsPopup(props: IPositionsProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
@@ -58,7 +59,7 @@ function PositionsPopup(props: IPositionsProps) {
 
   return (
     <>
-      <div className=" mt-4 rounded-2xl flex flex-col justify-between items-center h-[64px] px-3 sm:px-[25px] py-1.5 border-text-800  border-2 bg-secondary-400 ">
+      <div className=" mt-4 rounded-2xl flex flex-col justify-between items-center h-[64px] px-3 sm:px-[25px] pt-[8px] border-text-800  border-2 bg-secondary-400 ">
         {
           <>
             <div className="flex w-full justify-between">
@@ -75,7 +76,7 @@ function PositionsPopup(props: IPositionsProps) {
                   position={Position.top}
                   message="Fee collected by all positions"
                 >
-                  <div className="text-white rounded-lg text-center	 bg-info-800 flex items-center justify-center w-[90px] h-[44px] ">
+                  <div className="text-white rounded-lg text-center	 bg-info-800 flex items-center justify-center w-[100px] h-[44px] ">
                     <Image src={feeimg} />
                     <span className="ml-1 font-title3">0.05%</span>
                   </div>
@@ -93,6 +94,7 @@ function PositionsPopup(props: IPositionsProps) {
         setScreen={props.setScreen}
         tokenIn={props.tokenIn}
         tokenOut={props.tokenOut}
+        handleCollectFeeOperation={props.handleCollectFeeOperation}
       />
       <div className="mt-2">{ButtonComp}</div>
     </>

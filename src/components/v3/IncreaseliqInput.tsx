@@ -18,6 +18,7 @@ import { tokenIcons } from "../../constants/tokensList";
 import fromExponential from "from-exponential";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
+import { estimateTokenXFromTokenY, estimateTokenYFromTokenX } from "../../api/v3/liquidity";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -47,6 +48,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const [isFirstLaoding, setFirstLoading] = React.useState(false);
   const [isSecondLaoding, setSecondLoading] = React.useState(false);
+  const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
 
   const handleLiquidityInput = async (
     input: string | number,
@@ -74,7 +76,16 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
         props.setFirstTokenAmount(input.toString().trim());
       }
       setSecondLoading(true);
-      props.setSecondTokenAmount(2);
+      estimateTokenYFromTokenX(
+        new BigNumber(input),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        Number(selectedPosition.position.lower_tick_index),
+        Number(selectedPosition.position.upper_tick_index)
+      ).then((response) => {
+        setSecondLoading(false);
+        true ? props.setSecondTokenAmount(response.toString()) : props.setSecondTokenAmount(0);
+      });
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
 
@@ -88,7 +99,17 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
         props.setSecondTokenAmount(input.toString().trim());
       }
       setFirstLoading(true);
-      props.setFirstTokenAmount(2);
+      estimateTokenXFromTokenY(
+        new BigNumber(input),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        Number(selectedPosition.position.lower_tick_index),
+        Number(selectedPosition.position.upper_tick_index)
+      ).then((response) => {
+        setFirstLoading(false);
+
+        true ? props.setFirstTokenAmount(response.toString()) : props.setFirstTokenAmount(0);
+      });
     }
   };
 
