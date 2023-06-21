@@ -6,7 +6,8 @@
     "dev": "next dev -p 3010",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "fix-memory-limit": "cross-env LIMIT=2048 increase-memory-limit"
   },
   "dependencies": {
     "@airgap/beacon-sdk": "^4.0.0",
@@ -63,6 +64,7 @@
     "eslint-config-next": "12.1.6",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.0.24",
-    "typescript": "4.7.2"
+    "typescript": "4.7.2",
+    "increase-memory-limit": "^1.0.3"
   }
 }
