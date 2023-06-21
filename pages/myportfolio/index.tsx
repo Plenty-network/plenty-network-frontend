@@ -669,8 +669,8 @@ function MyPortfolio(props: any) {
     collectFees(
       selectedPosition,
       userAddress,
-      selectedPosition.tokenX.toString(),
-      selectedPosition.tokenY.toString(),
+      selectedPosition.tokenX ? selectedPosition.tokenX.toString() : "DAI.e",
+      selectedPosition.tokenY ? selectedPosition.tokenY.toString() : "USDC.e",
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,

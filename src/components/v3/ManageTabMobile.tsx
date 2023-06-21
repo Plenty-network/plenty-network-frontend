@@ -700,8 +700,8 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
     collectFees(
       selectedPosition,
       walletAddress,
-      selectedPosition.tokenX.toString(),
-      selectedPosition.tokenY.toString(),
+      props.tokenA.symbol,
+      props.tokenB.symbol,
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
