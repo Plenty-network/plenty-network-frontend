@@ -53,4 +53,6 @@ export interface IV3PositionObject {
   isInRange: boolean;
   isMaxPriceInfinity: boolean;
   position: IV3Position;
+  tokenX?: String;
+  tokenY?: String;
 }

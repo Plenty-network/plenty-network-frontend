@@ -12,7 +12,7 @@ import clsx from "clsx";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { ActivePopUp } from "./ManageTabV3";
-import { getPositons } from "../../api/v3/positions";
+import { getPositions, getPositionsAll } from "../../api/v3/positions";
 import { useAppSelector } from "../../redux";
 import { IV3PositionObject } from "../../api/v3/types";
 
@@ -33,7 +33,7 @@ function PositionsData(props: IPositionsProps) {
       Object.prototype.hasOwnProperty.call(props.tokenOut, "symbol")
     ) {
       setIsLoading(true);
-      getPositons(
+      getPositions(
         props.tokenIn.symbol,
         props.tokenOut.symbol,
         "0.05",
@@ -44,6 +44,10 @@ function PositionsData(props: IPositionsProps) {
         setData(res);
         setIsLoading(false);
       });
+
+      /*       getPositionsAll(walletAddress, tokenPrice).then((res) => {
+        console.log("positions all", res);
+      }); */
     }
   }, [props.tokenIn.symbol, props.tokenOut.symbol, Object.keys(tokenPrice).length]);
   return (
