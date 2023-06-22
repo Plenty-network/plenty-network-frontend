@@ -271,7 +271,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
         </div>
       </div>
 
-      <div className="mt-4"> {DecreaseButton}</div>
+      {/* <div className="mt-4"> {DecreaseButton}</div> */}
     </>
   );
 }
