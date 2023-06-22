@@ -48,33 +48,33 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
-  const DecreaseButton = useMemo(() => {
-    if (!walletAddress) {
-      return (
-        <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect wallet
-        </Button>
-      );
-    } else if (props.removePercentage === 0) {
-      return (
-        <Button onClick={() => null} color={"disabled"}>
-          Remove
-        </Button>
-      );
-    } else {
-      return (
-        <Button
-          color={"primary"}
-          onClick={() => {
-            props.setShow(true);
-            props.setScreen(ActivePopUp.ConfirmExisting);
-          }}
-        >
-          Remove
-        </Button>
-      );
-    }
-  }, [props.removePercentage, walletAddress]);
+  // const DecreaseButton = useMemo(() => {
+  //   if (!walletAddress) {
+  //     return (
+  //       <Button onClick={connectTempleWallet} color={"primary"}>
+  //         Connect wallet
+  //       </Button>
+  //     );
+  //   } else if (props.removePercentage === 0) {
+  //     return (
+  //       <Button onClick={() => null} color={"disabled"}>
+  //         Remove
+  //       </Button>
+  //     );
+  //   } else {
+  //     return (
+  //       <Button
+  //         color={"primary"}
+  //         onClick={() => {
+  //           props.setShow(true);
+  //           props.setScreen(ActivePopUp.ConfirmExisting);
+  //         }}
+  //       >
+  //         Remove
+  //       </Button>
+  //     );
+  //   }
+  // }, [props.removePercentage, walletAddress]);
 
   useEffect(() => {
     if (props.removePercentage) {
@@ -270,7 +270,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
         </div>
       </div>
 
-      <div className="mt-4"> {DecreaseButton}</div>
+      {/* <div className="mt-4"> {DecreaseButton}</div> */}
     </>
   );
 }
