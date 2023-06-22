@@ -70,7 +70,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       {
         Header: "Pool",
         id: "pools",
-        columnWidth: "w-[150px]",
+        columnWidth: "w-[220px]",
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenX", true),
         accessor: (x: any) => (
@@ -128,7 +128,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
                       x.tokenY.toString()
                     )}`}
               </div>
-              <div className="font-subtitle1 text-text-500">{x.ammType} Pool</div>
+              {/* <div className="font-subtitle1 text-text-500">{x.ammType} Pool</div> */}
             </div>
           </div>
         ),
@@ -136,16 +136,15 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       {
         Header: "Your liquidity",
         id: "yourliquidity",
-        columnWidth: "w-[80px] pr-2.5",
-        isToolTipEnabled: true,
+        columnWidth: "w-[124px]",
         tooltipMessage: "Value of tokens supplied to the pair.",
+        isToolTipEnabled: true,
         canShort: true,
-        accessorFn: (x: any) => x.totalLiquidityAmount,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "totalLiquidityAmount"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "liquidityDollar"),
         accessor: (x: any) => (
           <YourLiquidity
-            value={x.totalLiquidityAmount}
+            value={x.liquidityDollar}
             liquidity={x.liquidity}
             tokenA={x.tokenX.toString()}
             tokenB={x.tokenY.toString()}
@@ -153,9 +152,83 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         ),
       },
       {
+        Header: `Min/Max price`,
+        id: "Min/Max price",
+        columnWidth: "w-[154px]",
+        tooltipMessage: "Percentage liquidity staked in the pool’s gauge.",
+        sortType: (a: any, b: any) => compareNumericString(a, b, "maxPrice"),
+        canShort: true,
+        isToolTipEnabled: true,
+        accessor: (x: any) => (
+          <div className="text-end">
+            <div className=" text-text-50 font-subtitle4 ">
+              {nFormatterWithLesserNumber(x.minPrice)} /{" "}
+              {x.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber(x.maxPrice)}
+              {/* <div className="font-body3 text-text-500">
+                {tEZorCTEZtoUppercase(x.tokenX)} per {tEZorCTEZtoUppercase(x.tokenY)}
+              </div> */}
+            </div>
+          </div>
+        ),
+      },
+      {
+        Header: "Fees collected",
+        id: "Fees collected",
+        columnWidth: "w-[138px]",
+        tooltipMessage: "Annual percentage rate of return on your staked position.",
+        sortType: (a: any, b: any) => compareNumericString(a, b, "feesDollar"),
+        isToolTipEnabled: true,
+        canShort: true,
+        accessor: (x: any) => <StakePercentage value={x.feesDollar} />,
+      },
+      {
+        Header: "",
+        id: "range",
+        columnWidth: "w-[158px] ",
+
+        sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
+        accessor: (x: any) =>
+          !x.isInRange ? (
+            <span className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1 rounded-lg	 text-error-300 bg-error-300/[0.1] ">
+              <Image src={infoOrange} />
+              Out of range
+            </span>
+          ) : (
+            <div className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1  rounded-lg	text-success-500 bg-success-500/[0.1]">
+              <Image src={infoGreen} />
+              In Range
+            </div>
+          ),
+      },
+      {
+        Header: "",
+        id: "collect fee",
+        columnWidth: "w-[175px] ",
+
+        sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
+        accessor: (x: any) => (
+          <div
+            className={clsx(
+              x.feesDollar.isEqualTo(0) ? "cursor-not-allowed" : "cursor-pointer",
+              "bg-primary-500/10 md:w-[151px] w-[100px]   text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
+            )}
+            onClick={
+              x.feesDollar.isEqualTo(0)
+                ? () => {}
+                : () => {
+                    dispatch(setSelectedPosition(x));
+                    props.handleCollectFeeOperation();
+                  }
+            }
+          >
+            collect fees
+          </div>
+        ),
+      },
+      {
         Header: "",
         id: "manage",
-        columnWidth: "w-[120px] flex-1",
+        columnWidth: "w-[180px] ",
         accessor: (x) => (
           <ManageBtn
             tokenA={x.tokenX ? x.tokenX.toString() : ""}

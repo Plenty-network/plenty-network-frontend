@@ -140,13 +140,13 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   const refSettingTab = React.useRef(null);
   useEffect(() => {
-    topLevelSelectedToken.symbol === props.tokenIn.symbol
-      ? dispatch(setTokenInV3(props.tokenIn))
-      : dispatch(setTokeOutV3(props.tokenOut));
+    //topLevelSelectedToken.symbol === props.tokenIn.symbol
+    dispatch(setTokenInV3(props.tokenIn));
+    dispatch(setTokeOutV3(props.tokenOut));
 
     dispatch(setTokenInOrg(props.tokenA));
     dispatch(setTokeOutOrg(props.tokenB));
-  }, [props.tokenIn, props.tokenOut]);
+  }, [props.tokenIn, props.tokenA, props.tokenB]);
   useEffect(() => {
     const updateBalance = async () => {
       const balancePromises = [];
@@ -204,6 +204,9 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   const [isClearAll, setisClearAll] = useState(false);
   const resetAllValues = () => {
     setisClearAll(true);
+    setFirstTokenAmountIncLiq("");
+    setSecondTokenAmountIncLiq("");
+    setRemove({} as BalanceNat);
     setFirstTokenAmountLiq("");
     setSecondTokenAmountLiq("");
     dispatch(settopLevelSelectedToken(props.tokenA));
@@ -213,12 +216,12 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
       setisClearAll(false);
     }, 4000);
   };
-  const [deadline, setDeadline] = useState(0);
-  useEffect(() => {
-    const n = slippage === 1 ? 60 : slippage === 2 ? 120 : Number(slippage);
+  // const [deadline, setDeadline] = useState(0);
+  // useEffect(() => {
+  //   const n = slippage === 1 ? 60 : slippage === 2 ? 120 : Number(slippage);
 
-    setDeadline(Math.floor(new Date().getTime() / 1000) + n * 60);
-  }, [slippage]);
+  //   setDeadline(Math.floor(new Date().getTime() / 1000) + n * 60);
+  // }, [slippage]);
   const handleAddLiquidityOperation = () => {
     setContentTransaction(
       `Mint Position ${nFormatterWithLesserNumber(
@@ -896,8 +899,8 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                 </p>
               </div>
               <PositionsPopup
-                tokenIn={props.tokenIn}
-                tokenOut={props.tokenOut}
+                tokenIn={props.tokenA}
+                tokenOut={props.tokenB}
                 setScreen={setScreen}
                 handleCollectFeeOperation={handleCollectFeeOperation}
               />
@@ -923,14 +926,14 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                 activeStateIncDec={activeStateIncDec}
                 firstTokenAmount={firstTokenAmountIncLiq}
                 secondTokenAmount={secondTokenAmountIncLiq}
-                tokenIn={props.tokenIn}
-                setShow={setShowConfirm}
+                tokenIn={props.tokenA}
+                tokenOut={props.tokenB}
+                setRemove={setRemove}
                 removePercentage={removePercentage}
                 setRemovePercentage={setRemovePercentage}
-                setRemove={setRemove}
                 remove={remove}
-                tokenOut={props.tokenOut}
                 setScreen={setScreen}
+                setShow={setShowConfirm}
                 userBalances={userBalances}
                 setSecondTokenAmount={setSecondTokenAmountIncLiq}
                 setFirstTokenAmount={setFirstTokenAmountIncLiq}
@@ -945,8 +948,8 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                   setScreen={setScreen}
                   firstTokenAmount={firstTokenAmountLiq}
                   secondTokenAmount={secondTokenAmountLiq}
-                  tokenIn={props.tokenIn}
-                  tokenOut={props.tokenOut}
+                  tokenIn={props.tokenA}
+                  tokenOut={props.tokenB}
                   tokenPrice={tokenPrice}
                   pnlpEstimates={pnlpEstimates}
                   sharePool={sharePool}
@@ -981,7 +984,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
             removeTokenB={remove.y}
             show={showConfirm}
             setShow={setShowConfirm}
-            handleClick={handleIncreaseLiquidityOperation}
+            handleClick={handleRemoveLiquidityOperation}
           />
         )}
       {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"HtDOhje7Y5A"} />}

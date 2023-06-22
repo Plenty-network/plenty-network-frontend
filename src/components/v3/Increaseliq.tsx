@@ -49,6 +49,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
 
   const [currentPrice, setCurrentPrice] = useState<BigNumber>(new BigNumber(0));
   useEffect(() => {
+    console.log("selectedposition", selectedPosition, props.tokenIn.symbol, props.tokenOut.symbol);
     getRealPriceFromTick(
       selectedPosition.currentTickIndex,
       props.tokenIn.symbol,
@@ -57,7 +58,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
       console.log(res.toString(), "k");
       setCurrentPrice(res);
     });
-  }, [selectedPosition]);
+  }, [selectedPosition.currentTickIndex]);
   const IncreaseButton = useMemo(() => {
     if (!walletAddress) {
       return (
