@@ -271,10 +271,6 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
         <Button onClick={connectTempleWallet} color={"primary"}>
           Connect wallet
         </Button>
-      ) : props.removePercentage === 0 ? (
-        <Button onClick={() => null} color={"disabled"}>
-          Remove
-        </Button>
       ) : (
         <Button
           color={"primary"}
