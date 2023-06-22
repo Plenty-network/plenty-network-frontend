@@ -267,21 +267,21 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
           <div className="border-t border-text-800/[0.5] mb-3"></div>
         </div>
       </div>
-      {!walletAddress ? (
+      {/* {!walletAddress ? (
         <Button onClick={connectTempleWallet} color={"primary"}>
           Connect wallet
         </Button>
-      ) : (
-        <Button
-          color={"primary"}
-          onClick={() => {
-            props.setShow(true);
-            props.setScreen(ActivePopUp.ConfirmExisting);
-          }}
-        >
-          Remove
-        </Button>
-      )}
+      ) : ( */}
+      <Button
+        color={"primary"}
+        onClick={() => {
+          props.setShow(true);
+          props.setScreen(ActivePopUp.ConfirmExisting);
+        }}
+      >
+        Remove
+      </Button>
+
       {/* <div className="mt-4"> {DecreaseButton}</div> */}
     </>
   );
