@@ -13,8 +13,6 @@ import {
   getTezBalance,
 } from "../../api/util/balance";
 import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
-import { getLPTokenPrice } from "../../api/util/price";
-import { ELocksState } from "../../api/votes/types";
 import playBtn from "../../assets/icon/common/playBtn.svg";
 import { tzktExplorer } from "../../common/walletconnect";
 import { AppDispatch, useAppDispatch, useAppSelector } from "../../redux";

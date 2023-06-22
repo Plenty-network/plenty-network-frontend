@@ -76,13 +76,13 @@ export default function Pools(props: IIndexProps) {
       initialPriceCall.current = false;
     }
   }, [token]);
-  useEffect(() => {
-    if (!initialLpPriceCall.current) {
-      Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
-    } else {
-      initialLpPriceCall.current = false;
-    }
-  }, [tokenPrices]);
+  // useEffect(() => {
+  //   if (!initialLpPriceCall.current) {
+  //     Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
+  //   } else {
+  //     initialLpPriceCall.current = false;
+  //   }
+  // }, [tokenPrices]);
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
@@ -96,7 +96,6 @@ export default function Pools(props: IIndexProps) {
 
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
 
   return (
     <>

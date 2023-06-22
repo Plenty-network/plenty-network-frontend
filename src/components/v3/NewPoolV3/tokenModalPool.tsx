@@ -63,9 +63,9 @@ function TokenModalPool(props: ISwapModalProps) {
   );
 
   useEffect(() => {
-    topTokensList().then((res) => {
-      setTopTokens(res.topTokens);
-    });
+    // topTokensList().then((res) => {
+    //   setTopTokens(res.topTokens);
+    // });
   }, []);
 
   const topTokensListArray = useMemo(() => {

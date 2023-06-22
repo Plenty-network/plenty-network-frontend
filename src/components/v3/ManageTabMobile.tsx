@@ -7,9 +7,7 @@ import { POOL_TYPE } from "../../../pages/pools";
 import clock from "../../../src/assets/icon/poolsv3/settingsClock.svg";
 import { getBalanceFromTzkt, getTezBalance } from "../../api/util/balance";
 import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
-import { getLPTokenPrice } from "../../api/util/price";
 import { tzktExplorer } from "../../common/walletconnect";
-import { IConfigLPToken } from "../../config/types";
 
 import {
   FIRST_TOKEN_AMOUNT,
