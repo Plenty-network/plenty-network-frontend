@@ -48,48 +48,48 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
-  const DecreaseButton = useMemo(() => {
-    if (!walletAddress) {
-      return (
-        <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect wallet
-        </Button>
-      );
-    } else if (props.removePercentage === 0) {
-      return (
-        <Button onClick={() => null} color={"disabled"}>
-          Remove
-        </Button>
-      );
-    } else {
-      return (
-        <Button
-          color={"primary"}
-          onClick={() => {
-            props.setShow(true);
-            props.setScreen(ActivePopUp.ConfirmExisting);
-          }}
-        >
-          Remove
-        </Button>
-      );
-    }
-  }, [props.removePercentage, walletAddress]);
+  // const DecreaseButton = useMemo(() => {
+  //   if (!walletAddress) {
+  //     return (
+  //       <Button onClick={connectTempleWallet} color={"primary"}>
+  //         Connect wallet
+  //       </Button>
+  //     );
+  //   } else if (props.removePercentage === 0) {
+  //     return (
+  //       <Button onClick={() => null} color={"disabled"}>
+  //         Remove
+  //       </Button>
+  //     );
+  //   } else {
+  //     return (
+  //       <Button
+  //         color={"primary"}
+  //         onClick={() => {
+  //           props.setShow(true);
+  //           props.setScreen(ActivePopUp.ConfirmExisting);
+  //         }}
+  //       >
+  //         Remove
+  //       </Button>
+  //     );
+  //   }
+  // }, [props.removePercentage, walletAddress]);
 
-  useEffect(() => {
-    calculateTokensForRemoveLiquidity(
-      Number(props.removePercentage),
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
-      selectedPosition
-    ).then((res) => {
-      props.setRemove(res);
-    });
-  }, [props.removePercentage]);
+  // useEffect(() => {
+  //   calculateTokensForRemoveLiquidity(
+  //     Number(props.removePercentage),
+  //     props.tokenIn.symbol,
+  //     props.tokenOut.symbol,
+  //     selectedPosition
+  //   ).then((res) => {
+  //     props.setRemove(res);
+  //   });
+  // }, [props.removePercentage]);
 
   return (
     <>
-      {/* <div className="border border-text-800 bg-card-200 rounded-2xl	py-5 px-4 mt-5">
+      <div className="border border-text-800 bg-card-200 rounded-2xl	py-5 px-4 mt-5">
         <div className="flex gap-1 font-title3">
           Amount
           <div className="relative top-[2px]  cursor-pointer">
@@ -266,9 +266,9 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
           </div>
           <div className="border-t border-text-800/[0.5] mb-3"></div>
         </div>
-      </div> */}
+      </div>
 
-      <div className="mt-4"> {DecreaseButton}</div>
+      {/* <div className="mt-4"> {DecreaseButton}</div> */}
     </>
   );
 }
