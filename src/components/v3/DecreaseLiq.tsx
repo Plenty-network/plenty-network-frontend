@@ -95,22 +95,22 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
     }
   }, [props, props.removePercentage]);
 
-  useEffect(() => {
-    if (props.removePercentage) {
-      calculateTokensForRemoveLiquidity(
-        Number(props.removePercentage),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        selectedPosition
-      ).then((res) => {
-        props.setRemove(res);
-      });
-    }
-  }, [props.removePercentage]);
+  // useEffect(() => {
+  //   if (props.removePercentage) {
+  //     calculateTokensForRemoveLiquidity(
+  //       Number(props.removePercentage),
+  //       props.tokenIn.symbol,
+  //       props.tokenOut.symbol,
+  //       selectedPosition
+  //     ).then((res) => {
+  //       props.setRemove(res);
+  //     });
+  //   }
+  // }, [props.removePercentage]);
 
   return (
     <>
-      <div className="border border-text-800 bg-card-200 rounded-2xl	py-5 px-4 mt-5">
+      {/* <div className="border border-text-800 bg-card-200 rounded-2xl	py-5 px-4 mt-5">
         <div className="flex gap-1 font-title3">
           Amount
           <div className="relative top-[2px]  cursor-pointer">
@@ -171,10 +171,10 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             {DecreasePercentage.HUNDRED}
           </div>
         </div>
-        {/* <RangeSliderDecLiq
+        <RangeSliderDecLiq
           decreaseValue={props.removePercentage}
           setRemovePercentage={props.setRemovePercentage}
-        /> */}
+        />
       </div>
       <div className="border border-text-800 bg-card-200 rounded-2xl	py-5  mt-3">
         <div className="bg-card-500">
@@ -185,7 +185,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             </p>
             <p className="ml-auto flex gap-2 items-center">
               <span className="font-body4">
-                {props.remove.x ? nFormatterWithLesserNumber(props.remove.x) : 0}
+                {props.remove?.x ? nFormatterWithLesserNumber(props.remove?.x) : 0}
               </span>
               <span className="font-body4">{tEZorCTEZtoUppercase(props.tokenIn.symbol)}</span>
               <span>
@@ -213,7 +213,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             </p>
             <p className="ml-auto flex gap-2 items-center">
               <span className="font-body4">
-                {props.remove.y ? nFormatterWithLesserNumber(props.remove.y) : 0}
+                {props.remove?.y ? nFormatterWithLesserNumber(props.remove?.y) : 0}
               </span>
               <span className="font-body4">{tEZorCTEZtoUppercase(props.tokenOut.symbol)}</span>
               <span>
@@ -240,7 +240,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
               {tEZorCTEZtoUppercase(props.tokenIn.symbol)} fees earned
             </p>
             <p className="ml-auto flex gap-2 items-center">
-              <span className="font-body4">{selectedPosition.fees.x.toFixed(2)}</span>
+              <span className="font-body4">{selectedPosition.fees?.x.toFixed(2)}</span>
 
               <span>
                 {" "}
@@ -265,7 +265,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
               {tEZorCTEZtoUppercase(props.tokenOut.symbol)} fees earned
             </p>
             <p className="ml-auto flex gap-2 items-center">
-              <span className="font-body4">{selectedPosition.fees.y.toFixed(2)}</span>
+              <span className="font-body4">{selectedPosition.fees?.y.toFixed(2)}</span>
 
               <span>
                 {" "}
@@ -288,6 +288,9 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
           <div className="border-t border-text-800/[0.5] mb-3"></div>
         </div>
       </div>
+      
+       */}
+
       <div className="mt-4"> {DecreaseButton}</div>
     </>
   );
