@@ -48,7 +48,6 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
-
   const DecreaseButton = useMemo(() => {
     if (!walletAddress) {
       return (
@@ -75,7 +74,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
         </Button>
       );
     }
-  }, [props.removePercentage]);
+  }, [props.removePercentage, walletAddress]);
 
   useEffect(() => {
     if (props.removePercentage) {
@@ -271,7 +270,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
         </div>
       </div>
 
-      {/* <div className="mt-4"> {DecreaseButton}</div> */}
+      <div className="mt-4"> {DecreaseButton}</div>
     </>
   );
 }
