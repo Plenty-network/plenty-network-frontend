@@ -10,7 +10,7 @@ import { getEpochData } from "../../src/redux/epoch/epoch";
 import { AppDispatch, store, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
-import { fetchWallet, walletConnection } from "../../src/redux/wallet/wallet";
+import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
 
 const Bribes: NextPage = () => {
@@ -28,7 +28,9 @@ const Bribes: NextPage = () => {
   const initialLpPriceCall = useRef<boolean>(true);
   const initialRewardsAprCall = useRef<boolean>(true);
   const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
-  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
+  const rewardsAprEstimateError = useAppSelector(
+    (state) => state.rewardsApr.rewardsAprEstimateError
+  );
 
   useEffect(() => {
     dispatch(fetchWallet());

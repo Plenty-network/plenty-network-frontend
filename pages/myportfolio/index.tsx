@@ -7,7 +7,7 @@ import playIcon from "../../src/assets/icon/pools/playIcon.svg";
 import { useEffect, useState, useMemo, useRef } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { connect, useDispatch } from "react-redux";
-import { AppDispatch, store, useAppSelector } from "../../src/redux";
+import { AppDispatch, useAppSelector } from "../../src/redux";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
@@ -88,13 +88,13 @@ import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced"
 import { getPoolsRewardsData, getPositionsData } from "../../src/api/portfolio/pools";
 import { fetchTvlStatsData } from "../../src/redux/myPortfolio/tvl";
 import { fetchVotesStatsData } from "../../src/redux/myPortfolio/votesStats";
-import { VideoModal } from "../../src/components/Modal/videoModal";
+
 import { isMobile } from "react-device-detect";
 import { PortfolioDropdown } from "../../src/components/PortfolioSection";
 import nFormatter, { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
 import { tzktExplorer } from "../../src/common/walletconnect";
 import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
-import { PoolsV3TablePosition } from "../../src/components/PoolsV3Positions/poolsTable";
+//import { PoolsV3TablePosition } from "../../src/components/PoolsV3Positions/poolsTable";
 import { getPositionsAll } from "../../src/api/v3/positions";
 import { IV3PositionObject } from "../../src/api/v3/types";
 import { collectFees } from "../../src/operations/v3/fee";
@@ -1940,13 +1940,14 @@ function MyPortfolio(props: any) {
               ))}
             {activeStateTab === MyPortfolioHeader.Poolsv3 &&
               (activeSection === MyPortfolioSection.Positions ? (
-                <PoolsV3TablePosition
-                  className="md:px-5 md:py-4   py-4"
-                  poolsPosition={poolsv3Position.data}
-                  handleCollectFeeOperation={handleCollectFeeOperation}
-                  isfetched={poolsv3Position.isfetched}
-                />
+                <div></div>
               ) : (
+                // <PoolsV3TablePosition
+                //   className="md:px-5 md:py-4   py-4"
+                //   poolsPosition={poolsv3Position.data}
+                //   handleCollectFeeOperation={handleCollectFeeOperation}
+                //   isfetched={poolsv3Position.isfetched}
+                // />
                 <>
                   <div className="flex z-10 md:px-[25px] px-4 bg-sideBar md:sticky top-[58px] pt-5">
                     <p>
