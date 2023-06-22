@@ -313,11 +313,18 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
         accessor: (x: any) => (
           <div
-            className="bg-primary-500/10 md:w-[151px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
-            onClick={() => {
-              dispatch(setSelectedPosition(x));
-              props.handleCollectFeeOperation();
-            }}
+            className={clsx(
+              x.feesDollar.isEqualTo(0) ? "cursor-not-allowed" : "cursor-pointer",
+              "bg-primary-500/10 md:w-[151px] w-[100px]   text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
+            )}
+            onClick={
+              x.feesDollar.isEqualTo(0)
+                ? () => {}
+                : () => {
+                    dispatch(setSelectedPosition(x));
+                    props.handleCollectFeeOperation();
+                  }
+            }
           >
             collect fees
           </div>

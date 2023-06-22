@@ -238,8 +238,15 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             <div className="flex text-text-250">
               <span className="font-caption1 pl-1">Min Price</span>
               <span className="font-mobile-f1020 ">
-                ({tEZorCTEZtoUppercase(tokeninorg.symbol)} per{" "}
-                {tEZorCTEZtoUppercase(tokenoutorg.symbol)})
+                (
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? tEZorCTEZtoUppercase(tokenoutorg.symbol)
+                  : tEZorCTEZtoUppercase(tokeninorg.symbol)}{" "}
+                per{" "}
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? tEZorCTEZtoUppercase(tokeninorg.symbol)
+                  : tEZorCTEZtoUppercase(tokenoutorg.symbol)}
+                )
               </span>
             </div>
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
@@ -268,8 +275,15 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             <div className="flex text-text-250 mt-3 sm:mt-0">
               <span className="font-caption1 pl-1">Max Price</span>
               <span className="font-mobile-f1020">
-                ({tEZorCTEZtoUppercase(tokeninorg.symbol)} per{" "}
-                {tEZorCTEZtoUppercase(tokenoutorg.symbol)})
+                (
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? tEZorCTEZtoUppercase(tokenoutorg.symbol)
+                  : tEZorCTEZtoUppercase(tokeninorg.symbol)}{" "}
+                per{" "}
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? tEZorCTEZtoUppercase(tokeninorg.symbol)
+                  : tEZorCTEZtoUppercase(tokenoutorg.symbol)}
+                )
               </span>
             </div>
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">

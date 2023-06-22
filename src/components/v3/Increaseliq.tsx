@@ -217,8 +217,15 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
             <div className="flex text-text-250">
               <span className="font-caption1 pl-1">Min Price</span>
               <span className="font-mobile-f1020 ">
-                ({tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
-                {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
+                (
+                {selectedToken.symbol === props.tokenIn.symbol
+                  ? tEZorCTEZtoUppercase(props.tokenOut.symbol)
+                  : tEZorCTEZtoUppercase(props.tokenIn.symbol)}{" "}
+                per{" "}
+                {selectedToken.symbol === props.tokenIn.symbol
+                  ? tEZorCTEZtoUppercase(props.tokenIn.symbol)
+                  : tEZorCTEZtoUppercase(props.tokenOut.symbol)}
+                )
               </span>
             </div>
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2.5">
@@ -251,8 +258,15 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
             <div className="flex text-text-250 mt-3 sm:mt-0">
               <span className="font-caption1 pl-1">Max Price</span>
               <span className="font-mobile-f1020">
-                ({tEZorCTEZtoUppercase(props.tokenIn.symbol)} per{" "}
-                {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
+                (
+                {selectedToken.symbol === props.tokenIn.symbol
+                  ? tEZorCTEZtoUppercase(props.tokenOut.symbol)
+                  : tEZorCTEZtoUppercase(props.tokenIn.symbol)}{" "}
+                per{" "}
+                {selectedToken.symbol === props.tokenIn.symbol
+                  ? tEZorCTEZtoUppercase(props.tokenIn.symbol)
+                  : tEZorCTEZtoUppercase(props.tokenOut.symbol)}
+                )
               </span>
             </div>
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2.5">

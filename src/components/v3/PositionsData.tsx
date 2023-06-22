@@ -183,8 +183,11 @@ function PositionsData(props: IPositionsProps) {
                     )}
                   </div>
                   <div
-                    className="w-[110px] flex items-center font-subtitle4 text-primary-500 "
-                    onClick={props.handleCollectFeeOperation}
+                    className={clsx(
+                      d.feesDollar.isEqualTo(0) ? "cursor-not-allowed" : "cursor-pointer",
+                      "w-[110px] flex items-center font-subtitle4 text-primary-500 "
+                    )}
+                    onClick={d.feesDollar.isEqualTo(0) ? () => {} : props.handleCollectFeeOperation}
                   >
                     Collect fees
                     <span className=" h-[28px] border-r border-card-700 ml-auto"></span>
