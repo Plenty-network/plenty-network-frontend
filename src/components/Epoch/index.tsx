@@ -158,9 +158,9 @@ export function Epoch(props: IEpochProps) {
                 {!router.pathname.includes("vote")
                   ? epochData[indexOfCurrent]?.epochNumber
                   : selectedEpoch?.epochNumber
-                  ? selectedEpoch.epochNumber
+                  ? selectedEpoch?.epochNumber
                   : epochData[indexOfCurrent]?.epochNumber
-                  ? epochData[indexOfCurrent].epochNumber
+                  ? epochData[indexOfCurrent]?.epochNumber
                   : 0}
                 <span className="font-body2 text-text-250 ml-1">
                   {selectedEpoch?.epochNumber === epochData[indexOfCurrent]?.epochNumber
