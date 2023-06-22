@@ -47,14 +47,14 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
     return dispatch(walletConnection());
   };
 
-  const [currentPrice, setCurrentPrice] = useState();
+  const [currentPrice, setCurrentPrice] = useState<BigNumber>(new BigNumber(0));
   useEffect(() => {
     getRealPriceFromTick(
       selectedPosition.currentTickIndex,
       props.tokenIn.symbol,
       props.tokenOut.symbol
     ).then((res) => {
-      console.log(res, "k");
+      console.log(res.toString(), "k");
       setCurrentPrice(res);
     });
   }, [selectedPosition]);
@@ -221,13 +221,13 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                 {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
               </span>
             </div>
-            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
+            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2.5">
               <div className="font-title3">
                 {selectedToken.symbol === props.tokenIn.symbol
                   ? selectedPosition.minPrice.toFixed(2)
                   : new BigNumber(1).dividedBy(selectedPosition.maxPrice).toFixed(2)}
               </div>
-              <div className="font-subtitle5 text-text-250 mt-[1.5px]">
+              <div className="font-body3 text-text-250 mt-[1.5px]">
                 {" "}
                 $
                 {(
@@ -255,20 +255,53 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                 {tEZorCTEZtoUppercase(props.tokenOut.symbol)})
               </span>
             </div>
-            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
+            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2.5">
               <div className="font-title3">
                 {" "}
-                {selectedToken.symbol === props.tokenIn.symbol
+                {selectedPosition.isMaxPriceInfinity
+                  ? "∞"
+                  : selectedToken.symbol === props.tokenIn.symbol
                   ? selectedPosition.maxPrice.toFixed(2)
                   : new BigNumber(1).dividedBy(selectedPosition.minPrice).toFixed(2)}
               </div>
-              <div className="font-subtitle5 text-text-250 mt-[1.5px]">
+              <div className="font-body3 text-text-250 mt-[1.5px]">
+                $
+                {selectedPosition.isMaxPriceInfinity
+                  ? "--"
+                  : (
+                      Number(
+                        selectedToken.symbol === props.tokenIn.symbol
+                          ? selectedPosition.maxPrice
+                          : new BigNumber(1).dividedBy(selectedPosition.minPrice)
+                      ) *
+                      Number(
+                        tokenPrice[
+                          selectedToken.symbol === props.tokenIn.symbol
+                            ? props.tokenIn.name
+                            : props.tokenOut.name
+                        ]
+                      )
+                    ).toFixed(2)}
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className="flex text-text-250 mt-3 sm:mt-0">
+              <span className="font-caption1 pl-1">Current price</span>
+            </div>
+            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2.5">
+              <div className="font-title3">
+                {selectedToken.symbol === props.tokenIn.symbol
+                  ? nFormatterWithLesserNumber(currentPrice)
+                  : nFormatterWithLesserNumber(new BigNumber(1).dividedBy(currentPrice))}
+              </div>
+              <div className="font-body3 text-text-250 mt-[1.5px]">
                 $
                 {(
                   Number(
                     selectedToken.symbol === props.tokenIn.symbol
-                      ? selectedPosition.maxPrice
-                      : new BigNumber(1).dividedBy(selectedPosition.minPrice)
+                      ? currentPrice
+                      : new BigNumber(1).dividedBy(currentPrice)
                   ) *
                   Number(
                     tokenPrice[
@@ -279,15 +312,6 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                   )
                 ).toFixed(2)}
               </div>
-            </div>
-          </div>
-          <div>
-            <div className="flex text-text-250 mt-3 sm:mt-0">
-              <span className="font-caption1 pl-1">Current price</span>
-            </div>
-            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
-              <div className="font-title3">820.63</div>
-              <div className="font-subtitle5 text-text-250 mt-[1.5px]">$23.38</div>
             </div>
           </div>
         </div>

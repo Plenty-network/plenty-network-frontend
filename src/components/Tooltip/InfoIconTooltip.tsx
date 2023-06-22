@@ -16,7 +16,6 @@ export function InfoIconToolTip(props: IInfoIconToolTipProps) {
       <ToolTip
         classNameAncorToolTip="pushtoCenter"
         id={`info${randomId}`}
-        position={Position.top}
         message={""}
         toolTipChild={
           props.toolTipChild ? (

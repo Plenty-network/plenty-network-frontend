@@ -44,7 +44,7 @@ export function PopUpModal(props: IPopUpModalProps) {
       <div
         id="popuploadermain"
         className={clsx(
-          "broder relative border-popUpNotification  max-w-[460px] h-auto overflow-y-auto overflow-x-hidden bg-sideBar   border flex  flex-col   py-5",
+          "broder modalManage relative border-popUpNotification  max-w-[460px] h-auto overflow-y-auto overflow-x-hidden bg-sideBar   border flex  flex-col   py-5",
           props.title === "Select Token" && "h-[576px] ",
           props.Name === "Manage" ? "px-0 py-3" : "py-5 px-3 md:px-5",
           props.Name === "video"
