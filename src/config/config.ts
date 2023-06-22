@@ -115,7 +115,7 @@ const Config: IConfig = {
     testnet: {},
   },
   ROUTER: {
-    mainnet: "KT1Bc1cUsUuzbL8Ws2MLUsNkcYFGA4h4P6Kw",
+    mainnet: "KT1Kg1yxbettARbgvBMNtZLT6GkZcZsDdZny",
     testnet: "KT1CWvM4nLoyHBGKkGBKjnPNTNLzoJ9JpAW3",
   },
 
