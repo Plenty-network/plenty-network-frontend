@@ -47,15 +47,16 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
 
   const [currentPrice, setCurrentPrice] = useState<BigNumber>(new BigNumber(0));
   useEffect(() => {
-    console.log("selectedposition", selectedPosition, props.tokenIn.symbol, props.tokenOut.symbol);
-    getRealPriceFromTick(
-      selectedPosition.currentTickIndex,
-      props.tokenIn.symbol,
-      props.tokenOut.symbol
-    ).then((res) => {
-      console.log(res.toString(), "k");
-      setCurrentPrice(res);
-    });
+    if (selectedPosition.currentTickIndex) {
+      getRealPriceFromTick(
+        selectedPosition.currentTickIndex,
+        props.tokenIn.symbol,
+        props.tokenOut.symbol
+      ).then((res) => {
+        console.log(res.toString(), "k");
+        setCurrentPrice(res);
+      });
+    }
   }, [selectedPosition.currentTickIndex]);
   const IncreaseButton = useMemo(() => {
     if (!walletAddress) {
@@ -329,7 +330,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
           </div>
         </div>
       </div>
-      <IncreaseLiquidityInputV3
+      {/* <IncreaseLiquidityInputV3
         tokenIn={props.tokenIn}
         tokenOut={props.tokenOut}
         firstTokenAmount={props.firstTokenAmount}
@@ -338,7 +339,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
         setSecondTokenAmount={props.setSecondTokenAmount}
         setFirstTokenAmount={props.setFirstTokenAmount}
         tokenPrice={tokenPrice}
-      />
+      /> */}
       <div className="mt-4"> {IncreaseButton}</div>
     </>
   );
