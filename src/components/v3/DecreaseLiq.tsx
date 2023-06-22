@@ -20,6 +20,7 @@ import { RangeSliderDecLiq } from "./RangeSliderDecrease";
 import { ActivePopUp } from "./ManageTabV3";
 import { calculateTokensForRemoveLiquidity } from "../../api/v3/positions";
 import { BalanceNat } from "../../api/v3/types";
+import { handleClientScriptLoad } from "next/script";
 
 interface IDecLiquidityProp {
   tokenIn: tokenParameterLiquidity;
@@ -47,6 +48,10 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
+  };
+  const handleRemove = () => {
+    props.setShow(true);
+    props.setScreen(ActivePopUp.ConfirmExisting);
   };
   // const DecreaseButton = useMemo(() => {
   //   if (!walletAddress) {
@@ -267,11 +272,15 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
           <div className="border-t border-text-800/[0.5] mb-3"></div>
         </div>
       </div>
-
-      <Button onClick={connectTempleWallet} color={"primary"}>
-        Connect wallet
-      </Button>
-
+      {walletAddress == null ? (
+        <Button onClick={connectTempleWallet} color={"primary"}>
+          Connect wallet
+        </Button>
+      ) : (
+        <Button onClick={handleRemove} color={"primary"}>
+          Remove
+        </Button>
+      )}
       {/* <div className="mt-4"> {DecreaseButton}</div> */}
     </>
   );
