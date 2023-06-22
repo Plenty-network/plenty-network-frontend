@@ -101,6 +101,7 @@ export default function Vote() {
   const rewardsAprEstimateError = useAppSelector(
     (state) => state.rewardsApr.rewardsAprEstimateError
   );
+  const epochError = useAppSelector((state) => state.epoch).epochFetchError;
   var sum = 0;
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
@@ -178,13 +179,22 @@ export default function Vote() {
     // });
   }, []);
   useEffect(() => {
+    if (epochError) {
+      dispatch(getEpochData());
+    }
+  }, [epochError]);
+  useEffect(() => {
     dispatch(setbannerClicked(false));
     if (!(localStorage.getItem(USERADDRESS) === userAddress)) {
       localStorage.setItem(USERADDRESS, userAddress);
     }
   }, []);
   useEffect(() => {
-    if (selectedEpoch?.epochNumber) {
+    console.log(
+      "epochNumber",
+      selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
+    );
+    if (selectedEpoch?.epochNumber && Object.keys(tokenPrice).length !== 0) {
       setVoteData({} as { [id: string]: IVotePageData });
       setSelectedPools([] as ISelectedPool[]);
       setTotalVotingPower(0);
@@ -204,7 +214,13 @@ export default function Vote() {
         setSumofVotes(sum);
       });
     }
-  }, [userAddress, selectedDropDown.tokenId, selectedEpoch?.epochNumber, selectednft.tokenId]);
+  }, [
+    userAddress,
+    selectedDropDown.tokenId,
+    selectedEpoch?.epochNumber,
+    selectednft.tokenId,
+    tokenPrice,
+  ]);
   useEffect(() => {
     if (castVoteOperation) {
       setVoteData({} as { [id: string]: IVotePageData });

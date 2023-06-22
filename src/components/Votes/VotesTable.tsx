@@ -518,7 +518,7 @@ export function VotesTable(props: IVotesTableProps) {
         <Table<any>
           columns={
             isTablet
-              ? currentEpoch.epochNumber === selectedEpoch.epochNumber
+              ? currentEpoch?.epochNumber === selectedEpoch?.epochNumber
                 ? props.selectedDropDown.tokenId == ""
                   ? desktopcolumnsNFT
                   : props.sumOfVotes === 100
@@ -527,7 +527,7 @@ export function VotesTable(props: IVotesTableProps) {
                 : desktopcolumns
               : isMobile
               ? mobilecolumns
-              : currentEpoch.epochNumber === selectedEpoch.epochNumber
+              : currentEpoch?.epochNumber === selectedEpoch?.epochNumber
               ? props.selectedDropDown.tokenId == ""
                 ? desktopcolumnsNFT
                 : props.sumOfVotes === 100

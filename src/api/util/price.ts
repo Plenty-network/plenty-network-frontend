@@ -103,33 +103,16 @@ export const getTokenPrices = async (): Promise<{
   tokenPrice: { [id: string]: number };
 }> => {
   try {
-    const pricesResponse = await axios
-      .get("https://api.teztools.io/token/prices", { timeout: 3000 })
-      .then((resp) => resp.data)
-      .catch((err) => {
-        console.log(err);
-        return { contracts: [] };
-      });
-    const tokenPriceResponse = pricesResponse;
-
     const tokenPrice: { [id: string]: number } = {};
 
-    const indexerPriceResponse = await axios
-      .get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/prices`)
-      .then((resp) => resp.data)
-      .catch((err) => {
-        console.log(err);
-        return [];
-      });
-    const indexerPricesData = indexerPriceResponse;
+    const indexerPriceResponse = await axios.get(
+      `${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/prices`
+    );
 
-    for( const x of tokenPriceResponse.contracts){
-      tokenPrice[x.symbol] = Number(x.usdValue);
-    }
+    const indexerPricesData = indexerPriceResponse.data;
 
-    for( const x of indexerPricesData){
-      if(Number(x.price) !== 0)
-      tokenPrice[x.token] = Number(x.price);
+    for (const x of indexerPricesData) {
+      if (Number(x.price) !== 0) tokenPrice[x.token] = Number(x.price);
     }
 
     return {
