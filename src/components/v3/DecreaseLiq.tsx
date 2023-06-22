@@ -40,14 +40,14 @@ interface IDecLiquidityProp {
   removePercentage: number;
 }
 export default function DecreaseLiq(props: IDecLiquidityProp) {
-  // const tokens = useAppSelector((state) => state.config.tokens);
-  // const walletAddress = useAppSelector((state) => state.wallet.address);
+  const tokens = useAppSelector((state) => state.config.tokens);
+  const walletAddress = useAppSelector((state) => state.wallet.address);
 
-  // const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
-  // const dispatch = useDispatch<AppDispatch>();
-  // const connectTempleWallet = () => {
-  //   return dispatch(walletConnection());
-  // };
+  const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
+  const dispatch = useDispatch<AppDispatch>();
+  const connectTempleWallet = () => {
+    return dispatch(walletConnection());
+  };
   // enum DecreasePercentage {
   //   TWENTYFIVE = "25%",
   //   FIFTY = "50%",
@@ -95,22 +95,22 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
   //   }
   // }, [props, props.removePercentage]);
 
-  // useEffect(() => {
-  //   if (props.removePercentage) {
-  //     calculateTokensForRemoveLiquidity(
-  //       Number(props.removePercentage),
-  //       props.tokenIn.symbol,
-  //       props.tokenOut.symbol,
-  //       selectedPosition
-  //     ).then((res) => {
-  //       props.setRemove(res);
-  //     });
-  //   }
-  // }, [props.removePercentage]);
+  useEffect(() => {
+    if (props.removePercentage) {
+      calculateTokensForRemoveLiquidity(
+        Number(props.removePercentage),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        selectedPosition
+      ).then((res) => {
+        props.setRemove(res);
+      });
+    }
+  }, [props.removePercentage]);
 
   return (
     <>
-      {/* <div className="border border-text-800 bg-card-200 rounded-2xl	py-5 px-4 mt-5">
+      <div className="border border-text-800 bg-card-200 rounded-2xl	py-5 px-4 mt-5">
         <div className="flex gap-1 font-title3">
           Amount
           <div className="relative top-[2px]  cursor-pointer">
@@ -135,7 +135,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             )}
             onClick={() => props.setRemovePercentage(25)}
           >
-            {DecreasePercentage.TWENTYFIVE}
+            25%
           </div>
           <div
             className={clsx(
@@ -146,7 +146,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             )}
             onClick={() => props.setRemovePercentage(50)}
           >
-            {DecreasePercentage.FIFTY}
+            50%
           </div>
           <div
             className={clsx(
@@ -157,7 +157,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             )}
             onClick={() => props.setRemovePercentage(75)}
           >
-            {DecreasePercentage.SEVEENTYFIVE}
+            75%
           </div>
           <div
             className={clsx(
@@ -168,7 +168,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             )}
             onClick={() => props.setRemovePercentage(100)}
           >
-            {DecreasePercentage.HUNDRED}
+            100%
           </div>
         </div>
         <RangeSliderDecLiq
@@ -288,8 +288,6 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
           <div className="border-t border-text-800/[0.5] mb-3"></div>
         </div>
       </div>
-      
-       */}
 
       {/* <div className="mt-4"> {DecreaseButton}</div> */}
     </>
