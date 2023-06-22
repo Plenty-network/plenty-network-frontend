@@ -5,11 +5,10 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { getBalanceFromTzkt, getTezBalance } from "../../api/util/balance";
 import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
-import playBtn from "../../assets/icon/common/playBtn.svg";
 import { tzktExplorer } from "../../common/walletconnect";
-import { AppDispatch, useAppDispatch, useAppSelector } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../redux";
 import ConfirmTransaction from "../ConfirmTransaction";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import { tokenParameterLiquidity } from "../Liquidity/types";
 import { PopUpModal } from "../Modal/popupModal";
 import { VideoModal } from "../Modal/videoModal";
 import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
@@ -391,7 +390,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
                 <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
               </p>
             </div>
-            <IncreaseDecreaseLiqMain
+            {/* <IncreaseDecreaseLiqMain
               setActiveStateIncDec={setActiveStateIncDec}
               activeStateIncDec={activeStateIncDec}
               firstTokenAmount={firstTokenAmountLiq}
@@ -407,7 +406,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
               userBalances={userBalances}
               setSecondTokenAmount={setSecondTokenAmountLiq}
               setFirstTokenAmount={setFirstTokenAmountLiq}
-            />
+            /> */}
           </div>
         ) : null}
       </PopUpModal>
