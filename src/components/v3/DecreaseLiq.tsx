@@ -1,5 +1,5 @@
 import { tokenIcons } from "../../constants/tokensList";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import { tokenParameterLiquidity } from "../Liquidity/types";
 
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import clsx from "clsx";
@@ -96,14 +96,16 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
   }, [props, props.removePercentage]);
 
   useEffect(() => {
-    calculateTokensForRemoveLiquidity(
-      Number(props.removePercentage),
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
-      selectedPosition
-    ).then((res) => {
-      props.setRemove(res);
-    });
+    if (props.removePercentage) {
+      calculateTokensForRemoveLiquidity(
+        Number(props.removePercentage),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        selectedPosition
+      ).then((res) => {
+        props.setRemove(res);
+      });
+    }
   }, [props.removePercentage]);
 
   return (
@@ -169,10 +171,10 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             {DecreasePercentage.HUNDRED}
           </div>
         </div>
-        <RangeSliderDecLiq
+        {/* <RangeSliderDecLiq
           decreaseValue={props.removePercentage}
           setRemovePercentage={props.setRemovePercentage}
-        />
+        /> */}
       </div>
       <div className="border border-text-800 bg-card-200 rounded-2xl	py-5  mt-3">
         <div className="bg-card-500">
