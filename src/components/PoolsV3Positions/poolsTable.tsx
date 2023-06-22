@@ -452,7 +452,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
           NoData={NoData}
         />
       </div>
-      {showLiquidityModal && (
+      {/* {showLiquidityModal && (
         <ManagePoolsV3
           tokenIn={tokenIn}
           tokenOut={tokenOut}
@@ -462,7 +462,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
           activeState={activeState}
           setShowLiquidityModalPopup={setShowLiquidityModal}
         />
-      )}
+      )} */}
     </>
   );
 }
