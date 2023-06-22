@@ -63,34 +63,34 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
       </div>
 
       {props.activeStateIncDec === ActiveIncDecState.Increase ? (
-        <></>
-      ) : (
-        // <IncreaseLiq
-        //   setScreen={props.setScreen}
-        //   firstTokenAmount={props.firstTokenAmount}
-        //   secondTokenAmount={props.secondTokenAmount}
-        //   tokenIn={props.tokenIn}
-        //   tokenOut={props.tokenOut}
-        //   setShow={props.setShow}
-        //   userBalances={props.userBalances}
-        //   setSecondTokenAmount={props.setSecondTokenAmount}
-        //   setFirstTokenAmount={props.setFirstTokenAmount}
-        // />
-        <DecreaseLiq
-          setShow={props.setShow}
+        <IncreaseLiq
           setScreen={props.setScreen}
           firstTokenAmount={props.firstTokenAmount}
           secondTokenAmount={props.secondTokenAmount}
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}
-          setRemove={props.setRemove}
-          remove={props.remove}
+          setShow={props.setShow}
           userBalances={props.userBalances}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}
-          removePercentage={props.removePercentage}
-          setRemovePercentage={props.setRemovePercentage}
         />
+      ) : (
+        <></>
+        // <DecreaseLiq
+        //   setShow={props.setShow}
+        //   setScreen={props.setScreen}
+        //   firstTokenAmount={props.firstTokenAmount}
+        //   secondTokenAmount={props.secondTokenAmount}
+        //   tokenIn={props.tokenIn}
+        //   tokenOut={props.tokenOut}
+        //   setRemove={props.setRemove}
+        //   remove={props.remove}
+        //   userBalances={props.userBalances}
+        //   setSecondTokenAmount={props.setSecondTokenAmount}
+        //   setFirstTokenAmount={props.setFirstTokenAmount}
+        //   removePercentage={props.removePercentage}
+        //   setRemovePercentage={props.setRemovePercentage}
+        // />
       )}
     </>
   );
