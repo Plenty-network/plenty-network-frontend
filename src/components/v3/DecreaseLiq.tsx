@@ -48,12 +48,6 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
-  // enum DecreasePercentage {
-  //   TWENTYFIVE = "25%",
-  //   FIFTY = "50%",
-  //   SEVEENTYFIVE = "75%",
-  //   HUNDRED = "100%",
-  // }
 
   const DecreaseButton = useMemo(() => {
     if (!walletAddress) {
@@ -62,27 +56,13 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
           Connect wallet
         </Button>
       );
-    } else if (props.removePercentage == 0) {
+    } else if (props.removePercentage === 0) {
       return (
         <Button onClick={() => null} color={"disabled"}>
           Remove
         </Button>
       );
-    }
-    // else if (
-    //   walletAddress &&
-    //   ((props.firstTokenAmount &&
-    //     props.firstTokenAmount > Number(props.userBalances[props.tokenIn.name])) ||
-    //     (props.secondTokenAmount && props.secondTokenAmount) >
-    //       Number(props.userBalances[props.tokenOut.name]))
-    // ) {
-    //   return (
-    //     <Button onClick={() => null} color={"disabled"}>
-    //       Insufficient balance
-    //     </Button>
-    //   );
-    // }
-    else {
+    } else {
       return (
         <Button
           color={"primary"}
@@ -95,7 +75,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
         </Button>
       );
     }
-  }, [props, props.removePercentage]);
+  }, [props.removePercentage]);
 
   useEffect(() => {
     if (props.removePercentage) {
