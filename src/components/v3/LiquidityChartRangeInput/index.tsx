@@ -173,10 +173,11 @@ export default function LiquidityChartRangeInput({
   return (
     <div style={{ minHeight: "200px" }}>
       {isUninitialized ? (
-        <div className="flex items-center pt-[100px]  justify-center">
-          Your position will appear here.
-        </div>
-      ) : isLoadingData ? (
+        "Your position will appear here."
+      ) : // <div className="flex items-center pt-[100px]  justify-center">
+      //   Your position will appear here.
+      // </div>
+      isLoadingData ? (
         <div className="justify-center items-center  flex h-[180px]">
           <div className="spinner"></div>
         </div>
