@@ -390,7 +390,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
                 <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
               </p>
             </div>
-            {/* <IncreaseDecreaseLiqMain
+            <IncreaseDecreaseLiqMain
               setActiveStateIncDec={setActiveStateIncDec}
               activeStateIncDec={activeStateIncDec}
               firstTokenAmount={firstTokenAmountLiq}
@@ -406,7 +406,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
               userBalances={userBalances}
               setSecondTokenAmount={setSecondTokenAmountLiq}
               setFirstTokenAmount={setFirstTokenAmountLiq}
-            /> */}
+            />
           </div>
         ) : null}
       </PopUpModal>

@@ -63,18 +63,19 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
       </div>
 
       {props.activeStateIncDec === ActiveIncDecState.Increase ? (
-        <IncreaseLiq
-          setScreen={props.setScreen}
-          firstTokenAmount={props.firstTokenAmount}
-          secondTokenAmount={props.secondTokenAmount}
-          tokenIn={props.tokenIn}
-          tokenOut={props.tokenOut}
-          setShow={props.setShow}
-          userBalances={props.userBalances}
-          setSecondTokenAmount={props.setSecondTokenAmount}
-          setFirstTokenAmount={props.setFirstTokenAmount}
-        />
+        <></>
       ) : (
+        // <IncreaseLiq
+        //   setScreen={props.setScreen}
+        //   firstTokenAmount={props.firstTokenAmount}
+        //   secondTokenAmount={props.secondTokenAmount}
+        //   tokenIn={props.tokenIn}
+        //   tokenOut={props.tokenOut}
+        //   setShow={props.setShow}
+        //   userBalances={props.userBalances}
+        //   setSecondTokenAmount={props.setSecondTokenAmount}
+        //   setFirstTokenAmount={props.setFirstTokenAmount}
+        // />
         <DecreaseLiq
           setShow={props.setShow}
           setScreen={props.setScreen}
