@@ -55,45 +55,47 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
   //   HUNDRED = "100%",
   // }
 
-  // const DecreaseButton = useMemo(() => {
-  //   if (!walletAddress) {
-  //     return (
-  //       <Button onClick={connectTempleWallet} color={"primary"}>
-  //         Connect wallet
-  //       </Button>
-  //     );
-  //   } else if (props.removePercentage == 0) {
-  //     return (
-  //       <Button onClick={() => null} color={"disabled"}>
-  //         Remove
-  //       </Button>
-  //     );
-  //   } else if (
-  //     walletAddress &&
-  //     ((props.firstTokenAmount &&
-  //       props.firstTokenAmount > Number(props.userBalances[props.tokenIn.name])) ||
-  //       (props.secondTokenAmount && props.secondTokenAmount) >
-  //         Number(props.userBalances[props.tokenOut.name]))
-  //   ) {
-  //     return (
-  //       <Button onClick={() => null} color={"disabled"}>
-  //         Insufficient balance
-  //       </Button>
-  //     );
-  //   } else {
-  //     return (
-  //       <Button
-  //         color={"primary"}
-  //         onClick={() => {
-  //           props.setShow(true);
-  //           props.setScreen(ActivePopUp.ConfirmExisting);
-  //         }}
-  //       >
-  //         Remove
-  //       </Button>
-  //     );
-  //   }
-  // }, [props, props.removePercentage]);
+  const DecreaseButton = useMemo(() => {
+    if (!walletAddress) {
+      return (
+        <Button onClick={connectTempleWallet} color={"primary"}>
+          Connect wallet
+        </Button>
+      );
+    } else if (props.removePercentage == 0) {
+      return (
+        <Button onClick={() => null} color={"disabled"}>
+          Remove
+        </Button>
+      );
+    }
+    // else if (
+    //   walletAddress &&
+    //   ((props.firstTokenAmount &&
+    //     props.firstTokenAmount > Number(props.userBalances[props.tokenIn.name])) ||
+    //     (props.secondTokenAmount && props.secondTokenAmount) >
+    //       Number(props.userBalances[props.tokenOut.name]))
+    // ) {
+    //   return (
+    //     <Button onClick={() => null} color={"disabled"}>
+    //       Insufficient balance
+    //     </Button>
+    //   );
+    // }
+    else {
+      return (
+        <Button
+          color={"primary"}
+          onClick={() => {
+            props.setShow(true);
+            props.setScreen(ActivePopUp.ConfirmExisting);
+          }}
+        >
+          Remove
+        </Button>
+      );
+    }
+  }, [props, props.removePercentage]);
 
   useEffect(() => {
     if (props.removePercentage) {
@@ -289,7 +291,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
         </div>
       </div>
 
-      {/* <div className="mt-4"> {DecreaseButton}</div> */}
+      <div className="mt-4"> {DecreaseButton}</div>
     </>
   );
 }
