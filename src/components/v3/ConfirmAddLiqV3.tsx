@@ -33,8 +33,7 @@ interface IConfirmAddLiquidityProps {
   tokenPrice: {
     [id: string]: number;
   };
-  pnlpEstimates: string;
-  sharePool: string;
+
   slippage: number;
   handleAddLiquidityOperation: () => void;
   topLevelSelectedToken: tokenParameterLiquidity;

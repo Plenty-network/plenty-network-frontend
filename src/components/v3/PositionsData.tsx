@@ -1,7 +1,6 @@
 import Image from "next/image";
 import * as React from "react";
-import { BigNumber } from "bignumber.js";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
@@ -12,7 +11,7 @@ import clsx from "clsx";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { ActivePopUp } from "./ManageTabV3";
-import { getPositions, getPositionsAll } from "../../api/v3/positions";
+import { getPositions } from "../../api/v3/positions";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { IV3PositionObject } from "../../api/v3/types";
 import { setSelectedPosition } from "../../redux/poolsv3";

@@ -3,20 +3,16 @@ import Image from "next/image";
 import * as React from "react";
 import add from "../../../src/assets/icon/pools/addIcon.svg";
 import wallet from "../../../src/assets/icon/pools/wallet.svg";
-import { estimateOtherTokenAmount } from "../../api/liquidity";
-import nFormatter, {
+import {
   changeSource,
-  imageExists,
   nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
-import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
+
 import { useAppSelector } from "../../redux";
-import fallback from "../../../src/assets/icon/pools/fallback.png";
-import lock from "../../../src/assets/icon/poolsv3/Lock.svg";
 import { tokenIcons } from "../../constants/tokensList";
 import fromExponential from "from-exponential";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import { tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
 import { estimateTokenXFromTokenY, estimateTokenYFromTokenX } from "../../api/v3/liquidity";
 

@@ -15,29 +15,24 @@ import {
   TOKEN_A,
   TOKEN_B,
 } from "../../constants/localStorage";
-import { AppDispatch, useAppDispatch, useAppSelector } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../redux";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
 
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import ConfirmTransaction from "../ConfirmTransaction";
 import { Flashtype } from "../FlashScreen";
-import Liquidity from "../Liquidity";
 import PositionsPopup from "./Positions";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
-import { PopUpModal } from "../Modal/popupModal";
+import { tokenParameterLiquidity } from "../Liquidity/types";
 import { VideoModal } from "../Modal/videoModal";
-import { ActiveLiquidity, ManageLiquidityHeader } from "../Pools/ManageLiquidityHeader";
-import { StakingScreenType } from "../Pools/StakingScreen";
+import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
 import TransactionSubmitted from "../TransactionSubmitted";
 import LiquidityV3 from "./LiquidityV3";
 import PriceRangeV3 from "./PriceRange";
 import clsx from "clsx";
 import Button from "../Button/Button";
-import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
-import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
 import ConfirmAddLiquidityv3 from "./ConfirmAddLiqV3";
 import {
   setIsLoading,
@@ -119,14 +114,12 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   const [transactionId, setTransactionId] = useState("");
 
   const dispatch = useAppDispatch();
-  const [pnlpEstimates, setPnlpEstimates] = useState("");
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
 
   const [remove, setRemove] = useState({} as BalanceNat);
-  const [sharePool, setSharePool] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
 
@@ -951,8 +944,6 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                   tokenIn={props.tokenA}
                   tokenOut={props.tokenB}
                   tokenPrice={tokenPrice}
-                  pnlpEstimates={pnlpEstimates}
-                  sharePool={sharePool}
                   slippage={slippage}
                   handleAddLiquidityOperation={handleAddLiquidityOperation}
                   topLevelSelectedToken={topLevelSelectedToken}

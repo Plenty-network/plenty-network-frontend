@@ -1,14 +1,12 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
-import lock from "../../assets/icon/myPortfolio/purple_lock.svg";
+
 import { BigNumber } from "bignumber.js";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import ply from "../../assets/Tokens/ply.png";
 import Button from "../Button/Button";
 
-import { store, useAppSelector } from "../../redux";
-import { EClaimAllState } from "../Rewards/types";
-import nFormatter, {
+import { useAppSelector } from "../../redux";
+import {
   changeSource,
   nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
@@ -33,8 +31,6 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
   const closeModal = () => {
     props.setShow(false);
   };
-  // const tokenPrice = store.getState().tokenPrice.tokenPrice;
-  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
 
   return props.show ? (
     <PopUpModal onhide={closeModal}>

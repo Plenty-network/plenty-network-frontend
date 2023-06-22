@@ -1,14 +1,8 @@
-import clsx from "clsx";
-import Image from "next/image";
 import * as React from "react";
-
-import { BigNumber } from "bignumber.js";
-import { isMobile } from "react-device-detect";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import { tokenParameterLiquidity } from "../Liquidity/types";
 import IncreaseLiq from "./Increaseliq";
 import { ActiveIncDecState, ActivePopUp } from "./ManageTabV3";
 import DecreaseLiq from "./DecreaseLiq";
-import { useAppSelector } from "../../redux";
 import { BalanceNat } from "../../api/v3/types";
 
 interface IIncreaseDecreaseLiqMainProps {

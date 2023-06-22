@@ -1,15 +1,8 @@
 import Image from "next/image";
 import * as React from "react";
 import { Range, getTrackBackground } from "react-range";
-import plusDisable from "../../assets/icon/vote/plus-disable.svg";
-import minusDisable from "../../assets/icon/vote/minus-disable.svg";
-import plus from "../../assets/icon/vote/plus.svg";
-import minus from "../../assets/icon/vote/minus.svg";
-import { ISelectedPool, IVotePageData } from "../../api/votes/types";
-import { IVotes } from "../../operations/types";
-import { BigNumber } from "bignumber.js";
+
 import clsx from "clsx";
-import { PLY_DECIMAL_MULTIPLIER } from "../../constants/global";
 
 export interface IRangeSliderProps {
   decreaseValue: number;

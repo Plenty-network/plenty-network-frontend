@@ -3,17 +3,15 @@ import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 
 import info from "../../../src/assets/icon/common/infoIcon.svg";
 import clsx from "clsx";
-import nFormatter, {
+import {
   changeSource,
-  imageExists,
   nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useEffect } from "react";
 import Image from "next/image";
-import { BigNumber } from "bignumber.js";
 import { AppDispatch, useAppSelector } from "../../redux";
-import AddLiquidityV3 from "./AddliquidityV3";
+
 import Button from "../Button/Button";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";

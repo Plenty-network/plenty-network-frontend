@@ -1,11 +1,10 @@
 import infoOrange from "../../../src/assets/icon/poolsv3/infoOrange.svg";
 import infoGreen from "../../../src/assets/icon/poolsv3/infoGreen.svg";
 import { tokenIcons } from "../../constants/tokensList";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import { tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
-import nFormatter, {
+import {
   changeSource,
-  imageExists,
   nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
@@ -19,7 +18,6 @@ import { walletConnection } from "../../redux/wallet/wallet";
 import { ActivePopUp } from "./ManageTabV3";
 import IncreaseLiquidityInputV3 from "./IncreaseliqInput";
 import { getRealPriceFromTick } from "../../api/v3/helper";
-import { setcurrentPrice } from "../../redux/poolsv3";
 
 interface IIncLiquidityProp {
   tokenIn: tokenParameterLiquidity;

@@ -24,7 +24,7 @@ import {
 
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import LiquidityChartRangeInput from "./LiquidityChartRangeInput";
-import { calcrealPrice, calcTick } from "../../utils/outSideClickHook";
+
 // 1 -> 0.0001
 
 // 10 -> 0.001

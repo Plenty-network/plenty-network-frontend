@@ -98,6 +98,7 @@ import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
 import { getPositionsAll } from "../../src/api/v3/positions";
 import { IV3PositionObject } from "../../src/api/v3/types";
 import { collectFees } from "../../src/operations/v3/fee";
+import { PoolsV3TablePosition } from "../../src/components/PoolsV3Positions/poolsTable";
 
 export enum MyPortfolioSection {
   Positions = "Positions",
@@ -1940,14 +1941,13 @@ function MyPortfolio(props: any) {
               ))}
             {activeStateTab === MyPortfolioHeader.Poolsv3 &&
               (activeSection === MyPortfolioSection.Positions ? (
-                <div></div>
+                <PoolsV3TablePosition
+                  className="md:px-5 md:py-4   py-4"
+                  poolsPosition={poolsv3Position.data}
+                  handleCollectFeeOperation={handleCollectFeeOperation}
+                  isfetched={poolsv3Position.isfetched}
+                />
               ) : (
-                // <PoolsV3TablePosition
-                //   className="md:px-5 md:py-4   py-4"
-                //   poolsPosition={poolsv3Position.data}
-                //   handleCollectFeeOperation={handleCollectFeeOperation}
-                //   isfetched={poolsv3Position.isfetched}
-                // />
                 <>
                   <div className="flex z-10 md:px-[25px] px-4 bg-sideBar md:sticky top-[58px] pt-5">
                     <p>

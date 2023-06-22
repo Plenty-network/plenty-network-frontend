@@ -1,17 +1,9 @@
 import { BigNumber } from "bignumber.js";
 import Image from "next/image";
 
-import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import clock from "../../../src/assets/icon/poolsv3/settingsClock.svg";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { POOL_TYPE } from "../../../pages/pools";
-import {
-  getBalanceFromTzkt,
-  getPnlpBalance,
-  getStakedBalance,
-  getTezBalance,
-} from "../../api/util/balance";
+import { getBalanceFromTzkt, getTezBalance } from "../../api/util/balance";
 import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import playBtn from "../../assets/icon/common/playBtn.svg";
 import { tzktExplorer } from "../../common/walletconnect";
@@ -20,15 +12,12 @@ import ConfirmTransaction from "../ConfirmTransaction";
 import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
 import { PopUpModal } from "../Modal/popupModal";
 import { VideoModal } from "../Modal/videoModal";
-import { ActiveLiquidity, ManageLiquidityHeader } from "../Pools/ManageLiquidityHeader";
+import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
 import TransactionSubmitted from "../TransactionSubmitted";
 
 import clsx from "clsx";
-import { useDispatch } from "react-redux";
-import { walletConnection } from "../../redux/wallet/wallet";
 
-import { setFullRange, settopLevelSelectedToken } from "../../redux/poolsv3";
 import IncreaseDecreaseLiqMain from "../v3/IncreaseDecreaseliqMain";
 import ConfirmIncreaseLiq from "../v3/Confirmaddliq";
 import ConfirmDecreaseLiq from "../v3/Confirmremoveliq";
@@ -39,11 +28,7 @@ import {
   TOKEN_B,
 } from "../../constants/localStorage";
 import { setIsLoadingWallet } from "../../redux/walletLoading";
-import {
-  increaseLiquidity,
-  LiquidityOperation,
-  removeLiquidity,
-} from "../../operations/v3/liquidity";
+import { increaseLiquidity, removeLiquidity } from "../../operations/v3/liquidity";
 import { Flashtype } from "../FlashScreen";
 import { setFlashMessage } from "../../redux/flashMessage";
 import { BalanceNat } from "../../api/v3/types";
@@ -72,8 +57,6 @@ export enum ActivePopUp {
 export function ManagePoolsV3(props: IManageLiquidityProps) {
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const TOKEN = useAppSelector((state) => state.config.tokens);
-
-  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
 
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
@@ -380,23 +363,23 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
             : "sm:w-[602px] sm:max-w-[602px]",
           "w-[414px] max-w-[414px]  rounded-none sm:rounded-3xl px-4"
         )}
-        footerChild={
-          <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
-            <p className="font-subtitle1 md:text-f16 text-text-150">
-              {props.activeState === ActiveLiquidity.Liquidity &&
-                "Add liquidity, stake, and earn PLY"}
-              {props.activeState === ActiveLiquidity.Staking &&
-                "Add liquidity, stake, and earn PLY"}
-              {props.activeState === ActiveLiquidity.Rewards &&
-                "Add liquidity, stake, and earn PLY"}
-            </p>
-            <Image
-              className="cursor-pointer hover:opacity-90"
-              onClick={() => setShowVideoModal(true)}
-              src={playBtn}
-            />
-          </div>
-        }
+        // footerChild={
+        //   <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
+        //     <p className="font-subtitle1 md:text-f16 text-text-150">
+        //       {props.activeState === ActiveLiquidity.Liquidity &&
+        //         "Add liquidity, stake, and earn PLY"}
+        //       {props.activeState === ActiveLiquidity.Staking &&
+        //         "Add liquidity, stake, and earn PLY"}
+        //       {props.activeState === ActiveLiquidity.Rewards &&
+        //         "Add liquidity, stake, and earn PLY"}
+        //     </p>
+        //     <Image
+        //       className="cursor-pointer hover:opacity-90"
+        //       onClick={() => setShowVideoModal(true)}
+        //       src={playBtn}
+        //     />
+        //   </div>
+        // }
       >
         {screen === ActivePopUp.ManageExisting ? (
           <div>

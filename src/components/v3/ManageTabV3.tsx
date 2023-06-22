@@ -136,13 +136,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [transactionId, setTransactionId] = useState("");
 
   const dispatch = useAppDispatch();
-  const [pnlpEstimates, setPnlpEstimates] = useState("");
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     setShowTransactionSubmitModal(true);
   };
 
-  const [sharePool, setSharePool] = useState("");
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
 
@@ -952,8 +950,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               tokenIn={props.tokenA}
               tokenOut={props.tokenB}
               tokenPrice={tokenPrice}
-              pnlpEstimates={pnlpEstimates}
-              sharePool={sharePool}
               slippage={slippage}
               handleAddLiquidityOperation={handleAddLiquidityOperation}
               topLevelSelectedToken={topLevelSelectedToken}

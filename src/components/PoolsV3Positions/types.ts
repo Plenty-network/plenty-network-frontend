@@ -14,7 +14,6 @@ export interface IManageBtnProps {
   tokenB: string;
   data: IV3PositionObject;
 }
-export interface IBoostProps {}
 export interface IYourLiquidityProps {
   value: BigNumber;
   liquidity: any;

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import * as React from "react";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 
 import Button from "../Button/Button";
 
@@ -9,7 +9,7 @@ import { AppDispatch, useAppSelector } from "../../redux";
 
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import { tokenParameterLiquidity } from "../Liquidity/types";
 import { CircularImageInfo } from "../Pools/Component/CircularImageInfo";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import PositionsTable from "./PositionsTable";

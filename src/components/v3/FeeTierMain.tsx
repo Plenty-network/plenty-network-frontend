@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import Image from "next/image";
 import * as React from "react";
 import { isMobile } from "react-device-detect";
 

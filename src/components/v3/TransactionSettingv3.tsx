@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import info from "../../assets/icon/swap/info.svg";
 import Image from "next/image";
-import Button from "../Button/Button";
 import { useEffect, useRef, useState } from "react";
 import { ERRORMESSAGES } from "../../constants/swap";
 import { useOutsideClick } from "../../utils/outSideClickHook";

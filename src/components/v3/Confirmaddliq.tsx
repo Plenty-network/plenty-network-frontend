@@ -1,14 +1,10 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
-import lock from "../../assets/icon/myPortfolio/purple_lock.svg";
-import { BigNumber } from "bignumber.js";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import ply from "../../assets/Tokens/ply.png";
 import Button from "../Button/Button";
 
-import { store, useAppSelector } from "../../redux";
-import { EClaimAllState } from "../Rewards/types";
-import nFormatter, { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { useAppSelector } from "../../redux";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { ActivePopUp } from "./ManageTabV3";
@@ -30,7 +26,6 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
     props.setShow(false);
   };
 
-  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
 
   return props.show ? (
