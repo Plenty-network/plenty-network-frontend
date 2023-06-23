@@ -82,10 +82,10 @@ function PositionsPopup(props: IPositionsProps) {
                   </div>
                 </ToolTip>
               </div>
-              <div className="text-white rounded-lg text-center	 bg-info-800 flex items-center justify-center w-[90px] h-[44px] ml-3">
+              {/* <div className="text-white rounded-lg text-center	 bg-info-800 flex items-center justify-center w-[90px] h-[44px] ml-3">
                 <Image src={dollarimg} />
                 <span className="ml-1 font-title3">3.45</span>
-              </div>
+              </div> */}
             </div>
           </>
         }

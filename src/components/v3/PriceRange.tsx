@@ -240,7 +240,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
           </div>
           <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
             <div
-              className="w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
+              className="w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-info-600/[0.5]"
               onClick={() =>
                 onLeftRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -290,7 +290,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
               </div>
             </div>
             <div
-              className=" w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
+              className=" w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-info-600/[0.5]"
               onClick={() =>
                 onLeftRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -313,7 +313,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
           </div>
           <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
             <div
-              className="w-[35px] h-[24px] text-white rounded bg-info-600  flex items-center cursor-pointer justify-center"
+              className="w-[35px] h-[24px] text-white rounded bg-info-600  flex items-center cursor-pointer justify-center hover:bg-info-600/[0.5]"
               onClick={() =>
                 onRightRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -363,7 +363,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
               </div>
             </div>
             <div
-              className="w-[34px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center"
+              className="w-[34px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-info-600/[0.5]"
               onClick={() =>
                 onRightRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol

@@ -103,11 +103,11 @@ export default function LiquidityChartRangeInput({
 
       batch(() => {
         // simulate user input for auto-formatting and other validations
-        if ((mode === "handle" || mode === "reset") && leftRangeValue > 0) {
+        if ((mode === "handle" || mode === "reset" || mode === "drag") && leftRangeValue > 0) {
           onLeftRangeInput(leftRangeValue.toFixed(6));
         }
 
-        if ((mode === "handle" || mode === "reset") && rightRangeValue > 0) {
+        if ((mode === "handle" || mode === "reset" || mode === "drag") && rightRangeValue > 0) {
           // todo: remove this check. Upper bound for large numbers
           // sometimes fails to parse to tick.
           if (rightRangeValue < 1e35) {
@@ -116,7 +116,7 @@ export default function LiquidityChartRangeInput({
         }
       });
     },
-    [onLeftRangeInput, onRightRangeInput]
+    [onLeftRangeInput, onRightRangeInput, leftbrush, Bleftbrush, rightbrush, Brightbrush]
   );
 
   interactive = interactive && Boolean(formattedData?.length);

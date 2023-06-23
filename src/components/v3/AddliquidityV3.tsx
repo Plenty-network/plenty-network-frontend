@@ -62,6 +62,20 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       handleLiquidityInput(Number(props.secondTokenAmount).toFixed(4), "tokenIn");
   }, [topLevelSelectedToken]);
 
+  const debounce = (func: any, wait: number | undefined) => {
+    let timeout: NodeJS.Timeout | undefined;
+
+    return function executedFunction(...args: any[]) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  };
+
   React.useEffect(() => {
     Number(props.firstTokenAmount) !== 0 && handleLiquidityInput(props.firstTokenAmount, "tokenIn");
 
@@ -81,10 +95,10 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       dispatch(setInputDisable("false"));
     }
   }, [minTickA, maxTickA, minTickB, maxTickB]);
-  const handleLiquidityInput = async (
+  const handleLiquidityInput = function (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
-  ) => {
+  ) {
     if (input == ".") {
       props.setSecondTokenAmount("0.");
       props.setFirstTokenAmount("0.");
@@ -109,6 +123,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       setSecondLoading(true);
 
       if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
+        //const response = debounce(
         estimateTokenYFromTokenX(
           new BigNumber(input),
           props.tokenIn.symbol,
@@ -121,6 +136,19 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             ? props.setSecondTokenAmount(response)
             : props.setSecondTokenAmount(0);
         });
+
+        // estimateTokenYFromTokenX(
+        //   new BigNumber(input),
+        //   props.tokenIn.symbol,
+        //   props.tokenOut.symbol,
+        //   minTickA,
+        //   maxTickA
+        // ).then((response) => {
+        //   setSecondLoading(false);
+        //   inputDisabled === "false"
+        //     ? props.setSecondTokenAmount(response)
+        //     : props.setSecondTokenAmount(0);
+        // });
       } else {
         estimateTokenXFromTokenY(
           new BigNumber(input),

@@ -48,6 +48,8 @@ export default function Pools(props: IIndexProps) {
   const rewardsAprEstimateError = useAppSelector(
     (state) => state.rewardsApr.rewardsAprEstimateError
   );
+
+  console.log("testing preview link");
   const handleCloseManagePopup = (val: boolean) => {
     setShowLiquidityModal(val);
   };

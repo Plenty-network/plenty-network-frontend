@@ -25,7 +25,7 @@ function TransactionSettingsV3(props: ITransactionSettingsProps) {
 
   const handleSlippage = (input: string | number) => {
     if (input === "") {
-      props.setSlippage(30);
+      props.setSlippage(0);
     } else {
       props.setSlippage(Number(input));
     }
