@@ -62,20 +62,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       handleLiquidityInput(Number(props.secondTokenAmount).toFixed(4), "tokenIn");
   }, [topLevelSelectedToken]);
 
-  const debounce = (func: any, wait: number | undefined) => {
-    let timeout: NodeJS.Timeout | undefined;
-
-    return function executedFunction(...args: any[]) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  };
-
   React.useEffect(() => {
     Number(props.firstTokenAmount) !== 0 && handleLiquidityInput(props.firstTokenAmount, "tokenIn");
 
@@ -95,16 +81,20 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       dispatch(setInputDisable("false"));
     }
   }, [minTickA, maxTickA, minTickB, maxTickB]);
+  const timeout = React.useRef<any>();
   const handleLiquidityInput = function (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
   ) {
+    clearTimeout(timeout.current);
     if (input == ".") {
       props.setSecondTokenAmount("0.");
       props.setFirstTokenAmount("0.");
       return;
     }
     if (input === "" || isNaN(Number(input))) {
+      setSecondLoading(false);
+      setFirstLoading(false);
       props.setSecondTokenAmount("");
       props.setFirstTokenAmount("");
       return;
@@ -124,32 +114,36 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
 
       if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
         //const response = debounce(
-        estimateTokenYFromTokenX(
-          new BigNumber(input),
-          props.tokenIn.symbol,
-          props.tokenOut.symbol,
-          minTickA,
-          maxTickA
-        ).then((response) => {
-          setSecondLoading(false);
-          inputDisabled === "false"
-            ? props.setSecondTokenAmount(response)
-            : props.setSecondTokenAmount(0);
-        });
+        timeout.current = setTimeout(() => {
+          estimateTokenYFromTokenX(
+            new BigNumber(input),
+            props.tokenIn.symbol,
+            props.tokenOut.symbol,
+            minTickA,
+            maxTickA
+          ).then((response) => {
+            setSecondLoading(false);
+            inputDisabled === "false"
+              ? props.setSecondTokenAmount(response)
+              : props.setSecondTokenAmount(0);
+          });
+        }, 600);
       } else {
-        estimateTokenXFromTokenY(
-          new BigNumber(input),
-          props.tokenOut.symbol,
-          props.tokenIn.symbol,
-          minTickB,
-          maxTickB
-        ).then((response) => {
-          setSecondLoading(false);
+        timeout.current = setTimeout(() => {
+          estimateTokenXFromTokenY(
+            new BigNumber(input),
+            props.tokenOut.symbol,
+            props.tokenIn.symbol,
+            minTickB,
+            maxTickB
+          ).then((response) => {
+            setSecondLoading(false);
 
-          inputDisabled === "false"
-            ? props.setSecondTokenAmount(response)
-            : props.setSecondTokenAmount(0);
-        });
+            inputDisabled === "false"
+              ? props.setSecondTokenAmount(response)
+              : props.setSecondTokenAmount(0);
+          });
+        }, 600);
       }
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
@@ -166,32 +160,36 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       }
       setFirstLoading(true);
       if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
-        estimateTokenXFromTokenY(
-          new BigNumber(input),
-          props.tokenIn.symbol,
-          props.tokenOut.symbol,
-          minTickA,
-          maxTickA
-        ).then((response) => {
-          setFirstLoading(false);
+        timeout.current = setTimeout(() => {
+          estimateTokenXFromTokenY(
+            new BigNumber(input),
+            props.tokenIn.symbol,
+            props.tokenOut.symbol,
+            minTickA,
+            maxTickA
+          ).then((response) => {
+            setFirstLoading(false);
 
-          inputDisabled === "false"
-            ? props.setFirstTokenAmount(response)
-            : props.setFirstTokenAmount(0);
-        });
+            inputDisabled === "false"
+              ? props.setFirstTokenAmount(response)
+              : props.setFirstTokenAmount(0);
+          });
+        }, 600);
       } else {
-        estimateTokenYFromTokenX(
-          new BigNumber(input),
-          props.tokenOut.symbol,
-          props.tokenIn.symbol,
-          minTickB,
-          maxTickB
-        ).then((response) => {
-          setFirstLoading(false);
-          inputDisabled === "false"
-            ? props.setFirstTokenAmount(response.toString())
-            : props.setFirstTokenAmount(0);
-        });
+        timeout.current = setTimeout(() => {
+          estimateTokenYFromTokenX(
+            new BigNumber(input),
+            props.tokenOut.symbol,
+            props.tokenIn.symbol,
+            minTickB,
+            maxTickB
+          ).then((response) => {
+            setFirstLoading(false);
+            inputDisabled === "false"
+              ? props.setFirstTokenAmount(response.toString())
+              : props.setFirstTokenAmount(0);
+          });
+        }, 600);
       }
     }
   };
@@ -211,7 +209,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       : handleLiquidityInput(props.userBalances[props.tokenOut.name], "tokenOut");
   };
   return (
-    <div className="border relative border-text-800 bg-card-200 p-4 rounded-2xl	">
+    <div className="border relative border-text-800 bg-card-200 p-4 rounded-2xl ">
       <div className="border hover:border-text-700 relative flex border-text-800/[0.5] rounded-2xl h-[72px]">
         <div className="w-[40%] rounded-l-2xl  border-r items-center flex border-text-800/[0.5] bg-card-300">
           <div className="ml-2 md:ml-5">
@@ -301,7 +299,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         (topLevelSelectedToken.symbol === tokeninorg.symbol
           ? leftbrush < currentPrice && rightbrush < currentPrice
           : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice) && (
-          <div className="absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
+          <div className="absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg pl-7 backdrop-blur-[6px]  w-[480px]">
             <Image src={lock} />
             <span className="font-subtitle3 w-[318px] ml-5">
               The market price is outside your specified price range. Single-asset deposit only.
@@ -405,7 +403,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         (topLevelSelectedToken.symbol === tokeninorg.symbol
           ? leftbrush > currentPrice && rightbrush > currentPrice
           : bleftbrush > bcurrentPrice && brightbrush > bcurrentPrice) && (
-          <div className="absolute top-[93px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[480px]">
+          <div className="absolute top-[93px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg pl-7 backdrop-blur-[6px]  w-[480px]">
             <Image src={lock} />
             <span className="font-subtitle3 w-[318px] ml-5">
               The market price is outside your specified price range. Single-asset deposit only.
