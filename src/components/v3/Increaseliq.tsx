@@ -148,7 +148,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                 />
               </span>
               <span className="text-white font-body4 ml-5 relative top-[1px]">
-                {nFormatterWithLesserNumber(new BigNumber(selectedPosition.liquidity.x))}{" "}
+                {nFormatterWithLesserNumber(new BigNumber(props.firstTokenAmount))}{" "}
                 {tEZorCTEZtoUppercase(props.tokenIn.name)} (+
                 {nFormatterWithLesserNumber(new BigNumber(selectedPosition.fees.x))} fees)
               </span>
@@ -178,7 +178,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                 />
               </span>
               <span className="text-white font-body4 ml-5 relative top-[1px]">
-                {nFormatterWithLesserNumber(new BigNumber(selectedPosition.liquidity.y))}{" "}
+                {nFormatterWithLesserNumber(new BigNumber(props.secondTokenAmount))}{" "}
                 {tEZorCTEZtoUppercase(props.tokenOut.name)} (+
                 {nFormatterWithLesserNumber(new BigNumber(selectedPosition.fees.y))} fees)
               </span>
@@ -205,7 +205,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                 className={clsx(
                   selectedToken.symbol === props.tokenIn.symbol
                     ? "rounded-l-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
-                    : "text-text-400 bg-background-600 rounded-l-xl",
+                    : "text-text-400 hover:text-white bg-background-600 rounded-l-xl",
                   "px-[30px] py-[5px]"
                 )}
                 onClick={() => setSelectedToken(props.tokenIn)}
@@ -216,7 +216,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                 className={clsx(
                   selectedToken.symbol === props.tokenOut.symbol
                     ? "rounded-r-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
-                    : "text-text-400 bg-background-600 rounded-r-xl",
+                    : "text-text-400 hover:text-white bg-background-600 rounded-r-xl",
                   "px-[30px] py-[5px]"
                 )}
                 onClick={() => setSelectedToken(props.tokenOut)}
