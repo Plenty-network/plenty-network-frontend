@@ -4,6 +4,7 @@ import IncreaseLiq from "./Increaseliq";
 import { ActiveIncDecState, ActivePopUp } from "./ManageTabV3";
 import DecreaseLiq from "./DecreaseLiq";
 import { BalanceNat } from "../../api/v3/types";
+import clsx from "clsx";
 
 interface IIncreaseDecreaseLiqMainProps {
   setActiveStateIncDec: React.Dispatch<React.SetStateAction<ActiveIncDecState | string>>;

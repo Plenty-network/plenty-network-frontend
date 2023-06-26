@@ -396,6 +396,15 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         </Button>
       );
     } else if (
+      (inputDisabled == "first" && Number(secondTokenAmountLiq) <= 0) ||
+      (inputDisabled == "second" && Number(firstTokenAmountLiq) <= 0)
+    ) {
+      return (
+        <Button height="52px" onClick={() => null} color={"disabled"}>
+          Add
+        </Button>
+      );
+    } else if (
       walletAddress &&
       ((firstTokenAmountLiq && firstTokenAmountLiq > Number(userBalances[props.tokenIn.name])) ||
         (secondTokenAmountLiq && secondTokenAmountLiq) > Number(userBalances[props.tokenOut.name]))
@@ -797,7 +806,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
               </p> */}
               <p
-                className="text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer"
+                className="text-primary-500 hover:text-primary-500/[0.8] font-subtitle1 ml-auto mr-5 cursor-pointer"
                 onClick={resetAllValues}
               >
                 Clear All
@@ -807,7 +816,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                   className={clsx(
                     selectedToken.symbol === props.tokenA.symbol
                       ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
-                      : "text-text-250 px-2",
+                      : "text-text-250 hover:text-text-250/[0.8] px-2",
                     "font-subtitle1223"
                   )}
                   onClick={() => {
@@ -820,7 +829,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                   className={clsx(
                     selectedToken.symbol === props.tokenB.symbol
                       ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
-                      : "text-text-250 px-2",
+                      : "text-text-250 hover:text-text-250/[0.8] px-2",
                     "font-subtitle1223"
                   )}
                   onClick={() => {
@@ -833,7 +842,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               <div className="flex items-center justify-between flex-row  relative mr-[48px]">
                 <div
                   ref={refSettingTab}
-                  className="py-1  px-[8.5px] h-8 border border-text-700 cursor-pointer rounded-lg flex items-center w-[80px]"
+                  className="py-1 bg-text-800/[0.25] hover:bg-text=800/[0.5] px-[8.5px] h-8 border border-text-700 hover:border-text-600 cursor-pointer rounded-lg flex items-center w-[80px]"
                   onClick={() => setSettingsShow(!settingsShow)}
                 >
                   <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
