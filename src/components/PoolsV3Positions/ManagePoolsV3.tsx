@@ -433,7 +433,6 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
             setShow={setShowConfirm}
             removeTokenB={remove.y}
             show={showConfirm}
-            selectedPosition={selectedPosition}
             handleClick={handleRemoveLiquidityOperation}
           />
         )}

@@ -8,7 +8,7 @@ import {
   nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
-import { useMemo, useRef, useEffect } from "react";
+import { useMemo, useEffect } from "react";
 import Image from "next/image";
 import { AppDispatch, useAppSelector } from "../../redux";
 
@@ -20,6 +20,7 @@ import { RangeSliderDecLiq } from "./RangeSliderDecrease";
 import { ActivePopUp } from "./ManageTabV3";
 import { calculateTokensForRemoveLiquidity } from "../../api/v3/positions";
 import { BalanceNat } from "../../api/v3/types";
+import { handleClientScriptLoad } from "next/script";
 
 interface IDecLiquidityProp {
   tokenIn: tokenParameterLiquidity;
@@ -79,19 +80,16 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
   //     );
   //   }
   // }, [props.removePercentage, walletAddress]);
-  const timeout = useRef<any>();
+
   useEffect(() => {
-    clearTimeout(timeout.current);
-    timeout.current = setTimeout(() => {
-      calculateTokensForRemoveLiquidity(
-        Number(props.removePercentage),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        selectedPosition
-      ).then((res) => {
-        props.setRemove(res);
-      });
-    }, 600);
+    calculateTokensForRemoveLiquidity(
+      Number(props.removePercentage),
+      props.tokenIn.symbol,
+      props.tokenOut.symbol,
+      selectedPosition
+    ).then((res) => {
+      props.setRemove(res);
+    });
   }, [props.removePercentage]);
 
   return (
