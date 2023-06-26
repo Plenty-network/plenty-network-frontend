@@ -42,7 +42,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
   const [isFirstLaoding, setFirstLoading] = React.useState(false);
   const [isSecondLaoding, setSecondLoading] = React.useState(false);
   const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
-
+  const timeout = React.useRef<any>();
   React.useEffect(() => {
     if (
       selectedPosition.minPrice.isLessThan(props.currentPrice) &&
@@ -63,6 +63,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
   ) => {
+    clearTimeout(timeout.current);
     if (input == ".") {
       props.setSecondTokenAmount("0.");
       props.setFirstTokenAmount("0.");
@@ -85,18 +86,20 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
         props.setFirstTokenAmount(input.toString().trim());
       }
       setSecondLoading(true);
-      estimateTokenYFromTokenX(
-        new BigNumber(input),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        Number(selectedPosition.position.lower_tick_index),
-        Number(selectedPosition.position.upper_tick_index)
-      ).then((response) => {
-        setSecondLoading(false);
-        props.inputDisable === "false"
-          ? props.setSecondTokenAmount(response.toString())
-          : props.setSecondTokenAmount(0);
-      });
+      timeout.current = setTimeout(() => {
+        estimateTokenYFromTokenX(
+          new BigNumber(input),
+          props.tokenIn.symbol,
+          props.tokenOut.symbol,
+          Number(selectedPosition.position.lower_tick_index),
+          Number(selectedPosition.position.upper_tick_index)
+        ).then((response) => {
+          setSecondLoading(false);
+          props.inputDisable === "false"
+            ? props.setSecondTokenAmount(response.toString())
+            : props.setSecondTokenAmount(0);
+        });
+      }, 600);
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
 
@@ -110,19 +113,21 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
         props.setSecondTokenAmount(input.toString().trim());
       }
       setFirstLoading(true);
-      estimateTokenXFromTokenY(
-        new BigNumber(input),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        Number(selectedPosition.position.lower_tick_index),
-        Number(selectedPosition.position.upper_tick_index)
-      ).then((response) => {
-        setFirstLoading(false);
+      timeout.current = setTimeout(() => {
+        estimateTokenXFromTokenY(
+          new BigNumber(input),
+          props.tokenIn.symbol,
+          props.tokenOut.symbol,
+          Number(selectedPosition.position.lower_tick_index),
+          Number(selectedPosition.position.upper_tick_index)
+        ).then((response) => {
+          setFirstLoading(false);
 
-        props.inputDisable === "false"
-          ? props.setFirstTokenAmount(response.toString())
-          : props.setFirstTokenAmount(0);
-      });
+          props.inputDisable === "false"
+            ? props.setFirstTokenAmount(response.toString())
+            : props.setFirstTokenAmount(0);
+        });
+      }, 600);
     }
   };
 
