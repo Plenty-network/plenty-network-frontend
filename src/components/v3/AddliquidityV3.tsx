@@ -136,19 +136,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             ? props.setSecondTokenAmount(response)
             : props.setSecondTokenAmount(0);
         });
-
-        // estimateTokenYFromTokenX(
-        //   new BigNumber(input),
-        //   props.tokenIn.symbol,
-        //   props.tokenOut.symbol,
-        //   minTickA,
-        //   maxTickA
-        // ).then((response) => {
-        //   setSecondLoading(false);
-        //   inputDisabled === "false"
-        //     ? props.setSecondTokenAmount(response)
-        //     : props.setSecondTokenAmount(0);
-        // });
       } else {
         estimateTokenXFromTokenY(
           new BigNumber(input),
@@ -225,8 +212,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   };
   return (
     <div className="border relative border-text-800 bg-card-200 p-4 rounded-2xl	">
-      <div className="border relative flex border-text-800/[0.5] rounded-2xl h-[72px]">
-        <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
+      <div className="border hover:border-text-700 relative flex border-text-800/[0.5] rounded-2xl h-[72px]">
+        <div className="w-[40%] rounded-l-2xl  border-r items-center flex border-text-800/[0.5] bg-card-300">
           <div className="ml-2 md:ml-5">
             <img
               src={
@@ -260,7 +247,9 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
                   className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium2 outline-none w-[100%] placeholder:text-text-400"
                   value={fromExponential(props.firstTokenAmount)}
                   placeholder="0.0"
-                  onChange={(e) => handleLiquidityInput(e.target.value, "tokenIn")}
+                  onChange={(e) => {
+                    handleLiquidityInput(e.target.value, "tokenIn");
+                  }}
                 />
               )}
             </p>
@@ -282,7 +271,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
                 <Image alt={"alt"} src={wallet} className="walletIcon" />
               </div>
               <div
-                className="ml-1 flex cursor-pointer text-primary-500 font-caption1-small md:font-body2"
+                className="ml-1 flex cursor-pointer text-primary-500 hover:text-primary-500/[0.8]  font-caption1-small md:font-body2"
                 onClick={onClickAmount}
               >
                 {!(Number(props.userBalances[props.tokenIn.name]) >= 0) ? (
@@ -334,7 +323,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       <div
         className={clsx(
           false ? "mt-[1px]" : "-mt-[25px]",
-          "border flex border-text-800/[0.5] rounded-2xl h-[72px]"
+          "border flex hover:border-text-700 border-text-800/[0.5] rounded-2xl h-[72px]"
         )}
       >
         <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
@@ -393,7 +382,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
                 <Image alt={"alt"} src={wallet} className="walletIcon" />
               </div>
               <div
-                className="ml-1 cursor-pointer flex text-primary-500  font-caption1-small md:font-body2"
+                className="ml-1 cursor-pointer flex text-primary-500  hover:text-primary-500/[0.8]  font-caption1-small md:font-body2"
                 onClick={onClickSecondAmount}
               >
                 {!(Number(props.userBalances[props.tokenOut.name]) >= 0) ? (

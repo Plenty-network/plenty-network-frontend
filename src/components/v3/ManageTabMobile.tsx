@@ -968,6 +968,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
       {activeStateIncDec === ActiveIncDecState.Decrease &&
         screen === ActivePopUp.ConfirmExisting && (
           <ConfirmDecreaseLiq
+            selectedPosition={selectedPosition}
             setScreen={setScreen}
             tokenIn={props.tokenIn}
             tokenOut={props.tokenOut}

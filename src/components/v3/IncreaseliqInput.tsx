@@ -9,6 +9,7 @@ import {
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
 
+import lock from "../../../src/assets/icon/poolsv3/Lock.svg";
 import { useAppSelector } from "../../redux";
 import { tokenIcons } from "../../constants/tokensList";
 import fromExponential from "from-exponential";
@@ -30,21 +31,33 @@ interface IAddLiquidityProps {
   tokenPrice: {
     [id: string]: number;
   };
+  currentPrice: BigNumber;
+  setInputDisable: React.Dispatch<React.SetStateAction<string>>;
+  inputDisable: string;
 }
 function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
-  const rightbrush = useAppSelector((state) => state.poolsv3.rightbrush);
-  const leftbrush = useAppSelector((state) => state.poolsv3.leftbrush);
-  const currentPrice = useAppSelector((state) => state.poolsv3.currentPrice);
-  const brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
-  const bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
-  const bcurrentPrice = useAppSelector((state) => state.poolsv3.BcurrentPrice);
+
   const tokens = useAppSelector((state) => state.config.tokens);
-  const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
-  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const [isFirstLaoding, setFirstLoading] = React.useState(false);
   const [isSecondLaoding, setSecondLoading] = React.useState(false);
   const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
+
+  React.useEffect(() => {
+    if (
+      selectedPosition.minPrice.isLessThan(props.currentPrice) &&
+      selectedPosition.maxPrice.isLessThan(props.currentPrice)
+    ) {
+      props.setInputDisable("first");
+    } else if (
+      selectedPosition.minPrice.isGreaterThan(props.currentPrice) &&
+      selectedPosition.maxPrice.isGreaterThan(props.currentPrice)
+    ) {
+      props.setInputDisable("second");
+    } else {
+      props.setInputDisable("false");
+    }
+  }, [props.currentPrice, selectedPosition.minPrice, selectedPosition.maxPrice]);
 
   const handleLiquidityInput = async (
     input: string | number,
@@ -80,7 +93,9 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
         Number(selectedPosition.position.upper_tick_index)
       ).then((response) => {
         setSecondLoading(false);
-        true ? props.setSecondTokenAmount(response.toString()) : props.setSecondTokenAmount(0);
+        props.inputDisable === "false"
+          ? props.setSecondTokenAmount(response.toString())
+          : props.setSecondTokenAmount(0);
       });
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
@@ -104,7 +119,9 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
       ).then((response) => {
         setFirstLoading(false);
 
-        true ? props.setFirstTokenAmount(response.toString()) : props.setFirstTokenAmount(0);
+        props.inputDisable === "false"
+          ? props.setFirstTokenAmount(response.toString())
+          : props.setFirstTokenAmount(0);
       });
     }
   };
@@ -125,7 +142,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
   };
   return (
     <div className="border relative border-text-800 bg-card-200 p-4 rounded-2xl	">
-      <div className="border  flex border-text-800/[0.5] rounded-2xl h-[70px]">
+      <div className="border hover:border-text-700  flex border-text-800/[0.5] rounded-2xl h-[70px]">
         <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
           <div className="ml-2 md:ml-5">
             <img
@@ -200,21 +217,32 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
           )}
         </div>
       </div>
+      {selectedPosition.minPrice.isLessThan(props.currentPrice) &&
+        selectedPosition.maxPrice.isLessThan(props.currentPrice) && (
+          <div className="absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[517px]">
+            <Image src={lock} />
+            <span className="font-subtitle3 w-[318px] ml-5">
+              The market price is outside your specified price range. Single-asset deposit only.
+            </span>
+          </div>
+        )}
 
-      <div className="relative -top-[9px] left-[25%]">
-        <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
-      </div>
+      {selectedPosition.minPrice.isLessThan(props.currentPrice) &&
+        selectedPosition.maxPrice.isGreaterThan(props.currentPrice) && (
+          <div className="relative -top-[9px] left-[25%]">
+            <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
+          </div>
+        )}
 
       <div
         className={clsx(
-          (
-            topLevelSelectedToken.symbol === tokeninorg.symbol
-              ? leftbrush < currentPrice && rightbrush < currentPrice
-              : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice
+          !(
+            selectedPosition.minPrice.isLessThan(props.currentPrice) &&
+            selectedPosition.maxPrice.isGreaterThan(props.currentPrice)
           )
-            ? "mt-[1px]"
+            ? "mt-[6px]"
             : "-mt-[25px] ",
-          "border flex border-text-800/[0.5] rounded-2xl h-[70px]"
+          "border flex border-text-800/[0.5] hover:border-text-700 rounded-2xl h-[70px] relative"
         )}
       >
         <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
@@ -290,6 +318,15 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
             </div>
           )}
         </div>
+        {selectedPosition.minPrice.isGreaterThan(props.currentPrice) &&
+          selectedPosition.maxPrice.isGreaterThan(props.currentPrice) && (
+            <div className="absolute top-[0px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[517px]">
+              <Image src={lock} />
+              <span className="font-subtitle3 w-[318px] ml-5">
+                The market price is outside your specified price range. Single-asset deposit only.
+              </span>
+            </div>
+          )}
       </div>
     </div>
   );

@@ -11,6 +11,8 @@ import { Chart } from "./Chart";
 import { useDensityChartData } from "./hooks";
 import { ZoomLevels } from "./types";
 import { calcTick } from "../../../utils/outSideClickHook";
+import { dispatch } from "../../../common/walletconnect";
+import { setFullRange } from "../../../redux/poolsv3";
 export enum Bound {
   LOWER = "LOWER",
   UPPER = "UPPER",
@@ -61,7 +63,9 @@ export default function LiquidityChartRangeInput({
   onRightRangeInput,
   interactive,
   isFull,
+  setFullRange,
 }: {
+  setFullRange: React.Dispatch<React.SetStateAction<boolean>>;
   currencyA: tokenParameterLiquidity | undefined;
   currencyB: tokenParameterLiquidity | undefined;
   feeAmount?: FeeAmount;
@@ -96,7 +100,10 @@ export default function LiquidityChartRangeInput({
     (domain: [number, number], mode: string | undefined) => {
       let leftRangeValue = Number(domain[0]);
       const rightRangeValue = Number(domain[1]);
-
+      console.log(mode, "mode", isFull, domain);
+      if (mode === "handle" && isFull) {
+        setFullRange(false);
+      }
       if (leftRangeValue <= 0) {
         leftRangeValue = 1 / 10 ** 6;
       }
@@ -141,7 +148,7 @@ export default function LiquidityChartRangeInput({
     }
     return leftPrice && rightPrice ? [parseFloat(leftPrice), parseFloat(rightPrice)] : undefined;
   }, [priceLower, priceUpper, topLevelSelectedToken, isFull]);
-  const dispatch = useDispatch<AppDispatch>();
+
   const brushLabelValue = useCallback(
     (d: "w" | "e", x: number) => {
       if (!price) return "";

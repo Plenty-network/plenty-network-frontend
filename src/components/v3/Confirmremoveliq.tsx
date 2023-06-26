@@ -14,6 +14,7 @@ import {
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { ActivePopUp } from "./ManageTabV3";
+import { IV3PositionObject } from "../../api/v3/types";
 
 interface IConfirmLiqProps {
   show: boolean;
@@ -25,13 +26,14 @@ interface IConfirmLiqProps {
   tokenOut: tokenParameterLiquidity;
   removeTokenA: BigNumber;
   removeTokenB: BigNumber;
+  selectedPosition: IV3PositionObject;
 }
 function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
   const closeModal = () => {
     props.setShow(false);
   };
-
+  console.log(props.selectedPosition);
   return props.show ? (
     <PopUpModal onhide={closeModal}>
       {
@@ -67,7 +69,9 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                 />
               </p>
               <p className="font-title2-bold ml-1">
-                {nFormatterWithLesserNumber(props.removeTokenA)}
+                {nFormatterWithLesserNumber(
+                  props.selectedPosition.liquidity.x.minus(props.removeTokenA)
+                )}
               </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
@@ -89,7 +93,9 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                 />
               </p>
               <p className="font-title2-bold ml-1">
-                {nFormatterWithLesserNumber(props.removeTokenB)}
+                {nFormatterWithLesserNumber(
+                  props.selectedPosition.liquidity.y.minus(props.removeTokenB)
+                )}
               </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>

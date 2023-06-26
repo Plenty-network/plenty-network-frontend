@@ -114,7 +114,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             className={clsx(
               props.removePercentage === 25
                 ? "bg-primary-500 text-black"
-                : "bg-muted-235 text-text-500",
+                : "bg-muted-235 text-text-500 hover:text-white",
               "cursor-pointer w-[91px] h-[36px] rounded-lg	text-center font-body4  py-2"
             )}
             onClick={() => props.setRemovePercentage(25)}
@@ -125,7 +125,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             className={clsx(
               props.removePercentage === 50
                 ? "bg-primary-500 text-black"
-                : "bg-muted-235 text-text-500 ",
+                : "bg-muted-235 text-text-500 hover:text-white ",
               "cursor-pointer w-[91px] h-[36px] rounded-lg font-body4	 text-center py-2"
             )}
             onClick={() => props.setRemovePercentage(50)}
@@ -136,7 +136,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             className={clsx(
               props.removePercentage === 75
                 ? "bg-primary-500 text-black"
-                : "bg-muted-235 text-text-500",
+                : "bg-muted-235 text-text-500 hover:text-white",
               "cursor-pointer w-[91px] h-[36px] rounded-lg	font-body4 text-center py-2"
             )}
             onClick={() => props.setRemovePercentage(75)}
@@ -147,7 +147,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             className={clsx(
               props.removePercentage === 100
                 ? "bg-primary-500 text-black"
-                : "bg-muted-235 text-text-500",
+                : "bg-muted-235 text-text-500 hover:text-white",
               "cursor-pointer w-[91px] h-[36px] rounded-lg	font-body4  text-center py-2"
             )}
             onClick={() => props.setRemovePercentage(100)}

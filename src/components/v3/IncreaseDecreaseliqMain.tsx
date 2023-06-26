@@ -4,6 +4,7 @@ import IncreaseLiq from "./Increaseliq";
 import { ActiveIncDecState, ActivePopUp } from "./ManageTabV3";
 import DecreaseLiq from "./DecreaseLiq";
 import { BalanceNat } from "../../api/v3/types";
+import clsx from "clsx";
 
 interface IIncreaseDecreaseLiqMainProps {
   setActiveStateIncDec: React.Dispatch<React.SetStateAction<ActiveIncDecState | string>>;
@@ -40,7 +41,9 @@ export function Tab(props: ITabProps) {
     <div
       onClick={() => onClick()}
       className={`flex justify-center cursor-pointer items-center flex-1 py-1.5 ${
-        isActive ? active : "bg-text-800 border border-text-500 rounded-xl text-white"
+        isActive
+          ? active
+          : "bg-text-800 border border-text-500 hover:border-text-500/[0.8] hover:text-white/[0.8] rounded-xl text-white"
       }`}
     >
       {text}

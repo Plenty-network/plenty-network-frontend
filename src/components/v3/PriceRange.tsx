@@ -158,6 +158,13 @@ function PriceRangeV3(props: IPriceRangeProps) {
         ? dispatch(setRightRangeInput("∞"))
         : dispatch(setBRightRangeInput("∞"));
       calculateFullRange(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
+        console.log("full", response);
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? dispatch(setleftbrush(response.minTickPrice.toFixed(6)))
+          : dispatch(setBleftbrush(Number(value).toFixed(6)));
+        topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? dispatch(setrightbrush(response.maxTickPrice.toFixed(6)))
+          : dispatch(setBrightbrush(Number(value).toFixed(6)));
         topLevelSelectedToken.symbol === tokeninorg.symbol
           ? dispatch(setminTickA(response.minTick))
           : dispatch(setminTickB(response.minTick));
@@ -214,6 +221,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
             onRightRangeInput={onRightRangeInputFn}
             interactive={true}
             isFull={props.isFullRange}
+            setFullRange={props.setFullRange}
           />
         )}
       </div>
@@ -240,7 +248,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
           </div>
           <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
             <div
-              className="w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-info-600/[0.5]"
+              className="w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-background-700"
               onClick={() =>
                 onLeftRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -290,7 +298,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
               </div>
             </div>
             <div
-              className=" w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-info-600/[0.5]"
+              className=" w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-background-700"
               onClick={() =>
                 onLeftRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -313,7 +321,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
           </div>
           <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
             <div
-              className="w-[35px] h-[24px] text-white rounded bg-info-600  flex items-center cursor-pointer justify-center hover:bg-info-600/[0.5]"
+              className="w-[35px] h-[24px] text-white rounded bg-info-600  flex items-center cursor-pointer justify-center hover:bg-background-700"
               onClick={() =>
                 onRightRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -363,7 +371,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
               </div>
             </div>
             <div
-              className="w-[34px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-info-600/[0.5]"
+              className="w-[34px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-background-700"
               onClick={() =>
                 onRightRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -379,7 +387,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       </div>
 
       <div
-        className="mt-3 cursor-pointer border border-info-700 rounded-lg	text-center py-2.5 font-body1 mx-4"
+        className="mt-3 cursor-pointer border border-info-700 hover:border-text-600 rounded-lg	text-center py-2.5 font-body1 mx-4"
         onClick={() => fullrangeCalc(!props.isFullRange)}
       >
         {props.isFullRange ? "Remove Full Range" : "Full Range"}

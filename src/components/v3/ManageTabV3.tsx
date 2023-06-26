@@ -396,6 +396,15 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         </Button>
       );
     } else if (
+      (inputDisabled == "first" && Number(secondTokenAmountLiq) <= 0) ||
+      (inputDisabled == "second" && Number(firstTokenAmountLiq) <= 0)
+    ) {
+      return (
+        <Button height="52px" onClick={() => null} color={"disabled"}>
+          Add
+        </Button>
+      );
+    } else if (
       walletAddress &&
       ((firstTokenAmountLiq && firstTokenAmountLiq > Number(userBalances[props.tokenIn.name])) ||
         (secondTokenAmountLiq && secondTokenAmountLiq) > Number(userBalances[props.tokenOut.name]))
@@ -424,74 +433,74 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [isFullRange, setFullRangee] = React.useState(false);
   const full = useAppSelector((state) => state.poolsv3.isFullRange);
   React.useEffect(() => {
-    if (!isFullRange) {
-      dispatch(setIsLoading(true));
+    //if (!isFullRange) {
+    dispatch(setIsLoading(true));
 
-      calculateCurrentPrice(props.tokenA.symbol, props.tokenB.symbol, props.tokenA.symbol).then(
-        (response) => {
-          dispatch(setcurrentPrice(response.toFixed(6)));
-        }
-      );
-      calculateCurrentPrice(props.tokenA.symbol, props.tokenB.symbol, props.tokenB.symbol).then(
-        (response) => {
-          dispatch(setBcurrentPrice(response.toFixed(6)));
-        }
-      );
-      dispatch(setIsLoading(true));
-      getInitialBoundaries(props.tokenA.symbol, props.tokenB.symbol).then((response) => {
-        dispatch(setInitBound(response));
-        if (
-          new BigNumber(1)
-            .dividedBy(response.minValue)
-            .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
-        ) {
-          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+    calculateCurrentPrice(props.tokenA.symbol, props.tokenB.symbol, props.tokenA.symbol).then(
+      (response) => {
+        dispatch(setcurrentPrice(response.toFixed(6)));
+      }
+    );
+    calculateCurrentPrice(props.tokenA.symbol, props.tokenB.symbol, props.tokenB.symbol).then(
+      (response) => {
+        dispatch(setBcurrentPrice(response.toFixed(6)));
+      }
+    );
+    dispatch(setIsLoading(true));
+    getInitialBoundaries(props.tokenA.symbol, props.tokenB.symbol).then((response) => {
+      dispatch(setInitBound(response));
+      if (
+        new BigNumber(1)
+          .dividedBy(response.minValue)
+          .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
+      ) {
+        dispatch(setleftRangeInput(response.minValue.toFixed(6)));
 
-          dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+        dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
 
-          dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
+        dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
 
-          dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+        dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
 
-          dispatch(setleftbrush(response.minValue.toFixed(6)));
+        dispatch(setleftbrush(response.minValue.toFixed(6)));
 
-          dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+        dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
 
-          dispatch(setrightbrush(response.maxValue.toFixed(6)));
+        dispatch(setrightbrush(response.maxValue.toFixed(6)));
 
-          dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+        dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
 
-          dispatch(setIsLoading(false));
-        } else {
-          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+        dispatch(setIsLoading(false));
+      } else {
+        dispatch(setleftRangeInput(response.minValue.toFixed(6)));
 
-          dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+        dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
 
-          dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
+        dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
 
-          dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+        dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
 
-          dispatch(setleftbrush(response.minValue.toFixed(6)));
+        dispatch(setleftbrush(response.minValue.toFixed(6)));
 
-          dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+        dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
 
-          dispatch(setrightbrush(response.maxValue.toFixed(6)));
+        dispatch(setrightbrush(response.maxValue.toFixed(6)));
 
-          dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+        dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
 
-          dispatch(setIsLoading(false));
-        }
+        dispatch(setIsLoading(false));
+      }
 
-        dispatch(setminTickA(response.minTick.toString()));
+      dispatch(setminTickA(response.minTick.toString()));
 
-        dispatch(setminTickB(response.minTick.toString()));
+      dispatch(setminTickB(response.minTick.toString()));
 
-        dispatch(setmaxTickA(response.maxTick.toString()));
+      dispatch(setmaxTickA(response.maxTick.toString()));
 
-        dispatch(setmaxTickB(response.maxTick.toString()));
-      });
-    }
-  }, [isFullRange, full, isClearAll]);
+      dispatch(setmaxTickB(response.maxTick.toString()));
+    });
+    //}
+  }, [isClearAll]);
 
   const handleIncreaseLiquidityOperation = () => {
     setContentTransaction(
@@ -797,7 +806,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
               </p> */}
               <p
-                className="text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer"
+                className="text-primary-500 hover:text-primary-500/[0.8] font-subtitle1 ml-auto mr-5 cursor-pointer"
                 onClick={resetAllValues}
               >
                 Clear All
@@ -807,7 +816,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                   className={clsx(
                     selectedToken.symbol === props.tokenA.symbol
                       ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
-                      : "text-text-250 px-2",
+                      : "text-text-250 hover:text-white px-2",
                     "font-subtitle1223"
                   )}
                   onClick={() => {
@@ -820,7 +829,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                   className={clsx(
                     selectedToken.symbol === props.tokenB.symbol
                       ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
-                      : "text-text-250 px-2",
+                      : "text-text-250 hover:text-white px-2",
                     "font-subtitle1223"
                   )}
                   onClick={() => {
@@ -833,7 +842,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               <div className="flex items-center justify-between flex-row  relative mr-[48px]">
                 <div
                   ref={refSettingTab}
-                  className="py-1  px-[8.5px] h-8 border border-text-700 cursor-pointer rounded-lg flex items-center w-[80px]"
+                  className="py-1 bg-text-800/[0.25] hover:bg-text=800/[0.5] px-[8.5px] h-8 border border-text-700 hover:border-text-600 cursor-pointer rounded-lg flex items-center w-[80px]"
                   onClick={() => setSettingsShow(!settingsShow)}
                 >
                   <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
@@ -973,6 +982,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       {activeStateIncDec === ActiveIncDecState.Decrease &&
         screen === ActivePopUp.ConfirmExisting && (
           <ConfirmDecreaseLiq
+            selectedPosition={selectedPosition}
             setScreen={setScreen}
             tokenIn={props.tokenIn}
             tokenOut={props.tokenOut}
