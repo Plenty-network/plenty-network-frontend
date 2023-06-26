@@ -69,6 +69,20 @@ export const getV3DexAddress = (tokenIn: string, tokenOut: string): string => {
   return address ?? "false";
 };
 
+export const getTokensFromAMMAddress = (ammAddress: string): { tokenX: string; tokenY: string } => {
+  const state = store.getState();
+  const AMMs = state.config.AMMs;
+
+  const amm = Object.keys(AMMs).find((key) => key === ammAddress);
+
+  return {
+    // @ts-ignore
+    tokenX: AMMs[amm].tokenX.symbol,
+    // @ts-ignore
+    tokenY: AMMs[amm].tokenY.symbol,
+  };
+};
+
 export const getDexType = (tokenIn: string, tokenOut: string): string => {
   const state = store.getState();
   const AMM = state.config.AMMs;

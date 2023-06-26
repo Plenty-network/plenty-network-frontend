@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import info from "../../assets/icon/swap/info.svg";
 import Image from "next/image";
-import Button from "../Button/Button";
 import { useEffect, useRef, useState } from "react";
 import { ERRORMESSAGES } from "../../constants/swap";
 import { useOutsideClick } from "../../utils/outSideClickHook";
@@ -26,7 +25,7 @@ function TransactionSettingsV3(props: ITransactionSettingsProps) {
 
   const handleSlippage = (input: string | number) => {
     if (input === "") {
-      props.setSlippage(30);
+      props.setSlippage(0);
     } else {
       props.setSlippage(Number(input));
     }

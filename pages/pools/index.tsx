@@ -12,9 +12,7 @@ import { getEpochData } from "../../src/redux/epoch/epoch";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
-import info from "../../src/assets/icon/pools/InfoBlue.svg";
-import close from "../../src/assets/icon/pools/closeBlue.svg";
-import Image from "next/image";
+
 import { USERADDRESS } from "../../src/constants/localStorage";
 import { NewPool } from "../../src/components/Pools/NewPool";
 import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
@@ -50,6 +48,8 @@ export default function Pools(props: IIndexProps) {
   const rewardsAprEstimateError = useAppSelector(
     (state) => state.rewardsApr.rewardsAprEstimateError
   );
+
+  console.log("testing preview link");
   const handleCloseManagePopup = (val: boolean) => {
     setShowLiquidityModal(val);
   };

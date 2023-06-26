@@ -92,10 +92,6 @@ export const Brush = ({
           ? dispatch(setrightbrush(scaled[1]))
           : dispatch(setBrightbrush(scaled[1]));
 
-        // setBrushExtent(
-        //   [Tick.nearestUsableTick(scaled[0], 10), Tick.nearestUsableTick(scaled[1], 10)],
-        //   mode
-        // );
         setBrushExtent([scaled[0], scaled[1]], mode);
       }
 
@@ -228,7 +224,7 @@ export const Brush = ({
                 </g>
 
                 <g
-                  opacity={1}
+                  opacity={hovering ? 1 : 0}
                   fill={"#211336"}
                   transform={`translate(50,0), scale(${flipWestHandle ? "1" : "-1"}, 1)`}
                 >
@@ -275,7 +271,7 @@ export const Brush = ({
                 </g>
 
                 <g
-                  opacity={1}
+                  opacity={hovering ? 1 : 0}
                   fill={"#211336"}
                   transform={`translate(50,0), scale(${flipEastHandle ? "-1" : "1"}, 1)`}
                 >

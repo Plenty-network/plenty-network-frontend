@@ -1,14 +1,10 @@
-import clsx from "clsx";
-import Image from "next/image";
 import * as React from "react";
-
-import { BigNumber } from "bignumber.js";
-import { isMobile } from "react-device-detect";
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import { tokenParameterLiquidity } from "../Liquidity/types";
 import IncreaseLiq from "./Increaseliq";
 import { ActiveIncDecState, ActivePopUp } from "./ManageTabV3";
 import DecreaseLiq from "./DecreaseLiq";
-import { useAppSelector } from "../../redux";
+import { BalanceNat } from "../../api/v3/types";
+import clsx from "clsx";
 
 interface IIncreaseDecreaseLiqMainProps {
   setActiveStateIncDec: React.Dispatch<React.SetStateAction<ActiveIncDecState | string>>;
@@ -22,10 +18,14 @@ interface IIncreaseDecreaseLiqMainProps {
 
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
-
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
   userBalances: {
     [key: string]: string;
   };
+  setRemove: React.Dispatch<React.SetStateAction<BalanceNat>>;
+  remove: BalanceNat;
+  setRemovePercentage: React.Dispatch<React.SetStateAction<number>>;
+  removePercentage: number;
 }
 export interface ITabProps {
   isActive: boolean;
@@ -41,7 +41,9 @@ export function Tab(props: ITabProps) {
     <div
       onClick={() => onClick()}
       className={`flex justify-center cursor-pointer items-center flex-1 py-1.5 ${
-        isActive ? active : "bg-text-800 border border-text-500 rounded-xl text-white"
+        isActive
+          ? active
+          : "bg-text-800 border border-text-500 hover:border-text-500/[0.8] hover:text-white/[0.8] rounded-xl text-white"
       }`}
     >
       {text}
@@ -70,20 +72,26 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
           secondTokenAmount={props.secondTokenAmount}
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}
+          setShow={props.setShow}
           userBalances={props.userBalances}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}
         />
       ) : (
         <DecreaseLiq
+          setShow={props.setShow}
           setScreen={props.setScreen}
           firstTokenAmount={props.firstTokenAmount}
           secondTokenAmount={props.secondTokenAmount}
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}
+          setRemove={props.setRemove}
+          remove={props.remove}
           userBalances={props.userBalances}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}
+          removePercentage={props.removePercentage}
+          setRemovePercentage={props.setRemovePercentage}
         />
       )}
     </>

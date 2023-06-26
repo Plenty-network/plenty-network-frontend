@@ -1,37 +1,39 @@
 import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
-import lock from "../../assets/icon/myPortfolio/purple_lock.svg";
+
 import { BigNumber } from "bignumber.js";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
-import ply from "../../assets/Tokens/ply.png";
 import Button from "../Button/Button";
 
-import { store, useAppSelector } from "../../redux";
-import { EClaimAllState } from "../Rewards/types";
-import nFormatter, { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { useAppSelector } from "../../redux";
+import {
+  changeSource,
+  nFormatterWithLesserNumber,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { ActivePopUp } from "./ManageTabV3";
+import { IV3PositionObject } from "../../api/v3/types";
 
 interface IConfirmLiqProps {
   show: boolean;
 
-  setShow: any;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
   handleClick: () => void;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  removeTokenA: number;
-  removeTokenB: number;
+  removeTokenA: BigNumber;
+  removeTokenB: BigNumber;
+  selectedPosition: IV3PositionObject;
 }
 function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
   const closeModal = () => {
     props.setShow(false);
   };
-  // const tokenPrice = store.getState().tokenPrice.tokenPrice;
-  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-
+  console.log(props.selectedPosition);
   return props.show ? (
     <PopUpModal onhide={closeModal}>
       {
@@ -66,7 +68,11 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">2.35</p>
+              <p className="font-title2-bold ml-1">
+                {nFormatterWithLesserNumber(
+                  props.selectedPosition.liquidity.x.minus(props.removeTokenA)
+                )}
+              </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
 
@@ -86,7 +92,11 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">2.35</p>
+              <p className="font-title2-bold ml-1">
+                {nFormatterWithLesserNumber(
+                  props.selectedPosition.liquidity.y.minus(props.removeTokenB)
+                )}
+              </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>
           </div>

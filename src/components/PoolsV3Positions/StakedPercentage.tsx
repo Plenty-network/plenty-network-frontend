@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { IYourLiquidityProps } from "./types";
+import { IYourLiquidityProps, IYourStakeProps } from "./types";
 
-export function StakePercentage(props: IYourLiquidityProps) {
+export function StakePercentage(props: IYourStakeProps) {
   return (
     <>
       <div className="">

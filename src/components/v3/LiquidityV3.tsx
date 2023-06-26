@@ -1,19 +1,8 @@
 import Image from "next/image";
 import * as React from "react";
-import settings from "../../../src/assets/icon/swap/settings.svg";
-import { useMemo, useRef, useState } from "react";
-import TransactionSettingsLiquidity from "../TransactionSettings/TransactionSettingsLiq";
 import infoOrangeBig from "../../../src/assets/icon/poolsv3/InfoOrangeBig.svg";
-import infoblue from "../../../src/assets/icon/pools/InfoBlue.svg";
-import info from "../../../src/assets/icon/swap/info.svg";
-import { BigNumber } from "bignumber.js";
-import Button from "../Button/Button";
-import { SwitchWithIcon } from "../SwitchCheckbox/switchWithIcon";
-
-import wallet from "../../../src/assets/icon/pools/wallet.svg";
-import { AppDispatch, useAppSelector } from "../../redux";
-
-import { ISwapData, tokenParameterLiquidity } from "../Liquidity/types";
+import { useAppSelector } from "../../redux";
+import { tokenParameterLiquidity } from "../Liquidity/types";
 import AddLiquidityV3 from "./AddliquidityV3";
 import FeeTierMain from "./FeeTierMain";
 import { isMobile, isTablet } from "react-device-detect";

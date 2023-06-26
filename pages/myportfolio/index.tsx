@@ -7,7 +7,7 @@ import playIcon from "../../src/assets/icon/pools/playIcon.svg";
 import { useEffect, useState, useMemo, useRef } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { connect, useDispatch } from "react-redux";
-import { AppDispatch, store, useAppSelector } from "../../src/redux";
+import { AppDispatch, useAppSelector } from "../../src/redux";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
@@ -88,12 +88,16 @@ import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced"
 import { getPoolsRewardsData, getPositionsData } from "../../src/api/portfolio/pools";
 import { fetchTvlStatsData } from "../../src/redux/myPortfolio/tvl";
 import { fetchVotesStatsData } from "../../src/redux/myPortfolio/votesStats";
-import { VideoModal } from "../../src/components/Modal/videoModal";
+
 import { isMobile } from "react-device-detect";
 import { PortfolioDropdown } from "../../src/components/PortfolioSection";
 import nFormatter, { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
 import { tzktExplorer } from "../../src/common/walletconnect";
 import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
+//import { PoolsV3TablePosition } from "../../src/components/PoolsV3Positions/poolsTable";
+import { getPositionsAll } from "../../src/api/v3/positions";
+import { IV3PositionObject } from "../../src/api/v3/types";
+import { collectFees } from "../../src/operations/v3/fee";
 import { PoolsV3TablePosition } from "../../src/components/PoolsV3Positions/poolsTable";
 
 export enum MyPortfolioSection {
@@ -149,11 +153,11 @@ function MyPortfolio(props: any) {
   const bribesClaimData = useAppSelector((state) => state.portfolioRewards.bribesClaimData);
   const epochClaimData = useAppSelector((state) => state.portfolioRewards.epochClaimData);
   const feeClaimData = useAppSelector((state) => state.portfolioRewards.feesClaimData);
-  // const bribesStats = store.getState().portfolioRewards.totalBribesAmount;
+
   const bribesStats = useAppSelector((state) => state.portfolioRewards.totalBribesAmount);
-  // const tradingfeeStats = store.getState().portfolioRewards.totalTradingFeesAmount;
+
   const tradingfeeStats = useAppSelector((state) => state.portfolioRewards.totalTradingFeesAmount);
-  // const fetchingTradingfee = store.getState().portfolioRewards.fetchingLocksRewardsData;
+
   const fetchingTradingfee = useAppSelector(
     (state) => state.portfolioRewards.fetchingLocksRewardsData
   );
@@ -165,6 +169,10 @@ function MyPortfolio(props: any) {
     data: IPositionsData[];
     isfetched: boolean;
   }>({ data: [] as IPositionsData[], isfetched: false });
+  const [poolsv3Position, setPoolsv3Position] = useState<{
+    data: IV3PositionObject[] | undefined;
+    isfetched: boolean;
+  }>({ data: [] as IV3PositionObject[], isfetched: false });
   const [poolsRewards, setPoolsRewards] = useState<{
     data: IPoolsRewardsResponse;
     isfetched: boolean;
@@ -173,7 +181,7 @@ function MyPortfolio(props: any) {
     data: IAllLocksPositionData[];
     isfetched: boolean;
   }>({ data: [] as IAllLocksPositionData[], isfetched: false });
-  // const currentEpoch = store.getState().epoch.currentEpoch;
+
   const currentEpoch = useAppSelector((state) => state.epoch.currentEpoch);
   const [claimOperation, setClaimOperation] = useState(false);
   const locksRewardsDataError = useAppSelector(
@@ -185,7 +193,7 @@ function MyPortfolio(props: any) {
   const unclaimedInflationDataError = useAppSelector(
     (state) => state.portfolioRewards.unclaimedInflationDataError
   );
-  // const statsTvl: BigNumber = store.getState().portfolioStatsTvl.userTvl;
+
   const statsTvl: BigNumber = useAppSelector((state) => state.portfolioStatsTvl.userTvl);
   const statsTvlError: boolean = useAppSelector((state) => state.portfolioStatsTvl.userTvlError);
   const statsTvlFetching: boolean = useAppSelector(
@@ -254,6 +262,9 @@ function MyPortfolio(props: any) {
   }, [amm]);
   useEffect(() => {
     if (userAddress && Object.keys(tokenPrice).length !== 0) {
+      getPositionsAll(userAddress, tokenPrice).then((response) => {
+        setPoolsv3Position({ data: response, isfetched: true });
+      });
       dispatch(
         fetchAllLocksRewardsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
@@ -649,6 +660,80 @@ function MyPortfolio(props: any) {
       </p>
     );
   }, []);
+  const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
+  const handleCollectFeeOperation = () => {
+    setContentTransaction(`Collecting fee`);
+
+    setShowConfirmTransaction(true);
+    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
+
+    collectFees(
+      selectedPosition,
+      userAddress,
+      selectedPosition.tokenX ? selectedPosition.tokenX.toString() : "DAI.e",
+      selectedPosition.tokenY ? selectedPosition.tokenY.toString() : "USDC.e",
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `Collecting fee`,
+        linkText: "View in Explorer",
+        isLoading: true,
+
+        transactionId: "",
+      }
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `Collecting fee`,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
+              },
+              transactionId: response.operationId ? response.operationId : "",
+            })
+          );
+        }, 6000);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+        }, 2000);
+        setContentTransaction("");
+        dispatch(
+          setFlashMessage({
+            flashType: Flashtype.Rejected,
+            headerText: "Rejected",
+            trailingText:
+              response.error === "NOT_ENOUGH_TEZ" ? `You do not have enough tez` : `Collecting fee`,
+            linkText: "",
+            isLoading: true,
+            transactionId: "",
+          })
+        );
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+      }
+    });
+  };
 
   const handleWithdrawOperation = () => {
     setContentTransaction(`Withdraw ${nFormatter(manageData.baseValue)} PLY`);
@@ -1408,7 +1493,6 @@ function MyPortfolio(props: any) {
         }, 2000);
         setContentTransaction("");
       } else {
-        console.log("res", response);
         setBalanceUpdate(true);
         setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
@@ -1493,7 +1577,6 @@ function MyPortfolio(props: any) {
         }, 2000);
         setContentTransaction("");
       } else {
-        console.log("res", response);
         setBalanceUpdate(true);
         setClaimState(-1 as EClaimAllState);
         setShowConfirmTransaction(false);
@@ -1860,8 +1943,9 @@ function MyPortfolio(props: any) {
               (activeSection === MyPortfolioSection.Positions ? (
                 <PoolsV3TablePosition
                   className="md:px-5 md:py-4   py-4"
-                  poolsPosition={poolsPosition.data}
-                  isfetched={poolsPosition.isfetched}
+                  poolsPosition={poolsv3Position.data}
+                  handleCollectFeeOperation={handleCollectFeeOperation}
+                  isfetched={poolsv3Position.isfetched}
                 />
               ) : (
                 <>

@@ -116,6 +116,14 @@ body {
  
   margin-top: 20px;
 }
+.modalManage::-webkit-scrollbar-track-piece:end {
+ 
+  margin-bottom: 350px;
+}
+.modalManage::-webkit-scrollbar-track-piece:start {
+ 
+  margin-top: 50px;
+}
 .slider-input:focus::placeholder {
   color: transparent;
 }

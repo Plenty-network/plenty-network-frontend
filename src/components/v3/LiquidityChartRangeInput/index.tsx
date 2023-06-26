@@ -11,6 +11,8 @@ import { Chart } from "./Chart";
 import { useDensityChartData } from "./hooks";
 import { ZoomLevels } from "./types";
 import { calcTick } from "../../../utils/outSideClickHook";
+import { dispatch } from "../../../common/walletconnect";
+import { setFullRange } from "../../../redux/poolsv3";
 export enum Bound {
   LOWER = "LOWER",
   UPPER = "UPPER",
@@ -61,7 +63,9 @@ export default function LiquidityChartRangeInput({
   onRightRangeInput,
   interactive,
   isFull,
+  setFullRange,
 }: {
+  setFullRange: React.Dispatch<React.SetStateAction<boolean>>;
   currencyA: tokenParameterLiquidity | undefined;
   currencyB: tokenParameterLiquidity | undefined;
   feeAmount?: FeeAmount;
@@ -96,18 +100,21 @@ export default function LiquidityChartRangeInput({
     (domain: [number, number], mode: string | undefined) => {
       let leftRangeValue = Number(domain[0]);
       const rightRangeValue = Number(domain[1]);
-
+      console.log(mode, "mode", isFull, domain);
+      if (mode === "handle" && isFull) {
+        setFullRange(false);
+      }
       if (leftRangeValue <= 0) {
         leftRangeValue = 1 / 10 ** 6;
       }
 
       batch(() => {
         // simulate user input for auto-formatting and other validations
-        if ((mode === "handle" || mode === "reset") && leftRangeValue > 0) {
+        if ((mode === "handle" || mode === "reset" || mode === "drag") && leftRangeValue > 0) {
           onLeftRangeInput(leftRangeValue.toFixed(6));
         }
 
-        if ((mode === "handle" || mode === "reset") && rightRangeValue > 0) {
+        if ((mode === "handle" || mode === "reset" || mode === "drag") && rightRangeValue > 0) {
           // todo: remove this check. Upper bound for large numbers
           // sometimes fails to parse to tick.
           if (rightRangeValue < 1e35) {
@@ -116,7 +123,7 @@ export default function LiquidityChartRangeInput({
         }
       });
     },
-    [onLeftRangeInput, onRightRangeInput]
+    [onLeftRangeInput, onRightRangeInput, leftbrush, Bleftbrush, rightbrush, Brightbrush]
   );
 
   interactive = interactive && Boolean(formattedData?.length);
@@ -141,7 +148,7 @@ export default function LiquidityChartRangeInput({
     }
     return leftPrice && rightPrice ? [parseFloat(leftPrice), parseFloat(rightPrice)] : undefined;
   }, [priceLower, priceUpper, topLevelSelectedToken, isFull]);
-  const dispatch = useDispatch<AppDispatch>();
+
   const brushLabelValue = useCallback(
     (d: "w" | "e", x: number) => {
       if (!price) return "";
@@ -174,19 +181,23 @@ export default function LiquidityChartRangeInput({
     <div style={{ minHeight: "200px" }}>
       {isUninitialized ? (
         "Your position will appear here."
-      ) : isLoadingData ? (
+      ) : // <div className="flex items-center pt-[100px]  justify-center">
+      //   Your position will appear here.
+      // </div>
+      isLoadingData ? (
         <div className="justify-center items-center  flex h-[180px]">
           <div className="spinner"></div>
         </div>
-      ) : error ? (
-        <div className="flex items-center pt-[100px]  justify-center">
-          Liquidity data not available.
-        </div>
-      ) : !isLoadingData && (!formattedData || formattedData.length === 0 || !price) ? (
-        <div className="flex items-center pt-[100px] justify-center">
-          There is no liquidity data.
-        </div>
       ) : (
+        // : error ? (
+        //   <div className="flex items-center pt-[100px]  justify-center">
+        //     Liquidity data not available.
+        //   </div>
+        // ) : !isLoadingData && (!formattedData || formattedData.length === 0 || !price) ? (
+        //   <div className="flex items-center pt-[100px] justify-center">
+        //     There is no liquidity data.
+        //   </div>
+        // )
         <div className="relative justify-center items-center">
           <Chart
             data={{ series: formattedData, current: price }}

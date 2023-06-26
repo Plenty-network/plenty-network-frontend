@@ -33,8 +33,7 @@ interface IConfirmAddLiquidityProps {
   tokenPrice: {
     [id: string]: number;
   };
-  pnlpEstimates: string;
-  sharePool: string;
+
   slippage: number;
   handleAddLiquidityOperation: () => void;
   topLevelSelectedToken: tokenParameterLiquidity;
@@ -211,8 +210,8 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             <div
               className={clsx(
                 selectedToken.symbol === tokeninorg.symbol
-                  ? "rounded-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
-                  : "text-text-400 bg-background-600 rounded-r-xl",
+                  ? "rounded-l-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
+                  : "text-text-400 bg-background-600 rounded-l-xl",
                 "px-[30px] py-[5px]"
               )}
               onClick={() => setSelectedToken(tokeninorg)}
@@ -222,7 +221,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             <div
               className={clsx(
                 selectedToken.symbol === tokenoutorg.symbol
-                  ? "rounded-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
+                  ? "rounded-r-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
                   : "text-text-400 bg-background-600 rounded-r-xl",
                 "px-[30px] py-[5px]"
               )}
@@ -238,8 +237,15 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             <div className="flex text-text-250">
               <span className="font-caption1 pl-1">Min Price</span>
               <span className="font-mobile-f1020 ">
-                ({tEZorCTEZtoUppercase(tokeninorg.symbol)} per{" "}
-                {tEZorCTEZtoUppercase(tokenoutorg.symbol)})
+                (
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? tEZorCTEZtoUppercase(tokenoutorg.symbol)
+                  : tEZorCTEZtoUppercase(tokeninorg.symbol)}{" "}
+                per{" "}
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? tEZorCTEZtoUppercase(tokeninorg.symbol)
+                  : tEZorCTEZtoUppercase(tokenoutorg.symbol)}
+                )
               </span>
             </div>
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
@@ -268,8 +274,15 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             <div className="flex text-text-250 mt-3 sm:mt-0">
               <span className="font-caption1 pl-1">Max Price</span>
               <span className="font-mobile-f1020">
-                ({tEZorCTEZtoUppercase(tokeninorg.symbol)} per{" "}
-                {tEZorCTEZtoUppercase(tokenoutorg.symbol)})
+                (
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? tEZorCTEZtoUppercase(tokenoutorg.symbol)
+                  : tEZorCTEZtoUppercase(tokeninorg.symbol)}{" "}
+                per{" "}
+                {selectedToken.symbol === tokeninorg.symbol
+                  ? tEZorCTEZtoUppercase(tokeninorg.symbol)
+                  : tEZorCTEZtoUppercase(tokenoutorg.symbol)}
+                )
               </span>
             </div>
             <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">

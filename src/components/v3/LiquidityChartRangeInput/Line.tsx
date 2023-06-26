@@ -22,7 +22,7 @@ export const Line = ({
     () => (
       <line
         opacity={1}
-        strokeWidth={4}
+        strokeWidth={3}
         stroke={"#a8a8a8"}
         fill={"none"}
         x1={xScale(value)}
