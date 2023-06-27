@@ -1,9 +1,6 @@
-import { BigNumber } from "bignumber.js";
-import { Tick } from "@plenty-labs/v3-sdk";
 import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from "d3";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { getRealPriceFromTick, getTickFromRealPrice } from "../../../api/v3/helper";
 import { AppDispatch, useAppSelector } from "../../../redux";
 import { setBleftbrush, setBrightbrush, setleftbrush, setrightbrush } from "../../../redux/poolsv3";
 

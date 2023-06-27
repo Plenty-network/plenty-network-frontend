@@ -57,3 +57,20 @@ export interface IV3PositionObject {
   tokenY?: String;
   currentTickIndex: number;
 }
+
+export interface IV3ContractStorageParams {
+  currTickIndex: number;
+  currentTickWitness: number;
+  tickSpacing: number;
+  sqrtPriceValue: BigNumber;
+  liquidity: BigNumber;
+  feeBps: number;
+  tokenX: Token;
+  tokenY: Token;
+  feeGrowth: {
+    x: BigNumber;
+    y: BigNumber;
+  };
+  poolAddress: string;
+  ticksBigMap: number;
+}

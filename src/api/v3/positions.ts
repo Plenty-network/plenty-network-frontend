@@ -408,6 +408,13 @@ export const createIncreaseLiquidityOperation = async (
     deadline: Math.floor(new Date().getTime() / 1000) + 30 * 60, //default 30 min deadline
   };
 
+  console.log(
+    "increase liquidity options",
+    options.liquidityDelta.toString(),
+    options.maximumTokensContributed.x.toString(),
+    options.maximumTokensContributed.y.toString()
+  );
+
   // @ts-ignore
   return PositionManager.updatePositionOp(contractInstance, options);
 };

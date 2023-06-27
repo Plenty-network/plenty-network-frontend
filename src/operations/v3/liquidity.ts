@@ -63,7 +63,8 @@ export const LiquidityOperation = async (
       tokenXSymbol,
       tokenYSymbol,
       deadline,
-      maximumTokensContributedMain
+      maximumTokensContributedMain,
+      contractAddress
     );
     const allBatchOperations: WalletParamsWithKind[] = [];
 
@@ -239,7 +240,7 @@ export const increaseLiquidity = async (
     );
     const allBatchOperations: WalletParamsWithKind[] = [];
 
-    console.log("v3operationerror: contractAddress ", tokenX, tokenY);
+    console.log("v3operationerror: contractAddress ", tokenX, tokenY, createPosition);
 
     if (TOKENS[tokenXSymbol].standard === TokenStandard.FA12) {
       // push approveFA12 op for token1;
