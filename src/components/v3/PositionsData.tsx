@@ -54,7 +54,7 @@ function PositionsData(props: IPositionsProps) {
   }, [props.tokenIn.symbol, props.tokenOut.symbol, Object.keys(tokenPrice).length, walletAddress]);
   return (
     <div className="overflow-x-auto ">
-      <div className="flex  my-[24px] ml-8 min-w-[792px] ">
+      <div className="flex fade-in-light my-[24px] ml-8 min-w-[792px] ">
         <div className="w-[125px] text-text-250 font-body2 flex">
           Liquidity
           <div className="relative top-[2px] ml-1 cursor-pointer">
@@ -70,7 +70,7 @@ function PositionsData(props: IPositionsProps) {
             </ToolTip>
           </div>
         </div>
-        <div className="w-[166px] text-text-250 font-body2 flex">
+        <div className="w-[176px] text-text-250 font-body2 flex">
           Min/Max price
           <div className="relative top-[2px] ml-1 cursor-pointer">
             <ToolTip
@@ -106,12 +106,12 @@ function PositionsData(props: IPositionsProps) {
 
       <div className="h-[300px] overflow-y-auto swap min-w-[792px] ">
         {walletAddress === null ? (
-          <span className="flex items-center justify-center h-[280px] text-border-600 font-title3">
+          <span className="fade-in-light flex items-center justify-center h-[280px] text-border-600 font-title3">
             please connect your wallet
           </span>
         ) : !isLoading && data ? (
           data?.length === 0 ? (
-            <span className="flex items-center justify-center h-[280px] text-border-600 font-title3">
+            <span className="fade-in-light flex items-center justify-center h-[280px] text-border-600 font-title3">
               No new positions
             </span>
           ) : (
@@ -121,7 +121,7 @@ function PositionsData(props: IPositionsProps) {
                   key={index}
                   className={clsx(
                     index % 2 === 0 ? "bg-secondary-600" : "bg-card-500",
-                    "flex   h-[64px] items-center pl-10 min-w-[792px]"
+                    "flex   h-[64px] items-center pl-10 min-w-[792px] fade-in-light"
                   )}
                 >
                   <div className="w-[125px] text-white font-subtitle3 flex">
@@ -157,7 +157,7 @@ function PositionsData(props: IPositionsProps) {
                     </ToolTip>
                   </div>
 
-                  <div className="w-[166px] text-text-50 font-subtitle4 ">
+                  <div className="w-[176px] text-text-50 font-subtitle4 ">
                     {nFormatterWithLesserNumber(d.minPrice)} /{" "}
                     {d.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber(d.maxPrice)}
                     <div className="font-body3 text-text-500">
@@ -165,10 +165,10 @@ function PositionsData(props: IPositionsProps) {
                       {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
                     </div>
                   </div>
-                  <div className="w-[112px] text-white font-subtitle3 flex">
+                  <div className="w-[122px] text-white font-subtitle3 flex">
                     ${nFormatterWithLesserNumber(d.feesDollar)}
                   </div>
-                  <div className="w-[160px]">
+                  <div className="w-[180px]">
                     {!d.isInRange ? (
                       <span className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1 rounded-lg	 text-error-300 bg-error-300/[0.1] ">
                         <Image src={infoOrange} />
@@ -184,7 +184,7 @@ function PositionsData(props: IPositionsProps) {
                   <div
                     className={clsx(
                       d.feesDollar.isEqualTo(0) ? "cursor-not-allowed" : "cursor-pointer",
-                      "w-[110px] flex items-center font-subtitle4 text-primary-500 "
+                      "w-[120px] flex items-center font-subtitle4 text-primary-500 "
                     )}
                     onClick={d.feesDollar.isEqualTo(0) ? () => {} : props.handleCollectFeeOperation}
                   >
@@ -192,7 +192,7 @@ function PositionsData(props: IPositionsProps) {
                     <span className=" h-[28px] border-r border-card-700 ml-auto"></span>
                   </div>
                   <div
-                    className=" font-subtitle4 text-primary-500 text-right pr-2 w-[100px] cursor-pointer"
+                    className=" font-subtitle4 text-primary-500 text-right pr-2 w-[110px] cursor-pointer"
                     onClick={() => {
                       dispatch(setSelectedPosition(d));
                       props.setScreen(ActivePopUp.ManageExisting);

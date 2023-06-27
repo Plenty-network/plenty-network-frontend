@@ -121,7 +121,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
         Output is estimated. If the price changes by more than{" "}
         {props.slippage ? props.slippage : 0.5}% your transaction will revert
       </div> */}
-      <div className="mt-[17px] border border-text-800 bg-card-200 rounded-2xl py-5">
+      <div className="fade-in-light mt-[17px] border border-text-800 bg-card-200 rounded-2xl py-5">
         <div className="flex px-5">
           <div className="text-text-250 font-body4 ">You are depositing</div>{" "}
           <div className=" ml-auto">
@@ -211,7 +211,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
               className={clsx(
                 selectedToken.symbol === tokeninorg.symbol
                   ? "rounded-l-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
-                  : "text-text-400 bg-background-600 rounded-l-xl",
+                  : "text-text-400 bg-background-600 rounded-l-xl hover:text-white",
                 "px-[30px] py-[5px]"
               )}
               onClick={() => setSelectedToken(tokeninorg)}
@@ -222,7 +222,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
               className={clsx(
                 selectedToken.symbol === tokenoutorg.symbol
                   ? "rounded-r-lg	 border border-primary-500 bg-primary-500/[0.2] text-white"
-                  : "text-text-400 bg-background-600 rounded-r-xl",
+                  : "text-text-400 bg-background-600 rounded-r-xl hover:text-white",
                 "px-[30px] py-[5px]"
               )}
               onClick={() => setSelectedToken(tokenoutorg)}

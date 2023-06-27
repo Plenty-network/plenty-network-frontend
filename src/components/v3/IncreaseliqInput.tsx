@@ -42,7 +42,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
   const [isFirstLaoding, setFirstLoading] = React.useState(false);
   const [isSecondLaoding, setSecondLoading] = React.useState(false);
   const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
-
+  const timeout = React.useRef<any>();
   React.useEffect(() => {
     if (
       selectedPosition.minPrice.isLessThan(props.currentPrice) &&
@@ -63,6 +63,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
   ) => {
+    clearTimeout(timeout.current);
     if (input == ".") {
       props.setSecondTokenAmount("0.");
       props.setFirstTokenAmount("0.");
@@ -85,18 +86,20 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
         props.setFirstTokenAmount(input.toString().trim());
       }
       setSecondLoading(true);
-      estimateTokenYFromTokenX(
-        new BigNumber(input),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        Number(selectedPosition.position.lower_tick_index),
-        Number(selectedPosition.position.upper_tick_index)
-      ).then((response) => {
-        setSecondLoading(false);
-        props.inputDisable === "false"
-          ? props.setSecondTokenAmount(response.toString())
-          : props.setSecondTokenAmount(0);
-      });
+      timeout.current = setTimeout(() => {
+        estimateTokenYFromTokenX(
+          new BigNumber(input),
+          props.tokenIn.symbol,
+          props.tokenOut.symbol,
+          Number(selectedPosition.position.lower_tick_index),
+          Number(selectedPosition.position.upper_tick_index)
+        ).then((response) => {
+          setSecondLoading(false);
+          props.inputDisable === "false"
+            ? props.setSecondTokenAmount(response.toString())
+            : props.setSecondTokenAmount(0);
+        });
+      }, 600);
     } else if (tokenType === "tokenOut") {
       const decimal = new BigNumber(input).decimalPlaces();
 
@@ -110,19 +113,21 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
         props.setSecondTokenAmount(input.toString().trim());
       }
       setFirstLoading(true);
-      estimateTokenXFromTokenY(
-        new BigNumber(input),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
-        Number(selectedPosition.position.lower_tick_index),
-        Number(selectedPosition.position.upper_tick_index)
-      ).then((response) => {
-        setFirstLoading(false);
+      timeout.current = setTimeout(() => {
+        estimateTokenXFromTokenY(
+          new BigNumber(input),
+          props.tokenIn.symbol,
+          props.tokenOut.symbol,
+          Number(selectedPosition.position.lower_tick_index),
+          Number(selectedPosition.position.upper_tick_index)
+        ).then((response) => {
+          setFirstLoading(false);
 
-        props.inputDisable === "false"
-          ? props.setFirstTokenAmount(response.toString())
-          : props.setFirstTokenAmount(0);
-      });
+          props.inputDisable === "false"
+            ? props.setFirstTokenAmount(response.toString())
+            : props.setFirstTokenAmount(0);
+        });
+      }, 600);
     }
   };
 
@@ -142,7 +147,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
   };
   return (
     <div className="border relative border-text-800 bg-card-200 p-4 rounded-2xl	">
-      <div className="border hover:border-text-700  flex border-text-800/[0.5] rounded-2xl h-[70px]">
+      <div className="border hover:border-text-700/[0.8]  flex border-text-800/[0.5] rounded-2xl h-[70px]">
         <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
           <div className="ml-2 md:ml-5">
             <img
@@ -229,7 +234,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
 
       {selectedPosition.minPrice.isLessThan(props.currentPrice) &&
         selectedPosition.maxPrice.isGreaterThan(props.currentPrice) && (
-          <div className="relative -top-[9px] left-[25%]">
+          <div className="relative z-10 -top-[9px] left-[25%]">
             <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
           </div>
         )}
@@ -242,7 +247,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
           )
             ? "mt-[6px]"
             : "-mt-[25px] ",
-          "border flex border-text-800/[0.5] hover:border-text-700 rounded-2xl h-[70px] relative"
+          "border flex border-text-800/[0.5] hover:border-text-700/[0.8] rounded-2xl h-[70px] relative"
         )}
       >
         <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
