@@ -7,6 +7,7 @@ interface IFeeTierMainProps {
   setSelectedFeeTier: React.Dispatch<React.SetStateAction<string>>;
   selectedFeeTier: string;
   feeTier: string;
+  isExist: any;
 }
 function FeeTierMainNewPool(props: IFeeTierMainProps) {
   const fee = [
@@ -42,7 +43,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
           <div
             key={index}
             className={clsx(
-              feeInd.created
+              props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
                 ? "border-text-800 cursor-not-allowed"
                 : props.selectedFeeTier === feeInd.percentage
                 ? "border-blue-700"
@@ -53,7 +54,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
           >
             <div
               className={clsx(
-                feeInd.created
+                props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
                   ? "text-text-700"
                   : props.selectedFeeTier === feeInd.percentage
                   ? "text-blue-700"
@@ -65,7 +66,9 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
             </div>
             <div
               className={clsx(
-                feeInd.created ? "text-text-700" : " text-text-250",
+                props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
+                  ? "text-text-700"
+                  : " text-text-250",
                 "mt-2 font-mobile-400 sm:font-body1 "
               )}
             >
@@ -74,11 +77,15 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
             <div className="mt-[12px]">
               <span
                 className={clsx(
-                  feeInd.created ? "text-info-500 bg-info-500/[0.2]" : "text-white bg-shimmer-100",
+                  props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
+                    ? "text-info-500 bg-info-500/[0.2]"
+                    : "text-white bg-shimmer-100",
                   " rounded-xl	 px-2 items-center flex w-fit font-caption1 h-[24px]"
                 )}
               >
-                {feeInd.created ? "Created" : "Not Created"}
+                {props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
+                  ? "Created"
+                  : "Not Created"}
               </span>
             </div>
           </div>

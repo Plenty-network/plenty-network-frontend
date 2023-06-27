@@ -28,6 +28,10 @@ import { TextNewPool } from "./TextNewPool";
 import TokenModalPool from "./tokenModalPool";
 import { tzktExplorer } from "../../../common/walletconnect";
 import ConfirmAddPoolv3 from "./ConfirmAddPool";
+import { checkPoolExistence } from "../../../api/v3/factory";
+import { deployPoolOperation } from "../../../operations/v3/factory";
+import { Tick } from "@plenty-labs/v3-sdk";
+import { getTickFromRealPrice } from "../../../api/v3/helper";
 
 export interface IManageLiquidityProps {
   show: boolean;
@@ -61,12 +65,13 @@ export function NewPoolv3(props: IManageLiquidityProps) {
   };
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
-
+  const [selectedFeeTier, setSelectedFeeTier] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [showConfirmPool, setShowConfirmPool] = useState(false);
 
   const [contentTransaction, setContentTransaction] = useState("");
+  const [tick, setTick] = useState("");
 
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>(
     {} as tokenParameterLiquidity
@@ -75,6 +80,21 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     {} as tokenParameterLiquidity
   );
 
+  useEffect(() => {
+    if (
+      Number(priceAmount) > 0 &&
+      Object.prototype.hasOwnProperty.call(tokenIn, "symbol") &&
+      Object.prototype.hasOwnProperty.call(tokenOut, "symbol")
+    ) {
+      setTick("");
+      getTickFromRealPrice(new BigNumber(priceAmount), tokenIn.symbol, tokenOut.symbol).then(
+        (res) => {
+          console.log(res, "tick");
+          setTick(res);
+        }
+      );
+    }
+  }, [priceAmount, tokenIn.symbol, tokenOut.symbol]);
   const [swapModalShow, setSwapModalShow] = useState(false);
 
   const [tokenType, setTokenType] = useState<tokenType>("tokenIn");
@@ -188,18 +208,14 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       );
     }
   }, [tokensListConfig, allBalance.allTokensBalances]);
+  const [isExist, setIsExist] = useState<any>();
   useEffect(() => {
     setPair("");
-    if (
-      (tokenIn.name === "XTZ" && tokenOut.name !== "CTez") ||
-      (tokenOut.name === "XTZ" && tokenIn.name !== "CTez")
-    ) {
-      setPair(Pair.VOLATILE);
-    } else if (
-      (tokenIn.name === "XTZ" && tokenOut.name === "CTez") ||
-      (tokenOut.name === "XTZ" && tokenIn.name === "CTez")
-    ) {
-      setPair(Pair.STABLE);
+    if (tokenIn.name && tokenOut.name) {
+      checkPoolExistence(tokenIn.name, tokenOut.name).then((res) => {
+        setIsExist(res);
+        console.log(res, "newpools");
+      });
     }
   }, [tokenIn.name, tokenOut.name]);
 
@@ -214,12 +230,72 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(tokenOut.name));
     localStorage.setItem(FIRST_TOKEN_AMOUNT, pair === Pair.VOLATILE ? "volatile" : "stable");
+    deployPoolOperation(
+      tokenIn.symbol,
+      tokenOut.symbol,
+      Number(tick),
+      Number(selectedFeeTier),
 
-    setContentTransaction(`new pool`);
-    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    props.setReFetchPool(false);
-    setRefetch(false);
-    setShowConfirmTransaction(true);
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `new pool ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+          TOKEN_A
+        )} /  ${localStorage.getItem(TOKEN_B)}`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `new pool `,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
+              },
+              transactionId: response.operationId ? response.operationId : "",
+            })
+          );
+        }, 6000);
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        // setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+        //resetAllValues();
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              transactionId: "",
+              headerText: "Rejected",
+              trailingText: `new pool`,
+              linkText: "",
+              isLoading: true,
+            })
+          );
+        }, 2000);
+
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        // setContentTransaction("");
+      }
+    });
   };
   return (
     <>
@@ -231,7 +307,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
           <>
             <div className="flex ">
               <div className="mx-2 text-white font-title3">Add new pool</div>
-              <div className="relative top-[5px]">
+              <div className="relative top-[2px]">
                 <ToolTip
                   id="tooltip2"
                   position={Position.top}
@@ -251,6 +327,9 @@ export function NewPoolv3(props: IManageLiquidityProps) {
             <TextNewPool />
             <div className="">
               <NewPoolMain
+                setSelectedFeeTier={setSelectedFeeTier}
+                selectedFeeTier={selectedFeeTier}
+                isExist={isExist}
                 priceAmount={priceAmount}
                 setPriceAmount={setPriceAmount}
                 setShowConfirmPool={setShowConfirmPool}

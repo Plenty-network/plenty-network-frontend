@@ -36,6 +36,8 @@ import fromExponential from "from-exponential";
 import FeeTierMainNewPool from "./FeeTierNewPool";
 
 interface ILiquidityProps {
+  setSelectedFeeTier: React.Dispatch<React.SetStateAction<string>>;
+  selectedFeeTier: string;
   inputRef?: any;
   value?: string | "";
   onChange?: any;
@@ -54,6 +56,7 @@ interface ILiquidityProps {
   showLiquidityModal: boolean;
   contractTokenBalance: IAllTokensBalance;
   setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  isExist: any;
 }
 export const Pair = {
   VOLATILE: "Volatile pair",
@@ -67,10 +70,8 @@ function NewPoolMain(props: ILiquidityProps) {
     return dispatch(walletConnection());
   };
 
-  const [isExist, setIsExist] = useState(false);
-
   const [showNewPoolsManage, setShowNewPoolsManage] = useState<boolean>(false);
-  const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
+
   const handleNewPoolsManagePopup = (val: boolean) => {
     setShowNewPoolsManage(val);
   };
@@ -92,7 +93,12 @@ function NewPoolMain(props: ILiquidityProps) {
           Connect wallet
         </Button>
       );
-    } else if (!props.tokenIn.name || !props.tokenOut.name) {
+    } else if (
+      !props.tokenIn.name ||
+      !props.tokenOut.name ||
+      props.priceAmount === "" ||
+      props.selectedFeeTier === ""
+    ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
           Create pool
@@ -117,7 +123,7 @@ function NewPoolMain(props: ILiquidityProps) {
         </Button>
       );
     }
-  }, [props.pair, props.tokenIn, props.tokenOut, props.userBalances, isExist]);
+  }, [props.pair, props.tokenIn, props.tokenOut, props.userBalances, props]);
 
   const handleLiquidityInput = async (input: string | number) => {
     if (input == ".") {
@@ -321,9 +327,10 @@ function NewPoolMain(props: ILiquidityProps) {
       </div>
       {props.tokenIn.symbol && props.tokenOut.symbol && (
         <FeeTierMainNewPool
-          setSelectedFeeTier={setSelectedFeeTier}
-          selectedFeeTier={selectedFeeTier}
+          setSelectedFeeTier={props.setSelectedFeeTier}
+          selectedFeeTier={props.selectedFeeTier}
           feeTier={""}
+          isExist={props.isExist}
         />
       )}
 
