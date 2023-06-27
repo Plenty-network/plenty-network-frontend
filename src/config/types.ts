@@ -43,6 +43,7 @@ export interface IConfig {
   ANALYTICS_INDEXER: { mainnet: string; testnet: string };
   PLY_TOKEN: { mainnet: string; testnet: string };
   FACTORY: { mainnet: string; testnet: string };
+  V3_FACTORY: { mainnet: string; testnet: string };
   TEZ_DEPLOYER: { mainnet: string; testnet: string };
   EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData };
   IPFS_LINKS: { primary: string; fallback: string };
