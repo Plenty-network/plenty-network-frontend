@@ -134,13 +134,13 @@ export default function Zoom({
       )}
       <div
         onClick={zoomIn}
-        className="cursor-pointer bg-shimmer-100 p-1.5 rounded-full hover:bg-shimmer-200/[0.8]"
+        className="cursor-pointer bg-shimmer-100 p-2 rounded-full hover:bg-shimmer-200/[0.8]"
       >
         <ZoomIn size={13} />
       </div>
       <div
         onClick={zoomOut}
-        className="cursor-pointer bg-shimmer-100 p-1.5 rounded-full hover:bg-shimmer-200/[0.8]"
+        className="cursor-pointer bg-shimmer-100 p-2 rounded-full hover:bg-shimmer-200/[0.8]"
       >
         <ZoomOut size={13} />
       </div>

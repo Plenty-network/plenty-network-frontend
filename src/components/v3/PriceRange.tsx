@@ -226,7 +226,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         )}
       </div>
       {props.isFullRange && (
-        <div className=" absolute h-[78px]  flex items-center justify-center w-[362px] px-[20px] bg-error-300/[0.1]  rounded-lg	ml-4 z-10">
+        <div className="fade-in-light absolute h-[78px]  flex items-center justify-center w-[362px] px-[20px] bg-error-300/[0.1]  rounded-lg	ml-4 z-10">
           <span className=" text-error-300 text-[13px] leading-[20px] ">
             Full range liquidity is highly capital inefficient. Please proceed with caution.
           </span>

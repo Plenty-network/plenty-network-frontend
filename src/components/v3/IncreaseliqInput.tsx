@@ -147,7 +147,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
   };
   return (
     <div className="border relative border-text-800 bg-card-200 p-4 rounded-2xl	">
-      <div className="border hover:border-text-700  flex border-text-800/[0.5] rounded-2xl h-[70px]">
+      <div className="border hover:border-text-700/[0.8]  flex border-text-800/[0.5] rounded-2xl h-[70px]">
         <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
           <div className="ml-2 md:ml-5">
             <img
@@ -234,7 +234,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
 
       {selectedPosition.minPrice.isLessThan(props.currentPrice) &&
         selectedPosition.maxPrice.isGreaterThan(props.currentPrice) && (
-          <div className="relative -top-[9px] left-[25%]">
+          <div className="relative z-10 -top-[9px] left-[25%]">
             <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
           </div>
         )}
@@ -247,7 +247,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
           )
             ? "mt-[6px]"
             : "-mt-[25px] ",
-          "border flex border-text-800/[0.5] hover:border-text-700 rounded-2xl h-[70px] relative"
+          "border flex border-text-800/[0.5] hover:border-text-700/[0.8] rounded-2xl h-[70px] relative"
         )}
       >
         <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
