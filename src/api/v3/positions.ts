@@ -397,7 +397,10 @@ export const createIncreaseLiquidityOperation = async (
   const options = {
     liquidityDelta: liquidity,
 
-    maximumTokensContributed: maxTokensContributed,
+    maximumTokensContributed: {
+      x: maxTokensContributed.x.abs(),
+      y: maxTokensContributed.y.abs(),
+    },
 
     positionId: parseInt(position.position.key_id),
 
