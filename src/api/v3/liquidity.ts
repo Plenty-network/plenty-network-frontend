@@ -70,8 +70,16 @@ export const calculateFullRange = async (
     );
     let tickFullRange = PoolObject.getFullRangeBoundaries();
 
-    let minTickPrice = await getRealPriceFromTick(tickFullRange[0], tokenXSymbol, tokenYSymbol);
-    let maxTickPrice = await getRealPriceFromTick(tickFullRange[1], tokenXSymbol, tokenYSymbol);
+    let minTickPrice = Price.computeRealPriceFromSqrtPrice(
+      Tick.computeSqrtPriceFromTick(tickFullRange[0]),
+      contractStorageParameters.tokenX.decimals,
+      contractStorageParameters.tokenY.decimals
+    );
+    let maxTickPrice = Price.computeRealPriceFromSqrtPrice(
+      Tick.computeSqrtPriceFromTick(tickFullRange[1]),
+      contractStorageParameters.tokenX.decimals,
+      contractStorageParameters.tokenY.decimals
+    );
 
     console.log(
       "tickFullRange",
