@@ -8,7 +8,7 @@ import {
   nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
-import { useMemo, useEffect } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import Image from "next/image";
 import { AppDispatch, useAppSelector } from "../../redux";
 
@@ -20,7 +20,6 @@ import { RangeSliderDecLiq } from "./RangeSliderDecrease";
 import { ActivePopUp } from "./ManageTabV3";
 import { calculateTokensForRemoveLiquidity } from "../../api/v3/positions";
 import { BalanceNat } from "../../api/v3/types";
-import { handleClientScriptLoad } from "next/script";
 
 interface IDecLiquidityProp {
   tokenIn: tokenParameterLiquidity;
@@ -80,20 +79,23 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
   //     );
   //   }
   // }, [props.removePercentage, walletAddress]);
-
+  const timeout = useRef<any>();
   useEffect(() => {
-    calculateTokensForRemoveLiquidity(
-      Number(props.removePercentage),
-      props.tokenIn.symbol,
-      props.tokenOut.symbol,
-      selectedPosition
-    ).then((res) => {
-      props.setRemove(res);
-    });
+    clearTimeout(timeout.current);
+    timeout.current = setTimeout(() => {
+      calculateTokensForRemoveLiquidity(
+        Number(props.removePercentage),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        selectedPosition
+      ).then((res) => {
+        props.setRemove(res);
+      });
+    }, 600);
   }, [props.removePercentage]);
 
   return (
-    <>
+    <div className="fade-in-light ">
       <div className="border border-text-800 bg-card-200 rounded-2xl	py-5 px-4 mt-5">
         <div className="flex gap-1 font-title3">
           Amount
@@ -114,7 +116,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             className={clsx(
               props.removePercentage === 25
                 ? "bg-primary-500 text-black"
-                : "bg-muted-235 text-text-500 hover:text-white",
+                : "bg-muted-235 text-text-500 hover:text-white hover:bg-text-700",
               "cursor-pointer w-[91px] h-[36px] rounded-lg	text-center font-body4  py-2"
             )}
             onClick={() => props.setRemovePercentage(25)}
@@ -125,7 +127,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             className={clsx(
               props.removePercentage === 50
                 ? "bg-primary-500 text-black"
-                : "bg-muted-235 text-text-500 hover:text-white ",
+                : "bg-muted-235 text-text-500  hover:bg-text-700 hover:text-white ",
               "cursor-pointer w-[91px] h-[36px] rounded-lg font-body4	 text-center py-2"
             )}
             onClick={() => props.setRemovePercentage(50)}
@@ -136,7 +138,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             className={clsx(
               props.removePercentage === 75
                 ? "bg-primary-500 text-black"
-                : "bg-muted-235 text-text-500 hover:text-white",
+                : "bg-muted-235 text-text-500 hover:text-white hover:bg-text-700",
               "cursor-pointer w-[91px] h-[36px] rounded-lg	font-body4 text-center py-2"
             )}
             onClick={() => props.setRemovePercentage(75)}
@@ -147,7 +149,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             className={clsx(
               props.removePercentage === 100
                 ? "bg-primary-500 text-black"
-                : "bg-muted-235 text-text-500 hover:text-white",
+                : "bg-muted-235 text-text-500 hover:text-white hover:bg-text-700",
               "cursor-pointer w-[91px] h-[36px] rounded-lg	font-body4  text-center py-2"
             )}
             onClick={() => props.setRemovePercentage(100)}
@@ -272,16 +274,19 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
           <div className="border-t border-text-800/[0.5] mb-3"></div>
         </div>
       </div>
-      {walletAddress == null ? (
-        <Button onClick={connectTempleWallet} color={"primary"}>
-          Connect wallet
-        </Button>
-      ) : (
-        <Button onClick={handleRemove} color={"primary"}>
-          Remove
-        </Button>
-      )}
+      <div className="mt-5">
+        {" "}
+        {walletAddress == null ? (
+          <Button onClick={connectTempleWallet} color={"primary"}>
+            Connect wallet
+          </Button>
+        ) : (
+          <Button onClick={handleRemove} color={"primary"}>
+            Remove
+          </Button>
+        )}
+      </div>
       {/* <div className="mt-4"> {DecreaseButton}</div> */}
-    </>
+    </div>
   );
 }

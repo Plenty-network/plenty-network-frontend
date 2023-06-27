@@ -382,7 +382,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
           <div
             className={clsx(
               x.feesDollar.isEqualTo(0) ? "cursor-not-allowed" : "cursor-pointer",
-              "bg-primary-500/10 md:w-[151px] w-[100px]   text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
+              "bg-primary-500/10 md:w-[140px] w-[100px]   text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
             )}
             onClick={
               x.feesDollar.isEqualTo(0)
@@ -400,7 +400,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       {
         Header: "",
         id: "manage",
-        columnWidth: "w-[180px] ",
+        columnWidth: "w-[170px] ",
         accessor: (x) => (
           <ManageBtn
             tokenA={x.tokenX ? x.tokenX.toString() : "DAI.e"}
@@ -415,7 +415,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
   function ManageBtn(props: IManageBtnProps): any {
     return (
       <div
-        className="bg-primary-500/10 md:w-[141px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
+        className="bg-primary-500/10 md:w-[130px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
         onClick={() => {
           setShowLiquidityModal(true);
           dispatch(setSelectedPosition(props.data));

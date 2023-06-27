@@ -19,8 +19,9 @@ function VotingAllocation(props: IVotingAllocationProps) {
   const [piChartData, setPiChartData] = useState<IVotesData[]>();
   const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0);
   const userAddress = useAppSelector((state) => state.wallet.address);
+  const AMM = useAppSelector((state) => state.config.AMMs);
   useEffect(() => {
-    if (props.epochNumber) {
+    if (props.epochNumber && Object.keys(AMM).length !== 0) {
       if (
         props.selectedDropDown &&
         props.selectedDropDown.tokenId !== "" &&
@@ -60,6 +61,7 @@ function VotingAllocation(props: IVotingAllocationProps) {
     selectedDropDown,
     props.castVoteOperation,
     props.show,
+    AMM,
   ]);
 
   useEffect(() => {

@@ -779,9 +779,16 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     <>
       <PopUpModal
         onhide={closeModal}
+        Name={
+          screen === ActivePopUp.NewPosition
+            ? "newposition"
+            : screen === ActivePopUp.Positions
+            ? "positions"
+            : ""
+        }
         className={clsx(
           screen === ActivePopUp.Positions
-            ? "sm:w-[880px] sm:max-w-[880px]"
+            ? "sm:w-[972px] sm:max-w-[972px]"
             : screen === ActivePopUp.ConfirmAddV3
             ? "sm:w-[602px] sm:max-w-[602px]"
             : screen === ActivePopUp.NewPosition
@@ -891,11 +898,11 @@ export function ManageTabV3(props: IManageLiquidityProps) {
           </>
         ) : screen === ActivePopUp.Positions ? (
           <>
-            <div className="flex gap-1">
+            <div className="flex gap-1 h-[32px] items-center">
               <p className="text-white">
                 {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
               </p>
-              <p className="ml-1 relative top-[3px]">
+              <p className="ml-1 relative ">
                 <InfoIconToolTip
                   message={
                     "Create a new position or manage liquidity and collect fees for existing positions."

@@ -43,7 +43,7 @@ export function Tab(props: ITabProps) {
       className={`flex justify-center cursor-pointer items-center flex-1 py-1.5 ${
         isActive
           ? active
-          : "bg-text-800 border border-text-500 hover:border-text-500/[0.8] hover:text-white/[0.8] rounded-xl text-white"
+          : " hover:border-text-500/[0.8] hover:text-white/[0.8] rounded-r-xl text-white"
       }`}
     >
       {text}
@@ -54,7 +54,9 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
   const ListOfTabs = ["Increase liquidity", "Remove liquidity"];
   return (
     <>
-      <div className={`flex row justify-between mt-3 gap-2 text-text-400 text-f16  rounded-xl `}>
+      <div
+        className={`flex border border-shimmer-300 row justify-between mt-3 bg-background-600 text-text-400 text-f16  rounded-xl `}
+      >
         {ListOfTabs.map((tab, i) => (
           <Tab
             key={tab + i}

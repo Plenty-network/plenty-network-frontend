@@ -58,7 +58,14 @@ export function PopUpModal(props: IPopUpModalProps) {
       >
         {props.Name !== "disclaimer" && (
           <div
-            className="absolute right-0 top-[23px] px-6 cursor-pointer hover:opacity-90 hover:scale-90"
+            className={clsx(
+              "absolute right-0  px-6 cursor-pointer hover:opacity-90 hover:scale-90",
+              props.Name === "newposition"
+                ? "top-[28px]"
+                : props.Name === "positions"
+                ? "top-[26px]"
+                : "top-[23px]"
+            )}
             onClick={() => {
               setIsClose(true);
               //setTimeout(() => {
