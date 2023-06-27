@@ -220,6 +220,7 @@ export interface IConfigPool {
   gauge?: string;
   bribe?: string;
   fees?: number;
+  feeBps?: number;
 }
 
 export interface IConfigPools {
