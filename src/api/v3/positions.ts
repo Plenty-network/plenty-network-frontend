@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { Tick, Pool, Price, Liquidity, Fee, MAX_TICK, PositionManager } from "@plenty-labs/v3-sdk";
 import Config from "../../config/config";
-import { ContractStorage, getOutsideFeeGrowth, getRealPriceFromTick } from "./helper";
+import { contractStorage, getOutsideFeeGrowth, getRealPriceFromTick } from "./helper";
 
 import axios from "axios";
 import { BalanceNat, IV3Position, IV3PositionObject } from "./types";
@@ -24,7 +24,7 @@ export const getPositions = async (
   try {
     console.log("price X", tokenPrices[tokenXSymbol]);
     console.log("price Y", tokenPrices[tokenYSymbol]);
-    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
     let v3ContractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
     const positions: IV3Position[] = (
       await axios.get(
@@ -208,7 +208,7 @@ export const getPositionsAll = async (
 
     const contractStorageParametersPromises = positions.map(async (position) => {
       const { tokenX, tokenY } = getTokensFromAMMAddress(position.amm);
-      return await ContractStorage(tokenX, tokenY);
+      return await contractStorage(tokenX, tokenY);
     });
 
     const contractStorageParametersArray = await Promise.all(contractStorageParametersPromises);
@@ -461,7 +461,7 @@ export const calculateTokensForRemoveLiquidity = async (
   position: IV3PositionObject
 ): Promise<any> => {
   try {
-    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
     const newLiquidty = new BigNumber(position.position.liquidity).minus(
       BigNumber(position.position.liquidity).multipliedBy(percentage).dividedBy(100)
     );
