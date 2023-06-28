@@ -190,7 +190,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
     <div>
       <div className="mx-auto md:w-[400px] w-[362px]   px-[10px]  pt-2 pb-6  mb-5 h-[254px]">
         <div className="flex justify-between">
-          <div className="font-body4 ">Set Price Range</div>
+          <div className="font-body4 ">Set price range</div>
           {/* <div className="flex gap-1">
             <Image src={zoomin} />
             <Image src={zoomout} />
@@ -240,7 +240,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       >
         <div>
           <div className="font-body4 text-text-250">
-            Min Price{" "}
+            Min price{" "}
             <span className="font-caption1-small">
               ( {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
               {tEZorCTEZtoUppercase(props.tokenIn.symbol)} )
@@ -313,7 +313,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         </div>
         <div>
           <div className="font-body4 text-text-250">
-            Max Price{" "}
+            Max price{" "}
             <span className="font-caption1-small">
               ( {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
               {tEZorCTEZtoUppercase(props.tokenIn.symbol)} )

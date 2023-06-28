@@ -816,7 +816,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 className="text-primary-500 hover:text-primary-500/[0.8] font-subtitle1 ml-auto mr-5 cursor-pointer"
                 onClick={resetAllValues}
               >
-                Clear All
+                Clear all
               </p>
               <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
                 <div

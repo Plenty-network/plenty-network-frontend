@@ -88,7 +88,7 @@ function PositionsData(props: IPositionsProps) {
           </div>
         </div>
         <div className="w-[130px] text-text-250 font-body2 flex">
-          Fees Collected
+          Fees collected
           <div className="relative top-[2px] ml-1 cursor-pointer">
             <ToolTip
               id="tooltip2"

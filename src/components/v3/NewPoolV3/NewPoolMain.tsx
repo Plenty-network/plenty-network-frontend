@@ -146,7 +146,7 @@ function NewPoolMain(props: ILiquidityProps) {
         <>
           <div className=" relative gap-2 flex border-text-800/[0.5] rounded-2xl h-[89px]">
             <div
-              className="w-[50%] rounded-l-2xl border items-center flex border-text-800/[0.5] bg-card-300 cursor-pointer"
+              className="w-[50%] rounded-l-2xl border items-center flex border-text-800/[0.5] hover:border-text-700 bg-card-300 hover:bg-blue-800 cursor-pointer"
               onClick={() => props.handleTokenType("tokenIn")}
             >
               <div className="ml-3 md:ml-5 ">
@@ -180,7 +180,7 @@ function NewPoolMain(props: ILiquidityProps) {
               <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
             </div>
             <div
-              className="w-[50%] rounded-r-2xl border items-center flex border-text-800/[0.5] bg-card-300 cursor-pointer"
+              className="w-[50%] rounded-r-2xl border items-center flex border-text-800/[0.5] bg-card-300 hover:border-text-700 hover:bg-blue-800 cursor-pointer"
               onClick={() => props.handleTokenType("tokenOut")}
             >
               <div className="ml-5 md:ml-5 ">

@@ -408,7 +408,7 @@ export function PoolsTableV3(props: IShortCardProps) {
   }
   return (
     <>
-      {props.showLiquidityModal &&
+      {true &&
         (isMobile ? (
           <ManageTabMobile
             tokenIn={tokenChange(topLevelSelectedToken, tokenIn, tokenOut)}

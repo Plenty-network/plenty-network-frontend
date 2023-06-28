@@ -262,6 +262,7 @@ function MyPortfolio(props: any) {
   }, [amm]);
   useEffect(() => {
     if (userAddress && Object.keys(tokenPrice).length !== 0) {
+      setPoolsv3Position({ data: [] as IV3PositionObject[], isfetched: false });
       getPositionsAll(userAddress, tokenPrice).then((response) => {
         setPoolsv3Position({ data: response, isfetched: true });
       });
@@ -458,6 +459,13 @@ function MyPortfolio(props: any) {
       getAllLocksPositionData(userAddress).then((res) => {
         setLocksPosition({ data: res.allLocksData.reverse(), isfetched: true });
       });
+      if (Object.keys(tokenPrice).length !== 0 && userAddress) {
+        setPoolsv3Position({ data: [] as IV3PositionObject[], isfetched: false });
+        getPositionsAll(userAddress, tokenPrice).then((response) => {
+          setPoolsv3Position({ data: response, isfetched: true });
+        });
+      }
+
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         dispatch(
           fetchTvlStatsData({
@@ -1016,7 +1024,6 @@ function MyPortfolio(props: any) {
       if (response.success) {
         setBalanceUpdate(true);
         setTimeout(() => {
-          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Success,
@@ -1034,6 +1041,9 @@ function MyPortfolio(props: any) {
             })
           );
         }, 6000);
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        }, 8000);
 
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
