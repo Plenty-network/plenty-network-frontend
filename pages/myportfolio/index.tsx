@@ -94,7 +94,7 @@ import { PortfolioDropdown } from "../../src/components/PortfolioSection";
 import nFormatter, { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
 import { tzktExplorer } from "../../src/common/walletconnect";
 import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
-//import { PoolsV3TablePosition } from "../../src/components/PoolsV3Positions/poolsTable";
+
 import { getPositionsAll } from "../../src/api/v3/positions";
 import { IV3PositionObject } from "../../src/api/v3/types";
 import { collectFees } from "../../src/operations/v3/fee";

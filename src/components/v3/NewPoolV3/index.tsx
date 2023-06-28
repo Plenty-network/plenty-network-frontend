@@ -301,10 +301,12 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     <>
       {props.show && (
         <PopUpModal
+          Name="Manage"
           onhide={closeModal}
-          className="w-[390px] max-w-[390px] sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
+          isFullSizeOnMobile={true}
+          className="w-[400px] max-w-[400px] sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
         >
-          <>
+          <div className="px-2 md:px-0">
             <div className="flex ">
               <div className="mx-2 text-white font-title3">Add new pool</div>
               <div className="relative top-[2px]">
@@ -346,7 +348,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
                 contractTokenBalance={contractTokenBalance}
               />
             </div>
-          </>
+          </div>
         </PopUpModal>
       )}
       {showConfirmPool && (

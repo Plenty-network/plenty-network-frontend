@@ -37,7 +37,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
     },
   ];
   return (
-    <div className="flex gap-[12px]  items-center justify-start ml-1">
+    <div className="flex gap-2 md:gap-[12px]  items-center justify-start ml-1">
       {fee.map((feeInd, index) => {
         return (
           <div
@@ -48,7 +48,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
                 : props.selectedFeeTier === feeInd.percentage
                 ? "border-blue-700"
                 : "border-text-800 hover:border-text-400 cursor-pointer",
-              "border w-[133px]  rounded-2xl   bg-card-200   mb-5 h-[139px] sm:h-[128px] py-[12px] pl-[14px]  pr-3 "
+              "border w-[133px]  rounded-2xl   bg-card-200   mb-5 h-[128px] md:h-[139px] sm:h-[128px] py-[12px] pl-2.5 md:pl-[14px]  pr-2 md:pr-3 "
             )}
             onClick={() => props.setSelectedFeeTier(feeInd.percentage)}
           >
@@ -80,7 +80,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
                   props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
                     ? "text-info-500 bg-info-500/[0.2]"
                     : "text-white bg-shimmer-100",
-                  " rounded-xl	 px-2 items-center flex w-fit font-caption1 h-[24px]"
+                  " rounded-xl	 px-2 items-center flex w-fit text-[9px] md:font-caption1 h-[24px]"
                 )}
               >
                 {props.isExist?.feeTier?.toString() === feeInd.percentage.toString()

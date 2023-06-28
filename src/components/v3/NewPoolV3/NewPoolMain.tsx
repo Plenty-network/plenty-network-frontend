@@ -149,7 +149,7 @@ function NewPoolMain(props: ILiquidityProps) {
               className="w-[50%] rounded-l-2xl border items-center flex border-text-800/[0.5] bg-card-300 cursor-pointer"
               onClick={() => props.handleTokenType("tokenIn")}
             >
-              <div className="ml-2 md:ml-5 ">
+              <div className="ml-3 md:ml-5 ">
                 <img
                   src={
                     props.tokenIn.image
@@ -176,14 +176,14 @@ function NewPoolMain(props: ILiquidityProps) {
                 </p>
               </div>
             </div>
-            <div className="absolute top-[38%] left-[48%]">
+            <div className="absolute top-[38%] left-[47%] md:left-[48%]">
               <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
             </div>
             <div
               className="w-[50%] rounded-r-2xl border items-center flex border-text-800/[0.5] bg-card-300 cursor-pointer"
               onClick={() => props.handleTokenType("tokenOut")}
             >
-              <div className="ml-2 md:ml-5 ">
+              <div className="ml-5 md:ml-5 ">
                 <img
                   src={
                     props.tokenOut.image
@@ -225,8 +225,8 @@ function NewPoolMain(props: ILiquidityProps) {
                   {selectedToken.symbol
                     ? `: 1 ${
                         selectedToken.symbol === props.tokenIn.symbol
-                          ? props.tokenIn.name
-                          : props.tokenOut.symbol
+                          ? tEZorCTEZtoUppercase(props.tokenIn.name)
+                          : tEZorCTEZtoUppercase(props.tokenOut.symbol)
                       } =`
                     : null}
                 </span>
@@ -234,7 +234,7 @@ function NewPoolMain(props: ILiquidityProps) {
               <p className="flex items-center">
                 <input
                   type="text"
-                  className="text-white bg-muted-200/[0.1] text-left border-0 ml-1 font-medium2  lg:font-medium1 outline-none w-[100px] placeholder:text-text-500 "
+                  className="text-white bg-muted-200/[0.1] text-left border-0 ml-1 font-medium2  lg:font-medium1 outline-none w-[50px] md:w-[100px] placeholder:text-text-500 "
                   placeholder="0.0"
                   value={
                     props.priceAmount
@@ -279,9 +279,11 @@ function NewPoolMain(props: ILiquidityProps) {
                       onError={changeSource}
                     />
                     <span className="ml-1 font-caption1">
-                      {selectedToken.symbol === props.tokenIn.symbol
-                        ? props.tokenOut.name
-                        : props.tokenIn.symbol}
+                      {tEZorCTEZtoUppercase(
+                        selectedToken.symbol === props.tokenIn.symbol
+                          ? props.tokenOut.name
+                          : props.tokenIn.symbol
+                      )}
                     </span>
                   </>
                 )}{" "}
@@ -317,7 +319,7 @@ function NewPoolMain(props: ILiquidityProps) {
                     {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
                   </div>
                 </div>
-                <div className="font-body3 text-text-600 mt-[5.5px]">
+                <div className="font-body1 md:font-body3  text-text-600 mt-[5.5px]">
                   Select initial price token
                 </div>
               </div>

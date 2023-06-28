@@ -112,7 +112,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
     <>
       <div
         className={clsx(
-          "fade-in-light overflow-y-auto overflow-x-hidden modalManage h-[calc(100vh_-_290px)]"
+          "fade-in-light overflow-y-auto overflow-x-hidden modalManage h-[calc(100vh_-_286px)] mb-5"
         )}
       >
         <div className="mt-[17px] border border-text-800 bg-card-200 rounded-2xl py-5 mb-3">
@@ -361,7 +361,8 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
           inputDisable={inputDisable}
         />
       </div>
-      <div className="mt-4"> {IncreaseButton}</div>
+      <div className=" blur "></div>
+      <div className=""> {IncreaseButton}</div>
     </>
   );
 }
