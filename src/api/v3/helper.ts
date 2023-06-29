@@ -143,17 +143,20 @@ export const getRealPriceFromTick = async (
 export const getTickFromRealPrice = async (
   realPrice: BigNumber,
   tokenXSymbol: string,
-  tokenYSymbol: string
+  tokenYSymbol: string,
+  tickspacing: number
 ): Promise<any> => {
   try {
     let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
+    const state = store.getState();
+    const tokens = state.config.tokens;
     let tick = Tick.computeTickFromSqrtPrice(
       Price.computeSqrtPriceFromRealPrice(
         realPrice,
-        contractStorageParameters.tokenX.decimals,
-        contractStorageParameters.tokenY.decimals
+        tokens[tokenXSymbol].decimals,
+        tokens[tokenYSymbol].decimals
       ),
-      contractStorageParameters.tickSpacing
+      tickspacing
     );
 
     return tick;
