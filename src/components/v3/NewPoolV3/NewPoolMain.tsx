@@ -296,7 +296,7 @@ function NewPoolMain(props: ILiquidityProps) {
                     className={clsx(
                       selectedToken.symbol === props.tokenIn.symbol
                         ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
-                        : "text-text-250 px-2",
+                        : "text-text-250 px-2 hover:text-white",
                       "font-subtitle1223"
                     )}
                     onClick={() => {
@@ -309,7 +309,7 @@ function NewPoolMain(props: ILiquidityProps) {
                     className={clsx(
                       selectedToken.symbol === props.tokenOut.symbol
                         ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
-                        : "text-text-250 px-2",
+                        : "text-text-250 px-2 hover:text-white",
                       "font-subtitle1223"
                     )}
                     onClick={() => {

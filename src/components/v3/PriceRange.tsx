@@ -79,6 +79,17 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const BrightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
+  const TickSpacing = (selectedFeeTier: string) => {
+    if (selectedFeeTier === "0.01") {
+      return 1;
+    } else if (selectedFeeTier === "0.05") {
+      return 10;
+    } else if (selectedFeeTier === "0.3") {
+      return 60;
+    } else {
+      return 200;
+    }
+  };
 
   const dispatch = useDispatch<AppDispatch>();
   React.useEffect(() => {
@@ -91,7 +102,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         new BigNumber(value),
         props.tokenIn.symbol,
         props.tokenOut.symbol,
-        1
+        TickSpacing(props.selectedFeeTier)
       ).then((response1) => {
         dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
       });
@@ -100,7 +111,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         new BigNumber(1).dividedBy(new BigNumber(value)),
         props.tokenOut.symbol,
         props.tokenIn.symbol,
-        10
+        TickSpacing(props.selectedFeeTier)
       ).then((response1) => {
         dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
       });
@@ -126,7 +137,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         new BigNumber(value),
         props.tokenIn.symbol,
         props.tokenOut.symbol,
-        10
+        TickSpacing(props.selectedFeeTier)
       ).then((response) => {
         dispatch(setmaxTickA(Tick.nearestUsableTick(response, 10)));
       });
@@ -135,7 +146,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         new BigNumber(1).dividedBy(new BigNumber(value)),
         props.tokenOut.symbol,
         props.tokenIn.symbol,
-        10
+        TickSpacing(props.selectedFeeTier)
       ).then((response1) => {
         dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
       });
@@ -167,7 +178,6 @@ function PriceRangeV3(props: IPriceRangeProps) {
         ? dispatch(setRightRangeInput("∞"))
         : dispatch(setBRightRangeInput("∞"));
       calculateFullRange(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
-        console.log("full", response);
         topLevelSelectedToken.symbol === tokeninorg.symbol
           ? dispatch(setleftbrush(response.minTickPrice.toFixed(6)))
           : dispatch(setBleftbrush(Number(value).toFixed(6)));
@@ -188,7 +198,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       return 0.0001;
     } else if (props.selectedFeeTier === "0.05") {
       return 0.001;
-    } else if (props.selectedFeeTier === "0.03") {
+    } else if (props.selectedFeeTier === "0.3") {
       return 0.006;
     } else {
       return 0.002;

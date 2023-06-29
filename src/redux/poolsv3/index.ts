@@ -53,11 +53,9 @@ const PoolsV3Slice = createSlice({
       state.RightRangeInput = action.payload;
     },
     setleftbrush: (state, action) => {
-      console.log("fulls", action.payload);
       state.leftbrush = action.payload;
     },
     setrightbrush: (state, action) => {
-      console.log("fulls", action.payload);
       state.rightbrush = action.payload;
     },
     setcurrentPrice: (state, action) => {

@@ -7,8 +7,7 @@ import nFormatter from "../../../api/util/helpers";
 export interface IAprInfoProps {
   isMobile?: boolean;
 
-  currentApr: BigNumber;
-  boostedApr: BigNumber;
+  currentApr: number;
 }
 
 export function Apr(props: IAprInfoProps) {
@@ -21,10 +20,10 @@ export function Apr(props: IAprInfoProps) {
             Current APR :{" "}
             <span className="font-semibold text-white">{props.currentApr.toFixed(2)}%</span>
           </div>
-          <div>
+          {/* <div>
             Boosted APR :{" "}
             <span className="font-semibold text-white">{props.boostedApr.toFixed(2)}%</span>
-          </div>
+          </div> */}
         </div>
       }
     >
@@ -36,7 +35,7 @@ export function Apr(props: IAprInfoProps) {
         }
       >
         <div className="bg-muted-200  md:text-f14 text-f12 cursor-pointer text-text-50 border-border-500 rounded-lg py-[3px] px-2 ">
-          ${nFormatter(props.currentApr)}
+          ${props.currentApr}
         </div>
         {/* {!props.isMobile && <Image width={20} height={20} alt={"alt"} src={subtractSvg} />} */}
         {/* <div

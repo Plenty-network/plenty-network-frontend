@@ -33,7 +33,6 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
   const closeModal = () => {
     props.setShow(false);
   };
-  console.log(props.selectedPosition);
   return props.show ? (
     <PopUpModal onhide={closeModal}>
       {

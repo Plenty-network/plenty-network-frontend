@@ -9,10 +9,6 @@ module.exports = {
     ignoreBuildErrors: true,
   },
 
-  experimental: {
-    esmExternals: false,
-  },
-
   images: {
     domains: [
       "https://cloudflare-ipfs.com/ipfs/",

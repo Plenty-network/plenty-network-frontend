@@ -79,6 +79,17 @@ export function NewPoolv3(props: IManageLiquidityProps) {
   const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>(
     {} as tokenParameterLiquidity
   );
+  const percentage = (selectedFeeTier: string) => {
+    if (selectedFeeTier === "0.01") {
+      return 1;
+    } else if (selectedFeeTier === "0.05") {
+      return 10;
+    } else if (selectedFeeTier === "0.3") {
+      return 60;
+    } else {
+      return 200;
+    }
+  };
 
   useEffect(() => {
     if (
@@ -88,12 +99,14 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       selectedFeeTier !== ""
     ) {
       setTick("");
-      getTickFromRealPrice(new BigNumber(priceAmount), tokenIn.symbol, tokenOut.symbol, 1).then(
-        (res) => {
-          console.log(res, "tick");
-          setTick(res);
-        }
-      );
+      getTickFromRealPrice(
+        new BigNumber(priceAmount),
+        tokenIn.symbol,
+        tokenOut.symbol,
+        percentage(selectedFeeTier)
+      ).then((res) => {
+        setTick(res);
+      });
     }
   }, [priceAmount, tokenIn.symbol, tokenOut.symbol, selectedFeeTier]);
   const [swapModalShow, setSwapModalShow] = useState(false);
@@ -215,7 +228,6 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     if (tokenIn.name && tokenOut.name) {
       checkPoolExistence(tokenIn.name, tokenOut.name).then((res) => {
         setIsExist(res);
-        console.log(res, "newpools");
       });
     }
   }, [tokenIn.name, tokenOut.name]);
@@ -230,13 +242,12 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     setShowConfirmPool(false);
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(tokenOut.name));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, pair === Pair.VOLATILE ? "volatile" : "stable");
+
     deployPoolOperation(
       tokenIn.symbol,
       tokenOut.symbol,
       Number(tick),
-      1,
-
+      Number(selectedFeeTier) * 100,
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
@@ -251,7 +262,6 @@ export function NewPoolv3(props: IManageLiquidityProps) {
         transactionId: "",
       }
     ).then((response) => {
-      console.log(response, "res", tokenIn.symbol, tokenOut.symbol, Number(tick), 1);
       if (response.success) {
         setBalanceUpdate(true);
 
@@ -314,7 +324,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
               <div className="relative top-[2px]">
                 <ToolTip
                   id="tooltip2"
-                  position={Position.top}
+                  position={Position.right}
                   toolTipChild={
                     <div className="w-[100px] md:w-[250px]">
                       Create a new liquidity pool for a token pair.
@@ -381,7 +391,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
         tokens={tokensListConfig.filter((e: any) => {
           return (
             e.name.toLowerCase() !== MigrateToken.PLENTY.toLowerCase() &&
-            // e.name.toLowerCase() !== "XTZ".toLowerCase() &&
+            e.name.toLowerCase() !== "XTZ".toLowerCase() &&
             e.name.toLowerCase() !== MigrateToken.WRAP.toLowerCase()
           );
         })}
