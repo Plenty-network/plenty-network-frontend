@@ -57,7 +57,6 @@ export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
 export const getV3DexAddress = (tokenIn: string, tokenOut: string): string => {
   const state = store.getState();
   const AMM = state.config.AMMs;
-  console.log("v3 amms", state.config.AMMs);
   const address = Object.keys(AMM).find(
     (key) =>
       // @ts-ignore

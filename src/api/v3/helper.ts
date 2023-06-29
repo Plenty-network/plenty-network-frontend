@@ -147,7 +147,6 @@ export const getTickFromRealPrice = async (
   tickspacing: number
 ): Promise<any> => {
   try {
-    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
     const state = store.getState();
     const tokens = state.config.tokens;
     let tick = Tick.computeTickFromSqrtPrice(
