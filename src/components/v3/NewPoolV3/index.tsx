@@ -141,13 +141,14 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     setTokenIn({} as tokenParameterLiquidity);
     setTokenOut({} as tokenParameterLiquidity);
     setPriceAmount("");
-    setPair("");
+    setSelectedFeeTier("");
   };
   const resetAllValues = () => {
     closeModal();
-    setPair("");
+    setTokenIn({} as tokenParameterLiquidity);
+    setTokenOut({} as tokenParameterLiquidity);
     setPriceAmount("");
-
+    setSelectedFeeTier("");
     setBalanceUpdate(false);
   };
 
@@ -242,7 +243,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     setShowConfirmPool(false);
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(tokenOut.name));
-
+    setShowConfirmTransaction(true);
     deployPoolOperation(
       tokenIn.symbol,
       tokenOut.symbol,
@@ -288,7 +289,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
         // setContentTransaction("");
       } else {
         setBalanceUpdate(true);
-        //resetAllValues();
+        resetAllValues();
         setShowConfirmTransaction(false);
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
