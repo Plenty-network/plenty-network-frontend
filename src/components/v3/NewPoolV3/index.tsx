@@ -87,7 +87,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       Object.prototype.hasOwnProperty.call(tokenOut, "symbol")
     ) {
       setTick("");
-      getTickFromRealPrice(new BigNumber(priceAmount), tokenIn.symbol, tokenOut.symbol).then(
+      getTickFromRealPrice(new BigNumber(priceAmount), tokenIn.symbol, tokenOut.symbol, 1).then(
         (res) => {
           console.log(res, "tick");
           setTick(res);

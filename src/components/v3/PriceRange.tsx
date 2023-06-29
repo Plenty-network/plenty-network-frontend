@@ -32,6 +32,7 @@ import LiquidityChartRangeInput from "./LiquidityChartRangeInput";
 // 60 -> 0.006
 
 // 200 -> 0.02
+
 export interface SerializedToken {
   chainId: number;
   address: string;
@@ -86,16 +87,20 @@ function PriceRangeV3(props: IPriceRangeProps) {
 
   const onLeftRangeInputFn = (value: string) => {
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
-      getTickFromRealPrice(new BigNumber(value), props.tokenIn.symbol, props.tokenOut.symbol).then(
-        (response1) => {
-          dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
-        }
-      );
+      getTickFromRealPrice(
+        new BigNumber(value),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        1
+      ).then((response1) => {
+        dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
+      });
     } else {
       getTickFromRealPrice(
         new BigNumber(1).dividedBy(new BigNumber(value)),
         props.tokenOut.symbol,
-        props.tokenIn.symbol
+        props.tokenIn.symbol,
+        10
       ).then((response1) => {
         dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
       });
@@ -117,16 +122,20 @@ function PriceRangeV3(props: IPriceRangeProps) {
   };
   const onRightRangeInputFn = (value: string) => {
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
-      getTickFromRealPrice(new BigNumber(value), props.tokenIn.symbol, props.tokenOut.symbol).then(
-        (response) => {
-          dispatch(setmaxTickA(Tick.nearestUsableTick(response, 10)));
-        }
-      );
+      getTickFromRealPrice(
+        new BigNumber(value),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        10
+      ).then((response) => {
+        dispatch(setmaxTickA(Tick.nearestUsableTick(response, 10)));
+      });
     } else {
       getTickFromRealPrice(
         new BigNumber(1).dividedBy(new BigNumber(value)),
         props.tokenOut.symbol,
-        props.tokenIn.symbol
+        props.tokenIn.symbol,
+        10
       ).then((response1) => {
         dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
       });
