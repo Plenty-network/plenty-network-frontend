@@ -795,7 +795,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
               </div>
               <div className="flex border-t border-text-800 pt-2.5 mt-[18px] items-center">
                 <p className="ml-auto text-primary-500 font-subtitle1 ml-auto mr-5 cursor-pointer">
-                  Clear All
+                  Clear all
                 </p>
                 <div className="flex items-center justify-between flex-row  relative mr-[8px]">
                   <div

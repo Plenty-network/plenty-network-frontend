@@ -7,6 +7,7 @@ interface IFeeTierMainProps {
   setSelectedFeeTier: React.Dispatch<React.SetStateAction<string>>;
   selectedFeeTier: string;
   feeTier: string;
+  isExist: any;
 }
 function FeeTierMainNewPool(props: IFeeTierMainProps) {
   const fee = [
@@ -23,7 +24,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
       created: false,
     },
     {
-      percentage: "0.03",
+      percentage: "0.3",
       text: "Best for many stable pairs",
       selectPercentage: "46",
       created: true,
@@ -36,24 +37,24 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
     },
   ];
   return (
-    <div className="flex gap-[12px]  items-center justify-start ml-1">
+    <div className="flex gap-2 md:gap-[12px]  items-center justify-start ml-1">
       {fee.map((feeInd, index) => {
         return (
           <div
             key={index}
             className={clsx(
-              feeInd.created
+              props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
                 ? "border-text-800 cursor-not-allowed"
                 : props.selectedFeeTier === feeInd.percentage
                 ? "border-blue-700"
                 : "border-text-800 hover:border-text-400 cursor-pointer",
-              "border w-[133px]  rounded-2xl   bg-card-200   mb-5 h-[139px] sm:h-[128px] py-[12px] pl-[14px]  pr-3 "
+              "border w-[133px]  rounded-2xl   bg-card-200   mb-5 h-[128px] md:h-[139px] sm:h-[128px] py-[12px] pl-2.5 md:pl-[14px]  pr-2 md:pr-3 "
             )}
             onClick={() => props.setSelectedFeeTier(feeInd.percentage)}
           >
             <div
               className={clsx(
-                feeInd.created
+                props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
                   ? "text-text-700"
                   : props.selectedFeeTier === feeInd.percentage
                   ? "text-blue-700"
@@ -65,7 +66,9 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
             </div>
             <div
               className={clsx(
-                feeInd.created ? "text-text-700" : " text-text-250",
+                props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
+                  ? "text-text-700"
+                  : " text-text-250",
                 "mt-2 font-mobile-400 sm:font-body1 "
               )}
             >
@@ -74,11 +77,15 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
             <div className="mt-[12px]">
               <span
                 className={clsx(
-                  feeInd.created ? "text-info-500 bg-info-500/[0.2]" : "text-white bg-shimmer-100",
-                  " rounded-xl	 px-2 items-center flex w-fit font-caption1 h-[24px]"
+                  props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
+                    ? "text-info-500 bg-info-500/[0.2]"
+                    : "text-white bg-shimmer-100",
+                  " rounded-xl	 px-2 items-center flex w-fit text-[9px] md:font-caption1 h-[24px]"
                 )}
               >
-                {feeInd.created ? "Created" : "Not Created"}
+                {props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
+                  ? "Created"
+                  : "Not Created"}
               </span>
             </div>
           </div>

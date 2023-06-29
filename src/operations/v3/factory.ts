@@ -1,7 +1,7 @@
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { Approvals, Contract } from "@plenty-labs/v3-sdk";
 import { TokenStandard } from "./types";
-import { dappClient } from "../../common/walletconnect";
+import { dappClient, v3factoryAddress } from "../../common/walletconnect";
 import { store } from "../../redux";
 import {
   IOperationsResponse,
@@ -34,13 +34,27 @@ export const deployPoolOperation = async (
     const Tezos = await dappClient().tezos();
     const state = store.getState();
     const TOKENS = state.config.tokens;
-
+    
     const tokenX = await Tezos.wallet.at(TOKENS[tokenXSymbol].address as string);
     const tokenY = await Tezos.wallet.at(TOKENS[tokenYSymbol].address as string);
+    const factoryInstance = await Tezos.wallet.at(v3factoryAddress);
+    const allBatch: WalletParamsWithKind[] = [];
 
-    const allBatchOperations: WalletParamsWithKind[] = [];
+    allBatch.push({
+        kind: OpKind.TRANSACTION,
+        ...factoryInstance.methods
+        .deploy_pool(
+            TOKENS[tokenXSymbol].standard === TokenStandard.FA12? tokenX : [TOKENS[tokenXSymbol].address, TOKENS[tokenXSymbol].tokenId],
+            TOKENS[tokenYSymbol].standard === TokenStandard.FA12? tokenY : [TOKENS[tokenYSymbol].address, TOKENS[tokenYSymbol].tokenId],
+            initialTickIndex,
+            feeBps,
+            0
+            )
+        .toTransferParams(),
+    });
+    console.log("poolsop", 4, allBatch);
 
-    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatch);
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOperation = await batch.send();
 

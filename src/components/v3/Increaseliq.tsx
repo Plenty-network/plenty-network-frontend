@@ -112,7 +112,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
     <>
       <div
         className={clsx(
-          "fade-in-light overflow-y-auto overflow-x-hidden modalManage h-[calc(100vh_-_290px)]"
+          "fade-in-light overflow-y-auto overflow-x-hidden modalManage h-[calc(100vh_-_286px)] mb-5"
         )}
       >
         <div className="mt-[17px] border border-text-800 bg-card-200 rounded-2xl py-5 mb-3">
@@ -231,7 +231,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
           <div className="sm:flex gap-4 mt-2 px-5">
             <div>
               <div className="flex text-text-250">
-                <span className="font-caption1 pl-1">Min Price</span>
+                <span className="font-caption1 pl-1">Min price</span>
                 <span className="font-mobile-f1020 ">
                   (
                   {selectedToken.symbol === props.tokenIn.symbol
@@ -272,7 +272,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
             </div>
             <div>
               <div className="flex text-text-250 mt-3 sm:mt-0">
-                <span className="font-caption1 pl-1">Max Price</span>
+                <span className="font-caption1 pl-1">Max price</span>
                 <span className="font-mobile-f1020">
                   (
                   {selectedToken.symbol === props.tokenIn.symbol
@@ -361,7 +361,8 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
           inputDisable={inputDisable}
         />
       </div>
-      <div className="mt-4"> {IncreaseButton}</div>
+      <div className=" blur "></div>
+      <div className=""> {IncreaseButton}</div>
     </>
   );
 }

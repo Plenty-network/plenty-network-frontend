@@ -4,10 +4,11 @@ import BigNumber from "bignumber.js";
 import { Token, BalanceNat, IV3ContractStorageParams } from "./types";
 import { Tick, Liquidity, PositionManager, Price } from "@plenty-labs/v3-sdk";
 import { getV3DexAddress } from "../../api/util/fetchConfig";
-import { dappClient } from "../../common/walletconnect";
+import { connectedNetwork, dappClient } from "../../common/walletconnect";
+import { store } from "../../redux";
 
-const TokenDetail = async (tokenSymbol: String): Promise<Token> => {
-  let configResponse: any = await axios.get(Config.CONFIG_LINKS.testnet.TOKEN);
+const tokenDetail = async (tokenSymbol: String): Promise<Token> => {
+  let configResponse: any = await axios.get(Config.CONFIG_LINKS[connectedNetwork].TOKEN);
   configResponse = configResponse.data[`${tokenSymbol}`];
 
   let tokenAddress = configResponse.address;
@@ -23,13 +24,13 @@ const TokenDetail = async (tokenSymbol: String): Promise<Token> => {
   };
 };
 
-export const ContractStorage = async (
+export const contractStorage = async (
   tokenXSymbol: string,
   tokenYSymbol: string
 ): Promise<IV3ContractStorageParams> => {
   let v3ContractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
   const v3ContractStorage = await axios.get(
-    `${Config.TZKT_NODES.testnet}v1/contracts/${v3ContractAddress}/storage`
+    `${Config.TZKT_NODES[connectedNetwork]}v1/contracts/${v3ContractAddress}/storage`
   );
 
   // https://rpc.tzkt.io/ghostnet/chains/main/blocks/head/context/contracts/KT1M5yHd85ikngHm5YCu9gkfM2oqtbsKak8Y/storage
@@ -39,8 +40,8 @@ export const ContractStorage = async (
   let feeBps = parseInt(v3ContractStorage.data.constants.fee_bps);
   let currentTickWitness = parseInt(v3ContractStorage.data.cur_tick_witness);
   let liquidity = BigNumber(v3ContractStorage.data.liquidity);
-  let tokenX = await TokenDetail(tokenXSymbol);
-  let tokenY = await TokenDetail(tokenYSymbol);
+  let tokenX = await tokenDetail(tokenXSymbol);
+  let tokenY = await tokenDetail(tokenYSymbol);
   const fee_growth = {
     x: BigNumber(v3ContractStorage.data.fee_growth.x),
     y: BigNumber(v3ContractStorage.data.fee_growth.y),
@@ -107,20 +108,10 @@ export const getOutsideFeeGrowth = async (
   }
 };
 
-export const nearestTickIndex = async (): Promise<any> => {
-  try {
-    let nearestTick = Tick;
-
-    return nearestTick;
-  } catch (error) {
-    console.log("v3 error: ", error);
-  }
-};
-
 export const getTickAndRealPriceFromPool = async (contractAddress: string): Promise<any> => {
   try {
     let rpcResponse: any = await axios.get(
-      `${Config.V3_CONFIG_URL.testnet}/ticks?pool=${contractAddress}`
+      `${Config.V3_CONFIG_URL[connectedNetwork]}/ticks?pool=${contractAddress}`
     );
 
     return rpcResponse.data;
@@ -135,11 +126,12 @@ export const getRealPriceFromTick = async (
   tokenYSymbol: string
 ): Promise<any> => {
   try {
-    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    const state = store.getState();
+    const tokens = state.config.tokens;
     let priceValue = Price.computeRealPriceFromSqrtPrice(
       Tick.computeSqrtPriceFromTick(tick),
-      contractStorageParameters.tokenX.decimals,
-      contractStorageParameters.tokenY.decimals
+      tokens[tokenXSymbol].decimals,
+      tokens[tokenYSymbol].decimals
     );
 
     return priceValue;
@@ -151,17 +143,19 @@ export const getRealPriceFromTick = async (
 export const getTickFromRealPrice = async (
   realPrice: BigNumber,
   tokenXSymbol: string,
-  tokenYSymbol: string
+  tokenYSymbol: string,
+  tickspacing: number
 ): Promise<any> => {
   try {
-    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    const state = store.getState();
+    const tokens = state.config.tokens;
     let tick = Tick.computeTickFromSqrtPrice(
       Price.computeSqrtPriceFromRealPrice(
         realPrice,
-        contractStorageParameters.tokenX.decimals,
-        contractStorageParameters.tokenY.decimals
+        tokens[tokenXSymbol].decimals,
+        tokens[tokenYSymbol].decimals
       ),
-      contractStorageParameters.tickSpacing
+      tickspacing
     );
 
     return tick;
@@ -206,17 +200,10 @@ export const createPositionInstance = async (
   try {
     const Tezos = await dappClient().tezos();
 
-    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
 
     const contractInstance = await Tezos.wallet.at(contractAddress);
-    console.log(
-      "data createPositionInstance: ",
-      maximumTokensContributed,
-      lowerTick,
-      upperTick,
-      tokenXSymbol,
-      tokenYSymbol
-    );
+
     let liquidity = await calculateliquidity(
       maximumTokensContributed,
       lowerTick,
@@ -252,7 +239,7 @@ export const createPositionInstance = async (
       maximumTokensContributed: maxTokenFinal,
     };
 
-    let optionSet2 = {
+    /*     let optionSet2 = {
       lowerTickIndex: lowerTick,
       upperTickIndex: upperTick,
       lowerTickWitness: lowerTickWitness,
@@ -273,7 +260,7 @@ export const createPositionInstance = async (
       ).toString(),
     };
 
-    console.log("optionSet: ", optionSet2);
+    console.log("optionSet: ", optionSet2); */
     // @ts-ignore
     let createPosition = PositionManager.setPositionOp(contractInstance, optionSet);
 

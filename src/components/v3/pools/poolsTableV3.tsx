@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { Column } from "react-table";
 import { POOL_TYPE } from "../../../../pages/pools";
 import { IAllPoolsData, IAllPoolsDataResponse } from "../../../api/pools/types";
-import { usePoolsTableFilter } from "../../../hooks/usePoolsTableFilter";
+import { usePoolsTableFilter, usePoolsTableFilterV3 } from "../../../hooks/usePoolsTableFilter";
 import { usePoolsTableSearch } from "../../../hooks/usePoolsTableSearch";
 import { useTableNumberUtils } from "../../../hooks/useTableUtils";
 import { AppDispatch, store, useAppSelector } from "../../../redux";
@@ -26,12 +26,13 @@ import { ActiveLiquidity } from "../../Pools/ManageLiquidityHeader";
 import { NoContentAvailable, NoDataError } from "../../Pools/Component/ConnectWalletOrNoToken";
 import { CircularOverLappingImage } from "../../Pools/Component/CircularImageInfo";
 
-import { PoolsTextWithTooltip } from "../../Pools/Component/PoolsText";
 import { ManageLiquidity } from "../../Pools/ManageLiquidity";
 import { ManageTabV3 } from "../ManageTabV3";
 import { Apr } from "./Apr";
 import { setTokenInV3, settopLevelSelectedToken } from "../../../redux/poolsv3";
 import { ManageTabMobile } from "../ManageTabMobile";
+import { BigNumber } from "@ethersproject/bignumber";
+import { PoolsTextWithTooltip } from "./PoolsText";
 
 export interface IShortCardProps {
   className?: string;
@@ -66,7 +67,7 @@ export function PoolsTableV3(props: IShortCardProps) {
 
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
 
-  const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
+  const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilterV3(
     tokenPrices,
     props.poolsFilter,
 
@@ -198,7 +199,7 @@ export function PoolsTableV3(props: IShortCardProps) {
     ],
     [valueFormat]
   );
-  const desktopcolumns = React.useMemo<Column<IAllPoolsData>[]>(
+  const desktopcolumns = React.useMemo<Column<any>[]>(
     () => [
       {
         Header: "Pools",
@@ -209,7 +210,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x) => (
           <>
-            {!x.isGaugeAvailable ? (
+            {/* {!x.isGaugeAvailable ? (
               <ToolTip
                 id="tooltipM"
                 position={Position.top}
@@ -217,13 +218,8 @@ export function PoolsTableV3(props: IShortCardProps) {
               >
                 <Image src={newPool} width={"20px"} height={"20px"} className="cursor-pointer" />
               </ToolTip>
-            ) : null}
-            <div
-              className={clsx(
-                "flex gap-1 items-center max-w-[270px]",
-                !x.isGaugeAvailable ? "ml-[14px]" : "ml-[34px]"
-              )}
-            >
+            ) : null} */}
+            <div className={clsx("flex gap-1 items-center max-w-[270px]", "ml-[34px]")}>
               <CircularOverLappingImage
                 tokenA={
                   tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
@@ -257,7 +253,7 @@ export function PoolsTableV3(props: IShortCardProps) {
                       )}`}
                 </span>
                 <span className="font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-1">
-                  0.05%
+                  {x.feeTier}%
                 </span>
               </div>
             </div>
@@ -274,14 +270,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x: any) =>
-          x.isGaugeAvailable ? (
-            <Apr currentApr={x.apr} boostedApr={x.boostedApr} />
-          ) : (
-            <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-              -
-            </div>
-          ),
+        accessor: (x: any) => (
+          // x.isGaugeAvailable ? (
+          <Apr currentApr={x.apr} />
+        ),
+        // ) : (
+        //   <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+        //     -
+        //   </div>
+        // ),
       },
 
       {
@@ -293,15 +290,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
-        accessor: (x: any) => (
-          <PoolsTextWithTooltip
-            text={valueFormat(x.volume.toNumber())}
-            token1={x.volumeTokenA.toString()}
-            token2={x.volumeTokenB.toString()}
-            token1Name={x.tokenA.toString()}
-            token2Name={x.tokenB.toString()}
-          />
-        ),
+        accessor: (x: any) => <PoolsTextWithTooltip text={x.volume.toString()} />,
       },
       {
         Header: "TVL",
@@ -311,15 +300,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
-        accessor: (x) => (
-          <PoolsTextWithTooltip
-            text={valueFormat(x.tvl.toNumber())}
-            token1={x.tvlTokenA.toString()}
-            token2={x.tvlTokenB.toString()}
-            token1Name={x.tokenA.toString()}
-            token2Name={x.tokenB.toString()}
-          />
-        ),
+        accessor: (x) => <PoolsTextWithTooltip text={x.tvl.toString()} />,
       },
       {
         Header: "Fees",
@@ -330,15 +311,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
-        accessor: (x) => (
-          <PoolsTextWithTooltip
-            text={valueFormat(x.fees.toNumber())}
-            token1={x.feesTokenA.toString()}
-            token2={x.feesTokenB.toString()}
-            token1Name={x.tokenA.toString()}
-            token2Name={x.tokenB.toString()}
-          />
-        ),
+        accessor: (x) => <PoolsTextWithTooltip text={x.fees.toString()} />,
       },
 
       {
@@ -408,7 +381,7 @@ export function PoolsTableV3(props: IShortCardProps) {
   }
   return (
     <>
-      {true &&
+      {props.showLiquidityModal &&
         (isMobile ? (
           <ManageTabMobile
             tokenIn={tokenChange(topLevelSelectedToken, tokenIn, tokenOut)}
@@ -450,7 +423,7 @@ export function PoolsTableV3(props: IShortCardProps) {
             tableType={true}
             isFetched={isFetched}
             isConnectWalletRequired={props.isConnectWalletRequired}
-            TableWidth="min-w-[320px] lg:min-w-[750px]"
+            TableWidth="min-w-[780px]"
             NoData={NoData}
             loading={props.isFetching}
           />
@@ -466,7 +439,7 @@ export function PoolsTableV3(props: IShortCardProps) {
             tableType={true}
             isFetched={isFetched}
             isConnectWalletRequired={props.isConnectWalletRequired}
-            TableWidth="min-w-[320px] lg:min-w-[750px]"
+            TableWidth="min-w-[780px]"
             NoData={NoData}
             loading={props.isFetching}
           />

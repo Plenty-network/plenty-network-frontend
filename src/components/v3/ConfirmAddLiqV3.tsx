@@ -235,7 +235,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
         <div className="sm:flex gap-4 mt-2 px-5">
           <div>
             <div className="flex text-text-250">
-              <span className="font-caption1 pl-1">Min Price</span>
+              <span className="font-caption1 pl-1">Min price</span>
               <span className="font-mobile-f1020 ">
                 (
                 {selectedToken.symbol === tokeninorg.symbol
@@ -272,7 +272,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
           </div>
           <div>
             <div className="flex text-text-250 mt-3 sm:mt-0">
-              <span className="font-caption1 pl-1">Max Price</span>
+              <span className="font-caption1 pl-1">Max price</span>
               <span className="font-mobile-f1020">
                 (
                 {selectedToken.symbol === tokeninorg.symbol

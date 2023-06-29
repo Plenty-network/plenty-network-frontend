@@ -20,7 +20,7 @@ function FeeTierMain(props: IFeeTierMainProps) {
       selectPercentage: "46",
     },
     {
-      percentage: "0.03",
+      percentage: "0.3",
       text: "Best for many stable pairs",
       selectPercentage: "46",
     },

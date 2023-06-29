@@ -28,6 +28,10 @@ import { TextNewPool } from "./TextNewPool";
 import TokenModalPool from "./tokenModalPool";
 import { tzktExplorer } from "../../../common/walletconnect";
 import ConfirmAddPoolv3 from "./ConfirmAddPool";
+import { checkPoolExistence } from "../../../api/v3/factory";
+import { deployPoolOperation } from "../../../operations/v3/factory";
+import { Tick } from "@plenty-labs/v3-sdk";
+import { getTickFromRealPrice } from "../../../api/v3/helper";
 
 export interface IManageLiquidityProps {
   show: boolean;
@@ -61,12 +65,13 @@ export function NewPoolv3(props: IManageLiquidityProps) {
   };
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
-
+  const [selectedFeeTier, setSelectedFeeTier] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [showConfirmPool, setShowConfirmPool] = useState(false);
 
   const [contentTransaction, setContentTransaction] = useState("");
+  const [tick, setTick] = useState("");
 
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>(
     {} as tokenParameterLiquidity
@@ -74,7 +79,36 @@ export function NewPoolv3(props: IManageLiquidityProps) {
   const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>(
     {} as tokenParameterLiquidity
   );
+  const percentage = (selectedFeeTier: string) => {
+    if (selectedFeeTier === "0.01") {
+      return 1;
+    } else if (selectedFeeTier === "0.05") {
+      return 10;
+    } else if (selectedFeeTier === "0.3") {
+      return 60;
+    } else {
+      return 200;
+    }
+  };
 
+  useEffect(() => {
+    if (
+      Number(priceAmount) > 0 &&
+      Object.prototype.hasOwnProperty.call(tokenIn, "symbol") &&
+      Object.prototype.hasOwnProperty.call(tokenOut, "symbol") &&
+      selectedFeeTier !== ""
+    ) {
+      setTick("");
+      getTickFromRealPrice(
+        new BigNumber(priceAmount),
+        tokenIn.symbol,
+        tokenOut.symbol,
+        percentage(selectedFeeTier)
+      ).then((res) => {
+        setTick(res);
+      });
+    }
+  }, [priceAmount, tokenIn.symbol, tokenOut.symbol, selectedFeeTier]);
   const [swapModalShow, setSwapModalShow] = useState(false);
 
   const [tokenType, setTokenType] = useState<tokenType>("tokenIn");
@@ -188,18 +222,13 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       );
     }
   }, [tokensListConfig, allBalance.allTokensBalances]);
+  const [isExist, setIsExist] = useState<any>();
   useEffect(() => {
     setPair("");
-    if (
-      (tokenIn.name === "XTZ" && tokenOut.name !== "CTez") ||
-      (tokenOut.name === "XTZ" && tokenIn.name !== "CTez")
-    ) {
-      setPair(Pair.VOLATILE);
-    } else if (
-      (tokenIn.name === "XTZ" && tokenOut.name === "CTez") ||
-      (tokenOut.name === "XTZ" && tokenIn.name === "CTez")
-    ) {
-      setPair(Pair.STABLE);
+    if (tokenIn.name && tokenOut.name) {
+      checkPoolExistence(tokenIn.name, tokenOut.name).then((res) => {
+        setIsExist(res);
+      });
     }
   }, [tokenIn.name, tokenOut.name]);
 
@@ -213,28 +242,89 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     setShowConfirmPool(false);
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(tokenOut.name));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, pair === Pair.VOLATILE ? "volatile" : "stable");
 
-    setContentTransaction(`new pool`);
-    dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    props.setReFetchPool(false);
-    setRefetch(false);
-    setShowConfirmTransaction(true);
+    deployPoolOperation(
+      tokenIn.symbol,
+      tokenOut.symbol,
+      Number(tick),
+      Number(selectedFeeTier) * 100,
+      transactionSubmitModal,
+      resetAllValues,
+      setShowConfirmTransaction,
+      {
+        flashType: Flashtype.Info,
+        headerText: "Transaction submitted",
+        trailingText: `new pool ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+          TOKEN_A
+        )} /  ${localStorage.getItem(TOKEN_B)}`,
+        linkText: "View in Explorer",
+        isLoading: true,
+        transactionId: "",
+      }
+    ).then((response) => {
+      if (response.success) {
+        setBalanceUpdate(true);
+
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Success,
+              headerText: "Success",
+              trailingText: `new pool `,
+              linkText: "View in Explorer",
+              isLoading: true,
+              onClick: () => {
+                window.open(
+                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
+                  "_blank"
+                );
+              },
+              transactionId: response.operationId ? response.operationId : "",
+            })
+          );
+        }, 6000);
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        // setContentTransaction("");
+      } else {
+        setBalanceUpdate(true);
+        //resetAllValues();
+        setShowConfirmTransaction(false);
+        setTimeout(() => {
+          setShowTransactionSubmitModal(false);
+          dispatch(
+            setFlashMessage({
+              flashType: Flashtype.Rejected,
+              transactionId: "",
+              headerText: "Rejected",
+              trailingText: `new pool`,
+              linkText: "",
+              isLoading: true,
+            })
+          );
+        }, 2000);
+
+        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        // setContentTransaction("");
+      }
+    });
   };
   return (
     <>
       {props.show && (
         <PopUpModal
+          Name="Manage"
           onhide={closeModal}
-          className="w-[390px] max-w-[390px] sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
+          isFullSizeOnMobile={true}
+          className="w-[400px] max-w-[400px] sm:w-[620px] sm:max-w-[620px] rounded-none sm:rounded-3xl "
         >
-          <>
+          <div className="px-2 md:px-5">
             <div className="flex ">
               <div className="mx-2 text-white font-title3">Add new pool</div>
-              <div className="relative top-[5px]">
+              <div className="relative top-[2px]">
                 <ToolTip
                   id="tooltip2"
-                  position={Position.top}
+                  position={Position.right}
                   toolTipChild={
                     <div className="w-[100px] md:w-[250px]">
                       Create a new liquidity pool for a token pair.
@@ -251,6 +341,9 @@ export function NewPoolv3(props: IManageLiquidityProps) {
             <TextNewPool />
             <div className="">
               <NewPoolMain
+                setSelectedFeeTier={setSelectedFeeTier}
+                selectedFeeTier={selectedFeeTier}
+                isExist={isExist}
                 priceAmount={priceAmount}
                 setPriceAmount={setPriceAmount}
                 setShowConfirmPool={setShowConfirmPool}
@@ -267,7 +360,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
                 contractTokenBalance={contractTokenBalance}
               />
             </div>
-          </>
+          </div>
         </PopUpModal>
       )}
       {showConfirmPool && (
@@ -298,7 +391,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
         tokens={tokensListConfig.filter((e: any) => {
           return (
             e.name.toLowerCase() !== MigrateToken.PLENTY.toLowerCase() &&
-            // e.name.toLowerCase() !== "XTZ".toLowerCase() &&
+            e.name.toLowerCase() !== "XTZ".toLowerCase() &&
             e.name.toLowerCase() !== MigrateToken.WRAP.toLowerCase()
           );
         })}

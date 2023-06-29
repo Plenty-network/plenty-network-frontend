@@ -3,6 +3,8 @@ import { getAllPoolsData, getMyPoolsData, poolsDataWrapper } from "..";
 import { store } from "../../../redux";
 import { getTokenPrices } from "../../util/price";
 import { ITokenPriceList } from "../../util/types";
+import { getAllPoolsDataV3 } from "../../v3/pools";
+import { IAllPoolsDataResponse } from "../../v3/types";
 import { IAllPoolsData, IMyPoolsData, IPoolsDataWrapperResponse } from "../types";
 
 export const usePoolsMain = () =>
@@ -41,6 +43,16 @@ export const useAllPoolsData = (tokenPrice: ITokenPriceList, page: number = 0) =
     { refetchInterval: 30000, cacheTime: 1000 * 30, keepPreviousData: true }
   );
 
+export const useAllPoolsDataV3 = (tokenPrice: ITokenPriceList, page: number = 0) =>
+  useQuery<IAllPoolsDataResponse[], Error>(
+    ["all-pools", page],
+    async () => {
+      const allPoolsResponse = await getAllPoolsDataV3();
+      const allPoolsData = allPoolsResponse.allData;
+      return allPoolsData;
+    },
+    { refetchInterval: 30000, cacheTime: 1000 * 30, keepPreviousData: true }
+  );
 export const useMyPoolsData = (
   userTezosAddress: string,
   tokenPrice: ITokenPriceList,

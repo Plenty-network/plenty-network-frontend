@@ -45,7 +45,7 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
             </div> */}
           </div>
           <div className="border border-text-800 bg-card-200 p-4 mt-3 rounded-2xl">
-            <div className="text-text-400 font-body1 ">Your increasing liquidity</div>
+            <div className="text-text-400 font-body1 ">You are increasing liquidity</div>
             <div className="flex items-center gap-2 mt-3">
               <p>
                 <img

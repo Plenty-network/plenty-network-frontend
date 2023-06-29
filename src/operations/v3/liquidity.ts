@@ -5,7 +5,7 @@ import { getV3DexAddress } from "../../api/util/fetchConfig";
 import { BalanceNat, TokenStandard } from "./types";
 import { dappClient } from "../../common/walletconnect";
 import { store } from "../../redux";
-import { ContractStorage, createPositionInstance } from "../../api/v3/helper";
+import { contractStorage, createPositionInstance } from "../../api/v3/helper";
 import {
   IOperationsResponse,
   TResetAllValues,
@@ -198,7 +198,7 @@ export const LiquidityOperation = async (
 
 export const increaseLiquidity = async (
   position: IV3PositionObject,
-  tokensAmount: BalanceNat, //
+  tokensAmount: BalanceNat,
   tokenXSymbol: string,
   tokenYSymbol: string,
   userAddress: string,
@@ -215,7 +215,7 @@ export const increaseLiquidity = async (
 
     const tokenX = await Tezos.wallet.at(TOKENS[tokenXSymbol].address as string);
     const tokenY = await Tezos.wallet.at(TOKENS[tokenYSymbol].address as string);
-    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
     const contractInstance = await Tezos.wallet.at(contractStorageParameters.poolAddress);
 
     let amountTokenX = tokensAmount.x
@@ -386,7 +386,7 @@ export const removeLiquidity = async (
   try {
     const Tezos = await dappClient().tezos();
 
-    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
 
     const contractInstance = await Tezos.wallet.at(contractStorageParameters.poolAddress);
 

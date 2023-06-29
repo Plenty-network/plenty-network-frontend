@@ -32,6 +32,7 @@ import LiquidityChartRangeInput from "./LiquidityChartRangeInput";
 // 60 -> 0.006
 
 // 200 -> 0.02
+
 export interface SerializedToken {
   chainId: number;
   address: string;
@@ -78,6 +79,17 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const BrightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
+  const TickSpacing = (selectedFeeTier: string) => {
+    if (selectedFeeTier === "0.01") {
+      return 1;
+    } else if (selectedFeeTier === "0.05") {
+      return 10;
+    } else if (selectedFeeTier === "0.3") {
+      return 60;
+    } else {
+      return 200;
+    }
+  };
 
   const dispatch = useDispatch<AppDispatch>();
   React.useEffect(() => {
@@ -86,16 +98,20 @@ function PriceRangeV3(props: IPriceRangeProps) {
 
   const onLeftRangeInputFn = (value: string) => {
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
-      getTickFromRealPrice(new BigNumber(value), props.tokenIn.symbol, props.tokenOut.symbol).then(
-        (response1) => {
-          dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
-        }
-      );
+      getTickFromRealPrice(
+        new BigNumber(value),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        TickSpacing(props.selectedFeeTier)
+      ).then((response1) => {
+        dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
+      });
     } else {
       getTickFromRealPrice(
         new BigNumber(1).dividedBy(new BigNumber(value)),
         props.tokenOut.symbol,
-        props.tokenIn.symbol
+        props.tokenIn.symbol,
+        TickSpacing(props.selectedFeeTier)
       ).then((response1) => {
         dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
       });
@@ -117,16 +133,20 @@ function PriceRangeV3(props: IPriceRangeProps) {
   };
   const onRightRangeInputFn = (value: string) => {
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
-      getTickFromRealPrice(new BigNumber(value), props.tokenIn.symbol, props.tokenOut.symbol).then(
-        (response) => {
-          dispatch(setmaxTickA(Tick.nearestUsableTick(response, 10)));
-        }
-      );
+      getTickFromRealPrice(
+        new BigNumber(value),
+        props.tokenIn.symbol,
+        props.tokenOut.symbol,
+        TickSpacing(props.selectedFeeTier)
+      ).then((response) => {
+        dispatch(setmaxTickA(Tick.nearestUsableTick(response, 10)));
+      });
     } else {
       getTickFromRealPrice(
         new BigNumber(1).dividedBy(new BigNumber(value)),
         props.tokenOut.symbol,
-        props.tokenIn.symbol
+        props.tokenIn.symbol,
+        TickSpacing(props.selectedFeeTier)
       ).then((response1) => {
         dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
       });
@@ -158,7 +178,6 @@ function PriceRangeV3(props: IPriceRangeProps) {
         ? dispatch(setRightRangeInput("∞"))
         : dispatch(setBRightRangeInput("∞"));
       calculateFullRange(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
-        console.log("full", response);
         topLevelSelectedToken.symbol === tokeninorg.symbol
           ? dispatch(setleftbrush(response.minTickPrice.toFixed(6)))
           : dispatch(setBleftbrush(Number(value).toFixed(6)));
@@ -179,7 +198,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       return 0.0001;
     } else if (props.selectedFeeTier === "0.05") {
       return 0.001;
-    } else if (props.selectedFeeTier === "0.03") {
+    } else if (props.selectedFeeTier === "0.3") {
       return 0.006;
     } else {
       return 0.002;
@@ -190,7 +209,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
     <div>
       <div className="mx-auto md:w-[400px] w-[362px]   px-[10px]  pt-2 pb-6  mb-5 h-[254px]">
         <div className="flex justify-between">
-          <div className="font-body4 ">Set Price Range</div>
+          <div className="font-body4 ">Set price range</div>
           {/* <div className="flex gap-1">
             <Image src={zoomin} />
             <Image src={zoomout} />
@@ -240,7 +259,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       >
         <div>
           <div className="font-body4 text-text-250">
-            Min Price{" "}
+            Min price{" "}
             <span className="font-caption1-small">
               ( {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
               {tEZorCTEZtoUppercase(props.tokenIn.symbol)} )
@@ -313,7 +332,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         </div>
         <div>
           <div className="font-body4 text-text-250">
-            Max Price{" "}
+            Max price{" "}
             <span className="font-caption1-small">
               ( {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
               {tEZorCTEZtoUppercase(props.tokenIn.symbol)} )
