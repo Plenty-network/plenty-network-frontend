@@ -14,45 +14,49 @@ export function TextNewPool() {
           <Image src={link} />
         </span>
       </div>
-      <div className="flex font-body3 text-text-50 mt-3">
+      <div className="flex font-body3 text-text-50 mt-1">
+        <span className="relative top-0.5 w-[28px] md:w-[20px] h-[15px]">
+          <Image src={check} width={"14px"} height={"14px"} />
+        </span>
+        <span className="ml-0.5"> New V3 pools will have gauge support only in the future.</span>
+      </div>
+      {/* <div className="flex font-body3 text-text-50 mt-3">
         <span className="relative top-0.5 w-[50px] md:w-[30px] h-[15px]">
           <Image src={check} width={"14px"} height={"14px"} />
         </span>
         <span className="ml-1">
-          New pools are not attached to the vote-escrow system by default. Please raise an
-          attachment request in{" "}
-          <a href="https://discord.com/invite/9wZ4CuvkuJ" target="_blank" rel="noreferrer">
+          New V3 pools will have gauge support only in the future.{" "}
+           <a href="https://discord.com/invite/9wZ4CuvkuJ" target="_blank" rel="noreferrer">
             <i className="text-primary-500 ml-0.5">#gauge-requests</i>
           </a>{" "}
-          channel.{" "}
-          {/* <span className="text-primary-500 ml-0.5">
-            <a href="https://discord.com/invite/9wZ4CuvkuJ" target="_blank" rel="noreferrer">
-              Plenty&apos;s Discord.
-            </a>
-          </span> */}
+          channel.{" "} 
+         
         </span>
-      </div>
+      </div> */}
+
       <div className="flex font-body3 text-text-50 mt-1">
         <span className="relative top-0.5 w-[18px] md:w-[15px] h-[15px]">
           <Image src={check} width={"14px"} height={"14px"} />
         </span>
-        <span className="ml-[6px]">Trading fees for both stable and volatile swaps is 0.05%</span>
+        <span className="ml-[6px]">
+          20% of trading fees is taken as dev share, the rest goes to the liquidity provider.
+        </span>
       </div>
 
       <div className="flex font-body3 text-text-50 mt-1">
         <span className="relative top-0.5 w-[28px] md:w-[20px] h-[15px]">
           <Image src={check} width={"14px"} height={"14px"} />
         </span>
-        <span className="ml-0.5">It may take a few minutes for the new pool to show up.</span>
+        <span className="ml-0.5">
+          You must have at least 8 tez in your account to pay for pool deployment
+        </span>
       </div>
-      {/* <div className="flex font-body3 text-text-50 mt-1">
+      <div className="flex font-body3 text-text-50 mt-1">
         <span className="relative top-0.5 w-[28px] md:w-[20px] h-[15px]">
           <Image src={check} width={"14px"} height={"14px"} />
         </span>
-        <span className="ml-0.5">
-          You should have at least 5 tez in your wallet to pay for storage fees.
-        </span>
-      </div> */}
+        <span className="ml-[3px]">It may take a few minutes for the pool to show up.</span>
+      </div>
       {/* <div className="flex font-body3 text-text-50 mt-1">
         <span className="relative top-0.5 w-[28px] md:w-[20px] h-[15px]">
           <Image src={check} width={"14px"} height={"14px"} />
