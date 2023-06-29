@@ -41,10 +41,6 @@ export const deployPoolOperation = async (
 
     const allBatch: WalletParamsWithKind[] = [];
 
-    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatch);
-    const batch = Tezos.wallet.batch(updatedBatchOperations);
-    const batchOperation = await batch.send();
-
     allBatch.push({
         kind: OpKind.TRANSACTION,
         ...factoryInstance.methods
@@ -57,6 +53,10 @@ export const deployPoolOperation = async (
             )
         .toTransferParams(),
     });
+
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatch);
+    const batch = Tezos.wallet.batch(updatedBatchOperations);
+    const batchOperation = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(batchOperation.opHash as string);
