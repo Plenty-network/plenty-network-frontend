@@ -32,8 +32,6 @@ import { ManageTabV3 } from "../ManageTabV3";
 import { Apr } from "./Apr";
 import { setTokenInV3, settopLevelSelectedToken } from "../../../redux/poolsv3";
 import { ManageTabMobile } from "../ManageTabMobile";
-import { getAllPoolsData } from "../../../api/v3/pools";
-getAllPoolsData();
 
 export interface IShortCardProps {
   className?: string;
