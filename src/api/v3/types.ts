@@ -74,3 +74,19 @@ export interface IV3ContractStorageParams {
   poolAddress: string;
   ticksBigMap: number;
 }
+
+export interface IAllPoolsData {
+  tokenA : String;
+  tokenB : String;
+  feeTier: BigNumber;
+  apr : BigNumber;
+  volume : BigNumber;
+  tvl : BigNumber;
+  fees : BigNumber;
+}
+
+export interface IAllPoolsDataResponse {
+  success: boolean;
+  allData: any;
+  error?: string;
+}
