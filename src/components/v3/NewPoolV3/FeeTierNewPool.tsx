@@ -24,7 +24,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
       created: false,
     },
     {
-      percentage: "0.03",
+      percentage: "0.3",
       text: "Best for many stable pairs",
       selectPercentage: "46",
       created: true,

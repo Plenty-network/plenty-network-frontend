@@ -84,7 +84,8 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     if (
       Number(priceAmount) > 0 &&
       Object.prototype.hasOwnProperty.call(tokenIn, "symbol") &&
-      Object.prototype.hasOwnProperty.call(tokenOut, "symbol")
+      Object.prototype.hasOwnProperty.call(tokenOut, "symbol") &&
+      selectedFeeTier !== ""
     ) {
       setTick("");
       getTickFromRealPrice(new BigNumber(priceAmount), tokenIn.symbol, tokenOut.symbol, 1).then(
@@ -94,7 +95,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
         }
       );
     }
-  }, [priceAmount, tokenIn.symbol, tokenOut.symbol]);
+  }, [priceAmount, tokenIn.symbol, tokenOut.symbol, selectedFeeTier]);
   const [swapModalShow, setSwapModalShow] = useState(false);
 
   const [tokenType, setTokenType] = useState<tokenType>("tokenIn");
@@ -234,7 +235,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       tokenIn.symbol,
       tokenOut.symbol,
       Number(tick),
-      Number(selectedFeeTier),
+      1,
 
       transactionSubmitModal,
       resetAllValues,
@@ -250,6 +251,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
         transactionId: "",
       }
     ).then((response) => {
+      console.log(response, "res", tokenIn.symbol, tokenOut.symbol, Number(tick), 1);
       if (response.success) {
         setBalanceUpdate(true);
 
