@@ -212,8 +212,10 @@ export interface IConfigLPToken {
 
 export interface IConfigPool {
   address: string;
-  token1: IConfigToken;
-  token2: IConfigToken;
+  token1?: IConfigToken;
+  token2?: IConfigToken;
+  tokenX?: IConfigToken;
+  tokenY?: IConfigToken;
   lpToken: IConfigLPToken;
   type: PoolType;
   token1Precision?: string;

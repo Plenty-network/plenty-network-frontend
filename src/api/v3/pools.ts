@@ -1,3 +1,4 @@
+import axios from "axios";
 import { IAllPoolsDataResponse } from "./types";
 import { store } from "../../redux";
 
@@ -6,16 +7,30 @@ export const getAllPoolsData = async (): Promise<IAllPoolsDataResponse> => {
       const state = store.getState();
       const AMMS = state.config.AMMs;
       const TOKENS = state.config.tokens;
+      const allData : any[] = [];
 
-      const allData = {
-        tokenA : "USDC.e",
-        tokenB : "DAI.e",
-        feeTier: 0,
-        apr : 0,
-        volume : 0,
-        tvl : 0,
-        fees : 0,
-      };
+      for (var key in AMMS) {
+        if (AMMS.hasOwnProperty(key)) {
+            const val = AMMS[key];
+            const tokenA = val.tokenX?.symbol;
+            const tokenB = val.tokenY?.symbol;
+            const feeTier = Number(val.feeBps) / 100;
+            const apr = 0;
+            const volume = 0;
+            const tvl = 0;
+            const fees = 0;
+            allData.push ({
+                tokenA: tokenA,
+                tokenB: tokenB,
+                feeTier: feeTier,
+                apr : apr,
+                volume : volume,
+                tvl : tvl,
+                fees : fees,
+            });
+        }
+      }
+
       return {
         success: true,
         allData: allData,
