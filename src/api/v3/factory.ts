@@ -1,5 +1,4 @@
 import { store } from "../../redux";
-import { getV3DexAddress } from "../../api/util/fetchConfig";
 
 export const checkPoolExistence = async (
   tokenXSymbol: string,
@@ -9,20 +8,14 @@ export const checkPoolExistence = async (
     const state = store.getState();
     const AMM = state.config.AMMs;
 
-    let feeBPS;
+    let feeBPS : any[] = [];
 
-    let v3ContractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
-    if(v3ContractAddress) {
-        feeBPS = Number(AMM[v3ContractAddress].feeBps);
-        feeBPS = feeBPS / 100;
-    } 
-    else {
-        return {   
-            poolExists: false 
-        }
+    for (var key in AMM) {
+      if (AMM.hasOwnProperty(key) && AMM[key].tokenX?.symbol == tokenXSymbol && AMM[key].tokenY?.symbol == tokenYSymbol) {
+        const val = AMM[key];
+        feeBPS.push(AMM[key].feeBps);
+      }
     }
-    console.log("v3 new pool",feeBPS );
-
 
     return {
         poolExists: true,
@@ -32,3 +25,5 @@ export const checkPoolExistence = async (
     console.log("v3 error",error );
   }
 };
+
+checkPoolExistence("DAI.e", "USDC.e");
