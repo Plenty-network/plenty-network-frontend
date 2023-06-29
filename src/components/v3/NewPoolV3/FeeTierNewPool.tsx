@@ -43,7 +43,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
           <div
             key={index}
             className={clsx(
-              props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
+              props.isExist?.feeTier?.includes((Number(feeInd.percentage) * 100).toString())
                 ? "border-text-800 cursor-not-allowed"
                 : props.selectedFeeTier === feeInd.percentage
                 ? "border-blue-700"
@@ -54,7 +54,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
           >
             <div
               className={clsx(
-                props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
+                props.isExist?.feeTier?.includes((Number(feeInd.percentage) * 100).toString())
                   ? "text-text-700"
                   : props.selectedFeeTier === feeInd.percentage
                   ? "text-blue-700"
@@ -66,7 +66,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
             </div>
             <div
               className={clsx(
-                props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
+                props.isExist?.feeTier?.includes((Number(feeInd.percentage) * 100).toString())
                   ? "text-text-700"
                   : " text-text-250",
                 "mt-2 font-mobile-400 sm:font-body1 "
@@ -77,13 +77,13 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
             <div className="mt-[12px]">
               <span
                 className={clsx(
-                  props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
+                  props.isExist?.feeTier?.includes((Number(feeInd.percentage) * 100).toString())
                     ? "text-info-500 bg-info-500/[0.2]"
                     : "text-white bg-shimmer-100",
                   " rounded-xl	 px-2 items-center flex w-fit text-[9px] md:font-caption1 h-[24px]"
                 )}
               >
-                {props.isExist?.feeTier?.toString() === feeInd.percentage.toString()
+                {props.isExist?.feeTier?.includes((Number(feeInd.percentage) * 100).toString())
                   ? "Created"
                   : "Not Created"}
               </span>

@@ -255,9 +255,9 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `new pool ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-          TOKEN_A
-        )} /  ${localStorage.getItem(TOKEN_B)}`,
+        trailingText: `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
+          TOKEN_B
+        )} pool`,
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
@@ -272,7 +272,9 @@ export function NewPoolv3(props: IManageLiquidityProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `new pool `,
+              trailingText: `Addition of new ${localStorage.getItem(
+                TOKEN_A
+              )}/${localStorage.getItem(TOKEN_B)} pool`,
               linkText: "View in Explorer",
               isLoading: true,
               onClick: () => {
@@ -298,7 +300,9 @@ export function NewPoolv3(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `new pool`,
+              trailingText: `Addition of new ${localStorage.getItem(
+                TOKEN_A
+              )}/${localStorage.getItem(TOKEN_B)} pool`,
               linkText: "",
               isLoading: true,
             })
@@ -413,7 +417,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
           setShow={setShowConfirmTransaction}
           content={`Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
             TOKEN_B
-          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`}
+          )} pool`}
         />
       )}
       {showTransactionSubmitModal && (
@@ -425,7 +429,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
           }
           content={`Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
             TOKEN_B
-          )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`}
+          )} pool`}
         />
       )}
     </>

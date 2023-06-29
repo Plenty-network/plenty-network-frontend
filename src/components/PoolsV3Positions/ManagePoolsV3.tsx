@@ -223,8 +223,9 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
               transactionId: response.operationId ? response.operationId : "",
             })
           );
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         }, 6000);
-        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+
         // setContentTransaction("");
       } else {
         setBalanceUpdate(true);
@@ -317,8 +318,9 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
               transactionId: response.operationId ? response.operationId : "",
             })
           );
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         }, 6000);
-        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+
         // setContentTransaction("");
       } else {
         setBalanceUpdate(true);
