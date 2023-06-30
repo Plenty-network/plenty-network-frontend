@@ -25,5 +25,3 @@ export const checkPoolExistence = async (
     console.log("v3 error",error );
   }
 };
-
-checkPoolExistence("DAI.e", "USDC.e");
