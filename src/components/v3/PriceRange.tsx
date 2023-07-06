@@ -406,7 +406,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       </div>
 
       <div
-        className="mt-3 cursor-pointer border border-info-700 hover:border-text-600 rounded-lg	text-center py-2.5 font-body1 mx-4"
+        className="mt-3 cursor-pointer border border-info-700 hover:border-text-600 rounded-lg	text-center py-2.5 font-body1 mx-4 mb-2"
         onClick={() => fullrangeCalc(!props.isFullRange)}
       >
         {props.isFullRange ? "Remove Full Range" : "Full Range"}

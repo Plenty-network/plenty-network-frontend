@@ -2,7 +2,6 @@ import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 
 import { dappClient } from "../../common/walletconnect";
 import { store } from "../../redux";
-import { ContractStorage } from "../../api/v3/helper";
 import {
   IOperationsResponse,
   TResetAllValues,
@@ -17,6 +16,7 @@ import { IFlashMessageProps } from "../../redux/flashMessage/type";
 import { IV3PositionObject } from "../../api/v3/types";
 
 import { PositionManager } from "@plenty-labs/v3-sdk";
+import { contractStorage } from "../../api/v3/helper";
 
 export const collectFees = async (
   position: IV3PositionObject,
@@ -31,7 +31,7 @@ export const collectFees = async (
   try {
     const Tezos = await dappClient().tezos();
 
-    let contractStorageParameters = await ContractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
 
     const contractInstance = await Tezos.wallet.at(contractStorageParameters.poolAddress);
 
