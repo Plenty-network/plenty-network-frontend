@@ -100,8 +100,8 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       setTick("");
       getTickFromRealPrice(
         new BigNumber(priceAmount),
-        tokenIn.symbol,
-        tokenOut.symbol,
+        tokenInOp,
+        tokenOutOp,
         percentage(selectedFeeTier)
       ).then((res) => {
         setTick(res);

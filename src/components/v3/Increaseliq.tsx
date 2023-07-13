@@ -18,6 +18,7 @@ import { walletConnection } from "../../redux/wallet/wallet";
 import { ActivePopUp } from "./ManageTabV3";
 import IncreaseLiquidityInputV3 from "./IncreaseliqInput";
 import { getRealPriceFromTick } from "../../api/v3/helper";
+import { Chain, IConfigToken } from "../../config/types";
 
 interface IIncLiquidityProp {
   tokenIn: tokenParameterLiquidity;
@@ -46,17 +47,38 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
   };
   const [inputDisable, setInputDisable] = useState("false");
   const [currentPrice, setCurrentPrice] = useState<BigNumber>(new BigNumber(0));
+  const tokensArray = Object.entries(tokens);
+  const tokensListConfig = useMemo(() => {
+    return tokensArray.map((token) => ({
+      name: token[0],
+      image: `/assets/Tokens/${token[1].symbol}.png`,
+
+      chainType: token[1].originChain as Chain,
+      address: token[1].address,
+      interface: token[1],
+    }));
+  }, [tokens]);
+  const [tokenInConfig, setTokenInConfig] = useState<IConfigToken>({} as IConfigToken);
+  const [tokenOutConfig, setTokenOutConfig] = useState<IConfigToken>({} as IConfigToken);
   useEffect(() => {
-    if (selectedPosition?.currentTickIndex) {
-      getRealPriceFromTick(
-        selectedPosition?.currentTickIndex,
-        props.tokenIn.symbol,
-        props.tokenOut.symbol
-      ).then((res) => {
-        setCurrentPrice(res);
-      });
+    tokensListConfig.map((tokenConfig) => {
+      if (tokenConfig.name === props.tokenIn.symbol) {
+        setTokenInConfig(tokenConfig.interface);
+      }
+      if (tokenConfig.name === props.tokenOut.symbol) {
+        setTokenOutConfig(tokenConfig.interface);
+      }
+    });
+  }, [tokensListConfig, props.tokenIn.symbol, props.tokenOut.symbol]);
+  useEffect(() => {
+    if (selectedPosition?.currentTickIndex && tokenInConfig && tokenOutConfig) {
+      getRealPriceFromTick(selectedPosition?.currentTickIndex, tokenInConfig, tokenOutConfig).then(
+        (res) => {
+          setCurrentPrice(res);
+        }
+      );
     }
-  }, [selectedPosition?.currentTickIndex]);
+  }, [selectedPosition?.currentTickIndex, tokenInConfig, tokenOutConfig]);
   const IncreaseButton = useMemo(() => {
     if (!walletAddress) {
       return (
@@ -85,9 +107,9 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
     } else if (
       walletAddress &&
       ((props.firstTokenAmount &&
-        props.firstTokenAmount > Number(props.userBalances[props.tokenIn.name])) ||
-        (props.secondTokenAmount && props.secondTokenAmount) >
-          Number(props.userBalances[props.tokenOut.name]))
+        Number(props.firstTokenAmount) > Number(props.userBalances[props.tokenIn.name])) ||
+        (props.secondTokenAmount &&
+          Number(props.secondTokenAmount) > Number(props.userBalances[props.tokenOut.name])))
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>

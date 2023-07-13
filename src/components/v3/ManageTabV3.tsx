@@ -406,8 +406,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       );
     } else if (
       walletAddress &&
-      ((firstTokenAmountLiq && firstTokenAmountLiq > Number(userBalances[props.tokenIn.name])) ||
-        (secondTokenAmountLiq && secondTokenAmountLiq) > Number(userBalances[props.tokenOut.name]))
+      ((firstTokenAmountLiq &&
+        Number(firstTokenAmountLiq) > Number(userBalances[props.tokenIn.name])) ||
+        (secondTokenAmountLiq &&
+          Number(secondTokenAmountLiq) > Number(userBalances[props.tokenOut.name])))
     ) {
       return (
         <Button height="52px" onClick={() => null} color={"disabled"}>
