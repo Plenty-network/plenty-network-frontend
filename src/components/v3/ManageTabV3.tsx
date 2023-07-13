@@ -102,7 +102,7 @@ export enum ActivePopUp {
 }
 
 export function ManageTabV3(props: IManageLiquidityProps) {
-  const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
+  const [selectedFeeTier, setSelectedFeeTier] = useState(props.feeTier);
   const inputDisabled = useAppSelector((state) => state.poolsv3.inputDisable);
   const [showConfirm, setShowConfirm] = useState(false);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
@@ -914,6 +914,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               </p>
             </div>
             <PositionsPopup
+              feeTier={props.feeTier}
               tokenIn={props.tokenA}
               tokenOut={props.tokenB}
               setScreen={setScreen}

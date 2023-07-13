@@ -23,6 +23,7 @@ interface IPositionsProps {
   tokenOut: tokenParameterLiquidity;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
   handleCollectFeeOperation: () => void;
+  feeTier: string;
 }
 function PositionsPopup(props: IPositionsProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
@@ -78,7 +79,7 @@ function PositionsPopup(props: IPositionsProps) {
                 >
                   <div className="text-white rounded-lg text-center	 bg-info-800 flex items-center justify-center w-[100px] h-[44px] ">
                     <Image src={feeimg} />
-                    <span className="ml-1 font-title3">0.05%</span>
+                    <span className="ml-1 font-title3">{props.feeTier}%</span>
                   </div>
                 </ToolTip>
               </div>

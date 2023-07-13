@@ -58,6 +58,7 @@ export interface IManageBtnProps {
   tokenA: string;
   tokenB: string;
   isGauge: boolean;
+  feeTier: any;
 }
 export function PoolsTableV3(props: IShortCardProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -116,6 +117,7 @@ export function PoolsTableV3(props: IShortCardProps) {
       return <NoDataError content={"No Pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
+  const [feeTier, setFeeTier] = React.useState("");
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "DAI.e",
     image: `/assets/tokens/DAI.e.png`,
@@ -127,7 +129,7 @@ export function PoolsTableV3(props: IShortCardProps) {
     symbol: "USDC.e",
   });
 
-  const mobilecolumns = React.useMemo<Column<IAllPoolsData>[]>(
+  const mobilecolumns = React.useMemo<Column<any>[]>(
     () => [
       {
         Header: "Pools",
@@ -186,6 +188,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         columnWidth: "w-[115px] ml-auto",
         accessor: (x) => (
           <ManageBtn
+            feeTier={x.feeTier}
             isLiquidityAvailable={false}
             isStakeAvailable={false}
             tokenA={x.tokenA.toString()}
@@ -322,6 +325,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         minWidth: 151,
         accessor: (x) => (
           <ManageBtn
+            feeTier={x.feeTier}
             isLiquidityAvailable={false}
             isStakeAvailable={false}
             tokenA={x.tokenA.toString()}
@@ -353,22 +357,23 @@ export function PoolsTableV3(props: IShortCardProps) {
             } else {
               setActiveState(ActiveLiquidity.Liquidity);
             }
+            setFeeTier(props.feeTier);
             setTokenIn({
-              name: "DAI.e",
+              name: props.tokenA,
               image: getImagesPath(props.tokenA.toString()),
-              symbol: "DAI.e",
+              symbol: props.tokenA,
             });
             dispatch(
               settopLevelSelectedToken({
-                name: "DAI.e",
+                name: props.tokenA,
                 image: getImagesPath(props.tokenA.toString()),
-                symbol: "DAI.e",
+                symbol: props.tokenA,
               })
             );
             setTokenOut({
-              name: "USDC.e",
+              name: props.tokenB,
               image: getImagesPath(props.tokenB.toString()),
-              symbol: "USDC.e",
+              symbol: props.tokenB,
             });
 
             props.setShowLiquidityModal(true);
@@ -395,7 +400,7 @@ export function PoolsTableV3(props: IShortCardProps) {
             showLiquidityModal={props.showLiquidityModal}
             setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
             filter={props.poolsFilter}
-            feeTier={"0.01"}
+            feeTier={feeTier}
           />
         ) : (
           <ManageTabV3
@@ -410,7 +415,7 @@ export function PoolsTableV3(props: IShortCardProps) {
             showLiquidityModal={true}
             setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
             filter={props.poolsFilter}
-            feeTier={"0.01"}
+            feeTier={feeTier}
           />
         ))}
       {!isMobile && (

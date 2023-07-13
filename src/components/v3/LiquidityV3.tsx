@@ -64,7 +64,7 @@ function LiquidityV3(props: ILiquidityProps) {
           setFirstTokenAmount={props.setFirstTokenAmount}
           tokenPrice={tokenPrice}
         />
-        {props.feeTier !== props.selectedFeeTier && (
+        {props.feeTier != props.selectedFeeTier && (
           <div className="fade-in-warning h-[56px] mt-[7px] flex items-center  px-2 bg-error-300/[0.1]  rounded-lg	">
             <Image src={infoOrangeBig} />
             <span className="ml-3 text-error-300 text-[13px] leading-[20px] ">

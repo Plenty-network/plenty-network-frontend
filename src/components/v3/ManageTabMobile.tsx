@@ -193,7 +193,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
     updateBalance();
   }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
 
-  const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
+  const [selectedFeeTier, setSelectedFeeTier] = useState(props.feeTier);
   const [isClearAll, setisClearAll] = useState(false);
   const resetAllValues = () => {
     setisClearAll(true);
@@ -392,8 +392,10 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
       );
     } else if (
       walletAddress &&
-      ((firstTokenAmountLiq && firstTokenAmountLiq > Number(userBalances[props.tokenIn.name])) ||
-        (secondTokenAmountLiq && secondTokenAmountLiq) > Number(userBalances[props.tokenOut.name]))
+      ((firstTokenAmountLiq &&
+        Number(firstTokenAmountLiq) > Number(userBalances[props.tokenIn.name])) ||
+        (secondTokenAmountLiq &&
+          Number(secondTokenAmountLiq) > Number(userBalances[props.tokenOut.name])))
     ) {
       return (
         <Button height="52px" onClick={() => null} color={"disabled"}>
@@ -892,6 +894,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                 </p>
               </div>
               <PositionsPopup
+                feeTier={props.feeTier}
                 tokenIn={props.tokenA}
                 tokenOut={props.tokenB}
                 setScreen={setScreen}
