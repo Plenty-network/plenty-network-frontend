@@ -144,8 +144,8 @@ export const getRealPriceFromTick = async (
 
 export const getTickFromRealPrice = async (
   realPrice: BigNumber,
-  tokenXSymbol: string,
-  tokenYSymbol: string,
+  tokenXSymbol: IConfigToken,
+  tokenYSymbol: IConfigToken,
   tickspacing: number
 ): Promise<any> => {
   try {
@@ -154,8 +154,8 @@ export const getTickFromRealPrice = async (
     let tick = Tick.computeTickFromSqrtPrice(
       Price.computeSqrtPriceFromRealPrice(
         realPrice,
-        tokens[tokenXSymbol].decimals,
-        tokens[tokenYSymbol].decimals
+        tokenXSymbol.decimals,
+        tokenYSymbol.decimals
       ),
       tickspacing
     );
