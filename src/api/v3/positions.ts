@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
-import { Tick, Pool, Price, Liquidity, Fee, MAX_TICK, PositionManager } from "@plenty-labs/v3-sdk";
+import { Tick, Price, Liquidity, Fee, MAX_TICK, PositionManager } from "@plenty-labs/v3-sdk";
 import Config from "../../config/config";
-import { contractStorage, getOutsideFeeGrowth, getRealPriceFromTick } from "./helper";
+import { contractStorage, getOutsideFeeGrowth } from "./helper";
 
 import axios from "axios";
 import { BalanceNat, IV3Position, IV3PositionObject } from "./types";
@@ -22,8 +22,6 @@ export const getPositions = async (
     throw new Error("Invalid or empty arguments.");
   }
   try {
-    console.log("price X", tokenPrices[tokenXSymbol]);
-    console.log("price Y", tokenPrices[tokenYSymbol]);
     let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
     let v3ContractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
     const positions: IV3Position[] = (
@@ -44,13 +42,6 @@ export const getPositions = async (
         Tick.computeSqrtPriceFromTick(parseInt(position.lower_tick_index)),
         contractStorageParameters.tokenX.decimals,
         contractStorageParameters.tokenY.decimals
-      );
-
-      console.log(
-        "max",
-        parseInt(position.upper_tick_index) ==
-          Tick.nearestUsableTick(MAX_TICK, contractStorageParameters.tickSpacing),
-        position.upper_tick_index
       );
 
       const maxPrice =
@@ -97,49 +88,6 @@ export const getPositions = async (
         parseInt(position.lower_tick_index) <= contractStorageParameters.currTickIndex &&
         contractStorageParameters.currTickIndex <= parseInt(position.upper_tick_index);
 
-      /*       console.log("positions", {
-        liquidity: {
-          x: new BigNumber(
-            liquidity.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
-          ).toString(),
-          y: new BigNumber(
-            liquidity.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
-          ).toString(),
-        },
-        liquidityDollar: new BigNumber(
-          liquidity.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
-        )
-          .multipliedBy(tokenPrices[tokenXSymbol])
-          .plus(
-            BigNumber(
-              liquidity.y.dividedBy(
-                new BigNumber(10).pow(contractStorageParameters.tokenY.decimals)
-              )
-            ).multipliedBy(tokenPrices[tokenYSymbol])
-          )
-          .toString(),
-        minPrice: minPrice, // min price (Y/X)
-        maxPrice: maxPrice, // max price (Y/X)
-        fees: {
-          x: new BigNumber(
-            fees.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
-          ).toString(),
-          y: new BigNumber(
-            fees.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
-          ).toString(),
-        },
-        feesDollar: new BigNumber(
-          fees.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
-        )
-          .multipliedBy(tokenPrices[tokenXSymbol])
-          .plus(
-            BigNumber(
-              fees.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
-            ).multipliedBy(tokenPrices[tokenYSymbol])
-          )
-          .toString(),
-        isInRange: isInRange,
-      }); */
       return {
         position: position,
         currentTickIndex: contractStorageParameters.currTickIndex,
@@ -230,13 +178,6 @@ export const getPositionsAll = async (
         contractStorageParameters.tokenY.decimals
       );
 
-      console.log(
-        "max",
-        parseInt(position.upper_tick_index) ==
-          Tick.nearestUsableTick(MAX_TICK, contractStorageParameters.tickSpacing),
-        position.upper_tick_index
-      );
-
       const maxPrice =
         parseInt(position.upper_tick_index) == MAX_TICK
           ? BigNumber(Infinity)
@@ -281,49 +222,6 @@ export const getPositionsAll = async (
         parseInt(position.lower_tick_index) <= contractStorageParameters.currTickIndex &&
         contractStorageParameters.currTickIndex <= parseInt(position.upper_tick_index);
 
-      /*       console.log("positions", {
-        liquidity: {
-          x: new BigNumber(
-            liquidity.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
-          ).toString(),
-          y: new BigNumber(
-            liquidity.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
-          ).toString(),
-        },
-        liquidityDollar: new BigNumber(
-          liquidity.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
-        )
-          .multipliedBy(tokenPrices[tokenXSymbol])
-          .plus(
-            BigNumber(
-              liquidity.y.dividedBy(
-                new BigNumber(10).pow(contractStorageParameters.tokenY.decimals)
-              )
-            ).multipliedBy(tokenPrices[tokenYSymbol])
-          )
-          .toString(),
-        minPrice: minPrice, // min price (Y/X)
-        maxPrice: maxPrice, // max price (Y/X)
-        fees: {
-          x: new BigNumber(
-            fees.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
-          ).toString(),
-          y: new BigNumber(
-            fees.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
-          ).toString(),
-        },
-        feesDollar: new BigNumber(
-          fees.x.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
-        )
-          .multipliedBy(tokenPrices[tokenXSymbol])
-          .plus(
-            BigNumber(
-              fees.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
-            ).multipliedBy(tokenPrices[tokenYSymbol])
-          )
-          .toString(),
-        isInRange: isInRange,
-      }); */
       return {
         position: position,
         currentTickIndex: contractStorageParameters.currTickIndex,
@@ -410,13 +308,6 @@ export const createIncreaseLiquidityOperation = async (
 
     deadline: Math.floor(new Date().getTime() / 1000) + 30 * 60, //default 30 min deadline
   };
-
-  console.log(
-    "increase liquidity options",
-    options.liquidityDelta.toString(),
-    options.maximumTokensContributed.x.toString(),
-    options.maximumTokensContributed.y.toString()
-  );
 
   // @ts-ignore
   return PositionManager.updatePositionOp(contractInstance, options);

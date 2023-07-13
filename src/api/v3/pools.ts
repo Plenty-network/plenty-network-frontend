@@ -1,4 +1,3 @@
-import axios from "axios";
 import { IAllPoolsDataResponse } from "./types";
 import { store } from "../../redux";
 
@@ -6,7 +5,6 @@ export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
   try {
     const state = store.getState();
     const AMMS = state.config.AMMs;
-    const TOKENS = state.config.tokens;
     const allData: any[] = [];
 
     for (var key in AMMS) {

@@ -25,8 +25,6 @@ export const deployPoolOperation = async (
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
-    console.log('----newpool 11', 1, tokenXSymbol, tokenYSymbol, initialTickIndex);
-
     const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
     if (!WALLET_RESP.success) {
@@ -34,12 +32,8 @@ export const deployPoolOperation = async (
     }
 
     const Tezos = await dappClient().tezos();
-
     const tokenX = await Tezos.wallet.at(tokenXSymbol.address as string);
-    console.log('----newpool 11', 2, tokenX);
-
     const tokenY = await Tezos.wallet.at(tokenYSymbol.address as string);
-    console.log('----newpool 11', 3, tokenY);
 
     const factoryInstance = await Tezos.wallet.at(v3factoryAddress);
     const allBatch: WalletParamsWithKind[] = [];
@@ -61,12 +55,9 @@ export const deployPoolOperation = async (
         })
         .toTransferParams(),
     });
-    console.log("poolsop", 4, allBatch);
 
     const updatedBatchOperations = await getBatchOperationsWithLimits(allBatch);
     const batch = Tezos.wallet.batch(updatedBatchOperations);
-    console.log("poolsop", 5, batch);
-
     const batchOperation = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
