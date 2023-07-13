@@ -44,8 +44,7 @@ export interface IManageLiquidityProps {
 export function NewPoolv3(props: IManageLiquidityProps) {
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const TOKEN = useAppSelector((state) => state.config.tokens);
-  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  const walletAddress = useAppSelector((state) => state.wallet.address);
+
   const [pair, setPair] = useState("");
   const [priceAmount, setPriceAmount] = useState("");
 
@@ -77,6 +76,8 @@ export function NewPoolv3(props: IManageLiquidityProps) {
   const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>(
     {} as tokenParameterLiquidity
   );
+  const [tokenInOp, setTokenInOp] = React.useState<IConfigToken>({} as IConfigToken);
+  const [tokenOutOp, setTokenOutOp] = React.useState<IConfigToken>({} as IConfigToken);
   const percentage = (selectedFeeTier: string) => {
     if (selectedFeeTier === "0.01") {
       return 1;
@@ -116,12 +117,14 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       //setSecondTokenAmountLiq("");
     }
     if (tokenType === "tokenIn") {
+      setTokenInOp(token.interface);
       setTokenIn({
         name: token.name,
         symbol: token.name,
         image: token.image,
       });
     } else {
+      setTokenOutOp(token.interface);
       setTokenOut({
         name: token.name,
         symbol: token.name,
@@ -243,8 +246,8 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(tokenOut.name));
     setShowConfirmTransaction(true);
     deployPoolOperation(
-      tokenIn.symbol,
-      tokenOut.symbol,
+      tokenInOp,
+      tokenOutOp,
       Number(tick),
       Number(selectedFeeTier) * 100,
       transactionSubmitModal,
