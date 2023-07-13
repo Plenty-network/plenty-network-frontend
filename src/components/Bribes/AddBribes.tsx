@@ -472,7 +472,7 @@ function AddBribes(props: IAddBribes) {
                       : "0"}
                   </div>
                 </div>
-                {bottomValue > 0 && (
+                {Number(bottomValue) > 0 && (
                   <div className="font-body2 text-text-250 mt-4 mx-5">
                     You are adding a bribe of
                     <span

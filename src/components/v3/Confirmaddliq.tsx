@@ -9,6 +9,7 @@ import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { ActivePopUp } from "./ManageTabV3";
+import { BigNumber } from "ethers";
 
 interface IConfirmIncreaseLiqProps {
   show: boolean;
@@ -24,6 +25,7 @@ interface IConfirmIncreaseLiqProps {
 function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
   const closeModal = () => {
+    props.setScreen(ActivePopUp.ManageExisting);
     props.setShow(false);
   };
 
@@ -63,7 +65,7 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">{selectedPosition.liquidity.x.toFixed(2)}</p>
+              <p className="font-title2-bold ml-1">{Number(props.addTokenA).toFixed(2)}</p>
               {/* <p className="font-body4 ">(+ {props.addTokenA} )</p> */}
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
@@ -84,7 +86,7 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">{selectedPosition.liquidity.y.toFixed(2)}</p>
+              <p className="font-title2-bold ml-1">{Number(props.addTokenB).toFixed(2)}</p>
               {/* <p className="font-body4 ">(+ {props.addTokenB} )</p> */}
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>
@@ -110,7 +112,7 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">{selectedPosition.liquidity.x.toFixed(2)}</p>
+              <p className="font-title2-bold ml-1">{selectedPosition.fees.x.toFixed(2)}</p>
               {/* <p className="font-body4 ">(+ {props.addTokenA} )</p> */}
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
@@ -131,7 +133,7 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">{selectedPosition.liquidity.y.toFixed(2)}</p>
+              <p className="font-title2-bold ml-1">{selectedPosition.fees.y.toFixed(2)}</p>
               {/* <p className="font-body4 ">(+ {props.addTokenB} )</p> */}
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>
@@ -154,7 +156,9 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">{selectedPosition.liquidity.x.toFixed(2)}</p>
+              <p className="font-title2-bold ml-1">
+                {(Number(selectedPosition.fees.x) + Number(props.addTokenA)).toFixed(2)}
+              </p>
               {/* <p className="font-body4 ">(+ {props.addTokenA} )</p> */}
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
@@ -175,7 +179,9 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">{selectedPosition.liquidity.y.toFixed(2)}</p>
+              <p className="font-title2-bold ml-1">
+                {(Number(selectedPosition.fees.y) + Number(props.addTokenB)).toFixed(2)}
+              </p>
               {/* <p className="font-body4 ">(+ {props.addTokenB} )</p> */}
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>

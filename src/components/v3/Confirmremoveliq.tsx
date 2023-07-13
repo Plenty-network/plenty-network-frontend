@@ -31,6 +31,7 @@ interface IConfirmLiqProps {
 function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
   const closeModal = () => {
+    props.setScreen(ActivePopUp.ManageExisting);
     props.setShow(false);
   };
   return props.show ? (
