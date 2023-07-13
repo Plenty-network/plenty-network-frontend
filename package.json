@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
-   
   },
   "dependencies": {
     "@airgap/beacon-sdk": "^4.0.0",
