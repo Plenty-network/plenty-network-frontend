@@ -78,7 +78,7 @@ export const collectFees = async (
       throw new Error(status);
     }
   } catch (error: any) {
-    console.log("v3operationerror: ", error);
+    console.log("v3error: ", error);
     return {
       success: false,
       operationId: undefined,

@@ -2,6 +2,8 @@ import axios from "axios";
 import Config from "../../config/config";
 import BigNumber from "bignumber.js";
 import { Token, BalanceNat, IV3ContractStorageParams } from "./types";
+import { IConfigToken } from "../../config/types";
+
 import { Tick, Liquidity, PositionManager, Price } from "@plenty-labs/v3-sdk";
 import { getV3DexAddress } from "../../api/util/fetchConfig";
 import { connectedNetwork, dappClient } from "../../common/walletconnect";
@@ -122,16 +124,16 @@ export const getTickAndRealPriceFromPool = async (contractAddress: string): Prom
 
 export const getRealPriceFromTick = async (
   tick: number,
-  tokenXSymbol: string,
-  tokenYSymbol: string
+  tokenXSymbol: IConfigToken,
+  tokenYSymbol: IConfigToken
 ): Promise<any> => {
   try {
     const state = store.getState();
     const tokens = state.config.tokens;
     let priceValue = Price.computeRealPriceFromSqrtPrice(
       Tick.computeSqrtPriceFromTick(tick),
-      tokens[tokenXSymbol].decimals,
-      tokens[tokenYSymbol].decimals
+      tokenXSymbol.decimals,
+      tokenYSymbol.decimals
     );
 
     return priceValue;
@@ -181,7 +183,6 @@ export const calculateliquidity = async (
       sqrtPriceFromLowerTick,
       sqrtPriceFromUpperTick
     );
-    console.log("---v3----", liquidity);
     return liquidity;
   } catch (error) {
     console.log("v3 error: ", error);
@@ -211,14 +212,6 @@ export const createPositionInstance = async (
       contractStorageParameters
     );
 
-    /*     console.log(
-      "testssss",
-      liquidity.toString(),
-      contractStorageParameters.sqrtPriceValue.toString(),
-      Tick.computeSqrtPriceFromTick(lowerTick).toString(),
-      Tick.computeSqrtPriceFromTick(upperTick).toString()
-    ); */
-
     const maxTokenFinal = Liquidity.computeAmountFromLiquidity(
       liquidity,
       contractStorageParameters.sqrtPriceValue,
@@ -239,28 +232,6 @@ export const createPositionInstance = async (
       maximumTokensContributed: maxTokenFinal,
     };
 
-    /*     let optionSet2 = {
-      lowerTickIndex: lowerTick,
-      upperTickIndex: upperTick,
-      lowerTickWitness: lowerTickWitness,
-      upperTickWitness: upperTickWitness,
-      liquidity: liquidity.toString(),
-      deadline: deadline,
-      maximumTokensContributedX: maxTokenFinal.x.toString(),
-      maximumTokensContributedY: maxTokenFinal.y.toString(),
-      priceLowerTick: Price.computeRealPriceFromSqrtPrice(
-        Tick.computeSqrtPriceFromTick(lowerTick),
-        contractStorageParameters.tokenX.decimals,
-        contractStorageParameters.tokenY.decimals
-      ).toString(),
-      priceUpperTick: Price.computeRealPriceFromSqrtPrice(
-        Tick.computeSqrtPriceFromTick(upperTick),
-        contractStorageParameters.tokenX.decimals,
-        contractStorageParameters.tokenY.decimals
-      ).toString(),
-    };
-
-    console.log("optionSet: ", optionSet2); */
     // @ts-ignore
     let createPosition = PositionManager.setPositionOp(contractInstance, optionSet);
 

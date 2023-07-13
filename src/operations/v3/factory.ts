@@ -25,6 +25,8 @@ export const deployPoolOperation = async (
   flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
+    console.log('----newpool 11', 1, tokenXSymbol, tokenYSymbol, initialTickIndex);
+
     const { CheckIfWalletConnected } = dappClient();
     const WALLET_RESP = await CheckIfWalletConnected();
     if (!WALLET_RESP.success) {
@@ -32,9 +34,6 @@ export const deployPoolOperation = async (
     }
 
     const Tezos = await dappClient().tezos();
-    const state = store.getState();
-    const TOKENS = state.config.tokens;
-    console.log('----newpool 11', 1, tokenXSymbol, tokenYSymbol);
 
     const tokenX = await Tezos.wallet.at(tokenXSymbol.address as string);
     console.log('----newpool 11', 2, tokenX);
@@ -44,7 +43,6 @@ export const deployPoolOperation = async (
 
     const factoryInstance = await Tezos.wallet.at(v3factoryAddress);
     const allBatch: WalletParamsWithKind[] = [];
-    console.log;
     allBatch.push({
       kind: OpKind.TRANSACTION,
       ...factoryInstance.methodsObject
@@ -53,13 +51,13 @@ export const deployPoolOperation = async (
           initial_tick_index: initialTickIndex,
           extra_slots: 0,
           token_x:
-            TOKENS[tokenXSymbol].standard === TokenStandard.FA12
+            tokenXSymbol.standard === TokenStandard.FA12
               ? { fa12: tokenX.address }
-              : { fa2: { 1: tokenX.address, 2: TOKENS[tokenXSymbol].tokenId } },
+              : { fa2: { 1: tokenX.address, 2: tokenXSymbol.tokenId } },
           token_y:
-            TOKENS[tokenYSymbol].standard === TokenStandard.FA12
+            tokenYSymbol.standard === TokenStandard.FA12
               ? { fa12: tokenY.address }
-              : { fa2: { 2: tokenY.address, 3: TOKENS[tokenYSymbol].tokenId } },
+              : { fa2: { 2: tokenY.address, 3: tokenYSymbol.tokenId } },
         })
         .toTransferParams(),
     });
@@ -67,6 +65,8 @@ export const deployPoolOperation = async (
 
     const updatedBatchOperations = await getBatchOperationsWithLimits(allBatch);
     const batch = Tezos.wallet.batch(updatedBatchOperations);
+    console.log("poolsop", 5, batch);
+
     const batchOperation = await batch.send();
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
