@@ -7,7 +7,6 @@ import { IConfigToken } from "../../config/types";
 import { Tick, Liquidity, PositionManager, Price } from "@plenty-labs/v3-sdk";
 import { getV3DexAddress } from "../../api/util/fetchConfig";
 import { connectedNetwork, dappClient } from "../../common/walletconnect";
-import { store } from "../../redux";
 
 const tokenDetail = async (tokenSymbol: String): Promise<Token> => {
   let configResponse: any = await axios.get(Config.CONFIG_LINKS[connectedNetwork].TOKEN);
@@ -128,8 +127,6 @@ export const getRealPriceFromTick = async (
   tokenYSymbol: IConfigToken
 ): Promise<any> => {
   try {
-    const state = store.getState();
-    const tokens = state.config.tokens;
     let priceValue = Price.computeRealPriceFromSqrtPrice(
       Tick.computeSqrtPriceFromTick(tick),
       tokenXSymbol.decimals,
@@ -149,8 +146,6 @@ export const getTickFromRealPrice = async (
   tickspacing: number
 ): Promise<any> => {
   try {
-    const state = store.getState();
-    const tokens = state.config.tokens;
     let tick = Tick.computeTickFromSqrtPrice(
       Price.computeSqrtPriceFromRealPrice(
         realPrice,

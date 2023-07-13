@@ -5,6 +5,8 @@ import { contractStorage } from "./helper";
 import { store } from "../../redux";
 
 export const connectedNetwork = Config.NETWORK;
+const state = store.getState();
+const TOKENS = state.config.tokens;
 
 export const calculateCurrentPrice = async (
   tokenXSymbol: string,
@@ -139,8 +141,6 @@ export const estimateTokenXFromTokenY = async (
 ): Promise<any> => {
   try {
     let estimatedAmount;
-    const state = store.getState();
-    const TOKENS = state.config.tokens;
 
     amount = amount.multipliedBy(new BigNumber(10).pow(TOKENS[tokenYSymbol].decimals));
 
@@ -180,8 +180,6 @@ export const estimateTokenYFromTokenX = async (
 ): Promise<any> => {
   try {
     let estimatedAmount;
-    const state = store.getState();
-    const TOKENS = state.config.tokens;
 
     amount = amount.multipliedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals));
 

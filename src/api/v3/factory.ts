@@ -12,7 +12,6 @@ export const checkPoolExistence = async (
 
     for (var key in AMM) {
       if (AMM.hasOwnProperty(key) && AMM[key].tokenX?.symbol == tokenXSymbol && AMM[key].tokenY?.symbol == tokenYSymbol) {
-        const val = AMM[key];
         feeBPS.push(AMM[key].feeBps);
       }
     }
