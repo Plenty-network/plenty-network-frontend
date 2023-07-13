@@ -11,7 +11,6 @@ import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../../api/util/
 import { Chain, IConfigToken, MigrateToken } from "../../../config/types";
 import { FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_B } from "../../../constants/localStorage";
 import { tokensModalNewPool, tokenType } from "../../../constants/swap";
-import { deployStable, deployTezPair, deployVolatile } from "../../../operations/factory";
 import { useAppDispatch, useAppSelector } from "../../../redux";
 import { getConfig } from "../../../redux/config/config";
 import { setFlashMessage } from "../../../redux/flashMessage";
@@ -30,7 +29,6 @@ import { tzktExplorer } from "../../../common/walletconnect";
 import ConfirmAddPoolv3 from "./ConfirmAddPool";
 import { checkPoolExistence } from "../../../api/v3/factory";
 import { deployPoolOperation } from "../../../operations/v3/factory";
-import { Tick } from "@plenty-labs/v3-sdk";
 import { getTickFromRealPrice } from "../../../api/v3/helper";
 
 export interface IManageLiquidityProps {

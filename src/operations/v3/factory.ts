@@ -1,6 +1,6 @@
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
-import { Approvals, Contract } from "@plenty-labs/v3-sdk";
-import { TokenStandard } from "./types";
+import { IConfigToken, TokenStandard } from "./types";
+
 import { dappClient, v3factoryAddress } from "../../common/walletconnect";
 import { store } from "../../redux";
 import {
@@ -15,8 +15,8 @@ import { setFlashMessage } from "../../redux/flashMessage";
 import { IFlashMessageProps } from "../../redux/flashMessage/type";
 
 export const deployPoolOperation = async (
-  tokenXSymbol: string,
-  tokenYSymbol: string,
+  tokenXSymbol: IConfigToken,
+  tokenYSymbol: IConfigToken,
   initialTickIndex: number,
   feeBps: number,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
@@ -34,9 +34,14 @@ export const deployPoolOperation = async (
     const Tezos = await dappClient().tezos();
     const state = store.getState();
     const TOKENS = state.config.tokens;
+    console.log('----newpool 11', 1, tokenXSymbol, tokenYSymbol);
 
-    const tokenX = await Tezos.wallet.at(TOKENS[tokenXSymbol].address as string);
-    const tokenY = await Tezos.wallet.at(TOKENS[tokenYSymbol].address as string);
+    const tokenX = await Tezos.wallet.at(tokenXSymbol.address as string);
+    console.log('----newpool 11', 2, tokenX);
+
+    const tokenY = await Tezos.wallet.at(tokenYSymbol.address as string);
+    console.log('----newpool 11', 3, tokenY);
+
     const factoryInstance = await Tezos.wallet.at(v3factoryAddress);
     const allBatch: WalletParamsWithKind[] = [];
     console.log;
