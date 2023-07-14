@@ -103,7 +103,7 @@ export default function Pools(props: IIndexProps) {
         <div>
           <HeadInfo
             className="px-2 md:px-3"
-            title="Pools"
+            title="Pools V3"
             toolTipContent="Watch how to add liquidity, stake, and earn PLY. "
             searchValue={searchValue}
             setSearchValue={setSearchValue}
@@ -133,7 +133,7 @@ export default function Pools(props: IIndexProps) {
                 <Image src={info} />
               </p>
               <p className="font-body2 text-info-500 px-3 sm:w-auto w-[280px]">
-                APR for the first week will be 0
+                Gauges are not yet available for v3 pool
               </p>
               <p
                 className="ml-auto relative top-[7px] cursor-pointer"

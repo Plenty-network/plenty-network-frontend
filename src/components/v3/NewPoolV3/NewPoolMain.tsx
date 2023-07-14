@@ -144,7 +144,7 @@ function NewPoolMain(props: ILiquidityProps) {
     <>
       <div className="border rounded-2xl border-text-800 bg-card-200 px-[10px] md:px-3.5 pt-4 pb-4  mb-3">
         <>
-          <div className=" relative gap-2 flex border-text-800/[0.5] rounded-2xl h-[89px]">
+          <div className=" relative gap-1.5 flex border-text-800/[0.5] rounded-2xl h-[89px]">
             <div
               className="w-[50%] rounded-l-2xl border items-center flex border-text-800/[0.5] hover:border-text-700 bg-card-300 hover:bg-blue-800 cursor-pointer"
               onClick={() => props.handleTokenType("tokenIn")}
@@ -231,10 +231,13 @@ function NewPoolMain(props: ILiquidityProps) {
                     : null}
                 </span>
               </p>
-              <p className="flex items-center">
+              <p className="flex items-center w-[90%]">
                 <input
                   type="text"
-                  className="text-white bg-muted-200/[0.1] text-left border-0 ml-1 font-medium2  lg:font-medium1 outline-none w-[50px] md:w-[100px] placeholder:text-text-500 "
+                  style={{ width: (props.priceAmount.length + 6) * 10 + "px" }}
+                  className={clsx(
+                    "text-white bg-muted-200/[0.1] text-left border-0 ml-0 font-medium2  lg:font-medium1 outline-none   placeholder:text-text-500 "
+                  )}
                   placeholder="0.0"
                   value={
                     props.priceAmount
@@ -246,7 +249,7 @@ function NewPoolMain(props: ILiquidityProps) {
                   onChange={(e) => handleLiquidityInput(e.target.value)}
                 />
                 {props.tokenIn.symbol && props.tokenOut.symbol && (
-                  <>
+                  <div className="bg-muted-600 rounded-3xl px-2 py-1.5 flex ">
                     <img
                       src={
                         props.tokenOut.symbol && props.tokenIn.symbol
@@ -278,14 +281,14 @@ function NewPoolMain(props: ILiquidityProps) {
                       height={"16px"}
                       onError={changeSource}
                     />
-                    <span className="ml-1 font-caption1">
+                    <span className="ml-1 font-caption1 ">
                       {tEZorCTEZtoUppercase(
                         selectedToken.symbol === props.tokenIn.symbol
                           ? props.tokenOut.name
                           : props.tokenIn.symbol
                       )}
                     </span>
-                  </>
+                  </div>
                 )}{" "}
               </p>
             </div>

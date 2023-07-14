@@ -371,6 +371,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       )}
       {showConfirmPool && (
         <ConfirmAddPoolv3
+          selectedFeeTier={selectedFeeTier}
           show={showConfirmPool}
           pair={pair}
           setShow={setShowConfirmPool}
