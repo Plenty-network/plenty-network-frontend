@@ -2,7 +2,7 @@ import JSBI from "jsbi";
 
 import { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { getTickAndRealPriceFromPool } from "../../../api/v3/helper";
+import { getTickAndRealPriceFromPool, getV3PoolAddressWithFeeTier } from "../../../api/v3/helper";
 import { AppDispatch, useAppSelector } from "../../../redux";
 import { setIsLoading } from "../../../redux/poolsv3";
 import { tokenParameterLiquidity } from "../../Liquidity/types";
@@ -23,9 +23,11 @@ export interface TickProcessed {
 export function useDensityChartData({
   currencyA,
   currencyB,
+  feeTier,
 }: {
-  currencyA: tokenParameterLiquidity | undefined;
-  currencyB: tokenParameterLiquidity | undefined;
+  currencyA: tokenParameterLiquidity;
+  currencyB: tokenParameterLiquidity;
+  feeTier: number;
 }) {
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
@@ -35,12 +37,14 @@ export function useDensityChartData({
   const [isLoadingData, setisloading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
   useMemo(() => {
+    setData(undefined);
     setisloading(true);
-    getTickAndRealPriceFromPool("KT1AmeUTxh28afcKVgD6mJEzoSo95NThe3TW").then((response) => {
+    const poolAddress = getV3PoolAddressWithFeeTier(currencyA?.symbol, currencyB?.symbol, feeTier);
+    getTickAndRealPriceFromPool(poolAddress).then((response) => {
       setData(response);
       setisloading(false);
     });
-  }, [currencyA, currencyB]);
+  }, [currencyA, currencyB, feeTier]);
 
   const formatData = useCallback(() => {
     if (!data?.length) {

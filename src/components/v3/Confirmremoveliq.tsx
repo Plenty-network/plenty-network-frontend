@@ -69,9 +69,7 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                 />
               </p>
               <p className="font-title2-bold ml-1">
-                {nFormatterWithLesserNumber(
-                  props.selectedPosition.liquidity.x.minus(props.removeTokenA)
-                )}
+                {nFormatterWithLesserNumber(props.removeTokenA)}
               </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
@@ -93,9 +91,7 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                 />
               </p>
               <p className="font-title2-bold ml-1">
-                {nFormatterWithLesserNumber(
-                  props.selectedPosition.liquidity.y.minus(props.removeTokenB)
-                )}
+                {nFormatterWithLesserNumber(props.removeTokenB)}
               </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>
@@ -119,9 +115,7 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                 />
               </p>
               <p className="font-title2-bold ml-1">
-                {nFormatterWithLesserNumber(
-                  props.selectedPosition.liquidity.x.minus(props.removeTokenA)
-                )}
+                {nFormatterWithLesserNumber(props.selectedPosition.fees.x)}
               </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
@@ -143,9 +137,7 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                 />
               </p>
               <p className="font-title2-bold ml-1">
-                {nFormatterWithLesserNumber(
-                  props.selectedPosition.liquidity.y.minus(props.removeTokenB)
-                )}
+                {nFormatterWithLesserNumber(props.selectedPosition.fees.y)}
               </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>

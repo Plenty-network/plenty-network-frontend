@@ -433,7 +433,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   }, [selectedToken]);
 
   const [isFullRange, setFullRangee] = React.useState(false);
-  const full = useAppSelector((state) => state.poolsv3.isFullRange);
+
   React.useEffect(() => {
     //if (!isFullRange) {
     dispatch(setIsLoading(true));
@@ -502,7 +502,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       dispatch(setmaxTickB(response.maxTick.toString()));
     });
     //}
-  }, [isClearAll]);
+  }, [isClearAll, selectedFeeTier]);
 
   const handleIncreaseLiquidityOperation = () => {
     setContentTransaction(

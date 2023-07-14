@@ -251,6 +251,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
           <LiquidityChartRangeInput
             currencyA={currenyAA ?? undefined}
             currencyB={currencyBB ?? undefined}
+            feeTier={Number(props.selectedFeeTier)}
             feeAmount={500}
             ticksAtLimit={{ LOWER: false, UPPER: false }}
             price={
