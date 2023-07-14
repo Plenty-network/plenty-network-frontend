@@ -3,10 +3,11 @@ import Config from "../../config/config";
 import BigNumber from "bignumber.js";
 import { Token, BalanceNat, IV3ContractStorageParams } from "./types";
 import { IConfigToken } from "../../config/types";
-
 import { Tick, Liquidity, PositionManager, Price } from "@plenty-labs/v3-sdk";
 import { getV3DexAddress } from "../../api/util/fetchConfig";
 import { connectedNetwork, dappClient } from "../../common/walletconnect";
+import { store } from "../../redux";
+
 
 const tokenDetail = async (tokenSymbol: String): Promise<Token> => {
   let configResponse: any = await axios.get(Config.CONFIG_LINKS[connectedNetwork].TOKEN);
@@ -34,7 +35,6 @@ export const contractStorage = async (
     `${Config.TZKT_NODES[connectedNetwork]}v1/contracts/${v3ContractAddress}/storage`
   );
 
-  // https://rpc.tzkt.io/ghostnet/chains/main/blocks/head/context/contracts/KT1M5yHd85ikngHm5YCu9gkfM2oqtbsKak8Y/storage
   let sqrtPriceValue = BigNumber(v3ContractStorage.data.sqrt_price);
   let currTickIndex = parseInt(v3ContractStorage.data.cur_tick_index);
   let tickSpacing = parseInt(v3ContractStorage.data.constants.tick_spacing);
@@ -62,6 +62,21 @@ export const contractStorage = async (
     ticksBigMap: ticksBigMap,
     poolAddress: v3ContractAddress,
   };
+};
+
+export const getV3PoolAddressWithFeeTier = (tokenIn: string, tokenOut: string, feeTier: number): string => {
+  const state = store.getState();
+  const AMM = state.config.AMMs;
+  const feeBPS = feeTier * 100;
+
+  const address = Object.keys(AMM).find(
+    (key) =>
+      // @ts-ignore
+      (AMM[key].tokenX.symbol === tokenIn && AMM[key].tokenY.symbol === tokenOut && feeBPS.toString() === AMM[key].feeBps) ||
+      // @ts-ignore
+      (AMM[key].tokenY.symbol === tokenIn && AMM[key].tokenX.symbol === tokenOut && feeBPS.toString() === AMM[key].feeBps)
+  );
+  return address ?? "false";
 };
 
 export const calculateWitnessValue = async (

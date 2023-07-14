@@ -48,7 +48,9 @@ export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
 
   const address = Object.keys(AMM).find(
     (key) =>
+      // @ts-ignore
       (AMM[key].token1.symbol === tokenIn && AMM[key].token2.symbol === tokenOut) ||
+      // @ts-ignore
       (AMM[key].token2.symbol === tokenIn && AMM[key].token1.symbol === tokenOut)
   );
 
@@ -64,7 +66,6 @@ export const getV3DexAddress = (tokenIn: string, tokenOut: string): string => {
       // @ts-ignore
       (AMM[key].tokenY.symbol === tokenIn && AMM[key].tokenX.symbol === tokenOut)
   );
-  //console.log("address v3", address);
   return address ?? "false";
 };
 
