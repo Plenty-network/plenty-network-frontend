@@ -183,9 +183,65 @@ export function PoolsTableV3(props: IShortCardProps) {
       },
 
       {
+        Header: "APR",
+        id: "apr",
+        columnWidth: "w-[80px]",
+        subText: "external",
+        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
+        isToolTipEnabled: true,
+        canShort: true,
+        showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
+        accessor: (x: any) => (
+          // x.isGaugeAvailable ? (
+          <Apr currentApr={x.apr} />
+        ),
+        // ) : (
+        //   <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+        //     -
+        //   </div>
+        // ),
+      },
+
+      {
+        Header: "Volume",
+        id: "Volume24h",
+        subText: "(24h)",
+        columnWidth: "w-[129px]",
+        isToolTipEnabled: true,
+        tooltipMessage: "Pool’s trading volume in the last 24 hours.",
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
+        accessor: (x: any) => <PoolsTextWithTooltip text={x.volume.toString()} />,
+      },
+      {
+        Header: "TVL",
+        id: "TVL",
+        columnWidth: "w-[122px]",
+        tooltipMessage: "Total value locked up in the pool.",
+        isToolTipEnabled: true,
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
+        accessor: (x) => <PoolsTextWithTooltip text={x.tvl.toString()} />,
+      },
+      {
+        Header: "Fees",
+        id: "fees",
+        columnWidth: "w-[122px]",
+        subText: "(7D)",
+        tooltipMessage: "Trading fees collected by the pool in the current epoch.",
+        isToolTipEnabled: true,
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
+        accessor: (x) => <PoolsTextWithTooltip text={x.fees.toString()} />,
+      },
+
+      {
         Header: "",
         id: "manage",
-        columnWidth: "w-[115px] ml-auto",
+        sticky: "right",
+        columnWidth: "w-[160px] ml-auto",
+        minWidth: 151,
         accessor: (x) => (
           <ManageBtn
             feeTier={x.feeTier}
@@ -266,7 +322,7 @@ export function PoolsTableV3(props: IShortCardProps) {
       {
         Header: "APR",
         id: "apr",
-        columnWidth: "w-[150px]",
+        columnWidth: "w-[80px]",
         subText: "external",
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         isToolTipEnabled: true,

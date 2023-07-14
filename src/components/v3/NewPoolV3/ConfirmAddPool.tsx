@@ -27,7 +27,7 @@ interface IConfirmSwapProps {
   priceAmount: string;
   tokenIn: { name: string; image: any; symbol: string };
   tokenOut: { name: string; image: any; symbol: string };
-
+  selectedFeeTier: string;
   routeDetails: {
     path: string[];
     minimumOut: BigNumber;
@@ -69,7 +69,7 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
         </div> */}
           </div>
           <div className="mt-6">
-            <div className="relative rounded-2xl gap-2 h-[78px]  flex content-center justify-center">
+            <div className="relative rounded-2xl gap-1.5 h-[78px]  flex content-center justify-center">
               <div className="w-[50%] rounded-l-2xl border items-center flex border-text-800/[0.5] bg-card-300 cursor-pointer">
                 <div className="ml-2 md:ml-5 ">
                   <img
@@ -152,7 +152,7 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                     value={props.priceAmount}
                   />
                   {props.tokenIn.symbol && props.tokenOut.symbol && (
-                    <>
+                    <div className="bg-muted-600 rounded-3xl px-2 py-1.5 flex">
                       <img
                         src={
                           props.tokenOut.symbol && props.tokenIn.symbol
@@ -191,7 +191,7 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                             : props.tokenIn.symbol
                         )}
                       </span>
-                    </>
+                    </div>
                   )}{" "}
                 </p>
               </div>
@@ -225,8 +225,8 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                       {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
                     </div>
                   </div>
-                  <div className="font-body1 md:font-body3 text-text-600 mt-[5.5px]">
-                    Select initial price token
+                  <div className="font-body1 md:font-body3 text-text-600 mt-[5.5px]  text-end">
+                    {`${props.selectedFeeTier}% fee tier`}
                   </div>
                 </div>
               )}
