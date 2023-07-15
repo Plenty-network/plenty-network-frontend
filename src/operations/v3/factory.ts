@@ -1,6 +1,6 @@
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
-import { Approvals, Contract } from "@plenty-labs/v3-sdk";
-import { TokenStandard } from "./types";
+import { IConfigToken, TokenStandard } from "./types";
+
 import { dappClient, v3factoryAddress } from "../../common/walletconnect";
 import { store } from "../../redux";
 import {
@@ -15,8 +15,8 @@ import { setFlashMessage } from "../../redux/flashMessage";
 import { IFlashMessageProps } from "../../redux/flashMessage/type";
 
 export const deployPoolOperation = async (
-  tokenXSymbol: string,
-  tokenYSymbol: string,
+  tokenXSymbol: IConfigToken,
+  tokenYSymbol: IConfigToken,
   initialTickIndex: number,
   feeBps: number,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
@@ -32,14 +32,11 @@ export const deployPoolOperation = async (
     }
 
     const Tezos = await dappClient().tezos();
-    const state = store.getState();
-    const TOKENS = state.config.tokens;
+    const tokenX = await Tezos.wallet.at(tokenXSymbol.address as string);
+    const tokenY = await Tezos.wallet.at(tokenYSymbol.address as string);
 
-    const tokenX = await Tezos.wallet.at(TOKENS[tokenXSymbol].address as string);
-    const tokenY = await Tezos.wallet.at(TOKENS[tokenYSymbol].address as string);
     const factoryInstance = await Tezos.wallet.at(v3factoryAddress);
     const allBatch: WalletParamsWithKind[] = [];
-    console.log;
     allBatch.push({
       kind: OpKind.TRANSACTION,
       ...factoryInstance.methodsObject
@@ -48,17 +45,16 @@ export const deployPoolOperation = async (
           initial_tick_index: initialTickIndex,
           extra_slots: 0,
           token_x:
-            TOKENS[tokenXSymbol].standard === TokenStandard.FA12
+            tokenXSymbol.standard === TokenStandard.FA12
               ? { fa12: tokenX.address }
-              : { fa2: { 1: tokenX.address, 2: TOKENS[tokenXSymbol].tokenId } },
+              : { fa2: { 1: tokenX.address, 2: tokenXSymbol.tokenId } },
           token_y:
-            TOKENS[tokenYSymbol].standard === TokenStandard.FA12
+            tokenYSymbol.standard === TokenStandard.FA12
               ? { fa12: tokenY.address }
-              : { fa2: { 2: tokenY.address, 3: TOKENS[tokenYSymbol].tokenId } },
+              : { fa2: { 2: tokenY.address, 3: tokenYSymbol.tokenId } },
         })
         .toTransferParams(),
     });
-    console.log("poolsop", 4, allBatch);
 
     const updatedBatchOperations = await getBatchOperationsWithLimits(allBatch);
     const batch = Tezos.wallet.batch(updatedBatchOperations);

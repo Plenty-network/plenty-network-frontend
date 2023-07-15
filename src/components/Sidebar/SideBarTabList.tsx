@@ -3,6 +3,7 @@ import Link from "next/link";
 import Config from "../../config/config";
 import TooltipViolet from "../Migrate/TooltipViolet";
 import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
+import { useRouter } from "next/router";
 
 export interface ISingleSideBarProps {
   name: string;
@@ -24,6 +25,8 @@ export interface ISingleSideBarProps {
 }
 
 export function SingleSideBar(props: ISingleSideBarProps) {
+  const router = useRouter();
+
   if (props.pathName) {
     return (
       <Link className={`md:flex w-full flex-col ${props?.className}`} href={props.pathName}>
@@ -40,10 +43,14 @@ export function SingleSideBar(props: ISingleSideBarProps) {
             type={TooltipType.withoutBorder}
           >
             <div
-              className={`flex w-full  items-center justify-between h-[50px] ${
-                props.isActive ? "sideNavactive text-white" : "text-text-250"
+              className={`flex   items-center justify-between  ${
+                props.pathName === router.pathname ? "sideNavactive text-white" : "text-text-250"
               } ${
-                props.isSubmenu ? "pl-[68px] pr-6" : !props.isBottomMenu ? "pl-6 pr-[20px]" : ""
+                props.isSubmenu
+                  ? "pl-[26px] pr-6 h-[42px] w-[85%] ml-auto "
+                  : !props.isBottomMenu
+                  ? "pl-6 pr-[20px] h-[50px] w-full"
+                  : ""
               } text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-muted-250/60 ${
                 !props.isBottomMenu ? "border-x-2" : ""
               } border border-transprent `}

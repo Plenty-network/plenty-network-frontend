@@ -102,7 +102,7 @@ export enum ActivePopUp {
 }
 
 export function ManageTabV3(props: IManageLiquidityProps) {
-  const [selectedFeeTier, setSelectedFeeTier] = useState("0.01");
+  const [selectedFeeTier, setSelectedFeeTier] = useState(props.feeTier);
   const inputDisabled = useAppSelector((state) => state.poolsv3.inputDisable);
   const [showConfirm, setShowConfirm] = useState(false);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
@@ -406,8 +406,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       );
     } else if (
       walletAddress &&
-      ((firstTokenAmountLiq && firstTokenAmountLiq > Number(userBalances[props.tokenIn.name])) ||
-        (secondTokenAmountLiq && secondTokenAmountLiq) > Number(userBalances[props.tokenOut.name]))
+      ((firstTokenAmountLiq &&
+        Number(firstTokenAmountLiq) > Number(userBalances[props.tokenIn.name])) ||
+        (secondTokenAmountLiq &&
+          Number(secondTokenAmountLiq) > Number(userBalances[props.tokenOut.name])))
     ) {
       return (
         <Button height="52px" onClick={() => null} color={"disabled"}>
@@ -431,7 +433,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   }, [selectedToken]);
 
   const [isFullRange, setFullRangee] = React.useState(false);
-  const full = useAppSelector((state) => state.poolsv3.isFullRange);
+
   React.useEffect(() => {
     //if (!isFullRange) {
     dispatch(setIsLoading(true));
@@ -500,7 +502,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       dispatch(setmaxTickB(response.maxTick.toString()));
     });
     //}
-  }, [isClearAll]);
+  }, [isClearAll, selectedFeeTier]);
 
   const handleIncreaseLiquidityOperation = () => {
     setContentTransaction(
@@ -912,6 +914,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               </p>
             </div>
             <PositionsPopup
+              feeTier={props.feeTier}
               tokenIn={props.tokenA}
               tokenOut={props.tokenB}
               setScreen={setScreen}

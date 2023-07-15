@@ -9,6 +9,13 @@ export interface Token {
     decimals: number;
 }
 
+export enum Chain {
+    ETHEREUM = "ETHEREUM",
+    BSC = "BSC",
+    POLYGON = "POLYGON",
+    TEZOS = "TEZOS",
+}
+
 export enum TokenStandard {
     FA12 = "FA1.2",
     FA2 = "FA2",
@@ -18,4 +25,17 @@ export enum TokenStandard {
 export interface BalanceNat {
     x: BigNumber;
     y: BigNumber;
+}
+  
+export interface IConfigToken {
+    name: string;
+    symbol: string;
+    decimals?: number;
+    standard?: TokenStandard;
+    address?: string;
+    tokenId?: number;
+    thumbnailUri?: string;
+    originChain?: Chain;
+    pairs?: string[];
+    iconUrl?: string;
 }

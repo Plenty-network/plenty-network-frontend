@@ -48,7 +48,7 @@ export function TopNavBar(props: ITopNavBarProps) {
     <>
       <nav
         className={clsx(
-          "hidden  md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   px-10 pl-0 topNavblurEffect z-50",
+          "hidden  md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   pr-4 pl-0 topNavblurEffect z-50",
           props.isBanner ? "top-[38px]" : ""
         )}
       >

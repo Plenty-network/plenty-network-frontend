@@ -11,7 +11,6 @@ import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../../api/util/
 import { Chain, IConfigToken, MigrateToken } from "../../../config/types";
 import { FIRST_TOKEN_AMOUNT, TOKEN_A, TOKEN_B } from "../../../constants/localStorage";
 import { tokensModalNewPool, tokenType } from "../../../constants/swap";
-import { deployStable, deployTezPair, deployVolatile } from "../../../operations/factory";
 import { useAppDispatch, useAppSelector } from "../../../redux";
 import { getConfig } from "../../../redux/config/config";
 import { setFlashMessage } from "../../../redux/flashMessage";
@@ -30,7 +29,6 @@ import { tzktExplorer } from "../../../common/walletconnect";
 import ConfirmAddPoolv3 from "./ConfirmAddPool";
 import { checkPoolExistence } from "../../../api/v3/factory";
 import { deployPoolOperation } from "../../../operations/v3/factory";
-import { Tick } from "@plenty-labs/v3-sdk";
 import { getTickFromRealPrice } from "../../../api/v3/helper";
 
 export interface IManageLiquidityProps {
@@ -46,8 +44,7 @@ export interface IManageLiquidityProps {
 export function NewPoolv3(props: IManageLiquidityProps) {
   const [showVideoModal, setShowVideoModal] = React.useState(false);
   const TOKEN = useAppSelector((state) => state.config.tokens);
-  const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-  const walletAddress = useAppSelector((state) => state.wallet.address);
+
   const [pair, setPair] = useState("");
   const [priceAmount, setPriceAmount] = useState("");
 
@@ -79,6 +76,8 @@ export function NewPoolv3(props: IManageLiquidityProps) {
   const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>(
     {} as tokenParameterLiquidity
   );
+  const [tokenInOp, setTokenInOp] = React.useState<IConfigToken>({} as IConfigToken);
+  const [tokenOutOp, setTokenOutOp] = React.useState<IConfigToken>({} as IConfigToken);
   const percentage = (selectedFeeTier: string) => {
     if (selectedFeeTier === "0.01") {
       return 1;
@@ -101,8 +100,8 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       setTick("");
       getTickFromRealPrice(
         new BigNumber(priceAmount),
-        tokenIn.symbol,
-        tokenOut.symbol,
+        tokenInOp,
+        tokenOutOp,
         percentage(selectedFeeTier)
       ).then((res) => {
         setTick(res);
@@ -118,12 +117,14 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       //setSecondTokenAmountLiq("");
     }
     if (tokenType === "tokenIn") {
+      setTokenInOp(token.interface);
       setTokenIn({
         name: token.name,
         symbol: token.name,
         image: token.image,
       });
     } else {
+      setTokenOutOp(token.interface);
       setTokenOut({
         name: token.name,
         symbol: token.name,
@@ -245,8 +246,8 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(tokenOut.name));
     setShowConfirmTransaction(true);
     deployPoolOperation(
-      tokenIn.symbol,
-      tokenOut.symbol,
+      tokenInOp,
+      tokenOutOp,
       Number(tick),
       Number(selectedFeeTier) * 100,
       transactionSubmitModal,
@@ -370,6 +371,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       )}
       {showConfirmPool && (
         <ConfirmAddPoolv3
+          selectedFeeTier={selectedFeeTier}
           show={showConfirmPool}
           pair={pair}
           setShow={setShowConfirmPool}

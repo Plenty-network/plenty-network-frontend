@@ -90,3 +90,9 @@ export interface IAllPoolsDataResponse {
   allData: any;
   error?: string;
 }
+
+export interface IMyPoolsDataResponse {
+  success: boolean;
+  allData: any;
+  error?: string;
+}

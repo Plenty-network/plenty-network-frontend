@@ -31,6 +31,7 @@ interface IConfirmLiqProps {
 function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
   const closeModal = () => {
+    props.setScreen(ActivePopUp.ManageExisting);
     props.setShow(false);
   };
   return props.show ? (
@@ -49,8 +50,8 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
               <Image alt={'alt'} src={info} />
             </div> */}
           </div>
-          <div className="border border-text-800 bg-card-200 p-4 mt-3 rounded-2xl">
-            <div className="text-text-400 font-body1 ">You’re remove liquidity</div>
+          <div className="border-t border-x  border-text-800 bg-card-200 p-4 mt-3 rounded-t-2xl">
+            <div className="text-text-400 font-body1 ">You are removing </div>
             <div className="flex items-center gap-2 mt-3">
               <p>
                 <img
@@ -68,9 +69,7 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                 />
               </p>
               <p className="font-title2-bold ml-1">
-                {nFormatterWithLesserNumber(
-                  props.selectedPosition.liquidity.x.minus(props.removeTokenA)
-                )}
+                {nFormatterWithLesserNumber(props.removeTokenA)}
               </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
@@ -92,9 +91,53 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                 />
               </p>
               <p className="font-title2-bold ml-1">
-                {nFormatterWithLesserNumber(
-                  props.selectedPosition.liquidity.y.minus(props.removeTokenB)
-                )}
+                {nFormatterWithLesserNumber(props.removeTokenB)}
+              </p>
+              <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
+            </div>
+          </div>
+          <div className="border border-text-800 bg-card-200 p-4 rounded-b-2xl">
+            <div className="text-text-400 font-body1 ">Fees earned</div>
+            <div className="flex items-center gap-2 mt-3">
+              <p>
+                <img
+                  alt={"alt"}
+                  src={
+                    tokenIcons[props.tokenIn.symbol]
+                      ? tokenIcons[props.tokenIn.symbol].src
+                      : tokens[props.tokenIn.symbol.toString()]?.iconUrl
+                      ? tokens[props.tokenIn.symbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
+                  width={"24px"}
+                  height={"24px"}
+                  onError={changeSource}
+                />
+              </p>
+              <p className="font-title2-bold ml-1">
+                {nFormatterWithLesserNumber(props.selectedPosition.fees.x)}
+              </p>
+              <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
+            </div>
+
+            <div className="flex items-center gap-2 mt-1.5">
+              <p>
+                <img
+                  alt={"alt"}
+                  src={
+                    tokenIcons[props.tokenOut.symbol]
+                      ? tokenIcons[props.tokenOut.symbol].src
+                      : tokens[props.tokenOut.symbol.toString()]?.iconUrl
+                      ? tokens[props.tokenOut.symbol.toString()].iconUrl
+                      : `/assets/Tokens/fallback.png`
+                  }
+                  width={"24px"}
+                  height={"24px"}
+                  onError={changeSource}
+                />
+              </p>
+              <p className="font-title2-bold ml-1">
+                {nFormatterWithLesserNumber(props.selectedPosition.fees.y)}
               </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>

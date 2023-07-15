@@ -58,6 +58,7 @@ export interface IManageBtnProps {
   tokenA: string;
   tokenB: string;
   isGauge: boolean;
+  feeTier: any;
 }
 export function PoolsTableV3(props: IShortCardProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -116,6 +117,7 @@ export function PoolsTableV3(props: IShortCardProps) {
       return <NoDataError content={"No Pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
+  const [feeTier, setFeeTier] = React.useState("");
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
     name: "DAI.e",
     image: `/assets/tokens/DAI.e.png`,
@@ -127,7 +129,7 @@ export function PoolsTableV3(props: IShortCardProps) {
     symbol: "USDC.e",
   });
 
-  const mobilecolumns = React.useMemo<Column<IAllPoolsData>[]>(
+  const mobilecolumns = React.useMemo<Column<any>[]>(
     () => [
       {
         Header: "Pools",
@@ -181,11 +183,68 @@ export function PoolsTableV3(props: IShortCardProps) {
       },
 
       {
+        Header: "APR",
+        id: "apr",
+        columnWidth: "w-[80px]",
+        subText: "external",
+        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
+        isToolTipEnabled: true,
+        canShort: true,
+        showOnMobile: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
+        accessor: (x: any) => (
+          // x.isGaugeAvailable ? (
+          <Apr currentApr={x.apr} />
+        ),
+        // ) : (
+        //   <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
+        //     -
+        //   </div>
+        // ),
+      },
+
+      {
+        Header: "Volume",
+        id: "Volume24h",
+        subText: "(24h)",
+        columnWidth: "w-[129px]",
+        isToolTipEnabled: true,
+        tooltipMessage: "Pool’s trading volume in the last 24 hours.",
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
+        accessor: (x: any) => <PoolsTextWithTooltip text={x.volume.toString()} />,
+      },
+      {
+        Header: "TVL",
+        id: "TVL",
+        columnWidth: "w-[122px]",
+        tooltipMessage: "Total value locked up in the pool.",
+        isToolTipEnabled: true,
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
+        accessor: (x) => <PoolsTextWithTooltip text={x.tvl.toString()} />,
+      },
+      {
+        Header: "Fees",
+        id: "fees",
+        columnWidth: "w-[122px]",
+        subText: "(7D)",
+        tooltipMessage: "Trading fees collected by the pool in the current epoch.",
+        isToolTipEnabled: true,
+        canShort: true,
+        sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
+        accessor: (x) => <PoolsTextWithTooltip text={x.fees.toString()} />,
+      },
+
+      {
         Header: "",
         id: "manage",
-        columnWidth: "w-[115px] ml-auto",
+        sticky: "right",
+        columnWidth: "w-[160px] ml-auto",
+        minWidth: 151,
         accessor: (x) => (
           <ManageBtn
+            feeTier={x.feeTier}
             isLiquidityAvailable={false}
             isStakeAvailable={false}
             tokenA={x.tokenA.toString()}
@@ -263,7 +322,7 @@ export function PoolsTableV3(props: IShortCardProps) {
       {
         Header: "APR",
         id: "apr",
-        columnWidth: "w-[150px]",
+        columnWidth: "w-[80px]",
         subText: "external",
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         isToolTipEnabled: true,
@@ -322,6 +381,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         minWidth: 151,
         accessor: (x) => (
           <ManageBtn
+            feeTier={x.feeTier}
             isLiquidityAvailable={false}
             isStakeAvailable={false}
             tokenA={x.tokenA.toString()}
@@ -353,22 +413,23 @@ export function PoolsTableV3(props: IShortCardProps) {
             } else {
               setActiveState(ActiveLiquidity.Liquidity);
             }
+            setFeeTier(props.feeTier);
             setTokenIn({
-              name: "DAI.e",
+              name: props.tokenA,
               image: getImagesPath(props.tokenA.toString()),
-              symbol: "DAI.e",
+              symbol: props.tokenA,
             });
             dispatch(
               settopLevelSelectedToken({
-                name: "DAI.e",
+                name: props.tokenA,
                 image: getImagesPath(props.tokenA.toString()),
-                symbol: "DAI.e",
+                symbol: props.tokenA,
               })
             );
             setTokenOut({
-              name: "USDC.e",
+              name: props.tokenB,
               image: getImagesPath(props.tokenB.toString()),
-              symbol: "USDC.e",
+              symbol: props.tokenB,
             });
 
             props.setShowLiquidityModal(true);
@@ -395,7 +456,7 @@ export function PoolsTableV3(props: IShortCardProps) {
             showLiquidityModal={props.showLiquidityModal}
             setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
             filter={props.poolsFilter}
-            feeTier={"0.01"}
+            feeTier={feeTier}
           />
         ) : (
           <ManageTabV3
@@ -410,7 +471,7 @@ export function PoolsTableV3(props: IShortCardProps) {
             showLiquidityModal={true}
             setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
             filter={props.poolsFilter}
-            feeTier={"0.01"}
+            feeTier={feeTier}
           />
         ))}
       {!isMobile && (

@@ -24,6 +24,7 @@ import {
 
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import LiquidityChartRangeInput from "./LiquidityChartRangeInput";
+import { Chain, IConfigToken } from "../../config/types";
 
 // 1 -> 0.0001
 
@@ -64,7 +65,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
 
   const currencyBB = props.tokenOut;
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
-
+  const tokens = useAppSelector((state) => state.config.tokens);
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
@@ -79,6 +80,29 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const BrightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
   const Bleftbrush = useAppSelector((state) => state.poolsv3.Bleftbrush);
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
+  const tokensArray = Object.entries(tokens);
+  const tokensListConfig = React.useMemo(() => {
+    return tokensArray.map((token) => ({
+      name: token[0],
+      image: `/assets/Tokens/${token[1].symbol}.png`,
+
+      chainType: token[1].originChain as Chain,
+      address: token[1].address,
+      interface: token[1],
+    }));
+  }, [tokens]);
+  const [tokenInConfig, setTokenInConfig] = React.useState<IConfigToken>({} as IConfigToken);
+  const [tokenOutConfig, setTokenOutConfig] = React.useState<IConfigToken>({} as IConfigToken);
+  React.useEffect(() => {
+    tokensListConfig.map((tokenConfig) => {
+      if (tokenConfig.name === props.tokenIn.symbol) {
+        setTokenInConfig(tokenConfig.interface);
+      }
+      if (tokenConfig.name === props.tokenOut.symbol) {
+        setTokenOutConfig(tokenConfig.interface);
+      }
+    });
+  }, [tokensListConfig, props.tokenIn.symbol, props.tokenOut.symbol]);
   const TickSpacing = (selectedFeeTier: string) => {
     if (selectedFeeTier === "0.01") {
       return 1;
@@ -100,8 +124,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
       getTickFromRealPrice(
         new BigNumber(value),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
+        tokenInConfig,
+        tokenOutConfig,
         TickSpacing(props.selectedFeeTier)
       ).then((response1) => {
         dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
@@ -109,8 +133,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
     } else {
       getTickFromRealPrice(
         new BigNumber(1).dividedBy(new BigNumber(value)),
-        props.tokenOut.symbol,
-        props.tokenIn.symbol,
+        tokenInConfig,
+        tokenOutConfig,
         TickSpacing(props.selectedFeeTier)
       ).then((response1) => {
         dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
@@ -135,8 +159,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
       getTickFromRealPrice(
         new BigNumber(value),
-        props.tokenIn.symbol,
-        props.tokenOut.symbol,
+        tokenInConfig,
+        tokenOutConfig,
         TickSpacing(props.selectedFeeTier)
       ).then((response) => {
         dispatch(setmaxTickA(Tick.nearestUsableTick(response, 10)));
@@ -144,8 +168,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
     } else {
       getTickFromRealPrice(
         new BigNumber(1).dividedBy(new BigNumber(value)),
-        props.tokenOut.symbol,
-        props.tokenIn.symbol,
+        tokenInConfig,
+        tokenOutConfig,
         TickSpacing(props.selectedFeeTier)
       ).then((response1) => {
         dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
@@ -227,6 +251,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
           <LiquidityChartRangeInput
             currencyA={currenyAA ?? undefined}
             currencyB={currencyBB ?? undefined}
+            feeTier={Number(props.selectedFeeTier)}
             feeAmount={500}
             ticksAtLimit={{ LOWER: false, UPPER: false }}
             price={
@@ -406,7 +431,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       </div>
 
       <div
-        className="mt-3 cursor-pointer border border-info-700 hover:border-text-600 rounded-lg	text-center py-2.5 font-body1 mx-4"
+        className="mt-3 cursor-pointer border border-info-700 hover:border-text-600 rounded-lg	text-center py-2.5 font-body1 mx-4 mb-2"
         onClick={() => fullrangeCalc(!props.isFullRange)}
       >
         {props.isFullRange ? "Remove Full Range" : "Full Range"}

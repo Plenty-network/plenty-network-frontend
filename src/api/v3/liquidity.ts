@@ -107,18 +107,6 @@ export const getInitialBoundaries = async (
       contractStorageParameters.tokenY.decimals
     );
 
-    console.log(
-      "v3-------calculateMinandMaxPriceFromTick",
-      minTick,
-      maxTick,
-      minPriceValue.toString(),
-      maxPriceValue.toString(),
-      contractStorageParameters.tokenX.decimals,
-      contractStorageParameters.tokenY.decimals,
-      Tick.computeSqrtPriceFromTick(minTick).toString(),
-      Tick.computeSqrtPriceFromTick(maxTick).toString()
-    );
-
     return {
       minTick: minTick,
       maxTick: maxTick,
@@ -163,7 +151,6 @@ export const estimateTokenXFromTokenY = async (
     estimatedAmount = estimatedAmountCalc.dividedBy(
       new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals)
     );
-    console.log("estimatedAmountCalc", estimatedAmount.toNumber());
 
     return estimatedAmount;
   } catch (error) {

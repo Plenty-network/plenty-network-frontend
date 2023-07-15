@@ -37,7 +37,7 @@ function FeeTierMain(props: IFeeTierMainProps) {
           <div
             key={index}
             className={clsx(
-              props.selectedFeeTier === feeInd.percentage
+              props.selectedFeeTier == feeInd.percentage
                 ? "border-blue-700"
                 : "border-text-800 hover:border-text-400",
               "border fade-in-light w-[83px] sm:w-[127px] rounded-2xl   bg-card-200   mb-5 h-[139px] sm:h-[128px] py-[12px] pl-[14px]  pr-3 cursor-pointer"
@@ -46,7 +46,7 @@ function FeeTierMain(props: IFeeTierMainProps) {
           >
             <div
               className={clsx(
-                props.selectedFeeTier === feeInd.percentage ? "text-blue-700" : "text-text-250",
+                props.selectedFeeTier == feeInd.percentage ? "text-blue-700" : "text-text-250",
                 "font-caption2 sm:font-subtitle4 "
               )}
             >

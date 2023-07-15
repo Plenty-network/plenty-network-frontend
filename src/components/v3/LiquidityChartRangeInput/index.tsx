@@ -51,6 +51,7 @@ const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
 export default function LiquidityChartRangeInput({
   currencyA,
   currencyB,
+  feeTier,
   feeAmount,
   ticksAtLimit,
   price,
@@ -63,8 +64,9 @@ export default function LiquidityChartRangeInput({
   setFullRange,
 }: {
   setFullRange: React.Dispatch<React.SetStateAction<boolean>>;
-  currencyA: tokenParameterLiquidity | undefined;
-  currencyB: tokenParameterLiquidity | undefined;
+  currencyA: tokenParameterLiquidity;
+  currencyB: tokenParameterLiquidity;
+  feeTier: number;
   feeAmount?: FeeAmount;
   ticksAtLimit: { [bound in Bound]?: boolean | undefined };
   price: number;
@@ -91,6 +93,7 @@ export default function LiquidityChartRangeInput({
   const { isLoadingData, error, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
+    feeTier,
   });
 
   const onBrushDomainChangeEnded = useCallback(
@@ -177,11 +180,10 @@ export default function LiquidityChartRangeInput({
   return (
     <div style={{ minHeight: "200px" }}>
       {isUninitialized ? (
-        "Your position will appear here."
-      ) : // <div className="flex items-center pt-[100px]  justify-center">
-      //   Your position will appear here.
-      // </div>
-      isLoadingData ? (
+        <div className="flex items-center pt-[100px]  justify-center">
+          Your position will appear here.
+        </div>
+      ) : isLoadingData ? (
         <div className="justify-center items-center  flex h-[180px]">
           <div className="spinner"></div>
         </div>
