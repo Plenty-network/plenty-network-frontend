@@ -47,11 +47,11 @@ export const deployPoolOperation = async (
           token_x:
             tokenXSymbol.standard === TokenStandard.FA12
               ? { fa12: tokenX.address }
-              : { fa2: { 1: tokenX.address, 2: tokenXSymbol.tokenId } },
+              : { fa2: { address: tokenX.address, token_id: tokenXSymbol.tokenId } },
           token_y:
             tokenYSymbol.standard === TokenStandard.FA12
               ? { fa12: tokenY.address }
-              : { fa2: { 2: tokenY.address, 3: tokenYSymbol.tokenId } },
+              : { fa2: { address: tokenY.address, token_id: tokenYSymbol.tokenId } },
         })
         .toTransferParams(),
     });

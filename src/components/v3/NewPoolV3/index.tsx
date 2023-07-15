@@ -229,6 +229,11 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     setPair("");
     if (tokenIn.name && tokenOut.name) {
       checkPoolExistence(tokenIn.name, tokenOut.name).then((res) => {
+        if (tokenIn.name != res.tokenA) {
+          const tokenTemp = tokenIn;
+          setTokenIn(tokenOut);
+          setTokenOut(tokenTemp);
+        }
         setIsExist(res);
       });
     }
