@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { Approvals, Contract } from "@plenty-labs/v3-sdk";
-import { getV3DexAddress } from "../../api/util/fetchConfig";
+import { getV3PoolAddressWithFeeTier } from "../../api/util/fetchConfig";
 import { BalanceNat, TokenStandard } from "./types";
 import { dappClient } from "../../common/walletconnect";
 import { store } from "../../redux";
@@ -33,7 +33,8 @@ export const LiquidityOperation = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  flashMessageContent?: IFlashMessageProps
+  flashMessageContent?: IFlashMessageProps,
+  feeTier: any
 ): Promise<IOperationsResponse> => {
   try {
     const Tezos = await dappClient().tezos();
@@ -53,7 +54,7 @@ export const LiquidityOperation = async (
       y: amountTokenY,
     };
 
-    const contractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
+    const contractAddress = getV3PoolAddressWithFeeTier(tokenXSymbol, tokenYSymbol, feeTier);
 
     const tokenX = await Tezos.wallet.at(TOKENS[tokenXSymbol].address as string);
     const tokenY = await Tezos.wallet.at(TOKENS[tokenYSymbol].address as string);
@@ -64,7 +65,8 @@ export const LiquidityOperation = async (
       tokenYSymbol,
       deadline,
       maximumTokensContributedMain,
-      contractAddress
+      contractAddress,
+      feeTier
     );
     const allBatchOperations: WalletParamsWithKind[] = [];
 
@@ -200,6 +202,7 @@ export const increaseLiquidity = async (
   tokenXSymbol: string,
   tokenYSymbol: string,
   userAddress: string,
+  feeTier: number,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
@@ -213,7 +216,7 @@ export const increaseLiquidity = async (
 
     const tokenX = await Tezos.wallet.at(TOKENS[tokenXSymbol].address as string);
     const tokenY = await Tezos.wallet.at(TOKENS[tokenYSymbol].address as string);
-    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
     const contractInstance = await Tezos.wallet.at(contractStorageParameters.poolAddress);
 
     let amountTokenX = tokensAmount.x
@@ -374,6 +377,7 @@ export const removeLiquidity = async (
   userAddress: string,
   tokenXSymbol: string,
   tokenYSymbol: string,
+  feeTier: number,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
@@ -382,7 +386,7 @@ export const removeLiquidity = async (
   try {
     const Tezos = await dappClient().tezos();
 
-    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
 
     const contractInstance = await Tezos.wallet.at(contractStorageParameters.poolAddress);
 
@@ -430,3 +434,7 @@ export const removeLiquidity = async (
     };
   }
 };
+function feeTier(lowerTick: number, upperTick: number, tokenXSymbol: string, tokenYSymbol: string, deadline: number, maximumTokensContributedMain: { x: BigNumber; y: BigNumber; }, contractAddress: string, feeTier: any) {
+  throw new Error("Function not implemented.");
+}
+

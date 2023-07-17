@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import { Token, BalanceNat, IV3ContractStorageParams } from "./types";
 import { IConfigToken } from "../../config/types";
 import { Tick, Liquidity, PositionManager, Price } from "@plenty-labs/v3-sdk";
-import { getV3DexAddress } from "../../api/util/fetchConfig";
+import { getV3PoolAddressWithFeeTier } from "../../api/util/fetchConfig";
 import { connectedNetwork, dappClient } from "../../common/walletconnect";
 import { store } from "../../redux";
 
@@ -28,9 +28,10 @@ const tokenDetail = async (tokenSymbol: String): Promise<Token> => {
 
 export const contractStorage = async (
   tokenXSymbol: string,
-  tokenYSymbol: string
+  tokenYSymbol: string,
+  feeTier: number
 ): Promise<IV3ContractStorageParams> => {
-  let v3ContractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
+  let v3ContractAddress = getV3PoolAddressWithFeeTier(tokenXSymbol, tokenYSymbol, feeTier);
   const v3ContractStorage = await axios.get(
     `${Config.TZKT_NODES[connectedNetwork]}v1/contracts/${v3ContractAddress}/storage`
   );
@@ -62,21 +63,6 @@ export const contractStorage = async (
     ticksBigMap: ticksBigMap,
     poolAddress: v3ContractAddress,
   };
-};
-
-export const getV3PoolAddressWithFeeTier = (tokenIn: string, tokenOut: string, feeTier: number): string => {
-  const state = store.getState();
-  const AMM = state.config.AMMs;
-  const feeBPS = feeTier * 100;
-
-  const address = Object.keys(AMM).find(
-    (key) =>
-      // @ts-ignore
-      (AMM[key].tokenX.symbol === tokenIn && AMM[key].tokenY.symbol === tokenOut && feeBPS.toString() === AMM[key].feeBps) ||
-      // @ts-ignore
-      (AMM[key].tokenY.symbol === tokenIn && AMM[key].tokenX.symbol === tokenOut && feeBPS.toString() === AMM[key].feeBps)
-  );
-  return address ?? "false";
 };
 
 export const calculateWitnessValue = async (
@@ -206,12 +192,13 @@ export const createPositionInstance = async (
   tokenYSymbol: string,
   deadline: number,
   maximumTokensContributed: BalanceNat,
-  contractAddress: string
+  contractAddress: string,
+  feeTier: any
 ): Promise<any> => {
   try {
     const Tezos = await dappClient().tezos();
 
-    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
 
     const contractInstance = await Tezos.wallet.at(contractAddress);
 

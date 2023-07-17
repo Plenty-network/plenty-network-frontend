@@ -5,7 +5,7 @@ import { contractStorage, getOutsideFeeGrowth } from "./helper";
 
 import axios from "axios";
 import { BalanceNat, IV3Position, IV3PositionObject } from "./types";
-import { getTokensFromAMMAddress, getV3DexAddress } from "../util/fetchConfig";
+import { getTokensFromAMMAddress, getV3PoolAddressWithFeeTier } from "../util/fetchConfig";
 
 import { ITokenPriceList } from "../util/types";
 
@@ -14,16 +14,16 @@ export const connectedNetwork = Config.NETWORK;
 export const getPositions = async (
   tokenXSymbol: string,
   tokenYSymbol: string,
-  feeTier: string,
+  feeTier: any,
   userAddress: string,
-  tokenPrices: ITokenPriceList
+  tokenPrices: ITokenPriceList,
 ): Promise<IV3PositionObject[] | undefined> => {
   if (!userAddress || Object.keys(tokenPrices).length === 0) {
     throw new Error("Invalid or empty arguments.");
   }
   try {
-    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
-    let v3ContractAddress = getV3DexAddress(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
+    let v3ContractAddress = getV3PoolAddressWithFeeTier(tokenXSymbol, tokenYSymbol, feeTier);
     const positions: IV3Position[] = (
       await axios.get(
         `${Config.VE_INDEXER[connectedNetwork]}/v3-positions?pool=${v3ContractAddress}&address=${userAddress}`
@@ -144,7 +144,8 @@ export const getPositions = async (
 
 export const getPositionsAll = async (
   userAddress: string,
-  tokenPrices: ITokenPriceList
+  tokenPrices: ITokenPriceList,
+  feeTier: any
 ): Promise<IV3PositionObject[] | undefined> => {
   if (!userAddress || Object.keys(tokenPrices).length === 0) {
     throw new Error("Invalid or empty arguments.");
@@ -156,7 +157,7 @@ export const getPositionsAll = async (
 
     const contractStorageParametersPromises = positions.map(async (position) => {
       const { tokenX, tokenY } = getTokensFromAMMAddress(position.amm);
-      return await contractStorage(tokenX, tokenY);
+      return await contractStorage(tokenX, tokenY, feeTier);
     });
 
     const contractStorageParametersArray = await Promise.all(contractStorageParametersPromises);
@@ -349,10 +350,11 @@ export const calculateTokensForRemoveLiquidity = async (
   percentage: number,
   tokenXSymbol: string,
   tokenYSymbol: string,
-  position: IV3PositionObject
+  position: IV3PositionObject,
+  feeTier: number
 ): Promise<any> => {
   try {
-    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
     const newLiquidty = new BigNumber(position.position.liquidity).minus(
       BigNumber(position.position.liquidity).multipliedBy(percentage).dividedBy(100)
     );
