@@ -296,6 +296,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             ? new BigNumber(secondTokenAmountLiq)
             : new BigNumber(firstTokenAmountLiq),
       },
+
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
@@ -310,7 +311,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
-      }
+      },
+      Number(selectedFeeTier)
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -438,69 +440,77 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     //if (!isFullRange) {
     dispatch(setIsLoading(true));
 
-    calculateCurrentPrice(props.tokenA.symbol, props.tokenB.symbol, props.tokenA.symbol).then(
-      (response) => {
-        dispatch(setcurrentPrice(response.toFixed(6)));
-      }
-    );
-    calculateCurrentPrice(props.tokenA.symbol, props.tokenB.symbol, props.tokenB.symbol).then(
-      (response) => {
-        dispatch(setBcurrentPrice(response.toFixed(6)));
-      }
-    );
-    dispatch(setIsLoading(true));
-    getInitialBoundaries(props.tokenA.symbol, props.tokenB.symbol).then((response) => {
-      dispatch(setInitBound(response));
-      if (
-        new BigNumber(1)
-          .dividedBy(response.minValue)
-          .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
-      ) {
-        dispatch(setleftRangeInput(response.minValue.toFixed(6)));
-
-        dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
-
-        dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
-
-        dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
-
-        dispatch(setleftbrush(response.minValue.toFixed(6)));
-
-        dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
-
-        dispatch(setrightbrush(response.maxValue.toFixed(6)));
-
-        dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
-
-        dispatch(setIsLoading(false));
-      } else {
-        dispatch(setleftRangeInput(response.minValue.toFixed(6)));
-
-        dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
-
-        dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
-
-        dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
-
-        dispatch(setleftbrush(response.minValue.toFixed(6)));
-
-        dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
-
-        dispatch(setrightbrush(response.maxValue.toFixed(6)));
-
-        dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
-
-        dispatch(setIsLoading(false));
-      }
-
-      dispatch(setminTickA(response.minTick.toString()));
-
-      dispatch(setminTickB(response.minTick.toString()));
-
-      dispatch(setmaxTickA(response.maxTick.toString()));
-
-      dispatch(setmaxTickB(response.maxTick.toString()));
+    calculateCurrentPrice(
+      props.tokenA.symbol,
+      props.tokenB.symbol,
+      props.tokenA.symbol,
+      Number(selectedFeeTier)
+    ).then((response) => {
+      dispatch(setcurrentPrice(response.toFixed(6)));
     });
+    calculateCurrentPrice(
+      props.tokenA.symbol,
+      props.tokenB.symbol,
+      props.tokenB.symbol,
+      Number(selectedFeeTier)
+    ).then((response) => {
+      dispatch(setBcurrentPrice(response.toFixed(6)));
+    });
+    dispatch(setIsLoading(true));
+    getInitialBoundaries(props.tokenA.symbol, props.tokenB.symbol, Number(selectedFeeTier)).then(
+      (response) => {
+        dispatch(setInitBound(response));
+        if (
+          new BigNumber(1)
+            .dividedBy(response.minValue)
+            .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
+        ) {
+          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+
+          dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+
+          dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
+
+          dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+
+          dispatch(setleftbrush(response.minValue.toFixed(6)));
+
+          dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+
+          dispatch(setrightbrush(response.maxValue.toFixed(6)));
+
+          dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+
+          dispatch(setIsLoading(false));
+        } else {
+          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+
+          dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+
+          dispatch(setRightRangeInput(response.maxValue.toFixed(6)));
+
+          dispatch(setBRightRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+
+          dispatch(setleftbrush(response.minValue.toFixed(6)));
+
+          dispatch(setBleftbrush(new BigNumber(1).dividedBy(response.minValue).toFixed(6)));
+
+          dispatch(setrightbrush(response.maxValue.toFixed(6)));
+
+          dispatch(setBrightbrush(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
+
+          dispatch(setIsLoading(false));
+        }
+
+        dispatch(setminTickA(response.minTick.toString()));
+
+        dispatch(setminTickB(response.minTick.toString()));
+
+        dispatch(setmaxTickA(response.maxTick.toString()));
+
+        dispatch(setmaxTickB(response.maxTick.toString()));
+      }
+    );
     //}
   }, [isClearAll, selectedFeeTier]);
 
@@ -536,7 +546,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       props.tokenA.symbol,
       props.tokenB.symbol,
       walletAddress,
-
+      Number(selectedFeeTier),
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
@@ -631,7 +641,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       walletAddress,
       props.tokenA.symbol,
       props.tokenB.symbol,
-
+      Number(selectedFeeTier),
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
@@ -715,6 +725,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       walletAddress,
       props.tokenA.symbol,
       props.tokenB.symbol,
+      Number(selectedFeeTier),
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
@@ -943,6 +954,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             </div>
             <IncreaseDecreaseLiqMain
               setActiveStateIncDec={setActiveStateIncDec}
+              selectedFeeTier={Number(selectedFeeTier)}
               activeStateIncDec={activeStateIncDec}
               firstTokenAmount={firstTokenAmountIncLiq}
               secondTokenAmount={secondTokenAmountIncLiq}

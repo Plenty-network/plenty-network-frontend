@@ -38,6 +38,7 @@ interface IDecLiquidityProp {
   };
   setRemovePercentage: React.Dispatch<React.SetStateAction<number>>;
   removePercentage: number;
+  selectedFeeTier: number;
 }
 export default function DecreaseLiq(props: IDecLiquidityProp) {
   const tokens = useAppSelector((state) => state.config.tokens);
@@ -87,7 +88,8 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
         Number(props.removePercentage),
         props.tokenIn.symbol,
         props.tokenOut.symbol,
-        selectedPosition
+        selectedPosition,
+        props.selectedFeeTier
       ).then((res) => {
         props.setRemove(res);
       });

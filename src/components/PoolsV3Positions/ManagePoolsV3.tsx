@@ -40,6 +40,7 @@ export interface IManageLiquidityProps {
   activeState: string;
   showLiquidityModal?: boolean;
   setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  feeTier: string;
 }
 export enum ActiveIncDecState {
   Increase = "Increase liquidity",
@@ -181,7 +182,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
       props.tokenIn.symbol,
       props.tokenOut.symbol,
       walletAddress,
-
+      Number(props.feeTier),
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
@@ -276,7 +277,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
       walletAddress,
       props.tokenIn.symbol,
       props.tokenOut.symbol,
-
+      Number(props.feeTier),
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
@@ -393,6 +394,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
               </p>
             </div>
             <IncreaseDecreaseLiqMain
+              selectedFeeTier={Number(props.feeTier)}
               setActiveStateIncDec={setActiveStateIncDec}
               activeStateIncDec={activeStateIncDec}
               firstTokenAmount={firstTokenAmountLiq}

@@ -30,7 +30,7 @@ interface IIncLiquidityProp {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   setFirstTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
   setSecondTokenAmount: React.Dispatch<React.SetStateAction<string | number>>;
-
+  selectedFeeTier: number;
   userBalances: {
     [key: string]: string;
   };
@@ -219,7 +219,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
             <div className="flex items-center">
               <span className=" font-subtitle3  text-text-400">Fee tier</span>
             </div>
-            <div className="ml-auto font-body4 text-white">0.3%</div>
+            <div className="ml-auto font-body4 text-white">{props.selectedFeeTier}%</div>
           </div>
 
           <div className="flex  items-center   px-5 py-5">
@@ -381,6 +381,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
           tokenPrice={tokenPrice}
           setInputDisable={setInputDisable}
           inputDisable={inputDisable}
+          selectedFeeTier={props.selectedFeeTier}
         />
       </div>
       <div className=" blur "></div>

@@ -20,6 +20,7 @@ interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
   handleCollectFeeOperation: () => void;
   tokenOut: tokenParameterLiquidity;
+  feeTier: string;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
 }
 function PositionsData(props: IPositionsProps) {
@@ -40,7 +41,7 @@ function PositionsData(props: IPositionsProps) {
       getPositions(
         props.tokenIn.symbol,
         props.tokenOut.symbol,
-        "0.05",
+        props.feeTier,
         walletAddress,
         tokenPrice
       ).then((res) => {

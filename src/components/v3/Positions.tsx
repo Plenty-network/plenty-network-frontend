@@ -95,6 +95,7 @@ function PositionsPopup(props: IPositionsProps) {
         setScreen={props.setScreen}
         tokenIn={props.tokenIn}
         tokenOut={props.tokenOut}
+        feeTier={props.feeTier}
         handleCollectFeeOperation={props.handleCollectFeeOperation}
       />
       <div className="mt-2">{ButtonComp}</div>
