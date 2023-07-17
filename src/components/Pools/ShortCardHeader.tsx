@@ -36,10 +36,9 @@ export function Tabs(props: ITabsProps) {
           ? "justify-start"
           : "justify-end "
       } ${props.tableType ? "thSticky" : ""} ${
-        (props.TableName === "newPools" || props.TableName === "poolsPosition") &&
-        props.index === 0 &&
-        "pl-20 sm:pl-[40px]"
-      }`}
+        props.TableName === "poolsPosition" && props.index === 0 && "pl-20 sm:pl-[40px]"
+      } ${props.TableName === "newPools" && "lg:pl-20 pl-2 "}
+      `}
     >
       <div className="flex gap-0 flex-col">
         <div className={`flex  ${props.isFirstRow ? "justify-start" : "justify-end"} `}>

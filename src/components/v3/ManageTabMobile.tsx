@@ -816,7 +816,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
                     onClick={() => setSettingsShow(!settingsShow)}
                   >
                     <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
-                    <span className="text-white font-body4 ml-2 relative top-px">
+                    <span className="text-white font-body4 ml-2 relative top-[-5px]">
                       {slippage ? slippage : "30"}m
                     </span>
                   </div>

@@ -143,39 +143,39 @@ export function PoolsTableV3(props: IShortCardProps) {
             <div className={clsx("flex gap-1 items-center max-w-[240px]")}>
               <CircularOverLappingImage
                 tokenA={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
-                    ? x.tokenB.toString()
-                    : x.tokenA.toString()
+                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                    ? x.tokenB?.toString()
+                    : x.tokenA?.toString()
                 }
                 tokenB={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
-                    ? x.tokenA.toString()
-                    : x.tokenB.toString()
+                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                    ? x.tokenA?.toString()
+                    : x.tokenB?.toString()
                 }
                 src1={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
-                    ? getImagesPath(x.tokenB.toString())
-                    : getImagesPath(x.tokenA.toString())
+                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                    ? getImagesPath(x.tokenB?.toString())
+                    : getImagesPath(x.tokenA?.toString())
                 }
                 src2={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
-                    ? getImagesPath(x.tokenA.toString())
-                    : getImagesPath(x.tokenB.toString())
+                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                    ? getImagesPath(x.tokenA?.toString())
+                    : getImagesPath(x.tokenB?.toString())
                 }
               />
               <div className="flex items-center ">
                 <span className="md:text-f14 text-f12 text-white ">
-                  {tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
-                    ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
-                        x.tokenA.toString()
+                  {tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                    ? ` ${tEZorCTEZtoUppercase(x.tokenB?.toString())} / ${tEZorCTEZtoUppercase(
+                        x.tokenA?.toString()
                       )}`
-                    : ` ${tEZorCTEZtoUppercase(x.towkenA.toString())} / ${tEZorCTEZtoUppercase(
-                        x.tokenB.toString()
+                    : ` ${tEZorCTEZtoUppercase(x.tokenA?.toString())} / ${tEZorCTEZtoUppercase(
+                        x.tokenB?.toString()
                       )}`}
                 </span>
                 <span className="font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-1">
@@ -252,8 +252,8 @@ export function PoolsTableV3(props: IShortCardProps) {
             feeTier={x.feeTier}
             isLiquidityAvailable={false}
             isStakeAvailable={false}
-            tokenA={x.tokenA.toString()}
-            tokenB={x.tokenB.toString()}
+            tokenA={x.tokenA?.toString()}
+            tokenB={x.tokenB?.toString()}
             setShowLiquidityModal={props.setShowLiquidityModal}
             isGauge={x.isGaugeAvailable}
             setIsGaugeAvailable={setIsGaugeAvailable}
@@ -286,39 +286,39 @@ export function PoolsTableV3(props: IShortCardProps) {
             <div className={clsx("flex gap-1 items-center max-w-[270px]", "ml-[34px]")}>
               <CircularOverLappingImage
                 tokenA={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
-                    ? x.tokenB.toString()
-                    : x.tokenA.toString()
+                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                    ? x.tokenB?.toString()
+                    : x.tokenA?.toString()
                 }
                 tokenB={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
-                    ? x.tokenA.toString()
-                    : x.tokenB.toString()
+                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                    ? x.tokenA?.toString()
+                    : x.tokenB?.toString()
                 }
                 src1={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
-                    ? getImagesPath(x.tokenB.toString())
-                    : getImagesPath(x.tokenA.toString())
+                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                    ? getImagesPath(x.tokenB?.toString())
+                    : getImagesPath(x.tokenA?.toString())
                 }
                 src2={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
-                    ? getImagesPath(x.tokenA.toString())
-                    : getImagesPath(x.tokenB.toString())
+                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                    ? getImagesPath(x.tokenA?.toString())
+                    : getImagesPath(x.tokenB?.toString())
                 }
               />
               <div className="flex items-center ">
                 <span className="md:text-f14 text-f12 text-white ">
-                  {tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
-                    ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
-                        x.tokenA.toString()
+                  {tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                    ? ` ${tEZorCTEZtoUppercase(x.tokenB?.toString())} / ${tEZorCTEZtoUppercase(
+                        x.tokenA?.toString()
                       )}`
-                    : ` ${tEZorCTEZtoUppercase(x.tokenA.toString())} / ${tEZorCTEZtoUppercase(
-                        x.tokenB.toString()
+                    : ` ${tEZorCTEZtoUppercase(x.tokenA?.toString())} / ${tEZorCTEZtoUppercase(
+                        x.tokenB?.toString()
                       )}`}
                 </span>
                 <span className="font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-1">
@@ -394,8 +394,8 @@ export function PoolsTableV3(props: IShortCardProps) {
             feeTier={x.feeTier}
             isLiquidityAvailable={false}
             isStakeAvailable={false}
-            tokenA={x.tokenA.toString()}
-            tokenB={x.tokenB.toString()}
+            tokenA={x.tokenA?.toString()}
+            tokenB={x.tokenB?.toString()}
             setShowLiquidityModal={props.setShowLiquidityModal}
             isGauge={x.isGaugeAvailable}
             setIsGaugeAvailable={setIsGaugeAvailable}
@@ -426,19 +426,19 @@ export function PoolsTableV3(props: IShortCardProps) {
             setFeeTier(props.feeTier);
             setTokenIn({
               name: props.tokenA,
-              image: getImagesPath(props.tokenA.toString()),
+              image: getImagesPath(props.tokenA?.toString()),
               symbol: props.tokenA,
             });
             dispatch(
               settopLevelSelectedToken({
                 name: props.tokenA,
-                image: getImagesPath(props.tokenA.toString()),
+                image: getImagesPath(props.tokenA?.toString()),
                 symbol: props.tokenA,
               })
             );
             setTokenOut({
               name: props.tokenB,
-              image: getImagesPath(props.tokenB.toString()),
+              image: getImagesPath(props.tokenB?.toString()),
               symbol: props.tokenB,
             });
 
@@ -510,7 +510,7 @@ export function PoolsTableV3(props: IShortCardProps) {
             tableType={true}
             isFetched={isFetched}
             isConnectWalletRequired={props.isConnectWalletRequired}
-            TableWidth="min-w-[780px]"
+            TableWidth="min-w-[800px]"
             NoData={NoData}
             loading={props.isFetching}
           />

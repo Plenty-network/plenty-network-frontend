@@ -11,22 +11,22 @@ function FeeTierMain(props: IFeeTierMainProps) {
   const fee = [
     {
       percentage: "0.01",
-      text: "Best for many stable pairs",
+      text: "Best for very stable pairs",
       selectPercentage: "46",
     },
     {
       percentage: "0.05",
-      text: "Best for many stable pairs",
+      text: "Best for stable pairs",
       selectPercentage: "46",
     },
     {
       percentage: "0.3",
-      text: "Best for many stable pairs",
+      text: "Best for volatile pairs",
       selectPercentage: "46",
     },
     {
       percentage: "1",
-      text: "Best for many stable pairs",
+      text: "Best for exotic pairs",
       selectPercentage: "46",
     },
   ];
@@ -40,7 +40,7 @@ function FeeTierMain(props: IFeeTierMainProps) {
               props.selectedFeeTier == feeInd.percentage
                 ? "border-blue-700"
                 : "border-text-800 hover:border-text-400",
-              "border fade-in-light w-[83px] sm:w-[127px] rounded-2xl   bg-card-200   mb-5 h-[139px] sm:h-[128px] py-[12px] pl-[14px]  pr-3 cursor-pointer"
+              "border fade-in-light w-[95px] sm:w-[127px] rounded-2xl   bg-card-200   mb-5 sm:h-[139px] h-[120px]  py-[12px] sm:pl-[14px] pl-2  sm:pr-3 pr-2 cursor-pointer"
             )}
             onClick={() => props.setSelectedFeeTier(feeInd.percentage)}
           >
