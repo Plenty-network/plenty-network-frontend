@@ -100,9 +100,6 @@ export const getMyPoolsDataV3 = async (
       }
     }
 
-    console.log("v3 test 2", allData);
-
-
     return {
       success: true,
       allData: allData,

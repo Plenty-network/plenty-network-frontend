@@ -109,8 +109,6 @@ export const getInitialBoundaries = async (
       contractStorageParameters.tokenX.decimals,
       contractStorageParameters.tokenY.decimals
     );
-    console.log("v3 test 1", initialBoundaries, minPriceValue, maxPriceValue);
-
 
     return {
       minTick: minTick,
