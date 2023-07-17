@@ -56,6 +56,7 @@ export interface IV3PositionObject {
   tokenX?: String;
   tokenY?: String;
   currentTickIndex: number;
+  feeTier: any;
 }
 
 export interface IV3ContractStorageParams {
@@ -76,13 +77,13 @@ export interface IV3ContractStorageParams {
 }
 
 export interface IAllPoolsData {
-  tokenA : String;
-  tokenB : String;
+  tokenA: String;
+  tokenB: String;
   feeTier: BigNumber;
-  apr : BigNumber;
-  volume : BigNumber;
-  tvl : BigNumber;
-  fees : BigNumber;
+  apr: BigNumber;
+  volume: BigNumber;
+  tvl: BigNumber;
+  fees: BigNumber;
 }
 
 export interface IAllPoolsDataResponse {

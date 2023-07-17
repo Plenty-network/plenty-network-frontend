@@ -16,7 +16,7 @@ export const getPositions = async (
   tokenYSymbol: string,
   feeTier: any,
   userAddress: string,
-  tokenPrices: ITokenPriceList,
+  tokenPrices: ITokenPriceList
 ): Promise<IV3PositionObject[] | undefined> => {
   if (!userAddress || Object.keys(tokenPrices).length === 0) {
     throw new Error("Invalid or empty arguments.");
@@ -133,6 +133,8 @@ export const getPositions = async (
         isMaxPriceInfinity:
           parseInt(position.upper_tick_index) ==
           Tick.nearestUsableTick(MAX_TICK, contractStorageParameters.tickSpacing),
+
+        feeTier: feeTier,
       };
     });
 
@@ -144,8 +146,7 @@ export const getPositions = async (
 
 export const getPositionsAll = async (
   userAddress: string,
-  tokenPrices: ITokenPriceList,
-  feeTier: any
+  tokenPrices: ITokenPriceList
 ): Promise<IV3PositionObject[] | undefined> => {
   if (!userAddress || Object.keys(tokenPrices).length === 0) {
     throw new Error("Invalid or empty arguments.");
@@ -156,8 +157,8 @@ export const getPositionsAll = async (
     ).data;
 
     const contractStorageParametersPromises = positions.map(async (position) => {
-      const { tokenX, tokenY } = getTokensFromAMMAddress(position.amm);
-      return await contractStorage(tokenX, tokenY, feeTier);
+      const { tokenX, tokenY, feeBps } = getTokensFromAMMAddress(position.amm);
+      return await contractStorage(tokenX, tokenY, feeBps / 100);
     });
 
     const contractStorageParametersArray = await Promise.all(contractStorageParametersPromises);
@@ -270,6 +271,7 @@ export const getPositionsAll = async (
         isMaxPriceInfinity:
           parseInt(position.upper_tick_index) ==
           Tick.nearestUsableTick(MAX_TICK, contractStorageParameters.tickSpacing),
+        feeTier: contractStorageParameters.feeBps / 100,
       };
     });
 

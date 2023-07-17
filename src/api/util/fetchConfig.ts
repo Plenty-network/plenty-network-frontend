@@ -56,7 +56,11 @@ export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
 
   return address ?? "false";
 };
-export const getV3PoolAddressWithFeeTier = (tokenIn: string, tokenOut: string, feeTier: number): string => {
+export const getV3PoolAddressWithFeeTier = (
+  tokenIn: string,
+  tokenOut: string,
+  feeTier: number
+): string => {
   const state = store.getState();
   const AMM = state.config.AMMs;
   const feeBPS = feeTier * 100;
@@ -64,14 +68,20 @@ export const getV3PoolAddressWithFeeTier = (tokenIn: string, tokenOut: string, f
   const address = Object.keys(AMM).find(
     (key) =>
       // @ts-ignore
-      (AMM[key].tokenX.symbol === tokenIn && AMM[key].tokenY.symbol === tokenOut && feeBPS.toString() === AMM[key].feeBps) ||
+      (AMM[key].tokenX.symbol === tokenIn &&
+        AMM[key].tokenY.symbol === tokenOut &&
+        feeBPS.toString() === AMM[key].feeBps) ||
       // @ts-ignore
-      (AMM[key].tokenY.symbol === tokenIn && AMM[key].tokenX.symbol === tokenOut && feeBPS.toString() === AMM[key].feeBps)
+      (AMM[key].tokenY.symbol === tokenIn &&
+        AMM[key].tokenX.symbol === tokenOut &&
+        feeBPS.toString() === AMM[key].feeBps)
   );
   return address ?? "false";
 };
 
-export const getTokensFromAMMAddress = (ammAddress: string): { tokenX: string; tokenY: string } => {
+export const getTokensFromAMMAddress = (
+  ammAddress: string
+): { tokenX: string; tokenY: string; feeBps: number } => {
   const state = store.getState();
   const AMMs = state.config.AMMs;
 
@@ -82,6 +92,8 @@ export const getTokensFromAMMAddress = (ammAddress: string): { tokenX: string; t
     tokenX: AMMs[amm].tokenX.symbol,
     // @ts-ignore
     tokenY: AMMs[amm].tokenY.symbol,
+    // @ts-ignore
+    feeBps: AMMs[amm].feeBps,
   };
 };
 
@@ -91,9 +103,9 @@ export const getDexType = (tokenIn: string, tokenOut: string): string => {
 
   const address = Object.keys(AMM).find(
     (key) =>
-        // @ts-ignore
+      // @ts-ignore
       (AMM[key].token1.symbol === tokenIn && AMM[key].token2.symbol === tokenOut) ||
-          // @ts-ignore
+      // @ts-ignore
       (AMM[key].token2.symbol === tokenIn && AMM[key].token1.symbol === tokenOut)
   );
 
@@ -114,13 +126,13 @@ export const getLpToken = (
 
   const tokensAmm = Object.keys(AMMs).find(
     (ammAddress) =>
-        // @ts-ignore
+      // @ts-ignore
       (AMMs[ammAddress].token1.symbol === tokenOneSymbol &&
-            // @ts-ignore
+        // @ts-ignore
         AMMs[ammAddress].token2.symbol === tokenTwoSymbol) ||
-            // @ts-ignore
+      // @ts-ignore
       (AMMs[ammAddress].token2.symbol === tokenOneSymbol &&
-            // @ts-ignore
+        // @ts-ignore
         AMMs[ammAddress].token1.symbol === tokenTwoSymbol)
   );
 
