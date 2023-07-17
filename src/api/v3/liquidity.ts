@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { Tick, Pool, Price } from "@plenty-labs/v3-sdk";
 import Config from "../../config/config";
-import { contractStorage } from "./helper";
+import { contractStorage, getRealPriceFromTick } from "./helper";
 import { store } from "../../redux";
 
 export const connectedNetwork = Config.NETWORK;
@@ -32,7 +32,7 @@ export const calculateCurrentPrice = async (
         contractStorageParameters.tokenY.decimals
       );
     }
-    console.log("v3 test",contractStorageParameters, currentPrice);
+    console.log("v3 test", contractStorageParameters, currentPrice);
     return currentPrice;
   } catch (error) {
     console.log("v3 error: ", error);
@@ -145,7 +145,17 @@ export const estimateTokenXFromTokenY = async (
       contractStorageParameters.feeBps,
       contractStorageParameters.liquidity
     );
-
+    console.log("contractStorageParameters", contractStorageParameters);
+    getRealPriceFromTick(lowerTickIndex, TOKENS[tokenXSymbol], TOKENS[tokenYSymbol]).then(
+      (response) => {
+        console.log("v3 test lower price", 1 / response.toString());
+      }
+    );
+    getRealPriceFromTick(upperTickIndex, TOKENS[tokenXSymbol], TOKENS[tokenYSymbol]).then(
+      (response) => {
+        console.log("v3 test upper price", response.toString());
+      }
+    );
     let estimatedAmountCalc = PoolObject.estimateAmountXFromY(
       amount,
       lowerTickIndex,

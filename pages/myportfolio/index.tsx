@@ -680,6 +680,7 @@ function MyPortfolio(props: any) {
       userAddress,
       selectedPosition.tokenX ? selectedPosition.tokenX.toString() : "DAI.e",
       selectedPosition.tokenY ? selectedPosition.tokenY.toString() : "USDC.e",
+      selectedPosition.feeTier,
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,

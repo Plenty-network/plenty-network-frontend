@@ -45,7 +45,7 @@ export function useDensityChartData({
       setData(response);
       setisloading(false);
     });
-  }, [currencyA, currencyB, feeTier]);
+  }, [currencyA, currencyB, feeTier, topLevelSelectedToken]);
 
   const formatData = useCallback(() => {
     if (!data?.length) {
@@ -72,7 +72,7 @@ export function useDensityChartData({
     }
     dispatch(setIsLoading(false));
     return newData;
-  }, [data]);
+  }, [data, topLevelSelectedToken]);
 
   return useMemo(() => {
     return {

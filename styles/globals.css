@@ -658,6 +658,10 @@ input[type='number'] {
     @apply font-medium;
     @apply text-f13;
   }
+  .font-f8 {
+    @apply font-normal;
+    @apply text-f8;
+  }
   .font-f13-normal {
     @apply font-normal;
     @apply text-f13;

@@ -41,13 +41,13 @@ const MainMenu: Array<ISingleSideBarProps> = [
 
     subMenu: [
       {
-        name: "v3",
+        name: "V3",
         iconName: "pools",
         pathName: "/pools/v3",
         activePathName: "/pools/v3",
       },
       {
-        name: "v2",
+        name: "V2",
         iconName: "pools",
         pathName: "/pools",
         activePathName: "/pools",

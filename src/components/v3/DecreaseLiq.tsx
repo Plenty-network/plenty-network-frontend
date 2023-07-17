@@ -168,9 +168,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
         <div className="bg-card-500">
           <div className="border-t border-text-800/[0.5] mb-3"></div>
           <div className="flex px-5">
-            <p className="font-body4 text-text-400">
-              Pooled {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
-            </p>
+            <p className="font-body4 text-text-400">Remove pooled</p>
             <p className="ml-auto flex gap-2 items-center">
               <span className="font-body4">
                 {props.remove?.x ? nFormatterWithLesserNumber(props.remove?.x) : 0}
@@ -196,9 +194,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
           </div>
 
           <div className="flex px-5 my-3">
-            <p className="font-body4 text-text-400">
-              Pooled {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
-            </p>
+            <p className="font-body4 text-text-400">Remove pooled</p>
             <p className="ml-auto flex gap-2 items-center">
               <span className="font-body4">
                 {props.remove?.y ? nFormatterWithLesserNumber(props.remove?.y) : 0}
@@ -228,7 +224,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
               {tEZorCTEZtoUppercase(props.tokenIn.symbol)} fees earned
             </p>
             <p className="ml-auto flex gap-2 items-center">
-              <span className="font-body4">{selectedPosition.fees?.x.toFixed(2)}</span>
+              <span className="font-body4">{selectedPosition.fees?.x.toFixed(6)}</span>
 
               <span>
                 {" "}
@@ -253,7 +249,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
               {tEZorCTEZtoUppercase(props.tokenOut.symbol)} fees earned
             </p>
             <p className="ml-auto flex gap-2 items-center">
-              <span className="font-body4">{selectedPosition.fees?.y.toFixed(2)}</span>
+              <span className="font-body4">{selectedPosition.fees?.y.toFixed(6)}</span>
 
               <span>
                 {" "}

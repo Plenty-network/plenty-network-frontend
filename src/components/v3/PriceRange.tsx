@@ -114,7 +114,13 @@ function PriceRangeV3(props: IPriceRangeProps) {
       return 200;
     }
   };
-
+  console.log(
+    tokenPrice,
+    "hj",
+    topLevelSelectedToken.symbol === tokeninorg.symbol,
+    props.tokenOut.name,
+    props.tokenIn.name
+  );
   const dispatch = useDispatch<AppDispatch>();
   React.useEffect(() => {
     props.isClearAll && props.setFullRange(false);
@@ -133,10 +139,20 @@ function PriceRangeV3(props: IPriceRangeProps) {
     } else {
       getTickFromRealPrice(
         new BigNumber(1).dividedBy(new BigNumber(value)),
-        tokenInConfig,
         tokenOutConfig,
+        tokenInConfig,
         TickSpacing(props.selectedFeeTier)
       ).then((response1) => {
+        console.log(
+          "lefttick",
+          response1,
+          response1,
+          value,
+          new BigNumber(1).dividedBy(new BigNumber(value)).toString(),
+          tokenOutConfig,
+          tokenInConfig,
+          TickSpacing(props.selectedFeeTier)
+        );
         dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
       });
     }
@@ -168,10 +184,20 @@ function PriceRangeV3(props: IPriceRangeProps) {
     } else {
       getTickFromRealPrice(
         new BigNumber(1).dividedBy(new BigNumber(value)),
-        tokenInConfig,
         tokenOutConfig,
+        tokenInConfig,
+
         TickSpacing(props.selectedFeeTier)
       ).then((response1) => {
+        console.log(
+          "righttick",
+          response1,
+          value,
+          new BigNumber(1).dividedBy(new BigNumber(value)).toString(),
+          tokenOutConfig,
+          tokenInConfig,
+          TickSpacing(props.selectedFeeTier)
+        );
         dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
       });
     }
@@ -334,8 +360,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
                         Number(
                           tokenPrice[
                             topLevelSelectedToken.symbol === tokeninorg.symbol
-                              ? props.tokenOut.name
-                              : props.tokenIn.name
+                              ? tokenoutorg.name
+                              : tokeninorg.name
                           ]
                         )
                     )
@@ -348,8 +374,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
                           Number(
                             tokenPrice[
                               topLevelSelectedToken.symbol === tokeninorg.symbol
-                                ? props.tokenOut.name
-                                : props.tokenIn.name
+                                ? tokenoutorg.name
+                                : tokeninorg.name
                             ]
                           )
                       ).toFixed(2)
@@ -414,8 +440,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
                   : BrightRangeInput) &&
                 tokenPrice[
                   topLevelSelectedToken.symbol === tokeninorg.symbol
-                    ? props.tokenOut.name
-                    : props.tokenIn.name
+                    ? tokenoutorg.name
+                    : tokeninorg.name
                 ]
                   ? Number(
                       Number(
@@ -426,8 +452,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
                         Number(
                           tokenPrice[
                             topLevelSelectedToken.symbol === tokeninorg.symbol
-                              ? props.tokenOut.name
-                              : props.tokenIn.name
+                              ? tokenoutorg.name
+                              : tokeninorg.name
                           ]
                         )
                     )
@@ -440,8 +466,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
                           Number(
                             tokenPrice[
                               topLevelSelectedToken.symbol === tokeninorg.symbol
-                                ? props.tokenOut.name
-                                : props.tokenIn.name
+                                ? tokenoutorg.name
+                                : tokeninorg.name
                             ]
                           )
                       ).toFixed(2)
@@ -469,7 +495,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         className="mt-3 cursor-pointer border border-info-700 hover:border-text-600 rounded-lg	text-center py-2.5 font-body1 mx-4 mb-2"
         onClick={() => fullrangeCalc(!props.isFullRange)}
       >
-        {props.isFullRange ? "Remove Full Range" : "Full Range"}
+        {props.isFullRange ? "Remove Full range" : "Full range"}
       </div>
       {/* <div className="mt-3 border border-text-800/[0.5] bg-cardBackGround rounded-lg	text-center py-4 font-body1 text-primary-500 h-[52px]">
         View all positions

@@ -48,6 +48,10 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
   const [inputDisable, setInputDisable] = useState("false");
   const [currentPrice, setCurrentPrice] = useState<BigNumber>(new BigNumber(0));
   const tokensArray = Object.entries(tokens);
+  const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
+
+  const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
+
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
       name: token[0],
@@ -252,9 +256,9 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
 
           <div className="sm:flex gap-4 mt-2 px-5">
             <div>
-              <div className="flex text-text-250">
+              <div className="flex items-center text-text-250">
                 <span className="font-caption1 pl-1">Min price</span>
-                <span className="font-mobile-f1020 ">
+                <span className="font-f8 ">
                   (
                   {selectedToken.symbol === props.tokenIn.symbol
                     ? tEZorCTEZtoUppercase(props.tokenOut.symbol)
@@ -284,8 +288,8 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                     Number(
                       tokenPrice[
                         selectedToken.symbol === props.tokenIn.symbol
-                          ? props.tokenIn.name
-                          : props.tokenOut.name
+                          ? tokenoutorg.name
+                          : tokeninorg.name
                       ]
                     )
                   ).toFixed(2)}
@@ -293,9 +297,9 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
               </div>
             </div>
             <div>
-              <div className="flex text-text-250 mt-3 sm:mt-0">
+              <div className="flex items-center text-text-250 mt-3 sm:mt-0">
                 <span className="font-caption1 pl-1">Max price</span>
-                <span className="font-mobile-f1020">
+                <span className="font-f8">
                   (
                   {selectedToken.symbol === props.tokenIn.symbol
                     ? tEZorCTEZtoUppercase(props.tokenOut.symbol)
@@ -329,8 +333,8 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                         Number(
                           tokenPrice[
                             selectedToken.symbol === props.tokenIn.symbol
-                              ? props.tokenIn.name
-                              : props.tokenOut.name
+                              ? tokenoutorg.name
+                              : tokeninorg.name
                           ]
                         )
                       ).toFixed(2)}
@@ -358,8 +362,8 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                     Number(
                       tokenPrice[
                         selectedToken.symbol === props.tokenIn.symbol
-                          ? props.tokenIn.name
-                          : props.tokenOut.name
+                          ? tokenoutorg.name
+                          : tokeninorg.name
                       ]
                     )
                   ).toFixed(2)}

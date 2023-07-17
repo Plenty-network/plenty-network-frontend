@@ -211,7 +211,7 @@ export function PoolsTableV3(props: IShortCardProps) {
       {
         Header: "Volume",
         id: "Volume24h",
-        subText: "(24h)",
+        subText: "24h",
         columnWidth: "w-[129px]",
         isToolTipEnabled: true,
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
@@ -233,7 +233,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         Header: "Fees",
         id: "fees",
         columnWidth: "w-[122px]",
-        subText: "(7D)",
+        subText: "7d",
         tooltipMessage: "Trading fees collected by the pool in the current epoch.",
         isToolTipEnabled: true,
         canShort: true,

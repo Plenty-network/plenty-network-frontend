@@ -622,7 +622,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
 
   const handleRemoveLiquidityOperation = () => {
     setContentTransaction(
-      `Remove Liquidity ${nFormatterWithLesserNumber(remove.x)} ${tEZorCTEZtoUppercase(
+      `Remove liquidity ${nFormatterWithLesserNumber(remove.x)} ${tEZorCTEZtoUppercase(
         props.tokenA.name
       )} / ${nFormatterWithLesserNumber(remove.y)} ${tEZorCTEZtoUppercase(props.tokenB.name)} `
     );
@@ -648,7 +648,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Remove Liquidity ${localStorage.getItem(
+        trailingText: `Remove liquidity ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
         )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
           SECOND_TOKEN_AMOUNT
@@ -667,7 +667,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Remove Liquidity ${localStorage.getItem(
+              trailingText: `Remove liquidity ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT
@@ -697,7 +697,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Remove Liquidity ${localStorage.getItem(
+              trailingText: `Remove liquidity ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT

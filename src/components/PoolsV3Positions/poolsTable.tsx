@@ -396,7 +396,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
                   }
             }
           >
-            collect fees
+            Collect fees
           </div>
         ),
       },

@@ -19,6 +19,7 @@ import { tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
 import { estimateTokenXFromTokenY, estimateTokenYFromTokenX } from "../../api/v3/liquidity";
 import { setInputDisable } from "../../redux/poolsv3";
+import { getRealPriceFromTick } from "../../api/v3/helper";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -124,6 +125,16 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             maxTickA,
             props.selectedFeeTier
           ).then((response) => {
+            console.log(
+              response,
+              new BigNumber(input),
+              props.tokenIn.symbol,
+              props.tokenOut.symbol,
+              minTickA,
+              maxTickA,
+              props.selectedFeeTier,
+              "response"
+            );
             setSecondLoading(false);
             inputDisabled === "false"
               ? props.setSecondTokenAmount(response)
@@ -132,6 +143,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         }, 600);
       } else {
         timeout.current = setTimeout(() => {
+          console.log("mintick", minTickB, maxTickB);
+
           estimateTokenXFromTokenY(
             new BigNumber(input),
             props.tokenOut.symbol,
@@ -141,7 +154,17 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             props.selectedFeeTier
           ).then((response) => {
             setSecondLoading(false);
+            console.log(
+              response.toString(),
+              input,
+              props.tokenOut.symbol,
+              props.tokenIn.symbol,
 
+              minTickB,
+              maxTickB,
+              props.selectedFeeTier,
+              "response"
+            );
             inputDisabled === "false"
               ? props.setSecondTokenAmount(response)
               : props.setSecondTokenAmount(0);
@@ -172,6 +195,16 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             maxTickA,
             props.selectedFeeTier
           ).then((response) => {
+            console.log(
+              response,
+              new BigNumber(input),
+              props.tokenIn.symbol,
+              props.tokenOut.symbol,
+              minTickA,
+              maxTickA,
+              props.selectedFeeTier,
+              "response"
+            );
             setFirstLoading(false);
 
             inputDisabled === "false"
@@ -189,6 +222,16 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             maxTickB,
             props.selectedFeeTier
           ).then((response) => {
+            console.log(
+              response,
+              new BigNumber(input),
+              props.tokenIn.symbol,
+              props.tokenOut.symbol,
+              minTickA,
+              maxTickA,
+              props.selectedFeeTier,
+              "response"
+            );
             setFirstLoading(false);
             inputDisabled === "false"
               ? props.setFirstTokenAmount(response.toString())
