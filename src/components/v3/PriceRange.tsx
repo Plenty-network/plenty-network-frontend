@@ -287,7 +287,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         <div>
           <div className="font-body4 text-text-250">
             Min price{" "}
-            <span className="font-caption1-small">
+            <span className="font-mobile-f9">
               ( {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
               {tEZorCTEZtoUppercase(props.tokenIn.symbol)} )
             </span>
@@ -330,14 +330,28 @@ function PriceRangeV3(props: IPriceRangeProps) {
                         topLevelSelectedToken.symbol === tokeninorg.symbol
                           ? leftRangeInput
                           : BleftRangeInput
-                      ) * Number(tokenPrice[props.tokenIn.name])
+                      ) *
+                        Number(
+                          tokenPrice[
+                            topLevelSelectedToken.symbol === tokeninorg.symbol
+                              ? props.tokenOut.name
+                              : props.tokenIn.name
+                          ]
+                        )
                     )
                     ? Number(
                         Number(
                           topLevelSelectedToken.symbol === tokeninorg.symbol
                             ? leftRangeInput
                             : BleftRangeInput
-                        ) * Number(tokenPrice[props.tokenIn.name])
+                        ) *
+                          Number(
+                            tokenPrice[
+                              topLevelSelectedToken.symbol === tokeninorg.symbol
+                                ? props.tokenOut.name
+                                : props.tokenIn.name
+                            ]
+                          )
                       ).toFixed(2)
                     : "0.00"
                   : "0.00"}
@@ -360,7 +374,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         <div>
           <div className="font-body4 text-text-250">
             Max price{" "}
-            <span className="font-caption1-small">
+            <span className="font-mobile-f9">
               ( {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
               {tEZorCTEZtoUppercase(props.tokenIn.symbol)} )
             </span>
@@ -397,20 +411,39 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 $
                 {(topLevelSelectedToken.symbol === tokeninorg.symbol
                   ? rightRangeInput
-                  : BrightRangeInput) && tokenPrice[props.tokenOut.name]
+                  : BrightRangeInput) &&
+                tokenPrice[
+                  topLevelSelectedToken.symbol === tokeninorg.symbol
+                    ? props.tokenOut.name
+                    : props.tokenIn.name
+                ]
                   ? Number(
                       Number(
                         topLevelSelectedToken.symbol === tokeninorg.symbol
                           ? rightRangeInput
                           : BrightRangeInput
-                      ) * Number(tokenPrice[props.tokenOut.name])
+                      ) *
+                        Number(
+                          tokenPrice[
+                            topLevelSelectedToken.symbol === tokeninorg.symbol
+                              ? props.tokenOut.name
+                              : props.tokenIn.name
+                          ]
+                        )
                     )
                     ? Number(
                         Number(
                           topLevelSelectedToken.symbol === tokeninorg.symbol
                             ? rightRangeInput
                             : BrightRangeInput
-                        ) * Number(tokenPrice[props.tokenOut.name])
+                        ) *
+                          Number(
+                            tokenPrice[
+                              topLevelSelectedToken.symbol === tokeninorg.symbol
+                                ? props.tokenOut.name
+                                : props.tokenIn.name
+                            ]
+                          )
                       ).toFixed(2)
                     : "0.00"
                   : "0.00"}

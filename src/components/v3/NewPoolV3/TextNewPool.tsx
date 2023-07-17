@@ -9,11 +9,12 @@ export function TextNewPool() {
   return (
     <div className="px-2 mb-4">
       <div className="font-body4 mt-[16px]">
-        Please read before you add a new pool. After adding pool{" "}
+        Please read before you add a new pool.
+        {/* After adding pool{" "}
         <span className="font-body4 text-primary-500 ml-0.5">request gauge</span>
         <span className="relative top-[3px] ml-1">
           <Image src={link} width={"15px"} />
-        </span>
+        </span> */}
       </div>
       <div className="flex font-body3 text-text-50 mt-1">
         <span className="relative top-0.5 w-[28px] md:w-[20px] h-[15px]">

@@ -139,6 +139,17 @@ function NewPoolMain(props: ILiquidityProps) {
       props.setPriceAmount(input.toString());
     }
   };
+  const handlechange = (value: string) => {
+    if (value === "" || isNaN(Number(value))) {
+      props.setPriceAmount("");
+    } else {
+      if (value == "0") {
+        props.setPriceAmount("0");
+      } else {
+        props.setPriceAmount((1 / Number(value)).toString());
+      }
+    }
+  };
 
   return (
     <>
@@ -239,13 +250,7 @@ function NewPoolMain(props: ILiquidityProps) {
                     "text-white bg-muted-200/[0.1] text-left border-0 ml-0 font-medium2  lg:font-medium1 outline-none   placeholder:text-text-500 "
                   )}
                   placeholder="0.0"
-                  value={
-                    props.priceAmount
-                      ? selectedToken.symbol === props.tokenIn.symbol
-                        ? props.priceAmount
-                        : 1 / Number(props.priceAmount)
-                      : ""
-                  }
+                  value={props.priceAmount ? props.priceAmount : ""}
                   onChange={(e) => handleLiquidityInput(e.target.value)}
                 />
                 {props.tokenIn.symbol && props.tokenOut.symbol && (
@@ -303,6 +308,7 @@ function NewPoolMain(props: ILiquidityProps) {
                       "font-subtitle1223"
                     )}
                     onClick={() => {
+                      handlechange(props.priceAmount);
                       setSelectedToken(props.tokenIn);
                     }}
                   >
@@ -316,6 +322,7 @@ function NewPoolMain(props: ILiquidityProps) {
                       "font-subtitle1223"
                     )}
                     onClick={() => {
+                      handlechange(props.priceAmount);
                       setSelectedToken(props.tokenOut);
                     }}
                   >

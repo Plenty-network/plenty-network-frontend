@@ -379,6 +379,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
           selectedFeeTier={selectedFeeTier}
           show={showConfirmPool}
           pair={pair}
+          setPriceAmount={setPriceAmount}
           setShow={setShowConfirmPool}
           tokenIn={tokenIn}
           tokenOut={tokenOut}

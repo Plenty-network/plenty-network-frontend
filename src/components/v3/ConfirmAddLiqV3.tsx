@@ -33,7 +33,7 @@ interface IConfirmAddLiquidityProps {
   tokenPrice: {
     [id: string]: number;
   };
-
+  selectedFeeTier: string;
   slippage: number;
   handleAddLiquidityOperation: () => void;
   topLevelSelectedToken: tokenParameterLiquidity;
@@ -156,15 +156,21 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
               />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
-              {nFormatterWithLesserNumber(new BigNumber(props.firstTokenAmount))}{" "}
+              {props.topLevelSelectedToken.symbol === props.tokenIn.name
+                ? nFormatterWithLesserNumber(new BigNumber(props.firstTokenAmount))
+                : nFormatterWithLesserNumber(new BigNumber(props.secondTokenAmount))}{" "}
               {tEZorCTEZtoUppercase(tokeninorg.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
             $
-            {Number(
-              Number(props.firstTokenAmount) * Number(props.tokenPrice[tokeninorg.name] ?? 0)
-            ).toFixed(2)}
+            {props.topLevelSelectedToken.symbol === props.tokenIn.name
+              ? Number(
+                  Number(props.firstTokenAmount) * Number(props.tokenPrice[tokeninorg.name] ?? 0)
+                ).toFixed(2)
+              : Number(
+                  Number(props.secondTokenAmount) * Number(props.tokenPrice[tokeninorg.name] ?? 0)
+                ).toFixed(2)}
           </div>
         </div>
         <div className="flex  h-[50px] items-center border-b border-text-800/[0.5] bg-card-500 px-5">
@@ -185,15 +191,21 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
               />
             </span>
             <span className="text-white font-body4 ml-5 relative top-[1px]">
-              {nFormatterWithLesserNumber(new BigNumber(props.secondTokenAmount))}{" "}
+              {props.topLevelSelectedToken.symbol === props.tokenIn.name
+                ? nFormatterWithLesserNumber(new BigNumber(props.secondTokenAmount))
+                : nFormatterWithLesserNumber(new BigNumber(props.firstTokenAmount))}{" "}
               {tEZorCTEZtoUppercase(tokenoutorg.name)}
             </span>
           </div>
           <div className="ml-auto font-body4 text-text-400">
             $
-            {Number(
-              Number(props.secondTokenAmount) * Number(props.tokenPrice[tokenoutorg.name] ?? 0)
-            ).toFixed(2)}
+            {props.topLevelSelectedToken.symbol === props.tokenIn.name
+              ? Number(
+                  Number(props.secondTokenAmount) * Number(props.tokenPrice[tokenoutorg.name] ?? 0)
+                ).toFixed(2)
+              : Number(
+                  Number(props.firstTokenAmount) * Number(props.tokenPrice[tokenoutorg.name] ?? 0)
+                ).toFixed(2)}
           </div>
         </div>
 
@@ -201,7 +213,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
           <div className="flex items-center">
             <span className=" font-subtitle3  text-text-400">Fee tier</span>
           </div>
-          <div className="ml-auto font-body4 text-white">0.3%</div>
+          <div className="ml-auto font-body4 text-white">{props.selectedFeeTier}%</div>
         </div>
 
         <div className="flex  items-center   px-5 py-5">
@@ -234,9 +246,9 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
 
         <div className="sm:flex gap-4 mt-2 px-5">
           <div>
-            <div className="flex text-text-250">
+            <div className="flex items-center text-text-250">
               <span className="font-caption1 pl-1">Min price</span>
-              <span className="font-mobile-f1020 ">
+              <span className="font-mobile-f9 ">
                 (
                 {selectedToken.symbol === tokeninorg.symbol
                   ? tEZorCTEZtoUppercase(tokenoutorg.symbol)
@@ -271,9 +283,9 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
             </div>
           </div>
           <div>
-            <div className="flex text-text-250 mt-3 sm:mt-0">
+            <div className="flex items-center text-text-250 mt-3 sm:mt-0">
               <span className="font-caption1 pl-1">Max price</span>
-              <span className="font-mobile-f1020">
+              <span className="font-mobile-f9">
                 (
                 {selectedToken.symbol === tokeninorg.symbol
                   ? tEZorCTEZtoUppercase(tokenoutorg.symbol)
