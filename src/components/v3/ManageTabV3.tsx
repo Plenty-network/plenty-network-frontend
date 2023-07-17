@@ -446,7 +446,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       props.tokenA.symbol,
       Number(selectedFeeTier)
     ).then((response) => {
-      dispatch(setcurrentPrice(response.toFixed(6)));
+      dispatch(setcurrentPrice(response?.toFixed(6)));
     });
     calculateCurrentPrice(
       props.tokenA.symbol,
@@ -454,7 +454,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       props.tokenB.symbol,
       Number(selectedFeeTier)
     ).then((response) => {
-      dispatch(setBcurrentPrice(response.toFixed(6)));
+      dispatch(setBcurrentPrice(response?.toFixed(6)));
     });
     dispatch(setIsLoading(true));
     getInitialBoundaries(props.tokenA.symbol, props.tokenB.symbol, Number(selectedFeeTier)).then(
@@ -979,6 +979,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               setScreen={setScreen}
               firstTokenAmount={firstTokenAmountLiq}
               secondTokenAmount={secondTokenAmountLiq}
+              selectedFeeTier={selectedFeeTier}
               tokenIn={props.tokenA}
               tokenOut={props.tokenB}
               tokenPrice={tokenPrice}

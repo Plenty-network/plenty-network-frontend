@@ -39,7 +39,7 @@ interface IConfirmSwapProps {
     exchangeRate: BigNumber;
     success: boolean;
   };
-
+  setPriceAmount: React.Dispatch<React.SetStateAction<string>>;
   onClick: () => void;
   pair: string;
 }
@@ -54,6 +54,17 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
     props.setShow(false);
   };
 
+  const handlechange = (value: string) => {
+    if (value === "" || isNaN(Number(value))) {
+      props.setPriceAmount("");
+    } else {
+      if (value == "0") {
+        props.setPriceAmount("0");
+      } else {
+        props.setPriceAmount((1 / Number(value)).toString());
+      }
+    }
+  };
   const [selectedToken, setSelectedToken] = useState(props.tokenIn as tokenParameterLiquidity);
   return props.show ? (
     <PopUpModal onhide={closeModal}>
@@ -131,7 +142,7 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                 "border-text-800 "
               )}
             >
-              <div className="w-0 flex-auto">
+              <div className="w-0 flex-auto ">
                 <p>
                   <span className="mt-2  font-body4 text-text-400">
                     INITIAL PRIZE{" "}
@@ -144,10 +155,10 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                       : null}
                   </span>
                 </p>
-                <p className="flex items-center">
+                <p className="flex items-center ">
                   <input
                     type="text"
-                    className="text-white bg-muted-200/[0.1] text-left border-0 ml-1 font-medium2  lg:font-medium1 outline-none w-[50px] md:w-[100px] placeholder:text-text-500 "
+                    className="text-white bg-muted-200/[0.1] text-left border-0 ml-1 font-medium2  lg:font-medium1 outline-none  placeholder:text-text-500 w-[180px]"
                     placeholder="0.0"
                     value={props.priceAmount}
                   />
@@ -206,6 +217,7 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                         "font-subtitle1223"
                       )}
                       onClick={() => {
+                        handlechange(props.priceAmount);
                         setSelectedToken(props.tokenIn);
                       }}
                     >
@@ -219,6 +231,7 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                         "font-subtitle1223"
                       )}
                       onClick={() => {
+                        handlechange(props.priceAmount);
                         setSelectedToken(props.tokenOut);
                       }}
                     >

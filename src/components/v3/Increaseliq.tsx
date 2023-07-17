@@ -180,7 +180,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
             <div className="ml-auto font-body4 text-text-400">
               $
               {Number(
-                Number(selectedPosition.liquidity.x) * Number(tokenPrice[props.tokenIn.name] ?? 0)
+                Number(props.firstTokenAmount) * Number(tokenPrice[props.tokenIn.name] ?? 0)
               ).toFixed(2)}
             </div>
           </div>
@@ -210,7 +210,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
             <div className="ml-auto font-body4 text-text-400">
               $
               {Number(
-                Number(selectedPosition.liquidity.y) * Number(tokenPrice[props.tokenOut.name] ?? 0)
+                Number(props.secondTokenAmount) * Number(tokenPrice[props.tokenOut.name] ?? 0)
               ).toFixed(2)}
             </div>
           </div>

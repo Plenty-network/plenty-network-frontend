@@ -952,6 +952,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
             screen === ActivePopUp.ConfirmAddV3 && (
               <>
                 <ConfirmAddLiquidityv3
+                  selectedFeeTier={selectedFeeTier}
                   setScreen={setScreen}
                   firstTokenAmount={firstTokenAmountLiq}
                   secondTokenAmount={secondTokenAmountLiq}

@@ -315,7 +315,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       {(
         topLevelSelectedToken.symbol === tokeninorg.symbol
           ? Number(leftbrush) < Number(currentPrice) && rightbrush > currentPrice
-          : Number(leftbrush) < Number(bcurrentPrice) && Number(brightbrush) > Number(bcurrentPrice)
+          : Number(bleftbrush) < Number(bcurrentPrice) &&
+            Number(brightbrush) > Number(bcurrentPrice)
       ) ? (
         <div className="relative -top-[9px] left-[25%]">
           <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
