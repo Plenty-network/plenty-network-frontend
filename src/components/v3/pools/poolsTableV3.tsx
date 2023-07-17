@@ -143,33 +143,38 @@ export function PoolsTableV3(props: IShortCardProps) {
             <div className={clsx("flex gap-1 items-center max-w-[240px]")}>
               <CircularOverLappingImage
                 tokenA={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
                     ? x.tokenB.toString()
                     : x.tokenA.toString()
                 }
                 tokenB={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
                     ? x.tokenA.toString()
                     : x.tokenB.toString()
                 }
                 src1={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
                     ? getImagesPath(x.tokenB.toString())
                     : getImagesPath(x.tokenA.toString())
                 }
                 src2={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
                     ? getImagesPath(x.tokenA.toString())
                     : getImagesPath(x.tokenB.toString())
                 }
               />
               <div className="flex items-center ">
                 <span className="md:text-f14 text-f12 text-white ">
-                  {tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  {tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
                     ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
                         x.tokenA.toString()
                       )}`
-                    : ` ${tEZorCTEZtoUppercase(x.tokenA.toString())} / ${tEZorCTEZtoUppercase(
+                    : ` ${tEZorCTEZtoUppercase(x.towkenA.toString())} / ${tEZorCTEZtoUppercase(
                         x.tokenB.toString()
                       )}`}
                 </span>
@@ -281,29 +286,34 @@ export function PoolsTableV3(props: IShortCardProps) {
             <div className={clsx("flex gap-1 items-center max-w-[270px]", "ml-[34px]")}>
               <CircularOverLappingImage
                 tokenA={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
                     ? x.tokenB.toString()
                     : x.tokenA.toString()
                 }
                 tokenB={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
                     ? x.tokenA.toString()
                     : x.tokenB.toString()
                 }
                 src1={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
                     ? getImagesPath(x.tokenB.toString())
                     : getImagesPath(x.tokenA.toString())
                 }
                 src2={
-                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
                     ? getImagesPath(x.tokenA.toString())
                     : getImagesPath(x.tokenB.toString())
                 }
               />
               <div className="flex items-center ">
                 <span className="md:text-f14 text-f12 text-white ">
-                  {tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
+                  {tEZorCTEZtoUppercase(x.tokenA.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenB.toString()).substring(0, 1).toLowerCase()
                     ? ` ${tEZorCTEZtoUppercase(x.tokenB.toString())} / ${tEZorCTEZtoUppercase(
                         x.tokenA.toString()
                       )}`

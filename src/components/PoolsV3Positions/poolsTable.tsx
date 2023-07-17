@@ -251,7 +251,8 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
                 <img
                   alt={"alt"}
                   src={
-                    tEZorCTEZtoUppercase(x.tokenX.toString()) === "CTEZ"
+                    tEZorCTEZtoUppercase(x.tokenX.toString()).substring(0, 1).toLowerCase() >
+                    tEZorCTEZtoUppercase(x.tokenY.toString()).substring(0, 1).toLowerCase()
                       ? tokenIcons[x.tokenY]
                         ? tokenIcons[x.tokenY].src
                         : tokens[x.tokenY.toString()]?.iconUrl
@@ -272,7 +273,8 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
                 <img
                   alt={"alt"}
                   src={
-                    tEZorCTEZtoUppercase(x.tokenX.toString()) === "CTEZ"
+                    tEZorCTEZtoUppercase(x.tokenX.toString()).substring(0, 1).toLowerCase() >
+                    tEZorCTEZtoUppercase(x.tokenY.toString()).substring(0, 1).toLowerCase()
                       ? tokenIcons[x.tokenX]
                         ? tokenIcons[x.tokenX].src
                         : tokens[x.tokenX.toString()]?.iconUrl
@@ -292,7 +294,8 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
               <div>
                 <div className="font-body4">
                   {" "}
-                  {tEZorCTEZtoUppercase(x.tokenX.toString()) === "CTEZ"
+                  {tEZorCTEZtoUppercase(x.tokenX.toString()).substring(0, 1).toLowerCase() >
+                  tEZorCTEZtoUppercase(x.tokenY.toString()).substring(0, 1).toLowerCase()
                     ? ` ${tEZorCTEZtoUppercase(x.tokenY.toString())} / ${tEZorCTEZtoUppercase(
                         x.tokenX.toString()
                       )}`

@@ -65,10 +65,31 @@ function PositionsPopup(props: IPositionsProps) {
           <>
             <div className="flex w-full justify-between">
               <div className="flex gap-1 md:gap-2 items-center ">
-                <CircularImageInfo imageArray={[props.tokenIn.image, props.tokenOut.image]} />
+                <CircularImageInfo
+                  imageArray={
+                    tEZorCTEZtoUppercase(props.tokenIn.symbol.toString())
+                      .substring(0, 1)
+                      .toLowerCase() >
+                    tEZorCTEZtoUppercase(props.tokenOut.symbol.toString())
+                      .substring(0, 1)
+                      .toLowerCase()
+                      ? [props.tokenOut.image, props.tokenIn.image]
+                      : [props.tokenIn.image, props.tokenOut.image]
+                  }
+                />
                 <span className="font-body2 md:text-f14 text-white ">
-                  {tEZorCTEZtoUppercase(props.tokenIn.symbol)} /
-                  {tEZorCTEZtoUppercase(props.tokenOut.symbol)}
+                  {tEZorCTEZtoUppercase(props.tokenIn.symbol.toString())
+                    .substring(0, 1)
+                    .toLowerCase() >
+                  tEZorCTEZtoUppercase(props.tokenOut.symbol.toString())
+                    .substring(0, 1)
+                    .toLowerCase()
+                    ? `${tEZorCTEZtoUppercase(props.tokenOut.symbol)} / ${tEZorCTEZtoUppercase(
+                        props.tokenIn.symbol
+                      )}`
+                    : `${tEZorCTEZtoUppercase(props.tokenIn.symbol)} / ${tEZorCTEZtoUppercase(
+                        props.tokenOut.symbol
+                      )}`}
                 </span>
               </div>
               <div className="ml-auto">
