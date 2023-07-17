@@ -2,7 +2,7 @@ import JSBI from "jsbi";
 
 import { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { getTickAndRealPriceFromPool, getV3PoolAddressWithFeeTier } from "../../../api/v3/helper";
+import { getTickAndRealPriceFromPool } from "../../../api/v3/helper";
 import { AppDispatch, useAppSelector } from "../../../redux";
 import { setIsLoading } from "../../../redux/poolsv3";
 import { tokenParameterLiquidity } from "../../Liquidity/types";
@@ -14,6 +14,7 @@ export declare enum FeeAmount {
 }
 
 import { ChartEntry } from "./types";
+import { getV3PoolAddressWithFeeTier } from "../../../api/util/fetchConfig";
 export interface TickProcessed {
   tick: number;
   liquidityActive: JSBI;

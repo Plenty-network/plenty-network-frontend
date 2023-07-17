@@ -34,6 +34,7 @@ interface IAddLiquidityProps {
   currentPrice: BigNumber;
   setInputDisable: React.Dispatch<React.SetStateAction<string>>;
   inputDisable: string;
+  selectedFeeTier: number;
 }
 function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
@@ -92,7 +93,8 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
           props.tokenIn.symbol,
           props.tokenOut.symbol,
           Number(selectedPosition.position.lower_tick_index),
-          Number(selectedPosition.position.upper_tick_index)
+          Number(selectedPosition.position.upper_tick_index),
+          props.selectedFeeTier
         ).then((response) => {
           setSecondLoading(false);
           props.inputDisable === "false"
@@ -119,7 +121,8 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
           props.tokenIn.symbol,
           props.tokenOut.symbol,
           Number(selectedPosition.position.lower_tick_index),
-          Number(selectedPosition.position.upper_tick_index)
+          Number(selectedPosition.position.upper_tick_index),
+          props.selectedFeeTier
         ).then((response) => {
           setFirstLoading(false);
 

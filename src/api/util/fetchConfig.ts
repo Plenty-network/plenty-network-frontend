@@ -56,15 +56,17 @@ export const getDexAddress = (tokenIn: string, tokenOut: string): string => {
 
   return address ?? "false";
 };
-export const getV3DexAddress = (tokenIn: string, tokenOut: string): string => {
+export const getV3PoolAddressWithFeeTier = (tokenIn: string, tokenOut: string, feeTier: number): string => {
   const state = store.getState();
   const AMM = state.config.AMMs;
+  const feeBPS = feeTier * 100;
+
   const address = Object.keys(AMM).find(
     (key) =>
       // @ts-ignore
-      (AMM[key].tokenX.symbol === tokenIn && AMM[key].tokenY.symbol === tokenOut) ||
+      (AMM[key].tokenX.symbol === tokenIn && AMM[key].tokenY.symbol === tokenOut && feeBPS.toString() === AMM[key].feeBps) ||
       // @ts-ignore
-      (AMM[key].tokenY.symbol === tokenIn && AMM[key].tokenX.symbol === tokenOut)
+      (AMM[key].tokenY.symbol === tokenIn && AMM[key].tokenX.symbol === tokenOut && feeBPS.toString() === AMM[key].feeBps)
   );
   return address ?? "false";
 };
@@ -89,7 +91,9 @@ export const getDexType = (tokenIn: string, tokenOut: string): string => {
 
   const address = Object.keys(AMM).find(
     (key) =>
+        // @ts-ignore
       (AMM[key].token1.symbol === tokenIn && AMM[key].token2.symbol === tokenOut) ||
+          // @ts-ignore
       (AMM[key].token2.symbol === tokenIn && AMM[key].token1.symbol === tokenOut)
   );
 
@@ -110,9 +114,13 @@ export const getLpToken = (
 
   const tokensAmm = Object.keys(AMMs).find(
     (ammAddress) =>
+        // @ts-ignore
       (AMMs[ammAddress].token1.symbol === tokenOneSymbol &&
+            // @ts-ignore
         AMMs[ammAddress].token2.symbol === tokenTwoSymbol) ||
+            // @ts-ignore
       (AMMs[ammAddress].token2.symbol === tokenOneSymbol &&
+            // @ts-ignore
         AMMs[ammAddress].token1.symbol === tokenTwoSymbol)
   );
 

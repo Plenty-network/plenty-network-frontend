@@ -34,6 +34,7 @@ interface IAddLiquidityProps {
   tokenPrice: {
     [id: string]: number;
   };
+  selectedFeeTier: number;
 }
 function AddLiquidityV3(props: IAddLiquidityProps) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
@@ -67,14 +68,14 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
 
     if (
       topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? leftbrush < currentPrice && rightbrush < currentPrice
-        : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice
+        ? Number(leftbrush) < Number(currentPrice) && rightbrush < currentPrice
+        : Number(leftbrush) < Number(bcurrentPrice) && Number(brightbrush) < Number(bcurrentPrice)
     ) {
       dispatch(setInputDisable("first"));
     } else if (
       topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? leftbrush > currentPrice && rightbrush > currentPrice
-        : bleftbrush > bcurrentPrice && brightbrush > bcurrentPrice
+        ? Number(leftbrush) > Number(currentPrice) && Number(rightbrush) > Number(currentPrice)
+        : Number(bleftbrush) > Number(bcurrentPrice) && Number(brightbrush) > Number(bcurrentPrice)
     ) {
       dispatch(setInputDisable("second"));
     } else {
@@ -120,7 +121,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             props.tokenIn.symbol,
             props.tokenOut.symbol,
             minTickA,
-            maxTickA
+            maxTickA,
+            props.selectedFeeTier
           ).then((response) => {
             setSecondLoading(false);
             inputDisabled === "false"
@@ -135,7 +137,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             props.tokenOut.symbol,
             props.tokenIn.symbol,
             minTickB,
-            maxTickB
+            maxTickB,
+            props.selectedFeeTier
           ).then((response) => {
             setSecondLoading(false);
 
@@ -166,7 +169,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             props.tokenIn.symbol,
             props.tokenOut.symbol,
             minTickA,
-            maxTickA
+            maxTickA,
+            props.selectedFeeTier
           ).then((response) => {
             setFirstLoading(false);
 
@@ -182,7 +186,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             props.tokenOut.symbol,
             props.tokenIn.symbol,
             minTickB,
-            maxTickB
+            maxTickB,
+            props.selectedFeeTier
           ).then((response) => {
             setFirstLoading(false);
             inputDisabled === "false"
@@ -297,8 +302,9 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         ? rightbrush !== 0
         : brightbrush !== 0) &&
         (topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? leftbrush < currentPrice && rightbrush < currentPrice
-          : bleftbrush < bcurrentPrice && brightbrush < bcurrentPrice) && (
+          ? Number(leftbrush) < Number(currentPrice) && rightbrush < currentPrice
+          : Number(leftbrush) < Number(bcurrentPrice) &&
+            Number(brightbrush) < Number(bcurrentPrice)) && (
           <div className="fade-in-light absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg pl-7 backdrop-blur-[6px]  w-[480px]">
             <Image src={lock} />
             <span className="font-subtitle3 w-[318px] ml-5">
@@ -308,8 +314,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         )}
       {(
         topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? leftbrush < currentPrice && rightbrush > currentPrice
-          : bleftbrush < bcurrentPrice && brightbrush > bcurrentPrice
+          ? Number(leftbrush) < Number(currentPrice) && rightbrush > currentPrice
+          : Number(leftbrush) < Number(bcurrentPrice) && Number(brightbrush) > Number(bcurrentPrice)
       ) ? (
         <div className="relative -top-[9px] left-[25%]">
           <Image alt={"alt"} src={add} width={"24px"} height={"24px"} />
@@ -401,8 +407,9 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
 
       {!isLoadingData &&
         (topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? leftbrush > currentPrice && rightbrush > currentPrice
-          : bleftbrush > bcurrentPrice && brightbrush > bcurrentPrice) && (
+          ? Number(leftbrush) > Number(currentPrice) && Number(rightbrush) > Number(currentPrice)
+          : Number(bleftbrush) > Number(bcurrentPrice) &&
+            Number(brightbrush) > Number(bcurrentPrice)) && (
           <div className="fade-in-light absolute top-[93px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg pl-7 backdrop-blur-[6px]  w-[480px]">
             <Image src={lock} />
             <span className="font-subtitle3 w-[318px] ml-5">

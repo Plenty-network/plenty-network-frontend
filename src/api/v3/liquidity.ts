@@ -9,12 +9,13 @@ export const connectedNetwork = Config.NETWORK;
 export const calculateCurrentPrice = async (
   tokenXSymbol: string,
   tokenYSymbol: string,
-  refernceToken: String
+  refernceToken: String,
+  feeTier: number
 ): Promise<any> => {
   try {
     let currentPrice;
 
-    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
 
     if (refernceToken === tokenYSymbol) {
       currentPrice = BigNumber(1).dividedBy(
@@ -31,7 +32,7 @@ export const calculateCurrentPrice = async (
         contractStorageParameters.tokenY.decimals
       );
     }
-
+    console.log("v3 test",contractStorageParameters, currentPrice);
     return currentPrice;
   } catch (error) {
     console.log("v3 error: ", error);
@@ -40,10 +41,11 @@ export const calculateCurrentPrice = async (
 
 export const calculateFullRange = async (
   tokenXSymbol: string,
-  tokenYSymbol: string
+  tokenYSymbol: string,
+  feeTier: number
 ): Promise<any> => {
   try {
-    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
     let PoolObject = new Pool(
       contractStorageParameters.currTickIndex,
       contractStorageParameters.currentTickWitness,
@@ -78,10 +80,11 @@ export const calculateFullRange = async (
 
 export const getInitialBoundaries = async (
   tokenXSymbol: string,
-  tokenYSymbol: string
+  tokenYSymbol: string,
+  feeTier: number
 ): Promise<any> => {
   try {
-    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
     let PoolObject = new Pool(
       contractStorageParameters.currTickIndex,
       contractStorageParameters.currentTickWitness,
@@ -106,6 +109,8 @@ export const getInitialBoundaries = async (
       contractStorageParameters.tokenX.decimals,
       contractStorageParameters.tokenY.decimals
     );
+    console.log("v3 test 1", initialBoundaries, minPriceValue, maxPriceValue);
+
 
     return {
       minTick: minTick,
@@ -123,7 +128,8 @@ export const estimateTokenXFromTokenY = async (
   tokenXSymbol: string,
   tokenYSymbol: string,
   lowerTickIndex: number,
-  upperTickIndex: number
+  upperTickIndex: number,
+  feeTier: number
 ): Promise<any> => {
   try {
     let estimatedAmount;
@@ -132,7 +138,7 @@ export const estimateTokenXFromTokenY = async (
 
     amount = amount.multipliedBy(new BigNumber(10).pow(TOKENS[tokenYSymbol].decimals));
 
-    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
     let PoolObject = new Pool(
       contractStorageParameters.currTickIndex,
       contractStorageParameters.currentTickWitness,
@@ -163,7 +169,8 @@ export const estimateTokenYFromTokenX = async (
   tokenXSymbol: string,
   tokenYSymbol: string,
   lowerTickIndex: number,
-  upperTickIndex: number
+  upperTickIndex: number,
+  feeTier: number
 ): Promise<any> => {
   try {
     let estimatedAmount;
@@ -172,7 +179,7 @@ export const estimateTokenYFromTokenX = async (
 
     amount = amount.multipliedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals));
 
-    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
     let PoolObject = new Pool(
       contractStorageParameters.currTickIndex,
       contractStorageParameters.currentTickWitness,

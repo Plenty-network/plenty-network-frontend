@@ -201,20 +201,22 @@ function PriceRangeV3(props: IPriceRangeProps) {
       topLevelSelectedToken.symbol === tokeninorg.symbol
         ? dispatch(setRightRangeInput("∞"))
         : dispatch(setBRightRangeInput("∞"));
-      calculateFullRange(tokeninorg.symbol, tokenoutorg.symbol).then((response) => {
-        topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? dispatch(setleftbrush(response.minTickPrice.toFixed(6)))
-          : dispatch(setBleftbrush(Number(value).toFixed(6)));
-        topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? dispatch(setrightbrush(response.maxTickPrice.toFixed(6)))
-          : dispatch(setBrightbrush(Number(value).toFixed(6)));
-        topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? dispatch(setminTickA(response.minTick))
-          : dispatch(setminTickB(response.minTick));
-        topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? dispatch(setmaxTickA(response.maxTick))
-          : dispatch(setmaxTickB(response.maxTick));
-      });
+      calculateFullRange(tokeninorg.symbol, tokenoutorg.symbol, Number(props.selectedFeeTier)).then(
+        (response) => {
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? dispatch(setleftbrush(response.minTickPrice.toFixed(6)))
+            : dispatch(setBleftbrush(Number(value).toFixed(6)));
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? dispatch(setrightbrush(response.maxTickPrice.toFixed(6)))
+            : dispatch(setBrightbrush(Number(value).toFixed(6)));
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? dispatch(setminTickA(response.minTick))
+            : dispatch(setminTickB(response.minTick));
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? dispatch(setmaxTickA(response.maxTick))
+            : dispatch(setmaxTickB(response.maxTick));
+        }
+      );
     }
   };
   const percentage = () => {

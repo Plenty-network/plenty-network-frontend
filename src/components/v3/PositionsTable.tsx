@@ -8,12 +8,14 @@ interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
   handleCollectFeeOperation: () => void;
+  feeTier: string;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
 }
 function PositionsTable(props: IPositionsProps) {
   return (
     <>
       <PositionsData
+        feeTier={props.feeTier}
         tokenIn={props.tokenIn}
         tokenOut={props.tokenOut}
         setScreen={props.setScreen}

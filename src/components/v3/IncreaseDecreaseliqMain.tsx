@@ -7,6 +7,7 @@ import { BalanceNat } from "../../api/v3/types";
 import clsx from "clsx";
 
 interface IIncreaseDecreaseLiqMainProps {
+  selectedFeeTier: number;
   setActiveStateIncDec: React.Dispatch<React.SetStateAction<ActiveIncDecState | string>>;
   activeStateIncDec: ActiveIncDecState | string;
 
@@ -75,6 +76,7 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}
           setShow={props.setShow}
+          selectedFeeTier={props.selectedFeeTier}
           userBalances={props.userBalances}
           setSecondTokenAmount={props.setSecondTokenAmount}
           setFirstTokenAmount={props.setFirstTokenAmount}
@@ -82,6 +84,7 @@ function IncreaseDecreaseLiqMain(props: IIncreaseDecreaseLiqMainProps) {
       ) : (
         <DecreaseLiq
           setShow={props.setShow}
+          selectedFeeTier={props.selectedFeeTier}
           setScreen={props.setScreen}
           firstTokenAmount={props.firstTokenAmount}
           secondTokenAmount={props.secondTokenAmount}

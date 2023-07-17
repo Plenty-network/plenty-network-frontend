@@ -34,7 +34,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
   const { valueFormat } = useTableNumberUtils();
   const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   const tokens = useAppSelector((state) => state.config.tokens);
-
+  const [feeTier, setFeeTier] = React.useState("");
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
@@ -406,6 +406,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         columnWidth: "w-[170px] ",
         accessor: (x) => (
           <ManageBtn
+            feeTier={x.feeTier}
             tokenA={x.tokenX ? x.tokenX.toString() : "DAI.e"}
             tokenB={x.tokenY ? x.tokenY.toString() : "USDC.e"}
             data={x}
@@ -423,7 +424,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
           setShowLiquidityModal(true);
           dispatch(setSelectedPosition(props.data));
           setActiveState(ActiveLiquidity.Liquidity);
-
+          setFeeTier(props.feeTier);
           setTokenIn({
             name: props.tokenA,
             image: getImagesPath(props.tokenA.toString()),
@@ -463,6 +464,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
           showLiquidityModal={showLiquidityModal}
           setActiveState={setActiveState}
           activeState={activeState}
+          feeTier={feeTier}
           setShowLiquidityModalPopup={setShowLiquidityModal}
         />
       )}

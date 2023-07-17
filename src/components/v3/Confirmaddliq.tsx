@@ -30,7 +30,6 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
   };
 
   const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
-  console.log("add", props, selectedPosition);
   return props.show ? (
     <PopUpModal onhide={closeModal}>
       {

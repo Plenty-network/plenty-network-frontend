@@ -10,7 +10,7 @@ import {
 } from "../types";
 import { getBatchOperationsWithLimits } from "../../api/util/operations";
 
-import { setFlashMessage } from "../../redux/flashMessage";
+import { setFlashMessage } from "../../redux/flashMessage"; 
 import { IFlashMessageProps } from "../../redux/flashMessage/type";
 
 import { IV3PositionObject } from "../../api/v3/types";
@@ -23,6 +23,7 @@ export const collectFees = async (
   userAddress: string,
   tokenXSymbol: string,
   tokenYSymbol: string,
+  feeTier: number,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
@@ -31,7 +32,7 @@ export const collectFees = async (
   try {
     const Tezos = await dappClient().tezos();
 
-    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol);
+    let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
 
     const contractInstance = await Tezos.wallet.at(contractStorageParameters.poolAddress);
 

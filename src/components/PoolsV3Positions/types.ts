@@ -10,6 +10,7 @@ export interface IPoolsTablePosition {
   isConnectWalletRequired?: boolean;
 }
 export interface IManageBtnProps {
+  feeTier: any;
   tokenA: string;
   tokenB: string;
   data: IV3PositionObject;

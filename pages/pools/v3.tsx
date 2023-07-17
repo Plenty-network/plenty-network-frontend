@@ -133,7 +133,7 @@ export default function Pools(props: IIndexProps) {
                 <Image src={info} />
               </p>
               <p className="font-body2 text-info-500 px-3 sm:w-auto w-[280px]">
-                Gauges are not yet available for v3 pool
+                Gauges are not yet available for v3 pools
               </p>
               <p
                 className="ml-auto relative top-[7px] cursor-pointer"
