@@ -40,7 +40,7 @@ function FeeTierMain(props: IFeeTierMainProps) {
               props.selectedFeeTier == feeInd.percentage
                 ? "border-blue-700"
                 : "border-text-800 hover:border-text-400",
-              "border fade-in-light w-[95px] sm:w-[127px] rounded-2xl   bg-card-200   mb-5 sm:h-[139px] h-[120px]  py-[12px] sm:pl-[14px] pl-2  sm:pr-3 pr-2 cursor-pointer"
+              "border fade-in-light w-[95px] sm:w-[127px] rounded-2xl   bg-card-200   mb-5 sm:h-[128px] h-[120px]  py-[12px] sm:pl-[14px] pl-2  sm:pr-3 pr-2 cursor-pointer"
             )}
             onClick={() => props.setSelectedFeeTier(feeInd.percentage)}
           >

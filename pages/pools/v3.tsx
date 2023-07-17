@@ -21,6 +21,7 @@ import clsx from "clsx";
 import { CardHeaderV3, PoolsCardHeaderV3 } from "../../src/components/v3/pools/CardHeaderv3";
 import { PoolsTableV3 } from "../../src/components/v3/pools/poolsTableV3";
 import { NewPoolv3 } from "../../src/components/v3/NewPoolV3";
+import { MyPoolTablev3 } from "../../src/components/v3/pools/MyPoolsV3";
 
 export interface IIndexProps {}
 export enum POOL_TYPE {
@@ -158,8 +159,8 @@ export default function Pools(props: IIndexProps) {
             />
           )}
 
-          {/* {activeStateTab === PoolsCardHeader.Mypools && (
-            <MyPoolTable
+          {activeStateTab === PoolsCardHeaderV3.Mypools && (
+            <MyPoolTablev3
               className="md:pl-5 md:py-4  pl-2 py-4"
               poolsFilter={POOL_TYPE.MYPOOLS}
               isConnectWalletRequired={true}
@@ -170,9 +171,10 @@ export default function Pools(props: IIndexProps) {
               setShowLiquidityModal={handleCloseManagePopup}
               showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
-              isFetchingMyPool={isFetchingMyPool}
+              isFetching={false}
+              isError={false}
             />
-          )} */}
+          )}
           <NewPoolv3
             show={showNewPoolPopup}
             setShow={setShowNewPoolPopup}

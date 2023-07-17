@@ -2,6 +2,7 @@ import {
   useAllPoolsData,
   useAllPoolsDataV3,
   useMyPoolsData,
+  useMyPoolsDatav3,
   usePoolsMain,
 } from "../api/pools/query/poolsmain.query";
 import { IAllPoolsData } from "../api/pools/types";
@@ -83,5 +84,17 @@ export const usePoolsTableFilterV3 = (
     // }
     return { data: poolTableData, isFetched: isFetched };
   }
+  return { data: poolTableData, isFetched: isFetched };
+};
+
+export const useMyPoolsTableFilterv3 = (
+  userAddress: string,
+  tokenPrices: ITokenPriceList,
+  filterText: string | "MyPools" | undefined,
+
+  reFetchPool: boolean
+) => {
+  const { data: poolTableData = [], isFetched } = useMyPoolsDatav3(userAddress, 0);
+
   return { data: poolTableData, isFetched: isFetched };
 };

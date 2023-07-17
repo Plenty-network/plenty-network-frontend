@@ -54,8 +54,8 @@ function PositionsData(props: IPositionsProps) {
     }
   }, [props.tokenIn.symbol, props.tokenOut.symbol, Object.keys(tokenPrice).length, walletAddress]);
   return (
-    <div className="overflow-x-auto ">
-      <div className="flex fade-in-light my-[24px] ml-8 min-w-[792px] ">
+    <div className="overflow-x-auto md:overflow-x-hidden ">
+      <div className="flex fade-in-light my-[24px] ml-8 min-w-[724px] ">
         <div className="w-[125px] text-text-250 font-body2 flex">
           Liquidity
           <div className="relative top-[2px] ml-1 cursor-pointer">
@@ -71,7 +71,7 @@ function PositionsData(props: IPositionsProps) {
             </ToolTip>
           </div>
         </div>
-        <div className="w-[176px] text-text-250 font-body2 flex">
+        <div className="lg:w-[176px] w-[135px] text-text-250 font-body2 flex">
           Min/Max price
           <div className="relative top-[2px] ml-1 cursor-pointer">
             <ToolTip
@@ -88,7 +88,7 @@ function PositionsData(props: IPositionsProps) {
             </ToolTip>
           </div>
         </div>
-        <div className="w-[130px] text-text-250 font-body2 flex">
+        <div className="w-[122px] text-text-250 font-body2 flex">
           Fees collected
           <div className="relative top-[2px] ml-1 cursor-pointer">
             <ToolTip
@@ -105,7 +105,7 @@ function PositionsData(props: IPositionsProps) {
         </div>
       </div>
 
-      <div className="h-[300px] overflow-y-auto swap min-w-[792px] ">
+      <div className="h-[300px] overflow-y-auto swap min-w-[724px] ">
         {walletAddress === null ? (
           <span className="fade-in-light flex items-center justify-center h-[280px] text-border-600 font-title3">
             please connect your wallet
@@ -122,7 +122,7 @@ function PositionsData(props: IPositionsProps) {
                   key={index}
                   className={clsx(
                     index % 2 === 0 ? "bg-secondary-600" : "bg-card-500",
-                    "flex   h-[64px] items-center pl-10 min-w-[792px] fade-in-light"
+                    "flex   h-[64px] items-center pl-10 min-w-[724px] fade-in-light"
                   )}
                 >
                   <div className="w-[125px] text-white font-subtitle3 flex">
@@ -158,7 +158,7 @@ function PositionsData(props: IPositionsProps) {
                     </ToolTip>
                   </div>
 
-                  <div className="w-[176px] text-text-50 font-subtitle4 ">
+                  <div className="lg:w-[176px] w-[155px] text-text-50 font-subtitle4 ">
                     {nFormatterWithLesserNumber(d.minPrice)} /{" "}
                     {d.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber(d.maxPrice)}
                     <div className="font-body3 text-text-500">
@@ -169,7 +169,7 @@ function PositionsData(props: IPositionsProps) {
                   <div className="w-[122px] text-white font-subtitle3 flex">
                     ${nFormatterWithLesserNumber(d.feesDollar)}
                   </div>
-                  <div className="w-[180px]">
+                  <div className="lg:w-[180px] w-[135px]">
                     {!d.isInRange ? (
                       <span className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1 rounded-lg	 text-error-300 bg-error-300/[0.1] ">
                         <Image src={infoOrange} />

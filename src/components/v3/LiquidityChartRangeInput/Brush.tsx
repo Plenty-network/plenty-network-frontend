@@ -72,7 +72,7 @@ export const Brush = ({
       const { type, selection, mode } = event;
 
       if (!selection) {
-        setLocalBrushExtent(null);
+        //setLocalBrushExtent(null);
         return;
       }
 
