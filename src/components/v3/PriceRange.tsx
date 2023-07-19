@@ -134,7 +134,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
         tokenOutConfig,
         TickSpacing(props.selectedFeeTier)
       ).then((response1) => {
-        dispatch(setminTickA(Tick.nearestUsableTick(response1, 10)));
+        dispatch(
+          setminTickA(Tick.nearestUsableTick(response1, TickSpacing(props.selectedFeeTier)))
+        );
       });
     } else {
       getTickFromRealPrice(
@@ -153,7 +155,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
           tokenInConfig,
           TickSpacing(props.selectedFeeTier)
         );
-        dispatch(setmaxTickB(Tick.nearestUsableTick(response1, 10)));
+        dispatch(
+          setmaxTickB(Tick.nearestUsableTick(response1, TickSpacing(props.selectedFeeTier)))
+        );
       });
     }
 
@@ -179,7 +183,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         tokenOutConfig,
         TickSpacing(props.selectedFeeTier)
       ).then((response) => {
-        dispatch(setmaxTickA(Tick.nearestUsableTick(response, 10)));
+        dispatch(setmaxTickA(Tick.nearestUsableTick(response, TickSpacing(props.selectedFeeTier))));
       });
     } else {
       getTickFromRealPrice(
@@ -198,7 +202,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
           tokenInConfig,
           TickSpacing(props.selectedFeeTier)
         );
-        dispatch(setminTickB(Tick.nearestUsableTick(response1, 10)));
+        dispatch(
+          setminTickB(Tick.nearestUsableTick(response1, TickSpacing(props.selectedFeeTier)))
+        );
       });
     }
 

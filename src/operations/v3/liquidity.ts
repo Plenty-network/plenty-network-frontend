@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
-import { Approvals, Contract } from "@plenty-labs/v3-sdk";
+import { Approvals, Contract, Tick } from "@plenty-labs/v3-sdk";
 import { getV3PoolAddressWithFeeTier } from "../../api/util/fetchConfig";
 import { BalanceNat, TokenStandard } from "./types";
 import { dappClient } from "../../common/walletconnect";
@@ -37,6 +37,8 @@ export const LiquidityOperation = async (
   feeTier: any
 ): Promise<IOperationsResponse> => {
   try {
+    /*   console.log("fee tier", feeTier); */
+
     const Tezos = await dappClient().tezos();
     const state = store.getState();
     const TOKENS = state.config.tokens;
@@ -56,6 +58,8 @@ export const LiquidityOperation = async (
 
     const contractAddress = getV3PoolAddressWithFeeTier(tokenXSymbol, tokenYSymbol, feeTier);
 
+    /*  console.log("pool address", contractAddress); */
+
     const tokenX = await Tezos.wallet.at(TOKENS[tokenXSymbol].address as string);
     const tokenY = await Tezos.wallet.at(TOKENS[tokenYSymbol].address as string);
     let createPosition = await createPositionInstance(
@@ -68,6 +72,8 @@ export const LiquidityOperation = async (
       contractAddress,
       feeTier
     );
+
+    /*     console.log("add liq", lowerTick.toString(), upperTick.toString()); */
     const allBatchOperations: WalletParamsWithKind[] = [];
 
     if (TOKENS[tokenXSymbol].standard === TokenStandard.FA12) {
@@ -434,7 +440,15 @@ export const removeLiquidity = async (
     };
   }
 };
-function feeTier(lowerTick: number, upperTick: number, tokenXSymbol: string, tokenYSymbol: string, deadline: number, maximumTokensContributedMain: { x: BigNumber; y: BigNumber; }, contractAddress: string, feeTier: any) {
+function feeTier(
+  lowerTick: number,
+  upperTick: number,
+  tokenXSymbol: string,
+  tokenYSymbol: string,
+  deadline: number,
+  maximumTokensContributedMain: { x: BigNumber; y: BigNumber },
+  contractAddress: string,
+  feeTier: any
+) {
   throw new Error("Function not implemented.");
 }
-

@@ -8,7 +8,6 @@ import { getV3PoolAddressWithFeeTier } from "../../api/util/fetchConfig";
 import { connectedNetwork, dappClient } from "../../common/walletconnect";
 import { store } from "../../redux";
 
-
 const tokenDetail = async (tokenSymbol: String): Promise<Token> => {
   let configResponse: any = await axios.get(Config.CONFIG_LINKS[connectedNetwork].TOKEN);
   configResponse = configResponse.data[`${tokenSymbol}`];
@@ -148,11 +147,7 @@ export const getTickFromRealPrice = async (
 ): Promise<any> => {
   try {
     let tick = Tick.computeTickFromSqrtPrice(
-      Price.computeSqrtPriceFromRealPrice(
-        realPrice,
-        tokenXSymbol.decimals,
-        tokenYSymbol.decimals
-      ),
+      Price.computeSqrtPriceFromRealPrice(realPrice, tokenXSymbol.decimals, tokenYSymbol.decimals),
       tickspacing
     );
 
@@ -199,6 +194,8 @@ export const createPositionInstance = async (
     const Tezos = await dappClient().tezos();
 
     let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
+    lowerTick = Tick.nearestUsableTick(lowerTick, contractStorageParameters.tickSpacing);
+    upperTick = Tick.nearestUsableTick(upperTick, contractStorageParameters.tickSpacing);
 
     const contractInstance = await Tezos.wallet.at(contractAddress);
 
