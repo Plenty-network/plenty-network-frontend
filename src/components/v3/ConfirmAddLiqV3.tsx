@@ -22,6 +22,7 @@ import { getTickFromRealPrice } from "../../api/v3/helper";
 import { useDispatch } from "react-redux";
 import { setmaxTickA, setmaxTickB, setminTickA, setminTickB } from "../../redux/poolsv3";
 import { Tick } from "@plenty-labs/v3-sdk";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 interface IConfirmAddLiquidityProps {
   tokenIn: tokenParameterLiquidity;
@@ -244,11 +245,35 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
           </div>
         </div>
 
-        <div className="sm:flex gap-4 mt-2 px-5">
+        <div className="sm:flex gap-4 -mt-2 px-5">
           <div>
-            <div className="flex items-center text-text-250">
-              <span className="font-caption1 pl-1">Min price</span>
-              <span className="font-mobile-f9 ">
+            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[93px] w-auto sm:w-[163px] text-center p-3">
+              <span className="font-caption1 text-text-250 ">Min price</span>
+              <ToolTip
+                message={`$ ${
+                  selectedToken.symbol === tokeninorg.symbol
+                    ? minA > maxA
+                      ? (Number(tokenPrice[props.tokenIn.name]) * Number(maxA)).toFixed(2)
+                      : (Number(tokenPrice[props.tokenIn.name]) * Number(minA)).toFixed(2)
+                    : minB > maxB
+                    ? (Number(tokenPrice[props.tokenIn.name]) * Number(maxB)).toFixed(2)
+                    : (Number(tokenPrice[props.tokenIn.name]) * Number(minB)).toFixed(2)
+                }
+               `}
+                id="tooltip8"
+                position={Position.top}
+              >
+                <div className="font-title3">
+                  {selectedToken.symbol === tokeninorg.symbol
+                    ? minA > maxA
+                      ? maxA
+                      : minA
+                    : minB > maxB
+                    ? maxB
+                    : minB}
+                </div>
+              </ToolTip>
+              <span className="font-body1 text-text-250  ">
                 (
                 {selectedToken.symbol === tokeninorg.symbol
                   ? tEZorCTEZtoUppercase(tokenoutorg.symbol)
@@ -260,32 +285,36 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
                 )
               </span>
             </div>
-            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
-              <div className="font-title3">
-                {selectedToken.symbol === tokeninorg.symbol
-                  ? minA > maxA
-                    ? maxA
-                    : minA
-                  : minB > maxB
-                  ? maxB
-                  : minB}
-              </div>
-              <div className="font-subtitle5 text-text-250 mt-[1.5px]">
-                $
-                {selectedToken.symbol === tokeninorg.symbol
-                  ? minA > maxA
-                    ? (Number(tokenPrice[props.tokenIn.name]) * Number(maxA)).toFixed(2)
-                    : (Number(tokenPrice[props.tokenIn.name]) * Number(minA)).toFixed(2)
-                  : minB > maxB
-                  ? (Number(tokenPrice[props.tokenIn.name]) * Number(maxB)).toFixed(2)
-                  : (Number(tokenPrice[props.tokenIn.name]) * Number(minB)).toFixed(2)}
-              </div>
-            </div>
           </div>
           <div>
-            <div className="flex items-center text-text-250 mt-3 sm:mt-0">
-              <span className="font-caption1 pl-1">Max price</span>
-              <span className="font-mobile-f9">
+            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[93px] w-auto sm:w-[163px] text-center p-3">
+              <span className="font-caption1 text-text-250 ">Max price</span>
+              <ToolTip
+                message={`$  ${
+                  selectedToken.symbol === tokeninorg.symbol
+                    ? maxA < minA
+                      ? (Number(tokenPrice[props.tokenIn.name]) * Number(minA)).toFixed(2)
+                      : (Number(tokenPrice[props.tokenIn.name]) * Number(maxA)).toFixed(2)
+                    : maxB < minB
+                    ? (Number(tokenPrice[props.tokenIn.name]) * Number(minB)).toFixed(2)
+                    : (Number(tokenPrice[props.tokenIn.name]) * Number(maxB)).toFixed(2)
+                }
+             
+               `}
+                id="tooltip8"
+                position={Position.top}
+              >
+                <div className="font-title3">
+                  {selectedToken.symbol === tokeninorg.symbol
+                    ? maxA < minA
+                      ? minA
+                      : maxA
+                    : maxB < minB
+                    ? minB
+                    : maxB}
+                </div>
+              </ToolTip>
+              <span className="font-body1 text-text-250  ">
                 (
                 {selectedToken.symbol === tokeninorg.symbol
                   ? tEZorCTEZtoUppercase(tokenoutorg.symbol)
@@ -297,44 +326,38 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
                 )
               </span>
             </div>
-            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
-              <div className="font-title3">
-                {selectedToken.symbol === tokeninorg.symbol
-                  ? maxA < minA
-                    ? minA
-                    : maxA
-                  : maxB < minB
-                  ? minB
-                  : maxB}
-              </div>
-              <div className="font-subtitle5 text-text-250 mt-[1.5px]">
-                $
-                {selectedToken.symbol === tokeninorg.symbol
-                  ? maxA < minA
-                    ? (Number(tokenPrice[props.tokenIn.name]) * Number(minA)).toFixed(2)
-                    : (Number(tokenPrice[props.tokenIn.name]) * Number(maxA)).toFixed(2)
-                  : maxB < minB
-                  ? (Number(tokenPrice[props.tokenIn.name]) * Number(minB)).toFixed(2)
-                  : (Number(tokenPrice[props.tokenIn.name]) * Number(maxB)).toFixed(2)}
-              </div>
-            </div>
           </div>
           <div>
-            <div className="flex text-text-250 mt-3 sm:mt-0">
-              <span className="font-caption1 pl-1">Current price</span>
-            </div>
-            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2">
-              <div className="font-title3">
+            <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[93px] w-auto sm:w-[163px] text-center p-3">
+              <span className="font-caption1 text-text-250 ">Current price</span>
+              <ToolTip
+                message={`$ ${
+                  selectedToken.symbol === tokeninorg.symbol
+                    ? (Number(tokenPrice[props.tokenIn.name]) * Number(currentprice)).toFixed(2)
+                    : (Number(tokenPrice[props.tokenIn.name]) * Number(bcurrentprice)).toFixed(2)
+                }
+             
+               `}
+                id="tooltip8"
+                position={Position.top}
+              >
+                <div className="font-title3">
+                  {selectedToken.symbol === tokeninorg.symbol
+                    ? Number(currentprice)?.toFixed(6)
+                    : Number(bcurrentprice)?.toFixed(6)}
+                </div>
+              </ToolTip>
+              <span className="font-body1 text-text-250  ">
+                (
                 {selectedToken.symbol === tokeninorg.symbol
-                  ? Number(currentprice)?.toFixed(6)
-                  : Number(bcurrentprice)?.toFixed(6)}
-              </div>
-              <div className="font-subtitle5 text-text-250 mt-[1.5px]">
-                $
+                  ? tEZorCTEZtoUppercase(tokenoutorg.symbol)
+                  : tEZorCTEZtoUppercase(tokeninorg.symbol)}{" "}
+                per{" "}
                 {selectedToken.symbol === tokeninorg.symbol
-                  ? (Number(tokenPrice[props.tokenIn.name]) * Number(currentprice)).toFixed(2)
-                  : (Number(tokenPrice[props.tokenIn.name]) * Number(bcurrentprice)).toFixed(2)}
-              </div>
+                  ? tEZorCTEZtoUppercase(tokeninorg.symbol)
+                  : tEZorCTEZtoUppercase(tokenoutorg.symbol)}
+                )
+              </span>
             </div>
           </div>
         </div>

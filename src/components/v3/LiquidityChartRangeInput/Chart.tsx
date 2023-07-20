@@ -7,13 +7,13 @@ import { Brush } from "./Brush";
 import { Line } from "./Line";
 import { ChartEntry, LiquidityChartRangeInputProps } from "./types";
 import Zoom from "./Zoom";
+//import BarChart1 from "./BarGraphwithx";
 export enum Bound {
   LOWER = "LOWER",
   UPPER = "UPPER",
 }
 const xAccessor = (d: ChartEntry) => d.price0;
 const yAccessor = (d: ChartEntry) => d.activeLiquidity;
-const Tick = (d: ChartEntry) => d.Tick;
 
 export function Chart({
   id = "liquidityChartRangeInput",
@@ -46,6 +46,7 @@ export function Chart({
         .domain([0, max(series, yAccessor)] as number[])
         .range([innerHeight, 0]),
     };
+    console.log(" max(series, yAccessor)", max(series, yAccessor));
 
     if (zoom) {
       const newXscale = zoom.rescaleX(scales.xScale);
@@ -98,7 +99,7 @@ export function Chart({
         width="100%"
         height="100%"
         viewBox={`0 0 ${width} ${height}`}
-        style={{ overflow: "visible" }}
+        style={{ overflow: "visible", zIndex: "10" }}
       >
         <defs>
           <clipPath id={`${id}-chart-clip`}>
@@ -121,6 +122,16 @@ export function Chart({
 
         <g transform={`translate(${margins.left},${margins.top})`}>
           <g clipPath={`url(#${id}-chart-clip)`}>
+            {/* <BarChart1
+              data={series}
+              xScale={xScale}
+              yScale={yScale}
+              xAccessor={xAccessor}
+              yAccessor={yAccessor}
+              height={innerHeight}
+              styles={{ bar: { fill: "red" } }}
+              // You may need to pass any necessary styles for the bars
+            /> */}
             <Area
               series={series}
               xScale={xScale}
@@ -164,13 +175,13 @@ export function Chart({
             brushExtent={brushDomain ?? (xScale.domain() as [number, number])}
             innerWidth={innerWidth}
             innerHeight={innerHeight}
-            tick={Tick}
             setBrushExtent={onBrushDomainChange}
             westHandleColor={styles.brush.handle.west}
             eastHandleColor={styles.brush.handle.east}
           />
         </g>
       </svg>
+      <div className="relative  top-[-220px] left-[-60px] z-1"></div>
     </>
   );
 }

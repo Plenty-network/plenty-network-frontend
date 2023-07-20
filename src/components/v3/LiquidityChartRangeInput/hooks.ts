@@ -42,6 +42,7 @@ export function useDensityChartData({
     setisloading(true);
     const poolAddress = getV3PoolAddressWithFeeTier(currencyA?.symbol, currencyB?.symbol, feeTier);
     getTickAndRealPriceFromPool(poolAddress).then((response) => {
+      console.log("response", poolAddress);
       setData(response);
       setisloading(false);
     });
@@ -58,7 +59,6 @@ export function useDensityChartData({
       const t: any = data[i];
 
       const chartEntry = {
-        Tick: t.tick,
         activeLiquidity: parseFloat(t.liquidityNet.toString()),
         price0:
           topLevelSelectedToken.symbol === tokeninorg.symbol

@@ -85,7 +85,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
               >
                 {props.isExist?.feeTier?.includes((Number(feeInd.percentage) * 100).toString())
                   ? "Created"
-                  : "Not Created"}
+                  : "Not created"}
               </span>
             </div>
           </div>

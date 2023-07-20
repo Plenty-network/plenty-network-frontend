@@ -217,7 +217,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   // }, [slippage]);
   const handleAddLiquidityOperation = () => {
     setContentTransaction(
-      `Mint Position ${nFormatterWithLesserNumber(
+      `Mint position ${nFormatterWithLesserNumber(
         new BigNumber(firstTokenAmountLiq)
       )} ${tEZorCTEZtoUppercase(props.tokenIn.name)} / ${nFormatterWithLesserNumber(
         new BigNumber(secondTokenAmountLiq)
@@ -301,7 +301,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Mint Position ${localStorage.getItem(
+        trailingText: `Mint position ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
         )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
           SECOND_TOKEN_AMOUNT
@@ -351,7 +351,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Mint Position ${localStorage.getItem(
+              trailingText: `Mint position ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT

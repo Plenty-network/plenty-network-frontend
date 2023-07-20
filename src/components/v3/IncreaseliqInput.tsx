@@ -16,6 +16,7 @@ import fromExponential from "from-exponential";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import clsx from "clsx";
 import { estimateTokenXFromTokenY, estimateTokenYFromTokenX } from "../../api/v3/liquidity";
+import { isMobile } from "react-device-detect";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -182,7 +183,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
               ) : (
                 <input
                   type="text"
-                  className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium2 outline-none w-[100%] placeholder:text-text-400"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-title1  md:font-medium2 outline-none w-[100%] placeholder:text-text-400"
                   value={fromExponential(props.firstTokenAmount)}
                   placeholder="0.0"
                   onChange={(e) => handleLiquidityInput(e.target.value, "tokenIn")}
@@ -219,7 +220,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
                     )}{" "}
                   </span>
                 )}
-                {tEZorCTEZtoUppercase(props.tokenIn.name)}
+                {!isMobile && tEZorCTEZtoUppercase(props.tokenIn.name)}
               </div>
             </div>
           )}
@@ -285,7 +286,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
                 <input
                   type="text"
                   value={fromExponential(props.secondTokenAmount)}
-                  className="text-white bg-muted-200/[0.1] text-left border-0 font-input-text  md:font-medium2 outline-none w-[100%] placeholder:text-text-400"
+                  className="text-white bg-muted-200/[0.1] text-left border-0 font-title1  md:font-medium2 outline-none w-[100%] placeholder:text-text-400"
                   placeholder="0.0"
                   onChange={(e) => handleLiquidityInput(e.target.value, "tokenOut")}
                 />
@@ -321,7 +322,7 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
                     )}
                   </span>
                 )}
-                {tEZorCTEZtoUppercase(props.tokenOut.name)}
+                {!isMobile && tEZorCTEZtoUppercase(props.tokenOut.name)}
               </div>
             </div>
           )}

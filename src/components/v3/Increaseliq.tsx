@@ -19,6 +19,7 @@ import { ActivePopUp } from "./ManageTabV3";
 import IncreaseLiquidityInputV3 from "./IncreaseliqInput";
 import { getRealPriceFromTick } from "../../api/v3/helper";
 import { Chain, IConfigToken } from "../../config/types";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 interface IIncLiquidityProp {
   tokenIn: tokenParameterLiquidity;
@@ -254,32 +255,12 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
             </div>
           </div>
 
-          <div className="sm:flex gap-4 mt-2 px-5">
+          <div className="sm:flex gap-4 -mt-2 px-5">
             <div>
-              <div className="flex items-center text-text-250">
-                <span className="font-caption1 pl-1">Min price</span>
-                <span className="font-f8 ">
-                  (
-                  {selectedToken.symbol === props.tokenIn.symbol
-                    ? tEZorCTEZtoUppercase(props.tokenOut.symbol)
-                    : tEZorCTEZtoUppercase(props.tokenIn.symbol)}{" "}
-                  per{" "}
-                  {selectedToken.symbol === props.tokenIn.symbol
-                    ? tEZorCTEZtoUppercase(props.tokenIn.symbol)
-                    : tEZorCTEZtoUppercase(props.tokenOut.symbol)}
-                  )
-                </span>
-              </div>
-              <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2.5">
-                <div className="font-title3">
-                  {selectedToken.symbol === props.tokenIn.symbol
-                    ? selectedPosition.minPrice.toFixed(2)
-                    : new BigNumber(1).dividedBy(selectedPosition.maxPrice).toFixed(2)}
-                </div>
-                <div className="font-body3 text-text-250 mt-[1.5px]">
-                  {" "}
-                  $
-                  {(
+              <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[93px] w-auto sm:w-[163px] text-center p-3">
+                <span className="font-caption1 text-text-250 ">Min price</span>
+                <ToolTip
+                  message={`$${(
                     Number(
                       selectedToken.symbol === props.tokenIn.symbol
                         ? selectedPosition.minPrice
@@ -292,14 +273,17 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                           : tokeninorg.name
                       ]
                     )
-                  ).toFixed(2)}
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center text-text-250 mt-3 sm:mt-0">
-                <span className="font-caption1 pl-1">Max price</span>
-                <span className="font-f8">
+                  ).toFixed(2)}`}
+                  id="tooltip8"
+                  position={Position.top}
+                >
+                  <div className="font-title3">
+                    {selectedToken.symbol === props.tokenIn.symbol
+                      ? selectedPosition.minPrice.toFixed(2)
+                      : new BigNumber(1).dividedBy(selectedPosition.maxPrice).toFixed(2)}
+                  </div>
+                </ToolTip>
+                <span className="font-body1 text-text-250  ">
                   (
                   {selectedToken.symbol === props.tokenIn.symbol
                     ? tEZorCTEZtoUppercase(props.tokenOut.symbol)
@@ -311,41 +295,93 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                   )
                 </span>
               </div>
-              <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2.5">
-                <div className="font-title3">
-                  {" "}
-                  {selectedPosition.isMaxPriceInfinity
-                    ? "∞"
-                    : selectedToken.symbol === props.tokenIn.symbol
-                    ? selectedPosition.maxPrice.toFixed(2)
-                    : new BigNumber(1).dividedBy(selectedPosition.minPrice).toFixed(2)}
-                </div>
-                <div className="font-body3 text-text-250 mt-[1.5px]">
-                  $
-                  {selectedPosition.isMaxPriceInfinity
-                    ? "--"
-                    : (
-                        Number(
-                          selectedToken.symbol === props.tokenIn.symbol
-                            ? selectedPosition.maxPrice
-                            : new BigNumber(1).dividedBy(selectedPosition.minPrice)
-                        ) *
-                        Number(
-                          tokenPrice[
+            </div>
+            <div>
+              <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[93px] w-auto sm:w-[163px] text-center p-3">
+                <span className="font-caption1 text-text-250 ">Max price</span>
+                <ToolTip
+                  message={`$ ${
+                    selectedPosition.isMaxPriceInfinity
+                      ? "--"
+                      : (
+                          Number(
                             selectedToken.symbol === props.tokenIn.symbol
-                              ? tokenoutorg.name
-                              : tokeninorg.name
-                          ]
-                        )
-                      ).toFixed(2)}
-                </div>
+                              ? selectedPosition.maxPrice
+                              : new BigNumber(1).dividedBy(selectedPosition.minPrice)
+                          ) *
+                          Number(
+                            tokenPrice[
+                              selectedToken.symbol === props.tokenIn.symbol
+                                ? tokenoutorg.name
+                                : tokeninorg.name
+                            ]
+                          )
+                        ).toFixed(2)
+                  }`}
+                  id="tooltip8"
+                  position={Position.top}
+                >
+                  <div className="font-title3">
+                    {selectedPosition.isMaxPriceInfinity
+                      ? "∞"
+                      : selectedToken.symbol === props.tokenIn.symbol
+                      ? selectedPosition.maxPrice.toFixed(2)
+                      : new BigNumber(1).dividedBy(selectedPosition.minPrice).toFixed(2)}
+                  </div>
+                </ToolTip>
+                <span className="font-body1 text-text-250 ">
+                  (
+                  {selectedToken.symbol === props.tokenIn.symbol
+                    ? tEZorCTEZtoUppercase(props.tokenOut.symbol)
+                    : tEZorCTEZtoUppercase(props.tokenIn.symbol)}{" "}
+                  per{" "}
+                  {selectedToken.symbol === props.tokenIn.symbol
+                    ? tEZorCTEZtoUppercase(props.tokenIn.symbol)
+                    : tEZorCTEZtoUppercase(props.tokenOut.symbol)}
+                  )
+                </span>
               </div>
             </div>
             <div>
-              <div className="flex text-text-250 mt-3 sm:mt-0">
-                <span className="font-caption1 pl-1">Current price</span>
+              <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[93px] w-auto sm:w-[163px] text-center p-3">
+                <span className="font-caption1 text-text-250 ">Current price</span>
+                <ToolTip
+                  message={`$ ${(
+                    Number(
+                      selectedToken.symbol === props.tokenIn.symbol
+                        ? currentPrice
+                        : new BigNumber(1).dividedBy(currentPrice)
+                    ) *
+                    Number(
+                      tokenPrice[
+                        selectedToken.symbol === props.tokenIn.symbol
+                          ? tokenoutorg.name
+                          : tokeninorg.name
+                      ]
+                    )
+                  ).toFixed(2)}`}
+                  id="tooltip8"
+                  position={Position.top}
+                >
+                  <div className="font-title3">
+                    {selectedToken.symbol === props.tokenIn.symbol
+                      ? nFormatterWithLesserNumber(currentPrice)
+                      : nFormatterWithLesserNumber(new BigNumber(1).dividedBy(currentPrice))}
+                  </div>
+                </ToolTip>
+                <span className="font-body1 text-text-250  ">
+                  (
+                  {selectedToken.symbol === props.tokenIn.symbol
+                    ? tEZorCTEZtoUppercase(props.tokenOut.symbol)
+                    : tEZorCTEZtoUppercase(props.tokenIn.symbol)}{" "}
+                  per{" "}
+                  {selectedToken.symbol === props.tokenIn.symbol
+                    ? tEZorCTEZtoUppercase(props.tokenIn.symbol)
+                    : tEZorCTEZtoUppercase(props.tokenOut.symbol)}
+                  )
+                </span>
               </div>
-              <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2.5">
+              {/* <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2.5">
                 <div className="font-title3">
                   {selectedToken.symbol === props.tokenIn.symbol
                     ? nFormatterWithLesserNumber(currentPrice)
@@ -368,7 +404,8 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                     )
                   ).toFixed(2)}
                 </div>
-              </div>
+              
+              </div> */}
             </div>
           </div>
         </div>

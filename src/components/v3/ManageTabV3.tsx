@@ -232,7 +232,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   // }, [slippage]);
   const handleAddLiquidityOperation = () => {
     setContentTransaction(
-      `Mint Position ${nFormatterWithLesserNumber(
+      `Mint position ${nFormatterWithLesserNumber(
         new BigNumber(firstTokenAmountLiq)
       )} ${tEZorCTEZtoUppercase(props.tokenIn.name)} / ${nFormatterWithLesserNumber(
         new BigNumber(secondTokenAmountLiq)
@@ -250,7 +250,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
-    setScreen(ActivePopUp.NewPosition);
+    setScreen(ActivePopUp.Positions);
 
     console.log(
       "parameters",
@@ -303,7 +303,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Mint Position ${localStorage.getItem(
+        trailingText: `Mint position ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
         )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
           SECOND_TOKEN_AMOUNT
@@ -353,7 +353,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Mint Position ${localStorage.getItem(
+              trailingText: `Mint position ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT
@@ -533,7 +533,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       nFormatterWithLesserNumber(new BigNumber(secondTokenAmountIncLiq)).toString()
     );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    setScreen(ActivePopUp.ManageExisting);
+    setScreen(ActivePopUp.Positions);
     setShowConfirm(false);
     setShowConfirmTransaction(true);
 
@@ -631,7 +631,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     localStorage.setItem(FIRST_TOKEN_AMOUNT, nFormatterWithLesserNumber(remove.x).toString());
     localStorage.setItem(SECOND_TOKEN_AMOUNT, nFormatterWithLesserNumber(remove.y).toString());
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    setScreen(ActivePopUp.ManageExisting);
+    setScreen(ActivePopUp.Positions);
     setShowConfirm(false);
     setShowConfirmTransaction(true);
 

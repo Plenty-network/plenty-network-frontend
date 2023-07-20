@@ -25,6 +25,7 @@ import {
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import LiquidityChartRangeInput from "./LiquidityChartRangeInput";
 import { Chain, IConfigToken } from "../../config/types";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 // 1 -> 0.0001
 
@@ -304,7 +305,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
         )}
       </div>
       {props.isFullRange && (
-        <div className="fade-in-light absolute h-[78px]  flex items-center justify-center w-[362px] px-[20px] bg-error-300/[0.1]  rounded-lg	ml-4 z-10">
+        <div className="fade-in-light absolute h-[78px]  flex items-center justify-center w-[362px] px-[20px] bg-error-300/[0.1]  rounded-lg  ml-4 z-10">
           <span className=" text-error-300 text-[13px] leading-[20px] ">
             Full range liquidity is highly capital inefficient. Please proceed with caution.
           </span>
@@ -312,21 +313,14 @@ function PriceRangeV3(props: IPriceRangeProps) {
       )}
       <div
         className={clsx(
-          "relative flex w-[362px] mx-auto gap-[14px] justify-between	mt-[16px]",
+          "relative flex w-[378px] mx-auto gap-[10px] justify-between mt-[16px]",
           props.isFullRange && "opacity-[0.1]"
         )}
       >
         <div>
-          <div className="font-body4 text-text-250">
-            Min price{" "}
-            <span className="font-mobile-f9">
-              ( {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
-              {tEZorCTEZtoUppercase(props.tokenIn.symbol)} )
-            </span>
-          </div>
-          <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
+          <div className="border border-text-800 bg-card-200 rounded-2xl  py-3 px-2.5 flex items-center justify-between w-[185px] mt-[4px] h-[100px]">
             <div
-              className="w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-background-700"
+              className="w-[40px] h-[28px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-background-700"
               onClick={() =>
                 onLeftRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -338,39 +332,12 @@ function PriceRangeV3(props: IPriceRangeProps) {
               -
             </div>
             <div className="text-center">
-              <div className="font-body4 text-white">
-                <input
-                  type="text"
-                  disabled
-                  className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
-                  value={
-                    topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? leftRangeInput
-                      : BleftRangeInput
-                  }
-                  placeholder="0.0"
-                  onChange={(e) => onLeftRangeInputFn(e.target.value)}
-                />
-              </div>
-              <div className="font-body2 text-text-250">
-                $
-                {(topLevelSelectedToken.symbol === tokeninorg.symbol
-                  ? leftRangeInput
-                  : BleftRangeInput) && tokenPrice[props.tokenIn.name]
-                  ? Number(
-                      Number(
-                        topLevelSelectedToken.symbol === tokeninorg.symbol
-                          ? leftRangeInput
-                          : BleftRangeInput
-                      ) *
-                        Number(
-                          tokenPrice[
-                            topLevelSelectedToken.symbol === tokeninorg.symbol
-                              ? tokenoutorg.name
-                              : tokeninorg.name
-                          ]
-                        )
-                    )
+              <span className="font-caption1 text-text-250 ">Min price</span>
+              <ToolTip
+                message={`$  ${
+                  (topLevelSelectedToken.symbol === tokeninorg.symbol
+                    ? leftRangeInput
+                    : BleftRangeInput) && tokenPrice[props.tokenIn.name]
                     ? Number(
                         Number(
                           topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -384,13 +351,49 @@ function PriceRangeV3(props: IPriceRangeProps) {
                                 : tokeninorg.name
                             ]
                           )
-                      ).toFixed(2)
+                      )
+                      ? Number(
+                          Number(
+                            topLevelSelectedToken.symbol === tokeninorg.symbol
+                              ? leftRangeInput
+                              : BleftRangeInput
+                          ) *
+                            Number(
+                              tokenPrice[
+                                topLevelSelectedToken.symbol === tokeninorg.symbol
+                                  ? tokenoutorg.name
+                                  : tokeninorg.name
+                              ]
+                            )
+                        ).toFixed(2)
+                      : "0.00"
                     : "0.00"
-                  : "0.00"}
-              </div>
+                }`}
+                id="tooltip8"
+                position={Position.top}
+              >
+                <div className="font-title3">
+                  <input
+                    type="text"
+                    disabled
+                    className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
+                    value={
+                      topLevelSelectedToken.symbol === tokeninorg.symbol
+                        ? leftRangeInput
+                        : BleftRangeInput
+                    }
+                    placeholder="0.0"
+                    onChange={(e) => onLeftRangeInputFn(e.target.value)}
+                  />
+                </div>
+              </ToolTip>
+              <span className="font-mobile-400 text-text-250 ">
+                {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
+                {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
+              </span>
             </div>
             <div
-              className=" w-[35px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-background-700"
+              className="w-[40px] h-[28px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-background-700"
               onClick={() =>
                 onLeftRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -404,16 +407,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
           </div>
         </div>
         <div>
-          <div className="font-body4 text-text-250">
-            Max price{" "}
-            <span className="font-mobile-f9">
-              ( {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
-              {tEZorCTEZtoUppercase(props.tokenIn.symbol)} )
-            </span>
-          </div>
-          <div className="border border-text-800 bg-card-200 rounded-2xl	py-4 px-2.5 flex items-center justify-between	w-[172px] mt-[4px] h-[55px]">
+          <div className="border border-text-800 bg-card-200 rounded-2xl  py-3 px-2.5 flex items-center justify-between w-[185px] mt-[4px] h-[100px]">
             <div
-              className="w-[35px] h-[24px] text-white rounded bg-info-600  flex items-center cursor-pointer justify-center hover:bg-background-700"
+              className="w-[40px] h-[28px] text-white rounded bg-info-600  flex items-center cursor-pointer justify-center hover:bg-background-700"
               onClick={() =>
                 onRightRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -425,44 +421,17 @@ function PriceRangeV3(props: IPriceRangeProps) {
               -
             </div>
             <div className="text-center">
-              <div className="font-body4 text-white">
-                <input
-                  type="text"
-                  disabled
-                  className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
-                  value={
+              <span className="font-caption1 text-text-250 ">Max price</span>
+              <ToolTip
+                message={`$${
+                  (topLevelSelectedToken.symbol === tokeninorg.symbol
+                    ? rightRangeInput
+                    : BrightRangeInput) &&
+                  tokenPrice[
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? rightRangeInput
-                      : BrightRangeInput
-                  }
-                  placeholder="0.0"
-                  onChange={(e) => onRightRangeInputFn(e.target.value)}
-                />
-              </div>
-              <div className="font-body2 text-text-250">
-                $
-                {(topLevelSelectedToken.symbol === tokeninorg.symbol
-                  ? rightRangeInput
-                  : BrightRangeInput) &&
-                tokenPrice[
-                  topLevelSelectedToken.symbol === tokeninorg.symbol
-                    ? tokenoutorg.name
-                    : tokeninorg.name
-                ]
-                  ? Number(
-                      Number(
-                        topLevelSelectedToken.symbol === tokeninorg.symbol
-                          ? rightRangeInput
-                          : BrightRangeInput
-                      ) *
-                        Number(
-                          tokenPrice[
-                            topLevelSelectedToken.symbol === tokeninorg.symbol
-                              ? tokenoutorg.name
-                              : tokeninorg.name
-                          ]
-                        )
-                    )
+                      ? tokenoutorg.name
+                      : tokeninorg.name
+                  ]
                     ? Number(
                         Number(
                           topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -476,13 +445,49 @@ function PriceRangeV3(props: IPriceRangeProps) {
                                 : tokeninorg.name
                             ]
                           )
-                      ).toFixed(2)
+                      )
+                      ? Number(
+                          Number(
+                            topLevelSelectedToken.symbol === tokeninorg.symbol
+                              ? rightRangeInput
+                              : BrightRangeInput
+                          ) *
+                            Number(
+                              tokenPrice[
+                                topLevelSelectedToken.symbol === tokeninorg.symbol
+                                  ? tokenoutorg.name
+                                  : tokeninorg.name
+                              ]
+                            )
+                        ).toFixed(2)
+                      : "0.00"
                     : "0.00"
-                  : "0.00"}
-              </div>
+                }`}
+                id="tooltip8"
+                position={Position.top}
+              >
+                <div className="font-title3">
+                  <input
+                    type="text"
+                    disabled
+                    className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
+                    value={
+                      topLevelSelectedToken.symbol === tokeninorg.symbol
+                        ? rightRangeInput
+                        : BrightRangeInput
+                    }
+                    placeholder="0.0"
+                    onChange={(e) => onRightRangeInputFn(e.target.value)}
+                  />
+                </div>
+              </ToolTip>
+              <span className="font-mobile-400 text-text-250 ">
+                {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
+                {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
+              </span>
             </div>
             <div
-              className="w-[34px] h-[24px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-background-700"
+              className="w-[40px] h-[28px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-background-700"
               onClick={() =>
                 onRightRangeInputFn(
                   topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -498,12 +503,12 @@ function PriceRangeV3(props: IPriceRangeProps) {
       </div>
 
       <div
-        className="mt-3 cursor-pointer border border-info-700 hover:border-text-600 rounded-lg	text-center py-2.5 font-body1 mx-4 mb-2"
+        className="mt-3 cursor-pointer border border-info-700 hover:border-text-600 rounded-lg  text-center py-2.5 font-body1 mx-4 mb-2"
         onClick={() => fullrangeCalc(!props.isFullRange)}
       >
-        {props.isFullRange ? "Remove Full range" : "Full range"}
+        {props.isFullRange ? "Remove full range" : "Full range"}
       </div>
-      {/* <div className="mt-3 border border-text-800/[0.5] bg-cardBackGround rounded-lg	text-center py-4 font-body1 text-primary-500 h-[52px]">
+      {/* <div className="mt-3 border border-text-800/[0.5] bg-cardBackGround rounded-lg  text-center py-4 font-body1 text-primary-500 h-[52px]">
         View all positions
       </div> */}
     </div>

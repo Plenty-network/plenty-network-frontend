@@ -106,7 +106,7 @@ function TransactionSettings(props: ITransactionSettingsProps) {
         errorMessage ? "h-[300px]" : "h-[280px]"
       )}
     >
-      <div className="font-subtitle2">Transaction Settings</div>
+      <div className="font-subtitle2">Transaction settings</div>
       <div className="mt-2">
         <span className="font-caption1 text-text-200 ">Slippage tolerance</span>
         <span className="relative top-0.5 left-[5px]">

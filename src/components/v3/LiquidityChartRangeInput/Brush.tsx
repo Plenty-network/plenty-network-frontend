@@ -40,7 +40,6 @@ export const Brush = ({
   innerHeight,
   westHandleColor,
   eastHandleColor,
-  tick,
 }: {
   id: string;
   xScale: ScaleLinear<number, number>;
@@ -52,7 +51,6 @@ export const Brush = ({
   innerHeight: number;
   westHandleColor: string;
   eastHandleColor: string;
-  tick: (d: ChartEntry) => number;
 }) => {
   const brushRef = useRef<SVGGElement | null>(null);
   const brushBehavior = useRef<BrushBehavior<SVGGElement> | null>(null);
