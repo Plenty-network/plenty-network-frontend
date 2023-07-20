@@ -28,7 +28,7 @@ class TzktBlockExplorer extends BlockExplorer {
       [NetworkType.KATHMANDUNET]: "https://kathmandunet.tzkt.io/",
       [NetworkType.LIMANET]: "https://limanet.tzkt.io/",
       [NetworkType.MUMBAINET]: "https://mumbainet.tzkt.io/",
-      [NetworkType.NAIROBINET]: "https://nairobinet.tzkt.io/"
+      [NetworkType.NAIROBINET]: "https://nairobinet.tzkt.io/",
     }
   ) {
     super(rpcUrls);
@@ -77,7 +77,7 @@ export const dappClient = () => {
       colorMode: ColorMode.DARK,
       blockExplorer: new TzktBlockExplorer() as any,
       appUrl: "https://app.plenty.network",
-      featuredWallets: ['temple', 'naan', 'kukai', 'trust'],
+      featuredWallets: ["temple", "plenty", "kukai", "trust"],
     };
 
     return new BeaconWallet(dAppInfo);
@@ -167,4 +167,4 @@ export const dappClient = () => {
     tezos,
     disconnectWallet,
   };
-}
+};
