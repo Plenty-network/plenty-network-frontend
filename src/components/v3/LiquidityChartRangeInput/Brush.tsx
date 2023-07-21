@@ -56,8 +56,7 @@ export const Brush = ({
   const brushBehavior = useRef<BrushBehavior<SVGGElement> | null>(null);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const tokenIn = useAppSelector((state) => state.poolsv3.tokenInOrg);
-  const tokenOut = useAppSelector((state) => state.poolsv3.tokenOut);
-  const tickSpacing = 10;
+
   // only used to drag the handles on brush for performance
   const [localBrushExtent, setLocalBrushExtent] = useState<[number, number] | null>(brushExtent);
   const [showLabels, setShowLabels] = useState(false);

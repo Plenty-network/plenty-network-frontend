@@ -104,7 +104,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       }
     });
   }, [tokensListConfig, props.tokenIn.symbol, props.tokenOut.symbol]);
-  const TickSpacing = (selectedFeeTier: string) => {
+  const tickSpacing = (selectedFeeTier: string) => {
     if (selectedFeeTier === "0.01") {
       return 1;
     } else if (selectedFeeTier === "0.05") {
@@ -115,13 +115,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       return 200;
     }
   };
-  console.log(
-    tokenPrice,
-    "hj",
-    topLevelSelectedToken.symbol === tokeninorg.symbol,
-    props.tokenOut.name,
-    props.tokenIn.name
-  );
+
   const dispatch = useDispatch<AppDispatch>();
   React.useEffect(() => {
     props.isClearAll && props.setFullRange(false);
@@ -133,10 +127,10 @@ function PriceRangeV3(props: IPriceRangeProps) {
         new BigNumber(value),
         tokenInConfig,
         tokenOutConfig,
-        TickSpacing(props.selectedFeeTier)
+        tickSpacing(props.selectedFeeTier)
       ).then((response1) => {
         dispatch(
-          setminTickA(Tick.nearestUsableTick(response1, TickSpacing(props.selectedFeeTier)))
+          setminTickA(Tick.nearestUsableTick(response1, tickSpacing(props.selectedFeeTier)))
         );
       });
     } else {
@@ -144,20 +138,10 @@ function PriceRangeV3(props: IPriceRangeProps) {
         new BigNumber(1).dividedBy(new BigNumber(value)),
         tokenOutConfig,
         tokenInConfig,
-        TickSpacing(props.selectedFeeTier)
+        tickSpacing(props.selectedFeeTier)
       ).then((response1) => {
-        console.log(
-          "lefttick",
-          response1,
-          response1,
-          value,
-          new BigNumber(1).dividedBy(new BigNumber(value)).toString(),
-          tokenOutConfig,
-          tokenInConfig,
-          TickSpacing(props.selectedFeeTier)
-        );
         dispatch(
-          setmaxTickB(Tick.nearestUsableTick(response1, TickSpacing(props.selectedFeeTier)))
+          setmaxTickB(Tick.nearestUsableTick(response1, tickSpacing(props.selectedFeeTier)))
         );
       });
     }
@@ -182,9 +166,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
         new BigNumber(value),
         tokenInConfig,
         tokenOutConfig,
-        TickSpacing(props.selectedFeeTier)
+        tickSpacing(props.selectedFeeTier)
       ).then((response) => {
-        dispatch(setmaxTickA(Tick.nearestUsableTick(response, TickSpacing(props.selectedFeeTier))));
+        dispatch(setmaxTickA(Tick.nearestUsableTick(response, tickSpacing(props.selectedFeeTier))));
       });
     } else {
       getTickFromRealPrice(
@@ -192,19 +176,10 @@ function PriceRangeV3(props: IPriceRangeProps) {
         tokenOutConfig,
         tokenInConfig,
 
-        TickSpacing(props.selectedFeeTier)
+        tickSpacing(props.selectedFeeTier)
       ).then((response1) => {
-        console.log(
-          "righttick",
-          response1,
-          value,
-          new BigNumber(1).dividedBy(new BigNumber(value)).toString(),
-          tokenOutConfig,
-          tokenInConfig,
-          TickSpacing(props.selectedFeeTier)
-        );
         dispatch(
-          setminTickB(Tick.nearestUsableTick(response1, TickSpacing(props.selectedFeeTier)))
+          setminTickB(Tick.nearestUsableTick(response1, tickSpacing(props.selectedFeeTier)))
         );
       });
     }
@@ -313,12 +288,12 @@ function PriceRangeV3(props: IPriceRangeProps) {
       )}
       <div
         className={clsx(
-          "relative flex w-[378px] mx-auto gap-[10px] justify-between mt-[16px]",
+          "relative flex w-auto md:w-[378px] mx-auto gap-[5px] md:gap-[10px] justify-between md:mt-[16px]",
           props.isFullRange && "opacity-[0.1]"
         )}
       >
         <div>
-          <div className="border border-text-800 bg-card-200 rounded-2xl  py-3 px-2.5 flex items-center justify-between w-[185px] mt-[4px] h-[100px]">
+          <div className="border border-text-800 bg-card-200 rounded-2xl  py-3 px-2.5 flex items-center justify-between w-[170px] md:w-[185px] mt-[4px] h-[100px]">
             <div
               className="w-[40px] h-[28px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-background-700"
               onClick={() =>
@@ -407,7 +382,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
           </div>
         </div>
         <div>
-          <div className="border border-text-800 bg-card-200 rounded-2xl  py-3 px-2.5 flex items-center justify-between w-[185px] mt-[4px] h-[100px]">
+          <div className="border border-text-800 bg-card-200 rounded-2xl  py-3 px-2.5 flex items-center justify-between  w-[170px] md:w-[185px] mt-[4px] h-[100px]">
             <div
               className="w-[40px] h-[28px] text-white rounded bg-info-600  flex items-center cursor-pointer justify-center hover:bg-background-700"
               onClick={() =>

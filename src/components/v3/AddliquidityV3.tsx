@@ -20,6 +20,7 @@ import clsx from "clsx";
 import { estimateTokenXFromTokenY, estimateTokenYFromTokenX } from "../../api/v3/liquidity";
 import { setInputDisable } from "../../redux/poolsv3";
 import { getRealPriceFromTick } from "../../api/v3/helper";
+import { isMobile } from "react-device-detect";
 
 interface IAddLiquidityProps {
   firstTokenAmount: string | number;
@@ -259,7 +260,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
   return (
     <div className="border fade-in-light relative border-text-800 bg-card-200 p-4 rounded-2xl ">
       <div className="border hover:border-text-700/[0.8] relative flex border-text-800/[0.5] rounded-2xl h-[72px]">
-        <div className="w-[40%] rounded-l-2xl  border-r items-center flex border-text-800/[0.5] bg-card-300">
+        <div className="w-[45%] md:w-[40%] rounded-l-2xl  border-r items-center flex border-text-800/[0.5] bg-card-300">
           <div className="ml-2 md:ml-5">
             <img
               src={
@@ -329,7 +330,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
                     )}{" "}
                   </span>
                 )}
-                {tEZorCTEZtoUppercase(props.tokenIn.name)}
+                {!isMobile && tEZorCTEZtoUppercase(props.tokenIn.name)}
               </div>
             </div>
           )}
@@ -345,8 +346,8 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         ? rightbrush !== 0
         : brightbrush !== 0) &&
         (topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? Number(leftbrush) < Number(currentPrice) && rightbrush < currentPrice
-          : Number(leftbrush) < Number(bcurrentPrice) &&
+          ? Number(leftbrush) < Number(currentPrice) && Number(rightbrush) < Number(currentPrice)
+          : Number(bleftbrush) < Number(bcurrentPrice) &&
             Number(brightbrush) < Number(bcurrentPrice)) && (
           <div className="fade-in-light absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg pl-7 backdrop-blur-[6px]  w-[480px]">
             <Image src={lock} />
@@ -357,7 +358,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         )}
       {(
         topLevelSelectedToken.symbol === tokeninorg.symbol
-          ? Number(leftbrush) < Number(currentPrice) && rightbrush > currentPrice
+          ? Number(leftbrush) < Number(currentPrice) && Number(rightbrush) > Number(currentPrice)
           : Number(bleftbrush) < Number(bcurrentPrice) &&
             Number(brightbrush) > Number(bcurrentPrice)
       ) ? (
@@ -374,7 +375,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           "border flex hover:border-text-700/[0.8] border-text-800/[0.5] rounded-2xl h-[72px]"
         )}
       >
-        <div className="w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
+        <div className="w-[45%] md:w-[40%] rounded-l-2xl border-r items-center flex border-text-800/[0.5] bg-card-300">
           <div className="ml-2 md:ml-5">
             <img
               src={
@@ -442,7 +443,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
                     )}
                   </span>
                 )}
-                {tEZorCTEZtoUppercase(props.tokenOut.name)}
+                {!isMobile && tEZorCTEZtoUppercase(props.tokenOut.name)}
               </div>
             </div>
           )}

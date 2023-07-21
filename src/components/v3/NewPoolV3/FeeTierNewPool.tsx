@@ -15,25 +15,21 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
       percentage: "0.01",
       text: "Best for very stable pairs",
       selectPercentage: "46",
-      created: true,
     },
     {
       percentage: "0.05",
       text: "Best for stable pairs",
       selectPercentage: "46",
-      created: false,
     },
     {
       percentage: "0.3",
       text: "Best for volatile pairs",
       selectPercentage: "46",
-      created: true,
     },
     {
       percentage: "1",
       text: "Best for exotic pairs",
       selectPercentage: "46",
-      created: false,
     },
   ];
   return (

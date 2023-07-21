@@ -24,7 +24,7 @@ function FeeTierMain(props: IFeeTierMainProps) {
       });
     }
   }, [tokeninorg.name, tokenoutorg.name]);
-  console.log("isExist", isExist);
+
   const fee = [
     {
       percentage: "0.01",

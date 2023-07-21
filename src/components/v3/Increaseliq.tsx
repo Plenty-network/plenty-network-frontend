@@ -137,11 +137,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
   }, [props, walletAddress, inputDisable]);
   return (
     <>
-      <div
-        className={clsx(
-          "fade-in-light overflow-y-auto overflow-x-hidden modalManage h-[calc(100vh_-_286px)] mb-5"
-        )}
-      >
+      <div className={clsx("fade-in-light  mb-5")}>
         <div className="mt-[17px] border border-text-800 bg-card-200 rounded-2xl py-5 mb-3">
           <div className="flex items-center px-5">
             <div className="text-text-250 font-body4 ">You are depositing</div>{" "}

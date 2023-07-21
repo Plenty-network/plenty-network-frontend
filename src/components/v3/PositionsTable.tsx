@@ -3,6 +3,7 @@ import * as React from "react";
 import PositionsData from "./PositionsData";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { ActivePopUp } from "./ManageTabV3";
+import { PositionDataTable } from "./PositionsTableData";
 
 interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
@@ -13,15 +14,15 @@ interface IPositionsProps {
 }
 function PositionsTable(props: IPositionsProps) {
   return (
-    <>
-      <PositionsData
+    <div className="h-[300px] overflow-y-auto innerPool">
+      <PositionDataTable
         feeTier={props.feeTier}
         tokenIn={props.tokenIn}
         tokenOut={props.tokenOut}
         setScreen={props.setScreen}
         handleCollectFeeOperation={props.handleCollectFeeOperation}
       />
-    </>
+    </div>
   );
 }
 

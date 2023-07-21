@@ -132,7 +132,10 @@ const Table = <D extends object>({
               ref={headerRef}
               key={`headerGroup_${index}`}
               className={clsx(
-                "border border-borderCommon bg-cardBackGround flex  md:py-3  py-3  items-center rounded-t-xl	rounded-b  pl-5 pr-4  lg:pr-[25px]",
+                TableName == "positionsv3"
+                  ? "border-0 bg-transparent"
+                  : "border border-borderCommon bg-cardBackGround",
+                " flex  md:py-3  py-3  items-center rounded-t-xl	rounded-b  pl-5 pr-4  lg:pr-[25px]",
                 TableName === "poolsRewards" || TableName === "locksRewards"
                   ? "justify-between "
                   : "",
@@ -224,6 +227,10 @@ const Table = <D extends object>({
                     ${
                       TableName === "locksRewards" && row.original?.epoch !== ""
                         ? "py-1 "
+                        : TableName === "positionsv3"
+                        ? row.index % 2 === 0
+                          ? "bg-secondary-600 border-0 md:py-3  py-1"
+                          : "bg-card-500 border-0 md:py-3  py-1"
                         : "border border-borderCommon  bg-cardBackGround md:py-3  py-1 "
                     }`}
                     key={row}
@@ -251,7 +258,7 @@ const Table = <D extends object>({
               <NoDataError content={"No data on this selected page"} />
             )
           ) : null}
-          {isFetched && data.length > 0 && (
+          {TableName !== "positionsv3" && isFetched && data.length > 0 && (
             <tr className="h-[60px] mt-2 border border-borderCommon bg-cardBackGround px-5 py-4 rounded-lg  items-center w-auto">
               <div className="w-screen sm:w-auto">
                 <TablePagination

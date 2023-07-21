@@ -34,6 +34,8 @@ export function Tabs(props: ITabsProps) {
           ? "justify-start"
           : props.TableName === "mybribes" && props.index !== 3
           ? "justify-start"
+          : props.TableName === "positionsv3"
+          ? "justify-start"
           : "justify-end "
       } ${props.tableType ? "thSticky" : ""} ${
         props.TableName === "poolsPosition" && props.index === 0 && "pl-20 sm:pl-[40px]"
