@@ -198,7 +198,7 @@ function AddBribes(props: IAddBribes) {
       ) {
         return (
           <Button color="disabled" width="w-full">
-            InSufficient Balance
+            Insufficient Balance
           </Button>
         );
       } else if (
@@ -477,13 +477,16 @@ function AddBribes(props: IAddBribes) {
                   </div>
                 </div>
                 {Number(bottomValue) > 0 && (
-                  <div className="flex items-center justify-between py-5 px-4 bg-primary-500/[0.11]">
-                    <div className="w-[60%] md:w-[65%]">
+                  <div className="flex items-center justify-between py-5 px-4 bg-primary-500/[0.11] rounded-2xl">
+                    <div className="w-[50%] md:w-[50%]">
                       <div className="font-body2 text-text-250  ">You are adding a bribe from:</div>
                       <div className="font-body2 md:font-subtitle4 text-white mt-1">
                         Epoch {selectedDropDown.epochNumber} {!isSelectedEpoch && "-"}{" "}
-                        {!isSelectedEpoch && selectedEndDropDown.epochNumber} (
-                        {dateFormat(selectedDropDown.startTimestamp)} to{" "}
+                        {!isSelectedEpoch && selectedEndDropDown.epochNumber}{" "}
+                      </div>
+                      <div className="font-body2 md:font-subtitle4 text-white mt-1">
+                        {" "}
+                        ({dateFormat(selectedDropDown.startTimestamp)} to{" "}
                         {isSelectedEpoch
                           ? dateFormat(selectedDropDown.endTimestamp)
                           : dateFormat(selectedEndDropDown.endTimestamp)}
@@ -509,7 +512,8 @@ function AddBribes(props: IAddBribes) {
                         />
                       </div>
                       <div className="font-caption1 text-text-500 text-right mr-2 mt-1">
-                        {nFormatterWithLesserNumber(new BigNumber(Number(bottomValue)))} /epoch
+                        {nFormatterWithLesserNumber(new BigNumber(Number(props.bribeInputValue)))}{" "}
+                        /epoch
                       </div>
                     </div>
                   </div>
