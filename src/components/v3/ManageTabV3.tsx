@@ -791,11 +791,24 @@ export function ManageTabV3(props: IManageLiquidityProps) {
 
   return props.showLiquidityModal ? (
     <>
-      <div
-        id="modal_outer"
+      <PopUpModal
+        onhide={closeModal}
+        Name={
+          screen === ActivePopUp.NewPosition
+            ? "newposition"
+            : screen === ActivePopUp.Positions
+            ? "positions"
+            : ""
+        }
         className={clsx(
-          true &&
-            "z-index-max fixed top-[106px] left-0 flex flex-col gap-2 w-screen h-[81vh]  z-50 items-center justify-center topNavblurEffect overflow-y-auto swap"
+          screen === ActivePopUp.Positions
+            ? "sm:w-[972px] sm:max-w-[972px]"
+            : screen === ActivePopUp.ConfirmAddV3
+            ? "sm:w-[602px] sm:max-w-[602px]"
+            : screen === ActivePopUp.NewPosition
+            ? "sm:w-[972px] sm:max-w-[972px]"
+            : "sm:w-[602px] sm:max-w-[602px]",
+          "w-[414px] max-w-[414px]  rounded-none sm:rounded-3xl px-4"
         )}
       >
         {screen === ActivePopUp.NewPosition ? (
@@ -976,7 +989,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             />
           </>
         )}
-      </div>
+      </PopUpModal>
       {activeStateIncDec === ActiveIncDecState.Increase &&
         screen === ActivePopUp.ConfirmExisting && (
           <ConfirmIncreaseLiq
