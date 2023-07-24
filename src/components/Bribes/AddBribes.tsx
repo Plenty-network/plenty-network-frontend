@@ -22,7 +22,11 @@ import { getNextListOfEpochs } from "../../api/util/epoch";
 import ConfirmAddBribes from "./ConfirmBribes";
 import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
-import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import {
+  changeSource,
+  nFormatterWithLesserNumber,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { tokenIcons } from "../../constants/tokensList";
 import fromExponential from "from-exponential";
 
@@ -272,7 +276,7 @@ function AddBribes(props: IAddBribes) {
                   </ToolTip>
                 </div>
               </div>
-              <div className="border bg-card-200 mt-3 border-text-800 rounded-2xl  pt-[16px] pb-[20px]">
+              <div className="border bg-card-200 mt-3 border-text-800 rounded-2xl  pt-[16px] ">
                 <div className="text-text-250 font-body4 px-3 md:px-4">Select epochs</div>
                 <div className="flex items-center mt-[14px] px-[18px] cursor-pointer">
                   {!isSelectedEpoch ? (
@@ -442,7 +446,7 @@ function AddBribes(props: IAddBribes) {
                           onError={changeSource}
                         />
                       </div>
-                      <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center">
+                      <div className="w-[28px] relative -left-2  rounded-full h-[28px] flex justify-center items-center">
                         <img
                           alt={"alt"}
                           src={
@@ -472,27 +476,42 @@ function AddBribes(props: IAddBribes) {
                       : "0"}
                   </div>
                 </div>
-                {bottomValue > 0 && (
-                  <div className="font-body2 text-text-250 mt-4 mx-5">
-                    You are adding a bribe of
-                    <span
-                      className={clsx(
-                        "ml-1",
-                        Number(bottomValue) >
-                          Number(props.allBalance[props.bribeToken.name]?.balance)
-                          ? "text-error-500"
-                          : "text-white"
-                      )}
-                    >
-                      {Number(bottomValue)} {tEZorCTEZtoUppercase(props.bribeToken.name)}
-                    </span>{" "}
-                    from Epoch {selectedDropDown.epochNumber} {!isSelectedEpoch && "-"}{" "}
-                    {!isSelectedEpoch && selectedEndDropDown.epochNumber} (
-                    {dateFormat(selectedDropDown.startTimestamp)} to{" "}
-                    {isSelectedEpoch
-                      ? dateFormat(selectedDropDown.endTimestamp)
-                      : dateFormat(selectedEndDropDown.endTimestamp)}
-                    )
+                {Number(bottomValue) > 0 && (
+                  <div className="flex items-center justify-between py-5 px-4 bg-primary-500/[0.11]">
+                    <div className="w-[60%] md:w-[65%]">
+                      <div className="font-body2 text-text-250  ">You are adding a bribe from:</div>
+                      <div className="font-body2 md:font-subtitle4 text-white mt-1">
+                        Epoch {selectedDropDown.epochNumber} {!isSelectedEpoch && "-"}{" "}
+                        {!isSelectedEpoch && selectedEndDropDown.epochNumber} (
+                        {dateFormat(selectedDropDown.startTimestamp)} to{" "}
+                        {isSelectedEpoch
+                          ? dateFormat(selectedDropDown.endTimestamp)
+                          : dateFormat(selectedEndDropDown.endTimestamp)}
+                        )
+                      </div>
+                    </div>
+                    <div className="">
+                      <div className="border border-secondary-400 bg-secondary-400/[0.2] py-2 px-2 md:px-[14px] text-white flex items-center rounded-3xl 	gap-1 md:gap-2 font-body4 md:font-title2-bold">
+                        {nFormatterWithLesserNumber(new BigNumber(Number(bottomValue)))}{" "}
+                        {tEZorCTEZtoUppercase(props.bribeToken.name)}
+                        <img
+                          alt={"alt"}
+                          src={
+                            tokenIcons[props.bribeToken.name]
+                              ? tokenIcons[props.bribeToken.name].src
+                              : tokens[props.bribeToken.name.toString()]?.iconUrl
+                              ? tokens[props.bribeToken.name.toString()].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                          }
+                          width={"26px"}
+                          height={"26px"}
+                          onError={changeSource}
+                        />
+                      </div>
+                      <div className="font-caption1 text-text-500 text-right mr-2 mt-1">
+                        {nFormatterWithLesserNumber(new BigNumber(Number(bottomValue)))} /epoch
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
