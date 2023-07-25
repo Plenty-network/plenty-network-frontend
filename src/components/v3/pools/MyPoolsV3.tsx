@@ -30,11 +30,15 @@ export interface IShortCardProps {
   poolsFilter?: POOL_TYPE;
   isConnectWalletRequired?: boolean;
   searchValue: string;
+  setActiveState: React.Dispatch<React.SetStateAction<string>>;
   setSearchValue?: Function;
+  setFeeTier: React.Dispatch<React.SetStateAction<string>>;
   activeStateTab: PoolsCardHeaderV3;
   setActiveStateTab: React.Dispatch<React.SetStateAction<string>>;
   setShowLiquidityModal: (val: boolean) => void;
   showLiquidityModal: boolean;
+  setTokenIn: React.Dispatch<React.SetStateAction<tokenParameterLiquidity>>;
+  setTokenOut: React.Dispatch<React.SetStateAction<tokenParameterLiquidity>>;
   reFetchPool: boolean;
   //data: IAllPoolsData[];
   isFetching: boolean;
@@ -42,6 +46,10 @@ export interface IShortCardProps {
   setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IManageBtnProps {
+  setFeeTier: React.Dispatch<React.SetStateAction<string>>;
+  setActiveState: React.Dispatch<React.SetStateAction<string>>;
+  setTokenIn: React.Dispatch<React.SetStateAction<tokenParameterLiquidity>>;
+  setTokenOut: React.Dispatch<React.SetStateAction<tokenParameterLiquidity>>;
   setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
   isLiquidityAvailable: boolean;
   setShowLiquidityModal: (val: boolean) => void;
@@ -71,9 +79,6 @@ export function MyPoolTablev3(props: IShortCardProps) {
     props.searchValue,
     isFetch,
     poolTableData.length
-  );
-  const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
-    ActiveLiquidity.Liquidity
   );
 
   const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
@@ -105,17 +110,7 @@ export function MyPoolTablev3(props: IShortCardProps) {
       return <NoDataError content={"No Pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
-  const [feeTier, setFeeTier] = React.useState("");
-  const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
-    name: "DAI.e",
-    image: `/assets/tokens/DAI.e.png`,
-    symbol: "DAI.e",
-  });
-  const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
-    name: "USDC.e",
-    image: `/assets/tokens/USDC.e.png`,
-    symbol: "USDC.e",
-  });
+
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
 
   const mobilecolumns = React.useMemo<Column<any>[]>(
@@ -246,6 +241,10 @@ export function MyPoolTablev3(props: IShortCardProps) {
             setShowLiquidityModal={props.setShowLiquidityModal}
             isGauge={x.isGaugeAvailable}
             setIsGaugeAvailable={setIsGaugeAvailable}
+            setTokenIn={props.setTokenIn}
+            setTokenOut={props.setTokenOut}
+            setFeeTier={props.setFeeTier}
+            setActiveState={props.setActiveState}
           />
         ),
       },
@@ -388,6 +387,10 @@ export function MyPoolTablev3(props: IShortCardProps) {
             setShowLiquidityModal={props.setShowLiquidityModal}
             isGauge={x.isGaugeAvailable}
             setIsGaugeAvailable={setIsGaugeAvailable}
+            setTokenIn={props.setTokenIn}
+            setTokenOut={props.setTokenOut}
+            setFeeTier={props.setFeeTier}
+            setActiveState={props.setActiveState}
           />
         ),
       },
@@ -405,14 +408,14 @@ export function MyPoolTablev3(props: IShortCardProps) {
             if (props.isGauge) {
               props.isLiquidityAvailable
                 ? props.isStakeAvailable
-                  ? setActiveState(ActiveLiquidity.Rewards)
-                  : setActiveState(ActiveLiquidity.Staking)
-                : setActiveState(ActiveLiquidity.Liquidity);
+                  ? props.setActiveState(ActiveLiquidity.Rewards)
+                  : props.setActiveState(ActiveLiquidity.Staking)
+                : props.setActiveState(ActiveLiquidity.Liquidity);
             } else {
-              setActiveState(ActiveLiquidity.Liquidity);
+              props.setActiveState(ActiveLiquidity.Liquidity);
             }
-            setFeeTier(props.feeTier);
-            setTokenIn({
+            props.setFeeTier(props.feeTier);
+            props.setTokenIn({
               name: props.tokenA,
               image: getImagesPath(props.tokenA?.toString()),
               symbol: props.tokenA,
@@ -424,7 +427,7 @@ export function MyPoolTablev3(props: IShortCardProps) {
                 symbol: props.tokenA,
               })
             );
-            setTokenOut({
+            props.setTokenOut({
               name: props.tokenB,
               image: getImagesPath(props.tokenB?.toString()),
               symbol: props.tokenB,
@@ -440,38 +443,6 @@ export function MyPoolTablev3(props: IShortCardProps) {
   }
   return (
     <>
-      {props.showLiquidityModal &&
-        (isMobile ? (
-          <ManageTabMobile
-            tokenIn={tokenChange(topLevelSelectedToken, tokenIn, tokenOut)}
-            tokenOut={tokenChangeB(topLevelSelectedToken, tokenIn, tokenOut)}
-            tokenA={tokenIn}
-            tokenB={tokenOut}
-            closeFn={props.setShowLiquidityModal}
-            setActiveState={setActiveState}
-            activeState={activeState}
-            isGaugeAvailable={isGaugeAvailable}
-            showLiquidityModal={props.showLiquidityModal}
-            setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
-            filter={props.poolsFilter}
-            feeTier={feeTier}
-          />
-        ) : (
-          <ManageTabV3
-            tokenIn={tokenChange(topLevelSelectedToken, tokenIn, tokenOut)}
-            tokenOut={tokenChangeB(topLevelSelectedToken, tokenIn, tokenOut)}
-            tokenA={tokenIn}
-            tokenB={tokenOut}
-            closeFn={props.setShowLiquidityModal}
-            setActiveState={setActiveState}
-            activeState={activeState}
-            isGaugeAvailable={isGaugeAvailable}
-            showLiquidityModal={true}
-            setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
-            filter={props.poolsFilter}
-            feeTier={feeTier}
-          />
-        ))}
       {!isMobile && (
         <div className={` overflow-x-auto innerPool  ${props.className}`}>
           <Table<any>

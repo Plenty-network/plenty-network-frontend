@@ -704,8 +704,16 @@ input[type='number'] {
   top: 0px;
   background:  linear-gradient(270deg,#0d0714 85.7%,rgba(13,7,20,0) 100.55%);
   backdrop-filter: blur(2px);
-  align-self: stretch
-  
+  align-self: stretch;
+}
+.colStickyPosition:last-child {
+  position: -webkit-sticky;
+  position: sticky;
+  right: 0px;
+  top: 0px;
+  background:  transparent;
+  backdrop-filter: blur(2px);
+  align-self: stretch;
 }
 .thSticky:last-child {
   position: -webkit-sticky;
@@ -727,7 +735,21 @@ tfoot .thSticky:last-child,
  
   padding-right: 10px;
 }
-/* } */
+thead .thSticky:last-child,
+tfoot .thSticky:last-child,
+.colStickyPosition:last-child {
+  background:  transparent;
+  backdrop-filter: blur(5px);
+  padding-right: 10px;
+}
+@media (min-width: 320px) and (max-width: 768px) {
+ 
+.colStickyPosition:last-child {
+  background:  transparent;
+  backdrop-filter: blur(14px);
+  padding-right: 10px;
+}
+}
 
 .gradientBorder{
   position: relative;

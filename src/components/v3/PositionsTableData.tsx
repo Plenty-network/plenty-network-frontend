@@ -54,13 +54,13 @@ export function PositionDataTable(props: IShortCardProps) {
   const NoData = React.useMemo(() => {
     if (walletAddress === null) {
       return (
-        <span className="fade-in-light flex items-center justify-start md:justify-center pl-5 md:pl-0 h-[280px] text-border-600 font-title3">
+        <span className="fade-in-light flex items-center justify-start md:justify-center pl-5 md:pl-0 h-[245px] text-border-600 font-title3">
           please connect your wallet
         </span>
       );
     } else if (!isLoading && data && data?.length === 0) {
       return (
-        <span className="fade-in-light flex items-center justify-start md:justify-center h-[280px]  pl-5 md:pl-0 text-border-600 font-title3">
+        <span className="fade-in-light flex items-center justify-start md:justify-center h-[245px]  pl-5 md:pl-0 text-border-600 font-title3">
           No new positions
         </span>
       );

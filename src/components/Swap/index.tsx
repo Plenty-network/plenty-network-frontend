@@ -504,7 +504,7 @@ function Swap(props: ISwapProps) {
         name: tokenIn.name,
         image: tokenIn.image,
       });
-      if (inputValue > 0) {
+      if (Number(inputValue) > 0) {
         setTimeout(() => {
           routeDetails.current = {
             minimumOut: new BigNumber(0),

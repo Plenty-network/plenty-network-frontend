@@ -39,20 +39,13 @@ function LiquidityV3(props: ILiquidityProps) {
   return (
     <>
       <div className="w-auto lg:w-[546px] mx-auto rounded-2xl border-text-800  md:px-3.5  pb-4  ">
-        {!isMobile && (
+        <div className="hidden lg:block">
           <FeeTierMain
             setSelectedFeeTier={props.setSelectedFeeTier}
             selectedFeeTier={props.selectedFeeTier}
             feeTier={props.feeTier}
           />
-        )}
-        {isTablet && (
-          <FeeTierMain
-            setSelectedFeeTier={props.setSelectedFeeTier}
-            selectedFeeTier={props.selectedFeeTier}
-            feeTier={props.feeTier}
-          />
-        )}
+        </div>
 
         <AddLiquidityV3
           tokenIn={props.tokenIn}

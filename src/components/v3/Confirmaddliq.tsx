@@ -10,6 +10,7 @@ import { tokenParameterLiquidity } from "../Liquidity/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { ActivePopUp } from "./ManageTabV3";
 import { BigNumber } from "ethers";
+import clsx from "clsx";
 
 interface IConfirmIncreaseLiqProps {
   show: boolean;
@@ -31,7 +32,11 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
 
   const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
   return props.show ? (
-    <PopUpModal onhide={closeModal}>
+    <div
+      className={clsx(
+        "  mt-[70px] lg:mt-[75px] md:rounded-3xl mx-auto fade-in border  border-popUpNotification   p-5 bg-card-500 md:w-[602px] w-auto"
+      )}
+    >
       {
         <>
           <div className="flex">
@@ -193,7 +198,7 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
           </div>
         </>
       }
-    </PopUpModal>
+    </div>
   ) : null;
 }
 

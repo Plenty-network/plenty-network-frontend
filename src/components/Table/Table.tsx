@@ -245,7 +245,7 @@ const Table = <D extends object>({
                               : TableName === "mybribes" && i !== 3
                               ? "justify-start"
                               : "justify-end "
-                          }  ${tableType === true ? "colSticky" : ""} `}
+                          } ${tableType === true ? "colSticky" : ""} `}
                         >
                           {cell.render("Cell")}
                         </td>

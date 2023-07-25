@@ -14,7 +14,7 @@ interface IPositionsProps {
 }
 function PositionsTable(props: IPositionsProps) {
   return (
-    <div className="h-[300px] overflow-y-auto innerPool">
+    <div className="mt-3 h-[300px] overflow-y-auto innerPool">
       <PositionDataTable
         feeTier={props.feeTier}
         tokenIn={props.tokenIn}

@@ -63,7 +63,7 @@ export enum Bound {
 
 function PriceRangeV3(props: IPriceRangeProps) {
   const currenyAA = props.tokenIn;
-
+  const timeout = React.useRef<any>();
   const currencyBB = props.tokenOut;
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const tokens = useAppSelector((state) => state.config.tokens);
@@ -157,8 +157,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
     }
 
     topLevelSelectedToken.symbol === tokeninorg.symbol
-      ? dispatch(setleftRangeInput(Number(value).toFixed(6)))
-      : dispatch(setBleftRangeInput(Number(value).toFixed(6)));
+      ? dispatch(setleftRangeInput(value))
+      : dispatch(setBleftRangeInput(value));
   };
   const onRightRangeInputFn = (value: string) => {
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
@@ -193,10 +193,15 @@ function PriceRangeV3(props: IPriceRangeProps) {
         ? dispatch(setrightbrush(Number(value).toFixed(6)))
         : dispatch(setBrightbrush(Number(value).toFixed(6)));
     }
-
-    topLevelSelectedToken.symbol === tokeninorg.symbol
-      ? dispatch(setRightRangeInput(Number(value).toFixed(6)))
-      : dispatch(setBRightRangeInput(Number(value).toFixed(6)));
+    if (Number(value) < 0 || value == "-" || value === "" || isNaN(Number(value))) {
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? dispatch(setRightRangeInput(0))
+        : dispatch(setBRightRangeInput(0));
+    } else {
+      topLevelSelectedToken.symbol === tokeninorg.symbol
+        ? dispatch(setRightRangeInput(value))
+        : dispatch(setBRightRangeInput(value));
+    }
   };
   const fullrangeCalc = (value: boolean) => {
     props.setFullRange(!props.isFullRange);
@@ -350,7 +355,6 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 <div className="font-title3">
                   <input
                     type="text"
-                    disabled
                     className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
                     value={
                       topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -444,7 +448,6 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 <div className="font-title3">
                   <input
                     type="text"
-                    disabled
                     className="text-white font-body4 bg-card-200 text-center border-0    outline-none  placeholder:text-text-400 w-[100%]"
                     value={
                       topLevelSelectedToken.symbol === tokeninorg.symbol
@@ -478,7 +481,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       </div>
 
       <div
-        className="mt-3 cursor-pointer border border-info-700 hover:border-text-600 rounded-lg  text-center py-2.5 font-body1 mx-4 mb-2"
+        className="mt-3 cursor-pointer border border-info-700 hover:border-text-600 rounded-lg  text-center py-2.5 font-body1 sm:mx-4 sm:mb-2 mb-4"
         onClick={() => fullrangeCalc(!props.isFullRange)}
       >
         {props.isFullRange ? "Remove full range" : "Full range"}

@@ -293,7 +293,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
               </div>
             </div>
             <div>
-              <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[93px] w-auto sm:w-[163px] text-center p-3">
+              <div className="mt-3 sm:mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[93px] w-auto sm:w-[163px] text-center p-3">
                 <span className="font-caption1 text-text-250 ">Max price</span>
                 <ToolTip
                   message={`$ ${
@@ -339,7 +339,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
               </div>
             </div>
             <div>
-              <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[93px] w-auto sm:w-[163px] text-center p-3">
+              <div className="mt-3 sm:mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[93px] w-auto sm:w-[163px] text-center p-3">
                 <span className="font-caption1 text-text-250 ">Current price</span>
                 <ToolTip
                   message={`$ ${(
@@ -377,31 +377,6 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                   )
                 </span>
               </div>
-              {/* <div className="mt-1 border border-text-800 rounded-2xl	bg-card-200 h-[70px] w-auto sm:w-[163px] text-center py-2.5">
-                <div className="font-title3">
-                  {selectedToken.symbol === props.tokenIn.symbol
-                    ? nFormatterWithLesserNumber(currentPrice)
-                    : nFormatterWithLesserNumber(new BigNumber(1).dividedBy(currentPrice))}
-                </div>
-                <div className="font-body3 text-text-250 mt-[1.5px]">
-                  $
-                  {(
-                    Number(
-                      selectedToken.symbol === props.tokenIn.symbol
-                        ? currentPrice
-                        : new BigNumber(1).dividedBy(currentPrice)
-                    ) *
-                    Number(
-                      tokenPrice[
-                        selectedToken.symbol === props.tokenIn.symbol
-                          ? tokenoutorg.name
-                          : tokeninorg.name
-                      ]
-                    )
-                  ).toFixed(2)}
-                </div>
-              
-              </div> */}
             </div>
           </div>
         </div>

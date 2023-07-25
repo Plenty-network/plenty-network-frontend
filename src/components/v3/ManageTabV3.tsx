@@ -74,6 +74,8 @@ import {
 import { calculateCurrentPrice, getInitialBoundaries } from "../../api/v3/liquidity";
 import { BalanceNat } from "../../api/v3/types";
 import { collectFees } from "../../operations/v3/fee";
+import { isDesktop, isMobile, isTablet } from "react-device-detect";
+import FeeTierMain from "./FeeTierMain";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -791,96 +793,162 @@ export function ManageTabV3(props: IManageLiquidityProps) {
 
   return props.showLiquidityModal ? (
     <>
-      <PopUpModal
-        onhide={closeModal}
-        Name={
-          screen === ActivePopUp.NewPosition
-            ? "newposition"
-            : screen === ActivePopUp.Positions
-            ? "positions"
-            : ""
-        }
+      <div
+        id="modal_outer"
         className={clsx(
           screen === ActivePopUp.Positions
-            ? "sm:w-[972px] sm:max-w-[972px]"
+            ? "lg:w-[972px] lg:max-w-[972px] border  border-popUpNotification  lg:rounded-3xl p-5"
             : screen === ActivePopUp.ConfirmAddV3
-            ? "sm:w-[602px] sm:max-w-[602px]"
+            ? "sm:w-[602px] sm:max-w-[602px] border  border-popUpNotification lg:rounded-3xl  p-5"
             : screen === ActivePopUp.NewPosition
-            ? "sm:w-[972px] sm:max-w-[972px]"
-            : "sm:w-[602px] sm:max-w-[602px]",
-          "w-[414px] max-w-[414px]  rounded-none sm:rounded-3xl px-4"
+            ? "lg:w-[972px] lg:max-w-[972px] md:w-[602px] border  border-popUpNotification  md:rounded-3xl p-5"
+            : "sm:w-[602px] sm:max-w-[602px] border md:rounded-3xl  border-popUpNotification   p-5",
+          screen === ActivePopUp.ConfirmExisting && "hidden",
+          "  mt-[70px] mb-[60px] lg:mt-[75px]  mx-auto fade-in  bg-card-500"
         )}
       >
         {screen === ActivePopUp.NewPosition ? (
           <>
-            <div className="flex gap-1 items-center">
-              <p
-                className="cursor-pointer relative top-[3px]"
-                onClick={() => setScreen(ActivePopUp.Positions)}
-              >
-                <Image alt={"alt"} src={arrowLeft} />
-              </p>
-              <p className="text-white">
-                {props.activeState === ActiveLiquidity.Liquidity && "New position"}
-              </p>
+            <div className="flex gap-1 items-center justify-between">
+              <div className="flex items-center">
+                <p
+                  className="cursor-pointer relative top-[3px]"
+                  onClick={() => setScreen(ActivePopUp.Positions)}
+                >
+                  <Image alt={"alt"} src={arrowLeft} />
+                </p>
+                <p className="text-white">
+                  {props.activeState === ActiveLiquidity.Liquidity && "New position"}
+                </p>
+              </div>
               {/* <p className="ml-1 relative top-[0px]">
                 <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
               </p> */}
-              <p
-                className="text-primary-500 hover:text-primary-500/[0.8] font-subtitle1 ml-auto mr-5 cursor-pointer"
-                onClick={resetAllValues}
-              >
-                Clear all
-              </p>
-              <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
-                <div
-                  className={clsx(
-                    selectedToken.symbol === props.tokenA.symbol
-                      ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
-                      : "text-text-250 hover:text-white px-2",
-                    "font-subtitle1223"
-                  )}
-                  onClick={() => {
-                    setSelectedToken(props.tokenA);
-                  }}
-                >
-                  {tEZorCTEZtoUppercase(props.tokenA.symbol)}
+              {true && (
+                <div className="lg:flex justify-end items-center hidden">
+                  {" "}
+                  <p
+                    className="text-primary-500 hover:text-primary-500/[0.8] font-subtitle1 ml-auto mr-5 cursor-pointer"
+                    onClick={resetAllValues}
+                  >
+                    Clear all
+                  </p>
+                  <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
+                    <div
+                      className={clsx(
+                        selectedToken.symbol === props.tokenA.symbol
+                          ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
+                          : "text-text-250 hover:text-white px-2",
+                        "font-subtitle1223"
+                      )}
+                      onClick={() => {
+                        setSelectedToken(props.tokenA);
+                      }}
+                    >
+                      {tEZorCTEZtoUppercase(props.tokenA.symbol)}
+                    </div>
+                    <div
+                      className={clsx(
+                        selectedToken.symbol === props.tokenB.symbol
+                          ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
+                          : "text-text-250 hover:text-white px-2",
+                        "font-subtitle1223"
+                      )}
+                      onClick={() => {
+                        setSelectedToken(props.tokenB);
+                      }}
+                    >
+                      {tEZorCTEZtoUppercase(props.tokenB.symbol)}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between flex-row  relative ">
+                    <div
+                      ref={refSettingTab}
+                      className="py-1 bg-text-800/[0.25] hover:bg-text=800/[0.5] px-[8.5px] h-8 border border-text-700 hover:border-text-600 cursor-pointer rounded-lg flex items-center w-[80px]"
+                      onClick={() => setSettingsShow(!settingsShow)}
+                    >
+                      <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
+                      <span className="text-white font-body4 ml-2 relative top-px">
+                        {slippage ? slippage : "30"}m
+                      </span>
+                    </div>
+                    <TransactionSettingsV3
+                      show={settingsShow}
+                      setSlippage={setSlippage}
+                      slippage={slippage}
+                      setSettingsShow={setSettingsShow}
+                    />
+                  </div>
                 </div>
-                <div
-                  className={clsx(
-                    selectedToken.symbol === props.tokenB.symbol
-                      ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
-                      : "text-text-250 hover:text-white px-2",
-                    "font-subtitle1223"
-                  )}
-                  onClick={() => {
-                    setSelectedToken(props.tokenB);
-                  }}
+              )}
+            </div>
+            {true && (
+              <div className="flex items-center justify-end mt-1 lg:hidden">
+                <p
+                  className="text-primary-500 hover:text-primary-500/[0.8] font-subtitle1 ml-auto mr-5 cursor-pointer"
+                  onClick={resetAllValues}
                 >
-                  {tEZorCTEZtoUppercase(props.tokenB.symbol)}
+                  Clear all
+                </p>
+                <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
+                  <div
+                    className={clsx(
+                      selectedToken.symbol === props.tokenA.symbol
+                        ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
+                        : "text-text-250 hover:text-white px-2",
+                      "font-subtitle1223"
+                    )}
+                    onClick={() => {
+                      setSelectedToken(props.tokenA);
+                    }}
+                  >
+                    {tEZorCTEZtoUppercase(props.tokenA.symbol)}
+                  </div>
+                  <div
+                    className={clsx(
+                      selectedToken.symbol === props.tokenB.symbol
+                        ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
+                        : "text-text-250 hover:text-white px-2",
+                      "font-subtitle1223"
+                    )}
+                    onClick={() => {
+                      setSelectedToken(props.tokenB);
+                    }}
+                  >
+                    {tEZorCTEZtoUppercase(props.tokenB.symbol)}
+                  </div>
                 </div>
+                <div className="flex items-center justify-between flex-row  relative ">
+                  <div
+                    ref={refSettingTab}
+                    className="py-1 bg-text-800/[0.25] hover:bg-text=800/[0.5] px-[8.5px] h-8 border border-text-700 hover:border-text-600 cursor-pointer rounded-lg flex items-center w-[80px]"
+                    onClick={() => setSettingsShow(!settingsShow)}
+                  >
+                    <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
+                    <span className="text-white font-body4 ml-2 relative top-px">
+                      {slippage ? slippage : "30"}m
+                    </span>
+                  </div>
+                  <TransactionSettingsV3
+                    show={settingsShow}
+                    setSlippage={setSlippage}
+                    slippage={slippage}
+                    setSettingsShow={setSettingsShow}
+                  />
+                </div>{" "}
               </div>
-              <div className="flex items-center justify-between flex-row  relative mr-[48px]">
-                <div
-                  ref={refSettingTab}
-                  className="py-1 bg-text-800/[0.25] hover:bg-text=800/[0.5] px-[8.5px] h-8 border border-text-700 hover:border-text-600 cursor-pointer rounded-lg flex items-center w-[80px]"
-                  onClick={() => setSettingsShow(!settingsShow)}
-                >
-                  <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
-                  <span className="text-white font-body4 ml-2 relative top-px">
-                    {slippage ? slippage : "30"}m
-                  </span>
-                </div>
-                <TransactionSettingsV3
-                  show={settingsShow}
-                  setSlippage={setSlippage}
-                  slippage={slippage}
-                  setSettingsShow={setSettingsShow}
+            )}
+            {true && (
+              <div className="mt-5 lg:hidden">
+                <FeeTierMain
+                  setSelectedFeeTier={setSelectedFeeTier}
+                  selectedFeeTier={selectedFeeTier}
+                  feeTier={props.feeTier}
                 />
               </div>
-            </div>
+            )}
 
-            <div className="sm:flex  mt-4">
+            <div className="lg:flex  mt-4">
               <PriceRangeV3
                 tokenIn={props.tokenIn}
                 tokenOut={props.tokenOut}
@@ -913,6 +981,12 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         ) : screen === ActivePopUp.Positions ? (
           <>
             <div className="flex gap-1 h-[32px] items-center">
+              <p
+                className="cursor-pointer relative top-[3px]"
+                onClick={() => props.setShowLiquidityModalPopup(false)}
+              >
+                <Image alt={"alt"} src={arrowLeft} />
+              </p>
               <p className="text-white">
                 {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
               </p>
@@ -989,7 +1063,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             />
           </>
         )}
-      </PopUpModal>
+      </div>
       {activeStateIncDec === ActiveIncDecState.Increase &&
         screen === ActivePopUp.ConfirmExisting && (
           <ConfirmIncreaseLiq
