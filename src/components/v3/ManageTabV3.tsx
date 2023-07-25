@@ -74,7 +74,6 @@ import {
 import { calculateCurrentPrice, getInitialBoundaries } from "../../api/v3/liquidity";
 import { BalanceNat } from "../../api/v3/types";
 import { collectFees } from "../../operations/v3/fee";
-import { isDesktop, isMobile, isTablet } from "react-device-detect";
 import FeeTierMain from "./FeeTierMain";
 
 export interface IManageLiquidityProps {
@@ -106,6 +105,10 @@ export enum ActivePopUp {
 export function ManageTabV3(props: IManageLiquidityProps) {
   const [selectedFeeTier, setSelectedFeeTier] = useState(props.feeTier);
   const inputDisabled = useAppSelector((state) => state.poolsv3.inputDisable);
+  const leftRangeInput = useAppSelector((state) => state.poolsv3.leftRangeInput);
+  const rightRangeInput = useAppSelector((state) => state.poolsv3.RightRangeInput);
+  const BleftRangeInput = useAppSelector((state) => state.poolsv3.BleftRangeInput);
+  const BrightRangeInput = useAppSelector((state) => state.poolsv3.BRightRangeInput);
   const [showConfirm, setShowConfirm] = useState(false);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const minTickA = useAppSelector((state) => state.poolsv3.minTickA);
@@ -226,12 +229,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       setisClearAll(false);
     }, 4000);
   };
-  // const [deadline, setDeadline] = useState(0);
-  // useEffect(() => {
-  //   const n = slippage === 1 ? 60 : slippage === 2 ? 120 : Number(slippage);
 
-  //   setDeadline(Math.floor(new Date().getTime() / 1000) + n * 60);
-  // }, [slippage]);
   const handleAddLiquidityOperation = () => {
     setContentTransaction(
       `Mint position ${nFormatterWithLesserNumber(
@@ -391,6 +389,15 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         </Button>
       );
     } else if (
+      (topLevelSelectedToken.symbol === tokeninorg.symbol ? rightRangeInput : BrightRangeInput) <
+      (topLevelSelectedToken.symbol === tokeninorg.symbol ? leftRangeInput : BleftRangeInput)
+    ) {
+      return (
+        <Button height="52px" onClick={() => null} color={"disabled"}>
+          Range is invalid
+        </Button>
+      );
+    } else if (
       (inputDisabled == "false" && Number(firstTokenAmountLiq) <= 0) ||
       (inputDisabled == "false" && Number(secondTokenAmountLiq) <= 0)
     ) {
@@ -427,7 +434,16 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         </Button>
       );
     }
-  }, [props, firstTokenAmountLiq, secondTokenAmountLiq, inputDisabled]);
+  }, [
+    props,
+    firstTokenAmountLiq,
+    secondTokenAmountLiq,
+    inputDisabled,
+    leftRangeInput,
+    BleftRangeInput,
+    rightRangeInput,
+    BrightRangeInput,
+  ]);
   const [selectedToken, setSelectedToken] = useState({} as tokenParameterLiquidity);
   useEffect(() => {
     setSelectedToken(props.tokenA);

@@ -396,7 +396,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
           selectedFeeTier={props.selectedFeeTier}
         />
       </div>
-      <div className=" blur "></div>
+
       <div className=""> {IncreaseButton}</div>
     </>
   );

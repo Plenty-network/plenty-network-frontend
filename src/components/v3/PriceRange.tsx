@@ -1,5 +1,7 @@
 import { Tick } from "@plenty-labs/v3-sdk";
 import clsx from "clsx";
+
+import infoOrangeBig from "../../../src/assets/icon/poolsv3/InfoOrangeBig.svg";
 import { BigNumber } from "bignumber.js";
 import * as React from "react";
 import { useDispatch } from "react-redux";
@@ -26,6 +28,7 @@ import { tokenParameterLiquidity } from "../Liquidity/types";
 import LiquidityChartRangeInput from "./LiquidityChartRangeInput";
 import { Chain, IConfigToken } from "../../config/types";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import Image from "next/image";
 
 // 1 -> 0.0001
 
@@ -486,9 +489,15 @@ function PriceRangeV3(props: IPriceRangeProps) {
       >
         {props.isFullRange ? "Remove full range" : "Full range"}
       </div>
-      {/* <div className="mt-3 border border-text-800/[0.5] bg-cardBackGround rounded-lg  text-center py-4 font-body1 text-primary-500 h-[52px]">
-        View all positions
-      </div> */}
+      {(topLevelSelectedToken.symbol === tokeninorg.symbol ? rightRangeInput : BrightRangeInput) <
+        (topLevelSelectedToken.symbol === tokeninorg.symbol ? leftRangeInput : BleftRangeInput) && (
+        <div className="fade-in-warning h-[56px] mt-[7px] flex items-center  px-2 bg-error-300/[0.1]  rounded-lg	">
+          <Image src={infoOrangeBig} />
+          <span className="ml-3 text-error-300 text-[13px] leading-[20px] ">
+            {` Invalid range selected. The min price must be lower than the max price.`}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
