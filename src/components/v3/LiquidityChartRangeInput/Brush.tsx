@@ -72,7 +72,6 @@ export const Brush = ({
         //setLocalBrushExtent(null);
         return;
       }
-
       const scaledTemp = (selection as [number, number]).map(xScale.invert) as [number, number];
       const scaled = (selection as [number, number]).map(xScale.invert) as [number, number];
 

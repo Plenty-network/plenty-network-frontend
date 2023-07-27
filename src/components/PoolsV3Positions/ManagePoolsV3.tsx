@@ -1,6 +1,7 @@
 import { BigNumber } from "bignumber.js";
 import Image from "next/image";
 
+import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { getBalanceFromTzkt, getTezBalance } from "../../api/util/balance";
@@ -9,7 +10,7 @@ import { tzktExplorer } from "../../common/walletconnect";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import ConfirmTransaction from "../ConfirmTransaction";
 import { tokenParameterLiquidity } from "../Liquidity/types";
-import { PopUpModal } from "../Modal/popupModal";
+
 import { VideoModal } from "../Modal/videoModal";
 import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 import { InfoIconToolTip } from "../Tooltip/InfoIconTooltip";
@@ -353,39 +354,29 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
 
   return true ? (
     <>
-      <PopUpModal
-        onhide={closeModal}
+      <div
+        id="modal_outer"
         className={clsx(
           screen === ActivePopUp.Positions
-            ? "sm:w-[880px] sm:max-w-[880px]"
+            ? "lg:w-[972px] lg:max-w-[972px] border  border-popUpNotification  lg:rounded-3xl p-5"
             : screen === ActivePopUp.ConfirmAddV3
-            ? "sm:w-[602px] sm:max-w-[602px]"
+            ? "sm:w-[602px] sm:max-w-[602px] border  border-popUpNotification lg:rounded-3xl  p-5"
             : screen === ActivePopUp.NewPosition
-            ? "sm:w-[972px] sm:max-w-[972px]"
-            : "sm:w-[602px] sm:max-w-[602px]",
-          "w-[414px] max-w-[414px]  rounded-none sm:rounded-3xl px-4"
+            ? "lg:w-[972px] lg:max-w-[972px] md:w-[602px] border  border-popUpNotification  md:rounded-3xl p-5"
+            : "sm:w-[602px] sm:max-w-[602px] border md:rounded-3xl  border-popUpNotification   p-5",
+          screen === ActivePopUp.ConfirmExisting && "hidden",
+          "  mt-[70px] mb-[60px] lg:mt-[75px]  mx-auto fade-in  bg-card-500"
         )}
-        // footerChild={
-        //   <div className="flex justify-center items-center gap-2 md:gap-4 px-4 md:px-0">
-        //     <p className="font-subtitle1 md:text-f16 text-text-150">
-        //       {props.activeState === ActiveLiquidity.Liquidity &&
-        //         "Add liquidity, stake, and earn PLY"}
-        //       {props.activeState === ActiveLiquidity.Staking &&
-        //         "Add liquidity, stake, and earn PLY"}
-        //       {props.activeState === ActiveLiquidity.Rewards &&
-        //         "Add liquidity, stake, and earn PLY"}
-        //     </p>
-        //     <Image
-        //       className="cursor-pointer hover:opacity-90"
-        //       onClick={() => setShowVideoModal(true)}
-        //       src={playBtn}
-        //     />
-        //   </div>
-        // }
       >
         {screen === ActivePopUp.ManageExisting ? (
           <div>
             <div className="flex items-center">
+              <p
+                className="cursor-pointer relative top-[3px]"
+                onClick={() => props.setShowLiquidityModalPopup(false)}
+              >
+                <Image alt={"alt"} src={arrowLeft} />
+              </p>
               <p className="text-white">
                 {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
               </p>
@@ -413,7 +404,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
             />
           </div>
         ) : null}
-      </PopUpModal>
+      </div>
       {activeStateIncDec === ActiveIncDecState.Increase &&
         screen === ActivePopUp.ConfirmExisting && (
           <ConfirmIncreaseLiq

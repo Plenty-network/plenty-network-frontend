@@ -32,23 +32,7 @@ import { StakePercentage } from "./StakedPercentage";
 export function PoolsV3TablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
-  const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
   const tokens = useAppSelector((state) => state.config.tokens);
-  const [feeTier, setFeeTier] = React.useState("");
-  const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
-    ActiveLiquidity.Liquidity
-  );
-
-  const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
-    name: "USDC.e",
-    image: `/assets/tokens/USDC.e.png`,
-    symbol: "USDC.e",
-  });
-  const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
-    name: "USDT.e",
-    image: `/assets/tokens/USDT.e.png`,
-    symbol: "USDT.e",
-  });
 
   const NoData = React.useMemo(() => {
     return <NoPoolsPosition h1={"No active liquidity positions"} cta={"View Pools"} />;
@@ -407,6 +391,11 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         accessor: (x) => (
           <ManageBtn
             feeTier={x.feeTier}
+            setShowLiquidityModal={props.setShowLiquidityModalPopup}
+            setTokenIn={props.setTokenIn}
+            setTokenOut={props.setTokenOut}
+            setFeeTier={props.setFeeTier}
+            setActiveState={props.setActiveState}
             tokenA={x.tokenX ? x.tokenX.toString() : "DAI.e"}
             tokenB={x.tokenY ? x.tokenY.toString() : "USDC.e"}
             data={x}
@@ -421,16 +410,16 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       <div
         className="bg-primary-500/10 md:w-[130px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
         onClick={() => {
-          setShowLiquidityModal(true);
+          props.setShowLiquidityModal(true);
           dispatch(setSelectedPosition(props.data));
-          setActiveState(ActiveLiquidity.Liquidity);
-          setFeeTier(props.feeTier);
-          setTokenIn({
+          props.setActiveState(ActiveLiquidity.Liquidity);
+          props.setFeeTier(props.feeTier);
+          props.setTokenIn({
             name: props.tokenA,
             image: getImagesPath(props.tokenA.toString()),
             symbol: props.tokenA,
           });
-          setTokenOut({
+          props.setTokenOut({
             name: props.tokenB,
             image: getImagesPath(props.tokenB.toString()),
             symbol: props.tokenB,
@@ -456,7 +445,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
           NoData={NoData}
         />
       </div>
-      {showLiquidityModal && (
+      {/* {showLiquidityModal && (
         <ManagePoolsV3
           tokenIn={tokenIn}
           tokenOut={tokenOut}
@@ -467,7 +456,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
           feeTier={feeTier}
           setShowLiquidityModalPopup={setShowLiquidityModal}
         />
-      )}
+      )} */}
     </>
   );
 }

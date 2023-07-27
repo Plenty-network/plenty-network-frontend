@@ -14,6 +14,7 @@ export interface IBottomNavigationBarProps {}
 
 export interface IBottomNavMenuProps extends IBottomMoreNavMenuProps {
   activeSubMenuPool: boolean;
+  setActiveSubMenu: React.Dispatch<React.SetStateAction<MenuType>>;
   setActiveSubMenuPool: React.Dispatch<React.SetStateAction<boolean>>;
   subMenu: false | ISingleSideBarProps[] | undefined;
   link?: string;
@@ -100,15 +101,17 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
                 activeSubMenuPool={activeSubMenuPool}
                 setActiveSubMenuPool={setActiveSubMenuPool}
                 active={e.activePathName === pathname && activeSubMenu != MenuType.MoreNavMenu}
+                setActiveSubMenu={setActiveSubMenu}
               />
             ))}
           </>
           <MenuNoLink
-            onClick={() =>
+            onClick={() => {
               setActiveSubMenu((e) =>
                 e === MenuType.MoreNavMenu ? MenuType.NoMenu : MenuType.MoreNavMenu
-              )
-            }
+              );
+              setActiveSubMenuPool(false);
+            }}
             text={""}
             iconName={"moreMenu"}
             active={activeSubMenu === MenuType.MoreNavMenu}
@@ -130,7 +133,10 @@ export function MenuWithLink(props: IBottomNavMenuProps) {
         } ${
           props.className
         } border-t-[1.5px] text-f10 flex-1 flex flex-col items-center text-center   px-[18px] py-[9px]   `}
-        onClick={() => props.setActiveSubMenuPool(!props.activeSubMenuPool)}
+        onClick={() => {
+          props.setActiveSubMenuPool(!props.activeSubMenuPool);
+          props.setActiveSubMenu(MenuType.NoMenu);
+        }}
       >
         {props.iconName && (
           <Image
@@ -174,20 +180,20 @@ export function MenuWithLink(props: IBottomNavMenuProps) {
 export function SubMenuForPool() {
   return (
     <div className="w-screen flex flex-col text-f12 bg-topBar z-10">
-      <div className="px-9 hover:bg-sideBarHover ">
+      <div className=" hover:bg-sideBarHover border-t border-t-borderColor ">
         <SingleSideBar
-          name="v2"
+          name="V2"
           className="px-9 justify-between"
-          iconName="migrate"
+          iconName="pools"
           pathName={"/pools"}
           isBottomMenu
         />
       </div>
-      <div className="px-9 hover:bg-sideBarHover border-t border-t-borderColor hover:border-t-primary-500">
+      <div className=" hover:bg-sideBarHover border-t border-t-borderColor ">
         <SingleSideBar
-          name="v3"
+          name="V3"
           className="px-9 justify-between"
-          iconName="airdrop"
+          iconName="pools"
           pathName={"/pools/v3"}
           isBottomMenu
         />

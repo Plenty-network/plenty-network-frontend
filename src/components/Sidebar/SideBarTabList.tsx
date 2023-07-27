@@ -50,7 +50,9 @@ export function SingleSideBar(props: ISingleSideBarProps) {
                   ? "pl-[26px] pr-6 h-[42px] w-[85%] ml-auto "
                   : !props.isBottomMenu
                   ? "pl-6 pr-[20px] h-[50px] w-full"
-                  : "h-[50px]"
+                  : props.name === "V2" || props.name === "V3"
+                  ? "pl-8 h-[50px]"
+                  : "  h-[50px] "
               } text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-muted-250/60 ${
                 !props.isBottomMenu ? "border-x-2" : ""
               } border border-transprent `}

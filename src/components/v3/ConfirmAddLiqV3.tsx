@@ -62,9 +62,9 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     if (props.topLevelSelectedToken.symbol === props.tokenIn.symbol) {
-      setMinA(leftRangeInput.toString());
+      setMinA(Number(leftRangeInput)?.toFixed(6));
       setMinB((1 / Number(leftRangeInput)).toFixed(6));
-      setMaxA(rightRangeInput.toString());
+      setMaxA(Number(rightRangeInput)?.toFixed(6));
       setMaxB((1 / Number(rightRangeInput)).toFixed(6));
 
       // getTickFromRealPrice(
@@ -83,9 +83,9 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
       // });
     } else {
       setMinA((1 / Number(BleftRangeInput)).toFixed(6));
-      setMinB(BleftRangeInput.toString());
+      setMinB(Number(BleftRangeInput)?.toFixed(6));
       setMaxA((1 / Number(BrightRangeInput)).toFixed(6));
-      setMaxB(BrightRangeInput.toString());
+      setMaxB(Number(BrightRangeInput)?.toFixed(6));
 
       // getTickFromRealPrice(
       //   new BigNumber(1).dividedBy(new BigNumber(BleftRangeInput)),
