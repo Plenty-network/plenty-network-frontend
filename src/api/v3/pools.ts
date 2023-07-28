@@ -109,7 +109,7 @@ export const getMyPoolsDataV3 = async (
           volume: e.volume,
           tvl: e.tvl,
           fees: e.fees,
-      }
+      } 
     }).filter((element, index, array) => {
       return array.findIndex(a => a.tokenA === element.tokenA && a.tokenB === element.tokenB  && a.feeTier === element.feeTier) === index
     })
