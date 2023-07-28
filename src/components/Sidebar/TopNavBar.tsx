@@ -69,7 +69,7 @@ export function TopNavBar(props: ITopNavBarProps) {
                 {userAddress && !props.isBribes && (
                   <Link className={`cursor-pointer  `} href={"/myportfolio"}>
                     <div className="gradientBorder">
-                      <div className="innerContent cursor-pointer  flex items-center border border-primary-750 bg-primary-850 px-[14px] h-[44px] rounded-xl mt-[10px]">
+                      <div className="innerContent cursor-pointer  flex items-center border border-primary-750 bg-primary-850 px-[14px] h-[45px] rounded-xl mt-[10px]">
                         <Image alt={"alt"} src={myportfolionav} />
                         <span className="text-blue-500 font-body4 ml-1">My portfolio</span>
                       </div>

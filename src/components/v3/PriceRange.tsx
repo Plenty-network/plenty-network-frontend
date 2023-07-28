@@ -296,7 +296,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       )}
       <div
         className={clsx(
-          "relative flex w-auto md:w-[378px] mx-auto gap-[5px] md:gap-[10px] justify-between md:mt-[16px]",
+          "relative flex w-auto md:w-[378px] mx-auto gap-[5px] md:gap-[10px] justify-between md:mt-5",
           props.isFullRange && "opacity-[0.1]"
         )}
       >
@@ -484,14 +484,18 @@ function PriceRangeV3(props: IPriceRangeProps) {
       </div>
 
       <div
-        className="mt-3 cursor-pointer border border-info-700 hover:border-text-600 rounded-lg  text-center py-2.5 font-body1 sm:mx-4 sm:mb-2 mb-4"
+        className="mt-5 cursor-pointer border border-info-700 hover:border-text-600 rounded-lg  text-center py-2.5 font-body1 sm:mx-3 sm:mb-2 mb-6"
         onClick={() => fullrangeCalc(!props.isFullRange)}
       >
         {props.isFullRange ? "Remove full range" : "Full range"}
       </div>
-      {(topLevelSelectedToken.symbol === tokeninorg.symbol ? rightRangeInput : BrightRangeInput) <
-        (topLevelSelectedToken.symbol === tokeninorg.symbol ? leftRangeInput : BleftRangeInput) && (
-        <div className="fade-in-warning h-[56px] mt-[7px] flex items-center  px-2 bg-error-300/[0.1]  rounded-lg	">
+      {Number(
+        topLevelSelectedToken.symbol === tokeninorg.symbol ? rightRangeInput : BrightRangeInput
+      ) <
+        Number(
+          topLevelSelectedToken.symbol === tokeninorg.symbol ? leftRangeInput : BleftRangeInput
+        ) && (
+        <div className="fade-in-warning h-[56px] mt-[7px] flex items-center mx-3 px-2 bg-error-300/[0.1]  rounded-lg	">
           <Image src={infoOrangeBig} />
           <span className="ml-3 text-error-300 text-[13px] leading-[20px] ">
             {` Invalid range selected. The min price must be lower than the max price.`}

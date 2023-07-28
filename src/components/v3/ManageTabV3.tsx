@@ -216,6 +216,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
   const [isClearAll, setisClearAll] = useState(false);
   const resetAllValues = () => {
+    setSelectedFeeTier(props.feeTier);
     setisClearAll(true);
     setFirstTokenAmountIncLiq("");
     setSecondTokenAmountIncLiq("");
@@ -389,8 +390,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         </Button>
       );
     } else if (
-      (topLevelSelectedToken.symbol === tokeninorg.symbol ? rightRangeInput : BrightRangeInput) <
-      (topLevelSelectedToken.symbol === tokeninorg.symbol ? leftRangeInput : BleftRangeInput)
+      Number(
+        topLevelSelectedToken.symbol === tokeninorg.symbol ? rightRangeInput : BrightRangeInput
+      ) <
+      Number(topLevelSelectedToken.symbol === tokeninorg.symbol ? leftRangeInput : BleftRangeInput)
     ) {
       return (
         <Button height="52px" onClick={() => null} color={"disabled"}>
@@ -571,7 +574,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Increase Liquidity ${localStorage.getItem(
+        trailingText: `Increase liquidity ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
         )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
           SECOND_TOKEN_AMOUNT
@@ -590,7 +593,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Increase Liquidity ${localStorage.getItem(
+              trailingText: `Increase liquidity ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT
@@ -621,7 +624,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Increase Liquidity ${localStorage.getItem(
+              trailingText: `Increase liquidity ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT

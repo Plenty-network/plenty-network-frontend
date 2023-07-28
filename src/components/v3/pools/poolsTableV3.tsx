@@ -123,17 +123,6 @@ export function PoolsTableV3(props: IShortCardProps) {
       return <NoDataError content={"No Pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
-  // const [feeTier, setFeeTier] = React.useState("");
-  // const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
-  //   name: "DAI.e",
-  //   image: `/assets/tokens/DAI.e.png`,
-  //   symbol: "DAI.e",
-  // });
-  // const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
-  //   name: "USDC.e",
-  //   image: `/assets/tokens/USDC.e.png`,
-  //   symbol: "USDC.e",
-  // });
 
   const mobilecolumns = React.useMemo<Column<any>[]>(
     () => [
@@ -184,7 +173,7 @@ export function PoolsTableV3(props: IShortCardProps) {
                         x.tokenB?.toString()
                       )}`}
                 </span>
-                <span className="font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-1">
+                <span className="md:font-body2 font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-3">
                   0.05%
                 </span>
               </div>
@@ -331,7 +320,7 @@ export function PoolsTableV3(props: IShortCardProps) {
                         x.tokenB?.toString()
                       )}`}
                 </span>
-                <span className="font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-1">
+                <span className="md:font-body2 font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-3">
                   {x.feeTier}%
                 </span>
               </div>

@@ -212,7 +212,8 @@ export const increaseLiquidity = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  flashMessageContent?: IFlashMessageProps
+  flashMessageContent?: IFlashMessageProps,
+  setShowLiquidityModalPopup?: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<IOperationsResponse> => {
   try {
     const state = store.getState();
@@ -352,6 +353,7 @@ export const increaseLiquidity = async (
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(batchOperation.opHash as string);
+    setShowLiquidityModalPopup && setShowLiquidityModalPopup(false);
     resetAllValues && resetAllValues();
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
@@ -387,7 +389,8 @@ export const removeLiquidity = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  flashMessageContent?: IFlashMessageProps
+  flashMessageContent?: IFlashMessageProps,
+  setShowLiquidityModalPopup?: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<IOperationsResponse> => {
   try {
     const Tezos = await dappClient().tezos();
@@ -416,6 +419,7 @@ export const removeLiquidity = async (
 
     setShowConfirmTransaction && setShowConfirmTransaction(false);
     transactionSubmitModal && transactionSubmitModal(batchOperation.opHash as string);
+    setShowLiquidityModalPopup && setShowLiquidityModalPopup(false);
     resetAllValues && resetAllValues();
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));

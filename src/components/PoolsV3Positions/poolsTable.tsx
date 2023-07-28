@@ -387,7 +387,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       {
         Header: "",
         id: "manage",
-        columnWidth: "w-[170px] ",
+        columnWidth: "ml-auto w-[170px] ",
         accessor: (x) => (
           <ManageBtn
             feeTier={x.feeTier}
@@ -408,7 +408,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
   function ManageBtn(props: IManageBtnProps): any {
     return (
       <div
-        className="bg-primary-500/10 md:w-[130px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
+        className="ml-auto bg-primary-500/10 md:w-[130px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
         onClick={() => {
           props.setShowLiquidityModal(true);
           dispatch(setSelectedPosition(props.data));

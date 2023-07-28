@@ -499,7 +499,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
   }, [isFullRange, full]);
   const handleIncreaseLiquidityOperation = () => {
     setContentTransaction(
-      `Increase Liquidity ${nFormatterWithLesserNumber(
+      `Increase liquidity ${nFormatterWithLesserNumber(
         new BigNumber(firstTokenAmountIncLiq)
       )} ${tEZorCTEZtoUppercase(props.tokenIn.name)} / ${nFormatterWithLesserNumber(
         new BigNumber(secondTokenAmountIncLiq)
@@ -536,7 +536,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Increase Liquidity ${localStorage.getItem(
+        trailingText: `Increase liquidity ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
         )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
           SECOND_TOKEN_AMOUNT
@@ -555,7 +555,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Increase Liquidity ${localStorage.getItem(
+              trailingText: `Increase liquidity ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT
@@ -585,7 +585,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Increase Liquidity ${localStorage.getItem(
+              trailingText: `Increase liquidity ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT

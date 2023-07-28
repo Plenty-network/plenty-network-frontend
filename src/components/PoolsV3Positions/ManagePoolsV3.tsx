@@ -153,7 +153,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
 
   const handleIncreaseLiquidityOperation = () => {
     setContentTransaction(
-      `Increase Liquidity ${nFormatterWithLesserNumber(
+      `Increase liquidity ${nFormatterWithLesserNumber(
         new BigNumber(firstTokenAmountLiq)
       )} ${tEZorCTEZtoUppercase(props.tokenIn.name)} / ${nFormatterWithLesserNumber(
         new BigNumber(secondTokenAmountLiq)
@@ -173,7 +173,6 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
     setScreen(ActivePopUp.ManageExisting);
     setShowConfirm(false);
     setShowConfirmTransaction(true);
-
     increaseLiquidity(
       selectedPosition,
       {
@@ -200,16 +199,18 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
         transactionId: "",
       }
     ).then((response) => {
+      props.setShowLiquidityModalPopup(false);
       if (response.success) {
         setBalanceUpdate(true);
 
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Success,
               headerText: "Success",
-              trailingText: `Increase Liquidity ${localStorage.getItem(
+              trailingText: `Increase liquidity ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT
@@ -233,6 +234,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
         setBalanceUpdate(true);
         //resetAllValues();
         setShowConfirmTransaction(false);
+
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
           dispatch(
@@ -240,7 +242,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
               flashType: Flashtype.Rejected,
               transactionId: "",
               headerText: "Rejected",
-              trailingText: `Increase Liquidity ${localStorage.getItem(
+              trailingText: `Increase liquidity ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT
@@ -271,7 +273,6 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
     setScreen(ActivePopUp.ManageExisting);
     setShowConfirm(false);
     setShowConfirmTransaction(true);
-
     removeLiquidity(
       selectedPosition,
       removePercentage,
@@ -295,11 +296,13 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
         transactionId: "",
       }
     ).then((response) => {
+      props.setShowLiquidityModalPopup(false);
       if (response.success) {
         setBalanceUpdate(true);
 
         setTimeout(() => {
           setShowTransactionSubmitModal(false);
+
           dispatch(
             setFlashMessage({
               flashType: Flashtype.Success,
