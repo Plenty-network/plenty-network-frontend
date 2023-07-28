@@ -106,7 +106,9 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
               id="tooltip2"
               disable={false}
               position={Position.top}
-              toolTipChild={<div className="w-[100px] md:w-[150px]">Instructions for airdrop</div>}
+              toolTipChild={
+                <div className="w-[100px] md:w-[150px]">Percentage of liquidity being removed</div>
+              }
             >
               <Image alt={"alt"} src={info} />
             </ToolTip>
@@ -168,7 +170,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
         <div className="bg-card-500">
           <div className="border-t border-text-800/[0.5] mb-3"></div>
           <div className="flex px-5">
-            <p className="font-body4 text-text-400">Remove pooled</p>
+            <p className="font-body4 text-text-400">Amount being removed</p>
             <p className="ml-auto flex gap-2 items-center">
               <span className="font-body4">
                 {props.remove?.x ? nFormatterWithLesserNumber(props.remove?.x) : 0}
@@ -194,7 +196,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
           </div>
 
           <div className="flex px-5 my-3">
-            <p className="font-body4 text-text-400">Remove pooled</p>
+            <p className="font-body4 text-text-400">Amount being removed</p>
             <p className="ml-auto flex gap-2 items-center">
               <span className="font-body4">
                 {props.remove?.y ? nFormatterWithLesserNumber(props.remove?.y) : 0}

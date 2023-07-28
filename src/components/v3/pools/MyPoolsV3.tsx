@@ -163,7 +163,7 @@ export function MyPoolTablev3(props: IShortCardProps) {
                       )}`}
                 </span>
                 <span className="font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-1">
-                  0.05%
+                  {x.feeTier}%
                 </span>
               </div>
             </div>

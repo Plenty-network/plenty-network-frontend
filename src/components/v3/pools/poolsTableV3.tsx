@@ -174,7 +174,7 @@ export function PoolsTableV3(props: IShortCardProps) {
                       )}`}
                 </span>
                 <span className="md:font-body2 font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-3">
-                  0.05%
+                  {x.feeTier}%
                 </span>
               </div>
             </div>

@@ -215,7 +215,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     updateBalance();
   }, [walletAddress, TOKEN, balanceUpdate, props.tokenIn.symbol, props.tokenOut.symbol]);
   const [isClearAll, setisClearAll] = useState(false);
+  const [isFullRange, setFullRangee] = React.useState(false);
   const resetAllValues = () => {
+    setFullRangee(false);
     setSelectedFeeTier(props.feeTier);
     setisClearAll(true);
     setFirstTokenAmountIncLiq("");
@@ -454,8 +456,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   useEffect(() => {
     dispatch(settopLevelSelectedToken(selectedToken));
   }, [selectedToken]);
-
-  const [isFullRange, setFullRangee] = React.useState(false);
 
   React.useEffect(() => {
     //if (!isFullRange) {

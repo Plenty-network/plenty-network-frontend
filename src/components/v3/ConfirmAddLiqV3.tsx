@@ -264,7 +264,26 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
                 position={Position.top}
               >
                 <div className="font-title3">
-                  {selectedToken.symbol === tokeninorg.symbol
+                  {isNaN(
+                    Number(
+                      selectedToken.symbol === tokeninorg.symbol
+                        ? minA > maxA
+                          ? maxA
+                          : minA
+                        : minB > maxB
+                        ? maxB
+                        : minB
+                    )
+                  ) ||
+                  (selectedToken.symbol === tokeninorg.symbol
+                    ? minA > maxA
+                      ? maxA
+                      : minA
+                    : minB > maxB
+                    ? maxB
+                    : minB) === "Infinity"
+                    ? "0"
+                    : selectedToken.symbol === tokeninorg.symbol
                     ? minA > maxA
                       ? maxA
                       : minA
@@ -305,7 +324,19 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
                 position={Position.top}
               >
                 <div className="font-title3">
-                  {selectedToken.symbol === tokeninorg.symbol
+                  {isNaN(
+                    Number(
+                      selectedToken.symbol === tokeninorg.symbol
+                        ? maxA < minA
+                          ? minA
+                          : maxA
+                        : maxB < minB
+                        ? minB
+                        : maxB
+                    )
+                  )
+                    ? "∞"
+                    : selectedToken.symbol === tokeninorg.symbol
                     ? maxA < minA
                       ? minA
                       : maxA

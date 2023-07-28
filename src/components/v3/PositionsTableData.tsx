@@ -52,7 +52,7 @@ export function PositionDataTable(props: IShortCardProps) {
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
 
   const NoData = React.useMemo(() => {
-    if (walletAddress === null) {
+    if (walletAddress === null && data && data?.length === 0) {
       return (
         <span className="fade-in-light flex items-center justify-start md:justify-center pl-5 md:pl-0 h-[245px] text-border-600 font-title3">
           please connect your wallet
@@ -61,7 +61,7 @@ export function PositionDataTable(props: IShortCardProps) {
     } else if (!isLoading && data && data?.length === 0) {
       return (
         <span className="fade-in-light flex items-center justify-start md:justify-center h-[245px]  pl-5 md:pl-0 text-border-600 font-title3">
-          No new positions
+          No positions
         </span>
       );
     }
@@ -141,7 +141,7 @@ export function PositionDataTable(props: IShortCardProps) {
         id: "min/max price",
         columnWidth: "lg:w-[176px] w-[155px]",
 
-        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
+        tooltipMessage: "Lower and upper price boundaries.",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -164,7 +164,7 @@ export function PositionDataTable(props: IShortCardProps) {
 
         columnWidth: "w-[132px]",
         isToolTipEnabled: true,
-        tooltipMessage: "Pool’s trading volume in the last 24 hours.",
+        tooltipMessage: "Fees collected by the position.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
         accessor: (x: any) => (

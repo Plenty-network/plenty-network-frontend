@@ -69,6 +69,26 @@ export function nFormatterWithLesserNumber(num: BigNumber) {
     return 0;
   }
 }
+export function nFormatterWithLesserNumber5digit(num: BigNumber) {
+  if (num.isGreaterThan(0)) {
+    if (!num.isFinite()) {
+      return "∞";
+    }
+    if (num.isLessThan(0.01)) {
+      return "<0.01";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000000)) {
+      return num.dividedBy(1000000000).toFixed(2) + "b";
+    }
+    if (num.isGreaterThanOrEqualTo(1000000)) {
+      return num.dividedBy(1000000).toFixed(2) + "m";
+    }
+
+    return num.toFixed(2);
+  } else {
+    return 0;
+  }
+}
 export const changeSource = (e: any) => {
   e.target.src = fallback.src;
   e.onerror = null;
