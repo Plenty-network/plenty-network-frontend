@@ -93,11 +93,7 @@ function PositionsPopup(props: IPositionsProps) {
                 </span>
               </div>
               <div className="ml-auto">
-                <ToolTip
-                  id="tooltipj"
-                  position={Position.top}
-                  message="Fee collected by all positions"
-                >
+                <ToolTip id="tooltipj" position={Position.top} message="Trading fees for the pool.">
                   <div className="text-white rounded-lg text-center	 bg-info-800 flex items-center justify-center w-[100px] h-[44px] ">
                     <Image src={feeimg} />
                     <span className="ml-1 font-title3">{props.feeTier}%</span>

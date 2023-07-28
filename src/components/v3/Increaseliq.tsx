@@ -6,6 +6,7 @@ import clsx from "clsx";
 import {
   changeSource,
   nFormatterWithLesserNumber,
+  nFormatterWithLesserNumber5digit,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
 import { useMemo, useState, useEffect } from "react";
@@ -275,8 +276,10 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                 >
                   <div className="font-title3">
                     {selectedToken.symbol === props.tokenIn.symbol
-                      ? selectedPosition.minPrice.toFixed(2)
-                      : new BigNumber(1).dividedBy(selectedPosition.maxPrice).toFixed(2)}
+                      ? nFormatterWithLesserNumber5digit(new BigNumber(selectedPosition.minPrice))
+                      : nFormatterWithLesserNumber5digit(
+                          new BigNumber(1).dividedBy(selectedPosition.maxPrice)
+                        )}
                   </div>
                 </ToolTip>
                 <span className="font-body1 text-text-250  ">
@@ -321,8 +324,10 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                     {selectedPosition.isMaxPriceInfinity
                       ? "∞"
                       : selectedToken.symbol === props.tokenIn.symbol
-                      ? selectedPosition.maxPrice.toFixed(2)
-                      : new BigNumber(1).dividedBy(selectedPosition.minPrice).toFixed(2)}
+                      ? nFormatterWithLesserNumber5digit(new BigNumber(selectedPosition.maxPrice))
+                      : nFormatterWithLesserNumber5digit(
+                          new BigNumber(1).dividedBy(selectedPosition.minPrice)
+                        )}
                   </div>
                 </ToolTip>
                 <span className="font-body1 text-text-250 ">
@@ -361,8 +366,8 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                 >
                   <div className="font-title3">
                     {selectedToken.symbol === props.tokenIn.symbol
-                      ? nFormatterWithLesserNumber(currentPrice)
-                      : nFormatterWithLesserNumber(new BigNumber(1).dividedBy(currentPrice))}
+                      ? nFormatterWithLesserNumber5digit(currentPrice)
+                      : nFormatterWithLesserNumber5digit(new BigNumber(1).dividedBy(currentPrice))}
                   </div>
                 </ToolTip>
                 <span className="font-body1 text-text-250  ">

@@ -232,7 +232,7 @@ function NewPoolMain(props: ILiquidityProps) {
             <div className="w-0 flex-auto">
               <p>
                 <span className="mt-2  font-body4 text-text-400">
-                  INITIAL PRIZE{" "}
+                  INITIAL PRICE{" "}
                   {selectedToken.symbol
                     ? `: 1 ${
                         selectedToken.symbol === props.tokenIn.symbol
