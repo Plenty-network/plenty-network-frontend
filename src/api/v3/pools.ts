@@ -59,7 +59,7 @@ export const getMyPoolsDataV3 = async (
     }
     const state = store.getState();
     const AMMS = state.config.AMMs;
-    const v3PositionsResponse = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}v3-positions?address=${userTezosAddress}`);
+    const v3PositionsResponse = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}v3-positions?address=tz1cwthNsa3CrsSnZipdTzqiQf5NGSSQhQhM`);
     const v3IndexerPositionsData: any[] = v3PositionsResponse.data;
 
     const allData: any[] = [];
@@ -79,6 +79,7 @@ export const getMyPoolsDataV3 = async (
 
       const positonData = v3IndexerPositionsData[i];
       const AMM = AMMS[positonData.amm];
+      console.log('alldata', AMM);
 
       const tokenA = AMM.tokenX?.symbol;
       const tokenB = AMM.tokenY?.symbol;
@@ -98,11 +99,24 @@ export const getMyPoolsDataV3 = async (
           fees: fees,
         });
       }
-    }
+    }   
+    let uqiueAllData = allData.map(e => {
+      return { 
+          tokenA: e.tokenA,
+          tokenB: e.tokenB,
+          feeTier: e.feeTier,
+          apr: e.apr,
+          volume: e.volume,
+          tvl: e.tvl,
+          fees: e.fees,
+      }
+    }).filter((element, index, array) => {
+      return array.findIndex(a => a.tokenA === element.tokenA && a.tokenB === element.tokenB  && a.feeTier === element.feeTier) === index
+    })
 
     return {
       success: true,
-      allData: allData,
+      allData: uqiueAllData,
     };
   } catch (error: any) {
     console.log(error);
