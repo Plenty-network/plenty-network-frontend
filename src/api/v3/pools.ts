@@ -59,7 +59,7 @@ export const getMyPoolsDataV3 = async (
     }
     const state = store.getState();
     const AMMS = state.config.AMMs;
-    const v3PositionsResponse = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}v3-positions?address=tz1cwthNsa3CrsSnZipdTzqiQf5NGSSQhQhM`);
+    const v3PositionsResponse = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}v3-positions?address=${userTezosAddress}`);
     const v3IndexerPositionsData: any[] = v3PositionsResponse.data;
 
     const allData: any[] = [];
