@@ -5,7 +5,7 @@ import { useAccount, useNetwork } from "wagmi";
 import truncateMiddle from "truncate-middle";
 import { useEffect, useState } from "react";
 import { defaultChains } from "../../config/rainbowWalletConfig";
-export interface IWalletAddress {};
+export interface IWalletAddress {}
 
 function WalletAddress() {
   const [chainIconUrl, setChainIconUrl] = useState<string>("/assets/chains/fallback.svg");
