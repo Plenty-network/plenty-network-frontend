@@ -44,7 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             {/* Wrapping all the pages and components with Wagami Config and RainbowKit provider for using wallets across the app.
                 Configured wagami client, chains and theme are passed here.
              */}
-            <WagmiConfig client={wagmiClient}>
+            <WagmiConfig config={wagmiClient}>
               <RainbowKitProvider chains={chains} modalSize="compact" theme={customTheme}>
                 <Component {...pageProps} />
               </RainbowKitProvider>
