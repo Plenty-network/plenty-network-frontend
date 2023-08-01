@@ -34,20 +34,7 @@ export default function PoolsV3(props: IIndexProps) {
   const handleCloseManagePopup = (val: boolean) => {
     setShowLiquidityModal(val);
   };
-  const [feeTier, setFeeTier] = React.useState("");
-  const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
-    name: "DAI.e",
-    image: `/assets/tokens/DAI.e.png`,
-    symbol: "DAI.e",
-  });
-  const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
-    name: "USDC.e",
-    image: `/assets/tokens/USDC.e.png`,
-    symbol: "USDC.e",
-  });
-  const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
-    ActiveLiquidity.Liquidity
-  );
+
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const [searchValue, setSearchValue] = React.useState("");
@@ -112,17 +99,10 @@ export default function PoolsV3(props: IIndexProps) {
               className="md:pl-5 md:py-4  pl-2 py-4"
               searchValue={searchValue}
               activeStateTab={activeStateTab}
-              setShowLiquidityModalPopup={setShowLiquidityModal}
               setActiveStateTab={setActiveStateTab}
-              setShowLiquidityModal={handleCloseManagePopup}
-              showLiquidityModal={showLiquidityModal}
               reFetchPool={reFetchPool}
               isFetching={isFetching}
               isError={isError}
-              setTokenIn={setTokenIn}
-              setTokenOut={setTokenOut}
-              setFeeTier={setFeeTier}
-              setActiveState={setActiveState}
             />
           )}
 
@@ -132,18 +112,11 @@ export default function PoolsV3(props: IIndexProps) {
               poolsFilter={POOL_TYPE.MYPOOLS}
               isConnectWalletRequired={true}
               searchValue={searchValue}
-              activeStateTab={activeStateTab}
-              setShowLiquidityModalPopup={setShowLiquidityModal}
               setActiveStateTab={setActiveStateTab}
-              setShowLiquidityModal={handleCloseManagePopup}
-              showLiquidityModal={showLiquidityModal}
+              activeStateTab={activeStateTab}
               reFetchPool={reFetchPool}
               isFetching={false}
               isError={false}
-              setTokenIn={setTokenIn}
-              setTokenOut={setTokenOut}
-              setFeeTier={setFeeTier}
-              setActiveState={setActiveState}
             />
           )}
           <NewPoolv3
@@ -158,7 +131,7 @@ export default function PoolsV3(props: IIndexProps) {
           {/* poolsTable */}
         </div>
       )}
-      {showLiquidityModal &&
+      {/* {showLiquidityModal &&
         (false ? (
           <ManageTabMobile
             tokenIn={tokenChange(topLevelSelectedToken, tokenIn, tokenOut)}
@@ -187,7 +160,7 @@ export default function PoolsV3(props: IIndexProps) {
             setShowLiquidityModalPopup={setShowLiquidityModal}
             feeTier={feeTier}
           />
-        ))}
+        ))} */}
     </>
   );
 }

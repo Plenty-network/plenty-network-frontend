@@ -18,7 +18,11 @@ import { ActivePopUp } from "./ManageTabV3";
 import { IV3PositionObject } from "../../api/v3/types";
 import { getPositions } from "../../api/v3/positions";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
-import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import {
+  nFormatterWithLesserNumber,
+  nFormatterWithLesserNumber5digit,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { compareNumericString } from "../../utils/commonUtils";
 import { setSelectedPosition } from "../../redux/poolsv3";
 import Table from "../Table/Table";
@@ -137,7 +141,7 @@ export function PositionDataTable(props: IShortCardProps) {
         ),
       },
       {
-        Header: "min/max price",
+        Header: "Min/Max price",
         id: "min/max price",
         columnWidth: "lg:w-[176px] w-[155px]",
 
@@ -147,14 +151,40 @@ export function PositionDataTable(props: IShortCardProps) {
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
         accessor: (x: any) => (
-          <div className="lg:w-[176px] w-[155px] text-text-50 font-subtitle4 ">
-            {nFormatterWithLesserNumber(x.minPrice)} /{" "}
-            {x.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber(x.maxPrice)}
-            <div className="font-body3 text-text-500">
-              {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
-              {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
+          <ToolTip
+            id="tooltipj"
+            position={Position.top}
+            toolTipChild={
+              <>
+                {" "}
+                <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-start ">
+                  <div className={` font-medium `}>
+                    Min price:{" "}
+                    <span className="text-white">
+                      {nFormatterWithLesserNumber5digit(x.minPrice)}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-start ">
+                  <div className={` font-medium  `}>
+                    Max price:{" "}
+                    <span className="text-white">
+                      {x.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber5digit(x.maxPrice)}
+                    </span>
+                  </div>
+                </div>
+              </>
+            }
+          >
+            <div className="lg:w-[176px] w-[155px] text-text-50 font-subtitle4 ">
+              {nFormatterWithLesserNumber(x.minPrice)} /{" "}
+              {x.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber(x.maxPrice)}
+              <div className="font-body3 text-text-500">
+                {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
+                {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
+              </div>
             </div>
-          </div>
+          </ToolTip>
         ),
       },
 
@@ -203,8 +233,10 @@ export function PositionDataTable(props: IShortCardProps) {
         accessor: (x) => (
           <div
             className={clsx(
-              x.feesDollar.isEqualTo(0) ? "cursor-not-allowed" : "cursor-pointer",
-              "w-[120px] flex items-center font-subtitle4 text-primary-500 "
+              x.feesDollar.isEqualTo(0)
+                ? "cursor-not-allowed text-primary-500/[0.6]"
+                : "cursor-pointer text-primary-500",
+              "w-[120px] flex items-center font-subtitle4  "
             )}
             onClick={x.feesDollar.isEqualTo(0) ? () => {} : props.handleCollectFeeOperation}
           >
@@ -218,7 +250,7 @@ export function PositionDataTable(props: IShortCardProps) {
         Header: "",
         id: "manage",
         sticky: "right",
-        columnWidth: "w-[110px] ml-auto",
+        columnWidth: "w-[100px] ml-auto",
         minWidth: 151,
         accessor: (x) => (
           <div

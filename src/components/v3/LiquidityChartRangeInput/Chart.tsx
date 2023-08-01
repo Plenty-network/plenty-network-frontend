@@ -46,7 +46,6 @@ export function Chart({
         .domain([0, max(series, yAccessor)] as number[])
         .range([innerHeight, 0]),
     };
-    console.log(" max(series, yAccessor)", max(series, yAccessor));
 
     if (zoom) {
       const newXscale = zoom.rescaleX(scales.xScale);
@@ -170,7 +169,7 @@ export function Chart({
           <Brush
             id={id}
             xScale={xScale}
-            interactive={interactive}
+            interactive={true}
             brushLabelValue={brushLabels}
             brushExtent={brushDomain ?? (xScale.domain() as [number, number])}
             innerWidth={innerWidth}

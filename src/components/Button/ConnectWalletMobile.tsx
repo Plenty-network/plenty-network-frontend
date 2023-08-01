@@ -143,7 +143,19 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
                 onClick={copyAddress}
               >
                 <Image alt={"alt"} src={copyLogo} />
-                <span>Copy address</span>
+                <span>Copy address</span>(
+                <p
+                  className="text-f14 "
+                  style={{
+                    textOverflow: "ellipsis",
+                    width: "76px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                  }}
+                >
+                  {truncateMiddle(userAddress, 4, 4, "...")}
+                </p>
+                )
               </p>
               <p
                 className="flex gap-2 px-4  py-4 hover:bg-primary-755 cursor-pointer  text-white text-f14"

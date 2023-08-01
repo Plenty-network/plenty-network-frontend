@@ -7,7 +7,11 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { POOL_TYPE } from "../../../pages/pools";
 import { getBalanceFromTzkt, getTezBalance } from "../../api/util/balance";
-import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import {
+  nFormatterWithLesserNumber,
+  nFormatterWithLesserNumber5digit,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import playBtn from "../../assets/icon/common/playBtn.svg";
 import { tzktExplorer } from "../../common/walletconnect";
 
@@ -75,6 +79,7 @@ import { calculateCurrentPrice, getInitialBoundaries } from "../../api/v3/liquid
 import { BalanceNat } from "../../api/v3/types";
 import { collectFees } from "../../operations/v3/fee";
 import FeeTierMain from "./FeeTierMain";
+import Link from "next/link";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -82,11 +87,10 @@ export interface IManageLiquidityProps {
   tokenOut: tokenParameterLiquidity;
   tokenA: tokenParameterLiquidity;
   tokenB: tokenParameterLiquidity;
-  setActiveState: React.Dispatch<React.SetStateAction<string>>;
   activeState: string;
   isGaugeAvailable: boolean;
   showLiquidityModal?: boolean;
-  setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowLiquidityModalPopup: (val: boolean) => void;
   filter?: POOL_TYPE | undefined;
   feeTier: string;
 }
@@ -150,6 +154,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [balanceUpdate, setBalanceUpdate] = useState(false);
 
   const [contentTransaction, setContentTransaction] = useState("");
+  const [contentTransactionSubmitted, setContentTransactionSubmitted] = useState("");
 
   const [settingsShow, setSettingsShow] = useState(false);
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
@@ -225,6 +230,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     setRemove({} as BalanceNat);
     setFirstTokenAmountLiq("");
     setSecondTokenAmountLiq("");
+    dispatch(setleftbrush(0));
+    dispatch(setrightbrush(0));
+    dispatch(setBleftbrush(0));
+    dispatch(setBrightbrush(0));
     dispatch(settopLevelSelectedToken(props.tokenA));
     dispatch(setFullRange(false));
     setBalanceUpdate(false);
@@ -241,6 +250,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         new BigNumber(secondTokenAmountLiq)
       )} ${tEZorCTEZtoUppercase(props.tokenOut.name)} `
     );
+
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
     localStorage.setItem(
@@ -374,7 +384,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   };
 
   const closeModal = () => {
-    // props.setShowLiquidityModalPopup(false);
     props.closeFn(false);
   };
   const handleAddLiquidity = () => {
@@ -537,7 +546,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
 
   const handleIncreaseLiquidityOperation = () => {
     setContentTransaction(
-      `Increase Liquidity ${nFormatterWithLesserNumber(
+      `Increase liquidity ${nFormatterWithLesserNumber(
         new BigNumber(firstTokenAmountIncLiq)
       )} ${tEZorCTEZtoUppercase(props.tokenIn.name)} / ${nFormatterWithLesserNumber(
         new BigNumber(secondTokenAmountIncLiq)
@@ -643,14 +652,22 @@ export function ManageTabV3(props: IManageLiquidityProps) {
 
   const handleRemoveLiquidityOperation = () => {
     setContentTransaction(
-      `Remove liquidity ${nFormatterWithLesserNumber(remove.x)} ${tEZorCTEZtoUppercase(
-        props.tokenA.name
-      )} / ${nFormatterWithLesserNumber(remove.y)} ${tEZorCTEZtoUppercase(props.tokenB.name)} `
+      `Remove liquidity ${nFormatterWithLesserNumber5digit(
+        selectedPosition.liquidity.x.minus(remove.x)
+      )} ${tEZorCTEZtoUppercase(props.tokenA.name)} / ${nFormatterWithLesserNumber5digit(
+        selectedPosition.liquidity.y.minus(remove.y)
+      )} ${tEZorCTEZtoUppercase(props.tokenB.name)} `
     );
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenA.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenB.name));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, nFormatterWithLesserNumber(remove.x).toString());
-    localStorage.setItem(SECOND_TOKEN_AMOUNT, nFormatterWithLesserNumber(remove.y).toString());
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber5digit(selectedPosition.liquidity.x.minus(remove.x)).toString()
+    );
+    localStorage.setItem(
+      SECOND_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber5digit(selectedPosition.liquidity.y.minus(remove.y)).toString()
+    );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setScreen(ActivePopUp.Positions);
     setShowConfirm(false);
@@ -816,12 +833,12 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         id="modal_outer"
         className={clsx(
           screen === ActivePopUp.Positions
-            ? "lg:w-[972px] lg:max-w-[972px] border  border-popUpNotification  lg:rounded-3xl p-5"
+            ? "lg:w-[972px] lg:max-w-[972px] border  border-popUpNotification  lg:rounded-3xl py-5 px-3 md:p-5"
             : screen === ActivePopUp.ConfirmAddV3
-            ? "sm:w-[602px] sm:max-w-[602px] border  border-popUpNotification lg:rounded-3xl  p-5"
+            ? "sm:w-[602px] sm:max-w-[602px] border  border-popUpNotification lg:rounded-3xl py-5 px-3 md:p-5"
             : screen === ActivePopUp.NewPosition
-            ? "lg:w-[972px] lg:max-w-[972px] md:w-[602px] border  border-popUpNotification  md:rounded-3xl p-5"
-            : "sm:w-[602px] sm:max-w-[602px] border md:rounded-3xl  border-popUpNotification   p-5",
+            ? "lg:w-[972px] lg:max-w-[972px] md:w-[602px] border  border-popUpNotification  md:rounded-3xl py-5 px-3 md:p-5"
+            : "sm:w-[602px] sm:max-w-[602px] border md:rounded-3xl  border-popUpNotification  py-5 px-3 md:p-5",
           screen === ActivePopUp.ConfirmExisting && "hidden",
           "  mt-[70px] mb-[60px] lg:mt-[75px]  mx-auto fade-in  bg-card-500"
         )}
@@ -1000,12 +1017,14 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         ) : screen === ActivePopUp.Positions ? (
           <>
             <div className="flex gap-1 h-[32px] items-center">
-              <p
-                className="cursor-pointer relative top-[3px]"
-                onClick={() => props.setShowLiquidityModalPopup(false)}
-              >
-                <Image alt={"alt"} src={arrowLeft} />
-              </p>
+              <Link href="/pools/v3">
+                <p
+                  className="cursor-pointer relative top-[3px]"
+                  onClick={() => props.closeFn(false)}
+                >
+                  <Image alt={"alt"} src={arrowLeft} />
+                </p>
+              </Link>
               <p className="text-white">
                 {props.activeState === ActiveLiquidity.Liquidity && "Manage liquidity"}
               </p>

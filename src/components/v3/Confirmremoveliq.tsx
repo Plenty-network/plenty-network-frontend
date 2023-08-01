@@ -9,6 +9,7 @@ import { useAppSelector } from "../../redux";
 import {
   changeSource,
   nFormatterWithLesserNumber,
+  nFormatterWithLesserNumber5digit,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
 import { tokenParameterLiquidity } from "../Liquidity/types";
@@ -69,7 +70,9 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                 />
               </p>
               <p className="font-title2-bold ml-1">
-                {nFormatterWithLesserNumber(props.removeTokenA)}
+                {nFormatterWithLesserNumber5digit(
+                  props.selectedPosition.liquidity.x.minus(props.removeTokenA)
+                )}
               </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
@@ -91,7 +94,9 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
                 />
               </p>
               <p className="font-title2-bold ml-1">
-                {nFormatterWithLesserNumber(props.removeTokenB)}
+                {nFormatterWithLesserNumber5digit(
+                  props.selectedPosition.liquidity.y.minus(props.removeTokenB)
+                )}
               </p>
               <p className="font-body4 ">{tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>

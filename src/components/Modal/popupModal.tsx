@@ -44,9 +44,9 @@ export function PopUpModal(props: IPopUpModalProps) {
       <div
         id="popuploadermain"
         className={clsx(
-          "broder  relative border-popUpNotification  max-w-[460px]  bg-sideBar   border flex  flex-col   py-5",
+          "broder  relative border-popUpNotification  max-w-[460px]  bg-sideBar   border flex  flex-col   ",
           props.title === "Select Token" && "h-[576px] ",
-          props.Name === "Manage" ? "px-0 py-3" : "py-5 px-3 md:px-5",
+          props.Name === "Manage" ? "px-0 py-3" : "py-4 md:py-5  px-5",
           props.Name === "video"
             ? "md:w-max"
             : props.isFullSizeOnMobile
@@ -59,12 +59,12 @@ export function PopUpModal(props: IPopUpModalProps) {
         {props.Name !== "disclaimer" && (
           <div
             className={clsx(
-              "absolute right-0  px-6 cursor-pointer hover:opacity-90 hover:scale-90",
+              "absolute right-0  px-5 cursor-pointer hover:opacity-90 hover:scale-90",
               props.Name === "newposition"
                 ? "top-[28px]"
                 : props.Name === "positions"
                 ? "top-[26px]"
-                : "top-[23px]"
+                : "md:top-[22px] top-[17px]"
             )}
             onClick={() => {
               setIsClose(true);

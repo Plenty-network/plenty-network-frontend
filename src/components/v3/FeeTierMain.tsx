@@ -48,7 +48,7 @@ function FeeTierMain(props: IFeeTierMainProps) {
     },
   ];
   return (
-    <div className="flex gap-[7px]  items-center justify-center">
+    <div className="flex gap-1 md:gap-[7px]  items-center justify-center">
       {fee.map((feeInd, index) => {
         return (
           <div

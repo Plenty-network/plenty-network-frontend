@@ -25,7 +25,13 @@ export function InfoIconToolTip(props: IInfoIconToolTipProps) {
           )
         }
       >
-        <Image alt={"alt"} src={infoIcon} className="cursor-pointer" />
+        <Image
+          alt={"alt"}
+          width={"14px"}
+          height={"14px"}
+          src={infoIcon}
+          className="cursor-pointer"
+        />
       </ToolTip>
     </span>
   );

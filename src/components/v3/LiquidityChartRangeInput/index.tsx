@@ -10,6 +10,7 @@ import { tokenParameterLiquidity } from "../../Liquidity/types";
 import { Chart } from "./Chart";
 import { useDensityChartData } from "./hooks";
 import { ZoomLevels } from "./types";
+import { isMobile } from "react-device-detect";
 export enum Bound {
   LOWER = "LOWER",
   UPPER = "UPPER",
@@ -176,11 +177,19 @@ export default function LiquidityChartRangeInput({
     // Sentry.captureMessage(error.toString(), "log");
   }
 
-  const isUninitialized = !currencyA || !currencyB || formattedData === undefined;
+  const isUninitialized =
+    !currencyA ||
+    !currencyB ||
+    formattedData === undefined ||
+    (topLevelSelectedToken === tokeninorg ? leftbrush < 0 : Bleftbrush < 0) ||
+    (topLevelSelectedToken === tokeninorg ? rightbrush < 0 : Brightbrush < 0);
   return (
     <div style={{ minHeight: "200px" }}>
       {isUninitialized ? (
-        <div className="flex items-center pt-[100px]  justify-center">Loading chart</div>
+        <div className="flex flex-col items-center pt-[60px]  justify-center">
+          <div className="spinner"></div>
+          <div className="mt-2"> Loading chart</div>
+        </div>
       ) : isLoadingData ? (
         <div className="justify-center items-center  flex h-[180px]">
           <div className="spinner"></div>
@@ -198,7 +207,7 @@ export default function LiquidityChartRangeInput({
         <div className="relative justify-center items-center">
           <Chart
             data={{ series: formattedData, current: price }}
-            dimensions={{ width: 400, height: 200 }}
+            dimensions={{ width: isMobile ? 375 : 400, height: 200 }}
             margins={{ top: 10, right: 2, bottom: 20, left: 0 }}
             styles={{
               area: {
@@ -211,7 +220,7 @@ export default function LiquidityChartRangeInput({
                 },
               },
             }}
-            interactive={interactive}
+            interactive={true}
             brushLabels={brushLabelValue}
             brushDomain={brushDomain}
             onBrushDomainChange={onBrushDomainChangeEnded}

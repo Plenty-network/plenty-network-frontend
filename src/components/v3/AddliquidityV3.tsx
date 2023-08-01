@@ -126,16 +126,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             maxTickA,
             props.selectedFeeTier
           ).then((response) => {
-            console.log(
-              response,
-              new BigNumber(input),
-              props.tokenIn.symbol,
-              props.tokenOut.symbol,
-              minTickA,
-              maxTickA,
-              props.selectedFeeTier,
-              "response"
-            );
             setSecondLoading(false);
             inputDisabled === "false"
               ? props.setSecondTokenAmount(response)
@@ -144,8 +134,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         }, 600);
       } else {
         timeout.current = setTimeout(() => {
-          console.log("mintick", minTickB, maxTickB);
-
           estimateTokenXFromTokenY(
             new BigNumber(input),
             props.tokenOut.symbol,
@@ -155,17 +143,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             props.selectedFeeTier
           ).then((response) => {
             setSecondLoading(false);
-            console.log(
-              response.toString(),
-              input,
-              props.tokenOut.symbol,
-              props.tokenIn.symbol,
 
-              minTickB,
-              maxTickB,
-              props.selectedFeeTier,
-              "response"
-            );
             inputDisabled === "false"
               ? props.setSecondTokenAmount(response)
               : props.setSecondTokenAmount(0);
@@ -196,16 +174,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             maxTickA,
             props.selectedFeeTier
           ).then((response) => {
-            console.log(
-              response,
-              new BigNumber(input),
-              props.tokenIn.symbol,
-              props.tokenOut.symbol,
-              minTickA,
-              maxTickA,
-              props.selectedFeeTier,
-              "response"
-            );
             setFirstLoading(false);
 
             inputDisabled === "false"
@@ -223,16 +191,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             maxTickB,
             props.selectedFeeTier
           ).then((response) => {
-            console.log(
-              response,
-              new BigNumber(input),
-              props.tokenIn.symbol,
-              props.tokenOut.symbol,
-              minTickA,
-              maxTickA,
-              props.selectedFeeTier,
-              "response"
-            );
             setFirstLoading(false);
             inputDisabled === "false"
               ? props.setFirstTokenAmount(response.toString())
@@ -258,7 +216,7 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
       : handleLiquidityInput(props.userBalances[props.tokenOut.name], "tokenOut");
   };
   return (
-    <div className="border fade-in-light relative border-text-800 bg-card-200 p-4 rounded-2xl ">
+    <div className="border fade-in-light relative border-text-800 bg-card-200 p-4 rounded-2xl mt-0.5">
       <div className="border hover:border-text-700/[0.8] relative flex border-text-800/[0.5] rounded-2xl h-[72px]">
         <div className="w-[45%] md:w-[40%] rounded-l-2xl  border-r items-center flex border-text-800/[0.5] bg-card-300">
           <div className="ml-2 md:ml-5">
@@ -337,14 +295,15 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
         </div>
       </div>
 
-      {(!isLoadingData &&
-      currentPrice !== 0 &&
-      bcurrentPrice !== 0 &&
-      topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? leftbrush !== 0
-        : bleftbrush !== 0 && topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? rightbrush !== 0
-        : brightbrush !== 0) &&
+      {!isLoadingData &&
+        Number(currentPrice) !== 0 &&
+        Number(bcurrentPrice) !== 0 &&
+        (topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? Number(leftbrush) !== 0
+          : Number(bleftbrush) !== 0) &&
+        (topLevelSelectedToken.symbol === tokeninorg.symbol
+          ? Number(rightbrush) !== 0
+          : Number(brightbrush) !== 0) &&
         (topLevelSelectedToken.symbol === tokeninorg.symbol
           ? Number(leftbrush) < Number(currentPrice) && Number(rightbrush) < Number(currentPrice)
           : Number(bleftbrush) < Number(bcurrentPrice) &&

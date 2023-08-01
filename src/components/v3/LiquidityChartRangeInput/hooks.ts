@@ -42,7 +42,6 @@ export function useDensityChartData({
     setisloading(true);
     const poolAddress = getV3PoolAddressWithFeeTier(currencyA?.symbol, currencyB?.symbol, feeTier);
     getTickAndRealPriceFromPool(poolAddress).then((response) => {
-      console.log("response", poolAddress);
       setData(response);
       setisloading(false);
     });

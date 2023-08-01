@@ -74,8 +74,8 @@ export function nFormatterWithLesserNumber5digit(num: BigNumber) {
     if (!num.isFinite()) {
       return "∞";
     }
-    if (num.isLessThan(0.01)) {
-      return "<0.01";
+    if (num.isLessThan(0.00001)) {
+      return "<0.00001";
     }
     if (num.isGreaterThanOrEqualTo(1000000000)) {
       return num.dividedBy(1000000000).toFixed(2) + "b";
@@ -84,7 +84,7 @@ export function nFormatterWithLesserNumber5digit(num: BigNumber) {
       return num.dividedBy(1000000).toFixed(2) + "m";
     }
 
-    return num.toFixed(2);
+    return num.toFixed(5);
   } else {
     return 0;
   }

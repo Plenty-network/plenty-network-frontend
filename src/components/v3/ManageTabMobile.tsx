@@ -236,44 +236,7 @@ export function ManageTabMobile(props: IManageLiquidityProps) {
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
     setScreen(ActivePopUp.NewPosition);
-    console.log(
-      "minTickA",
-      minTickA,
-      "maxTickA",
-      maxTickA,
-      "minTickB",
-      minTickB,
-      "maxTickB",
-      maxTickB
-    );
-    console.log(
-      "parameters",
-      walletAddress,
-      minTickA,
-      maxTickA,
-      minTickB,
-      maxTickB,
-      "ll",
-      topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,
-      topLevelSelectedToken.symbol === tokeninorg.symbol ? maxTickA : maxTickB,
-      topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? props.tokenIn.symbol
-        : props.tokenOut.symbol,
-      topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? props.tokenOut.symbol
-        : props.tokenIn.symbol,
-      Math.floor(new Date().getTime() / 1000) + slippage * 60,
-      {
-        x:
-          topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? new BigNumber(firstTokenAmountLiq).toString()
-            : new BigNumber(secondTokenAmountLiq).toString(),
-        y:
-          topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? new BigNumber(secondTokenAmountLiq).toString()
-            : new BigNumber(firstTokenAmountLiq).toString(),
-      }
-    );
+
     LiquidityOperation(
       walletAddress,
       topLevelSelectedToken.symbol === tokeninorg.symbol ? minTickA : minTickB,

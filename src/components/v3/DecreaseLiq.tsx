@@ -6,6 +6,7 @@ import clsx from "clsx";
 import {
   changeSource,
   nFormatterWithLesserNumber,
+  nFormatterWithLesserNumber5digit,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
 import { useMemo, useRef, useEffect } from "react";
@@ -53,6 +54,7 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
     props.setShow(true);
     props.setScreen(ActivePopUp.ConfirmExisting);
   };
+
   // const DecreaseButton = useMemo(() => {
   //   if (!walletAddress) {
   //     return (
@@ -173,7 +175,11 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             <p className="font-body4 text-text-400">Amount being removed</p>
             <p className="ml-auto flex gap-2 items-center">
               <span className="font-body4">
-                {props.remove?.x ? nFormatterWithLesserNumber(props.remove?.x) : 0}
+                {props.remove?.x
+                  ? nFormatterWithLesserNumber5digit(
+                      selectedPosition.liquidity.x.minus(props.remove?.x)
+                    )
+                  : 0}
               </span>
               <span className="font-body4">{tEZorCTEZtoUppercase(props.tokenIn.symbol)}</span>
               <span>
@@ -199,7 +205,11 @@ export default function DecreaseLiq(props: IDecLiquidityProp) {
             <p className="font-body4 text-text-400">Amount being removed</p>
             <p className="ml-auto flex gap-2 items-center">
               <span className="font-body4">
-                {props.remove?.y ? nFormatterWithLesserNumber(props.remove?.y) : 0}
+                {props.remove?.y
+                  ? nFormatterWithLesserNumber5digit(
+                      selectedPosition.liquidity.y.minus(props.remove?.y)
+                    )
+                  : 0}
               </span>
               <span className="font-body4">{tEZorCTEZtoUppercase(props.tokenOut.symbol)}</span>
               <span>

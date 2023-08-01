@@ -24,39 +24,34 @@ import { CircularOverLappingImage } from "../../Pools/Component/CircularImageInf
 import { Apr } from "./Apr";
 import { PoolsTextWithTooltip } from "./PoolsText";
 import { settopLevelSelectedToken } from "../../../redux/poolsv3";
+import {
+  setActiveStatev3,
+  setFeeTier,
+  setShowLiquidityModalV3,
+  setTokenXV3,
+  setTokenYV3,
+} from "../../../redux/poolsv3/manageLiq";
+import Link from "next/link";
 
 export interface IShortCardProps {
   className?: string;
-  poolsFilter?: POOL_TYPE;
+  poolsFilter: POOL_TYPE;
   isConnectWalletRequired?: boolean;
   searchValue: string;
-  setActiveState: React.Dispatch<React.SetStateAction<string>>;
+
   setSearchValue?: Function;
-  setFeeTier: React.Dispatch<React.SetStateAction<string>>;
   activeStateTab: PoolsCardHeaderV3;
   setActiveStateTab: React.Dispatch<React.SetStateAction<string>>;
-  setShowLiquidityModal: (val: boolean) => void;
-  showLiquidityModal: boolean;
-  setTokenIn: React.Dispatch<React.SetStateAction<tokenParameterLiquidity>>;
-  setTokenOut: React.Dispatch<React.SetStateAction<tokenParameterLiquidity>>;
+
   reFetchPool: boolean;
   //data: IAllPoolsData[];
   isFetching: boolean;
   isError: boolean;
-  setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IManageBtnProps {
-  setFeeTier: React.Dispatch<React.SetStateAction<string>>;
-  setActiveState: React.Dispatch<React.SetStateAction<string>>;
-  setTokenIn: React.Dispatch<React.SetStateAction<tokenParameterLiquidity>>;
-  setTokenOut: React.Dispatch<React.SetStateAction<tokenParameterLiquidity>>;
-  setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
-  isLiquidityAvailable: boolean;
-  setShowLiquidityModal: (val: boolean) => void;
-  isStakeAvailable: boolean;
   tokenA: string;
   tokenB: string;
-  isGauge: boolean;
+
   feeTier: any;
 }
 export function MyPoolTablev3(props: IShortCardProps) {
@@ -113,144 +108,6 @@ export function MyPoolTablev3(props: IShortCardProps) {
 
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
 
-  const mobilecolumns = React.useMemo<Column<any>[]>(
-    () => [
-      {
-        Header: "Pools",
-        id: "pools",
-        columnWidth: "w-[240px]",
-        canShort: true,
-        showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
-        accessor: (x) => (
-          <>
-            <div className={clsx("flex gap-1 items-center max-w-[240px]")}>
-              <CircularOverLappingImage
-                tokenA={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
-                    ? x.tokenB?.toString()
-                    : x.tokenA?.toString()
-                }
-                tokenB={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
-                    ? x.tokenA?.toString()
-                    : x.tokenB?.toString()
-                }
-                src1={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
-                    ? getImagesPath(x.tokenB?.toString())
-                    : getImagesPath(x.tokenA?.toString())
-                }
-                src2={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
-                    ? getImagesPath(x.tokenA?.toString())
-                    : getImagesPath(x.tokenB?.toString())
-                }
-              />
-              <div className="flex items-center ">
-                <span className="md:text-f14 text-f12 text-white ">
-                  {tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
-                    ? ` ${tEZorCTEZtoUppercase(x.tokenB?.toString())} / ${tEZorCTEZtoUppercase(
-                        x.tokenA?.toString()
-                      )}`
-                    : ` ${tEZorCTEZtoUppercase(x.tokenA?.toString())} / ${tEZorCTEZtoUppercase(
-                        x.tokenB?.toString()
-                      )}`}
-                </span>
-                <span className="font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-1">
-                  {x.feeTier}%
-                </span>
-              </div>
-            </div>
-          </>
-        ),
-      },
-
-      {
-        Header: "APR",
-        id: "apr",
-        columnWidth: "w-[80px]",
-        subText: "external",
-        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
-        isToolTipEnabled: true,
-        canShort: true,
-        showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x: any) => (
-          // x.isGaugeAvailable ? (
-          <Apr currentApr={x.apr} />
-        ),
-        // ) : (
-        //   <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-        //     -
-        //   </div>
-        // ),
-      },
-
-      {
-        Header: "Volume",
-        id: "Volume24h",
-        subText: "24h",
-        columnWidth: "w-[129px]",
-        isToolTipEnabled: true,
-        tooltipMessage: "Pool’s trading volume in the last 24 hours.",
-        canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
-        accessor: (x: any) => <PoolsTextWithTooltip text={x.volume.toString()} />,
-      },
-      {
-        Header: "TVL",
-        id: "TVL",
-        columnWidth: "w-[122px]",
-        tooltipMessage: "Total value locked up in the pool.",
-        isToolTipEnabled: true,
-        canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
-        accessor: (x) => <PoolsTextWithTooltip text={x.tvl.toString()} />,
-      },
-      {
-        Header: "Fees",
-        id: "fees",
-        columnWidth: "w-[122px]",
-        subText: "7d",
-        tooltipMessage: "Trading fees collected by the pool in the current epoch.",
-        isToolTipEnabled: true,
-        canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
-        accessor: (x) => <PoolsTextWithTooltip text={x.fees.toString()} />,
-      },
-
-      {
-        Header: "",
-        id: "manage",
-        sticky: "right",
-        columnWidth: "w-[160px] ml-auto",
-        minWidth: 151,
-        accessor: (x) => (
-          <ManageBtn
-            feeTier={x.feeTier}
-            isLiquidityAvailable={false}
-            isStakeAvailable={false}
-            tokenA={x.tokenA?.toString()}
-            tokenB={x.tokenB?.toString()}
-            setShowLiquidityModal={props.setShowLiquidityModal}
-            isGauge={x.isGaugeAvailable}
-            setIsGaugeAvailable={setIsGaugeAvailable}
-            setTokenIn={props.setTokenIn}
-            setTokenOut={props.setTokenOut}
-            setFeeTier={props.setFeeTier}
-            setActiveState={props.setActiveState}
-          />
-        ),
-      },
-    ],
-    [valueFormat]
-  );
   const desktopcolumns = React.useMemo<Column<any>[]>(
     () => [
       {
@@ -262,15 +119,6 @@ export function MyPoolTablev3(props: IShortCardProps) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x) => (
           <>
-            {/* {!x.isGaugeAvailable ? (
-              <ToolTip
-                id="tooltipM"
-                position={Position.top}
-                toolTipChild={<div className="">No gauge for the pool</div>}
-              >
-                <Image src={newPool} width={"20px"} height={"20px"} className="cursor-pointer" />
-              </ToolTip>
-            ) : null} */}
             <div className={clsx("flex gap-1 items-center max-w-[270px]", "ml-[34px]")}>
               <CircularOverLappingImage
                 tokenA={
@@ -309,7 +157,7 @@ export function MyPoolTablev3(props: IShortCardProps) {
                         x.tokenB?.toString()
                       )}`}
                 </span>
-                <span className="font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-1">
+                <span className="md:font-body2 font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-3">
                   {x.feeTier}%
                 </span>
               </div>
@@ -327,15 +175,7 @@ export function MyPoolTablev3(props: IShortCardProps) {
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
-        accessor: (x: any) => (
-          // x.isGaugeAvailable ? (
-          <Apr currentApr={x.apr} />
-        ),
-        // ) : (
-        //   <div className="flex justify-center items-center font-body2 md:font-body4 text-right">
-        //     -
-        //   </div>
-        // ),
+        accessor: (x: any) => <Apr currentApr={x.apr} />,
       },
 
       {
@@ -380,17 +220,8 @@ export function MyPoolTablev3(props: IShortCardProps) {
         accessor: (x) => (
           <ManageBtn
             feeTier={x.feeTier}
-            isLiquidityAvailable={false}
-            isStakeAvailable={false}
             tokenA={x.tokenA?.toString()}
             tokenB={x.tokenB?.toString()}
-            setShowLiquidityModal={props.setShowLiquidityModal}
-            isGauge={x.isGaugeAvailable}
-            setIsGaugeAvailable={setIsGaugeAvailable}
-            setTokenIn={props.setTokenIn}
-            setTokenOut={props.setTokenOut}
-            setFeeTier={props.setFeeTier}
-            setActiveState={props.setActiveState}
           />
         ),
       },
@@ -400,76 +231,58 @@ export function MyPoolTablev3(props: IShortCardProps) {
 
   function ManageBtn(props: IManageBtnProps): any {
     return (
-      <div className="pl-0 pr-1 md:pr-0 md:pl-0">
-        <div
-          className="bg-primary-500/10 font-caption2 md:font-subtitle4  hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-5 md:px-7 py-2 rounded-lg"
-          onClick={() => {
-            props.setIsGaugeAvailable(props.isGauge);
-            if (props.isGauge) {
-              props.isLiquidityAvailable
-                ? props.isStakeAvailable
-                  ? props.setActiveState(ActiveLiquidity.Rewards)
-                  : props.setActiveState(ActiveLiquidity.Staking)
-                : props.setActiveState(ActiveLiquidity.Liquidity);
-            } else {
-              props.setActiveState(ActiveLiquidity.Liquidity);
-            }
-            props.setFeeTier(props.feeTier);
-            props.setTokenIn({
-              name: props.tokenA,
-              image: getImagesPath(props.tokenA?.toString()),
-              symbol: props.tokenA,
-            });
-            dispatch(
-              settopLevelSelectedToken({
-                name: props.tokenA,
-                image: getImagesPath(props.tokenA?.toString()),
-                symbol: props.tokenA,
-              })
-            );
-            props.setTokenOut({
-              name: props.tokenB,
-              image: getImagesPath(props.tokenB?.toString()),
-              symbol: props.tokenB,
-            });
+      <Link href={`/pools/v3/manageLiquidity`}>
+        <div className="pl-0 pr-1 md:pr-0 md:pl-0">
+          <div
+            className="bg-primary-500/10 font-caption2 md:font-subtitle4  hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-5 md:px-7 py-2 rounded-lg"
+            onClick={() => {
+              dispatch(setActiveStatev3(ActiveLiquidity.Liquidity));
 
-            props.setShowLiquidityModal(true);
-          }}
-        >
-          Manage
+              dispatch(setFeeTier(props.feeTier));
+              //props.setFeeTier(props.feeTier);
+              dispatch(
+                setTokenXV3({
+                  name: props.tokenA,
+                  image: getImagesPath(props.tokenA?.toString()),
+                  symbol: props.tokenA,
+                })
+              );
+              dispatch(
+                setTokenYV3({
+                  name: props.tokenB,
+                  image: getImagesPath(props.tokenB?.toString()),
+                  symbol: props.tokenB,
+                })
+              );
+              dispatch(
+                settopLevelSelectedToken({
+                  name: props.tokenA,
+                  image: getImagesPath(props.tokenA?.toString()),
+                  symbol: props.tokenA,
+                })
+              );
+              dispatch(setShowLiquidityModalV3(true));
+            }}
+          >
+            Manage
+          </div>
         </div>
-      </div>
+      </Link>
     );
   }
   return (
     <>
-      {!isMobile && (
+      {true && (
         <div className={` overflow-x-auto innerPool  ${props.className}`}>
           <Table<any>
-            columns={isMobile ? mobilecolumns : desktopcolumns}
+            columns={desktopcolumns}
             data={poolsTableData}
             shortby="fees"
             TableName="newPools"
             tableType={true}
             isFetched={isFetched}
             isConnectWalletRequired={props.isConnectWalletRequired}
-            TableWidth="min-w-[780px]"
-            NoData={NoData}
-            loading={props.isFetching}
-          />
-        </div>
-      )}
-      {isMobile && !props.showLiquidityModal && (
-        <div className={` overflow-x-auto innerPool  ${props.className}`}>
-          <Table<any>
-            columns={isMobile ? mobilecolumns : desktopcolumns}
-            data={poolsTableData}
-            shortby="fees"
-            TableName="newPools"
-            tableType={true}
-            isFetched={isFetched}
-            isConnectWalletRequired={props.isConnectWalletRequired}
-            TableWidth="min-w-[800px]"
+            TableWidth="min-w-[880px]"
             NoData={NoData}
             loading={props.isFetching}
           />

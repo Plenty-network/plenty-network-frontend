@@ -5,7 +5,11 @@ import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { getBalanceFromTzkt, getTezBalance } from "../../api/util/balance";
-import { nFormatterWithLesserNumber, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import {
+  nFormatterWithLesserNumber,
+  nFormatterWithLesserNumber5digit,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { tzktExplorer } from "../../common/walletconnect";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import ConfirmTransaction from "../ConfirmTransaction";
@@ -189,7 +193,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
-        trailingText: `Increase Liquidity ${localStorage.getItem(
+        trailingText: `Increase liquidity ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
         )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
           SECOND_TOKEN_AMOUNT
@@ -261,14 +265,22 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
 
   const handleRemoveLiquidityOperation = () => {
     setContentTransaction(
-      `Remove liquidity ${nFormatterWithLesserNumber(remove.x)} ${tEZorCTEZtoUppercase(
-        props.tokenIn.name
-      )} / ${nFormatterWithLesserNumber(remove.y)} ${tEZorCTEZtoUppercase(props.tokenOut.name)} `
+      `Remove liquidity ${nFormatterWithLesserNumber5digit(
+        selectedPosition.liquidity.x.minus(remove.x)
+      )} ${tEZorCTEZtoUppercase(props.tokenIn.name)} / ${nFormatterWithLesserNumber5digit(
+        selectedPosition.liquidity.y.minus(remove.y)
+      )} `
     );
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
-    localStorage.setItem(FIRST_TOKEN_AMOUNT, nFormatterWithLesserNumber(remove.x).toString());
-    localStorage.setItem(SECOND_TOKEN_AMOUNT, nFormatterWithLesserNumber(remove.y).toString());
+    localStorage.setItem(
+      FIRST_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber5digit(selectedPosition.liquidity.x.minus(remove.x)).toString()
+    );
+    localStorage.setItem(
+      SECOND_TOKEN_AMOUNT,
+      nFormatterWithLesserNumber5digit(selectedPosition.liquidity.y.minus(remove.y)).toString()
+    );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setScreen(ActivePopUp.ManageExisting);
     setShowConfirm(false);

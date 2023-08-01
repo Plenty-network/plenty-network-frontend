@@ -22,6 +22,7 @@ import { rpcData } from "./userSettings/rpcData";
 import { airdropTransactions } from "./airdrop/transactions";
 import { airdropState } from "./airdrop/state";
 import { poolsv3 } from "./poolsv3";
+import { ManageLiquidityV3 } from "./poolsv3/manageLiq";
 
 const reducers = combineReducers({
   wallet: wallet,
@@ -42,6 +43,7 @@ const reducers = combineReducers({
   airdropTransactions: airdropTransactions,
   airdropState: airdropState,
   poolsv3: poolsv3,
+  ManageLiquidityV3: ManageLiquidityV3,
 });
 
 const persistConfig = {
