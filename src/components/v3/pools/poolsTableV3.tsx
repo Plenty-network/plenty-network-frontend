@@ -133,7 +133,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x) => (
           <>
-            <div className={clsx("flex gap-1 items-center max-w-[270px]", "ml-[34px]")}>
+            <div className={clsx("flex gap-1 items-center max-w-[270px]", "ml-1 md:ml-[34px]")}>
               <CircularOverLappingImage
                 tokenA={
                   tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
@@ -229,7 +229,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         Header: "",
         id: "manage",
         sticky: "right",
-        columnWidth: "w-[140px] ml-auto",
+        columnWidth: "w-[100px] md:w-[140px] ml-auto",
         minWidth: 151,
         accessor: (x) => (
           <ManageBtn
