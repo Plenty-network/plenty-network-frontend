@@ -6,6 +6,8 @@ export enum Bound {
 export interface ChartEntry {
   activeLiquidity: number;
   price0: number;
+  price1: number;
+  price2: number;
   width: number;
   valueX: number;
 }
