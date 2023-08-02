@@ -1,5 +1,6 @@
 import JSBI from "jsbi";
 
+import { BigNumber } from "bignumber.js";
 import { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getTickAndRealPriceFromPool } from "../../../api/v3/helper";
@@ -55,23 +56,31 @@ export function useDensityChartData({
 
     const newData: ChartEntry[] = [];
 
-    for (let i = 1; i < data.length - 1; i++) {
+    let liquidity = new BigNumber(data[0].liquidityNet);
+
+    for (let i = 0; i < data.length - 1; i++) {
       const t: any = data[i];
 
       const chartEntry = {
-        width: Number(data[i + 1].realPriceX) - Number(data[i].realPriceX),
-        valueX: Number(data[i + 1].realPriceX + data[i].realPriceX) / 2,
-        activeLiquidity: parseFloat(t.liquidityNet) / 1000000000000000000,
+        width:
+          topLevelSelectedToken.symbol === tokeninorg.symbol
+            ? Number(data[i + 1].realPriceX) - Number(data[i].realPriceX)
+            : Number(data[i].realPriceY) - Number(data[i + 1].realPriceY),
+        valueX: (Number(data[i + 1].realPriceX) + Number(data[i].realPriceX)) / 2,
+        activeLiquidity: liquidity.toNumber(),
         price0:
           topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? parseFloat(t.realPriceX)
-            : parseFloat(t.realPriceY),
+            ? (Number(data[i + 1].realPriceX) + Number(data[i].realPriceX)) / 2
+            : (Number(data[i + 1].realPriceY) + Number(data[i].realPriceY)) / 2,
       };
+
+      liquidity = liquidity.plus(data[i + 1].liquidityNet);
 
       if (chartEntry.activeLiquidity > 0) {
         newData.push(chartEntry);
       }
     }
+
     dispatch(setIsLoading(false));
     return newData;
   }, [data, topLevelSelectedToken]);

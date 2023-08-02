@@ -228,9 +228,9 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
       </div>
       {selectedPosition.minPrice.isLessThan(props.currentPrice) &&
         selectedPosition.maxPrice.isLessThan(props.currentPrice) && (
-          <div className="absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[517px]">
+          <div className="absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	 pl-2	md:pl-7 backdrop-blur-[6px]	md:w-[517px]">
             <Image src={lock} />
-            <span className="font-subtitle3 w-[318px] ml-5">
+            <span className="font-caption1-small  md:font-subtitle3 w-[250px] md:w-[318px] ml-2 md:ml-5">
               The market price is outside your specified price range. Single-asset deposit only.
             </span>
           </div>
@@ -329,9 +329,9 @@ function IncreaseLiquidityInputV3(props: IAddLiquidityProps) {
         </div>
         {selectedPosition.minPrice.isGreaterThan(props.currentPrice) &&
           selectedPosition.maxPrice.isGreaterThan(props.currentPrice) && (
-            <div className="absolute top-[0px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg	pl-7 backdrop-blur-[6px]	w-[517px]">
+            <div className="absolute top-[0px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg pl-2	md:pl-7 backdrop-blur-[6px]	md:w-[517px]">
               <Image src={lock} />
-              <span className="font-subtitle3 w-[318px] ml-5">
+              <span className="font-caption1-small  md:font-subtitle3 w-[250px] md:w-[318px] ml-2 md:ml-5">
                 The market price is outside your specified price range. Single-asset deposit only.
               </span>
             </div>

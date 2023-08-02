@@ -30,22 +30,20 @@ const BarChart1: React.FC<BarChartProps> = ({
       {data.map((d: ChartEntry, index: number) => {
         const x: number = xScale(xAccessor(d));
         const y: number = yScale(yAccessor(d));
-        console.log(
-          "yAccessor(d)",
-          yAccessor(d),
-          "yScale(yAccessor(d))",
-          yScale(yAccessor(d)),
-          "y",
-          y,
-          "x",
-          x
-        );
 
         const width: number = d.width;
         const barHeight: number = height - y;
-        console.log("BarChart1", x, y, width, height - y);
+
         return (
-          <rect key={index} x={x} y={y} width={20} height={barHeight} fill={styles.bar.fill} />
+          <rect
+            key={index}
+            x={x}
+            y={y}
+            width={width}
+            height={barHeight}
+            fill={"rgba(21,112,241,0.2)"}
+            stroke={"#1570F1"}
+          />
         );
       })}
     </g>

@@ -2,16 +2,20 @@ import { useState, useEffect, useMemo } from "react";
 
 import { tokenParameter } from "../constants/swap";
 import { useRouter } from "next/router";
-import { useAppSelector } from "../redux";
+import { AppDispatch, useAppSelector } from "../redux";
 import { tokenParameterLiquidity } from "../components/Liquidity/types";
+import { useDispatch } from "react-redux";
+import { setShowLiquidityModalV3 } from "../redux/poolsv3/manageLiq";
 
 export const useLocationStateInManageLiquidity = () => {
   const tokens = useAppSelector((state) => state.config.tokens);
-  const tokensArray = Object.entries(tokens);
+  const dispatch = useDispatch<AppDispatch>();
   const tokenOut = useAppSelector((state) => state.ManageLiquidityV3.tokenY);
   const tokenIn = useAppSelector((state) => state.ManageLiquidityV3.tokenX);
   const router = useRouter();
-
+  const showLiquidityModal = useAppSelector(
+    (state) => state.ManageLiquidityV3.showLiquidityModalV3
+  );
   const [tokenX, setTokenX] = useState<tokenParameterLiquidity>(
     router.asPath.indexOf("=") >= 0
       ? router.asPath
@@ -68,6 +72,7 @@ export const useLocationStateInManageLiquidity = () => {
   );
 
   useEffect(() => {
+    dispatch(setShowLiquidityModalV3(true));
     void router.replace(
       {
         pathname: router.pathname,
@@ -99,5 +104,6 @@ export const useLocationStateInManageLiquidity = () => {
     setTokenX,
     tokenY,
     setTokenY,
+    showLiquidityModal,
   };
 };

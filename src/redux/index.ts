@@ -61,6 +61,7 @@ const persistConfig = {
     "portfolioStatsVotes",
     "rpcData",
     "airdropTransactions",
+    "ManageLiquidityV3",
   ],
 };
 

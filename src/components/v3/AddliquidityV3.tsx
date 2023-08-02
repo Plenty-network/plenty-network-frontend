@@ -308,9 +308,9 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           ? Number(leftbrush) < Number(currentPrice) && Number(rightbrush) < Number(currentPrice)
           : Number(bleftbrush) < Number(bcurrentPrice) &&
             Number(brightbrush) < Number(bcurrentPrice)) && (
-          <div className="fade-in-light absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg pl-7 backdrop-blur-[6px]  w-[480px]">
+          <div className="fade-in-light absolute top-[18px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg pl-2 md:pl-7 backdrop-blur-[6px]  md:w-[480px]">
             <Image src={lock} />
-            <span className="font-subtitle3 w-[318px] ml-5">
+            <span className="font-caption1-small  md:font-subtitle3 w-[250px] md:w-[318px] ml-2 md:ml-5">
               The market price is outside your specified price range. Single-asset deposit only.
             </span>
           </div>
@@ -414,9 +414,9 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
           ? Number(leftbrush) > Number(currentPrice) && Number(rightbrush) > Number(currentPrice)
           : Number(bleftbrush) > Number(bcurrentPrice) &&
             Number(brightbrush) > Number(bcurrentPrice)) && (
-          <div className="fade-in-light absolute top-[93px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg pl-7 backdrop-blur-[6px]  w-[480px]">
+          <div className="fade-in-light absolute top-[93px] bg-card-500/[0.6] flex items-center h-[70px] rounded-lg pl-2 md:pl-7 backdrop-blur-[6px]  md:w-[480px]">
             <Image src={lock} />
-            <span className="font-subtitle3 w-[318px] ml-5">
+            <span className="font-caption1-small  md:font-subtitle3 w-[250px] md:w-[318px] ml-2 md:ml-5">
               The market price is outside your specified price range. Single-asset deposit only.
             </span>
           </div>
