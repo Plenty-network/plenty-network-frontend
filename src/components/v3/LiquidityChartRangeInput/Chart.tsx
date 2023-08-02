@@ -7,6 +7,7 @@ import { Brush } from "./Brush";
 import { Line } from "./Line";
 import { ChartEntry, LiquidityChartRangeInputProps } from "./types";
 import Zoom from "./Zoom";
+import BarChart1 from "./BarGraphwithx";
 //import BarChart1 from "./BarGraphwithx";
 export enum Bound {
   LOWER = "LOWER",
@@ -121,7 +122,7 @@ export function Chart({
 
         <g transform={`translate(${margins.left},${margins.top})`}>
           <g clipPath={`url(#${id}-chart-clip)`}>
-            {/* <BarChart1
+            <BarChart1
               data={series}
               xScale={xScale}
               yScale={yScale}
@@ -129,17 +130,18 @@ export function Chart({
               yAccessor={yAccessor}
               height={innerHeight}
               styles={{ bar: { fill: "red" } }}
-              // You may need to pass any necessary styles for the bars
-            /> */}
-            <Area
+            />
+
+            {/* uncomment it for previous area chart */}
+            {/* <Area
               series={series}
               xScale={xScale}
               yScale={yScale}
               xValue={xAccessor}
               yValue={yAccessor}
-            />
+            /> */}
 
-            {brushDomain && (
+            {/* {brushDomain && (
               // duplicate area chart with mask for selected area
               <g mask={`url(#${id}-chart-area-mask)`}>
                 <Area
@@ -151,7 +153,7 @@ export function Chart({
                   fill={styles.area.selection}
                 />
               </g>
-            )}
+            )} */}
 
             <Line value={current} xScale={xScale} innerHeight={innerHeight} />
 

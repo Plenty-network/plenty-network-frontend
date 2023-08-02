@@ -1,8 +1,6 @@
 import React from "react";
 import { ChartEntry } from "./types";
 
-// Assuming you have defined appropriate types for data and styles
-
 type BarChartProps = {
   data: ChartEntry[];
   xScale: d3.ScaleLinear<number, number>;
@@ -26,22 +24,28 @@ const BarChart1: React.FC<BarChartProps> = ({
   height,
   styles,
 }) => {
+  console.log("BarChart1", data);
   return (
     <g>
       {data.map((d: ChartEntry, index: number) => {
         const x: number = xScale(xAccessor(d));
         const y: number = yScale(yAccessor(d));
-        const barHeight: number = height - y;
+        console.log(
+          "yAccessor(d)",
+          yAccessor(d),
+          "yScale(yAccessor(d))",
+          yScale(yAccessor(d)),
+          "y",
+          y,
+          "x",
+          x
+        );
 
+        const width: number = d.width;
+        const barHeight: number = height - y;
+        console.log("BarChart1", x, y, width, height - y);
         return (
-          <rect
-            key={index}
-            x={x}
-            y={y}
-            width={xScale?.bandwidth ? xScale.bandwidth() : 10}
-            height={barHeight}
-            fill={styles.bar.fill}
-          />
+          <rect key={index} x={x} y={y} width={20} height={barHeight} fill={styles.bar.fill} />
         );
       })}
     </g>

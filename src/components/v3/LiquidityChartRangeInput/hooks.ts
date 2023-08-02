@@ -37,6 +37,7 @@ export function useDensityChartData({
   const [data, setData] = useState<any>();
   const [isLoadingData, setisloading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
+
   useMemo(() => {
     setData(undefined);
     setisloading(true);
@@ -58,7 +59,9 @@ export function useDensityChartData({
       const t: any = data[i];
 
       const chartEntry = {
-        activeLiquidity: parseFloat(t.liquidityNet.toString()),
+        width: Number(data[i + 1].realPriceX) - Number(data[i].realPriceX),
+        valueX: Number(data[i + 1].realPriceX + data[i].realPriceX) / 2,
+        activeLiquidity: parseFloat(t.liquidityNet) / 1000000000000000000,
         price0:
           topLevelSelectedToken.symbol === tokeninorg.symbol
             ? parseFloat(t.realPriceX)
