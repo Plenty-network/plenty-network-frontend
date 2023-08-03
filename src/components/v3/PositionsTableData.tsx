@@ -108,7 +108,7 @@ export function PositionDataTable(props: IShortCardProps) {
         columnWidth: "w-[130px]",
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "liquidityDollar"),
         accessor: (x) => (
           <>
             <div className="w-[125px] text-white font-subtitle3 flex">
@@ -149,7 +149,7 @@ export function PositionDataTable(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "apr"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "minPrice"),
         accessor: (x: any) => (
           <ToolTip
             id="tooltipj"
@@ -196,7 +196,7 @@ export function PositionDataTable(props: IShortCardProps) {
         isToolTipEnabled: true,
         tooltipMessage: "Fees collected by the position.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "feesDollar"),
         accessor: (x: any) => (
           <div className="w-[122px] text-white font-subtitle3 flex">
             ${nFormatterWithLesserNumber(x.feesDollar)}
@@ -208,7 +208,6 @@ export function PositionDataTable(props: IShortCardProps) {
         id: "range",
         columnWidth: "lg:w-[160px] w-[135px]",
 
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
         accessor: (x) => (
           <div className="lg:w-[180px] w-[135px]">
             {!x.isInRange ? (

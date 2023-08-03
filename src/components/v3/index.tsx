@@ -13,12 +13,6 @@ import { PoolsTableV3 } from "./pools/poolsTableV3";
 import { MyPoolTablev3 } from "./pools/MyPoolsV3";
 import { NewPoolv3 } from "./NewPoolV3";
 import { AppDispatch, useAppSelector } from "../../redux";
-import { isMobile } from "react-device-detect";
-import { ManageTabMobile } from "./ManageTabMobile";
-import { ManageTabV3 } from "./ManageTabV3";
-import { tokenChange, tokenChangeB } from "../../api/util/helpers";
-import { tokenParameterLiquidity } from "../Liquidity/types";
-import { ActiveLiquidity } from "../Pools/ManageLiquidityHeader";
 
 export interface IIndexProps {}
 export enum POOL_TYPE {
@@ -84,7 +78,7 @@ export default function PoolsV3(props: IIndexProps) {
                 <Image src={info} />
               </p>
               <p className="font-body2 text-info-500 px-3 sm:w-auto w-[280px]">
-                Gauges are not yet available for v3 pools
+                PLY incentivisation is not available for v3 pools
               </p>
               <p
                 className="ml-auto relative top-[7px] cursor-pointer"
@@ -131,36 +125,6 @@ export default function PoolsV3(props: IIndexProps) {
           {/* poolsTable */}
         </div>
       )}
-      {/* {showLiquidityModal &&
-        (false ? (
-          <ManageTabMobile
-            tokenIn={tokenChange(topLevelSelectedToken, tokenIn, tokenOut)}
-            tokenOut={tokenChangeB(topLevelSelectedToken, tokenIn, tokenOut)}
-            tokenA={tokenIn}
-            tokenB={tokenOut}
-            closeFn={setShowLiquidityModal}
-            setActiveState={setActiveState}
-            activeState={activeState}
-            isGaugeAvailable={false}
-            showLiquidityModal={showLiquidityModal}
-            setShowLiquidityModalPopup={setShowLiquidityModal}
-            feeTier={feeTier}
-          />
-        ) : (
-          <ManageTabV3
-            tokenIn={tokenChange(topLevelSelectedToken, tokenIn, tokenOut)}
-            tokenOut={tokenChangeB(topLevelSelectedToken, tokenIn, tokenOut)}
-            tokenA={tokenIn}
-            tokenB={tokenOut}
-            closeFn={setShowLiquidityModal}
-            setActiveState={setActiveState}
-            activeState={activeState}
-            isGaugeAvailable={false}
-            showLiquidityModal={true}
-            setShowLiquidityModalPopup={setShowLiquidityModal}
-            feeTier={feeTier}
-          />
-        ))} */}
     </>
   );
 }

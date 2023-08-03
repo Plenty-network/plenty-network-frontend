@@ -60,11 +60,8 @@ export function PopUpModal(props: IPopUpModalProps) {
           <div
             className={clsx(
               "absolute right-0  px-5 cursor-pointer hover:opacity-90 hover:scale-90",
-              props.Name === "newposition"
-                ? "top-[28px]"
-                : props.Name === "positions"
-                ? "top-[26px]"
-                : "md:top-[22px] top-[17px]"
+              "md:top-[22px] top-[17px]",
+              props.title == "Confirm transaction" && "hidden"
             )}
             onClick={() => {
               setIsClose(true);

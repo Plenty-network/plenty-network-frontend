@@ -283,7 +283,6 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                   </div>
                 </ToolTip>
                 <span className="font-body1 text-text-250  ">
-                  (
                   {selectedToken.symbol === props.tokenIn.symbol
                     ? tEZorCTEZtoUppercase(props.tokenOut.symbol)
                     : tEZorCTEZtoUppercase(props.tokenIn.symbol)}{" "}
@@ -291,7 +290,6 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                   {selectedToken.symbol === props.tokenIn.symbol
                     ? tEZorCTEZtoUppercase(props.tokenIn.symbol)
                     : tEZorCTEZtoUppercase(props.tokenOut.symbol)}
-                  )
                 </span>
               </div>
             </div>
@@ -331,7 +329,6 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                   </div>
                 </ToolTip>
                 <span className="font-body1 text-text-250 ">
-                  (
                   {selectedToken.symbol === props.tokenIn.symbol
                     ? tEZorCTEZtoUppercase(props.tokenOut.symbol)
                     : tEZorCTEZtoUppercase(props.tokenIn.symbol)}{" "}
@@ -339,7 +336,6 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                   {selectedToken.symbol === props.tokenIn.symbol
                     ? tEZorCTEZtoUppercase(props.tokenIn.symbol)
                     : tEZorCTEZtoUppercase(props.tokenOut.symbol)}
-                  )
                 </span>
               </div>
             </div>
@@ -371,7 +367,6 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                   </div>
                 </ToolTip>
                 <span className="font-body1 text-text-250  ">
-                  (
                   {selectedToken.symbol === props.tokenIn.symbol
                     ? tEZorCTEZtoUppercase(props.tokenOut.symbol)
                     : tEZorCTEZtoUppercase(props.tokenIn.symbol)}{" "}
@@ -379,7 +374,6 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                   {selectedToken.symbol === props.tokenIn.symbol
                     ? tEZorCTEZtoUppercase(props.tokenIn.symbol)
                     : tEZorCTEZtoUppercase(props.tokenOut.symbol)}
-                  )
                 </span>
               </div>
             </div>

@@ -21,6 +21,7 @@ import {
   createIncreaseLiquidityOperation,
   createRemoveLiquidityOperation,
 } from "../../api/v3/positions";
+import { ActivePopUp } from "../../components/v3/ManageTabV3";
 
 export const LiquidityOperation = async (
   userAddress: string,
@@ -33,8 +34,9 @@ export const LiquidityOperation = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
-  flashMessageContent?: IFlashMessageProps,
-  feeTier: any
+  feeTier: any,
+  setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>,
+  flashMessageContent?: IFlashMessageProps
 ): Promise<IOperationsResponse> => {
   try {
     /*   console.log("fee tier", feeTier); */
@@ -185,6 +187,7 @@ export const LiquidityOperation = async (
 
     const status = await batchOperation.status();
     if (status === "applied") {
+      setScreen && setScreen(ActivePopUp.Positions);
       return {
         success: true,
         operationId: batchOperation.opHash,
@@ -212,7 +215,9 @@ export const increaseLiquidity = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  setScreen?: React.Dispatch<React.SetStateAction<ActivePopUp>>,
   flashMessageContent?: IFlashMessageProps,
+
   setShowLiquidityModalPopup?: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<IOperationsResponse> => {
   try {
@@ -362,6 +367,7 @@ export const increaseLiquidity = async (
 
     const status = await batchOperation.status();
     if (status === "applied") {
+      setScreen && setScreen(ActivePopUp.Positions);
       return {
         success: true,
         operationId: batchOperation.opHash,
@@ -389,6 +395,7 @@ export const removeLiquidity = async (
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
   setShowConfirmTransaction: TSetShowConfirmTransaction | undefined,
+  setScreen?: React.Dispatch<React.SetStateAction<ActivePopUp>>,
   flashMessageContent?: IFlashMessageProps,
   setShowLiquidityModalPopup?: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<IOperationsResponse> => {
@@ -428,6 +435,7 @@ export const removeLiquidity = async (
 
     const status = await batchOperation.status();
     if (status === "applied") {
+      setScreen && setScreen(ActivePopUp.Positions);
       return {
         success: true,
         operationId: batchOperation.opHash,

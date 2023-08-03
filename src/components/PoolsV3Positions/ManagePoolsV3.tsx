@@ -175,6 +175,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
     );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setScreen(ActivePopUp.ManageExisting);
+
     setShowConfirm(false);
     setShowConfirmTransaction(true);
     increaseLiquidity(
@@ -190,6 +191,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
+      undefined,
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
@@ -235,6 +237,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
 
         // setContentTransaction("");
       } else {
+        setScreen(ActivePopUp.ManageExisting);
         setBalanceUpdate(true);
         //resetAllValues();
         setShowConfirmTransaction(false);
@@ -295,6 +298,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
+      undefined,
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
@@ -340,6 +344,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
 
         // setContentTransaction("");
       } else {
+        setScreen(ActivePopUp.ManageExisting);
         setBalanceUpdate(true);
         //resetAllValues();
         setShowConfirmTransaction(false);

@@ -63,7 +63,9 @@ export function TopNavBar(props: ITopNavBarProps) {
         </div>
         {!props.isLanding && (
           <div className="flex justify-between flex-1 h-full">
-            {!router.pathname.includes("swap") && !router.pathname.includes("migrate") && <Epoch />}
+            {!router.pathname.includes("swap") &&
+              !router.pathname.includes("migrate") &&
+              !router.pathname.includes("pools/v3") && <Epoch />}
             <div className="ml-auto flex flex-row gap-7 ">
               <div className="flex items-center flex-row gap-3.5 ">
                 {userAddress && !props.isBribes && (

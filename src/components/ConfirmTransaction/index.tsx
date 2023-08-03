@@ -14,7 +14,7 @@ function ConfirmTransaction(props: IConfirmTransactionProps) {
   };
 
   return props.show ? (
-    <PopUpModal title="Confirm transaction" onhide={closeModal}>
+    <PopUpModal title="Confirm transaction">
       {
         <>
           <div className="flex justify-center mt-10">

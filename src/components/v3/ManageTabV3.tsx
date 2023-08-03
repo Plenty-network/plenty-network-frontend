@@ -152,6 +152,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
 
   const [showTransactionSubmitModal, setShowTransactionSubmitModal] = useState(false);
   const [balanceUpdate, setBalanceUpdate] = useState(false);
+  const handleCloseTransactionSubmitted = () => {
+    setShowTransactionSubmitModal(false);
+    setScreen(ActivePopUp.Positions);
+  };
 
   const [contentTransaction, setContentTransaction] = useState("");
   const [contentTransactionSubmitted, setContentTransactionSubmitted] = useState("");
@@ -263,7 +267,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     setShowConfirmTransaction(true);
-    setScreen(ActivePopUp.Positions);
 
     console.log(
       "parameters",
@@ -313,6 +316,8 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
+      Number(selectedFeeTier),
+      setScreen,
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
@@ -324,8 +329,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         linkText: "View in Explorer",
         isLoading: true,
         transactionId: "",
-      },
-      Number(selectedFeeTier)
+      }
     ).then((response) => {
       if (response.success) {
         setBalanceUpdate(true);
@@ -356,6 +360,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         // setContentTransaction("");
       } else {
+        setScreen(ActivePopUp.NewPosition);
         setBalanceUpdate(true);
         //resetAllValues();
         setShowConfirmTransaction(false);
@@ -467,6 +472,17 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   }, [selectedToken]);
 
   React.useEffect(() => {
+    console.log(
+      "selectedFeeTier",
+      Number(selectedFeeTier),
+
+      "tokenx",
+      props.tokenA.symbol,
+      "tokeny",
+      props.tokenB.symbol,
+      "topLevelSelectedToken",
+      props.tokenA.symbol
+    );
     //if (!isFullRange) {
     dispatch(setIsLoading(true));
 
@@ -563,7 +579,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       nFormatterWithLesserNumber(new BigNumber(secondTokenAmountIncLiq)).toString()
     );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    setScreen(ActivePopUp.Positions);
+
     setShowConfirm(false);
     setShowConfirmTransaction(true);
 
@@ -580,6 +596,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
+      setScreen,
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
@@ -623,6 +640,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
 
         // setContentTransaction("");
       } else {
+        setScreen(ActivePopUp.ManageExisting);
         setBalanceUpdate(true);
         //resetAllValues();
         setShowConfirmTransaction(false);
@@ -669,7 +687,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       nFormatterWithLesserNumber5digit(selectedPosition.liquidity.y.minus(remove.y)).toString()
     );
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    setScreen(ActivePopUp.Positions);
+
     setShowConfirm(false);
     setShowConfirmTransaction(true);
 
@@ -683,6 +701,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       transactionSubmitModal,
       resetAllValues,
       setShowConfirmTransaction,
+      setScreen,
       {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
@@ -725,6 +744,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
         // setContentTransaction("");
       } else {
+        setScreen(ActivePopUp.ManageExisting);
         setBalanceUpdate(true);
         //resetAllValues();
         setShowConfirmTransaction(false);
@@ -1140,7 +1160,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       {showTransactionSubmitModal && (
         <TransactionSubmitted
           show={showTransactionSubmitModal}
-          setShow={setShowTransactionSubmitModal}
+          setShow={handleCloseTransactionSubmitted}
           onBtnClick={
             transactionId ? () => window.open(`${tzktExplorer}${transactionId}`, "_blank") : null
           }

@@ -18,7 +18,6 @@ import { compareNumericString } from "../../../utils/commonUtils";
 import Table from "../../Table/Table";
 import { ManageTabV3 } from "../ManageTabV3";
 import { tEZorCTEZtoUppercase, tokenChange, tokenChangeB } from "../../../api/util/helpers";
-import { ManageTabMobile } from "../ManageTabMobile";
 import clsx from "clsx";
 import { CircularOverLappingImage } from "../../Pools/Component/CircularImageInfo";
 import { Apr } from "./Apr";
@@ -113,13 +112,13 @@ export function MyPoolTablev3(props: IShortCardProps) {
       {
         Header: "Pools",
         id: "pools",
-        columnWidth: "w-[290px]",
+        columnWidth: "w-[320px]",
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tokenA", true),
         accessor: (x) => (
           <>
-            <div className={clsx("flex gap-1 items-center max-w-[270px]", "ml-1 md:ml-[34px]")}>
+            <div className={clsx("flex gap-1 items-center max-w-[320px]", "ml-1 md:ml-[54px]")}>
               <CircularOverLappingImage
                 tokenA={
                   tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
@@ -157,7 +156,7 @@ export function MyPoolTablev3(props: IShortCardProps) {
                         x.tokenB?.toString()
                       )}`}
                 </span>
-                <span className="md:font-body2 font-caption1-small text-white border-text-800 rounded-lg text-center	p-1 bg-muted-200 border w-[45px] ml-3">
+                <span className="bg-primary-500/[0.2] rounded-lg  px-2 text-primary-500 md:font-body2 font-caption1-small  text-center	py-1 px-2   w-fit  ml-2 md:ml-3">
                   {x.feeTier}%
                 </span>
               </div>

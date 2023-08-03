@@ -70,8 +70,8 @@ export function useDensityChartData({
         activeLiquidity: liquidity.toNumber(),
         price0:
           topLevelSelectedToken.symbol === tokeninorg.symbol
-            ? (Number(data[i + 1].realPriceX) + Number(data[i].realPriceX)) / 2
-            : (Number(data[i + 1].realPriceY) + Number(data[i].realPriceY)) / 2,
+            ? Number(data[i].realPriceX)
+            : Number(data[i].realPriceY),
         price1:
           topLevelSelectedToken.symbol === tokeninorg.symbol
             ? Number(data[i].realPriceX)

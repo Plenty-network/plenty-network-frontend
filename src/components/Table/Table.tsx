@@ -142,7 +142,7 @@ const Table = <D extends object>({
                 TableName === "lockPosition" || TableName === "poolsPositionv3"
                   ? "lg:pl-[30px]"
                   : TableName === "newPools"
-                  ? "lg:pl-[20px] "
+                  ? "lg:pl-[0px] "
                   : "lg:pl-[50px] "
               )}
             >

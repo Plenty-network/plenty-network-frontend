@@ -1,15 +1,18 @@
-import { PopUpModal } from "../Modal/popupModal";
 import Image from "next/image";
 import arrowLeft from "../../../src/assets/icon/pools/arrowLeft.svg";
 import Button from "../Button/Button";
-
+import { BigNumber } from "bignumber.js";
 import add from "../../../src/assets/icon/pools/addIcon.svg";
 import { useAppSelector } from "../../redux";
-import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import {
+  changeSource,
+  nFormatterWithLesserNumber5digit,
+  tEZorCTEZtoUppercase,
+} from "../../api/util/helpers";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { ActivePopUp } from "./ManageTabV3";
-import { BigNumber } from "ethers";
+
 import clsx from "clsx";
 
 interface IConfirmIncreaseLiqProps {
@@ -69,7 +72,9 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">{Number(props.addTokenA).toFixed(6)}</p>
+              <p className="font-title2-bold ml-1">
+                {nFormatterWithLesserNumber5digit(new BigNumber(props.addTokenA))}
+              </p>
               {/* <p className="font-body4 ">(+ {props.addTokenA} )</p> */}
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
@@ -90,7 +95,9 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">{Number(props.addTokenB).toFixed(6)}</p>
+              <p className="font-title2-bold ml-1">
+                {nFormatterWithLesserNumber5digit(new BigNumber(props.addTokenB))}
+              </p>
               {/* <p className="font-body4 ">(+ {props.addTokenB} )</p> */}
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>
@@ -116,7 +123,9 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">{selectedPosition.fees.x.toFixed(6)}</p>
+              <p className="font-title2-bold ml-1">
+                {nFormatterWithLesserNumber5digit(selectedPosition.fees.x)}
+              </p>
               {/* <p className="font-body4 ">(+ {props.addTokenA} )</p> */}
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
             </div>
@@ -137,7 +146,9 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                   onError={changeSource}
                 />
               </p>
-              <p className="font-title2-bold ml-1">{selectedPosition.fees.y.toFixed(6)}</p>
+              <p className="font-title2-bold ml-1">
+                {nFormatterWithLesserNumber5digit(selectedPosition.fees.y)}
+              </p>
               {/* <p className="font-body4 ">(+ {props.addTokenB} )</p> */}
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}
             </div>
@@ -161,7 +172,9 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                 />
               </p>
               <p className="font-title2-bold ml-1">
-                {(Number(selectedPosition.fees.x) + Number(props.addTokenA)).toFixed(6)}
+                {nFormatterWithLesserNumber5digit(
+                  new BigNumber(selectedPosition.fees.x).plus(new BigNumber(props.addTokenA))
+                )}
               </p>
               {/* <p className="font-body4 ">(+ {props.addTokenA} )</p> */}
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenIn.symbol)}</p>{" "}
@@ -184,7 +197,9 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
                 />
               </p>
               <p className="font-title2-bold ml-1">
-                {(Number(selectedPosition.fees.y) + Number(props.addTokenB)).toFixed(6)}
+                {nFormatterWithLesserNumber5digit(
+                  selectedPosition.fees.y.plus(new BigNumber(props.addTokenB))
+                )}
               </p>
               {/* <p className="font-body4 ">(+ {props.addTokenB} )</p> */}
               <p className="font-body4 "> {tEZorCTEZtoUppercase(props.tokenOut.symbol)}</p>{" "}

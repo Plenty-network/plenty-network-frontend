@@ -293,7 +293,6 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
                 </div>
               </ToolTip>
               <span className="font-body1 text-text-250  ">
-                (
                 {selectedToken.symbol === tokeninorg.symbol
                   ? tEZorCTEZtoUppercase(tokenoutorg.symbol)
                   : tEZorCTEZtoUppercase(tokeninorg.symbol)}{" "}
@@ -301,7 +300,6 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
                 {selectedToken.symbol === tokeninorg.symbol
                   ? tEZorCTEZtoUppercase(tokeninorg.symbol)
                   : tEZorCTEZtoUppercase(tokenoutorg.symbol)}
-                )
               </span>
             </div>
           </div>
@@ -346,7 +344,6 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
                 </div>
               </ToolTip>
               <span className="font-body1 text-text-250  ">
-                (
                 {selectedToken.symbol === tokeninorg.symbol
                   ? tEZorCTEZtoUppercase(tokenoutorg.symbol)
                   : tEZorCTEZtoUppercase(tokeninorg.symbol)}{" "}
@@ -354,7 +351,6 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
                 {selectedToken.symbol === tokeninorg.symbol
                   ? tEZorCTEZtoUppercase(tokeninorg.symbol)
                   : tEZorCTEZtoUppercase(tokenoutorg.symbol)}
-                )
               </span>
             </div>
           </div>
@@ -379,7 +375,6 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
                 </div>
               </ToolTip>
               <span className="font-body1 text-text-250  ">
-                (
                 {selectedToken.symbol === tokeninorg.symbol
                   ? tEZorCTEZtoUppercase(tokenoutorg.symbol)
                   : tEZorCTEZtoUppercase(tokeninorg.symbol)}{" "}
@@ -387,7 +382,6 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
                 {selectedToken.symbol === tokeninorg.symbol
                   ? tEZorCTEZtoUppercase(tokeninorg.symbol)
                   : tEZorCTEZtoUppercase(tokenoutorg.symbol)}
-                )
               </span>
             </div>
           </div>
