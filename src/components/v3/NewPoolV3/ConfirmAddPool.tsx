@@ -4,7 +4,7 @@ import { PopUpModal } from "../../Modal/popupModal";
 import { isMobile } from "react-device-detect";
 import Image from "next/image";
 import ratesrefresh from "../../../../src/assets/icon/swap/ratesrefresh.svg";
-
+import fromExponential from "from-exponential";
 import add from "../../../../src/assets/icon/pools/addIcon.svg";
 import { useMemo, useState } from "react";
 
@@ -144,7 +144,7 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
             >
               <div className="w-0 flex-auto ">
                 <p>
-                  <span className="mt-2  font-body4 text-text-400">
+                  <span className="mt-2 font-body2  md:font-body4 text-text-400">
                     INITIAL PRICE{" "}
                     {selectedToken.symbol
                       ? `: 1 ${tEZorCTEZtoUppercase(
@@ -158,43 +158,47 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                 <p className="flex items-center ">
                   <input
                     type="text"
-                    className="text-white bg-muted-200/[0.1] text-left border-0 ml-1 font-medium2  lg:font-medium1 outline-none  placeholder:text-text-500 w-[180px]"
+                    className="text-white bg-muted-200/[0.1] text-left border-0 ml-1 font-medium2  lg:font-medium1 outline-none  placeholder:text-text-500 w-[70px] md:w-[150px]"
                     placeholder="0.0"
-                    value={props.priceAmount}
+                    disabled
+                    value={fromExponential(props.priceAmount)}
                   />
                   {props.tokenIn.symbol && props.tokenOut.symbol && (
-                    <div className="bg-muted-600 rounded-3xl px-2 py-1.5 flex">
-                      <img
-                        src={
-                          props.tokenOut.symbol && props.tokenIn.symbol
-                            ? tokenIcons[
-                                selectedToken.symbol === props.tokenIn.symbol
-                                  ? props.tokenOut.symbol
-                                  : props.tokenIn.symbol
-                              ]
+                    <div className="bg-muted-600 rounded-3xl px-2 py-1.5 flex items-center">
+                      <span className="w-4 h-4">
+                        <img
+                          src={
+                            props.tokenOut.symbol && props.tokenIn.symbol
                               ? tokenIcons[
                                   selectedToken.symbol === props.tokenIn.symbol
                                     ? props.tokenOut.symbol
                                     : props.tokenIn.symbol
-                                ].src
-                              : TOKEN[
-                                  selectedToken.symbol === props.tokenIn.symbol
-                                    ? props.tokenOut.symbol.toString()
-                                    : props.tokenIn.symbol.toString()
-                                ]?.iconUrl
-                              ? TOKEN[
-                                  selectedToken.symbol === props.tokenIn.symbol
-                                    ? props.tokenOut.symbol.toString()
-                                    : props.tokenIn.symbol.toString()
-                                ].iconUrl
-                              : `/assets/Tokens/fallback.png`
-                            : `/assets/icon/emptyIcon.svg`
-                        }
-                        className=""
-                        width={"16px"}
-                        height={"16px"}
-                        onError={changeSource}
-                      />
+                                ]
+                                ? tokenIcons[
+                                    selectedToken.symbol === props.tokenIn.symbol
+                                      ? props.tokenOut.symbol
+                                      : props.tokenIn.symbol
+                                  ].src
+                                : TOKEN[
+                                    selectedToken.symbol === props.tokenIn.symbol
+                                      ? props.tokenOut.symbol.toString()
+                                      : props.tokenIn.symbol.toString()
+                                  ]?.iconUrl
+                                ? TOKEN[
+                                    selectedToken.symbol === props.tokenIn.symbol
+                                      ? props.tokenOut.symbol.toString()
+                                      : props.tokenIn.symbol.toString()
+                                  ].iconUrl
+                                : `/assets/Tokens/fallback.png`
+                              : `/assets/icon/emptyIcon.svg`
+                          }
+                          className=""
+                          width={"16px"}
+                          height={"16px"}
+                          onError={changeSource}
+                        />
+                      </span>
+
                       <span className="ml-1 font-caption1">
                         {tEZorCTEZtoUppercase(
                           selectedToken.symbol === props.tokenIn.symbol

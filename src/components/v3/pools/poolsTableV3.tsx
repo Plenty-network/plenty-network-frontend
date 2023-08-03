@@ -426,7 +426,7 @@ export function PoolsTableV3(props: IShortCardProps) {
             tableType={true}
             isFetched={isFetched}
             isConnectWalletRequired={props.isConnectWalletRequired}
-            TableWidth="min-w-[880px]"
+            TableWidth="min-w-[900px]"
             NoData={NoData}
             loading={props.isFetching}
           />

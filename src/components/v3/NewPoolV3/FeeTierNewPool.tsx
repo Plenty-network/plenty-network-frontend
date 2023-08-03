@@ -33,7 +33,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
     },
   ];
   return (
-    <div className="flex gap-2 md:gap-[12px]  items-center justify-start ml-1">
+    <div className="flex  gap-1 md:gap-2 md:gap-[12px]  items-center justify-start ml-1">
       {fee.map((feeInd, index) => {
         return (
           <div
@@ -76,7 +76,7 @@ function FeeTierMainNewPool(props: IFeeTierMainProps) {
                   props.isExist?.feeTier?.includes((Number(feeInd.percentage) * 100).toString())
                     ? "text-info-500 bg-info-500/[0.2]"
                     : "text-white bg-shimmer-100",
-                  " rounded-xl	 px-2 items-center flex w-fit text-[9px] md:font-caption1 h-[24px]"
+                  " rounded-xl	 px-2 items-center flex w-fit text-[7px] md:font-caption1 h-[24px]"
                 )}
               >
                 {props.isExist?.feeTier?.includes((Number(feeInd.percentage) * 100).toString())

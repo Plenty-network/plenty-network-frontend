@@ -77,7 +77,7 @@ function FeeTierMain(props: IFeeTierMainProps) {
             </div>
             <div className="mt-2 font-mobile-400 sm:font-body1 text-text-250">{feeInd.text}</div>
             <div className="mt-[12px]">
-              <span className="text-white rounded-xl	bg-shimmer-100 px-2 items-center flex w-fit text-[8px]  md:font-caption2 h-[24px]">
+              <span className="text-white rounded-xl	bg-shimmer-100 px-2 items-center flex w-fit text-[7px]  md:font-caption2 h-[24px]">
                 {isExist?.feeTier?.includes((Number(feeInd.percentage) * 100).toString())
                   ? feeInd.selectPercentage + "%"
                   : "Not created"}

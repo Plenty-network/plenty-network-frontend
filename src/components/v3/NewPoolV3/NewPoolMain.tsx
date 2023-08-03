@@ -34,6 +34,7 @@ import { tokenIcons } from "../../../constants/tokensList";
 
 import fromExponential from "from-exponential";
 import FeeTierMainNewPool from "./FeeTierNewPool";
+import { isMobile } from "react-device-detect";
 
 interface ILiquidityProps {
   setSelectedFeeTier: React.Dispatch<React.SetStateAction<string>>;
@@ -150,7 +151,16 @@ function NewPoolMain(props: ILiquidityProps) {
       }
     }
   };
-
+  console.log(
+    isMobile
+      ? Number(props.priceAmount.length + 1) * 10 > 70
+        ? (props.priceAmount.length + 1) * 10 + "px"
+        : "70px"
+      : Number(props.priceAmount.length + 1) * 10 > 250
+      ? (props.priceAmount.length + 1) * 10 + "px"
+      : "250px",
+    "h"
+  );
   return (
     <>
       <div className="border rounded-2xl border-text-800 bg-card-200 px-[10px] md:px-3.5 pt-4 pb-4  mb-3">
@@ -231,7 +241,7 @@ function NewPoolMain(props: ILiquidityProps) {
           >
             <div className="w-0 flex-auto">
               <p>
-                <span className="mt-2  font-body4 text-text-400">
+                <span className="mt-2  font-body2  md:font-body4 text-text-400">
                   INITIAL PRICE{" "}
                   {selectedToken.symbol
                     ? `: 1 ${
@@ -245,7 +255,15 @@ function NewPoolMain(props: ILiquidityProps) {
               <p className="flex items-center w-[90%]">
                 <input
                   type="text"
-                  style={{ width: (props.priceAmount.length + 6) * 10 + "px" }}
+                  style={{
+                    width: isMobile
+                      ? Number(props.priceAmount.length + 1) * 10 > 70
+                        ? (props.priceAmount.length + 1) * 10 + "px"
+                        : "70px"
+                      : Number(props.priceAmount.length + 1) * 10 > 250
+                      ? (props.priceAmount.length + 1) * 10 + "px"
+                      : "250px",
+                  }}
                   className={clsx(
                     "text-white bg-muted-200/[0.1] text-left border-0 ml-0 font-medium2  lg:font-medium1 outline-none   placeholder:text-text-500 "
                   )}
@@ -254,38 +272,42 @@ function NewPoolMain(props: ILiquidityProps) {
                   onChange={(e) => handleLiquidityInput(e.target.value)}
                 />
                 {props.tokenIn.symbol && props.tokenOut.symbol && (
-                  <div className="bg-muted-600 rounded-3xl px-2 py-1.5 flex ">
-                    <img
-                      src={
-                        props.tokenOut.symbol && props.tokenIn.symbol
-                          ? tokenIcons[
-                              selectedToken.symbol === props.tokenIn.symbol
-                                ? props.tokenOut.symbol
-                                : props.tokenIn.symbol
-                            ]
+                  <div className="bg-muted-600 rounded-3xl px-2 py-1.5 flex items-center ">
+                    <span className="w-4 h-4">
+                      {" "}
+                      <img
+                        src={
+                          props.tokenOut.symbol && props.tokenIn.symbol
                             ? tokenIcons[
                                 selectedToken.symbol === props.tokenIn.symbol
                                   ? props.tokenOut.symbol
                                   : props.tokenIn.symbol
-                              ].src
-                            : TOKEN[
-                                selectedToken.symbol === props.tokenIn.symbol
-                                  ? props.tokenOut.symbol.toString()
-                                  : props.tokenIn.symbol.toString()
-                              ]?.iconUrl
-                            ? TOKEN[
-                                selectedToken.symbol === props.tokenIn.symbol
-                                  ? props.tokenOut.symbol.toString()
-                                  : props.tokenIn.symbol.toString()
-                              ].iconUrl
-                            : `/assets/Tokens/fallback.png`
-                          : `/assets/icon/emptyIcon.svg`
-                      }
-                      className=""
-                      width={"16px"}
-                      height={"16px"}
-                      onError={changeSource}
-                    />
+                              ]
+                              ? tokenIcons[
+                                  selectedToken.symbol === props.tokenIn.symbol
+                                    ? props.tokenOut.symbol
+                                    : props.tokenIn.symbol
+                                ].src
+                              : TOKEN[
+                                  selectedToken.symbol === props.tokenIn.symbol
+                                    ? props.tokenOut.symbol.toString()
+                                    : props.tokenIn.symbol.toString()
+                                ]?.iconUrl
+                              ? TOKEN[
+                                  selectedToken.symbol === props.tokenIn.symbol
+                                    ? props.tokenOut.symbol.toString()
+                                    : props.tokenIn.symbol.toString()
+                                ].iconUrl
+                              : `/assets/Tokens/fallback.png`
+                            : `/assets/icon/emptyIcon.svg`
+                        }
+                        className=""
+                        width={"16px"}
+                        height={"16px"}
+                        onError={changeSource}
+                      />
+                    </span>
+
                     <span className="ml-1 font-caption1 ">
                       {tEZorCTEZtoUppercase(
                         selectedToken.symbol === props.tokenIn.symbol
