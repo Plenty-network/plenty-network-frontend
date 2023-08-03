@@ -100,7 +100,7 @@ export function MyPoolTablev3(props: IShortCardProps) {
       !props.isFetching
     ) {
       return <NoSearchResult />;
-    } else if (poolsTableData.length === 0 && !props.isFetching) {
+    } else if (poolsTableData.length === 0 && !props.isFetching && userAddress) {
       return <NoDataError content={"No Pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);

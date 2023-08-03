@@ -106,7 +106,7 @@ export function PositionDataTable(props: IShortCardProps) {
         Header: "Liquidity",
         id: "Liquidity",
         columnWidth: "w-[130px]",
-        canShort: true,
+
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "liquidityDollar"),
         accessor: (x) => (
@@ -147,7 +147,7 @@ export function PositionDataTable(props: IShortCardProps) {
 
         tooltipMessage: "Lower and upper price boundaries.",
         isToolTipEnabled: true,
-        canShort: true,
+
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "minPrice"),
         accessor: (x: any) => (
@@ -195,7 +195,7 @@ export function PositionDataTable(props: IShortCardProps) {
         columnWidth: "w-[132px]",
         isToolTipEnabled: true,
         tooltipMessage: "Fees collected by the position.",
-        canShort: true,
+
         sortType: (a: any, b: any) => compareNumericString(a, b, "feesDollar"),
         accessor: (x: any) => (
           <div className="w-[122px] text-white font-subtitle3 flex">

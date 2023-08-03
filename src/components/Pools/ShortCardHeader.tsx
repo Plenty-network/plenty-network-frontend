@@ -62,7 +62,7 @@ export function Tabs(props: ITabsProps) {
               (props.TableName === "poolsPosition" && isMobile && props.index === 1) ||
               (props.TableName === "lockPosition" && isMobile && props.index === 1) ||
               (props.TableName === "locksRewards" && isMobile && props.index === 2) ? (
-                <span className="relative top-[3px] mr-1">
+                <span className="relative top-[3px] mr-1 w-[14px] h-[14px]">
                   <ToolTip
                     position={Position.top}
                     toolTipChild={

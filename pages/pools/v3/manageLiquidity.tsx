@@ -1,16 +1,8 @@
 import * as React from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import info from "../../../src/assets/icon/pools/InfoBlue.svg";
-import close from "../../../src/assets/icon/pools/closeBlue.svg";
-import Image from "next/image";
-import clsx from "clsx";
-
-import { isMobile } from "react-device-detect";
 import { AppDispatch, useAppSelector } from "../../../src/redux";
-import { tokenParameterLiquidity } from "../../../src/components/Liquidity/types";
-import { ActiveLiquidity } from "../../../src/components/Pools/ManageLiquidityHeader";
-import { ManageTabMobile } from "../../../src/components/v3/ManageTabMobile";
+
 import { tokenChange, tokenChangeB } from "../../../src/api/util/helpers";
 import { ManageTabV3 } from "../../../src/components/v3/ManageTabV3";
 import { setShowLiquidityModalV3 } from "../../../src/redux/poolsv3/manageLiq";
@@ -34,6 +26,8 @@ export default function ManageLiquidtyPoolsV3(props: IIndexProps) {
   };
   const { tokenX, setTokenX, tokenY, setTokenY, showLiquidityModal } =
     useLocationStateInManageLiquidity();
+
+  console.log("tokenX", tokenX, "tokenY", tokenY);
   return (
     <SideBarHOC>
       {showLiquidityModal && (

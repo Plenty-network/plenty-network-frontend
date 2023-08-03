@@ -558,7 +558,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       }
     );
     //}
-  }, [isClearAll, selectedFeeTier]);
+  }, [isClearAll, selectedFeeTier, props.tokenA.symbol, props.tokenB.symbol]);
 
   const handleIncreaseLiquidityOperation = () => {
     setContentTransaction(

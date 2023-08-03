@@ -12,7 +12,7 @@ export interface IInfoIconToolTipProps {
 export function InfoIconToolTip(props: IInfoIconToolTipProps) {
   const randomId = generateRandomString(5);
   return (
-    <span className="flex justify-center items-center">
+    <span className="flex justify-center items-center w-[14px] h-[17px]">
       <ToolTip
         classNameAncorToolTip="pushtoCenter"
         id={`info${randomId}`}
