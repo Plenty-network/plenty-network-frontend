@@ -42,8 +42,7 @@ const BarChart1: React.FC<BarChartProps> = ({
             y={y}
             width={width}
             height={barHeight}
-            fill={"rgba(21,112,241,0.2)"}
-            stroke={"#1570F1"}
+            fill={"rgba(21,112,241,0.5)"}
           />
         );
       })}
