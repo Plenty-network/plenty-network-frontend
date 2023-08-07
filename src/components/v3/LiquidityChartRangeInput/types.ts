@@ -34,6 +34,7 @@ export interface ZoomLevels {
 export interface LiquidityChartRangeInputProps {
   // to distringuish between multiple charts in the DOM
   id?: string;
+  feeTier: number;
 
   data: {
     series: ChartEntry[];

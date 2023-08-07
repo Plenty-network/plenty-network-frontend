@@ -6,7 +6,7 @@ import { AxisBottom } from "./AxisBottom";
 import { Brush } from "./Brush";
 import { Line } from "./Line";
 import { ChartEntry, LiquidityChartRangeInputProps } from "./types";
-import Zoom from "./Zoom";
+import Zoom, { ZoomOverlay } from "./Zoom";
 import BarChart1 from "./BarGraphwithx";
 //import BarChart1 from "./BarGraphwithx";
 export enum Bound {
@@ -18,6 +18,7 @@ const yAccessor = (d: ChartEntry) => d.activeLiquidity;
 
 export function Chart({
   id = "liquidityChartRangeInput",
+  feeTier,
   data: { series, current },
   ticksAtLimit,
   styles,
@@ -74,7 +75,6 @@ export function Chart({
       onBrushDomainChange(xScale.domain() as [number, number], undefined);
     }
   }, [brushDomain, onBrushDomainChange, xScale]);
-
   return (
     <>
       <Zoom
@@ -160,13 +160,16 @@ export function Chart({
             <AxisBottom xScale={xScale} innerHeight={innerHeight} />
           </g>
 
-          <rect
+          {/* <rect
             fill={"transparent"}
             cursor={"grab"}
             width={innerWidth}
             height={height}
             ref={zoomRef}
-          />
+            id={"myRect"}
+            
+          /> */}
+          <ZoomOverlay width={innerWidth} height={height} zoomRef={zoomRef} />
 
           <Brush
             id={id}

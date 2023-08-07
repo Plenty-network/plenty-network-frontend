@@ -206,6 +206,7 @@ export default function LiquidityChartRangeInput({
         // )
         <div className="relative justify-center items-center">
           <Chart
+            feeTier={feeTier}
             data={{ series: formattedData, current: price }}
             dimensions={{ width: isMobile ? 375 : 400, height: 200 }}
             margins={{ top: 10, right: 2, bottom: 20, left: 0 }}

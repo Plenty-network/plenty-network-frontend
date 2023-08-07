@@ -1,9 +1,19 @@
 import { ScaleLinear, select, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from "d3";
 import Image from "next/image";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { RefObject, useEffect, useMemo, useRef } from "react";
 import { RefreshCcw, ZoomIn, ZoomOut } from "react-feather";
 
 import { ZoomLevels } from "./types";
+
+interface ZoomOverlayProps {
+  width: number;
+  height: number;
+  zoomRef: RefObject<SVGRectElement>;
+}
+
+export const ZoomOverlay: React.FC<ZoomOverlayProps> = ({ width, height, zoomRef }) => {
+  return <rect cursor={"grab"} width={width} fill={"transparent"} height={height} ref={zoomRef} />;
+};
 
 export default function Zoom({
   svg,
@@ -16,6 +26,7 @@ export default function Zoom({
   zoomLevels,
 }: {
   svg: SVGElement | null;
+
   xScale: ScaleLinear<number, number>;
   setZoom: (transform: ZoomTransform) => void;
   width: number;
@@ -54,7 +65,7 @@ export default function Zoom({
           .transition()
           .call(zoomBehavior.current.scaleTo, 0.5),
     ],
-    [svg, innerHeight, innerWidth, zoomBehavior]
+    [svg]
   );
 
   useEffect(() => {
@@ -100,13 +111,13 @@ export default function Zoom({
       )}
       <div
         onClick={zoomIn}
-        className="cursor-pointer bg-shimmer-100 p-2 rounded-full hover:bg-primary-500/[0.6]"
+        className="cursor-pointer bg-shimmer-100 p-2 rounded-full hover:bg-primary-500/[0.9]"
       >
         <ZoomIn size={13} />
       </div>
       <div
         onClick={zoomOut}
-        className="cursor-pointer bg-shimmer-100 p-2 rounded-full hover:bg-primary-500/[0.6]"
+        className="cursor-pointer bg-shimmer-100 p-2 rounded-full hover:bg-primary-500/[0.9]"
       >
         <ZoomOut size={13} />
       </div>
