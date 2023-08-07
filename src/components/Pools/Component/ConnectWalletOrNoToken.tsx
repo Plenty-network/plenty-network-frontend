@@ -18,7 +18,7 @@ export function NoContentAvailable(props: IWalletNotConnectedProps) {
       <div className="flex justify-center items-center  mt-2 md:mt-12  text-text-200 flex-col font-title3 ">
         No liquidity positions
         <div className="text-text-500 font-body3 mt-2">
-          You do not have actve liquidity position
+          You do not have active liquidity position
         </div>
         <div className="border-b border-navBarBorder/[0.4] w-[120px] mt-[14px]"></div>
         <Link href={"/pools/v3"}>
