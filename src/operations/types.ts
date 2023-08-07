@@ -6,6 +6,15 @@ export interface IOperationsResponse {
     error?: string;
 }
 
+export interface IParamObject {
+    app_id: number,
+    min_out:  number,
+    receiver: string,
+    token_in_id: number,
+    token_out_id: number,
+    hops: Map<any, any>,
+}
+
 export interface IAttachmentLiteral {
     add_attachment?: { add_attachemnt : number};
     remove_attachment?: { remove_attachemnt : number};

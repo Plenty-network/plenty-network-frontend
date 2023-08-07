@@ -1,9 +1,8 @@
 import { BigNumber } from "bignumber.js";
-import { ISwapDataResponse, IRouteTokenList } from "./types";
+import { IParamObject, IRouteTokenList } from "./types";
 import axios from "axios";
 import Config from '../../config/config';
 import { connectedNetwork } from "../../common/walletconnect";
-import { store } from "../../redux";
 
 export const allPathsRouter = async (
     tokenIn: string,
@@ -11,17 +10,13 @@ export const allPathsRouter = async (
     tokenInAmount: BigNumber,
     userAddress: string,
     slippage: number
-  ): Promise<{ paths: string[]; swapData: string[] }> => {
+  ): Promise<{ param: IParamObject | undefined }> => {
     try {
-        const paths = ['1'];
-        const swapData = ['1'];
-        const state = store.getState();
-        const TOKEN = state.config.tokens;
         let tokenInId = 0;
         let tokenOutId = 0;
 
         const routeSwapURL = await axios.get(
-            `${Config.PLENTY_3ROUTE_URL[connectedNetwork]}swap/${tokenIn}/${tokenOut}/${tokenInAmount.toString()}`, {
+            `${Config.PLENTY_3ROUTE_URL[connectedNetwork]}swap/${tokenIn.toUpperCase()}/${tokenOut.toUpperCase()}/${tokenInAmount.toString()}`, {
               headers: {
                 'Authorization': `${process.env.NEXT_PUBLIC_ROUTER_AUTHORISATION_TOKEN}`
               }
@@ -71,16 +66,14 @@ export const allPathsRouter = async (
                 }));
             }
         }
-
+        console.log('routertest', param)
         return {
-            paths,
-            swapData,
+            param,
         };
     } catch (error) {
       console.log(error);
       return {
-        paths: [],
-        swapData: [],
+        param: undefined,
       };
     }
   };

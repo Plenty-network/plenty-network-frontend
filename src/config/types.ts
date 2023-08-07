@@ -49,6 +49,7 @@ export interface IConfig {
   AIRDROP: { mainnet: string; testnet: string };
   AIRDROP_ETH_MESSAGE_PREFIX: string;
   PLENTY_3ROUTE_URL: { mainnet: string; testnet: string };
+  PLENTY_3ROUTE_CONTRACT: string;
 }
 
 interface IApi {

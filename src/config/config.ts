@@ -48,7 +48,7 @@ const Config: IConfig = {
     mainnet: "KT1HpNxd9RaeCwxrp1QX96DyocWURJXX8sZx",
     testnet: "KT1J3EQDZbLUR1Hp8TZKFwY5FLoekiPSgsmL",
   },
-
+  PLENTY_3ROUTE_CONTRACT: "KT1R7WEtNNim3YgkxPt8wPMczjH3eyhbJMtz",
   VE_INDEXER: {
     mainnet: "https://ply-indexer.mainnet.plenty.network/v1/",
     testnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
