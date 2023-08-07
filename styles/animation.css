@@ -490,6 +490,20 @@
     -o-animation: fadeIn 1.1s;
     -ms-animation: fadeIn 1.1s;
   }
+	.fade-in-label{
+    animation: fadeInLabel 0.4s;
+    -webkit-animation: fadeInLabel 0.4s;
+    -moz-animation: fadeInLabel 0.4s;
+    -o-animation: fadeInLabel 0.4s;
+    -ms-animation: fadeInLabel 0.4s;
+  }
+	.fade-out-label{
+    animation: fadeOutLabel 0.4s;
+    -webkit-animation: fadeOutLabel 0.4s;
+    -moz-animation: fadeOutLabel 0.4s;
+    -o-animation: fadeOutLabel 0.4s;
+    -ms-animation: fadeOutLabel 0.4s;
+  }
   .fade-in-3{
     animation: fadeIn 0.3s;
     -webkit-animation: fadeIn 0.3s;
@@ -531,6 +545,37 @@
     100% { 
         opacity: 1;
         transform: scale(1);
+     }
+  }
+	@keyframes fadeInLabel {
+    0% { 
+        opacity: 0; 
+        
+
+    }
+    30%{
+        opacity: 0.3; 
+        
+    }
+    100% { 
+        opacity: 1;
+        
+     }
+  }
+	@keyframes fadeOutLabel {
+    0% { 
+        opacity: 1;
+        
+
+    }
+    30%{
+        opacity: 0.3; 
+        
+    }
+    100% { 
+        
+		opacity: 0; 
+        
      }
   }
   @keyframes fadeOut {

@@ -217,7 +217,7 @@ export const Brush = ({
                 </g>
 
                 <g
-                  opacity={hovering ? 1 : 0}
+                  className={showLabels || hovering ? " fade-in-label" : "fade-out-label opacity-0"}
                   fill={"#211336"}
                   transform={`translate(50,0), scale(${flipWestHandle ? "1" : "-1"}, 1)`}
                 >
@@ -264,7 +264,7 @@ export const Brush = ({
                 </g>
 
                 <g
-                  opacity={hovering ? 1 : 0}
+                  className={showLabels || hovering ? " fade-in-label" : "fade-out-label opacity-0"}
                   fill={"#211336"}
                   transform={`translate(50,0), scale(${flipEastHandle ? "-1" : "1"}, 1)`}
                 >
