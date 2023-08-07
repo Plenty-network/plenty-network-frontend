@@ -3,14 +3,15 @@ import { IParamObject, IRouteTokenList } from "./types";
 import axios from "axios";
 import Config from '../../config/config';
 import { connectedNetwork } from "../../common/walletconnect";
+import { store } from "../../redux";
 
-export const allPathsRouter = async (
+export const threeRouteRouter = async (
     tokenIn: string,
     tokenOut: string,
     tokenInAmount: BigNumber,
     userAddress: string,
     slippage: number
-  ): Promise<{ param: IParamObject | undefined }> => {
+  ): Promise<{ param: IParamObject | [] }> => {
     try {
         let tokenInId = 0;
         let tokenOutId = 0;
@@ -66,14 +67,14 @@ export const allPathsRouter = async (
                 }));
             }
         }
-        console.log('routertest', param)
+        console.log('routertest', param);
         return {
             param,
         };
     } catch (error) {
       console.log(error);
       return {
-        param: undefined,
+        param: [],
       };
     }
   };

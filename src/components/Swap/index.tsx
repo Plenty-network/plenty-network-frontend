@@ -17,8 +17,9 @@ import {
 } from "../../api/util/types";
 import { Chain, MigrateToken } from "../../config/types";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
-// import { allPathsRouter } from "../../api/swap/3route";
-// allPathsRouter("TZBTC", "USDT", BigNumber(0.1), "tz1bs6GqVskvU1Y9S9qJF5eMoF37SFGYfkTw",0.98);
+// import { threeRouteRouter } from "../../api/swap/3route";
+// threeRouteRouter("tzBTC", "USDT", BigNumber(0.1), "tz1bs6GqVskvU1Y9S9qJF5eMoF37SFGYfkTw",0.98);
+
 interface ISwapProps {
   className?: string;
   otherProps: {

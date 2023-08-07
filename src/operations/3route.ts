@@ -5,6 +5,7 @@ import { dappClient } from "../common/walletconnect";
 import { store } from "../redux";
 import { setFlashMessage } from "../redux/flashMessage";
 import { IFlashMessageProps } from "../redux/flashMessage/type";
+
 import {
   IOperationsResponse,
   TResetAllValues,
@@ -13,7 +14,8 @@ import {
   IParamObject
 } from "./types";
 import Config from '../config/config';
-import { allPathsRouter } from '../api/swap/3route';
+import { threeRouteRouter } from '../api/swap/3route';
+import { TokenStandard } from "../config/types";
 
 export const addBribe = async (
     tokenIn: string,
@@ -33,19 +35,55 @@ export const addBribe = async (
       throw new Error("Wallet connection failed.");
     }
     const Tezos = await dappClient().tezos();
-    
-    const routerContractInstance = await Tezos.wallet.at(Config.PLENTY_3ROUTE_CONTRACT);
+    const state = store.getState();
+    const TOKENS = state.config.tokens;
 
-    const param: IParamObject | any = await allPathsRouter(tokenIn, tokenOut, tokenInAmount, userAddress, slippage);
+    const routerContractInstance = await Tezos.wallet.at(Config.PLENTY_3ROUTE_CONTRACT);
+    const tokenInInstance: any = await Tezos.wallet.at(TOKENS[tokenIn].address as string);
+
+    const param: IParamObject | any = await threeRouteRouter(tokenIn, tokenOut, tokenInAmount, userAddress, slippage);
 
     const allBatchOperations: WalletParamsWithKind[] = [];
 
-    allBatchOperations.push({
+    if (TOKENS[tokenIn].standard === TokenStandard.TEZ) {
+      allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         ...routerContractInstance.methods
-          .execute(param?.token_in_id, param?.token_out_id, param?.min_out, param?.receiver, param?.hops, param?.app_id)
-          .toTransferParams(),
+        .execute(param?.token_in_id, param?.token_out_id, param?.min_out, param?.receiver, param?.hops, param?.app_id)
+        .toTransferParams({ amount: Number(tokenInAmount), mutez: true }),
       });
+    } else {
+        if (TOKENS[tokenIn].standard === TokenStandard.FA12) {
+          allBatchOperations.push({
+            kind: OpKind.TRANSACTION,
+            // @ts-ignore
+            ...Approvals.approveFA12(tokenInInstance, {
+              spender: Config.PLENTY_3ROUTE_CONTRACT,
+              value: tokenInAmount.decimalPlaces(0, 1),
+            }),
+          });
+        } else if (TOKENS[tokenIn].standard === TokenStandard.FA2) {
+          allBatchOperations.push({
+            kind: OpKind.TRANSACTION,
+            // @ts-ignore
+            ...Approvals.updateOperatorsFA2(tokenInInstance as Contract, [
+              {
+                add_operator: {
+                  owner: userAddress,
+                  token_id: TOKENS[tokenIn].tokenId || 0,
+                  operator: TOKENS[tokenIn].address,
+                },
+              },
+            ]),
+          });
+        }
+        allBatchOperations.push({
+            kind: OpKind.TRANSACTION,
+            ...routerContractInstance.methods
+              .execute(param?.token_in_id, param?.token_out_id, param?.min_out, param?.receiver, param?.hops, param?.app_id)
+              .toTransferParams(),
+        });
+    }
 
     const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
     const batch = Tezos.wallet.batch(updatedBatchOperations);
