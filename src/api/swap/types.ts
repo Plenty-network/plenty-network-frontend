@@ -15,6 +15,13 @@ export interface ISwapDataResponse {
   target?: BigNumber;
 }
 
+export interface IRouteTokenList {
+  config: any;
+  data: any[];
+  header: any;
+  request: any;
+}
+
 export interface ICalculateTokenResponse {
     tokenOutAmount: BigNumber;
     fees: BigNumber;

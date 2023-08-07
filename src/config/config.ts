@@ -124,7 +124,6 @@ const Config: IConfig = {
   ADMIN_ADDRESS: "KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW",
   BURNER: "tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg",
 
-
   EXPLORER_LINKS: {
     RINKEBY: "https://rinkeby.etherscan.io/tx/",
     ETHEREUM: "https://etherscan.io/tx/",
@@ -132,6 +131,12 @@ const Config: IConfig = {
       mainnet: "https://tzkt.io/",
       testnet: "https://ghostnet.tzkt.io/"
     },
+  },
+
+  PLENTY_3ROUTE_URL: 
+  {
+    mainnet: "https://plenty.3route.io/v3/",
+    testnet: "",
   },
 };
 
