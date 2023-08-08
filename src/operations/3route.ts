@@ -17,7 +17,7 @@ import Config from '../config/config';
 import { threeRouteRouter } from '../api/swap/3route';
 import { TokenStandard } from "../config/types";
 
-export const addBribe = async (
+export const routerSwap = async (
     tokenIn: string,
     tokenOut: string,
     tokenInAmount: BigNumber,

@@ -67,9 +67,9 @@ export const threeRouteRouter = async (
                 }));
             }
         }
-        console.log('routertest', param);
+
         return {
-            param,
+            param
         };
     } catch (error) {
       console.log(error);
