@@ -42,7 +42,10 @@ export const addBribe = async (
     const tokenInInstance: any = await Tezos.wallet.at(TOKENS[tokenIn].address as string);
 
     const param: IParamObject | any = await threeRouteRouter(tokenIn, tokenOut, tokenInAmount, userAddress, slippage);
-
+    let swapAmount = tokenInAmount
+                      .multipliedBy(new BigNumber(10).pow(TOKENS[tokenIn].decimals))
+                      .decimalPlaces(0, 1)
+                      .toString();
     const allBatchOperations: WalletParamsWithKind[] = [];
 
     if (TOKENS[tokenIn].standard === TokenStandard.TEZ) {
@@ -50,7 +53,7 @@ export const addBribe = async (
         kind: OpKind.TRANSACTION,
         ...routerContractInstance.methods
         .execute(param?.token_in_id, param?.token_out_id, param?.min_out, param?.receiver, param?.hops, param?.app_id)
-        .toTransferParams({ amount: Number(tokenInAmount), mutez: true }),
+        .toTransferParams({ amount: Number(swapAmount), mutez: true }),
       });
     } else {
         if (TOKENS[tokenIn].standard === TokenStandard.FA12) {
@@ -59,7 +62,7 @@ export const addBribe = async (
             // @ts-ignore
             ...Approvals.approveFA12(tokenInInstance, {
               spender: Config.PLENTY_3ROUTE_CONTRACT,
-              value: tokenInAmount.decimalPlaces(0, 1),
+              value: swapAmount,
             }),
           });
         } else if (TOKENS[tokenIn].standard === TokenStandard.FA2) {
