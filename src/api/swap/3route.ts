@@ -3,7 +3,6 @@ import { IParamObject, IRouteTokenList } from "./types";
 import axios from "axios";
 import Config from "../../config/config";
 import { connectedNetwork } from "../../common/walletconnect";
-import { store } from "../../redux";
 
 export const threeRouteRouter = async (
   tokenIn: string,
@@ -110,9 +109,6 @@ export const estimateSwapOutput = async (
   slippage: number,
 ): Promise<{ tokenOutValue: BigNumber, minReceived: string }> => {
   try {
-    const state = store.getState();
-    const TOKENS = state.config.tokens;
-
     const routeSwapURL = await axios.get(
       `${
         Config.PLENTY_3ROUTE_URL[connectedNetwork]
@@ -126,7 +122,6 @@ export const estimateSwapOutput = async (
 
     let tokenOutValue =  BigNumber(routeSwapURL.data.output);
     let minReceived = BigNumber(routeSwapURL.data.output)
-                      .multipliedBy(new BigNumber(10).pow(TOKENS[tokenOut].decimals))
                       .multipliedBy(slippage)
                       .decimalPlaces(0, 1)
                       .toString();

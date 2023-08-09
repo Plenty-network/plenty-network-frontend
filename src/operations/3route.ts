@@ -85,7 +85,7 @@ export const routerSwap = async (
           kind: OpKind.TRANSACTION,
           // @ts-ignore
           ...tokenInInstance.methods
-          .approve(dexContractAddress, tokenInAmount.decimalPlaces(0, 1))
+          .approve(Config.PLENTY_3ROUTE_CONTRACT, swapAmount)
           .toTransferParams(),
         });
         allBatchOperations.push({
@@ -110,7 +110,7 @@ export const routerSwap = async (
             {
               add_operator: {
                 owner: userAddress,
-                operator: dexContractAddress,
+                operator: Config.PLENTY_3ROUTE_CONTRACT,
                 token_id: TOKENS[tokenIn].tokenId,
               },
             },
