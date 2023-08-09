@@ -106,9 +106,10 @@ export const estimateSwapOutput = async (
   tokenIn: string,
   tokenOut: string,
   tokenInAmount: BigNumber,
-  slippage: number,
-): Promise<{ tokenOutValue: BigNumber, minReceived: string }> => {
+  slippage: number
+): Promise<{ tokenOutValue: BigNumber; minReceived: string }> => {
   try {
+    console.log("tokenIn", tokenIn, tokenOut, tokenInAmount.toString(), slippage);
     const routeSwapURL = await axios.get(
       `${
         Config.PLENTY_3ROUTE_URL[connectedNetwork]
@@ -120,20 +121,22 @@ export const estimateSwapOutput = async (
       }
     );
 
-    let tokenOutValue =  BigNumber(routeSwapURL.data.output);
+    let tokenOutValue = BigNumber(routeSwapURL.data.output);
     let minReceived = BigNumber(routeSwapURL.data.output)
-                      .multipliedBy(slippage)
-                      .decimalPlaces(0, 1)
-                      .toString();
-
+      .multipliedBy(slippage)
+      .decimalPlaces(0, 1)
+      .toString();
+    console.log("tokenOutValue", tokenOutValue.toString(), minReceived.toString());
     return {
-      tokenOutValue, minReceived
+      tokenOutValue,
+      minReceived,
     };
   } catch (error) {
     console.log(error);
     return {
       // @ts-ignore
-      tokenOutValue: 0, minReceived: 0
+      tokenOutValue: 0,
+      minReceived: 0,
     };
   }
 };

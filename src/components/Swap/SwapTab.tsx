@@ -48,6 +48,7 @@ import { IAllTokensBalanceResponse } from "../../api/util/types";
 import { Chain } from "../../config/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { tzktExplorer } from "../../common/walletconnect";
+import { routerSwap } from "../../operations/3route";
 
 interface ISwapTabProps {
   className?: string;
@@ -116,6 +117,7 @@ interface ISwapTabProps {
   setBalanceUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   allBalance: IAllTokensBalanceResponse;
   isSwitchClicked: boolean;
+  minimumReceived: BigNumber;
 }
 
 function SwapTab(props: ISwapTabProps) {
@@ -198,12 +200,14 @@ function SwapTab(props: ISwapTabProps) {
     !expertMode && props.setShowConfirmSwap(false);
     const recepientAddress = props.recepient ? props.recepient : props.walletAddress;
     !expertMode && props.setShowConfirmTransaction(true);
-    allSwapWrapper(
+    routerSwap(
+      props.tokenIn.name,
+      props.tokenOut.name,
       new BigNumber(props.firstTokenAmount),
-      props.routeDetails.path,
-      props.routeDetails.minimumTokenOut,
+
       props.walletAddress,
-      recepientAddress,
+      (100 - Number(props.slippage)) / 100,
+
       transactionSubmitModal,
       props.resetAllValues,
       !expertMode && props.setShowConfirmTransaction,
@@ -277,17 +281,17 @@ function SwapTab(props: ISwapTabProps) {
     });
   };
 
-  const swapRoute = useMemo(() => {
-    if (props.routeDetails.path?.length >= 2) {
-      return props.routeDetails.path.map((tokenName) =>
-        props.tokens.find((token) => {
-          return token.name === tokenName;
-        })
-      );
-    }
+  // const swapRoute = useMemo(() => {
+  //   if (props.routeDetails.path?.length >= 2) {
+  //     return props.routeDetails.path.map((tokenName) =>
+  //       props.tokens.find((token) => {
+  //         return token.name === tokenName;
+  //       })
+  //     );
+  //   }
 
-    return null;
-  }, [props.routeDetails.path]);
+  //   return null;
+  // }, [props.routeDetails.path]);
 
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {
@@ -313,7 +317,7 @@ function SwapTab(props: ISwapTabProps) {
           </Button>
         );
       } else if (
-        props.firstTokenAmount >
+        Number(props.firstTokenAmount) >
         Number(props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance)
       ) {
         return (
@@ -321,7 +325,9 @@ function SwapTab(props: ISwapTabProps) {
             Insufficient balance
           </Button>
         );
-      } else if (expertMode && Number(props.routeDetails.priceImpact) > 3) {
+      }
+      // else if (expertMode && Number(props.routeDetails.priceImpact) > 3) {
+      else if (expertMode) {
         return (
           <Button color="error" width="w-full" onClick={handleSwap}>
             Swap Anyway
@@ -398,7 +404,7 @@ function SwapTab(props: ISwapTabProps) {
       <div
         className={clsx(
           "lg:w-580 mt-4 h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700",
-          (props.firstTokenAmount >
+          (Number(props.firstTokenAmount) >
             Number(props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance) ||
             props.errorMessage) &&
             "border-errorBorder hover:border-errorBorder bg-errorBg",
@@ -552,9 +558,7 @@ function SwapTab(props: ISwapTabProps) {
               <div className="text-right font-body1 text-text-400">YOU RECEIVE</div>
               <div>
                 {Object.keys(props.tokenOut).length !== 0 ? (
-                  isRefresh ||
-                  props.loading.isLoadingSecond ||
-                  (props.isSwitchClicked && props.secondTokenAmount === "") ? (
+                  isRefresh || props.loading.isLoadingSecond || props.isSwitchClicked ? (
                     <p className="ml-auto my-[4px] w-[100px]  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input
@@ -563,7 +567,7 @@ function SwapTab(props: ISwapTabProps) {
                         "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 "
                       )}
                       placeholder="0.0"
-                      disabled={props.errorMessage === ERRORMESSAGES.SWAPROUTER}
+                      disabled
                       onChange={(e) => props.handleSwapTokenInput(e.target.value, "tokenOut")}
                       value={fromExponential(props.secondTokenAmount)}
                       onFocus={() => setIsSecondInputFocus(true)}
@@ -652,7 +656,7 @@ function SwapTab(props: ISwapTabProps) {
           </div>
         )}
 
-        {props.routeDetails.success && (
+        {true && (
           <div
             className="h-12 mt-3 cursor-pointer px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] items-center flex "
             onClick={() => setOpenSwapDetails(!openSwapDetails)}
@@ -689,13 +693,13 @@ function SwapTab(props: ISwapTabProps) {
                               </div>
 
                               <div className="ml-auto font-body2 md:font-subtitle4">
-                                {` ${Number(props.routeDetails.minimumOut).toFixed(
+                                {` ${Number(props.minimumReceived).toFixed(
                                   4
                                 )} ${tEZorCTEZtoUppercase(props.tokenOut.name)}`}
                               </div>
                             </div>
 
-                            <div className="flex mt-3">
+                            {/* <div className="flex mt-3">
                               <div className="font-body1 md:font-body3 ">
                                 <span className="mr-[5px]">Price impact</span>
                               </div>
@@ -708,8 +712,8 @@ function SwapTab(props: ISwapTabProps) {
                               >
                                 {`${props.routeDetails.priceImpact.toFixed(4)} %`}
                               </div>
-                            </div>
-                            <div className="flex mt-3 mb-2">
+                            </div> */}
+                            {/* <div className="flex mt-3 mb-2">
                               <div className="font-body1 md:font-body3 ">
                                 <span className="mr-[5px]">Fee</span>
                               </div>
@@ -717,7 +721,7 @@ function SwapTab(props: ISwapTabProps) {
                               <div className="ml-auto font-body2 md:font-subtitle4">
                                 {`${props.routeDetails.finalFeePerc.toFixed(2)}  %`}
                               </div>
-                            </div>
+                            </div> */}
                           </div>
                         </p>
                       }
@@ -762,7 +766,7 @@ function SwapTab(props: ISwapTabProps) {
                     <Image alt={"alt"} src={ratesrefresh} onClick={(e) => convertRates(e)} />
                   </span>
                 </div>
-                <div className="ml-auto cursor-pointer">
+                {/* <div className="ml-auto cursor-pointer">
                   <ToolTip
                     id="tooltip9"
                     type={isMobile ? TooltipType.swapRoute : TooltipType.swap}
@@ -915,7 +919,7 @@ function SwapTab(props: ISwapTabProps) {
                       ).toFixed(2)} %`}</span>
                     </div>
                   </ToolTip>
-                </div>
+                </div> */}
                 <div className=" relative top-[3px] ">
                   <Image
                     src={arrowDown}
@@ -929,7 +933,7 @@ function SwapTab(props: ISwapTabProps) {
           </div>
         )}
 
-        {openSwapDetails && props.routeDetails.success && (
+        {openSwapDetails && (
           <div
             className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 animate__animated `}
           >
@@ -961,22 +965,22 @@ function SwapTab(props: ISwapTabProps) {
                 ) : (
                   <div className="ml-auto font-mobile-700 md:font-subtitle4 cursor-pointer">
                     <ToolTip
-                      message={fromExponential(props.routeDetails.minimumOut.toNumber())}
+                      message={fromExponential(props.minimumReceived.toNumber())}
                       id="tooltip6"
-                      disable={Number(props.routeDetails.minimumOut) < 0}
+                      disable={Number(props.minimumReceived) < 0}
                       position={isMobile ? Position.left : Position.top}
                     >
-                      {Number(props.routeDetails.minimumOut) < 0
+                      {Number(props.minimumReceived) < 0
                         ? `0 ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
-                        : ` ${Number(props.routeDetails.minimumOut).toFixed(
-                            4
-                          )} ${tEZorCTEZtoUppercase(props.tokenOut.name)}`}
+                        : ` ${Number(props.minimumReceived).toFixed(4)} ${tEZorCTEZtoUppercase(
+                            props.tokenOut.name
+                          )}`}
                     </ToolTip>
                   </div>
                 )}
               </div>
 
-              <div className="flex mt-2">
+              {/* <div className="flex mt-2">
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Price impact</span>
                   <span className="relative top-1 lg:top-0.5">
@@ -1016,8 +1020,8 @@ function SwapTab(props: ISwapTabProps) {
                     </ToolTip>
                   </div>
                 )}
-              </div>
-              <div className="flex mt-2">
+              </div> */}
+              {/* <div className="flex mt-2">
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Fee</span>
                   <span className="relative top-1 lg:top-0.5">
@@ -1045,10 +1049,10 @@ function SwapTab(props: ISwapTabProps) {
                     {`${props.routeDetails.finalFeePerc.toFixed(2)}  %`}
                   </div>
                 )}
-              </div>
-              <div className="border-t border-text-800 mt-[18px]"></div>
+              </div> */}
+              {/* <div className="border-t border-text-800 mt-[18px]"></div> */}
 
-              <div className="mt-4 ">
+              {/* <div className="mt-4 ">
                 <div className="font-subtitle2 md:font-subtitle4">
                   {" "}
                   <span className="mr-[5px]">Route</span>
@@ -1196,7 +1200,7 @@ function SwapTab(props: ISwapTabProps) {
                     </div>
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         )}
