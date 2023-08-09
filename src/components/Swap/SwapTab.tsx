@@ -205,7 +205,7 @@ function SwapTab(props: ISwapTabProps) {
       props.tokenOut.name,
       new BigNumber(props.firstTokenAmount),
 
-      props.walletAddress,
+      recepientAddress,
       (100 - Number(props.slippage)) / 100,
 
       transactionSubmitModal,
@@ -656,7 +656,7 @@ function SwapTab(props: ISwapTabProps) {
           </div>
         )}
 
-        {true && (
+        {props.tokenOut.name && (
           <div
             className="h-12 mt-3 cursor-pointer px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] items-center flex "
             onClick={() => setOpenSwapDetails(!openSwapDetails)}
@@ -766,8 +766,8 @@ function SwapTab(props: ISwapTabProps) {
                     <Image alt={"alt"} src={ratesrefresh} onClick={(e) => convertRates(e)} />
                   </span>
                 </div>
-                {/* <div className="ml-auto cursor-pointer">
-                  <ToolTip
+                <div className="ml-auto cursor-pointer">
+                  {/* <ToolTip
                     id="tooltip9"
                     type={isMobile ? TooltipType.swapRoute : TooltipType.swap}
                     position={Position.top}
@@ -918,8 +918,8 @@ function SwapTab(props: ISwapTabProps) {
                         props.routeDetails.finalFeePerc
                       ).toFixed(2)} %`}</span>
                     </div>
-                  </ToolTip>
-                </div> */}
+                  </ToolTip> */}
+                </div>
                 <div className=" relative top-[3px] ">
                   <Image
                     src={arrowDown}
@@ -935,7 +935,7 @@ function SwapTab(props: ISwapTabProps) {
 
         {openSwapDetails && (
           <div
-            className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 animate__animated `}
+            className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[63px] rounded-3xl mt-2 animate__animated `}
           >
             <div className="scale-in-animation">
               <div className="flex">
