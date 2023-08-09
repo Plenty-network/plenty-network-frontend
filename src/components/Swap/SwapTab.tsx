@@ -118,6 +118,7 @@ interface ISwapTabProps {
   allBalance: IAllTokensBalanceResponse;
   isSwitchClicked: boolean;
   minimumReceived: BigNumber;
+  exchangeRate: BigNumber;
 }
 
 function SwapTab(props: ISwapTabProps) {
@@ -513,9 +514,7 @@ function SwapTab(props: ISwapTabProps) {
       <div
         className=" -mt-[25px] cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-2xl "
         onClick={
-          Object.keys(props.tokenOut).length !== 0
-            ? () => props.changeTokenLocation()
-            : () => props.changeTokenLocation()
+          Object.keys(props.tokenOut).length !== 0 ? () => props.changeTokenLocation() : () => {}
         }
       >
         <div className="p-[11.5px] bg-card-500 rounded-2xl  w-[68px] h-[68px]">
@@ -677,64 +676,6 @@ function SwapTab(props: ISwapTabProps) {
             ) : (
               <>
                 <div>
-                  <span className="relative top-0.5">
-                    <ToolTip
-                      id="tooltip1"
-                      position={isMobile ? Position.right : Position.top}
-                      toolTipChild={
-                        <p>
-                          <div
-                            className={`w-[277px]   rounded-3xl 
-                            }`}
-                          >
-                            <div className="flex mt-2">
-                              <div className="font-body1  md:font-body3 ">
-                                <span className="mr-[5px]">Minimum received</span>
-                              </div>
-
-                              <div className="ml-auto font-body2 md:font-subtitle4">
-                                {` ${Number(props.minimumReceived).toFixed(
-                                  4
-                                )} ${tEZorCTEZtoUppercase(props.tokenOut.name)}`}
-                              </div>
-                            </div>
-
-                            {/* <div className="flex mt-3">
-                              <div className="font-body1 md:font-body3 ">
-                                <span className="mr-[5px]">Price impact</span>
-                              </div>
-
-                              <div
-                                className={clsx(
-                                  "ml-auto font-body2 md:font-subtitle4",
-                                  Number(props.routeDetails.priceImpact) > 3 && "text-error-500"
-                                )}
-                              >
-                                {`${props.routeDetails.priceImpact.toFixed(4)} %`}
-                              </div>
-                            </div> */}
-                            {/* <div className="flex mt-3 mb-2">
-                              <div className="font-body1 md:font-body3 ">
-                                <span className="mr-[5px]">Fee</span>
-                              </div>
-
-                              <div className="ml-auto font-body2 md:font-subtitle4">
-                                {`${props.routeDetails.finalFeePerc.toFixed(2)}  %`}
-                              </div>
-                            </div> */}
-                          </div>
-                        </p>
-                      }
-                    >
-                      <Image
-                        alt={"alt"}
-                        src={info}
-                        className="cursor-pointer"
-                        width={"15px"}
-                        height={"15px"}
-                      />
-                    </ToolTip>
-                  </span>
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px] cursor-pointer">
                     1{" "}
                     {!isConvert
@@ -744,21 +685,17 @@ function SwapTab(props: ISwapTabProps) {
                     <ToolTip
                       message={
                         !isConvert
-                          ? fromExponential(props.routeDetails.exchangeRate.toString())
-                          : fromExponential(1 / Number(props.routeDetails.exchangeRate)).toString()
+                          ? fromExponential(props.exchangeRate.toString())
+                          : fromExponential(1 / Number(props.exchangeRate)).toString()
                       }
                       id="tooltip7"
                       position={Position.top}
                     >
                       {!isConvert
-                        ? ` ${nFormatterWithLesserNumber(
-                            new BigNumber(props.routeDetails.exchangeRate)
-                          )} 
+                        ? ` ${nFormatterWithLesserNumber(new BigNumber(props.exchangeRate))} 
                             ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
                         : `${nFormatterWithLesserNumber(
-                            new BigNumber(
-                              new BigNumber(1).dividedBy(props.routeDetails.exchangeRate)
-                            )
+                            new BigNumber(new BigNumber(1).dividedBy(props.exchangeRate))
                           )} ${tEZorCTEZtoUppercase(props.tokenIn.name)}`}
                     </ToolTip>
                   </span>
@@ -935,7 +872,7 @@ function SwapTab(props: ISwapTabProps) {
 
         {openSwapDetails && (
           <div
-            className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[63px] rounded-3xl mt-2 animate__animated `}
+            className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px]  rounded-3xl mt-2 animate__animated `}
           >
             <div className="scale-in-animation">
               <div className="flex">
@@ -1215,6 +1152,7 @@ function SwapTab(props: ISwapTabProps) {
       )}
       {props.showConfirmSwap && (
         <ConfirmSwap
+          minimumReceived={props.minimumReceived}
           show={props.showConfirmSwap}
           tokens={props.tokens}
           setShow={props.setShowConfirmSwap}
