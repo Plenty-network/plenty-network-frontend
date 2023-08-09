@@ -1,5 +1,6 @@
-import { MichelsonMap, OpKind, WalletParamsWithKind } from "@taquito/taquito";
+import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { BigNumber } from "bignumber.js";
+import { getDexAddress } from '../api/util/fetchConfig';
 import { getBatchOperationsWithLimits } from "../api/util/operations";
 import { dappClient } from "../common/walletconnect";
 import { store } from "../redux";
@@ -38,6 +39,8 @@ export const routerSwap = async (
     const state = store.getState();
     const TOKENS = state.config.tokens;
 
+    const dexContractAddress = getDexAddress(tokenIn, tokenOut);
+
     const routerContractInstance = await Tezos.wallet.at(Config.PLENTY_3ROUTE_CONTRACT);
     let tokenInInstance;
     if (tokenIn.toLowerCase() != "xtz") {
@@ -60,6 +63,7 @@ export const routerSwap = async (
       .multipliedBy(new BigNumber(10).pow(TOKENS[tokenIn].decimals))
       .decimalPlaces(0, 1)
       .toString();
+      
     const allBatchOperations: WalletParamsWithKind[] = [];
 
     if (TOKENS[tokenIn].standard === TokenStandard.TEZ) {
@@ -76,45 +80,58 @@ export const routerSwap = async (
           )
           .toTransferParams({ amount: Number(swapAmount), mutez: true }),
       });
-    } else {
-      if (TOKENS[tokenIn].standard === TokenStandard.FA12) {
+    } else if (TOKENS[tokenIn].standard === TokenStandard.FA12) {
         allBatchOperations.push({
           kind: OpKind.TRANSACTION,
           // @ts-ignore
-          ...Approvals.approveFA12(tokenInInstance, {
-            spender: Config.PLENTY_3ROUTE_CONTRACT,
-            value: swapAmount,
-          }),
+          ...tokenInInstance.methods
+          .approve(dexContractAddress, tokenInAmount.decimalPlaces(0, 1))
+          .toTransferParams(),
         });
-      } else if (TOKENS[tokenIn].standard === TokenStandard.FA2) {
+        allBatchOperations.push({
+          kind: OpKind.TRANSACTION,
+          ...routerContractInstance.methods
+            .execute(
+              param?.token_in_id,
+              param?.token_out_id,
+              param?.min_out,
+              param?.receiver,
+              param?.hops,
+              param?.app_id
+            )
+            .toTransferParams(),
+        });
+      } else if(TOKENS[tokenIn].standard === TokenStandard.FA2) {
         allBatchOperations.push({
           kind: OpKind.TRANSACTION,
           // @ts-ignore
-          ...Approvals.updateOperatorsFA2(tokenInInstance as Contract, [
+          ...tokenInInstance.methods
+          .update_operators([
             {
               add_operator: {
                 owner: userAddress,
-                token_id: TOKENS[tokenIn].tokenId || 0,
-                operator: Config.PLENTY_3ROUTE_CONTRACT,
+                operator: dexContractAddress,
+                token_id: TOKENS[tokenIn].tokenId,
               },
             },
-          ]),
+          ])
+          .toTransferParams(),
+
+        });
+        allBatchOperations.push({
+          kind: OpKind.TRANSACTION,
+          ...routerContractInstance.methods
+            .execute(
+              param?.token_in_id,
+              param?.token_out_id,
+              param?.min_out,
+              param?.receiver,
+              param?.hops,
+              param?.app_id
+            )
+            .toTransferParams(),
         });
       }
-      allBatchOperations.push({
-        kind: OpKind.TRANSACTION,
-        ...routerContractInstance.methods
-          .execute(
-            param?.token_in_id,
-            param?.token_out_id,
-            param?.min_out,
-            param?.receiver,
-            param?.hops,
-            param?.app_id
-          )
-          .toTransferParams(),
-      });
-    }
 
     const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
     const batch = Tezos.wallet.batch(updatedBatchOperations);
