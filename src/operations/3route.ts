@@ -116,7 +116,6 @@ export const routerSwap = async (
             },
           ])
           .toTransferParams(),
-
         });
         allBatchOperations.push({
           kind: OpKind.TRANSACTION,
@@ -130,6 +129,21 @@ export const routerSwap = async (
               param?.app_id
             )
             .toTransferParams(),
+        });
+        allBatchOperations.push({
+          kind: OpKind.TRANSACTION,
+          // @ts-ignore
+          ...tokenInInstance.methods
+          .update_operators([
+            {
+              remove_operator: {
+                owner: userAddress,
+                operator: Config.PLENTY_3ROUTE_CONTRACT,
+                token_id: TOKENS[tokenIn].tokenId,
+              },
+            },
+          ])
+          .toTransferParams(),
         });
       }
 
