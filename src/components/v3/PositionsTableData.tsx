@@ -213,12 +213,12 @@ export function PositionDataTable(props: IShortCardProps) {
           <div className="lg:w-[180px] w-[135px]">
             {!x.isInRange ? (
               <span className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1 rounded-lg	 text-error-300 bg-error-300/[0.1] ">
-                <Image src={infoOrange} />
+                {/* <Image src={infoOrange} /> */}
                 Out of range
               </span>
             ) : (
               <div className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1  rounded-lg	text-success-500 bg-success-500/[0.1]">
-                <Image src={infoGreen} />
+                {/* <Image src={infoGreen} /> */}
                 In Range
               </div>
             )}
