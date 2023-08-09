@@ -85,6 +85,7 @@ export function PositionDataTable(props: IShortCardProps) {
         walletAddress,
         tokenPrice
       ).then((res) => {
+        console.log("positions", res);
         setData(res);
         setIsLoading(false);
       });
