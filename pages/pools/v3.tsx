@@ -16,6 +16,7 @@ import clsx from "clsx";
 
 import { PoolsCardHeaderV3 } from "../../src/components/v3/pools/CardHeaderv3";
 import PoolsV3 from "../../src/components/v3";
+import Tutorial from "../../src/components/Tutorial";
 
 export interface IIndexProps {}
 export enum POOL_TYPE {
@@ -91,11 +92,12 @@ export default function Pools(props: IIndexProps) {
 
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
-
+  const [show, setShow] = useState(true);
   return (
     <>
       <SideBarHOC>
-        <PoolsV3 />
+        <Tutorial show={show} setShow={setShow} />
+        {false && <PoolsV3 />}
       </SideBarHOC>
     </>
   );
