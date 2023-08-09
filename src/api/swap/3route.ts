@@ -124,9 +124,8 @@ export const estimateSwapOutput = async (
     let tokenOutValue = BigNumber(routeSwapURL.data.output);
     let minReceived = BigNumber(routeSwapURL.data.output)
       .multipliedBy(slippage)
-      .decimalPlaces(0, 1)
       .toString();
-    console.log("tokenOutValue", tokenOutValue.toString(), minReceived.toString());
+    console.log("tokenOutValue", tokenOutValue.toString(), minReceived);
     return {
       tokenOutValue,
       minReceived,
@@ -136,7 +135,7 @@ export const estimateSwapOutput = async (
     return {
       // @ts-ignore
       tokenOutValue: 0,
-      minReceived: 0,
+      minReceived: '0',
     };
   }
 };
