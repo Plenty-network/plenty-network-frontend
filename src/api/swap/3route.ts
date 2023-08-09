@@ -1,80 +1,105 @@
 import { BigNumber } from "bignumber.js";
 import { IParamObject, IRouteTokenList } from "./types";
 import axios from "axios";
-import Config from '../../config/config';
+import Config from "../../config/config";
 import { connectedNetwork } from "../../common/walletconnect";
 import { store } from "../../redux";
+import { MichelsonMap } from "@taquito/taquito";
 
 export const threeRouteRouter = async (
-    tokenIn: string,
-    tokenOut: string,
-    tokenInAmount: BigNumber,
-    userAddress: string,
-    slippage: number
-  ): Promise<{ param: IParamObject | [] }> => {
-    try {
-        let tokenInId = 0;
-        let tokenOutId = 0;
+  tokenIn: string,
+  tokenOut: string,
+  tokenInAmount: BigNumber,
+  userAddress: string,
+  slippage: number,
+  tokenInDecimals: number,
+  tokenOutDecimals: number
+): Promise<{ param: IParamObject }> => {
+  try {
+    let tokenInId = 0;
+    let tokenOutId = 0;
 
-        const routeSwapURL = await axios.get(
-            `${Config.PLENTY_3ROUTE_URL[connectedNetwork]}swap/${tokenIn.toUpperCase()}/${tokenOut.toUpperCase()}/${tokenInAmount.toString()}`, {
-              headers: {
-                'Authorization': `${process.env.NEXT_PUBLIC_ROUTER_AUTHORISATION_TOKEN}`
-              }
-            }
-          );        
-          
-          let routeTokenList : IRouteTokenList = await axios.get(
-            `${Config.PLENTY_3ROUTE_URL[connectedNetwork]}tokens`, {
-              headers: {
-                'Authorization': `${process.env.NEXT_PUBLIC_ROUTER_AUTHORISATION_TOKEN}`
-               }
-            }
-          );   
+    const routeSwapURL = await axios.get(
+      `${
+        Config.PLENTY_3ROUTE_URL[connectedNetwork]
+      }swap/${tokenIn.toUpperCase()}/${tokenOut.toUpperCase()}/${tokenInAmount.toString()}`,
+      {
+        headers: {
+          Authorization: `${process.env.NEXT_PUBLIC_ROUTER_AUTHORISATION_TOKEN}`,
+        },
+      }
+    );
 
-        routeTokenList.data.map<any>((datum) => {
-          if(datum.symbol.toUpperCase() === tokenIn.toUpperCase() ){
-            tokenInId = datum.id;
-            return;
-          }
+    let routeTokenList: IRouteTokenList = await axios.get(
+      `${Config.PLENTY_3ROUTE_URL[connectedNetwork]}tokens`,
+      {
+        headers: {
+          Authorization: `${process.env.NEXT_PUBLIC_ROUTER_AUTHORISATION_TOKEN}`,
+        },
+      }
+    );
+
+    routeTokenList.data.map<any>((datum) => {
+      if (datum.symbol.toUpperCase() === tokenIn.toUpperCase()) {
+        tokenInId = datum.id;
+        return;
+      }
+    });
+
+    routeTokenList.data.map<any>((datum) => {
+      if (datum.symbol.toUpperCase() === tokenOut.toUpperCase()) {
+        tokenOutId = datum.id;
+        return;
+      }
+    });
+
+    let param = {
+      app_id: "4",
+      min_out: BigNumber(routeSwapURL.data.output)
+        .multipliedBy(new BigNumber(10).pow(tokenOutDecimals))
+        .multipliedBy(slippage)
+        .decimalPlaces(0, 1)
+        .toString(),
+      receiver: userAddress,
+      token_in_id: tokenInId.toString(),
+      token_out_id: tokenOutId.toString(),
+      hops: {},
+    };
+
+    const hopsReal = new Map();
+    for (let i = 0; i < routeSwapURL.data.chains.length; i++) {
+      const chain = routeSwapURL.data.chains[i];
+      for (let j = 0; j < chain.hops.length; j++) {
+        const hop = chain.hops[j];
+
+        hopsReal.set(hopsReal.size, {
+          code: ((j === 0 ? 1 : 0) + (hop.forward ? 2 : 0)).toString(),
+          dex_id: hop.dex.toString(),
+          amount_opt:
+            j === 0
+              ? BigNumber(chain.input)
+                  .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
+                  .decimalPlaces(0, 1)
+                  .toString()
+              : undefined,
+          params: "",
         });
-
-        routeTokenList.data.map<any>((datum) => {
-          if(datum.symbol.toUpperCase() === tokenOut.toUpperCase()){
-            tokenOutId = datum.id;
-            return;
-          }
-        });
-
-        let param = {
-            app_id: 4,
-            min_out: routeSwapURL.data.output * slippage,
-            receiver: userAddress,
-            token_in_id: tokenInId,
-            token_out_id: tokenOutId,
-            hops: new Map(),
-        };
-
-        for (let i = 0; i < routeSwapURL.data.chains.length; i++) {
-            const chain = routeSwapURL.data.chains[i];
-            for (let j = 0; j < chain.hops.length; j++) {
-                const hop = chain.hops[j];
-                param.hops.set(param.hops.size, ({
-                    code: (j === 0 ? 1 : 0) + (hop.forward ? 2 : 0),
-                    dex_id: hop.dex,
-                    amount_opt: j === 0 ? chain.input : undefined,
-                    params: []
-                }));
-            }
-        }
-
-        return {
-            param
-        };
-    } catch (error) {
-      console.log(error);
-      return {
-        param: [],
-      };
+      }
     }
-  };
+
+    hopsReal.forEach((value, key) => {
+      //@ts-ignore
+      param.hops[key] = value;
+    });
+
+    return {
+      param,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      // @ts-ignore
+      param: {},
+    };
+  }
+};

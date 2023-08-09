@@ -1,5 +1,5 @@
-import { BigNumber } from 'bignumber.js'
-import { IConfigLPToken } from '../../config/types';
+import { BigNumber } from "bignumber.js";
+import { IConfigLPToken } from "../../config/types";
 
 export interface ISwapDataResponse {
   success: boolean;
@@ -23,28 +23,28 @@ export interface IRouteTokenList {
 }
 
 export interface IParamObject {
-  app_id: number,
-  min_out:  number,
-  receiver: string,
-  token_in_id: number,
-  token_out_id: number,
-  hops: Map<any, any>,
+  app_id: string;
+  min_out: string;
+  receiver: string;
+  token_in_id: string;
+  token_out_id: string;
+  hops: {};
 }
 
 export interface ICalculateTokenResponse {
-    tokenOutAmount: BigNumber;
-    fees: BigNumber;
-    feePerc : BigNumber;
-    minimumOut: BigNumber;
-    exchangeRate: BigNumber;
-    priceImpact: BigNumber;
-    error?: any;
-  }
+  tokenOutAmount: BigNumber;
+  fees: BigNumber;
+  feePerc: BigNumber;
+  minimumOut: BigNumber;
+  exchangeRate: BigNumber;
+  priceImpact: BigNumber;
+  error?: any;
+}
 
 export interface IRouterResponse {
   path: string[];
   tokenOutAmount: BigNumber;
-  userFinalTokenOut ?: BigNumber;
+  userFinalTokenOut?: BigNumber;
   finalMinimumTokenOut: BigNumber;
   minimumTokenOut: BigNumber[];
   finalPriceImpact: BigNumber;
@@ -56,7 +56,7 @@ export interface IRouterResponse {
 
 export interface IBestPathResponse {
   path: string[];
-  bestPathSwapData : ISwapDataResponse[];
+  bestPathSwapData: ISwapDataResponse[];
   tokenOutAmount: BigNumber;
   minimumTokenOut: BigNumber[];
   fees: BigNumber[];
@@ -64,633 +64,523 @@ export interface IBestPathResponse {
   priceImpact: BigNumber[];
 }
 
-export const tezCtezStorageType : any = {
-  "prim": "pair",
-  "args": [
+export const tezCtezStorageType: any = {
+  prim: "pair",
+  args: [
     {
-      "prim": "pair",
-      "args": [
+      prim: "pair",
+      args: [
         {
-          "prim": "pair",
-          "args": [
+          prim: "pair",
+          args: [
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "bool",
-                  "annots": [
-                    "%Locked"
-                  ]
+                  prim: "bool",
+                  annots: ["%Locked"],
                 },
                 {
-                  "prim": "address",
-                  "annots": [
-                    "%admin"
-                  ]
-                }
-              ]
+                  prim: "address",
+                  annots: ["%admin"],
+                },
+              ],
             },
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "address",
-                  "annots": [
-                    "%ctezAddress"
-                  ]
+                  prim: "address",
+                  annots: ["%ctezAddress"],
                 },
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%ctezFee"
-                  ]
-                }
-              ]
-            }
-          ]
+                  prim: "nat",
+                  annots: ["%ctezFee"],
+                },
+              ],
+            },
+          ],
         },
         {
-          "prim": "pair",
-          "args": [
+          prim: "pair",
+          args: [
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%ctezPool"
-                  ]
+                  prim: "nat",
+                  annots: ["%ctezPool"],
                 },
                 {
-                  "prim": "address",
-                  "annots": [
-                    "%ctez_admin"
-                  ]
-                }
-              ]
+                  prim: "address",
+                  annots: ["%ctez_admin"],
+                },
+              ],
             },
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%lpFee"
-                  ]
+                  prim: "nat",
+                  annots: ["%lpFee"],
                 },
                 {
-                  "prim": "pair",
-                  "args": [
+                  prim: "pair",
+                  args: [
                     {
-                      "prim": "address",
-                      "annots": [
-                        "%lqtAddress"
-                      ]
+                      prim: "address",
+                      annots: ["%lqtAddress"],
                     },
                     {
-                      "prim": "nat",
-                      "annots": [
-                        "%lqtTotal"
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                      prim: "nat",
+                      annots: ["%lqtTotal"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
-      "prim": "pair",
-      "args": [
+      prim: "pair",
+      args: [
         {
-          "prim": "pair",
-          "args": [
+          prim: "pair",
+          args: [
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "option",
-                  "args": [
+                  prim: "option",
+                  args: [
                     {
-                      "prim": "nat"
-                    }
+                      prim: "nat",
+                    },
                   ],
-                  "annots": [
-                    "%minAmount"
-                  ]
+                  annots: ["%minAmount"],
                 },
                 {
-                  "prim": "bool",
-                  "annots": [
-                    "%paused"
-                  ]
-                }
-              ]
+                  prim: "bool",
+                  annots: ["%paused"],
+                },
+              ],
             },
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "option",
-                  "args": [
+                  prim: "option",
+                  args: [
                     {
-                      "prim": "address"
-                    }
+                      prim: "address",
+                    },
                   ],
-                  "annots": [
-                    "%recipient"
-                  ]
+                  annots: ["%recipient"],
                 },
                 {
-                  "prim": "option",
-                  "args": [
+                  prim: "option",
+                  args: [
                     {
-                      "prim": "address"
-                    }
+                      prim: "address",
+                    },
                   ],
-                  "annots": [
-                    "%sender"
-                  ]
-                }
-              ]
-            }
-          ]
+                  annots: ["%sender"],
+                },
+              ],
+            },
+          ],
         },
         {
-          "prim": "pair",
-          "args": [
+          prim: "pair",
+          args: [
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "bool",
-                  "annots": [
-                    "%state"
-                  ]
+                  prim: "bool",
+                  annots: ["%state"],
                 },
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%tezPool"
-                  ]
-                }
-              ]
+                  prim: "nat",
+                  annots: ["%tezPool"],
+                },
+              ],
             },
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "option",
-                  "args": [
+                  prim: "option",
+                  args: [
                     {
-                      "prim": "nat"
-                    }
+                      prim: "nat",
+                    },
                   ],
-                  "annots": [
-                    "%tradeAmount"
-                  ]
+                  annots: ["%tradeAmount"],
                 },
                 {
-                  "prim": "pair",
-                  "args": [
+                  prim: "pair",
+                  args: [
                     {
-                      "prim": "option",
-                      "args": [
+                      prim: "option",
+                      args: [
                         {
-                          "prim": "address"
-                        }
+                          prim: "address",
+                        },
                       ],
-                      "annots": [
-                        "%voterContract"
-                      ]
+                      annots: ["%voterContract"],
                     },
                     {
-                      "prim": "nat",
-                      "annots": [
-                        "%xtzFee"
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
+                      prim: "nat",
+                      annots: ["%xtzFee"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
-export const stableswapStorageType : any = {
-  "prim": "pair",
-  "args": [
+export const stableswapStorageType: any = {
+  prim: "pair",
+  args: [
     {
-      "prim": "pair",
-      "args": [
+      prim: "pair",
+      args: [
         {
-          "prim": "pair",
-          "args": [
+          prim: "pair",
+          args: [
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "address",
-                  "annots": [
-                    "%admin"
-                  ]
+                  prim: "address",
+                  annots: ["%admin"],
                 },
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%lpFee"
-                  ]
-                }
-              ]
+                  prim: "nat",
+                  annots: ["%lpFee"],
+                },
+              ],
             },
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "address",
-                  "annots": [
-                    "%lqtAddress"
-                  ]
+                  prim: "address",
+                  annots: ["%lqtAddress"],
                 },
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%lqtTotal"
-                  ]
-                }
-              ]
-            }
-          ]
+                  prim: "nat",
+                  annots: ["%lqtTotal"],
+                },
+              ],
+            },
+          ],
         },
         {
-          "prim": "pair",
-          "args": [
+          prim: "pair",
+          args: [
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "bool",
-                  "annots": [
-                    "%paused"
-                  ]
+                  prim: "bool",
+                  annots: ["%paused"],
                 },
                 {
-                  "prim": "bool",
-                  "annots": [
-                    "%state"
-                  ]
-                }
-              ]
+                  prim: "bool",
+                  annots: ["%state"],
+                },
+              ],
             },
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "address",
-                  "annots": [
-                    "%token1Address"
-                  ]
+                  prim: "address",
+                  annots: ["%token1Address"],
                 },
                 {
-                  "prim": "pair",
-                  "args": [
+                  prim: "pair",
+                  args: [
                     {
-                      "prim": "bool",
-                      "annots": [
-                        "%token1Check"
-                      ]
+                      prim: "bool",
+                      annots: ["%token1Check"],
                     },
                     {
-                      "prim": "nat",
-                      "annots": [
-                        "%token1Fee"
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                      prim: "nat",
+                      annots: ["%token1Fee"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
-      "prim": "pair",
-      "args": [
+      prim: "pair",
+      args: [
         {
-          "prim": "pair",
-          "args": [
+          prim: "pair",
+          args: [
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%token1Id"
-                  ]
+                  prim: "nat",
+                  annots: ["%token1Id"],
                 },
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%token1Pool"
-                  ]
-                }
-              ]
+                  prim: "nat",
+                  annots: ["%token1Pool"],
+                },
+              ],
             },
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%token1Precision"
-                  ]
+                  prim: "nat",
+                  annots: ["%token1Precision"],
                 },
                 {
-                  "prim": "pair",
-                  "args": [
+                  prim: "pair",
+                  args: [
                     {
-                      "prim": "address",
-                      "annots": [
-                        "%token2Address"
-                      ]
+                      prim: "address",
+                      annots: ["%token2Address"],
                     },
                     {
-                      "prim": "bool",
-                      "annots": [
-                        "%token2Check"
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
+                      prim: "bool",
+                      annots: ["%token2Check"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
         {
-          "prim": "pair",
-          "args": [
+          prim: "pair",
+          args: [
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%token2Fee"
-                  ]
+                  prim: "nat",
+                  annots: ["%token2Fee"],
                 },
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%token2Id"
-                  ]
-                }
-              ]
+                  prim: "nat",
+                  annots: ["%token2Id"],
+                },
+              ],
             },
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%token2Pool"
-                  ]
+                  prim: "nat",
+                  annots: ["%token2Pool"],
                 },
                 {
-                  "prim": "pair",
-                  "args": [
+                  prim: "pair",
+                  args: [
                     {
-                      "prim": "nat",
-                      "annots": [
-                        "%token2Precision"
-                      ]
+                      prim: "nat",
+                      annots: ["%token2Precision"],
                     },
                     {
-                      "prim": "option",
-                      "args": [
+                      prim: "option",
+                      args: [
                         {
-                          "prim": "address"
-                        }
+                          prim: "address",
+                        },
                       ],
-                      "annots": [
-                        "%voterContract"
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
+                      annots: ["%voterContract"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
-export const volatileSwapStorageType : any = {
-  "prim": "pair",
-  "args": [
+export const volatileSwapStorageType: any = {
+  prim: "pair",
+  args: [
     {
-      "prim": "pair",
-      "args": [
+      prim: "pair",
+      args: [
         {
-          "prim": "pair",
-          "args": [
+          prim: "pair",
+          args: [
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "address",
-                  "annots": [
-                    "%admin"
-                  ]
+                  prim: "address",
+                  annots: ["%admin"],
                 },
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%lpFee"
-                  ]
-                }
-              ]
+                  prim: "nat",
+                  annots: ["%lpFee"],
+                },
+              ],
             },
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "address",
-                  "annots": [
-                    "%lpTokenAddress"
-                  ]
+                  prim: "address",
+                  annots: ["%lpTokenAddress"],
                 },
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%maxSwapLimit"
-                  ]
-                }
-              ]
-            }
-          ]
+                  prim: "nat",
+                  annots: ["%maxSwapLimit"],
+                },
+              ],
+            },
+          ],
         },
         {
-          "prim": "pair",
-          "args": [
+          prim: "pair",
+          args: [
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "bool",
-                  "annots": [
-                    "%paused"
-                  ]
+                  prim: "bool",
+                  annots: ["%paused"],
                 },
                 {
-                  "prim": "bool",
-                  "annots": [
-                    "%state"
-                  ]
-                }
-              ]
+                  prim: "bool",
+                  annots: ["%state"],
+                },
+              ],
             },
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "address",
-                  "annots": [
-                    "%token1Address"
-                  ]
+                  prim: "address",
+                  annots: ["%token1Address"],
                 },
                 {
-                  "prim": "pair",
-                  "args": [
+                  prim: "pair",
+                  args: [
                     {
-                      "prim": "bool",
-                      "annots": [
-                        "%token1Check"
-                      ]
+                      prim: "bool",
+                      annots: ["%token1Check"],
                     },
                     {
-                      "prim": "nat",
-                      "annots": [
-                        "%token1Id"
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                      prim: "nat",
+                      annots: ["%token1Id"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
-      "prim": "pair",
-      "args": [
+      prim: "pair",
+      args: [
         {
-          "prim": "pair",
-          "args": [
+          prim: "pair",
+          args: [
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%token1_Fee"
-                  ]
+                  prim: "nat",
+                  annots: ["%token1_Fee"],
                 },
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%token1_pool"
-                  ]
-                }
-              ]
+                  prim: "nat",
+                  annots: ["%token1_pool"],
+                },
+              ],
             },
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "address",
-                  "annots": [
-                    "%token2Address"
-                  ]
+                  prim: "address",
+                  annots: ["%token2Address"],
                 },
                 {
-                  "prim": "bool",
-                  "annots": [
-                    "%token2Check"
-                  ]
-                }
-              ]
-            }
-          ]
+                  prim: "bool",
+                  annots: ["%token2Check"],
+                },
+              ],
+            },
+          ],
         },
         {
-          "prim": "pair",
-          "args": [
+          prim: "pair",
+          args: [
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%token2Id"
-                  ]
+                  prim: "nat",
+                  annots: ["%token2Id"],
                 },
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%token2_Fee"
-                  ]
-                }
-              ]
+                  prim: "nat",
+                  annots: ["%token2_Fee"],
+                },
+              ],
             },
             {
-              "prim": "pair",
-              "args": [
+              prim: "pair",
+              args: [
                 {
-                  "prim": "nat",
-                  "annots": [
-                    "%token2_pool"
-                  ]
+                  prim: "nat",
+                  annots: ["%token2_pool"],
                 },
                 {
-                  "prim": "pair",
-                  "args": [
+                  prim: "pair",
+                  args: [
                     {
-                      "prim": "nat",
-                      "annots": [
-                        "%totalSupply"
-                      ]
+                      prim: "nat",
+                      annots: ["%totalSupply"],
                     },
                     {
-                      "prim": "option",
-                      "args": [
+                      prim: "option",
+                      args: [
                         {
-                          "prim": "address"
-                        }
+                          prim: "address",
+                        },
                       ],
-                      "annots": [
-                        "%voterContract"
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
+                      annots: ["%voterContract"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
 export const tezPairsStorageType: any = {
   prim: "pair",

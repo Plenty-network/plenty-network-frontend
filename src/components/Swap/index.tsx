@@ -17,6 +17,8 @@ import {
 } from "../../api/util/types";
 import { Chain, MigrateToken } from "../../config/types";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { routerSwap } from "../../operations/3route";
+
 // import { threeRouteRouter } from "../../api/swap/3route";
 // threeRouteRouter("tzBTC", "USDT", BigNumber(0.1), "tz1bs6GqVskvU1Y9S9qJF5eMoF37SFGYfkTw",0.98);
 
@@ -105,6 +107,18 @@ function Swap(props: ISwapProps) {
   });
 
   useEffect(() => {
+    /*
+    routerSwap(
+      "XTZ",
+      "USDt",
+      BigNumber(1),
+      walletAddress,
+      0.99,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    ); */
     setAllBalance({
       success: false,
       allTokensBalances: {} as IAllTokensBalance,
