@@ -4,7 +4,6 @@ import axios from "axios";
 import Config from "../../config/config";
 import { connectedNetwork } from "../../common/walletconnect";
 import { store } from "../../redux";
-import { MichelsonMap } from "@taquito/taquito";
 
 export const threeRouteRouter = async (
   tokenIn: string,
@@ -100,6 +99,46 @@ export const threeRouteRouter = async (
     return {
       // @ts-ignore
       param: {},
+    };
+  }
+};
+
+export const estimateSwapOutput = async (
+  tokenIn: string,
+  tokenOut: string,
+  tokenInAmount: BigNumber,
+  slippage: number,
+): Promise<{ tokenOutValue: BigNumber, minReceived: string }> => {
+  try {
+    const state = store.getState();
+    const TOKENS = state.config.tokens;
+
+    const routeSwapURL = await axios.get(
+      `${
+        Config.PLENTY_3ROUTE_URL[connectedNetwork]
+      }swap/${tokenIn.toUpperCase()}/${tokenOut.toUpperCase()}/${tokenInAmount.toString()}`,
+      {
+        headers: {
+          Authorization: `${process.env.NEXT_PUBLIC_ROUTER_AUTHORISATION_TOKEN}`,
+        },
+      }
+    );
+
+    let tokenOutValue =  BigNumber(routeSwapURL.data.output);
+    let minReceived = BigNumber(routeSwapURL.data.output)
+                      .multipliedBy(new BigNumber(10).pow(TOKENS[tokenOut].decimals))
+                      .multipliedBy(slippage)
+                      .decimalPlaces(0, 1)
+                      .toString();
+
+    return {
+      tokenOutValue, minReceived
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      // @ts-ignore
+      tokenOutValue: 0, minReceived: 0
     };
   }
 };

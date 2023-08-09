@@ -56,8 +56,6 @@ export const routerSwap = async (
       )
     ).param;
 
-    console.log("param", param);
-
     let swapAmount = tokenInAmount
       .multipliedBy(new BigNumber(10).pow(TOKENS[tokenIn].decimals))
       .decimalPlaces(0, 1)
@@ -130,8 +128,6 @@ export const routerSwap = async (
     }
 
     await batchOperation.confirmation(1);
-
-    console.log(batchOperation.status());
 
     const status = await batchOperation.status();
     if (status === "applied") {
