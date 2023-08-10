@@ -156,7 +156,7 @@ export function MyPoolTablev3(props: IShortCardProps) {
                         x.tokenB?.toString()
                       )}`}
                 </span>
-                <span className="bg-primary-500/[0.2] rounded-lg  px-2 text-primary-500 md:font-body2 font-caption1-small  text-center	py-1 px-2   w-fit  ml-2 md:ml-3">
+                <span className="bg-primary-500/[0.2] rounded-lg  px-2 text-white md:font-body2 font-caption1-small  text-center	py-1.5 px-2   w-fit  ml-2 md:ml-3">
                   {x.feeTier}%
                 </span>
               </div>

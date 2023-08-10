@@ -32,7 +32,7 @@ const BarChart1: React.FC<BarChartProps> = ({
         const y: number = yScale(yAccessor(d));
         const x1: number = xScale(d.price1);
         const x2: number = xScale(d.price2);
-        const width: number = x2 - x1 + 0.5;
+        const width: number = x2 - x1;
         const barHeight: number = height - y;
 
         return (

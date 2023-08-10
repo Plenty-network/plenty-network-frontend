@@ -80,6 +80,8 @@ import { BalanceNat } from "../../api/v3/types";
 import { collectFees } from "../../operations/v3/fee";
 import FeeTierMain from "./FeeTierMain";
 import Link from "next/link";
+import TransactionSettings from "../TransactionSettings/TransactionSettings";
+import { useOutsideClick } from "../../utils/outSideClickHook";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -163,6 +165,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   const [settingsShow, setSettingsShow] = useState(false);
   const [userBalances, setUserBalances] = useState<{ [key: string]: string }>({});
   const refSettingTab = React.useRef(null);
+  // useOutsideClick(refSettingTab, () => {
+  //   setSettingsShow(false);
+  // });
   useEffect(() => {
     //topLevelSelectedToken.symbol === props.tokenIn.symbol
     dispatch(setTokenInV3(props.tokenIn));
@@ -357,7 +362,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             })
           );
         }, 6000);
-        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        }, 12000);
         // setContentTransaction("");
       } else {
         setScreen(ActivePopUp.NewPosition);
@@ -865,7 +872,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       >
         {screen === ActivePopUp.NewPosition ? (
           <>
-            <div className="flex gap-1 items-center justify-between">
+            <div className="flex gap-1 items-center justify-between relative">
               <div className="flex items-center">
                 <p
                   className="cursor-pointer relative top-[3px]"
@@ -880,66 +887,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               {/* <p className="ml-1 relative top-[0px]">
                 <InfoIconToolTip message={"Add or remove liquidity from the selected pool."} />
               </p> */}
-              {true && (
-                <div className="lg:flex justify-end items-center hidden">
-                  {" "}
-                  <p
-                    className="text-primary-500 hover:text-primary-500/[0.8] font-subtitle1 ml-auto mr-5 cursor-pointer"
-                    onClick={resetAllValues}
-                  >
-                    Clear all
-                  </p>
-                  <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
-                    <div
-                      className={clsx(
-                        selectedToken.symbol === props.tokenA.symbol
-                          ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
-                          : "text-text-250 hover:text-white px-2",
-                        "font-subtitle1223"
-                      )}
-                      onClick={() => {
-                        setSelectedToken(props.tokenA);
-                      }}
-                    >
-                      {tEZorCTEZtoUppercase(props.tokenA.symbol)}
-                    </div>
-                    <div
-                      className={clsx(
-                        selectedToken.symbol === props.tokenB.symbol
-                          ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
-                          : "text-text-250 hover:text-white px-2",
-                        "font-subtitle1223"
-                      )}
-                      onClick={() => {
-                        setSelectedToken(props.tokenB);
-                      }}
-                    >
-                      {tEZorCTEZtoUppercase(props.tokenB.symbol)}
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between flex-row  relative ">
-                    <div
-                      ref={refSettingTab}
-                      className="py-1 bg-text-800/[0.25] hover:bg-text=800/[0.5] px-[8.5px] h-8 border border-text-700 hover:border-text-600 cursor-pointer rounded-lg flex items-center w-[80px]"
-                      onClick={() => setSettingsShow(!settingsShow)}
-                    >
-                      <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
-                      <span className="text-white font-body4 ml-2 relative top-px">
-                        {slippage ? slippage : "30"}m
-                      </span>
-                    </div>
-                    <TransactionSettingsV3
-                      show={settingsShow}
-                      setSlippage={setSlippage}
-                      slippage={slippage}
-                      setSettingsShow={setSettingsShow}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-            {true && (
-              <div className="flex items-center justify-end mt-1 lg:hidden">
+
+              <div className="lg:flex justify-end items-center hidden">
+                {" "}
                 <p
                   className="text-primary-500 hover:text-primary-500/[0.8] font-subtitle1 ml-auto mr-5 cursor-pointer"
                   onClick={resetAllValues}
@@ -974,7 +924,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                     {tEZorCTEZtoUppercase(props.tokenB.symbol)}
                   </div>
                 </div>
-                <div className="flex items-center justify-between flex-row  relative ">
+                <div className="flex items-center justify-between flex-row   ">
                   <div
                     ref={refSettingTab}
                     className="py-1 bg-text-800/[0.25] hover:bg-text=800/[0.5] px-[8.5px] h-8 border border-text-700 hover:border-text-600 cursor-pointer rounded-lg flex items-center w-[80px]"
@@ -985,24 +935,78 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                       {slippage ? slippage : "30"}m
                     </span>
                   </div>
-                  <TransactionSettingsV3
-                    show={settingsShow}
-                    setSlippage={setSlippage}
-                    slippage={slippage}
-                    setSettingsShow={setSettingsShow}
-                  />
-                </div>{" "}
-              </div>
-            )}
-            {true && (
-              <div className="mt-5 lg:hidden">
-                <FeeTierMain
-                  setSelectedFeeTier={setSelectedFeeTier}
-                  selectedFeeTier={selectedFeeTier}
-                  feeTier={props.feeTier}
+                </div>
+                <TransactionSettingsV3
+                  show={settingsShow}
+                  setSlippage={setSlippage}
+                  slippage={slippage}
+                  setSettingsShow={setSettingsShow}
                 />
               </div>
-            )}
+            </div>
+
+            <div className="flex items-center justify-end mt-1 lg:hidden">
+              <p
+                className="text-primary-500 hover:text-primary-500/[0.8] font-subtitle1 ml-auto mr-5 cursor-pointer"
+                onClick={resetAllValues}
+              >
+                Clear all
+              </p>
+              <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit  mr-4">
+                <div
+                  className={clsx(
+                    selectedToken.symbol === props.tokenA.symbol
+                      ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
+                      : "text-text-250 hover:text-white px-2",
+                    "font-subtitle1223"
+                  )}
+                  onClick={() => {
+                    setSelectedToken(props.tokenA);
+                  }}
+                >
+                  {tEZorCTEZtoUppercase(props.tokenA.symbol)}
+                </div>
+                <div
+                  className={clsx(
+                    selectedToken.symbol === props.tokenB.symbol
+                      ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
+                      : "text-text-250 hover:text-white px-2",
+                    "font-subtitle1223"
+                  )}
+                  onClick={() => {
+                    setSelectedToken(props.tokenB);
+                  }}
+                >
+                  {tEZorCTEZtoUppercase(props.tokenB.symbol)}
+                </div>
+              </div>
+              <div className="flex items-center justify-between flex-row   ">
+                <div
+                  ref={refSettingTab}
+                  className="py-1 bg-text-800/[0.25] hover:bg-text=800/[0.5] px-[8.5px] h-8 border border-text-700 hover:border-text-600 cursor-pointer rounded-lg flex items-center w-[80px]"
+                  onClick={() => setSettingsShow(!settingsShow)}
+                >
+                  <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />
+                  <span className="text-white font-body4 ml-2 relative top-px">
+                    {slippage ? slippage : "30"}m
+                  </span>
+                </div>
+                <TransactionSettingsV3
+                  show={settingsShow}
+                  setSlippage={setSlippage}
+                  slippage={slippage}
+                  setSettingsShow={setSettingsShow}
+                />
+              </div>{" "}
+            </div>
+
+            <div className="mt-5 lg:hidden">
+              <FeeTierMain
+                setSelectedFeeTier={setSelectedFeeTier}
+                selectedFeeTier={selectedFeeTier}
+                feeTier={props.feeTier}
+              />
+            </div>
 
             <div className="lg:flex  mt-4">
               <PriceRangeV3
