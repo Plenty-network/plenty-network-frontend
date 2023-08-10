@@ -119,6 +119,7 @@ function Tutorial(props: ITutorialProps) {
         >
           {STEPS[currentStep].displayText}
         </div>
+        <div className="h-[300px]"></div>
 
         <div className="flex justify-between mt-10 mx-5">
           <button
@@ -131,11 +132,10 @@ function Tutorial(props: ITutorialProps) {
             Previous
           </button>
           <button
-            onClick={goToNextStep}
+            onClick={currentStep === STEPS.length - 1 ? closeModal : goToNextStep}
             className={clsx("text-sm", {
-              "opacity-50 cursor-not-allowed": currentStep === STEPS.length - 1,
+              "opacity-50 cursor-not-allowed": false,
             })}
-            disabled={currentStep === STEPS.length - 1}
           >
             Next
           </button>

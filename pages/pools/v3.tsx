@@ -95,10 +95,7 @@ export default function Pools(props: IIndexProps) {
   const [show, setShow] = useState(true);
   return (
     <>
-      <SideBarHOC>
-        <Tutorial show={show} setShow={setShow} />
-        {false && <PoolsV3 />}
-      </SideBarHOC>
+      <SideBarHOC>{show ? <Tutorial show={show} setShow={setShow} /> : <PoolsV3 />}</SideBarHOC>
     </>
   );
 }
