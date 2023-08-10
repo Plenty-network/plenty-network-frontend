@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { PopUpModal } from "../Modal/popupModal";
 import clsx from "clsx";
+import { ChevronLeft, ChevronRight } from "react-feather";
 
 interface ITutorialProps {
   show: boolean;
@@ -112,32 +113,32 @@ function Tutorial(props: ITutorialProps) {
 
         <div
           className={clsx(
-            "flex justify-center mt-[50px] text-center mx-8 ",
+            "flex justify-center mt-[50px] text-center mx-8 h-[100px]",
 
             currentStep && "fade-in-3"
           )}
         >
           {STEPS[currentStep].displayText}
         </div>
-        <div className="h-[300px]"></div>
 
-        <div className="flex justify-between mt-10 mx-5">
+        <div className="flex justify-between my-10 mx-5">
           <button
             onClick={goToPreviousStep}
-            className={clsx("text-sm", {
+            className={clsx("", {
               "opacity-50 cursor-not-allowed": currentStep === 0,
             })}
             disabled={currentStep === 0}
           >
-            Previous
+            <ChevronLeft size={40} />
           </button>
+          <div className="h-[300px] border border-primary-500/[0.5] w-[300px]"></div>
           <button
             onClick={currentStep === STEPS.length - 1 ? closeModal : goToNextStep}
-            className={clsx("text-sm", {
+            className={clsx("", {
               "opacity-50 cursor-not-allowed": false,
             })}
           >
-            Next
+            <ChevronRight size={40} />
           </button>
         </div>
       </>
