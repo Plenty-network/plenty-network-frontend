@@ -1161,6 +1161,7 @@ function SwapTab(props: ISwapTabProps) {
           firstTokenAmount={props.firstTokenAmount}
           secondTokenAmount={props.secondTokenAmount.toString()}
           routeDetails={props.routeDetails}
+          exchangeRate={props.exchangeRate}
           onClick={handleConfirmSwap}
         />
       )}

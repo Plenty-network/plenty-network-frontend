@@ -41,6 +41,7 @@ interface IConfirmSwapProps {
     address: string | undefined;
   }[];
   minimumReceived: BigNumber;
+  exchangeRate: BigNumber;
 }
 function ConfirmSwap(props: IConfirmSwapProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
@@ -128,9 +129,9 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                       : tEZorCTEZtoUppercase(props.tokenOut.name)}{" "}
                     =
                     {!isConvert
-                      ? ` ${props.routeDetails.exchangeRate.toFixed(3)} 
+                      ? ` ${props.exchangeRate.toFixed(3)} 
                             ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
-                      : `${Number(1 / Number(props.routeDetails.exchangeRate)).toFixed(
+                      : `${Number(1 / Number(props.exchangeRate)).toFixed(
                           3
                         )} ${tEZorCTEZtoUppercase(props.tokenIn.name)}`}
                   </span>
