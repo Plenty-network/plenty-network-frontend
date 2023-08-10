@@ -77,6 +77,7 @@ export function PositionDataTable(props: IShortCardProps) {
       Object.prototype.hasOwnProperty.call(props.tokenOut, "symbol") &&
       walletAddress
     ) {
+      setData([]);
       setIsLoading(true);
       getPositions(
         props.tokenIn.symbol,

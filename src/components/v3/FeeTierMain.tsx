@@ -77,11 +77,16 @@ function FeeTierMain(props: IFeeTierMainProps) {
             </div>
             <div className="mt-2 font-mobile-400 sm:font-body1 text-text-250">{feeInd.text}</div>
             <div className="mt-[12px]">
-              <span className="text-white rounded-xl	bg-shimmer-100 px-2 items-center flex w-fit text-[7px]  md:font-caption2 h-[24px]">
+              <span className="bg-primary-500/[0.2] rounded-lg  px-2  text-white md:font-body2 text-[7px]  text-left	py-1 px-2   w-fit  ">
                 {isExist?.feeTier?.includes((Number(feeInd.percentage) * 100).toString())
                   ? feeInd.selectPercentage + "%"
                   : "Not created"}
               </span>
+              {/* <span className="text-white rounded-xl	bg-shimmer-100 px-2 items-center flex w-fit text-[7px]  md:font-caption2 h-[24px]">
+                {isExist?.feeTier?.includes((Number(feeInd.percentage) * 100).toString())
+                  ? feeInd.selectPercentage + "%"
+                  : "Not created"}
+              </span> */}
             </div>
           </div>
         );

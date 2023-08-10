@@ -8,6 +8,7 @@ import { Line } from "./Line";
 import { ChartEntry, LiquidityChartRangeInputProps } from "./types";
 import Zoom, { ZoomOverlay } from "./Zoom";
 import BarChart1 from "./BarGraphwithx";
+import { useAppSelector } from "../../../redux";
 //import BarChart1 from "./BarGraphwithx";
 export enum Bound {
   LOWER = "LOWER",
@@ -31,6 +32,7 @@ export function Chart({
   zoomLevels,
 }: LiquidityChartRangeInputProps) {
   const zoomRef = useRef<SVGRectElement | null>(null);
+  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
 
   const [zoom, setZoom] = useState<ZoomTransform | null>(null);
 
@@ -63,6 +65,7 @@ export function Chart({
     series,
     innerHeight,
     zoom,
+    topLevelSelectedToken,
   ]);
 
   useEffect(() => {
@@ -74,7 +77,7 @@ export function Chart({
     if (!brushDomain) {
       onBrushDomainChange(xScale.domain() as [number, number], undefined);
     }
-  }, [brushDomain, onBrushDomainChange, xScale]);
+  }, [brushDomain, onBrushDomainChange, xScale, topLevelSelectedToken]);
   return (
     <>
       <Zoom
