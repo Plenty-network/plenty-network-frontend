@@ -71,33 +71,23 @@ export function Chart({
   useEffect(() => {
     // reset zoom as necessary
     setZoom(null);
-  }, [zoomLevels]);
+  }, [zoomLevels, topLevelSelectedToken]);
 
   useEffect(() => {
     if (!brushDomain) {
       onBrushDomainChange(xScale.domain() as [number, number], undefined);
     }
   }, [brushDomain, onBrushDomainChange, xScale, topLevelSelectedToken]);
+
+  const [delay, setDelay] = useState(0);
+  useEffect(() => {
+    setTimeout(() => {
+      setDelay(delay + 1);
+    }, 2000);
+  }, []);
+
   return (
     <>
-      <Zoom
-        svg={zoomRef.current}
-        xScale={xScale}
-        setZoom={setZoom}
-        width={innerWidth}
-        height={
-          // allow zooming inside the x-axis
-          height
-        }
-        resetBrush={() => {
-          onBrushDomainChange(
-            [current * zoomLevels.initialMin, current * zoomLevels.initialMax] as [number, number],
-            "reset"
-          );
-        }}
-        showResetButton={Boolean(ticksAtLimit[Bound.LOWER] || ticksAtLimit[Bound.UPPER])}
-        zoomLevels={zoomLevels}
-      />
       <svg
         width="100%"
         height="100%"
@@ -135,43 +125,10 @@ export function Chart({
               styles={{ bar: { fill: "red" } }}
             />
 
-            {/* uncomment it for previous area chart */}
-            {/* <Area
-              series={series}
-              xScale={xScale}
-              yScale={yScale}
-              xValue={xAccessor}
-              yValue={yAccessor}
-            /> */}
-
-            {/* {brushDomain && (
-              // duplicate area chart with mask for selected area
-              <g mask={`url(#${id}-chart-area-mask)`}>
-                <Area
-                  series={series}
-                  xScale={xScale}
-                  yScale={yScale}
-                  xValue={xAccessor}
-                  yValue={yAccessor}
-                  fill={styles.area.selection}
-                />
-              </g>
-            )} */}
-
             <Line value={current} xScale={xScale} innerHeight={innerHeight} />
 
             <AxisBottom xScale={xScale} innerHeight={innerHeight} />
           </g>
-
-          {/* <rect
-            fill={"transparent"}
-            cursor={"grab"}
-            width={innerWidth}
-            height={height}
-            ref={zoomRef}
-            id={"myRect"}
-            
-          /> */}
           <ZoomOverlay width={innerWidth} height={height} zoomRef={zoomRef} />
 
           <Brush
@@ -188,7 +145,24 @@ export function Chart({
           />
         </g>
       </svg>
-      <div className="relative  top-[-220px] left-[-60px] z-1"></div>
+      <Zoom
+        svg={zoomRef.current}
+        xScale={xScale}
+        setZoom={setZoom}
+        width={innerWidth}
+        height={
+          // allow zooming inside the x-axis
+          height
+        }
+        resetBrush={() => {
+          onBrushDomainChange(
+            [current * zoomLevels.initialMin, current * zoomLevels.initialMax] as [number, number],
+            "reset"
+          );
+        }}
+        showResetButton={Boolean(ticksAtLimit[Bound.LOWER] || ticksAtLimit[Bound.UPPER])}
+        zoomLevels={zoomLevels}
+      />
     </>
   );
 }
