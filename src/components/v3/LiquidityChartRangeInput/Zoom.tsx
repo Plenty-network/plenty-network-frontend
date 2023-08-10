@@ -36,6 +36,7 @@ export default function Zoom({
   zoomLevels: ZoomLevels;
 }) {
   const zoomBehavior = useRef<ZoomBehavior<Element, unknown>>();
+  console.log("svg", svg);
 
   const [zoomIn, zoomOut, zoomInitial, zoomReset] = useMemo(
     () => [
@@ -65,7 +66,7 @@ export default function Zoom({
           .transition()
           .call(zoomBehavior.current.scaleTo, 0.5),
     ],
-    [svg]
+    [svg, ZoomOverlay]
   );
 
   useEffect(() => {

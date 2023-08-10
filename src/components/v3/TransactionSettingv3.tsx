@@ -20,9 +20,6 @@ function TransactionSettingsV3(props: ITransactionSettingsProps) {
   const [errorMessage, setErrorMessage] = useState("");
   const refSetting = useRef(null);
 
-  const dispatch = useDispatch<AppDispatch>();
-  const walletAddress = useAppSelector((state) => state.wallet.address);
-
   const handleSlippage = (input: string | number) => {
     if (input === "") {
       props.setSlippage(0);
@@ -34,9 +31,9 @@ function TransactionSettingsV3(props: ITransactionSettingsProps) {
   const handleClick = (value: number) => {
     props.setSlippage(Number(value));
   };
-  useOutsideClick(refSetting, () => {
-    props.setSettingsShow(false);
-  });
+  // useOutsideClick(refSetting, () => {
+  //   props.setSettingsShow(false);
+  // });
   useEffect(() => {
     if (Number(props.slippage) > 30 && Number(props.slippage) <= 100) {
       //setErrorMessage(ERRORMESSAGES.TRANSACTIONSETTINGSWARNING);

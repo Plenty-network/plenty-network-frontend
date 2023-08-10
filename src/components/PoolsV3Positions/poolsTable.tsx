@@ -288,6 +288,9 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
                       )}`}
                 </div>
               </div>
+              <span className="bg-primary-500/[0.2] rounded-lg  px-2  text-white md:font-body2 font-caption1-small  text-center	py-1.5 px-2   w-fit  ml-2 md:ml-3">
+                {x.feeTier}%
+              </span>
             </div>
           </>
         ),
@@ -296,8 +299,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         Header: "Your liquidity",
         id: "yourliquidity",
         columnWidth: "w-[124px]",
-        tooltipMessage: "Value of tokens supplied to the pair.",
-        isToolTipEnabled: true,
+
         canShort: true,
         showOnMobile: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "liquidityDollar"),
@@ -314,13 +316,13 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         Header: `Min/Max price`,
         id: "Min/Max price",
         columnWidth: "w-[154px]",
-        tooltipMessage: "Percentage liquidity staked in the pool’s gauge.",
+        tooltipMessage: "Lower and upper price boundaries.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "maxPrice"),
         canShort: true,
         isToolTipEnabled: true,
         accessor: (x: any) => (
           <div className="text-end">
-            <div className=" text-text-50 font-subtitle4 ">
+            <div className="Total value locked up in the pool.">
               {nFormatterWithLesserNumber(x.minPrice)} /{" "}
               {x.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber(x.maxPrice)}
               {/* <div className="font-body3 text-text-500">
@@ -334,7 +336,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         Header: "Fees collected",
         id: "Fees collected",
         columnWidth: "w-[138px]",
-        tooltipMessage: "Annual percentage rate of return on your staked position.",
+        tooltipMessage: "Fees collected by the position.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "feesDollar"),
         isToolTipEnabled: true,
         canShort: true,
@@ -349,12 +351,12 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         accessor: (x: any) =>
           !x.isInRange ? (
             <span className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1 rounded-lg	 text-error-300 bg-error-300/[0.1] ">
-              <Image src={infoOrange} />
+              {/* <Image src={infoOrange} /> */}
               Out of range
             </span>
           ) : (
             <div className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1  rounded-lg	text-success-500 bg-success-500/[0.1]">
-              <Image src={infoGreen} />
+              {/* <Image src={infoGreen} /> */}
               In Range
             </div>
           ),
