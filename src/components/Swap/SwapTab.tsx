@@ -227,6 +227,7 @@ function SwapTab(props: ISwapTabProps) {
       }
     ).then((response) => {
       if (response.success) {
+        setTransactionId(response.operationId ? response.operationId : "");
         props.setBalanceUpdate(true);
         props.resetAllValues;
         setTimeout(() => {

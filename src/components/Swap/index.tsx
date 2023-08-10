@@ -373,6 +373,8 @@ function Swap(props: ISwapProps) {
     setFirstTokenAmount("");
     setSecondTokenAmount("");
     handleSwapTokenInput("", "tokenIn");
+    SetMinimumReceived(new BigNumber(0));
+
     routeDetails.current = {
       minimumOut: new BigNumber(0),
       minimumTokenOut: [],
