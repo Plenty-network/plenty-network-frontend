@@ -132,15 +132,12 @@ function TransactionSettings(props: ITransactionSettingsProps) {
       </div>
       <div className="flex mt-3">
         <div className=" mr-2.5">
-          <Button
-            color="primary"
-            width="w-[87px]"
-            height="h-9"
-            borderRadius="rounded-lg"
+          <div
+            className="bg-primary-500 w-[87px] h-9 rounded-lg flex items-center justify-center"
             onClick={handleAutoSlippage}
           >
             Auto
-          </Button>
+          </div>
         </div>
         <div
           className={clsx(

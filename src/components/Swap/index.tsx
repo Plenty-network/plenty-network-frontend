@@ -8,8 +8,8 @@ import { getAllTokensBalanceFromTzkt } from "../../api/util/balance";
 import { ERRORMESSAGES, tokenParameter, tokensModal, tokenType } from "../../constants/swap";
 import { useAppSelector } from "../../redux";
 import { BigNumber } from "bignumber.js";
-import { allPaths } from "../../api/swap/router";
-import { computeAllPathsWrapper, computeReverseCalculationWrapper } from "../../api/swap/wrappers";
+
+import { loadSwapDataWrapper } from "../../api/swap/wrappers";
 import {
   IAllBalanceResponse,
   IAllTokensBalance,
@@ -18,10 +18,9 @@ import {
 import { Chain, MigrateToken } from "../../config/types";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { estimateSwapOutput } from "../../api/swap/3route";
-import { routerSwap } from "../../operations/3route";
 
-// import { threeRouteRouter } from "../../api/swap/3route";
-// threeRouteRouter("tzBTC", "USDT", BigNumber(0.1), "tz1bs6GqVskvU1Y9S9qJF5eMoF37SFGYfkTw",0.98);
+import { ISwapDataResponse } from "../../api/swap/types";
+import { calculateTokensOutWrapper } from "../../api/swap/wrappers";
 
 interface ISwapProps {
   className?: string;
@@ -73,6 +72,7 @@ function Swap(props: ISwapProps) {
     isLoadingSecond: false,
   });
   const [minimumReceived, SetMinimumReceived] = useState<BigNumber>(new BigNumber(0));
+  const swapData = React.useRef<ISwapDataResponse>({} as ISwapDataResponse);
   const routeDetails = React.useRef<{
     path: string[];
     minimumOut: BigNumber;
@@ -166,13 +166,54 @@ function Swap(props: ISwapProps) {
       tokenIn.name !== "" &&
       tokenOut.name !== ""
     ) {
-      if (firstTokenAmount !== "" || secondTokenAmount !== "") {
-        loading.current = {
-          isLoadingfirst: false,
-          isLoadingSecond: false,
-        };
-        !isSwitchClicked.current && setSecondTokenAmount("");
-        !isSwitchClicked.current && handleSwapTokenInput(firstTokenAmount, "tokenIn");
+      if (!enableMultiHop) {
+        // !isSwitchClicked.current &&
+        //   firstTokenAmount === "" &&
+        //   (loading.current = {
+        //     isLoadingfirst: true,
+        //     isLoadingSecond: true,
+        //   });
+
+        loadSwapDataWrapper(tokenIn.name, tokenOut.name).then((res) => {
+          if (res) {
+            setAllPathState(["a", "b", "c"]);
+            loading.current = {
+              isLoadingfirst: false,
+              isLoadingSecond: false,
+            };
+
+            if (res.success) {
+              setAllPathState([]);
+              swapData.current = res;
+              setErrorMessage("");
+              if (firstTokenAmount !== "" || secondTokenAmount !== "") {
+                loading.current = {
+                  isLoadingfirst: false,
+                  isLoadingSecond: false,
+                };
+                !isSwitchClicked.current && setSecondTokenAmount("");
+                !isSwitchClicked.current && handleSwapTokenInput(firstTokenAmount, "tokenIn");
+              }
+            } else {
+              setFirstTokenAmount("");
+              setSecondTokenAmount("");
+              setAllPathState(["a", "b"]);
+
+              setErrorMessage(
+                enableMultiHop ? ERRORMESSAGES.SWAPROUTER : ERRORMESSAGES.SWAPMULTIHOP
+              );
+            }
+          }
+        });
+      } else {
+        if (firstTokenAmount !== "" || secondTokenAmount !== "") {
+          loading.current = {
+            isLoadingfirst: false,
+            isLoadingSecond: false,
+          };
+          !isSwitchClicked.current && setSecondTokenAmount("");
+          !isSwitchClicked.current && handleSwapTokenInput(firstTokenAmount, "tokenIn");
+        }
       }
     }
   }, [
@@ -251,106 +292,49 @@ function Swap(props: ISwapProps) {
             isLoadingSecond: false,
             isLoadingfirst: false,
           };
-          // const res = computeAllPathsWrapper(
-          //   allPath.current,
-          //   new BigNumber(input),
-          //   new BigNumber(slippage),
-          //   allPathSwapData.current,
-          //   tokenPrice
-          // );
+          if (enableMultiHop) {
+            estimateSwapOutput(
+              tokenIn.name,
+              tokenOut.name,
+              new BigNumber(input),
+              (100 - Number(slippage)) / 100
+            ).then((res) => {
+              SetMinimumReceived(new BigNumber(res.minReceived));
 
-          estimateSwapOutput(
-            tokenIn.name,
-            tokenOut.name,
-            new BigNumber(input),
-            (100 - Number(slippage)) / 100
-          ).then((res) => {
-            SetMinimumReceived(new BigNumber(res.minReceived));
-            console.log(res, "res");
-            if (new BigNumber(res.tokenOutValue)?.isLessThan(0)) {
-              flag = 0;
-              setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY);
-            }
+              if (new BigNumber(res.tokenOutValue)?.isLessThan(0)) {
+                flag = 0;
+                setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY);
+              }
 
-            setSecondTokenAmount(
-              new BigNumber(res.tokenOutValue)?.isLessThanOrEqualTo(0)
-                ? 0
-                : res.tokenOutValue?.toString().trim()
+              setSecondTokenAmount(
+                new BigNumber(res.tokenOutValue)?.isLessThanOrEqualTo(0)
+                  ? 0
+                  : res.tokenOutValue?.toString().trim()
+              );
+              //setSecondTokenAmount(res.tokenOutValue.toString());
+            });
+            loading.current = {
+              isLoadingSecond: false,
+              isLoadingfirst: false,
+            };
+          } else {
+            const res = calculateTokensOutWrapper(
+              new BigNumber(input),
+              swapData.current.exchangeFee,
+              new BigNumber(slippage),
+              tokenIn.name,
+              tokenOut.name,
+              swapData.current.tokenInSupply,
+              swapData.current.tokenOutSupply,
+              swapData.current.tokenInPrecision,
+              swapData.current.tokenOutPrecision,
+              swapData.current.target
             );
-            //setSecondTokenAmount(res.tokenOutValue.toString());
-          });
-          loading.current = {
-            isLoadingSecond: false,
-            isLoadingfirst: false,
-          };
-          // routeDetails.current = {
-          //   minimumOut: res.finalMinimumTokenOut,
-          //   minimumTokenOut: res.minimumTokenOut,
-          //   feePerc: res.feePerc,
-          //   isStable: res.isStable,
-          //   path: res.path,
-          //   finalFeePerc: res.finalFeePerc,
-          //   priceImpact: res.finalPriceImpact,
-          //   success: true,
-          //   exchangeRate: res.exchangeRate,
-          // };
+            SetMinimumReceived(new BigNumber(res.minimumOut));
+            setSecondTokenAmount(res.tokenOutAmount.toString());
+          }
         }
       }
-      // else if (tokenType === "tokenOut") {
-      //   setSecondTokenAmount(input.toString().trim());
-      //   const decimal = new BigNumber(input).decimalPlaces();
-
-      //   if (
-      //     input !== null &&
-      //     decimal !== null &&
-      //     new BigNumber(decimal).isGreaterThan(tokens[tokenOut.name].decimals)
-      //   ) {
-      //     flag = 0;
-      //     setErrorMessage(
-      //       `The Precision of ${tEZorCTEZtoUppercase(tokenOut.name)} token cant be greater than ${
-      //         tokens[tokenOut.name].decimals
-      //       } decimals`
-      //     );
-      //   }
-
-      //   if (Object.keys(tokenIn).length !== 0) {
-      //     loading.current = {
-      //       isLoadingfirst: true,
-      //       isLoadingSecond: false,
-      //     };
-      //     const res = computeReverseCalculationWrapper(
-      //       allPath1.current,
-      //       new BigNumber(input),
-      //       new BigNumber(slippage),
-      //       allPathSwapData1.current,
-      //       tokenPrice,
-      //       allPath.current,
-      //       allPathSwapData.current
-      //     );
-      //     loading.current = {
-      //       isLoadingSecond: false,
-      //       isLoadingfirst: false,
-      //     };
-      //     routeDetails.current = {
-      //       minimumOut: res.finalMinimumTokenOut,
-      //       minimumTokenOut: res.minimumTokenOut,
-      //       feePerc: res.feePerc,
-      //       isStable: res.isStable,
-      //       path: res.path,
-      //       finalFeePerc: res.finalFeePerc,
-      //       priceImpact: res.finalPriceImpact,
-      //       success: true,
-      //       exchangeRate: res.exchangeRate,
-      //     };
-      //     if (res.tokenOutAmount.isLessThan(0)) {
-      //       flag = 0;
-      //       setErrorMessage(ERRORMESSAGES.INSUFFICIENT_LIQUIDITY);
-      //     }
-      //     setFirstTokenAmount(
-      //       res.tokenOutAmount.isLessThan(0) ? 0 : res.tokenOutAmount.toString().trim()
-      //     );
-      //   }
-      // }
     }
 
     if (flag === 1) {
@@ -424,6 +408,7 @@ function Swap(props: ISwapProps) {
       tokenIn.name !== "" &&
       tokenOut.name !== ""
     ) {
+      setAllPathState([]);
       loading.current = {
         isLoadingfirst: false,
         isLoadingSecond: true,
@@ -469,11 +454,14 @@ function Swap(props: ISwapProps) {
           });
         }, 2000);
       } else {
-        setSecondTokenAmount(0);
+        isSwitchClicked.current = false;
+        setAllPathState(["a"]);
+
         loading.current = {
           isLoadingSecond: false,
           isLoadingfirst: false,
         };
+        setSecondTokenAmount("");
       }
     } else if (Object.keys(tokenOut).length === 0) {
       loading.current = {

@@ -450,7 +450,10 @@ function SwapTab(props: ISwapTabProps) {
                     )}
                     placeholder="0.0"
                     lang="en"
-                    disabled={props.errorMessage === ERRORMESSAGES.SWAPROUTER}
+                    disabled={
+                      props.errorMessage === ERRORMESSAGES.SWAPROUTER ||
+                      props.errorMessage === ERRORMESSAGES.SWAPMULTIHOP
+                    }
                     onChange={(e) => props.handleSwapTokenInput(e.target.value, "tokenIn")}
                     value={props.firstTokenAmount}
                     onFocus={() => setIsFirstInputFocus(true)}
