@@ -139,7 +139,7 @@ function Swap(props: ISwapProps) {
       Object.keys(tokenIn).length !== 0 &&
       tokenIn.name !== ""
     ) {
-      enableMultiHop &&
+      if (enableMultiHop) {
         estimateSwapOutput(
           tokenIn.name,
           tokenOut.name,
@@ -148,6 +148,7 @@ function Swap(props: ISwapProps) {
         ).then((res) => {
           setExchangeRate(new BigNumber(res.tokenOutValue));
         });
+      }
     }
   }, [tokenIn.name, tokenOut.name, walletAddress, enableMultiHop]);
 
@@ -179,7 +180,20 @@ function Swap(props: ISwapProps) {
             if (res.success) {
               setAllPathState([]);
               swapData.current = res;
-              setExchangeRate(res.exchangeFee);
+              const ress = calculateTokensOutWrapper(
+                new BigNumber(1),
+                swapData.current.exchangeFee,
+                new BigNumber(slippage),
+                tokenIn.name,
+                tokenOut.name,
+                swapData.current.tokenInSupply,
+                swapData.current.tokenOutSupply,
+                swapData.current.tokenInPrecision,
+                swapData.current.tokenOutPrecision,
+                swapData.current.target
+              );
+              setExchangeRate(new BigNumber(ress.exchangeRate));
+
               setErrorMessage("");
               if (firstTokenAmount !== "" || secondTokenAmount !== "") {
                 loading.current = {
