@@ -143,7 +143,8 @@ function SwapTab(props: ISwapTabProps) {
   const refreshAllData = (value: boolean) => {
     setRefresh(value);
     setTimeout(() => {
-      props.handleSwapTokenInput(props.firstTokenAmount, "tokenIn");
+      props.firstTokenAmount !== "" &&
+        props.handleSwapTokenInput(props.firstTokenAmount, "tokenIn");
       setRefresh(false);
     }, 500);
   };
@@ -731,7 +732,7 @@ function SwapTab(props: ISwapTabProps) {
           </div>
         )}
 
-        {props.tokenOut.name && (
+        {props.tokenOut.name && props.errorMessage !== ERRORMESSAGES.SWAPMULTIHOP && (
           <div
             className="h-12 mt-3 cursor-pointer px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] items-center flex "
             onClick={() => setOpenSwapDetails(!openSwapDetails)}
@@ -946,7 +947,7 @@ function SwapTab(props: ISwapTabProps) {
           </div>
         )}
 
-        {openSwapDetails && (
+        {openSwapDetails && props.errorMessage !== ERRORMESSAGES.SWAPMULTIHOP && (
           <div
             className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px]  rounded-3xl mt-2 animate__animated `}
           >
