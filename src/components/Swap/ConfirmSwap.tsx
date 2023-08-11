@@ -40,6 +40,8 @@ interface IConfirmSwapProps {
     chainType: Chain;
     address: string | undefined;
   }[];
+  minimumReceived: BigNumber;
+  exchangeRate: BigNumber;
 }
 function ConfirmSwap(props: IConfirmSwapProps) {
   const tokens = useAppSelector((state) => state.config.tokens);
@@ -127,9 +129,9 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                       : tEZorCTEZtoUppercase(props.tokenOut.name)}{" "}
                     =
                     {!isConvert
-                      ? ` ${props.routeDetails.exchangeRate.toFixed(3)} 
+                      ? ` ${props.exchangeRate.toFixed(3)} 
                             ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
-                      : `${Number(1 / Number(props.routeDetails.exchangeRate)).toFixed(
+                      : `${Number(1 / Number(props.exchangeRate)).toFixed(
                           3
                         )} ${tEZorCTEZtoUppercase(props.tokenIn.name)}`}
                   </span>
@@ -141,7 +143,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
             </div>
 
             <div
-              className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 `}
+              className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px]  rounded-3xl mt-2 `}
             >
               <div className="flex">
                 <div className="font-mobile-400 md:font-body3 ">
@@ -169,13 +171,13 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 </div>
 
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
-                  {` ${Number(props.routeDetails.minimumOut).toFixed(4)} ${tEZorCTEZtoUppercase(
+                  {` ${Number(props.minimumReceived).toFixed(4)} ${tEZorCTEZtoUppercase(
                     props.tokenOut.name
                   )}`}
                 </div>
               </div>
 
-              <div className="flex mt-2">
+              {/* <div className="flex mt-2">
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Price impact</span>
                   <span className="relative top-0.5">
@@ -207,8 +209,8 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 >
                   {`${props.routeDetails.priceImpact.toFixed(4)} %`}
                 </div>
-              </div>
-              <div className="flex mt-2">
+              </div> */}
+              {/* <div className="flex mt-2">
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Fee</span>
                   <span className="relative top-0.5">
@@ -229,8 +231,8 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                 <div className="ml-auto font-mobile-700 md:font-subtitle4">
                   {`${props.routeDetails.finalFeePerc.toFixed(2)} %`}
                 </div>
-              </div>
-              <div className="border-t border-text-800 mt-[18px]"></div>
+              </div> */}
+              {/* <div className="border-t border-text-800 mt-[18px]"></div>
               <div className="mt-4 ">
                 <div className="font-subtitle2 md:font-subtitle4">
                   {" "}
@@ -419,7 +421,7 @@ function ConfirmSwap(props: IConfirmSwapProps) {
                     })}
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="mt-4">
               <Button color="primary" width="w-full" onClick={props.onClick}>
