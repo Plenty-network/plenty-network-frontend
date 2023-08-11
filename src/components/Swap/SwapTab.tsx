@@ -21,7 +21,7 @@ import { ERRORMESSAGES, tokensModal, tokenType } from "../../../src/constants/sw
 import { useStateAnimate } from "../../hooks/useAnimateUseState";
 import loader from "../../assets/animations/shimmer-swap.json";
 import { BigNumber } from "bignumber.js";
-import { allSwapWrapper } from "../../operations/swap";
+import { allSwapWrapper, directSwapWrapper } from "../../operations/swap";
 import ExpertModePopup from "../ExpertMode";
 import ConfirmSwap from "./ConfirmSwap";
 import ConfirmTransaction from "../ConfirmTransaction";
@@ -201,99 +201,171 @@ function SwapTab(props: ISwapTabProps) {
     !expertMode && props.setShowConfirmSwap(false);
     const recepientAddress = props.recepient ? props.recepient : props.walletAddress;
     !expertMode && props.setShowConfirmTransaction(true);
-    routerSwap(
-      props.tokenIn.name,
-      props.tokenOut.name,
-      new BigNumber(props.firstTokenAmount),
+    if (props.enableMultiHop) {
+      routerSwap(
+        props.tokenIn.name,
+        props.tokenOut.name,
+        new BigNumber(props.firstTokenAmount),
 
-      recepientAddress,
-      (100 - Number(props.slippage)) / 100,
+        recepientAddress,
+        (100 - Number(props.slippage)) / 100,
 
-      transactionSubmitModal,
-      props.resetAllValues,
-      !expertMode && props.setShowConfirmTransaction,
-      {
-        flashType: Flashtype.Info,
-        headerText: "Transaction submitted",
-        trailingText: `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-          TOKEN_A
-        )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `,
-        linkText: "View in Explorer",
-        isLoading: true,
-        onClick: () => {
-          window.open(`${tzktExplorer}${transactionId}`, "_blank");
-        },
-        transactionId: "",
-      }
-    ).then((response) => {
-      if (response.success) {
-        setTransactionId(response.operationId ? response.operationId : "");
-        props.setBalanceUpdate(true);
-        props.resetAllValues;
-        setTimeout(() => {
-          props.setShowTransactionSubmitModal(false);
-          dispatch(
-            setFlashMessage({
-              flashType: Flashtype.Success,
-              headerText: "Success",
-              trailingText: `Swap ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} for ${localStorage.getItem(
-                SECOND_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_B)}`,
-              linkText: "View in Explorer",
-              isLoading: true,
-              onClick: () => {
-                window.open(
-                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
-                  "_blank"
-                );
-              },
-              transactionId: response.operationId ? response.operationId : "",
-            })
-          );
-        }, 6000);
+        transactionSubmitModal,
+        props.resetAllValues,
+        !expertMode && props.setShowConfirmTransaction,
+        {
+          flashType: Flashtype.Info,
+          headerText: "Transaction submitted",
+          trailingText: `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+            TOKEN_A
+          )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `,
+          linkText: "View in Explorer",
+          isLoading: true,
+          onClick: () => {
+            window.open(`${tzktExplorer}${transactionId}`, "_blank");
+          },
+          transactionId: "",
+        }
+      ).then((response) => {
+        if (response.success) {
+          setTransactionId(response.operationId ? response.operationId : "");
+          props.setBalanceUpdate(true);
+          props.resetAllValues;
+          setTimeout(() => {
+            props.setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Success,
+                headerText: "Success",
+                trailingText: `Swap ${localStorage.getItem(
+                  FIRST_TOKEN_AMOUNT
+                )} ${localStorage.getItem(TOKEN_A)} for ${localStorage.getItem(
+                  SECOND_TOKEN_AMOUNT
+                )} ${localStorage.getItem(TOKEN_B)}`,
+                linkText: "View in Explorer",
+                isLoading: true,
+                onClick: () => {
+                  window.open(
+                    `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
+                    "_blank"
+                  );
+                },
+                transactionId: response.operationId ? response.operationId : "",
+              })
+            );
+          }, 6000);
 
-        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-      } else {
-        props.setBalanceUpdate(true);
-        props.resetAllValues;
-        props.setShowConfirmTransaction(false);
-        setTimeout(() => {
-          props.setShowTransactionSubmitModal(false);
-          dispatch(
-            setFlashMessage({
-              flashType: Flashtype.Rejected,
-              transactionId: "",
-              headerText: "Rejected",
-              trailingText:
-                response.error === "NOT_ENOUGH_TEZ"
-                  ? `You do not have enough tez`
-                  : `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-                      TOKEN_A
-                    )}`,
-              linkText: "",
-              isLoading: true,
-            })
-          );
-        }, 2000);
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        } else {
+          props.setBalanceUpdate(true);
+          props.resetAllValues;
+          props.setShowConfirmTransaction(false);
+          setTimeout(() => {
+            props.setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Rejected,
+                transactionId: "",
+                headerText: "Rejected",
+                trailingText:
+                  response.error === "NOT_ENOUGH_TEZ"
+                    ? `You do not have enough tez`
+                    : `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+                        TOKEN_A
+                      )}`,
+                linkText: "",
+                isLoading: true,
+              })
+            );
+          }, 2000);
 
-        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-      }
-    });
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        }
+      });
+    } else {
+      directSwapWrapper(
+        props.tokenIn.name,
+        props.tokenOut.name,
+        new BigNumber(props.secondTokenAmount),
+
+        recepientAddress,
+        new BigNumber(props.firstTokenAmount),
+        props.walletAddress,
+
+        transactionSubmitModal,
+        props.resetAllValues,
+        !expertMode && props.setShowConfirmTransaction,
+        {
+          flashType: Flashtype.Info,
+          headerText: "Transaction submitted",
+          trailingText: `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+            TOKEN_A
+          )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `,
+          linkText: "View in Explorer",
+          isLoading: true,
+          onClick: () => {
+            window.open(`${tzktExplorer}${transactionId}`, "_blank");
+          },
+          transactionId: "",
+        }
+      ).then((response) => {
+        if (response.success) {
+          setTransactionId(response.operationId ? response.operationId : "");
+          props.setBalanceUpdate(true);
+          props.resetAllValues;
+          setTimeout(() => {
+            props.setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Success,
+                headerText: "Success",
+                trailingText: `Swap ${localStorage.getItem(
+                  FIRST_TOKEN_AMOUNT
+                )} ${localStorage.getItem(TOKEN_A)} for ${localStorage.getItem(
+                  SECOND_TOKEN_AMOUNT
+                )} ${localStorage.getItem(TOKEN_B)}`,
+                linkText: "View in Explorer",
+                isLoading: true,
+                onClick: () => {
+                  window.open(
+                    `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
+                    "_blank"
+                  );
+                },
+                transactionId: response.operationId ? response.operationId : "",
+              })
+            );
+          }, 6000);
+
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        } else {
+          props.setBalanceUpdate(true);
+          props.resetAllValues;
+          props.setShowConfirmTransaction(false);
+          setTimeout(() => {
+            props.setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Rejected,
+                transactionId: "",
+                headerText: "Rejected",
+                trailingText:
+                  response.error === "NOT_ENOUGH_TEZ"
+                    ? `You do not have enough tez`
+                    : `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+                        TOKEN_A
+                      )}`,
+                linkText: "",
+                isLoading: true,
+              })
+            );
+          }, 2000);
+
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        }
+      });
+    }
   };
-
-  // const swapRoute = useMemo(() => {
-  //   if (props.routeDetails.path?.length >= 2) {
-  //     return props.routeDetails.path.map((tokenName) =>
-  //       props.tokens.find((token) => {
-  //         return token.name === tokenName;
-  //       })
-  //     );
-  //   }
-
-  //   return null;
-  // }, [props.routeDetails.path]);
 
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {
