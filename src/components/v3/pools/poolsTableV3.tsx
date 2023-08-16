@@ -182,8 +182,8 @@ export function PoolsTableV3(props: IShortCardProps) {
         Header: "APR",
         id: "apr",
         columnWidth: "w-[80px]",
-        subText: "external",
-        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
+
+        tooltipMessage: "Annual percentage rate of return on your position through trading fees",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
