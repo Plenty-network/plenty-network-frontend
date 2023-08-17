@@ -1,7 +1,8 @@
 import Lottie from "lottie-react";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-
+import animation2 from "../../assets/animations/step1bg.json";
+import animation from "../../assets/animations/step1.json";
 import { PopUpModal } from "../Modal/popupModal";
 import clsx from "clsx";
 import { ChevronLeft, ChevronRight } from "react-feather";
@@ -131,7 +132,13 @@ function Tutorial(props: ITutorialProps) {
           >
             <ChevronLeft size={40} />
           </button>
-          <div className="h-[300px] border border-primary-500/[0.5] w-[300px]"></div>
+          <div className="h-[300px]  w-[300px]">
+            <Lottie
+              animationData={animation2}
+              loop={true}
+              style={{ height: "300px", width: "300px" }}
+            />
+          </div>
           <button
             onClick={currentStep === STEPS.length - 1 ? closeModal : goToNextStep}
             className={clsx("", {
