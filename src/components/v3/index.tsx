@@ -90,7 +90,7 @@ export default function PoolsV3(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeaderV3.All && (
             <PoolsTableV3
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
@@ -102,7 +102,7 @@ export default function PoolsV3(props: IIndexProps) {
 
           {activeStateTab === PoolsCardHeaderV3.Mypools && (
             <MyPoolTablev3
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               poolsFilter={POOL_TYPE.MYPOOLS}
               isConnectWalletRequired={true}
               searchValue={searchValue}

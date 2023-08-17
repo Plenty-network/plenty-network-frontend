@@ -11,12 +11,13 @@ import { useDispatch } from "react-redux";
 import { walletConnection } from "../../redux/wallet/wallet";
 import { tokenParameterLiquidity } from "../Liquidity/types";
 import { CircularImageInfo } from "../Pools/Component/CircularImageInfo";
-import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
+import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import PositionsTable from "./PositionsTable";
 import feeimg from "../../assets/icon/poolsv3/feeMP.svg";
 import dollarimg from "../../assets/icon/poolsv3/dollarMP.svg";
 import { ActivePopUp } from "./ManageTabV3";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { tokenIcons } from "../../constants/tokensList";
 
 interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
@@ -32,6 +33,7 @@ function PositionsPopup(props: IPositionsProps) {
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
+  const tokens = useAppSelector((state) => state.config.tokens);
   const ButtonComp = useMemo(() => {
     if (!walletAddress) {
       return (
@@ -64,8 +66,60 @@ function PositionsPopup(props: IPositionsProps) {
         {
           <>
             <div className="flex w-full justify-between">
-              <div className="flex gap-1 md:gap-2 items-center ">
-                <CircularImageInfo
+              <div className="flex  items-center ">
+                <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center overflow-hidden">
+                  <img
+                    alt={"alt"}
+                    src={
+                      tEZorCTEZtoUppercase(props.tokenIn.symbol.toString())
+                        .substring(0, 1)
+                        .toLowerCase() >
+                      tEZorCTEZtoUppercase(props.tokenOut.symbol.toString())
+                        .substring(0, 1)
+                        .toLowerCase()
+                        ? tokenIcons[props.tokenOut.symbol]
+                          ? tokenIcons[props.tokenOut.symbol].src
+                          : tokens[props.tokenOut.symbol.toString()]?.iconUrl
+                          ? tokens[props.tokenOut.symbol.toString()].iconUrl
+                          : `/assets/Tokens/fallback.png`
+                        : tokenIcons[props.tokenIn.symbol]
+                        ? tokenIcons[props.tokenIn.symbol].src
+                        : tokens[props.tokenIn.symbol.toString()]?.iconUrl
+                        ? tokens[props.tokenIn.symbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                    }
+                    width={"24px"}
+                    height={"24px"}
+                    onError={changeSource}
+                  />
+                </div>
+                <div className="w-[28px] relative -left-2 bg-card-600 rounded-full h-[28px] flex justify-center items-center overflow-hidden">
+                  <img
+                    alt={"alt"}
+                    src={
+                      tEZorCTEZtoUppercase(props.tokenIn.symbol.toString())
+                        .substring(0, 1)
+                        .toLowerCase() >
+                      tEZorCTEZtoUppercase(props.tokenOut.symbol.toString())
+                        .substring(0, 1)
+                        .toLowerCase()
+                        ? tokenIcons[props.tokenIn.symbol]
+                          ? tokenIcons[props.tokenIn.symbol].src
+                          : tokens[props.tokenIn.symbol.toString()]?.iconUrl
+                          ? tokens[props.tokenIn.symbol.toString()].iconUrl
+                          : `/assets/Tokens/fallback.png`
+                        : tokenIcons[props.tokenOut.symbol]
+                        ? tokenIcons[props.tokenOut.symbol].src
+                        : tokens[props.tokenOut.symbol.toString()]?.iconUrl
+                        ? tokens[props.tokenOut.symbol.toString()].iconUrl
+                        : `/assets/Tokens/fallback.png`
+                    }
+                    width={"24px"}
+                    height={"24px"}
+                    onError={changeSource}
+                  />
+                </div>
+                {/* <CircularImageInfo
                   imageArray={
                     tEZorCTEZtoUppercase(props.tokenIn.symbol.toString())
                       .substring(0, 1)
@@ -76,7 +130,7 @@ function PositionsPopup(props: IPositionsProps) {
                       ? [props.tokenOut.image, props.tokenIn.image]
                       : [props.tokenIn.image, props.tokenOut.image]
                   }
-                />
+                /> */}
                 <span className="font-body2 md:text-f14 text-white ">
                   {tEZorCTEZtoUppercase(props.tokenIn.symbol.toString())
                     .substring(0, 1)
