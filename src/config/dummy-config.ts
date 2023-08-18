@@ -54,12 +54,12 @@ const Config: IConfig = {
   },
 
   VE_INDEXER: {
-    mainnet: "https://ply-indexer.mainnet.plenty.network/v1/",
-    testnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
+    mainnet: "api.plenty.network/ply/",
+    testnet: "api.plenty.network/ply/",
   },
   ANALYTICS_INDEXER: {
-    mainnet: "https://api.plenty.network/analytics/",
-    testnet: "https://api.plenty.network/analytics/",
+    mainnet: "https://api.plenty.network/",
+    testnet: "https://api.plenty.network/",
   },
 
   FAUCET: "KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH",
@@ -93,12 +93,12 @@ const Config: IConfig = {
 
   CONFIG_LINKS: {
     testnet: {
-      POOL: "https://ghostnet.data-config.plenty.network/pools/v3",
-      TOKEN: "https://ghostnet.data-config.plenty.network/tokens",
+      POOL: 'https://api.plenty.network/config/pools/v3',
+      TOKEN: 'https://api.plenty.network/config/tokens',
     },
     mainnet: {
-      POOL: "https://config.mainnet.plenty.network/pools",
-      TOKEN: "https://config.mainnet.plenty.network/tokens",
+      POOL: 'https://api.plenty.network/config/pools/v3',
+      TOKEN: 'https://api.plenty.network/config/tokens',
     },
   },
 
@@ -137,8 +137,8 @@ const Config: IConfig = {
     },
   },
   V3_CONFIG_URL: {
-    testnet: "https://ghostnet.data-config.plenty.network/",
-    mainnet: "https://config.mainnet.plenty.network/",
+    testnet: "https://api.plenty.network/config/",
+    mainnet: "https://api.plenty.network/config/",
   },
 };
 
