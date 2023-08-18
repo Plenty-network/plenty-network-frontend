@@ -7,7 +7,7 @@ import { store } from "../../redux";
 import { POOLS_PAGE_LIMIT } from "../../constants/global";
 
 export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
-  try {
+  try { 
     const state = store.getState();
     const AMMS = state.config.AMMs;
     const allData: any[] = [];
