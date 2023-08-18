@@ -12,7 +12,8 @@ interface IFeeTierMainProps {
 function FeeTierMain(props: IFeeTierMainProps) {
   const [isExist, setIsExist] = React.useState<any>();
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
-  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
+  const tokenOutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
+  const poolShare = useAppSelector((state) => state.poolsv3.poolShare);
   const tokenoutorg = useAppSelector((state) => state.poolsv3.tokenOutOrg);
   React.useEffect(() => {
     if (tokeninorg.name && tokenoutorg.name) {
@@ -29,24 +30,21 @@ function FeeTierMain(props: IFeeTierMainProps) {
     {
       percentage: "0.01",
       text: "Best for very stable pairs",
-      selectPercentage: "46",
     },
     {
       percentage: "0.05",
       text: "Best for stable pairs",
-      selectPercentage: "46",
     },
     {
       percentage: "0.3",
       text: "Best for volatile pairs",
-      selectPercentage: "46",
     },
     {
       percentage: "1",
       text: "Best for exotic pairs",
-      selectPercentage: "46",
     },
   ];
+
   return (
     <div className="flex gap-1 md:gap-[7px]  items-center justify-center">
       {fee.map((feeInd, index) => {
@@ -79,7 +77,12 @@ function FeeTierMain(props: IFeeTierMainProps) {
             <div className="mt-[12px]">
               <span className="bg-primary-500/[0.2] rounded-lg  px-2  text-white md:font-body2 text-[7px]  text-left	py-1 px-2   w-fit  ">
                 {isExist?.feeTier?.includes((Number(feeInd.percentage) * 100).toString())
-                  ? feeInd.selectPercentage + "%"
+                  ? poolShare.find(
+                      (pool) =>
+                        pool.symbolX === tokeninorg.symbol &&
+                        pool.symbolY === tokenOutorg.symbol &&
+                        pool.feebps === Number(feeInd.percentage)
+                    )?.poolShare || 0 + "%"
                   : "Not created"}
               </span>
               {/* <span className="text-white rounded-xl	bg-shimmer-100 px-2 items-center flex w-fit text-[7px]  md:font-caption2 h-[24px]">

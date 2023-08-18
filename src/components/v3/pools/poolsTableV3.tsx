@@ -29,7 +29,7 @@ import { CircularOverLappingImage } from "../../Pools/Component/CircularImageInf
 import { ManageLiquidity } from "../../Pools/ManageLiquidity";
 import { ManageTabV3 } from "../ManageTabV3";
 import { Apr } from "./Apr";
-import { setTokenInV3, settopLevelSelectedToken } from "../../../redux/poolsv3";
+import { setPoolShare, setTokenInV3, settopLevelSelectedToken } from "../../../redux/poolsv3";
 
 import { PoolsTextWithTooltip } from "./PoolsText";
 import {
@@ -40,6 +40,7 @@ import {
   setTokenYV3,
 } from "../../../redux/poolsv3/manageLiq";
 import Link from "next/link";
+import { getPoolsShareDataV3 } from "../../../api/v3/pools";
 
 export interface IShortCardProps {
   className?: string;
@@ -120,6 +121,12 @@ export function PoolsTableV3(props: IShortCardProps) {
       return <NoDataError content={"No Pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
+  useEffect(() => {
+    getPoolsShareDataV3().then((res) => {
+      dispatch(setPoolShare(res.allData));
+      console.log(res);
+    });
+  }, []);
 
   const mobilecolumns = React.useMemo<Column<any>[]>(
     () => [
