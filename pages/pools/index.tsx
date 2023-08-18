@@ -194,7 +194,7 @@ export default function Pools(props: IIndexProps) {
           )} */}
           {activeStateTab === PoolsCardHeader.All && (
             <PoolsTable
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setShowLiquidityModalPopup={setShowLiquidityModal}
@@ -209,7 +209,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
             <PoolsTable
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               poolsFilter={POOL_TYPE.STABLE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
@@ -225,7 +225,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
             <PoolsTable
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               poolsFilter={POOL_TYPE.VOLATILE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
@@ -241,7 +241,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
             <MyPoolTable
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               poolsFilter={POOL_TYPE.MYPOOLS}
               isConnectWalletRequired={true}
               searchValue={searchValue}
