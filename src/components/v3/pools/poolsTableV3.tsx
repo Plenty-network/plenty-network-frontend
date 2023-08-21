@@ -207,7 +207,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
-        accessor: (x: any) => <PoolsTextWithTooltip text={x.volume.toString()} />,
+        accessor: (x: any) => (
+          <PoolsTextWithTooltip
+            text={x.volume.toString()}
+            token1Name={x.tokenA}
+            token2Name={x.tokenB}
+            token1=""
+            token2=""
+          />
+        ),
       },
       {
         Header: "TVL",
@@ -217,7 +225,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
-        accessor: (x) => <PoolsTextWithTooltip text={x.tvl.toString()} />,
+        accessor: (x) => (
+          <PoolsTextWithTooltip
+            text={x.tvl.toString()}
+            token1Name={x.tokenA}
+            token2Name={x.tokenB}
+            token1=""
+            token2=""
+          />
+        ),
       },
       {
         Header: "Fees",
@@ -228,7 +244,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
-        accessor: (x) => <PoolsTextWithTooltip text={x.fees.toString()} />,
+        accessor: (x) => (
+          <PoolsTextWithTooltip
+            text={x.fees.toString()}
+            token1Name={x.tokenA}
+            token2Name={x.tokenB}
+            token1=""
+            token2=""
+          />
+        ),
       },
 
       {
@@ -331,7 +355,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
-        accessor: (x: any) => <PoolsTextWithTooltip text={x.volume.toString()} />,
+        accessor: (x: any) => (
+          <PoolsTextWithTooltip
+            text={x.volume.toString()}
+            token1Name={x.tokenA}
+            token2Name={x.tokenB}
+            token1="0"
+            token2="0"
+          />
+        ),
       },
       {
         Header: "TVL",
@@ -341,7 +373,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
-        accessor: (x) => <PoolsTextWithTooltip text={x.tvl.toString()} />,
+        accessor: (x) => (
+          <PoolsTextWithTooltip
+            text={x.tvl.toString()}
+            token1Name={x.tokenA}
+            token2Name={x.tokenB}
+            token1="0"
+            token2="0"
+          />
+        ),
       },
       {
         Header: "Fees",
@@ -352,7 +392,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
-        accessor: (x) => <PoolsTextWithTooltip text={x.fees.toString()} />,
+        accessor: (x) => (
+          <PoolsTextWithTooltip
+            text={x.fees.toString()}
+            token1Name={x.tokenA}
+            token2Name={x.tokenB}
+            token1="0"
+            token2="0"
+          />
+        ),
       },
 
       {
