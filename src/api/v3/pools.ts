@@ -52,8 +52,6 @@ export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
       allData: allData,
     };
   } catch (error: any) {
-    console.log('vedata', error);
-
     console.log(error);
     return {
       success: false,
@@ -153,7 +151,6 @@ export const getMyPoolsDataV3 = async (
             })
         }
     });
-    console.log('vedata', finalData)
 
     return {
       success: true,
