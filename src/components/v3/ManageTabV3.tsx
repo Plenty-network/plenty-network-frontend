@@ -927,7 +927,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
                 <div className="flex items-center justify-between flex-row   ">
                   <div
                     ref={refSettingTab}
-                    className="py-1 bg-text-800/[0.25] hover:bg-text=800/[0.5] px-[8.5px] h-8 border border-text-700 hover:border-text-600 cursor-pointer rounded-lg flex items-center w-[80px]"
+                    className="py-1 bg-text-800/[0.25] hover:bg-text=800/[0.5] px-[8.5px] h-8 border border-text-700 hover:border-text-600 cursor-pointer rounded-lg flex items-center w-fit"
                     onClick={() => setSettingsShow(!settingsShow)}
                   >
                     <Image alt={"alt"} src={clock} height={"20px"} width={"20px"} />

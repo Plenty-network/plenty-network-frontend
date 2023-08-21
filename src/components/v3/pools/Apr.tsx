@@ -3,7 +3,7 @@ import * as React from "react";
 import { Position, ToolTip } from "../../Tooltip/TooltipAdvanced";
 import boostIcon from "../../../assets/icon/myPortfolio/boostBlue.svg";
 import { BigNumber } from "bignumber.js";
-import nFormatter from "../../../api/util/helpers";
+import nFormatter, { nFormatterWithLesserNumber } from "../../../api/util/helpers";
 export interface IAprInfoProps {
   isMobile?: boolean;
 
@@ -35,7 +35,7 @@ export function Apr(props: IAprInfoProps) {
         }
       >
         <div className="bg-muted-200  md:text-f14 text-f12 cursor-pointer text-text-50 border-border-500 rounded-lg py-[3px] px-2 ">
-          {props.currentApr}
+          {nFormatterWithLesserNumber(new BigNumber(props.currentApr))}%
         </div>
         {/* {!props.isMobile && <Image width={20} height={20} alt={"alt"} src={subtractSvg} />} */}
         {/* <div

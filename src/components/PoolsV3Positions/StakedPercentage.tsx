@@ -12,7 +12,7 @@ export function StakePercentage(props: IYourStakeProps) {
           toolTipChild={<div className="text-center"></div>}
         >
           <div className="font-body4 cursor-pointer text-white">
-            {Number(props.value) > 0 ? `${props.value.toFixed(2)}%` : "0%"}
+            ${Number(props.value) > 0 ? `${props.value.toFixed(2)}` : "0"}
           </div>
         </ToolTip>
       </div>
