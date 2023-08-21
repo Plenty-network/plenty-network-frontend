@@ -127,7 +127,7 @@ export function PoolsTableV3(props: IShortCardProps) {
       console.log(res);
     });
   }, []);
-
+  console.log("v3", poolsTableData);
   const mobilecolumns = React.useMemo<Column<any>[]>(
     () => [
       {
@@ -209,11 +209,11 @@ export function PoolsTableV3(props: IShortCardProps) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
         accessor: (x: any) => (
           <PoolsTextWithTooltip
-            text={x.volume.toString()}
+            text={x.volume.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1=""
-            token2=""
+            token1={x.volume.token1}
+            token2={x.volume.token2}
           />
         ),
       },
@@ -227,11 +227,11 @@ export function PoolsTableV3(props: IShortCardProps) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.tvl.toString()}
+            text={x.tvl.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1=""
-            token2=""
+            token1={x.tvl.token1}
+            token2={x.tvl.token2}
           />
         ),
       },
@@ -246,11 +246,11 @@ export function PoolsTableV3(props: IShortCardProps) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.fees.toString()}
+            text={x.fees.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1=""
-            token2=""
+            token1={x.fees.token1}
+            token2={x.fees.token2}
           />
         ),
       },
@@ -357,11 +357,11 @@ export function PoolsTableV3(props: IShortCardProps) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
         accessor: (x: any) => (
           <PoolsTextWithTooltip
-            text={x.volume.toString()}
+            text={x.volume.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1="0"
-            token2="0"
+            token1={x.volume.token1}
+            token2={x.volume.token2}
           />
         ),
       },
@@ -375,11 +375,11 @@ export function PoolsTableV3(props: IShortCardProps) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.tvl.toString()}
+            text={x.tvl.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1="0"
-            token2="0"
+            token1={x.tvl.token1}
+            token2={x.tvl.token2}
           />
         ),
       },
@@ -394,11 +394,11 @@ export function PoolsTableV3(props: IShortCardProps) {
         sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.fees.toString()}
+            text={x.fees.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1="0"
-            token2="0"
+            token1={x.fees.token1}
+            token2={x.fees.token2}
           />
         ),
       },
