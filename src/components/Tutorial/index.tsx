@@ -6,6 +6,8 @@ import animation from "../../assets/animations/step1.json";
 import animation1 from "../../assets/animations/Flow_1.json";
 import animation2 from "../../assets/animations/Flow_2.json";
 import animation3 from "../../assets/animations/Flow_3.json";
+
+import animation4 from "../../assets/animations/Flow_4.json";
 import { PopUpModal } from "../Modal/popupModal";
 import clsx from "clsx";
 import { ChevronLeft, ChevronRight } from "react-feather";
@@ -48,7 +50,7 @@ function Tutorial(props: ITutorialProps) {
         "Like a traditional AMM, as prices move, assets are converted entirely into one of the assets in the pool. If your position goes out of range, then you'll have 100% of the other asset until the price re-enters your range.",
       mobileDisplayText:
         "Like a traditional AMM, as prices move, assets are converted entirely into one of the assets in the pool. If your position goes out of range, then you'll have 100% of the other asset until the price re-enters your range.",
-      animation: animation2,
+      animation: animation4,
     },
     // {
     //   displayText:
