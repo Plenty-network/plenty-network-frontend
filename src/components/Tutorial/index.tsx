@@ -6,6 +6,7 @@ import animation from "../../assets/animations/step1.json";
 import { PopUpModal } from "../Modal/popupModal";
 import clsx from "clsx";
 import { ChevronLeft, ChevronRight } from "react-feather";
+import { FIRST_TIME_TUTORIAL } from "../../constants/localStorage";
 
 interface ITutorialProps {
   show: boolean;
@@ -16,36 +17,42 @@ function Tutorial(props: ITutorialProps) {
   const STEPS: {
     displayText: string;
     mobileDisplayText: string;
+    animation: any;
   }[] = [
     {
       displayText:
         "In classic pools, liquidity was distributed in the full range of possible prices. With supercharged pools, we can now concentrate liquidity around the current spot price, massively increasing capital efficienc",
       mobileDisplayText:
         "In classic pools, liquidity was distributed in the full range of possible prices. With supercharged pools, we can now concentrate liquidity around the current spot price, massively increasing capital efficienc",
+      animation: animation2,
     },
     {
       displayText:
         "Now you can pick a strategy that suits you. Passive strategies allows you to distribute a little bit across the entire span. You earn less, but never go out of range.",
       mobileDisplayText:
         "Now you can pick a strategy that suits you. Passive strategies allows you to distribute a little bit across the entire span. You earn less, but never go out of range.",
+      animation: animation,
     },
     {
       displayText:
         "A more aggressive strategy will allow you to earn more, but is more likely to go out of range. Watch it closely and rebalance as needed. While out of range, you will stop earning on swaps.",
       mobileDisplayText:
         "A more aggressive strategy will allow you to earn more, but is more likely to go out of range. Watch it closely and rebalance as needed. While out of range, you will stop earning on swaps.",
+      animation: animation2,
     },
     {
       displayText:
         "Like a traditional AMM, as prices move, assets are converted entirely into one of the assets in the pool. If your position goes out of range, then you'll have 100% of the other asset until the price re-enters your range.",
       mobileDisplayText:
         "Like a traditional AMM, as prices move, assets are converted entirely into one of the assets in the pool. If your position goes out of range, then you'll have 100% of the other asset until the price re-enters your range.",
+      animation: animation2,
     },
     {
       displayText:
         "In the free market of LPs everyone follows different strategies. Liquidity is more dynamic, and better optimized for traders..",
       mobileDisplayText:
         "In the free market of LPs everyone follows different strategies. Liquidity is more dynamic, and better optimized for traders.",
+      animation: animation2,
     },
   ];
 
@@ -53,6 +60,7 @@ function Tutorial(props: ITutorialProps) {
   console.log("Current Step:", currentStep);
 
   const closeModal = () => {
+    localStorage.setItem(FIRST_TIME_TUTORIAL, "true");
     props.setShow(false);
   };
 
@@ -134,7 +142,7 @@ function Tutorial(props: ITutorialProps) {
           </button>
           <div className="h-[300px]  w-[300px]">
             <Lottie
-              animationData={animation2}
+              animationData={STEPS[currentStep].animation}
               loop={true}
               style={{ height: "300px", width: "300px" }}
             />

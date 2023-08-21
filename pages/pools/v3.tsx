@@ -11,7 +11,7 @@ import { getEpochData } from "../../src/redux/epoch/epoch";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
-import { USERADDRESS } from "../../src/constants/localStorage";
+import { FIRST_TIME_TUTORIAL, USERADDRESS } from "../../src/constants/localStorage";
 import clsx from "clsx";
 
 import { PoolsCardHeaderV3 } from "../../src/components/v3/pools/CardHeaderv3";
@@ -92,10 +92,17 @@ export default function Pools(props: IIndexProps) {
 
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
+
   const [show, setShow] = useState(true);
   return (
     <>
-      <SideBarHOC>{show ? <Tutorial show={show} setShow={setShow} /> : <PoolsV3 />}</SideBarHOC>
+      <SideBarHOC>
+        {localStorage.getItem(FIRST_TIME_TUTORIAL) !== "true" ? (
+          <Tutorial show={show} setShow={setShow} />
+        ) : (
+          <PoolsV3 />
+        )}
+      </SideBarHOC>
     </>
   );
 }
