@@ -12,6 +12,7 @@ import { PopUpModal } from "../Modal/popupModal";
 import clsx from "clsx";
 import { ChevronLeft, ChevronRight } from "react-feather";
 import { FIRST_TIME_TUTORIAL } from "../../constants/localStorage";
+import { isMobile } from "react-device-detect";
 
 interface ITutorialProps {
   show: boolean;
@@ -111,9 +112,11 @@ function Tutorial(props: ITutorialProps) {
       onhide={closeModal}
     >
       <>
-        <div className="flex justify-center font-title1">What is Supercharged Liquidity?</div>
+        <div className="flex justify-center font-title3 md:font-title1">
+          What is Supercharged Liquidity?
+        </div>
 
-        <div className="flex gap-4 mt-[50px] justify-center">
+        <div className="flex gap-4 mx-2 md:mx-0 mt-[50px] justify-center">
           {STEPS.map((step, index) => (
             <div className="loading-container" key={index}>
               <div
@@ -127,7 +130,7 @@ function Tutorial(props: ITutorialProps) {
 
         <div
           className={clsx(
-            "flex justify-center mt-[50px] text-center mx-8 h-[100px]",
+            "flex justify-center mt-[50px] text-center mx-2 md:mx-8 h-[100px]",
 
             currentStep && "fade-in-3"
           )}
@@ -135,7 +138,7 @@ function Tutorial(props: ITutorialProps) {
           {STEPS[currentStep].displayText}
         </div>
 
-        <div className="flex justify-between items-center -mt-[73px] mb-10 mx-5">
+        <div className="flex justify-between items-center mt-3 md:-mt-[73px] mb-10 mx-2 md:mx-5">
           <button
             onClick={goToPreviousStep}
             className={clsx("mt-[56px]", {
@@ -145,11 +148,11 @@ function Tutorial(props: ITutorialProps) {
           >
             <ChevronLeft size={40} />
           </button>
-          <div className="h-[300px]  w-[300px]">
+          <div className="md:h-[300px]  md:w-[300px]">
             <Lottie
               animationData={STEPS[currentStep].animation}
               loop={true}
-              style={{ height: "300px", width: "300px" }}
+              style={{ height: isMobile ? "200px" : "300px", width: isMobile ? "200px" : "300px" }}
             />
           </div>
           <button
