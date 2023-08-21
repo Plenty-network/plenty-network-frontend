@@ -29,7 +29,7 @@ import { CircularOverLappingImage } from "../../Pools/Component/CircularImageInf
 import { ManageLiquidity } from "../../Pools/ManageLiquidity";
 import { ManageTabV3 } from "../ManageTabV3";
 import { Apr } from "./Apr";
-import { setTokenInV3, settopLevelSelectedToken } from "../../../redux/poolsv3";
+import { setPoolShare, setTokenInV3, settopLevelSelectedToken } from "../../../redux/poolsv3";
 
 import { PoolsTextWithTooltip } from "./PoolsText";
 import {
@@ -40,6 +40,7 @@ import {
   setTokenYV3,
 } from "../../../redux/poolsv3/manageLiq";
 import Link from "next/link";
+import { getPoolsShareDataV3 } from "../../../api/v3/pools";
 
 export interface IShortCardProps {
   className?: string;
@@ -120,6 +121,12 @@ export function PoolsTableV3(props: IShortCardProps) {
       return <NoDataError content={"No Pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
+  useEffect(() => {
+    getPoolsShareDataV3().then((res) => {
+      dispatch(setPoolShare(res.allData));
+      console.log(res);
+    });
+  }, []);
 
   const mobilecolumns = React.useMemo<Column<any>[]>(
     () => [
@@ -182,8 +189,8 @@ export function PoolsTableV3(props: IShortCardProps) {
         Header: "APR",
         id: "apr",
         columnWidth: "w-[80px]",
-        subText: "external",
-        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
+
+        tooltipMessage: "Annual percentage rate of return on your position through trading fees",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -200,7 +207,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
-        accessor: (x: any) => <PoolsTextWithTooltip text={x.volume.toString()} />,
+        accessor: (x: any) => (
+          <PoolsTextWithTooltip
+            text={x.volume.toString()}
+            token1Name={x.tokenA}
+            token2Name={x.tokenB}
+            token1=""
+            token2=""
+          />
+        ),
       },
       {
         Header: "TVL",
@@ -210,7 +225,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
-        accessor: (x) => <PoolsTextWithTooltip text={x.tvl.toString()} />,
+        accessor: (x) => (
+          <PoolsTextWithTooltip
+            text={x.tvl.toString()}
+            token1Name={x.tokenA}
+            token2Name={x.tokenB}
+            token1=""
+            token2=""
+          />
+        ),
       },
       {
         Header: "Fees",
@@ -221,7 +244,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
-        accessor: (x) => <PoolsTextWithTooltip text={x.fees.toString()} />,
+        accessor: (x) => (
+          <PoolsTextWithTooltip
+            text={x.fees.toString()}
+            token1Name={x.tokenA}
+            token2Name={x.tokenB}
+            token1=""
+            token2=""
+          />
+        ),
       },
 
       {
@@ -306,8 +337,8 @@ export function PoolsTableV3(props: IShortCardProps) {
         Header: "APR",
         id: "apr",
         columnWidth: "w-[80px]",
-        subText: "external",
-        tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
+
+        tooltipMessage: "Annual percentage rate of return on your position through trading fees",
         isToolTipEnabled: true,
         canShort: true,
         showOnMobile: true,
@@ -324,7 +355,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
-        accessor: (x: any) => <PoolsTextWithTooltip text={x.volume.toString()} />,
+        accessor: (x: any) => (
+          <PoolsTextWithTooltip
+            text={x.volume.toString()}
+            token1Name={x.tokenA}
+            token2Name={x.tokenB}
+            token1="0"
+            token2="0"
+          />
+        ),
       },
       {
         Header: "TVL",
@@ -334,7 +373,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
-        accessor: (x) => <PoolsTextWithTooltip text={x.tvl.toString()} />,
+        accessor: (x) => (
+          <PoolsTextWithTooltip
+            text={x.tvl.toString()}
+            token1Name={x.tokenA}
+            token2Name={x.tokenB}
+            token1="0"
+            token2="0"
+          />
+        ),
       },
       {
         Header: "Fees",
@@ -345,7 +392,15 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
-        accessor: (x) => <PoolsTextWithTooltip text={x.fees.toString()} />,
+        accessor: (x) => (
+          <PoolsTextWithTooltip
+            text={x.fees.toString()}
+            token1Name={x.tokenA}
+            token2Name={x.tokenB}
+            token1="0"
+            token2="0"
+          />
+        ),
       },
 
       {

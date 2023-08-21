@@ -1974,7 +1974,7 @@ function MyPortfolio(props: any) {
                       )}
                     </div>
                     <PoolsTableRewards
-                      className="md:px-5 md:py-4   py-4"
+                      className="md:pl-5 md:mr-5  md:py-4   py-4"
                       poolsData={poolsRewards.data.poolsRewardsData}
                       isfetched={poolsRewards.isfetched}
                     />
@@ -1983,7 +1983,7 @@ function MyPortfolio(props: any) {
               {activeStateTab === MyPortfolioHeader.Poolsv3 &&
                 (activeSection === MyPortfolioSection.Positions ? (
                   <PoolsV3TablePosition
-                    className="md:px-5 md:py-4   py-4"
+                    className="md:pl-5 md:mr-5 md:py-4   py-4"
                     setTokenIn={setTokenIn}
                     setTokenOut={setTokenOut}
                     setFeeTier={setFeeTier}
@@ -2026,7 +2026,7 @@ function MyPortfolio(props: any) {
                       )}
                     </div>
                     <PoolsTableRewards
-                      className="md:px-5 md:py-4   py-4"
+                      className="md:pl-5 md:mr-5 md:py-4   py-4"
                       poolsData={poolsRewards.data.poolsRewardsData}
                       isfetched={poolsRewards.isfetched}
                     />
@@ -2055,7 +2055,7 @@ function MyPortfolio(props: any) {
                       </a>
                     </div>
                     <LocksTablePosition
-                      className="md:px-5 md:pb-4 md:pt-2  py-4"
+                      className="md:pl-5 md:mr-5 md:pb-4 md:pt-2  py-4"
                       locksPosition={locksPosition.data}
                       isfetched={locksPosition.isfetched}
                       setIsManageLock={setIsManageLock}
@@ -2107,7 +2107,7 @@ function MyPortfolio(props: any) {
                       </div>
                     </div>
                     <LocksTableRewards
-                      className="md:px-5 md:pb-4   "
+                      className="md:pl-5 md:mr-5 md:pb-4   "
                       allLocksRewardsData={allLocksRewardsData}
                       isFetching={fetchingTradingfee}
                       selectedDropDown={selectednft}

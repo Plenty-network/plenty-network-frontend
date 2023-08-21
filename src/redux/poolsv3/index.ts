@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { initialBoundaries, IV3PositionObject } from "../../api/v3/types";
+import { IDataResponse, initialBoundaries, IV3PositionObject } from "../../api/v3/types";
 import { tokenParameterLiquidity } from "../../components/Liquidity/types";
 
 const initialState = {
@@ -27,12 +27,16 @@ const initialState = {
   minTickB: 0,
   maxTickB: 0,
   selectedPosition: {} as IV3PositionObject,
+  poolShare: [] as IDataResponse[],
 };
 
 const PoolsV3Slice = createSlice({
   name: "PoolsV3",
   initialState,
   reducers: {
+    setPoolShare: (state, action) => {
+      state.poolShare = action.payload;
+    },
     setSelectedPosition: (state, action) => {
       state.selectedPosition = action.payload;
     },
@@ -110,6 +114,7 @@ const PoolsV3Slice = createSlice({
   },
 });
 export const {
+  setPoolShare,
   setInitBound,
   setInputDisable,
   setFullRange,

@@ -97,3 +97,12 @@ export interface IMyPoolsDataResponse {
   allData: any;
   error?: string;
 }
+
+export interface IDataResponse {
+  symbolX: string;
+  symbolY: string;
+  address: string;
+  feebps: any;
+  tvl?: any;
+  poolShare?: any;
+}

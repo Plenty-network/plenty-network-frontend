@@ -1,11 +1,10 @@
+import { BigNumber } from "bignumber.js";
 import axios from "axios";
-import { IAllPoolsDataResponse, IMyPoolsDataResponse } from "./types";
+import { IAllPoolsDataResponse, IMyPoolsDataResponse, IDataResponse } from "./types";
 import Config from "../../config/config";
 import { connectedNetwork } from "../../common/walletconnect";
 import { store } from "../../redux";
-import {
-  POOLS_PAGE_LIMIT,
-} from "../../constants/global";
+import { POOLS_PAGE_LIMIT } from "../../constants/global";
 
 export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
   try {
@@ -13,27 +12,24 @@ export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
     const AMMS = state.config.AMMs;
     const allData: any[] = [];
 
-    for (var key in AMMS) {
-      if (AMMS.hasOwnProperty(key)) {
-        const val = AMMS[key];
-        const tokenA = val.tokenX?.symbol;
-        const tokenB = val.tokenY?.symbol;
-        const feeTier = Number(val.feeBps) / 100;
-        const apr = 0;
-        const volume = 0;
-        const tvl = 0;
-        const fees = 0;
-        allData.push({
-          tokenA: tokenA,
-          tokenB: tokenB,
-          feeTier: feeTier,
-          apr: apr,
-          volume: volume,
-          tvl: tvl,
-          fees: fees,
-        });
-      }
-    }
+    const fetchAnalyticsPoolsData = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}pools`);
+    let analyticsPoolsData: any[] = fetchAnalyticsPoolsData.data;
+
+    analyticsPoolsData.map<any>((datum) => {
+      let poolPairs: any[] = Object.values(AMMS).filter((e: any) => e.address === datum.pool);
+
+      if(poolPairs[0]){
+          allData.push({
+            tokenA: poolPairs[0].tokenX.symbol,
+            tokenB: poolPairs[0].tokenY.symbol,
+            feeTier: poolPairs[0].feeBps/100,
+            apr: Number(datum.tvl.value) === 0 ? 0 : ((datum.fees.value7D*52)/datum.tvl.value)*100,
+            volume: BigNumber(datum.volume.value24H),
+            tvl: BigNumber(datum.tvl.value),
+            fees: BigNumber(datum.fees.value24H),
+          })
+        }
+    });
 
     return {
       success: true,
@@ -57,12 +53,17 @@ export const getMyPoolsDataV3 = async (
     if (!userTezosAddress || userTezosAddress.length <= 0) {
       throw new Error("Invalid or empty arguments.");
     }
+
     const state = store.getState();
     const AMMS = state.config.AMMs;
     const v3PositionsResponse = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}v3-positions?address=${userTezosAddress}`);
     const v3IndexerPositionsData: any[] = v3PositionsResponse.data;
 
+    const fetchAnalyticsPoolsData = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}pools`);
+    let analyticsPoolsData: any[] = fetchAnalyticsPoolsData.data;
+
     const allData: any[] = [];
+    const finalData: any[] = [];
     const allPositionsLength = v3IndexerPositionsData.length;
 
     const startIndex = page
@@ -76,47 +77,112 @@ export const getMyPoolsDataV3 = async (
         : allPositionsLength;
 
     for (let i = startIndex; i < endIndex; i++) {
-
-      const positonData = v3IndexerPositionsData[i];
-      const AMM = AMMS[positonData.amm];
-      console.log('alldata', AMM);
-
-      const tokenA = AMM.tokenX?.symbol;
-      const tokenB = AMM.tokenY?.symbol;
-      const feeTier = Number(AMM.feeBps) / 100;
-      const apr = 0;
-      const volume = 0;
-      const tvl = 0;
-      const fees = 0;
-      if (AMM) {
-        allData.push({
-          tokenA: tokenA,
-          tokenB: tokenB,
-          feeTier: feeTier,
-          apr: apr,
-          volume: volume,
-          tvl: tvl,
-          fees: fees,
-        });
-      }
+        const positonData = v3IndexerPositionsData[i];
+        const AMM = AMMS[positonData.amm];
+        const tokenA = AMM.tokenX?.symbol;
+        const tokenB = AMM.tokenY?.symbol;
+        const feeTier = Number(AMM.feeBps) / 100;
+        const address = AMM.address
+        if (AMM) {
+          allData.push({
+            address: address,
+            tokenA: tokenA,
+            tokenB: tokenB,
+            feeTier: feeTier,
+          });
+        }
     }   
-    let uqiueAllData = allData.map(e => {
-      return { 
-          tokenA: e.tokenA,
-          tokenB: e.tokenB,
-          feeTier: e.feeTier,
-          apr: e.apr,
-          volume: e.volume,
-          tvl: e.tvl,
-          fees: e.fees,
-      } 
+
+    let uniqueAllData = allData.map(e => {
+        return { 
+            address: e.address,
+            tokenA: e.tokenA,
+            tokenB: e.tokenB,
+            feeTier: e.feeTier,
+        } 
     }).filter((element, index, array) => {
-      return array.findIndex(a => a.tokenA === element.tokenA && a.tokenB === element.tokenB  && a.feeTier === element.feeTier) === index
-    })
+        return array.findIndex(a => a.tokenA === element.tokenA && a.tokenB === element.tokenB  && a.feeTier === element.feeTier) === index
+    });
+
+    analyticsPoolsData.map<any>((datum) => {
+        let poolPairs: any[] = Object.values(uniqueAllData).filter((e: any) => e.address === datum.pool);
+        if(poolPairs[0]){
+            finalData.push({
+              tokenA: poolPairs[0].tokenA,
+              tokenB: poolPairs[0].tokenB,
+              feeTier: poolPairs[0].feeTier,
+              apr: Number(datum.tvl.value) === 0 ? 0 : ((datum.fees.value7D*52)/datum.tvl.value)*100,
+              volume: BigNumber(datum.volume.value24H),
+              tvl: BigNumber(datum.tvl.value),
+              fees: BigNumber(datum.fees.value24H),
+            })
+        }
+    });
 
     return {
       success: true,
-      allData: uqiueAllData,
+      allData: finalData,
+    };
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      allData: [],
+      error: error.message,
+    };
+  }
+};
+
+export const getPoolsShareDataV3 = async (): Promise<IAllPoolsDataResponse> => {
+  try {
+    const state = store.getState();
+    const AMMS = state.config.AMMs;
+    const allData: IDataResponse[] = [];
+    const finalData: IDataResponse[] = [];
+    let poolShare = 0;
+    let count;
+    let initialTVL;
+
+    const fetchAnalyticsPoolsData = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}pools`);
+    let analyticsPoolsData: any[] = fetchAnalyticsPoolsData.data;
+
+    analyticsPoolsData.map<any>((datum) => {
+      let poolPairs: any[] = Object.values(AMMS).filter((e: any) => e.address === datum.pool);
+      if(poolPairs[0]){
+          allData.push({
+            symbolX: poolPairs[0].tokenX.symbol,
+            symbolY: poolPairs[0].tokenY.symbol,
+            address: datum.pool,
+            feebps: poolPairs[0].feeBps/100,
+            tvl: datum.tvl.value
+          })
+        }
+    });
+
+    for (var i = 0; i < allData.length; i++) {
+      count = Number(allData[i].tvl);
+      initialTVL = Number(allData[i].tvl);
+
+      for (var j = 0; j < allData.length; j++) {
+        if(allData[i].symbolX === allData[j].symbolX && allData[i].symbolY === allData[j].symbolY && allData[i].feebps !== allData[j].feebps) {
+          count = count + Number(allData[j].tvl);
+        } 
+      }
+
+      poolShare = (Number(allData[i].tvl)/count) * 100;
+
+      finalData.push({
+        symbolX: allData[i].symbolX,
+        symbolY: allData[i].symbolY,
+        address: allData[i].address,
+        feebps: allData[i].feebps,
+        poolShare: Number.isNaN(poolShare) ? 0 : poolShare,
+      })
+    }
+
+    return {
+      success: true,
+      allData: finalData,
     };
   } catch (error: any) {
     console.log(error);
