@@ -1,8 +1,11 @@
 import Lottie from "lottie-react";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import animation2 from "../../assets/animations/step1bg.json";
+//import animation2 from "../../assets/animations/step1bg.json";
 import animation from "../../assets/animations/step1.json";
+import animation1 from "../../assets/animations/Flow_1.json";
+import animation2 from "../../assets/animations/Flow_2.json";
+import animation3 from "../../assets/animations/Flow_3.json";
 import { PopUpModal } from "../Modal/popupModal";
 import clsx from "clsx";
 import { ChevronLeft, ChevronRight } from "react-feather";
@@ -24,21 +27,21 @@ function Tutorial(props: ITutorialProps) {
         "In classic pools, liquidity was distributed in the full range of possible prices. With supercharged pools, we can now concentrate liquidity around the current spot price, massively increasing capital efficienc",
       mobileDisplayText:
         "In classic pools, liquidity was distributed in the full range of possible prices. With supercharged pools, we can now concentrate liquidity around the current spot price, massively increasing capital efficienc",
-      animation: animation2,
+      animation: animation1,
     },
     {
       displayText:
         "Now you can pick a strategy that suits you. Passive strategies allows you to distribute a little bit across the entire span. You earn less, but never go out of range.",
       mobileDisplayText:
         "Now you can pick a strategy that suits you. Passive strategies allows you to distribute a little bit across the entire span. You earn less, but never go out of range.",
-      animation: animation,
+      animation: animation2,
     },
     {
       displayText:
         "A more aggressive strategy will allow you to earn more, but is more likely to go out of range. Watch it closely and rebalance as needed. While out of range, you will stop earning on swaps.",
       mobileDisplayText:
         "A more aggressive strategy will allow you to earn more, but is more likely to go out of range. Watch it closely and rebalance as needed. While out of range, you will stop earning on swaps.",
-      animation: animation2,
+      animation: animation3,
     },
     {
       displayText:
@@ -47,13 +50,13 @@ function Tutorial(props: ITutorialProps) {
         "Like a traditional AMM, as prices move, assets are converted entirely into one of the assets in the pool. If your position goes out of range, then you'll have 100% of the other asset until the price re-enters your range.",
       animation: animation2,
     },
-    {
-      displayText:
-        "In the free market of LPs everyone follows different strategies. Liquidity is more dynamic, and better optimized for traders..",
-      mobileDisplayText:
-        "In the free market of LPs everyone follows different strategies. Liquidity is more dynamic, and better optimized for traders.",
-      animation: animation2,
-    },
+    // {
+    //   displayText:
+    //     "In the free market of LPs everyone follows different strategies. Liquidity is more dynamic, and better optimized for traders..",
+    //   mobileDisplayText:
+    //     "In the free market of LPs everyone follows different strategies. Liquidity is more dynamic, and better optimized for traders.",
+    //   animation: animation2,
+    // },
   ];
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -130,10 +133,10 @@ function Tutorial(props: ITutorialProps) {
           {STEPS[currentStep].displayText}
         </div>
 
-        <div className="flex justify-between my-10 mx-5">
+        <div className="flex justify-between items-center -mt-[73px] mb-10 mx-5">
           <button
             onClick={goToPreviousStep}
-            className={clsx("", {
+            className={clsx("mt-[56px]", {
               "opacity-50 cursor-not-allowed": currentStep === 0,
             })}
             disabled={currentStep === 0}
@@ -149,7 +152,7 @@ function Tutorial(props: ITutorialProps) {
           </div>
           <button
             onClick={currentStep === STEPS.length - 1 ? closeModal : goToNextStep}
-            className={clsx("", {
+            className={clsx("mt-[56px]", {
               "opacity-50 cursor-not-allowed": false,
             })}
           >
