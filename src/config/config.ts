@@ -61,6 +61,10 @@ const Config: IConfig = {
     mainnet: "https://api.plenty.network/analytics/",
     testnet: "https://api.plenty.network/analytics/",
   },
+  VE_ANALYTICS_INDEXER: {
+    mainnet: "https://api.plenty.network/ve/",
+    testnet: "https://api.plenty.network/ve/",
+  },
 
   FAUCET: "KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH",
 

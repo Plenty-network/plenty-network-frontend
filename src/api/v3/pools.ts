@@ -15,8 +15,12 @@ export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
     const fetchAnalyticsPoolsData = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}pools`);
     let analyticsPoolsData: any[] = fetchAnalyticsPoolsData.data;
 
+    const fetchVePoolsData = await axios.get(`${Config.VE_ANALYTICS_INDEXER[connectedNetwork]}pools`);
+    let vePoolsData: any[] = fetchVePoolsData.data;
+
     analyticsPoolsData.map<any>((datum) => {
       let poolPairs: any[] = Object.values(AMMS).filter((e: any) => e.address === datum.pool);
+      let vePoolPairs: any[] = Object.values(vePoolsData).filter((e: any) => e.pool === datum.pool);
 
       if(poolPairs[0]){
           allData.push({
@@ -24,9 +28,21 @@ export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
             tokenB: poolPairs[0].tokenY.symbol,
             feeTier: poolPairs[0].feeBps/100,
             apr: Number(datum.tvl.value) === 0 ? 0 : ((datum.fees.value7D*52)/datum.tvl.value)*100,
-            volume: BigNumber(datum.volume.value24H),
-            tvl: BigNumber(datum.tvl.value),
-            fees: BigNumber(datum.fees.value24H),
+            volume: {
+              value: BigNumber(vePoolPairs[0].volume24H.value),
+              token1: BigNumber(vePoolPairs[0].volume24H.token1),
+              token2: BigNumber(vePoolPairs[0].volume24H.token2),
+            },
+            tvl: {
+              value: BigNumber(vePoolPairs[0].tvl.value),
+              token1: BigNumber(vePoolPairs[0].tvl.token1),
+              token2: BigNumber(vePoolPairs[0].tvl.token2),
+            },
+            fees: {
+              value: BigNumber(vePoolPairs[0].fees24H.value),
+              token1: BigNumber(vePoolPairs[0].fees24H.token1),
+              token2: BigNumber(vePoolPairs[0].fees24H.token2),
+            }
           })
         }
     });
@@ -36,6 +52,8 @@ export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
       allData: allData,
     };
   } catch (error: any) {
+    console.log('vedata', error);
+
     console.log(error);
     return {
       success: false,
@@ -61,6 +79,9 @@ export const getMyPoolsDataV3 = async (
 
     const fetchAnalyticsPoolsData = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}pools`);
     let analyticsPoolsData: any[] = fetchAnalyticsPoolsData.data;
+
+    const fetchVePoolsData = await axios.get(`${Config.VE_ANALYTICS_INDEXER[connectedNetwork]}pools`);
+    let vePoolsData: any[] = fetchVePoolsData.data;
 
     const allData: any[] = [];
     const finalData: any[] = [];
@@ -106,18 +127,33 @@ export const getMyPoolsDataV3 = async (
 
     analyticsPoolsData.map<any>((datum) => {
         let poolPairs: any[] = Object.values(uniqueAllData).filter((e: any) => e.address === datum.pool);
+        let vePoolPairs: any[] = Object.values(vePoolsData).filter((e: any) => e.pool === datum.pool);
+
         if(poolPairs[0]){
             finalData.push({
               tokenA: poolPairs[0].tokenA,
               tokenB: poolPairs[0].tokenB,
               feeTier: poolPairs[0].feeTier,
               apr: Number(datum.tvl.value) === 0 ? 0 : ((datum.fees.value7D*52)/datum.tvl.value)*100,
-              volume: BigNumber(datum.volume.value24H),
-              tvl: BigNumber(datum.tvl.value),
-              fees: BigNumber(datum.fees.value24H),
+              volume: {
+                value: BigNumber(vePoolPairs[0].volume24H.value),
+                token1: BigNumber(vePoolPairs[0].volume24H.token1),
+                token2: BigNumber(vePoolPairs[0].volume24H.token2),
+              },
+              tvl: {
+                value: BigNumber(vePoolPairs[0].tvl.value),
+                token1: BigNumber(vePoolPairs[0].tvl.token1),
+                token2: BigNumber(vePoolPairs[0].tvl.token2),
+              },
+              fees: {
+                value: BigNumber(vePoolPairs[0].fees24H.value),
+                token1: BigNumber(vePoolPairs[0].fees24H.token1),
+                token2: BigNumber(vePoolPairs[0].fees24H.token2),
+              }
             })
         }
     });
+    console.log('vedata', finalData)
 
     return {
       success: true,
