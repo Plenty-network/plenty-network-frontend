@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { chains, wagmiClient } from "../src/config/rainbowWalletConfig";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
@@ -15,6 +15,8 @@ import { WagmiConfig } from "wagmi";
 import { customTheme } from "../src/config/rainbowWalletTheme";
 import { useRouter } from "next/router";
 import { MetaAirdrop } from "../src/components/Meta/MetaAirdrop";
+import { firebase } from "../src/config/firebaseConfig";
+import { getAnalytics, logEvent, Analytics, setCurrentScreen } from "firebase/analytics";
 
 let persistor = persistStore(store);
 
@@ -22,10 +24,30 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(new QueryClient());
   const router = useRouter();
 
+  useEffect(() => {
+    const analytics = getAnalytics(firebase);
+    console.log(analytics, firebase);
+    if (process.env.NODE_ENV === "development") {
+      const logEvents = (url: string) => {
+        console.log(url, "url", analytics);
+        logEvent(analytics, "screen_view");
+        logEvent(analytics, "page_view", { page_path: url, page_title: url });
+        //setCurrentScreen(analytics, url);
+        //analytics.logEvent("share");
+      };
+
+      router.events.on("routeChangeComplete", logEvents);
+      logEvents(window.location.pathname);
+
+      return () => {
+        router.events.off("routeChangeComplete", logEvents);
+      };
+    }
+  }, []);
   return (
     <>
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-671PKE2RZR"
+      {/* <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-820H15VVZM"
         strategy="afterInteractive"
       />
       <Script id="google-analytics" strategy="afterInteractive">
@@ -34,9 +56,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           function gtag(){window.dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', 'G-671PKE2RZR');
+          gtag('config', 'G-820H15VVZM');
         `}
-      </Script>
+      </Script> */}
       {router.pathname.includes("airdrop") ? <MetaAirdrop /> : <Meta />}
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>

@@ -26,6 +26,7 @@ import ExpertModePopup from "../ExpertMode";
 import ConfirmSwap from "./ConfirmSwap";
 import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
+import { getAnalytics, logEvent, Analytics, setCurrentScreen } from "firebase/analytics";
 import {
   FIRST_TOKEN_AMOUNT,
   SECOND_TOKEN_AMOUNT,
@@ -49,6 +50,7 @@ import { Chain } from "../../config/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { tzktExplorer } from "../../common/walletconnect";
 import { routerSwap } from "../../operations/3route";
+import { analytics } from "../../config/firebaseConfig";
 
 interface ISwapTabProps {
   className?: string;
@@ -179,6 +181,7 @@ function SwapTab(props: ISwapTabProps) {
   };
   const [isConvert, setConvert] = useState(false);
   const handleSwap = () => {
+    logEvent(analytics, "swap_cta_clicked", { id: props.walletAddress });
     !expertMode && props.setShowConfirmSwap(true);
     expertMode && handleConfirmSwap();
   };
