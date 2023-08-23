@@ -1039,7 +1039,7 @@
   }
 }
 .loading-container {
-	width: 130px;
+	width: 145px;
 	height: 6px;
 	background-color: #2A1945;
 	overflow: hidden;
@@ -1061,29 +1061,11 @@
 		width: 100%;
 	}
 } 
- /* .loading-container:nth-child(1) .loading-bar {
-	animation: fill 6s linear forwards 0s;
-}
 
-.loading-container:nth-child(2) .loading-bar {
-	animation: fill 6s linear forwards 6s;
-}
-
-.loading-container:nth-child(3) .loading-bar {
-	animation: fill 6s linear forwards 12s;
-}
-
-.loading-container:nth-child(4) .loading-bar {
-	animation: fill 6s linear forwards 18s;
-}
-
-.loading-container:nth-child(5) .loading-bar {
-	animation: fill 6s linear forwards 24s;
-}  */
 
 	
 .loading-bar.active {
-  animation: fill 6s linear forwards;
+  animation: fill 20s linear forwards;
 }
 
 

@@ -27,9 +27,9 @@ function Tutorial(props: ITutorialProps) {
   }[] = [
     {
       displayText:
-        "In classic pools, liquidity was distributed in the full range of possible prices. With supercharged pools, we can now concentrate liquidity around the current spot price, massively increasing capital efficienc",
+        "In classic pools, liquidity was distributed in the full range of possible prices. With supercharged pools, we can now concentrate liquidity around the current spot price, massively increasing capital efficiency.",
       mobileDisplayText:
-        "In classic pools, liquidity was distributed in the full range of possible prices. With supercharged pools, we can now concentrate liquidity around the current spot price, massively increasing capital efficienc",
+        "In classic pools, liquidity was distributed in the full range of possible prices. With supercharged pools, we can now concentrate liquidity around the current spot price, massively increasing capital efficiency.",
       animation: animation1,
     },
     {
@@ -82,7 +82,6 @@ function Tutorial(props: ITutorialProps) {
   // Function to navigate to the next step
   const goToNextStep = () => {
     if (currentStep < STEPS.length - 1) {
-      console.log("inc", currentStep, STEPS.length - 1);
       setCurrentStep(currentStep + 1);
     }
   };
@@ -97,12 +96,28 @@ function Tutorial(props: ITutorialProps) {
           return prevStep;
         }
       });
-    }, 6000);
+    }, 20000);
 
     return () => {
       clearInterval(interval);
     };
   }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStep((prevStep) => {
+        if (prevStep < STEPS.length - 1) {
+          return prevStep + 1;
+        } else {
+          clearInterval(interval);
+          return prevStep;
+        }
+      });
+    }, 20000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [currentStep]);
 
   return props.show ? (
     <PopUpModal
@@ -113,10 +128,10 @@ function Tutorial(props: ITutorialProps) {
     >
       <>
         <div className="flex justify-center font-title3 md:font-title1">
-          What is Supercharged Liquidity?
+          What is concentarted Liquidity?
         </div>
 
-        <div className="flex gap-4 mx-2 md:mx-0 mt-[50px] justify-center">
+        <div className="flex gap-5 mx-2 md:mx-8 mt-[50px] justify-center">
           {STEPS.map((step, index) => (
             <div className="loading-container" key={index}>
               <div
@@ -130,7 +145,7 @@ function Tutorial(props: ITutorialProps) {
 
         <div
           className={clsx(
-            "flex justify-center mt-[50px] text-center mx-2 md:mx-8 h-[100px]",
+            "flex justify-center mt-[50px] text-center mx-2 md:mx-11 h-[100px]",
 
             currentStep && "fade-in-3"
           )}
@@ -142,7 +157,7 @@ function Tutorial(props: ITutorialProps) {
           <button
             onClick={goToPreviousStep}
             className={clsx("mt-[56px]", {
-              "opacity-50 cursor-not-allowed": currentStep === 0,
+              "opacity-0": currentStep === 0,
             })}
             disabled={currentStep === 0}
           >
