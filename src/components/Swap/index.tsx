@@ -21,6 +21,8 @@ import { estimateSwapOutput } from "../../api/swap/3route";
 
 import { ISwapDataResponse } from "../../api/swap/types";
 import { calculateTokensOutWrapper } from "../../api/swap/wrappers";
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../../config/firebaseConfig";
 
 interface ISwapProps {
   className?: string;
@@ -407,6 +409,7 @@ function Swap(props: ISwapProps) {
     handleClose();
   };
   const changeTokenLocation = () => {
+    logEvent(analytics, "swap_switch_clicked", { id: walletAddress });
     const inputValue = secondTokenAmount;
     setFirstTokenAmount(inputValue.toString());
 

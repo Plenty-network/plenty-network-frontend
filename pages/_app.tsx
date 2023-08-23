@@ -26,14 +26,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     const analytics = getAnalytics(firebase);
-    console.log(analytics, firebase);
+
     if (true) {
       const logEvents = (url: string) => {
-        console.log(url, "url", analytics);
         logEvent(analytics, "screen_view");
         logEvent(analytics, "page_view", { page_path: url, page_title: url });
-        //setCurrentScreen(analytics, url);
-        //analytics.logEvent("share");
       };
 
       router.events.on("routeChangeComplete", logEvents);

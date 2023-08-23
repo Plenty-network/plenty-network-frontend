@@ -12,6 +12,8 @@ import { AppDispatch, store, useAppSelector } from "../../redux";
 import { setisMyportfolio, setSelectedDropDown } from "../../redux/veNFT";
 import PieChartButton from "../LocksPosition/PieChart";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../../config/firebaseConfig";
 
 export interface IDropdownProps {
   Options: IVeNFTData[];
@@ -64,7 +66,12 @@ export function VeNFT(props: IDropdownProps) {
         )}
         {...(props.Options.length === 0
           ? {}
-          : { onClick: () => setIsDropDownActive(!isDropDownActive) })}
+          : {
+              onClick: () => {
+                setIsDropDownActive(!isDropDownActive);
+                logEvent(analytics, "vote_select_your_veNft_dropdown_opened");
+              },
+            })}
       >
         <p
           className={clsx(

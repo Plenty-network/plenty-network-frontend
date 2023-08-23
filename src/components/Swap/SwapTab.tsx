@@ -181,7 +181,7 @@ function SwapTab(props: ISwapTabProps) {
   };
   const [isConvert, setConvert] = useState(false);
   const handleSwap = () => {
-    logEvent(analytics, "swap_cta_clicked", { id: props.walletAddress });
+    logEvent(analytics, "swap_main_cta_clicked", { id: props.walletAddress });
     !expertMode && props.setShowConfirmSwap(true);
     expertMode && handleConfirmSwap();
   };
@@ -190,6 +190,7 @@ function SwapTab(props: ISwapTabProps) {
     setConvert(!isConvert);
   };
   const handleConfirmSwap = () => {
+    logEvent(analytics, "swap_confirm_swap_clicked", { id: props.walletAddress });
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));

@@ -43,6 +43,8 @@ import { tzktExplorer } from "../../src/common/walletconnect";
 import { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../../src/config/firebaseConfig";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -88,6 +90,7 @@ export default function Vote() {
   const initialLpPriceCall = useRef<boolean>(true);
   const initialRewardsAprCall = useRef<boolean>(true);
   const handleCreateLock = () => {
+    logEvent(analytics, "vote_create_lock");
     setShowCreateLockModal(true);
   };
 
@@ -414,6 +417,7 @@ export default function Vote() {
   };
 
   const handleLockOperation = () => {
+    logEvent(analytics, "vote_create_lock_proceed");
     setContentTransaction(`Locking PLY`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
@@ -500,6 +504,7 @@ export default function Vote() {
     });
   };
   const handleVoteOperation = () => {
+    logEvent(analytics, "vote_cast_vote");
     setContentTransaction(`Casting vote`);
     setShowCastVoteModal(false);
     setShowConfirmTransaction(true);

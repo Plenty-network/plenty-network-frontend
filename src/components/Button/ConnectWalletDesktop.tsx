@@ -21,6 +21,8 @@ import Link from "next/link";
 import close from "../../assets/icon/common/close-icon.svg";
 
 import { BUY_CRYPTO } from "../../constants/localStorage";
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../../config/firebaseConfig";
 
 export interface IConnectWalletBtnDeskTopProps {
   setShowFiat: React.Dispatch<React.SetStateAction<boolean>>;
@@ -36,9 +38,11 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const dispatch = useAppDispatch();
   const reff = React.useRef(null);
   const connectTempleWallet = () => {
+    logEvent(analytics, "connect_Wallet");
     return dispatch(walletConnection());
   };
   const copyAddress = () => {
+    logEvent(analytics, "copy_address", { address: userAddress });
     copy(userAddress);
     props.setShowToast(true);
     setTimeout(() => {
@@ -54,6 +58,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const switchWalletFunction = async () => {
     setShowMenu(false);
     if (userAddress) {
+      logEvent(analytics, "switch_address", { address: userAddress });
       return dispatch(switchWallet());
     }
   };
@@ -63,6 +68,7 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   });
 
   const handleFiat = () => {
+    logEvent(analytics, "buy_tez");
     setShowMenu(false);
     props.setShowFiat(true);
   };
@@ -163,7 +169,10 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
 
               <p
                 className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
-                onClick={() => props.setNodeSelector(true)}
+                onClick={() => {
+                  logEvent(analytics, "node_Selector");
+                  props.setNodeSelector(true);
+                }}
               >
                 <Image alt={"alt"} src={nodeSelectorLogo} />
                 <span>Node Selector</span>
