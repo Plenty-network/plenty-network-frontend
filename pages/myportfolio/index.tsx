@@ -581,7 +581,9 @@ function MyPortfolio(props: any) {
               : "text-text-250 bg-muted-700 rounded-l-lg"
           )}
           onClick={() => {
-            logEvent(analytics, "myportfolio_positions_clicked");
+            if (process.env.NODE_ENV === "production") {
+              logEvent(analytics, "myportfolio_positions_clicked");
+            }
             setActiveSection(MyPortfolioSection.Positions);
             dispatch(setMyPortfolioSection(MyPortfolioSection.Positions));
           }}
@@ -601,7 +603,9 @@ function MyPortfolio(props: any) {
               : "text-text-250 bg-muted-700 rounded-r-lg"
           )}
           onClick={() => {
-            logEvent(analytics, "myportfolio_rewards_clicked");
+            if (process.env.NODE_ENV === "production") {
+              logEvent(analytics, "myportfolio_rewards_clicked");
+            }
             setActiveSection(MyPortfolioSection.Rewards);
             dispatch(setMyPortfolioSection(MyPortfolioSection.Rewards));
           }}
@@ -650,7 +654,9 @@ function MyPortfolio(props: any) {
   }, []);
 
   const handleWithdrawOperation = () => {
-    logEvent(analytics, "myportfolio_positions_withdraw");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_positions_withdraw");
+    }
     setContentTransaction(`Withdraw ${nFormatter(manageData.baseValue)} PLY`);
     setClaimState(-1 as EClaimAllState);
     setShowWithdraw(false);
@@ -730,7 +736,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleWithdrawClaimOperation = () => {
-    logEvent(analytics, "myportfolio_positions_withdraw_claim");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_positions_withdraw_claim");
+    }
     setContentTransaction(`Claim and withdraw ${nFormatter(manageData.baseValue)} PLY`);
     setShowWithdraw(false);
     setShowConfirmTransaction(true);
@@ -821,7 +829,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleLockOperation = () => {
-    logEvent(analytics, "myportfolio_positions_locks_manageLockCTA");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_positions_locks_manageLockCTA");
+    }
     setContentTransaction(`Locking PLY`);
     setShowCreateLockModal(false);
     setClaimState(-1 as EClaimAllState);
@@ -907,7 +917,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleIncreaseVoteOperation = () => {
-    logEvent(analytics, "myportfolio_positions_locks_increaselock");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_positions_locks_increaselock");
+    }
     setIsManageLock(false);
     setContentTransaction(`Locking ${plyInput} PLY`);
     setShowCreateLockModal(false);
@@ -983,7 +995,9 @@ function MyPortfolio(props: any) {
     });
   };
   const IncreaseLockEndOperation = () => {
-    logEvent(analytics, "myportfolio_positions_locks_increaselock");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_positions_locks_increaselock");
+    }
     setIsManageLock(false);
     setClaimState(-1 as EClaimAllState);
     setContentTransaction(`Increase lock`);
@@ -1060,7 +1074,9 @@ function MyPortfolio(props: any) {
     });
   };
   const IncreaseLockValueOperation = () => {
-    logEvent(analytics, "myportfolio_positions_locks_increaselock");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_positions_locks_increaselock");
+    }
     setIsManageLock(false);
     setClaimState(-1 as EClaimAllState);
     setContentTransaction(`Increase lock`);
@@ -1136,7 +1152,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimAllPly = () => {
-    logEvent(analytics, "myportfolio_rewards_claim_plyemission");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_rewards_claim_plyemission");
+    }
     setShowClaimPly(false);
     setContentTransaction(`Claim ${nFormatter(poolsRewards.data.gaugeEmissionsTotal)} PLY`);
     setShowConfirmTransaction(true);
@@ -1212,7 +1230,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimBribes = () => {
-    logEvent(analytics, "myportfolio_rewards_claim_bribes");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_rewards_claim_bribes");
+    }
     setContentTransaction(` Claim bribes $${nFormatter(bribesStats)}`);
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
@@ -1288,7 +1308,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimFees = () => {
-    logEvent(analytics, "myportfolio_rewards_claim_tradingfee");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_rewards_claim_tradingfee");
+    }
     setContentTransaction(`Claim trading fees $${nFormatter(tradingfeeStats)}`);
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
@@ -1441,7 +1463,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimALLEpoch = () => {
-    logEvent(analytics, "myportfolio_rewards_locks_claimall");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_rewards_locks_claimall");
+    }
     setContentTransaction(`Claim lock rewards for Epoch ${epochClaim}`);
     setClaimState(EClaimAllState.EPOCH);
     setShowClaimPly(false);
@@ -1526,7 +1550,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimALLUnClaimed = () => {
-    logEvent(analytics, "myportfolio_rewards_claim_unclaimedInflation");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_rewards_claim_unclaimedInflation");
+    }
     setContentTransaction(
       `Claim inflation ${nFormatter(unclaimInflation.unclaimedInflationAmount)} PLY`
     );
@@ -1611,7 +1637,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimALLSuperNova = () => {
-    logEvent(analytics, "myportfolio_rewards_claimmax");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_rewards_claimmax");
+    }
     setContentTransaction(`Claim all emissions, inflation, fees and bribes
     `);
     setShowClaimPly(false);
@@ -1742,7 +1770,9 @@ function MyPortfolio(props: any) {
                         poolsRewards.data?.gaugeAddresses === undefined
                           ? () => {}
                           : () => {
-                              logEvent(analytics, "myportfolio_rewards_claimmax");
+                              if (process.env.NODE_ENV === "production") {
+                                logEvent(analytics, "myportfolio_rewards_claimmax");
+                              }
                               setClaimValueDollar(
                                 poolsRewards.data?.gaugeEmissionsTotalValue
                                   .plus(bribesStats)

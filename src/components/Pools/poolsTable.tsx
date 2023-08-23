@@ -507,9 +507,11 @@ export function ShortCard(props: IShortCardProps) {
         <div
           className="bg-primary-500/10 font-caption2 md:font-subtitle4  hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-5 md:px-7 py-2 rounded-lg"
           onClick={() => {
-            logEvent(analytics, "pools_manage_clicked", {
-              pool: `${props.tokenA}/${props.tokenB}`,
-            });
+            if (process.env.NODE_ENV === "production") {
+              logEvent(analytics, "pools_manage_clicked", {
+                pool: `${props.tokenA}/${props.tokenB}`,
+              });
+            }
             userAddress && dispatch(getTotalVotingPower());
             props.setIsGaugeAvailable(props.isGauge);
             if (props.isGauge) {

@@ -69,7 +69,9 @@ export function VeNFT(props: IDropdownProps) {
           : {
               onClick: () => {
                 setIsDropDownActive(!isDropDownActive);
-                logEvent(analytics, "vote_select_your_veNft_dropdown_opened");
+                if (process.env.NODE_ENV === "production") {
+                  logEvent(analytics, "vote_select_your_veNft_dropdown_opened");
+                }
               },
             })}
       >

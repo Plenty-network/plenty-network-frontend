@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 
-import { getAnalytics, logEvent, Analytics, setCurrentScreen } from "firebase/analytics";
 import Swap from "../../src/components/Swap";
 import { useInterval } from "../../src/hooks/useInterval";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";

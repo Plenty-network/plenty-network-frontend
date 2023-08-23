@@ -125,7 +125,9 @@ export default function Pools(props: IIndexProps) {
   const [isbanner, setisBanner] = React.useState(false);
   const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
   const handleNewPool = () => {
-    logEvent(analytics, "pools_new_pools");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "pools_new_pools");
+    }
     setShowNewPoolPopup(true);
   };
   const [reFetchPool, setReFetchPool] = React.useState(false);

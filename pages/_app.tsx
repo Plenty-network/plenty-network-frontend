@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const analytics = getAnalytics(firebase);
 
-    if (true) {
+    if (process.env.NODE_ENV === "production") {
       const logEvents = (url: string) => {
         logEvent(analytics, "screen_view");
         logEvent(analytics, "page_view", { page_path: url, page_title: url });

@@ -409,7 +409,9 @@ function Swap(props: ISwapProps) {
     handleClose();
   };
   const changeTokenLocation = () => {
-    logEvent(analytics, "swap_switch_clicked", { id: walletAddress });
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "swap_switch_clicked", { id: walletAddress });
+    }
     const inputValue = secondTokenAmount;
     setFirstTokenAmount(inputValue.toString());
 

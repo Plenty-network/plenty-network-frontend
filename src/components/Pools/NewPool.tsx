@@ -225,7 +225,9 @@ export function NewPool(props: IManageLiquidityProps) {
   };
 
   const handleAddNewPoolOperation = () => {
-    logEvent(analytics, "pools_createpool_clicked");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "pools_createpool_clicked");
+    }
     setShowConfirmPool(false);
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(tokenOut.name));

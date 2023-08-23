@@ -90,7 +90,9 @@ export default function Vote() {
   const initialLpPriceCall = useRef<boolean>(true);
   const initialRewardsAprCall = useRef<boolean>(true);
   const handleCreateLock = () => {
-    logEvent(analytics, "vote_create_lock");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "vote_create_lock");
+    }
     setShowCreateLockModal(true);
   };
 
@@ -417,7 +419,9 @@ export default function Vote() {
   };
 
   const handleLockOperation = () => {
-    logEvent(analytics, "vote_create_lock_proceed");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "vote_create_lock_proceed");
+    }
     setContentTransaction(`Locking PLY`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
@@ -504,7 +508,9 @@ export default function Vote() {
     });
   };
   const handleVoteOperation = () => {
-    logEvent(analytics, "vote_cast_vote");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "vote_cast_vote");
+    }
     setContentTransaction(`Casting vote`);
     setShowCastVoteModal(false);
     setShowConfirmTransaction(true);

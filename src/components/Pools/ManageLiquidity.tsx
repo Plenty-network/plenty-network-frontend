@@ -352,7 +352,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   };
 
   const handleAddLiquidityOperation = () => {
-    logEvent(analytics, "pools_add_liquiidty");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "pools_add_liquiidty");
+    }
     setContentTransaction(
       `Mint ${nFormatterWithLesserNumber(
         new BigNumber(firstTokenAmountLiq)
@@ -453,7 +455,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   };
 
   const handleDetach = () => {
-    logEvent(analytics, "pools_detach_lock");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "pools_detach_lock");
+    }
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.symbol));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.symbol));
     if (boost?.stakedData.boostedLockId) {
@@ -521,7 +525,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     });
   };
   const handleStakeOperation = () => {
-    logEvent(analytics, "pools_stacking");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "pools_stacking");
+    }
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
     localStorage.setItem(
@@ -628,7 +634,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     });
   };
   const handleUnStakeOperation = () => {
-    logEvent(analytics, "pools_unstacking");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "pools_unstacking");
+    }
     setContentTransaction(
       `Unstake ${nFormatterWithLesserNumber(new BigNumber(unStakeInput)).toString()} PNLP`
     );
@@ -716,7 +724,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     });
   };
   const handleRewardsOperation = () => {
-    logEvent(analytics, "pools_rewards");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "pools_rewards");
+    }
     setContentTransaction(`Harvest `);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     localStorage.setItem(
@@ -790,7 +800,9 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
     });
   };
   const handleRemoveLiquidityOperation = () => {
-    logEvent(analytics, "pools_remove_liquidity");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "pools_remove_liquidity");
+    }
     setContentTransaction(
       `Burn ${nFormatterWithLesserNumber(new BigNumber(burnAmount)).toString()} PNLP`
     );

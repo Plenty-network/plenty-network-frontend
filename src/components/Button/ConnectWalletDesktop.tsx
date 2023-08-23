@@ -38,12 +38,16 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const dispatch = useAppDispatch();
   const reff = React.useRef(null);
   const connectTempleWallet = () => {
-    logEvent(analytics, "connect_Wallet");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "connect_Wallet");
+    }
     return dispatch(walletConnection());
   };
   const copyAddress = () => {
-    logEvent(analytics, "copy_address", { address: userAddress });
-    copy(userAddress);
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "copy_address", { address: userAddress });
+      copy(userAddress);
+    }
     props.setShowToast(true);
     setTimeout(() => {
       props.setShowToast(false);
@@ -58,7 +62,9 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const switchWalletFunction = async () => {
     setShowMenu(false);
     if (userAddress) {
-      logEvent(analytics, "switch_address", { address: userAddress });
+      if (process.env.NODE_ENV === "production") {
+        logEvent(analytics, "switch_address", { address: userAddress });
+      }
       return dispatch(switchWallet());
     }
   };
@@ -68,7 +74,9 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   });
 
   const handleFiat = () => {
-    logEvent(analytics, "buy_tez");
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "buy_tez");
+    }
     setShowMenu(false);
     props.setShowFiat(true);
   };
@@ -170,7 +178,9 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
               <p
                 className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
                 onClick={() => {
-                  logEvent(analytics, "node_Selector");
+                  if (process.env.NODE_ENV === "production") {
+                    logEvent(analytics, "node_Selector");
+                  }
                   props.setNodeSelector(true);
                 }}
               >
