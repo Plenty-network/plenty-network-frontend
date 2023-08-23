@@ -239,7 +239,14 @@ export function PositionDataTable(props: IShortCardProps) {
                 : "cursor-pointer text-primary-500",
               "w-[120px] flex items-center font-subtitle4  "
             )}
-            onClick={x.feesDollar.isEqualTo(0) ? () => {} : props.handleCollectFeeOperation}
+            onClick={
+              x.feesDollar.isEqualTo(0)
+                ? () => {}
+                : () => {
+                    dispatch(setSelectedPosition(x));
+                    props.handleCollectFeeOperation;
+                  }
+            }
           >
             Collect fees
             <span className=" h-[28px] border-r border-card-700 ml-auto"></span>
