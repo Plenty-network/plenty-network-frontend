@@ -244,7 +244,7 @@ export function PositionDataTable(props: IShortCardProps) {
                 ? () => {}
                 : () => {
                     dispatch(setSelectedPosition(x));
-                    props.handleCollectFeeOperation;
+                    props.handleCollectFeeOperation();
                   }
             }
           >
