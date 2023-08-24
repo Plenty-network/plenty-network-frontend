@@ -97,7 +97,7 @@ function Tutorial(props: ITutorialProps) {
           return prevStep;
         }
       });
-    }, 12000);
+    }, 17000);
 
     return () => {
       clearInterval(interval);
@@ -114,7 +114,7 @@ function Tutorial(props: ITutorialProps) {
             return prevStep;
           }
         });
-      }, 12000);
+      }, 17000);
 
       return () => {
         clearInterval(interval);
