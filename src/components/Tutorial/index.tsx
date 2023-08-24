@@ -115,7 +115,7 @@ function Tutorial(props: ITutorialProps) {
             return prevStep;
           }
         });
-      }, 20000);
+      }, 12000);
 
       return () => {
         clearInterval(interval);
