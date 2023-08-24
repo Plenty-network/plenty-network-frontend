@@ -209,7 +209,9 @@ export const getLPTokenPrices = async (tokenPrice: {
 }): Promise<{ success: boolean; lpPrices: { [id: string]: BigNumber } }> => {
   try {
     const state = store.getState();
-    const AMM = state.config.AMMs;
+    const V2_AMM = state.config.AMMs;
+    const V3_AMM = state.config.V3_AMMs;
+    const AMM = {...V2_AMM, ...V3_AMM};
 
     let lpPrices: { [id: string]: BigNumber } = {};
     for (const key in AMM) {

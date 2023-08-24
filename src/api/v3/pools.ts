@@ -5,11 +5,11 @@ import Config from "../../config/config";
 import { connectedNetwork } from "../../common/walletconnect";
 import { store } from "../../redux";
 import { POOLS_PAGE_LIMIT } from "../../constants/global";
+const state = store.getState();
+const AMMS = state.config.V3_AMMs;
 
 export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
   try {
-    const state = store.getState();
-    const AMMS = state.config.AMMs;
     const allData: any[] = [];
 
     const fetchAnalyticsPoolsData = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}pools`);
@@ -69,9 +69,6 @@ export const getMyPoolsDataV3 = async (
     if (!userTezosAddress || userTezosAddress.length <= 0) {
       throw new Error("Invalid or empty arguments.");
     }
-
-    const state = store.getState();
-    const AMMS = state.config.AMMs;
     const v3PositionsResponse = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}v3-positions?address=${userTezosAddress}`);
     const v3IndexerPositionsData: any[] = v3PositionsResponse.data;
 
@@ -168,8 +165,6 @@ export const getMyPoolsDataV3 = async (
 
 export const getPoolsShareDataV3 = async (): Promise<IAllPoolsDataResponse> => {
   try {
-    const state = store.getState();
-    const AMMS = state.config.AMMs;
     const allData: IDataResponse[] = [];
     const finalData: IDataResponse[] = [];
     let poolShare = 0;

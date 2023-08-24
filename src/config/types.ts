@@ -146,6 +146,7 @@ export interface IContractsConfig {
   // AMM: IAmmContracts;
   TOKEN: IConfigTokens;
   AMM: IConfigPools;
+  V3_AMM: IConfigPools;
 }
 
 export interface IGaugeConfigData {
@@ -232,6 +233,9 @@ export interface IConfigPools {
 }
 
 export interface IConfigData {
-  POOL: string;
+  POOL: {
+    V2: string;
+    V3: string;
+  }
   TOKEN: string;
 }

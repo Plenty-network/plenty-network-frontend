@@ -4,9 +4,8 @@ import BigNumber from "bignumber.js";
 import { Token, BalanceNat, IV3ContractStorageParams } from "./types";
 import { IConfigToken } from "../../config/types";
 import { Tick, Liquidity, PositionManager, Price } from "@plenty-labs/v3-sdk";
-import { getV3PoolAddressWithFeeTier } from "../../api/util/fetchConfig";
+import { getV3PoolAddressWithFeeTier } from "../util/fetchConfig";
 import { connectedNetwork, dappClient } from "../../common/walletconnect";
-import { store } from "../../redux";
 
 const tokenDetail = async (tokenSymbol: String): Promise<Token> => {
   let configResponse: any = await axios.get(Config.CONFIG_LINKS[connectedNetwork].TOKEN);
