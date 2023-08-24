@@ -171,7 +171,6 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         id: "range",
         columnWidth: "w-[158px] ",
 
-        sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
         accessor: (x: any) =>
           !x.isInRange ? (
             <span className="w-fit h-[28px] px-3 flex items-center font-caption2 gap-1 rounded-lg	 text-error-300 bg-error-300/[0.1] ">
@@ -190,7 +189,6 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         id: "collect fee",
         columnWidth: "w-[175px] ",
 
-        sortType: (a: any, b: any) => compareNumericString(a, b, "boostValue"),
         accessor: (x: any) => (
           <div
             className={clsx(
