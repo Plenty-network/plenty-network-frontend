@@ -98,17 +98,17 @@ const Config: IConfig = {
   CONFIG_LINKS: {
     testnet: {
       POOL: {
-        V2: 'https://api.plenty.network/config/pools/v2',
-        V3: 'https://api.plenty.network/config/pools/v3',
+        V2: "https://api.plenty.network/config/pools/v2",
+        V3: "https://api.plenty.network/config/pools/v3",
       },
-      TOKEN: 'https://api.plenty.network/config/tokens',
+      TOKEN: "https://api.plenty.network/config/tokens",
     },
     mainnet: {
       POOL: {
-        V2: 'https://api.plenty.network/config/pools/v2',
-        V3: 'https://api.plenty.network/config/pools/v3',
-      },      
-      TOKEN: 'https://api.plenty.network/config/tokens',
+        V2: "https://api.plenty.network/config/pools/v2",
+        V3: "https://api.plenty.network/config/pools/v3",
+      },
+      TOKEN: "https://api.plenty.network/config/tokens",
     },
   },
 
