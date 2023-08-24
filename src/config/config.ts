@@ -55,7 +55,7 @@ const Config: IConfig = {
 
   VE_INDEXER: {
     mainnet: "api.plenty.network/ply/",
-    testnet: "api.plenty.network/ply/",
+    testnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
   },
   ANALYTICS_INDEXER: {
     mainnet: "https://api.plenty.network/analytics/",
