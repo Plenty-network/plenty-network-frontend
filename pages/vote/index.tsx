@@ -420,7 +420,7 @@ export default function Vote() {
 
   const handleLockOperation = () => {
     if (process.env.NODE_ENV === "production") {
-      logEvent(analytics, "vote_create_lock_proceed");
+      logEvent(analytics, "vote_create_lock_confirm");
     }
     setContentTransaction(`Locking PLY`);
     setShowCreateLockModal(false);

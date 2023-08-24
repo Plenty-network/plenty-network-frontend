@@ -69,9 +69,6 @@ export function VeNFT(props: IDropdownProps) {
           : {
               onClick: () => {
                 setIsDropDownActive(!isDropDownActive);
-                if (process.env.NODE_ENV === "production") {
-                  logEvent(analytics, "vote_select_your_veNft_dropdown_opened");
-                }
               },
             })}
       >
@@ -193,6 +190,9 @@ export function VeNFT(props: IDropdownProps) {
           onClick={
             props.veNFT
               ? () => {
+                  if (process.env.NODE_ENV === "production") {
+                    logEvent(analytics, "vote_veNft_selected_dropdown", { id: props.tokenId });
+                  }
                   dispatch(
                     setSelectedDropDown({
                       votingPower:
