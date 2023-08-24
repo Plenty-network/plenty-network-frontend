@@ -69,10 +69,11 @@ function Tutorial(props: ITutorialProps) {
     localStorage.setItem(FIRST_TIME_TUTORIAL, "true");
     props.setShow(false);
   };
-
+  const [prevClicked, setPrevClicked] = useState(false);
   // Function to navigate to the previous step
   const goToPreviousStep = () => {
     if (currentStep > 0) {
+      setPrevClicked(true);
       document.querySelectorAll(".loading-bar").forEach((bar) => bar.classList.remove("active"));
 
       setCurrentStep(currentStep - 1);
@@ -82,6 +83,7 @@ function Tutorial(props: ITutorialProps) {
   // Function to navigate to the next step
   const goToNextStep = () => {
     if (currentStep < STEPS.length - 1) {
+      setPrevClicked(true);
       setCurrentStep(currentStep + 1);
     }
   };
@@ -103,21 +105,23 @@ function Tutorial(props: ITutorialProps) {
     };
   }, []);
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentStep((prevStep) => {
-        if (prevStep < STEPS.length - 1) {
-          return prevStep + 1;
-        } else {
-          clearInterval(interval);
-          return prevStep;
-        }
-      });
-    }, 20000);
+    if (prevClicked) {
+      const interval = setInterval(() => {
+        setCurrentStep((prevStep) => {
+          if (prevStep < STEPS.length - 1) {
+            return prevStep + 1;
+          } else {
+            clearInterval(interval);
+            return prevStep;
+          }
+        });
+      }, 20000);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [currentStep]);
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [prevClicked]);
 
   return props.show ? (
     <PopUpModal
@@ -153,7 +157,7 @@ function Tutorial(props: ITutorialProps) {
           {STEPS[currentStep].displayText}
         </div>
 
-        <div className="flex justify-between items-center mt-3 md:-mt-[73px] mb-10 mx-2 md:mx-5">
+        <div className="flex justify-between items-center mt-3 md:-mt-[73px] mb-10 mx-2 md:mx-10">
           <button
             onClick={goToPreviousStep}
             className={clsx("mt-[56px]", {
