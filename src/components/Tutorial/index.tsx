@@ -3,8 +3,8 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 //import animation2 from "../../assets/animations/step1bg.json";
 import animation from "../../assets/animations/step1.json";
-import animation1 from "../../assets/animations/Flow_1.json";
-import animation2 from "../../assets/animations/Flow_2.json";
+import animation2 from "../../assets/animations/Flow_1.json";
+import animation1 from "../../assets/animations/Flow_2.json";
 import animation3 from "../../assets/animations/Flow_3.json";
 
 import animation4 from "../../assets/animations/Flow_4.json";
