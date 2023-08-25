@@ -509,7 +509,7 @@ export default function Vote() {
   };
   const handleVoteOperation = () => {
     if (process.env.NODE_ENV === "production") {
-      logEvent(analytics, "vote_cast_vote");
+      logEvent(analytics, "vote_cast_vote_confirm");
     }
     setContentTransaction(`Casting vote`);
     setShowCastVoteModal(false);

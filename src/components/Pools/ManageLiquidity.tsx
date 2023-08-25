@@ -353,7 +353,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
 
   const handleAddLiquidityOperation = () => {
     if (process.env.NODE_ENV === "production") {
-      logEvent(analytics, "pools_add_liquiidty");
+      logEvent(analytics, "pools_add_liquiidty_confirm");
     }
     setContentTransaction(
       `Mint ${nFormatterWithLesserNumber(
@@ -456,7 +456,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
 
   const handleDetach = () => {
     if (process.env.NODE_ENV === "production") {
-      logEvent(analytics, "pools_detach_lock");
+      logEvent(analytics, "pools_detach_lock_confirm");
     }
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.symbol));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.symbol));
@@ -526,7 +526,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   };
   const handleStakeOperation = () => {
     if (process.env.NODE_ENV === "production") {
-      logEvent(analytics, "pools_stacking");
+      logEvent(analytics, "pools_stacking_confirm");
     }
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
@@ -635,7 +635,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   };
   const handleUnStakeOperation = () => {
     if (process.env.NODE_ENV === "production") {
-      logEvent(analytics, "pools_unstacking");
+      logEvent(analytics, "pools_unstacking_confirm");
     }
     setContentTransaction(
       `Unstake ${nFormatterWithLesserNumber(new BigNumber(unStakeInput)).toString()} PNLP`
@@ -725,7 +725,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   };
   const handleRewardsOperation = () => {
     if (process.env.NODE_ENV === "production") {
-      logEvent(analytics, "pools_rewards");
+      logEvent(analytics, "pools_rewards_confirm");
     }
     setContentTransaction(`Harvest `);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
@@ -801,7 +801,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   };
   const handleRemoveLiquidityOperation = () => {
     if (process.env.NODE_ENV === "production") {
-      logEvent(analytics, "pools_remove_liquidity");
+      logEvent(analytics, "pools_remove_liquidity_confirm");
     }
     setContentTransaction(
       `Burn ${nFormatterWithLesserNumber(new BigNumber(burnAmount)).toString()} PNLP`
