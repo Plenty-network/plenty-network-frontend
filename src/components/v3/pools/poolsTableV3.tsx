@@ -72,7 +72,7 @@ export function PoolsTableV3(props: IShortCardProps) {
   const { valueFormat } = useTableNumberUtils();
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
 
-  const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilterV3(
+  const { data: poolTableData = [], isFetched: isFetch } = usePoolsTableFilterV3(
     tokenPrices,
     props.poolsFilter,
 

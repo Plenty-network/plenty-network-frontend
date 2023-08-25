@@ -96,5 +96,8 @@ export const useMyPoolsTableFilterv3 = (
 ) => {
   const { data: poolTableData = [], isFetched } = useMyPoolsDatav3(userAddress, 0);
 
+  if (poolTableData.length) {
+    return { data: poolTableData, isFetched: isFetched };
+  }
   return { data: poolTableData, isFetched: isFetched };
 };
