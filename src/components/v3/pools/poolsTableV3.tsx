@@ -206,7 +206,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "volume.value"),
         accessor: (x: any) => (
           <PoolsTextWithTooltip
             text={x.volume.value}
@@ -224,7 +224,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         tooltipMessage: "Total value locked up in the pool.",
         isToolTipEnabled: true,
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl.value"),
         accessor: (x) => (
           <PoolsTextWithTooltip
             text={x.tvl.value}
@@ -243,7 +243,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         tooltipMessage: "Trading fees collected by the pool in the current epoch.",
         isToolTipEnabled: true,
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "fees.value"),
         accessor: (x) => (
           <PoolsTextWithTooltip
             text={x.fees.value}
@@ -354,7 +354,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "volume.value"),
         accessor: (x: any) => (
           <PoolsTextWithTooltip
             text={x.volume.value}
@@ -372,7 +372,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         tooltipMessage: "Total value locked up in the pool.",
         isToolTipEnabled: true,
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl.value"),
         accessor: (x) => (
           <PoolsTextWithTooltip
             text={x.tvl.value}
@@ -391,7 +391,7 @@ export function PoolsTableV3(props: IShortCardProps) {
         tooltipMessage: "Trading fees collected by the pool in the current epoch.",
         isToolTipEnabled: true,
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "fees.value"),
         accessor: (x) => (
           <PoolsTextWithTooltip
             text={x.fees.value}

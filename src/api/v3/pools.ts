@@ -27,7 +27,7 @@ export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
             tokenA: poolPairs[0].tokenX.symbol,
             tokenB: poolPairs[0].tokenY.symbol,
             feeTier: poolPairs[0].feeBps/100,
-            apr: Number(datum.tvl.value) === 0 ? 0 : ((datum.fees.value7D*52)/datum.tvl.value)*100,
+            apr: Number(vePoolPairs[0].tvl.value) === 0 ? 0 : ((vePoolPairs[0].fees7D.value*52)/vePoolPairs[0].tvl.value)*100,
             volume: {
               value: BigNumber(vePoolPairs[0].volume24H.value),
               token1: BigNumber(vePoolPairs[0].volume24H.token1),
@@ -39,9 +39,9 @@ export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
               token2: BigNumber(vePoolPairs[0].tvl.token2),
             },
             fees: {
-              value: BigNumber(vePoolPairs[0].fees24H.value),
-              token1: BigNumber(vePoolPairs[0].fees24H.token1),
-              token2: BigNumber(vePoolPairs[0].fees24H.token2),
+              value: BigNumber(vePoolPairs[0].fees7D.value),
+              token1: BigNumber(vePoolPairs[0].fees7D.token1),
+              token2: BigNumber(vePoolPairs[0].fees7D.token2),
             }
           })
         }
