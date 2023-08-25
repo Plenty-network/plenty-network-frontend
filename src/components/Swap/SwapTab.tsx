@@ -26,6 +26,7 @@ import ExpertModePopup from "../ExpertMode";
 import ConfirmSwap from "./ConfirmSwap";
 import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
+import { getAnalytics, logEvent, Analytics, setCurrentScreen } from "firebase/analytics";
 import {
   FIRST_TOKEN_AMOUNT,
   SECOND_TOKEN_AMOUNT,
@@ -49,6 +50,7 @@ import { Chain } from "../../config/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { tzktExplorer } from "../../common/walletconnect";
 import { routerSwap } from "../../operations/3route";
+import { analytics } from "../../config/firebaseConfig";
 
 interface ISwapTabProps {
   className?: string;
@@ -179,6 +181,9 @@ function SwapTab(props: ISwapTabProps) {
   };
   const [isConvert, setConvert] = useState(false);
   const handleSwap = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "swap_main_cta_clicked", { id: props.walletAddress });
+    }
     !expertMode && props.setShowConfirmSwap(true);
     expertMode && handleConfirmSwap();
   };
@@ -187,6 +192,9 @@ function SwapTab(props: ISwapTabProps) {
     setConvert(!isConvert);
   };
   const handleConfirmSwap = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "swap_confirm_swap_clicked", { id: props.walletAddress });
+    }
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));

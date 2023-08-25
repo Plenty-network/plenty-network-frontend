@@ -14,6 +14,8 @@ import {
   setUserSettingsSlippage,
 } from "../../redux/userSettings/userSettings";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
+import { analytics } from "../../config/firebaseConfig";
+import { logEvent } from "firebase/analytics";
 
 interface ITransactionSettingsProps {
   onClick?: () => void | Promise<void>;
@@ -37,10 +39,16 @@ function TransactionSettings(props: ITransactionSettingsProps) {
   const dispatch = useDispatch<AppDispatch>();
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const handleShowRecepient = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "swap_add_recipient", { id: walletAddress });
+    }
     setRecepientlocal(!recepientlocal);
     props.setShowRecepient(!recepientlocal);
   };
   const handleExpertMode = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "swap_expert_mode", { id: walletAddress });
+    }
     props.setExpertMode(!props.expertMode);
     walletAddress !== null &&
       dispatch(
@@ -52,6 +60,9 @@ function TransactionSettings(props: ITransactionSettingsProps) {
     props.setShowExpertPopup(!props.expertMode);
   };
   const handleMultiHop = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "swap_multihop", { id: walletAddress });
+    }
     walletAddress !== null &&
       dispatch(
         setUserSettingsMultihop({
@@ -65,6 +76,9 @@ function TransactionSettings(props: ITransactionSettingsProps) {
     if (input === "" || isNaN(Number(input))) {
       props.setSlippage("");
     } else {
+      if (process.env.NODE_ENV === "production") {
+        logEvent(analytics, "swap_settings_slippage");
+      }
       props.setSlippage(input);
       walletAddress !== null &&
         dispatch(
