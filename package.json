@@ -9,14 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@airgap/beacon-sdk": "^4.0.0",
-    "@plenty-labs/v3-sdk": "^1.0.12",
-    "@rainbow-me/rainbowkit": "^0.8.1",
+    "@airgap/beacon-sdk": "^4.0.6",
+    "@rainbow-me/rainbowkit": "^1.0.9",
     "@reduxjs/toolkit": "^1.8.2",
-    "@taquito/beacon-wallet": "^16.1.2",
-    "@taquito/michel-codec": "^16.1.2",
-    "@taquito/taquito": "^16.1.2",
-    "@taquito/tzip16": "^16.1.2",
+    "@taquito/beacon-wallet": "^17.2.0",
+    "@taquito/michel-codec": "^17.2.0",
+    "@taquito/taquito": "^17.2.0",
+    "@taquito/tzip16": "^17.2.0",
     "@wert-io/widget-initializer": "^2.0.3",
     "animate.css": "^4.1.1",
     "clsx": "^1.1.1",
@@ -24,6 +23,7 @@
     "copy-to-clipboard": "^3.3.2",
     "d3": "^7.8.2",
     "ethers": "^5.7.2",
+    "firebase": "^10.2.0",
     "from-exponential": "^1.1.1",
     "javascript-time-ago": "^2.5.7",
     "jsbi": "^4.3.0",
@@ -47,7 +47,8 @@
     "recharts": "2.1.12",
     "redux-persist": "^6.0.0",
     "truncate-middle": "^1.0.6",
-    "wagmi": "^0.9.5"
+    "viem": "^1.5.0",
+    "wagmi": "^1.3.9"
   },
   "devDependencies": {
     "@types/d3": "^7.4.0",
@@ -63,6 +64,6 @@
     "eslint-config-next": "12.1.6",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.0.24",
-    "typescript": "4.7.2"
+    "typescript": "^5.0.4"
   }
 }

@@ -62,7 +62,7 @@ function PositionsPopup(props: IPositionsProps) {
 
   return (
     <>
-      <div className=" mt-4 rounded-2xl flex flex-col justify-between items-center h-[64px] px-3 sm:px-[25px] pt-[8px] border-text-800  border-2 bg-secondary-400 ">
+      <div className=" mt-4 rounded-2xl flex flex-col justify-between items-center h-[64px] px-3 sm:px-[25px] pt-[8px] border-text-800  border-2 bg-secondary-800 ">
         {
           <>
             <div className="flex w-full justify-between">

@@ -1,6 +1,6 @@
 import { useConnectModal, useChainModal } from "@rainbow-me/rainbowkit";
 import { useCallback, useMemo } from "react";
-import { useAccount, useSigner, useSignMessage } from "wagmi";
+import { useAccount, useWalletClient, useSignMessage } from "wagmi";
 import { submitSignatureData } from "../../api/airdrop";
 import Config from "../../config/config";
 import { AIRDROP_ERROR_MESSAGES, AIRDROP_EVM_CTA_TEXTS } from "../../constants/airdrop";
@@ -29,7 +29,7 @@ const EvmWalletButton = (props: IEvmWalletButton): JSX.Element => {
   const evmCTAState = useAppSelector((state) => state.airdropState.evmCTAState);
   /* Hooks provided by wagami for getting account, connection, network and chain related info */
   const { isConnected: isEvmConnected, address: ethAddress } = useAccount();
-  const { data: ethSigner } = useSigner();
+  const { data: ethSigner } = useWalletClient();
   const { signMessageAsync } = useSignMessage();
   const userTezosAddress = useAppSelector((state) => state.wallet.address);
 
@@ -52,7 +52,7 @@ const EvmWalletButton = (props: IEvmWalletButton): JSX.Element => {
           signatureData.signature
         );
         // Success message as of now as set in api.
-        if(signSubmitResponse === "SUBMITED_TEZOS_ADDRESS") {
+        if (signSubmitResponse === "SUBMITED_TEZOS_ADDRESS") {
           dispatch(setReloadTrigger());
         } else {
           dispatch(

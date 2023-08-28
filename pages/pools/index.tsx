@@ -22,6 +22,8 @@ import { MyPoolTable } from "../../src/components/Pools/MyPoolTable";
 import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
 import { SwitchPools } from "../../src/components/SwitchCheckbox/SwitchPools";
 import { Position, ToolTip } from "../../src/components/Tooltip/TooltipAdvanced";
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../../src/config/firebaseConfig";
 export interface IIndexProps {}
 export enum POOL_TYPE {
   VOLATILE = "VOLATILE",
@@ -122,6 +124,9 @@ export default function Pools(props: IIndexProps) {
   const [isbanner, setisBanner] = React.useState(false);
   const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
   const handleNewPool = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "pools_new_pools");
+    }
     setShowNewPoolPopup(true);
   };
   const [reFetchPool, setReFetchPool] = React.useState(false);

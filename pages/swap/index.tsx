@@ -4,15 +4,18 @@ import { useEffect, useRef } from "react";
 import BigNumber from 'bignumber.js';
 import { useDispatch } from "react-redux";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
+
 import Swap from "../../src/components/Swap";
 import { useInterval } from "../../src/hooks/useInterval";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getEpochData } from "../../src/redux/epoch/epoch";
-import { AppDispatch, store, useAppSelector } from "../../src/redux/index";
+import { AppDispatch, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
-import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
+import { getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet, walletConnection, walletDisconnection } from "../../src/redux/wallet/wallet";
 import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
+import { useRouter } from "next/router";
+import { analytics, firebase } from "../../src/config/firebaseConfig";
 
 const Home: NextPage = () => {
   const userAddress = useAppSelector((state) => state.wallet.address);
@@ -22,10 +25,13 @@ const Home: NextPage = () => {
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
   const initialPriceCall = useRef<boolean>(true);
-  const initialLpPriceCall = useRef<boolean>(true);
+  // const initialLpPriceCall = useRef<boolean>(true);
   const initialRewardsAprCall = useRef<boolean>(true);
   const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
-  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
+  const rewardsAprEstimateError = useAppSelector(
+    (state) => state.rewardsApr.rewardsAprEstimateError
+  );
+  const router = useRouter();
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -54,19 +60,19 @@ const Home: NextPage = () => {
     }
   }, [totalVotingPowerError]);
   useEffect(() => {
-    if(!initialPriceCall.current) {
+    if (!initialPriceCall.current) {
       Object.keys(token).length !== 0 && dispatch(getTokenPrice());
     } else {
       initialPriceCall.current = false;
     }
   }, [token]);
-  useEffect(() => {
+  /* useEffect(() => {
     if(!initialLpPriceCall.current) {
       Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
     } else {
       initialLpPriceCall.current = false;
     }
-  }, [tokenPrices]);
+  }, [tokenPrices]); */
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);

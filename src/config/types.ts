@@ -21,7 +21,7 @@ export interface IConfig {
   };
   ROUTER: INodes;
   V3_CONFIG_URL: INodes;
-
+  
   // WRAPPED_ASSETS: {
   //   testnet: Record<string, IWrappedToken>;
   //   mainnet: Record<string, IWrappedToken>;
@@ -51,6 +51,8 @@ export interface IConfig {
   AIRDROP_SERVER: { mainnet: string; testnet: string };
   AIRDROP: { mainnet: string; testnet: string };
   AIRDROP_ETH_MESSAGE_PREFIX: string;
+  PLENTY_3ROUTE_URL: { mainnet: string; testnet: string };
+  PLENTY_3ROUTE_CONTRACT: string;
 }
 
 interface IApi {
