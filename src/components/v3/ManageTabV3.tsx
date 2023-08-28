@@ -82,6 +82,8 @@ import FeeTierMain from "./FeeTierMain";
 import Link from "next/link";
 import TransactionSettings from "../TransactionSettings/TransactionSettings";
 import { useOutsideClick } from "../../utils/outSideClickHook";
+import { WatchTutorial } from "../Button/watchTutorial";
+import Tutorial from "../Tutorial";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
@@ -853,21 +855,21 @@ export function ManageTabV3(props: IManageLiquidityProps) {
       }
     });
   };
-
+  const [showTutorial, setShowTutorial] = useState(false);
   return props.showLiquidityModal ? (
     <>
       <div
         id="modal_outer"
         className={clsx(
           screen === ActivePopUp.Positions
-            ? "lg:w-[972px] lg:max-w-[972px] border  border-popUpNotification  lg:rounded-3xl py-5 px-3 md:p-5"
+            ? "lg:w-[972px] lg:max-w-[972px] border  border-popUpNotification  lg:rounded-3xl py-5 px-3 md:p-5 mb-[60px]"
             : screen === ActivePopUp.ConfirmAddV3
-            ? "sm:w-[602px] sm:max-w-[602px] border  border-popUpNotification lg:rounded-3xl py-5 px-3 md:p-5"
+            ? "sm:w-[602px] sm:max-w-[602px] border  border-popUpNotification lg:rounded-3xl py-5 px-3 md:p-5 mb-[60px]"
             : screen === ActivePopUp.NewPosition
             ? "lg:w-[972px] lg:max-w-[972px] md:w-[602px] border  border-popUpNotification  md:rounded-3xl py-5 px-3 md:p-5"
-            : "sm:w-[602px] sm:max-w-[602px] border md:rounded-3xl  border-popUpNotification  py-5 px-3 md:p-5",
+            : "sm:w-[602px] sm:max-w-[602px] border md:rounded-3xl  border-popUpNotification  py-5 px-3 md:p-5 mb-[60px]",
           screen === ActivePopUp.ConfirmExisting && "hidden",
-          "  mt-[70px] mb-[60px] lg:mt-[75px]  mx-auto fade-in  bg-card-500"
+          "  mt-[70px]  lg:mt-[75px]  mx-auto fade-in  bg-card-500"
         )}
       >
         {screen === ActivePopUp.NewPosition ? (
@@ -1126,6 +1128,15 @@ export function ManageTabV3(props: IManageLiquidityProps) {
           </>
         )}
       </div>
+      <div
+        className={clsx(
+          screen === ActivePopUp.NewPosition ? "" : "hidden",
+          "lg:w-[200px] lg:max-w-[200px] mt-5 mb-[60px] mx-auto"
+        )}
+      >
+        <WatchTutorial onClick={() => setShowTutorial(true)} />
+      </div>
+      {showTutorial && <Tutorial show={showTutorial} setShow={setShowTutorial} />}
       {activeStateIncDec === ActiveIncDecState.Increase &&
         screen === ActivePopUp.ConfirmExisting && (
           <ConfirmIncreaseLiq
