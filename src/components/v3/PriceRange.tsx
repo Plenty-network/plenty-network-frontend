@@ -120,11 +120,11 @@ function PriceRangeV3(props: IPriceRangeProps) {
     });
   }, [tokensListConfig, props.tokenIn.symbol, props.tokenOut.symbol]);
   const tickSpacing = (selectedFeeTier: string) => {
-    if (selectedFeeTier === "0.01") {
+    if (selectedFeeTier == "0.01") {
       return 1;
-    } else if (selectedFeeTier === "0.05") {
+    } else if (selectedFeeTier == "0.05") {
       return 10;
-    } else if (selectedFeeTier === "0.3") {
+    } else if (selectedFeeTier == "0.3") {
       return 60;
     } else {
       return 200;
