@@ -176,7 +176,7 @@ function Tutorial(props: ITutorialProps) {
           <button
             onClick={currentStep === STEPS.length - 1 ? closeModal : goToNextStep}
             className={clsx("mt-[56px]", {
-              "opacity-50 cursor-not-allowed": false,
+              "opacity-0": currentStep === STEPS.length - 1,
             })}
           >
             <ChevronRight size={40} />

@@ -7,7 +7,10 @@ import walletIcon from "../../assets/icon/common/walletIcon.svg";
 import copy from "copy-to-clipboard";
 import truncateMiddle from "truncate-middle";
 import copyLogo from "../../assets/icon/common/copyLogo.svg";
-
+import airdrop from "../../../public/assets/icon/airdrop.svg";
+import docs from "../../../public/assets/icon/VectorfooterMenu-1.svg";
+import feedback from "../../../public/assets/icon/VectorfooterMenu-2.svg";
+import migrate from "../../../public/assets/icon/migrate.svg";
 import switchLogo from "../../assets/icon/navigation/copy.svg";
 import fiatLogo from "../../assets/icon/common/fiatLogo.svg";
 import nodeSelectorLogo from "../../assets/icon/common/nodeSelectorLogo.svg";
@@ -167,6 +170,39 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
               >
                 <Image alt={"alt"} src={nodeSelectorLogo} />
                 <span>Node Selector</span>
+              </p>
+
+              <p>
+                <Link href={"/migrate"}>
+                  <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                    <Image alt={"alt"} src={migrate} />
+                    <span>Migrate</span>
+                  </p>
+                </Link>
+              </p>
+              <p>
+                <Link href={"/airdrop"}>
+                  <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                    <Image alt={"alt"} src={airdrop} />
+                    <span>Airdrop</span>
+                  </p>
+                </Link>
+              </p>
+              <p>
+                <a href={"https://whitepaper.plenty.network/"} target="_blank" rel="noreferrer">
+                  <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                    <Image alt={"alt"} src={docs} />
+                    <span>Docs</span>
+                  </p>
+                </a>
+              </p>
+              <p>
+                <a href={"https://tally.so/r/mOQg0M"} target="_blank" rel="noreferrer">
+                  <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                    <Image alt={"alt"} src={feedback} />
+                    <span>Feedback</span>
+                  </p>
+                </a>
               </p>
               <p>
                 {router.pathname.includes("myportfolio") ? (

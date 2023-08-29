@@ -17,16 +17,16 @@ export const FooterMenu: Array<IHrefIconProps> = [
     iconName: "VectorfooterMenu",
     href: "https://analytics.plenty.network/",
   },
-  {
-    name: "Docs",
-    iconName: "VectorfooterMenu-1",
-    href: "https://whitepaper.plenty.network/",
-  },
-  {
-    name: "Feedback",
-    iconName: "VectorfooterMenu-2",
-    href: "https://tally.so/r/mOQg0M ",
-  },
+  // {
+  //   name: "Docs",
+  //   iconName: "VectorfooterMenu-1",
+  //   href: "https://whitepaper.plenty.network/",
+  // },
+  // {
+  //   name: "Feedback",
+  //   iconName: "VectorfooterMenu-2",
+  //   href: "https://tally.so/r/mOQg0M ",
+  // },
 ];
 
 const MainMenu: Array<ISingleSideBarProps> = [
