@@ -40,8 +40,8 @@ export const getPositions = async (
 
       const minPrice = Price.computeRealPriceFromSqrtPrice(
         Tick.computeSqrtPriceFromTick(parseInt(position.lower_tick_index)),
-        contractStorageParameters.tokenX.decimals,
-        contractStorageParameters.tokenY.decimals
+        contractStorageParameters.tokenX,
+        contractStorageParameters.tokenY
       );
 
       const maxPrice =
@@ -49,8 +49,8 @@ export const getPositions = async (
           ? BigNumber(Infinity)
           : Price.computeRealPriceFromSqrtPrice(
               Tick.computeSqrtPriceFromTick(parseInt(position.upper_tick_index)),
-              contractStorageParameters.tokenX.decimals,
-              contractStorageParameters.tokenY.decimals
+              contractStorageParameters.tokenX,
+              contractStorageParameters.tokenY
             );
 
       const lowerTickOutsideLast = await getOutsideFeeGrowth(
@@ -176,8 +176,8 @@ export const getPositionsAll = async (
 
       const minPrice = Price.computeRealPriceFromSqrtPrice(
         Tick.computeSqrtPriceFromTick(parseInt(position.lower_tick_index)),
-        contractStorageParameters.tokenX.decimals,
-        contractStorageParameters.tokenY.decimals
+        contractStorageParameters.tokenX,
+        contractStorageParameters.tokenY
       );
 
       const maxPrice =
@@ -185,8 +185,8 @@ export const getPositionsAll = async (
           ? BigNumber(Infinity)
           : Price.computeRealPriceFromSqrtPrice(
               Tick.computeSqrtPriceFromTick(parseInt(position.upper_tick_index)),
-              contractStorageParameters.tokenX.decimals,
-              contractStorageParameters.tokenY.decimals
+              contractStorageParameters.tokenX,
+              contractStorageParameters.tokenY
             );
 
       const lowerTickOutsideLast = await getOutsideFeeGrowth(

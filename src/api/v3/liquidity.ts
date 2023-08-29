@@ -21,15 +21,15 @@ export const calculateCurrentPrice = async (
       currentPrice = BigNumber(1).dividedBy(
         Price.computeRealPriceFromSqrtPrice(
           contractStorageParameters.sqrtPriceValue,
-          contractStorageParameters.tokenX.decimals,
-          contractStorageParameters.tokenY.decimals
+          contractStorageParameters.tokenX,
+          contractStorageParameters.tokenY
         )
       );
     } else {
       currentPrice = Price.computeRealPriceFromSqrtPrice(
         contractStorageParameters.sqrtPriceValue,
-        contractStorageParameters.tokenX.decimals,
-        contractStorageParameters.tokenY.decimals
+        contractStorageParameters.tokenX,
+        contractStorageParameters.tokenY
       );
     }
     
@@ -58,13 +58,13 @@ export const calculateFullRange = async (
 
     let minTickPrice = Price.computeRealPriceFromSqrtPrice(
       Tick.computeSqrtPriceFromTick(tickFullRange[0]),
-      contractStorageParameters.tokenX.decimals,
-      contractStorageParameters.tokenY.decimals
+      contractStorageParameters.tokenX,
+      contractStorageParameters.tokenY
     );
     let maxTickPrice = Price.computeRealPriceFromSqrtPrice(
       Tick.computeSqrtPriceFromTick(tickFullRange[1]),
-      contractStorageParameters.tokenX.decimals,
-      contractStorageParameters.tokenY.decimals
+      contractStorageParameters.tokenX,
+      contractStorageParameters.tokenY
     );
 
     return {
@@ -100,14 +100,14 @@ export const getInitialBoundaries = async (
 
     let minPriceValue = Price.computeRealPriceFromSqrtPrice(
       Tick.computeSqrtPriceFromTick(minTick),
-      contractStorageParameters.tokenX.decimals,
-      contractStorageParameters.tokenY.decimals
+      contractStorageParameters.tokenX,
+      contractStorageParameters.tokenY
     );
 
     let maxPriceValue = Price.computeRealPriceFromSqrtPrice(
       Tick.computeSqrtPriceFromTick(maxTick),
-      contractStorageParameters.tokenX.decimals,
-      contractStorageParameters.tokenY.decimals
+      contractStorageParameters.tokenX,
+      contractStorageParameters.tokenY
     );
 
     return {
