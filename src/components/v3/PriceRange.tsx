@@ -87,11 +87,11 @@ function PriceRangeV3(props: IPriceRangeProps) {
   const Brightbrush = useAppSelector((state) => state.poolsv3.Brightbrush);
   const tokensArray = Object.entries(tokens);
   const percentage = () => {
-    if (props.selectedFeeTier === "0.01") {
+    if (props.selectedFeeTier == "0.01") {
       return 0.0001;
-    } else if (props.selectedFeeTier === "0.05") {
+    } else if (props.selectedFeeTier == "0.05") {
       return 0.001;
-    } else if (props.selectedFeeTier === "0.3") {
+    } else if (props.selectedFeeTier == "0.3") {
       return 0.006;
     } else {
       return 0.002;

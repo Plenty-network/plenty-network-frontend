@@ -77,14 +77,16 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
     });
   }, [tokensListConfig, props.tokenIn.symbol, props.tokenOut.symbol]);
   useEffect(() => {
+    console.log("selectedPosition", selectedPosition);
     if (selectedPosition?.currentTickIndex && tokenInConfig && tokenOutConfig) {
       getRealPriceFromTick(selectedPosition?.currentTickIndex, tokenInConfig, tokenOutConfig).then(
         (res) => {
+          console.log("currentPrice", res.toString());
           setCurrentPrice(res);
         }
       );
     }
-  }, [selectedPosition?.currentTickIndex, tokenInConfig, tokenOutConfig]);
+  }, [tokenInConfig, tokenOutConfig, selectedPosition]);
   const IncreaseButton = useMemo(() => {
     if (!walletAddress) {
       return (
