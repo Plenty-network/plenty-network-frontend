@@ -24,6 +24,12 @@ body.swap {
 
 } */
 
+.landingBottom {
+  background-image: url('../public/assets/image/banner.svg');
+
+  background-repeat: no-repeat;
+}
+
 html{
   height: -webkit-fill-available;
 } 

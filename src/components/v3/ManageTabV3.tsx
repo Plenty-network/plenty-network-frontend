@@ -866,10 +866,10 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             : screen === ActivePopUp.ConfirmAddV3
             ? "sm:w-[602px] sm:max-w-[602px] border  border-popUpNotification lg:rounded-3xl py-5 px-3 md:p-5 mb-[60px]"
             : screen === ActivePopUp.NewPosition
-            ? "lg:w-[972px] lg:max-w-[972px] md:w-[602px] border  border-popUpNotification  md:rounded-3xl py-5 px-3 md:p-5"
+            ? "mb-[60px] lg:w-[972px] lg:max-w-[972px] md:w-[602px] border  border-popUpNotification  md:rounded-3xl py-5 px-3 md:p-5"
             : "sm:w-[602px] sm:max-w-[602px] border md:rounded-3xl  border-popUpNotification  py-5 px-3 md:p-5 mb-[60px]",
           screen === ActivePopUp.ConfirmExisting && "hidden",
-          "  mt-[70px]  lg:mt-[75px]  mx-auto fade-in  bg-card-500"
+          "  mt-[70px] mb-[60px]  lg:mt-[75px]  mx-auto fade-in  bg-card-500"
         )}
       >
         {screen === ActivePopUp.NewPosition ? (
@@ -1128,15 +1128,15 @@ export function ManageTabV3(props: IManageLiquidityProps) {
           </>
         )}
       </div>
-      <div
+      {/* <div
         className={clsx(
           screen === ActivePopUp.NewPosition ? "" : "hidden",
           "lg:w-[200px] lg:max-w-[200px] mt-5 mb-[60px] mx-auto"
         )}
       >
         <WatchTutorial onClick={() => setShowTutorial(true)} />
-      </div>
-      {showTutorial && <Tutorial show={showTutorial} setShow={setShowTutorial} />}
+      </div> */}
+      {/* {showTutorial && <Tutorial show={showTutorial} setShow={setShowTutorial} />} */}
       {activeStateIncDec === ActiveIncDecState.Increase &&
         screen === ActivePopUp.ConfirmExisting && (
           <ConfirmIncreaseLiq

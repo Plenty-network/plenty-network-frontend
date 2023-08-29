@@ -165,7 +165,7 @@ export default function Pools(props: IIndexProps) {
               </ToolTip>
             </p>
           </div>
-          <div className="sticky top-[-3px] z-10">
+          <div className="sticky top-[-3px] z-2">
             <CardHeader
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
