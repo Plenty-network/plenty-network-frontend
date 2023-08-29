@@ -59,8 +59,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
                 <img
                   alt={"alt"}
                   src={
-                    tEZorCTEZtoUppercase(x.tokenX.toString()).substring(0, 1).toLowerCase() >
-                    tEZorCTEZtoUppercase(x.tokenY.toString()).substring(0, 1).toLowerCase()
+                    tEZorCTEZtoUppercase(x.tokenX.toString()) === "CTEZ"
                       ? tokenIcons[x.tokenY]
                         ? tokenIcons[x.tokenY].src
                         : tokens[x.tokenY.toString()]?.iconUrl
@@ -81,8 +80,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
                 <img
                   alt={"alt"}
                   src={
-                    tEZorCTEZtoUppercase(x.tokenX.toString()).substring(0, 1).toLowerCase() >
-                    tEZorCTEZtoUppercase(x.tokenY.toString()).substring(0, 1).toLowerCase()
+                    tEZorCTEZtoUppercase(x.tokenX.toString()) === "CTEZ"
                       ? tokenIcons[x.tokenX]
                         ? tokenIcons[x.tokenX].src
                         : tokens[x.tokenX.toString()]?.iconUrl

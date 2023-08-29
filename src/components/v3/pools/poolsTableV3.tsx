@@ -142,26 +142,22 @@ export function PoolsTableV3(props: IShortCardProps) {
             <div className={clsx("flex gap-1 items-center max-w-[270px]", "ml-1 md:ml-[34px]")}>
               <CircularOverLappingImage
                 tokenA={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? x.tokenB?.toString()
                     : x.tokenA?.toString()
                 }
                 tokenB={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? x.tokenA?.toString()
                     : x.tokenB?.toString()
                 }
                 src1={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? getImagesPath(x.tokenB?.toString())
                     : getImagesPath(x.tokenA?.toString())
                 }
                 src2={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? getImagesPath(x.tokenA?.toString())
                     : getImagesPath(x.tokenB?.toString())
                 }
@@ -290,40 +286,31 @@ export function PoolsTableV3(props: IShortCardProps) {
             <div className={clsx("flex gap-1 items-center max-w-[320px]", "ml-[54px]")}>
               <CircularOverLappingImage
                 tokenA={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? x.tokenB?.toString()
                     : x.tokenA?.toString()
                 }
                 tokenB={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? x.tokenA?.toString()
                     : x.tokenB?.toString()
                 }
                 src1={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? getImagesPath(x.tokenB?.toString())
                     : getImagesPath(x.tokenA?.toString())
                 }
                 src2={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? getImagesPath(x.tokenA?.toString())
                     : getImagesPath(x.tokenB?.toString())
                 }
               />
               <div className="flex items-center ">
                 <span className="md:text-f14 text-f12 text-white ">
-                  {tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
-                    ? ` ${tEZorCTEZtoUppercase(x.tokenB?.toString())} / ${tEZorCTEZtoUppercase(
-                        x.tokenA?.toString()
-                      )}`
-                    : ` ${tEZorCTEZtoUppercase(x.tokenA?.toString())} / ${tEZorCTEZtoUppercase(
-                        x.tokenB?.toString()
-                      )}`}
+                  {` ${tEZorCTEZtoUppercase(x.tokenA?.toString())} / ${tEZorCTEZtoUppercase(
+                    x.tokenB?.toString()
+                  )}`}
                 </span>
                 <span className="bg-primary-500/[0.2] rounded-lg  px-2  text-white md:font-body2 font-caption1-small  text-center	py-1.5 px-2   w-fit  ml-2 md:ml-3">
                   {x.feeTier}%

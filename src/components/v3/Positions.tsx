@@ -71,18 +71,7 @@ function PositionsPopup(props: IPositionsProps) {
                   <img
                     alt={"alt"}
                     src={
-                      tEZorCTEZtoUppercase(props.tokenIn.symbol.toString())
-                        .substring(0, 1)
-                        .toLowerCase() >
-                      tEZorCTEZtoUppercase(props.tokenOut.symbol.toString())
-                        .substring(0, 1)
-                        .toLowerCase()
-                        ? tokenIcons[props.tokenOut.symbol]
-                          ? tokenIcons[props.tokenOut.symbol].src
-                          : tokens[props.tokenOut.symbol.toString()]?.iconUrl
-                          ? tokens[props.tokenOut.symbol.toString()].iconUrl
-                          : `/assets/Tokens/fallback.png`
-                        : tokenIcons[props.tokenIn.symbol]
+                      tokenIcons[props.tokenIn.symbol]
                         ? tokenIcons[props.tokenIn.symbol].src
                         : tokens[props.tokenIn.symbol.toString()]?.iconUrl
                         ? tokens[props.tokenIn.symbol.toString()].iconUrl
@@ -97,18 +86,7 @@ function PositionsPopup(props: IPositionsProps) {
                   <img
                     alt={"alt"}
                     src={
-                      tEZorCTEZtoUppercase(props.tokenIn.symbol.toString())
-                        .substring(0, 1)
-                        .toLowerCase() >
-                      tEZorCTEZtoUppercase(props.tokenOut.symbol.toString())
-                        .substring(0, 1)
-                        .toLowerCase()
-                        ? tokenIcons[props.tokenIn.symbol]
-                          ? tokenIcons[props.tokenIn.symbol].src
-                          : tokens[props.tokenIn.symbol.toString()]?.iconUrl
-                          ? tokens[props.tokenIn.symbol.toString()].iconUrl
-                          : `/assets/Tokens/fallback.png`
-                        : tokenIcons[props.tokenOut.symbol]
+                      tokenIcons[props.tokenOut.symbol]
                         ? tokenIcons[props.tokenOut.symbol].src
                         : tokens[props.tokenOut.symbol.toString()]?.iconUrl
                         ? tokens[props.tokenOut.symbol.toString()].iconUrl
@@ -132,18 +110,9 @@ function PositionsPopup(props: IPositionsProps) {
                   }
                 /> */}
                 <span className="font-body2 md:text-f14 text-white ">
-                  {tEZorCTEZtoUppercase(props.tokenIn.symbol.toString())
-                    .substring(0, 1)
-                    .toLowerCase() >
-                  tEZorCTEZtoUppercase(props.tokenOut.symbol.toString())
-                    .substring(0, 1)
-                    .toLowerCase()
-                    ? `${tEZorCTEZtoUppercase(props.tokenOut.symbol)} / ${tEZorCTEZtoUppercase(
-                        props.tokenIn.symbol
-                      )}`
-                    : `${tEZorCTEZtoUppercase(props.tokenIn.symbol)} / ${tEZorCTEZtoUppercase(
-                        props.tokenOut.symbol
-                      )}`}
+                  {`${tEZorCTEZtoUppercase(props.tokenIn.symbol)} / ${tEZorCTEZtoUppercase(
+                    props.tokenOut.symbol
+                  )}`}
                 </span>
               </div>
               <div className="ml-auto">
