@@ -62,7 +62,7 @@ export function PositionDataTable(props: IShortCardProps) {
           please connect your wallet
         </span>
       );
-    } else if (!isLoading && !data) {
+    } else if (!isLoading && (data === undefined || (data && data.length == 0))) {
       return (
         <span className="fade-in-light flex items-center justify-start md:justify-center h-[245px]  pl-5 md:pl-0 text-border-600 font-title3">
           No positions
