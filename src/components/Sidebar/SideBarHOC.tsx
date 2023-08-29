@@ -27,7 +27,8 @@ export interface ISideBarHOCProps {
 
 export function SideBarHOC(props: ISideBarHOCProps) {
   const userAddress = useAppSelector((state) => state.wallet.address);
-  const [isBanner, setIsBanner] = React.useState(true);
+  const [isBanner, setIsBanner] = React.useState(false);
+  const isbannerRedux = useAppSelector((state) => state.walletLoading.isBanner);
   const [showToast, setShowToast] = React.useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const showNotificationClick = () => {
@@ -52,7 +53,12 @@ export function SideBarHOC(props: ISideBarHOCProps) {
       localStorage.clear();
       localStorage.setItem(CLEARLS, "true");
     }
+    setIsBanner(isbannerRedux);
   }, []);
+  useEffect(() => {
+    setIsBanner(isbannerRedux);
+  }, [isbannerRedux]);
+
   return (
     <>
       <FlashMessageHOC />
