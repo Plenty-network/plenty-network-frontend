@@ -135,7 +135,8 @@ export const getTokenPrices = async (): Promise<{
     } */
 
     for (const x of indexerPricesData) {
-      if (Number(x.price) !== 0) tokenPrice[x.token] = Number(x.price);
+      //if (Number(x.price) !== 0) tokenPrice[x.token] = Number(x.price);
+      tokenPrice[x.token] = Number(x.price);
     }
 
     return {
@@ -211,7 +212,7 @@ export const getLPTokenPrices = async (tokenPrice: {
     const state = store.getState();
     const V2_AMM = state.config.AMMs;
     const V3_AMM = state.config.V3_AMMs;
-    const AMM = {...V2_AMM, ...V3_AMM};
+    const AMM = { ...V2_AMM, ...V3_AMM };
 
     let lpPrices: { [id: string]: BigNumber } = {};
     for (const key in AMM) {
