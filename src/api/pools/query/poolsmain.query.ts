@@ -6,6 +6,7 @@ import { ITokenPriceList } from "../../util/types";
 import { getAllPoolsDataV3, getMyPoolsDataV3 } from "../../v3/pools";
 import { IAllPoolsDataResponse } from "../../v3/types";
 import { IAllPoolsData, IMyPoolsData, IPoolsDataWrapperResponse } from "../types";
+import { useEffect, useMemo, useState } from "react";
 
 export const usePoolsMain = () =>
   useQuery<IPoolsDataWrapperResponse[], Error>(
@@ -43,7 +44,11 @@ export const useAllPoolsData = (tokenPrice: ITokenPriceList, page: number = 0) =
     { refetchInterval: 30000, cacheTime: 1000 * 30, keepPreviousData: true }
   );
 
-export const useAllPoolsDataV3 = (tokenPrice: ITokenPriceList, page: number = 0) =>
+export const useAllPoolsDataV3 = (
+  tokenPrice: ITokenPriceList,
+  page: number = 0,
+  placeholderData: IAllPoolsDataResponse[]
+) =>
   useQuery<IAllPoolsDataResponse[], Error>(
     ["all-pools", page],
     async () => {
@@ -51,7 +56,13 @@ export const useAllPoolsDataV3 = (tokenPrice: ITokenPriceList, page: number = 0)
       const allPoolsData = allPoolsResponse.allData;
       return allPoolsData;
     },
-    { refetchInterval: 30000, cacheTime: 1000 * 30, keepPreviousData: true }
+    {
+      refetchInterval: 30000,
+      cacheTime: 1000 * 30,
+      keepPreviousData: true,
+      refetchOnMount: "always",
+      placeholderData: placeholderData,
+    }
   );
 export const useMyPoolsData = (
   userTezosAddress: string,
