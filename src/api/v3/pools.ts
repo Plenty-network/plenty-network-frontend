@@ -69,7 +69,7 @@ export const getMyPoolsDataV3 = async (
     if (!userTezosAddress || userTezosAddress.length <= 0) {
       throw new Error("Invalid or empty arguments.");
     }
-    const v3PositionsResponse = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}v3-positions?address=${userTezosAddress}`);
+    const v3PositionsResponse = await axios.get(`${Config.V3_VE_INDEXER[connectedNetwork]}positions?address=${userTezosAddress}`);
     const v3IndexerPositionsData: any[] = v3PositionsResponse.data;
 
     const fetchAnalyticsPoolsData = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}pools`);
