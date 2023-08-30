@@ -141,7 +141,10 @@ export function SideBar(props: ISideBarProps) {
             />
           ))}
         </div>
-        <BottomCard setShowTutorial={props.setShowTutorial} />
+        <div className="my-5">
+          <BottomCard setShowTutorial={props.setShowTutorial} />
+        </div>
+
         <div>
           <div className=" border-border-500/50 border-t">
             {FooterMenu.map((e, i) => (

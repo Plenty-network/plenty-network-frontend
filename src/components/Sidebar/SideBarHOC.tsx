@@ -106,7 +106,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
             </div>
           </div>
         </div>
-        {isMobile && !props.isBribes && <BottomNavigationBar />}
+        {isMobile && !props.isBribes && <BottomNavigationBar setShowTutorial={setShowTutorial} />}
         {isMobile && (
           <>
             <Banner isBanner={isBanner} setIsBanner={setIsBanner} />

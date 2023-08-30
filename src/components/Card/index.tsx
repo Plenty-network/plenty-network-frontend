@@ -17,13 +17,13 @@ function BottomCard(props: ILandingPageProps) {
     <>
       <div
         className={clsx(
-          " rounded-lg	 landingBottom mx-6   px-2.5 py-[14px]  w-[184px] h-[105px] cursor-pointer "
+          " rounded-lg	 landingBottom mx-6   px-2.5 py-[14px] w-auto  md:w-[184px] h-[105px] cursor-pointer "
         )}
         onClick={() => props.setShowTutorial(true)}
       >
         <div className=" w-[113px] text-white  font-body1">Explore V3 and it features</div>
 
-        <div className=" h-[36px] bg-black rounded text-blue-700  text-center px-[22px] font-caption2  mt-2 py-2.5 cursor-pointer">
+        <div className=" h-[36px] w-fit bg-black rounded text-blue-700  text-center px-[22px] font-caption2  mt-2 py-2.5 cursor-pointer">
           Get started with V3
         </div>
       </div>

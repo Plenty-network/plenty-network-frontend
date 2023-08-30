@@ -9,8 +9,11 @@ import { FooterInfoIcon } from "./FooterIconList";
 import { HrefIcon } from "./LinkIconList";
 import { FooterMenu } from "./Sidebar";
 import { ISingleSideBarProps, SingleSideBar } from "./SideBarTabList";
+import BottomCard from "../Card";
 
-export interface IBottomNavigationBarProps {}
+export interface IBottomNavigationBarProps {
+  setShowTutorial: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 export interface IBottomNavMenuProps extends IBottomMoreNavMenuProps {
   activeSubMenuPool: boolean;
@@ -34,6 +37,10 @@ enum MenuType {
 }
 export interface ISubMenuProps {}
 export interface ISubMenuListProps {
+  refWrapper?: any;
+}
+export interface IMoreMenuListProps {
+  setShowTutorial: React.Dispatch<React.SetStateAction<boolean>>;
   refWrapper?: any;
 }
 const mainMenu: Array<ISingleSideBarProps> = [
@@ -87,7 +94,9 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
     >
       <div className="bg-cardBackGround" ref={reff}>
         {activeSubMenu === MenuType.Menu && <SubMenuList />}
-        {activeSubMenu === MenuType.MoreNavMenu && <MoreSubMenuList />}
+        {activeSubMenu === MenuType.MoreNavMenu && (
+          <MoreSubMenuList setShowTutorial={props.setShowTutorial} />
+        )}
         {activeSubMenuPool && <SubMenuForPool />}
         <div className="justify-between flex w-screen">
           <>
@@ -245,7 +254,7 @@ export function SubMenuList(props: ISubMenuListProps) {
     </div>
   );
 }
-export function MoreSubMenuList(props: ISubMenuListProps) {
+export function MoreSubMenuList(props: IMoreMenuListProps) {
   const dispatch = useAppDispatch();
   const handleClick = () => {
     dispatch(setbannerClicked(false));
@@ -259,7 +268,10 @@ export function MoreSubMenuList(props: ISubMenuListProps) {
       {/*  */}
 
       {/*  */}
-      <div className="px-9 hover:bg-sideBarHover ">
+      <div className="py-5 border-t border-t-borderColor mx-3">
+        <BottomCard setShowTutorial={props.setShowTutorial} />
+      </div>
+      <div className="px-9 hover:bg-sideBarHover border-t border-t-borderColor ">
         <SingleSideBar
           name="Migrate"
           className="px-9 justify-between"
