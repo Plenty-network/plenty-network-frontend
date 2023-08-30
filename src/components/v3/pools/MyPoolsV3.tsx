@@ -219,7 +219,7 @@ export function MyPoolTablev3(props: IShortCardProps) {
         id: "fees",
         columnWidth: "w-[122px]",
         subText: "7d",
-        tooltipMessage: "Trading fees collected by the pool in the current epoch.",
+        tooltipMessage: "Trading fees collected by the pool in the last 7 days.",
         isToolTipEnabled: true,
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "fees.value"),

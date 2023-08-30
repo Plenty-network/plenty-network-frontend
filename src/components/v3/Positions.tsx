@@ -18,12 +18,13 @@ import dollarimg from "../../assets/icon/poolsv3/dollarMP.svg";
 import { ActivePopUp } from "./ManageTabV3";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { tokenIcons } from "../../constants/tokensList";
+import { IV3PositionObject } from "../../api/v3/types";
 
 interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
-  handleCollectFeeOperation: () => void;
+  handleCollectFeeOperation: (selectedPosition: IV3PositionObject) => void;
   feeTier: string;
 }
 function PositionsPopup(props: IPositionsProps) {
