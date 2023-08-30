@@ -29,7 +29,13 @@ body.swap {
 
   background-repeat: no-repeat;
 }
-
+@media (min-width: 320px) and (max-width: 768px) {
+  .landingBottom {
+    background-image: url('../public/assets/image/tutorial_Banner_mobile.svg');
+  
+    background-repeat: no-repeat;
+  }
+}
 html{
   height: -webkit-fill-available;
 } 

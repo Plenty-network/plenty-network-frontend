@@ -268,7 +268,7 @@ export function MoreSubMenuList(props: IMoreMenuListProps) {
       {/*  */}
 
       {/*  */}
-      <div className="py-5 border-t border-t-borderColor mx-3">
+      <div className="py-5 border-t border-t-borderColor px-3">
         <BottomCard setShowTutorial={props.setShowTutorial} />
       </div>
       <div className="px-9 hover:bg-sideBarHover border-t border-t-borderColor ">
