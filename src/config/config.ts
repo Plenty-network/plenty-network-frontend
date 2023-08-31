@@ -42,7 +42,7 @@ const Config: IConfig = {
   },
   V3_FACTORY: {
     mainnet: "",
-    testnet: "KT1KEa3Pc3dpHfSCH4r1nCNsFXNL6Q1ctASS",
+    testnet: "KT1LzD2Uj1VjSjrRwusCbZYhUAAbRfQDKmBM",
   },
   TEZ_DEPLOYER: {
     mainnet: "KT1JnpY4fUQ9DurUhb7uCQtKkunLiamgdzyc",
@@ -52,14 +52,22 @@ const Config: IConfig = {
     mainnet: "KT1HpNxd9RaeCwxrp1QX96DyocWURJXX8sZx",
     testnet: "KT1J3EQDZbLUR1Hp8TZKFwY5FLoekiPSgsmL",
   },
-
+  PLENTY_3ROUTE_CONTRACT: "KT1R7WEtNNim3YgkxPt8wPMczjH3eyhbJMtz",
   VE_INDEXER: {
-    mainnet: "https://ply-indexer.mainnet.plenty.network/v1/",
+    mainnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
     testnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
+  },
+  V3_VE_INDEXER: {
+    mainnet: "https://api.plenty.network/v3/",
+    testnet: "https://api.plenty.network/v3/",
   },
   ANALYTICS_INDEXER: {
     mainnet: "https://api.plenty.network/analytics/",
     testnet: "https://api.plenty.network/analytics/",
+  },
+  VE_ANALYTICS_INDEXER: {
+    mainnet: "https://api.plenty.network/ve/",
+    testnet: "https://api.plenty.network/ve/",
   },
 
   FAUCET: "KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH",
@@ -93,12 +101,18 @@ const Config: IConfig = {
 
   CONFIG_LINKS: {
     testnet: {
-      POOL: "https://ghostnet.data-config.plenty.network/pools/v3",
-      TOKEN: "https://ghostnet.data-config.plenty.network/tokens",
+      POOL: {
+        V2: "https://api.plenty.network/config/pools/v2",
+        V3: "https://api.plenty.network/config/pools/v3",
+      },
+      TOKEN: "https://api.plenty.network/config/tokens",
     },
     mainnet: {
-      POOL: "https://config.mainnet.plenty.network/pools",
-      TOKEN: "https://config.mainnet.plenty.network/tokens",
+      POOL: {
+        V2: "https://api.plenty.network/config/pools/v2",
+        V3: "https://api.plenty.network/config/pools/v3",
+      },
+      TOKEN: "https://api.plenty.network/config/tokens",
     },
   },
 
@@ -137,8 +151,13 @@ const Config: IConfig = {
     },
   },
   V3_CONFIG_URL: {
-    testnet: "https://ghostnet.data-config.plenty.network/",
-    mainnet: "https://config.mainnet.plenty.network/",
+    testnet: "https://api.plenty.network/config/",
+    mainnet: "https://api.plenty.network/config/",
+  },
+  PLENTY_3ROUTE_URL: 
+  {
+    mainnet: "https://plenty.3route.io/v3/",
+    testnet: "",
   },
 };
 

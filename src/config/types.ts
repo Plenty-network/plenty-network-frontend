@@ -21,7 +21,7 @@ export interface IConfig {
   };
   ROUTER: INodes;
   V3_CONFIG_URL: INodes;
-
+  
   // WRAPPED_ASSETS: {
   //   testnet: Record<string, IWrappedToken>;
   //   mainnet: Record<string, IWrappedToken>;
@@ -40,7 +40,9 @@ export interface IConfig {
   VOTER: { mainnet: string; testnet: string };
   VOTE_ESCROW: { mainnet: string; testnet: string };
   VE_INDEXER: { mainnet: string; testnet: string };
+  V3_VE_INDEXER: { mainnet: string; testnet: string };
   ANALYTICS_INDEXER: { mainnet: string; testnet: string };
+  VE_ANALYTICS_INDEXER: { mainnet: string; testnet: string };
   PLY_TOKEN: { mainnet: string; testnet: string };
   FACTORY: { mainnet: string; testnet: string };
   V3_FACTORY: { mainnet: string; testnet: string };
@@ -50,6 +52,8 @@ export interface IConfig {
   AIRDROP_SERVER: { mainnet: string; testnet: string };
   AIRDROP: { mainnet: string; testnet: string };
   AIRDROP_ETH_MESSAGE_PREFIX: string;
+  PLENTY_3ROUTE_URL: { mainnet: string; testnet: string };
+  PLENTY_3ROUTE_CONTRACT: string;
 }
 
 interface IApi {
@@ -145,6 +149,7 @@ export interface IContractsConfig {
   // AMM: IAmmContracts;
   TOKEN: IConfigTokens;
   AMM: IConfigPools;
+  V3_AMM: IConfigPools;
 }
 
 export interface IGaugeConfigData {
@@ -231,6 +236,9 @@ export interface IConfigPools {
 }
 
 export interface IConfigData {
-  POOL: string;
+  POOL: {
+    V2: string;
+    V3: string;
+  }
   TOKEN: string;
 }

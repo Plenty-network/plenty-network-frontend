@@ -9,7 +9,6 @@ import nFormatter, {
   nFormatterWithLesserNumber,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
-import { IAllTokensBalance, IAllTokensBalanceResponse } from "../../api/util/types";
 import { useAppSelector } from "../../redux";
 import { ISwapData, tokenParameterLiquidity } from "./types";
 import fallback from "../../../src/assets/icon/pools/fallback.png";

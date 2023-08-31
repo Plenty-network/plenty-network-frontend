@@ -185,14 +185,14 @@ export function MyPoolTablev3(props: IShortCardProps) {
         isToolTipEnabled: true,
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "volume.value"),
         accessor: (x: any) => (
           <PoolsTextWithTooltip
-            text={x.volume.toString()}
+            text={x.volume.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1="0"
-            token2="0"
+            token1={x.volume.token1}
+            token2={x.volume.token2}
           />
         ),
       },
@@ -203,14 +203,14 @@ export function MyPoolTablev3(props: IShortCardProps) {
         tooltipMessage: "Total value locked up in the pool.",
         isToolTipEnabled: true,
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl.value"),
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.tvl.toString()}
+            text={x.tvl.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1="0"
-            token2="0"
+            token1={x.tvl.token1}
+            token2={x.tvl.token2}
           />
         ),
       },
@@ -219,17 +219,17 @@ export function MyPoolTablev3(props: IShortCardProps) {
         id: "fees",
         columnWidth: "w-[122px]",
         subText: "7d",
-        tooltipMessage: "Trading fees collected by the pool in the current epoch.",
+        tooltipMessage: "Trading fees collected by the pool in the last 7 days.",
         isToolTipEnabled: true,
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "fees.value"),
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.fees.toString()}
+            text={x.fees.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1="0"
-            token2="0"
+            token1={x.fees.token1}
+            token2={x.fees.token2}
           />
         ),
       },

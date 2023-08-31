@@ -16,9 +16,11 @@ import { IGaugeExistsResponse } from "./types";
 
 export const fetchConfig = async (): Promise<IContractsConfig> => {
   try {
+    const newV2PoolsUrl: string = Config.CONFIG_LINKS[connectedNetwork].POOL.V2;
+    const newV3PoolsUrl: string = Config.CONFIG_LINKS[connectedNetwork].POOL.V3;
     const newTokensUrl: string = Config.CONFIG_LINKS[connectedNetwork].TOKEN;
-    const newPoolsUrl: string = Config.CONFIG_LINKS[connectedNetwork].POOL;
-    const configResult = await Promise.all([axios.get(newTokensUrl), axios.get(newPoolsUrl)]);
+
+    const configResult = await Promise.all([axios.get(newTokensUrl), axios.get(newV2PoolsUrl), axios.get(newV3PoolsUrl)]);
     if (configResult.find((result) => result.status !== 200)) {
       throw new Error("Failed to fetch the config from server.");
     } else {
@@ -32,9 +34,12 @@ export const fetchConfig = async (): Promise<IContractsConfig> => {
       }
       const TOKEN: IConfigTokens = tokenData;
       const AMM: IConfigPools = configResult[1].data;
+      const V3_AMM: IConfigPools = configResult[2].data;
+
       return {
         TOKEN,
         AMM,
+        V3_AMM
       };
     }
   } catch (error: any) {
@@ -62,7 +67,7 @@ export const getV3PoolAddressWithFeeTier = (
   feeTier: number
 ): string => {
   const state = store.getState();
-  const AMM = state.config.AMMs;
+  const AMM = state.config.V3_AMMs;
   const feeBPS = feeTier * 100;
 
   const address = Object.keys(AMM).find(
@@ -83,7 +88,7 @@ export const getTokensFromAMMAddress = (
   ammAddress: string
 ): { tokenX: string; tokenY: string; feeBps: number } => {
   const state = store.getState();
-  const AMMs = state.config.AMMs;
+  const AMMs = state.config.V3_AMMs;
 
   const amm = Object.keys(AMMs).find((key) => key === ammAddress);
 

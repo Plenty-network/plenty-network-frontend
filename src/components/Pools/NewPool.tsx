@@ -29,6 +29,8 @@ import NewPoolMain, { Pair } from "./NewPoolMain";
 import { TextNewPool } from "./TextNewPool";
 import TokenModalPool from "./tokenModalPool";
 import { tzktExplorer } from "../../common/walletconnect";
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../../config/firebaseConfig";
 
 export interface IManageLiquidityProps {
   show: boolean;
@@ -223,6 +225,9 @@ export function NewPool(props: IManageLiquidityProps) {
   };
 
   const handleAddNewPoolOperation = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "pools_createpool_confirm");
+    }
     setShowConfirmPool(false);
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(tokenOut.name));

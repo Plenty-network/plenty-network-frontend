@@ -6,7 +6,7 @@ export const checkPoolExistence = async (
 ): Promise<any> => {
   try {
     const state = store.getState();
-    const AMM = state.config.AMMs;
+    const AMM = state.config.V3_AMMs;
 
     let feeBPS: any[] = [];
     let tokenA = tokenXSymbol;

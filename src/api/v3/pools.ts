@@ -5,28 +5,44 @@ import Config from "../../config/config";
 import { connectedNetwork } from "../../common/walletconnect";
 import { store } from "../../redux";
 import { POOLS_PAGE_LIMIT } from "../../constants/global";
+const state = store.getState();
+const AMMS = state.config.V3_AMMs;
 
 export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
   try {
-    const state = store.getState();
-    const AMMS = state.config.AMMs;
     const allData: any[] = [];
 
     const fetchAnalyticsPoolsData = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}pools`);
     let analyticsPoolsData: any[] = fetchAnalyticsPoolsData.data;
 
+    const fetchVePoolsData = await axios.get(`${Config.VE_ANALYTICS_INDEXER[connectedNetwork]}pools`);
+    let vePoolsData: any[] = fetchVePoolsData.data;
+
     analyticsPoolsData.map<any>((datum) => {
       let poolPairs: any[] = Object.values(AMMS).filter((e: any) => e.address === datum.pool);
+      let vePoolPairs: any[] = Object.values(vePoolsData).filter((e: any) => e.pool === datum.pool);
 
       if(poolPairs[0]){
           allData.push({
             tokenA: poolPairs[0].tokenX.symbol,
             tokenB: poolPairs[0].tokenY.symbol,
             feeTier: poolPairs[0].feeBps/100,
-            apr: Number(datum.tvl.value) === 0 ? 0 : ((datum.fees.value7D*52)/datum.tvl.value)*100,
-            volume: BigNumber(datum.volume.value24H),
-            tvl: BigNumber(datum.tvl.value),
-            fees: BigNumber(datum.fees.value24H),
+            apr: Number(vePoolPairs[0].tvl.value) === 0 ? 0 : ((vePoolPairs[0].fees7D.value*52)/vePoolPairs[0].tvl.value)*100,
+            volume: {
+              value: BigNumber(vePoolPairs[0].volume24H.value),
+              token1: BigNumber(vePoolPairs[0].volume24H.token1),
+              token2: BigNumber(vePoolPairs[0].volume24H.token2),
+            },
+            tvl: {
+              value: BigNumber(vePoolPairs[0].tvl.value),
+              token1: BigNumber(vePoolPairs[0].tvl.token1),
+              token2: BigNumber(vePoolPairs[0].tvl.token2),
+            },
+            fees: {
+              value: BigNumber(vePoolPairs[0].fees7D.value),
+              token1: BigNumber(vePoolPairs[0].fees7D.token1),
+              token2: BigNumber(vePoolPairs[0].fees7D.token2),
+            }
           })
         }
     });
@@ -53,14 +69,14 @@ export const getMyPoolsDataV3 = async (
     if (!userTezosAddress || userTezosAddress.length <= 0) {
       throw new Error("Invalid or empty arguments.");
     }
-
-    const state = store.getState();
-    const AMMS = state.config.AMMs;
-    const v3PositionsResponse = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}v3-positions?address=${userTezosAddress}`);
+    const v3PositionsResponse = await axios.get(`${Config.V3_VE_INDEXER[connectedNetwork]}positions?address=${userTezosAddress}`);
     const v3IndexerPositionsData: any[] = v3PositionsResponse.data;
 
     const fetchAnalyticsPoolsData = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}pools`);
     let analyticsPoolsData: any[] = fetchAnalyticsPoolsData.data;
+
+    const fetchVePoolsData = await axios.get(`${Config.VE_ANALYTICS_INDEXER[connectedNetwork]}pools`);
+    let vePoolsData: any[] = fetchVePoolsData.data;
 
     const allData: any[] = [];
     const finalData: any[] = [];
@@ -106,15 +122,29 @@ export const getMyPoolsDataV3 = async (
 
     analyticsPoolsData.map<any>((datum) => {
         let poolPairs: any[] = Object.values(uniqueAllData).filter((e: any) => e.address === datum.pool);
+        let vePoolPairs: any[] = Object.values(vePoolsData).filter((e: any) => e.pool === datum.pool);
+
         if(poolPairs[0]){
             finalData.push({
               tokenA: poolPairs[0].tokenA,
               tokenB: poolPairs[0].tokenB,
               feeTier: poolPairs[0].feeTier,
               apr: Number(datum.tvl.value) === 0 ? 0 : ((datum.fees.value7D*52)/datum.tvl.value)*100,
-              volume: BigNumber(datum.volume.value24H),
-              tvl: BigNumber(datum.tvl.value),
-              fees: BigNumber(datum.fees.value24H),
+              volume: {
+                value: BigNumber(vePoolPairs[0].volume24H.value),
+                token1: BigNumber(vePoolPairs[0].volume24H.token1),
+                token2: BigNumber(vePoolPairs[0].volume24H.token2),
+              },
+              tvl: {
+                value: BigNumber(vePoolPairs[0].tvl.value),
+                token1: BigNumber(vePoolPairs[0].tvl.token1),
+                token2: BigNumber(vePoolPairs[0].tvl.token2),
+              },
+              fees: {
+                value: BigNumber(vePoolPairs[0].fees24H.value),
+                token1: BigNumber(vePoolPairs[0].fees24H.token1),
+                token2: BigNumber(vePoolPairs[0].fees24H.token2),
+              }
             })
         }
     });
@@ -135,8 +165,6 @@ export const getMyPoolsDataV3 = async (
 
 export const getPoolsShareDataV3 = async (): Promise<IAllPoolsDataResponse> => {
   try {
-    const state = store.getState();
-    const AMMS = state.config.AMMs;
     const allData: IDataResponse[] = [];
     const finalData: IDataResponse[] = [];
     let poolShare = 0;

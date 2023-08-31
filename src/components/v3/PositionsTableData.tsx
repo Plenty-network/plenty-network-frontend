@@ -29,7 +29,7 @@ import Table from "../Table/Table";
 
 export interface IShortCardProps {
   tokenIn: tokenParameterLiquidity;
-  handleCollectFeeOperation: () => void;
+  handleCollectFeeOperation: (selectedPosition: IV3PositionObject) => void;
   tokenOut: tokenParameterLiquidity;
   feeTier: string;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
@@ -62,7 +62,7 @@ export function PositionDataTable(props: IShortCardProps) {
           please connect your wallet
         </span>
       );
-    } else if (!isLoading && data && data?.length === 0) {
+    } else if (!isLoading && (data === undefined || (data && data.length == 0))) {
       return (
         <span className="fade-in-light flex items-center justify-start md:justify-center h-[245px]  pl-5 md:pl-0 text-border-600 font-title3">
           No positions
@@ -239,7 +239,14 @@ export function PositionDataTable(props: IShortCardProps) {
                 : "cursor-pointer text-primary-500",
               "w-[120px] flex items-center font-subtitle4  "
             )}
-            onClick={x.feesDollar.isEqualTo(0) ? () => {} : props.handleCollectFeeOperation}
+            onClick={
+              x.feesDollar.isEqualTo(0)
+                ? () => {}
+                : () => {
+                    dispatch(setSelectedPosition(x));
+                    props.handleCollectFeeOperation(x);
+                  }
+            }
           >
             Collect fees
             <span className=" h-[28px] border-r border-card-700 ml-auto"></span>

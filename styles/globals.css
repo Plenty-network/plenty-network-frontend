@@ -299,14 +299,14 @@ input[type='number'] {
     ); */
     padding: 0.5px;
    
-    height: 96.5px;
+    height: 97.5px;
     border-radius: 12px;
     
 }
 @media (min-width: 320px) and (max-width: 768px) {
   .gradientBorderCrypto {
     top: 65px !important;
-  height: 94.5px;
+  height: 97.5px;
  
   }
 }

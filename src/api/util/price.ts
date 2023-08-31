@@ -103,7 +103,7 @@ export const getTokenPrices = async (): Promise<{
   tokenPrice: { [id: string]: number };
 }> => {
   try {
-    const pricesResponse = await axios
+    /*     const pricesResponse = await axios
       .get("https://api.teztools.io/token/prices", { timeout: 3000 })
       .then((resp) => resp.data)
       .catch((err) => {
@@ -117,12 +117,12 @@ export const getTokenPrices = async (): Promise<{
           ],
         };
       });
-    const tokenPriceResponse = pricesResponse;
+    const tokenPriceResponse = pricesResponse; */
 
     const tokenPrice: { [id: string]: number } = {};
 
     const indexerPriceResponse = await axios
-      .get(`${Config.ANALYTICS_INDEXER["mainnet"]}ve/prices`)
+      .get(`${Config.VE_ANALYTICS_INDEXER["mainnet"]}prices`)
       .then((resp) => resp.data)
       .catch((err) => {
         console.log(err);
@@ -130,12 +130,13 @@ export const getTokenPrices = async (): Promise<{
       });
     const indexerPricesData = indexerPriceResponse;
 
-    for (const x of tokenPriceResponse.contracts) {
+    /*     for (const x of tokenPriceResponse.contracts) {
       tokenPrice[x.symbol] = Number(x.usdValue);
-    }
+    } */
 
     for (const x of indexerPricesData) {
-      if (Number(x.price) !== 0) tokenPrice[x.token] = Number(x.price);
+      //if (Number(x.price) !== 0) tokenPrice[x.token] = Number(x.price);
+      tokenPrice[x.token] = Number(x.price);
     }
 
     return {
@@ -209,7 +210,9 @@ export const getLPTokenPrices = async (tokenPrice: {
 }): Promise<{ success: boolean; lpPrices: { [id: string]: BigNumber } }> => {
   try {
     const state = store.getState();
-    const AMM = state.config.AMMs;
+    const V2_AMM = state.config.AMMs;
+    const V3_AMM = state.config.V3_AMMs;
+    const AMM = { ...V2_AMM, ...V3_AMM };
 
     let lpPrices: { [id: string]: BigNumber } = {};
     for (const key in AMM) {

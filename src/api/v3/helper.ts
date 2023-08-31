@@ -4,9 +4,8 @@ import BigNumber from "bignumber.js";
 import { Token, BalanceNat, IV3ContractStorageParams } from "./types";
 import { IConfigToken } from "../../config/types";
 import { Tick, Liquidity, PositionManager, Price } from "@plenty-labs/v3-sdk";
-import { getV3PoolAddressWithFeeTier } from "../../api/util/fetchConfig";
+import { getV3PoolAddressWithFeeTier } from "../util/fetchConfig";
 import { connectedNetwork, dappClient } from "../../common/walletconnect";
-import { store } from "../../redux";
 
 const tokenDetail = async (tokenSymbol: String): Promise<Token> => {
   let configResponse: any = await axios.get(Config.CONFIG_LINKS[connectedNetwork].TOKEN);
@@ -127,11 +126,8 @@ export const getRealPriceFromTick = async (
   tokenYSymbol: IConfigToken
 ): Promise<any> => {
   try {
-    let priceValue = Price.computeRealPriceFromSqrtPrice(
-      Tick.computeSqrtPriceFromTick(tick),
-      tokenXSymbol.decimals,
-      tokenYSymbol.decimals
-    );
+    //@ts-ignore
+    let priceValue = Price.computeRealPriceFromSqrtPrice(Tick.computeSqrtPriceFromTick(tick), tokenXSymbol, tokenYSymbol);
 
     return priceValue;
   } catch (error) {
@@ -147,7 +143,8 @@ export const getTickFromRealPrice = async (
 ): Promise<any> => {
   try {
     let tick = Tick.computeTickFromSqrtPrice(
-      Price.computeSqrtPriceFromRealPrice(realPrice, tokenXSymbol.decimals, tokenYSymbol.decimals),
+      //@ts-ignore
+      Price.computeSqrtPriceFromRealPrice(realPrice, tokenXSymbol, tokenYSymbol),
       tickspacing
     );
 

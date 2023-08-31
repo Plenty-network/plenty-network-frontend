@@ -18,12 +18,13 @@ import dollarimg from "../../assets/icon/poolsv3/dollarMP.svg";
 import { ActivePopUp } from "./ManageTabV3";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { tokenIcons } from "../../constants/tokensList";
+import { IV3PositionObject } from "../../api/v3/types";
 
 interface IPositionsProps {
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
-  handleCollectFeeOperation: () => void;
+  handleCollectFeeOperation: (selectedPosition: IV3PositionObject) => void;
   feeTier: string;
 }
 function PositionsPopup(props: IPositionsProps) {
@@ -62,7 +63,7 @@ function PositionsPopup(props: IPositionsProps) {
 
   return (
     <>
-      <div className=" mt-4 rounded-2xl flex flex-col justify-between items-center h-[64px] px-3 sm:px-[25px] pt-[8px] border-text-800  border-2 bg-secondary-400 ">
+      <div className=" mt-4 rounded-2xl flex flex-col justify-between items-center h-[64px] px-3 sm:px-[25px] pt-[8px] border-text-800  border-2 bg-secondary-800 ">
         {
           <>
             <div className="flex w-full justify-between">
@@ -71,18 +72,7 @@ function PositionsPopup(props: IPositionsProps) {
                   <img
                     alt={"alt"}
                     src={
-                      tEZorCTEZtoUppercase(props.tokenIn.symbol.toString())
-                        .substring(0, 1)
-                        .toLowerCase() >
-                      tEZorCTEZtoUppercase(props.tokenOut.symbol.toString())
-                        .substring(0, 1)
-                        .toLowerCase()
-                        ? tokenIcons[props.tokenOut.symbol]
-                          ? tokenIcons[props.tokenOut.symbol].src
-                          : tokens[props.tokenOut.symbol.toString()]?.iconUrl
-                          ? tokens[props.tokenOut.symbol.toString()].iconUrl
-                          : `/assets/Tokens/fallback.png`
-                        : tokenIcons[props.tokenIn.symbol]
+                      tokenIcons[props.tokenIn.symbol]
                         ? tokenIcons[props.tokenIn.symbol].src
                         : tokens[props.tokenIn.symbol.toString()]?.iconUrl
                         ? tokens[props.tokenIn.symbol.toString()].iconUrl
@@ -97,18 +87,7 @@ function PositionsPopup(props: IPositionsProps) {
                   <img
                     alt={"alt"}
                     src={
-                      tEZorCTEZtoUppercase(props.tokenIn.symbol.toString())
-                        .substring(0, 1)
-                        .toLowerCase() >
-                      tEZorCTEZtoUppercase(props.tokenOut.symbol.toString())
-                        .substring(0, 1)
-                        .toLowerCase()
-                        ? tokenIcons[props.tokenIn.symbol]
-                          ? tokenIcons[props.tokenIn.symbol].src
-                          : tokens[props.tokenIn.symbol.toString()]?.iconUrl
-                          ? tokens[props.tokenIn.symbol.toString()].iconUrl
-                          : `/assets/Tokens/fallback.png`
-                        : tokenIcons[props.tokenOut.symbol]
+                      tokenIcons[props.tokenOut.symbol]
                         ? tokenIcons[props.tokenOut.symbol].src
                         : tokens[props.tokenOut.symbol.toString()]?.iconUrl
                         ? tokens[props.tokenOut.symbol.toString()].iconUrl
@@ -132,18 +111,9 @@ function PositionsPopup(props: IPositionsProps) {
                   }
                 /> */}
                 <span className="font-body2 md:text-f14 text-white ">
-                  {tEZorCTEZtoUppercase(props.tokenIn.symbol.toString())
-                    .substring(0, 1)
-                    .toLowerCase() >
-                  tEZorCTEZtoUppercase(props.tokenOut.symbol.toString())
-                    .substring(0, 1)
-                    .toLowerCase()
-                    ? `${tEZorCTEZtoUppercase(props.tokenOut.symbol)} / ${tEZorCTEZtoUppercase(
-                        props.tokenIn.symbol
-                      )}`
-                    : `${tEZorCTEZtoUppercase(props.tokenIn.symbol)} / ${tEZorCTEZtoUppercase(
-                        props.tokenOut.symbol
-                      )}`}
+                  {`${tEZorCTEZtoUppercase(props.tokenIn.symbol)} / ${tEZorCTEZtoUppercase(
+                    props.tokenOut.symbol
+                  )}`}
                 </span>
               </div>
               <div className="ml-auto">

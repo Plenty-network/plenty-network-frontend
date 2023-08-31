@@ -40,7 +40,7 @@ import {
   setTokenYV3,
 } from "../../../redux/poolsv3/manageLiq";
 import Link from "next/link";
-import { getPoolsShareDataV3 } from "../../../api/v3/pools";
+import { getAllPoolsDataV3, getPoolsShareDataV3 } from "../../../api/v3/pools";
 
 export interface IShortCardProps {
   className?: string;
@@ -71,14 +71,24 @@ export function PoolsTableV3(props: IShortCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const [placeholderData, setPlaceholderData] = useState([] as IAllPoolsDataResponse[]);
 
-  const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilterV3(
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getAllPoolsDataV3();
+      setPlaceholderData(data.allData);
+    }
+
+    fetchData();
+  }, []);
+  const { data: poolTableData = [], isFetched: isFetch } = usePoolsTableFilterV3(
     tokenPrices,
     props.poolsFilter,
 
     props.reFetchPool,
     0,
-    true
+    true,
+    placeholderData
   );
 
   const [poolsTableData, isFetched] = usePoolsTableSearch(
@@ -127,7 +137,7 @@ export function PoolsTableV3(props: IShortCardProps) {
       console.log(res);
     });
   }, []);
-
+  console.log("v3", poolsTableData);
   const mobilecolumns = React.useMemo<Column<any>[]>(
     () => [
       {
@@ -142,26 +152,22 @@ export function PoolsTableV3(props: IShortCardProps) {
             <div className={clsx("flex gap-1 items-center max-w-[270px]", "ml-1 md:ml-[34px]")}>
               <CircularOverLappingImage
                 tokenA={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? x.tokenB?.toString()
                     : x.tokenA?.toString()
                 }
                 tokenB={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? x.tokenA?.toString()
                     : x.tokenB?.toString()
                 }
                 src1={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? getImagesPath(x.tokenB?.toString())
                     : getImagesPath(x.tokenA?.toString())
                 }
                 src2={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? getImagesPath(x.tokenA?.toString())
                     : getImagesPath(x.tokenB?.toString())
                 }
@@ -206,14 +212,14 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "volume.value"),
         accessor: (x: any) => (
           <PoolsTextWithTooltip
-            text={x.volume.toString()}
+            text={x.volume.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1=""
-            token2=""
+            token1={x.volume.token1}
+            token2={x.volume.token2}
           />
         ),
       },
@@ -224,14 +230,14 @@ export function PoolsTableV3(props: IShortCardProps) {
         tooltipMessage: "Total value locked up in the pool.",
         isToolTipEnabled: true,
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl.value"),
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.tvl.toString()}
+            text={x.tvl.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1=""
-            token2=""
+            token1={x.tvl.token1}
+            token2={x.tvl.token2}
           />
         ),
       },
@@ -240,17 +246,17 @@ export function PoolsTableV3(props: IShortCardProps) {
         id: "fees",
         columnWidth: "w-[122px]",
         subText: "7d",
-        tooltipMessage: "Trading fees collected by the pool in the current epoch.",
+        tooltipMessage: "Trading fees collected by the pool in the last 7 days.",
         isToolTipEnabled: true,
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "fees.value"),
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.fees.toString()}
+            text={x.fees.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1=""
-            token2=""
+            token1={x.fees.token1}
+            token2={x.fees.token2}
           />
         ),
       },
@@ -290,40 +296,31 @@ export function PoolsTableV3(props: IShortCardProps) {
             <div className={clsx("flex gap-1 items-center max-w-[320px]", "ml-[54px]")}>
               <CircularOverLappingImage
                 tokenA={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? x.tokenB?.toString()
                     : x.tokenA?.toString()
                 }
                 tokenB={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? x.tokenA?.toString()
                     : x.tokenB?.toString()
                 }
                 src1={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? getImagesPath(x.tokenB?.toString())
                     : getImagesPath(x.tokenA?.toString())
                 }
                 src2={
-                  tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
+                  tEZorCTEZtoUppercase(x.tokenA.toString()) === "CTEZ"
                     ? getImagesPath(x.tokenA?.toString())
                     : getImagesPath(x.tokenB?.toString())
                 }
               />
               <div className="flex items-center ">
                 <span className="md:text-f14 text-f12 text-white ">
-                  {tEZorCTEZtoUppercase(x.tokenA?.toString()).substring(0, 1).toLowerCase() >
-                  tEZorCTEZtoUppercase(x.tokenB?.toString()).substring(0, 1).toLowerCase()
-                    ? ` ${tEZorCTEZtoUppercase(x.tokenB?.toString())} / ${tEZorCTEZtoUppercase(
-                        x.tokenA?.toString()
-                      )}`
-                    : ` ${tEZorCTEZtoUppercase(x.tokenA?.toString())} / ${tEZorCTEZtoUppercase(
-                        x.tokenB?.toString()
-                      )}`}
+                  {` ${tEZorCTEZtoUppercase(x.tokenA?.toString())} / ${tEZorCTEZtoUppercase(
+                    x.tokenB?.toString()
+                  )}`}
                 </span>
                 <span className="bg-primary-500/[0.2] rounded-lg  px-2  text-white md:font-body2 font-caption1-small  text-center	py-1.5 px-2   w-fit  ml-2 md:ml-3">
                   {x.feeTier}%
@@ -354,14 +351,14 @@ export function PoolsTableV3(props: IShortCardProps) {
         isToolTipEnabled: true,
         tooltipMessage: "Pool’s trading volume in the last 24 hours.",
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "volume"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "volume.value"),
         accessor: (x: any) => (
           <PoolsTextWithTooltip
-            text={x.volume.toString()}
+            text={x.volume.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1="0"
-            token2="0"
+            token1={x.volume.token1}
+            token2={x.volume.token2}
           />
         ),
       },
@@ -372,14 +369,14 @@ export function PoolsTableV3(props: IShortCardProps) {
         tooltipMessage: "Total value locked up in the pool.",
         isToolTipEnabled: true,
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "tvl.value"),
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.tvl.toString()}
+            text={x.tvl.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1="0"
-            token2="0"
+            token1={x.tvl.token1}
+            token2={x.tvl.token2}
           />
         ),
       },
@@ -388,17 +385,17 @@ export function PoolsTableV3(props: IShortCardProps) {
         id: "fees",
         columnWidth: "w-[122px]",
         subText: "7d",
-        tooltipMessage: "Trading fees collected by the pool in the current epoch.",
+        tooltipMessage: "Trading fees collected by the pool in the last 7 days.",
         isToolTipEnabled: true,
         canShort: true,
-        sortType: (a: any, b: any) => compareNumericString(a, b, "fees"),
+        sortType: (a: any, b: any) => compareNumericString(a, b, "fees.value"),
         accessor: (x) => (
           <PoolsTextWithTooltip
-            text={x.fees.toString()}
+            text={x.fees.value}
             token1Name={x.tokenA}
             token2Name={x.tokenB}
-            token1="0"
-            token2="0"
+            token1={x.fees.token1}
+            token2={x.fees.token2}
           />
         ),
       },
