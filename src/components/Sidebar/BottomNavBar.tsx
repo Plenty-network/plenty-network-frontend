@@ -235,7 +235,7 @@ export function MenuNoLink(props: IBottomMoreNavMenuProps) {
           width={"24px"}
         />
       )}
-      <p>{props.text}</p>
+      <p className="w-[6px] h-[6px] rounded-full bg-blue-700 relative -top-[3px]"></p>
     </div>
   );
 }
