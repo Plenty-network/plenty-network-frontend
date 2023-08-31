@@ -504,7 +504,7 @@ export const getTotalAmmVotes = async (epochNumber: number): Promise<IVotesRespo
     // Create a list of top 9 gauges and sum up the remaining others from the main list.
     const [topAmmData, summedData] = createOtherAmmsData(totalAmmVotesData);
 
-    return {
+    return { 
       success: true,
       isOtherDataAvailable: true,
       allData: totalAmmVotesData,

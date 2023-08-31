@@ -490,6 +490,20 @@
     -o-animation: fadeIn 1.1s;
     -ms-animation: fadeIn 1.1s;
   }
+	.fade-in-label{
+    animation: fadeInLabel 0.4s;
+    -webkit-animation: fadeInLabel 0.4s;
+    -moz-animation: fadeInLabel 0.4s;
+    -o-animation: fadeInLabel 0.4s;
+    -ms-animation: fadeInLabel 0.4s;
+  }
+	.fade-out-label{
+    animation: fadeOutLabel 0.4s;
+    -webkit-animation: fadeOutLabel 0.4s;
+    -moz-animation: fadeOutLabel 0.4s;
+    -o-animation: fadeOutLabel 0.4s;
+    -ms-animation: fadeOutLabel 0.4s;
+  }
   .fade-in-3{
     animation: fadeIn 0.3s;
     -webkit-animation: fadeIn 0.3s;
@@ -531,6 +545,37 @@
     100% { 
         opacity: 1;
         transform: scale(1);
+     }
+  }
+	@keyframes fadeInLabel {
+    0% { 
+        opacity: 0; 
+        
+
+    }
+    30%{
+        opacity: 0.3; 
+        
+    }
+    100% { 
+        opacity: 1;
+        
+     }
+  }
+	@keyframes fadeOutLabel {
+    0% { 
+        opacity: 1;
+        
+
+    }
+    30%{
+        opacity: 0.3; 
+        
+    }
+    100% { 
+        
+		opacity: 0; 
+        
      }
   }
   @keyframes fadeOut {
@@ -934,4 +979,62 @@
 	opacity: 0; visibility: hidden;
 }
  
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  animation: spinner-plncf9 4s infinite;
+}
+
+.spinner::before,
+.spinner::after {
+  content: '';
+  grid-area: 1/1;
+  border: 9px solid;
+  border-radius: 50%;
+  border-color: #9D5CFF #9D5CFF #0000 #0000;
+  mix-blend-mode: darken;
+  animation: spinner-plncf9 1s infinite linear;
+}
+
+.spinner::after {
+  border-color: #0000 #0000 #e6d4ff #e6d4ff;
+  animation-direction: reverse;
+}
+
+@keyframes spinner-plncf9 {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+
+.fade-in-light {
+	-webkit-animation: fade-in 0.8s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	        animation: fade-in 0.8s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+.fade-in-warning {
+	-webkit-animation: fade-in 0.5s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	        animation: fade-in 0.5s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+
+ @-webkit-keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

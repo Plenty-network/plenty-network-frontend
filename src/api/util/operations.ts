@@ -3,9 +3,9 @@ import { WalletParamsWithKind } from "@taquito/taquito/dist/types/wallet";
 import cloneDeep from "lodash-es/cloneDeep";
 import slice from "lodash-es/slice";
 import concat from "lodash-es/concat";
-import findLastIndex from "lodash-es/findLastIndex"
+import findLastIndex from "lodash-es/findLastIndex";
 import { dappClient, tzktNode } from "../../common/walletconnect";
-import axios from 'axios';
+import axios from "axios";
 import { BigNumber } from "bignumber.js";
 import { GAS_LIMIT_EXCESS, STORAGE_LIMIT_EXCESS } from "../../constants/global";
 
@@ -21,7 +21,7 @@ export const getMaxPossibleBatchArray = async (
     let leftoverBatch: ParamsWithKind[] = [];
     const Tezos = await dappClient().tezos();
     // let gasConsumed = 0;
-    //Find the approx max possible 
+    //Find the approx max possible
     while (maxPossibleBatch.length > 0) {
       const isTransactionPossible: boolean = await Tezos.estimate
         .batch(maxPossibleBatch)
@@ -72,16 +72,19 @@ export const getMaxPossibleBatchArrayV2 = async (
     const listOfLeftoverBatches: ParamsWithKind[][] = [];
     const Tezos = await dappClient().tezos();
     // Add complete list as first possibility if original array length is 1
-    if(maxPossibleBatch.length === 1) {
+    if (maxPossibleBatch.length === 1) {
       listOfAllBatches.push(maxPossibleBatch);
       listOfLeftoverBatches.push([]);
     }
     // Check if it's possible to execute the original batch and return immediately if so.
     const isTransactionPossible: boolean = await Tezos.estimate
-        .batch(maxPossibleBatch)
-        .then((_est) => true)
-        .catch((_err) => {console.log(_err);return false;});
-    if(isTransactionPossible) {
+      .batch(maxPossibleBatch)
+      .then((_est) => true)
+      .catch((_err) => {
+        console.log(_err);
+        return false;
+      });
+    if (isTransactionPossible) {
       return maxPossibleBatch as WalletParamsWithKind[];
     }
     // Create the approx max possible batches list
@@ -115,7 +118,7 @@ export const getMaxPossibleBatchArrayV2 = async (
       // for all other failures
       throw new Error("Couldn't find successful batch operations possible.");
     }
-    
+
     const maxPossibleBatchesWithDust = [];
     maxPossibleBatch = listOfAllBatches[maxPossibleBatchIndex];
     leftoverBatch = listOfLeftoverBatches[maxPossibleBatchIndex];
@@ -124,7 +127,7 @@ export const getMaxPossibleBatchArrayV2 = async (
     for (let i = 0; i < leftoverBatch.length; i++) {
       maxPossibleBatchesWithDust.push(concat(maxPossibleBatch, slice(leftoverBatch, 0, i + 1)));
     }
-    
+
     const maxPromisesReult = await Promise.allSettled(
       maxPossibleBatchesWithDust.map((batch) => Tezos.estimate.batch(batch))
     );
@@ -133,7 +136,7 @@ export const getMaxPossibleBatchArrayV2 = async (
       maxPromisesReult,
       (result) => result.status === "fulfilled"
     );
-    
+
     maxPossibleBatch =
       finalMaxPossibleBatchIndex >= 0
         ? maxPossibleBatchesWithDust[finalMaxPossibleBatchIndex]
@@ -156,21 +159,24 @@ export const getBatchOperationsWithLimits = async (
   try {
     let notEnoughTez = false;
     let notRevealed = false;
-    
+    console.log("Estimating batch operations...", allBatchOperations);
     const Tezos = await dappClient().tezos();
+
     const limits = await Tezos.estimate
       .batch(allBatchOperations as ParamsWithKind[])
       .then((limits) => limits)
       .catch((err) => {
         console.log(err);
         const errorMessage = String(err.message);
-        if(errorMessage.includes("storage_exhausted")) {
+        if (errorMessage.includes("storage_exhausted")) {
           notEnoughTez = true;
-        } else if(errorMessage.includes("reveal")) {
+        } else if (errorMessage.includes("reveal")) {
           notRevealed = true;
         }
         return undefined;
       });
+
+    console.log("Limits", limits);
 
     const updatedBatchOperations: WalletParamsWithKind[] = [];
     if (limits !== undefined) {
@@ -191,12 +197,13 @@ export const getBatchOperationsWithLimits = async (
         });
       });
     } else {
-      if(notEnoughTez) {
+      if (notEnoughTez) {
         throw new Error("NOT_ENOUGH_TEZ");
-      } else if(notRevealed) {
+      } else if (notRevealed) {
         // return the original batch if address is not revealed
         return allBatchOperations;
       }
+      //return allBatchOperations;
       throw new Error("Failed to create batch");
     }
 

@@ -195,10 +195,6 @@ export default function Vote() {
     }
   }, []);
   useEffect(() => {
-    console.log(
-      "epochNumber",
-      selectedEpoch?.epochNumber ? selectedEpoch?.epochNumber : currentEpoch?.epochNumber
-    );
     if (selectedEpoch?.epochNumber && Object.keys(tokenPrice).length !== 0) {
       setVoteData({} as { [id: string]: IVotePageData });
       setSelectedPools([] as ISelectedPool[]);

@@ -31,7 +31,7 @@ function TransactionSubmitted(props: ITransactionSubmittedProps) {
               style={{ height: "150px", width: "150px" }}
             />
           </div>
-          <div className="mt-11 border border-border-100/[0.4] rounded-2xl bg-secondary-100/[0.02] flex justify-center items-center h-[52px] font-subtitle4">
+          <div className="mt-11 px-4 py-3 border border-border-100/[0.4] rounded-2xl bg-secondary-100/[0.02] flex justify-center items-center  font-subtitle4">
             {props.content}
           </div>
           <div

@@ -12,11 +12,10 @@ export interface IInfoIconToolTipProps {
 export function InfoIconToolTip(props: IInfoIconToolTipProps) {
   const randomId = generateRandomString(5);
   return (
-    <span className="flex justify-center items-center">
+    <span className="flex justify-center items-center w-[14px] h-[17px]">
       <ToolTip
         classNameAncorToolTip="pushtoCenter"
         id={`info${randomId}`}
-        position={Position.top}
         message={""}
         toolTipChild={
           props.toolTipChild ? (
@@ -26,7 +25,13 @@ export function InfoIconToolTip(props: IInfoIconToolTipProps) {
           )
         }
       >
-        <Image alt={"alt"} src={infoIcon} className="cursor-pointer" />
+        <Image
+          alt={"alt"}
+          width={"14px"}
+          height={"14px"}
+          src={infoIcon}
+          className="cursor-pointer"
+        />
       </ToolTip>
     </span>
   );

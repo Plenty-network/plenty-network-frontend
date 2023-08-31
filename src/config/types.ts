@@ -20,7 +20,8 @@ export interface IConfig {
     mainnet: Record<string, string>;
   };
   ROUTER: INodes;
-
+  V3_CONFIG_URL: INodes;
+  
   // WRAPPED_ASSETS: {
   //   testnet: Record<string, IWrappedToken>;
   //   mainnet: Record<string, IWrappedToken>;
@@ -40,8 +41,10 @@ export interface IConfig {
   VOTE_ESCROW: { mainnet: string; testnet: string };
   VE_INDEXER: { mainnet: string; testnet: string };
   ANALYTICS_INDEXER: { mainnet: string; testnet: string };
+  VE_ANALYTICS_INDEXER: { mainnet: string; testnet: string };
   PLY_TOKEN: { mainnet: string; testnet: string };
   FACTORY: { mainnet: string; testnet: string };
+  V3_FACTORY: { mainnet: string; testnet: string };
   TEZ_DEPLOYER: { mainnet: string; testnet: string };
   EXCHANGE_TOKENS: { [key in MigrateToken]: IExchangeTokenData };
   IPFS_LINKS: { primary: string; fallback: string };
@@ -145,6 +148,7 @@ export interface IContractsConfig {
   // AMM: IAmmContracts;
   TOKEN: IConfigTokens;
   AMM: IConfigPools;
+  V3_AMM: IConfigPools;
 }
 
 export interface IGaugeConfigData {
@@ -212,8 +216,10 @@ export interface IConfigLPToken {
 
 export interface IConfigPool {
   address: string;
-  token1: IConfigToken;
-  token2: IConfigToken;
+  token1?: IConfigToken;
+  token2?: IConfigToken;
+  tokenX?: IConfigToken;
+  tokenY?: IConfigToken;
   lpToken: IConfigLPToken;
   type: PoolType;
   token1Precision?: string;
@@ -221,6 +227,7 @@ export interface IConfigPool {
   gauge?: string;
   bribe?: string;
   fees?: number;
+  feeBps?: number;
 }
 
 export interface IConfigPools {
@@ -228,6 +235,9 @@ export interface IConfigPools {
 }
 
 export interface IConfigData {
-  POOL: string;
+  POOL: {
+    V2: string;
+    V3: string;
+  }
   TOKEN: string;
 }

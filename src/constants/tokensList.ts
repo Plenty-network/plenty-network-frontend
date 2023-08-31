@@ -63,6 +63,7 @@ export const tokenIcons: { [token: string]: StaticImageData } = {
   TEZ: xtz,
   CTEZ: ctez,
   CTez: ctez,
+  ctez: ctez,
   ETHtz: ETHtz,
   PLENTY: plenty,
   USDtz: usdtz,

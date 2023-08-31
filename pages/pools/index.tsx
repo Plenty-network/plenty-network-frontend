@@ -12,9 +12,7 @@ import { getEpochData } from "../../src/redux/epoch/epoch";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
-import info from "../../src/assets/icon/pools/InfoBlue.svg";
-import close from "../../src/assets/icon/pools/closeBlue.svg";
-import Image from "next/image";
+
 import { USERADDRESS } from "../../src/constants/localStorage";
 import { NewPool } from "../../src/components/Pools/NewPool";
 import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
@@ -52,6 +50,7 @@ export default function Pools(props: IIndexProps) {
   const rewardsAprEstimateError = useAppSelector(
     (state) => state.rewardsApr.rewardsAprEstimateError
   );
+
   const handleCloseManagePopup = (val: boolean) => {
     setShowLiquidityModal(val);
   };
@@ -200,7 +199,7 @@ export default function Pools(props: IIndexProps) {
           )} */}
           {activeStateTab === PoolsCardHeader.All && (
             <PoolsTable
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setShowLiquidityModalPopup={setShowLiquidityModal}
@@ -215,7 +214,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
             <PoolsTable
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               poolsFilter={POOL_TYPE.STABLE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
@@ -231,7 +230,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
             <PoolsTable
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               poolsFilter={POOL_TYPE.VOLATILE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
@@ -247,7 +246,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
             <MyPoolTable
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               poolsFilter={POOL_TYPE.MYPOOLS}
               isConnectWalletRequired={true}
               searchValue={searchValue}

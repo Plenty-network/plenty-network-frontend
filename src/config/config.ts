@@ -1,4 +1,4 @@
-import { IConfig, TokenStandard } from './types';
+import { IConfig, TokenStandard } from "./types";
 import { NetworkType } from "@airgap/beacon-types";
 
 const Config: IConfig = {
@@ -40,6 +40,10 @@ const Config: IConfig = {
     mainnet: "KT1ECkj846eLwRSexCKagq8FfkBBxqhsNhkD",
     testnet: "KT1UmJmgNvy7sGztaFkr598Lj7JxiWbTFbQp",
   },
+  V3_FACTORY: {
+    mainnet: "",
+    testnet: "KT1KEa3Pc3dpHfSCH4r1nCNsFXNL6Q1ctASS",
+  },
   TEZ_DEPLOYER: {
     mainnet: "KT1JnpY4fUQ9DurUhb7uCQtKkunLiamgdzyc",
     testnet: "KT1Mr3fLViGYZCztpMUWxdGNSHjA8xPtczVA",
@@ -50,12 +54,16 @@ const Config: IConfig = {
   },
   PLENTY_3ROUTE_CONTRACT: "KT1R7WEtNNim3YgkxPt8wPMczjH3eyhbJMtz",
   VE_INDEXER: {
-    mainnet: "https://ply-indexer.mainnet.plenty.network/v1/",
+    mainnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
     testnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
   },
   ANALYTICS_INDEXER: {
-    mainnet: "https://api.analytics.plenty.network/",
-    testnet: "http://3.111.147.231:3000/",//"https://analytics-indexer.ghostnet.plenty.network/",
+    mainnet: "https://api.plenty.network/analytics/",
+    testnet: "https://api.plenty.network/analytics/",
+  },
+  VE_ANALYTICS_INDEXER: {
+    mainnet: "https://api.plenty.network/ve/",
+    testnet: "https://api.plenty.network/ve/",
   },
 
   FAUCET: "KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH",
@@ -89,12 +97,18 @@ const Config: IConfig = {
 
   CONFIG_LINKS: {
     testnet: {
-      POOL: "https://ghostnet.data-config.plenty.network/pools",
-      TOKEN: "https://ghostnet.data-config.plenty.network/tokens",
+      POOL: {
+        V2: "https://api.plenty.network/config/pools/v2",
+        V3: "https://api.plenty.network/config/pools/v3",
+      },
+      TOKEN: "https://api.plenty.network/config/tokens",
     },
     mainnet: {
-      POOL: "https://config.mainnet.plenty.network/pools",
-      TOKEN: "https://config.mainnet.plenty.network/tokens",
+      POOL: {
+        V2: "https://api.plenty.network/config/pools/v2",
+        V3: "https://api.plenty.network/config/pools/v3",
+      },
+      TOKEN: "https://api.plenty.network/config/tokens",
     },
   },
 
@@ -119,20 +133,23 @@ const Config: IConfig = {
     testnet: "KT1CWvM4nLoyHBGKkGBKjnPNTNLzoJ9JpAW3",
   },
 
-  NETWORK: "mainnet",
-  WALLET_NETWORK: NetworkType.MAINNET,
+  NETWORK: "testnet",
+  WALLET_NETWORK: NetworkType.GHOSTNET,
   ADMIN_ADDRESS: "KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW",
   BURNER: "tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg",
 
   EXPLORER_LINKS: {
     RINKEBY: "https://rinkeby.etherscan.io/tx/",
     ETHEREUM: "https://etherscan.io/tx/",
-    TEZOS: { 
+    TEZOS: {
       mainnet: "https://tzkt.io/",
-      testnet: "https://ghostnet.tzkt.io/"
+      testnet: "https://ghostnet.tzkt.io/",
     },
   },
-
+  V3_CONFIG_URL: {
+    testnet: "https://api.plenty.network/config/",
+    mainnet: "https://api.plenty.network/config/",
+  },
   PLENTY_3ROUTE_URL: 
   {
     mainnet: "https://plenty.3route.io/v3/",

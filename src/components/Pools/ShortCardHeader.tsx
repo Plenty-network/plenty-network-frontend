@@ -34,12 +34,13 @@ export function Tabs(props: ITabsProps) {
           ? "justify-start"
           : props.TableName === "mybribes" && props.index !== 3
           ? "justify-start"
+          : props.TableName === "positionsv3"
+          ? "justify-start"
           : "justify-end "
       } ${props.tableType ? "thSticky" : ""} ${
-        (props.TableName === "newPools" || props.TableName === "poolsPosition") &&
-        props.index === 0 &&
-        "pl-20 sm:pl-[40px]"
-      }`}
+        props.TableName === "poolsPosition" && props.index === 0 && "pl-20 sm:pl-[40px]"
+      } ${props.TableName === "newPools" && "lg:pl-20 pl-2 "}
+      `}
     >
       <div className="flex gap-0 flex-col">
         <div className={`flex  ${props.isFirstRow ? "justify-start" : "justify-end"} `}>
@@ -61,14 +62,20 @@ export function Tabs(props: ITabsProps) {
               (props.TableName === "poolsPosition" && isMobile && props.index === 1) ||
               (props.TableName === "lockPosition" && isMobile && props.index === 1) ||
               (props.TableName === "locksRewards" && isMobile && props.index === 2) ? (
-                <span className="relative top-[3px] mr-1">
+                <span className="relative top-[3px] mr-1 w-[14px] h-[14px]">
                   <ToolTip
                     position={Position.top}
                     toolTipChild={
                       <div className="text-center w-[200px] md:w-[350px]">{props.toolTipChild}</div>
                     }
                   >
-                    <Image alt={"alt"} src={info} className="cursor-pointer" />
+                    <Image
+                      alt={"alt"}
+                      src={info}
+                      width={"14px"}
+                      height={"14px"}
+                      className="cursor-pointer"
+                    />
                   </ToolTip>
                 </span>
               ) : (
