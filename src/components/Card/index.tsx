@@ -17,7 +17,7 @@ function BottomCard(props: ILandingPageProps) {
     <>
       <div
         className={clsx(
-          " rounded-lg	justify-between flex-col landingBottom ml-6 mr-8 md:mx-6  p-4 md:px-2.5 md:py-[14px] w-auto  md:w-[184px] h-[194px] md:h-[105px] cursor-pointer "
+          " rounded-lg	flex md:block justify-between flex-col landingBottom ml-6 mr-8 md:mx-6  p-4 md:px-2.5 md:py-[14px] w-auto  md:w-[184px] h-[194px] md:h-[105px] cursor-pointer "
         )}
         onClick={() => props.setShowTutorial(true)}
       >
