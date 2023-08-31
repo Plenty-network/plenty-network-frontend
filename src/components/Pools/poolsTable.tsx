@@ -561,7 +561,7 @@ export function ShortCard(props: IShortCardProps) {
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}
           data={poolsTableData}
-          shortby="fees"
+          shortby="apr"
           TableName="newPools"
           tableType={true}
           isFetched={isFetched}
