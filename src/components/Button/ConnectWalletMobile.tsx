@@ -4,6 +4,8 @@ import copyLogo from "../../assets/icon/common/copyLogo.svg";
 import disconnectLogo from "../../assets/icon/common/disconnectLogo.svg";
 import fiatLogo from "../../assets/icon/common/fiatLogo.svg";
 
+import airdrop from "../../../public/assets/icon/airdrop.svg";
+import migrate from "../../../public/assets/icon/migrate.svg";
 import "animate.css";
 import copy from "copy-to-clipboard";
 import truncateMiddle from "truncate-middle";
@@ -21,6 +23,7 @@ import WertWidgetPopup from "../Wert";
 import { Position, ToolTip, TooltipType } from "../Tooltip/TooltipAdvanced";
 import { BUY_CRYPTO } from "../../constants/localStorage";
 import ReactTooltip from "react-tooltip";
+import Link from "next/link";
 
 export interface IConnectWalletBtnMobileProps {
   setNodeSelector: React.Dispatch<React.SetStateAction<boolean>>;
@@ -179,7 +182,22 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
                 <Image alt={"alt"} src={nodeSelectorLogo} />
                 <span>Node Selector</span>
               </p>
-
+              <p>
+                <Link href={"/migrate"}>
+                  <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                    <Image alt={"alt"} src={migrate} />
+                    <span>Migrate</span>
+                  </p>
+                </Link>
+              </p>
+              <p>
+                <Link href={"/airdrop"}>
+                  <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                    <Image alt={"alt"} src={airdrop} />
+                    <span>Airdrop</span>
+                  </p>
+                </Link>
+              </p>
               <p
                 onClick={disconnectUserWallet}
                 className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14 z-50"

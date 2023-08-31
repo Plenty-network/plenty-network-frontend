@@ -7,9 +7,10 @@ import walletIcon from "../../assets/icon/common/walletIcon.svg";
 import copy from "copy-to-clipboard";
 import truncateMiddle from "truncate-middle";
 import copyLogo from "../../assets/icon/common/copyLogo.svg";
-import airdrop from "../../../public/assets/icon/airdrop.svg";
+
 import docs from "../../assets/icon/common/feedback.svg";
 import feedback from "../../assets/icon/common/docs.svg";
+import airdrop from "../../../public/assets/icon/airdrop.svg";
 import migrate from "../../../public/assets/icon/migrate.svg";
 import switchLogo from "../../assets/icon/navigation/copy.svg";
 import fiatLogo from "../../assets/icon/common/fiatLogo.svg";
