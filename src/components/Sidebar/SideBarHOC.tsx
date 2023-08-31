@@ -17,6 +17,7 @@ import WertWidgetPopup from "../Wert";
 import CopiedToast from "../Notification/copiedToast";
 
 import { CLEARLS } from "../../constants/localStorage";
+import Tutorial from "../Tutorial";
 
 export interface ISideBarHOCProps {
   children: any;
@@ -55,6 +56,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
     }
     setIsBanner(isbannerRedux);
   }, []);
+  const [showTutorial, setShowTutorial] = React.useState(false);
   useEffect(() => {
     setIsBanner(isbannerRedux);
   }, [isbannerRedux]);
@@ -84,7 +86,9 @@ export function SideBarHOC(props: ISideBarHOCProps) {
           />
         )}
         <div className="flex flex-no-wrap">
-          {!isMobile && !props.isBribes && <SideBar isBanner={isBanner} />}
+          {!isMobile && !props.isBribes && (
+            <SideBar isBanner={isBanner} setShowTutorial={setShowTutorial} />
+          )}
           <div
             data-iscapture="true"
             className={`mt-0 ${
@@ -108,7 +112,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
             </div>
           </div>
         </div>
-        {isMobile && !props.isBribes && <BottomNavigationBar />}
+        {isMobile && !props.isBribes && <BottomNavigationBar setShowTutorial={setShowTutorial} />}
         {isMobile && (
           <>
             <Banner isBanner={isBanner} setIsBanner={setIsBanner} />
@@ -126,6 +130,7 @@ export function SideBarHOC(props: ISideBarHOCProps) {
       </div>
       <NodeSelector show={showNodeSelector} setShow={setNodeSelector} />
       {showFiat && <WertWidgetPopup hide={setShowFiat} />}
+      {showTutorial && <Tutorial show={showTutorial} setShow={setShowTutorial} />}
     </>
   );
 }

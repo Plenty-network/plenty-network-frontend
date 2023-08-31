@@ -5,8 +5,10 @@ import { setbannerClicked } from "../../redux/walletLoading";
 import { FooterInfoIcon } from "./FooterIconList";
 import { HrefIcon, IHrefIconProps } from "./LinkIconList";
 import { ISingleSideBarProps, SingleSideBar } from "./SideBarTabList";
+import BottomCard from "../Card";
 
 export interface ISideBarProps {
+  setShowTutorial: React.Dispatch<React.SetStateAction<boolean>>;
   isBanner: boolean;
 }
 export const FooterMenu: Array<IHrefIconProps> = [
@@ -15,16 +17,16 @@ export const FooterMenu: Array<IHrefIconProps> = [
     iconName: "VectorfooterMenu",
     href: "https://analytics.plenty.network/",
   },
-  {
-    name: "Docs",
-    iconName: "VectorfooterMenu-1",
-    href: "https://whitepaper.plenty.network/",
-  },
-  {
-    name: "Feedback",
-    iconName: "VectorfooterMenu-2",
-    href: "https://tally.so/r/mOQg0M ",
-  },
+  // {
+  //   name: "Docs",
+  //   iconName: "VectorfooterMenu-1",
+  //   href: "https://whitepaper.plenty.network/",
+  // },
+  // {
+  //   name: "Feedback",
+  //   iconName: "VectorfooterMenu-2",
+  //   href: "https://tally.so/r/mOQg0M ",
+  // },
 ];
 
 const MainMenu: Array<ISingleSideBarProps> = [
@@ -60,19 +62,19 @@ const MainMenu: Array<ISingleSideBarProps> = [
     pathName: "/vote",
     activePathName: "/vote",
   },
-  {
-    name: "Migrate",
-    iconName: "migrate",
-    pathName: "/migrate",
-    activePathName: "/migrate",
-    isToolTip: true,
-  },
-  {
-    name: "Airdrop",
-    iconName: "airdrop",
-    pathName: "/airdrop",
-    activePathName: "/airdrop",
-  },
+  // {
+  //   name: "Migrate",
+  //   iconName: "migrate",
+  //   pathName: "/migrate",
+  //   activePathName: "/migrate",
+  //   isToolTip: true,
+  // },
+  // {
+  //   name: "Airdrop",
+  //   iconName: "airdrop",
+  //   pathName: "/airdrop",
+  //   activePathName: "/airdrop",
+  // },
   {
     name: "Bribe",
     iconName: "bribes",
@@ -139,6 +141,10 @@ export function SideBar(props: ISideBarProps) {
             />
           ))}
         </div>
+        <div className="my-5">
+          <BottomCard setShowTutorial={props.setShowTutorial} />
+        </div>
+
         <div>
           <div className=" border-border-500/50 border-t">
             {FooterMenu.map((e, i) => (

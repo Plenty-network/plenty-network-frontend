@@ -1,11 +1,14 @@
 import clsx from "clsx";
 import Image from "next/image";
+
+import playTutorial from "../../assets/icon/poolsv3/playTutorial.svg";
 import * as React from "react";
 import playIcon from "../../assets/icon/pools/playIcon.svg";
 import { store, useAppSelector } from "../../redux";
 import { VideoModal } from "../Modal/videoModal";
 import { InputSearchBox } from "../Pools/Component/SearchInputBox";
 import { ToolTip } from "../Tooltip/TooltipAdvanced";
+import Tutorial from "../Tutorial";
 export interface IHeadInfoProps {
   className?: string;
   title: string;
@@ -22,11 +25,12 @@ export default function HeadInfo(props: IHeadInfoProps) {
   // const userAddress = store.getState().wallet.address;
   const userAddress = useAppSelector((state) => state.wallet.address);
   const [showVideoModal, setShowVideoModal] = React.useState(false);
+  const [showTutorial, setShowTutorial] = React.useState(false);
   return (
     <div
       className={`${props.className} flex h-[68px] justify-between items-center border-b border-b-borderCommon py-2 pt-2 md:pt-2 bg-cardBackGround`}
     >
-      <div className="flex gap-1">
+      <div className="flex items-center gap-1">
         <div className="p-4 text-f18 font-medium text-white">
           {props.title ? props.title : "Pools"}
         </div>
@@ -61,6 +65,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
         value={props.searchValue}
         onChange={props.setSearchValue}
       /> */}
+      {showTutorial && <Tutorial show={showTutorial} setShow={setShowTutorial} />}
       {showVideoModal && (
         <VideoModal
           closefn={setShowVideoModal}

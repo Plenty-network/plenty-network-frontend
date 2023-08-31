@@ -1038,3 +1038,35 @@
     opacity: 1;
   }
 }
+.loading-container {
+	width: 145px;
+	height: 6px;
+	background-color: #2A1945;
+	overflow: hidden;
+}
+
+.loading-bar {
+	height: 100%;
+	width: 0;
+	background-color: #9D5CFF;
+	
+} 
+
+
+@keyframes fill {
+	0% {
+		width: 0;
+	}
+	100% {
+		width: 100%;
+	}
+} 
+
+
+	
+.loading-bar.active {
+  animation: fill 17s linear forwards;
+}
+
+
+

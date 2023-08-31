@@ -9,8 +9,11 @@ import { FooterInfoIcon } from "./FooterIconList";
 import { HrefIcon } from "./LinkIconList";
 import { FooterMenu } from "./Sidebar";
 import { ISingleSideBarProps, SingleSideBar } from "./SideBarTabList";
+import BottomCard from "../Card";
 
-export interface IBottomNavigationBarProps {}
+export interface IBottomNavigationBarProps {
+  setShowTutorial: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 export interface IBottomNavMenuProps extends IBottomMoreNavMenuProps {
   activeSubMenuPool: boolean;
@@ -34,6 +37,10 @@ enum MenuType {
 }
 export interface ISubMenuProps {}
 export interface ISubMenuListProps {
+  refWrapper?: any;
+}
+export interface IMoreMenuListProps {
+  setShowTutorial: React.Dispatch<React.SetStateAction<boolean>>;
   refWrapper?: any;
 }
 const mainMenu: Array<ISingleSideBarProps> = [
@@ -87,7 +94,9 @@ export default function BottomNavigationBar(props: IBottomNavigationBarProps) {
     >
       <div className="bg-cardBackGround" ref={reff}>
         {activeSubMenu === MenuType.Menu && <SubMenuList />}
-        {activeSubMenu === MenuType.MoreNavMenu && <MoreSubMenuList />}
+        {activeSubMenu === MenuType.MoreNavMenu && (
+          <MoreSubMenuList setShowTutorial={props.setShowTutorial} />
+        )}
         {activeSubMenuPool && <SubMenuForPool />}
         <div className="justify-between flex w-screen">
           <>
@@ -226,7 +235,7 @@ export function MenuNoLink(props: IBottomMoreNavMenuProps) {
           width={"24px"}
         />
       )}
-      <p>{props.text}</p>
+      <p className="w-[6px] h-[6px] rounded-full bg-blue-700 relative -top-[3px]"></p>
     </div>
   );
 }
@@ -245,7 +254,7 @@ export function SubMenuList(props: ISubMenuListProps) {
     </div>
   );
 }
-export function MoreSubMenuList(props: ISubMenuListProps) {
+export function MoreSubMenuList(props: IMoreMenuListProps) {
   const dispatch = useAppDispatch();
   const handleClick = () => {
     dispatch(setbannerClicked(false));
@@ -259,7 +268,10 @@ export function MoreSubMenuList(props: ISubMenuListProps) {
       {/*  */}
 
       {/*  */}
-      <div className="px-9 hover:bg-sideBarHover ">
+      <div className="py-5 border-t border-t-borderColor px-2">
+        <BottomCard setShowTutorial={props.setShowTutorial} />
+      </div>
+      {/* <div className="px-9 hover:bg-sideBarHover border-t border-t-borderColor ">
         <SingleSideBar
           name="Migrate"
           className="px-9 justify-between"
@@ -276,7 +288,7 @@ export function MoreSubMenuList(props: ISubMenuListProps) {
           pathName={"/airdrop"}
           isBottomMenu
         />
-      </div>
+      </div> */}
       <div className="px-9 border-t border-t-borderColor hover:bg-sideBarHover hover:border-t-primary-500">
         <SingleSideBar
           name="Bribe"
