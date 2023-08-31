@@ -21,11 +21,12 @@ import { ERRORMESSAGES, tokensModal, tokenType } from "../../../src/constants/sw
 import { useStateAnimate } from "../../hooks/useAnimateUseState";
 import loader from "../../assets/animations/shimmer-swap.json";
 import { BigNumber } from "bignumber.js";
-import { allSwapWrapper } from "../../operations/swap";
+import { allSwapWrapper, directSwapWrapper } from "../../operations/swap";
 import ExpertModePopup from "../ExpertMode";
 import ConfirmSwap from "./ConfirmSwap";
 import ConfirmTransaction from "../ConfirmTransaction";
 import TransactionSubmitted from "../TransactionSubmitted";
+import { getAnalytics, logEvent, Analytics, setCurrentScreen } from "firebase/analytics";
 import {
   FIRST_TOKEN_AMOUNT,
   SECOND_TOKEN_AMOUNT,
@@ -48,6 +49,8 @@ import { IAllTokensBalanceResponse } from "../../api/util/types";
 import { Chain } from "../../config/types";
 import { tokenIcons } from "../../constants/tokensList";
 import { tzktExplorer } from "../../common/walletconnect";
+import { routerSwap } from "../../operations/3route";
+import { analytics } from "../../config/firebaseConfig";
 
 interface ISwapTabProps {
   className?: string;
@@ -116,6 +119,8 @@ interface ISwapTabProps {
   setBalanceUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   allBalance: IAllTokensBalanceResponse;
   isSwitchClicked: boolean;
+  minimumReceived: BigNumber;
+  exchangeRate: BigNumber;
 }
 
 function SwapTab(props: ISwapTabProps) {
@@ -140,7 +145,8 @@ function SwapTab(props: ISwapTabProps) {
   const refreshAllData = (value: boolean) => {
     setRefresh(value);
     setTimeout(() => {
-      props.handleSwapTokenInput(props.firstTokenAmount, "tokenIn");
+      props.firstTokenAmount !== "" &&
+        props.handleSwapTokenInput(props.firstTokenAmount, "tokenIn");
       setRefresh(false);
     }, 500);
   };
@@ -175,6 +181,9 @@ function SwapTab(props: ISwapTabProps) {
   };
   const [isConvert, setConvert] = useState(false);
   const handleSwap = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "swap_main_cta_clicked", { id: props.walletAddress });
+    }
     !expertMode && props.setShowConfirmSwap(true);
     expertMode && handleConfirmSwap();
   };
@@ -183,6 +192,9 @@ function SwapTab(props: ISwapTabProps) {
     setConvert(!isConvert);
   };
   const handleConfirmSwap = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "swap_confirm_swap_clicked", { id: props.walletAddress });
+    }
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(props.tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(props.tokenOut.name));
@@ -198,96 +210,171 @@ function SwapTab(props: ISwapTabProps) {
     !expertMode && props.setShowConfirmSwap(false);
     const recepientAddress = props.recepient ? props.recepient : props.walletAddress;
     !expertMode && props.setShowConfirmTransaction(true);
-    allSwapWrapper(
-      new BigNumber(props.firstTokenAmount),
-      props.routeDetails.path,
-      props.routeDetails.minimumTokenOut,
-      props.walletAddress,
-      recepientAddress,
-      transactionSubmitModal,
-      props.resetAllValues,
-      !expertMode && props.setShowConfirmTransaction,
-      {
-        flashType: Flashtype.Info,
-        headerText: "Transaction submitted",
-        trailingText: `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-          TOKEN_A
-        )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `,
-        linkText: "View in Explorer",
-        isLoading: true,
-        onClick: () => {
-          window.open(`${tzktExplorer}${transactionId}`, "_blank");
-        },
-        transactionId: "",
-      }
-    ).then((response) => {
-      if (response.success) {
-        props.setBalanceUpdate(true);
-        props.resetAllValues;
-        setTimeout(() => {
-          props.setShowTransactionSubmitModal(false);
-          dispatch(
-            setFlashMessage({
-              flashType: Flashtype.Success,
-              headerText: "Success",
-              trailingText: `Swap ${localStorage.getItem(
-                FIRST_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_A)} for ${localStorage.getItem(
-                SECOND_TOKEN_AMOUNT
-              )} ${localStorage.getItem(TOKEN_B)}`,
-              linkText: "View in Explorer",
-              isLoading: true,
-              onClick: () => {
-                window.open(
-                  `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
-                  "_blank"
-                );
-              },
-              transactionId: response.operationId ? response.operationId : "",
-            })
-          );
-        }, 6000);
+    if (props.enableMultiHop) {
+      routerSwap(
+        props.tokenIn.name,
+        props.tokenOut.name,
+        new BigNumber(props.firstTokenAmount),
 
-        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-      } else {
-        props.setBalanceUpdate(true);
-        props.resetAllValues;
-        props.setShowConfirmTransaction(false);
-        setTimeout(() => {
-          props.setShowTransactionSubmitModal(false);
-          dispatch(
-            setFlashMessage({
-              flashType: Flashtype.Rejected,
-              transactionId: "",
-              headerText: "Rejected",
-              trailingText:
-                response.error === "NOT_ENOUGH_TEZ"
-                  ? `You do not have enough tez`
-                  : `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
-                      TOKEN_A
-                    )}`,
-              linkText: "",
-              isLoading: true,
-            })
-          );
-        }, 2000);
+        recepientAddress,
+        (100 - Number(props.slippage)) / 100,
 
-        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-      }
-    });
-  };
+        transactionSubmitModal,
+        props.resetAllValues,
+        !expertMode && props.setShowConfirmTransaction,
+        {
+          flashType: Flashtype.Info,
+          headerText: "Transaction submitted",
+          trailingText: `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+            TOKEN_A
+          )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `,
+          linkText: "View in Explorer",
+          isLoading: true,
+          onClick: () => {
+            window.open(`${tzktExplorer}${transactionId}`, "_blank");
+          },
+          transactionId: "",
+        }
+      ).then((response) => {
+        if (response.success) {
+          setTransactionId(response.operationId ? response.operationId : "");
+          props.setBalanceUpdate(true);
+          props.resetAllValues;
+          setTimeout(() => {
+            props.setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Success,
+                headerText: "Success",
+                trailingText: `Swap ${localStorage.getItem(
+                  FIRST_TOKEN_AMOUNT
+                )} ${localStorage.getItem(TOKEN_A)} for ${localStorage.getItem(
+                  SECOND_TOKEN_AMOUNT
+                )} ${localStorage.getItem(TOKEN_B)}`,
+                linkText: "View in Explorer",
+                isLoading: true,
+                onClick: () => {
+                  window.open(
+                    `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
+                    "_blank"
+                  );
+                },
+                transactionId: response.operationId ? response.operationId : "",
+              })
+            );
+          }, 6000);
 
-  const swapRoute = useMemo(() => {
-    if (props.routeDetails.path?.length >= 2) {
-      return props.routeDetails.path.map((tokenName) =>
-        props.tokens.find((token) => {
-          return token.name === tokenName;
-        })
-      );
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        } else {
+          props.setBalanceUpdate(true);
+          props.resetAllValues;
+          props.setShowConfirmTransaction(false);
+          setTimeout(() => {
+            props.setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Rejected,
+                transactionId: "",
+                headerText: "Rejected",
+                trailingText:
+                  response.error === "NOT_ENOUGH_TEZ"
+                    ? `You do not have enough tez`
+                    : `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+                        TOKEN_A
+                      )}`,
+                linkText: "",
+                isLoading: true,
+              })
+            );
+          }, 2000);
+
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        }
+      });
+    } else {
+      directSwapWrapper(
+        props.tokenIn.name,
+        props.tokenOut.name,
+        new BigNumber(props.secondTokenAmount),
+
+        recepientAddress,
+        new BigNumber(props.firstTokenAmount),
+        props.walletAddress,
+
+        transactionSubmitModal,
+        props.resetAllValues,
+        !expertMode && props.setShowConfirmTransaction,
+        {
+          flashType: Flashtype.Info,
+          headerText: "Transaction submitted",
+          trailingText: `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+            TOKEN_A
+          )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `,
+          linkText: "View in Explorer",
+          isLoading: true,
+          onClick: () => {
+            window.open(`${tzktExplorer}${transactionId}`, "_blank");
+          },
+          transactionId: "",
+        }
+      ).then((response) => {
+        if (response.success) {
+          setTransactionId(response.operationId ? response.operationId : "");
+          props.setBalanceUpdate(true);
+          props.resetAllValues;
+          setTimeout(() => {
+            props.setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Success,
+                headerText: "Success",
+                trailingText: `Swap ${localStorage.getItem(
+                  FIRST_TOKEN_AMOUNT
+                )} ${localStorage.getItem(TOKEN_A)} for ${localStorage.getItem(
+                  SECOND_TOKEN_AMOUNT
+                )} ${localStorage.getItem(TOKEN_B)}`,
+                linkText: "View in Explorer",
+                isLoading: true,
+                onClick: () => {
+                  window.open(
+                    `${tzktExplorer}${response.operationId ? response.operationId : ""}`,
+                    "_blank"
+                  );
+                },
+                transactionId: response.operationId ? response.operationId : "",
+              })
+            );
+          }, 6000);
+
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        } else {
+          props.setBalanceUpdate(true);
+          props.resetAllValues;
+          props.setShowConfirmTransaction(false);
+          setTimeout(() => {
+            props.setShowTransactionSubmitModal(false);
+            dispatch(
+              setFlashMessage({
+                flashType: Flashtype.Rejected,
+                transactionId: "",
+                headerText: "Rejected",
+                trailingText:
+                  response.error === "NOT_ENOUGH_TEZ"
+                    ? `You do not have enough tez`
+                    : `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
+                        TOKEN_A
+                      )}`,
+                linkText: "",
+                isLoading: true,
+              })
+            );
+          }, 2000);
+
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        }
+      });
     }
-
-    return null;
-  }, [props.routeDetails.path]);
+  };
 
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {
@@ -313,7 +400,7 @@ function SwapTab(props: ISwapTabProps) {
           </Button>
         );
       } else if (
-        props.firstTokenAmount >
+        Number(props.firstTokenAmount) >
         Number(props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance)
       ) {
         return (
@@ -321,7 +408,9 @@ function SwapTab(props: ISwapTabProps) {
             Insufficient balance
           </Button>
         );
-      } else if (expertMode && Number(props.routeDetails.priceImpact) > 3) {
+      }
+      // else if (expertMode && Number(props.routeDetails.priceImpact) > 3) {
+      else if (expertMode) {
         return (
           <Button color="error" width="w-full" onClick={handleSwap}>
             Swap Anyway
@@ -398,7 +487,7 @@ function SwapTab(props: ISwapTabProps) {
       <div
         className={clsx(
           "lg:w-580 mt-4 h-[102px] border bg-muted-200/[0.1]  mx-5 lg:mx-[30px] rounded-2xl px-4 hover:border-text-700",
-          (props.firstTokenAmount >
+          (Number(props.firstTokenAmount) >
             Number(props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance) ||
             props.errorMessage) &&
             "border-errorBorder hover:border-errorBorder bg-errorBg",
@@ -442,7 +531,10 @@ function SwapTab(props: ISwapTabProps) {
                     )}
                     placeholder="0.0"
                     lang="en"
-                    disabled={props.errorMessage === ERRORMESSAGES.SWAPROUTER}
+                    disabled={
+                      props.errorMessage === ERRORMESSAGES.SWAPROUTER ||
+                      props.errorMessage === ERRORMESSAGES.SWAPMULTIHOP
+                    }
                     onChange={(e) => props.handleSwapTokenInput(e.target.value, "tokenIn")}
                     value={props.firstTokenAmount}
                     onFocus={() => setIsFirstInputFocus(true)}
@@ -507,9 +599,7 @@ function SwapTab(props: ISwapTabProps) {
       <div
         className=" -mt-[25px] cursor-pointer relative top-[26px] bg-switchBorder w-[70px] h-[70px] p-px  mx-auto rounded-2xl "
         onClick={
-          Object.keys(props.tokenOut).length !== 0
-            ? () => props.changeTokenLocation()
-            : () => props.changeTokenLocation()
+          Object.keys(props.tokenOut).length !== 0 ? () => props.changeTokenLocation() : () => {}
         }
       >
         <div className="p-[11.5px] bg-card-500 rounded-2xl  w-[68px] h-[68px]">
@@ -552,9 +642,7 @@ function SwapTab(props: ISwapTabProps) {
               <div className="text-right font-body1 text-text-400">YOU RECEIVE</div>
               <div>
                 {Object.keys(props.tokenOut).length !== 0 ? (
-                  isRefresh ||
-                  props.loading.isLoadingSecond ||
-                  (props.isSwitchClicked && props.secondTokenAmount === "") ? (
+                  isRefresh || props.loading.isLoadingSecond || props.isSwitchClicked ? (
                     <p className="ml-auto my-[4px] w-[100px]  h-[32px] rounded animate-pulse bg-shimmer-100"></p>
                   ) : (
                     <input
@@ -563,7 +651,7 @@ function SwapTab(props: ISwapTabProps) {
                         "text-primary-500  inputSecond text-right border-0 font-input-text lg:font-medium1 outline-none w-[100%] placeholder:text-primary-500 "
                       )}
                       placeholder="0.0"
-                      disabled={props.errorMessage === ERRORMESSAGES.SWAPROUTER}
+                      disabled
                       onChange={(e) => props.handleSwapTokenInput(e.target.value, "tokenOut")}
                       value={fromExponential(props.secondTokenAmount)}
                       onFocus={() => setIsSecondInputFocus(true)}
@@ -652,7 +740,7 @@ function SwapTab(props: ISwapTabProps) {
           </div>
         )}
 
-        {props.routeDetails.success && (
+        {props.tokenOut.name && props.errorMessage !== ERRORMESSAGES.SWAPMULTIHOP && (
           <div
             className="h-12 mt-3 cursor-pointer px-4 pt-[13px] pb-[15px] rounded-2xl bg-muted-600 border border-primary-500/[0.2] items-center flex "
             onClick={() => setOpenSwapDetails(!openSwapDetails)}
@@ -673,64 +761,6 @@ function SwapTab(props: ISwapTabProps) {
             ) : (
               <>
                 <div>
-                  <span className="relative top-0.5">
-                    <ToolTip
-                      id="tooltip1"
-                      position={isMobile ? Position.right : Position.top}
-                      toolTipChild={
-                        <p>
-                          <div
-                            className={`w-[277px]   rounded-3xl 
-                            }`}
-                          >
-                            <div className="flex mt-2">
-                              <div className="font-body1  md:font-body3 ">
-                                <span className="mr-[5px]">Minimum received</span>
-                              </div>
-
-                              <div className="ml-auto font-body2 md:font-subtitle4">
-                                {` ${Number(props.routeDetails.minimumOut).toFixed(
-                                  4
-                                )} ${tEZorCTEZtoUppercase(props.tokenOut.name)}`}
-                              </div>
-                            </div>
-
-                            <div className="flex mt-3">
-                              <div className="font-body1 md:font-body3 ">
-                                <span className="mr-[5px]">Price impact</span>
-                              </div>
-
-                              <div
-                                className={clsx(
-                                  "ml-auto font-body2 md:font-subtitle4",
-                                  Number(props.routeDetails.priceImpact) > 3 && "text-error-500"
-                                )}
-                              >
-                                {`${props.routeDetails.priceImpact.toFixed(4)} %`}
-                              </div>
-                            </div>
-                            <div className="flex mt-3 mb-2">
-                              <div className="font-body1 md:font-body3 ">
-                                <span className="mr-[5px]">Fee</span>
-                              </div>
-
-                              <div className="ml-auto font-body2 md:font-subtitle4">
-                                {`${props.routeDetails.finalFeePerc.toFixed(2)}  %`}
-                              </div>
-                            </div>
-                          </div>
-                        </p>
-                      }
-                    >
-                      <Image
-                        alt={"alt"}
-                        src={info}
-                        className="cursor-pointer"
-                        width={"15px"}
-                        height={"15px"}
-                      />
-                    </ToolTip>
-                  </span>
                   <span className="ml-[9.25px] font-bold3 lg:font-text-bold mr-[7px] cursor-pointer">
                     1{" "}
                     {!isConvert
@@ -740,21 +770,17 @@ function SwapTab(props: ISwapTabProps) {
                     <ToolTip
                       message={
                         !isConvert
-                          ? fromExponential(props.routeDetails.exchangeRate.toString())
-                          : fromExponential(1 / Number(props.routeDetails.exchangeRate)).toString()
+                          ? fromExponential(props.exchangeRate.toString())
+                          : fromExponential(1 / Number(props.exchangeRate)).toString()
                       }
                       id="tooltip7"
                       position={Position.top}
                     >
                       {!isConvert
-                        ? ` ${nFormatterWithLesserNumber(
-                            new BigNumber(props.routeDetails.exchangeRate)
-                          )} 
+                        ? ` ${nFormatterWithLesserNumber(new BigNumber(props.exchangeRate))} 
                             ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
                         : `${nFormatterWithLesserNumber(
-                            new BigNumber(
-                              new BigNumber(1).dividedBy(props.routeDetails.exchangeRate)
-                            )
+                            new BigNumber(new BigNumber(1).dividedBy(props.exchangeRate))
                           )} ${tEZorCTEZtoUppercase(props.tokenIn.name)}`}
                     </ToolTip>
                   </span>
@@ -763,7 +789,7 @@ function SwapTab(props: ISwapTabProps) {
                   </span>
                 </div>
                 <div className="ml-auto cursor-pointer">
-                  <ToolTip
+                  {/* <ToolTip
                     id="tooltip9"
                     type={isMobile ? TooltipType.swapRoute : TooltipType.swap}
                     position={Position.top}
@@ -914,7 +940,7 @@ function SwapTab(props: ISwapTabProps) {
                         props.routeDetails.finalFeePerc
                       ).toFixed(2)} %`}</span>
                     </div>
-                  </ToolTip>
+                  </ToolTip> */}
                 </div>
                 <div className=" relative top-[3px] ">
                   <Image
@@ -929,9 +955,9 @@ function SwapTab(props: ISwapTabProps) {
           </div>
         )}
 
-        {openSwapDetails && props.routeDetails.success && (
+        {openSwapDetails && props.errorMessage !== ERRORMESSAGES.SWAPMULTIHOP && (
           <div
-            className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px] h-[218px] rounded-3xl mt-2 animate__animated `}
+            className={`bg-card-500 border border-text-700/[0.5] py-[14px] lg:py-5 px-[15px] lg:px-[22px]  rounded-3xl mt-2 animate__animated `}
           >
             <div className="scale-in-animation">
               <div className="flex">
@@ -961,22 +987,22 @@ function SwapTab(props: ISwapTabProps) {
                 ) : (
                   <div className="ml-auto font-mobile-700 md:font-subtitle4 cursor-pointer">
                     <ToolTip
-                      message={fromExponential(props.routeDetails.minimumOut.toNumber())}
+                      message={fromExponential(props.minimumReceived.toNumber())}
                       id="tooltip6"
-                      disable={Number(props.routeDetails.minimumOut) < 0}
+                      disable={Number(props.minimumReceived) < 0}
                       position={isMobile ? Position.left : Position.top}
                     >
-                      {Number(props.routeDetails.minimumOut) < 0
+                      {Number(props.minimumReceived) < 0
                         ? `0 ${tEZorCTEZtoUppercase(props.tokenOut.name)}`
-                        : ` ${Number(props.routeDetails.minimumOut).toFixed(
-                            4
-                          )} ${tEZorCTEZtoUppercase(props.tokenOut.name)}`}
+                        : ` ${Number(props.minimumReceived).toFixed(4)} ${tEZorCTEZtoUppercase(
+                            props.tokenOut.name
+                          )}`}
                     </ToolTip>
                   </div>
                 )}
               </div>
 
-              <div className="flex mt-2">
+              {/* <div className="flex mt-2">
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Price impact</span>
                   <span className="relative top-1 lg:top-0.5">
@@ -1016,8 +1042,8 @@ function SwapTab(props: ISwapTabProps) {
                     </ToolTip>
                   </div>
                 )}
-              </div>
-              <div className="flex mt-2">
+              </div> */}
+              {/* <div className="flex mt-2">
                 <div className="font-mobile-400 md:font-body3 ">
                   <span className="mr-[5px]">Fee</span>
                   <span className="relative top-1 lg:top-0.5">
@@ -1045,10 +1071,10 @@ function SwapTab(props: ISwapTabProps) {
                     {`${props.routeDetails.finalFeePerc.toFixed(2)}  %`}
                   </div>
                 )}
-              </div>
-              <div className="border-t border-text-800 mt-[18px]"></div>
+              </div> */}
+              {/* <div className="border-t border-text-800 mt-[18px]"></div> */}
 
-              <div className="mt-4 ">
+              {/* <div className="mt-4 ">
                 <div className="font-subtitle2 md:font-subtitle4">
                   {" "}
                   <span className="mr-[5px]">Route</span>
@@ -1196,7 +1222,7 @@ function SwapTab(props: ISwapTabProps) {
                     </div>
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         )}
@@ -1211,6 +1237,7 @@ function SwapTab(props: ISwapTabProps) {
       )}
       {props.showConfirmSwap && (
         <ConfirmSwap
+          minimumReceived={props.minimumReceived}
           show={props.showConfirmSwap}
           tokens={props.tokens}
           setShow={props.setShowConfirmSwap}
@@ -1219,6 +1246,7 @@ function SwapTab(props: ISwapTabProps) {
           firstTokenAmount={props.firstTokenAmount}
           secondTokenAmount={props.secondTokenAmount.toString()}
           routeDetails={props.routeDetails}
+          exchangeRate={props.exchangeRate}
           onClick={handleConfirmSwap}
         />
       )}

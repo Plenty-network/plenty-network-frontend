@@ -94,6 +94,8 @@ import { PortfolioDropdown } from "../../src/components/PortfolioSection";
 import nFormatter, { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
 import { tzktExplorer } from "../../src/common/walletconnect";
 import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../../src/config/firebaseConfig";
 
 import { getPositionsAll } from "../../src/api/v3/positions";
 import { IV3PositionObject } from "../../src/api/v3/types";
@@ -621,6 +623,9 @@ function MyPortfolio(props: any) {
               : "text-text-250 bg-muted-700 rounded-l-lg"
           )}
           onClick={() => {
+            if (process.env.NODE_ENV === "production") {
+              logEvent(analytics, "myportfolio_positions_clicked");
+            }
             setActiveSection(MyPortfolioSection.Positions);
             dispatch(setMyPortfolioSection(MyPortfolioSection.Positions));
           }}
@@ -640,6 +645,9 @@ function MyPortfolio(props: any) {
               : "text-text-250 bg-muted-700 rounded-r-lg"
           )}
           onClick={() => {
+            if (process.env.NODE_ENV === "production") {
+              logEvent(analytics, "myportfolio_rewards_clicked");
+            }
             setActiveSection(MyPortfolioSection.Rewards);
             dispatch(setMyPortfolioSection(MyPortfolioSection.Rewards));
           }}
@@ -763,6 +771,9 @@ function MyPortfolio(props: any) {
   };
 
   const handleWithdrawOperation = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_positions_withdraw");
+    }
     setContentTransaction(`Withdraw ${nFormatter(manageData.baseValue)} PLY`);
     setClaimState(-1 as EClaimAllState);
     setShowWithdraw(false);
@@ -842,6 +853,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleWithdrawClaimOperation = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_positions_withdraw_claim");
+    }
     setContentTransaction(`Claim and withdraw ${nFormatter(manageData.baseValue)} PLY`);
     setShowWithdraw(false);
     setShowConfirmTransaction(true);
@@ -932,6 +946,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleLockOperation = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_positions_locks_manageLockCTA");
+    }
     setContentTransaction(`Locking PLY`);
     setShowCreateLockModal(false);
     setClaimState(-1 as EClaimAllState);
@@ -1017,6 +1034,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleIncreaseVoteOperation = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_positions_locks_increaselock");
+    }
     setIsManageLock(false);
     setContentTransaction(`Locking ${plyInput} PLY`);
     setShowCreateLockModal(false);
@@ -1094,6 +1114,9 @@ function MyPortfolio(props: any) {
     });
   };
   const IncreaseLockEndOperation = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_positions_locks_increaselock");
+    }
     setIsManageLock(false);
     setClaimState(-1 as EClaimAllState);
     setContentTransaction(`Increase lock`);
@@ -1170,6 +1193,9 @@ function MyPortfolio(props: any) {
     });
   };
   const IncreaseLockValueOperation = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_positions_locks_increaselock");
+    }
     setIsManageLock(false);
     setClaimState(-1 as EClaimAllState);
     setContentTransaction(`Increase lock`);
@@ -1245,6 +1271,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimAllPly = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_rewards_claim_plyemission");
+    }
     setShowClaimPly(false);
     setContentTransaction(`Claim ${nFormatter(poolsRewards.data.gaugeEmissionsTotal)} PLY`);
     setShowConfirmTransaction(true);
@@ -1320,6 +1349,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimBribes = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_rewards_claim_bribes");
+    }
     setContentTransaction(` Claim bribes $${nFormatter(bribesStats)}`);
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
@@ -1395,6 +1427,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimFees = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_rewards_claim_tradingfee");
+    }
     setContentTransaction(`Claim trading fees $${nFormatter(tradingfeeStats)}`);
     setShowClaimPly(false);
     setShowConfirmTransaction(true);
@@ -1547,6 +1582,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimALLEpoch = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_rewards_locks_claimall");
+    }
     setContentTransaction(`Claim lock rewards for Epoch ${epochClaim}`);
     setClaimState(EClaimAllState.EPOCH);
     setShowClaimPly(false);
@@ -1631,6 +1669,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimALLUnClaimed = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_rewards_claim_unclaimedInflation");
+    }
     setContentTransaction(
       `Claim inflation ${nFormatter(unclaimInflation.unclaimedInflationAmount)} PLY`
     );
@@ -1715,6 +1756,9 @@ function MyPortfolio(props: any) {
     });
   };
   const handleClaimALLSuperNova = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "myportfolio_rewards_claimmax");
+    }
     setContentTransaction(`Claim all emissions, inflation, fees and bribes
     `);
     setShowClaimPly(false);
@@ -1828,51 +1872,55 @@ function MyPortfolio(props: any) {
                 {/* {Tooltip} */}
 
                 {activeSection === MyPortfolioSection.Rewards && (
-                  <div className="ml-auto ">
-                    <ToolTip
-                      id="tooltipM"
-                      position={Position.left}
-                      toolTipChild={
-                        <div className="w-[100px] md:w-[180px]">
-                          Claim maximum possible rewards within gas limit
-                        </div>
+                <div className="ml-auto ">
+                  <ToolTip
+                    id="tooltipM"
+                    position={Position.left}
+                    toolTipChild={
+                      <div className="w-[100px] md:w-[180px]">
+                        Claim maximum possible rewards within gas limit
+                      </div>
+                    }
+                  >
+                    <div
+                      className={clsx(
+                        "cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-black h-[44px] md:h-[50px] px-[20px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
+                        (poolsRewards.data?.gaugeAddresses?.length === 0 &&
+                          feeClaimData?.length === 0 &&
+                          bribesClaimData?.length === 0 &&
+                          inflationData?.length === 0) ||
+                          poolsRewards.data?.gaugeAddresses === undefined
+                          ? "cursor-not-allowed"
+                          : "cursor-pointer"
+                      )}
+                    
+                      onClick={
+                        (poolsRewards.data?.gaugeAddresses?.length === 0 &&
+                          feeClaimData?.length === 0 &&
+                          bribesClaimData?.length === 0 &&
+                          inflationData?.length === 0) ||
+                        poolsRewards.data?.gaugeAddresses === undefined
+                          ? () => {}
+                          : () => {
+                              if (process.env.NODE_ENV === "production") {
+                                logEvent(analytics, "myportfolio_rewards_claimmax");
+                              }
+                              setClaimValueDollar(
+                                poolsRewards.data?.gaugeEmissionsTotalValue
+                                  .plus(bribesStats)
+                                  .plus(tradingfeeStats)
+                              );
+                              setShowClaimPly(true);
+
+                              setClaimState(EClaimAllState.SUPERNOVA);
+                            }
                       }
                     >
-                      <div
-                        className={clsx(
-                          "cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-black h-[44px] md:h-[50px] px-[20px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
-                          (poolsRewards.data?.gaugeAddresses?.length === 0 &&
-                            feeClaimData?.length === 0 &&
-                            bribesClaimData?.length === 0 &&
-                            inflationData?.length === 0) ||
-                            poolsRewards.data?.gaugeAddresses === undefined
-                            ? "cursor-not-allowed"
-                            : "cursor-pointer"
-                        )}
-                        onClick={
-                          (poolsRewards.data?.gaugeAddresses?.length === 0 &&
-                            feeClaimData?.length === 0 &&
-                            bribesClaimData?.length === 0 &&
-                            inflationData?.length === 0) ||
-                          poolsRewards.data?.gaugeAddresses === undefined
-                            ? () => {}
-                            : () => {
-                                setClaimValueDollar(
-                                  poolsRewards.data?.gaugeEmissionsTotalValue
-                                    .plus(bribesStats)
-                                    .plus(tradingfeeStats)
-                                );
-                                setShowClaimPly(true);
-
-                                setClaimState(EClaimAllState.SUPERNOVA);
-                              }
-                        }
-                      >
-                        Claim max
-                      </div>
-                    </ToolTip>
-                  </div>
-                )}
+                      Claim max
+                    </div>
+                  </ToolTip>
+                </div>
+              )}
               </div>
               {activeSection === MyPortfolioSection.Rewards && (
                 <div className="py-1.5   px-2 rounded-lg  flex items-center bg-info-500/[0.1] mx-2 md:mx-[23px] mt-2">

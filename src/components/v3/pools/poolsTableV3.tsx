@@ -40,7 +40,7 @@ import {
   setTokenYV3,
 } from "../../../redux/poolsv3/manageLiq";
 import Link from "next/link";
-import { getPoolsShareDataV3 } from "../../../api/v3/pools";
+import { getAllPoolsDataV3, getPoolsShareDataV3 } from "../../../api/v3/pools";
 
 export interface IShortCardProps {
   className?: string;
@@ -71,14 +71,24 @@ export function PoolsTableV3(props: IShortCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
+  const [placeholderData, setPlaceholderData] = useState([] as IAllPoolsDataResponse[]);
 
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getAllPoolsDataV3();
+      setPlaceholderData(data.allData);
+    }
+
+    fetchData();
+  }, []);
   const { data: poolTableData = [], isFetched: isFetch } = usePoolsTableFilterV3(
     tokenPrices,
     props.poolsFilter,
 
     props.reFetchPool,
     0,
-    true
+    true,
+    placeholderData
   );
 
   const [poolsTableData, isFetched] = usePoolsTableSearch(

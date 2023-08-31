@@ -43,6 +43,8 @@ import { tzktExplorer } from "../../src/common/walletconnect";
 import { nFormatterWithLesserNumber } from "../../src/api/util/helpers";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../../src/config/firebaseConfig";
 
 export default function Vote() {
   const dispatch = useDispatch<AppDispatch>();
@@ -88,6 +90,9 @@ export default function Vote() {
   const initialLpPriceCall = useRef<boolean>(true);
   const initialRewardsAprCall = useRef<boolean>(true);
   const handleCreateLock = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "vote_create_lock");
+    }
     setShowCreateLockModal(true);
   };
 
@@ -410,6 +415,9 @@ export default function Vote() {
   };
 
   const handleLockOperation = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "vote_create_lock_confirm");
+    }
     setContentTransaction(`Locking PLY`);
     setShowCreateLockModal(false);
     setShowConfirmTransaction(true);
@@ -496,6 +504,9 @@ export default function Vote() {
     });
   };
   const handleVoteOperation = () => {
+    if (process.env.NODE_ENV === "production") {
+      logEvent(analytics, "vote_cast_vote_confirm");
+    }
     setContentTransaction(`Casting vote`);
     setShowCastVoteModal(false);
     setShowConfirmTransaction(true);

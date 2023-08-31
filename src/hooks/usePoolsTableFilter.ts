@@ -5,7 +5,7 @@ import {
   useMyPoolsDatav3,
   usePoolsMain,
 } from "../api/pools/query/poolsmain.query";
-import { IAllPoolsData } from "../api/pools/types";
+import { IAllPoolsData, IAllPoolsDataResponse } from "../api/pools/types";
 import { ITokenPriceList } from "../api/util/types";
 
 import { BigNumber } from "bignumber.js";
@@ -63,9 +63,14 @@ export const usePoolsTableFilterV3 = (
 
   reFetchPool: boolean,
   page: number,
-  tvlFilter: boolean
+  tvlFilter: boolean,
+  placeholderData: IAllPoolsDataResponse[]
 ) => {
-  const { data: poolTableData = [], isFetched } = useAllPoolsDataV3(tokenPrices, page);
+  const { data: poolTableData = [], isFetched } = useAllPoolsDataV3(
+    tokenPrices,
+    page,
+    placeholderData
+  );
 
   if (poolTableData.length) {
     if (filterText) {
