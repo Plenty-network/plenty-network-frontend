@@ -4,6 +4,8 @@ import copyLogo from "../../assets/icon/common/copyLogo.svg";
 import disconnectLogo from "../../assets/icon/common/disconnectLogo.svg";
 import fiatLogo from "../../assets/icon/common/fiatLogo.svg";
 
+import docs from "../../assets/icon/common/feedback.svg";
+import feedback from "../../assets/icon/common/docs.svg";
 import airdrop from "../../../public/assets/icon/airdrop.svg";
 import migrate from "../../../public/assets/icon/migrate.svg";
 import "animate.css";
@@ -197,6 +199,22 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
                     <span>Airdrop</span>
                   </p>
                 </Link>
+              </p>
+              <p>
+                <a href={"https://whitepaper.plenty.network/"} target="_blank" rel="noreferrer">
+                  <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                    <Image alt={"alt"} src={docs} />
+                    <span>Docs</span>
+                  </p>
+                </a>
+              </p>
+              <p>
+                <a href={"https://tally.so/r/mOQg0M"} target="_blank" rel="noreferrer">
+                  <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                    <Image alt={"alt"} src={feedback} />
+                    <span>Feedback</span>
+                  </p>
+                </a>
               </p>
               <p
                 onClick={disconnectUserWallet}
