@@ -862,14 +862,14 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         id="modal_outer"
         className={clsx(
           screen === ActivePopUp.Positions
-            ? "lg:w-[972px] lg:max-w-[972px] border  border-popUpNotification  lg:rounded-3xl py-5 px-3 md:p-5 mb-[60px]"
+            ? "lg:w-[972px] lg:max-w-[972px] border  border-popUpNotification  lg:rounded-3xl py-5 px-3 md:p-5 "
             : screen === ActivePopUp.ConfirmAddV3
             ? "sm:w-[602px] sm:max-w-[602px] border  border-popUpNotification lg:rounded-3xl py-5 px-3 md:p-5 mb-[60px]"
             : screen === ActivePopUp.NewPosition
-            ? "mb-[60px] lg:w-[972px] lg:max-w-[972px] md:w-[602px] border  border-popUpNotification  md:rounded-3xl py-5 px-3 md:p-5"
+            ? " lg:w-[972px] lg:max-w-[972px] md:w-[602px] border  border-popUpNotification  md:rounded-3xl py-5 px-3 md:p-5"
             : "sm:w-[602px] sm:max-w-[602px] border md:rounded-3xl  border-popUpNotification  py-5 px-3 md:p-5 mb-[60px]",
           screen === ActivePopUp.ConfirmExisting && "hidden",
-          "  mt-[70px] mb-[60px]  lg:mt-[75px]  mx-auto fade-in  bg-card-500"
+          "  mt-[70px]   lg:mt-[75px]  mx-auto fade-in  bg-card-500"
         )}
       >
         {screen === ActivePopUp.NewPosition ? (
@@ -1128,15 +1128,19 @@ export function ManageTabV3(props: IManageLiquidityProps) {
           </>
         )}
       </div>
-      {/* <div
+      <div
         className={clsx(
-          screen === ActivePopUp.NewPosition ? "" : "hidden",
-          "lg:w-[200px] lg:max-w-[200px] mt-5 mb-[60px] mx-auto"
+          screen === ActivePopUp.Positions || screen === ActivePopUp.NewPosition ? "" : "hidden",
+          "flex justify-center items-center gap-3 text-center lg:w-[500px] lg:max-w-[500px] mt-5 mb-[60px] mx-auto"
         )}
       >
-        <WatchTutorial onClick={() => setShowTutorial(true)} />
-      </div> */}
-      {/* {showTutorial && <Tutorial show={showTutorial} setShow={setShowTutorial} />} */}
+        Learn how to manage liquidty on V3{" "}
+        <Image
+          className="cursor-pointer hover:opacity-90"
+          onClick={() => setShowVideoModal(true)}
+          src={playBtn}
+        />
+      </div>
       {activeStateIncDec === ActiveIncDecState.Increase &&
         screen === ActivePopUp.ConfirmExisting && (
           <ConfirmIncreaseLiq

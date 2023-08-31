@@ -48,8 +48,8 @@ export default function PoolsV3(props: IIndexProps) {
         <div>
           <HeadInfo
             className="px-2 md:px-3"
-            title="Pools V3"
-            toolTipContent="Watch how to add liquidity, stake, and earn PLY. "
+            title="Pools"
+            toolTipContent="Watch how to add liquidity to a V3 pool."
             searchValue={searchValue}
             setSearchValue={setSearchValue}
             isFirst={walletAddress !== null && localStorage.getItem(USERADDRESS) !== walletAddress}

@@ -34,30 +34,29 @@ export default function HeadInfo(props: IHeadInfoProps) {
         <div className="p-4 text-f18 font-medium text-white">
           {props.title ? props.title : "Pools"}
         </div>
-        {props.title !== "Pools V3" && (
-          <ToolTip
-            classNameToolTipContainer={`playIconTooltip-right`}
-            toolTipChild={
-              props.toolTipContent ? (
-                <p className="w-[200px] md:w-[312px]">{props.toolTipContent}</p>
-              ) : (
-                <p className="w-[200px] md:w-[312px]">
-                  Watch how to add liquidity, stake, and earn PLY
-                </p>
-              )
-            }
-            classNameAncorToolTip="pushtoCenter"
-            isShowInnitially={props.isFirst ? true : false}
-          >
-            <Image
-              src={playIcon}
-              onClick={() => setShowVideoModal(true)}
-              height={"28px"}
-              width={"28px"}
-              className="cursor-pointer hover:opacity-90"
-            />
-          </ToolTip>
-        )}
+
+        <ToolTip
+          classNameToolTipContainer={`playIconTooltip-right`}
+          toolTipChild={
+            props.toolTipContent ? (
+              <p className="max-w-[200px] md:max-w-[312px]">{props.toolTipContent}</p>
+            ) : (
+              <p className="w-[200px] md:w-[312px]">
+                Watch how to add liquidity, stake, and earn PLY
+              </p>
+            )
+          }
+          classNameAncorToolTip="pushtoCenter"
+          isShowInnitially={props.isFirst ? true : false}
+        >
+          <Image
+            src={playIcon}
+            onClick={() => setShowVideoModal(true)}
+            height={"28px"}
+            width={"28px"}
+            className="cursor-pointer hover:opacity-90"
+          />
+        </ToolTip>
       </div>
 
       {/* <InputSearchBox
@@ -85,7 +84,7 @@ export default function HeadInfo(props: IHeadInfoProps) {
       ) : (
         <></>
       )}
-      {props.title === "Pools" || props.title === "Pools V3" ? (
+      {props.title === "Pools" ? (
         <div
           className={clsx(
             "ml-auto h-[50px] font-subtitle2 md:font-title3-bold flex items-center px-3 md:px-[32px] text-primary-500 rounded-lg bg-primary-500/[0.1] hover:bg-primary-500/[0.2] mr-0",
