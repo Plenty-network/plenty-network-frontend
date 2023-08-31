@@ -79,11 +79,11 @@ export function NewPoolv3(props: IManageLiquidityProps) {
   const [tokenInOp, setTokenInOp] = React.useState<IConfigToken>({} as IConfigToken);
   const [tokenOutOp, setTokenOutOp] = React.useState<IConfigToken>({} as IConfigToken);
   const percentage = (selectedFeeTier: string) => {
-    if (selectedFeeTier === "0.01") {
+    if (selectedFeeTier == "0.01") {
       return 1;
-    } else if (selectedFeeTier === "0.05") {
+    } else if (selectedFeeTier == "0.05") {
       return 10;
-    } else if (selectedFeeTier === "0.3") {
+    } else if (selectedFeeTier == "0.3") {
       return 60;
     } else {
       return 200;

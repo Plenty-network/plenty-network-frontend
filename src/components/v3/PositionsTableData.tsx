@@ -29,7 +29,7 @@ import Table from "../Table/Table";
 
 export interface IShortCardProps {
   tokenIn: tokenParameterLiquidity;
-  handleCollectFeeOperation: () => void;
+  handleCollectFeeOperation: (selectedPosition: IV3PositionObject) => void;
   tokenOut: tokenParameterLiquidity;
   feeTier: string;
   setScreen: React.Dispatch<React.SetStateAction<ActivePopUp>>;
@@ -244,7 +244,7 @@ export function PositionDataTable(props: IShortCardProps) {
                 ? () => {}
                 : () => {
                     dispatch(setSelectedPosition(x));
-                    props.handleCollectFeeOperation();
+                    props.handleCollectFeeOperation(x);
                   }
             }
           >

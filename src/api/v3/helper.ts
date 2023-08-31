@@ -126,11 +126,8 @@ export const getRealPriceFromTick = async (
   tokenYSymbol: IConfigToken
 ): Promise<any> => {
   try {
-    let priceValue = Price.computeRealPriceFromSqrtPrice(
-      Tick.computeSqrtPriceFromTick(tick),
-      tokenXSymbol.decimals,
-      tokenYSymbol.decimals
-    );
+    //@ts-ignore
+    let priceValue = Price.computeRealPriceFromSqrtPrice(Tick.computeSqrtPriceFromTick(tick), tokenXSymbol, tokenYSymbol);
 
     return priceValue;
   } catch (error) {
@@ -146,7 +143,8 @@ export const getTickFromRealPrice = async (
 ): Promise<any> => {
   try {
     let tick = Tick.computeTickFromSqrtPrice(
-      Price.computeSqrtPriceFromRealPrice(realPrice, tokenXSymbol.decimals, tokenYSymbol.decimals),
+      //@ts-ignore
+      Price.computeSqrtPriceFromRealPrice(realPrice, tokenXSymbol, tokenYSymbol),
       tickspacing
     );
 

@@ -76,7 +76,7 @@ import {
   removeLiquidity,
 } from "../../operations/v3/liquidity";
 import { calculateCurrentPrice, getInitialBoundaries } from "../../api/v3/liquidity";
-import { BalanceNat } from "../../api/v3/types";
+import { BalanceNat, IV3PositionObject } from "../../api/v3/types";
 import { collectFees } from "../../operations/v3/fee";
 import FeeTierMain from "./FeeTierMain";
 import Link from "next/link";
@@ -779,14 +779,14 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     });
   };
 
-  const handleCollectFeeOperation = () => {
+  const handleCollectFeeOperation = (selectedPositionParameter: IV3PositionObject) => {
     setContentTransaction(`Collecting fee`);
 
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-
+    console.log("sele", selectedPositionParameter);
     collectFees(
-      selectedPosition,
+      selectedPositionParameter,
       walletAddress,
       props.tokenA.symbol,
       props.tokenB.symbol,

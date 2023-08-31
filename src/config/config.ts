@@ -42,7 +42,7 @@ const Config: IConfig = {
   },
   V3_FACTORY: {
     mainnet: "",
-    testnet: "KT1KEa3Pc3dpHfSCH4r1nCNsFXNL6Q1ctASS",
+    testnet: "KT1LzD2Uj1VjSjrRwusCbZYhUAAbRfQDKmBM",
   },
   TEZ_DEPLOYER: {
     mainnet: "KT1JnpY4fUQ9DurUhb7uCQtKkunLiamgdzyc",
@@ -56,6 +56,10 @@ const Config: IConfig = {
   VE_INDEXER: {
     mainnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
     testnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
+  },
+  V3_VE_INDEXER: {
+    mainnet: "https://api.plenty.network/v3/",
+    testnet: "https://api.plenty.network/v3/",
   },
   ANALYTICS_INDEXER: {
     mainnet: "https://api.plenty.network/analytics/",

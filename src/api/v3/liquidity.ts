@@ -21,18 +21,18 @@ export const calculateCurrentPrice = async (
       currentPrice = BigNumber(1).dividedBy(
         Price.computeRealPriceFromSqrtPrice(
           contractStorageParameters.sqrtPriceValue,
-          contractStorageParameters.tokenX.decimals,
-          contractStorageParameters.tokenY.decimals
+          contractStorageParameters.tokenX,
+          contractStorageParameters.tokenY
         )
       );
     } else {
       currentPrice = Price.computeRealPriceFromSqrtPrice(
         contractStorageParameters.sqrtPriceValue,
-        contractStorageParameters.tokenX.decimals,
-        contractStorageParameters.tokenY.decimals
+        contractStorageParameters.tokenX,
+        contractStorageParameters.tokenY
       );
     }
-    console.log("v3 test", contractStorageParameters, currentPrice);
+    
     return currentPrice;
   } catch (error) {
     console.log("v3 error: ", error);
@@ -58,13 +58,13 @@ export const calculateFullRange = async (
 
     let minTickPrice = Price.computeRealPriceFromSqrtPrice(
       Tick.computeSqrtPriceFromTick(tickFullRange[0]),
-      contractStorageParameters.tokenX.decimals,
-      contractStorageParameters.tokenY.decimals
+      contractStorageParameters.tokenX,
+      contractStorageParameters.tokenY
     );
     let maxTickPrice = Price.computeRealPriceFromSqrtPrice(
       Tick.computeSqrtPriceFromTick(tickFullRange[1]),
-      contractStorageParameters.tokenX.decimals,
-      contractStorageParameters.tokenY.decimals
+      contractStorageParameters.tokenX,
+      contractStorageParameters.tokenY
     );
 
     return {
@@ -100,14 +100,14 @@ export const getInitialBoundaries = async (
 
     let minPriceValue = Price.computeRealPriceFromSqrtPrice(
       Tick.computeSqrtPriceFromTick(minTick),
-      contractStorageParameters.tokenX.decimals,
-      contractStorageParameters.tokenY.decimals
+      contractStorageParameters.tokenX,
+      contractStorageParameters.tokenY
     );
 
     let maxPriceValue = Price.computeRealPriceFromSqrtPrice(
       Tick.computeSqrtPriceFromTick(maxTick),
-      contractStorageParameters.tokenX.decimals,
-      contractStorageParameters.tokenY.decimals
+      contractStorageParameters.tokenX,
+      contractStorageParameters.tokenY
     );
 
     return {
@@ -130,7 +130,6 @@ export const estimateTokenXFromTokenY = async (
   feeTier: number
 ): Promise<any> => {
   try {
-    //console.log("v3 test", amount, tokenXSymbol, tokenYSymbol, lowerTickIndex, upperTickIndex);
     let estimatedAmount;
     const state = store.getState();
     const TOKENS = state.config.tokens;
@@ -148,17 +147,6 @@ export const estimateTokenXFromTokenY = async (
       contractStorageParameters.feeBps,
       contractStorageParameters.liquidity
     );
-    /*     console.log("contractStorageParameters", contractStorageParameters);
-    getRealPriceFromTick(lowerTickIndex, TOKENS[tokenXSymbol], TOKENS[tokenYSymbol]).then(
-      (response) => {
-        console.log("v3 test lower price", 1 / response.toString());
-      }
-    );
-    getRealPriceFromTick(upperTickIndex, TOKENS[tokenXSymbol], TOKENS[tokenYSymbol]).then(
-      (response) => {
-        console.log("v3 test upper price", response.toString());
-      }
-    ); */
     let estimatedAmountCalc = PoolObject.estimateAmountXFromY(
       amount,
       lowerTickIndex,
@@ -184,24 +172,12 @@ export const estimateTokenYFromTokenX = async (
   feeTier: number
 ): Promise<any> => {
   try {
-    /*     console.log("v3 test", amount, tokenXSymbol, tokenYSymbol, lowerTickIndex, upperTickIndex); */
-
     let estimatedAmount;
     const state = store.getState();
     const TOKENS = state.config.tokens;
 
     amount = amount.multipliedBy(new BigNumber(10).pow(TOKENS[tokenXSymbol].decimals));
 
-    /*     getRealPriceFromTick(lowerTickIndex, TOKENS[tokenXSymbol], TOKENS[tokenYSymbol]).then(
-      (response) => {
-        console.log("v3 test lower price", 1 / response.toString());
-      }
-    );
-    getRealPriceFromTick(upperTickIndex, TOKENS[tokenXSymbol], TOKENS[tokenYSymbol]).then(
-      (response) => {
-        console.log("v3 test upper price", response.toString());
-      }
-    ); */
     let contractStorageParameters = await contractStorage(tokenXSymbol, tokenYSymbol, feeTier);
     lowerTickIndex = Tick.nearestUsableTick(lowerTickIndex, contractStorageParameters.tickSpacing);
     upperTickIndex = Tick.nearestUsableTick(upperTickIndex, contractStorageParameters.tickSpacing);

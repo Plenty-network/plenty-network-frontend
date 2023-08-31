@@ -40,6 +40,7 @@ export interface IConfig {
   VOTER: { mainnet: string; testnet: string };
   VOTE_ESCROW: { mainnet: string; testnet: string };
   VE_INDEXER: { mainnet: string; testnet: string };
+  V3_VE_INDEXER: { mainnet: string; testnet: string };
   ANALYTICS_INDEXER: { mainnet: string; testnet: string };
   VE_ANALYTICS_INDEXER: { mainnet: string; testnet: string };
   PLY_TOKEN: { mainnet: string; testnet: string };
