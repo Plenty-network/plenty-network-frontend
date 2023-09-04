@@ -30,13 +30,15 @@ export function PoolsTextWithTooltip(props: IPoolsTextWithTooltipProps) {
       toolTipChild={
         <div>
           <div className="text-text-500 text-f14 font-normal flex gap-1">
-            <div className={`text-white font-medium pr-1 `}>{props.token1.toString()}</div>
+            <div className={`text-white font-medium pr-1 `}>
+              {props.token1?.toString() ?? "0.0"}
+            </div>
             <div className={`${isTEZorCTEZ(props.token1Name) ? "uppercase" : ""}`}>
               {props.token1Name}
             </div>
           </div>
           <div className="text-text-500 text-f14 font-normal flex gap-1">
-            <div className={`text-white font-medium pr-1`}>{props.token2.toString()}</div>
+            <div className={`text-white font-medium pr-1`}>{props.token2?.toString() ?? "0.0"}</div>
             <div className={`${isTEZorCTEZ(props.token2Name) ? "uppercase" : ""}`}>
               {props.token2Name}
             </div>
