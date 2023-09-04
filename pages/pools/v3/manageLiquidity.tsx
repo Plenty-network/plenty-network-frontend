@@ -27,7 +27,6 @@ export default function ManageLiquidtyPoolsV3(props: IIndexProps) {
   const { tokenX, setTokenX, tokenY, setTokenY, showLiquidityModal } =
     useLocationStateInManageLiquidity();
 
-  console.log("tokenX", tokenX, "tokenY", tokenY);
   return (
     <SideBarHOC>
       {showLiquidityModal && (
