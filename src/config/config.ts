@@ -54,8 +54,8 @@ const Config: IConfig = {
   },
   PLENTY_3ROUTE_CONTRACT: "KT1R7WEtNNim3YgkxPt8wPMczjH3eyhbJMtz",
   VE_INDEXER: {
-    mainnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
-    testnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
+    mainnet: "https://api.plenty.network/ply/",
+    testnet: "https://api.plenty.network/ply/",
   },
   V3_VE_INDEXER: {
     mainnet: "https://api.plenty.network/v3/",

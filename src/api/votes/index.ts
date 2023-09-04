@@ -150,7 +150,7 @@ const mainPageRewardData = async (
       isCurrentEpoch = epochData.isCurrent;
 
       const feesResponse = await axios.get(
-        `${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/pools?ts=${
+        `${Config.VE_ANALYTICS_INDEXER[connectedNetwork]}pools?ts=${
           epochData.epochEndTimestamp - 1
         }`
       );
