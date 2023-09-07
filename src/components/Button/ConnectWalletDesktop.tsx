@@ -50,8 +50,8 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const copyAddress = () => {
     if (process.env.NODE_ENV === "production") {
       logEvent(analytics, "copy_address", { address: userAddress });
-      copy(userAddress);
     }
+    copy(userAddress);
     props.setShowToast(true);
     setTimeout(() => {
       props.setShowToast(false);

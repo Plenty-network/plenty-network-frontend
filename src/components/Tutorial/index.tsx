@@ -131,7 +131,7 @@ function Tutorial(props: ITutorialProps) {
     >
       <>
         <div className="flex justify-center font-title3 md:font-title1">
-          What is concentarted Liquidity?
+          What is concentrated liquidity?
         </div>
 
         <div className="flex gap-5 mx-2 md:mx-8 mt-[50px] justify-center">

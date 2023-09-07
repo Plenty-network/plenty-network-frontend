@@ -23,19 +23,9 @@ export const usePoolsMain = () =>
     { refetchInterval: 60000, cacheTime: 1000 * 30 }
   );
 
-// export const useGetValue=()=>{
-//   const tokenprice = useAppSelector((state) => state.tokenPrice).tokenPrice;
-//   let data:IPoolsDataWrapperResponse[]=[]
-//   if(Object.keys(tokenprice).length>0){
-//     const { data , isFetched } = usePoolsMain(tokenprice);
-//     return { data , isFetched }
-//   }
-//   return  { data:data , isFetched:false }
-// }
-
 export const useAllPoolsData = (tokenPrice: ITokenPriceList, page: number = 0) =>
   useQuery<IAllPoolsData[], Error>(
-    ["all-pools", page],
+    ["all-pools-v2", page],
     async () => {
       const allPoolsResponse = await getAllPoolsData(tokenPrice, page);
       const allPoolsData = allPoolsResponse.allData;
@@ -50,7 +40,7 @@ export const useAllPoolsDataV3 = (
   placeholderData: IAllPoolsDataResponse[]
 ) =>
   useQuery<IAllPoolsDataResponse[], Error>(
-    ["all-pools", page],
+    ["all-pools-v3", page],
     async () => {
       const allPoolsResponse = await getAllPoolsDataV3();
       const allPoolsData = allPoolsResponse.allData;
@@ -70,7 +60,7 @@ export const useMyPoolsData = (
   page: number = 0
 ) =>
   useQuery<IMyPoolsData[], Error>(
-    ["my-pools", page],
+    ["my-pools-v2", page],
     async () => {
       const myPoolsResponse = await getMyPoolsData(userTezosAddress, tokenPrice, page);
       const myPoolsData = myPoolsResponse.allData;
@@ -81,7 +71,7 @@ export const useMyPoolsData = (
 
 export const useMyPoolsDatav3 = (userTezosAddress: string, page: number = 0) =>
   useQuery<IMyPoolsData[], Error>(
-    ["my-pools", page],
+    ["my-pools-v3", page],
     async () => {
       const myPoolsResponse = await getMyPoolsDataV3(userTezosAddress, page);
       const myPoolsData = myPoolsResponse.allData;

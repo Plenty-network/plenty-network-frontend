@@ -22,7 +22,7 @@ function BottomCard(props: ILandingPageProps) {
         onClick={() => props.setShowTutorial(true)}
       >
         <div className=" w-[175px] md:w-[113px] text-white font-title-f20 md:font-body1">
-          Explore V3 and it features
+          Explore V3 and its features
         </div>
 
         <div className="h-[38px] md:h-[36px] w-fit bg-black rounded text-blue-700  text-center px-[22px] font-subtitle4 md:font-caption2  mt-2 py-2.5 cursor-pointer">
