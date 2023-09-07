@@ -410,7 +410,8 @@ export const removeLiquidity = async (
       position,
       percentage,
       userAddress,
-      contractInstance
+      contractInstance,
+      contractStorageParameters.sqrtPriceValue
     );
     const allBatchOperations: WalletParamsWithKind[] = [];
 

@@ -4,7 +4,7 @@ import Config from "../../config/config";
 import { contractStorage, getOutsideFeeGrowth } from "./helper";
 
 import axios from "axios";
-import { BalanceNat, IV3Position, IV3PositionObject } from "./types";
+import { BalanceNat, IV3ContractStorageParams, IV3Position, IV3PositionObject } from "./types";
 import { getTokensFromAMMAddress, getV3PoolAddressWithFeeTier } from "../util/fetchConfig";
 
 import { ITokenPriceList } from "../util/types";
@@ -298,7 +298,7 @@ export const createIncreaseLiquidityOperation = async (
   const options = {
     liquidityDelta: liquidity,
 
-    maximumTokensContributed: {
+    tokensLimit: {
       x: maxTokensContributed.x.abs(),
       y: maxTokensContributed.y.abs(),
     },
@@ -320,20 +320,20 @@ export const createRemoveLiquidityOperation = async (
   position: IV3PositionObject,
   percentage: number,
   userAddress: string,
-  contractInstance: any
+  contractInstance: any,
+  sqrtPriceValue: BigNumber
 ) => {
   const liquidity = new BigNumber(position.position.liquidity)
     .multipliedBy(percentage)
     .dividedBy(100)
     .multipliedBy(-1);
 
+  const minOut = await calculateMinOut(percentage, position, sqrtPriceValue);
+
   const options = {
     liquidityDelta: liquidity,
 
-    maximumTokensContributed: {
-      x: new BigNumber(0),
-      y: new BigNumber(0),
-    },
+    tokensLimit: minOut,
 
     positionId: parseInt(position.position.key_id),
 
@@ -375,6 +375,32 @@ export const calculateTokensForRemoveLiquidity = async (
       y: new BigNumber(
         tokenAmounts.y.dividedBy(new BigNumber(10).pow(contractStorageParameters.tokenY.decimals))
       ).abs(),
+    };
+  } catch (error) {
+    console.log("v3 error: ", error);
+  }
+};
+
+const calculateMinOut = async (
+  percentage: number,
+  position: IV3PositionObject,
+  sqrtPriceValue: BigNumber
+): Promise<any> => {
+  try {
+    const newLiquidty = new BigNumber(position.position.liquidity).minus(
+      BigNumber(position.position.liquidity).multipliedBy(percentage).dividedBy(100)
+    );
+
+    const tokenAmounts = Liquidity.computeAmountFromLiquidity(
+      newLiquidty,
+      sqrtPriceValue,
+      Tick.computeSqrtPriceFromTick(parseInt(position.position.lower_tick_index)),
+      Tick.computeSqrtPriceFromTick(parseInt(position.position.upper_tick_index))
+    );
+
+    return {
+      x: tokenAmounts.x.abs(),
+      y: tokenAmounts.y.abs(),
     };
   } catch (error) {
     console.log("v3 error: ", error);
