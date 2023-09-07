@@ -54,8 +54,8 @@ const Config: IConfig = {
   },
   PLENTY_3ROUTE_CONTRACT: "KT1R7WEtNNim3YgkxPt8wPMczjH3eyhbJMtz",
   VE_INDEXER: {
-    mainnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
-    testnet: "https://ply-indexer.ghostnet.plenty.network/v1/",
+    mainnet: "https://api.plenty.network/ply/",
+    testnet: "https://api.plenty.network/ply/",
   },
   V3_VE_INDEXER: {
     mainnet: "https://api.plenty.network/v3/",
@@ -137,8 +137,8 @@ const Config: IConfig = {
     testnet: "KT1CWvM4nLoyHBGKkGBKjnPNTNLzoJ9JpAW3",
   },
 
-  NETWORK: "testnet",
-  WALLET_NETWORK: NetworkType.GHOSTNET,
+  NETWORK: "mainnet",
+  WALLET_NETWORK: NetworkType.MAINNET,
   ADMIN_ADDRESS: "KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW",
   BURNER: "tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg",
 

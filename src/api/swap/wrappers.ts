@@ -393,7 +393,7 @@ export const topTokensList = async (): Promise<{
   topTokens: { [id: string]: number };
 }> => {
   try {
-    const tokenTvlResponse = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}analytics/tokens`);
+    const tokenTvlResponse = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}tokens`);
     const tokenTvl = tokenTvlResponse.data;
     const topTokens: { [id: string]: number } = {};
 

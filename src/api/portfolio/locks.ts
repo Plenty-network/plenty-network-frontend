@@ -194,7 +194,6 @@ export const getAllLocksRewardsData = async (
     );
     const locksIndexerData: IAllLocksRewardsIndexerData[] = locksIndexerResponse.data;
     for (const lockData of locksIndexerData) {
-      // console.log(lockData);
       const locksRewardsTokenData: ILocksRewardsTokenData = {};
       for (const voteData of lockData.votesUnclaimed) {
         if (!locksRewardsTokenData[voteData.epoch]) {
@@ -241,7 +240,6 @@ export const getAllLocksRewardsData = async (
       allLocksRewardsData[lockData.lockId] = locksRewardsTokenData;
     }
     
-    // console.log(locksIndexerData);
     return {
       allLocksRewardsData,
       totalTradingFeesAmount,
@@ -387,7 +385,6 @@ export const getAllRewardsOperationsData = async (
     const locksIndexerData: IAllLocksRewardsIndexerData[] = locksIndexerResponse.data;
 
     for (const lockData of locksIndexerData) {
-      // console.log(lockData);
       const tokenId = lockData.lockId;
       const allEpochClaimTokenData: IAllEpochClaimTokenData = {};
       const allFeesOperationData: IAllFeesOperationData = {

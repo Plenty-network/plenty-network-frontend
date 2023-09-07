@@ -213,7 +213,6 @@ export const getUnclaimedInflationData = async (
         inflationOpertionData.push({ tokenId: Number(lockData.id), epochs: epochsList });
       }
       allLocksInflationData[lockData.id] = lockInflationData;
-      // console.log(lockData);
       
     }
     
@@ -231,7 +230,6 @@ export const getUnclaimedInflationData = async (
       claimAllInflationData: inflationOpertionData,
       allLocksInflationData,
     };
-    // console.log(inflationIndexerData);
   } catch (error: any) {
     console.log(error);
     throw new Error(error.message);
