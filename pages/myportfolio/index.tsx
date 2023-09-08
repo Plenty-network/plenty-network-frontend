@@ -1872,55 +1872,54 @@ function MyPortfolio(props: any) {
                 {/* {Tooltip} */}
 
                 {activeSection === MyPortfolioSection.Rewards && (
-                <div className="ml-auto ">
-                  <ToolTip
-                    id="tooltipM"
-                    position={Position.left}
-                    toolTipChild={
-                      <div className="w-[100px] md:w-[180px]">
-                        Claim maximum possible rewards within gas limit
-                      </div>
-                    }
-                  >
-                    <div
-                      className={clsx(
-                        "cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-black h-[44px] md:h-[50px] px-[20px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
-                        (poolsRewards.data?.gaugeAddresses?.length === 0 &&
-                          feeClaimData?.length === 0 &&
-                          bribesClaimData?.length === 0 &&
-                          inflationData?.length === 0) ||
-                          poolsRewards.data?.gaugeAddresses === undefined
-                          ? "cursor-not-allowed"
-                          : "cursor-pointer"
-                      )}
-                    
-                      onClick={
-                        (poolsRewards.data?.gaugeAddresses?.length === 0 &&
-                          feeClaimData?.length === 0 &&
-                          bribesClaimData?.length === 0 &&
-                          inflationData?.length === 0) ||
-                        poolsRewards.data?.gaugeAddresses === undefined
-                          ? () => {}
-                          : () => {
-                              if (process.env.NODE_ENV === "production") {
-                                logEvent(analytics, "myportfolio_rewards_claimmax");
-                              }
-                              setClaimValueDollar(
-                                poolsRewards.data?.gaugeEmissionsTotalValue
-                                  .plus(bribesStats)
-                                  .plus(tradingfeeStats)
-                              );
-                              setShowClaimPly(true);
-
-                              setClaimState(EClaimAllState.SUPERNOVA);
-                            }
+                  <div className="ml-auto ">
+                    <ToolTip
+                      id="tooltipM"
+                      position={Position.left}
+                      toolTipChild={
+                        <div className="w-[100px] md:w-[180px]">
+                          Claim maximum possible rewards within gas limit
+                        </div>
                       }
                     >
-                      Claim max
-                    </div>
-                  </ToolTip>
-                </div>
-              )}
+                      <div
+                        className={clsx(
+                          "cursor-pointer flex items-center md:font-title3-bold font-subtitle4 text-black h-[44px] md:h-[50px] px-[20px] md:px-[32px] bg-primary-500 rounded-xl md:w-[155px]  justify-center",
+                          (poolsRewards.data?.gaugeAddresses?.length === 0 &&
+                            feeClaimData?.length === 0 &&
+                            bribesClaimData?.length === 0 &&
+                            inflationData?.length === 0) ||
+                            poolsRewards.data?.gaugeAddresses === undefined
+                            ? "cursor-not-allowed"
+                            : "cursor-pointer"
+                        )}
+                        onClick={
+                          (poolsRewards.data?.gaugeAddresses?.length === 0 &&
+                            feeClaimData?.length === 0 &&
+                            bribesClaimData?.length === 0 &&
+                            inflationData?.length === 0) ||
+                          poolsRewards.data?.gaugeAddresses === undefined
+                            ? () => {}
+                            : () => {
+                                if (process.env.NODE_ENV === "production") {
+                                  logEvent(analytics, "myportfolio_rewards_claimmax");
+                                }
+                                setClaimValueDollar(
+                                  poolsRewards.data?.gaugeEmissionsTotalValue
+                                    .plus(bribesStats)
+                                    .plus(tradingfeeStats)
+                                );
+                                setShowClaimPly(true);
+
+                                setClaimState(EClaimAllState.SUPERNOVA);
+                              }
+                        }
+                      >
+                        Claim max
+                      </div>
+                    </ToolTip>
+                  </div>
+                )}
               </div>
               {activeSection === MyPortfolioSection.Rewards && (
                 <div className="py-1.5   px-2 rounded-lg  flex items-center bg-info-500/[0.1] mx-2 md:mx-[23px] mt-2">
@@ -2103,7 +2102,7 @@ function MyPortfolio(props: any) {
                       </a>
                     </div>
                     <LocksTablePosition
-                      className="md:pl-5 md:mr-5 md:pb-4 md:pt-2  py-4"
+                      className="md:pl-5 md:mr-2 md:pb-4 md:pt-2  py-4"
                       locksPosition={locksPosition.data}
                       isfetched={locksPosition.isfetched}
                       setIsManageLock={setIsManageLock}
