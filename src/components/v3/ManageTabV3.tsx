@@ -750,7 +750,9 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             })
           );
         }, 6000);
-        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        setTimeout(() => {
+          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+        }, 9000);
         // setContentTransaction("");
       } else {
         setScreen(ActivePopUp.ManageExisting);
