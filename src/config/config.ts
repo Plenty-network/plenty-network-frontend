@@ -46,7 +46,7 @@ const Config: IConfig = {
   },
   V3_FACTORY: {
     mainnet: "",
-    testnet: "KT1LzD2Uj1VjSjrRwusCbZYhUAAbRfQDKmBM",
+    testnet: "KT1UkeUEmmGAzkmaSs3RhFbmhtau2J1AAo7p",
   },
   TEZ_DEPLOYER: {
     mainnet: "KT1JnpY4fUQ9DurUhb7uCQtKkunLiamgdzyc",
