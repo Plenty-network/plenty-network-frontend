@@ -18,7 +18,7 @@ export const fetchConfig = async (): Promise<IContractsConfig> => {
   try {
     const newV2PoolsUrl: string = `${Config.API_SERVER_URL[connectedNetwork]}config/pools/v2`
     const newV3PoolsUrl: string = `${Config.API_SERVER_URL[connectedNetwork]}config/pools/v3`
-    const newTokensUrl: string = `${Config.API_SERVER_URL[connectedNetwork]}config/token`;
+    const newTokensUrl: string = `${Config.API_SERVER_URL[connectedNetwork]}config/tokens`;
 
     const configResult = await Promise.all([axios.get(newTokensUrl), axios.get(newV2PoolsUrl), axios.get(newV3PoolsUrl)]);
     if (configResult.find((result) => result.status !== 200)) {
