@@ -121,7 +121,7 @@ export const LiquidityOperation = async (
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         // @ts-ignore
-        ...Approvals.updateOperatorsFA2(tokenX, [
+        ...Approvals.updateOperatorsFA2(tokenY, [
           {
             add_operator: {
               owner: userAddress,
@@ -161,7 +161,7 @@ export const LiquidityOperation = async (
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         // @ts-ignore
-        ...Approvals.updateOperatorsFA2(tokenX, [
+        ...Approvals.updateOperatorsFA2(tokenY, [
           {
             remove_operator: {
               owner: userAddress,
