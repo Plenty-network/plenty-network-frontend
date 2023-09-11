@@ -104,8 +104,8 @@ const Config: IConfig = {
     testnet: "KT1CWvM4nLoyHBGKkGBKjnPNTNLzoJ9JpAW3",
   },
 
-  NETWORK: "mainnet",
-  WALLET_NETWORK: NetworkType.MAINNET,
+  NETWORK: "testnet",
+  WALLET_NETWORK: NetworkType.GHOSTNET,
   ADMIN_ADDRESS: "KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW",
   BURNER: "tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg",
 
