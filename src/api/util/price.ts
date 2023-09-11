@@ -122,7 +122,7 @@ export const getTokenPrices = async (): Promise<{
     const tokenPrice: { [id: string]: number } = {};
 
     const indexerPriceResponse = await axios
-      .get(`${Config.VE_ANALYTICS_INDEXER["mainnet"]}prices`)
+      .get(`${Config.API_SERVER_URL["mainnet"]}ve/prices`)
       .then((resp) => resp.data)
       .catch((err) => {
         console.log(err);

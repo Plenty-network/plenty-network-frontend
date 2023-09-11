@@ -8,7 +8,7 @@ import { getV3PoolAddressWithFeeTier } from "../util/fetchConfig";
 import { connectedNetwork, dappClient } from "../../common/walletconnect";
 
 const tokenDetail = async (tokenSymbol: String): Promise<Token> => {
-  let configResponse: any = await axios.get(Config.CONFIG_LINKS[connectedNetwork].TOKEN);
+  let configResponse: any = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}config/tokens`);
   configResponse = configResponse.data[`${tokenSymbol}`];
 
   let tokenAddress = configResponse.address;
@@ -68,7 +68,7 @@ export const calculateWitnessValue = async (
   poolAddress: string
 ): Promise<any> => {
   let rpcResponse = await axios.get(
-    `${Config.V3_CONFIG_URL.testnet}/ticks?pool=${poolAddress}&witnessOf=${witnessFrom}`
+    `${Config.API_SERVER_URL.testnet}config/ticks?pool=${poolAddress}&witnessOf=${witnessFrom}`
   );
 
   let witnessValue = rpcResponse.data.witness;
@@ -111,7 +111,7 @@ export const getOutsideFeeGrowth = async (
 export const getTickAndRealPriceFromPool = async (contractAddress: string): Promise<any> => {
   try {
     let rpcResponse: any = await axios.get(
-      `${Config.V3_CONFIG_URL[connectedNetwork]}/ticks?pool=${contractAddress}`
+      `${Config.API_SERVER_URL[connectedNetwork]}config/ticks?pool=${contractAddress}`
     );
 
     return rpcResponse.data;

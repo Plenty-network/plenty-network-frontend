@@ -20,17 +20,10 @@ export interface IConfig {
     mainnet: Record<string, string>;
   };
   ROUTER: INodes;
-  V3_CONFIG_URL: INodes;
-  
   // WRAPPED_ASSETS: {
   //   testnet: Record<string, IWrappedToken>;
   //   mainnet: Record<string, IWrappedToken>;
   // };
-
-  CONFIG_LINKS: {
-    testnet: IConfigData;
-    mainnet: IConfigData;
-  };
 
   NETWORK: "mainnet" | "testnet";
   WALLET_NETWORK: NetworkType;
@@ -39,10 +32,7 @@ export interface IConfig {
   VE_SWAP: { mainnet: string; testnet: string };
   VOTER: { mainnet: string; testnet: string };
   VOTE_ESCROW: { mainnet: string; testnet: string };
-  VE_INDEXER: { mainnet: string; testnet: string };
-  V3_VE_INDEXER: { mainnet: string; testnet: string };
-  ANALYTICS_INDEXER: { mainnet: string; testnet: string };
-  VE_ANALYTICS_INDEXER: { mainnet: string; testnet: string };
+  API_SERVER_URL: { mainnet: string; testnet: string };
   PLY_TOKEN: { mainnet: string; testnet: string };
   FACTORY: { mainnet: string; testnet: string };
   V3_FACTORY: { mainnet: string; testnet: string };

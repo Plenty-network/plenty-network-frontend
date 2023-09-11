@@ -16,9 +16,9 @@ import { IGaugeExistsResponse } from "./types";
 
 export const fetchConfig = async (): Promise<IContractsConfig> => {
   try {
-    const newV2PoolsUrl: string = Config.CONFIG_LINKS[connectedNetwork].POOL.V2;
-    const newV3PoolsUrl: string = Config.CONFIG_LINKS[connectedNetwork].POOL.V3;
-    const newTokensUrl: string = Config.CONFIG_LINKS[connectedNetwork].TOKEN;
+    const newV2PoolsUrl: string = `${Config.API_SERVER_URL[connectedNetwork]}config/pools/v2`
+    const newV3PoolsUrl: string = `${Config.API_SERVER_URL[connectedNetwork]}config/pools/v3`
+    const newTokensUrl: string = `${Config.API_SERVER_URL[connectedNetwork]}config/token`;
 
     const configResult = await Promise.all([axios.get(newTokensUrl), axios.get(newV2PoolsUrl), axios.get(newV3PoolsUrl)]);
     if (configResult.find((result) => result.status !== 200)) {

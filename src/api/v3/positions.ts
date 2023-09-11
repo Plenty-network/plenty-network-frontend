@@ -26,7 +26,7 @@ export const getPositions = async (
     let v3ContractAddress = getV3PoolAddressWithFeeTier(tokenXSymbol, tokenYSymbol, feeTier);
     const positions: IV3Position[] = (
       await axios.get(
-        `${Config.V3_VE_INDEXER[connectedNetwork]}/positions?pool=${v3ContractAddress}&address=${userAddress}`
+        `${Config.API_SERVER_URL[connectedNetwork]}v3/positions?pool=${v3ContractAddress}&address=${userAddress}`
       )
     ).data;
 
@@ -153,7 +153,7 @@ export const getPositionsAll = async (
   }
   try {
     const positions: IV3Position[] = (
-      await axios.get(`${Config.V3_VE_INDEXER[connectedNetwork]}/positions?address=${userAddress}`)
+      await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}v3/positions?address=${userAddress}`)
     ).data;
 
     const contractStorageParametersPromises = positions.map(async (position) => {

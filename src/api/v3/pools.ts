@@ -12,10 +12,10 @@ export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
   try {
     const allData: any[] = [];
 
-    const fetchAnalyticsPoolsData = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}pools`);
+    const fetchAnalyticsPoolsData = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}analytics/pools`);
     let analyticsPoolsData: any[] = fetchAnalyticsPoolsData.data;
 
-    const fetchVePoolsData = await axios.get(`${Config.VE_ANALYTICS_INDEXER[connectedNetwork]}pools`);
+    const fetchVePoolsData = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}ve/pools`);
     let vePoolsData: any[] = fetchVePoolsData.data;
 
     analyticsPoolsData.map<any>((datum) => {
@@ -69,13 +69,13 @@ export const getMyPoolsDataV3 = async (
     if (!userTezosAddress || userTezosAddress.length <= 0) {
       throw new Error("Invalid or empty arguments.");
     }
-    const v3PositionsResponse = await axios.get(`${Config.V3_VE_INDEXER[connectedNetwork]}positions?address=${userTezosAddress}`);
+    const v3PositionsResponse = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}v3/positions?address=${userTezosAddress}`);
     const v3IndexerPositionsData: any[] = v3PositionsResponse.data;
 
-    const fetchAnalyticsPoolsData = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}pools`);
+    const fetchAnalyticsPoolsData = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}analytics/pools`);
     let analyticsPoolsData: any[] = fetchAnalyticsPoolsData.data;
 
-    const fetchVePoolsData = await axios.get(`${Config.VE_ANALYTICS_INDEXER[connectedNetwork]}pools`);
+    const fetchVePoolsData = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}ve/pools`);
     let vePoolsData: any[] = fetchVePoolsData.data;
 
     const allData: any[] = [];
@@ -171,7 +171,7 @@ export const getPoolsShareDataV3 = async (): Promise<IAllPoolsDataResponse> => {
     let count;
     let initialTVL;
 
-    const fetchAnalyticsPoolsData = await axios.get(`${Config.ANALYTICS_INDEXER[connectedNetwork]}pools`);
+    const fetchAnalyticsPoolsData = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}analytics/pools`);
     let analyticsPoolsData: any[] = fetchAnalyticsPoolsData.data;
 
     analyticsPoolsData.map<any>((datum) => {

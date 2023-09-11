@@ -16,6 +16,10 @@ const Config: IConfig = {
     mainnet: process.env.NEXT_PUBLIC_TZKT_MAINNET || "https://api.tzkt.io/",
     testnet: process.env.NEXT_PUBLIC_TZKT_GHOSTNET || "https://api.ghostnet.tzkt.io/",
   },
+  API_SERVER_URL: {
+    testnet: "https://api.plenty.network/",
+    mainnet: "https://api.plenty.network/",
+  },
   PUBLIC_TZKT_NODES: {
     mainnet: "https://api.tzkt.io/",
     testnet: "https://api.ghostnet.tzkt.io/",
@@ -53,23 +57,6 @@ const Config: IConfig = {
     testnet: "KT1J3EQDZbLUR1Hp8TZKFwY5FLoekiPSgsmL",
   },
   PLENTY_3ROUTE_CONTRACT: "KT1R7WEtNNim3YgkxPt8wPMczjH3eyhbJMtz",
-  VE_INDEXER: {
-    mainnet: "https://api.plenty.network/ply/",
-    testnet: "https://api.plenty.network/ply/",
-  },
-  V3_VE_INDEXER: {
-    mainnet: "https://api.plenty.network/v3/",
-    testnet: "https://api.plenty.network/v3/",
-  },
-  ANALYTICS_INDEXER: {
-    mainnet: "https://api.plenty.network/analytics/",
-    testnet: "https://api.plenty.network/analytics/",
-  },
-  VE_ANALYTICS_INDEXER: {
-    mainnet: "https://api.plenty.network/ve/",
-    testnet: "https://api.plenty.network/ve/",
-  },
-
   FAUCET: "KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH",
 
   AIRDROP_SERVER: {
@@ -93,34 +80,14 @@ const Config: IConfig = {
       tokenMapid: 1777,
     },
   },
-
   IPFS_LINKS: {
     primary: "https://cloudflare-ipfs.com/ipfs/",
     fallback: "https://ipfs.io/ipfs/",
   },
-
-  CONFIG_LINKS: {
-    testnet: {
-      POOL: {
-        V2: "https://api.plenty.network/config/pools/v2",
-        V3: "https://api.plenty.network/config/pools/v3",
-      },
-      TOKEN: "https://api.plenty.network/config/tokens",
-    },
-    mainnet: {
-      POOL: {
-        V2: "https://api.plenty.network/config/pools/v2",
-        V3: "https://api.plenty.network/config/pools/v3",
-      },
-      TOKEN: "https://api.plenty.network/config/tokens",
-    },
-  },
-
   CTEZ: {
     mainnet: "KT1GWnsoFZVHGh7roXEER3qeCcgJgrXT3de2",
     testnet: "KT1P7eP7gGuHgPVNWRLs1p4uRhc9Wbyku8B2",
   },
-
   SERVERLESS_BASE_URL: {
     mainnet: "https://w0sujgfj39.execute-api.us-east-2.amazonaws.com/v1",
     testnet: "https://testnet.dummy-api.us-east-10.amazonaws.com/v1",
@@ -149,10 +116,6 @@ const Config: IConfig = {
       mainnet: "https://tzkt.io/",
       testnet: "https://ghostnet.tzkt.io/",
     },
-  },
-  V3_CONFIG_URL: {
-    testnet: "https://api.plenty.network/config/",
-    mainnet: "https://api.plenty.network/config/",
   },
   PLENTY_3ROUTE_URL: 
   {

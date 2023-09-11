@@ -37,7 +37,7 @@ export const getPositionsData = async (
     let liquidityAmountSum = new BigNumber(0);
 
     const positionsResponse = await axios.get(
-      `${Config.VE_INDEXER[connectedNetwork]}positions?address=${userTezosAddress}`
+      `${Config.API_SERVER_URL[connectedNetwork]}ply/positions?address=${userTezosAddress}`
     );
     const positionsResponseData: IPositionsIndexerData[] = positionsResponse.data;
 
@@ -118,7 +118,7 @@ export const getPoolsRewardsData = async (
     const AMM = state.config.AMMs;
 
     const positionsResponse = await axios.get(
-      `${Config.VE_INDEXER[connectedNetwork]}positions?address=${userTezosAddress}`
+      `${Config.API_SERVER_URL[connectedNetwork]}ply/positions?address=${userTezosAddress}`
     );
     const positionsResponseData: IPositionsIndexerData[] = positionsResponse.data;
 

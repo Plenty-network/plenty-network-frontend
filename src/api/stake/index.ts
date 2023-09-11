@@ -29,7 +29,7 @@ export const getVePLYListForUser = async (
     const AMM = state.config.AMMs;
 
     const locksResponse = await axios.get(
-      `${Config.VE_INDEXER[connectedNetwork]}locks?address=${userTezosAddress}`
+      `${Config.API_SERVER_URL[connectedNetwork]}ply/locks?address=${userTezosAddress}`
     );
 
     if (locksResponse.data.result.length === 0) {

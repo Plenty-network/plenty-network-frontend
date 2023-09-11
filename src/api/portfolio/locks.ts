@@ -53,7 +53,7 @@ export const getAllLocksPositionData = async (
     const GAUGES = state.config.gauges;
 
     const [locksResponse, veStorageResponse] = await Promise.all([
-      axios.get(`${Config.VE_INDEXER[connectedNetwork]}locks?address=${userTezosAddress}`),
+      axios.get(`${Config.API_SERVER_URL[connectedNetwork]}ply/locks?address=${userTezosAddress}`),
       getTzktStorageData(voteEscrowAddress),
     ]);
     const locksData = locksResponse.data.result;
@@ -190,7 +190,7 @@ export const getAllLocksRewardsData = async (
     let totalBribesAmount = new BigNumber(0);
 
     const locksIndexerResponse = await axios.get(
-      `${Config.VE_INDEXER[connectedNetwork]}votes?address=${userTezosAddress}`
+      `${Config.API_SERVER_URL[connectedNetwork]}ply/votes?address=${userTezosAddress}`
     );
     const locksIndexerData: IAllLocksRewardsIndexerData[] = locksIndexerResponse.data;
     for (const lockData of locksIndexerData) {
@@ -380,7 +380,7 @@ export const getAllRewardsOperationsData = async (
     const allFeesClaimData: IAllFeesOperationData[] = [];
 
     const locksIndexerResponse = await axios.get(
-      `${Config.VE_INDEXER[connectedNetwork]}votes?address=${userTezosAddress}`
+      `${Config.API_SERVER_URL[connectedNetwork]}ply/votes?address=${userTezosAddress}`
     );
     const locksIndexerData: IAllLocksRewardsIndexerData[] = locksIndexerResponse.data;
 
