@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@airgap/beacon-sdk": "^4.0.6",
+    "@plenty-labs/v3-sdk": "^1.0.24",
     "@rainbow-me/rainbowkit": "^1.0.9",
-    "@plenty-labs/v3-sdk": "^1.0.22",
     "@reduxjs/toolkit": "^1.8.2",
     "@taquito/beacon-wallet": "^17.2.0",
     "@taquito/michel-codec": "^17.2.0",
@@ -45,7 +45,7 @@
     "react-table": "^7.7.0",
     "react-time-ago": "^7.2.1",
     "react-tooltip": "^4.2.21",
-    "recharts": "2.1.12",
+    "recharts": "^2.8.0",
     "redux-persist": "^6.0.0",
     "truncate-middle": "^1.0.6",
     "viem": "^1.5.0",

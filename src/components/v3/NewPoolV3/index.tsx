@@ -253,7 +253,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     deployPoolOperation(
       tokenInOp,
       tokenOutOp,
-      Number(tick),
+      Number(priceAmount),
       Number(selectedFeeTier) * 100,
       transactionSubmitModal,
       resetAllValues,

@@ -3,6 +3,7 @@ import { IConfigToken, TokenStandard } from "./types";
 
 import { dappClient, v3factoryAddress } from "../../common/walletconnect";
 import { store } from "../../redux";
+import { PoolDeployer } from "@plenty-labs/v3-sdk";
 import {
   IOperationsResponse,
   TResetAllValues,
@@ -17,7 +18,7 @@ import { IFlashMessageProps } from "../../redux/flashMessage/type";
 export const deployPoolOperation = async (
   tokenXSymbol: IConfigToken,
   tokenYSymbol: IConfigToken,
-  initialTickIndex: number,
+  realPrice: number,
   feeBps: number,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
@@ -32,29 +33,16 @@ export const deployPoolOperation = async (
     }
 
     const Tezos = await dappClient().tezos();
-    const tokenX = await Tezos.wallet.at(tokenXSymbol.address as string);
-    const tokenY = await Tezos.wallet.at(tokenYSymbol.address as string);
-
     const factoryInstance = await Tezos.wallet.at(v3factoryAddress);
+
     const allBatch: WalletParamsWithKind[] = [];
     allBatch.push({
       kind: OpKind.TRANSACTION,
-      ...factoryInstance.methodsObject
-        .deploy_pool({
-          fee_bps: feeBps,
-          initial_tick_index: initialTickIndex,
-          extra_slots: 0,
-          token_x:
-            tokenXSymbol.standard === TokenStandard.FA12
-              ? { fa12: tokenX.address }
-              : { fa2: { address: tokenX.address, token_id: tokenXSymbol.tokenId } },
-          token_y:
-            tokenYSymbol.standard === TokenStandard.FA12
-              ? { fa12: tokenY.address }
-              : { fa2: { address: tokenY.address, token_id: tokenYSymbol.tokenId } },
-        })
-        .toTransferParams(),
+        // @ts-ignore
+      ...PoolDeployer.deployPool(factoryInstance, {tokenX: tokenXSymbol, tokenY: tokenYSymbol, realPrice, feeBps })
     });
+
+    console.log('allBatch', allBatch)
 
     const updatedBatchOperations = await getBatchOperationsWithLimits(allBatch);
     const batch = Tezos.wallet.batch(updatedBatchOperations);
