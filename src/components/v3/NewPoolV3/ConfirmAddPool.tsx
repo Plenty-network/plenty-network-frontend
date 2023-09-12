@@ -22,6 +22,8 @@ import { useAppSelector } from "../../../redux";
 import { tokenParameterLiquidity } from "../../Liquidity/types";
 
 interface IConfirmSwapProps {
+  setSelectedToken: React.Dispatch<React.SetStateAction<tokenParameterLiquidity>>;
+  selectedToken: tokenParameterLiquidity;
   show: boolean;
   setShow: any;
   priceAmount: string;
@@ -45,11 +47,7 @@ interface IConfirmSwapProps {
 }
 function ConfirmAddPoolv3(props: IConfirmSwapProps) {
   const TOKEN = useAppSelector((state) => state.config.tokens);
-  const [isConvert, setConvert] = useState(false);
-  const convertRates = (e: any) => {
-    e.stopPropagation();
-    setConvert(!isConvert);
-  };
+
   const closeModal = () => {
     props.setShow(false);
   };
@@ -65,7 +63,7 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
       }
     }
   };
-  const [selectedToken, setSelectedToken] = useState(props.tokenIn as tokenParameterLiquidity);
+
   return props.show ? (
     <PopUpModal onhide={closeModal}>
       {
@@ -146,9 +144,9 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                 <p>
                   <span className="mt-2 font-body2  md:font-body4 text-text-400">
                     INITIAL PRICE{" "}
-                    {selectedToken.symbol
+                    {props.selectedToken.symbol
                       ? `: 1 ${tEZorCTEZtoUppercase(
-                          selectedToken.symbol === props.tokenIn.symbol
+                          props.selectedToken.symbol === props.tokenIn.symbol
                             ? props.tokenIn.name
                             : props.tokenOut.symbol
                         )} =`
@@ -170,22 +168,22 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                           src={
                             props.tokenOut.symbol && props.tokenIn.symbol
                               ? tokenIcons[
-                                  selectedToken.symbol === props.tokenIn.symbol
+                                  props.selectedToken.symbol === props.tokenIn.symbol
                                     ? props.tokenOut.symbol
                                     : props.tokenIn.symbol
                                 ]
                                 ? tokenIcons[
-                                    selectedToken.symbol === props.tokenIn.symbol
+                                    props.selectedToken.symbol === props.tokenIn.symbol
                                       ? props.tokenOut.symbol
                                       : props.tokenIn.symbol
                                   ].src
                                 : TOKEN[
-                                    selectedToken.symbol === props.tokenIn.symbol
+                                    props.selectedToken.symbol === props.tokenIn.symbol
                                       ? props.tokenOut.symbol.toString()
                                       : props.tokenIn.symbol.toString()
                                   ]?.iconUrl
                                 ? TOKEN[
-                                    selectedToken.symbol === props.tokenIn.symbol
+                                    props.selectedToken.symbol === props.tokenIn.symbol
                                       ? props.tokenOut.symbol.toString()
                                       : props.tokenIn.symbol.toString()
                                   ].iconUrl
@@ -201,7 +199,7 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
 
                       <span className="ml-1 font-caption1">
                         {tEZorCTEZtoUppercase(
-                          selectedToken.symbol === props.tokenIn.symbol
+                          props.selectedToken.symbol === props.tokenIn.symbol
                             ? props.tokenOut.name
                             : props.tokenIn.symbol
                         )}
@@ -215,28 +213,28 @@ function ConfirmAddPoolv3(props: IConfirmSwapProps) {
                   <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit ml-auto ">
                     <div
                       className={clsx(
-                        selectedToken.symbol === props.tokenIn.symbol
+                        props.selectedToken.symbol === props.tokenIn.symbol
                           ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
                           : "text-text-250 px-2",
                         "font-subtitle1223"
                       )}
                       onClick={() => {
                         handlechange(props.priceAmount);
-                        setSelectedToken(props.tokenIn);
+                        props.setSelectedToken(props.tokenIn);
                       }}
                     >
                       {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
                     </div>
                     <div
                       className={clsx(
-                        selectedToken.symbol === props.tokenOut.symbol
+                        props.selectedToken.symbol === props.tokenOut.symbol
                           ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
                           : "text-text-250 px-2",
                         "font-subtitle1223"
                       )}
                       onClick={() => {
                         handlechange(props.priceAmount);
-                        setSelectedToken(props.tokenOut);
+                        props.setSelectedToken(props.tokenOut);
                       }}
                     >
                       {tEZorCTEZtoUppercase(props.tokenOut.symbol)}

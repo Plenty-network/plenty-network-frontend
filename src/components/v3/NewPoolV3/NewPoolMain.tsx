@@ -37,6 +37,8 @@ import FeeTierMainNewPool from "./FeeTierNewPool";
 import { isMobile } from "react-device-detect";
 
 interface ILiquidityProps {
+  setSelectedToken: React.Dispatch<React.SetStateAction<tokenParameterLiquidity>>;
+  selectedToken: tokenParameterLiquidity;
   setSelectedFeeTier: React.Dispatch<React.SetStateAction<string>>;
   selectedFeeTier: string;
   inputRef?: any;
@@ -76,14 +78,13 @@ function NewPoolMain(props: ILiquidityProps) {
   const handleNewPoolsManagePopup = (val: boolean) => {
     setShowNewPoolsManage(val);
   };
-  const [selectedToken, setSelectedToken] = useState({} as tokenParameterLiquidity);
 
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(props.tokenIn, "symbol") &&
       Object.prototype.hasOwnProperty.call(props.tokenOut, "symbol")
     ) {
-      setSelectedToken(props.tokenIn);
+      props.setSelectedToken(props.tokenIn);
     }
   }, [props.tokenIn, props.tokenOut]);
 
@@ -243,9 +244,9 @@ function NewPoolMain(props: ILiquidityProps) {
               <p>
                 <span className="mt-2  font-body2  md:font-body4 text-text-400">
                   INITIAL PRICE{" "}
-                  {selectedToken.symbol
+                  {props.selectedToken.symbol
                     ? `: 1 ${
-                        selectedToken.symbol === props.tokenIn.symbol
+                        props.selectedToken.symbol === props.tokenIn.symbol
                           ? tEZorCTEZtoUppercase(props.tokenIn.name)
                           : tEZorCTEZtoUppercase(props.tokenOut.symbol)
                       } =`
@@ -279,22 +280,22 @@ function NewPoolMain(props: ILiquidityProps) {
                         src={
                           props.tokenOut.symbol && props.tokenIn.symbol
                             ? tokenIcons[
-                                selectedToken.symbol === props.tokenIn.symbol
+                                props.selectedToken.symbol === props.tokenIn.symbol
                                   ? props.tokenOut.symbol
                                   : props.tokenIn.symbol
                               ]
                               ? tokenIcons[
-                                  selectedToken.symbol === props.tokenIn.symbol
+                                  props.selectedToken.symbol === props.tokenIn.symbol
                                     ? props.tokenOut.symbol
                                     : props.tokenIn.symbol
                                 ].src
                               : TOKEN[
-                                  selectedToken.symbol === props.tokenIn.symbol
+                                  props.selectedToken.symbol === props.tokenIn.symbol
                                     ? props.tokenOut.symbol.toString()
                                     : props.tokenIn.symbol.toString()
                                 ]?.iconUrl
                               ? TOKEN[
-                                  selectedToken.symbol === props.tokenIn.symbol
+                                  props.selectedToken.symbol === props.tokenIn.symbol
                                     ? props.tokenOut.symbol.toString()
                                     : props.tokenIn.symbol.toString()
                                 ].iconUrl
@@ -310,7 +311,7 @@ function NewPoolMain(props: ILiquidityProps) {
 
                     <span className="ml-1 font-caption1 ">
                       {tEZorCTEZtoUppercase(
-                        selectedToken.symbol === props.tokenIn.symbol
+                        props.selectedToken.symbol === props.tokenIn.symbol
                           ? props.tokenOut.name
                           : props.tokenIn.symbol
                       )}
@@ -324,28 +325,28 @@ function NewPoolMain(props: ILiquidityProps) {
                 <div className="border border-text-800 rounded-lg	bg-info-900 h-[27px] p-[1px] cursor-pointer flex items-center w-fit ml-auto ">
                   <div
                     className={clsx(
-                      selectedToken.symbol === props.tokenIn.symbol
+                      props.selectedToken.symbol === props.tokenIn.symbol
                         ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
                         : "text-text-250 px-2 hover:text-white",
                       "font-subtitle1223"
                     )}
                     onClick={() => {
                       handlechange(props.priceAmount);
-                      setSelectedToken(props.tokenIn);
+                      props.setSelectedToken(props.tokenIn);
                     }}
                   >
                     {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
                   </div>
                   <div
                     className={clsx(
-                      selectedToken.symbol === props.tokenOut.symbol
+                      props.selectedToken.symbol === props.tokenOut.symbol
                         ? "h-[23px] px-2  bg-shimmer-200 rounded-[6px]	"
                         : "text-text-250 px-2 hover:text-white",
                       "font-subtitle1223"
                     )}
                     onClick={() => {
                       handlechange(props.priceAmount);
-                      setSelectedToken(props.tokenOut);
+                      props.setSelectedToken(props.tokenOut);
                     }}
                   >
                     {tEZorCTEZtoUppercase(props.tokenOut.symbol)}

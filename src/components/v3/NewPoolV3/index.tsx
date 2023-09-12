@@ -49,7 +49,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
   const [priceAmount, setPriceAmount] = useState("");
 
   const [showConfirmTransaction, setShowConfirmTransaction] = useState(false);
-
+  const [selectedToken, setSelectedToken] = useState({} as tokenParameterLiquidity);
   const [transactionId, setTransactionId] = useState("");
 
   const tokens = useAppSelector((state) => state.config.tokens);
@@ -66,9 +66,6 @@ export function NewPoolv3(props: IManageLiquidityProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [showConfirmPool, setShowConfirmPool] = useState(false);
-
-  const [contentTransaction, setContentTransaction] = useState("");
-  const [tick, setTick] = useState("");
 
   const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>(
     {} as tokenParameterLiquidity
@@ -90,24 +87,24 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     }
   };
 
-  useEffect(() => {
-    if (
-      Number(priceAmount) > 0 &&
-      Object.prototype.hasOwnProperty.call(tokenIn, "symbol") &&
-      Object.prototype.hasOwnProperty.call(tokenOut, "symbol") &&
-      selectedFeeTier !== ""
-    ) {
-      setTick("");
-      getTickFromRealPrice(
-        new BigNumber(priceAmount),
-        tokenInOp,
-        tokenOutOp,
-        percentage(selectedFeeTier)
-      ).then((res) => {
-        setTick(res);
-      });
-    }
-  }, [priceAmount, tokenIn.symbol, tokenOut.symbol, selectedFeeTier]);
+  // useEffect(() => {
+  //   if (
+  //     Number(priceAmount) > 0 &&
+  //     Object.prototype.hasOwnProperty.call(tokenIn, "symbol") &&
+  //     Object.prototype.hasOwnProperty.call(tokenOut, "symbol") &&
+  //     selectedFeeTier !== ""
+  //   ) {
+  //     setTick("");
+  //     getTickFromRealPrice(
+  //       new BigNumber(priceAmount),
+  //       tokenInOp,
+  //       tokenOutOp,
+  //       percentage(selectedFeeTier)
+  //     ).then((res) => {
+  //       setTick(res);
+  //     });
+  //   }
+  // }, [priceAmount, tokenIn.symbol, tokenOut.symbol, selectedFeeTier]);
   const [swapModalShow, setSwapModalShow] = useState(false);
 
   const [tokenType, setTokenType] = useState<tokenType>("tokenIn");
@@ -253,7 +250,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     deployPoolOperation(
       tokenInOp,
       tokenOutOp,
-      Number(priceAmount),
+      selectedToken.symbol === tokenInOp.symbol ? Number(priceAmount) : 1 / Number(priceAmount),
       Number(selectedFeeTier) * 100,
       transactionSubmitModal,
       resetAllValues,
@@ -352,6 +349,8 @@ export function NewPoolv3(props: IManageLiquidityProps) {
             <TextNewPool />
             <div className="">
               <NewPoolMain
+                setSelectedToken={setSelectedToken}
+                selectedToken={selectedToken}
                 setSelectedFeeTier={setSelectedFeeTier}
                 selectedFeeTier={selectedFeeTier}
                 isExist={isExist}
@@ -377,6 +376,8 @@ export function NewPoolv3(props: IManageLiquidityProps) {
       {showConfirmPool && (
         <ConfirmAddPoolv3
           selectedFeeTier={selectedFeeTier}
+          setSelectedToken={setSelectedToken}
+          selectedToken={selectedToken}
           show={showConfirmPool}
           pair={pair}
           setPriceAmount={setPriceAmount}
