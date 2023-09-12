@@ -26,9 +26,9 @@ function Tutorial(props: ITutorialProps) {
   }[] = [
     {
       displayText:
-        "In classic pools, liquidity was distributed in the full range of possible prices. With supercharged pools, we can now concentrate liquidity around the current spot price, massively increasing capital efficiency.",
+        "With supercharged pools, we can now focus and consolidate liquidity around the current market spot price, greatly enhancing capital efficiency.",
       mobileDisplayText:
-        "In classic pools, liquidity was distributed in the full range of possible prices. With supercharged pools, we can now concentrate liquidity around the current spot price, massively increasing capital efficiency.",
+        "With supercharged pools, we can now focus and consolidate liquidity around the current market spot price, greatly enhancing capital efficiency.",
       animation: animation1,
     },
     {
@@ -131,7 +131,7 @@ function Tutorial(props: ITutorialProps) {
     >
       <>
         <div className="flex justify-center font-title3 md:font-title1">
-          What is concentrated liquidity?
+          What is supercharged pools?
         </div>
 
         <div className="flex gap-5 mx-2 md:mx-8 mt-[50px] justify-center">
