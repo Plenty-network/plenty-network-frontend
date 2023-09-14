@@ -2,7 +2,7 @@ import Lottie from "lottie-react";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
-import animation4 from "../../assets/animations/Flow_22.json";
+import animation4 from "../../assets/animations/Flow_9.json";
 import animation1 from "../../assets/animations/Flow_2.json";
 import animation2 from "../../assets/animations/Flow_3.json";
 
