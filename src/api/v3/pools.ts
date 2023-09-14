@@ -7,7 +7,7 @@ import { store } from "../../redux";
 import { POOLS_PAGE_LIMIT } from "../../constants/global";
 const state = store.getState();
 const AMMS = state.config.V3_AMMs;
-
+const feesFactor = 0.8;
 export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
   try {
     const allData: any[] = [];
@@ -27,7 +27,7 @@ export const getAllPoolsDataV3 = async (): Promise<IAllPoolsDataResponse> => {
             tokenA: poolPairs[0].tokenX.symbol,
             tokenB: poolPairs[0].tokenY.symbol,
             feeTier: poolPairs[0].feeBps/100,
-            apr: Number(vePoolPairs[0].tvl.value) === 0 ? 0 : ((vePoolPairs[0].fees7D.value*52)/vePoolPairs[0].tvl.value)*100,
+            apr: Number(vePoolPairs[0].tvl.value) === 0 ? 0 : ((vePoolPairs[0].fees7D.value*feesFactor*52)/vePoolPairs[0].tvl.value)*100,
             volume: {
               value: BigNumber(vePoolPairs[0].volume24H.value),
               token1: BigNumber(vePoolPairs[0].volume24H.token1),
@@ -123,13 +123,12 @@ export const getMyPoolsDataV3 = async (
     analyticsPoolsData.map<any>((datum) => {
         let poolPairs: any[] = Object.values(uniqueAllData).filter((e: any) => e.address === datum.pool);
         let vePoolPairs: any[] = Object.values(vePoolsData).filter((e: any) => e.pool === datum.pool);
-
         if(poolPairs[0]){
             finalData.push({
               tokenA: poolPairs[0].tokenA,
               tokenB: poolPairs[0].tokenB,
               feeTier: poolPairs[0].feeTier,
-              apr: Number(datum.tvl.value) === 0 ? 0 : ((datum.fees.value7D*52)/datum.tvl.value)*100,
+              apr: Number(datum.tvl.value) === 0 ? 0 : ((datum.fees.value7D*feesFactor*52)/datum.tvl.value)*100,
               volume: {
                 value: BigNumber(vePoolPairs[0].volume24H.value),
                 token1: BigNumber(vePoolPairs[0].volume24H.token1),
