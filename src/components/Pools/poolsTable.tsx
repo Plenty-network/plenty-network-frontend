@@ -30,6 +30,14 @@ import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { analytics } from "../../config/firebaseConfig";
 import { logEvent } from "firebase/analytics";
+import {
+  setActiveStatev2,
+  setIsGaugeAvailable,
+  setShowLiquidityModalV2,
+  setTokenXV2,
+  setTokenYV2,
+} from "../../redux/pools/manageLiqV2";
+import Link from "next/link";
 
 export interface IShortCardProps {
   className?: string;
@@ -49,7 +57,7 @@ export interface IShortCardProps {
   poolFilterwithTvl: boolean;
 }
 export interface IManageBtnProps {
-  setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
+  // setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
   isLiquidityAvailable: boolean;
   setShowLiquidityModal: (val: boolean) => void;
   isStakeAvailable: boolean;
@@ -79,11 +87,11 @@ export function ShortCard(props: IShortCardProps) {
     poolTableData.length
   );
 
-  const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
-    ActiveLiquidity.Liquidity
-  );
+  // const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
+  //   ActiveLiquidity.Liquidity
+  // );
 
-  const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
+  //const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
@@ -111,16 +119,16 @@ export function ShortCard(props: IShortCardProps) {
       return <NoDataError content={"No Pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
-  const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
-    name: "USDC.e",
-    image: `/assets/tokens/USDC.e.png`,
-    symbol: "USDC.e",
-  });
-  const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
-    name: "USDT.e",
-    image: `/assets/tokens/USDT.e.png`,
-    symbol: "USDT.e",
-  });
+  // const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
+  //   name: "USDC.e",
+  //   image: `/assets/tokens/USDC.e.png`,
+  //   symbol: "USDC.e",
+  // });
+  // const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
+  //   name: "USDT.e",
+  //   image: `/assets/tokens/USDT.e.png`,
+  //   symbol: "USDT.e",
+  // });
 
   const mobilecolumns = React.useMemo<Column<IAllPoolsData>[]>(
     () => [
@@ -295,7 +303,6 @@ export function ShortCard(props: IShortCardProps) {
             tokenB={x.tokenB.toString()}
             setShowLiquidityModal={props.setShowLiquidityModal}
             isGauge={x.isGaugeAvailable}
-            setIsGaugeAvailable={setIsGaugeAvailable}
           />
         ),
       },
@@ -493,7 +500,6 @@ export function ShortCard(props: IShortCardProps) {
             tokenB={x.tokenB.toString()}
             setShowLiquidityModal={props.setShowLiquidityModal}
             isGauge={x.isGaugeAvailable}
-            setIsGaugeAvailable={setIsGaugeAvailable}
           />
         ),
       },
@@ -503,48 +509,65 @@ export function ShortCard(props: IShortCardProps) {
 
   function ManageBtn(props: IManageBtnProps): any {
     return (
-      <div className="pl-0 pr-1 md:pr-0 md:pl-0">
-        <div
-          className="bg-primary-500/10 font-caption2 md:font-subtitle4  hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-5 md:px-7 py-2 rounded-lg"
-          onClick={() => {
-            if (process.env.NODE_ENV === "production") {
-              logEvent(analytics, "pools_manage_clicked", {
-                pool: `${props.tokenA}/${props.tokenB}`,
-              });
-            }
-            userAddress && dispatch(getTotalVotingPower());
-            props.setIsGaugeAvailable(props.isGauge);
-            if (props.isGauge) {
-              props.isLiquidityAvailable
-                ? props.isStakeAvailable
-                  ? setActiveState(ActiveLiquidity.Rewards)
-                  : setActiveState(ActiveLiquidity.Staking)
-                : setActiveState(ActiveLiquidity.Liquidity);
-            } else {
-              setActiveState(ActiveLiquidity.Liquidity);
-            }
-            setTokenIn({
-              name: props.tokenA,
-              image: getImagesPath(props.tokenA.toString()),
-              symbol: props.tokenA,
-            });
-            setTokenOut({
-              name: props.tokenB,
-              image: getImagesPath(props.tokenB.toString()),
-              symbol: props.tokenB,
-            });
-
-            props.setShowLiquidityModal(true);
-          }}
-        >
-          Manage
+      <Link href={`/pools/v2/manageLiquidity`}>
+        <div className="pl-0 pr-1 md:pr-0 md:pl-0">
+          <div
+            className="bg-primary-500/10 font-caption2 md:font-subtitle4  hover:bg-primary-500/20 cursor-pointer  text-primary-500 px-5 md:px-7 py-2 rounded-lg"
+            onClick={() => {
+              if (process.env.NODE_ENV === "production") {
+                logEvent(analytics, "pools_manage_clicked", {
+                  pool: `${props.tokenA}/${props.tokenB}`,
+                });
+              }
+              userAddress && dispatch(getTotalVotingPower());
+              dispatch(setIsGaugeAvailable(props.isGauge));
+              //props.setIsGaugeAvailable(props.isGauge);
+              if (props.isGauge) {
+                props.isLiquidityAvailable
+                  ? props.isStakeAvailable
+                    ? dispatch(setActiveStatev2(ActiveLiquidity.Rewards))
+                    : dispatch(setActiveStatev2(ActiveLiquidity.Staking))
+                  : dispatch(setActiveStatev2(ActiveLiquidity.Liquidity));
+              } else {
+                dispatch(setActiveStatev2(ActiveLiquidity.Liquidity));
+              }
+              dispatch(
+                setTokenXV2({
+                  name: props.tokenA,
+                  image: getImagesPath(props.tokenA.toString()),
+                  symbol: props.tokenA,
+                })
+              );
+              // setTokenIn({
+              //   name: props.tokenA,
+              //   image: getImagesPath(props.tokenA.toString()),
+              //   symbol: props.tokenA,
+              // });
+              dispatch(
+                setTokenYV2({
+                  name: props.tokenB,
+                  image: getImagesPath(props.tokenB.toString()),
+                  symbol: props.tokenB,
+                })
+              );
+              // setTokenOut({
+              //   name: props.tokenB,
+              //   image: getImagesPath(props.tokenB.toString()),
+              //   symbol: props.tokenB,
+              // });
+              dispatch(setShowLiquidityModalV2(true));
+              //props.setShowLiquidityModal(true);
+            }}
+          >
+            Manage
+          </div>
         </div>
-      </div>
+      </Link>
     );
   }
   return (
     <>
-      {props.showLiquidityModal && (
+      {/* {props.showLiquidityModal && (
         <ManageLiquidity
           tokenIn={tokenIn}
           tokenOut={tokenOut}
@@ -556,7 +579,7 @@ export function ShortCard(props: IShortCardProps) {
           setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
           filter={props.poolsFilter}
         />
-      )}
+      )} */}
       <div className={` overflow-x-auto innerPool  ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}

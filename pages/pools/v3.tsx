@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import HeadInfo from "../../src/components/HeadInfo";
 
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { useInterval } from "../../src/hooks/useInterval";
@@ -9,10 +8,9 @@ import { AppDispatch, useAppSelector } from "../../src/redux";
 import { createGaugeConfig, getConfig } from "../../src/redux/config/config";
 import { getEpochData } from "../../src/redux/epoch/epoch";
 import { getTotalVotingPower } from "../../src/redux/pools";
-import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
+import { getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { FIRST_TIME_TUTORIAL, USERADDRESS } from "../../src/constants/localStorage";
-import clsx from "clsx";
 
 import { PoolsCardHeaderV3 } from "../../src/components/v3/pools/CardHeaderv3";
 import PoolsV3 from "../../src/components/v3";
@@ -32,14 +30,11 @@ export default function Pools(props: IIndexProps) {
 
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
   const epochError = useAppSelector((state) => state.epoch).epochFetchError;
-  const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
+
   const amm = useAppSelector((state) => state.config.AMMs);
-  const [showLiquidityModal, setShowLiquidityModal] = React.useState(false);
+
   const initialPriceCall = React.useRef<boolean>(true);
-  const initialLpPriceCall = React.useRef<boolean>(true);
-  const handleCloseManagePopup = (val: boolean) => {
-    setShowLiquidityModal(val);
-  };
+
   useEffect(() => {
     if (epochError) {
       dispatch(getEpochData());
@@ -72,26 +67,10 @@ export default function Pools(props: IIndexProps) {
       initialPriceCall.current = false;
     }
   }, [token]);
-  // useEffect(() => {
-  //   if (!initialLpPriceCall.current) {
-  //     Object.keys(tokenPrices).length !== 0 && dispatch(getLpTokenPrice(tokenPrices));
-  //   } else {
-  //     initialLpPriceCall.current = false;
-  //   }
-  // }, [tokenPrices]);
+
   useEffect(() => {
     Object.keys(amm).length !== 0 && dispatch(createGaugeConfig());
   }, [amm]);
-  const [searchValue, setSearchValue] = React.useState("");
-  const [isbanner, setisBanner] = React.useState(true);
-  const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
-  const handleNewPool = () => {
-    setShowNewPoolPopup(true);
-  };
-  const [reFetchPool, setReFetchPool] = React.useState(false);
-
-  const [isFetching, setIsFetching] = useState(false);
-  const [isError, setIsError] = useState(false);
 
   const [show, setShow] = useState(true);
   return (

@@ -121,7 +121,7 @@ export default function Pools(props: IIndexProps) {
     }
   }, [rewardsAprEstimateError]);
   const [searchValue, setSearchValue] = React.useState("");
-  const [isbanner, setisBanner] = React.useState(false);
+  //const [isbanner, setisBanner] = React.useState(false);
   const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
   const handleNewPool = () => {
     if (process.env.NODE_ENV === "production") {

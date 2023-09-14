@@ -5,18 +5,17 @@ import { useRouter } from "next/router";
 import { AppDispatch, useAppSelector } from "../redux";
 import { tokenParameterLiquidity } from "../components/Liquidity/types";
 import { useDispatch } from "react-redux";
-import { setShowLiquidityModalV3 } from "../redux/poolsv3/manageLiq";
 
-export const useLocationStateInManageLiquidity = () => {
-  const tokens = useAppSelector((state) => state.config.tokens);
+import { setShowLiquidityModalV2 } from "../redux/pools/manageLiqV2";
+
+export const useLocationStateInManageLiquidityV2 = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const tokenOut = useAppSelector((state) => state.ManageLiquidityV3.tokenY);
-  const tokenIn = useAppSelector((state) => state.ManageLiquidityV3.tokenX);
+  const tokenOut = useAppSelector((state) => state.ManageLiquidityV2.tokenY);
+  const tokenIn = useAppSelector((state) => state.ManageLiquidityV2.tokenX);
   const router = useRouter();
   const showLiquidityModal = useAppSelector(
-    (state) => state.ManageLiquidityV3.showLiquidityModalV3
+    (state) => state.ManageLiquidityV2.showLiquidityModalV2
   );
-  // const [feeBps, setFeeBps] = useState("");
   const [tokenX, setTokenX] = useState<tokenParameterLiquidity>(
     router.asPath.indexOf("=") >= 0
       ? router.asPath
@@ -73,33 +72,20 @@ export const useLocationStateInManageLiquidity = () => {
   );
 
   useEffect(() => {
-    dispatch(setShowLiquidityModalV3(true));
+    dispatch(setShowLiquidityModalV2(true));
     void router.replace(
       {
         pathname: router.pathname,
         query: {
           ...router.query,
-          tokenX: tokenX ? tokenX.symbol : null,
-          tokenY: tokenY ? tokenY.symbol : null,
-          // feeBps: feeBps,
+          tokenA: tokenX ? tokenX.symbol : null,
+          tokenB: tokenY ? tokenY.symbol : null,
         },
       },
       undefined,
       { shallow: true }
     );
   }, [tokenX, tokenY]);
-  // useEffect(() => {
-  //   const tokenInFromParam = router.query.tokenX;
-  //   const tokenOutFromParam = router.query.tokenY;
-
-  //   if (tokenInFromParam) {
-  //     setTokenX(tokenInFromParam);
-  //   }
-
-  //   if (tokenOutFromParam) {
-  //     setTokenY(tokenOutFromParam);
-  //   }
-  // }, [router]);
 
   return {
     tokenX,
