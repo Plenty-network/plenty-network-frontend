@@ -26,8 +26,9 @@ import { tokenIcons } from "../../constants/tokensList";
 
 import { ManagePoolsV3 } from "./ManagePoolsV3";
 import { IV3PositionObject } from "../../api/v3/types";
-import { setSelectedPosition } from "../../redux/poolsv3";
+import { setSelectedPosition, setcurrentPrice } from "../../redux/poolsv3";
 import { StakePercentage } from "./StakedPercentage";
+import { calculateCurrentPrice } from "../../api/v3/liquidity";
 
 export function PoolsV3TablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
@@ -232,6 +233,14 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
       <div
         className="ml-auto bg-primary-500/10 md:w-[130px] w-[100px] cursor-pointer  text-primary-500 hover:opacity-90  font-subtitle3 rounded-lg flex items-center h-[40px] justify-center"
         onClick={() => {
+          calculateCurrentPrice(
+            props.tokenA,
+            props.tokenB,
+            props.tokenA,
+            Number(props.feeTier)
+          ).then((response) => {
+            dispatch(setcurrentPrice(response?.toFixed(6)));
+          });
           props.setShowLiquidityModal(true);
           dispatch(setSelectedPosition(props.data));
           props.setActiveState(ActiveLiquidity.Liquidity);
