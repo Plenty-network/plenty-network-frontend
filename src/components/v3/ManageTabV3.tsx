@@ -1159,7 +1159,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             handleClick={handleRemoveLiquidityOperation}
           />
         )}
-      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"HtDOhje7Y5A"} />}
+      {showVideoModal && <VideoModal closefn={setShowVideoModal} linkString={"lchYETZED_Y"} />}
       {showConfirmTransaction && (
         <ConfirmTransaction
           show={showConfirmTransaction}
