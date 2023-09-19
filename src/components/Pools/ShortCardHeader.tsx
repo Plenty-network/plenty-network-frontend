@@ -38,8 +38,8 @@ export function Tabs(props: ITabsProps) {
           ? "justify-start"
           : "justify-end "
       } ${props.tableType ? "thSticky" : ""} ${
-        props.TableName === "poolsPosition" && props.index === 0 && "pl-20 sm:pl-[40px]"
-      } ${props.TableName === "newPools" && "lg:pl-20 pl-2 "}
+        props.TableName === "poolsPosition" && props.index === 0 ? "pl-20 sm:pl-[40px]" : ""
+      } ${props.TableName === "newPools" ? "lg:pl-[60px] pl-2 " : ""}
       `}
     >
       <div className="flex gap-0 flex-col">

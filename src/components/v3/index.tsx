@@ -43,6 +43,26 @@ export default function PoolsV3(props: IIndexProps) {
 
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
+  // Function to check if the page has already been reloaded
+  function hasPageReloaded() {
+    return localStorage.getItem("pageReloaded") === "true";
+  }
+
+  // Function to mark the page as reloaded
+  function markPageAsReloaded() {
+    localStorage.setItem("pageReloaded", "true");
+  }
+
+  // Check if the page has already been reloaded
+  if (!hasPageReloaded()) {
+    // Your code that depends on the reload action goes here
+
+    // Mark the page as reloaded
+    markPageAsReloaded();
+
+    // Trigger the page reload (if needed)
+    window.location.reload();
+  }
 
   return (
     <>

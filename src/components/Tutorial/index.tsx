@@ -67,59 +67,55 @@ function Tutorial(props: ITutorialProps) {
     localStorage.setItem(FIRST_TIME_TUTORIAL, "true");
     props.setShow(false);
   };
-  const [prevClicked, setPrevClicked] = useState(false);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timer | null>(null);
+
+  // Function to start the timer interval
+  const startTimerInterval = () => {
+    if (intervalId !== null) {
+      clearInterval(intervalId);
+    }
+
+    const newIntervalId = setInterval(() => {
+      setCurrentStep((prevStep) => {
+        if (prevStep < STEPS.length - 1) {
+          return prevStep + 1;
+        } else {
+          clearInterval(newIntervalId);
+          return prevStep;
+        }
+      });
+    }, 17000);
+
+    setIntervalId(newIntervalId);
+  };
+
   // Function to navigate to the previous step
   const goToPreviousStep = () => {
     if (currentStep > 0) {
-      setPrevClicked(true);
-      document.querySelectorAll(".loading-bar").forEach((bar) => bar.classList.remove("active"));
-
       setCurrentStep(currentStep - 1);
+      startTimerInterval();
     }
   };
 
   // Function to navigate to the next step
   const goToNextStep = () => {
     if (currentStep < STEPS.length - 1) {
-      setPrevClicked(true);
       setCurrentStep(currentStep + 1);
+      startTimerInterval();
     }
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentStep((prevStep) => {
-        if (prevStep < STEPS.length - 1) {
-          return prevStep + 1;
-        } else {
-          clearInterval(interval);
-          return prevStep;
-        }
-      });
-    }, 17000);
+    // Start the initial timer interval
+    startTimerInterval();
 
+    // Clear the interval when the component unmounts
     return () => {
-      clearInterval(interval);
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+      }
     };
   }, []);
-  useEffect(() => {
-    if (prevClicked) {
-      const interval = setInterval(() => {
-        setCurrentStep((prevStep) => {
-          if (prevStep < STEPS.length - 1) {
-            return prevStep + 1;
-          } else {
-            clearInterval(interval);
-            return prevStep;
-          }
-        });
-      }, 17000);
-
-      return () => {
-        clearInterval(interval);
-      };
-    }
-  }, [prevClicked]);
 
   return props.show ? (
     <PopUpModal
