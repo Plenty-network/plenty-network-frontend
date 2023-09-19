@@ -235,7 +235,7 @@ function TokenModalPool(props: ISwapModalProps) {
               onChange={(ev: any) => props.setSearchQuery(ev.target.value)}
             />
           </div>
-          <div className="text-text-400 mt-[20px] font-body1">
+          {/* <div className="text-text-400 mt-[20px] font-body1">
             Common base
             <span className="relative top-0.5 ml-[5px]">
               <ToolTip
@@ -250,8 +250,8 @@ function TokenModalPool(props: ISwapModalProps) {
                 <Image alt={"alt"} src={infogrey} className="cursor-pointer" />
               </ToolTip>
             </span>
-          </div>
-          <div className="flex flex-wrap mt-1">
+          </div> */}
+          {/* <div className="flex flex-wrap mt-1">
             {topTokensListArray.map((token, index) => {
               if (token.name !== "XTZ") {
                 return (
@@ -287,15 +287,15 @@ function TokenModalPool(props: ISwapModalProps) {
                 );
               }
             })}
-          </div>
+          </div> */}
           {Object.keys(tokensToShow).length === 0 ? (
-            <div className="border  h-[300px]  border-text-800 bg-muted-200 rounded-xl flex justify-center items-center px-[18px] w-full pb-5 mt-5 font-body4 text-white">
+            <div className="border  h-[420px]  border-text-800 bg-muted-200 rounded-xl flex justify-center items-center px-[18px] w-full pb-5 mt-5 font-body4 text-white">
               No Tokens found
             </div>
           ) : (
             <div
               id="tokensList"
-              className="border relative max-h-[300px] h-[300px] modal overflow-y-auto border-text-800 bg-muted-200 rounded-xl  w-full pb-5 mt-5"
+              className="border relative max-h-[420px] h-[420px] modal overflow-y-auto border-text-800 bg-muted-200 rounded-xl  w-full pb-5 mt-5"
             >
               {tokensToShow.map((token, index) => {
                 return (
