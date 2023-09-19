@@ -481,17 +481,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
   }, [selectedToken]);
 
   React.useEffect(() => {
-    console.log(
-      "selectedFeeTier",
-      Number(selectedFeeTier),
-
-      "tokenx",
-      props.tokenA.symbol,
-      "tokeny",
-      props.tokenB.symbol,
-      "topLevelSelectedToken",
-      props.tokenA.symbol
-    );
     //if (!isFullRange) {
     dispatch(setIsLoading(true));
 
@@ -788,7 +777,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
 
     setShowConfirmTransaction(true);
     dispatch(setIsLoadingWallet({ isLoading: true, operationSuccesful: false }));
-    console.log("sele", selectedPositionParameter);
+
     collectFees(
       selectedPositionParameter,
       walletAddress,

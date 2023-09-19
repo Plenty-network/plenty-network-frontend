@@ -24,7 +24,6 @@ const BarChart1: React.FC<BarChartProps> = ({
   height,
   styles,
 }) => {
-  console.log("BarChart1", data);
   return (
     <g>
       {data.map((d: ChartEntry, index: number) => {

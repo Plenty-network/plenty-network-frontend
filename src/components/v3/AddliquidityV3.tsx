@@ -126,7 +126,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             maxTickA,
             props.selectedFeeTier
           ).then((response) => {
-            console.log("response1", response);
             setSecondLoading(false);
             inputDisabled === "false"
               ? props.setSecondTokenAmount(response)
@@ -144,7 +143,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             props.selectedFeeTier
           ).then((response) => {
             setSecondLoading(false);
-            console.log("response2", response);
             inputDisabled === "false"
               ? props.setSecondTokenAmount(response)
               : props.setSecondTokenAmount(0);
@@ -176,7 +174,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             props.selectedFeeTier
           ).then((response) => {
             setFirstLoading(false);
-            console.log("response3", response);
             inputDisabled === "false"
               ? props.setFirstTokenAmount(response)
               : props.setFirstTokenAmount(0);
@@ -192,7 +189,6 @@ function AddLiquidityV3(props: IAddLiquidityProps) {
             maxTickB,
             props.selectedFeeTier
           ).then((response) => {
-            console.log("response4", response);
             setFirstLoading(false);
             inputDisabled === "false"
               ? props.setFirstTokenAmount(response.toString())

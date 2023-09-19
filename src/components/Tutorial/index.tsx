@@ -62,7 +62,6 @@ function Tutorial(props: ITutorialProps) {
   ];
 
   const [currentStep, setCurrentStep] = useState(0);
-  console.log("Current Step:", currentStep);
 
   const closeModal = () => {
     localStorage.setItem(FIRST_TIME_TUTORIAL, "true");

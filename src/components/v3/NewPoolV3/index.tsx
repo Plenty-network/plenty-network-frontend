@@ -247,6 +247,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     localStorage.setItem(TOKEN_A, tEZorCTEZtoUppercase(tokenIn.name));
     localStorage.setItem(TOKEN_B, tEZorCTEZtoUppercase(tokenOut.name));
     setShowConfirmTransaction(true);
+
     deployPoolOperation(
       tokenInOp,
       tokenOutOp,

@@ -152,16 +152,7 @@ function NewPoolMain(props: ILiquidityProps) {
       }
     }
   };
-  console.log(
-    isMobile
-      ? Number(props.priceAmount.length + 1) * 10 > 70
-        ? (props.priceAmount.length + 1) * 10 + "px"
-        : "70px"
-      : Number(props.priceAmount.length + 1) * 10 > 250
-      ? (props.priceAmount.length + 1) * 10 + "px"
-      : "250px",
-    "h"
-  );
+
   return (
     <>
       <div className="border rounded-2xl border-text-800 bg-card-200 px-[10px] md:px-3.5 pt-4 pb-4  mb-3">

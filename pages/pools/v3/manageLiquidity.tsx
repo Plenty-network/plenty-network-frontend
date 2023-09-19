@@ -24,7 +24,7 @@ export default function ManageLiquidtyPoolsV3(props: IIndexProps) {
   const setShowLiquidityModal = (val: boolean) => {
     dispatch(setShowLiquidityModalV3(val));
   };
-  const { tokenX, setTokenX, tokenY, setTokenY, showLiquidityModal } =
+  const { tokenX, setTokenX, tokenY, setTokenY, showLiquidityModal, feeBps, setFeeBps } =
     useLocationStateInManageLiquidity();
 
   return (
@@ -40,7 +40,7 @@ export default function ManageLiquidtyPoolsV3(props: IIndexProps) {
           isGaugeAvailable={false}
           showLiquidityModal={true}
           setShowLiquidityModalPopup={setShowLiquidityModal}
-          feeTier={feeTier}
+          feeTier={feeBps}
         />
       )}
     </SideBarHOC>
