@@ -440,7 +440,7 @@ export default function Vote() {
         trailingText: `Lock ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
         )} PLY till ${localStorage.getItem(TOKEN_A)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -456,7 +456,7 @@ export default function Vote() {
               trailingText: `Lock ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} PLY till ${localStorage.getItem(TOKEN_A)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -525,7 +525,7 @@ export default function Vote() {
         headerText: "Transaction submitted",
         trailingText: `Vote with VeNFT #
         ${localStorage.getItem(FIRST_TOKEN_AMOUNT)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -542,7 +542,7 @@ export default function Vote() {
               headerText: "Success",
               trailingText: `Vote with VeNFT #
               ${localStorage.getItem(FIRST_TOKEN_AMOUNT)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(

@@ -116,7 +116,7 @@ export function ShortCard(props: IShortCardProps) {
     ) {
       return <NoSearchResult />;
     } else if (poolsTableData.length === 0 && !props.isFetching) {
-      return <NoDataError content={"No Pools data"} />;
+      return <NoDataError content={"No pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
   // const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
@@ -395,7 +395,7 @@ export function ShortCard(props: IShortCardProps) {
       {
         Header: "APR",
         id: "apr1",
-        columnWidth: "w-[110px]",
+        columnWidth: "w-[150px]",
         subText: "next epoch",
         tooltipMessage: "Annual percentage rate of return on your staked liquidity position.",
         isToolTipEnabled: true,
@@ -473,7 +473,7 @@ export function ShortCard(props: IShortCardProps) {
         canShort: true,
         sortType: (a: any, b: any) => compareNumericString(a, b, "bribeUSD"),
         subText: "current epoch",
-        columnWidth: "w-[123px] pr-2.5",
+        columnWidth: "w-[183px] pr-2.5",
         tooltipMessage:
           "Incentives provided by the protocols to boost the liquidity of their tokens.",
         isToolTipEnabled: true,

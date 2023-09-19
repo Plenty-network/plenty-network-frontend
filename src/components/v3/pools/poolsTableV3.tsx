@@ -128,7 +128,7 @@ export function PoolsTableV3(props: IShortCardProps) {
     ) {
       return <NoSearchResult />;
     } else if (poolsTableData.length === 0 && !props.isFetching) {
-      return <NoDataError content={"No Pools data"} />;
+      return <NoDataError content={"No pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
   useEffect(() => {

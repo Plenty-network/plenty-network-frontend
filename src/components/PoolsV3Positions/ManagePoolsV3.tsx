@@ -200,7 +200,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
         )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
           SECOND_TOKEN_AMOUNT
         )} ${localStorage.getItem(TOKEN_B)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -221,7 +221,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_B)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -307,7 +307,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
         )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
           SECOND_TOKEN_AMOUNT
         )} ${localStorage.getItem(TOKEN_B)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -328,7 +328,7 @@ export function ManagePoolsV3(props: IManageLiquidityProps) {
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_B)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(

@@ -112,7 +112,7 @@ export enum MyPortfolioSection {
 function MyPortfolio(props: any) {
   const [feeTier, setFeeTier] = React.useState("");
   const [activeStateTab, setActiveStateTab] = React.useState<MyPortfolioHeader>(
-    MyPortfolioHeader.Pools
+    MyPortfolioHeader.Poolsv3
   );
 
   const [activeSection, setActiveSection] = React.useState<MyPortfolioSection>(
@@ -395,7 +395,7 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (userAddress) {
       setPoolsRewards({ data: {} as IPoolsRewardsResponse, isfetched: false });
-
+      console.log(lpTokenPrice, tokenPrice, "v2");
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
           setPoolsPosition({ data: res.positionPoolsData, isfetched: true });
@@ -714,7 +714,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Collecting fee`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -729,7 +729,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Collecting fee`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -789,7 +789,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -804,7 +804,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -881,7 +881,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Claim and withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -896,7 +896,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Claim and withdraw lock #${localStorage.getItem(TOKEN_ID)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -972,7 +972,7 @@ function MyPortfolio(props: any) {
         trailingText: `Lock ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
         )} PLY till ${localStorage.getItem(TOKEN_A)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -989,7 +989,7 @@ function MyPortfolio(props: any) {
               trailingText: `Lock ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} PLY till ${localStorage.getItem(TOKEN_A)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -1055,7 +1055,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -1068,7 +1068,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -1134,7 +1134,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -1149,7 +1149,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -1213,7 +1213,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -1228,7 +1228,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Modify lock #${localStorage.getItem(TOKEN_ID)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -1288,7 +1288,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Claim ${localStorage.getItem(CLAIM)} PLY`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -1304,7 +1304,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Claim ${localStorage.getItem(CLAIM)} PLY`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -1366,7 +1366,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Claim bribes $${localStorage.getItem(CLAIM)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -1382,7 +1382,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Claim bribes $${localStorage.getItem(CLAIM)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -1444,7 +1444,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Claim trading fees $${localStorage.getItem(CLAIM)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -1460,7 +1460,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Claim trading fees $${localStorage.getItem(CLAIM)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -1520,7 +1520,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Claim all lock rewards`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -1536,7 +1536,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Claim all lock rewards`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -1601,7 +1601,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Claim lock rewards for Epoch ${localStorage.getItem(CLAIM)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -1617,7 +1617,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Claim lock rewards for Epoch ${localStorage.getItem(CLAIM)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -1688,7 +1688,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Claim inflation ${localStorage.getItem(CLAIM)} PLY`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -1704,7 +1704,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Claim inflation ${localStorage.getItem(CLAIM)} PLY`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -1776,7 +1776,7 @@ function MyPortfolio(props: any) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Claim all emissions, inflation, fees and bribes`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -1791,7 +1791,7 @@ function MyPortfolio(props: any) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Claim all emissions, inflation, fees and bribes`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -1842,6 +1842,7 @@ function MyPortfolio(props: any) {
       }
     });
   };
+  console.log(poolsPosition.data, "v2pools");
   return (
     <>
       <SideBarHOC>

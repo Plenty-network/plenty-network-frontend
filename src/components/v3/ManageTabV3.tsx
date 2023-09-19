@@ -333,7 +333,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
           SECOND_TOKEN_AMOUNT
         )} ${localStorage.getItem(TOKEN_B)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -352,7 +352,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_B)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -603,7 +603,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
           SECOND_TOKEN_AMOUNT
         )} ${localStorage.getItem(TOKEN_B)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -622,7 +622,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_B)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -708,7 +708,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
           SECOND_TOKEN_AMOUNT
         )} ${localStorage.getItem(TOKEN_B)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -727,7 +727,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(
                 SECOND_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_B)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -791,7 +791,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Collecting fee`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -806,7 +806,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Collecting fee`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(

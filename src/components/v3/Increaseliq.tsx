@@ -43,12 +43,13 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const selectedPosition = useAppSelector((state) => state.poolsv3.selectedPosition);
+  const currentPrice = useAppSelector((state) => state.poolsv3.currentPrice);
   const dispatch = useDispatch<AppDispatch>();
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
   const [inputDisable, setInputDisable] = useState("false");
-  const [currentPrice, setCurrentPrice] = useState<BigNumber>(new BigNumber(0));
+  //const [currentPrice, setCurrentPrice] = useState<BigNumber>(new BigNumber(0));
   const tokensArray = Object.entries(tokens);
   const tokeninorg = useAppSelector((state) => state.poolsv3.tokenInOrg);
 
@@ -76,15 +77,18 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
       }
     });
   }, [tokensListConfig, props.tokenIn.symbol, props.tokenOut.symbol]);
-  useEffect(() => {
-    if (selectedPosition && tokenInConfig && tokenOutConfig) {
-      getRealPriceFromTick(selectedPosition?.currentTickIndex, tokenInConfig, tokenOutConfig).then(
-        (res) => {
-          setCurrentPrice(res);
-        }
-      );
-    }
-  }, [tokenInConfig, tokenOutConfig, selectedPosition]);
+
+  // useEffect(() => {
+  //   if (selectedPosition && tokenInConfig && tokenOutConfig) {
+  //     getRealPriceFromTick(selectedPosition?.currentTickIndex, tokenInConfig, tokenOutConfig).then(
+  //       (res) => {
+  //         console.log(selectedPosition, currentPrice, res, "selectedposition");
+  //         setCurrentPrice(res);
+  //       }
+  //     );
+  //   }
+  // }, [tokenInConfig, tokenOutConfig, selectedPosition]);
+
   const IncreaseButton = useMemo(() => {
     if (!walletAddress) {
       return (
@@ -276,9 +280,9 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                 >
                   <div className="font-title3">
                     {selectedToken.symbol === props.tokenIn.symbol
-                      ? nFormatterWithLesserNumber5digit(new BigNumber(selectedPosition.minPrice))
+                      ? nFormatterWithLesserNumber5digit(new BigNumber(selectedPosition?.minPrice))
                       : nFormatterWithLesserNumber5digit(
-                          new BigNumber(1).dividedBy(selectedPosition.maxPrice)
+                          new BigNumber(1).dividedBy(selectedPosition?.maxPrice)
                         )}
                   </div>
                 </ToolTip>
@@ -322,9 +326,9 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                     {selectedPosition.isMaxPriceInfinity
                       ? "∞"
                       : selectedToken.symbol === props.tokenIn.symbol
-                      ? nFormatterWithLesserNumber5digit(new BigNumber(selectedPosition.maxPrice))
+                      ? nFormatterWithLesserNumber5digit(new BigNumber(selectedPosition?.maxPrice))
                       : nFormatterWithLesserNumber5digit(
-                          new BigNumber(1).dividedBy(selectedPosition.minPrice)
+                          new BigNumber(1).dividedBy(selectedPosition?.minPrice)
                         )}
                   </div>
                 </ToolTip>
@@ -362,8 +366,10 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
                 >
                   <div className="font-title3">
                     {selectedToken.symbol === props.tokenIn.symbol
-                      ? nFormatterWithLesserNumber5digit(currentPrice)
-                      : nFormatterWithLesserNumber5digit(new BigNumber(1).dividedBy(currentPrice))}
+                      ? nFormatterWithLesserNumber5digit(new BigNumber(currentPrice))
+                      : nFormatterWithLesserNumber5digit(
+                          new BigNumber(1).dividedBy(new BigNumber(currentPrice))
+                        )}
                   </div>
                 </ToolTip>
                 <span className="font-body1 text-text-250  ">
@@ -381,7 +387,7 @@ export default function IncreaseLiq(props: IIncLiquidityProp) {
         </div>
 
         <IncreaseLiquidityInputV3
-          currentPrice={currentPrice}
+          currentPrice={new BigNumber(currentPrice)}
           tokenIn={props.tokenIn}
           tokenOut={props.tokenOut}
           firstTokenAmount={props.firstTokenAmount}

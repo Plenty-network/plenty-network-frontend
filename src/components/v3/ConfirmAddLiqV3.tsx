@@ -229,7 +229,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
               )}
               onClick={() => setSelectedToken(tokeninorg)}
             >
-              {tokeninorg.symbol}
+              {tEZorCTEZtoUppercase(tokeninorg.symbol)}
             </div>
             <div
               className={clsx(
@@ -240,7 +240,7 @@ function ConfirmAddLiquidityv3(props: IConfirmAddLiquidityProps) {
               )}
               onClick={() => setSelectedToken(tokenoutorg)}
             >
-              {tokenoutorg.symbol}
+              {tEZorCTEZtoUppercase(tokenoutorg.symbol)}
             </div>
           </div>
         </div>

@@ -41,8 +41,9 @@ export function MyPortfolioCardHeader(props: ICardHeaderProps) {
       <div
         className={`${props.className} flex justify-center items-center border-b border-b-borderCommon md:justify-start w-full md:w-max  md:px-[24px] justify-between `}
       >
-        {PoolsHeaderCard("Pools V2", 0, "")}
         {PoolsHeaderCard("Pools V3", 1, "")}
+        {PoolsHeaderCard("Pools V2", 0, "")}
+
         {PoolsHeaderCard("Locks", 2, "")}
       </div>
     </div>

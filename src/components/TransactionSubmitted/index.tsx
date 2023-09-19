@@ -17,7 +17,7 @@ function TransactionSubmitted(props: ITransactionSubmittedProps) {
 
   return props.show ? (
     <PopUpModal
-      title="Transaction Submitted"
+      title="Transaction submitted"
       noGlassEffect={true}
       isAnimteToLoader={true}
       onhide={closeModal}
@@ -38,7 +38,7 @@ function TransactionSubmitted(props: ITransactionSubmittedProps) {
             className="my-3 cursor-pointer font-text-bold flex justify-center text-primary-500"
             onClick={props.onBtnClick}
           >
-            View on Block Explorer
+            View on block explorer
             <span className="ml-2">
               <Image alt={"alt"} src={externalLink} width={"12px"} height={"12px"} />
             </span>

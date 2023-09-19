@@ -245,7 +245,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: `Staked percentage`,
         id: "Staked percentage",
-        columnWidth: "w-[124px]",
+        columnWidth: "w-[164px]",
         tooltipMessage: "Percentage liquidity staked in the pool’s gauge.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "stakedPercentage"),
         canShort: true,

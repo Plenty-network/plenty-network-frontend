@@ -29,6 +29,8 @@ export default function PoolsV3(props: IIndexProps) {
     setShowLiquidityModal(val);
   };
 
+  // Delay the reload by 100 milliseconds
+
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
   const [searchValue, setSearchValue] = React.useState("");

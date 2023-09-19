@@ -22,7 +22,7 @@ function Banner(props: IBanner) {
   //     flashType: Flashtype.Info,
   //     headerText: "Transaction submitted",
   //     trailingText: `Claim test tokens on Ghostnet `,
-  //     linkText: "View in Explorer",
+  //     linkText: "View in block explorer",
   //     isLoading: true,
   //     transactionId: "",
   //   }).then((res) => {
@@ -34,7 +34,7 @@ function Banner(props: IBanner) {
   //             flashType: Flashtype.Success,
   //             headerText: "Success",
   //             trailingText: `Claim test tokens on Ghostnet`,
-  //             linkText: "View in Explorer",
+  //             linkText: "View in block explorer",
   //             isLoading: true,
   //             transactionId: "",
   //           })
