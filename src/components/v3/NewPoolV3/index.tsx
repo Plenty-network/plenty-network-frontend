@@ -1,4 +1,4 @@
-import { BigNumber } from "bignumber.js";
+import BigNumber from "bignumber.js";
 import Image from "next/image";
 import * as React from "react";
 
@@ -250,7 +250,9 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     deployPoolOperation(
       tokenInOp,
       tokenOutOp,
-      selectedToken.symbol === tokenInOp.symbol ? Number(priceAmount) : 1 / Number(priceAmount),
+      selectedToken.symbol === tokenInOp.symbol
+        ? new BigNumber(priceAmount)
+        : new BigNumber(1 / Number(priceAmount)),
       Number(selectedFeeTier) * 100,
       transactionSubmitModal,
       resetAllValues,

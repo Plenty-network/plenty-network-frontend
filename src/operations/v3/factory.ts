@@ -1,6 +1,7 @@
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
 import { IConfigToken, TokenStandard } from "./types";
 
+import { BigNumber } from "bignumber.js";
 import { dappClient, v3factoryAddress } from "../../common/walletconnect";
 import { store } from "../../redux";
 import { PoolDeployer } from "@plenty-labs/v3-sdk";
@@ -18,7 +19,7 @@ import { IFlashMessageProps } from "../../redux/flashMessage/type";
 export const deployPoolOperation = async (
   tokenXSymbol: IConfigToken,
   tokenYSymbol: IConfigToken,
-  realPrice: number,
+  realPrice: BigNumber,
   feeBps: number,
   transactionSubmitModal: TTransactionSubmitModal | undefined,
   resetAllValues: TResetAllValues | undefined,
@@ -38,11 +39,16 @@ export const deployPoolOperation = async (
     const allBatch: WalletParamsWithKind[] = [];
     allBatch.push({
       kind: OpKind.TRANSACTION,
-        // @ts-ignore
-      ...PoolDeployer.deployPool(factoryInstance, {tokenX: tokenXSymbol, tokenY: tokenYSymbol, realPrice, feeBps })
+      // @ts-ignore
+      ...PoolDeployer.deployPool(factoryInstance, {
+        tokenX: tokenXSymbol,
+        tokenY: tokenYSymbol,
+        realPrice,
+        feeBps,
+      }),
     });
 
-    console.log('allBatch', allBatch)
+    console.log("allBatch", allBatch);
 
     const updatedBatchOperations = await getBatchOperationsWithLimits(allBatch);
     const batch = Tezos.wallet.batch(updatedBatchOperations);
