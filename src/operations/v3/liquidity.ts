@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
-import { Approvals, Contract, Tick } from "@plenty-labs/v3-sdk";
+import { Approvals, Contract, Tick, ZERO_VAL } from "@plenty-labs/v3-sdk";
 import { getV3PoolAddressWithFeeTier } from "../../api/util/fetchConfig";
 import { BalanceNat, TokenStandard } from "./types";
 import { dappClient } from "../../common/walletconnect";
@@ -85,6 +85,14 @@ export const LiquidityOperation = async (
         // @ts-ignore
         ...Approvals.approveFA12(tokenX, {
           spender: contractAddress,
+          value: ZERO_VAL,
+        }),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        // @ts-ignore
+        ...Approvals.approveFA12(tokenX, {
+          spender: contractAddress,
           value: amountTokenX.decimalPlaces(0, 1),
         }),
       });
@@ -108,6 +116,14 @@ export const LiquidityOperation = async (
 
     if (TOKENS[tokenYSymbol].standard === TokenStandard.FA12) {
       // push approveFA12 op for token2;
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        // @ts-ignore
+        ...Approvals.approveFA12(tokenY, {
+          spender: contractAddress,
+          value: ZERO_VAL,
+        }),
+      });
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         // @ts-ignore
@@ -260,6 +276,14 @@ export const increaseLiquidity = async (
         // @ts-ignore
         ...Approvals.approveFA12(tokenX, {
           spender: contractStorageParameters.poolAddress,
+          value: ZERO_VAL,
+        }),
+      });
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        // @ts-ignore
+        ...Approvals.approveFA12(tokenX, {
+          spender: contractStorageParameters.poolAddress,
           value: tokensAmount.x
             .multipliedBy(new BigNumber(10).pow(contractStorageParameters.tokenX.decimals))
             .decimalPlaces(0, 1),
@@ -285,6 +309,14 @@ export const increaseLiquidity = async (
 
     if (TOKENS[tokenYSymbol].standard === TokenStandard.FA12) {
       // push approveFA12 op for token2;
+      allBatchOperations.push({
+        kind: OpKind.TRANSACTION,
+        // @ts-ignore
+        ...Approvals.approveFA12(tokenY, {
+          spender: contractStorageParameters.poolAddress,
+          value: ZERO_VAL,
+        }),
+      });
       allBatchOperations.push({
         kind: OpKind.TRANSACTION,
         // @ts-ignore
