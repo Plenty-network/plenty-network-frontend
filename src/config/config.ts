@@ -45,7 +45,7 @@ const Config: IConfig = {
     testnet: "KT1UmJmgNvy7sGztaFkr598Lj7JxiWbTFbQp",
   },
   V3_FACTORY: {
-    mainnet: "",
+    mainnet: "KT1ALGKnEeaB9BuEr9eCjpoJTXzE7HBnn2bA",
     testnet: "KT1UkeUEmmGAzkmaSs3RhFbmhtau2J1AAo7p",
   },
   TEZ_DEPLOYER: {
@@ -104,8 +104,8 @@ const Config: IConfig = {
     testnet: "KT1CWvM4nLoyHBGKkGBKjnPNTNLzoJ9JpAW3",
   },
 
-  NETWORK: "testnet",
-  WALLET_NETWORK: NetworkType.GHOSTNET,
+  NETWORK: "mainnet",
+  WALLET_NETWORK: NetworkType.MAINNET,
   ADMIN_ADDRESS: "KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW",
   BURNER: "tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg",
 
@@ -117,8 +117,7 @@ const Config: IConfig = {
       testnet: "https://ghostnet.tzkt.io/",
     },
   },
-  PLENTY_3ROUTE_URL: 
-  {
+  PLENTY_3ROUTE_URL: {
     mainnet: "https://plenty.3route.io/v3/",
     testnet: "",
   },
