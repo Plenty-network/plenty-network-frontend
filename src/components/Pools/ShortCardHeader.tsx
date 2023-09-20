@@ -39,7 +39,13 @@ export function Tabs(props: ITabsProps) {
           : "justify-end "
       } ${props.tableType ? "thSticky" : ""} ${
         props.TableName === "poolsPosition" && props.index === 0 ? "pl-20 sm:pl-[40px]" : ""
-      } ${props.TableName === "newPools" ? "lg:pl-[60px] pl-2 " : ""}
+      } ${
+        props.TableName === "newPools"
+          ? "lg:pl-[60px] pl-2 "
+          : props.TableName === "newPoolsV3"
+          ? "lg:pl-[62px] pl-2"
+          : ""
+      }
       `}
     >
       <div className="flex gap-0 flex-col">
@@ -62,7 +68,7 @@ export function Tabs(props: ITabsProps) {
               (props.TableName === "poolsPosition" && isMobile && props.index === 1) ||
               (props.TableName === "lockPosition" && isMobile && props.index === 1) ||
               (props.TableName === "locksRewards" && isMobile && props.index === 2) ? (
-                <span className="relative top-[3px] mr-1 w-[14px] h-[14px]">
+                <span className="relative top-[3px]  w-[14px] h-[14px]">
                   <ToolTip
                     position={Position.top}
                     toolTipChild={

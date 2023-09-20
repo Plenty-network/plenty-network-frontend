@@ -395,7 +395,7 @@ function MyPortfolio(props: any) {
   useEffect(() => {
     if (userAddress) {
       setPoolsRewards({ data: {} as IPoolsRewardsResponse, isfetched: false });
-      console.log(lpTokenPrice, tokenPrice, "v2");
+
       if (Object.keys(lpTokenPrice).length !== 0 && Object.keys(tokenPrice).length !== 0) {
         getPositionsData(userAddress, lpTokenPrice).then((res) => {
           setPoolsPosition({ data: res.positionPoolsData, isfetched: true });
@@ -1842,7 +1842,7 @@ function MyPortfolio(props: any) {
       }
     });
   };
-  console.log(poolsPosition.data, "v2pools");
+
   return (
     <>
       <SideBarHOC>

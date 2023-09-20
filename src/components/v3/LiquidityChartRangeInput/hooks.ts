@@ -71,7 +71,7 @@ export function useDensityChartData({
         price0:
           topLevelSelectedToken.symbol === tokeninorg.symbol
             ? Number(data[i].realPriceX)
-            : Number(data[i].realPriceY),
+            : Number(data[i + 1].realPriceY),
         price1:
           topLevelSelectedToken.symbol === tokeninorg.symbol
             ? Number(data[i].realPriceX)

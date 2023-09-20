@@ -474,7 +474,7 @@ export function PoolsTableV3(props: IShortCardProps) {
             columns={isMobile ? mobilecolumns : desktopcolumns}
             data={poolsTableData}
             shortby="fees"
-            TableName="newPools"
+            TableName="newPoolsV3"
             tableType={true}
             isFetched={isFetched}
             isConnectWalletRequired={props.isConnectWalletRequired}

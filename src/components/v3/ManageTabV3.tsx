@@ -509,7 +509,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
             .dividedBy(response.minValue)
             .isGreaterThan(new BigNumber(1).dividedBy(response.maxValue))
         ) {
-          dispatch(setleftRangeInput(response.minValue.toFixed(6)));
+          dispatch(setleftRangeInput(Number(response.minValue).toFixed(6)));
 
           dispatch(setBleftRangeInput(new BigNumber(1).dividedBy(response.maxValue).toFixed(6)));
 
@@ -688,7 +688,6 @@ export function ManageTabV3(props: IManageLiquidityProps) {
 
     setShowConfirm(false);
     setShowConfirmTransaction(true);
-
     removeLiquidity(
       selectedPosition,
       removePercentage,

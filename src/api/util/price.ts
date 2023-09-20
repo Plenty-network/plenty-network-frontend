@@ -211,8 +211,7 @@ export const getLPTokenPrices = async (tokenPrice: {
   try {
     const state = store.getState();
     const V2_AMM = state.config.AMMs;
-    const V3_AMM = state.config.V3_AMMs;
-    const AMM = { ...V2_AMM, ...V3_AMM };
+    const AMM = { ...V2_AMM };
 
     let lpPrices: { [id: string]: BigNumber } = {};
     for (const key in AMM) {

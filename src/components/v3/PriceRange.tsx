@@ -7,7 +7,7 @@ import { BigNumber } from "bignumber.js";
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { tEZorCTEZtoUppercase } from "../../api/util/helpers";
-import { getTickFromRealPrice } from "../../api/v3/helper";
+import { getRealPriceFromTick, getTickFromRealPrice } from "../../api/v3/helper";
 import { calculateFullRange } from "../../api/v3/liquidity";
 import { AppDispatch, useAppSelector } from "../../redux";
 import {
@@ -144,6 +144,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
         tokenOutConfig,
         tickSpacing(props.selectedFeeTier)
       ).then((response1) => {
+        getRealPriceFromTick(response1, tokenInConfig, tokenOutConfig).then((realprice) => {
+          dispatch(setleftRangeInput(Number(realprice).toFixed(6)));
+        });
         dispatch(
           setminTickA(Tick.nearestUsableTick(response1, tickSpacing(props.selectedFeeTier)))
         );
@@ -155,6 +158,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
         tokenInConfig,
         tickSpacing(props.selectedFeeTier)
       ).then((response1) => {
+        getRealPriceFromTick(response1, tokenOutConfig, tokenInConfig).then((realprice) => {
+          dispatch(setBleftRangeInput((1 / Number(realprice)).toFixed(6)));
+        });
         dispatch(
           setmaxTickB(Tick.nearestUsableTick(response1, tickSpacing(props.selectedFeeTier)))
         );
@@ -174,11 +180,13 @@ function PriceRangeV3(props: IPriceRangeProps) {
       topLevelSelectedToken.symbol === tokeninorg.symbol
         ? dispatch(setleftRangeInput(0 + percentage()))
         : dispatch(setBleftRangeInput(0 + percentage()));
-    } else {
-      topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setleftRangeInput(value))
-        : dispatch(setBleftRangeInput(value));
     }
+    // else {
+    //   console.log("value else", value);
+    //   topLevelSelectedToken.symbol === tokeninorg.symbol
+    //     ? dispatch(setleftRangeInput(value))
+    //     : dispatch(setBleftRangeInput(value));
+    // }
   };
   const onRightRangeInputFn = (value: string) => {
     if (Number(value) <= 0 || value == "-" || value === "" || isNaN(Number(value))) {
@@ -189,6 +197,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
           tokenOutConfig,
           tickSpacing(props.selectedFeeTier)
         ).then((response) => {
+          getRealPriceFromTick(response, tokenInConfig, tokenOutConfig).then((realprice) => {
+            dispatch(setRightRangeInput(realprice.toFixed(6)));
+          });
           dispatch(
             setmaxTickA(Tick.nearestUsableTick(response, tickSpacing(props.selectedFeeTier)))
           );
@@ -201,6 +212,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
 
           tickSpacing(props.selectedFeeTier)
         ).then((response1) => {
+          getRealPriceFromTick(response1, tokenOutConfig, tokenInConfig).then((realprice) => {
+            dispatch(setBRightRangeInput((1 / Number(realprice)).toFixed(6)));
+          });
           dispatch(
             setminTickB(Tick.nearestUsableTick(response1, tickSpacing(props.selectedFeeTier)))
           );
@@ -214,6 +228,10 @@ function PriceRangeV3(props: IPriceRangeProps) {
           tokenOutConfig,
           tickSpacing(props.selectedFeeTier)
         ).then((response) => {
+          getRealPriceFromTick(response, tokenInConfig, tokenOutConfig).then((realprice) => {
+            dispatch(setRightRangeInput(Number(realprice).toFixed(6)));
+          });
+
           dispatch(
             setmaxTickA(Tick.nearestUsableTick(response, tickSpacing(props.selectedFeeTier)))
           );
@@ -226,6 +244,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
 
           tickSpacing(props.selectedFeeTier)
         ).then((response1) => {
+          getRealPriceFromTick(response1, tokenOutConfig, tokenInConfig).then((realprice) => {
+            dispatch(setBRightRangeInput((1 / Number(realprice)).toFixed(6)));
+          });
           dispatch(
             setminTickB(Tick.nearestUsableTick(response1, tickSpacing(props.selectedFeeTier)))
           );
@@ -252,11 +273,12 @@ function PriceRangeV3(props: IPriceRangeProps) {
       topLevelSelectedToken.symbol === tokeninorg.symbol
         ? dispatch(setRightRangeInput(0 + percentage()))
         : dispatch(setBRightRangeInput(0 + percentage()));
-    } else {
-      topLevelSelectedToken.symbol === tokeninorg.symbol
-        ? dispatch(setRightRangeInput(value))
-        : dispatch(setBRightRangeInput(value));
     }
+    // else {
+    //   topLevelSelectedToken.symbol === tokeninorg.symbol
+    //     ? dispatch(setRightRangeInput(value))
+    //     : dispatch(setBRightRangeInput(value));
+    // }
   };
   const fullrangeCalc = (value: boolean) => {
     props.setFullRange(!props.isFullRange);
@@ -287,7 +309,12 @@ function PriceRangeV3(props: IPriceRangeProps) {
       );
     }
   };
-
+  // console.log(
+  //   Number(leftRangeInput),
+  //   percentage(),
+  //   (Number(leftRangeInput) - Number(leftRangeInput) * Number(percentage())).toString(),
+  //   "valueminus"
+  // );
   return (
     <div>
       <div className="mx-auto md:w-[400px] w-[362px]   px-[10px]  pt-2 pb-6  mb-5 h-[254px]">
@@ -341,13 +368,19 @@ function PriceRangeV3(props: IPriceRangeProps) {
               <div className="border border-text-800 bg-card-200 rounded-2xl  py-3 px-2.5 flex items-center justify-between w-[170px] md:w-[185px] mt-[4px] h-[100px]">
                 <div
                   className="w-[40px] h-[28px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-background-700"
-                  onClick={() =>
+                  onClick={() => {
                     onLeftRangeInputFn(
                       topLevelSelectedToken.symbol === tokeninorg.symbol
-                        ? (Number(leftRangeInput) - percentage()).toString()
-                        : (Number(BleftRangeInput) - percentage()).toString()
-                    )
-                  }
+                        ? (
+                            Number(leftRangeInput) -
+                            Number(leftRangeInput) * Number(percentage())
+                          ).toString()
+                        : (
+                            Number(BleftRangeInput) -
+                            Number(BleftRangeInput) * Number(percentage())
+                          ).toString()
+                    );
+                  }}
                 >
                   <Image src={minus} />
                 </div>
@@ -413,13 +446,19 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 </div>
                 <div
                   className="w-[40px] h-[28px] text-white rounded bg-info-600 cursor-pointer flex items-center justify-center hover:bg-background-700"
-                  onClick={() =>
+                  onClick={() => {
                     onLeftRangeInputFn(
                       topLevelSelectedToken.symbol === tokeninorg.symbol
-                        ? (Number(leftRangeInput) + percentage()).toString()
-                        : (Number(BleftRangeInput) + percentage()).toString()
-                    )
-                  }
+                        ? (
+                            Number(leftRangeInput) +
+                            Number(leftRangeInput) * percentage()
+                          ).toString()
+                        : (
+                            Number(BleftRangeInput) +
+                            Number(BleftRangeInput) * percentage()
+                          ).toString()
+                    );
+                  }}
                 >
                   <Image src={plus} />
                 </div>
@@ -432,8 +471,14 @@ function PriceRangeV3(props: IPriceRangeProps) {
                   onClick={() =>
                     onRightRangeInputFn(
                       topLevelSelectedToken.symbol === tokeninorg.symbol
-                        ? (Number(rightRangeInput) - percentage()).toString()
-                        : (Number(BrightRangeInput) - percentage()).toString()
+                        ? (
+                            Number(rightRangeInput) -
+                            Number(rightRangeInput) * percentage()
+                          ).toString()
+                        : (
+                            Number(BrightRangeInput) -
+                            Number(BrightRangeInput) * percentage()
+                          ).toString()
                     )
                   }
                 >
@@ -509,8 +554,14 @@ function PriceRangeV3(props: IPriceRangeProps) {
                   onClick={() =>
                     onRightRangeInputFn(
                       topLevelSelectedToken.symbol === tokeninorg.symbol
-                        ? (Number(rightRangeInput) + percentage()).toString()
-                        : (Number(BrightRangeInput) + percentage()).toString()
+                        ? (
+                            Number(rightRangeInput) +
+                            Number(rightRangeInput) * percentage()
+                          ).toString()
+                        : (
+                            Number(BrightRangeInput) +
+                            Number(BrightRangeInput) * percentage()
+                          ).toString()
                     )
                   }
                 >
@@ -539,8 +590,11 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 onClick={() =>
                   onLeftRangeInputFn(
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? (Number(leftRangeInput) - percentage()).toString()
-                      : (Number(BleftRangeInput) - percentage()).toString()
+                      ? (Number(leftRangeInput) - Number(leftRangeInput) * percentage()).toString()
+                      : (
+                          Number(BleftRangeInput) -
+                          Number(BleftRangeInput) * percentage()
+                        ).toString()
                   )
                 }
               >
@@ -611,8 +665,11 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 onClick={() =>
                   onLeftRangeInputFn(
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? (Number(leftRangeInput) + percentage()).toString()
-                      : (Number(BleftRangeInput) + percentage()).toString()
+                      ? (Number(leftRangeInput) + Number(leftRangeInput) * percentage()).toString()
+                      : (
+                          Number(BleftRangeInput) +
+                          Number(BleftRangeInput) * percentage()
+                        ).toString()
                   )
                 }
               >
@@ -627,8 +684,14 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 onClick={() =>
                   onRightRangeInputFn(
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? (Number(rightRangeInput) - percentage()).toString()
-                      : (Number(BrightRangeInput) - percentage()).toString()
+                      ? (
+                          Number(rightRangeInput) -
+                          Number(rightRangeInput) * percentage()
+                        ).toString()
+                      : (
+                          Number(BrightRangeInput) -
+                          Number(BrightRangeInput) * percentage()
+                        ).toString()
                   )
                 }
               >
@@ -704,8 +767,14 @@ function PriceRangeV3(props: IPriceRangeProps) {
                 onClick={() =>
                   onRightRangeInputFn(
                     topLevelSelectedToken.symbol === tokeninorg.symbol
-                      ? (Number(rightRangeInput) + percentage()).toString()
-                      : (Number(BrightRangeInput) + percentage()).toString()
+                      ? (
+                          Number(rightRangeInput) +
+                          Number(rightRangeInput) * percentage()
+                        ).toString()
+                      : (
+                          Number(BrightRangeInput) +
+                          Number(BrightRangeInput) * percentage()
+                        ).toString()
                   )
                 }
               >
@@ -723,7 +792,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       </div>
       {Number(
         topLevelSelectedToken.symbol === tokeninorg.symbol ? rightRangeInput : BrightRangeInput
-      ) <
+      ) <=
         Number(
           topLevelSelectedToken.symbol === tokeninorg.symbol ? leftRangeInput : BleftRangeInput
         ) && (
