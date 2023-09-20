@@ -14,7 +14,7 @@ function ConfirmTransaction(props: IConfirmTransactionProps) {
   };
 
   return props.show ? (
-    <PopUpModal title="Confirm transaction" onhide={closeModal}>
+    <PopUpModal title="Confirm transaction">
       {
         <>
           <div className="flex justify-center mt-10">
@@ -24,10 +24,10 @@ function ConfirmTransaction(props: IConfirmTransactionProps) {
               style={{ height: "150px", width: "150px" }}
             />
           </div>
-          <div className="mt-11 border border-border-100/[0.4] rounded-2xl bg-secondary-100/[0.02] flex justify-center items-center h-[52px] font-subtitle4">
+          <div className="mt-11 border px-4 py-3 border-border-100/[0.4] rounded-2xl bg-secondary-100/[0.02] flex justify-center items-center font-subtitle4">
             {props.content}
           </div>
-          <div className="my-3 font-caption1 flex text-center justify-center text-text-300">
+          <div className="my-3  font-caption1 flex text-center justify-center text-text-300">
             {props.clainText !== "" ? props.clainText : "Confirm the transaction in your wallet"}
           </div>
         </>

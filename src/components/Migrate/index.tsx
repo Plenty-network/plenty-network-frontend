@@ -174,7 +174,7 @@ function Migrate(props: IMigrateProps) {
         trailingText: `Migration of ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
         )} ${localStorage.getItem(TOKEN_A)} `,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -190,7 +190,7 @@ function Migrate(props: IMigrateProps) {
               trailingText: `Migration of ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_A)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(

@@ -47,7 +47,7 @@ export function PortfolioDropdown(props: IDropdownProps) {
           {props.selectedText && (
             <span className="text-text-250 flex items-center">
               {props.selectedText}{" "}
-              <span className="relative top-1">
+              <span className="relative top-[2px]">
                 {props.selectedText === MyPortfolioSection.Positions ? (
                   <Image alt={"alt"} src={Positions} />
                 ) : (

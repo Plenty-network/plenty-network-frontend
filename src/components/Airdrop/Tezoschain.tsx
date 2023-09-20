@@ -167,7 +167,7 @@ function TezosChain(props: ITezosChain) {
         trailingText: `Lock ${localStorage.getItem(
           FIRST_TOKEN_AMOUNT
         )} PLY till ${localStorage.getItem(TOKEN_A)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -182,7 +182,7 @@ function TezosChain(props: ITezosChain) {
               trailingText: `Lock ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} PLY till ${localStorage.getItem(TOKEN_A)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -325,7 +325,7 @@ function TezosChain(props: ITezosChain) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -337,7 +337,7 @@ function TezosChain(props: ITezosChain) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Claim airdrop ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(

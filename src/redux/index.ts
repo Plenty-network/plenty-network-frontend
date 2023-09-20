@@ -21,7 +21,9 @@ import { portfolioStatsVotes } from "./myPortfolio/votesStats";
 import { rpcData } from "./userSettings/rpcData";
 import { airdropTransactions } from "./airdrop/transactions";
 import { airdropState } from "./airdrop/state";
-
+import { poolsv3 } from "./poolsv3";
+import { ManageLiquidityV3 } from "./poolsv3/manageLiq";
+import { ManageLiquidityV2 } from "./pools/manageLiqV2";
 const reducers = combineReducers({
   wallet: wallet,
   config: config,
@@ -40,6 +42,9 @@ const reducers = combineReducers({
   rpcData: rpcData,
   airdropTransactions: airdropTransactions,
   airdropState: airdropState,
+  poolsv3: poolsv3,
+  ManageLiquidityV3: ManageLiquidityV3,
+  ManageLiquidityV2: ManageLiquidityV2,
 });
 
 const persistConfig = {
@@ -57,6 +62,8 @@ const persistConfig = {
     "portfolioStatsVotes",
     "rpcData",
     "airdropTransactions",
+    "ManageLiquidityV3",
+    "ManageLiquidityV2",
   ],
 };
 

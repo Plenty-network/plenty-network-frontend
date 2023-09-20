@@ -64,7 +64,7 @@ export const addBribe = async (
 
     let bribeTokenContractInstance;
     // Create a token instance for all non tez tokens
-    if (bribeToken.address !== undefined) {
+    if (bribeToken.address != undefined) {
       bribeTokenContractInstance = await Tezos.wallet.at(bribeToken.address as string);
     }
     const bribeContractInstance = await Tezos.wallet.at(bribeAddress);

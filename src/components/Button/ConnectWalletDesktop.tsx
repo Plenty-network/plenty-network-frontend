@@ -8,6 +8,10 @@ import copy from "copy-to-clipboard";
 import truncateMiddle from "truncate-middle";
 import copyLogo from "../../assets/icon/common/copyLogo.svg";
 
+import docs from "../../assets/icon/common/feedback.svg";
+import feedback from "../../assets/icon/common/docs.svg";
+import airdrop from "../../../public/assets/icon/airdrop.svg";
+import migrate from "../../../public/assets/icon/migrate.svg";
 import switchLogo from "../../assets/icon/navigation/copy.svg";
 import fiatLogo from "../../assets/icon/common/fiatLogo.svg";
 import nodeSelectorLogo from "../../assets/icon/common/nodeSelectorLogo.svg";
@@ -46,8 +50,8 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
   const copyAddress = () => {
     if (process.env.NODE_ENV === "production") {
       logEvent(analytics, "copy_address", { address: userAddress });
-      copy(userAddress);
     }
+    copy(userAddress);
     props.setShowToast(true);
     setTimeout(() => {
       props.setShowToast(false);
@@ -148,48 +152,104 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
           )}
 
           {showMenu && (
-            <div className="absolute w-[320px] fade-in-3  right-0 top-[55px] mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50 py-3.5 flex flex-col">
+            <div className="absolute w-[320px] fade-in-3  right-0 top-[55px] mt-2 border z-50 bg-primary-750 rounded-2xl border-muted-50  flex flex-col">
               {/* <p className="bg-primary-755 text-f14 p-4 flex gap-2">
                 <span className="text-text-400">Temple wallet</span>(
                 <span className="text-text-50">{truncateMiddle(userAddress, 4, 4, "...")}</span>)
               </p> */}
-              <p
-                className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
-                onClick={copyAddress}
-              >
-                <Image alt={"alt"} src={copyLogo} />
-                <span>Copy address</span>
-              </p>
-              <p
-                className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
-                onClick={handleFiat}
-              >
-                <Image alt={"alt"} src={fiatLogo} />
-                <span>Buy tez with fiat</span>
-              </p>
-              <p
-                className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
-                onClick={switchWalletFunction}
-              >
-                <Image alt={"alt"} src={switchLogo} />
-                <span>Switch account</span>
-              </p>
+              <div className="bg-primary-500/[0.05] rounded-lg mt-[14px] mx-[14px]">
+                <p
+                  className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+                  onClick={copyAddress}
+                >
+                  <Image alt={"alt"} src={copyLogo} />
+                  <span>Copy address</span>
+                </p>
+                <p
+                  className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+                  onClick={handleFiat}
+                >
+                  <Image alt={"alt"} src={fiatLogo} />
+                  <span>Buy tez with fiat</span>
+                </p>
+                <p
+                  className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+                  onClick={switchWalletFunction}
+                >
+                  <Image alt={"alt"} src={switchLogo} />
+                  <span>Switch account</span>
+                </p>
 
-              <p
-                className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
-                onClick={() => {
-                  if (process.env.NODE_ENV === "production") {
-                    logEvent(analytics, "node_Selector");
-                  }
-                  props.setNodeSelector(true);
-                }}
-              >
-                <Image alt={"alt"} src={nodeSelectorLogo} />
-                <span>Node Selector</span>
-              </p>
-              <p>
-                {router.pathname.includes("myportfolio") ? (
-                  <Link className={``} href={"/swap"}>
+                <p
+                  className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+                  onClick={() => {
+                    if (process.env.NODE_ENV === "production") {
+                      logEvent(analytics, "node_Selector");
+                    }
+                    props.setNodeSelector(true);
+                  }}
+                >
+                  <Image alt={"alt"} src={nodeSelectorLogo} />
+                  <span>Node Selector</span>
+                </p>
+              </div>
+              <div className="bg-primary-500/[0.05] rounded-lg  mt-[12px] mx-[14px]">
+                <p>
+                  <Link href={"/airdrop"}>
+                    <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                      <Image alt={"alt"} src={airdrop} />
+                      <span>Airdrop</span>
+                    </p>
+                  </Link>
+                </p>
+                <p>
+                  <Link href={"/migrate"}>
+                    <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                      <Image alt={"alt"} src={migrate} />
+                      <span>Migrate</span>
+                    </p>
+                  </Link>
+                </p>
+              </div>
+              <div className="bg-primary-500/[0.05] rounded-lg mt-[12px] mx-[14px]">
+                <p>
+                  <a href={"https://docs.plenty.network/"} target="_blank" rel="noreferrer">
+                    <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                      <Image alt={"alt"} src={docs} />
+                      <span>Docs</span>
+                    </p>
+                  </a>
+                </p>
+                {/* <p>
+                  <a href={"https://docs.plenty.network/"} target="_blank" rel="noreferrer">
+                    <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                      <Image alt={"alt"} src={docs} />
+                      <span>V2 Docs</span>
+                    </p>
+                  </a>
+                </p> */}
+                <p>
+                  <a href={"https://tally.so/r/mOQg0M"} target="_blank" rel="noreferrer">
+                    <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                      <Image alt={"alt"} src={feedback} />
+                      <span>Feedback</span>
+                    </p>
+                  </a>
+                </p>
+              </div>
+              <div className="bg-primary-500/[0.05] rounded-lg mt-[12px] my-[14px] mx-[14px]">
+                <p>
+                  {router.pathname.includes("myportfolio") ? (
+                    <Link className={``} href={"/swap"}>
+                      <p
+                        onClick={disconnectUserWallet}
+                        className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+                      >
+                        <Image alt={"alt"} src={disconnectLogo} />
+                        <span>Disconnect</span>
+                      </p>
+                    </Link>
+                  ) : (
                     <p
                       onClick={disconnectUserWallet}
                       className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
@@ -197,17 +257,9 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
                       <Image alt={"alt"} src={disconnectLogo} />
                       <span>Disconnect</span>
                     </p>
-                  </Link>
-                ) : (
-                  <p
-                    onClick={disconnectUserWallet}
-                    className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
-                  >
-                    <Image alt={"alt"} src={disconnectLogo} />
-                    <span>Disconnect</span>
-                  </p>
-                )}
-              </p>
+                  )}
+                </p>
+              </div>
             </div>
           )}
         </div>

@@ -514,7 +514,7 @@ export function VotesTable(props: IVotesTableProps) {
 
   return (
     <>
-      <div className={`overflow-x-auto inner ${props.className}`}>
+      <div className={`overflow-x-auto md:pr-2 inner ${props.className}`}>
         <Table<any>
           columns={
             isTablet

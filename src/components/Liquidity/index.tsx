@@ -90,9 +90,9 @@ function Liquidity(props: ILiquidityProps) {
     } else if (
       walletAddress &&
       ((props.firstTokenAmount &&
-        props.firstTokenAmount > Number(props.userBalances[props.tokenIn.name])) ||
-        (props.secondTokenAmount && props.secondTokenAmount) >
-          Number(props.userBalances[props.tokenOut.name]))
+        Number(props.firstTokenAmount) > Number(props.userBalances[props.tokenIn.name])) ||
+        (props.secondTokenAmount &&
+          Number(props.secondTokenAmount) > Number(props.userBalances[props.tokenOut.name])))
     ) {
       return (
         <Button onClick={() => null} color={"disabled"}>
@@ -152,7 +152,7 @@ function Liquidity(props: ILiquidityProps) {
               />
             </span>
             <span className="ml-2 text-white font-title3 relative top-[12px]">
-              {props.isAddLiquidity ? "Add Liquidity" : "Remove Liquidity"}
+              {props.isAddLiquidity ? "Add liquidity" : "Remove liquidity"}
             </span>
           </div>
           <div

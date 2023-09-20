@@ -138,7 +138,7 @@ const mainPageRewardData = async (
   try {
     const state = store.getState();
     const TOKENS = state.config.tokens;
-    const bribes = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}bribes?epoch=${epoch}`);
+    const bribes = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}ply/bribes?epoch=${epoch}`);
     const bribesData: IBribesResponse[] = bribes.data;
 
     const res: IEpochResponse = await fetchEpochData(epoch);
@@ -150,7 +150,7 @@ const mainPageRewardData = async (
       isCurrentEpoch = epochData.isCurrent;
 
       const feesResponse = await axios.get(
-        `${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/pools?ts=${
+        `${Config.API_SERVER_URL[connectedNetwork]}ve/pools?ts=${
           epochData.epochEndTimestamp - 1
         }`
       );
@@ -273,7 +273,7 @@ export const votesPageDataWrapper = async (
 
     const votesData = await getAllVotesData(epoch, tokenId); */
 
-    // const poolsResponse = await axios.get(`${Config.VE_INDEXER}pools`);
+    // const poolsResponse = await axios.get(`${Config.API_SERVER_URL}ply/pools`);
     // const poolsData: VolumeV1Data[] = poolsResponse.data;
     if (!rewardData.success || Object.keys(rewardData.allData).length === 0) {
       throw new Error("No pools data found");
@@ -385,7 +385,7 @@ export const getVeNFTsList = async (
     const epochTimestamp = epochData.epochEndTimestamp - 10; // Timestamp within the epoch.
 
     const locksResponse = await axios.get(
-      `${Config.VE_INDEXER[connectedNetwork]}locks?address=${userTezosAddress}&epoch=${epochNumber}&timestamp=${epochTimestamp}`
+      `${Config.API_SERVER_URL[connectedNetwork]}ply/locks?address=${userTezosAddress}&epoch=${epochNumber}&timestamp=${epochTimestamp}`
     );
     const locksData = locksResponse.data.result;
 
@@ -504,7 +504,7 @@ export const getTotalAmmVotes = async (epochNumber: number): Promise<IVotesRespo
     // Create a list of top 9 gauges and sum up the remaining others from the main list.
     const [topAmmData, summedData] = createOtherAmmsData(totalAmmVotesData);
 
-    return {
+    return { 
       success: true,
       isOtherDataAvailable: true,
       allData: totalAmmVotesData,

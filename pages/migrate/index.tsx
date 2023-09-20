@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import { BigNumber } from "bignumber.js";
 import "animate.css";
-import playIcon from "../../src/assets/icon/pools/playIcon.svg";
-import { useEffect, useState, useMemo, useRef } from "react";
+
+import { useEffect, useState, useRef } from "react";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 import { connect, useDispatch } from "react-redux";
 import { AppDispatch, store, useAppSelector } from "../../src/redux";
@@ -63,7 +63,9 @@ function MigrateMain(props: any) {
   const initialLpPriceCall = useRef<boolean>(true);
   const initialRewardsAprCall = useRef<boolean>(true);
   const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
-  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
+  const rewardsAprEstimateError = useAppSelector(
+    (state) => state.rewardsApr.rewardsAprEstimateError
+  );
 
   const tokenIn = { symbol: "WRAP" };
   const tokenOut = { symbol: "PLENTY" };
@@ -162,7 +164,9 @@ function MigrateMain(props: any) {
       dispatch(
         fetchAllLocksRewardsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
-      dispatch(fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice }));
+      dispatch(
+        fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+      );
       dispatch(
         fetchUnclaimedInflationData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
       );
@@ -180,7 +184,9 @@ function MigrateMain(props: any) {
   useEffect(() => {
     if (userAddress && Object.keys(tokenPrice).length !== 0 && rewardsOperationDataError) {
       setTimeout(() => {
-        dispatch(fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice }));
+        dispatch(
+          fetchAllRewardsOperationsData({ userTezosAddress: userAddress, tokenPrices: tokenPrice })
+        );
       }, API_RE_ATTAMPT_DELAY);
     }
   }, [rewardsOperationDataError]);

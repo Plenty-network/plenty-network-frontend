@@ -31,6 +31,7 @@ export function PoolsTableRewards(props: IPoolsTableRewards) {
         h1={"No PLY emissions"}
         subText={"You do not have unclaimed PLY rewards for your LPs."}
         cta={"View pools"}
+        page={"v2"}
       />
     );
   }, []);

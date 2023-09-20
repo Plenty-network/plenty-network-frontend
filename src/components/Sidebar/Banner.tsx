@@ -17,50 +17,53 @@ function Banner(props: IBanner) {
   const dispatch = useAppDispatch();
   const percentage = useAppSelector((state) => state.rewardsApr.rewardsAprEstimate);
 
-  const handleFaucet = () => {
-    claimFaucet(undefined, undefined, undefined, {
-      flashType: Flashtype.Info,
-      headerText: "Transaction submitted",
-      trailingText: `Claim test tokens on Ghostnet `,
-      linkText: "View in Explorer",
-      isLoading: true,
-      transactionId: "",
-    }).then((res) => {
-      if (res.success) {
-        setTimeout(() => {
-          dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-          dispatch(
-            setFlashMessage({
-              flashType: Flashtype.Success,
-              headerText: "Success",
-              trailingText: `Claim test tokens on Ghostnet`,
-              linkText: "View in Explorer",
-              isLoading: true,
-              transactionId: "",
-            })
-          );
-        }, 6000);
-      } else {
-        dispatch(
-          setFlashMessage({
-            flashType: Flashtype.Rejected,
-            transactionId: "",
-            headerText: "Rejected",
-            trailingText:
-              res.error === "NOT_ENOUGH_TEZ"
-                ? `You do not have enough tez`
-                : `Claim test tokens on Ghostnet`,
-            linkText: "",
-            isLoading: true,
-          })
-        );
-        dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
-      }
-    });
-  };
+  // const handleFaucet = () => {
+  //   claimFaucet(undefined, undefined, undefined, {
+  //     flashType: Flashtype.Info,
+  //     headerText: "Transaction submitted",
+  //     trailingText: `Claim test tokens on Ghostnet `,
+  //     linkText: "View in block explorer",
+  //     isLoading: true,
+  //     transactionId: "",
+  //   }).then((res) => {
+  //     if (res.success) {
+  //       setTimeout(() => {
+  //         dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+  //         dispatch(
+  //           setFlashMessage({
+  //             flashType: Flashtype.Success,
+  //             headerText: "Success",
+  //             trailingText: `Claim test tokens on Ghostnet`,
+  //             linkText: "View in block explorer",
+  //             isLoading: true,
+  //             transactionId: "",
+  //           })
+  //         );
+  //       }, 6000);
+  //     } else {
+  //       dispatch(
+  //         setFlashMessage({
+  //           flashType: Flashtype.Rejected,
+  //           transactionId: "",
+  //           headerText: "Rejected",
+  //           trailingText:
+  //             res.error === "NOT_ENOUGH_TEZ"
+  //               ? `You do not have enough tez`
+  //               : `Claim test tokens on Ghostnet`,
+  //           linkText: "",
+  //           isLoading: true,
+  //         })
+  //       );
+  //       dispatch(setIsLoadingWallet({ isLoading: false, operationSuccesful: true }));
+  //     }
+  //   });
+  // };
   const [isHover, setHover] = useState(false);
   const handleClick = () => {
     dispatch(setbannerClicked(true));
+  };
+  const handleClose = () => {
+    dispatch(setIsBanner(false));
   };
   return (
     <div
@@ -83,7 +86,7 @@ function Banner(props: IBanner) {
       <p
         className="text-right mr-2 md:mr-[10px] cursor-pointer"
         onClick={() => {
-          props.setIsBanner(false);
+          handleClose();
         }}
       >
         <div
