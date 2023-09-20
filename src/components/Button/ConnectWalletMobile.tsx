@@ -143,86 +143,106 @@ export function ConnectWalletBtnMobile(props: IConnectWalletBtnMobileProps) {
               </span>
               )
             </p> */}
-              <p
-                className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
-                onClick={copyAddress}
-              >
-                <Image alt={"alt"} src={copyLogo} />
-                <span>Copy address</span>(
+              <div className="bg-primary-500/[0.05] rounded-lg mt-[14px] mx-[14px]">
                 <p
-                  className="text-f14 "
-                  style={{
-                    textOverflow: "ellipsis",
-                    width: "76px",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                  }}
+                  className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+                  onClick={copyAddress}
                 >
-                  {truncateMiddle(userAddress, 4, 4, "...")}
+                  <Image alt={"alt"} src={copyLogo} />
+                  <span>Copy address</span>(
+                  <p
+                    className="text-f14 "
+                    style={{
+                      textOverflow: "ellipsis",
+                      width: "76px",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {truncateMiddle(userAddress, 4, 4, "...")}
+                  </p>
+                  )
                 </p>
-                )
-              </p>
-              <p
-                className="flex gap-2 px-4  py-4 hover:bg-primary-755 cursor-pointer  text-white text-f14"
-                onClick={handleFiat}
-              >
-                <Image alt={"alt"} src={fiatLogo} />
-                <span>Buy tez with fiat</span>
-              </p>
-              <p
-                className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
-                onClick={switchWalletFunction}
-              >
-                <Image alt={"alt"} src={switchLogo} />
-                <span>Switch account</span>
-              </p>
+                <p
+                  className="flex gap-2 px-4  py-4 hover:bg-primary-755 cursor-pointer  text-white text-f14"
+                  onClick={handleFiat}
+                >
+                  <Image alt={"alt"} src={fiatLogo} />
+                  <span>Buy tez with fiat</span>
+                </p>
+                <p
+                  className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+                  onClick={switchWalletFunction}
+                >
+                  <Image alt={"alt"} src={switchLogo} />
+                  <span>Switch account</span>
+                </p>
 
-              <p
-                className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
-                onClick={() => props.setNodeSelector(true)}
-              >
-                <Image alt={"alt"} src={nodeSelectorLogo} />
-                <span>Node Selector</span>
-              </p>
-              <p>
-                <Link href={"/migrate"}>
-                  <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
-                    <Image alt={"alt"} src={migrate} />
-                    <span>Migrate</span>
-                  </p>
-                </Link>
-              </p>
-              <p>
-                <Link href={"/airdrop"}>
-                  <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
-                    <Image alt={"alt"} src={airdrop} />
-                    <span>Airdrop</span>
-                  </p>
-                </Link>
-              </p>
-              <p>
-                <a href={"https://whitepaper.plenty.network/"} target="_blank" rel="noreferrer">
-                  <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
-                    <Image alt={"alt"} src={docs} />
-                    <span>Docs</span>
-                  </p>
-                </a>
-              </p>
-              <p>
-                <a href={"https://tally.so/r/mOQg0M"} target="_blank" rel="noreferrer">
-                  <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
-                    <Image alt={"alt"} src={feedback} />
-                    <span>Feedback</span>
-                  </p>
-                </a>
-              </p>
-              <p
-                onClick={disconnectUserWallet}
-                className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14 z-50"
-              >
-                <Image alt={"alt"} src={disconnectLogo} />
-                <span>Disconnect</span>
-              </p>
+                <p
+                  className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14"
+                  onClick={() => props.setNodeSelector(true)}
+                >
+                  <Image alt={"alt"} src={nodeSelectorLogo} />
+                  <span>Node Selector</span>
+                </p>
+              </div>
+              <div className="bg-primary-500/[0.05] rounded-lg mt-[14px] mx-[14px]">
+                <p>
+                  <Link href={"/airdrop"}>
+                    <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                      <Image alt={"alt"} src={airdrop} />
+                      <span>Airdrop</span>
+                    </p>
+                  </Link>
+                </p>
+                <p>
+                  <Link href={"/migrate"}>
+                    <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                      <Image alt={"alt"} src={migrate} />
+                      <span>Migrate</span>
+                    </p>
+                  </Link>
+                </p>
+              </div>
+              <div className="bg-primary-500/[0.05] rounded-lg mt-[14px] mx-[14px]">
+                <p>
+                  <a
+                    href={"https://www.npmjs.com/package/@plenty-labs/v3-sdk"}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                      <Image alt={"alt"} src={docs} />
+                      <span>V3 Docs</span>
+                    </p>
+                  </a>
+                </p>
+                <p>
+                  <a href={"https://docs.plenty.network/"} target="_blank" rel="noreferrer">
+                    <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                      <Image alt={"alt"} src={docs} />
+                      <span>V2 Docs</span>
+                    </p>
+                  </a>
+                </p>
+                <p>
+                  <a href={"https://tally.so/r/mOQg0M"} target="_blank" rel="noreferrer">
+                    <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
+                      <Image alt={"alt"} src={feedback} />
+                      <span>Feedback</span>
+                    </p>
+                  </a>
+                </p>
+              </div>
+              <div className="bg-primary-500/[0.05] rounded-lg mt-[14px] mx-[14px]">
+                <p
+                  onClick={disconnectUserWallet}
+                  className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14 z-50"
+                >
+                  <Image alt={"alt"} src={disconnectLogo} />
+                  <span>Disconnect</span>
+                </p>
+              </div>
             </div>
           )}
         </div>

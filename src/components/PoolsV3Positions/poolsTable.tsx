@@ -185,7 +185,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
               </>
             }
           >
-            <div className="text-end">
+            <div className="text-end font-body4 cursor-pointer text-white">
               <div className="Total value locked up in the pool.">
                 {isFlip
                   ? nFormatterWithLesserNumber(new BigNumber(1).dividedBy(x.maxPrice))
@@ -201,6 +201,15 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
                 {/* <div className="font-body3 text-text-500">
                 {tEZorCTEZtoUppercase(x.tokenX)} per {tEZorCTEZtoUppercase(x.tokenY)}
               </div> */}
+                <div className="font-body3 text-text-500">
+                  {isFlip
+                    ? tEZorCTEZtoUppercase(x.tokenX.toString())
+                    : tEZorCTEZtoUppercase(x.tokenY.toString())}{" "}
+                  per{" "}
+                  {isFlip
+                    ? tEZorCTEZtoUppercase(x.tokenY.toString())
+                    : tEZorCTEZtoUppercase(x.tokenX.toString())}
+                </div>
               </div>
             </div>
           </ToolTip>
