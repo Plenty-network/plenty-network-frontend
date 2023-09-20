@@ -49,7 +49,7 @@ function ConfirmIncreaseLiq(props: IConfirmIncreaseLiqProps) {
             >
               <Image alt={"alt"} src={arrowLeft} />
             </div>
-            <div className="mx-2 text-white font-title3">Confirm Increase liquidity</div>
+            <div className="mx-2 text-white font-title3">Confirm increase liquidity</div>
             {/* <div className="relative top-[2px] cursor-pointer">
               <Image alt={'alt'} src={info} />
             </div> */}

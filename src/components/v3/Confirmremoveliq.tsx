@@ -46,7 +46,7 @@ function ConfirmDecreaseLiq(props: IConfirmLiqProps) {
             >
               <Image alt={"alt"} src={arrowLeft} />
             </div>
-            <div className="mx-2 text-white font-title3">Confirm Decrease liquidity</div>
+            <div className="mx-2 text-white font-title3">Confirm decrease liquidity</div>
             {/* <div className="relative top-[2px] cursor-pointer">
               <Image alt={'alt'} src={info} />
             </div> */}
