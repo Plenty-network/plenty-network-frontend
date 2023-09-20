@@ -4,13 +4,8 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Column } from "react-table";
 
-import infoOrange from "../../../src/assets/icon/poolsv3/infoOrange.svg";
-import infoGreen from "../../../src/assets/icon/poolsv3/infoGreen.svg";
-import newPool from "../../../assets/icon/pools/newPool.svg";
-import Image from "next/image";
 import clsx from "clsx";
-
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from "bignumber.js";
 import { AppDispatch, useAppSelector } from "../../redux";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
 import { tokenParameterLiquidity } from "../Liquidity/types";
@@ -47,14 +42,13 @@ export interface IManageBtnProps {
 export function PositionDataTable(props: IShortCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { valueFormat } = useTableNumberUtils();
-  const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
+
   const operationSuccesful = useAppSelector((state) => state.walletLoading.operationSuccesful);
   const [isLoading, setIsLoading] = useState(true);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const [data, setData] = useState<IV3PositionObject[] | undefined>([]);
-  const topLevelSelectedToken = useAppSelector((state) => state.poolsv3.topLevelSelectedToken);
-
+  const [isFlip, setFlip] = useState(false);
   const NoData = React.useMemo(() => {
     if (walletAddress === null && data && data?.length === 0) {
       return (
@@ -101,6 +95,13 @@ export function PositionDataTable(props: IShortCardProps) {
     walletAddress,
     operationSuccesful,
   ]);
+  useEffect(() => {
+    data?.map((positions) => {
+      if (positions.minPrice.isLessThan(0.01) || positions.maxPrice.isLessThan(0.01)) {
+        setFlip(true);
+      }
+    });
+  }, [data]);
 
   const desktopcolumns = React.useMemo<Column<IV3PositionObject>[]>(
     () => [
@@ -163,7 +164,9 @@ export function PositionDataTable(props: IShortCardProps) {
                   <div className={` font-medium `}>
                     Min price:{" "}
                     <span className="text-white">
-                      {nFormatterWithLesserNumber5digit(x.minPrice)}
+                      {isFlip
+                        ? nFormatterWithLesserNumber5digit(new BigNumber(1).dividedBy(x.maxPrice))
+                        : nFormatterWithLesserNumber5digit(x.minPrice)}
                     </span>
                   </div>
                 </div>
@@ -171,7 +174,11 @@ export function PositionDataTable(props: IShortCardProps) {
                   <div className={` font-medium  `}>
                     Max price:{" "}
                     <span className="text-white">
-                      {x.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber5digit(x.maxPrice)}
+                      {x.isMaxPriceInfinity
+                        ? "∞"
+                        : isFlip
+                        ? nFormatterWithLesserNumber5digit(new BigNumber(1).dividedBy(x.minPrice))
+                        : nFormatterWithLesserNumber5digit(x.maxPrice)}
                     </span>
                   </div>
                 </div>
@@ -179,11 +186,23 @@ export function PositionDataTable(props: IShortCardProps) {
             }
           >
             <div className="lg:w-[176px] w-[155px] text-text-50 font-subtitle4 ">
-              {nFormatterWithLesserNumber(x.minPrice)} /{" "}
-              {x.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber(x.maxPrice)}
+              {isFlip
+                ? nFormatterWithLesserNumber(new BigNumber(1).dividedBy(x.maxPrice))
+                : nFormatterWithLesserNumber(x.minPrice)}{" "}
+              /{" "}
+              {x.isMaxPriceInfinity
+                ? "∞"
+                : isFlip
+                ? nFormatterWithLesserNumber(new BigNumber(1).dividedBy(x.minPrice))
+                : nFormatterWithLesserNumber(x.maxPrice)}
               <div className="font-body3 text-text-500">
-                {tEZorCTEZtoUppercase(props.tokenOut.symbol)} per{" "}
-                {tEZorCTEZtoUppercase(props.tokenIn.symbol)}
+                {isFlip
+                  ? tEZorCTEZtoUppercase(props.tokenIn.symbol)
+                  : tEZorCTEZtoUppercase(props.tokenOut.symbol)}{" "}
+                per{" "}
+                {isFlip
+                  ? tEZorCTEZtoUppercase(props.tokenOut.symbol)
+                  : tEZorCTEZtoUppercase(props.tokenIn.symbol)}
               </div>
             </div>
           </ToolTip>

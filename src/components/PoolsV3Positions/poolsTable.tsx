@@ -1,4 +1,5 @@
 import * as React from "react";
+import { BigNumber } from "bignumber.js";
 import Image from "next/image";
 import { Column } from "react-table";
 import { useTableNumberUtils } from "../../hooks/useTableUtils";
@@ -19,6 +20,7 @@ import { compareNumericString } from "../../utils/commonUtils";
 import {
   changeSource,
   nFormatterWithLesserNumber,
+  nFormatterWithLesserNumber5digit,
   tEZorCTEZtoUppercase,
 } from "../../api/util/helpers";
 import clsx from "clsx";
@@ -29,6 +31,7 @@ import { IV3PositionObject } from "../../api/v3/types";
 import { setSelectedPosition, setcurrentPrice } from "../../redux/poolsv3";
 import { StakePercentage } from "./StakedPercentage";
 import { calculateCurrentPrice } from "../../api/v3/liquidity";
+import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 
 export function PoolsV3TablePosition(props: IPoolsTablePosition) {
   const dispatch = useDispatch<AppDispatch>();
@@ -43,7 +46,14 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
     if (name) return `/assets/tokens/${name.toLowerCase()}.png`;
     else return "";
   };
-
+  const [isFlip, setFlip] = React.useState(false);
+  React.useEffect(() => {
+    props.poolsPosition?.map((positions) => {
+      if (positions.minPrice.isLessThan(0.01) || positions.maxPrice.isLessThan(0.01)) {
+        setFlip(true);
+      }
+    });
+  }, [props.poolsPosition]);
   const desktopcolumns = React.useMemo<Column<IV3PositionObject>[]>(
     () => [
       {
@@ -144,15 +154,56 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
         canShort: true,
         isToolTipEnabled: true,
         accessor: (x: any) => (
-          <div className="text-end">
-            <div className="Total value locked up in the pool.">
-              {nFormatterWithLesserNumber(x.minPrice)} /{" "}
-              {x.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber(x.maxPrice)}
-              {/* <div className="font-body3 text-text-500">
+          <ToolTip
+            id="tooltipj"
+            position={Position.top}
+            toolTipChild={
+              <>
+                {" "}
+                <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-start ">
+                  <div className={` font-medium `}>
+                    Min price:{" "}
+                    <span className="text-white">
+                      {isFlip
+                        ? nFormatterWithLesserNumber5digit(new BigNumber(1).dividedBy(x.maxPrice))
+                        : nFormatterWithLesserNumber5digit(x.minPrice)}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-text-500 text-f14 font-normal flex gap-1 mt-1 justify-start ">
+                  <div className={` font-medium  `}>
+                    Max price:{" "}
+                    <span className="text-white">
+                      {x.isMaxPriceInfinity
+                        ? "∞"
+                        : isFlip
+                        ? nFormatterWithLesserNumber5digit(new BigNumber(1).dividedBy(x.minPrice))
+                        : nFormatterWithLesserNumber5digit(x.maxPrice)}
+                    </span>
+                  </div>
+                </div>
+              </>
+            }
+          >
+            <div className="text-end">
+              <div className="Total value locked up in the pool.">
+                {isFlip
+                  ? nFormatterWithLesserNumber(new BigNumber(1).dividedBy(x.maxPrice))
+                  : nFormatterWithLesserNumber(x.minPrice)}{" "}
+                /{" "}
+                {x.isMaxPriceInfinity
+                  ? "∞"
+                  : isFlip
+                  ? nFormatterWithLesserNumber(new BigNumber(1).dividedBy(x.minPrice))
+                  : nFormatterWithLesserNumber(x.maxPrice)}
+                {/* {nFormatterWithLesserNumber(x.minPrice)} /{" "}
+              {x.isMaxPriceInfinity ? "∞" : nFormatterWithLesserNumber(x.maxPrice)} */}
+                {/* <div className="font-body3 text-text-500">
                 {tEZorCTEZtoUppercase(x.tokenX)} per {tEZorCTEZtoUppercase(x.tokenY)}
               </div> */}
+              </div>
             </div>
-          </div>
+          </ToolTip>
         ),
       },
       {

@@ -417,7 +417,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
     } else if (
       Number(
         topLevelSelectedToken.symbol === tokeninorg.symbol ? rightRangeInput : BrightRangeInput
-      ) <
+      ) <=
       Number(topLevelSelectedToken.symbol === tokeninorg.symbol ? leftRangeInput : BleftRangeInput)
     ) {
       return (
@@ -1124,7 +1124,7 @@ export function ManageTabV3(props: IManageLiquidityProps) {
           "flex justify-center items-center gap-3 text-center lg:w-[500px] lg:max-w-[500px] mt-5 mb-[60px] mx-auto"
         )}
       >
-        Learn how to manage liquidty on V3{" "}
+        Learn how to manage liquidity on V3{" "}
         <Image
           className="cursor-pointer hover:opacity-90"
           onClick={() => setShowVideoModal(true)}
