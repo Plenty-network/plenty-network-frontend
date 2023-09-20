@@ -48,7 +48,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
   });
   const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
   const NoData = React.useMemo(() => {
-    return <NoPoolsPosition h1={"No active liquidity positions"} cta={"View Pools"} />;
+    return <NoPoolsPosition h1={"No active liquidity positions"} cta={"View Pools"} page={"v2"} />;
   }, []);
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
@@ -245,7 +245,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
       {
         Header: `Staked percentage`,
         id: "Staked percentage",
-        columnWidth: "w-[124px]",
+        columnWidth: "w-[164px]",
         tooltipMessage: "Percentage liquidity staked in the pool’s gauge.",
         sortType: (a: any, b: any) => compareNumericString(a, b, "stakedPercentage"),
         canShort: true,

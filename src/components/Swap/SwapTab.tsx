@@ -228,7 +228,7 @@ function SwapTab(props: ISwapTabProps) {
           trailingText: `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
             TOKEN_A
           )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `,
-          linkText: "View in Explorer",
+          linkText: "View in block explorer",
           isLoading: true,
           onClick: () => {
             window.open(`${tzktExplorer}${transactionId}`, "_blank");
@@ -251,7 +251,7 @@ function SwapTab(props: ISwapTabProps) {
                 )} ${localStorage.getItem(TOKEN_A)} for ${localStorage.getItem(
                   SECOND_TOKEN_AMOUNT
                 )} ${localStorage.getItem(TOKEN_B)}`,
-                linkText: "View in Explorer",
+                linkText: "View in block explorer",
                 isLoading: true,
                 onClick: () => {
                   window.open(
@@ -310,7 +310,7 @@ function SwapTab(props: ISwapTabProps) {
           trailingText: `Swap ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
             TOKEN_A
           )} for ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)} `,
-          linkText: "View in Explorer",
+          linkText: "View in block explorer",
           isLoading: true,
           onClick: () => {
             window.open(`${tzktExplorer}${transactionId}`, "_blank");
@@ -333,7 +333,7 @@ function SwapTab(props: ISwapTabProps) {
                 )} ${localStorage.getItem(TOKEN_A)} for ${localStorage.getItem(
                   SECOND_TOKEN_AMOUNT
                 )} ${localStorage.getItem(TOKEN_B)}`,
-                linkText: "View in Explorer",
+                linkText: "View in block explorer",
                 isLoading: true,
                 onClick: () => {
                   window.open(

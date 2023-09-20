@@ -54,17 +54,18 @@ import { RewardsScreen } from "./RewardsScreen";
 import { StakingScreen, StakingScreenType } from "./StakingScreen";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../../config/firebaseConfig";
+import { useRouter } from "next/router";
 
 export interface IManageLiquidityProps {
   closeFn: (val: boolean) => void;
   tokenIn: tokenParameterLiquidity;
   tokenOut: tokenParameterLiquidity;
-  setActiveState: React.Dispatch<React.SetStateAction<string>>;
+  setActiveState: (val: string) => void;
+  //setActiveState: React.Dispatch<React.SetStateAction<string>>;
   activeState: string;
   isGaugeAvailable: boolean;
   showLiquidityModal?: boolean;
   setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
-  filter?: POOL_TYPE | undefined;
 }
 
 export function ManageLiquidity(props: IManageLiquidityProps) {
@@ -316,7 +317,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
   }, []);
 
   useEffect(() => {
-    if (firstTokenAmountLiq > 0 && secondTokenAmountLiq > 0 && isAddLiquidity) {
+    if (Number(firstTokenAmountLiq) > 0 && Number(secondTokenAmountLiq) > 0 && isAddLiquidity) {
       const res = getPnlpOutputEstimate(
         props.tokenIn.symbol,
         props.tokenOut.symbol,
@@ -333,7 +334,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         ELiquidityProcess.ADD
       );
       setSharePool(sharePool.pnlpPoolShare);
-    } else if (burnAmount > 0 && !isAddLiquidity) {
+    } else if (Number(burnAmount) > 0 && !isAddLiquidity) {
       const sharePool = getPoolShareForPnlp(
         burnAmount.toString(),
         swapData.current.lpTokenSupply,
@@ -391,7 +392,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
           TOKEN_A
         )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -409,7 +410,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               trailingText: `Add ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
                 TOKEN_A
               )} and ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} ${localStorage.getItem(TOKEN_B)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -480,7 +481,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
           FIRST_TOKEN_AMOUNT
         )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool
         `,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -497,7 +498,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 FIRST_TOKEN_AMOUNT
               )} from ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(TOKEN_B)} pool
               `,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               transactionId: "",
             })
@@ -566,7 +567,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
             : `Boost ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
                 TOKEN_B
               )} pool stake with # ${localStorage.getItem(SECOND_TOKEN_AMOUNT)} `,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -589,7 +590,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                   : `Boost ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
                       TOKEN_B
                     )} pool stake with # ${localStorage.getItem(SECOND_TOKEN_AMOUNT)}`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -665,7 +666,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         trailingText: `Unstake ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} ${localStorage.getItem(
           TOKEN_A
         )} / ${localStorage.getItem(TOKEN_B)} PNLP`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -683,7 +684,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               trailingText: `Unstake ${localStorage.getItem(
                 FIRST_TOKEN_AMOUNT
               )} ${localStorage.getItem(TOKEN_A)} / ${localStorage.getItem(TOKEN_B)} PNLP`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -745,7 +746,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         flashType: Flashtype.Info,
         headerText: "Transaction submitted",
         trailingText: `Claim ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
 
         transactionId: "",
@@ -760,7 +761,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Claim ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -836,7 +837,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
         trailingText: `Burn ${nFormatterWithLesserNumber(
           new BigNumber(burnAmount)
         ).toString()} PNLP `,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -852,7 +853,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
               trailingText: `Burn ${nFormatterWithLesserNumber(
                 new BigNumber(burnAmount)
               ).toString()} PNLP`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
@@ -892,9 +893,10 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
       }
     });
   };
-
+  const router = useRouter();
   const closeModal = () => {
-    // props.setShowLiquidityModalPopup(false);
+    router.replace("/pools", undefined, { shallow: true });
+
     props.closeFn(false);
   };
 
@@ -929,7 +931,7 @@ export function ManageLiquidity(props: IManageLiquidityProps) {
                 {props.activeState === ActiveLiquidity.Staking && "Stake liquidity"}
                 {props.activeState === ActiveLiquidity.Rewards && "Your positions & rewards"}
               </p>
-              <p className="ml-1 relative top-[6px]">
+              <p className="ml-1 relative top-[5px]">
                 <InfoIconToolTip
                   message={
                     props.activeState === ActiveLiquidity.Liquidity

@@ -48,7 +48,7 @@ export function TopNavBar(props: ITopNavBarProps) {
     <>
       <nav
         className={clsx(
-          "hidden  md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   px-10 pl-0 topNavblurEffect z-50",
+          "hidden  md:flex border-b border-border-500/50 w-screen fixed h-16 items-center shadow   pr-4 pl-0 topNavblurEffect z-50",
           props.isBanner ? "top-[38px]" : ""
         )}
       >
@@ -63,13 +63,15 @@ export function TopNavBar(props: ITopNavBarProps) {
         </div>
         {!props.isLanding && (
           <div className="flex justify-between flex-1 h-full">
-            {!router.pathname.includes("swap") && !router.pathname.includes("migrate") && <Epoch />}
+            {!router.pathname.includes("swap") &&
+              !router.pathname.includes("migrate") &&
+              !router.pathname.includes("pools/v3") && <Epoch />}
             <div className="ml-auto flex flex-row gap-7 ">
               <div className="flex items-center flex-row gap-3.5 ">
                 {userAddress && !props.isBribes && (
                   <Link className={`cursor-pointer  `} href={"/myportfolio"}>
                     <div className="gradientBorder">
-                      <div className="innerContent cursor-pointer  flex items-center border border-primary-750 bg-primary-850 px-[14px] h-[44px] rounded-xl mt-[10px]">
+                      <div className="innerContent cursor-pointer  flex items-center border border-primary-750 bg-primary-850 px-[14px] h-[45px] rounded-xl mt-[10px]">
                         <Image alt={"alt"} src={myportfolionav} />
                         <span className="text-blue-500 font-body4 ml-1">My portfolio</span>
                       </div>

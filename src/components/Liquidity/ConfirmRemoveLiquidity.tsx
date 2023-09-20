@@ -53,7 +53,7 @@ function ConfirmRemoveLiquidity(props: IConfirmRemoveLiquidityProps) {
         Output is estimated. If the price changes by more than 0.5% your transaction will revert
       </div>
       <div className="mt-[17px] border border-text-800 bg-card-200 rounded-2xl py-5">
-        <p className="text-text-250 font-body4 px-5">Your removing</p>
+        <p className="text-text-250 font-body4 px-5">You are removing</p>
         <div className="flex mt-3 h-[50px] items-center border-t border-b border-text-800/[0.5] bg-card-500 px-5">
           <div className="flex items-center">
             <span className="relative top-[3px]">

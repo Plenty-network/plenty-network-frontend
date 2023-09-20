@@ -108,7 +108,7 @@ function BribesMain(props: BribesMainProps) {
         trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
           TOKEN_B
         )} pool`,
-        linkText: "View in Explorer",
+        linkText: "View in block explorer",
         isLoading: true,
         transactionId: "",
       }
@@ -125,7 +125,7 @@ function BribesMain(props: BribesMainProps) {
               trailingText: `Add bribe for ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
                 TOKEN_B
               )} pool`,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(
