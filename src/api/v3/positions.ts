@@ -153,7 +153,9 @@ export const getPositionsAll = async (
   }
   try {
     const positions: IV3Position[] = (
-      await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}v3/positions?address=${userAddress}`)
+      await axios.get(
+        `${Config.API_SERVER_URL[connectedNetwork]}v3/positions?address=${userAddress}`
+      )
     ).data;
 
     const contractStorageParametersPromises = positions.map(async (position) => {
@@ -330,6 +332,7 @@ export const createRemoveLiquidityOperation = async (
 
   const minOut = await calculateMinOut(percentage, position, sqrtPriceValue);
 
+
   const options = {
     liquidityDelta: liquidity,
 
@@ -387,9 +390,10 @@ const calculateMinOut = async (
   sqrtPriceValue: BigNumber
 ): Promise<any> => {
   try {
-    const newLiquidty = new BigNumber(position.position.liquidity).minus(
-      BigNumber(position.position.liquidity).multipliedBy(percentage).dividedBy(100)
-    );
+    const newLiquidty = new BigNumber(position.position.liquidity)
+      .multipliedBy(-1)
+      .multipliedBy(percentage)
+      .dividedBy(100);
 
     const tokenAmounts = Liquidity.computeAmountFromLiquidity(
       newLiquidty,
@@ -398,6 +402,8 @@ const calculateMinOut = async (
       Tick.computeSqrtPriceFromTick(parseInt(position.position.upper_tick_index))
     );
 
+    /*     console.log("tokenAmounts: ", tokenAmounts.x.abs().toString(), tokenAmounts.y.abs().toString());
+     */
     return {
       x: tokenAmounts.x.abs(),
       y: tokenAmounts.y.abs(),
