@@ -135,6 +135,7 @@ export function NewPoolv3(props: IManageLiquidityProps) {
     setSearchQuery("");
   };
   const closeModal = () => {
+    setSelectedToken({} as tokenParameterLiquidity);
     props.setShow(false);
     setTokenIn({} as tokenParameterLiquidity);
     setTokenOut({} as tokenParameterLiquidity);
