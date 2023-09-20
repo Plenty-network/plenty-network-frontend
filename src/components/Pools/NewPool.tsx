@@ -254,7 +254,7 @@ export function NewPool(props: IManageLiquidityProps) {
           trailingText: `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
             TOKEN_B
           )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
-          linkText: "View in Explorer",
+          linkText: "View in block explorer",
           isLoading: true,
           transactionId: "",
         }
@@ -274,7 +274,7 @@ export function NewPool(props: IManageLiquidityProps) {
                 )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
                   FIRST_TOKEN_AMOUNT
                 )} pool`,
-                linkText: "View in Explorer",
+                linkText: "View in block explorer",
                 isLoading: true,
                 onClick: () => {
                   window.open(
@@ -337,7 +337,7 @@ export function NewPool(props: IManageLiquidityProps) {
           trailingText: `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
             TOKEN_B
           )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
-          linkText: "View in Explorer",
+          linkText: "View in block explorer",
           isLoading: true,
           transactionId: "",
         }
@@ -357,7 +357,7 @@ export function NewPool(props: IManageLiquidityProps) {
                 )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
                   FIRST_TOKEN_AMOUNT
                 )} pool`,
-                linkText: "View in Explorer",
+                linkText: "View in block explorer",
                 isLoading: true,
                 onClick: () => {
                   window.open(
@@ -420,7 +420,7 @@ export function NewPool(props: IManageLiquidityProps) {
           trailingText: `Addition of new ${localStorage.getItem(TOKEN_A)}/${localStorage.getItem(
             TOKEN_B
           )} ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} pool`,
-          linkText: "View in Explorer",
+          linkText: "View in block explorer",
           isLoading: true,
           transactionId: "",
         }
@@ -440,7 +440,7 @@ export function NewPool(props: IManageLiquidityProps) {
                 )}/${localStorage.getItem(TOKEN_B)} ${localStorage.getItem(
                   FIRST_TOKEN_AMOUNT
                 )} pool`,
-                linkText: "View in Explorer",
+                linkText: "View in block explorer",
                 isLoading: true,
                 onClick: () => {
                   window.open(

@@ -132,7 +132,7 @@ export const getVotesStatsData = async (
     if (!userTezosAddress) {
       throw new Error("Invalid or empty arguments.");
     }
-    const locksResponse = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}locks?address=${userTezosAddress}`);
+    const locksResponse = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}ply/locks?address=${userTezosAddress}`);
     const locksData = locksResponse.data.result;
     let [totalEpochVotingPower, totalPlyLocked]: [BigNumber, BigNumber] = locksData.reduce(
       ([epochVotingPowerSum, plyLockedSum]: [BigNumber, BigNumber], lock: any) =>
@@ -181,7 +181,7 @@ export const getUnclaimedInflationData = async (
     const allLocksInflationData: IAllLocksInflationData = {};
 
     const inflationIndexerResponse = await axios.get(
-      `${Config.VE_INDEXER[connectedNetwork]}inflation?address=${userTezosAddress}`
+      `${Config.API_SERVER_URL[connectedNetwork]}ply/inflation?address=${userTezosAddress}`
     );
     const inflationIndexerData: IUnclaimedInflationIndexer[] = inflationIndexerResponse.data;
 
@@ -213,7 +213,6 @@ export const getUnclaimedInflationData = async (
         inflationOpertionData.push({ tokenId: Number(lockData.id), epochs: epochsList });
       }
       allLocksInflationData[lockData.id] = lockInflationData;
-      // console.log(lockData);
       
     }
     
@@ -231,7 +230,6 @@ export const getUnclaimedInflationData = async (
       claimAllInflationData: inflationOpertionData,
       allLocksInflationData,
     };
-    // console.log(inflationIndexerData);
   } catch (error: any) {
     console.log(error);
     throw new Error(error.message);

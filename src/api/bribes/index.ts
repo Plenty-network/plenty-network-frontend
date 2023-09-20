@@ -36,7 +36,7 @@ export const getUserBribeData = async (
     const TOKEN = state.config.tokens;
 
     const userBribeResponse = await axios.get(
-      `${Config.VE_INDEXER[connectedNetwork]}bribes-provider?address=${address}`
+      `${Config.API_SERVER_URL[connectedNetwork]}ply/bribes-provider?address=${address}`
     );
     const myBribesData: IUserBribeIndexerData[] = userBribeResponse.data;
     const allData: IUserBribeData[] = [];
@@ -165,7 +165,7 @@ export const getUserBribeData = async (
    try {
      const state = store.getState();
      const TOKENS = state.config.tokens;
-     const bribes = await axios.get(`${Config.VE_INDEXER[connectedNetwork]}bribes?epoch=${epoch}`);
+     const bribes = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}ply/bribes?epoch=${epoch}`);
      const bribesData: IBribesResponse[] = bribes.data;
 
      const res: IEpochResponse = await fetchEpochData(epoch);
@@ -175,7 +175,7 @@ export const getUserBribeData = async (
        const epochData = res.epochData as IEpochData;
 
        const poolsResponse = await axios.get(
-         `${Config.ANALYTICS_INDEXER[connectedNetwork]}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
+         `${Config.API_SERVER_URL[connectedNetwork]}ve/pools?ts=${epochData.epochEndTimestamp - 1}`
        );
        poolsData = poolsResponse.data;
      } else {

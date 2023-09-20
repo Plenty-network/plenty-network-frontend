@@ -101,7 +101,7 @@ function ClaimVested(props: IMigrateProps) {
       flashType: Flashtype.Info,
       headerText: "Transaction submitted",
       trailingText: `Claim of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `,
-      linkText: "View in Explorer",
+      linkText: "View in block explorer",
       isLoading: true,
       transactionId: "",
     }).then((response) => {
@@ -114,7 +114,7 @@ function ClaimVested(props: IMigrateProps) {
               flashType: Flashtype.Success,
               headerText: "Success",
               trailingText: `Claim of ${localStorage.getItem(FIRST_TOKEN_AMOUNT)} PLY `,
-              linkText: "View in Explorer",
+              linkText: "View in block explorer",
               isLoading: true,
               onClick: () => {
                 window.open(

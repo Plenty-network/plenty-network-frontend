@@ -50,7 +50,6 @@ export const getTokenDataFromTzkt = async (
         }
       }
     }
-    console.log(finalTokensDataList);
     return {
       success: true,
       allTokensList: finalTokensDataList,

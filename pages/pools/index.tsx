@@ -12,9 +12,7 @@ import { getEpochData } from "../../src/redux/epoch/epoch";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
 import { fetchWallet } from "../../src/redux/wallet/wallet";
-import info from "../../src/assets/icon/pools/InfoBlue.svg";
-import close from "../../src/assets/icon/pools/closeBlue.svg";
-import Image from "next/image";
+
 import { USERADDRESS } from "../../src/constants/localStorage";
 import { NewPool } from "../../src/components/Pools/NewPool";
 import { InputSearchBox } from "../../src/components/Pools/Component/SearchInputBox";
@@ -52,6 +50,7 @@ export default function Pools(props: IIndexProps) {
   const rewardsAprEstimateError = useAppSelector(
     (state) => state.rewardsApr.rewardsAprEstimateError
   );
+
   const handleCloseManagePopup = (val: boolean) => {
     setShowLiquidityModal(val);
   };
@@ -122,7 +121,7 @@ export default function Pools(props: IIndexProps) {
     }
   }, [rewardsAprEstimateError]);
   const [searchValue, setSearchValue] = React.useState("");
-  const [isbanner, setisBanner] = React.useState(false);
+  //const [isbanner, setisBanner] = React.useState(false);
   const [showNewPoolPopup, setShowNewPoolPopup] = React.useState(false);
   const handleNewPool = () => {
     if (process.env.NODE_ENV === "production") {
@@ -136,6 +135,25 @@ export default function Pools(props: IIndexProps) {
   const [isError, setIsError] = useState(false);
   const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
   const [poolFilterwithTvl, setPoolFilterwithTvl] = useState(true);
+  function hasPageReloaded() {
+    return sessionStorage.getItem("pageReloadedv2") === "true";
+  }
+
+  // Function to mark the page as reloaded
+  function markPageAsReloaded() {
+    sessionStorage.setItem("pageReloadedv2", "true");
+  }
+
+  // Check if the page has already been reloaded
+  if (!hasPageReloaded()) {
+    // Your code that depends on the reload action goes here
+
+    // Mark the page as reloaded
+    markPageAsReloaded();
+
+    // Trigger the page reload (if needed)
+    window.location.reload();
+  }
   return (
     <>
       <SideBarHOC>
@@ -171,7 +189,7 @@ export default function Pools(props: IIndexProps) {
               </ToolTip>
             </p>
           </div>
-          <div className="sticky top-[-3px] z-10">
+          <div className="sticky top-[-3px] md:z-[1]">
             <CardHeader
               activeStateTab={activeStateTab}
               setActiveStateTab={setActiveStateTab}
@@ -200,7 +218,7 @@ export default function Pools(props: IIndexProps) {
           )} */}
           {activeStateTab === PoolsCardHeader.All && (
             <PoolsTable
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               searchValue={searchValue}
               activeStateTab={activeStateTab}
               setShowLiquidityModalPopup={setShowLiquidityModal}
@@ -215,7 +233,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.Stable && (
             <PoolsTable
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               poolsFilter={POOL_TYPE.STABLE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
@@ -231,7 +249,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.Volatile && (
             <PoolsTable
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               poolsFilter={POOL_TYPE.VOLATILE}
               searchValue={searchValue}
               activeStateTab={activeStateTab}
@@ -247,7 +265,7 @@ export default function Pools(props: IIndexProps) {
           )}
           {activeStateTab === PoolsCardHeader.Mypools && (
             <MyPoolTable
-              className="md:pl-5 md:py-4  pl-2 py-4"
+              className="md:pl-5 md:mr-5 mr-2 md:py-4  pl-2 py-4"
               poolsFilter={POOL_TYPE.MYPOOLS}
               isConnectWalletRequired={true}
               searchValue={searchValue}

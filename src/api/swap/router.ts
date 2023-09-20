@@ -100,7 +100,6 @@ const allPathHelper = (
   TOKEN: IConfigTokens,
   paths: string[]
 ) => {
-  // console.log(src, dest, TOKEN[src]);
   if (src === dest) {
     paths.push(psf);
   }

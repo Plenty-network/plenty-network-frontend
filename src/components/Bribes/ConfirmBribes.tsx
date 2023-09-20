@@ -70,7 +70,7 @@ function ConfirmAddBribes(props: IConfirmAddBribes) {
               <div className="border bg-card-200 mt-3 border-text-800 rounded-2xl   ">
                 <div className="flex bg-card-500 rounded-t-2xl h-[51px] items-center ">
                   <p className="text-text-50 font-body2 md:font-body4 ml-3 md:ml-5">
-                    Your are adding bribes for
+                    You are adding bribes for
                   </p>
                   <p className="ml-auto pr-3 md:pr-5 flex justify-center items-center">
                     <div className="bg-card-600 rounded-full w-[28px] h-[28px] flex justify-center items-center">

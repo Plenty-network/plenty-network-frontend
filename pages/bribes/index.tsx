@@ -10,10 +10,11 @@ import { getEpochData } from "../../src/redux/epoch/epoch";
 import { AppDispatch, store, useAppSelector } from "../../src/redux/index";
 import { getTotalVotingPower } from "../../src/redux/pools";
 import { getLpTokenPrice, getTokenPrice } from "../../src/redux/tokenPrice/tokenPrice";
-import { fetchWallet, walletConnection } from "../../src/redux/wallet/wallet";
+import { fetchWallet } from "../../src/redux/wallet/wallet";
 import { getRewardsAprEstimate } from "../../src/redux/rewardsApr";
 
 const Bribes: NextPage = () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const userAddress = useAppSelector((state) => state.wallet.address);
   const token = useAppSelector((state) => state.config.tokens);
   const totalVotingPowerError = useAppSelector((state) => state.pools.totalVotingPowerError);
@@ -27,7 +28,9 @@ const Bribes: NextPage = () => {
   const initialLpPriceCall = useRef<boolean>(true);
   const initialRewardsAprCall = useRef<boolean>(true);
   const currentTotalVotingPower = useAppSelector((state) => state.pools.totalVotingPower);
-  const rewardsAprEstimateError = useAppSelector((state) => state.rewardsApr.rewardsAprEstimateError);
+  const rewardsAprEstimateError = useAppSelector(
+    (state) => state.rewardsApr.rewardsAprEstimateError
+  );
 
   useEffect(() => {
     dispatch(fetchWallet());
@@ -51,14 +54,14 @@ const Bribes: NextPage = () => {
     }
   }, [totalVotingPowerError]);
   useEffect(() => {
-    if(!initialPriceCall.current) {
+    if (!initialPriceCall.current) {
       Object.keys(token).length !== 0 && dispatch(getTokenPrice());
     } else {
       initialPriceCall.current = false;
     }
   }, [token]);
   useEffect(() => {
-    if(!initialLpPriceCall.current) {
+    if (!initialLpPriceCall.current) {
       Object.keys(tokenPrice).length !== 0 && dispatch(getLpTokenPrice(tokenPrice));
     } else {
       initialLpPriceCall.current = false;

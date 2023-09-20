@@ -17,7 +17,6 @@ import { connectedNetwork } from "../../common/walletconnect";
 import pLimit from "p-limit";
 import { PROMISE_ALL_CONCURRENCY_LIMIT } from "../../constants/global";
 
-
 /**
  * Returns the pools data for a user (positions).
  * @param userTezosAddress - Tezos wallet address of the user
@@ -38,14 +37,15 @@ export const getPositionsData = async (
     let liquidityAmountSum = new BigNumber(0);
 
     const positionsResponse = await axios.get(
-      `${Config.VE_INDEXER[connectedNetwork]}positions?address=${userTezosAddress}`
+      `${Config.API_SERVER_URL[connectedNetwork]}ply/positions?address=${userTezosAddress}`
     );
     const positionsResponseData: IPositionsIndexerData[] = positionsResponse.data;
 
     const positionsData: IPositionsData[] = positionsResponseData.map(
       (pool: IPositionsIndexerData): IPositionsData => {
         const lpTokenDecimalMultplier = new BigNumber(10).pow(AMM[pool.amm].lpToken.decimals);
-        const lpTokenPrice = new BigNumber(lPTokenPrices[AMM[pool.amm].lpToken.address]) ?? new BigNumber(0);
+        const lpTokenPrice =
+          new BigNumber(lPTokenPrices[AMM[pool.amm].lpToken.address]) ?? new BigNumber(0);
         const lpBalance = new BigNumber(pool.lqtBalance);
         const staked = new BigNumber(pool.stakedBalance);
         const baseBalance = staked.multipliedBy(40).dividedBy(100);
@@ -73,11 +73,14 @@ export const getPositionsData = async (
         };
       }
     );
-    
+
     let poolsWithoutGaugeData: IPositionsData[] = [];
-    const poolsWithoutGaugeResponse: IPositionsResponse = await getPositionsFromConfig(userTezosAddress,lPTokenPrices);
-    
-    if(poolsWithoutGaugeResponse.success) {
+    const poolsWithoutGaugeResponse: IPositionsResponse = await getPositionsFromConfig(
+      userTezosAddress,
+      lPTokenPrices
+    );
+
+    if (poolsWithoutGaugeResponse.success) {
       liquidityAmountSum = liquidityAmountSum.plus(poolsWithoutGaugeResponse.liquidityAmountSum);
       poolsWithoutGaugeData = poolsWithoutGaugeResponse.positionPoolsData;
     }
@@ -98,7 +101,6 @@ export const getPositionsData = async (
   }
 };
 
-
 /**
  * Returns the list of pools with respective unclaimed emissions.
  * @param userTezosAddress - Tezos wallet address of the user
@@ -116,7 +118,7 @@ export const getPoolsRewardsData = async (
     const AMM = state.config.AMMs;
 
     const positionsResponse = await axios.get(
-      `${Config.VE_INDEXER[connectedNetwork]}positions?address=${userTezosAddress}`
+      `${Config.API_SERVER_URL[connectedNetwork]}ply/positions?address=${userTezosAddress}`
     );
     const positionsResponseData: IPositionsIndexerData[] = positionsResponse.data;
 
@@ -178,7 +180,6 @@ export const getPoolsRewardsData = async (
   }
 };
 
-
 /**
  * Returns the pools data for a user (positions) from all the pools in config which doesn't have a gauge.
  * @param userTezosAddress - Tezos wallet address of the user
@@ -206,13 +207,13 @@ const getPositionsFromConfig = async (
     const poolsWithoutGauge: IConfigPool[] = Object.values(AMM).filter(
       (pool: IConfigPool) => pool.gauge === undefined
     );
-    
+
     const lpBalancesData: IPnlpBalanceResponse[] = await Promise.all(
       poolsWithoutGauge.map((pool: IConfigPool) =>
         limit(() => getPnlpBalance(pool.token1.symbol, pool.token2.symbol, userTezosAddress))
       )
     );
-    
+
     poolsWithoutGauge.forEach((pool: IConfigPool, index: number) => {
       const pnlpBalanceData: IPnlpBalanceResponse = lpBalancesData[index];
       if (pnlpBalanceData.success && new BigNumber(pnlpBalanceData.balance).isGreaterThan(0)) {

@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import PropTypes from "prop-types";
 import { useEffect, useRef } from "react";
+import BigNumber from 'bignumber.js';
 import { useDispatch } from "react-redux";
 import { SideBarHOC } from "../../src/components/Sidebar/SideBarHOC";
 

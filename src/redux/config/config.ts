@@ -10,6 +10,7 @@ interface ConfigState {
   gauges: IGaugeConfig;
   tokens: IConfigTokens;
   AMMs: IConfigPools;
+  V3_AMMs: IConfigPools;
 }
 
 const initialState: ConfigState = {
@@ -20,6 +21,7 @@ const initialState: ConfigState = {
   gauges: {},
   tokens: {},
   AMMs: {},
+  V3_AMMs: {},
 };
 
 export const getConfig = createAsyncThunk("config/getConfig", async (thunkAPI) => {
@@ -59,6 +61,7 @@ const ConfigSlice = createSlice({
       // state.lp = action.payload.LP;
       state.tokens = action.payload.TOKEN;
       state.AMMs = action.payload.AMM;
+      state.V3_AMMs = action.payload.V3_AMM;
       console.log("config fetching completed");
     },
     [getConfig.rejected.toString()]: (state: any, action: any) => {

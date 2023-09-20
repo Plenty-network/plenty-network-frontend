@@ -55,7 +55,7 @@ function TransactionSettingsLiquidity(props: ITransactionSettingsProps) {
         "z-20 absolute right-[10px]  md:-right-[1px]  bg-card-500 border border-text-700/[0.5] w-[250px] md:w-[319px] p-5 rounded-2xl fade-in-3 "
       )}
     >
-      <div className="font-subtitle2">Transaction Settings</div>
+      <div className="font-subtitle2">Transaction settings</div>
       <div className="mt-2">
         <span className="font-caption1 text-text-200 ">Slippage tolerance</span>
         <span className="relative top-0.5 left-[5px]">
