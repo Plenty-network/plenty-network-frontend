@@ -135,6 +135,25 @@ export default function Pools(props: IIndexProps) {
   const [isError, setIsError] = useState(false);
   const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
   const [poolFilterwithTvl, setPoolFilterwithTvl] = useState(true);
+  function hasPageReloaded() {
+    return localStorage.getItem("pageReloadedv2") === "true";
+  }
+
+  // Function to mark the page as reloaded
+  function markPageAsReloaded() {
+    localStorage.setItem("pageReloadedv2", "true");
+  }
+
+  // Check if the page has already been reloaded
+  if (!hasPageReloaded()) {
+    // Your code that depends on the reload action goes here
+
+    // Mark the page as reloaded
+    markPageAsReloaded();
+
+    // Trigger the page reload (if needed)
+    window.location.reload();
+  }
   return (
     <>
       <SideBarHOC>

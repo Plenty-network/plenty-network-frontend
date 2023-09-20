@@ -45,12 +45,12 @@ export default function PoolsV3(props: IIndexProps) {
   const [isError, setIsError] = useState(false);
   // Function to check if the page has already been reloaded
   function hasPageReloaded() {
-    return localStorage.getItem("pageReloaded") === "true";
+    return localStorage.getItem("pageReloadedv3") === "true";
   }
 
   // Function to mark the page as reloaded
   function markPageAsReloaded() {
-    localStorage.setItem("pageReloaded", "true");
+    localStorage.setItem("pageReloadedv3", "true");
   }
 
   // Check if the page has already been reloaded
@@ -100,7 +100,7 @@ export default function PoolsV3(props: IIndexProps) {
                 <Image src={info} />
               </p>
               <p className="font-body2 text-info-500 px-3 sm:w-auto w-[280px]">
-                PLY incentivisation is not available for v3 pools
+                PLY incentivisation is not available for V3 pools
               </p>
               <p
                 className="ml-auto relative top-[7px] cursor-pointer"
