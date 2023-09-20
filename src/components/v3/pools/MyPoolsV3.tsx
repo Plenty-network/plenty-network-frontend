@@ -303,7 +303,7 @@ export function MyPoolTablev3(props: IShortCardProps) {
             columns={desktopcolumns}
             data={poolsTableData}
             shortby="fees"
-            TableName="newPools"
+            TableName="newPoolsV3"
             tableType={true}
             isFetched={isFetched}
             isConnectWalletRequired={props.isConnectWalletRequired}
