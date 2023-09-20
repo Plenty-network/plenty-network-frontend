@@ -136,12 +136,12 @@ export default function Pools(props: IIndexProps) {
   const [isFetchingMyPool, setIsFetchingMyPool] = useState(false);
   const [poolFilterwithTvl, setPoolFilterwithTvl] = useState(true);
   function hasPageReloaded() {
-    return localStorage.getItem("pageReloadedv2") === "true";
+    return sessionStorage.getItem("pageReloadedv2") === "true";
   }
 
   // Function to mark the page as reloaded
   function markPageAsReloaded() {
-    localStorage.setItem("pageReloadedv2", "true");
+    sessionStorage.setItem("pageReloadedv2", "true");
   }
 
   // Check if the page has already been reloaded

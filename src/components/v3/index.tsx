@@ -44,13 +44,14 @@ export default function PoolsV3(props: IIndexProps) {
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
   // Function to check if the page has already been reloaded
+
   function hasPageReloaded() {
-    return localStorage.getItem("pageReloadedv3") === "true";
+    return sessionStorage.getItem("pageReloadedv3") === "true";
   }
 
   // Function to mark the page as reloaded
   function markPageAsReloaded() {
-    localStorage.setItem("pageReloadedv3", "true");
+    sessionStorage.setItem("pageReloadedv3", "true");
   }
 
   // Check if the page has already been reloaded
