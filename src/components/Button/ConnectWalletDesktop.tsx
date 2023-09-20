@@ -213,25 +213,21 @@ export function ConnectWalletBtnDeskTop(props: IConnectWalletBtnDeskTopProps) {
               </div>
               <div className="bg-primary-500/[0.05] rounded-lg mt-[12px] mx-[14px]">
                 <p>
-                  <a
-                    href={"https://www.npmjs.com/package/@plenty-labs/v3-sdk"}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
+                  <a href={"https://docs.plenty.network/"} target="_blank" rel="noreferrer">
                     <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
                       <Image alt={"alt"} src={docs} />
-                      <span>V3 Docs</span>
+                      <span>Docs</span>
                     </p>
                   </a>
                 </p>
-                <p>
+                {/* <p>
                   <a href={"https://docs.plenty.network/"} target="_blank" rel="noreferrer">
                     <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
                       <Image alt={"alt"} src={docs} />
                       <span>V2 Docs</span>
                     </p>
                   </a>
-                </p>
+                </p> */}
                 <p>
                   <a href={"https://tally.so/r/mOQg0M"} target="_blank" rel="noreferrer">
                     <p className="flex gap-2 px-4  py-4 hover:bg-primary-755  cursor-pointer text-white text-f14">
