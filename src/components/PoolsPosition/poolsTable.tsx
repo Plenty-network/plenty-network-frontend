@@ -48,7 +48,7 @@ export function PoolsTablePosition(props: IPoolsTablePosition) {
   });
   const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
   const NoData = React.useMemo(() => {
-    return <NoPoolsPosition h1={"No active liquidity positions"} cta={"View Pools"} />;
+    return <NoPoolsPosition h1={"No active liquidity positions"} cta={"View Pools"} page={"v2"} />;
   }, []);
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;

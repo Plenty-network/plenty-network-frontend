@@ -39,7 +39,7 @@ export function PoolsV3TablePosition(props: IPoolsTablePosition) {
   const tokens = useAppSelector((state) => state.config.tokens);
 
   const NoData = React.useMemo(() => {
-    return <NoPoolsPosition h1={"No active liquidity positions"} cta={"View Pools"} />;
+    return <NoPoolsPosition h1={"No active liquidity positions"} cta={"View pools"} page={"v3"} />;
   }, []);
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
