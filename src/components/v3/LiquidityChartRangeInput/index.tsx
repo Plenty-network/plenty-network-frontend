@@ -162,8 +162,8 @@ export default function LiquidityChartRangeInput({
       }
       if (isFull) {
         if (d === "e") {
-          return "-100%";
-        } else return "100%";
+          return "100%";
+        } else return "-100%";
       }
       const percent =
         (x < price ? -1 : 1) * ((Math.max(x, price) - Math.min(x, price)) / price) * 100;
