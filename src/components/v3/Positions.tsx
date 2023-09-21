@@ -3,6 +3,7 @@ import * as React from "react";
 
 import { useMemo } from "react";
 
+import info from "../../../src/assets/icon/pools/InfoBlue.svg";
 import Button from "../Button/Button";
 
 import { AppDispatch, useAppSelector } from "../../redux";
@@ -131,6 +132,21 @@ function PositionsPopup(props: IPositionsProps) {
             </div>
           </>
         }
+      </div>
+      <div className="py-1.5 md:h-[42px] md:pl-7 pl-2  pr-2 rounded-lg mt-3 flex items-center bg-info-500/[0.1]">
+        <p className="relative top-0.5">
+          <Image src={info} />
+        </p>
+        <p className="font-body2 text-info-500 px-3 sm:w-auto w-[300px]">
+          80% of the trading fees goes to the liquidity provider, the remaining goes to the
+          developers.
+        </p>
+        {/* <p
+                className="ml-auto relative top-[7px] cursor-pointer"
+                
+              >
+                <Image src={close} />
+              </p> */}
       </div>
       <PositionsTable
         setScreen={props.setScreen}
