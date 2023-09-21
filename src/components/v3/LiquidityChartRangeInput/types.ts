@@ -8,8 +8,6 @@ export interface ChartEntry {
   price0: number;
   price1: number;
   price2: number;
-  width: number;
-  valueX: number;
 }
 
 interface Dimensions {
