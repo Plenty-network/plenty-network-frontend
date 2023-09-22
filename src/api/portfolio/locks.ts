@@ -412,25 +412,28 @@ export const getAllRewardsOperationsData = async (
           allFeesOperationData.amms[voteData.amm].push(Number(epochNumber));
         }
         for (const bribe of voteData.bribes) {
-          const value = new BigNumber(bribe.value).dividedBy(
-            new BigNumber(10).pow(TOKENS[bribe.name].decimals)
-          );
-          const amount = value.multipliedBy(tokenPrices[bribe.name] || 0);
-          // Claim bribe only if the bribe value is greater than 0 and the amount is
-          // greater than 0.1$ as of current price.
-          if(value.isGreaterThan(0) && amount.isGreaterThanOrEqualTo(0.1)) {
-            const bribeId = Number(bribe.bribeId);
-            const amm = bribe.amm;
-            allEpochClaimTokenData[epochNumber].bribeData.push({
-              bribeId,
-              amm,
-            });
-            allBribesClaimData.push({
-              tokenId: Number(tokenId),
-              epoch: Number(epochNumber),
-              bribeId,
-              amm,
-            });
+          if(TOKENS[bribe.name]) 
+          {
+            const value = new BigNumber(bribe.value).dividedBy(
+              new BigNumber(10).pow(TOKENS[bribe.name].decimals)
+            );
+            const amount = value.multipliedBy(tokenPrices[bribe.name] || 0);
+            // Claim bribe only if the bribe value is greater than 0 and the amount is
+            // greater than 0.1$ as of current price.
+            if(value.isGreaterThan(0) && amount.isGreaterThanOrEqualTo(0.1)) {
+              const bribeId = Number(bribe.bribeId);
+              const amm = bribe.amm;
+              allEpochClaimTokenData[epochNumber].bribeData.push({
+                bribeId,
+                amm,
+              });
+              allBribesClaimData.push({
+                tokenId: Number(tokenId),
+                epoch: Number(epochNumber),
+                bribeId,
+                amm,
+              });
+            }
           }
         }
       }
