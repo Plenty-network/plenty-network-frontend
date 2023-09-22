@@ -332,7 +332,6 @@ export const createRemoveLiquidityOperation = async (
 
   const minOut = await calculateMinOut(percentage, position, sqrtPriceValue);
 
-
   const options = {
     liquidityDelta: liquidity,
 
