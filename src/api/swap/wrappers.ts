@@ -83,7 +83,7 @@ export const calculateTokensOutWrapper = (
         type
       );
     } else {
-      if (tokenIn === "XTZ" && tokenOut === "CTez" && target) {
+      if (tokenIn === "XTZ" && tokenOut == "ctez" && target) {
         outputData = calculateTokensOutTezCtez(
           tokenInSupply,
           tokenOutSupply,
@@ -93,7 +93,7 @@ export const calculateTokensOutWrapper = (
           target,
           tokenIn
         );
-      } else if (tokenIn === "CTez" && tokenOut === "XTZ" && target) {
+      } else if (tokenIn == "ctez" && tokenOut === "XTZ" && target) {
         outputData = calculateTokensOutTezCtez(
           tokenOutSupply,
           tokenInSupply,
@@ -162,7 +162,7 @@ export const calculateTokensInWrapper = (
         tokenOut
       );
     } else {
-      if (tokenIn === "XTZ" && tokenOut === "CTez" && target) {
+      if (tokenIn === "XTZ" && tokenOut == "ctez" && target) {
         outputData = calculateTokensInTezCtez(
           tokenInSupply,
           tokenOutSupply,
@@ -172,7 +172,7 @@ export const calculateTokensInWrapper = (
           target,
           tokenIn
         );
-      } else if (tokenIn === "CTez" && tokenOut === "XTZ" && target) {
+      } else if (tokenIn == "ctez" && tokenOut === "XTZ" && target) {
         outputData = calculateTokensInTezCtez(
           tokenOutSupply,
           tokenInSupply,
@@ -434,7 +434,7 @@ export const topTokenListGhostnet = async (): Promise<{
     const topTokens: { [id: string]: number } = {};
 
     topTokens["XTZ"] = 0;
-    topTokens["CTez"] = 1;
+    topTokens["ctez"] = 1;
     topTokens["USDC.e"] = 2;
     topTokens["USDT.e"] = 3;
     topTokens["USDtz"] = 4;

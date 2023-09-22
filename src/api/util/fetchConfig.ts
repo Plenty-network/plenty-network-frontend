@@ -16,11 +16,15 @@ import { IGaugeExistsResponse } from "./types";
 
 export const fetchConfig = async (): Promise<IContractsConfig> => {
   try {
-    const newV2PoolsUrl: string = `${Config.API_SERVER_URL[connectedNetwork]}config/pools/v2`
-    const newV3PoolsUrl: string = `${Config.API_SERVER_URL[connectedNetwork]}config/pools/v3`
+    const newV2PoolsUrl: string = `${Config.API_SERVER_URL[connectedNetwork]}config/pools/v2`;
+    const newV3PoolsUrl: string = `${Config.API_SERVER_URL[connectedNetwork]}config/pools/v3`;
     const newTokensUrl: string = `${Config.API_SERVER_URL[connectedNetwork]}config/tokens`;
 
-    const configResult = await Promise.all([axios.get(newTokensUrl), axios.get(newV2PoolsUrl), axios.get(newV3PoolsUrl)]);
+    const configResult = await Promise.all([
+      axios.get(newTokensUrl),
+      axios.get(newV2PoolsUrl),
+      axios.get(newV3PoolsUrl),
+    ]);
     if (configResult.find((result) => result.status !== 200)) {
       throw new Error("Failed to fetch the config from server.");
     } else {
@@ -39,7 +43,7 @@ export const fetchConfig = async (): Promise<IContractsConfig> => {
       return {
         TOKEN,
         AMM,
-        V3_AMM
+        V3_AMM,
       };
     }
   } catch (error: any) {
@@ -184,8 +188,8 @@ export const isTezPair = (tokenOneSymbol: string, tokenTwoSymbol: string): boole
  * @param tokenTwoSymbol - Symbol of the second token of the pair
  */
 export const isCtezTezPair = (tokenOneSymbol: string, tokenTwoSymbol: string): boolean => {
-  return (tokenOneSymbol === "XTZ" && tokenTwoSymbol === "CTez") ||
-    (tokenOneSymbol === "CTez" && tokenTwoSymbol === "XTZ")
+  return (tokenOneSymbol === "XTZ" && tokenTwoSymbol == "ctez") ||
+    (tokenOneSymbol == "ctez" && tokenTwoSymbol === "XTZ")
     ? true
     : false;
 };
