@@ -206,13 +206,13 @@ export function NewPool(props: IManageLiquidityProps) {
   useEffect(() => {
     setPair("");
     if (
-      (tokenIn.name === "XTZ" && tokenOut.name !== "CTez") ||
-      (tokenOut.name === "XTZ" && tokenIn.name !== "CTez")
+      (tokenIn.name === "XTZ" && tokenOut.name != "ctez") ||
+      (tokenOut.name === "XTZ" && tokenIn.name != "ctez")
     ) {
       setPair(Pair.VOLATILE);
     } else if (
-      (tokenIn.name === "XTZ" && tokenOut.name === "CTez") ||
-      (tokenOut.name === "XTZ" && tokenIn.name === "CTez")
+      (tokenIn.name === "XTZ" && tokenOut.name == "ctez") ||
+      (tokenOut.name === "XTZ" && tokenIn.name == "ctez")
     ) {
       setPair(Pair.STABLE);
     }
