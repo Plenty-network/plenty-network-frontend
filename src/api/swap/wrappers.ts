@@ -8,7 +8,11 @@ import {
   loadSwapDataGeneralStable,
   loadSwapDataTezCtez,
 } from "./stableswap";
-import { calculateTokenInputVolatile, calculateTokenOutputVolatile, loadSwapDataVolatile } from "./volatile";
+import {
+  calculateTokenInputVolatile,
+  calculateTokenOutputVolatile,
+  loadSwapDataVolatile,
+} from "./volatile";
 import { BigNumber } from "bignumber.js";
 import { ISwapDataResponse, ICalculateTokenResponse, IRouterResponse } from "./types";
 import { computeAllPaths, computeAllPathsReverse } from "./router";
@@ -25,15 +29,12 @@ export const loadSwapDataWrapper = async (
   try {
     const type = getDexType(tokenIn, tokenOut);
     let swapData: ISwapDataResponse;
-    if(type === PoolType.TEZ) {
+    if (type === PoolType.TEZ) {
       swapData = await loadSwapDataTezPairs(tokenIn, tokenOut);
     } else if (type === PoolType.VOLATILE) {
       swapData = await loadSwapDataVolatile(tokenIn, tokenOut);
     } else {
-      if (
-        (tokenIn === "XTZ" && tokenOut === "CTez") ||
-        (tokenIn === "CTez" && tokenOut === "XTZ")
-      ) {
+      if ((tokenIn === "XTZ" && tokenOut == "ctez") || (tokenIn == "ctez" && tokenOut === "XTZ")) {
         swapData = await loadSwapDataTezCtez(tokenIn, tokenOut);
       } else {
         swapData = await loadSwapDataGeneralStable(tokenIn, tokenOut);
@@ -238,9 +239,9 @@ export const computeAllPathsWrapper = (
       finalFeePerc = finalFeePerc.plus(y);
     }
 
-    for( var z = 0 ; z < bestPath.path.length-1 ; z++){
-      const dexType = getDexType(bestPath.path[z] , bestPath.path[z+1]);
-      if(dexType === PoolType.STABLE) isStable.push(true);
+    for (var z = 0; z < bestPath.path.length - 1; z++) {
+      const dexType = getDexType(bestPath.path[z], bestPath.path[z + 1]);
+      if (dexType === PoolType.STABLE) isStable.push(true);
       else isStable.push(false);
     }
 
@@ -285,15 +286,15 @@ export const computeReverseCalculationWrapper = (
   slippage: BigNumber,
   swapData: ISwapDataResponse[][],
   tokenPrice: { [id: string]: number },
-  paths2 : string[],
-  swapData2 : ISwapDataResponse[][]
+  paths2: string[],
+  swapData2: ISwapDataResponse[][]
 ): IRouterResponse => {
   try {
     const state = store.getState();
     const TOKEN = state.config.tokens;
 
     const bestPath = computeAllPathsReverse(paths, tokenInAmount, slippage, swapData);
-    let temp = computeAllPaths(paths2 , bestPath.tokenOutAmount , slippage , swapData2);
+    let temp = computeAllPaths(paths2, bestPath.tokenOutAmount, slippage, swapData2);
 
     const path = paths2[0].split(" ");
     const tokenIn = path[0];
@@ -301,15 +302,18 @@ export const computeReverseCalculationWrapper = (
 
     //BINARY SEARCH FOR USER AMOUNT
     let low = bestPath.tokenOutAmount;
-    while(temp.tokenOutAmount.isGreaterThan(tokenInAmount) && temp.tokenOutAmount.isGreaterThan(new BigNumber(0))){
+    while (
+      temp.tokenOutAmount.isGreaterThan(tokenInAmount) &&
+      temp.tokenOutAmount.isGreaterThan(new BigNumber(0))
+    ) {
       low = low.minus(1);
-      if(low.isLessThan(0)) {
+      if (low.isLessThan(0)) {
         low = new BigNumber(1).dividedBy(new BigNumber(10).pow(tokenInData.decimals));
         break;
       }
-      temp = computeAllPaths(paths2 , low , slippage , swapData2);
+      temp = computeAllPaths(paths2, low, slippage, swapData2);
     }
-    
+
     let high = low.plus(1);
     let mid = new BigNumber(0);
 
@@ -317,22 +321,20 @@ export const computeReverseCalculationWrapper = (
     // const tokenIn = path[0];
     // const tokenInData = TOKEN[tokenIn];
 
-    while(low.isLessThanOrEqualTo(high)){
-      mid = (low.plus(high)).dividedBy(2).decimalPlaces(tokenInData.decimals , 1);
-      
-      let currAns = computeAllPaths(paths2 , mid , slippage , swapData2);
-      if(currAns.tokenOutAmount.isEqualTo(tokenInAmount)){
+    while (low.isLessThanOrEqualTo(high)) {
+      mid = low.plus(high).dividedBy(2).decimalPlaces(tokenInData.decimals, 1);
+
+      let currAns = computeAllPaths(paths2, mid, slippage, swapData2);
+      if (currAns.tokenOutAmount.isEqualTo(tokenInAmount)) {
         break;
-      }
-      else if(tokenInAmount.isGreaterThan(currAns.tokenOutAmount)){
+      } else if (tokenInAmount.isGreaterThan(currAns.tokenOutAmount)) {
         low = mid.plus(new BigNumber(1).dividedBy(new BigNumber(10).pow(tokenInData.decimals)));
-      }else{
+      } else {
         high = mid.minus(new BigNumber(1).dividedBy(new BigNumber(10).pow(tokenInData.decimals)));
       }
-    } 
+    }
 
-
-    const forwardPass = computeAllPaths(paths2 , mid , slippage , swapData2);
+    const forwardPass = computeAllPaths(paths2, mid, slippage, swapData2);
 
     const isStable: boolean[] = [];
     let finalPriceImpact = new BigNumber(0);
@@ -346,9 +348,9 @@ export const computeReverseCalculationWrapper = (
       finalFeePerc = finalFeePerc.plus(x);
     }
 
-    for( var z = 0 ; z < forwardPass.path.length-1 ; z++){
-      const dexType = getDexType(forwardPass.path[z] , forwardPass.path[z+1]);
-      if(dexType === PoolType.STABLE) isStable.push(true);
+    for (var z = 0; z < forwardPass.path.length - 1; z++) {
+      const dexType = getDexType(forwardPass.path[z], forwardPass.path[z + 1]);
+      if (dexType === PoolType.STABLE) isStable.push(true);
       else isStable.push(false);
     }
 
@@ -363,7 +365,7 @@ export const computeReverseCalculationWrapper = (
     return {
       path: forwardPass.path,
       tokenOutAmount: mid,
-      userFinalTokenOut : forwardPass.tokenOutAmount,
+      userFinalTokenOut: forwardPass.tokenOutAmount,
       finalMinimumTokenOut: forwardPass.minimumTokenOut[forwardPass.minimumTokenOut.length - 1],
       minimumTokenOut: forwardPass.minimumTokenOut,
       finalPriceImpact: finalPriceImpact,
@@ -393,7 +395,9 @@ export const topTokensList = async (): Promise<{
   topTokens: { [id: string]: number };
 }> => {
   try {
-    const tokenTvlResponse = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}analytics/tokens`);
+    const tokenTvlResponse = await axios.get(
+      `${Config.API_SERVER_URL[connectedNetwork]}analytics/tokens`
+    );
     const tokenTvl = tokenTvlResponse.data;
     const topTokens: { [id: string]: number } = {};
 
@@ -429,14 +433,14 @@ export const topTokenListGhostnet = async (): Promise<{
   try {
     const topTokens: { [id: string]: number } = {};
 
-    topTokens['XTZ']=0;
-    topTokens['CTez']=1;
-    topTokens['USDC.e']=2;
-    topTokens['USDT.e']=3;
-    topTokens['USDtz']=4;
-    topTokens['DAI.e']=5;
-    topTokens['WBTC.e']=6;
-    topTokens['LINK.e']=7;
+    topTokens["XTZ"] = 0;
+    topTokens["CTez"] = 1;
+    topTokens["USDC.e"] = 2;
+    topTokens["USDT.e"] = 3;
+    topTokens["USDtz"] = 4;
+    topTokens["DAI.e"] = 5;
+    topTokens["WBTC.e"] = 6;
+    topTokens["LINK.e"] = 7;
 
     return {
       success: true,
