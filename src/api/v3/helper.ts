@@ -8,7 +8,9 @@ import { getV3PoolAddressWithFeeTier } from "../util/fetchConfig";
 import { connectedNetwork, dappClient } from "../../common/walletconnect";
 
 const tokenDetail = async (tokenSymbol: String): Promise<Token> => {
-  let configResponse: any = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}config/tokens`);
+  let configResponse: any = await axios.get(
+    `${Config.API_SERVER_URL[connectedNetwork]}config/tokens`
+  );
   configResponse = configResponse.data[`${tokenSymbol}`];
 
   let tokenAddress = configResponse.address;
@@ -92,7 +94,7 @@ export const getOutsideFeeGrowth = async (
 ): Promise<BalanceNat> => {
   try {
     const feeGrowthOutside = await axios.get(
-      `${Config.TZKT_NODES.testnet}v1/bigmaps/${ticksBigmap}/keys/${tick}`
+      `${Config.TZKT_NODES[connectedNetwork]}v1/bigmaps/${ticksBigmap}/keys/${tick}`
     );
 
     return {
@@ -127,7 +129,11 @@ export const getRealPriceFromTick = async (
 ): Promise<any> => {
   try {
     //@ts-ignore
-    let priceValue = Price.computeRealPriceFromSqrtPrice(Tick.computeSqrtPriceFromTick(tick), tokenXSymbol, tokenYSymbol);
+    let priceValue = Price.computeRealPriceFromSqrtPrice(
+      Tick.computeSqrtPriceFromTick(tick),
+      tokenXSymbol,
+      tokenYSymbol
+    );
 
     return priceValue;
   } catch (error) {
