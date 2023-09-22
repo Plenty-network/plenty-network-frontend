@@ -268,27 +268,30 @@ const getBribesData = (
     let bribesData: ILockRewardsBribeData[] = [];
     const bribesObj: { [tokenSymbol: string]: ILockRewardsBribeData } = {};
     for (const bribeData of bribes) {
-      const value = new BigNumber(bribeData.value).dividedBy(
-        new BigNumber(10).pow(TOKENS[bribeData.name].decimals)
-      );
-      const amount = value.multipliedBy(tokenPrices[bribeData.name] || 0);
-      // Filtering out the bribes which are less that 0.1$ as of current price.
-      if(amount.isGreaterThanOrEqualTo(0.1)) {
-        bribesValue = bribesValue.plus(amount);
-        // Sum up the bribes of all similar tokens
-        if (bribesObj[bribeData.name]) {
-          const prevBribeObj = bribesObj[bribeData.name];
-          bribesObj[bribeData.name] = {
-            ...prevBribeObj,
-            bribeValue: prevBribeObj.bribeValue.plus(value),
-            bribePrice: prevBribeObj.bribePrice.plus(amount),
-          };
-        } else {
-          bribesObj[bribeData.name] = {
-            bribeValue: value,
-            bribePrice: amount,
-            tokenSymbol: bribeData.name,
-          };
+      if(TOKENS[bribeData.name])
+      {
+        const value = new BigNumber(bribeData.value).dividedBy(
+          new BigNumber(10).pow(TOKENS[bribeData.name].decimals)
+        );
+        const amount = value.multipliedBy(tokenPrices[bribeData.name] || 0);
+        // Filtering out the bribes which are less that 0.1$ as of current price.
+        if(amount.isGreaterThanOrEqualTo(0.1)) {
+          bribesValue = bribesValue.plus(amount);
+          // Sum up the bribes of all similar tokens
+          if (bribesObj[bribeData.name]) {
+            const prevBribeObj = bribesObj[bribeData.name];
+            bribesObj[bribeData.name] = {
+              ...prevBribeObj,
+              bribeValue: prevBribeObj.bribeValue.plus(value),
+              bribePrice: prevBribeObj.bribePrice.plus(amount),
+            };
+          } else {
+            bribesObj[bribeData.name] = {
+              bribeValue: value,
+              bribePrice: amount,
+              tokenSymbol: bribeData.name,
+            };
+          }
         }
       }
     }
