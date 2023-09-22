@@ -1,5 +1,5 @@
 import { getDexAddress } from "../api/util/fetchConfig";
-import { store} from "../redux";
+import { store } from "../redux";
 import { BigNumber } from "bignumber.js";
 import { TokenStandard } from "../config/types";
 import { OpKind, WalletParamsWithKind } from "@taquito/taquito";
@@ -85,7 +85,7 @@ export const directSwapWrapper = async (
 ): Promise<IOperationsResponse> => {
   try {
     let res;
-    if (tokenIn === "XTZ" && tokenOut === "CTez") {
+    if (tokenIn === "XTZ" && tokenOut == "ctez") {
       res = await tez_to_ctez(
         tokenIn,
         tokenOut,
@@ -97,7 +97,7 @@ export const directSwapWrapper = async (
         setShowConfirmTransaction,
         flashMessageContent
       );
-    } else if (tokenIn === "CTez" && tokenOut === "XTZ") {
+    } else if (tokenIn == "ctez" && tokenOut === "XTZ") {
       res = await ctez_to_tez(
         tokenIn,
         tokenOut,
@@ -110,8 +110,8 @@ export const directSwapWrapper = async (
         flashMessageContent
       );
     } else if (
-      (tokenIn === "XTZ" && tokenOut !== "CTez") ||
-      (tokenIn !== "CTez" && tokenOut === "XTZ")
+      (tokenIn === "XTZ" && tokenOut != "ctez") ||
+      (tokenIn != "ctez" && tokenOut === "XTZ")
     ) {
       res = await swapTezPairs(
         tokenIn,
@@ -371,15 +371,14 @@ async function ctez_to_tez(
     await batchOp.confirmation(1);
 
     const status = await batchOp.status();
-    if(status === "applied"){
+    if (status === "applied") {
       return {
         success: true,
         operationId: batchOp.opHash,
       };
-    }else{
+    } else {
       throw new Error(status);
     }
-
   } catch (error: any) {
     console.log(error);
     return {
@@ -437,7 +436,7 @@ async function tez_to_ctez(
         }),
     });
 
-    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);   
+    const updatedBatchOperations = await getBatchOperationsWithLimits(allBatchOperations);
     const batch = Tezos.wallet.batch(updatedBatchOperations);
     const batchOp: any = await batch.send();
 
@@ -448,16 +447,16 @@ async function tez_to_ctez(
     if (flashMessageContent) {
       store.dispatch(setFlashMessage(flashMessageContent));
     }
-    
+
     await batchOp.confirmation(1);
 
     const status = await batchOp.status();
-    if(status === "applied"){
+    if (status === "applied") {
       return {
         success: true,
         operationId: batchOp.opHash,
       };
-    }else{
+    } else {
       throw new Error(status);
     }
   } catch (error: any) {

@@ -92,7 +92,7 @@ function NewPoolMain(props: ILiquidityProps) {
   const [isExist, setIsExist] = useState(false);
   const [isGauge, setIsGauge] = useState(false);
   const [showNewPoolsManage, setShowNewPoolsManage] = useState<boolean>(false);
-  
+
   const handleNewPoolsManagePopup = (val: boolean) => {
     setShowNewPoolsManage(val);
   };
@@ -446,8 +446,8 @@ function NewPoolMain(props: ILiquidityProps) {
       <div className="flex gap-2 mb-5">
         <div
           onClick={
-            (props.tokenIn.name === "XTZ" && props.tokenOut.name !== "CTez") ||
-            (props.tokenOut.name === "XTZ" && props.tokenIn.name !== "CTez")
+            (props.tokenIn.name === "XTZ" && props.tokenOut.name != "ctez") ||
+            (props.tokenOut.name === "XTZ" && props.tokenIn.name != "ctez")
               ? undefined
               : () => props.setPair(Pair.STABLE)
           }

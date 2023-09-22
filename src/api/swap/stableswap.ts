@@ -1,16 +1,18 @@
-import CONFIG from '../../config/config';
-import BigNumber from 'bignumber.js';
-import { store } from '../../redux';
-import axios from 'axios';
-import { connectedNetwork, getRpcNode } from '../../common/walletconnect';
-import { getDexAddress } from '../util/fetchConfig';
-import { ISwapDataResponse , ICalculateTokenResponse, tezCtezStorageType, stableswapStorageType } from './types';
-import { getStorage } from '../util/storageProvider';
+import CONFIG from "../../config/config";
+import BigNumber from "bignumber.js";
+import { store } from "../../redux";
+import axios from "axios";
+import { connectedNetwork, getRpcNode } from "../../common/walletconnect";
+import { getDexAddress } from "../util/fetchConfig";
+import {
+  ISwapDataResponse,
+  ICalculateTokenResponse,
+  tezCtezStorageType,
+  stableswapStorageType,
+} from "./types";
+import { getStorage } from "../util/storageProvider";
 
-const util = (
-  x: BigNumber,
-  y: BigNumber
-): { first: BigNumber; second: BigNumber } => {
+const util = (x: BigNumber, y: BigNumber): { first: BigNumber; second: BigNumber } => {
   const plus = x.plus(y);
   const minus = x.minus(y);
   const plus2 = plus.multipliedBy(plus);
@@ -82,13 +84,12 @@ export const calculateTokensOutTezCtez = (
   target: BigNumber,
   tokenIn: string
 ): ICalculateTokenResponse => {
-
   const feePerc = new BigNumber(100).dividedBy(pairFeeDenom);
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(6));
   tezSupply = tezSupply.multipliedBy(new BigNumber(10).pow(6));
   ctezSupply = ctezSupply.multipliedBy(new BigNumber(10).pow(6));
   try {
-    if (tokenIn === 'CTez') {
+    if (tokenIn == "ctez") {
       const dy = newton_dx_to_dy(
         target.multipliedBy(ctezSupply),
         tezSupply.multipliedBy(new BigNumber(2).pow(48)),
@@ -97,11 +98,9 @@ export const calculateTokensOutTezCtez = (
       ).dividedBy(new BigNumber(2).pow(48));
       let fee = dy.dividedBy(pairFeeDenom);
       let tokenOut = dy.minus(fee);
-      let minOut = tokenOut.minus(
-        slippage.multipliedBy(tokenOut).dividedBy(100)
-      );
+      let minOut = tokenOut.minus(slippage.multipliedBy(tokenOut).dividedBy(100));
       minOut = minOut.dividedBy(new BigNumber(10).pow(6));
-      const exchangeRate = tokenOut.dividedBy(tokenInAmount); 
+      const exchangeRate = tokenOut.dividedBy(tokenInAmount);
 
       const updatedCtezSupply = ctezSupply.plus(tokenInAmount);
       const updatedTezSupply = tezSupply.minus(tokenOut);
@@ -118,9 +117,11 @@ export const calculateTokensOutTezCtez = (
       let priceImpact = tokenOut.minus(nextTokenOut).dividedBy(tokenOut);
       priceImpact = priceImpact.multipliedBy(100);
       priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
-      const tokenOutAmount = new BigNumber(tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6 , 1));
+      const tokenOutAmount = new BigNumber(
+        tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6, 1)
+      );
       const fees = fee.dividedBy(new BigNumber(10).pow(6));
-      const minimumOut = new BigNumber(minOut.decimalPlaces(6 , 1));
+      const minimumOut = new BigNumber(minOut.decimalPlaces(6, 1));
 
       return {
         tokenOutAmount,
@@ -130,7 +131,7 @@ export const calculateTokensOutTezCtez = (
         exchangeRate,
         priceImpact,
       };
-    } else if (tokenIn === 'XTZ') {
+    } else if (tokenIn === "XTZ") {
       const dy = newton_dx_to_dy(
         tezSupply.multipliedBy(new BigNumber(2).pow(48)),
         target.multipliedBy(ctezSupply),
@@ -139,9 +140,7 @@ export const calculateTokensOutTezCtez = (
       ).dividedBy(target);
       let fee = dy.dividedBy(pairFeeDenom);
       let tokenOut = dy.minus(fee);
-      let minOut = tokenOut.minus(
-        slippage.multipliedBy(tokenOut).dividedBy(100)
-      );
+      let minOut = tokenOut.minus(slippage.multipliedBy(tokenOut).dividedBy(100));
       minOut = minOut.dividedBy(new BigNumber(10).pow(6));
       const exchangeRate = tokenOut.dividedBy(tokenInAmount);
 
@@ -159,9 +158,11 @@ export const calculateTokensOutTezCtez = (
       let priceImpact = tokenOut.minus(nextTokenOut).dividedBy(tokenOut);
       priceImpact = priceImpact.multipliedBy(100);
       priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
-      const tokenOutAmount  = new BigNumber(tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6 , 1));
+      const tokenOutAmount = new BigNumber(
+        tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6, 1)
+      );
       const fees = fee.dividedBy(new BigNumber(10).pow(6));
-      const minimumOut = new BigNumber(minOut.decimalPlaces(6 , 1));
+      const minimumOut = new BigNumber(minOut.decimalPlaces(6, 1));
       return {
         tokenOutAmount,
         fees,
@@ -174,7 +175,7 @@ export const calculateTokensOutTezCtez = (
     return {
       tokenOutAmount: new BigNumber(0),
       fees: new BigNumber(0),
-      feePerc : new BigNumber(0),
+      feePerc: new BigNumber(0),
       minimumOut: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
@@ -183,7 +184,7 @@ export const calculateTokensOutTezCtez = (
     return {
       tokenOutAmount: new BigNumber(0),
       fees: new BigNumber(0),
-      feePerc : new BigNumber(0),
+      feePerc: new BigNumber(0),
       minimumOut: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
@@ -201,13 +202,12 @@ export const calculateTokensInTezCtez = (
   target: BigNumber,
   tokenIn: string
 ): ICalculateTokenResponse => {
-
   const feePerc = new BigNumber(100).dividedBy(pairFeeDenom);
   tokenInAmount = tokenInAmount.multipliedBy(new BigNumber(10).pow(6));
   tezSupply = tezSupply.multipliedBy(new BigNumber(10).pow(6));
   ctezSupply = ctezSupply.multipliedBy(new BigNumber(10).pow(6));
   try {
-    if (tokenIn === 'CTez') {
+    if (tokenIn == "ctez") {
       const dy = newton_dx_to_dy(
         target.multipliedBy(ctezSupply),
         tezSupply.multipliedBy(new BigNumber(2).pow(48)),
@@ -218,11 +218,9 @@ export const calculateTokensInTezCtez = (
       // let tokenOut = dy.minus(fee);
       let tokenOut = dy;
       // let tokenOut = dy.plus(dy.multipliedBy(0.001));
-      let minOut = tokenOut.minus(
-        slippage.multipliedBy(tokenOut).dividedBy(100)
-      );
+      let minOut = tokenOut.minus(slippage.multipliedBy(tokenOut).dividedBy(100));
       minOut = minOut.dividedBy(new BigNumber(10).pow(6));
-      const exchangeRate = tokenOut.dividedBy(tokenInAmount); 
+      const exchangeRate = tokenOut.dividedBy(tokenInAmount);
 
       const updatedCtezSupply = ctezSupply.plus(tokenInAmount);
       const updatedTezSupply = tezSupply.minus(tokenOut);
@@ -239,9 +237,11 @@ export const calculateTokensInTezCtez = (
       let priceImpact = tokenOut.minus(nextTokenOut).dividedBy(tokenOut);
       priceImpact = priceImpact.multipliedBy(100);
       priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
-      const tokenOutAmount = new BigNumber(tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6 , 1));
+      const tokenOutAmount = new BigNumber(
+        tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6, 1)
+      );
       const fees = fee.dividedBy(new BigNumber(10).pow(6));
-      const minimumOut = new BigNumber(minOut.decimalPlaces(6 , 1));
+      const minimumOut = new BigNumber(minOut.decimalPlaces(6, 1));
 
       return {
         tokenOutAmount,
@@ -251,20 +251,20 @@ export const calculateTokensInTezCtez = (
         exchangeRate,
         priceImpact,
       };
-    } else if (tokenIn === 'XTZ') {
+    } else if (tokenIn === "XTZ") {
       const dy = newton_dx_to_dy(
         tezSupply.multipliedBy(new BigNumber(2).pow(48)),
         target.multipliedBy(ctezSupply),
-        tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(new BigNumber(2).pow(48)),
+        tokenInAmount
+          .multipliedBy(new BigNumber(1000).dividedBy(999))
+          .multipliedBy(new BigNumber(2).pow(48)),
         5
       ).dividedBy(target);
       let fee = dy.dividedBy(pairFeeDenom);
       // let tokenOut = dy.minus(fee);
       let tokenOut = dy;
       // let tokenOut = dy.plus(dy.multipliedBy(0.001));
-      let minOut = tokenOut.minus(
-        slippage.multipliedBy(tokenOut).dividedBy(100)
-      );
+      let minOut = tokenOut.minus(slippage.multipliedBy(tokenOut).dividedBy(100));
       minOut = minOut.dividedBy(new BigNumber(10).pow(6));
       const exchangeRate = tokenOut.dividedBy(tokenInAmount);
 
@@ -274,7 +274,9 @@ export const calculateTokensInTezCtez = (
       const nextDy = newton_dx_to_dy(
         updatedTezSupply.multipliedBy(new BigNumber(2).pow(48)),
         target.multipliedBy(updatedCtezSupply),
-        tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(new BigNumber(2).pow(48)),
+        tokenInAmount
+          .multipliedBy(new BigNumber(1000).dividedBy(999))
+          .multipliedBy(new BigNumber(2).pow(48)),
         5
       ).dividedBy(target);
       const nextFee = nextDy.dividedBy(pairFeeDenom);
@@ -282,9 +284,11 @@ export const calculateTokensInTezCtez = (
       let priceImpact = tokenOut.minus(nextTokenOut).dividedBy(tokenOut);
       priceImpact = priceImpact.multipliedBy(100);
       priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
-      const tokenOutAmount  = new BigNumber(tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6 , 1));
+      const tokenOutAmount = new BigNumber(
+        tokenOut.dividedBy(new BigNumber(10).pow(6)).decimalPlaces(6, 1)
+      );
       const fees = fee.dividedBy(new BigNumber(10).pow(6));
-      const minimumOut = new BigNumber(minOut.decimalPlaces(6 , 1));
+      const minimumOut = new BigNumber(minOut.decimalPlaces(6, 1));
       return {
         tokenOutAmount,
         fees,
@@ -297,7 +301,7 @@ export const calculateTokensInTezCtez = (
     return {
       tokenOutAmount: new BigNumber(0),
       fees: new BigNumber(0),
-      feePerc : new BigNumber(0),
+      feePerc: new BigNumber(0),
       minimumOut: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
@@ -306,7 +310,7 @@ export const calculateTokensInTezCtez = (
     return {
       tokenOutAmount: new BigNumber(0),
       fees: new BigNumber(0),
-      feePerc : new BigNumber(0),
+      feePerc: new BigNumber(0),
       minimumOut: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
@@ -324,11 +328,11 @@ export const loadSwapDataTezCtez = async (
 
     const AMM = state.config.AMMs;
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
-    if (dexContractAddress === 'false') {
-      throw new Error('No dex found');
+    if (dexContractAddress === "false") {
+      throw new Error("No dex found");
     }
 
-    const storageResponse = await getStorage(dexContractAddress , tezCtezStorageType);
+    const storageResponse = await getStorage(dexContractAddress, tezCtezStorageType);
 
     let tezSupply: BigNumber = new BigNumber(storageResponse.tezPool);
     let ctezSupply: BigNumber = new BigNumber(storageResponse.ctezPool);
@@ -366,7 +370,7 @@ export const loadSwapDataTezCtez = async (
       target,
     };
   } catch (error) {
-    console.log({ message: 'Tez-Ctez swap data error', error });
+    console.log({ message: "Tez-Ctez swap data error", error });
     return {
       success: false,
       tokenInSupply: new BigNumber(0),
@@ -414,9 +418,7 @@ export const calculateTokensOutGeneralStable = (
     let fee = dy.dividedBy(Exchangefee);
     let tokenOutAmt = dy.minus(fee).dividedBy(tokenOutPrecision);
 
-    let minOut = tokenOutAmt.minus(
-      slippage.multipliedBy(tokenOutAmt).dividedBy(100)
-    );
+    let minOut = tokenOutAmt.minus(slippage.multipliedBy(tokenOutAmt).dividedBy(100));
     minOut = minOut.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
 
     const updatedTokenInPool = tokenInSupply.plus(tokenInAmount);
@@ -436,8 +438,8 @@ export const calculateTokensOutGeneralStable = (
     tokenOutAmt = tokenOutAmt.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
     fee = fee.dividedBy(tokenOutPrecision);
     fee = fee.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
-    const tokenOutAmount = new BigNumber(tokenOutAmt.decimalPlaces(TOKEN[tokenOut].decimals , 1));
-    const minimumOut = new BigNumber(minOut.decimalPlaces(TOKEN[tokenOut].decimals , 1));
+    const tokenOutAmount = new BigNumber(tokenOutAmt.decimalPlaces(TOKEN[tokenOut].decimals, 1));
+    const minimumOut = new BigNumber(minOut.decimalPlaces(TOKEN[tokenOut].decimals, 1));
     const fees = fee;
     const exchangeRate = tokenOutAmount.dividedBy(
       tokenInAmount.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals))
@@ -454,7 +456,7 @@ export const calculateTokensOutGeneralStable = (
     return {
       tokenOutAmount: new BigNumber(0),
       fees: new BigNumber(0),
-      feePerc : new BigNumber(0),
+      feePerc: new BigNumber(0),
       minimumOut: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
@@ -493,40 +495,38 @@ export const calculateTokensInGeneralStable = (
       5
     );
 
-      let fee = dy.dividedBy(Exchangefee);
-      // let tokenOutAmt = dy.minus(fee).dividedBy(tokenOutPrecision);
-      let tokenOutAmt = dy.dividedBy(tokenOutPrecision);
-      // tokenOutAmt = tokenOutAmt.plus(tokenOutAmt.multipliedBy(0.001));
-  
-      let minOut = tokenOutAmt.minus(
-        slippage.multipliedBy(tokenOutAmt).dividedBy(100)
-      );
-      minOut = minOut.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
-  
-      const updatedTokenInPool = tokenInSupply.plus(tokenInAmount);
-      const updatedTokenOutPool = tokenOutSupply.minus(tokenOutAmt);
-  
-      const nextDy = newton_dx_to_dy(
-        updatedTokenInPool,
-        updatedTokenOutPool,
-        tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(tokenInPrecision),
-        5
-      );
-      const nextFee = nextDy.dividedBy(Exchangefee);
-      const nextTokenOut = nextDy.minus(nextFee).dividedBy(tokenOutPrecision);
-      let priceImpact = tokenOutAmt.minus(nextTokenOut).dividedBy(tokenOutAmt);
-      priceImpact = priceImpact.multipliedBy(100);
-      priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
-      tokenOutAmt = tokenOutAmt.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
-      fee = fee.dividedBy(tokenOutPrecision);
-      fee = fee.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
-      const tokenOutAmount = new BigNumber(tokenOutAmt.decimalPlaces(TOKEN[tokenOut].decimals , 1));
-      const minimumOut = new BigNumber(minOut.decimalPlaces(TOKEN[tokenOut].decimals , 1));
-      const fees = fee;
-      const exchangeRate = tokenOutAmount.dividedBy(
-        tokenInAmount.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals))
-      );
-      
+    let fee = dy.dividedBy(Exchangefee);
+    // let tokenOutAmt = dy.minus(fee).dividedBy(tokenOutPrecision);
+    let tokenOutAmt = dy.dividedBy(tokenOutPrecision);
+    // tokenOutAmt = tokenOutAmt.plus(tokenOutAmt.multipliedBy(0.001));
+
+    let minOut = tokenOutAmt.minus(slippage.multipliedBy(tokenOutAmt).dividedBy(100));
+    minOut = minOut.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+
+    const updatedTokenInPool = tokenInSupply.plus(tokenInAmount);
+    const updatedTokenOutPool = tokenOutSupply.minus(tokenOutAmt);
+
+    const nextDy = newton_dx_to_dy(
+      updatedTokenInPool,
+      updatedTokenOutPool,
+      tokenInAmount.multipliedBy(new BigNumber(1000).dividedBy(999)).multipliedBy(tokenInPrecision),
+      5
+    );
+    const nextFee = nextDy.dividedBy(Exchangefee);
+    const nextTokenOut = nextDy.minus(nextFee).dividedBy(tokenOutPrecision);
+    let priceImpact = tokenOutAmt.minus(nextTokenOut).dividedBy(tokenOutAmt);
+    priceImpact = priceImpact.multipliedBy(100);
+    priceImpact = new BigNumber(Math.abs(Number(priceImpact)));
+    tokenOutAmt = tokenOutAmt.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+    fee = fee.dividedBy(tokenOutPrecision);
+    fee = fee.dividedBy(new BigNumber(10).pow(TOKEN[tokenOut].decimals));
+    const tokenOutAmount = new BigNumber(tokenOutAmt.decimalPlaces(TOKEN[tokenOut].decimals, 1));
+    const minimumOut = new BigNumber(minOut.decimalPlaces(TOKEN[tokenOut].decimals, 1));
+    const fees = fee;
+    const exchangeRate = tokenOutAmount.dividedBy(
+      tokenInAmount.dividedBy(new BigNumber(10).pow(TOKEN[tokenIn].decimals))
+    );
+
     return {
       tokenOutAmount,
       fees,
@@ -539,7 +539,7 @@ export const calculateTokensInGeneralStable = (
     return {
       tokenOutAmount: new BigNumber(0),
       fees: new BigNumber(0),
-      feePerc : new BigNumber(0),
+      feePerc: new BigNumber(0),
       minimumOut: new BigNumber(0),
       exchangeRate: new BigNumber(0),
       priceImpact: new BigNumber(0),
@@ -558,14 +558,14 @@ export const loadSwapDataGeneralStable = async (
     const TOKEN = state.config.tokens;
 
     const dexContractAddress = getDexAddress(tokenIn, tokenOut);
-    if (dexContractAddress === 'false') {
-      throw new Error('No dex found');
+    if (dexContractAddress === "false") {
+      throw new Error("No dex found");
     }
 
-    const storageResponse = await getStorage(dexContractAddress , stableswapStorageType);
+    const storageResponse = await getStorage(dexContractAddress, stableswapStorageType);
 
     const token1Pool = new BigNumber(storageResponse.token1Pool);
-    const token2Pool = new BigNumber(storageResponse.token2Pool);  
+    const token2Pool = new BigNumber(storageResponse.token2Pool);
     const token1Precision = new BigNumber(AMM[dexContractAddress].token1Precision as string);
     const token2Precision = new BigNumber(AMM[dexContractAddress].token2Precision as string);
 
@@ -605,7 +605,7 @@ export const loadSwapDataGeneralStable = async (
       tokenOutPrecision,
     };
   } catch (error) {
-    console.log({ message: 'Stableswap data error', error });
+    console.log({ message: "Stableswap data error", error });
     return {
       success: false,
       tokenIn,
