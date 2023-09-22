@@ -37,7 +37,6 @@ import { getTzktBigMapData, getTzktStorageData } from "../util/storageProvider";
 import { IConfigPool, IConfigTokens } from "../../config/types";
 import { getThumbnailForVeNFT } from "../util/locks";
 
-
 /**
  * Returns the list of all the locks created by a user along with the pool attached if any.
  * @param userTezosAddress - Tezos wallet address of the user
@@ -61,7 +60,7 @@ export const getAllLocksPositionData = async (
 
     let lockIdsString: string = "";
     let lockIds: string[] = [];
-    if(locksData.length > 0) {
+    if (locksData.length > 0) {
       lockIds = locksData.map((lock: any) => lock.id);
       lockIdsString = lockIds.join(",");
     }
@@ -168,7 +167,6 @@ export const getAllLocksPositionData = async (
   }
 };
 
-
 /**
  * Returns the rewards data for all the locks owned by a user.
  * @param userTezosAddress - Tezos wallet address of the user
@@ -208,7 +206,7 @@ export const getAllLocksRewardsData = async (
           );
           // If fees is not claimable and bribes data is empty after filtering out <0.1$ values,
           // then move to next iteration
-          if(!isFeeClaimable(voteData) && bribesValueAndData.bribesData.length <= 0) {
+          if (!isFeeClaimable(voteData) && bribesValueAndData.bribesData.length <= 0) {
             continue;
           }
           const feesValueAndData: IFeesValueAndData = getFeesData(
@@ -239,7 +237,7 @@ export const getAllLocksRewardsData = async (
       }
       allLocksRewardsData[lockData.lockId] = locksRewardsTokenData;
     }
-    
+
     return {
       allLocksRewardsData,
       totalTradingFeesAmount,
@@ -250,7 +248,6 @@ export const getAllLocksRewardsData = async (
     throw new Error(error.message);
   }
 };
-
 
 /**
  * Returns the required bribes data (sum of individual bribes in $ and list of individual bribes) for an amm in an epoch.
@@ -268,14 +265,13 @@ const getBribesData = (
     let bribesData: ILockRewardsBribeData[] = [];
     const bribesObj: { [tokenSymbol: string]: ILockRewardsBribeData } = {};
     for (const bribeData of bribes) {
-      if(TOKENS[bribeData.name])
-      {
+      if (TOKENS[bribeData.name]) {
         const value = new BigNumber(bribeData.value).dividedBy(
           new BigNumber(10).pow(TOKENS[bribeData.name].decimals)
         );
         const amount = value.multipliedBy(tokenPrices[bribeData.name] || 0);
         // Filtering out the bribes which are less that 0.1$ as of current price.
-        if(amount.isGreaterThanOrEqualTo(0.1)) {
+        if (amount.isGreaterThanOrEqualTo(0.1)) {
           bribesValue = bribesValue.plus(amount);
           // Sum up the bribes of all similar tokens
           if (bribesObj[bribeData.name]) {
@@ -297,7 +293,7 @@ const getBribesData = (
     }
     bribesData = Object.values(bribesObj);
 
-    if(bribesData.length > 0) {
+    if (bribesData.length > 0) {
       bribesData.sort((a, b) => b.bribePrice.minus(a.bribePrice).toNumber());
     }
     return {
@@ -309,7 +305,6 @@ const getBribesData = (
     throw new Error(error.message);
   }
 };
-
 
 /**
  * Returns the modified fee data as required (value in $) for an amm in an epoch.
@@ -327,41 +322,49 @@ const getFeesData = (
   TOKENS: IConfigTokens
 ): IFeesValueAndData => {
   try {
-    const token1Symbol = feeData.token1Symbol;
-    const token2Symbol = feeData.token2Symbol;
-    const tokenOneDecimal = new BigNumber(10).pow(
-      TOKENS[token1Symbol] ? TOKENS[token1Symbol].decimals : 0
-    );
-    const tokenTwoDecimal = new BigNumber(10).pow(
-      TOKENS[token2Symbol] ? TOKENS[token2Symbol].decimals : 0
-    );
+    if (TOKENS[feeData.token1Symbol] && TOKENS[feeData.token2Symbol]) {
+      const token1Symbol = feeData.token1Symbol;
+      const token2Symbol = feeData.token2Symbol;
+      const tokenOneDecimal = new BigNumber(10).pow(
+        TOKENS[token1Symbol] ? TOKENS[token1Symbol].decimals : 0
+      );
+      const tokenTwoDecimal = new BigNumber(10).pow(
+        TOKENS[token2Symbol] ? TOKENS[token2Symbol].decimals : 0
+      );
 
-    const tokenOneFeeValue = new BigNumber(feeData.token1Fee).dividedBy(tokenOneDecimal);
-    const tokenTwoFeeValue = new BigNumber(feeData.token2Fee).dividedBy(tokenTwoDecimal);
-    const feesOneAmount = tokenOneFeeValue.multipliedBy(tokenPrices[token1Symbol] || 0);
-    const feesTwoAmount = tokenTwoFeeValue.multipliedBy(tokenPrices[token2Symbol] || 0);
-    const tokenAFees = token1Symbol === AMM.token1.symbol ? tokenOneFeeValue : tokenTwoFeeValue;
-    const tokenBFees = token1Symbol === AMM.token2.symbol ? tokenOneFeeValue : tokenTwoFeeValue;
+      const tokenOneFeeValue = new BigNumber(feeData.token1Fee).dividedBy(tokenOneDecimal);
+      const tokenTwoFeeValue = new BigNumber(feeData.token2Fee).dividedBy(tokenTwoDecimal);
+      const feesOneAmount = tokenOneFeeValue.multipliedBy(tokenPrices[token1Symbol] || 0);
+      const feesTwoAmount = tokenTwoFeeValue.multipliedBy(tokenPrices[token2Symbol] || 0);
+      const tokenAFees = token1Symbol === AMM.token1.symbol ? tokenOneFeeValue : tokenTwoFeeValue;
+      const tokenBFees = token1Symbol === AMM.token2.symbol ? tokenOneFeeValue : tokenTwoFeeValue;
 
-    const feesStatus = feeClaimed
-      ? EFeesStatus.CLAIMED
-      : token1Symbol === "" && token2Symbol === ""
-      ? EFeesStatus.NOT_PULLED
-      : EFeesStatus.GENERATED;
-    const feesAmount =
-      feesStatus === EFeesStatus.CLAIMED ? new BigNumber(0) : feesOneAmount.plus(feesTwoAmount);
-    const feesData: ILockRewardsFeeData = { tokenAFees, tokenBFees };
-    return {
-      feesStatus,
-      feesAmount,
-      feesData,
-    };
+      const feesStatus = feeClaimed
+        ? EFeesStatus.CLAIMED
+        : token1Symbol === "" && token2Symbol === ""
+        ? EFeesStatus.NOT_PULLED
+        : EFeesStatus.GENERATED;
+      const feesAmount =
+        feesStatus === EFeesStatus.CLAIMED ? new BigNumber(0) : feesOneAmount.plus(feesTwoAmount);
+      const feesData: ILockRewardsFeeData = { tokenAFees, tokenBFees };
+      return {
+        feesStatus,
+        feesAmount,
+        feesData,
+      };
+    } else {
+      console.log("Invalid token symbol in fee data.", feeData.token1Symbol, feeData.token1Symbol);
+      return {
+        feesStatus: EFeesStatus.CLAIMED,
+        feesAmount: new BigNumber(0),
+        feesData: { tokenAFees: new BigNumber(0), tokenBFees: new BigNumber(0) },
+      };
+    }
   } catch (error: any) {
     console.log(error);
     throw new Error(error.message);
   }
 };
-
 
 /**
  * Returns the data required for all operations related to user rewards.
@@ -412,15 +415,14 @@ export const getAllRewardsOperationsData = async (
           allFeesOperationData.amms[voteData.amm].push(Number(epochNumber));
         }
         for (const bribe of voteData.bribes) {
-          if(TOKENS[bribe.name]) 
-          {
+          if (TOKENS[bribe.name]) {
             const value = new BigNumber(bribe.value).dividedBy(
               new BigNumber(10).pow(TOKENS[bribe.name].decimals)
             );
             const amount = value.multipliedBy(tokenPrices[bribe.name] || 0);
             // Claim bribe only if the bribe value is greater than 0 and the amount is
             // greater than 0.1$ as of current price.
-            if(value.isGreaterThan(0) && amount.isGreaterThanOrEqualTo(0.1)) {
+            if (value.isGreaterThan(0) && amount.isGreaterThanOrEqualTo(0.1)) {
               const bribeId = Number(bribe.bribeId);
               const amm = bribe.amm;
               allEpochClaimTokenData[epochNumber].bribeData.push({
@@ -444,7 +446,6 @@ export const getAllRewardsOperationsData = async (
     const claimableEpochData = filterEmptyEpochClaimData(allEpochClaimOperationData);
     //Format the data structure as well as filter out empty data
     const claimableFeesData = createClaimAllFeeData(allFeesClaimData);
-    
 
     return {
       epochClaimData: claimableEpochData,
@@ -456,7 +457,6 @@ export const getAllRewardsOperationsData = async (
     throw new Error(error.message);
   }
 };
-
 
 /**
  * Checks if the fee is claimable or not.
@@ -475,7 +475,6 @@ const isFeeClaimable = (voteData: IVotesUnclaimedIndexer): boolean => {
     return false;
   }
 };
-
 
 /**
  * Filters the claimable fees data for 0 values and returns the list in modified format required for operation.
@@ -499,11 +498,10 @@ const createClaimAllFeeData = (
   return claimableFeesData;
 };
 
-
 /**
  * Filters the claimable epoch data and returns the list in modified format for operation.
  * @param allEpochClaimOperationData - Claimable epoch wise data for all locks and all epochs.
- * @returns 
+ * @returns
  */
 const filterEmptyEpochClaimData = (
   allEpochClaimOperationData: IAllEpochClaimOperationData
@@ -522,7 +520,6 @@ const filterEmptyEpochClaimData = (
   });
   return claimableEpochData;
 };
-
 
 /**
  * Returns all the unclaimed data for all the lock selected.
