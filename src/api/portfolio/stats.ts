@@ -16,6 +16,7 @@ import {
 import { ILpTokenPriceList, ITokenPriceList } from "../util/types";
 import { getPositionsData } from "./pools";
 import { connectedNetwork } from "../../common/walletconnect";
+import { fetchAndCalculateTVL } from "../v3/positions";
 
 /**
  * Returns the statistical data of TVL for positions of my porfolio.
@@ -40,9 +41,10 @@ export const getTvlStatsData = async (
     // const tokenPrices = state.tokenPrice.tokenPrice;
     const PLYPrice = new BigNumber(tokenPrices["PLY"] ?? 0);
 
-    const [votesStatsData, positionsData] = await Promise.all([
+    const [votesStatsData, positionsData, v3Tvl] = await Promise.all([
       getVotesStatsData(userTezosAddress),
       getPositionsData(userTezosAddress, lPTokenPrices),
+      fetchAndCalculateTVL(userTezosAddress, tokenPrices),
     ]);
     if (!positionsData.success) {
       throw new Error(positionsData.error as string);
@@ -50,7 +52,7 @@ export const getTvlStatsData = async (
 
     const liquidityAmountSum = positionsData.liquidityAmountSum;
     const totalPLYAmount = votesStatsData.totalPlyLocked.multipliedBy(PLYPrice);
-    const tvl = liquidityAmountSum.plus(totalPLYAmount);
+    const tvl = liquidityAmountSum.plus(totalPLYAmount).plus(v3Tvl);
 
     // return {
     //   success: true,
@@ -90,9 +92,10 @@ export const getPositionStatsData = async (
     // const tokenPrices = state.tokenPrice.tokenPrice;
     const PLYPrice = new BigNumber(tokenPrices["PLY"] ?? 0);
 
-    const [votesStatsData, positionsData] = await Promise.all([
+    const [votesStatsData, positionsData, v3Tvl] = await Promise.all([
       getVotesStatsData(userTezosAddress),
       getPositionsData(userTezosAddress, lPTokenPrices),
+      fetchAndCalculateTVL(userTezosAddress, tokenPrices),
     ]);
     if (!positionsData.success) {
       throw new Error(positionsData.error as string);
@@ -100,7 +103,7 @@ export const getPositionStatsData = async (
 
     const liquidityAmountSum = positionsData.liquidityAmountSum;
     const totalPLYAmount = votesStatsData.totalPlyLocked.multipliedBy(PLYPrice);
-    const tvl = liquidityAmountSum.plus(totalPLYAmount);
+    const tvl = liquidityAmountSum.plus(totalPLYAmount).plus(v3Tvl);
 
     return {
       success: true,
@@ -132,7 +135,9 @@ export const getVotesStatsData = async (
     if (!userTezosAddress) {
       throw new Error("Invalid or empty arguments.");
     }
-    const locksResponse = await axios.get(`${Config.API_SERVER_URL[connectedNetwork]}ply/locks?address=${userTezosAddress}`);
+    const locksResponse = await axios.get(
+      `${Config.API_SERVER_URL[connectedNetwork]}ply/locks?address=${userTezosAddress}`
+    );
     const locksData = locksResponse.data.result;
     let [totalEpochVotingPower, totalPlyLocked]: [BigNumber, BigNumber] = locksData.reduce(
       ([epochVotingPowerSum, plyLockedSum]: [BigNumber, BigNumber], lock: any) =>
@@ -213,9 +218,8 @@ export const getUnclaimedInflationData = async (
         inflationOpertionData.push({ tokenId: Number(lockData.id), epochs: epochsList });
       }
       allLocksInflationData[lockData.id] = lockInflationData;
-      
     }
-    
+
     totalUnclaimedPLYValue = totalUnclaimedPLYValue.dividedBy(PLY_DECIMAL_MULTIPLIER);
     const unclaimedInflationData: IUnclaimedInflationData = {
       unclaimedInflationValue: totalUnclaimedPLYValue.multipliedBy(
