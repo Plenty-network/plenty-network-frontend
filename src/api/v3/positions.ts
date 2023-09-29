@@ -411,3 +411,25 @@ const calculateMinOut = async (
     console.log("v3 error: ", error);
   }
 };
+
+export const fetchAndCalculateTVL = async (
+  userAddress: string,
+  tokenPrices: ITokenPriceList
+): Promise<BigNumber> => {
+  try {
+    let tvl = new BigNumber(0);
+    const positions = await getPositionsAll(userAddress, tokenPrices);
+    if (!positions || positions.length === 0) {
+      return tvl;
+    }
+
+    for (let position of positions) {
+      tvl = tvl.plus(position.liquidityDollar);
+    }
+
+    return tvl;
+  } catch (error) {
+    console.error("Error fetching positions or calculating TVL: ", error);
+    return new BigNumber(0);
+  }
+};
