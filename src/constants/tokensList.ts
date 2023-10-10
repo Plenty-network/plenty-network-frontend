@@ -47,6 +47,8 @@ import ply from "../assets/Tokens/ply.png";
 import sirs from "../assets/Tokens/SIRS.png";
 import up from "../assets/Tokens/UP.png";
 import seb from "../assets/Tokens/seb.png";
+import ted from "../assets/Tokens/ted.png";
+
 import { StaticImageData } from "next/image";
 
 export const tokenIcons: { [token: string]: StaticImageData } = {
@@ -75,4 +77,5 @@ export const tokenIcons: { [token: string]: StaticImageData } = {
   UP: up,
   SEB: seb,
   kDAO: kDAO,
+  TED: ted,
 };
