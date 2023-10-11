@@ -23,7 +23,8 @@ import { ISwapDataResponse } from "../../api/swap/types";
 import { calculateTokensOutWrapper } from "../../api/swap/wrappers";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../../config/firebaseConfig";
-
+import routelogo from "../../assets/icon/common/3route.svg";
+import Image from "next/image";
 interface ISwapProps {
   className?: string;
   otherProps: {
@@ -577,6 +578,9 @@ function Swap(props: ISwapProps) {
           minimumReceived={minimumReceived}
           exchangeRate={exchangeRate}
         />
+      </div>
+      <div className="mx-auto my-3 flex items-center gap-2 text-white/[0.8] font-title2-18 w-[227px]">
+        Powered by <Image src={routelogo} width={"112px"} alt="" />{" "}
       </div>
       <SwapModal
         tokens={tokensListConfig.filter((e: any) => {
