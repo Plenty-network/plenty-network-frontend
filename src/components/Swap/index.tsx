@@ -579,8 +579,8 @@ function Swap(props: ISwapProps) {
           exchangeRate={exchangeRate}
         />
       </div>
-      <div className="mx-auto my-3 flex items-center gap-2 text-white/[0.8] font-title2-18 w-[227px]">
-        Powered by <Image src={routelogo} width={"112px"} alt="" />{" "}
+      <div className="mx-auto my-3 flex items-center gap-2 text-white/[0.8] font-body4  w-[227px]">
+        Powered by <Image src={routelogo} width={"96px"} alt="" />{" "}
       </div>
       <SwapModal
         tokens={tokensListConfig.filter((e: any) => {
