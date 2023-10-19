@@ -431,19 +431,19 @@ function SwapTab(props: ISwapTabProps) {
       );
     }
   }, [props]);
-  function reduceTo17Decimals(x: BigNumber) {
+  function reduceTo17Decimals(value: BigNumber) {
     // Convert x to a string to count the number of decimal places
-    const xString = x.toString();
+    const valueString = value.toString();
 
     // Check if x has 18 decimal places
 
-    if (xString.includes(".") && xString.split(".")[1].length === 18) {
+    if (valueString.includes(".") && valueString.split(".")[1].length === 18) {
       // Reduce to 17 decimal places
-      return x.toFixed(17);
+      return value.toFixed(17);
     }
 
     // If x doesn't have 18 decimal places, return it as is
-    return x;
+    return value;
   }
   const onClickAmount = () => {
     props.setSecondTokenAmount("");
