@@ -431,7 +431,20 @@ function SwapTab(props: ISwapTabProps) {
       );
     }
   }, [props]);
+  function reduceTo17Decimals(x: BigNumber) {
+    // Convert x to a string to count the number of decimal places
+    const xString = x.toString();
 
+    // Check if x has 18 decimal places
+
+    if (xString.includes(".") && xString.split(".")[1].length === 18) {
+      // Reduce to 17 decimal places
+      return x.toFixed(17);
+    }
+
+    // If x doesn't have 18 decimal places, return it as is
+    return x;
+  }
   const onClickAmount = () => {
     props.setSecondTokenAmount("");
 
@@ -441,7 +454,9 @@ function SwapTab(props: ISwapTabProps) {
           "tokenIn"
         )
       : props.handleSwapTokenInput(
-          props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance.toString(),
+          reduceTo17Decimals(
+            props.allBalance?.allTokensBalances[props.tokenIn.name]?.balance
+          ).toString(),
           "tokenIn"
         );
   };
