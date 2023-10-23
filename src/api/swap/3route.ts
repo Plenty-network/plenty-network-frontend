@@ -52,7 +52,7 @@ export const threeRouteRouter = async (
     });
 
     let param = {
-      app_id: "4",
+      app_id: "0",
       min_out: BigNumber(routeSwapURL.data.output)
         .multipliedBy(new BigNumber(10).pow(tokenOutDecimals))
         .multipliedBy(slippage)
@@ -65,24 +65,15 @@ export const threeRouteRouter = async (
     };
 
     const hopsReal = new Map();
-    for (let i = 0; i < routeSwapURL.data.chains.length; i++) {
-      const chain = routeSwapURL.data.chains[i];
-      for (let j = 0; j < chain.hops.length; j++) {
-        const hop = chain.hops[j];
-
-        hopsReal.set(hopsReal.size, {
-          code: ((j === 0 ? 1 : 0) + (hop.forward ? 2 : 0)).toString(),
-          dex_id: hop.dex.toString(),
-          amount_opt:
-            j === 0
-              ? BigNumber(chain.input)
-                  .multipliedBy(new BigNumber(10).pow(tokenInDecimals))
-                  .decimalPlaces(0, 1)
-                  .toString()
-              : undefined,
-          params: "",
-        });
-      }
+    for (let i = 0; i < routeSwapURL.data.hops.length; i++) {
+      const hop = routeSwapURL.data.hops[i];
+      hopsReal.set(hopsReal.size, {
+        code: hop.code,
+        dex_id: hop.dexId.toString(),
+        amount_from_token_in_reserves: hop.tokenInAmount.toString(),
+        amount_from_trading_balance: hop.tradingBalanceAmount.toString(),
+        params: hop.params == null ? "" : hop.params,
+      });
     }
 
     hopsReal.forEach((value, key) => {
@@ -121,9 +112,7 @@ export const estimateSwapOutput = async (
     );
 
     let tokenOutValue = BigNumber(routeSwapURL.data.output);
-    let minReceived = BigNumber(routeSwapURL.data.output)
-      .multipliedBy(slippage)
-      .toString();
+    let minReceived = BigNumber(routeSwapURL.data.output).multipliedBy(slippage).toString();
     return {
       tokenOutValue,
       minReceived,
@@ -133,7 +122,7 @@ export const estimateSwapOutput = async (
     return {
       // @ts-ignore
       tokenOutValue: 0,
-      minReceived: '0',
+      minReceived: "0",
     };
   }
 };
