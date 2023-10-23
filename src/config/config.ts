@@ -56,7 +56,7 @@ const Config: IConfig = {
     mainnet: "KT1HpNxd9RaeCwxrp1QX96DyocWURJXX8sZx",
     testnet: "KT1J3EQDZbLUR1Hp8TZKFwY5FLoekiPSgsmL",
   },
-  PLENTY_3ROUTE_CONTRACT: "KT1R7WEtNNim3YgkxPt8wPMczjH3eyhbJMtz",
+  PLENTY_3ROUTE_CONTRACT: "KT1V5XKmeypanMS9pR65REpqmVejWBZURuuT",
   FAUCET: "KT1RZREo5PFKCGSgtfoMUzXqisT6mFQ1qxhH",
 
   AIRDROP_SERVER: {
@@ -118,7 +118,7 @@ const Config: IConfig = {
     },
   },
   PLENTY_3ROUTE_URL: {
-    mainnet: "https://plenty.3route.io/v3/",
+    mainnet: "https://plenty.3route.io/v4/",
     testnet: "",
   },
 };
