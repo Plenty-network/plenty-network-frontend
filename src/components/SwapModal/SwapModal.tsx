@@ -15,6 +15,7 @@ import nFormatter, { changeSource, tEZorCTEZtoUppercase } from "../../api/util/h
 import { tokenIcons } from "../../constants/tokensList";
 import { useAppSelector } from "../../redux";
 
+// Define the props interface for the component
 interface ISwapModalProps {
   tokens: {
     name: string;
@@ -34,9 +35,16 @@ interface ISwapModalProps {
   isLoading: boolean;
   isSuccess: boolean;
 }
+
+// Define the SwapModal component
 function SwapModal(props: ISwapModalProps) {
+  // Access Redux state using the useAppSelector hook
   const tokens = useAppSelector((state) => state.config.tokens);
+
+  // Create a ref for the search input element
   const searchTokenEl = useRef(null);
+
+  // State to store the list of tokens to display
   const [tokensToShow, setTokensToShow] = useState<
     | {
         name: string;
@@ -46,6 +54,8 @@ function SwapModal(props: ISwapModalProps) {
       }[]
     | []
   >([]);
+
+  // State to store the list of top tokens
   const [topTokens, setTopTokens] = useState<{
     [id: string]: number;
   }>(
@@ -53,12 +63,15 @@ function SwapModal(props: ISwapModalProps) {
       [id: string]: number;
     }
   );
+
+  // Fetch the top tokens when the component mounts
   useEffect(() => {
     topTokensList().then((res) => {
       setTopTokens(res.topTokens);
     });
   }, []);
 
+  // Create an array from the topTokens object
   const topTokensListArray = useMemo(() => {
     const tokensArray = Object.entries(topTokens);
     return tokensArray.map((token) => ({
@@ -67,6 +80,7 @@ function SwapModal(props: ISwapModalProps) {
     }));
   }, [topTokens]);
 
+  // Callback function to filter tokens based on search query
   const searchHits = useCallback(
     (token: { name: string; image: string; chainType: Chain; address: string | undefined }) => {
       return (
@@ -79,22 +93,21 @@ function SwapModal(props: ISwapModalProps) {
     },
     [props.searchQuery]
   );
+
+  // Effect to filter and update the displayed tokens
   useEffect(() => {
     const filterTokens = () => {
-      const filterTokenslist = props.tokens
-        .filter(searchHits)
-
-        .map((token) => {
-          return { ...token };
-        });
+      const filterTokenslist = props.tokens.filter(searchHits).map((token) => {
+        return { ...token };
+      });
 
       setTokensToShow(filterTokenslist);
     };
+
     filterTokens();
   }, [
     props.tokens,
     props.searchQuery,
-
     props.tokenType,
     props.tokenIn.name,
     props.tokenOut.name,

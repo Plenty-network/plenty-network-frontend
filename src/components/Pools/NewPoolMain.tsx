@@ -73,26 +73,30 @@ interface ILiquidityProps {
   contractTokenBalance: IAllTokensBalance;
   setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
+// Define a constant for pair types
 export const Pair = {
   VOLATILE: "Volatile pair",
   STABLE: "Stable pair",
 };
 function NewPoolMain(props: ILiquidityProps) {
+  // Redux state selectors
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const amm = useAppSelector((state) => state.config.AMMs);
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const walletAddress = useAppSelector((state) => state.wallet.address);
   const dispatch = useDispatch<AppDispatch>();
+  // Function to connect to Temple Wallet
   const connectTempleWallet = () => {
     return dispatch(walletConnection());
   };
+  // Local state for active state, existence, and gauge
   const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
     ActiveLiquidity.Liquidity
   );
   const [isExist, setIsExist] = useState(false);
   const [isGauge, setIsGauge] = useState(false);
   const [showNewPoolsManage, setShowNewPoolsManage] = useState<boolean>(false);
-
+  // Function to show or hide the New Pools Manage popup
   const handleNewPoolsManagePopup = (val: boolean) => {
     setShowNewPoolsManage(val);
   };
@@ -117,6 +121,7 @@ function NewPoolMain(props: ILiquidityProps) {
       }
     }
   }, [props.tokenIn, props.tokenOut]);
+  // Button component based on wallet status, input validation, and other conditions
 
   const AddButton = useMemo(() => {
     if (!walletAddress) {
@@ -178,7 +183,7 @@ function NewPoolMain(props: ILiquidityProps) {
     props.userBalances,
     isExist,
   ]);
-
+  // Function to handle liquidity input
   const handleLiquidityInput = async (
     input: string | number,
     tokenType: "tokenIn" | "tokenOut"
@@ -206,6 +211,7 @@ function NewPoolMain(props: ILiquidityProps) {
       props.setSecondTokenAmount(input.toString().trim());
     }
   };
+  // Function to handle clicking on the first token amount
   const onClickAmount = () => {
     props.tokenIn.name === "tez"
       ? handleLiquidityInput(
@@ -214,7 +220,7 @@ function NewPoolMain(props: ILiquidityProps) {
         )
       : handleLiquidityInput(props.userBalances[props.tokenIn.name]?.balance.toNumber(), "tokenIn");
   };
-
+  // Function to handle clicking on the second token amount
   const onClickSecondAmount = () => {
     props.tokenOut.name === "tez"
       ? handleLiquidityInput(
