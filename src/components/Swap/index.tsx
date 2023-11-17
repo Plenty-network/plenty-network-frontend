@@ -25,6 +25,8 @@ import { logEvent } from "firebase/analytics";
 import { analytics } from "../../config/firebaseConfig";
 import routelogo from "../../assets/icon/common/3route.svg";
 import Image from "next/image";
+
+// Define component props
 interface ISwapProps {
   className?: string;
   otherProps: {
@@ -35,6 +37,8 @@ interface ISwapProps {
 }
 
 function Swap(props: ISwapProps) {
+  // Define and initialize various states and references for the component
+
   const TOKEN = useAppSelector((state) => state.config.tokens);
   const tokenPrice = useAppSelector((state) => state.tokenPrice.tokenPrice);
   const userSettings = useAppSelector((state) =>
@@ -109,7 +113,7 @@ function Swap(props: ISwapProps) {
     success: false,
     allTokensBalances: {} as IAllTokensBalance,
   });
-
+  // Load all token balances when wallet address or tokens change
   useEffect(() => {
     setAllBalance({
       success: false,
@@ -129,7 +133,7 @@ function Swap(props: ISwapProps) {
       });
     }
   }, [walletAddress, tokens, balanceUpdate]);
-
+  // Update slippage and multi-hop setting from user settings
   useEffect(() => {
     setSlippage(userSettings.slippage);
     setEnableMultiHop(userSettings.multiHop);
@@ -154,7 +158,7 @@ function Swap(props: ISwapProps) {
       }
     }
   }, [tokenIn.name, tokenOut.name, walletAddress, enableMultiHop]);
-
+  // Calculate the exchange rate when input tokens change
   useEffect(() => {
     if (
       Object.prototype.hasOwnProperty.call(tokenIn, "name") &&
@@ -239,13 +243,13 @@ function Swap(props: ISwapProps) {
     isSwitchClicked.current,
     balanceUpdate,
   ]);
-
+  // Clear the second token amount if the first token amount is cleared
   useEffect(() => {
     if (firstTokenAmount === "") {
       setSecondTokenAmount("");
     }
   }, [firstTokenAmount, secondTokenAmount]);
-
+  // Handle changes in the first or second token input
   const handleSwapTokenInput = (input: string | number, tokenType: "tokenIn" | "tokenOut") => {
     isSwitchClicked.current = false;
     var flag = 1;
@@ -356,18 +360,18 @@ function Swap(props: ISwapProps) {
       setErrorMessage("");
     }
   };
-
+  // Handle token type changes (tokenIn or tokenOut)
   const handleTokenType = (type: tokenType) => {
     setBalanceUpdate(false);
     setSwapModalShow(true);
     setTokenType(type);
   };
-
+  // Close the swap modal
   const handleClose = () => {
     setSwapModalShow(false);
     setSearchQuery("");
   };
-
+  // Reset all input values
   const resetAllValues = () => {
     setFirstTokenAmount("");
     setSecondTokenAmount("");
@@ -386,6 +390,7 @@ function Swap(props: ISwapProps) {
       exchangeRate: new BigNumber(0),
     };
   };
+  // Select a token from the modal
   const selectToken = (token: tokensModal) => {
     isSwitchClicked.current = false;
     if ((tokenType === "tokenOut" || tokenType === "tokenIn") && firstTokenAmount !== "") {
@@ -409,6 +414,7 @@ function Swap(props: ISwapProps) {
     }
     handleClose();
   };
+  // Change the location of tokens (switch them)
   const changeTokenLocation = () => {
     if (process.env.NODE_ENV === "production") {
       logEvent(analytics, "swap_switch_clicked", { id: walletAddress });
@@ -502,7 +508,7 @@ function Swap(props: ISwapProps) {
       setTokenOut({} as tokenParameter);
     }
   };
-
+  // Generate the tokens list configuration
   const tokensListConfig = useMemo(() => {
     return tokensArray.map((token) => ({
       name: token[0],
@@ -511,6 +517,7 @@ function Swap(props: ISwapProps) {
       address: token[1].address,
     }));
   }, [tokens]);
+  // Sort the tokens list configuration by balance
   useEffect(() => {
     if (allBalance.success && Object.keys(allBalance.allTokensBalances).length !== 0) {
       tokensListConfig.sort(

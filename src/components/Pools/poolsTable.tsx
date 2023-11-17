@@ -39,6 +39,7 @@ import {
 } from "../../redux/pools/manageLiqV2";
 import Link from "next/link";
 
+// Define the props for ShortCard component
 export interface IShortCardProps {
   className?: string;
   poolsFilter?: POOL_TYPE;
@@ -50,14 +51,14 @@ export interface IShortCardProps {
   setShowLiquidityModal: (val: boolean) => void;
   showLiquidityModal: boolean;
   reFetchPool: boolean;
-  //data: IAllPoolsData[];
   isFetching: boolean;
   isError: boolean;
   setShowLiquidityModalPopup: React.Dispatch<React.SetStateAction<boolean>>;
   poolFilterwithTvl: boolean;
 }
+
+// Define the props for ManageBtn component
 export interface IManageBtnProps {
-  // setIsGaugeAvailable: React.Dispatch<React.SetStateAction<boolean>>;
   isLiquidityAvailable: boolean;
   setShowLiquidityModal: (val: boolean) => void;
   isStakeAvailable: boolean;
@@ -65,33 +66,37 @@ export interface IManageBtnProps {
   tokenB: string;
   isGauge: boolean;
 }
+
+// ShortCard is a React functional component
 export function ShortCard(props: IShortCardProps) {
+  // Retrieve user's address from Redux store
   const userAddress = useAppSelector((state) => state.wallet.address);
+
+  // Get the Redux dispatch function
   const dispatch = useDispatch<AppDispatch>();
+
+  // Utilize a hook for number formatting
   const { valueFormat } = useTableNumberUtils();
+
+  // Get token prices from Redux store
   const tokenPrices = useAppSelector((state) => state.tokenPrice.tokenPrice);
 
+  // Fetch and filter pool table data
   const { data: poolTableData = [], isFetched: isFetch = false } = usePoolsTableFilter(
     tokenPrices,
     props.poolsFilter,
-
     props.reFetchPool,
     0,
     props.poolFilterwithTvl
   );
 
+  // Search and filter pool table data
   const [poolsTableData, isFetched] = usePoolsTableSearch(
     poolTableData,
     props.searchValue,
     isFetch,
     poolTableData.length
   );
-
-  // const [activeState, setActiveState] = React.useState<ActiveLiquidity | string>(
-  //   ActiveLiquidity.Liquidity
-  // );
-
-  //const [isGaugeAvailable, setIsGaugeAvailable] = React.useState(false);
 
   const getImagesPath = (name: string, isSvg?: boolean) => {
     if (isSvg) return `/assets/tokens/${name}.svg`;
@@ -119,17 +124,8 @@ export function ShortCard(props: IShortCardProps) {
       return <NoDataError content={"No pools data"} />;
     }
   }, [userAddress, poolsTableData, isFetched, props.isFetching]);
-  // const [tokenIn, setTokenIn] = React.useState<tokenParameterLiquidity>({
-  //   name: "USDC.e",
-  //   image: `/assets/tokens/USDC.e.png`,
-  //   symbol: "USDC.e",
-  // });
-  // const [tokenOut, setTokenOut] = React.useState<tokenParameterLiquidity>({
-  //   name: "USDT.e",
-  //   image: `/assets/tokens/USDT.e.png`,
-  //   symbol: "USDT.e",
-  // });
 
+  // Define the columns for the mobile view
   const mobilecolumns = React.useMemo<Column<IAllPoolsData>[]>(
     () => [
       {
@@ -309,6 +305,7 @@ export function ShortCard(props: IShortCardProps) {
     ],
     [valueFormat]
   );
+  // Define the columns for the desktop view
   const desktopcolumns = React.useMemo<Column<IAllPoolsData>[]>(
     () => [
       {
@@ -506,7 +503,7 @@ export function ShortCard(props: IShortCardProps) {
     ],
     [valueFormat]
   );
-
+  // Define a component for the "Manage" button
   function ManageBtn(props: IManageBtnProps): any {
     return (
       <Link href={`/pools/v2/manageLiquidity`}>
@@ -567,19 +564,6 @@ export function ShortCard(props: IShortCardProps) {
   }
   return (
     <>
-      {/* {props.showLiquidityModal && (
-        <ManageLiquidity
-          tokenIn={tokenIn}
-          tokenOut={tokenOut}
-          closeFn={props.setShowLiquidityModal}
-          setActiveState={setActiveState}
-          activeState={activeState}
-          isGaugeAvailable={isGaugeAvailable}
-          showLiquidityModal={props.showLiquidityModal}
-          setShowLiquidityModalPopup={props.setShowLiquidityModalPopup}
-          filter={props.poolsFilter}
-        />
-      )} */}
       <div className={` overflow-x-auto innerPool  ${props.className}`}>
         <Table<any>
           columns={isMobile ? mobilecolumns : desktopcolumns}

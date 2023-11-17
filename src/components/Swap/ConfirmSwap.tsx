@@ -1,26 +1,26 @@
-import clsx from "clsx";
 import Button from "../Button/Button";
 import { PopUpModal } from "../Modal/popupModal";
-import { isMobile } from "react-device-detect";
+
 import Image from "next/image";
 import ratesrefresh from "../../../src/assets/icon/swap/ratesrefresh.svg";
 import { useMemo, useState } from "react";
 import arrow from "../../../src/assets/icon/swap/downArrow.svg";
 import info from "../../../src/assets/icon/swap/info.svg";
 import { BigNumber } from "bignumber.js";
-import stableSwap from "../../../src/assets/icon/swap/stableswapViolet.svg";
+
 import { tokenIcons } from "../../constants/tokensList";
 import { Position, ToolTip } from "../Tooltip/TooltipAdvanced";
 import { changeSource, tEZorCTEZtoUppercase } from "../../api/util/helpers";
 import { Chain } from "../../config/types";
 import { useAppSelector } from "../../redux";
 
+// Define the props for the ConfirmSwap component
 interface IConfirmSwapProps {
-  show: boolean;
-  setShow: any;
-  tokenIn: { name: string; image: any };
-  tokenOut: { name: string; image: any };
-  firstTokenAmount: string | number;
+  show: boolean; // Show or hide the ConfirmSwap component
+  setShow: any; // Function to set the visibility of the ConfirmSwap component
+  tokenIn: { name: string; image: any }; // Details of the first token
+  tokenOut: { name: string; image: any }; // Details of the second token
+  firstTokenAmount: string | number; // Amount of the first token
   routeDetails: {
     path: string[];
     minimumOut: BigNumber;
@@ -31,39 +31,50 @@ interface IConfirmSwapProps {
     isStable: boolean[];
     exchangeRate: BigNumber;
     success: boolean;
-  };
-  secondTokenAmount: string | number;
-  onClick: () => void;
+  }; // Details of the swap route
+  secondTokenAmount: string | number; // Amount of the second token
+  onClick: () => void; // Function to handle the click event
   tokens: {
     name: string;
     image: string;
     chainType: Chain;
     address: string | undefined;
-  }[];
-  minimumReceived: BigNumber;
-  exchangeRate: BigNumber;
+  }[]; // List of available tokens
+  minimumReceived: BigNumber; // Minimum amount to be received
+  exchangeRate: BigNumber; // Exchange rate
 }
+
+// Define the ConfirmSwap component
 function ConfirmSwap(props: IConfirmSwapProps) {
+  // Access the tokens state from Redux
   const tokens = useAppSelector((state) => state.config.tokens);
+
+  // State to manage the conversion rates display
   const [isConvert, setConvert] = useState(false);
+
+  // Function to toggle the conversion rates display
   const convertRates = (e: any) => {
     e.stopPropagation();
     setConvert(!isConvert);
   };
+
+  // Function to close the ConfirmSwap modal
   const closeModal = () => {
     props.setShow(false);
   };
+
+  // Generate the swapRoute array based on routeDetails
   const swapRoute = useMemo(() => {
     if (props.routeDetails.path?.length >= 2) {
       return props.routeDetails.path.map((tokenName) =>
         props.tokens.find((token) => token.name === tokenName)
       );
     }
-
     return null;
   }, [props.routeDetails.path]);
 
   return props.show ? (
+    // Render the ConfirmSwap component when 'show' is true
     <PopUpModal title="Confirm Swap" onhide={closeModal}>
       {
         <>
