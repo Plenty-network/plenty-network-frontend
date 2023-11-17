@@ -136,6 +136,16 @@ function PriceRangeV3(props: IPriceRangeProps) {
     props.isClearAll && props.setFullRange(false);
   }, [props.isClearAll]);
 
+  function debounce(fn: any, delay: number | undefined) {
+    let timer: NodeJS.Timeout | undefined;
+    return function (...args: any) {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        fn(...args);
+      }, delay);
+    };
+  }
+
   const onLeftRangeInputFn = (value: string) => {
     if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
       getTickFromRealPrice(
@@ -189,6 +199,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
     // }
   };
   const onRightRangeInputFn = (value: string) => {
+    dispatch(setRightRangeInput(value));
+
     if (Number(value) <= 0 || value == "-" || value === "" || isNaN(Number(value))) {
       if (topLevelSelectedToken.symbol === tokeninorg.symbol) {
         getTickFromRealPrice(
@@ -280,6 +292,9 @@ function PriceRangeV3(props: IPriceRangeProps) {
     //     : dispatch(setBRightRangeInput(value));
     // }
   };
+  const leftdebo = debounce(onLeftRangeInputFn, 2000);
+  const rightdebo = debounce(onRightRangeInputFn, 2000);
+
   const fullrangeCalc = (value: boolean) => {
     props.setFullRange(!props.isFullRange);
     //dispatch(props.setFullRange(!props.isFullRange));
@@ -309,12 +324,7 @@ function PriceRangeV3(props: IPriceRangeProps) {
       );
     }
   };
-  // console.log(
-  //   Number(leftRangeInput),
-  //   percentage(),
-  //   (Number(leftRangeInput) - Number(leftRangeInput) * Number(percentage())).toString(),
-  //   "valueminus"
-  // );
+
   return (
     <div>
       <div className="mx-auto md:w-[400px] w-[362px]   px-[10px]  pt-2 pb-6  mb-5 h-[254px]">
@@ -435,7 +445,10 @@ function PriceRangeV3(props: IPriceRangeProps) {
                             : BleftRangeInput
                         }
                         placeholder="0.0"
-                        onChange={(e) => onLeftRangeInputFn(e.target.value)}
+                        onChange={(e) => {
+                          dispatch(setleftRangeInput(e.target.value));
+                          leftdebo(e.target.value);
+                        }}
                       />
                     </div>
                   </ToolTip>
@@ -540,7 +553,10 @@ function PriceRangeV3(props: IPriceRangeProps) {
                             : BrightRangeInput
                         }
                         placeholder="0.0"
-                        onChange={(e) => onRightRangeInputFn(e.target.value)}
+                        onChange={(e) => {
+                          dispatch(setRightRangeInput(e.target.value));
+                          rightdebo(e.target.value);
+                        }}
                       />
                     </div>
                   </ToolTip>
@@ -651,7 +667,10 @@ function PriceRangeV3(props: IPriceRangeProps) {
                           : BleftRangeInput
                       }
                       placeholder="0.0"
-                      onChange={(e) => onLeftRangeInputFn(e.target.value)}
+                      onChange={(e) => {
+                        dispatch(setleftRangeInput(e.target.value));
+                        leftdebo(e.target.value);
+                      }}
                     />
                   </div>
                 </ToolTip>
@@ -753,7 +772,10 @@ function PriceRangeV3(props: IPriceRangeProps) {
                           : BrightRangeInput
                       }
                       placeholder="0.0"
-                      onChange={(e) => onRightRangeInputFn(e.target.value)}
+                      onChange={(e) => {
+                        dispatch(setRightRangeInput(e.target.value));
+                        rightdebo(e.target.value);
+                      }}
                     />
                   </div>
                 </ToolTip>

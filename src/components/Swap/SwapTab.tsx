@@ -142,6 +142,7 @@ function SwapTab(props: ISwapTabProps) {
   const [isFirstInputFocus, setIsFirstInputFocus] = useState(false);
   const dispatch = useAppDispatch();
   const [isRefresh, setRefresh] = useState(false);
+  // Refresh Data Function
   const refreshAllData = (value: boolean) => {
     setRefresh(value);
     setTimeout(() => {
@@ -150,6 +151,7 @@ function SwapTab(props: ISwapTabProps) {
       setRefresh(false);
     }, 500);
   };
+  // Handling Percentage Price Change
   const [priceDiff, setpriceDiff] = useState("");
   useEffect(() => {
     if (
@@ -171,15 +173,18 @@ function SwapTab(props: ISwapTabProps) {
       setpriceDiff("");
     }
   }, [props.firstTokenAmount, props.secondTokenAmount]);
-
+  // Expert Mode and User Settings Handling
   useEffect(() => {
     setExpertMode(userSettings.expertMode);
   }, [props.walletAddress, userSettings]);
+  // Function to Handle Transaction Submission
   const transactionSubmitModal = (id: string) => {
     setTransactionId(id);
     props.setShowTransactionSubmitModal(true);
   };
+  // Handling Conversion Rates
   const [isConvert, setConvert] = useState(false);
+  // Handling Swap
   const handleSwap = () => {
     if (process.env.NODE_ENV === "production") {
       logEvent(analytics, "swap_main_cta_clicked", { id: props.walletAddress });
@@ -191,6 +196,7 @@ function SwapTab(props: ISwapTabProps) {
     e.stopPropagation();
     setConvert(!isConvert);
   };
+  // Handling Swap Confirmation
   const handleConfirmSwap = () => {
     if (process.env.NODE_ENV === "production") {
       logEvent(analytics, "swap_confirm_swap_clicked", { id: props.walletAddress });
@@ -210,7 +216,9 @@ function SwapTab(props: ISwapTabProps) {
     !expertMode && props.setShowConfirmSwap(false);
     const recepientAddress = props.recepient ? props.recepient : props.walletAddress;
     !expertMode && props.setShowConfirmTransaction(true);
+    // Checking for multi-hop or direct swap
     if (props.enableMultiHop) {
+      // Multi-hop swap
       routerSwap(
         props.tokenIn.name,
         props.tokenOut.name,
@@ -292,6 +300,7 @@ function SwapTab(props: ISwapTabProps) {
         }
       });
     } else {
+      // Direct swap
       directSwapWrapper(
         props.tokenIn.name,
         props.tokenOut.name,
@@ -375,7 +384,7 @@ function SwapTab(props: ISwapTabProps) {
       });
     }
   };
-
+  // Swap Button
   const SwapButton = useMemo(() => {
     if (props.walletAddress) {
       if (Object.keys(props.tokenOut).length === 0) {
