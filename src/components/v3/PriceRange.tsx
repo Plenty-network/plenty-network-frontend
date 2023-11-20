@@ -292,8 +292,8 @@ function PriceRangeV3(props: IPriceRangeProps) {
     //     : dispatch(setBRightRangeInput(value));
     // }
   };
-  const leftdebo = debounce(onLeftRangeInputFn, 2000);
-  const rightdebo = debounce(onRightRangeInputFn, 2000);
+  const leftdebo = debounce(onLeftRangeInputFn, 5000);
+  const rightdebo = debounce(onRightRangeInputFn, 5000);
 
   const fullrangeCalc = (value: boolean) => {
     props.setFullRange(!props.isFullRange);
