@@ -47,6 +47,7 @@ import ply from "../assets/Tokens/ply.png";
 import sirs from "../assets/Tokens/SIRS.png";
 import up from "../assets/Tokens/UP.png";
 import seb from "../assets/Tokens/seb.png";
+import pole from "../assets/Tokens/POLE.png";
 import ted from "../assets/Tokens/ted.png";
 
 import { StaticImageData } from "next/image";
@@ -60,6 +61,7 @@ export const tokenIcons: { [token: string]: StaticImageData } = {
   "MATIC.e": matic_normal,
   "BUSD.e": busd_normal,
   "USDT.e": usdt_normal,
+  "$POLE ": pole,
   DOGA: doga,
   XTZ: xtz,
   TEZ: xtz,
