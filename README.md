@@ -40,8 +40,8 @@ For steps on local deployment, development, and code contribution, please see [C
 
 ## Accessing Plenty network
 
-- Swap on Plenty network: https://app.plenty.network/swap
-- View and manage pools : https://app.plenty.network/pools
+- Swap on Plenty: https://app.plenty.network/swap
+- View and manage pools: https://app.plenty.network/pools
 - Vote on favourite pools with VeNFT: https://app.plenty.network/vote
 - Bribe users to vote on my pool: https://app.plenty.network/bribes
 
