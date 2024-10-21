@@ -4,7 +4,7 @@ const nextConfig = {
 };
 
 module.exports = {
-  target: "serverless",
+  // target: "serverless",
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -34,5 +34,16 @@ module.exports = {
         permanent: true,
       },
     ];
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    return config;
   },
 };

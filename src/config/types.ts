@@ -1,4 +1,4 @@
-import { NetworkType } from "@airgap/beacon-types";
+// import { NetworkType } from "@airgap/beacon-types";
 
 export interface IConfig {
   // STANDARD_CONFIG: string;
@@ -26,7 +26,8 @@ export interface IConfig {
   // };
 
   NETWORK: "mainnet" | "testnet";
-  WALLET_NETWORK: NetworkType;
+  // WALLET_NETWORK: NetworkType;
+  WALLET_NETWORK: string;
   ADMIN_ADDRESS: string;
   BURNER: string;
   VE_SWAP: { mainnet: string; testnet: string };

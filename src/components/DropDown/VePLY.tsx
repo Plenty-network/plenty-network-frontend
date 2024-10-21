@@ -6,7 +6,9 @@ import { useOutsideClick } from "../../utils/outSideClickHook";
 import { IVePLYData } from "../../api/stake/types";
 import { ELocksState } from "../../api/votes/types";
 import loader from "../../assets/animations/shimmer-swap.json";
-import Lottie from "lottie-react";
+import dynamic from 'next/dynamic';
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 export interface IDropdownProps {
   Options: IVePLYData[];

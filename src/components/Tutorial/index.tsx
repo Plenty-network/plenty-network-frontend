@@ -1,4 +1,4 @@
-import Lottie from "lottie-react";
+import dynamic from 'next/dynamic';
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
@@ -17,6 +17,8 @@ interface ITutorialProps {
   show: boolean;
   setShow: any;
 }
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 function Tutorial(props: ITutorialProps) {
   const STEPS: {

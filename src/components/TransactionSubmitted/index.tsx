@@ -1,8 +1,10 @@
-import Lottie from "lottie-react";
 import Image from "next/image";
 import externalLink from "../../../src/assets/icon/common/externalLink.svg";
 import animation from "../../assets/animations/transaction-submitted.json";
 import { PopUpModal } from "../Modal/popupModal";
+import dynamic from 'next/dynamic';
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 interface ITransactionSubmittedProps {
   show: boolean;

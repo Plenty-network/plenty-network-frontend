@@ -1,6 +1,8 @@
+import dynamic from 'next/dynamic';
 import { PopUpModal } from "../Modal/popupModal";
 import loader from "../../assets/animations/loader.json";
-import Lottie from "lottie-react";
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 interface IConfirmTransactionProps {
   show: boolean;

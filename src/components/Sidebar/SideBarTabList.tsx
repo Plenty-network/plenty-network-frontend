@@ -30,7 +30,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
   if (props.pathName) {
     return (
       <Link className={`md:flex w-full flex-col ${props?.className}`} href={props.pathName}>
-        <a target={props.openNewPage ? "_blank" : ""} rel="noopener noreferrer">
+        {/* <a target={props.openNewPage ? "_blank" : ""} rel="noopener noreferrer"> */}
           <ToolTip
             position={Position.bottom}
             disable={props.isToolTip ? false : true}
@@ -89,7 +89,7 @@ export function SingleSideBar(props: ISingleSideBarProps) {
               )}
             </div>{" "}
           </ToolTip>
-        </a>
+        {/* </a> */}
       </Link>
     );
   }
