@@ -29,68 +29,71 @@ export function SingleSideBar(props: ISingleSideBarProps) {
 
   if (props.pathName) {
     return (
-      <a
+      <Link
         className={`md:flex w-full flex-col border-l-0 ${props?.className}`}
         href={props.pathName}
-        target={props.openNewPage ? "_blank" : ""}
-        rel="noopener noreferrer"
       >
-        <ToolTip
-          position={Position.bottom}
-          disable={props.isToolTip ? false : true}
-          toolTipChild={
-            <TooltipViolet
-              rate1={`1 WRAP = ${Config.EXCHANGE_TOKENS.WRAP.exchangeRate} PLY`}
-              rate2={`1 PLENTY = ${Config.EXCHANGE_TOKENS.PLENTY.exchangeRate} PLY`}
-            />
-          }
-          type={TooltipType.withoutBorder}
+        <a
+          target={props.openNewPage ? "_blank" : ""}
+          rel="noopener noreferrer"
         >
-          <div
-            className={`flex   items-center justify-between  ${props.pathName === router.pathname ? "sideNavactive text-white" : "text-text-250"
-              } ${props.isSubmenu
-                ? "pl-[26px] pr-6 h-[42px] w-[85%] ml-auto "
-                : !props.isBottomMenu
-                  ? "pl-6 pr-[20px] h-[50px] w-full"
-                  : props.name === "V2" || props.name === "V3"
-                    ? "pl-8 h-[50px]"
-                    : "  h-[50px] "
-              } text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-muted-250/60 ${!props.isBottomMenu ? "border-x-2" : ""
-              } border border-transprent `}
+          <ToolTip
+            position={Position.bottom}
+            disable={props.isToolTip ? false : true}
+            toolTipChild={
+              <TooltipViolet
+                rate1={`1 WRAP = ${Config.EXCHANGE_TOKENS.WRAP.exchangeRate} PLY`}
+                rate2={`1 PLENTY = ${Config.EXCHANGE_TOKENS.PLENTY.exchangeRate} PLY`}
+              />
+            }
+            type={TooltipType.withoutBorder}
           >
-            <div className="flex  gap-4">
-              {props.iconName && (
+            <div
+              className={`flex   items-center justify-between  ${props.pathName === router.pathname ? "sideNavactive text-white" : "text-text-250"
+                } ${props.isSubmenu
+                  ? "pl-[26px] pr-6 h-[42px] w-[85%] ml-auto "
+                  : !props.isBottomMenu
+                    ? "pl-6 pr-[20px] h-[50px] w-full"
+                    : props.name === "V2" || props.name === "V3"
+                      ? "pl-8 h-[50px]"
+                      : "  h-[50px] "
+                } text-gray-300 hover:text-gray-500 cursor-pointer items-center  hover:bg-muted-250/60 ${!props.isBottomMenu ? "border-x-2" : ""
+                } border border-transprent `}
+            >
+              <div className="flex  gap-4">
+                {props.iconName && (
+                  <Image
+                    alt={"alt"}
+                    className={props.isActive ? "opacity-100" : "opacity-70"}
+                    src={`/assets/icon/${props.iconName}.svg`}
+                    height={"20px"}
+                    width={"20px"}
+                  />
+                )}
+                <p>{props.name}</p>
+              </div>
+              {props.isHrefIcon && (
+                <p className="w-[11px] h-[11px] relative -top-1 ml-auto ">
+                  <Image
+                    alt={"alt"}
+                    src={"/assets/icon/HrefIcon.svg"}
+                    height={"15px"}
+                    width={"15px"}
+                  />
+                </p>
+              )}
+              {props.subMenu && props.subMenu.length && (
                 <Image
                   alt={"alt"}
-                  className={props.isActive ? "opacity-100" : "opacity-70"}
-                  src={`/assets/icon/${props.iconName}.svg`}
-                  height={"20px"}
-                  width={"20px"}
+                  src={props.isMenuOpen ? "/assets/icon/UpArrow.svg" : "/assets/icon/DownArrow.svg"}
+                  height={"8px"}
+                  width={"11px"}
                 />
               )}
-              <p>{props.name}</p>
-            </div>
-            {props.isHrefIcon && (
-              <p className="w-[11px] h-[11px] relative -top-1 ml-auto ">
-                <Image
-                  alt={"alt"}
-                  src={"/assets/icon/HrefIcon.svg"}
-                  height={"15px"}
-                  width={"15px"}
-                />
-              </p>
-            )}
-            {props.subMenu && props.subMenu.length && (
-              <Image
-                alt={"alt"}
-                src={props.isMenuOpen ? "/assets/icon/UpArrow.svg" : "/assets/icon/DownArrow.svg"}
-                height={"8px"}
-                width={"11px"}
-              />
-            )}
-          </div>{" "}
-        </ToolTip>
-      </a>
+            </div>{" "}
+          </ToolTip>
+        </a>
+      </Link>
     );
   }
 
