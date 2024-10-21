@@ -1,37 +1,37 @@
 import { store } from "../redux";
 import Config from "../config/config";
+import { NETWORK_TYPE } from "../config/types";
 // import { NetworkType } from "@airgap/beacon-sdk";
 
 class TzktBlockExplorer {
   constructor(
-    public readonly rpcUrls: { [key in string]: string } = {
-      ["mainnet"]: "https://tzkt.io/",
-      ["delphinet"]: "https://delphi.tzkt.io/",
-      ["edonet"]: "https://edo.tzkt.io/",
-      ["florencenet"]: "https://florence.tzkt.io/",
-      ["granadanet"]: "https://granada.tzkt.io/",
-      ["hangzhounet"]: "https://hangzhou.tzkt.io/",
-      ["ithacanet"]: "https://ithacanet.tzkt.io/",
-      ["jakartanet"]: "https://jakartanet.tzkt.io/",
-      ["custom"]: "https://ghostnet.tzkt.io/",
-      ["ghostnet"]: "https://ghostnet.tzkt.io/",
-      ["weeklynet"]: "https://weeklynet.tzkt.io/",
-      ["oxfordnet"]: "https://oxfordnet.tzkt.io/",
-      ["parisnet"]: "https://parisnet.tzkt.io/",
-      ["dailynet"]: "https://dailynet.tzkt.io/",
-      ["kathmandunet"]: "https://kathmandunet.tzkt.io/",
-      ["limanet"]: "https://limanet.tzkt.io/",
-      ["mumbainet"]: "https://mumbainet.tzkt.io/",
-      ["nairobinet"]: "https://nairobinet.tzkt.io/",
+    public readonly rpcUrls: { [key in NETWORK_TYPE]: string } = {
+      [NETWORK_TYPE.MAINNET]: "https://tzkt.io/",
+      [NETWORK_TYPE.DELPHINET]: "https://delphi.tzkt.io/",
+      [NETWORK_TYPE.EDONET]: "https://edo.tzkt.io/",
+      [NETWORK_TYPE.FLORENCENET]: "https://florence.tzkt.io/",
+      [NETWORK_TYPE.GRANADANET]: "https://granada.tzkt.io/",
+      [NETWORK_TYPE.HANGZHOUNET]: "https://hangzhou.tzkt.io/",
+      [NETWORK_TYPE.ITHACANET]: "https://ithacanet.tzkt.io/",
+      [NETWORK_TYPE.JAKARTANET]: "https://jakartanet.tzkt.io/",
+      [NETWORK_TYPE.CUSTOM]: "https://ghostnet.tzkt.io/",
+      [NETWORK_TYPE.GHOSTNET]: "https://ghostnet.tzkt.io/",
+      [NETWORK_TYPE.WEEKLYNET]: "https://weeklynet.tzkt.io/",
+      [NETWORK_TYPE.OXFORDNET]: "https://oxfordnet.tzkt.io/",
+      [NETWORK_TYPE.PARISNET]: "https://parisnet.tzkt.io/",
+      [NETWORK_TYPE.DAILYNET]: "https://dailynet.tzkt.io/",
+      [NETWORK_TYPE.KATHMANDUNET]: "https://kathmandunet.tzkt.io/",
+      [NETWORK_TYPE.LIMANET]: "https://limanet.tzkt.io/",
+      [NETWORK_TYPE.MUMBAINET]: "https://mumbainet.tzkt.io/",
+      [NETWORK_TYPE.NAIROBINET]: "https://nairobinet.tzkt.io/",
     }
   ) {}
-
-  async getAddressLink(address: string, network: string): Promise<string> {
+  async getAddressLink(address: string, network: NETWORK_TYPE): Promise<string> {
     const blockExplorer = this.rpcUrls[network];
     return `${blockExplorer}${address}/operations`;
   }
 
-  async getTransactionLink(transactionId: string, network: string): Promise<string> {
+  async getTransactionLink(transactionId: string, network: NETWORK_TYPE): Promise<string> {
     const blockExplorer = this.rpcUrls[network];
     return `${blockExplorer}${transactionId}`;
   }
