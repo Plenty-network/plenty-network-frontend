@@ -1,5 +1,5 @@
-import { IConfig, TokenStandard } from "./types";
-import { NetworkType } from "@airgap/beacon-types";
+import { IConfig, NETWORK_TYPE, TokenStandard } from "./types";
+// import { NetworkType } from "@airgap/beacon-types";
 
 const Config: IConfig = {
   NAME: "Plenty Network",
@@ -105,7 +105,7 @@ const Config: IConfig = {
   },
 
   NETWORK: "mainnet",
-  WALLET_NETWORK: NetworkType.MAINNET,
+  WALLET_NETWORK: NETWORK_TYPE.MAINNET,
   ADMIN_ADDRESS: "KT1GpTEq4p2XZ8w9p5xM7Wayyw5VR7tb3UaW",
   BURNER: "tz1ZnK6zYJrC9PfKCPryg9tPW6LrERisTGtg",
 

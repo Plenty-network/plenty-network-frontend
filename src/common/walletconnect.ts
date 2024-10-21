@@ -1,47 +1,38 @@
-import {
-  AccountInfo,
-  BlockExplorer,
-  ColorMode,
-  DAppClientOptions,
-  Network,
-  NetworkType,
-} from "@airgap/beacon-sdk";
-import type { BeaconWallet } from "@taquito/beacon-wallet";
+import { store } from "../redux";
 import Config from "../config/config";
-import { store, useAppDispatch } from "../redux";
+import { NETWORK_TYPE } from "../config/types";
+// import { NetworkType } from "@airgap/beacon-sdk";
 
-class TzktBlockExplorer extends BlockExplorer {
+class TzktBlockExplorer {
   constructor(
-    public readonly rpcUrls: { [key in NetworkType]: string } = {
-      [NetworkType.MAINNET]: "https://tzkt.io/",
-      [NetworkType.DELPHINET]: "https://delphi.tzkt.io/",
-      [NetworkType.EDONET]: "https://edo.tzkt.io/",
-      [NetworkType.FLORENCENET]: "https://florence.tzkt.io/",
-      [NetworkType.GRANADANET]: "https://granada.tzkt.io/",
-      [NetworkType.HANGZHOUNET]: "https://hangzhou.tzkt.io/",
-      [NetworkType.ITHACANET]: "https://ithacanet.tzkt.io/",
-      [NetworkType.JAKARTANET]: "https://jakartanet.tzkt.io/",
-      [NetworkType.CUSTOM]: "https://ghostnet.tzkt.io/",
-      [NetworkType.GHOSTNET]: "https://ghostnet.tzkt.io/",
-      [NetworkType.MONDAYNET]: "https://mondaynet.tzkt.io/",
-      [NetworkType.DAILYNET]: "https://mondaynet.tzkt.io/",
-      [NetworkType.KATHMANDUNET]: "https://kathmandunet.tzkt.io/",
-      [NetworkType.LIMANET]: "https://limanet.tzkt.io/",
-      [NetworkType.MUMBAINET]: "https://mumbainet.tzkt.io/",
-      [NetworkType.NAIROBINET]: "https://nairobinet.tzkt.io/",
+    public readonly rpcUrls: { [key in NETWORK_TYPE]: string } = {
+      [NETWORK_TYPE.MAINNET]: "https://tzkt.io/",
+      [NETWORK_TYPE.DELPHINET]: "https://delphi.tzkt.io/",
+      [NETWORK_TYPE.EDONET]: "https://edo.tzkt.io/",
+      [NETWORK_TYPE.FLORENCENET]: "https://florence.tzkt.io/",
+      [NETWORK_TYPE.GRANADANET]: "https://granada.tzkt.io/",
+      [NETWORK_TYPE.HANGZHOUNET]: "https://hangzhou.tzkt.io/",
+      [NETWORK_TYPE.ITHACANET]: "https://ithacanet.tzkt.io/",
+      [NETWORK_TYPE.JAKARTANET]: "https://jakartanet.tzkt.io/",
+      [NETWORK_TYPE.CUSTOM]: "https://ghostnet.tzkt.io/",
+      [NETWORK_TYPE.GHOSTNET]: "https://ghostnet.tzkt.io/",
+      [NETWORK_TYPE.WEEKLYNET]: "https://weeklynet.tzkt.io/",
+      [NETWORK_TYPE.OXFORDNET]: "https://oxfordnet.tzkt.io/",
+      [NETWORK_TYPE.PARISNET]: "https://parisnet.tzkt.io/",
+      [NETWORK_TYPE.DAILYNET]: "https://dailynet.tzkt.io/",
+      [NETWORK_TYPE.KATHMANDUNET]: "https://kathmandunet.tzkt.io/",
+      [NETWORK_TYPE.LIMANET]: "https://limanet.tzkt.io/",
+      [NETWORK_TYPE.MUMBAINET]: "https://mumbainet.tzkt.io/",
+      [NETWORK_TYPE.NAIROBINET]: "https://nairobinet.tzkt.io/",
     }
-  ) {
-    super(rpcUrls);
-  }
-
-  public async getAddressLink(address: string, network: Network): Promise<string> {
-    const blockExplorer = await this.getLinkForNetwork(network);
-
+  ) {}
+  async getAddressLink(address: string, network: NETWORK_TYPE): Promise<string> {
+    const blockExplorer = this.rpcUrls[network];
     return `${blockExplorer}${address}/operations`;
   }
-  public async getTransactionLink(transactionId: string, network: Network): Promise<string> {
-    const blockExplorer = await this.getLinkForNetwork(network);
 
+  async getTransactionLink(transactionId: string, network: NETWORK_TYPE): Promise<string> {
+    const blockExplorer = this.rpcUrls[network];
     return `${blockExplorer}${transactionId}`;
   }
 }
@@ -64,60 +55,66 @@ export const tzktExplorer = Config.EXPLORER_LINKS.TEZOS[connectedNetwork];
 export const getRpcNode = () =>
   store.getState().rpcData.rpcNode || Config.RPC_NODES[connectedNetwork];
 
-//export const dispatch = () => useAppDispatch();
-
+// The dappClient function
 export const dappClient = () => {
-  let instance: BeaconWallet | undefined;
+  let instance: any;
 
-  async function init() {
+  const init = async () => {
+    if (typeof window === "undefined") return undefined;
+    const { ColorMode } = await import("@airgap/beacon-sdk");
     const { BeaconWallet } = await import("@taquito/beacon-wallet");
-    const dAppInfo: DAppClientOptions = {
+    const dAppInfo = {
       name: "Plenty Network",
       iconUrl: "https://app.plenty.network/assets/icon/plentyLogo1000.svg",
       preferredNetwork: walletNetwork,
-      colorMode: ColorMode.DARK,
-      blockExplorer: new TzktBlockExplorer() as any,
+      colorMode: ColorMode.DARK, // You can safely use this inside the async import
+      blockExplorer: new TzktBlockExplorer(),
       appUrl: "https://app.plenty.network",
       featuredWallets: ["temple", "plenty", "kukai", "trust"],
     };
 
-    return new BeaconWallet(dAppInfo);
-  }
-  async function loadWallet() {
+    return new BeaconWallet(dAppInfo as any);
+  };
+
+  const loadWallet = async () => {
+    if (typeof window === "undefined") return undefined;
     if (!instance) instance = await init();
     return instance;
-  }
+  };
 
-  async function getDAppClient() {
+  const getDAppClient = async () => {
     const wallet = await loadWallet();
-    return wallet.client;
-  }
-  async function getDAppClientWallet() {
+    return wallet ? wallet.client : null;
+  };
+
+  const getDAppClientWallet = async () => {
     const wallet = await loadWallet();
     return wallet;
-  }
+  };
 
-  async function connectAccount() {
+  const connectAccount = async () => {
     const client = await getDAppClient();
-
+    if (!client) return null;
     await client.clearActiveAccount();
     return client.requestPermissions({
       network: {
         type: walletNetwork,
       },
     });
-  }
+  };
 
-  async function swapAccount(account: AccountInfo) {
+  const swapAccount = async (account: any) => {
     const client = await getDAppClient();
-
+    if (!client) return null;
     await client.clearActiveAccount();
     await client.setActiveAccount(account);
     return account;
-  }
-  async function CheckIfWalletConnected() {
+  };
+
+  const CheckIfWalletConnected = async () => {
     try {
       const client = await getDAppClient();
+      if (!client) return { success: false, error: "No client available" };
       const activeAccount = await client.getActiveAccount();
       if (!activeAccount) {
         await client.requestPermissions({
@@ -127,39 +124,32 @@ export const dappClient = () => {
           },
         });
       }
-      return {
-        success: true,
-      };
+      return { success: true };
     } catch (error) {
-      return {
-        success: false,
-        error,
-      };
+      return { success: false, error };
     }
-  }
-  async function tezos() {
+  };
+
+  const tezos = async () => {
+    if (typeof window === "undefined") return undefined;
     const { TezosToolkit } = await import("@taquito/taquito");
     const Tezos = new TezosToolkit(getRpcNode());
     const wallet = await getDAppClientWallet();
     if (wallet) Tezos.setWalletProvider(wallet);
     return Tezos;
-  }
-  async function disconnectWallet() {
+  };
+
+  const disconnectWallet = async () => {
     const wallet = await getDAppClient();
+    if (!wallet) return { success: false, error: "No wallet to disconnect" };
     try {
       await wallet.disconnect();
-      return {
-        success: true,
-        wallet: null,
-      };
+      return { success: true, wallet: null };
     } catch (error) {
-      return {
-        success: false,
-        wallet: null,
-        error,
-      };
+      return { success: false, wallet: null, error };
     }
-  }
+  };
+
   return {
     getDAppClient,
     connectAccount,

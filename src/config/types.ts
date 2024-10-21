@@ -1,4 +1,4 @@
-import { NetworkType } from "@airgap/beacon-types";
+// import { NetworkType } from "@airgap/beacon-types";
 
 export interface IConfig {
   // STANDARD_CONFIG: string;
@@ -26,7 +26,7 @@ export interface IConfig {
   // };
 
   NETWORK: "mainnet" | "testnet";
-  WALLET_NETWORK: NetworkType;
+  WALLET_NETWORK: NETWORK_TYPE;
   ADMIN_ADDRESS: string;
   BURNER: string;
   VE_SWAP: { mainnet: string; testnet: string };
@@ -231,4 +231,25 @@ export interface IConfigData {
     V3: string;
   }
   TOKEN: string;
+}
+
+export enum NETWORK_TYPE {
+  MAINNET = "mainnet",
+  DELPHINET = "delphinet",
+  EDONET = "edonet",
+  FLORENCENET = "florencenet",
+  GRANADANET = "granadanet",
+  HANGZHOUNET = "hangzhounet",
+  ITHACANET = "ithacanet",
+  JAKARTANET = "jakartanet",
+  CUSTOM = "custom",
+  GHOSTNET = "ghostnet",
+  WEEKLYNET = "weeklynet",
+  OXFORDNET = "oxfordnet",
+  PARISNET = "parisnet",
+  DAILYNET = "dailynet",
+  KATHMANDUNET = "kathmandunet",
+  LIMANET = "limanet",
+  MUMBAINET = "mumbainet",
+  NAIROBINET = "nairobinet",
 }

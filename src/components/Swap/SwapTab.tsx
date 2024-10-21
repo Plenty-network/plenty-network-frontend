@@ -12,7 +12,7 @@ import router from "../../../src/assets/icon/swap/router.svg";
 import stableSwap from "../../../src/assets/icon/swap/stableswapViolet.svg";
 import switchsvg from "../../../src/assets/icon/swap/switch.svg";
 import Image from "next/image";
-import Lottie from "lottie-react";
+import dynamic from 'next/dynamic';
 import Button from "../Button/Button";
 import TokenDropdown from "../TokenDropdown/TokenDropdown";
 import TransactionSettings from "../TransactionSettings/TransactionSettings";
@@ -52,6 +52,7 @@ import { tzktExplorer } from "../../common/walletconnect";
 import { routerSwap } from "../../operations/3route";
 import { analytics } from "../../config/firebaseConfig";
 
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 interface ISwapTabProps {
   className?: string;
   walletAddress: string | "";
